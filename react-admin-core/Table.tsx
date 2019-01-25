@@ -64,7 +64,7 @@ export interface IProps {
     sort?: string;
     order?: "asc" | "desc";
     page?: number;
-    renderTableRow?: () => React.ReactElement<TableRowProps>;
+    renderTableRow?: (index: number) => React.ReactElement<TableRowProps>;
     renderHeadTableRow?: () => React.ReactElement<TableRowProps>;
     selectionApi?: ISelectionApi;
 }
@@ -91,7 +91,11 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                 <TableBody>
                     {data.map((row, index) => {
                         const isSelected = this.isSelected(row.id);
-                        const tableRow: React.ReactElement<TableRowProps> = this.props.renderTableRow ? this.props.renderTableRow() : <TableRow />;
+                        const tableRow: React.ReactElement<TableRowProps> = this.props.renderTableRow ? (
+                            this.props.renderTableRow(index)
+                        ) : (
+                            <TableRow />
+                        );
                         return (
                             <tableRow.type
                                 {...tableRow.props}
@@ -103,7 +107,6 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                                 key={row.id}
                                 selected={isSelected}
                                 id={row.id}
-                                index={index}
                                 onKeyDown={(ev: React.KeyboardEvent) => this.handleKeyDown(ev)}
                             >
                                 {tableRow.props.children}

@@ -1,3 +1,4 @@
+import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import Save from "@material-ui/icons/Save";
@@ -8,7 +9,6 @@ import { compose } from "recompose";
 import EditDialogApiContext from "./EditDialogApiContext";
 import { StackApiContext } from "./Stack/Api";
 import withDirtyHandlerApi, { IWithDirtyHandlerApiProps } from "./withDirtyHandlerApi";
-import { CircularProgress } from "@material-ui/core";
 import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
 
 const styles = (theme: Theme) =>
@@ -35,17 +35,17 @@ class FinalForm extends React.Component<IProps> {
     public componentDidMount() {
         if (this.props.dirtyHandlerApi) {
             this.props.dirtyHandlerApi.registerBinding(this, {
-                isDirty: function() {
+                isDirty: () => {
                     if (!this.formRenderProps) return false;
                     return this.formRenderProps.dirty;
-                }.bind(this),
-                submit: function() {
-                    return this.submit();
-                }.bind(this),
-                reset: function() {
+                },
+                submit: () => {
+                    return this.submit(undefined);
+                },
+                reset: () => {
                     if (!this.formRenderProps) return;
                     this.formRenderProps.form.reset();
-                }.bind(this),
+                },
             });
         }
     }

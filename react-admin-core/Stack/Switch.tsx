@@ -1,9 +1,9 @@
-import * as React from "react";
-import { StackApiContext } from "./Api";
-import StackPage, { IProps as IPageProps } from "./Page";
-import { Route, RouteComponentProps, match } from "react-router";
 import { History } from "history";
+import * as React from "react";
+import { match, Route, RouteComponentProps } from "react-router";
+import { StackApiContext } from "./Api";
 import Breadcrumb from "./Breadcrumb";
+import StackPage, { IProps as IPageProps } from "./Page";
 
 interface IProps {
     initialPage?: string;

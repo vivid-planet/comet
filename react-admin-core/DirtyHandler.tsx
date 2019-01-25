@@ -51,15 +51,15 @@ class DirtyHandler extends React.Component<IProps, IState> {
     public componentDidMount() {
         if (this.context) {
             this.context.registerBinding(this, {
-                isDirty: function() {
+                isDirty: () => {
                     return this.isBindingDirty();
-                }.bind(this),
-                submit: function() {
+                },
+                submit: () => {
                     return this.submitBindings();
-                }.bind(this),
-                reset: function() {
+                },
+                reset: () => {
                     return this.resetBindings();
-                }.bind(this),
+                },
             });
         }
     }

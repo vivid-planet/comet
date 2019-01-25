@@ -50,20 +50,20 @@ class TableLocalChanges<TData extends { id: string; pos?: number }> extends Reac
         const dirtyApi = this.props.dirtyHandlerApi ? this.props.dirtyHandlerApi.getParent() : undefined;
         if (dirtyApi) {
             dirtyApi.registerBinding(this, {
-                isDirty: function() {
+                isDirty: () => {
                     if (Object.keys(this.state.changes).length > 0) return true;
                     if (this.state.changedOrder) return true;
                     return false;
-                }.bind(this),
-                submit: function() {
+                },
+                submit: () => {
                     return this.submitLocalDataChanges();
-                }.bind(this),
-                reset: function() {
+                },
+                reset: () => {
                     this.setState({
                         changes: {},
                         changedOrder: null,
                     });
-                }.bind(this),
+                },
             });
         }
     }

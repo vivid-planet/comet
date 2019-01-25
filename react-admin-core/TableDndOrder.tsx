@@ -127,8 +127,8 @@ class TableDndOrder extends React.Component<IProps> {
     public render() {
         const props = {
             ...this.props,
-            renderTableRow: () => {
-                return <ExtendedDndOrderRow moveRow={this.props.moveRow} />;
+            renderTableRow: (index: number) => {
+                return <ExtendedDndOrderRow moveRow={this.props.moveRow} index={index} />;
             },
             renderHeadTableRow: () => {
                 return (
