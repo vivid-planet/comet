@@ -32,8 +32,6 @@ class DirtyHandler extends React.Component<IProps, IState> {
         };
         this.bindings = [];
 
-        this.handleDialogClose = this.handleDialogClose.bind(this);
-
         this.dirtyHandlerApi = {
             registerBinding: this.registerBinding.bind(this),
             unregisterBinding: this.unregisterBinding.bind(this),
@@ -75,32 +73,16 @@ class DirtyHandler extends React.Component<IProps, IState> {
             <DirtyHandlerApiContext.Provider value={this.dirtyHandlerApi}>
                 <React.Fragment>
                     {this.props.children}
-                    <Dialog
-                        open={this.state.dialogOpen}
-                        onClose={e => {
-                            this.handleDialogClose(false);
-                        }}
-                    >
+                    <Dialog open={this.state.dialogOpen} onClose={this.handleDialogCloseNo}>
                         <DialogTitle>Save changes?</DialogTitle>
                         <DialogContent>
                             <DialogContentText>Save changes?</DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button
-                                onClick={e => {
-                                    this.handleDialogClose(false);
-                                }}
-                                color="primary"
-                            >
+                            <Button onClick={this.handleDialogCloseNo} color="primary">
                                 No
                             </Button>
-                            <Button
-                                onClick={e => {
-                                    this.handleDialogClose(true);
-                                }}
-                                color="primary"
-                                autoFocus={true}
-                            >
+                            <Button onClick={this.handleDialogCloseYes} color="primary" autoFocus={true}>
                                 Yes
                             </Button>
                         </DialogActions>
@@ -109,6 +91,30 @@ class DirtyHandler extends React.Component<IProps, IState> {
             </DirtyHandlerApiContext.Provider>
         );
     }
+
+    private handleDialogCloseYes = () => {
+        this.setState({ dialogOpen: false });
+        this.submitBindings().then(
+            () => {
+                this.resolveOnDialogClose.forEach(resolve => resolve());
+                this.resolveOnDialogClose.length = 0;
+                this.rejectOnDialogClose.length = 0;
+            },
+            errors => {
+                this.rejectOnDialogClose.forEach(reject => reject(errors));
+                this.resolveOnDialogClose.length = 0;
+                this.rejectOnDialogClose.length = 0;
+            },
+        );
+    };
+    private handleDialogCloseNo = () => {
+        this.setState({ dialogOpen: false });
+        this.resetBindings().then(() => {
+            this.resolveOnDialogClose.forEach(resolve => resolve());
+            this.resolveOnDialogClose.length = 0;
+            this.rejectOnDialogClose.length = 0;
+        });
+    };
 
     private isBindingDirty() {
         return Promise.all(
@@ -156,30 +162,6 @@ class DirtyHandler extends React.Component<IProps, IState> {
     }
     private unregisterBinding(obj: React.Component) {
         this.bindings = this.bindings.filter(item => item.obj !== obj);
-    }
-
-    private handleDialogClose(submit: boolean) {
-        this.setState({ dialogOpen: false });
-        if (submit) {
-            this.submitBindings().then(
-                () => {
-                    this.resolveOnDialogClose.forEach(resolve => resolve());
-                    this.resolveOnDialogClose.length = 0;
-                    this.rejectOnDialogClose.length = 0;
-                },
-                errors => {
-                    this.rejectOnDialogClose.forEach(reject => reject(errors));
-                    this.resolveOnDialogClose.length = 0;
-                    this.rejectOnDialogClose.length = 0;
-                },
-            );
-        } else {
-            this.resetBindings().then(() => {
-                this.resolveOnDialogClose.forEach(resolve => resolve());
-                this.resolveOnDialogClose.length = 0;
-                this.rejectOnDialogClose.length = 0;
-            });
-        }
     }
 
     private getParent(): IDirtyHandlerApi | undefined {

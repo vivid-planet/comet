@@ -18,12 +18,7 @@ class LocalChangesToolbar extends React.Component<IProps> {
                 {this.props.loading && <CircularProgress />}
                 {!this.props.loading && (
                     <Toolbar>
-                        <Button
-                            color="default"
-                            onClick={ev => {
-                                this.props.tableLocalChangesApi.submitLocalDataChanges();
-                            }}
-                        >
+                        <Button color="default" onClick={this.handleSaveClick}>
                             Speichern
                             <SaveIcon />
                         </Button>
@@ -33,5 +28,9 @@ class LocalChangesToolbar extends React.Component<IProps> {
             </>
         );
     }
+
+    private handleSaveClick = () => {
+        this.props.tableLocalChangesApi.submitLocalDataChanges();
+    };
 }
 export default LocalChangesToolbar;

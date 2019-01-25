@@ -55,13 +55,7 @@ class Stack extends React.Component<IProps, IState> {
                                     <Breadcrumbs breadcrumbs={this.state.breadcrumbs} />
                                 </Toolbar>
 
-                                <Button
-                                    color="default"
-                                    disabled={this.state.breadcrumbs.length <= 1}
-                                    onClick={ev => {
-                                        this.goBack();
-                                    }}
-                                >
+                                <Button color="default" disabled={this.state.breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
                                     Zurück
                                     <ArrowBackIcon />
                                 </Button>
@@ -82,6 +76,10 @@ class Stack extends React.Component<IProps, IState> {
             </StackApiContext.Provider>
         );
     }
+
+    private handleGoBackClick = () => {
+        this.goBack();
+    };
 
     private goBackForce() {
         this.history.replace(this.state.breadcrumbs[this.state.breadcrumbs.length - 2].url);

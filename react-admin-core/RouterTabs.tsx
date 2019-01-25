@@ -67,16 +67,14 @@ class RouterTabs extends React.Component<IProps> {
                 </Route>
                 {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
                     return (
-                        <Route
-                            path={`${this.props.match.url}${child.props.path}`}
-                            exact={child.props.path === ""}
-                            children={({ match }) => {
+                        <Route path={`${this.props.match.url}${child.props.path}`} exact={child.props.path === ""}>
+                            {({ match }) => {
                                 if (match || child.props.forceRender) {
                                     return <TabContainer style={{ display: !match ? "none" : "" }}>{child.props.children}</TabContainer>;
                                 }
                                 return null;
                             }}
-                        />
+                        </Route>
                     );
                 })}
             </div>

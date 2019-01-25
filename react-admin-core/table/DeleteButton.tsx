@@ -17,13 +17,7 @@ class DeleteButton extends React.Component<IProps> {
                     <>
                         {loading && <CircularProgress />}
                         {!loading && (
-                            <Button
-                                color="default"
-                                disabled={!this.props.selectedId}
-                                onClick={ev => {
-                                    deleteBrand({ variables: { id: this.props.selectedId! } });
-                                }}
-                            >
+                            <Button color="default" disabled={!this.props.selectedId} onClick={this.handleDeleteClick.bind(this, deleteBrand)}>
                                 Löschen
                                 <RemoveIcon />
                             </Button>
@@ -33,5 +27,15 @@ class DeleteButton extends React.Component<IProps> {
             </DeleteMutation>
         );
     }
+
+    private handleDeleteClick = (
+        deleteBrand: (options: {
+            variables: {
+                id: string;
+            };
+        }) => void,
+    ) => {
+        deleteBrand({ variables: { id: this.props.selectedId! } });
+    };
 }
 export default DeleteButton;

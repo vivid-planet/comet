@@ -43,32 +43,16 @@ class DeleteMutation extends React.Component<IncludingInjectedProps, IState> {
                     },
                 )}
 
-                <Dialog
-                    open={this.state.dialogOpen}
-                    onClose={e => {
-                        this.handleDialogClose(false);
-                    }}
-                >
+                <Dialog open={this.state.dialogOpen} onClose={this.handleNoClick}>
                     <DialogTitle>Delete row?</DialogTitle>
                     <DialogContent>
                         <DialogContentText>Delete row?</DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button
-                            onClick={e => {
-                                this.handleDialogClose(false);
-                            }}
-                            color="primary"
-                        >
+                        <Button onClick={this.handleNoClick} color="primary">
                             No
                         </Button>
-                        <Button
-                            onClick={e => {
-                                this.handleDialogClose(true);
-                            }}
-                            color="primary"
-                            autoFocus={true}
-                        >
+                        <Button onClick={this.handleYesClick} color="primary" autoFocus={true}>
                             Yes
                         </Button>
                     </DialogActions>
@@ -77,33 +61,35 @@ class DeleteMutation extends React.Component<IncludingInjectedProps, IState> {
         );
     }
 
-    private handleDialogClose(doIt: boolean) {
+    private handleYesClick = () => {
         this.setState({ dialogOpen: false });
-        if (doIt) {
-            this.setState({ loading: true });
-            const refetchQueries = [];
-            if (this.props.tableQuery) {
-                refetchQueries.push({
-                    query: this.props.tableQuery.api.getQuery(),
-                    variables: this.props.tableQuery.api.getVariables(),
-                });
-            }
-            this.props.client
-                .mutate({
-                    mutation: this.props.mutation,
-                    variables: this.state.pendingVariables,
-                    refetchQueries,
-                })
-                .then(() => {
-                    this.setState({ loading: false });
-                    if (this.state.pendingVariables) {
-                        if (this.props.tableQuery) {
-                            this.props.tableQuery.api.onRowDeleted(this.state.pendingVariables.id);
-                        }
-                    }
-                });
+        this.setState({ loading: true });
+        const refetchQueries = [];
+        if (this.props.tableQuery) {
+            refetchQueries.push({
+                query: this.props.tableQuery.api.getQuery(),
+                variables: this.props.tableQuery.api.getVariables(),
+            });
         }
-    }
+        this.props.client
+            .mutate({
+                mutation: this.props.mutation,
+                variables: this.state.pendingVariables,
+                refetchQueries,
+            })
+            .then(() => {
+                this.setState({ loading: false });
+                if (this.state.pendingVariables) {
+                    if (this.props.tableQuery) {
+                        this.props.tableQuery.api.onRowDeleted(this.state.pendingVariables.id);
+                    }
+                }
+            });
+    };
+
+    private handleNoClick = () => {
+        this.setState({ dialogOpen: false });
+    };
 }
 
 export default withTableQueryContext(withApollo(DeleteMutation));

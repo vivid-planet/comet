@@ -2,7 +2,17 @@ import RootRef from "@material-ui/core/RootRef";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import * as React from "react";
-import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropContext, DragSource, DropTarget, DropTargetMonitor } from "react-dnd";
+import {
+    ConnectDragPreview,
+    ConnectDragSource,
+    ConnectDropTarget,
+    DragDropContext,
+    DragElementWrapper,
+    DragPreviewOptions,
+    DragSource,
+    DropTarget,
+    DropTargetMonitor,
+} from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { findDOMNode } from "react-dom";
 import { compose } from "recompose";
@@ -90,12 +100,7 @@ class DndOrderRow extends React.Component<IRowProps & IRowCollectedProps> {
         const { connectDropTarget, connectDragSource, connectDragPreview, isDragging, moveRow, ...rest } = this.props;
         const opacity = isDragging ? 0 : 1;
         return (
-            <RootRef
-                rootRef={instance => {
-                    connectDropTarget(instance);
-                    connectDragPreview(instance);
-                }}
-            >
+            <RootRef rootRef={this.handleRootRef}>
                 <TableRow {...rest} style={{ opacity }}>
                     <TableCell>{connectDragSource(<span style={{ padding: 5 }}>::</span>)}</TableCell>
                     {this.props.children}
@@ -103,6 +108,12 @@ class DndOrderRow extends React.Component<IRowProps & IRowCollectedProps> {
             </RootRef>
         );
     }
+
+    private handleRootRef = (instance: any) => {
+        const { connectDropTarget, connectDragPreview } = this.props;
+        connectDropTarget(instance);
+        connectDragPreview(instance);
+    };
 }
 
 const ExtendedDndOrderRow = DragSource(

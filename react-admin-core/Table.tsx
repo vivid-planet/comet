@@ -20,6 +20,10 @@ interface ITableHeadProps {
 }
 
 const EnhancedTableHead = (props: ITableHeadProps) => {
+    const handleSortClick = (column: IColumn, ev: React.MouseEvent) => {
+        props.onSortClick(ev, column.name);
+    };
+
     const tableRow: React.ReactElement<TableRowProps> = props.renderHeadTableRow ? props.renderHeadTableRow() : <TableRow />;
     return (
         <TableHead>
@@ -28,13 +32,7 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
                 {props.columns.map((column, index) => (
                     <TableCell padding="default" key={index} numeric={column.numeric ? column.numeric : false}>
                         {column.sortable ? (
-                            <TableSortLabel
-                                active={props.sort === column.name}
-                                direction={props.order}
-                                onClick={ev => {
-                                    props.onSortClick(ev, column.name);
-                                }}
-                            >
+                            <TableSortLabel active={props.sort === column.name} direction={props.order} onClick={handleSortClick.bind(null, column)}>
                                 {column.header || column.name}
                             </TableSortLabel>
                         ) : (
@@ -100,14 +98,14 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                             <tableRow.type
                                 {...tableRow.props}
                                 hover={this.props.selectable}
-                                onClick={(event: React.MouseEvent) => this.handleClick(event, row.id)}
+                                onClick={this.handleClick.bind(this, row.id)}
                                 role="checkbox"
                                 aria-checked={isSelected}
                                 tabIndex={-1}
                                 key={row.id}
                                 selected={isSelected}
                                 id={row.id}
-                                onKeyDown={(ev: React.KeyboardEvent) => this.handleKeyDown(ev)}
+                                onKeyDown={this.handleKeyDown}
                             >
                                 {tableRow.props.children}
                                 {this.props.columns.map((column, colIndex) => (
@@ -127,11 +125,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                                 rowsPerPage={rowsPerPage}
                                 rowsPerPageOptions={[rowsPerPage]}
                                 page={page}
-                                onChangePage={(ev, newPage) => {
-                                    if (this.props.tableQuery) {
-                                        this.props.tableQuery.api.changePage(newPage);
-                                    }
-                                }}
+                                onChangePage={this.handleChangePage}
                             />
                         </TableRow>
                     </TableFooter>
@@ -140,13 +134,19 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
         );
     }
 
-    private handleClick(event: React.MouseEvent, id: string) {
+    private handleChangePage = (ev: React.MouseEvent | null, newPage: number) => {
+        if (this.props.tableQuery) {
+            this.props.tableQuery.api.changePage(newPage);
+        }
+    };
+
+    private handleClick = (id: string, event: React.MouseEvent) => {
         if (this.props.selectable && this.props.selectionApi) {
             this.props.selectionApi.handleSelectId(id);
         }
-    }
+    };
 
-    private handleKeyDown(event: React.KeyboardEvent) {
+    private handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
             if (this.props.selectable && this.props.selectionApi) {
                 const selectedIndex = this.props.data.findIndex(i => String(this.props.selectedId) === String(i.id));
@@ -159,7 +159,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                 event.preventDefault();
             }
         }
-    }
+    };
 
     private isSelected(id: string) {
         return String(this.props.selectedId) === String(id); //  as strings as selectedId might come from url
