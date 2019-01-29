@@ -30,7 +30,7 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
             <tableRow.type {...tableRow.props}>
                 {tableRow.props.children}
                 {props.columns.map((column, index) => (
-                    <TableCell padding="default" key={index} numeric={column.numeric ? column.numeric : false}>
+                    <TableCell padding="default" key={index} align={column.numeric ? "right" : "inherit"}>
                         {column.sortable ? (
                             <TableSortLabel active={props.sort === column.name} direction={props.order} onClick={handleSortClick.bind(null, column)}>
                                 {column.header || column.name}
@@ -109,7 +109,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                             >
                                 {tableRow.props.children}
                                 {this.props.columns.map((column, colIndex) => (
-                                    <TableCell key={colIndex} numeric={column.numeric ? column.numeric : false}>
+                                    <TableCell key={colIndex} align={column.numeric ? "right" : "inherit"}>
                                         {column.cell ? column.cell(row) : (row as any)[column.name]}
                                     </TableCell>
                                 ))}
