@@ -52,8 +52,11 @@ interface IColumn {
     cell?: (row: any) => React.ReactNode;
     sortable?: boolean;
 }
+interface IRow {
+    id: string | number;
+}
 export interface IProps {
-    data: Array<{ id: string }>;
+    data: IRow[];
     columns: IColumn[];
     total: number;
     selectedId?: string;
@@ -104,7 +107,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                                 tabIndex={-1}
                                 key={row.id}
                                 selected={isSelected}
-                                id={row.id}
+                                id={String(row.id)}
                                 onKeyDown={this.handleKeyDown}
                             >
                                 {tableRow.props.children}
@@ -153,7 +156,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                 if (selectedIndex !== -1) {
                     const nextSelectedIndex = event.key === "ArrowDown" ? selectedIndex + 1 : selectedIndex - 1;
                     if (this.props.data[nextSelectedIndex]) {
-                        this.props.selectionApi.handleSelectId(this.props.data[nextSelectedIndex].id);
+                        this.props.selectionApi.handleSelectId(String(this.props.data[nextSelectedIndex].id));
                     }
                 }
                 event.preventDefault();
@@ -161,7 +164,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
         }
     };
 
-    private isSelected(id: string) {
+    private isSelected(id: string | number) {
         return String(this.props.selectedId) === String(id); //  as strings as selectedId might come from url
     }
 
