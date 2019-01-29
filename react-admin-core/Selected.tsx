@@ -6,7 +6,7 @@ import styled from "styled-components";
 interface IProps {
     selectionMode?: "edit" | "add";
     selectedId?: string;
-    rows?: Array<{ id: string }>;
+    rows?: Array<{ id: string | number }>;
     query?: any;
     dataChild?: string;
     children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
