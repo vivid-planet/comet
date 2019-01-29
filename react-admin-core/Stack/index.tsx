@@ -9,7 +9,7 @@ import DirtyHandler from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import IStackApi, { StackApiContext } from "./Api";
 import Breadcrumb from "./Breadcrumb";
-import Breadcrumbs from "./Breadcrumbs";
+import { Breadcrumbs } from "@vivid-planet/react-admin-mui";
 
 interface IProps {
     topLevelTitle: string;
@@ -52,7 +52,7 @@ class Stack extends React.Component<IProps, IState> {
                         return (
                             <>
                                 <Toolbar>
-                                    <Breadcrumbs breadcrumbs={this.state.breadcrumbs} />
+                                    <Breadcrumbs pages={this.state.breadcrumbs} />
                                 </Toolbar>
 
                                 <Button color="default" disabled={this.state.breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
