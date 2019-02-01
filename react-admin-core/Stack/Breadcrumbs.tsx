@@ -41,7 +41,7 @@ class Breadcrumbs extends React.Component<IProps> {
                 {this.props.breadcrumbs.map(crumb => (
                     <Li key={crumb.id}>
                         <Link to={crumb.url} replace={true}>
-                            <Typography variant="subheading">{crumb.title}</Typography>
+                            <Typography variant="subtitle1">{crumb.title}</Typography>
                         </Link>
                     </Li>
                 ))}
