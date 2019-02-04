@@ -2,6 +2,7 @@ import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { Breadcrumbs } from "@vivid-planet/react-admin-mui";
 import * as history from "history";
 import * as React from "react";
 import { match, Route, RouteComponentProps } from "react-router";
@@ -9,7 +10,6 @@ import DirtyHandler from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import IStackApi, { StackApiContext } from "./Api";
 import Breadcrumb from "./Breadcrumb";
-import { Breadcrumbs } from "@vivid-planet/react-admin-mui";
 
 interface IProps {
     topLevelTitle: string;

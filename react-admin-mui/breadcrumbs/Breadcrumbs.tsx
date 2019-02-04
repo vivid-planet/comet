@@ -1,8 +1,8 @@
-import * as React from "react";
-import { Link, Toolbar, Typography } from "@material-ui/core";
-import { KeyboardArrowRight } from "@material-ui/icons";
-import { Link as RouterLink } from "react-router-dom";
+import { Link, Typography } from "@material-ui/core";
 import { LinkProps } from "@material-ui/core/Link";
+import { KeyboardArrowRight } from "@material-ui/icons";
+import * as React from "react";
+import { Link as RouterLink } from "react-router-dom";
 
 export interface IBreadcrumbItem {
     id: string;
@@ -14,7 +14,7 @@ export interface IBreadcrumbProps {
     pages: IBreadcrumbItem[];
 }
 
-const MyLink = (props: LinkProps) => (
+const BreadcrumbLink = (props: LinkProps) => (
     <RouterLink to={props.href!} className={props.className}>
         {props.children}
     </RouterLink>
@@ -28,7 +28,7 @@ const Breadcrumbs = ({ pages }: IBreadcrumbProps) => {
 
                 return (
                     <React.Fragment key={id}>
-                        <Link href={url} component={MyLink} color={isLast ? "primary" : "inherit"}>
+                        <Link href={url} component={BreadcrumbLink} color={isLast ? "primary" : "inherit"}>
                             <Typography variant="subtitle1" color={isLast ? "primary" : "inherit"}>
                                 {title}
                             </Typography>
