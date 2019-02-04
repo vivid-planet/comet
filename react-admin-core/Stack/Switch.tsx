@@ -4,6 +4,7 @@ import { match, Route, RouteComponentProps } from "react-router";
 import { StackApiContext } from "./Api";
 import Breadcrumb from "./Breadcrumb";
 import StackPage, { IProps as IPageProps } from "./Page";
+import SwitchMeta from "./SwitchMeta";
 const UUID = require("uuid");
 
 interface IProps {
@@ -34,15 +35,6 @@ class StackSwitch extends React.Component<IProps> {
         this.id = UUID.v4();
     }
 
-    public componentDidMount() {
-        if (!this.context) throw new Error("Switch must be wrapped by a Stack");
-        this.context.registerSwitch(this.id, this.getInitialPage());
-    }
-    public componentWillUnmount() {
-        if (!this.context) throw new Error("Switch must be wrapped by a Stack");
-        this.context.unregisterSwitch(this.id);
-    }
-
     public render() {
         return (
             <Route>
@@ -58,16 +50,22 @@ class StackSwitch extends React.Component<IProps> {
                                 {(props: RouteComponentProps<IRouteParams>) => {
                                     if (!props.match) return null;
                                     const ret = (
-                                        <StackSwitchApiContext.Provider
-                                            value={{
-                                                activatePage: this.activatePage.bind(this),
-                                                id: this.id,
-                                            }}
+                                        <SwitchMeta
+                                            id={this.id}
+                                            activePage={page.props.name}
+                                            isInitialPageActive={this.isInitialPage(page.props.name)}
                                         >
-                                            {typeof page.props.children === "function"
-                                                ? page.props.children(props.match.params.id)
-                                                : page.props.children}
-                                        </StackSwitchApiContext.Provider>
+                                            <StackSwitchApiContext.Provider
+                                                value={{
+                                                    activatePage: this.activatePage.bind(this),
+                                                    id: this.id,
+                                                }}
+                                            >
+                                                {typeof page.props.children === "function"
+                                                    ? page.props.children(props.match.params.id)
+                                                    : page.props.children}
+                                            </StackSwitchApiContext.Provider>
+                                        </SwitchMeta>
                                     );
                                     if (this.isInitialPage(page.props.name)) {
                                         return ret;
@@ -92,7 +90,6 @@ class StackSwitch extends React.Component<IProps> {
         } else {
             this.history.replace(this.match.url + "/" + payload + "/" + pageName);
         }
-        this.context.pageActivated(this.id, pageName);
     }
 
     private getInitialPage() {

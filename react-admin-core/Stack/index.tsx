@@ -25,7 +25,7 @@ interface IState {
     switches: Array<{
         id: string;
         isInitialPageActive: boolean;
-        initialPageName: string;
+        activePage?: string;
     }>;
 }
 class Stack extends React.Component<IProps, IState> {
@@ -52,9 +52,8 @@ class Stack extends React.Component<IProps, IState> {
                     goAllBack: this.goAllBack.bind(this),
                     goBackForce: this.goBackForce.bind(this),
 
-                    registerSwitch: this.registerSwitch,
-                    unregisterSwitch: this.unregisterSwitch,
-                    pageActivated: this.pageActivated,
+                    addSwitchMeta: this.addSwitchMeta,
+                    removeSwitchMeta: this.removeSwitchMeta,
                     switches: this.state.switches,
                 }}
             >
@@ -146,36 +145,30 @@ class Stack extends React.Component<IProps, IState> {
         this.breadcrumbs = breadcrumbs;
     }
 
-    private registerSwitch = (id: string, initialPageName: string) => {
+    private addSwitchMeta = (id: string, options: { activePage: string; isInitialPageActive: boolean }) => {
         this.setState({
             switches: [
                 ...this.state.switches,
                 {
                     id,
-                    isInitialPageActive: true,
-                    initialPageName,
+                    ...options,
                 },
             ],
         });
-    };
-    private unregisterSwitch = (id: string) => {
-        this.setState({
-            switches: this.state.switches.filter(item => item.id !== id),
-        });
-    };
-    private pageActivated = (id: string, pageName: string) => {
-        const switches = this.state.switches.map(item => {
-            if (item.id === id) {
-                return {
-                    ...item,
-                    isInitialPageActive: pageName === item.initialPageName,
-                };
-            } else {
-                return item;
-            }
-        });
+        const switches = [...this.state.switches];
+        const index = switches.findIndex(i => i.id === id);
+        if (index === -1) {
+            switches.push({ id, ...options });
+        } else {
+            switches[index] = { id, ...options };
+        }
         this.setState({
             switches,
+        });
+    };
+    private removeSwitchMeta = (id: string) => {
+        this.setState({
+            switches: this.state.switches.filter(item => item.id !== id),
         });
     };
 }

@@ -9,9 +9,8 @@ export default interface IStackApi {
     goAllBack: () => void;
     goBackForce: () => void;
 
-    registerSwitch: (id: string, initialPageName: string) => void;
-    unregisterSwitch: (id: string) => void;
-    pageActivated: (id: string, pageName: string) => void;
+    addSwitchMeta: (id: string, options: { activePage: string; isInitialPageActive: boolean }) => void;
+    removeSwitchMeta: (id: string) => void;
     switches: Array<{
         id: string;
         isInitialPageActive: boolean;
