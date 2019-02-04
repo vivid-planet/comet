@@ -5,6 +5,9 @@ import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 import { Route, RouteComponentProps, withRouter } from "react-router-dom";
+import { StackApiContext } from "./Stack/Api";
+import Breadcrumb from "./Stack/Breadcrumb";
+import { StackSwitchApiContext } from "./Stack/Switch";
 
 interface ITabProps {
     path: string;
@@ -50,29 +53,52 @@ class RouterTabs extends React.Component<IProps> {
 
         return (
             <div className={classes.root}>
-                <Route path={`${this.props.match.url}/:tab`}>
-                    {({ match }) => {
-                        const path = match ? "/" + match.params.tab : "";
-                        const value = paths.indexOf(path);
-                        return (
-                            <AppBar position="static">
-                                <Tabs value={value} onChange={this.handleChange}>
-                                    {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => (
-                                        <MaterialTab label={child.props.label} disabled={child.props.disabled} />
-                                    ))}
-                                </Tabs>
-                            </AppBar>
-                        );
-                    }}
-                </Route>
+                <StackApiContext.Consumer>
+                    {stackApi => (
+                        <StackSwitchApiContext.Consumer>
+                            {stackSwitchApi => {
+                                const ret = (
+                                    <Route path={`${this.props.match.url}/:tab`}>
+                                        {({ match }) => {
+                                            const path = match ? "/" + match.params.tab : "";
+                                            const value = paths.indexOf(path);
+                                            return (
+                                                <AppBar position="static">
+                                                    <Tabs value={value} onChange={this.handleChange}>
+                                                        {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => (
+                                                            <MaterialTab label={child.props.label} disabled={child.props.disabled} />
+                                                        ))}
+                                                    </Tabs>
+                                                </AppBar>
+                                            );
+                                        }}
+                                    </Route>
+                                );
+
+                                if (stackApi && stackSwitchApi) {
+                                    // When inside a Stack show only the last TabBar
+                                    const ownSwitchIndex = stackSwitchApi.id ? stackApi.switches.findIndex(i => i.id === stackSwitchApi.id) : -1;
+                                    const nextSwitchShowsInitialPage =
+                                        stackApi.switches[ownSwitchIndex + 1] && stackApi.switches[ownSwitchIndex + 1].isInitialPageActive;
+                                    const shouldShowTabBar = ownSwitchIndex === stackApi.switches.length - (nextSwitchShowsInitialPage ? 2 : 1);
+                                    if (!shouldShowTabBar) {
+                                        return null;
+                                    }
+                                }
+                                return ret;
+                            }}
+                        </StackSwitchApiContext.Consumer>
+                    )}
+                </StackApiContext.Consumer>
                 {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
                     return (
                         <Route path={`${this.props.match.url}${child.props.path}`} exact={child.props.path === ""}>
                             {({ match }) => {
+                                let ret = null;
                                 if (match || child.props.forceRender) {
-                                    return <TabContainer style={{ display: !match ? "none" : "" }}>{child.props.children}</TabContainer>;
+                                    ret = <TabContainer style={{ display: !match ? "none" : "" }}>{child.props.children}</TabContainer>;
                                 }
-                                return null;
+                                return ret;
                             }}
                         </Route>
                     );

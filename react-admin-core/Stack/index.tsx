@@ -2,6 +2,7 @@ import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { Breadcrumbs } from "@vivid-planet/react-admin-mui";
 import * as history from "history";
 import * as React from "react";
 import { match, Route, RouteComponentProps } from "react-router";
@@ -9,7 +10,7 @@ import DirtyHandler from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import IStackApi, { StackApiContext } from "./Api";
 import Breadcrumb from "./Breadcrumb";
-import { Breadcrumbs } from "@vivid-planet/react-admin-mui";
+import Switch from "./Switch";
 
 interface IProps {
     topLevelTitle: string;
@@ -21,31 +22,42 @@ interface IBreadcrumbItem {
 }
 interface IState {
     breadcrumbs: IBreadcrumbItem[];
+    switches: Array<{
+        id: string;
+        isInitialPageActive: boolean;
+        initialPageName: string;
+    }>;
 }
 class Stack extends React.Component<IProps, IState> {
-    public stackApi: IStackApi;
     private breadcrumbs: IBreadcrumbItem[]; // duplicates this.state.breadcrumbs, needed for multiple calls that modify state.breadcrumbs as setState updates this.state deferred
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
     constructor(props: IProps) {
         super(props);
-        this.stackApi = {
-            addBreadcrumb: this.addBreadcrumb.bind(this),
-            updateBreadcrumb: this.updateBreadcrumb.bind(this),
-            removeBreadcrumb: this.removeBreadcrumb.bind(this),
-            goBack: this.goBack.bind(this),
-            goAllBack: this.goAllBack.bind(this),
-            goBackForce: this.goBackForce.bind(this),
-        };
         this.breadcrumbs = [];
         this.state = {
             breadcrumbs: [],
+            switches: [],
         };
     }
 
     public render() {
         return (
-            <StackApiContext.Provider value={this.stackApi}>
+            <StackApiContext.Provider
+                value={{
+                    addBreadcrumb: this.addBreadcrumb.bind(this),
+                    updateBreadcrumb: this.updateBreadcrumb.bind(this),
+                    removeBreadcrumb: this.removeBreadcrumb.bind(this),
+                    goBack: this.goBack.bind(this),
+                    goAllBack: this.goAllBack.bind(this),
+                    goBackForce: this.goBackForce.bind(this),
+
+                    registerSwitch: this.registerSwitch,
+                    unregisterSwitch: this.unregisterSwitch,
+                    pageActivated: this.pageActivated,
+                    switches: this.state.switches,
+                }}
+            >
                 <Route>
                     {(routerProps: RouteComponentProps<any>) => {
                         this.history = routerProps.history;
@@ -133,6 +145,39 @@ class Stack extends React.Component<IProps, IState> {
         });
         this.breadcrumbs = breadcrumbs;
     }
+
+    private registerSwitch = (id: string, initialPageName: string) => {
+        this.setState({
+            switches: [
+                ...this.state.switches,
+                {
+                    id,
+                    isInitialPageActive: true,
+                    initialPageName,
+                },
+            ],
+        });
+    };
+    private unregisterSwitch = (id: string) => {
+        this.setState({
+            switches: this.state.switches.filter(item => item.id !== id),
+        });
+    };
+    private pageActivated = (id: string, pageName: string) => {
+        const switches = this.state.switches.map(item => {
+            if (item.id === id) {
+                return {
+                    ...item,
+                    isInitialPageActive: pageName === item.initialPageName,
+                };
+            } else {
+                return item;
+            }
+        });
+        this.setState({
+            switches,
+        });
+    };
 }
 
 export default Stack;
