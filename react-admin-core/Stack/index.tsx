@@ -10,7 +10,6 @@ import DirtyHandler from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import IStackApi, { StackApiContext } from "./Api";
 import Breadcrumb from "./Breadcrumb";
-import Switch from "./Switch";
 
 interface IProps {
     topLevelTitle: string;
