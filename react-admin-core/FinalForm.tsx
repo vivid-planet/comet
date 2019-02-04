@@ -20,14 +20,14 @@ const styles = (theme: Theme) =>
 
 interface IProps extends IWithDirtyHandlerApiProps, IWithTableQueryProps {
     mode: "edit" | "add";
-    doUpdate: (variables: object) => any; // TODO return type Promise?
-    doCreate: (variables: object) => any; // TODO return type Promise?
-    onSubmit: (values: object) => any; // TODO return type Promise?
-    submitVariables: object;
+    doUpdate?: (variables: object) => any; // TODO return type Promise?
+    doCreate?: (variables: object) => any; // TODO return type Promise?
+    onSubmit?: (values: object) => any; // TODO return type Promise?
+    submitVariables?: object;
     classes: {
         saveButton: string;
     };
-    initialValues: any;
+    initialValues?: any;
 }
 
 class FinalForm extends React.Component<IProps> {
@@ -123,10 +123,12 @@ class FinalForm extends React.Component<IProps> {
         } else {
             const submitVariables = this.props.submitVariables || {};
             if (this.props.mode === "edit") {
+                if (!this.props.doUpdate) throw new Error("doUpdate is required with mode=edit");
                 ret = this.props.doUpdate({
                     variables: { ...submitVariables, id: this.props.initialValues.id, body: values },
                 });
             } else if (this.props.mode === "add") {
+                if (!this.props.doCreate) throw new Error("doCreate is required with mode=add");
                 const refetchQueries = [];
                 if (this.props.tableQuery) {
                     refetchQueries.push({
