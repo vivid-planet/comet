@@ -47,7 +47,7 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
 
 interface IColumn {
     name: string;
-    header?: string;
+    header?: string | React.ReactNode;
     numeric?: boolean;
     cell?: (row: any) => React.ReactNode;
     sortable?: boolean;
