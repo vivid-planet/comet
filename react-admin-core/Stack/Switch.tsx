@@ -12,21 +12,31 @@ interface IProps {
     title?: string;
     children: Array<React.ReactElement<IPageProps>>;
 }
+interface IState {
+    pageBreadcrumbTitle?: string;
+}
 export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
     activatePage: (pageName: string, payload: string) => {
+        return;
+    },
+    updatePageBreadcrumbTitle: (title?: string) => {
         return;
     },
 });
 export interface IStackSwitchApi {
     activatePage: (pageName: string, payload: string) => void;
+    updatePageBreadcrumbTitle: (title?: string) => void;
     id?: string;
 }
 interface IRouteParams {
     id?: string;
 }
-class StackSwitch extends React.Component<IProps> {
+class StackSwitch extends React.Component<IProps, IState> {
     public static contextType = StackApiContext;
     public match: match<IRouteParams>;
+    public readonly state = {
+        pageBreadcrumbTitle: "",
+    };
     private history: History;
     private id: string;
 
@@ -57,8 +67,9 @@ class StackSwitch extends React.Component<IProps> {
                                         >
                                             <StackSwitchApiContext.Provider
                                                 value={{
-                                                    activatePage: this.activatePage.bind(this),
+                                                    activatePage: this.activatePage,
                                                     id: this.id,
+                                                    updatePageBreadcrumbTitle: this.updatePageBreadcrumbTitle,
                                                 }}
                                             >
                                                 {typeof page.props.children === "function"
@@ -71,7 +82,10 @@ class StackSwitch extends React.Component<IProps> {
                                         return ret;
                                     } else {
                                         return (
-                                            <Breadcrumb url={props.match.url} title={page.props.title || page.props.name}>
+                                            <Breadcrumb
+                                                url={props.match.url}
+                                                title={this.state.pageBreadcrumbTitle || page.props.title || page.props.name}
+                                            >
                                                 {ret}
                                             </Breadcrumb>
                                         );
@@ -84,13 +98,13 @@ class StackSwitch extends React.Component<IProps> {
             </Route>
         );
     }
-    public activatePage(pageName?: string, payload?: string) {
+    public activatePage = (pageName?: string, payload?: string) => {
         if (this.isInitialPage(pageName)) {
             this.history.replace(this.match.url);
         } else {
             this.history.replace(this.match.url + "/" + payload + "/" + pageName);
         }
-    }
+    };
 
     private getInitialPage() {
         let initialPage = this.props.initialPage;
@@ -103,6 +117,12 @@ class StackSwitch extends React.Component<IProps> {
         if (!pageName) return true;
         return this.getInitialPage() === pageName;
     }
+
+    private updatePageBreadcrumbTitle = (title?: string) => {
+        this.setState({
+            pageBreadcrumbTitle: title,
+        });
+    };
 }
 
 export default StackSwitch;
