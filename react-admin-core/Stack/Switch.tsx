@@ -13,7 +13,9 @@ interface IProps {
     children: Array<React.ReactElement<IPageProps>>;
 }
 interface IState {
-    pageBreadcrumbTitle?: string;
+    pageBreadcrumbTitle: {
+        [pageName: string]: string | undefined;
+    };
 }
 export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
     activatePage: (pageName: string, payload: string) => {
@@ -34,15 +36,16 @@ interface IRouteParams {
 class StackSwitch extends React.Component<IProps, IState> {
     public static contextType = StackApiContext;
     public match: match<IRouteParams>;
-    public readonly state = {
-        pageBreadcrumbTitle: "",
-    };
     private history: History;
     private id: string;
+    private activePage: string;
 
     constructor(props: IProps) {
         super(props);
         this.id = UUID.v4();
+        this.state = {
+            pageBreadcrumbTitle: {},
+        };
     }
 
     public render() {
@@ -59,6 +62,7 @@ class StackSwitch extends React.Component<IProps, IState> {
                             <Route path={path} exact={this.isInitialPage(page.props.name)}>
                                 {(props: RouteComponentProps<IRouteParams>) => {
                                     if (!props.match) return null;
+                                    this.activePage = page.props.name;
                                     const ret = (
                                         <SwitchMeta
                                             id={this.id}
@@ -84,7 +88,7 @@ class StackSwitch extends React.Component<IProps, IState> {
                                         return (
                                             <Breadcrumb
                                                 url={props.match.url}
-                                                title={this.state.pageBreadcrumbTitle || page.props.title || page.props.name}
+                                                title={this.state.pageBreadcrumbTitle[page.props.name] || page.props.title || page.props.name}
                                             >
                                                 {ret}
                                             </Breadcrumb>
@@ -119,9 +123,13 @@ class StackSwitch extends React.Component<IProps, IState> {
     }
 
     private updatePageBreadcrumbTitle = (title?: string) => {
-        this.setState({
-            pageBreadcrumbTitle: title,
-        });
+        if (this.activePage) {
+            const pageBreadcrumbTitle = { ...this.state.pageBreadcrumbTitle };
+            pageBreadcrumbTitle[this.activePage] = title;
+            this.setState({
+                pageBreadcrumbTitle,
+            });
+        }
     };
 }
 
