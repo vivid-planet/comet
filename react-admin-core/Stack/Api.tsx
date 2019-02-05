@@ -2,8 +2,8 @@ import * as React from "react";
 import Switch from "./Switch";
 
 export default interface IStackApi {
-    addBreadcrumb: (id: string, url: string, title: string) => void;
-    updateBreadcrumb: (id: string, url: string, title: string) => void;
+    addBreadcrumb: (id: string, parentId: string, url: string, title: string) => void;
+    updateBreadcrumb: (id: string, parentId: string, url: string, title: string) => void;
     removeBreadcrumb: (id: string) => void;
     goBack: () => void;
     goAllBack: () => void;
