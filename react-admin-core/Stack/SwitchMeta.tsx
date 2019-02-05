@@ -7,22 +7,40 @@ interface IProps {
     isInitialPageActive: boolean;
 }
 
+const SwitchMetaContext = React.createContext<string>("");
+
 class SwitchMeta extends React.Component<IProps> {
     public static contextType = StackApiContext;
+    private parentId?: string;
 
     public render() {
-        return this.props.children;
+        return (
+            <SwitchMetaContext.Consumer>
+                {parentId => {
+                    this.parentId = parentId;
+                    return <SwitchMetaContext.Provider value={this.props.id}>{this.props.children}</SwitchMetaContext.Provider>;
+                }}
+            </SwitchMetaContext.Consumer>
+        );
     }
 
     public componentDidMount() {
         if (!this.context) throw new Error("Switch must be wrapped by a Stack");
-        this.context.addSwitchMeta(this.props.id, { activePage: this.props.activePage, isInitialPageActive: this.props.isInitialPageActive });
+        this.context.addSwitchMeta(this.props.id, {
+            parentId: this.parentId,
+            activePage: this.props.activePage,
+            isInitialPageActive: this.props.isInitialPageActive,
+        });
     }
 
     public componentDidUpdate(prevProps: IProps) {
         if (!this.context) throw new Error("Switch must be wrapped by a Stack");
         if (this.props.activePage !== prevProps.activePage || this.props.isInitialPageActive !== prevProps.isInitialPageActive) {
-            this.context.addSwitchMeta(this.props.id, { activePage: this.props.activePage, isInitialPageActive: this.props.isInitialPageActive });
+            this.context.addSwitchMeta(this.props.id, {
+                parentId: this.parentId,
+                activePage: this.props.activePage,
+                isInitialPageActive: this.props.isInitialPageActive,
+            });
         }
     }
 

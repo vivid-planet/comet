@@ -62,21 +62,23 @@ interface IBreadcrumbItem {
     title: string;
     invisible: boolean;
 }
+interface ISwitchItem {
+    id: string;
+    parentId: string;
+    isInitialPageActive: boolean;
+    activePage?: string;
+}
 interface IState {
     breadcrumbs: IBreadcrumbItem[];
-    switches: Array<{
-        id: string;
-        isInitialPageActive: boolean;
-        activePage?: string;
-    }>;
+    switches: ISwitchItem[];
 }
 class Stack extends React.Component<IProps, IState> {
-    private breadcrumbs: IBreadcrumbItem[]; // duplicates this.state.breadcrumbs, needed for multiple calls that modify state.breadcrumbs as setState updates this.state deferred
+    private breadcrumbs: IBreadcrumbItem[] = []; // duplicates this.state.breadcrumbs, needed for multiple calls that modify state.breadcrumbs as setState updates this.state deferred
+    private switches: ISwitchItem[] = []; // duplicates this.state.switches, needed for multiple calls that modify state.switches as setState updates this.state deferred
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
     constructor(props: IProps) {
         super(props);
-        this.breadcrumbs = [];
         this.state = {
             breadcrumbs: [],
             switches: [],
@@ -97,7 +99,7 @@ class Stack extends React.Component<IProps, IState> {
 
                     addSwitchMeta: this.addSwitchMeta,
                     removeSwitchMeta: this.removeSwitchMeta,
-                    switches: this.state.switches,
+                    switches: sortByParentId(this.state.switches),
                 }}
             >
                 <Route>
@@ -208,17 +210,8 @@ class Stack extends React.Component<IProps, IState> {
         this.breadcrumbs = breadcrumbs;
     }
 
-    private addSwitchMeta = (id: string, options: { activePage: string; isInitialPageActive: boolean }) => {
-        this.setState({
-            switches: [
-                ...this.state.switches,
-                {
-                    id,
-                    ...options,
-                },
-            ],
-        });
-        const switches = [...this.state.switches];
+    private addSwitchMeta = (id: string, options: { parentId: string; activePage: string; isInitialPageActive: boolean }) => {
+        const switches = [...this.switches];
         const index = switches.findIndex(i => i.id === id);
         if (index === -1) {
             switches.push({ id, ...options });
@@ -228,11 +221,15 @@ class Stack extends React.Component<IProps, IState> {
         this.setState({
             switches,
         });
+        this.switches = switches;
     };
+
     private removeSwitchMeta = (id: string) => {
+        const switches = this.switches.filter(item => item.id !== id);
         this.setState({
-            switches: this.state.switches.filter(item => item.id !== id),
+            switches,
         });
+        this.switches = switches;
     };
 }
 
