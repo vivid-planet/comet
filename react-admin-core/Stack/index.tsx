@@ -11,29 +11,74 @@ import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import IStackApi, { StackApiContext } from "./Api";
 import Breadcrumb from "./Breadcrumb";
 
+interface ISortNode {
+    id: string;
+    parentId: string;
+}
+interface ISortTree<TSortNode extends ISortNode> {
+    children: Array<ISortTree<TSortNode>>;
+    node?: TSortNode; // root is undefined
+}
+const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
+    // first build a tree structure
+    const addChildrenToNode = (node?: TSortNode) => {
+        const currentNodeId = node ? node.id : "";
+        const sortTreeNode: ISortTree<TSortNode> = {
+            node,
+            children: [],
+        };
+        nodes.forEach(e => {
+            if (e.parentId === currentNodeId) {
+                sortTreeNode.children.push(addChildrenToNode(e));
+            }
+        });
+        return sortTreeNode;
+    };
+    const tree = addChildrenToNode(undefined);
+
+    // then traverse this tree
+    const preOrderTraverse = (sortTreeNode: ISortTree<TSortNode>, fn: (node: TSortNode) => void) => {
+        if (sortTreeNode.node) fn(sortTreeNode.node);
+        sortTreeNode.children.forEach(e => {
+            preOrderTraverse(e, fn);
+        });
+    };
+
+    // and re-create a flat array again
+    const ret: TSortNode[] = [];
+    preOrderTraverse(tree, (node: TSortNode) => {
+        ret.push(node);
+    });
+    return ret;
+};
+
 interface IProps {
     topLevelTitle: string;
 }
 interface IBreadcrumbItem {
     id: string;
+    parentId: string;
     url: string;
     title: string;
+    invisible: boolean;
+}
+interface ISwitchItem {
+    id: string;
+    parentId: string;
+    isInitialPageActive: boolean;
+    activePage?: string;
 }
 interface IState {
     breadcrumbs: IBreadcrumbItem[];
-    switches: Array<{
-        id: string;
-        isInitialPageActive: boolean;
-        activePage?: string;
-    }>;
+    switches: ISwitchItem[];
 }
 class Stack extends React.Component<IProps, IState> {
-    private breadcrumbs: IBreadcrumbItem[]; // duplicates this.state.breadcrumbs, needed for multiple calls that modify state.breadcrumbs as setState updates this.state deferred
+    private breadcrumbs: IBreadcrumbItem[] = []; // duplicates this.state.breadcrumbs, needed for multiple calls that modify state.breadcrumbs as setState updates this.state deferred
+    private switches: ISwitchItem[] = []; // duplicates this.state.switches, needed for multiple calls that modify state.switches as setState updates this.state deferred
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
     constructor(props: IProps) {
         super(props);
-        this.breadcrumbs = [];
         this.state = {
             breadcrumbs: [],
             switches: [],
@@ -41,6 +86,7 @@ class Stack extends React.Component<IProps, IState> {
     }
 
     public render() {
+        const breadcrumbs = this.getVisibleBreadcrumbs();
         return (
             <StackApiContext.Provider
                 value={{
@@ -53,7 +99,7 @@ class Stack extends React.Component<IProps, IState> {
 
                     addSwitchMeta: this.addSwitchMeta,
                     removeSwitchMeta: this.removeSwitchMeta,
-                    switches: this.state.switches,
+                    switches: sortByParentId(this.state.switches),
                 }}
             >
                 <Route>
@@ -62,10 +108,10 @@ class Stack extends React.Component<IProps, IState> {
                         return (
                             <>
                                 <Toolbar>
-                                    <Breadcrumbs pages={this.state.breadcrumbs} />
+                                    <Breadcrumbs pages={breadcrumbs} />
                                 </Toolbar>
 
-                                <Button color="default" disabled={this.state.breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
+                                <Button color="default" disabled={breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
                                     Zurück
                                     <ArrowBackIcon />
                                 </Button>
@@ -87,12 +133,30 @@ class Stack extends React.Component<IProps, IState> {
         );
     }
 
+    private getVisibleBreadcrumbs() {
+        let prev: IBreadcrumbItem;
+        const breadcrumbs = sortByParentId(this.state.breadcrumbs)
+            .map(i => {
+                return { ...i }; // clone so we can modify in filter below
+            })
+            .filter(i => {
+                if (i.invisible) {
+                    prev.url = i.url;
+                    return false;
+                }
+                prev = i;
+                return true;
+            });
+        return breadcrumbs;
+    }
+
     private handleGoBackClick = () => {
         this.goBack();
     };
 
     private goBackForce() {
-        this.history.replace(this.state.breadcrumbs[this.state.breadcrumbs.length - 2].url);
+        const breadcrumbs = this.getVisibleBreadcrumbs();
+        this.history.replace(breadcrumbs[breadcrumbs.length - 2].url);
     }
 
     private async goBack() {
@@ -109,13 +173,15 @@ class Stack extends React.Component<IProps, IState> {
         this.history.replace(this.state.breadcrumbs[0].url);
     }
 
-    private addBreadcrumb(id: string, url: string, title: string) {
+    private addBreadcrumb(id: string, parentId: string, url: string, title: string, invisible: boolean) {
         const breadcrumbs = [
             ...this.breadcrumbs,
             {
                 id,
+                parentId,
                 url,
                 title,
+                invisible,
             },
         ];
         this.setState({
@@ -124,9 +190,9 @@ class Stack extends React.Component<IProps, IState> {
         this.breadcrumbs = breadcrumbs;
     }
 
-    private updateBreadcrumb(id: string, url: string, title: string) {
+    private updateBreadcrumb(id: string, parentId: string, url: string, title: string, invisible: boolean) {
         const breadcrumbs = this.breadcrumbs.map(crumb => {
-            return crumb.id === id ? { id, url, title } : crumb;
+            return crumb.id === id ? { id, parentId, url, title, invisible } : crumb;
         });
         this.setState({
             breadcrumbs,
@@ -144,17 +210,8 @@ class Stack extends React.Component<IProps, IState> {
         this.breadcrumbs = breadcrumbs;
     }
 
-    private addSwitchMeta = (id: string, options: { activePage: string; isInitialPageActive: boolean }) => {
-        this.setState({
-            switches: [
-                ...this.state.switches,
-                {
-                    id,
-                    ...options,
-                },
-            ],
-        });
-        const switches = [...this.state.switches];
+    private addSwitchMeta = (id: string, options: { parentId: string; activePage: string; isInitialPageActive: boolean }) => {
+        const switches = [...this.switches];
         const index = switches.findIndex(i => i.id === id);
         if (index === -1) {
             switches.push({ id, ...options });
@@ -164,11 +221,15 @@ class Stack extends React.Component<IProps, IState> {
         this.setState({
             switches,
         });
+        this.switches = switches;
     };
+
     private removeSwitchMeta = (id: string) => {
+        const switches = this.switches.filter(item => item.id !== id);
         this.setState({
-            switches: this.state.switches.filter(item => item.id !== id),
+            switches,
         });
+        this.switches = switches;
     };
 }
 
