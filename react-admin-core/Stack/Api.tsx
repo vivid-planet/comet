@@ -1,4 +1,5 @@
 import * as React from "react";
+import Switch from "./Switch";
 
 export default interface IStackApi {
     addBreadcrumb: (id: string, url: string, title: string) => void;
@@ -7,6 +8,13 @@ export default interface IStackApi {
     goBack: () => void;
     goAllBack: () => void;
     goBackForce: () => void;
+
+    addSwitchMeta: (id: string, options: { activePage: string; isInitialPageActive: boolean }) => void;
+    removeSwitchMeta: (id: string) => void;
+    switches: Array<{
+        id: string;
+        isInitialPageActive: boolean;
+    }>;
 }
 export const StackApiContext = React.createContext<IStackApi | undefined>(undefined);
 

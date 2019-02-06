@@ -21,31 +21,41 @@ interface IBreadcrumbItem {
 }
 interface IState {
     breadcrumbs: IBreadcrumbItem[];
+    switches: Array<{
+        id: string;
+        isInitialPageActive: boolean;
+        activePage?: string;
+    }>;
 }
 class Stack extends React.Component<IProps, IState> {
-    public stackApi: IStackApi;
     private breadcrumbs: IBreadcrumbItem[]; // duplicates this.state.breadcrumbs, needed for multiple calls that modify state.breadcrumbs as setState updates this.state deferred
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
     constructor(props: IProps) {
         super(props);
-        this.stackApi = {
-            addBreadcrumb: this.addBreadcrumb.bind(this),
-            updateBreadcrumb: this.updateBreadcrumb.bind(this),
-            removeBreadcrumb: this.removeBreadcrumb.bind(this),
-            goBack: this.goBack.bind(this),
-            goAllBack: this.goAllBack.bind(this),
-            goBackForce: this.goBackForce.bind(this),
-        };
         this.breadcrumbs = [];
         this.state = {
             breadcrumbs: [],
+            switches: [],
         };
     }
 
     public render() {
         return (
-            <StackApiContext.Provider value={this.stackApi}>
+            <StackApiContext.Provider
+                value={{
+                    addBreadcrumb: this.addBreadcrumb.bind(this),
+                    updateBreadcrumb: this.updateBreadcrumb.bind(this),
+                    removeBreadcrumb: this.removeBreadcrumb.bind(this),
+                    goBack: this.goBack.bind(this),
+                    goAllBack: this.goAllBack.bind(this),
+                    goBackForce: this.goBackForce.bind(this),
+
+                    addSwitchMeta: this.addSwitchMeta,
+                    removeSwitchMeta: this.removeSwitchMeta,
+                    switches: this.state.switches,
+                }}
+            >
                 <Route>
                     {(routerProps: RouteComponentProps<any>) => {
                         this.history = routerProps.history;
@@ -133,6 +143,33 @@ class Stack extends React.Component<IProps, IState> {
         });
         this.breadcrumbs = breadcrumbs;
     }
+
+    private addSwitchMeta = (id: string, options: { activePage: string; isInitialPageActive: boolean }) => {
+        this.setState({
+            switches: [
+                ...this.state.switches,
+                {
+                    id,
+                    ...options,
+                },
+            ],
+        });
+        const switches = [...this.state.switches];
+        const index = switches.findIndex(i => i.id === id);
+        if (index === -1) {
+            switches.push({ id, ...options });
+        } else {
+            switches[index] = { id, ...options };
+        }
+        this.setState({
+            switches,
+        });
+    };
+    private removeSwitchMeta = (id: string) => {
+        this.setState({
+            switches: this.state.switches.filter(item => item.id !== id),
+        });
+    };
 }
 
 export default Stack;

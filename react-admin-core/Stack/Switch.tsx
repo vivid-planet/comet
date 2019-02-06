@@ -4,6 +4,8 @@ import { match, Route, RouteComponentProps } from "react-router";
 import { StackApiContext } from "./Api";
 import Breadcrumb from "./Breadcrumb";
 import StackPage, { IProps as IPageProps } from "./Page";
+import SwitchMeta from "./SwitchMeta";
+const UUID = require("uuid");
 
 interface IProps {
     initialPage?: string;
@@ -17,6 +19,7 @@ export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
 });
 export interface IStackSwitchApi {
     activatePage: (pageName: string, payload: string) => void;
+    id?: string;
 }
 interface IRouteParams {
     id?: string;
@@ -24,54 +27,61 @@ interface IRouteParams {
 class StackSwitch extends React.Component<IProps> {
     public static contextType = StackApiContext;
     public match: match<IRouteParams>;
-    private stackSwitchApi: IStackSwitchApi;
     private history: History;
+    private id: string;
 
     constructor(props: IProps) {
         super(props);
-        this.stackSwitchApi = {
-            activatePage: this.activatePage.bind(this),
-        };
+        this.id = UUID.v4();
     }
+
     public render() {
         return (
-            <React.Fragment>
-                <Route>
-                    {(routerProps: RouteComponentProps<IRouteParams>) => {
-                        this.history = routerProps.history;
-                        this.match = routerProps.match;
-                        if (!this.match) return null;
+            <Route>
+                {(routerProps: RouteComponentProps<IRouteParams>) => {
+                    this.history = routerProps.history;
+                    this.match = routerProps.match;
+                    if (!this.match) return null;
 
-                        return React.Children.map(this.props.children, (page: any) => {
-                            const isInitialPage = this.isInitialPage(page.props.name);
-                            const path = isInitialPage ? `${this.match.url}` : `${this.match.url}/:id/${page.props.name}`;
-                            return (
-                                <Route path={path} exact={isInitialPage}>
-                                    {(props: RouteComponentProps<IRouteParams>) => {
-                                        if (!props.match) return null;
-                                        const ret = (
-                                            <StackSwitchApiContext.Provider value={this.stackSwitchApi}>
+                    return React.Children.map(this.props.children, (page: any) => {
+                        const path = this.isInitialPage(page.props.name) ? `${this.match.url}` : `${this.match.url}/:id/${page.props.name}`;
+                        return (
+                            <Route path={path} exact={this.isInitialPage(page.props.name)}>
+                                {(props: RouteComponentProps<IRouteParams>) => {
+                                    if (!props.match) return null;
+                                    const ret = (
+                                        <SwitchMeta
+                                            id={this.id}
+                                            activePage={page.props.name}
+                                            isInitialPageActive={this.isInitialPage(page.props.name)}
+                                        >
+                                            <StackSwitchApiContext.Provider
+                                                value={{
+                                                    activatePage: this.activatePage.bind(this),
+                                                    id: this.id,
+                                                }}
+                                            >
                                                 {typeof page.props.children === "function"
                                                     ? page.props.children(props.match.params.id)
                                                     : page.props.children}
                                             </StackSwitchApiContext.Provider>
+                                        </SwitchMeta>
+                                    );
+                                    if (this.isInitialPage(page.props.name)) {
+                                        return ret;
+                                    } else {
+                                        return (
+                                            <Breadcrumb url={props.match.url} title={page.props.title || page.props.name}>
+                                                {ret}
+                                            </Breadcrumb>
                                         );
-                                        if (isInitialPage) {
-                                            return ret;
-                                        } else {
-                                            return (
-                                                <Breadcrumb url={props.match.url} title={page.props.title || page.props.name}>
-                                                    {ret}
-                                                </Breadcrumb>
-                                            );
-                                        }
-                                    }}
-                                </Route>
-                            );
-                        });
-                    }}
-                </Route>
-            </React.Fragment>
+                                    }
+                                }}
+                            </Route>
+                        );
+                    });
+                }}
+            </Route>
         );
     }
     public activatePage(pageName?: string, payload?: string) {
