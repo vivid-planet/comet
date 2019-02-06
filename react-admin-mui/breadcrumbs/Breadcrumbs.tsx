@@ -1,6 +1,6 @@
 import { Link, Typography } from "@material-ui/core";
 import { LinkProps } from "@material-ui/core/Link";
-import { KeyboardArrowRight } from "@material-ui/icons";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
 import { Link as RouterLink } from "react-router-dom";
 
