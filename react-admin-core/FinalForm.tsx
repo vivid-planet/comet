@@ -83,7 +83,7 @@ class FinalForm extends React.Component<IProps> {
                         return (
                             <Button
                                 className={classes.saveButton}
-                                variant="raised"
+                                variant="contained"
                                 color="primary"
                                 type="submit"
                                 disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
