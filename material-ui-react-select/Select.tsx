@@ -181,7 +181,7 @@ interface IProps<OptionType> {
 }
 class SelectWrapper<OptionType> extends React.Component<IProps<OptionType> & ReactSelectProps<OptionType>> {
     public render() {
-        const { classes, theme, ...rest } = this.props;
+        const { classes, theme, components: origComponents, ...rest } = this.props;
         const selectStyles = {
             input: (base: any) => ({
                 ...base,
@@ -193,7 +193,7 @@ class SelectWrapper<OptionType> extends React.Component<IProps<OptionType> & Rea
         };
         const SelectComponent = this.props.selectComponent;
         // @ts-ignore (classes is not supported but we use it to pass it down to other components)
-        return <SelectComponent classes={classes} styles={selectStyles} components={components} {...rest} />;
+        return <SelectComponent classes={classes} styles={selectStyles} components={{ ...components, ...origComponents }} {...rest} />;
     }
 }
 const ExtendedSelectWrapper = withStyles(styles, { withTheme: true })(SelectWrapper);
