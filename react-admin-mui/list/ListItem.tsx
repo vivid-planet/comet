@@ -37,7 +37,7 @@ class ListItem extends React.Component<IListItem & IListItemProps & WithStyles<t
                     className={classes.listItem}
                     button
                     onClick={this.handleClick}
-                    {...{ level, showIconsOnly }}
+                    {...{ level }}
                     {...(path ? { selected: location.pathname === path, component: Link, to: path } : {})}
                 >
                     <ListItemIcon>{!!icon ? React.createElement(icon) : <Icon>{text.substr(0, 1)}</Icon>}</ListItemIcon>
