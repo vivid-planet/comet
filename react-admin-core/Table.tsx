@@ -1,6 +1,6 @@
 import MuiTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
+import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
@@ -20,8 +20,8 @@ interface ITableHeadProps {
 }
 
 const EnhancedTableHead = (props: ITableHeadProps) => {
-    const handleSortClick = (column: IColumn, ev: React.MouseEvent) => {
-        props.onSortClick(ev, column.name);
+    const handleSortClick = (name: string, ev: React.MouseEvent) => {
+        props.onSortClick(ev, name);
     };
 
     const tableRow: React.ReactElement<TableRowProps> = props.renderHeadTableRow ? props.renderHeadTableRow() : <TableRow />;
@@ -29,14 +29,14 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
         <TableHead>
             <tableRow.type {...tableRow.props}>
                 {tableRow.props.children}
-                {props.columns.map((column, index) => (
-                    <TableCell padding="default" key={index} align={column.numeric ? "right" : "inherit"}>
-                        {column.sortable ? (
-                            <TableSortLabel active={props.sort === column.name} direction={props.order} onClick={handleSortClick.bind(null, column)}>
-                                {column.header || column.name}
+                {props.columns.map(({ name, header, sortable, headerProps }, index) => (
+                    <TableCell key={index} {...headerProps}>
+                        {sortable ? (
+                            <TableSortLabel active={props.sort === name} direction={props.order} onClick={handleSortClick.bind(null, name)}>
+                                {header}
                             </TableSortLabel>
                         ) : (
-                            column.header || column.name
+                            header
                         )}
                     </TableCell>
                 ))}
@@ -48,9 +48,10 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
 interface IColumn {
     name: string;
     header?: string | React.ReactNode;
-    numeric?: boolean;
     cell?: (row: any) => React.ReactNode;
     sortable?: boolean;
+    cellProps?: TableCellProps;
+    headerProps?: TableCellProps;
 }
 interface IRow {
     id: string | number;
@@ -112,7 +113,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                             >
                                 {tableRow.props.children}
                                 {this.props.columns.map((column, colIndex) => (
-                                    <TableCell key={colIndex} align={column.numeric ? "right" : "inherit"}>
+                                    <TableCell key={colIndex} {...column.cellProps}>
                                         {column.cell ? column.cell(row) : (row as any)[column.name]}
                                     </TableCell>
                                 ))}
