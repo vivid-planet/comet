@@ -18,7 +18,7 @@ interface IState {
     };
 }
 export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
-    activatePage: (pageName: string, payload: string) => {
+    activatePage: (pageName: string, payload: string, subUrl?: string) => {
         return;
     },
     updatePageBreadcrumbTitle: (title?: string) => {
@@ -26,7 +26,7 @@ export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
     },
 });
 export interface IStackSwitchApi {
-    activatePage: (pageName: string, payload: string) => void;
+    activatePage: (pageName: string, payload: string, subUrl?: string) => void;
     updatePageBreadcrumbTitle: (title?: string) => void;
     id?: string;
 }
@@ -102,11 +102,13 @@ class StackSwitch extends React.Component<IProps, IState> {
             </Route>
         );
     }
-    public activatePage = (pageName?: string, payload?: string) => {
+    public activatePage = (pageName: string, payload: string, subUrl?: string) => {
         if (this.isInitialPage(pageName)) {
             this.history.replace(this.match.url);
+            if (payload) throw new Error("activating the initialPage must not have a payload");
+            if (subUrl) throw new Error("activating the initialPage must not have a subUrl");
         } else {
-            this.history.replace(this.match.url + "/" + payload + "/" + pageName);
+            this.history.replace(this.match.url + "/" + payload + "/" + pageName + (subUrl ? "/" + subUrl : ""));
         }
     };
 
