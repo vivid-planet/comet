@@ -28,6 +28,7 @@ interface IProps extends IWithDirtyHandlerApiProps, IWithTableQueryProps {
         saveButton: string;
     };
     initialValues?: any;
+    modifySubmitVariables?: (variables: object, mode: "edit" | "add") => void;
 }
 
 class FinalForm extends React.Component<IProps> {
@@ -124,8 +125,12 @@ class FinalForm extends React.Component<IProps> {
             const submitVariables = this.props.submitVariables || {};
             if (this.props.mode === "edit") {
                 if (!this.props.doUpdate) throw new Error("doUpdate is required with mode=edit");
+                const variables = { ...submitVariables, id: this.props.initialValues.id, body: { ...values } };
+                if (this.props.modifySubmitVariables) {
+                    this.props.modifySubmitVariables(variables, this.props.mode);
+                }
                 ret = this.props.doUpdate({
-                    variables: { ...submitVariables, id: this.props.initialValues.id, body: values },
+                    variables,
                 });
             } else if (this.props.mode === "add") {
                 if (!this.props.doCreate) throw new Error("doCreate is required with mode=add");
@@ -136,8 +141,12 @@ class FinalForm extends React.Component<IProps> {
                         variables: this.props.tableQuery.api.getVariables(),
                     });
                 }
+                const variables = { ...submitVariables, body: { ...values } };
+                if (this.props.modifySubmitVariables) {
+                    this.props.modifySubmitVariables(variables, this.props.mode);
+                }
                 ret = this.props.doCreate({
-                    variables: { ...submitVariables, body: values },
+                    variables,
                     refetchQueries,
                     update: ({}, data: any) => {
                         if (this.props.tableQuery) {
