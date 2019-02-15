@@ -1,6 +1,6 @@
 import {
     Async as ReactSelectAsync,
-    AyncCreatable as ReactSelectAsyncCreatable,
+    AsyncCreatable as ReactSelectAsyncCreatable,
     Creatable as ReactSelectCreatable,
     Select as ReactSelect,
 } from "@vivid-planet/react-admin-final-form-material-ui/ReactSelect";
@@ -50,7 +50,7 @@ export class Creatable<OptionType> extends React.Component<FieldRenderProps & Re
         return <ReactSelectCreatable {...rest} components={{ Control, ...components }} />;
     }
 }
-export class AyncCreatable<OptionType> extends React.Component<
+export class AsyncCreatable<OptionType> extends React.Component<
     FieldRenderProps & ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
 > {
     public render() {
