@@ -126,7 +126,9 @@ class FinalForm extends React.Component<IProps> {
             if (this.props.mode === "edit") {
                 if (!this.props.doUpdate) throw new Error("doUpdate is required with mode=edit");
                 const variables = { ...submitVariables, id: this.props.initialValues.id, body: { ...values } };
-                if (this.props.modifySubmitVariables) this.props.modifySubmitVariables(variables, this.props.mode);
+                if (this.props.modifySubmitVariables) {
+                    this.props.modifySubmitVariables(variables, this.props.mode);
+                }
                 ret = this.props.doUpdate({
                     variables,
                 });
@@ -140,7 +142,9 @@ class FinalForm extends React.Component<IProps> {
                     });
                 }
                 const variables = { ...submitVariables, body: { ...values } };
-                if (this.props.modifySubmitVariables) this.props.modifySubmitVariables(variables, this.props.mode);
+                if (this.props.modifySubmitVariables) {
+                    this.props.modifySubmitVariables(variables, this.props.mode);
+                }
                 ret = this.props.doCreate({
                     variables,
                     refetchQueries,
