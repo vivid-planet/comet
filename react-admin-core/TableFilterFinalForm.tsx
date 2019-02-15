@@ -6,6 +6,7 @@ import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryCon
 
 interface IAutoSaveProps extends IWithTableQueryProps, FormSpyRenderProps {
     values: any;
+    modifySubmitVariables?: (variables: object) => void;
 }
 interface IAutoSaveState {
     values: any;
@@ -16,7 +17,11 @@ class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
         if (!isEqual(this.state.values, values)) {
             this.setState({ values });
             if (this.props.tableQuery) {
-                this.props.tableQuery.api.changeFilters(this.props.values);
+                const valuesCopy = { ...values };
+                if (this.props.modifySubmitVariables) {
+                    this.props.modifySubmitVariables(valuesCopy);
+                }
+                this.props.tableQuery.api.changeFilters(valuesCopy);
             }
         }
     }, 500);
@@ -37,8 +42,11 @@ class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
 
 const ExtendedAutoSave = withTableQueryContext(AutoSave);
 
+interface IProps {
+    modifySubmitVariables?: (variables: object) => void;
+}
 // tslint:disable-next-line:max-classes-per-file
-class TableFilterFinalForm extends React.Component {
+class TableFilterFinalForm extends React.Component<IProps> {
     public render() {
         return <Form onSubmit={this.handleSubmit} render={this.renderForm} />;
     }
@@ -46,7 +54,9 @@ class TableFilterFinalForm extends React.Component {
         return (
             <form>
                 {this.props.children}
-                <FormSpy subscription={{ values: true }} component={ExtendedAutoSave} />
+                <FormSpy subscription={{ values: true }}>
+                    {renderProps => <ExtendedAutoSave {...renderProps} modifySubmitVariables={this.props.modifySubmitVariables} />}
+                </FormSpy>
             </form>
         );
     };
