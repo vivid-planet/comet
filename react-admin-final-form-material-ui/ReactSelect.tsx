@@ -29,7 +29,7 @@ export class Creatable<OptionType> extends React.Component<FieldRenderProps & Re
         return <ReactSelectCreatable {...input} {...rest} />;
     }
 }
-export class AyncCreatable<OptionType> extends React.Component<
+export class AsyncCreatable<OptionType> extends React.Component<
     FieldRenderProps & ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
 > {
     public render() {
