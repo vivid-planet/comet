@@ -6,22 +6,21 @@ import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryCon
 
 interface IAutoSaveProps extends IWithTableQueryProps, FormSpyRenderProps {
     values: any;
-    modifySubmitVariables?: (variables: object) => void;
+    modifySubmitVariables?: <T = object>(variables: T) => T;
 }
 interface IAutoSaveState {
     values: any;
 }
 class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
     private valueChanged = debounce(() => {
-        const { values } = this.props;
+        let { values } = this.props;
         if (!isEqual(this.state.values, values)) {
             this.setState({ values });
             if (this.props.tableQuery) {
-                const valuesCopy = { ...values };
                 if (this.props.modifySubmitVariables) {
-                    this.props.modifySubmitVariables(valuesCopy);
+                    values = this.props.modifySubmitVariables({ ...values });
                 }
-                this.props.tableQuery.api.changeFilters(valuesCopy);
+                this.props.tableQuery.api.changeFilters(values);
             }
         }
     }, 500);
@@ -43,7 +42,7 @@ class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
 const ExtendedAutoSave = withTableQueryContext(AutoSave);
 
 interface IProps {
-    modifySubmitVariables?: (variables: object) => void;
+    modifySubmitVariables?: <T = object>(variables: T) => T;
 }
 // tslint:disable-next-line:max-classes-per-file
 class TableFilterFinalForm extends React.Component<IProps> {
