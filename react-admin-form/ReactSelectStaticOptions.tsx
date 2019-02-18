@@ -26,6 +26,6 @@ class ReactSelectStaticOptions extends React.Component<IProps> {
     }
     private getOptionLabel = ({ label }: IOptionType) => label;
     private getOptionValue = ({ value }: IOptionType) => value;
-    private onChange = ({ value }: IOptionType) => this.props.input.onChange(value);
+    private onChange = (v: IOptionType) => this.props.input.onChange(v ? v.value : null);
 }
 export default ReactSelectStaticOptions;
