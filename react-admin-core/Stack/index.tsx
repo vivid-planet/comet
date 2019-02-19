@@ -54,6 +54,7 @@ const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
 
 interface IProps {
     topLevelTitle: string;
+    showBackButton?: boolean;
 }
 interface IBreadcrumbItem {
     id: string;
@@ -111,10 +112,12 @@ class Stack extends React.Component<IProps, IState> {
                                     <Breadcrumbs pages={breadcrumbs} />
                                 </Toolbar>
 
-                                <Button color="default" disabled={breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
-                                    Zurück
-                                    <ArrowBackIcon />
-                                </Button>
+                                {this.props.showBackButton && (
+                                    <Button color="default" disabled={breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
+                                        Zurück
+                                        <ArrowBackIcon />
+                                    </Button>
+                                )}
 
                                 <Breadcrumb title={this.props.topLevelTitle} url={routerProps.match.url}>
                                     <DirtyHandler
