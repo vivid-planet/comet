@@ -17,12 +17,18 @@ const StyledFormLabel = styled(FormLabel)`
 
 interface IProps {
     label?: string | React.ReactNode;
+    required?: boolean;
 }
-const FormField: React.FunctionComponent<IProps> = props => (
+const FieldControl: React.FunctionComponent<IProps> = props => (
     <StyledFormControl fullWidth={true}>
         <Grid container>
             <Grid item xs={4}>
-                {props.label && <StyledFormLabel>{props.label}:</StyledFormLabel>}
+                {props.label && (
+                    <StyledFormLabel>
+                        {props.label}
+                        {props.required && "*"}
+                    </StyledFormLabel>
+                )}
             </Grid>
             <Grid item xs={8}>
                 {props.children}
@@ -31,4 +37,4 @@ const FormField: React.FunctionComponent<IProps> = props => (
     </StyledFormControl>
 );
 
-export default FormField;
+export default FieldControl;
