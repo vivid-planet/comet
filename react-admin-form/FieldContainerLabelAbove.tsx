@@ -19,22 +19,16 @@ interface IProps {
     label?: string | React.ReactNode;
     required?: boolean;
 }
-const FieldContainer: React.FunctionComponent<IProps> = props => (
+const FieldContainerLabelAbove: React.FunctionComponent<IProps> = props => (
     <StyledFormControl fullWidth={true}>
-        <Grid container>
-            <Grid item xs={4}>
-                {props.label && (
-                    <StyledFormLabel>
-                        {props.label}
-                        {props.required && "*"}
-                    </StyledFormLabel>
-                )}
-            </Grid>
-            <Grid item xs={8}>
-                {props.children}
-            </Grid>
-        </Grid>
+        <div>
+            <StyledFormLabel>
+                {props.label}
+                {props.required && "*"}
+            </StyledFormLabel>
+        </div>
+        <div>{props.children}</div>
     </StyledFormControl>
 );
 
-export default FieldContainer;
+export default FieldContainerLabelAbove;

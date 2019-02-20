@@ -28,7 +28,7 @@ interface IProps extends IWithDirtyHandlerApiProps, IWithTableQueryProps {
         saveButton: string;
     };
     initialValues?: any;
-    modifySubmitVariables?: (variables: object, mode: "edit" | "add") => void;
+    modifySubmitVariables?: <T = object>(variables: T, mode: "edit" | "add") => T;
 }
 
 class FinalForm extends React.Component<IProps> {
@@ -125,9 +125,9 @@ class FinalForm extends React.Component<IProps> {
             const submitVariables = this.props.submitVariables || {};
             if (this.props.mode === "edit") {
                 if (!this.props.doUpdate) throw new Error("doUpdate is required with mode=edit");
-                const variables = { ...submitVariables, id: this.props.initialValues.id, body: { ...values } };
+                let variables = { ...submitVariables, id: this.props.initialValues.id, body: { ...values } };
                 if (this.props.modifySubmitVariables) {
-                    this.props.modifySubmitVariables(variables, this.props.mode);
+                    variables = this.props.modifySubmitVariables(variables, this.props.mode);
                 }
                 ret = this.props.doUpdate({
                     variables,
@@ -141,9 +141,9 @@ class FinalForm extends React.Component<IProps> {
                         variables: this.props.tableQuery.api.getVariables(),
                     });
                 }
-                const variables = { ...submitVariables, body: { ...values } };
+                let variables = { ...submitVariables, body: { ...values } };
                 if (this.props.modifySubmitVariables) {
-                    this.props.modifySubmitVariables(variables, this.props.mode);
+                    variables = this.props.modifySubmitVariables(variables, this.props.mode);
                 }
                 ret = this.props.doCreate({
                     variables,
