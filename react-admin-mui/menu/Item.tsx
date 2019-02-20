@@ -28,7 +28,7 @@ const Item: React.FunctionComponent<IMenuItem & ListItemProps> = ({ text, icon, 
     if (!context) throw new Error("Could not find context for menu");
 
     const classes = useStyles({
-        level: level!,
+        level: level !== undefined ? level : 1,
         menuOpen: context.open,
     });
     if (!icon && !context.open) icon = <Icon>{text.substr(0, 1).toUpperCase()}</Icon>;
