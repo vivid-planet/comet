@@ -20,7 +20,7 @@ const SecondaryAction = ({ open, onClick }: any) => {
 
 const Category: React.FunctionComponent<IMenuCategoryProps & ListProps> = ({ level, collapsible, itemProps, children, ...otherProps }) => {
     if (!level) level = 1;
-    const [open, setOpen] = React.useState<boolean>(true);
+    const [open, setOpen] = React.useState(true);
     const childElements = React.Children.map(children, (child: React.ReactElement<IMenuLevel>) =>
         React.cloneElement<IMenuLevel>(child, {
             level: level! + 1,

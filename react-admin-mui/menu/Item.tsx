@@ -24,7 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Item: React.FunctionComponent<IMenuItem & ListItemProps> = ({ text, icon, level, secondaryAction, ...otherProps }) => {
-    const context = React.useContext<IMenuContext | null>(MenuContext)!;
+    const context = React.useContext(MenuContext);
+    if (!context) throw new Error("Could not find context for menu");
+
     const classes = useStyles({
         level: level!,
         menuOpen: context.open,
