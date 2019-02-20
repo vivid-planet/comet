@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core";
 import * as React from "react";
 import { Field as FinalFormField, FieldRenderProps, RenderableProps } from "react-final-form";
-import FormField from "./FieldContainer";
+import FieldContainer from "./FieldContainer";
 
 const requiredValidator = (value: any) => (value ? undefined : "Pflichtfeld");
 
@@ -15,12 +15,12 @@ interface IVividFieldProps {
     children?: (props: FieldRenderProps) => React.ReactNode;
     required?: boolean;
     validate?: (value: any, allValues: object) => any;
-    formFieldComponent?: React.ComponentType<any>;
+    fieldContainerComponent?: React.ComponentType<any>;
     [otherProp: string]: any;
 }
 class Field extends React.Component<IVividFieldProps> {
     public render() {
-        const { children, component, name, label, required, validate, ...rest } = this.props;
+        const { children, component, name, label, required, validate, fieldContainerComponent, ...rest } = this.props;
         const composedValidate = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
         return (
             <FinalFormField name={name} validate={composedValidate} {...rest}>
@@ -31,14 +31,14 @@ class Field extends React.Component<IVividFieldProps> {
 
     private renderField({ input, meta, ...rest }: FieldRenderProps) {
         const { children, component, name, label, required } = this.props;
-        const UsedFormField = this.props.formFieldComponent || FormField;
+        const UsedFieldContainer = this.props.fieldContainerComponent || FieldContainer;
 
         if (component) {
             return (
-                <UsedFormField label={label} required={required}>
+                <UsedFieldContainer label={label} required={required}>
                     {React.createElement(component, { ...rest, input, meta })}
                     {meta.error && meta.touched && <Typography color="error">{meta.error}</Typography>}
-                </UsedFormField>
+                </UsedFieldContainer>
             );
         } else {
             if (typeof children !== "function") {
