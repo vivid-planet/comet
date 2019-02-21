@@ -2,23 +2,22 @@ import { Collapse, IconButton, List } from "@material-ui/core";
 import { ListProps } from "@material-ui/core/List";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import { IMenuItem, IMenuItemLink, MenuItem } from "@vivid-planet/react-admin-mui";
+import { IMenuItemProps, MenuItem } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 
 export interface IMenuLevel {
     level?: number;
 }
 
-export interface IMenuCategoryProps extends IMenuLevel {
+export interface ICollapsibleItemProps extends IMenuItemProps {
     collapsible: boolean;
-    itemProps: IMenuItem | IMenuItemLink;
 }
 
 const SecondaryAction = ({ open, onClick }: any) => {
     return <IconButton onClick={onClick}>{open ? <ExpandLess /> : <ExpandMore />}</IconButton>;
 };
 
-const Category: React.FunctionComponent<IMenuCategoryProps & ListProps> = ({ level, collapsible, itemProps, children, ...otherProps }) => {
+const CollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps> = ({ level, collapsible, text, icon, children, ...otherProps }) => {
     if (!level) level = 1;
     const [open, setOpen] = React.useState(true);
     const childElements = React.Children.map(children, (child: React.ReactElement<IMenuLevel>) =>
@@ -30,8 +29,7 @@ const Category: React.FunctionComponent<IMenuCategoryProps & ListProps> = ({ lev
     return (
         <List {...otherProps}>
             <MenuItem
-                {...itemProps}
-                level={level}
+                {...{ text, icon, level }}
                 secondaryAction={collapsible && <SecondaryAction open={open} onClick={handleClick.bind(null, open, setOpen)} />}
             />
             {collapsible ? (
@@ -45,7 +43,7 @@ const Category: React.FunctionComponent<IMenuCategoryProps & ListProps> = ({ lev
     );
 };
 
-export default Category;
+export default CollapsibleItem;
 
 const handleClick = (open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     setOpen(!open);
