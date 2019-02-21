@@ -9,7 +9,10 @@ export interface IMenuLevel {
     level?: number;
 }
 
+type MenuChild = React.ReactElement<IMenuLevel>;
+
 export interface ICollapsibleItemProps extends IMenuItemProps {
+    children: MenuChild[];
     collapsible: boolean;
 }
 
@@ -20,7 +23,7 @@ const SecondaryAction = ({ open, onClick }: any) => {
 const CollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps> = ({ level, collapsible, text, icon, children, ...otherProps }) => {
     if (!level) level = 1;
     const [open, setOpen] = React.useState(true);
-    const childElements = React.Children.map(children, (child: React.ReactElement<IMenuLevel>) =>
+    const childElements = React.Children.map(children, (child: MenuChild) =>
         React.cloneElement<IMenuLevel>(child, {
             level: level! + 1,
         }),
