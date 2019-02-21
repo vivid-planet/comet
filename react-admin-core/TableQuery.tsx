@@ -29,7 +29,6 @@ interface IProps<TData, TVariables> {
     variables?: TVariables;
     defaultSort?: string;
     defaultOrder?: "asc" | "desc";
-    rowsPerPage?: number;
     selectionApi?: ISelectionApi;
     children: (result: IQueryResult<TData, TVariables>) => React.ReactNode;
 }
@@ -60,7 +59,7 @@ class TableQuery<TData = any, TVariables extends IDefaultVariables = IDefaultVar
             onRowDeleted: this.onRowDeleted.bind(this),
         };
         this.state = {
-            page: 0,
+            page: 1,
             sort: props.defaultSort,
             order: props.defaultOrder || "asc",
         };
@@ -70,7 +69,6 @@ class TableQuery<TData = any, TVariables extends IDefaultVariables = IDefaultVar
             <TableQueryContext.Provider
                 value={{
                     api: this.tableQueryApi,
-                    rowsPerPage: this.props.rowsPerPage,
                     page: this.state.page,
                     sort: this.state.sort,
                     order: this.state.order,
@@ -107,10 +105,7 @@ class TableQuery<TData = any, TVariables extends IDefaultVariables = IDefaultVar
         const variables: any = { ...(this.props.variables as any) };
         variables.sort = this.state.sort;
         variables.order = this.state.order;
-        if (this.props.rowsPerPage) {
-            variables.offset = 0;
-            variables.limit = this.props.rowsPerPage;
-        }
+        variables.page = 1;
         return variables;
     }
 
@@ -119,10 +114,9 @@ class TableQuery<TData = any, TVariables extends IDefaultVariables = IDefaultVar
     }
 
     private changePage(page: number) {
-        if (!this.props.rowsPerPage) return;
         this.fetchMore({
             variables: {
-                offset: page * this.props.rowsPerPage,
+                page,
             },
             updateQuery: ({}, { fetchMoreResult }: { fetchMoreResult: any }) => {
                 this.setState({ page });

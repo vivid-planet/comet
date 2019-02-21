@@ -13,7 +13,6 @@ export interface ITableQueryApi {
 
 export interface ITableQueryContext {
     api: ITableQueryApi;
-    rowsPerPage?: number;
     page: number;
     sort?: string;
     order: "asc" | "desc";
