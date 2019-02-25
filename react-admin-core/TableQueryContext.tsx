@@ -8,7 +8,7 @@ export interface ITableQueryApi {
     getVariables: () => object;
     getQuery: () => DocumentNode;
     onRowCreated: (id: string) => void;
-    onRowDeleted: (id: string) => void;
+    onRowDeleted: () => void;
 }
 
 export interface ITableQueryContext {

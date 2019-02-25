@@ -12,12 +12,12 @@ import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryCon
 
 interface IProps {
     mutation: any;
-    children: (action: (options: { variables: { id: string } }) => void, data: { loading: boolean; error: any }) => React.ReactNode;
+    children: (action: (options: { variables: object }) => void, data: { loading: boolean; error: any }) => React.ReactNode;
 }
 interface IState {
     dialogOpen: boolean;
     loading: boolean;
-    pendingVariables?: { id: string };
+    pendingVariables?: object;
 }
 type IncludingInjectedProps = WithApolloClient<IProps> & IWithTableQueryProps;
 class DeleteMutation extends React.Component<IncludingInjectedProps, IState> {
@@ -81,7 +81,7 @@ class DeleteMutation extends React.Component<IncludingInjectedProps, IState> {
                 this.setState({ loading: false });
                 if (this.state.pendingVariables) {
                     if (this.props.tableQuery) {
-                        this.props.tableQuery.api.onRowDeleted(this.state.pendingVariables.id);
+                        this.props.tableQuery.api.onRowDeleted();
                     }
                 }
             });
