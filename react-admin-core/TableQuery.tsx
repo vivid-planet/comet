@@ -1,12 +1,12 @@
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, RootRef } from "@material-ui/core";
 import { DocumentNode } from "graphql";
 import * as React from "react";
-import { OperationVariables, Query } from "react-apollo";
-import styled from "styled-components";
+import { Query } from "react-apollo";
 import ISelectionApi from "./SelectionApi";
+import * as sc from "./TableQuery.sc";
 import TableQueryContext, { ITableQueryApi } from "./TableQueryContext";
 
-export interface IQueryResult<TData, TVariables> {
+export interface IQueryResult<TTableData, TVariables, TData> {
     // extends ObservableQueryFields<TData, TVariables>
     // client: ApolloClient<any>;
     data: TData;
@@ -17,6 +17,7 @@ export interface IQueryResult<TData, TVariables> {
     order: "asc" | "desc";
     sort?: string;
     tableQueryApi: ITableQueryApi;
+    tableData: TTableData;
 }
 
 export interface IDefaultVariables {
@@ -24,30 +25,30 @@ export interface IDefaultVariables {
     order?: "asc" | "desc";
     sort?: string;
 }
-interface IProps<TData, TVariables> {
+interface IProps<TTableData, TVariables, TData> {
     query: DocumentNode;
+    tableDataAccessor: string;
     variables?: TVariables;
     defaultSort?: string;
     defaultOrder?: "asc" | "desc";
     selectionApi?: ISelectionApi;
-    children: (result: IQueryResult<TData, TVariables>) => React.ReactNode;
+    children: (result: IQueryResult<TTableData, TVariables, TData>) => React.ReactNode;
 }
 interface IState {
     page: number;
     order: "asc" | "desc";
     sort?: string;
+    filters: object;
 }
 
-const ProgressContainer = styled.div`
-    padding-top: 30px;
-    display: flex;
-    justify-content: center;
-`;
-
-class TableQuery<TData = any, TVariables extends IDefaultVariables = IDefaultVariables> extends React.Component<IProps<TData, TVariables>, IState> {
+class TableQuery<TTableData = any, TVariables extends IDefaultVariables = IDefaultVariables, TData = any> extends React.Component<
+    IProps<TTableData, TVariables, TData>,
+    IState
+> {
     private tableQueryApi: ITableQueryApi;
     private fetchMore: any;
-    constructor(props: IProps<TData, TVariables>) {
+    private domRef = React.createRef<HTMLDivElement>();
+    constructor(props: IProps<TTableData, TVariables, TData>) {
         super(props);
         this.tableQueryApi = {
             changePage: this.changePage.bind(this),
@@ -62,47 +63,60 @@ class TableQuery<TData = any, TVariables extends IDefaultVariables = IDefaultVar
             page: 1,
             sort: props.defaultSort,
             order: props.defaultOrder || "asc",
+            filters: {},
         };
     }
     public render() {
         return (
-            <TableQueryContext.Provider
-                value={{
-                    api: this.tableQueryApi,
-                    page: this.state.page,
-                    sort: this.state.sort,
-                    order: this.state.order,
-                }}
-            >
-                <Query query={this.props.query} variables={this.getVariables()}>
-                    {queryResult => {
-                        if (queryResult.loading) {
-                            return (
-                                <ProgressContainer>
-                                    <CircularProgress />
-                                </ProgressContainer>
-                            );
-                        }
-                        if (queryResult.error) return <p>Error :( {queryResult.error.toString()}</p>;
-
-                        this.fetchMore = queryResult.fetchMore;
-                        const extendedQueryResult = {
-                            ...queryResult,
-                            page: this.state.page,
-                            changePage: this.changePage.bind(this),
-                            order: this.state.order,
-                            sort: this.state.sort,
-                            tableQueryApi: this.tableQueryApi,
-                        };
-                        return this.props.children(extendedQueryResult);
+            <RootRef rootRef={this.domRef}>
+                <TableQueryContext.Provider
+                    value={{
+                        api: this.tableQueryApi,
+                        page: this.state.page,
+                        sort: this.state.sort,
+                        order: this.state.order,
                     }}
-                </Query>
-            </TableQueryContext.Provider>
+                >
+                    <Query query={this.props.query} variables={this.getVariables()} notifyOnNetworkStatusChange={true}>
+                        {(queryResult: any) => {
+                            if (queryResult.error) return <p>Error :( {queryResult.error.toString()}</p>;
+                            if (!queryResult.data[this.props.tableDataAccessor]) {
+                                return (
+                                    <sc.ProgressContainer>
+                                        <CircularProgress />
+                                    </sc.ProgressContainer>
+                                );
+                            }
+
+                            this.fetchMore = queryResult.fetchMore;
+                            const extendedQueryResult = {
+                                ...queryResult,
+                                tableData: queryResult.data[this.props.tableDataAccessor],
+                                page: this.state.page,
+                                changePage: this.changePage.bind(this),
+                                order: this.state.order,
+                                sort: this.state.sort,
+                                tableQueryApi: this.tableQueryApi,
+                            };
+                            return (
+                                <>
+                                    {queryResult.loading && (
+                                        <sc.ProgressOverlayContainer>
+                                            <CircularProgress />
+                                        </sc.ProgressOverlayContainer>
+                                    )}
+                                    {this.props.children(extendedQueryResult)}
+                                </>
+                            );
+                        }}
+                    </Query>
+                </TableQueryContext.Provider>
+            </RootRef>
         );
     }
 
     private getVariables() {
-        const variables: any = { ...(this.props.variables as any) };
+        const variables: any = { ...(this.props.variables as any), ...this.state.filters };
         variables.sort = this.state.sort;
         variables.order = this.state.order;
         variables.page = 1;
@@ -123,19 +137,14 @@ class TableQuery<TData = any, TVariables extends IDefaultVariables = IDefaultVar
                 return fetchMoreResult;
             },
         });
+        if (this.domRef.current) {
+            this.domRef.current.scrollIntoView();
+        }
     }
 
     private changeFilters(filters: object) {
-        const variables = {
-            // offset: 0,
-            ...filters,
-        };
-        this.fetchMore({
-            variables,
-            updateQuery: ({}, { fetchMoreResult }: { fetchMoreResult: any }) => {
-                this.setState({ page: 0 });
-                return fetchMoreResult;
-            },
+        this.setState({
+            filters: { ...filters },
         });
     }
 
@@ -151,7 +160,7 @@ class TableQuery<TData = any, TVariables extends IDefaultVariables = IDefaultVar
             },
             updateQuery: ({}, { fetchMoreResult }: { fetchMoreResult: any }) => {
                 this.setState({
-                    page: 0,
+                    page: 1,
                     sort: columnName,
                     order,
                 });
