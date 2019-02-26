@@ -8,7 +8,7 @@ interface IProps {
     selectedId?: string;
     rows?: Array<{ id: string | number }>;
     query?: any;
-    dataChild?: string;
+    dataAccessor?: string;
     children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
 }
 const ProgressContainer = styled.div`
@@ -36,10 +36,10 @@ class Selected extends React.Component<IProps> {
                             );
                         }
                         if (queryResult.error) return <p>Error :( {queryResult.error.toString()}</p>;
-                        if (!this.props.dataChild) {
+                        if (!this.props.dataAccessor) {
                             throw new Error("dataChild prop is required");
                         }
-                        return this.props.children(queryResult.data[this.props.dataChild], { selectionMode: "edit" });
+                        return this.props.children(queryResult.data[this.props.dataAccessor], { selectionMode: "edit" });
                     }}
                 </Query>
             );
