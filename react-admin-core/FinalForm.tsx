@@ -1,11 +1,11 @@
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
-import Save from "@material-ui/icons/Save";
+import CancelIcon from "@material-ui/icons/Cancel";
+import SaveIcon from "@material-ui/icons/Save";
 import { FORM_ERROR } from "final-form";
 import * as React from "react";
 import { Form, FormRenderProps } from "react-final-form";
-import { compose } from "recompose";
 import EditDialogApiContext from "./EditDialogApiContext";
 import IStackApi, { StackApiContext } from "./Stack/Api";
 import withDirtyHandlerApi, { IWithDirtyHandlerApiProps } from "./withDirtyHandlerApi";
@@ -81,21 +81,44 @@ class FinalForm extends React.Component<IProps> {
                         if (formRenderProps.submitting) return <CircularProgress />;
 
                         return (
-                            <Button
-                                className={classes.saveButton}
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
-                            >
-                                <Save />
-                                Save
-                            </Button>
+                            <>
+                                <StackApiContext.Consumer>
+                                    {stackApi => {
+                                        if (!stackApi) return null;
+
+                                        return (
+                                            <Button
+                                                className={classes.saveButton}
+                                                variant="flat"
+                                                color="default"
+                                                onClick={this.handleCancelClick.bind(this, stackApi)}
+                                            >
+                                                <CancelIcon />
+                                                Abbrechen
+                                            </Button>
+                                        );
+                                    }}
+                                </StackApiContext.Consumer>
+                                <Button
+                                    className={classes.saveButton}
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                    disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
+                                >
+                                    <SaveIcon />
+                                    Save
+                                </Button>
+                            </>
                         );
                     }}
                 </EditDialogApiContext.Consumer>
             </form>
         );
+    };
+
+    private handleCancelClick = (stackApi: IStackApi) => {
+        stackApi.goBack();
     };
 
     private submit = (event: any) => {
