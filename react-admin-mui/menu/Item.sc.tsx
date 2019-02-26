@@ -7,6 +7,6 @@ interface IMenuItemStyleProps {
     menuOpen: boolean;
 }
 
-export const ListItem = styled(MuiListItem)<IMenuItemStyleProps>`
+export const ListItem = styled<IMenuItemStyleProps>(({ level, menuOpen, ...rest }) => <MuiListItem {...rest} />)`
     padding-left: ${({ theme, level, menuOpen }) => theme.spacing.unit * 2 * (menuOpen ? level : 1)};
 `;
