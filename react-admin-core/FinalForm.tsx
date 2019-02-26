@@ -89,7 +89,7 @@ class FinalForm extends React.Component<IProps> {
                                         return (
                                             <Button
                                                 className={classes.saveButton}
-                                                variant="flat"
+                                                variant="text"
                                                 color="default"
                                                 onClick={this.handleCancelClick.bind(this, stackApi)}
                                             >
