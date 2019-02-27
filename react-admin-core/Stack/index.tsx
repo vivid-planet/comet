@@ -74,8 +74,6 @@ interface IState {
     switches: ISwitchItem[];
 }
 class Stack extends React.Component<IProps, IState> {
-    private breadcrumbs: IBreadcrumbItem[] = []; // duplicates this.state.breadcrumbs, needed for multiple calls that modify state.breadcrumbs as setState updates this.state deferred
-    private switches: ISwitchItem[] = []; // duplicates this.state.switches, needed for multiple calls that modify state.switches as setState updates this.state deferred
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
     constructor(props: IProps) {
@@ -177,62 +175,68 @@ class Stack extends React.Component<IProps, IState> {
     }
 
     private addBreadcrumb(id: string, parentId: string, url: string, title: string, invisible: boolean) {
-        const breadcrumbs = [
-            ...this.breadcrumbs,
-            {
-                id,
-                parentId,
-                url,
-                title,
-                invisible,
-            },
-        ];
-        this.setState({
-            breadcrumbs,
+        this.setState(state => {
+            const breadcrumbs = [
+                ...state.breadcrumbs,
+                {
+                    id,
+                    parentId,
+                    url,
+                    title,
+                    invisible,
+                },
+            ];
+
+            return {
+                breadcrumbs,
+            };
         });
-        this.breadcrumbs = breadcrumbs;
     }
 
     private updateBreadcrumb(id: string, parentId: string, url: string, title: string, invisible: boolean) {
-        const breadcrumbs = this.breadcrumbs.map(crumb => {
-            return crumb.id === id ? { id, parentId, url, title, invisible } : crumb;
+        this.setState(state => {
+            const breadcrumbs = state.breadcrumbs.map(crumb => {
+                return crumb.id === id ? { id, parentId, url, title, invisible } : crumb;
+            });
+            return {
+                breadcrumbs,
+            };
         });
-        this.setState({
-            breadcrumbs,
-        });
-        this.breadcrumbs = breadcrumbs;
     }
 
     private removeBreadcrumb(id: string) {
-        const breadcrumbs = this.breadcrumbs.filter(crumb => {
-            return crumb.id !== id;
+        this.setState(state => {
+            const breadcrumbs = state.breadcrumbs.filter(crumb => {
+                return crumb.id !== id;
+            });
+            return {
+                breadcrumbs,
+            };
         });
-        this.setState({
-            breadcrumbs,
-        });
-        this.breadcrumbs = breadcrumbs;
     }
 
     private addSwitchMeta = (id: string, options: { parentId: string; activePage: string; isInitialPageActive: boolean }) => {
-        const switches = [...this.switches];
-        const index = switches.findIndex(i => i.id === id);
-        if (index === -1) {
-            switches.push({ id, ...options });
-        } else {
-            switches[index] = { id, ...options };
-        }
-        this.setState({
-            switches,
+        this.setState(state => {
+            const switches = [...state.switches];
+            const index = switches.findIndex(i => i.id === id);
+            if (index === -1) {
+                switches.push({ id, ...options });
+            } else {
+                switches[index] = { id, ...options };
+            }
+            return {
+                switches,
+            };
         });
-        this.switches = switches;
     };
 
     private removeSwitchMeta = (id: string) => {
-        const switches = this.switches.filter(item => item.id !== id);
-        this.setState({
-            switches,
+        this.setState(state => {
+            const switches = state.switches.filter(item => item.id !== id);
+            return {
+                switches,
+            };
         });
-        this.switches = switches;
     };
 }
 
