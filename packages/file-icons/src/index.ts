@@ -1,0 +1,9 @@
+export { default as Excel } from "./Excel";
+export { default as File } from "./File";
+export { default as FileIcon } from "./FileIcon";
+export { default as Jpg } from "./Jpg";
+export { default as Pdf } from "./Pdf";
+export { default as Png } from "./Png";
+export { default as Powerpoint } from "./Powerpoint";
+export { default as Word } from "./Word";
+export { default as Zip } from "./Zip";

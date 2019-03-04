@@ -1,0 +1,28 @@
+{
+    "name": "@vivid-planet/file-icons",
+    "version": "1.0.0-alpha.0",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib"
+    ],
+    "dependencies": {
+        "@material-ui/core": "^3.9.2",
+        "react": "^16.8.3"
+    },
+    "devDependencies": {
+        "rimraf": "^2.6.3",
+        "typescript": "^3.3.3333"
+    },
+    "scripts": {
+        "prebuild": "rimraf lib",
+        "build": "tsc --project ./tsconfig.json",
+        "start": "tsc --project ./tsconfig.json --watch",
+        "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
+        "prepublish": "npm run build"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "license": "BSD-2-Clause"
+}
