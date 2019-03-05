@@ -1,7 +1,7 @@
 import { Collapse, IconButton, List } from "@material-ui/core";
 import { ListProps } from "@material-ui/core/List";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
+import ArrowDropUp from "@material-ui/icons/ArrowDropUp";
 import { IMenuItemProps, MenuItem } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 
@@ -17,7 +17,7 @@ export interface ICollapsibleItemProps extends IMenuItemProps {
 }
 
 const SecondaryAction = ({ open, onClick }: any) => {
-    return <IconButton onClick={onClick}>{open ? <ExpandLess /> : <ExpandMore />}</IconButton>;
+    return <IconButton onClick={onClick}>{open ? <ArrowDropDown /> : <ArrowDropUp />}</IconButton>;
 };
 
 const CollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps> = ({ level, collapsible, text, icon, children, ...otherProps }) => {
