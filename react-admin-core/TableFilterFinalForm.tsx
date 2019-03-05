@@ -42,7 +42,7 @@ class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
 const ExtendedAutoSave = withTableQueryContext(AutoSave);
 
 interface IProps {
-    modifySubmitVariables?: <T = object>(variables: T) => T;
+    modifySubmitVariables?: (variables: any) => any;
 }
 // tslint:disable-next-line:max-classes-per-file
 class TableFilterFinalForm extends React.Component<IProps> {
