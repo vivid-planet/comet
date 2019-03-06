@@ -71,6 +71,7 @@ export interface IProps {
     selectionApi?: ISelectionApi;
     hasPrevious?: boolean;
     hasNext?: boolean;
+    rowName?: string | { plural: string; singular: string };
 }
 
 class Table extends React.Component<IProps & IWithTableQueryProps> {
@@ -130,6 +131,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                                 hasPrevious={this.props.hasPrevious}
                                 onBackClick={this.handleBackButtonClick}
                                 onNextClick={this.handleNextButtonClick}
+                                rowName={this.props.rowName}
                             />
                         </TableRow>
                     </TableFooter>
