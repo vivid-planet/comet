@@ -11,12 +11,12 @@ interface IProps {
     total: number;
     onBackClick: () => void;
     onNextClick: () => void;
-    rowName?: string | { plural: string; singular: string };
+    rowName?: string | ((count: number) => string);
 }
 
 const Pagination: React.FunctionComponent<IProps> = ({ total, hasPrevious, hasNext, onBackClick, onNextClick, rowName }) => {
-    if (typeof rowName === "object") {
-        rowName = total === 1 ? rowName.singular : rowName.plural;
+    if (typeof rowName === "function") {
+        rowName = rowName(total);
     }
     return (
         <TableCell colSpan={1000}>

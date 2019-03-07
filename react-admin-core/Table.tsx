@@ -71,7 +71,7 @@ export interface IProps {
     selectionApi?: ISelectionApi;
     hasPrevious?: boolean;
     hasNext?: boolean;
-    rowName?: string | { plural: string; singular: string };
+    rowName?: string | ((count: number) => string);
 }
 
 class Table extends React.Component<IProps & IWithTableQueryProps> {
