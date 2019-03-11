@@ -171,13 +171,13 @@ class TableQuery<TTableData = any, TVariables extends IDefaultVariables = IDefau
 
     private onRowCreated(id: string) {
         if (this.props.selectionApi) {
-            this.props.selectionApi.selectIdWithoutDirtyCheck(id);
+            this.props.selectionApi.handleSelectId(id);
         }
     }
 
     private onRowDeleted(id: string) {
         if (this.props.selectionApi) {
-            this.props.selectionApi.deselectWithoutDirtyCheck();
+            this.props.selectionApi.handleDeselect();
         }
     }
 }

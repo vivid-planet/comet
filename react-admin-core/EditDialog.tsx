@@ -67,7 +67,7 @@ class EditDialog extends React.Component<IProps> {
     private handleSaveClick = (dirtyHandlerApi: IDirtyHandlerApi | undefined, selectionApi: ISelectionApi) => {
         if (dirtyHandlerApi) {
             dirtyHandlerApi.submitBindings().then(() => {
-                selectionApi.deselectWithoutDirtyCheck();
+                selectionApi.handleDeselect();
             });
         }
     };
