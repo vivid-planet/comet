@@ -11,8 +11,6 @@ export interface IDirtyHandlerApi {
     isBindingDirty: () => Promise<boolean>;
     resetBindings: () => Promise<void>;
     submitBindings: () => Promise<void>;
-    askSave: () => Promise<void>;
-    askSaveIfDirty: () => Promise<void>;
     getParent: () => IDirtyHandlerApi | undefined;
 }
 

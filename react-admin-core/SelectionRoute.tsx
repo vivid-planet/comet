@@ -30,8 +30,6 @@ class SelectionRoute extends React.Component<IProps> {
         this.selectionApi = {
             handleSelectId: this.handleSelectId.bind(this),
             handleDeselect: this.handleDeselect.bind(this),
-            selectIdWithoutDirtyCheck: this.selectIdWithoutDirtyCheck.bind(this),
-            deselectWithoutDirtyCheck: this.deselectWithoutDirtyCheck.bind(this),
             handleAdd: this.handleAdd.bind(this),
         };
         this.state = {
@@ -50,7 +48,7 @@ class SelectionRoute extends React.Component<IProps> {
                         <Route path={path}>
                             {(props: RouteComponentProps<IRouteParams>) => {
                                 let selectedId: string | undefined;
-                                let selectionMode: "edit" | "add";
+                                let selectionMode: "edit" | "add" | undefined;
                                 if (props.match && props.match.params.id === "add") {
                                     selectedId = undefined;
                                     selectionMode = "add";
@@ -58,19 +56,11 @@ class SelectionRoute extends React.Component<IProps> {
                                     selectedId = props.match.params.id;
                                     selectionMode = "edit";
                                 }
-                                return (
-                                    <DirtyHandlerApiContext.Consumer>
-                                        {dirtyHandlerApi => {
-                                            // don't use withDirtyHAndlerApi HOC to avoid ref issues
-                                            this.dirtyHandlerApi = dirtyHandlerApi;
-                                            return this.props.children({
-                                                selectedId,
-                                                selectionMode,
-                                                selectionApi: this.selectionApi,
-                                            });
-                                        }}
-                                    </DirtyHandlerApiContext.Consumer>
-                                );
+                                return this.props.children({
+                                    selectedId,
+                                    selectionMode,
+                                    selectionApi: this.selectionApi,
+                                });
                             }}
                         </Route>
                     );
@@ -80,48 +70,15 @@ class SelectionRoute extends React.Component<IProps> {
     }
 
     private async handleSelectId(id: string) {
-        if (this.dirtyHandlerApi) {
-            try {
-                await this.dirtyHandlerApi.askSaveIfDirty();
-            } catch (e) {
-                // saving changes failed, stop selecting id
-                // TODO should this really catch the error silently?
-                return;
-            }
-        }
-        this.selectIdWithoutDirtyCheck(id);
+        this.history.push(`${this.match.url}/${id}`);
     }
 
     private async handleDeselect() {
-        if (this.dirtyHandlerApi) {
-            try {
-                await this.dirtyHandlerApi.askSaveIfDirty();
-            } catch (e) {
-                // saving changes failed, stop selecting id
-                // TODO should this really catch the error silently?
-                return;
-            }
-        }
-        this.deselectWithoutDirtyCheck();
-    }
-    private deselectWithoutDirtyCheck() {
-        this.history.replace(`${this.match.url}`);
-    }
-    private selectIdWithoutDirtyCheck(id: string) {
-        this.history.replace(`${this.match.url}/${id}`);
+        this.history.push(`${this.match.url}`);
     }
 
-    private async handleAdd() {
-        if (this.dirtyHandlerApi) {
-            try {
-                await this.dirtyHandlerApi.askSaveIfDirty();
-            } catch (e) {
-                // saving changes failed, stop selecting id
-                // TODO should this really catch the error silently?
-                return;
-            }
-        }
-        this.history.replace(`${this.match.url}/add`);
+    private handleAdd() {
+        this.history.push(`${this.match.url}/add`);
     }
 }
 export default SelectionRoute;
