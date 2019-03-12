@@ -118,7 +118,7 @@ class RouterTabs extends React.Component<IProps> {
         const paths = React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
             return child.props.path;
         });
-        this.props.history.replace(this.props.match.url + paths[value]);
+        this.props.history.push(this.props.match.url + paths[value]);
     };
 }
 const ExtendedRouterTabs = withStyles(styles)(withRouter(RouterTabs));

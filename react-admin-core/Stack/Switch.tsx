@@ -104,11 +104,11 @@ class StackSwitch extends React.Component<IProps, IState> {
     }
     public activatePage = (pageName: string, payload: string, subUrl?: string) => {
         if (this.isInitialPage(pageName)) {
-            this.history.replace(this.match.url);
+            this.history.push(this.match.url);
             if (payload) throw new Error("activating the initialPage must not have a payload");
             if (subUrl) throw new Error("activating the initialPage must not have a subUrl");
         } else {
-            this.history.replace(this.match.url + "/" + payload + "/" + pageName + (subUrl ? "/" + subUrl : ""));
+            this.history.push(this.match.url + "/" + payload + "/" + pageName + (subUrl ? "/" + subUrl : ""));
         }
     };
 
