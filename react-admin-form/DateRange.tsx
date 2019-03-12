@@ -63,10 +63,10 @@ const DateRange: React.FunctionComponent<InputBaseProps & FieldRenderProps> = ({
                     selectsStart
                     startDate={startDate || undefined}
                     endDate={endDate || undefined}
-                    onChange={e => {
-                        setStartDate(e);
+                    onChange={newValue => {
+                        setStartDate(newValue);
                         input.onChange({
-                            start: e,
+                            start: newValue,
                             end: endDate,
                         });
                     }}
@@ -78,11 +78,11 @@ const DateRange: React.FunctionComponent<InputBaseProps & FieldRenderProps> = ({
                     selectsEnd
                     startDate={startDate || undefined}
                     endDate={endDate || undefined}
-                    onChange={e => {
-                        setEndDate(e);
+                    onChange={newValue => {
+                        setEndDate(newValue);
                         input.onChange({
                             start: startDate,
-                            end: e,
+                            end: newValue,
                         });
                     }}
                 />
