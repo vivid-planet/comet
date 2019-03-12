@@ -2,7 +2,6 @@ import { DocumentNode } from "graphql";
 import * as React from "react";
 
 export interface ITableQueryApi {
-    changePage: (page: number) => void;
     changeFilters: (filters: object) => void;
     changeSort: (columnName: string) => void;
     getVariables: () => object;
@@ -13,7 +12,6 @@ export interface ITableQueryApi {
 
 export interface ITableQueryContext {
     api: ITableQueryApi;
-    page: number;
     sort?: string;
     order: "asc" | "desc";
 }

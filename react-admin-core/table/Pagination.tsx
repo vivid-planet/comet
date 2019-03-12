@@ -4,30 +4,28 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
 import * as sc from "./Pagination.sc";
+import { IPagingActions } from "./pagingStrategy/PagingStrategy";
 
 interface IProps {
-    hasPrevious: boolean;
-    hasNext: boolean;
-    total: number;
-    onBackClick: () => void;
-    onNextClick: () => void;
+    totalCount: number;
+    pagingActions: IPagingActions;
 }
 
-const Pagination: React.FunctionComponent<IProps> = ({ total, hasPrevious, hasNext, onBackClick, onNextClick }) => (
+const Pagination: React.FunctionComponent<IProps> = ({ totalCount, pagingActions }) => (
     <TableCell colSpan={1000}>
         <Toolbar>
             <Grid container justify="space-between" alignItems="center">
                 <Grid item>
                     <Typography color="textPrimary" variant="body2">
-                        {total}
+                        {totalCount}
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <sc.Button onClick={onBackClick} disabled={!hasPrevious}>
-                        <KeyboardArrowLeft color={hasPrevious ? "inherit" : "disabled"} />
+                    <sc.Button onClick={pagingActions.fetchPreviousPage} disabled={!pagingActions.fetchPreviousPage}>
+                        <KeyboardArrowLeft color={pagingActions.fetchPreviousPage ? "inherit" : "disabled"} />
                     </sc.Button>
-                    <sc.Button onClick={onNextClick} disabled={!hasNext}>
-                        <KeyboardArrowRight color={hasNext ? "inherit" : "disabled"} />
+                    <sc.Button onClick={pagingActions.fetchNextPage} disabled={!pagingActions.fetchNextPage}>
+                        <KeyboardArrowRight color={pagingActions.fetchNextPage ? "inherit" : "disabled"} />
                     </sc.Button>
                 </Grid>
             </Grid>

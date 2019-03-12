@@ -9,6 +9,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import ISelectionApi from "./SelectionApi";
 import Pagination from "./table/Pagination";
+import { IPagingActions } from "./table/pagingStrategy/PagingStrategy";
 import TableQueryContext from "./TableQueryContext";
 import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
 
@@ -60,7 +61,7 @@ interface IRow {
 export interface IProps {
     data: IRow[];
     columns: IColumn[];
-    total: number;
+    totalCount: number;
     selectedId?: string;
     selectable?: boolean;
     sort?: string;
@@ -69,8 +70,8 @@ export interface IProps {
     renderTableRow?: (index: number) => React.ReactElement<TableRowProps>;
     renderHeadTableRow?: () => React.ReactElement<TableRowProps>;
     selectionApi?: ISelectionApi;
-    hasPrevious?: boolean;
-    hasNext?: boolean;
+
+    pagingActions?: IPagingActions;
 }
 
 class Table extends React.Component<IProps & IWithTableQueryProps> {
@@ -121,41 +122,16 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                         );
                     })}
                 </TableBody>
-                {this.props.hasNext !== undefined && this.props.hasPrevious !== undefined && (
+                {this.props.pagingActions && (
                     <TableFooter>
                         <TableRow>
-                            <Pagination
-                                total={this.props.total}
-                                hasNext={this.props.hasNext}
-                                hasPrevious={this.props.hasPrevious}
-                                onBackClick={this.handleBackButtonClick}
-                                onNextClick={this.handleNextButtonClick}
-                            />
+                            <Pagination totalCount={this.props.totalCount} pagingActions={this.props.pagingActions} />
                         </TableRow>
                     </TableFooter>
                 )}
             </MuiTable>
         );
     }
-
-    private handleBackButtonClick = () => {
-        if (this.props.tableQuery) {
-            const page = this.props.page !== undefined ? this.props.page : this.context.page;
-            this.props.tableQuery.api.changePage(page - 1);
-        }
-    };
-    private handleNextButtonClick = () => {
-        if (this.props.tableQuery) {
-            const page = this.props.page !== undefined ? this.props.page : this.context.page;
-            this.props.tableQuery.api.changePage(page + 1);
-        }
-    };
-
-    private handleChangePage = (ev: React.MouseEvent | null, newPage: number) => {
-        if (this.props.tableQuery) {
-            this.props.tableQuery.api.changePage(newPage);
-        }
-    };
 
     private handleClick = (id: string, event: React.MouseEvent) => {
         if (this.props.selectable && this.props.selectionApi) {
