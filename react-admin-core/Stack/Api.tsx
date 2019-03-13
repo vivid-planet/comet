@@ -7,7 +7,6 @@ export default interface IStackApi {
     removeBreadcrumb: (id: string) => void;
     goBack: () => void;
     goAllBack: () => void;
-    goBackForce: () => void;
 
     addSwitchMeta: (id: string, options: { activePage: string; isInitialPageActive: boolean }) => void;
     removeSwitchMeta: (id: string) => void;

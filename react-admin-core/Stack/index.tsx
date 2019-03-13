@@ -94,7 +94,6 @@ class Stack extends React.Component<IProps, IState> {
                     removeBreadcrumb: this.removeBreadcrumb.bind(this),
                     goBack: this.goBack.bind(this),
                     goAllBack: this.goAllBack.bind(this),
-                    goBackForce: this.goBackForce.bind(this),
 
                     addSwitchMeta: this.addSwitchMeta,
                     removeSwitchMeta: this.removeSwitchMeta,
@@ -155,23 +154,13 @@ class Stack extends React.Component<IProps, IState> {
         this.goBack();
     };
 
-    private goBackForce() {
+    private goBack() {
         const breadcrumbs = this.getVisibleBreadcrumbs();
-        this.history.replace(breadcrumbs[breadcrumbs.length - 2].url);
+        this.history.push(breadcrumbs[breadcrumbs.length - 2].url);
     }
 
-    private async goBack() {
-        if (this.dirtyHandlerApi) {
-            await this.dirtyHandlerApi.askSaveIfDirty();
-        }
-        this.goBackForce();
-    }
-
-    private async goAllBack() {
-        if (this.dirtyHandlerApi) {
-            await this.dirtyHandlerApi.askSaveIfDirty();
-        }
-        this.history.replace(this.state.breadcrumbs[0].url);
+    private goAllBack() {
+        this.history.push(this.state.breadcrumbs[0].url);
     }
 
     private addBreadcrumb(id: string, parentId: string, url: string, title: string, invisible: boolean) {

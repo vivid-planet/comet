@@ -1,7 +1,7 @@
 import { ListItemProps } from "@material-ui/core/ListItem";
 import { IMenuItemProps, MenuItem } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
-import { Link, LinkProps } from "react-router-dom";
+import { Link, LinkProps, Route } from "react-router-dom";
 
 export interface IMenuItemLink extends IMenuItemProps {
     path: string;
@@ -11,7 +11,15 @@ class ItemLink extends React.Component<IMenuItemLink & ListItemProps & Partial<L
     public render() {
         const { path, ...otherProps } = this.props;
 
-        return <MenuItem selected={location.pathname === path} component={Link} to={path} {...otherProps} />;
+        return (
+            <Route
+                path={path}
+                strict={false}
+                children={({ location, match }) => {
+                    return <MenuItem selected={!!match} component={Link} to={path} {...otherProps} />;
+                }}
+            />
+        );
     }
 }
 
