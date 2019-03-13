@@ -7,23 +7,29 @@ import {
 import { ListItemIconProps } from "@material-ui/core/ListItemIcon";
 import { ListItemSecondaryActionProps } from "@material-ui/core/ListItemSecondaryAction";
 import { ListItemTextProps } from "@material-ui/core/ListItemText";
-import styled from "@vivid-planet/react-admin-mui/styled-components";
+import styled, { css } from "@vivid-planet/react-admin-mui/styled-components";
 import * as React from "react";
 
 interface IMenuItemStyleProps {
     level: number;
+    hasIcon: boolean;
     menuOpen: boolean;
     enableMargin?: boolean;
 }
 
-export const ListItem = styled<IMenuItemStyleProps>(({ level, menuOpen, enableMargin, ...rest }) => (
+export const ListItem = styled<IMenuItemStyleProps>(({ level, menuOpen, enableMargin, hasIcon = false, ...rest }) => (
     <MuiListItem {...rest} classes={{ root: "root", selected: "selected" }} />
 ))<IMenuItemStyleProps>`
     &.root {
-        padding-bottom: 10px;
-        padding-top: 10px;
-        padding-left: ${({ theme, level, menuOpen }) => theme.spacing.unit * 2 * (menuOpen ? level : 1)}px;
-        ${({ enableMargin, theme }) => enableMargin && `margin-bottom: ${theme.spacing.unit}px`}
+        padding-top: ${({ hasIcon }) => (hasIcon ? `20px` : `10px`)};
+        padding-bottom: ${({ hasIcon }) => (hasIcon ? `20px` : `10px`)};
+        padding-left: 19px;
+
+        ${({ enableMargin, theme }) =>
+            enableMargin &&
+            css`
+                margin-bottom: ${theme.spacing.unit}px;
+            `};
 
         &.selected {
             background-color: ${({ theme }) => theme.palette.primary.main};
@@ -48,11 +54,15 @@ export const ListItemText = styled<IMenuItemTextStyleProps & ListItemTextProps>(
     <MuiListItemText {...rest} classes={{ root: "root", primary: "primary", textDense: "textDense" }} />
 ))<IMenuItemTextStyleProps>`
     &.root {
+        &:first-child {
+            ${({ inset }) => inset && `padding-left: 60px`};
+        }
+
         .primary {
             font-size: 15px;
             line-height: 20px;
-            color: ${props => (props.selected ? props.theme.palette.primary.contrastText : props.theme.palette.text.primary)};
-            font-weight: ${props => (props.selected || props.level === 1 ? "bold" : "normal")};
+            color: ${({ selected, theme }) => (selected ? theme.palette.primary.contrastText : theme.palette.text.primary)};
+            font-weight: ${({ selected, level }) => (selected || level === 1 ? "bold" : "normal")};
         }
     }
 `;
@@ -66,6 +76,21 @@ export const ListItemIcon = styled<IMenuItemSelected & ListItemIconProps>(({ sel
             color: ${({ selected, theme }) => (selected ? theme.palette.primary.contrastText : theme.palette.text.primary)};
         }
     }
+`;
+
+export const TextIcon = styled.div<IMenuItemSelected>`
+    font-family: ${({ theme }) => theme.typography.fontFamily};
+    font-size: 15px;
+    line-height: 20px;
+    width: 20px;
+    text-align: center;
+
+    ${({ selected }) =>
+        selected &&
+        css`
+            color: white;
+            font-weight: bold;
+        `};
 `;
 
 export const ListItemSecondaryAction = styled<IMenuItemSelected & ListItemSecondaryActionProps>(({ selected, ...rest }) => (

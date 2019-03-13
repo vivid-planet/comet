@@ -30,7 +30,7 @@ const CollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps
     );
 
     return (
-        <List {...otherProps}>
+        <List {...otherProps} disablePadding={true}>
             <MenuItem
                 {...{ text, icon, level }}
                 secondaryAction={collapsible && <SecondaryAction open={open} onClick={handleClick.bind(null, open, setOpen)} />}
