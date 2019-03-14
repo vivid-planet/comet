@@ -45,7 +45,7 @@ class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
 const ExtendedAutoSave = withTableQueryContext(AutoSave);
 
 interface IProps {
-    modifySubmitVariables?: <T = object>(variables: T) => T;
+    modifySubmitVariables?: (variables: any) => any;
     headline?: string;
     resetButton?: boolean;
 }
