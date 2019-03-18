@@ -8,13 +8,14 @@ import TableRow, { TableRowProps } from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import ISelectionApi from "./SelectionApi";
+import { IColumnProps } from "./table/Column";
 import Pagination from "./table/Pagination";
 import { IPagingActions } from "./table/pagingStrategy/PagingStrategy";
 import TableQueryContext from "./TableQueryContext";
 import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
 
 interface ITableHeadProps {
-    columns: IColumn[];
+    columns: Array<React.ReactElement<IColumnProps> | undefined>;
     renderHeadTableRow?: () => React.ReactElement<TableRowProps>;
     onSortClick: (ev: React.MouseEvent, column: string) => void;
     sort?: string;
@@ -31,36 +32,32 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
         <TableHead>
             <tableRow.type {...tableRow.props}>
                 {tableRow.props.children}
-                {props.columns.map(({ name, header, sortable, headerProps }, index) => (
-                    <TableCell key={index} {...headerProps}>
-                        {sortable ? (
-                            <TableSortLabel active={props.sort === name} direction={props.order} onClick={handleSortClick.bind(null, name)}>
-                                {header}
-                            </TableSortLabel>
-                        ) : (
-                            header
-                        )}
-                    </TableCell>
-                ))}
+                {React.Children.map(props.columns, (column: React.ReactElement<IColumnProps>, index) => {
+                    if (!column) return null;
+                    const { name, header, sortable, headerProps } = column.props;
+                    return (
+                        <TableCell key={index} {...headerProps}>
+                            {sortable ? (
+                                <TableSortLabel active={props.sort === name} direction={props.order} onClick={handleSortClick.bind(null, name)}>
+                                    {header}
+                                </TableSortLabel>
+                            ) : (
+                                header
+                            )}
+                        </TableCell>
+                    );
+                })}
             </tableRow.type>
         </TableHead>
     );
 };
 
-interface IColumn {
-    name: string;
-    header?: string | React.ReactNode;
-    cell?: (row: any) => React.ReactNode;
-    sortable?: boolean;
-    cellProps?: TableCellProps;
-    headerProps?: TableCellProps;
-}
 interface IRow {
     id: string | number;
 }
 export interface IProps {
     data: IRow[];
-    columns: IColumn[];
+    children: Array<React.ReactElement<IColumnProps> | undefined>;
     totalCount: number;
     selectedId?: string;
     selectable?: boolean;
@@ -85,7 +82,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
         return (
             <MuiTable>
                 <EnhancedTableHead
-                    columns={this.props.columns}
+                    columns={this.props.children}
                     onSortClick={this.handleSortClick}
                     sort={sort}
                     order={order}
@@ -113,11 +110,14 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                                 onKeyDown={this.handleKeyDown}
                             >
                                 {tableRow.props.children}
-                                {this.props.columns.map((column, colIndex) => (
-                                    <TableCell key={colIndex} {...column.cellProps}>
-                                        {column.cell ? column.cell(row) : (row as any)[column.name]}
-                                    </TableCell>
-                                ))}
+                                {React.Children.map(this.props.children, (column: React.ReactElement<IColumnProps>, colIndex) => {
+                                    if (!column) return null;
+                                    return (
+                                        <TableCell key={colIndex} {...column.props.cellProps}>
+                                            {column.props.children ? column.props.children(row) : (row as any)[column.props.name]}
+                                        </TableCell>
+                                    );
+                                })}
                             </tableRow.type>
                         );
                     })}
