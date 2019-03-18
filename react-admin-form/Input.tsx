@@ -19,6 +19,6 @@ export const StyledInput = styled<InputBaseProps>(({ ...props }) => <MuiInputBas
 `;
 
 const Input: React.FunctionComponent<InputBaseProps & FieldRenderProps> = ({ meta, input, innerRef, ...props }) => (
-    <StyledInput {...props} {...input} />
+    <StyledInput {...input} {...props} />
 );
 export default Input;

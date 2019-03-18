@@ -1,3 +1,6 @@
+import { Grid, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import CancelIcon from "@material-ui/icons/Cancel";
 import { debounce } from "debounce";
 import isEqual = require("lodash.isequal");
 import * as React from "react";
@@ -42,7 +45,9 @@ class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
 const ExtendedAutoSave = withTableQueryContext(AutoSave);
 
 interface IProps {
-    modifySubmitVariables?: <T = object>(variables: T) => T;
+    modifySubmitVariables?: (variables: any) => any;
+    headline?: string;
+    resetButton?: boolean;
 }
 // tslint:disable-next-line:max-classes-per-file
 class TableFilterFinalForm extends React.Component<IProps> {
@@ -52,6 +57,30 @@ class TableFilterFinalForm extends React.Component<IProps> {
     private renderForm = (formRenderProps: FormRenderProps) => {
         return (
             <form>
+                {(this.props.headline || this.props.resetButton) && (
+                    <Grid container justify="space-between">
+                        {this.props.headline && (
+                            <Grid item>
+                                <Typography variant="h5">{this.props.headline}</Typography>
+                            </Grid>
+                        )}
+                        {this.props.resetButton && (
+                            <Grid item>
+                                <Button
+                                    variant="text"
+                                    color="default"
+                                    onClick={() => {
+                                        formRenderProps.form.reset();
+                                    }}
+                                >
+                                    <CancelIcon />
+                                    Filter zurücksetzen
+                                </Button>
+                            </Grid>
+                        )}
+                    </Grid>
+                )}
+
                 {this.props.children}
                 <FormSpy subscription={{ values: true }}>
                     {renderProps => <ExtendedAutoSave {...renderProps} modifySubmitVariables={this.props.modifySubmitVariables} />}

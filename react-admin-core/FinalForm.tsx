@@ -186,7 +186,7 @@ class FinalForm extends React.Component<IProps> {
                 if (stackApi) {
                     // if this form is inside a Stack goBack after save success
                     // TODO we probably shouldn't have a hard dependency to Stack
-                    stackApi.goBackForce();
+                    stackApi.goBack();
                 }
                 return data;
             })
