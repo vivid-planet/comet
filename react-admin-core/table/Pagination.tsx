@@ -9,28 +9,34 @@ import { IPagingActions } from "./pagingStrategy/PagingStrategy";
 interface IProps {
     totalCount: number;
     pagingActions: IPagingActions;
+    rowName?: string | ((count: number) => string);
 }
 
-const Pagination: React.FunctionComponent<IProps> = ({ totalCount, pagingActions }) => (
-    <TableCell colSpan={1000}>
-        <Toolbar>
-            <Grid container justify="space-between" alignItems="center">
-                <Grid item>
-                    <Typography color="textPrimary" variant="body2">
-                        {totalCount}
-                    </Typography>
+const Pagination: React.FunctionComponent<IProps> = ({ totalCount, pagingActions, rowName }) => {
+    if (typeof rowName === "function") {
+        rowName = rowName(totalCount);
+    }
+    return (
+        <TableCell colSpan={1000}>
+            <Toolbar>
+                <Grid container justify="space-between" alignItems="center">
+                    <Grid item>
+                        <Typography color="textPrimary" variant="body2">
+                            {totalCount} {rowName}
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <sc.Button onClick={pagingActions.fetchPreviousPage} disabled={!pagingActions.fetchPreviousPage}>
+                            <KeyboardArrowLeft color={pagingActions.fetchPreviousPage ? "inherit" : "disabled"} />
+                        </sc.Button>
+                        <sc.Button onClick={pagingActions.fetchNextPage} disabled={!pagingActions.fetchNextPage}>
+                            <KeyboardArrowRight color={pagingActions.fetchNextPage ? "inherit" : "disabled"} />
+                        </sc.Button>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <sc.Button onClick={pagingActions.fetchPreviousPage} disabled={!pagingActions.fetchPreviousPage}>
-                        <KeyboardArrowLeft color={pagingActions.fetchPreviousPage ? "inherit" : "disabled"} />
-                    </sc.Button>
-                    <sc.Button onClick={pagingActions.fetchNextPage} disabled={!pagingActions.fetchNextPage}>
-                        <KeyboardArrowRight color={pagingActions.fetchNextPage ? "inherit" : "disabled"} />
-                    </sc.Button>
-                </Grid>
-            </Grid>
-        </Toolbar>
-    </TableCell>
-);
+            </Toolbar>
+        </TableCell>
+    );
+};
 
 export default Pagination;

@@ -67,8 +67,8 @@ export interface IProps {
     renderTableRow?: (index: number) => React.ReactElement<TableRowProps>;
     renderHeadTableRow?: () => React.ReactElement<TableRowProps>;
     selectionApi?: ISelectionApi;
-
     pagingActions?: IPagingActions;
+    rowName?: string | ((count: number) => string);
 }
 
 class Table extends React.Component<IProps & IWithTableQueryProps> {
@@ -125,7 +125,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                 {this.props.pagingActions && (
                     <TableFooter>
                         <TableRow>
-                            <Pagination totalCount={this.props.totalCount} pagingActions={this.props.pagingActions} />
+                            <Pagination totalCount={this.props.totalCount} pagingActions={this.props.pagingActions} rowName={this.props.rowName} />
                         </TableRow>
                     </TableFooter>
                 )}
