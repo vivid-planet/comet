@@ -53,18 +53,21 @@ const vividStyles = {
 export class Select<OptionType> extends React.Component<FieldRenderProps & ReactSelectProps<OptionType>> {
     public render() {
         const { components, styles, ...rest } = this.props;
+        // @ts-ignore TODO: Fix Later
         return <ReactSelect {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
     }
 }
 export class Async<OptionType> extends React.Component<FieldRenderProps & ReactSelectAsyncProps<OptionType>> {
     public render() {
         const { components, styles, ...rest } = this.props;
+        // @ts-ignore TODO: Fix Later
         return <ReactSelectAsync {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
     }
 }
 export class Creatable<OptionType> extends React.Component<FieldRenderProps & ReactSelectCreatableProps<OptionType>> {
     public render() {
         const { components, styles, ...rest } = this.props;
+        // @ts-ignore TODO: Fix Later
         return <ReactSelectCreatable {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
     }
 }
@@ -73,6 +76,7 @@ export class AsyncCreatable<OptionType> extends React.Component<
 > {
     public render() {
         const { components, styles, ...rest } = this.props;
+        // @ts-ignore TODO: Fix Later
         return <ReactSelectAsyncCreatable {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
     }
 }
