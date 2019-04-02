@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-core",
-    "version": "0.0.0",
+    "version": "1.0.0-alpha.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -17,6 +17,7 @@
         "graphql-tag": "^2.10.1",
         "history": "^4.9.0",
         "lodash.isequal": "^4.5.0",
+        "query-string": "^6.4.2",
         "react": "^16.8.6",
         "react-apollo": "^2.5.3",
         "react-dnd": "^5.0.0",
@@ -27,7 +28,6 @@
         "react-router-dom": "^4.3.1",
         "recompose": "^0.30.0",
         "styled-components": "^3.4.10",
-        "query-string": "^6.4.2",
         "uuid": "^3.3.2"
     },
     "devDependencies": {
