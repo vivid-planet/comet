@@ -5,7 +5,7 @@
         "clean": "lerna clean",
         "bootstrap": "lerna bootstrap",
         "start": "lerna run --parallel start",
-        "prepare": "rimraf packages/*/build && lerna run prepare",
+        "prepare": "rimraf packages/*/lib && lerna run prepare",
         "build": "npm run prepare && lerna run --parallel build"
     },
     "devDependencies": {
