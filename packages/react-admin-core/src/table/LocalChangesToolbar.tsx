@@ -1,8 +1,8 @@
 import { CircularProgress, Toolbar } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
-import { ITableLocalChangesApi } from "@vivid-planet/react-admin-core/TableLocalChanges";
 import * as React from "react";
+import { ITableLocalChangesApi } from "../TableLocalChanges";
 
 interface IProps {
     tableLocalChangesApi: ITableLocalChangesApi;

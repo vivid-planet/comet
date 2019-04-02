@@ -2,8 +2,8 @@ import { Collapse, IconButton, List } from "@material-ui/core";
 import { ListProps } from "@material-ui/core/List";
 import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 import ArrowDropUp from "@material-ui/icons/ArrowDropUp";
-import { IMenuItemProps, MenuItem } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
+import { IMenuItemProps, MenuItem } from "../menu";
 
 export interface IMenuLevel {
     level?: number;

@@ -1,8 +1,8 @@
-import ReactSelect from "@vivid-planet/react-admin-form/ReactSelect";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { Props as ReactSelectProps } from "react-select/lib/Select";
 import { OptionsType } from "react-select/lib/types";
+import ReactSelect from "./ReactSelect";
 
 interface IOptionType {
     value: string;

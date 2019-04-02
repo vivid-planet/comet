@@ -7,8 +7,8 @@ import {
 import { ListItemIconProps } from "@material-ui/core/ListItemIcon";
 import { ListItemSecondaryActionProps } from "@material-ui/core/ListItemSecondaryAction";
 import { ListItemTextProps } from "@material-ui/core/ListItemText";
-import styled, { css } from "@vivid-planet/react-admin-mui/styled-components";
 import * as React from "react";
+import styled, { css } from "../styled-components";
 
 interface IMenuItemStyleProps {
     level: number;

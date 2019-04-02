@@ -1,7 +1,7 @@
 import { ListItemProps } from "@material-ui/core/ListItem";
-import { IMenuItemProps, MenuItem } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { Link, LinkProps, Route } from "react-router-dom";
+import { IMenuItemProps, MenuItem } from "./index";
 
 export interface IMenuItemLink extends IMenuItemProps {
     path: string;

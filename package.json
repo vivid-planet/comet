@@ -1,0 +1,24 @@
+{
+    "name": "root",
+    "private": true,
+    "scripts": {
+        "clean": "lerna clean",
+        "bootstrap": "lerna bootstrap",
+        "start": "lerna run --parallel start",
+        "prepare": "rimraf packages/*/build && lerna run prepare",
+        "build": "npm run prepare && lerna run --parallel build"
+    },
+    "devDependencies": {
+        "@vivid-planet/vplint": "^1.0.2",
+        "husky": "^1.3.1",
+        "lerna": "^3.13.1",
+        "lint-staged": "^8.1.5",
+        "prettier": "^1.16.4",
+        "prettylint": "^1.0.0",
+        "typescript": "^3.4.1",
+        "tslint": "^5.15.0",
+        "tslint-config-prettier": "^1.18.0",
+        "tslint-react": "^4.0.0"
+    },
+    "license": "BSD-2-Clause"
+}

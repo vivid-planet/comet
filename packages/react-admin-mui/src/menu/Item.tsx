@@ -1,7 +1,6 @@
 import { ListItemProps } from "@material-ui/core/ListItem";
-import { MenuContext } from "@vivid-planet/react-admin-mui";
-import { IMenuLevel } from "@vivid-planet/react-admin-mui/menu/CollapsibleItem";
 import * as React from "react";
+import { IMenuLevel, MenuContext } from "./index";
 import * as sc from "./Item.sc";
 
 export interface IMenuItemProps extends IMenuLevel {
