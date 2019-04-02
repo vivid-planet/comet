@@ -1,4 +1,4 @@
-import styled from "@vivid-planet/react-admin-mui/styled-components";
+import { styledComponents as styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 
 const FormSection = styled.div`

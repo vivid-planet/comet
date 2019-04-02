@@ -1,5 +1,5 @@
 import { Paper } from "@material-ui/core";
-import styled from "@vivid-planet/react-admin-mui/styled-components";
+import { styledComponents as styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 
 const FormPaper = styled(Paper)`

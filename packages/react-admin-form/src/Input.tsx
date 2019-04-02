@@ -1,5 +1,5 @@
 import MuiInputBase, { InputBaseProps } from "@material-ui/core/InputBase";
-import styled from "@vivid-planet/react-admin-mui/styled-components";
+import { styledComponents as styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 

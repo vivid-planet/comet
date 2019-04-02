@@ -1,8 +1,8 @@
 import { InputBaseProps } from "@material-ui/core/InputBase";
 import Popover from "@material-ui/core/Popover";
 import DateRangeIcon from "@material-ui/icons/DateRange";
-import LocaleContext from "@vivid-planet/react-admin-date-fns/LocaleContext";
-import styled from "@vivid-planet/react-admin-mui/styled-components";
+import { LocaleContext } from "@vivid-planet/react-admin-date-fns";
+import { styledComponents as styled } from "@vivid-planet/react-admin-mui";
 import { format } from "date-fns";
 import * as de from "date-fns/locale/de";
 import * as React from "react";
