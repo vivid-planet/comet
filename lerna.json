@@ -5,7 +5,8 @@
         "packages/react-admin-date-fns",
         "packages/react-admin-layout",
         "packages/react-admin-mui",
-        "packages/react-admin-final-form-material-ui"
+        "packages/react-admin-final-form-material-ui",
+        "packages/react-admin-core"
     ],
     "version": "independent"
 }
