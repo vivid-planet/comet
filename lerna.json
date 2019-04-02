@@ -1,4 +1,10 @@
 {
-    "packages": ["packages/*"],
+    "packages": [
+        "packages/file-icons",
+        "packages/material-ui-react-select",
+        "packages/react-admin-date-fns",
+        "packages/react-admin-layout",
+        "packages/react-admin-mui"
+    ],
     "version": "independent"
 }
