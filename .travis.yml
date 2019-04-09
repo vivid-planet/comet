@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+    - "8"
+cache: npm
+before_script:
+    - npx lerna exec -- npm install
+script:
+    - git reset --soft origin/$TRAVIS_PULL_REQUEST_BRANCH
+    - npx lint-staged
