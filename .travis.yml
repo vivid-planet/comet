@@ -8,5 +8,5 @@ before_script:
     - npm install
     - npx lerna exec -- npm install
 script:
-    - git reset --soft origin/$TRAVIS_PULL_REQUEST_BRANCH
+    - git reset --soft origin/\$TRAVIS_PULL_REQUEST_BRANCH
     - npx lint-staged
