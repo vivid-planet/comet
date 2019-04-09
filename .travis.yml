@@ -2,7 +2,10 @@ language: node_js
 node_js:
     - "8"
 cache: npm
+before_install:
+    - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 before_script:
+    - npm install
     - npx lerna exec -- npm install
 script:
     - git reset --soft origin/$TRAVIS_PULL_REQUEST_BRANCH
