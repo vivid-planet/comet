@@ -4,6 +4,7 @@ import * as React from "react";
 export interface ITableQueryApi {
     changeFilters: (filters: object) => void;
     changeSort: (columnName: string) => void;
+    changePage: (variables: object) => void;
     getVariables: () => object;
     getQuery: () => DocumentNode;
     onRowCreated: (id: string) => void;
@@ -12,8 +13,8 @@ export interface ITableQueryApi {
 
 export interface ITableQueryContext {
     api: ITableQueryApi;
-    sort?: string;
-    order: "asc" | "desc";
+    // sort?: string;
+    // order: "asc" | "desc";
 }
 
 export default React.createContext<ITableQueryContext | undefined>(undefined);

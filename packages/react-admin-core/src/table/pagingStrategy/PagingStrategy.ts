@@ -1,10 +1,6 @@
-import TableQuery from "../../TableQuery";
+import { ITableQueryApi } from "../../TableQueryContext";
 
 export interface IPagingActions {
-    fetchNextPage?: () => void;
-    fetchPreviousPage?: () => void;
-}
-export interface IPagingStrategy {
-    createPagingActions: (tableQuery: TableQuery, queryData: any) => IPagingActions;
-    extractRows: (data: any) => any[];
+    fetchNextPage?: (tableQuery: ITableQueryApi) => void;
+    fetchPreviousPage?: (tableQuery: ITableQueryApi) => void;
 }
