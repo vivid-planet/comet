@@ -105,17 +105,13 @@ class Stack extends React.Component<IProps, IState> {
                         this.history = routerProps.history;
                         return (
                             <>
-                                <Toolbar>
-                                    <Breadcrumbs pages={breadcrumbs} />
-                                </Toolbar>
-
+                                <Breadcrumbs pages={breadcrumbs} />
                                 {this.props.showBackButton && (
                                     <Button color="default" disabled={breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
                                         Zurück
                                         <ArrowBackIcon />
                                     </Button>
                                 )}
-
                                 <Breadcrumb title={this.props.topLevelTitle} url={routerProps.match.url}>
                                     <DirtyHandler
                                         ref={ref => {
