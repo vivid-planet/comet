@@ -1,10 +1,10 @@
 import { Grid, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import CancelIcon from "@material-ui/icons/Cancel";
 import { debounce } from "debounce";
 import isEqual = require("lodash.isequal");
 import * as React from "react";
 import { Form, FormRenderProps, FormSpy, FormSpyRenderProps } from "react-final-form";
+import { FilterCancelIcon } from "./TableFilterFinalForm.sc";
 import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
 
 interface IAutoSaveProps extends IWithTableQueryProps, FormSpyRenderProps {
@@ -61,7 +61,9 @@ class TableFilterFinalForm extends React.Component<IProps> {
                     <Grid container justify="space-between">
                         {this.props.headline && (
                             <Grid item>
-                                <Typography variant="h5">{this.props.headline}</Typography>
+                                <Typography variant="h4" color="primary">
+                                    {this.props.headline}
+                                </Typography>
                             </Grid>
                         )}
                         {this.props.resetButton && (
@@ -73,14 +75,13 @@ class TableFilterFinalForm extends React.Component<IProps> {
                                         formRenderProps.form.reset();
                                     }}
                                 >
-                                    <CancelIcon />
+                                    <FilterCancelIcon />
                                     Filter zurücksetzen
                                 </Button>
                             </Grid>
                         )}
                     </Grid>
                 )}
-
                 {this.props.children}
                 <FormSpy subscription={{ values: true }}>
                     {renderProps => <ExtendedAutoSave {...renderProps} modifySubmitVariables={this.props.modifySubmitVariables} />}
