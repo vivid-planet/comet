@@ -4,7 +4,7 @@ import { debounce } from "debounce";
 import isEqual = require("lodash.isequal");
 import * as React from "react";
 import { Form, FormRenderProps, FormSpy, FormSpyRenderProps } from "react-final-form";
-import { FilterCancelIcon } from "./TableFilterFinalForm.sc";
+import * as sc from "./TableFilterFinalForm.sc";
 import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
 
 interface IAutoSaveProps extends IWithTableQueryProps, FormSpyRenderProps {
@@ -75,7 +75,7 @@ class TableFilterFinalForm extends React.Component<IProps> {
                                         formRenderProps.form.reset();
                                     }}
                                 >
-                                    <FilterCancelIcon />
+                                    <sc.FilterCancelIcon />
                                     Filter zurücksetzen
                                 </Button>
                             </Grid>
