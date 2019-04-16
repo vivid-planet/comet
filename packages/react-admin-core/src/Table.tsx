@@ -15,7 +15,7 @@ import TableQueryContext from "./TableQueryContext";
 import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
 
 interface ITableHeadProps {
-    columns: Array<React.ReactElement<IColumnProps> | undefined>;
+    columns: Array<React.ReactElement<IColumnProps> | undefined | false>;
     renderHeadTableRow?: () => React.ReactElement<TableRowProps>;
     onSortClick: (ev: React.MouseEvent, column: string) => void;
     sort?: string;
@@ -57,7 +57,7 @@ interface IRow {
 }
 export interface IProps {
     data: IRow[];
-    children: Array<React.ReactElement<IColumnProps> | undefined>;
+    children: Array<React.ReactElement<IColumnProps> | undefined | false>;
     totalCount: number;
     selectedId?: string;
     selectable?: boolean;
