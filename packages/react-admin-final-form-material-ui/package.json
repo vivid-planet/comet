@@ -6,28 +6,24 @@
     "files": [
         "lib"
     ],
-    "dependencies": {
-        "@material-ui/core": "^3.9.3",
+    "devDependencies": {
+        "@vivid-planet/material-ui-react-select": "^1.0.0-alpha.0"
+    },
+    "peerDependencies": {
+        "@material-ui/core": "^3.9.2",
         "@vivid-planet/material-ui-react-select": "^1.0.0-alpha.0",
         "final-form": "^4.12.0",
-        "react": "^16.8.6",
-        "react-dom": "^16.8.6",
+        "react": "^16.8",
+        "react-dom": "^16.8",
         "react-final-form": "^3.7.0",
         "react-select": "^2.4.2"
-    },
-    "devDependencies": {
-        "@types/react": "^16.8.10",
-        "@types/react-dom": "^16.8.3",
-        "@types/react-select": "^2.0.15",
-        "rimraf": "^2.6.3",
-        "typescript": "^3.4.1"
     },
     "scripts": {
         "prebuild": "rimraf lib",
         "build": "tsc --project ./tsconfig.json",
         "start": "tsc --project ./tsconfig.json --watch",
         "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
-        "prepublish": "npm run build"
+        "prepare": "npm run build"
     },
     "publishConfig": {
         "access": "public"
