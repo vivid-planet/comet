@@ -27,6 +27,8 @@
         "graphql-tag": "^2.10.1",
         "history": "^4.9.0",
         "react": "^16.8",
+        "react-apollo": "^2.5.3",
+        "react-apollo-hooks": "^0.4.4",
         "react-dom": "^16.8",
         "react-final-form": "^3.7.0",
         "react-router": "^4.3.1",
