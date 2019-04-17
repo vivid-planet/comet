@@ -6,7 +6,7 @@ import ISelectionApi from "./SelectionApi";
 import { IPagingActions } from "./table/pagingStrategy/PagingStrategy";
 import { ITableQueryApi } from "./TableQueryContext";
 
-interface ITableData<TRow extends { id: number } = { id: number }> {
+interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
     data?: TRow[];
     totalCount?: number;
     pagingActions?: IPagingActions;
