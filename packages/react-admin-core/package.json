@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-core",
-    "version": "1.0.0-alpha.1",
+    "version": "1.0.0-alpha.2",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -9,7 +9,7 @@
     "dependencies": {
         "@material-ui/core": "^3.9.3",
         "@material-ui/icons": "^3.0.2",
-        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.0",
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.1",
         "apollo-client": "^2.5.1",
         "debounce": "^1.2.0",
         "final-form": "^4.12.0",
