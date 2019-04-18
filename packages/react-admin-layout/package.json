@@ -6,22 +6,16 @@
     "files": [
         "lib"
     ],
-    "dependencies": {
+    "peerDependencies": {
         "react": "^16.8.6",
         "react-dom": "^16.8.6"
-    },
-    "devDependencies": {
-        "@types/react": "^16.8.10",
-        "@types/react-dom": "^16.8.3",
-        "rimraf": "^2.6.3",
-        "typescript": "^3.4.1"
     },
     "scripts": {
         "prebuild": "rimraf lib",
         "build": "tsc --project ./tsconfig.json",
         "start": "tsc --project ./tsconfig.json --watch",
         "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
-        "prepublish": "npm run build"
+        "prepare": "npm run build"
     },
     "publishConfig": {
         "access": "public"

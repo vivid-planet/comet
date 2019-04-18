@@ -1,12 +1,11 @@
 language: node_js
 node_js:
     - "8"
-cache: npm
+cache: yarn
 before_install:
     - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 before_script:
-    - npm install
-    - npx lerna exec -- npm install
+    - yarn
 script:
     - git reset --soft origin/${TRAVIS_BRANCH}
-    - npx lint-staged
+    - yarn lint-staged
