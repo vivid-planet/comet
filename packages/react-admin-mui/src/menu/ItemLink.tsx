@@ -16,6 +16,7 @@ export class MenuItemLink extends React.Component<IMenuItemLink & ListItemProps 
                 path={path}
                 strict={false}
                 children={({ location, match }) => {
+                    // @ts-ignore
                     return <MenuItem selected={!!match} component={Link} to={path} {...otherProps} />;
                 }}
             />
