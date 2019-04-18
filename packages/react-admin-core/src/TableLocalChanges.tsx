@@ -2,7 +2,7 @@ import ApolloClient from "apollo-client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import { ApolloConsumer } from "react-apollo";
-import withDirtyHandlerApi, { IWithDirtyHandlerApiProps } from "./withDirtyHandlerApi";
+import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./withDirtyHandlerApi";
 
 export interface ITableLocalChangesApi {
     setLocalDataChange: (id: string, column: string, value: any) => void;
@@ -172,4 +172,5 @@ class TableLocalChanges<TData extends { id: string; pos?: number }> extends Reac
     }
 }
 
-export default withDirtyHandlerApi(TableLocalChanges);
+const WrappedTableLocalChanges = withDirtyHandlerApi(TableLocalChanges);
+export { WrappedTableLocalChanges as TableLocalChanges };

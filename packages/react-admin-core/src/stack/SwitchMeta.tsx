@@ -9,7 +9,7 @@ interface IProps {
 
 const SwitchMetaContext = React.createContext<string>("");
 
-class SwitchMeta extends React.Component<IProps> {
+export class StackSwitchMeta extends React.Component<IProps> {
     public static contextType = StackApiContext;
     private parentId?: string;
 
@@ -49,5 +49,3 @@ class SwitchMeta extends React.Component<IProps> {
         this.context.removeSwitchMeta(this.props.id);
     }
 }
-
-export default SwitchMeta;

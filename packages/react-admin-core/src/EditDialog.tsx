@@ -4,16 +4,16 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import * as React from "react";
-import DirtyHandler from "./DirtyHandler";
-import DirtyHandlerApiContext, { IDirtyHandlerApi } from "./DirtyHandlerApiContext";
-import EditDialogContext, { IEditDialogApi } from "./EditDialogApiContext";
-import ISelectionApi from "./SelectionApi";
-import SelectionRoute from "./SelectionRoute";
+import { DirtyHandler } from "./DirtyHandler";
+import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
+import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
+import { ISelectionApi } from "./SelectionApi";
+import { SelectionRoute } from "./SelectionRoute";
 
 interface IProps {
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
-class EditDialog extends React.Component<IProps> {
+export class EditDialog extends React.Component<IProps> {
     private editDialogApi: IEditDialogApi;
     private selectionRef: React.RefObject<SelectionRoute> = React.createRef<SelectionRoute>();
 
@@ -28,7 +28,7 @@ class EditDialog extends React.Component<IProps> {
 
     public render() {
         return (
-            <EditDialogContext.Provider value={this.editDialogApi}>
+            <EditDialogApiContext.Provider value={this.editDialogApi}>
                 <DirtyHandler>
                     <SelectionRoute ref={this.selectionRef}>
                         {({ selectedId, selectionMode, selectionApi }) => (
@@ -53,7 +53,7 @@ class EditDialog extends React.Component<IProps> {
                         )}
                     </SelectionRoute>
                 </DirtyHandler>
-            </EditDialogContext.Provider>
+            </EditDialogApiContext.Provider>
         );
     }
 
@@ -75,5 +75,3 @@ class EditDialog extends React.Component<IProps> {
         selectionApi.handleDeselect();
     };
 }
-
-export default EditDialog;

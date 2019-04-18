@@ -1,12 +1,8 @@
 import { CircularProgress, RootRef } from "@material-ui/core";
 import { ApolloError } from "apollo-client";
-import { DocumentNode } from "graphql";
 import * as React from "react";
-import { Query, renderToStringWithData } from "react-apollo";
-import ISelectionApi from "./SelectionApi";
-import { IPagingActions } from "./table/pagingStrategy/PagingStrategy";
 import * as sc from "./TableQuery.sc";
-import TableQueryContext, { ITableQueryApi } from "./TableQueryContext";
+import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
 export const parseIdFromIri = (iri: string) => {
     const m = iri.match(/\/(\d+)/);
@@ -24,7 +20,7 @@ interface IProps {
     error?: ApolloError;
 }
 
-class TableQuery extends React.Component<IProps> {
+export class TableQuery extends React.Component<IProps> {
     private domRef = React.createRef<HTMLDivElement>();
     constructor(props: IProps) {
         super(props);
@@ -49,5 +45,3 @@ class TableQuery extends React.Component<IProps> {
         );
     }
 }
-
-export default TableQuery;

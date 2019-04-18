@@ -2,23 +2,23 @@ import { History } from "history";
 import * as React from "react";
 import { match, RouteComponentProps } from "react-router";
 import { Route } from "react-router-dom";
-import DirtyHandlerApiContext, { IDirtyHandlerApi } from "./DirtyHandlerApiContext";
-import ISelectionApi from "./SelectionApi";
+import { IDirtyHandlerApi } from "./DirtyHandlerApiContext";
+import { ISelectionApi } from "./SelectionApi";
 
-export interface IRenderPropArgs {
+export interface ISelectionRouterRenderPropArgs {
     selectedId?: string;
     selectionMode?: "edit" | "add";
     selectionApi: ISelectionApi;
 }
 
 interface IProps {
-    children: (injectedProps: IRenderPropArgs) => React.ReactNode;
+    children: (injectedProps: ISelectionRouterRenderPropArgs) => React.ReactNode;
 }
 
 interface IRouteParams {
     id?: string;
 }
-class SelectionRoute extends React.Component<IProps> {
+export class SelectionRoute extends React.Component<IProps> {
     public selectionApi: ISelectionApi;
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: History;
@@ -81,4 +81,3 @@ class SelectionRoute extends React.Component<IProps> {
         this.history.push(`${this.match.url}/add`);
     }
 }
-export default SelectionRoute;

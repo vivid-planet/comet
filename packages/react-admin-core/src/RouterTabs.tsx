@@ -5,9 +5,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 import { Route, RouteComponentProps, withRouter } from "react-router-dom";
-import { StackApiContext } from "./Stack/Api";
-import Breadcrumb from "./Stack/Breadcrumb";
-import { StackSwitchApiContext } from "./Stack/Switch";
+import { StackApiContext, StackBreadcrumb, StackSwitchApiContext } from "./stack";
 
 interface ITabProps {
     path: string;
@@ -99,9 +97,13 @@ class RouterTabs extends React.Component<IProps> {
                                 }
                                 if (match) {
                                     return (
-                                        <Breadcrumb url={`${this.props.match.url}${child.props.path}`} title={child.props.label} invisible={true}>
+                                        <StackBreadcrumb
+                                            url={`${this.props.match.url}${child.props.path}`}
+                                            title={child.props.label}
+                                            invisible={true}
+                                        >
                                             <TabContainer>{child.props.children}</TabContainer>
-                                        </Breadcrumb>
+                                        </StackBreadcrumb>
                                     );
                                 } else {
                                     return <TabContainer style={{ display: "none" }}>{child.props.children}</TabContainer>;
@@ -121,6 +123,4 @@ class RouterTabs extends React.Component<IProps> {
         this.props.history.push(this.props.match.url + paths[value]);
     };
 }
-const ExtendedRouterTabs = withStyles(styles)(withRouter(RouterTabs));
-
-export default ExtendedRouterTabs;
+export const ExtendedRouterTabs = withStyles(styles)(withRouter(RouterTabs));

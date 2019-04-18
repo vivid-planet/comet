@@ -21,7 +21,7 @@ const BreadcrumbLink = (props: LinkProps) => (
     </RouterLink>
 );
 
-const Breadcrumbs = ({ pages }: IBreadcrumbProps) => {
+export const Breadcrumbs = ({ pages }: IBreadcrumbProps) => {
     return (
         <Root>
             {pages.map(({ id, url, title }, index) => {
@@ -39,5 +39,3 @@ const Breadcrumbs = ({ pages }: IBreadcrumbProps) => {
         </Root>
     );
 };
-
-export default Breadcrumbs;

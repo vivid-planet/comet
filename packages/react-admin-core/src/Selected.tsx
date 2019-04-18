@@ -1,6 +1,6 @@
 import { CircularProgress } from "@material-ui/core";
 import * as React from "react";
-import { Query } from "react-apollo";
+import { Query, QueryResult } from "react-apollo";
 import styled from "styled-components";
 
 interface IProps {
@@ -17,7 +17,7 @@ const ProgressContainer = styled.div`
     justify-content: center;
 `;
 
-class Selected extends React.Component<IProps> {
+export class Selected extends React.Component<IProps> {
     public render() {
         let row;
         if (this.props.rows) {
@@ -27,7 +27,7 @@ class Selected extends React.Component<IProps> {
         if (this.props.selectionMode === "edit" && !row) {
             return (
                 <Query query={this.props.query} variables={{ id: this.props.selectedId }}>
-                    {queryResult => {
+                    {(queryResult: QueryResult) => {
                         if (queryResult.loading || !queryResult.data) {
                             return (
                                 <ProgressContainer>
@@ -53,4 +53,3 @@ class Selected extends React.Component<IProps> {
         }
     }
 }
-export default Selected;

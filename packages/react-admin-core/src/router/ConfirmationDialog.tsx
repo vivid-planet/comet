@@ -11,7 +11,8 @@ interface IProps {
     message: string;
     handleClose: (ok: boolean) => void;
 }
-const ConfirmationDialog: React.FunctionComponent<IProps> = ({ message, handleClose, isOpen }) => {
+
+export const RouterConfirmationDialog: React.FunctionComponent<IProps> = ({ message, handleClose, isOpen }) => {
     return (
         <Dialog open={isOpen} onClose={handleClose.bind(this, false)}>
             <DialogTitle>{message}</DialogTitle>
@@ -29,4 +30,3 @@ const ConfirmationDialog: React.FunctionComponent<IProps> = ({ message, handleCl
         </Dialog>
     );
 };
-export default ConfirmationDialog;

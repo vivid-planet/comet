@@ -1,12 +1,12 @@
 import * as React from "react";
 
-export interface IProps {
+export interface IStackPageProps {
     name: string;
     title?: string;
     children: ((id: string) => React.ReactNode) | React.ReactNode;
 }
 
-export default class StackPage extends React.Component<IProps> {
+export class StackPage extends React.Component<IStackPageProps> {
     public render(): React.ReactNode {
         return null;
     }

@@ -2,15 +2,15 @@ import { History } from "history";
 import * as React from "react";
 import { match, Route, RouteComponentProps } from "react-router";
 import { StackApiContext } from "./Api";
-import Breadcrumb from "./Breadcrumb";
-import StackPage, { IProps as IPageProps } from "./Page";
-import SwitchMeta from "./SwitchMeta";
+import { StackBreadcrumb } from "./Breadcrumb";
+import { IStackPageProps, StackPage } from "./Page";
+import { StackSwitchMeta } from "./SwitchMeta";
 const UUID = require("uuid");
 
 interface IProps {
     initialPage?: string;
     title?: string;
-    children: Array<React.ReactElement<IPageProps>>;
+    children: Array<React.ReactElement<IStackPageProps>>;
 }
 interface IState {
     pageBreadcrumbTitle: {
@@ -33,7 +33,7 @@ export interface IStackSwitchApi {
 interface IRouteParams {
     id?: string;
 }
-class StackSwitch extends React.Component<IProps, IState> {
+export class StackSwitch extends React.Component<IProps, IState> {
     public static contextType = StackApiContext;
     public match: match<IRouteParams>;
     private history: History;
@@ -64,7 +64,7 @@ class StackSwitch extends React.Component<IProps, IState> {
                                     if (!props.match) return null;
                                     this.activePage = page.props.name;
                                     const ret = (
-                                        <SwitchMeta
+                                        <StackSwitchMeta
                                             id={this.id}
                                             activePage={page.props.name}
                                             isInitialPageActive={this.isInitialPage(page.props.name)}
@@ -80,18 +80,18 @@ class StackSwitch extends React.Component<IProps, IState> {
                                                     ? page.props.children(props.match.params.id)
                                                     : page.props.children}
                                             </StackSwitchApiContext.Provider>
-                                        </SwitchMeta>
+                                        </StackSwitchMeta>
                                     );
                                     if (this.isInitialPage(page.props.name)) {
                                         return ret;
                                     } else {
                                         return (
-                                            <Breadcrumb
+                                            <StackBreadcrumb
                                                 url={props.match.url}
                                                 title={this.state.pageBreadcrumbTitle[page.props.name] || page.props.title || page.props.name}
                                             >
                                                 {ret}
-                                            </Breadcrumb>
+                                            </StackBreadcrumb>
                                         );
                                     }
                                 }}
@@ -134,5 +134,3 @@ class StackSwitch extends React.Component<IProps, IState> {
         }
     };
 }
-
-export default StackSwitch;

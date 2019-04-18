@@ -1,7 +1,7 @@
 import { TableCellProps } from "@material-ui/core/TableCell";
 import * as React from "react";
 
-export interface IColumnProps {
+export interface ITableColumnProps {
     name: string;
     header?: string | React.ReactNode;
     sortable?: boolean;
@@ -9,8 +9,7 @@ export interface IColumnProps {
     headerProps?: TableCellProps;
     children?: (row: any) => React.ReactNode;
 }
-const Column: React.FunctionComponent<IColumnProps> = () => {
+
+export const TableColumn: React.FunctionComponent<ITableColumnProps> = () => {
     return null;
 };
-
-export default Column;

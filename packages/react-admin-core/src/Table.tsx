@@ -1,21 +1,19 @@
-import { IconButton, Toolbar, Typography } from "@material-ui/core";
 import MuiTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
-import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
+import TableCell from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow, { TableRowProps } from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
-import ISelectionApi from "./SelectionApi";
-import { IColumnProps } from "./table/Column";
-import Pagination from "./table/Pagination";
-import { IPagingActions } from "./table/pagingStrategy/PagingStrategy";
-import TableQueryContext from "./TableQueryContext";
-import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
+import { ISelectionApi } from "./SelectionApi";
+import { ITableColumnProps, TablePagination } from "./table";
+import { IPagingActions } from "./table/pagingStrategy";
+import { TableQueryContext } from "./TableQueryContext";
+import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
 
 interface ITableHeadProps {
-    columns: Array<React.ReactElement<IColumnProps> | undefined | false>;
+    columns: Array<React.ReactElement<ITableColumnProps> | undefined | false>;
     renderHeadTableRow?: () => React.ReactElement<TableRowProps>;
     onSortClick: (ev: React.MouseEvent, column: string) => void;
     sort?: string;
@@ -32,7 +30,7 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
         <TableHead>
             <tableRow.type {...tableRow.props}>
                 {tableRow.props.children}
-                {React.Children.map(props.columns, (column: React.ReactElement<IColumnProps>, index) => {
+                {React.Children.map(props.columns, (column: React.ReactElement<ITableColumnProps>, index) => {
                     if (!column) return null;
                     const { name, header, sortable, headerProps } = column.props;
                     return (
@@ -55,9 +53,9 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
 interface IRow {
     id: string | number;
 }
-export interface IProps {
+export interface ITableProps {
     data: IRow[];
-    children: Array<React.ReactElement<IColumnProps> | undefined | false>;
+    children: Array<React.ReactElement<ITableColumnProps> | undefined | false>;
     totalCount: number;
     selectedId?: string;
     selectable?: boolean;
@@ -71,7 +69,7 @@ export interface IProps {
     rowName?: string | ((count: number) => string);
 }
 
-class Table extends React.Component<IProps & IWithTableQueryProps> {
+class Table extends React.Component<ITableProps & IWithTableQueryProps> {
     public static contextType = TableQueryContext;
     public render() {
         const { data } = this.props;
@@ -110,7 +108,7 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                                 onKeyDown={this.handleKeyDown}
                             >
                                 {tableRow.props.children}
-                                {React.Children.map(this.props.children, (column: React.ReactElement<IColumnProps>, colIndex) => {
+                                {React.Children.map(this.props.children, (column: React.ReactElement<ITableColumnProps>, colIndex) => {
                                     if (!column) return null;
                                     return (
                                         <TableCell key={colIndex} {...column.props.cellProps}>
@@ -125,7 +123,11 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
                 {this.props.pagingActions && (
                     <TableFooter>
                         <TableRow>
-                            <Pagination totalCount={this.props.totalCount} pagingActions={this.props.pagingActions} rowName={this.props.rowName} />
+                            <TablePagination
+                                totalCount={this.props.totalCount}
+                                pagingActions={this.props.pagingActions}
+                                rowName={this.props.rowName}
+                            />
                         </TableRow>
                     </TableFooter>
                 )}
@@ -165,6 +167,4 @@ class Table extends React.Component<IProps & IWithTableQueryProps> {
     }
 }
 
-const ExtendedTable = withTableQueryContext(Table);
-
-export default ExtendedTable;
+export const ExtendedTable = withTableQueryContext(Table);

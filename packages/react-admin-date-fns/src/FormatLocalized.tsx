@@ -1,14 +1,12 @@
 import { format } from "date-fns";
 import * as React from "react";
-import LocaleContext from "./LocaleContext";
+import { LocaleContext } from "./LocaleContext";
 
 interface IProps {
     format: string;
     date: Date | number;
 }
-const FormatLocalized: React.FunctionComponent<IProps> = ({ date, format: formatString }) => {
+export const FormatLocalized: React.FunctionComponent<IProps> = ({ date, format: formatString }) => {
     const locale = React.useContext(LocaleContext);
     return <>{format(date, formatString, { locale })}</>;
 };
-
-export default FormatLocalized;

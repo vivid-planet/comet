@@ -1,5 +1,5 @@
 import MuiInputBase, { InputBaseProps } from "@material-ui/core/InputBase";
-import { styledComponents as styled } from "@vivid-planet/react-admin-mui";
+import { styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
@@ -18,7 +18,6 @@ export const StyledInput = styled<InputBaseProps>(({ ...props }) => <MuiInputBas
     }
 `;
 
-const Input: React.FunctionComponent<InputBaseProps & FieldRenderProps> = ({ meta, input, innerRef, ...props }) => (
+export const Input: React.FunctionComponent<InputBaseProps & FieldRenderProps> = ({ meta, input, innerRef, ...props }) => (
     <StyledInput {...input} {...props} />
 );
-export default Input;

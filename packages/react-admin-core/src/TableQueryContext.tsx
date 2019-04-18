@@ -17,4 +17,4 @@ export interface ITableQueryContext {
     // order: "asc" | "desc";
 }
 
-export default React.createContext<ITableQueryContext | undefined>(undefined);
+export const TableQueryContext = React.createContext<ITableQueryContext | undefined>(undefined);

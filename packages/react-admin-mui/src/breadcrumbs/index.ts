@@ -1,1 +1,1 @@
-export { default as Breadcrumbs, IBreadcrumbItem, IBreadcrumbProps } from "./Breadcrumbs";
+export * from "./Breadcrumbs";

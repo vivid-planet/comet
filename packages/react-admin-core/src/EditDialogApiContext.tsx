@@ -5,4 +5,4 @@ export interface IEditDialogApi {
     openEditDialog: (id: string) => void;
 }
 
-export default React.createContext<IEditDialogApi | null>(null);
+export const EditDialogApiContext = React.createContext<IEditDialogApi | null>(null);

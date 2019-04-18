@@ -1,20 +1,20 @@
 import * as React from "react";
-import DirtyHandlerApiContext, { IDirtyHandlerApi } from "./DirtyHandlerApiContext";
-import ISelectionApi from "./SelectionApi";
+import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
+import { ISelectionApi } from "./SelectionApi";
 
-export interface IRenderPropArgs {
+export interface ISelectionRenderPropArgs {
     selectedId?: string;
     selectionMode?: "edit" | "add";
     selectionApi: ISelectionApi;
 }
 interface IProps {
-    children: (injectedProps: IRenderPropArgs) => React.ReactNode;
+    children: (injectedProps: ISelectionRenderPropArgs) => React.ReactNode;
 }
 interface IState {
     selectedId?: string;
     selectionMode?: "edit" | "add";
 }
-class Selection extends React.Component<IProps, IState> {
+export class Selection extends React.Component<IProps, IState> {
     private selectionApi: ISelectionApi;
     private dirtyHandlerApi?: IDirtyHandlerApi;
     constructor(props: IProps) {
@@ -52,5 +52,3 @@ class Selection extends React.Component<IProps, IState> {
         });
     }
 }
-
-export default Selection;

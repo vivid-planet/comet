@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@material-ui/core";
 import { ColorPartial } from "@material-ui/core/styles/createPalette";
-import { styledComponents as styled } from "@vivid-planet/react-admin-mui";
+import { styled } from "@vivid-planet/react-admin-mui";
 
 export const StyledFormControl = styled(FormControl)`
     && {

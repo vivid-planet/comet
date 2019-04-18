@@ -6,7 +6,7 @@ interface IProps {
     required?: boolean;
 }
 
-const FieldContainerLabelAbove: React.FunctionComponent<IProps> = props => (
+export const FieldContainerLabelAbove: React.FunctionComponent<IProps> = props => (
     <sc.StyledFormControl fullWidth={true}>
         <div>
             <sc.StyledFormLabel>
@@ -17,5 +17,3 @@ const FieldContainerLabelAbove: React.FunctionComponent<IProps> = props => (
         <div>{props.children}</div>
     </sc.StyledFormControl>
 );
-
-export default FieldContainerLabelAbove;

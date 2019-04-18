@@ -14,4 +14,4 @@ export interface IDirtyHandlerApi {
     getParent: () => IDirtyHandlerApi | undefined;
 }
 
-export default React.createContext<IDirtyHandlerApi | undefined>(undefined);
+export const DirtyHandlerApiContext = React.createContext<IDirtyHandlerApi | undefined>(undefined);
