@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-form",
-    "version": "1.0.0-alpha.1",
+    "version": "1.0.0-alpha.2",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -10,9 +10,9 @@
         "react-datepicker": "^2.3.0"
     },
     "devDependencies": {
-        "@vivid-planet/react-admin-date-fns": "^1.0.0-alpha.0",
-        "@vivid-planet/react-admin-final-form-material-ui": "^1.0.0-alpha.0",
-        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.0"
+        "@vivid-planet/react-admin-date-fns": "^1.0.0-alpha.1",
+        "@vivid-planet/react-admin-final-form-material-ui": "^1.0.0-alpha.1",
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.2"
     },
     "peerDependencies": {
         "@material-ui/core": "^3.9.2",
