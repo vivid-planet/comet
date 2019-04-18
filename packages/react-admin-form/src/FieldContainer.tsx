@@ -1,5 +1,5 @@
 import { FormControl, FormLabel, Grid } from "@material-ui/core";
-import { styledComponents as styled } from "@vivid-planet/react-admin-mui";
+import { styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 
 const StyledFormControl = styled(FormControl)`
@@ -19,7 +19,8 @@ interface IProps {
     label?: string | React.ReactNode;
     required?: boolean;
 }
-const FieldContainer: React.FunctionComponent<IProps> = props => (
+
+export const FieldContainer: React.FunctionComponent<IProps> = props => (
     <StyledFormControl fullWidth={true}>
         <Grid container>
             <Grid item xs={4}>
@@ -36,5 +37,3 @@ const FieldContainer: React.FunctionComponent<IProps> = props => (
         </Grid>
     </StyledFormControl>
 );
-
-export default FieldContainer;

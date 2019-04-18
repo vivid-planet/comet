@@ -4,7 +4,6 @@ import { FieldRenderProps } from "react-final-form";
 
 interface IProps extends FieldRenderProps {}
 
-const Switch: React.SFC<IProps> = ({ input: { checked, name, onChange, ...restInput }, meta, ...rest }) => {
+export const Switch: React.SFC<IProps> = ({ input: { checked, name, onChange, ...restInput }, meta, ...rest }) => {
     return <MuiSwitch {...rest} name={name} inputProps={restInput} onChange={onChange} checked={checked} />;
 };
-export default Switch;

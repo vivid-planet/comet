@@ -16,7 +16,7 @@ const onChangeAdapter = (origOnChange: <T>(event: React.ChangeEvent<T> | any) =>
 interface IProps extends FieldRenderProps, ReactDatePickerProps {
     width?: string;
 }
-const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...rest }) => {
+export const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...rest }) => {
     const inputProps = {
         style: {
             width,
@@ -33,5 +33,3 @@ const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange,
         />
     );
 };
-
-export default DatePicker;

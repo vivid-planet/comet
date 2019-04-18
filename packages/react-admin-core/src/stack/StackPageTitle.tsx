@@ -6,7 +6,7 @@ interface IProps {
     children: React.ReactNode;
 }
 
-class StackPageTitle extends React.Component<IProps> {
+export class StackPageTitle extends React.Component<IProps> {
     public static contextType = StackSwitchApiContext;
     public render() {
         return this.props.children;
@@ -22,5 +22,3 @@ class StackPageTitle extends React.Component<IProps> {
         }
     }
 }
-
-export default StackPageTitle;

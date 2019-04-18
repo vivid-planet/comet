@@ -2,21 +2,10 @@ import RootRef from "@material-ui/core/RootRef";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import * as React from "react";
-import {
-    ConnectDragPreview,
-    ConnectDragSource,
-    ConnectDropTarget,
-    DragDropContext,
-    DragElementWrapper,
-    DragPreviewOptions,
-    DragSource,
-    DropTarget,
-    DropTargetMonitor,
-} from "react-dnd";
+import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropContext, DragSource, DropTarget, DropTargetMonitor } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { findDOMNode } from "react-dom";
-import { compose } from "recompose";
-import Table, { IProps as ITableProps } from "./Table";
+import { ExtendedTable, ITableProps } from "./Table";
 
 const cardSource = {
     beginDrag(props: IRowProps) {
@@ -149,8 +138,8 @@ class TableDndOrder extends React.Component<IProps> {
                 );
             },
         };
-        return <Table {...props} />;
+        return <ExtendedTable {...props} />;
     }
 }
-
-export default DragDropContext(HTML5Backend)(TableDndOrder);
+const WrappedTableDndOrder = DragDropContext(HTML5Backend)(TableDndOrder);
+export { WrappedTableDndOrder as TableDndOrder };

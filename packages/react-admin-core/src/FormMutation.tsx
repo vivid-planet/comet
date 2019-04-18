@@ -8,7 +8,7 @@ interface IProps {
     children: (actions: { update: () => void; create: () => void }, data: { loading: boolean; error: any }) => React.ReactNode;
 }
 
-class FormMutation extends React.Component<IProps> {
+export class FormMutation extends React.Component<IProps> {
     public render() {
         return (
             <Mutation mutation={this.props.updateMutation}>
@@ -29,5 +29,3 @@ class FormMutation extends React.Component<IProps> {
         );
     }
 }
-
-export default FormMutation;

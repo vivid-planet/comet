@@ -37,5 +37,3 @@ export class AsyncCreatable<OptionType> extends React.Component<
         return <ReactSelectAsyncCreatable {...input} {...rest} />;
     }
 }
-
-export default Select;

@@ -4,11 +4,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import ApolloClient from "apollo-client";
 import * as React from "react";
 import { withApollo, WithApolloClient } from "react-apollo";
-import { compose } from "recompose";
-import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
+import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
 
 interface IProps {
     mutation: any;
@@ -92,4 +90,5 @@ class DeleteMutation extends React.Component<IncludingInjectedProps, IState> {
     };
 }
 
-export default withTableQueryContext(withApollo(DeleteMutation));
+const WrappedDeleteMutation = withTableQueryContext(withApollo(DeleteMutation));
+export { WrappedDeleteMutation as DeleteMutation };

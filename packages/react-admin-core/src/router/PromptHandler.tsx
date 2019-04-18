@@ -1,12 +1,12 @@
 import * as React from "react";
 import { Prompt } from "react-router";
-import Context from "./Context";
+import { RouterContext } from "./Context";
 
 interface IMessages {
     [id: string]: () => boolean | string;
 }
 
-const PromptHandler: React.FunctionComponent<{}> = ({ children, ...props }) => {
+export const RouterPromptHandler: React.FunctionComponent<{}> = ({ children, ...props }) => {
     const registeredMessages = React.useRef<IMessages>({});
 
     const register = (id: string, message: () => string | boolean) => {
@@ -30,7 +30,7 @@ const PromptHandler: React.FunctionComponent<{}> = ({ children, ...props }) => {
     };
 
     return (
-        <Context.Provider
+        <RouterContext.Provider
             value={{
                 register,
                 unregister,
@@ -38,7 +38,6 @@ const PromptHandler: React.FunctionComponent<{}> = ({ children, ...props }) => {
         >
             <Prompt when={true} message={promptMessage} />
             {children}
-        </Context.Provider>
+        </RouterContext.Provider>
     );
 };
-export default PromptHandler;

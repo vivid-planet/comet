@@ -11,6 +11,7 @@ interface IRestPagingData {
     nextPage: string;
     previousPage: string;
 }
+
 export function createRestPagingActions<TData extends IRestPagingData>(data: TData): IPagingActions {
     const nextPage = data.nextPage ? getPageParameterFromUrl(data.nextPage) : null;
     const previousPage = data.previousPage ? getPageParameterFromUrl(data.previousPage) : null;

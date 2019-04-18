@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core";
 import * as React from "react";
 import { Field as FinalFormField, FieldRenderProps, RenderableProps } from "react-final-form";
-import FieldContainer from "./FieldContainer";
+import { FieldContainer } from "./FieldContainer";
 
 const requiredValidator = (value: any) => (value ? undefined : "Pflichtfeld");
 
@@ -18,7 +18,8 @@ interface IVividFieldProps {
     fieldContainerComponent?: React.ComponentType<any>;
     [otherProp: string]: any;
 }
-class Field extends React.Component<IVividFieldProps> {
+
+export class Field extends React.Component<IVividFieldProps> {
     public render() {
         const { children, component, name, label, required, validate, fieldContainerComponent, ...rest } = this.props;
         const composedValidate = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
@@ -48,4 +49,3 @@ class Field extends React.Component<IVividFieldProps> {
         }
     }
 }
-export default Field;

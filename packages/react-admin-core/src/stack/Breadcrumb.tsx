@@ -10,7 +10,7 @@ interface IProps {
 
 const BreadcrumbContext = React.createContext<string>("");
 
-class Breadcrumb extends React.Component<IProps> {
+export class StackBreadcrumb extends React.Component<IProps> {
     public static contextType = StackApiContext;
     public id: string;
     private parentId?: string;
@@ -43,5 +43,3 @@ class Breadcrumb extends React.Component<IProps> {
         this.context.removeBreadcrumb(this.id);
     }
 }
-
-export default Breadcrumb;

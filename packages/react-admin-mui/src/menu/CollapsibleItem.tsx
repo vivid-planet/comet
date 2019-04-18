@@ -3,7 +3,7 @@ import { ListProps } from "@material-ui/core/List";
 import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 import ArrowDropUp from "@material-ui/icons/ArrowDropUp";
 import * as React from "react";
-import { IMenuItemProps, MenuItem } from "../menu";
+import { IMenuItemProps, MenuItem } from "./Item";
 
 export interface IMenuLevel {
     level?: number;
@@ -20,7 +20,14 @@ const SecondaryAction = ({ open, onClick }: any) => {
     return <IconButton onClick={onClick}>{open ? <ArrowDropDown /> : <ArrowDropUp />}</IconButton>;
 };
 
-const CollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps> = ({ level, collapsible, text, icon, children, ...otherProps }) => {
+export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps> = ({
+    level,
+    collapsible,
+    text,
+    icon,
+    children,
+    ...otherProps
+}) => {
     if (!level) level = 1;
     const [open, setOpen] = React.useState(true);
     const childElements = React.Children.map(children, (child: MenuChild) =>
@@ -45,8 +52,6 @@ const CollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps
         </List>
     );
 };
-
-export default CollapsibleItem;
 
 const handleClick = (open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     setOpen(!open);

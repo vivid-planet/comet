@@ -1,7 +1,6 @@
-import * as History from "history";
 import * as React from "react";
-import DirtyHandlerApiContext, { IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
-import Prompt from "./router/Prompt";
+import { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
+import { RouterPrompt } from "./router";
 
 interface IProps {}
 
@@ -10,7 +9,7 @@ interface IBinding {
     binding: IDirtyHandlerApiBinding;
 }
 type Bindings = IBinding[];
-class DirtyHandler extends React.Component<IProps> {
+export class DirtyHandler extends React.Component<IProps> {
     public static contextType = DirtyHandlerApiContext;
 
     public dirtyHandlerApi: IDirtyHandlerApi;
@@ -56,7 +55,7 @@ class DirtyHandler extends React.Component<IProps> {
     public render() {
         return (
             <DirtyHandlerApiContext.Provider value={this.dirtyHandlerApi}>
-                <Prompt message={this.promptMessage} />
+                <RouterPrompt message={this.promptMessage} />
                 {this.props.children}
             </DirtyHandlerApiContext.Provider>
         );
@@ -105,5 +104,3 @@ class DirtyHandler extends React.Component<IProps> {
         return this.context;
     }
 }
-
-export default DirtyHandler;

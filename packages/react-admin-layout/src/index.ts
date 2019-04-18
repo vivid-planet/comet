@@ -1,1 +1,1 @@
-export { default as FixedLeftRightLayout } from "./FixedLeftRightLayout";
+export * from "./FixedLeftRightLayout";

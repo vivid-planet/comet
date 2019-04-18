@@ -5,7 +5,7 @@ import isEqual = require("lodash.isequal");
 import * as React from "react";
 import { Form, FormRenderProps, FormSpy, FormSpyRenderProps } from "react-final-form";
 import * as sc from "./TableFilterFinalForm.sc";
-import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
+import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
 
 interface IAutoSaveProps extends IWithTableQueryProps, FormSpyRenderProps {
     values: any;
@@ -50,7 +50,7 @@ interface IProps {
     resetButton?: boolean;
 }
 // tslint:disable-next-line:max-classes-per-file
-class TableFilterFinalForm extends React.Component<IProps> {
+export class TableFilterFinalForm extends React.Component<IProps> {
     public render() {
         return <Form onSubmit={this.handleSubmit} render={this.renderForm} />;
     }
@@ -93,5 +93,3 @@ class TableFilterFinalForm extends React.Component<IProps> {
         return;
     };
 }
-
-export default TableFilterFinalForm;

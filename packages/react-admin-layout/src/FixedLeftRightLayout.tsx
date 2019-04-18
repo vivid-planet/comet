@@ -8,7 +8,7 @@ Right.displayName = "FixedLeftRightLayout.Right";
 interface IProps {
     children: any[]; // Array<Left | Right>;
 }
-class FixedLeftRightLayout extends React.Component<IProps> {
+export class FixedLeftRightLayout extends React.Component<IProps> {
     public static Left = Left;
     public static Right = Right;
 
@@ -34,5 +34,3 @@ class FixedLeftRightLayout extends React.Component<IProps> {
         );
     }
 }
-
-export default FixedLeftRightLayout;

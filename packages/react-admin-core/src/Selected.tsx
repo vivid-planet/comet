@@ -17,7 +17,7 @@ const ProgressContainer = styled.div`
     justify-content: center;
 `;
 
-class Selected extends React.Component<IProps> {
+export class Selected extends React.Component<IProps> {
     public render() {
         let row;
         if (this.props.rows) {
@@ -53,4 +53,3 @@ class Selected extends React.Component<IProps> {
         }
     }
 }
-export default Selected;

@@ -5,7 +5,7 @@ import {
     Creatable as ReactSelectCreatable,
     Select as ReactSelect,
 } from "@vivid-planet/react-admin-final-form-material-ui/lib/ReactSelect";
-import { styledComponents as styled } from "@vivid-planet/react-admin-mui";
+import { styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { Props as ReactSelectAsyncProps } from "react-select/lib/Async";
@@ -19,7 +19,7 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-export const Input = styled<InputBaseProps>(({ ...props }) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} />)`
+export const ControlInput = styled<InputBaseProps>(({ ...props }) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} />)`
     &.root {
         border: 1px solid #d8dbdf;
         border-radius: 2px;
@@ -41,7 +41,7 @@ function Control<OptionType>(props: ControlProps<OptionType>) {
             ...props.innerProps,
         },
     };
-    return <Input type="text" fullWidth {...InputProps} {...props.selectProps.textFieldProps} />;
+    return <ControlInput type="text" fullWidth {...InputProps} {...props.selectProps.textFieldProps} />;
 }
 
 const vividStyles = {
@@ -80,5 +80,3 @@ export class AsyncCreatable<OptionType> extends React.Component<
         return <ReactSelectAsyncCreatable {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
     }
 }
-
-export default Select;

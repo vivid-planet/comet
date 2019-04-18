@@ -1,5 +1,5 @@
 import { ButtonBase } from "@material-ui/core";
-import { styledComponents as styled } from "@vivid-planet/react-admin-mui";
+import { styled } from "@vivid-planet/react-admin-mui";
 
 export const Spacer = styled.div`
     flex: 1 1 100%;

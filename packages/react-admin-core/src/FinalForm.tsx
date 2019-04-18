@@ -6,10 +6,10 @@ import SaveIcon from "@material-ui/icons/Save";
 import { FORM_ERROR } from "final-form";
 import * as React from "react";
 import { Form, FormRenderProps } from "react-final-form";
-import EditDialogApiContext from "./EditDialogApiContext";
-import IStackApi, { StackApiContext } from "./Stack/Api";
-import withDirtyHandlerApi, { IWithDirtyHandlerApiProps } from "./withDirtyHandlerApi";
-import withTableQueryContext, { IWithTableQueryProps } from "./withTableQueryContext";
+import { EditDialogApiContext } from "./EditDialogApiContext";
+import { IStackApi, StackApiContext } from "./stack";
+import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./withDirtyHandlerApi";
+import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -205,9 +205,5 @@ class FinalForm extends React.Component<IProps> {
     };
 }
 
-// export default compose(
-//    withTableQueryContext,
-//    withDirtyHandlerApi,
-//    withStyles(styles),
-// )(FinalForm);
-export default withStyles(styles)(withDirtyHandlerApi(withTableQueryContext(FinalForm)));
+const WrappedFinalForm = withStyles(styles)(withDirtyHandlerApi(withTableQueryContext(FinalForm)));
+export { WrappedFinalForm as FinalForm };

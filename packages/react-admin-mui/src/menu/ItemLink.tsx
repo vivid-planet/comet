@@ -1,13 +1,13 @@
 import { ListItemProps } from "@material-ui/core/ListItem";
 import * as React from "react";
 import { Link, LinkProps, Route } from "react-router-dom";
-import { IMenuItemProps, MenuItem } from "./index";
+import { IMenuItemProps, MenuItem } from "./Item";
 
 export interface IMenuItemLink extends IMenuItemProps {
     path: string;
 }
 
-class ItemLink extends React.Component<IMenuItemLink & ListItemProps & Partial<LinkProps>> {
+export class MenuItemLink extends React.Component<IMenuItemLink & ListItemProps & Partial<LinkProps>> {
     public render() {
         const { path, ...otherProps } = this.props;
 
@@ -22,5 +22,3 @@ class ItemLink extends React.Component<IMenuItemLink & ListItemProps & Partial<L
         );
     }
 }
-
-export default ItemLink;

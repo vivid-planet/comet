@@ -11,7 +11,7 @@ interface IProps {
     loading: boolean;
 }
 
-class LocalChangesToolbar extends React.Component<IProps> {
+export class TableLocalChangesToolbar extends React.Component<IProps> {
     public render() {
         return (
             <>
@@ -33,4 +33,3 @@ class LocalChangesToolbar extends React.Component<IProps> {
         this.props.tableLocalChangesApi.submitLocalDataChanges();
     };
 }
-export default LocalChangesToolbar;

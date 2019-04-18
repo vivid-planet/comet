@@ -1,7 +1,7 @@
 import * as React from "react";
-import { BrowserRouter, BrowserRouterProps } from "react-router-dom";
-import ConfirmationDialog from "./ConfirmationDialog";
-import PromptHandler from "./PromptHandler";
+import { BrowserRouter as ReactBrowserRouter, BrowserRouterProps } from "react-router-dom";
+import { RouterConfirmationDialog } from "./ConfirmationDialog";
+import { RouterPromptHandler } from "./PromptHandler";
 
 // BrowserRouter that sets up a material-ui confirmation dialog
 // plus a PromptHandler that works with our Prompt (supporting multiple Prompts)
@@ -11,7 +11,8 @@ interface IState {
     message: string;
     callback?: (ok: boolean) => void;
 }
-const VividBrowserRouter: React.FunctionComponent<BrowserRouterProps> = ({ children, ...props }) => {
+
+export const RouterBrowserRouter: React.FunctionComponent<BrowserRouterProps> = ({ children, ...props }) => {
     const [state, setState] = React.useState<IState>({
         showConfirmationDialog: false,
         message: "",
@@ -36,13 +37,11 @@ const VividBrowserRouter: React.FunctionComponent<BrowserRouterProps> = ({ child
     };
 
     return (
-        <BrowserRouter getUserConfirmation={getConfirmation} {...props}>
-            <PromptHandler>
+        <ReactBrowserRouter getUserConfirmation={getConfirmation} {...props}>
+            <RouterPromptHandler>
                 {children}
-                <ConfirmationDialog isOpen={state.showConfirmationDialog} message={state.message} handleClose={handleClose} />
-            </PromptHandler>
-        </BrowserRouter>
+                <RouterConfirmationDialog isOpen={state.showConfirmationDialog} message={state.message} handleClose={handleClose} />
+            </RouterPromptHandler>
+        </ReactBrowserRouter>
     );
 };
-
-export default VividBrowserRouter;

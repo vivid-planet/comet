@@ -1,13 +1,13 @@
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
 import * as React from "react";
-import Excel from "./Excel";
-import File from "./File";
-import Jpg from "./Jpg";
-import Pdf from "./Pdf";
-import Png from "./Png";
-import Powerpoint from "./Powerpoint";
-import Word from "./Word";
-import Zip from "./Zip";
+import { Excel } from "./Excel";
+import { File } from "./File";
+import { Jpg } from "./Jpg";
+import { Pdf } from "./Pdf";
+import { Png } from "./Png";
+import { Powerpoint } from "./Powerpoint";
+import { Word } from "./Word";
+import { Zip } from "./Zip";
 
 interface IComponents {
     [fileType: string]: React.ComponentType;
@@ -38,12 +38,11 @@ const components: IComponents = {
 interface IProps extends SvgIconProps {
     fileType: string;
 }
-const FileIcon: React.FunctionComponent<IProps> = ({ fileType, ...rest }) => {
+
+export const FileIcon: React.FunctionComponent<IProps> = ({ fileType, ...rest }) => {
     if (components[fileType]) {
         const Cmp = components[fileType];
         return <Cmp {...rest} />;
     }
     return <File {...rest} />;
 };
-
-export default FileIcon;

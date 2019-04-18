@@ -4,7 +4,7 @@ import { FieldRenderProps } from "react-final-form";
 
 interface IProps extends FieldRenderProps {}
 
-const TextField: React.SFC<IProps> = ({ input: { name, onChange, value, ...restInput }, meta, ...rest }) => (
+export const TextField: React.SFC<IProps> = ({ input: { name, onChange, value, ...restInput }, meta, ...rest }) => (
     <MuiTextField
         {...rest}
         name={name}
@@ -15,4 +15,3 @@ const TextField: React.SFC<IProps> = ({ input: { name, onChange, value, ...restI
         value={value}
     />
 );
-export default TextField;

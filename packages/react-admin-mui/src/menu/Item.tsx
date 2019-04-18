@@ -12,7 +12,7 @@ export interface IMenuItemProps extends IMenuLevel {
 
 type MuiListItemProps = Pick<ListItemProps, Exclude<keyof ListItemProps, "innerRef">>;
 
-const Item: React.FunctionComponent<IMenuItemProps & MuiListItemProps> = ({ text, icon, level, secondaryAction, ...otherProps }) => {
+export const MenuItem: React.FunctionComponent<IMenuItemProps & MuiListItemProps> = ({ text, icon, level, secondaryAction, ...otherProps }) => {
     const context = React.useContext(MenuContext);
     if (!context) throw new Error("Could not find context for menu");
     const hasIcon = !!icon;
@@ -30,5 +30,3 @@ const Item: React.FunctionComponent<IMenuItemProps & MuiListItemProps> = ({ text
         </sc.ListItem>
     );
 };
-
-export default Item;

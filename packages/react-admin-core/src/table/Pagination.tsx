@@ -3,7 +3,7 @@ import TableCell from "@material-ui/core/TableCell";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
-import TableQueryContext from "../TableQueryContext";
+import { TableQueryContext } from "../TableQueryContext";
 import * as sc from "./Pagination.sc";
 import { IPagingActions } from "./pagingStrategy/PagingStrategy";
 
@@ -13,7 +13,7 @@ interface IProps {
     rowName?: string | ((count: number) => string);
 }
 
-const Pagination: React.FunctionComponent<IProps> = ({ totalCount, pagingActions, rowName }) => {
+export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingActions, rowName }) => {
     const tableQueryContext = React.useContext(TableQueryContext);
     if (typeof rowName === "function") {
         rowName = rowName(totalCount);
@@ -50,5 +50,3 @@ const Pagination: React.FunctionComponent<IProps> = ({ totalCount, pagingActions
         </TableCell>
     );
 };
-
-export default Pagination;

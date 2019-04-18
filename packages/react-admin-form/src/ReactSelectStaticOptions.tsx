@@ -2,7 +2,7 @@ import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { Props as ReactSelectProps } from "react-select/lib/Select";
 import { OptionsType } from "react-select/lib/types";
-import ReactSelect from "./ReactSelect";
+import { Select } from "./ReactSelect";
 
 interface IOptionType {
     value: string;
@@ -12,10 +12,10 @@ interface IOptionType {
 interface IProps extends FieldRenderProps, ReactSelectProps<IOptionType> {
     options: OptionsType<IOptionType>;
 }
-class ReactSelectStaticOptions extends React.Component<IProps> {
+export class ReactSelectStaticOptions extends React.Component<IProps> {
     public render() {
         return (
-            <ReactSelect
+            <Select
                 {...this.props}
                 value={this.props.options.filter(({ value }) => value === this.props.input.value)}
                 getOptionLabel={this.getOptionLabel}
@@ -28,4 +28,3 @@ class ReactSelectStaticOptions extends React.Component<IProps> {
     private getOptionValue = ({ value }: IOptionType) => value;
     private onChange = (v: IOptionType) => this.props.input.onChange(v ? v.value : null);
 }
-export default ReactSelectStaticOptions;

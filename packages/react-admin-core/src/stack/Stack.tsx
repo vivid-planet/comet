@@ -1,24 +1,24 @@
 import Button from "@material-ui/core/Button";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { Breadcrumbs } from "@vivid-planet/react-admin-mui";
 import * as history from "history";
 import * as React from "react";
-import { match, Route, RouteComponentProps } from "react-router";
-import DirtyHandler from "../DirtyHandler";
+import { Route, RouteComponentProps } from "react-router";
+import { DirtyHandler } from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
-import IStackApi, { StackApiContext } from "./Api";
-import Breadcrumb from "./Breadcrumb";
+import { StackApiContext } from "./Api";
+import { StackBreadcrumb } from "./Breadcrumb";
 
 interface ISortNode {
     id: string;
     parentId: string;
 }
+
 interface ISortTree<TSortNode extends ISortNode> {
     children: Array<ISortTree<TSortNode>>;
     node?: TSortNode; // root is undefined
 }
+
 const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
     // first build a tree structure
     const addChildrenToNode = (node?: TSortNode) => {
@@ -73,7 +73,7 @@ interface IState {
     breadcrumbs: IBreadcrumbItem[];
     switches: ISwitchItem[];
 }
-class Stack extends React.Component<IProps, IState> {
+export class Stack extends React.Component<IProps, IState> {
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
     constructor(props: IProps) {
@@ -112,7 +112,7 @@ class Stack extends React.Component<IProps, IState> {
                                         <ArrowBackIcon />
                                     </Button>
                                 )}
-                                <Breadcrumb title={this.props.topLevelTitle} url={routerProps.match.url}>
+                                <StackBreadcrumb title={this.props.topLevelTitle} url={routerProps.match.url}>
                                     <DirtyHandler
                                         ref={ref => {
                                             this.dirtyHandlerApi = ref ? ref.dirtyHandlerApi : undefined;
@@ -120,7 +120,7 @@ class Stack extends React.Component<IProps, IState> {
                                     >
                                         {this.props.children}
                                     </DirtyHandler>
-                                </Breadcrumb>
+                                </StackBreadcrumb>
                             </>
                         );
                     }}
@@ -224,5 +224,3 @@ class Stack extends React.Component<IProps, IState> {
         });
     };
 }
-
-export default Stack;
