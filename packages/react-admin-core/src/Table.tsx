@@ -167,4 +167,5 @@ class Table extends React.Component<ITableProps & IWithTableQueryProps> {
     }
 }
 
-export const ExtendedTable = withTableQueryContext(Table);
+const ExtendedTable = withTableQueryContext(Table);
+export { ExtendedTable as Table };

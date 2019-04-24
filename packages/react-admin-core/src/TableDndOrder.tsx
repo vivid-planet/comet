@@ -5,7 +5,7 @@ import * as React from "react";
 import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropContext, DragSource, DropTarget, DropTargetMonitor } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { findDOMNode } from "react-dom";
-import { ExtendedTable, ITableProps } from "./Table";
+import { ITableProps, Table } from "./Table";
 
 const cardSource = {
     beginDrag(props: IRowProps) {
@@ -138,7 +138,7 @@ class TableDndOrder extends React.Component<IProps> {
                 );
             },
         };
-        return <ExtendedTable {...props} />;
+        return <Table {...props} />;
     }
 }
 const WrappedTableDndOrder = DragDropContext(HTML5Backend)(TableDndOrder);
