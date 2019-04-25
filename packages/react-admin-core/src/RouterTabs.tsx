@@ -123,4 +123,5 @@ class RouterTabs extends React.Component<IProps> {
         this.props.history.push(this.props.match.url + paths[value]);
     };
 }
-export const ExtendedRouterTabs = withStyles(styles)(withRouter(RouterTabs));
+const ExtendedRouterTabs = withStyles(styles)(withRouter(RouterTabs));
+export { ExtendedRouterTabs as RouterTabs };

@@ -12,7 +12,7 @@ import { StyledInput } from "./Input";
 
 registerLocale("de", de);
 
-export const ExtendedStyledInput = styled<InputBaseProps>(StyledInput)`
+const ExtendedStyledInput = styled<InputBaseProps>(StyledInput)`
     & input {
         cursor: default;
     }
