@@ -4,7 +4,7 @@ import {
     AsyncCreatable as ReactSelectAsyncCreatable,
     Creatable as ReactSelectCreatable,
     Select as ReactSelect,
-} from "@vivid-planet/react-admin-final-form-material-ui/lib/ReactSelect";
+} from "@vivid-planet/react-admin-final-form-material-ui";
 import { styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
