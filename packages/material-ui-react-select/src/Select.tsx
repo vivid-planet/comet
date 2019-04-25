@@ -4,7 +4,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import { createStyles, withStyles } from "@material-ui/styles";
 import classNames from "classnames";
 import * as React from "react";
-import ReactSelect, { Async as ReactSelectAsync, AsyncCreatable as ReactSelectAsyncCreatable, Creatable as ReactSelectCreatable } from "react-select";
+import * as Select from "react-select";
 import { Props as ReactSelectAsyncProps } from "react-select/lib/Async";
 import { ValueContainerProps } from "react-select/lib/components/containers";
 import { ControlProps } from "react-select/lib/components/Control";
@@ -199,23 +199,25 @@ class SelectWrapper<OptionType> extends React.Component<IProps<OptionType> & Rea
 const ExtendedSelectWrapper = withStyles(styles, { withTheme: true })(SelectWrapper);
 
 // tslint:disable:max-classes-per-file
-export class Select<OptionType> extends React.Component<ReactSelectProps<OptionType>> {
+export class ReactSelect<OptionType> extends React.Component<ReactSelectProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={ReactSelect} {...this.props} />;
+        return <ExtendedSelectWrapper selectComponent={Select} {...this.props} />;
     }
 }
-export class Async<OptionType> extends React.Component<ReactSelectAsyncProps<OptionType>> {
+export class ReactSelectAsync<OptionType> extends React.Component<ReactSelectAsyncProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={ReactSelectAsync} {...this.props} />;
+        return <ExtendedSelectWrapper selectComponent={Select.Async} {...this.props} />;
     }
 }
-export class Creatable<OptionType> extends React.Component<ReactSelectCreatableProps<OptionType>> {
+export class ReactSelectCreatable<OptionType> extends React.Component<ReactSelectCreatableProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={ReactSelectCreatable} {...this.props} />;
+        return <ExtendedSelectWrapper selectComponent={Select.Creatable} {...this.props} />;
     }
 }
-export class AsyncCreatable<OptionType> extends React.Component<ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>> {
+export class ReactSelectAsyncCreatable<OptionType> extends React.Component<
+    ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
+> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={ReactSelectAsyncCreatable} {...this.props} />;
+        return <ExtendedSelectWrapper selectComponent={Select.AsyncCreatable} {...this.props} />;
     }
 }

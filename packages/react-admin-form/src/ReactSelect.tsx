@@ -1,9 +1,9 @@
 import MuiInputBase, { InputBaseProps } from "@material-ui/core/InputBase";
 import {
-    Async as ReactSelectAsync,
-    AsyncCreatable as ReactSelectAsyncCreatable,
-    Creatable as ReactSelectCreatable,
-    Select as ReactSelect,
+    ReactSelect as Select,
+    ReactSelectAsync as Async,
+    ReactSelectAsyncCreatable as AsyncCreatable,
+    ReactSelectCreatable as Creatable,
 } from "@vivid-planet/react-admin-final-form-material-ui";
 import { styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
@@ -50,33 +50,33 @@ const vividStyles = {
 };
 
 // tslint:disable:max-classes-per-file
-export class Select<OptionType> extends React.Component<FieldRenderProps & ReactSelectProps<OptionType>> {
+export class ReactSelect<OptionType> extends React.Component<FieldRenderProps & ReactSelectProps<OptionType>> {
     public render() {
         const { components, styles, ...rest } = this.props;
         // @ts-ignore TODO: Fix Later
-        return <ReactSelect {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
+        return <Select {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
     }
 }
-export class Async<OptionType> extends React.Component<FieldRenderProps & ReactSelectAsyncProps<OptionType>> {
+export class ReactSelectAsync<OptionType> extends React.Component<FieldRenderProps & ReactSelectAsyncProps<OptionType>> {
     public render() {
         const { components, styles, ...rest } = this.props;
         // @ts-ignore TODO: Fix Later
-        return <ReactSelectAsync {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
+        return <Async {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
     }
 }
-export class Creatable<OptionType> extends React.Component<FieldRenderProps & ReactSelectCreatableProps<OptionType>> {
+export class ReactSelectCreatable<OptionType> extends React.Component<FieldRenderProps & ReactSelectCreatableProps<OptionType>> {
     public render() {
         const { components, styles, ...rest } = this.props;
         // @ts-ignore TODO: Fix Later
-        return <ReactSelectCreatable {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
+        return <Creatable {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
     }
 }
-export class AsyncCreatable<OptionType> extends React.Component<
+export class ReactSelectAsyncCreatable<OptionType> extends React.Component<
     FieldRenderProps & ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
 > {
     public render() {
         const { components, styles, ...rest } = this.props;
         // @ts-ignore TODO: Fix Later
-        return <ReactSelectAsyncCreatable {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
+        return <AsyncCreatable {...rest} components={{ Control, ...components }} styles={{ ...vividStyles, ...styles }} />;
     }
 }

@@ -2,7 +2,7 @@ import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { Props as ReactSelectProps } from "react-select/lib/Select";
 import { OptionsType } from "react-select/lib/types";
-import { Select } from "./ReactSelect";
+import { ReactSelect } from "./ReactSelect";
 
 interface IOptionType {
     value: string;
@@ -15,7 +15,7 @@ interface IProps extends FieldRenderProps, ReactSelectProps<IOptionType> {
 export class ReactSelectStaticOptions extends React.Component<IProps> {
     public render() {
         return (
-            <Select
+            <ReactSelect
                 {...this.props}
                 value={this.props.options.filter(({ value }) => value === this.props.input.value)}
                 getOptionLabel={this.getOptionLabel}

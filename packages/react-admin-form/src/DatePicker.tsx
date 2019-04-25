@@ -1,8 +1,8 @@
-// tslint:disable:no-submodule-imports
 import { format } from "date-fns";
 import * as de from "date-fns/locale/de";
 import * as React from "react";
 import DatePickerOrig, { ReactDatePickerProps, registerLocale } from "react-datepicker";
+// tslint:disable-next-line:no-submodule-imports
 import "react-datepicker/dist/react-datepicker.css";
 import { FieldRenderProps } from "react-final-form";
 import { StyledInput } from "./Input";
