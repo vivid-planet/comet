@@ -1,6 +1,6 @@
 {
     "rules": {
-        "no-submodule-imports": [true, "@material-ui", "@vivid-planet", "react-select", "date-fns"],
+        "no-submodule-imports": [true, "@material-ui", "react-select", "date-fns"],
         "no-implicit-dependencies": [true, "dev", ["@vivid-planet"]],
         "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"],
         "object-literal-sort-keys": false,
