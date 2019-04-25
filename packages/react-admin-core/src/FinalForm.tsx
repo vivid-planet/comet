@@ -183,8 +183,10 @@ class FinalForm extends React.Component<IProps> {
         }
         return Promise.resolve(ret)
             .then(data => {
+                this.formRenderProps.form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
                 if (stackApi) {
                     // if this form is inside a Stack goBack after save success
+                    // do this after form.reset() to have a dirty form, so it won't ask for saving changes
                     // TODO we probably shouldn't have a hard dependency to Stack
                     stackApi.goBack();
                 }
