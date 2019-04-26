@@ -1,4 +1,4 @@
-import { ITableQueryApi } from "../../TableQueryContext";
+import { ITableQueryApi } from "../TableQueryContext";
 import { IPagingActions } from "./PagingStrategy";
 
 interface IRelayPagingData {

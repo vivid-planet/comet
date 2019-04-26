@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
+import { DirtyHandlerApiContext, IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 
 export interface IWithDirtyHandlerApiProps {
     dirtyHandlerApi?: IDirtyHandlerApi;

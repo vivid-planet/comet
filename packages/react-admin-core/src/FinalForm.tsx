@@ -8,8 +8,8 @@ import * as React from "react";
 import { Form, FormRenderProps } from "react-final-form";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { IStackApi, StackApiContext } from "./stack";
-import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./withDirtyHandlerApi";
-import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
+import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirtyHandlerApi";
+import { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
 
 const styles = (theme: Theme) =>
     createStyles({

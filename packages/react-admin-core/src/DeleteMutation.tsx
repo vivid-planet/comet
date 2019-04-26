@@ -6,7 +6,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import * as React from "react";
 import { withApollo, WithApolloClient } from "react-apollo";
-import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
+import { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
 
 interface IProps {
     mutation: any;

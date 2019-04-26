@@ -1,4 +1,4 @@
-import { ITableQueryApi } from "../../TableQueryContext";
+import { ITableQueryApi } from "../TableQueryContext";
 
 export interface IPagingActions {
     fetchNextPage?: (tableQuery: ITableQueryApi) => void;
