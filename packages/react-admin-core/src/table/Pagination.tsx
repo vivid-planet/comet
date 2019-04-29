@@ -3,9 +3,9 @@ import TableCell from "@material-ui/core/TableCell";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
-import { TableQueryContext } from "../TableQueryContext";
 import * as sc from "./Pagination.sc";
 import { IPagingActions } from "./pagingStrategy/PagingStrategy";
+import { TableQueryContext } from "./TableQueryContext";
 
 interface IProps {
     totalCount: number;

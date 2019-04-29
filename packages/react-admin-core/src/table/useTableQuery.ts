@@ -2,8 +2,8 @@ import { OperationVariables } from "apollo-client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import { QueryHookOptions, QueryHookResult, useQuery } from "react-apollo-hooks";
-import { ISelectionApi } from "./SelectionApi";
-import { IPagingActions } from "./table/pagingStrategy";
+import { ISelectionApi } from "../SelectionApi";
+import { IPagingActions } from "./pagingStrategy";
 import { ITableQueryApi } from "./TableQueryContext";
 
 interface ITableData<TRow extends { id: string | number } = { id: string | number }> {

@@ -1,5 +1,5 @@
 import * as queryString from "query-string";
-import { ITableQueryApi } from "../../TableQueryContext";
+import { ITableQueryApi } from "../TableQueryContext";
 import { IPagingActions } from "./PagingStrategy";
 
 function getPageParameterFromUrl(url: string) {

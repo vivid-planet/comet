@@ -6,9 +6,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow, { TableRowProps } from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
-import { ISelectionApi } from "./SelectionApi";
-import { ITableColumnProps, TablePagination } from "./table";
-import { IPagingActions } from "./table/pagingStrategy";
+import { ISelectionApi } from "../SelectionApi";
+import { ITableColumnProps } from "./Column";
+import { TablePagination } from "./Pagination";
+import { IPagingActions } from "./pagingStrategy";
 import { TableQueryContext } from "./TableQueryContext";
 import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
 
