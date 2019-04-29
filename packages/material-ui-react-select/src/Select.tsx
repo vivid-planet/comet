@@ -201,7 +201,7 @@ const ExtendedSelectWrapper = withStyles(styles, { withTheme: true })(SelectWrap
 // tslint:disable:max-classes-per-file
 export class ReactSelect<OptionType> extends React.Component<ReactSelectProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={Select} {...this.props} />;
+        return <ExtendedSelectWrapper selectComponent={Select.default} {...this.props} />;
     }
 }
 export class ReactSelectAsync<OptionType> extends React.Component<ReactSelectAsyncProps<OptionType>> {
