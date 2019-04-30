@@ -1,13 +1,13 @@
 {
     "name": "@vivid-planet/react-admin-final-form-material-ui",
-    "version": "1.0.0-alpha.2",
+    "version": "1.0.0-alpha.3",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
     "devDependencies": {
-        "@vivid-planet/material-ui-react-select": "^1.0.0-alpha.2"
+        "@vivid-planet/material-ui-react-select": "^1.0.0-alpha.3"
     },
     "peerDependencies": {
         "@material-ui/core": "^3.9.2",
