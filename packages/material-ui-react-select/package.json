@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/material-ui-react-select",
-    "version": "1.0.0-alpha.3",
+    "version": "1.0.0-alpha.4",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
