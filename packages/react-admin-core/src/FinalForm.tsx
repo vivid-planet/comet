@@ -7,6 +7,7 @@ import { FORM_ERROR } from "final-form";
 import * as React from "react";
 import { Form, FormRenderProps } from "react-final-form";
 import { EditDialogApiContext } from "./EditDialogApiContext";
+import * as sc from "./FinalForm.sc";
 import { IStackApi, StackApiContext } from "./stack";
 import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirtyHandlerApi";
 import { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
@@ -72,7 +73,7 @@ class FinalForm extends React.Component<IProps> {
         const { classes } = this.props;
         return (
             <form onSubmit={this.submit}>
-                <div>{this.props.children}</div>
+                <sc.InnerForm>{this.props.children}</sc.InnerForm>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
                 <EditDialogApiContext.Consumer>
                     {editDialogApi => {
@@ -93,7 +94,9 @@ class FinalForm extends React.Component<IProps> {
                                                 color="default"
                                                 onClick={this.handleCancelClick.bind(this, stackApi)}
                                             >
-                                                <CancelIcon />
+                                                <sc.ButtonIconWrapper>
+                                                    <CancelIcon fontSize={"inherit"} />
+                                                </sc.ButtonIconWrapper>
                                                 Abbrechen
                                             </Button>
                                         );
@@ -106,7 +109,9 @@ class FinalForm extends React.Component<IProps> {
                                     type="submit"
                                     disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
                                 >
-                                    <SaveIcon />
+                                    <sc.ButtonIconWrapper>
+                                        <SaveIcon fontSize={"inherit"} />
+                                    </sc.ButtonIconWrapper>
                                     Save
                                 </Button>
                             </>
