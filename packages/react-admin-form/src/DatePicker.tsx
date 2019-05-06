@@ -5,6 +5,7 @@ import DatePickerOrig, { ReactDatePickerProps, registerLocale } from "react-date
 // tslint:disable-next-line:no-submodule-imports
 import "react-datepicker/dist/react-datepicker.css";
 import { FieldRenderProps } from "react-final-form";
+import * as sc from "./DatePicker.sc";
 import { StyledInput } from "./Input";
 
 registerLocale("de", de);
@@ -23,13 +24,15 @@ export const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, on
         },
     };
     return (
-        <DatePickerOrig
-            locale="de"
-            selected={value ? new Date(value) : null}
-            onChange={onChangeAdapter.bind(this, onChange, !!rest.showTimeSelect)}
-            customInput={<StyledInput type="text" {...inputProps} />}
-            {...restInput}
-            {...rest}
-        />
+        <sc.DatePickerRoot>
+            <DatePickerOrig
+                locale="de"
+                selected={value ? new Date(value) : null}
+                onChange={onChangeAdapter.bind(this, onChange, !!rest.showTimeSelect)}
+                customInput={<StyledInput type="text" {...inputProps} />}
+                {...restInput}
+                {...rest}
+            />
+        </sc.DatePickerRoot>
     );
 };
