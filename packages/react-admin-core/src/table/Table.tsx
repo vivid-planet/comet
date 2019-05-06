@@ -2,14 +2,14 @@ import MuiTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow, { TableRowProps } from "@material-ui/core/TableRow";
+import { TableRowProps } from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
 import { ITableColumnProps } from "./Column";
 import { TablePagination } from "./Pagination";
 import { IPagingActions } from "./pagingStrategy";
+import * as sc from "./Table.sc";
 import { TableQueryContext } from "./TableQueryContext";
 import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
 
@@ -26,9 +26,9 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
         props.onSortClick(ev, name);
     };
 
-    const tableRow: React.ReactElement<TableRowProps> = props.renderHeadTableRow ? props.renderHeadTableRow() : <TableRow />;
+    const tableRow: React.ReactElement<TableRowProps> = props.renderHeadTableRow ? props.renderHeadTableRow() : <sc.StyledTableRow />;
     return (
-        <TableHead>
+        <sc.StyledTableHead>
             <tableRow.type {...tableRow.props}>
                 {tableRow.props.children}
                 {React.Children.map(props.columns, (column: React.ReactElement<ITableColumnProps>, index) => {
@@ -47,7 +47,7 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
                     );
                 })}
             </tableRow.type>
-        </TableHead>
+        </sc.StyledTableHead>
     );
 };
 
@@ -93,7 +93,7 @@ class Table extends React.Component<ITableProps & IWithTableQueryProps> {
                         const tableRow: React.ReactElement<TableRowProps> = this.props.renderTableRow ? (
                             this.props.renderTableRow(index)
                         ) : (
-                            <TableRow />
+                            <sc.StyledTableRow />
                         );
                         return (
                             <tableRow.type
@@ -123,13 +123,13 @@ class Table extends React.Component<ITableProps & IWithTableQueryProps> {
                 </TableBody>
                 {this.props.pagingActions && (
                     <TableFooter>
-                        <TableRow>
+                        <sc.StyledTableRow>
                             <TablePagination
                                 totalCount={this.props.totalCount}
                                 pagingActions={this.props.pagingActions}
                                 rowName={this.props.rowName}
                             />
-                        </TableRow>
+                        </sc.StyledTableRow>
                     </TableFooter>
                 )}
             </MuiTable>
