@@ -65,7 +65,7 @@ export class DirtyHandler extends React.Component<IProps> {
         if (!this.isBindingDirty()) {
             return true;
         } else {
-            return "Lose unsaved changes?";
+            return "Nicht gespeicherte Änderungen verwerfen?";
         }
     };
 

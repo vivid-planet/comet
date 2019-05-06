@@ -112,7 +112,7 @@ class FinalForm extends React.Component<IProps> {
                                     <sc.ButtonIconWrapper>
                                         <SaveIcon fontSize={"inherit"} />
                                     </sc.ButtonIconWrapper>
-                                    Save
+                                    Speichern
                                 </Button>
                             </>
                         );

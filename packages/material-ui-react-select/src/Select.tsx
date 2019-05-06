@@ -193,7 +193,7 @@ class SelectWrapper<OptionType> extends React.Component<IProps<OptionType> & Rea
         };
         const SelectComponent = this.props.selectComponent;
         // @ts-ignore (classes is not supported but we use it to pass it down to other components)
-        return <SelectComponent classes={classes} styles={selectStyles} components={{ ...components, ...origComponents }} {...rest} />;
+        return <SelectComponent classes={classes} styles={selectStyles} components={{ ...components, ...origComponents }} placeholder="" {...rest} />;
     }
 }
 const ExtendedSelectWrapper = withStyles(styles, { withTheme: true })(SelectWrapper);
