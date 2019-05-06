@@ -1,7 +1,10 @@
-import CancelIcon from "@material-ui/icons/Cancel";
 import styled from "styled-components";
 
-export const FilterCancelIcon = styled(CancelIcon)`
-    width: 12px;
-    height: 12px;
+export const FormHeader = styled.div`
+    margin-bottom: 20px;
+`;
+
+export const FilterCancelIconWrapper = styled.div`
+    margin-right: 5px;
+    font-size: 0;
 `;
