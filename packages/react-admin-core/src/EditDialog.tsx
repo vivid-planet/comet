@@ -38,12 +38,12 @@ export class EditDialog extends React.Component<IProps> {
                                     <DialogContent>{this.props.children({ selectedId, selectionMode })}</DialogContent>
                                     <DialogActions>
                                         <Button onClick={this.handleCancelClick.bind(this, selectionApi)} color="primary">
-                                            Cancel
+                                            Abbrechen
                                         </Button>
                                         <DirtyHandlerApiContext.Consumer>
                                             {dirtyHandlerApi => (
                                                 <Button onClick={this.handleSaveClick.bind(this, dirtyHandlerApi, selectionApi)} color="primary">
-                                                    Save
+                                                    Speichern
                                                 </Button>
                                             )}
                                         </DirtyHandlerApiContext.Consumer>

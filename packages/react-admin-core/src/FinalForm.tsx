@@ -107,7 +107,7 @@ class FinalForm extends React.Component<IProps> {
                                     disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
                                 >
                                     <SaveIcon />
-                                    Save
+                                    Speichern
                                 </Button>
                             </>
                         );

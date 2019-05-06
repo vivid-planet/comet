@@ -24,7 +24,7 @@ export const RouterConfirmationDialog: React.FunctionComponent<IProps> = ({ mess
                     OK
                 </Button>
                 <Button onClick={handleClose.bind(this, false)} color="primary">
-                    Cancel
+                    Abbrechen
                 </Button>
             </DialogActions>
         </Dialog>
