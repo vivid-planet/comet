@@ -16,6 +16,10 @@ export const StyledInput = styled<InputBaseProps>(({ ...props }) => <MuiInputBas
     &.root.focused {
         border-color: #0081b8;
     }
+
+    input {
+        height: 19px;
+    }
 `;
 
 export const Input: React.FunctionComponent<InputBaseProps & FieldRenderProps> = ({ meta, input, innerRef, ...props }) => (
