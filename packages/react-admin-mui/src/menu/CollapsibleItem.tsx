@@ -42,7 +42,8 @@ export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps 
         <List {...otherProps} disablePadding={true}>
             <MenuItem
                 {...{ text, icon, level }}
-                secondaryAction={collapsible && <SecondaryAction open={open} onClick={handleClick.bind(null, open, setOpen)} />}
+                onClick={handleClick.bind(null, open, setOpen)}
+                secondaryAction={collapsible && <SecondaryAction open={open} />}
             />
             {collapsible ? (
                 <Collapse in={open} timeout="auto" unmountOnExit>
