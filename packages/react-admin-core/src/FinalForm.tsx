@@ -3,8 +3,10 @@ import Button from "@material-ui/core/Button";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import SaveIcon from "@material-ui/icons/Save";
+import ApolloClient from "apollo-client";
 import { FORM_ERROR } from "final-form";
 import * as React from "react";
+import { ApolloConsumer } from "react-apollo";
 import { Form, FormRenderProps } from "react-final-form";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
@@ -33,6 +35,7 @@ interface IProps extends IWithDirtyHandlerApiProps, IWithTableQueryProps {
 }
 
 class FinalForm extends React.Component<IProps> {
+    private client: ApolloClient<any>;
     private formRenderProps: FormRenderProps;
     public componentDidMount() {
         if (this.props.dirtyHandlerApi) {
@@ -60,11 +63,22 @@ class FinalForm extends React.Component<IProps> {
 
     public render() {
         return (
-            <StackApiContext.Consumer>
-                {stackApi => (
-                    <Form onSubmit={this.handleSubmit.bind(this, stackApi)} initialValues={this.props.initialValues} render={this.renderForm} />
-                )}
-            </StackApiContext.Consumer>
+            <ApolloConsumer>
+                {client => {
+                    this.client = client; // TODO port this component to hooks to avoid that
+                    return (
+                        <StackApiContext.Consumer>
+                            {stackApi => (
+                                <Form
+                                    onSubmit={this.handleSubmit.bind(this, stackApi)}
+                                    initialValues={this.props.initialValues}
+                                    render={this.renderForm}
+                                />
+                            )}
+                        </StackApiContext.Consumer>
+                    );
+                }}
+            </ApolloConsumer>
         );
     }
 
@@ -149,6 +163,19 @@ class FinalForm extends React.Component<IProps> {
         let ret;
         if (this.props.onSubmit) {
             ret = this.props.onSubmit(values);
+            ret = Promise.resolve(ret).then(data => {
+                if (this.props.mode === "add") {
+                    if (this.props.tableQuery) {
+                        // refetch TableQuery after adding
+                        this.client.query({
+                            query: this.props.tableQuery.api.getQuery(),
+                            variables: this.props.tableQuery.api.getVariables(),
+                            fetchPolicy: "network-only",
+                        });
+                    }
+                }
+                return data;
+            });
         } else {
             const submitVariables = this.props.submitVariables || {};
             if (this.props.mode === "edit") {
