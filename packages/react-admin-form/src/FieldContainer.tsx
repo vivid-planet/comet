@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import * as React from "react";
 import * as sc from "./FieldContainer.sc";
 
@@ -19,7 +19,7 @@ export const FieldContainer: React.FunctionComponent<IProps> = props => (
                 )}
             </Grid>
             <Grid item xs={8}>
-                {props.children}
+                <Typography>{props.children}</Typography>
             </Grid>
         </Grid>
     </sc.StyledFormControl>
