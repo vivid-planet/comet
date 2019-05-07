@@ -1,19 +1,6 @@
-import { FormControl, FormLabel, Grid } from "@material-ui/core";
-import { styled } from "@vivid-planet/react-admin-mui";
+import { Grid, Typography } from "@material-ui/core";
 import * as React from "react";
-
-const StyledFormControl = styled(FormControl)`
-    && {
-        padding-bottom: 16px;
-    }
-`;
-
-const StyledFormLabel = styled(FormLabel)`
-    && {
-        margin: 8px 0;
-        display: block;
-    }
-`;
+import * as sc from "./FieldContainer.sc";
 
 interface IProps {
     label?: string | React.ReactNode;
@@ -21,19 +8,19 @@ interface IProps {
 }
 
 export const FieldContainer: React.FunctionComponent<IProps> = props => (
-    <StyledFormControl fullWidth={true}>
+    <sc.StyledFormControl fullWidth={true}>
         <Grid container>
             <Grid item xs={4}>
                 {props.label && (
-                    <StyledFormLabel>
+                    <sc.StyledFormLabel>
                         {props.label}
                         {props.required && "*"}
-                    </StyledFormLabel>
+                    </sc.StyledFormLabel>
                 )}
             </Grid>
             <Grid item xs={8}>
-                {props.children}
+                <Typography>{props.children}</Typography>
             </Grid>
         </Grid>
-    </StyledFormControl>
+    </sc.StyledFormControl>
 );
