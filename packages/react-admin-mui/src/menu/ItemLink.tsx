@@ -4,12 +4,16 @@ import { Link, LinkProps, Route } from "react-router-dom";
 import { IMenuItemProps, MenuItem } from "./Item";
 
 export interface IMenuItemLink extends IMenuItemProps {
-    path: string;
+    path?: string;
 }
 
 export class MenuItemLink extends React.Component<IMenuItemLink & ListItemProps & Partial<LinkProps>> {
     public render() {
         const { path, ...otherProps } = this.props;
+        if (!path) {
+            // eg. external link
+            return <MenuItem selected={false} {...otherProps} />;
+        }
 
         return (
             <Route
