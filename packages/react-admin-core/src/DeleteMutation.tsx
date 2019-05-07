@@ -42,16 +42,13 @@ class DeleteMutation extends React.Component<IncludingInjectedProps, IState> {
                 )}
 
                 <Dialog open={this.state.dialogOpen} onClose={this.handleNoClick}>
-                    <DialogTitle>Delete row?</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>Delete row?</DialogContentText>
-                    </DialogContent>
+                    <DialogTitle>Datensatz löschen?</DialogTitle>
                     <DialogActions>
-                        <Button onClick={this.handleNoClick} color="primary">
-                            No
+                        <Button onClick={this.handleYesClick} color="primary" autoFocus={true} variant="contained">
+                            Ja
                         </Button>
-                        <Button onClick={this.handleYesClick} color="primary" autoFocus={true}>
-                            Yes
+                        <Button onClick={this.handleNoClick} color="primary">
+                            Nein
                         </Button>
                     </DialogActions>
                 </Dialog>
