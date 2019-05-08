@@ -66,6 +66,10 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             api,
         };
 
+        React.useEffect(() => {
+            ret.refetch();
+        }, []);
+
         function changePage(vars: object) {
             // TODO
             // if (this.domRef.current) {
