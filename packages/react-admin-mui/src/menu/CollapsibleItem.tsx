@@ -1,7 +1,6 @@
 import { Collapse, IconButton, List } from "@material-ui/core";
 import { ListProps } from "@material-ui/core/List";
-import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
-import ArrowDropUp from "@material-ui/icons/ArrowDropUp";
+import { KeyboardArrowDown as ArrowDownIcon, KeyboardArrowUp as ArrowUpIcon } from "@material-ui/icons";
 import * as React from "react";
 import { IMenuItemProps, MenuItem } from "./Item";
 
@@ -18,7 +17,7 @@ export interface ICollapsibleItemProps extends IMenuItemProps {
 }
 
 const SecondaryAction = ({ open, onClick }: any) => {
-    return <IconButton onClick={onClick}>{open ? <ArrowDropDown /> : <ArrowDropUp />}</IconButton>;
+    return <IconButton onClick={onClick}>{open ? <ArrowUpIcon /> : <ArrowDownIcon />}</IconButton>;
 };
 
 export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps> = ({
