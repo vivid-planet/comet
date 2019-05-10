@@ -2,7 +2,7 @@ import MuiTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
-import { TableRowProps } from "@material-ui/core/TableRow";
+import TableRow, { TableRowProps } from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
@@ -26,7 +26,7 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
         props.onSortClick(ev, name);
     };
 
-    const tableRow: React.ReactElement<TableRowProps> = props.renderHeadTableRow ? props.renderHeadTableRow() : <sc.StyledTableRow />;
+    const tableRow: React.ReactElement<TableRowProps> = props.renderHeadTableRow ? props.renderHeadTableRow() : <TableRow />;
     return (
         <sc.StyledTableHead>
             <tableRow.type {...tableRow.props}>
@@ -68,6 +68,7 @@ export interface ITableProps {
     selectionApi?: ISelectionApi;
     pagingActions?: IPagingActions;
     rowName?: string | ((count: number) => string);
+    hideTableHead?: boolean;
 }
 
 class Table extends React.Component<ITableProps & IWithTableQueryProps> {
@@ -80,20 +81,22 @@ class Table extends React.Component<ITableProps & IWithTableQueryProps> {
 
         return (
             <MuiTable>
-                <EnhancedTableHead
-                    columns={this.props.children}
-                    onSortClick={this.handleSortClick}
-                    sort={sort}
-                    order={order}
-                    renderHeadTableRow={this.props.renderHeadTableRow}
-                />
+                {!this.props.hideTableHead && (
+                    <EnhancedTableHead
+                        columns={this.props.children}
+                        onSortClick={this.handleSortClick}
+                        sort={sort}
+                        order={order}
+                        renderHeadTableRow={this.props.renderHeadTableRow}
+                    />
+                )}
                 <TableBody>
                     {data.map((row, index) => {
                         const isSelected = this.isSelected(row.id);
                         const tableRow: React.ReactElement<TableRowProps> = this.props.renderTableRow ? (
                             this.props.renderTableRow(index)
                         ) : (
-                            <sc.StyledTableRow />
+                            <sc.StyledTableBodyRow hideTableHead={!!this.props.hideTableHead} />
                         );
                         return (
                             <tableRow.type
@@ -123,13 +126,13 @@ class Table extends React.Component<ITableProps & IWithTableQueryProps> {
                 </TableBody>
                 {this.props.pagingActions && (
                     <TableFooter>
-                        <sc.StyledTableRow>
+                        <sc.StyledTableBodyRow hideTableHead={!!this.props.hideTableHead}>
                             <TablePagination
                                 totalCount={this.props.totalCount}
                                 pagingActions={this.props.pagingActions}
                                 rowName={this.props.rowName}
                             />
-                        </sc.StyledTableRow>
+                        </sc.StyledTableBodyRow>
                     </TableFooter>
                 )}
             </MuiTable>
