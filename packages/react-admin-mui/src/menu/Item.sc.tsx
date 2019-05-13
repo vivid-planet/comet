@@ -31,7 +31,8 @@ export const ListItem = styled<IMenuItemStyleProps>(({ level, menuOpen, enableMa
                 margin-bottom: ${theme.spacing.unit}px;
             `};
 
-        &.selected {
+        &.selected,
+        &.selected:focus {
             background-color: ${({ theme }) => theme.palette.primary.main};
         }
 
