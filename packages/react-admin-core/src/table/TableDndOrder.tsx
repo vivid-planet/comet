@@ -5,7 +5,7 @@ import * as React from "react";
 import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropContext, DragSource, DropTarget, DropTargetMonitor } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { findDOMNode } from "react-dom";
-import { ITableProps, Table } from "./Table";
+import { IRow, ITableProps, Table } from "./Table";
 
 const cardSource = {
     beginDrag(props: IRowProps) {
@@ -119,11 +119,11 @@ const ExtendedDndOrderRow = DragSource(
     }))(DndOrderRow),
 );
 
-interface IProps extends ITableProps {
+interface IProps<TRow extends IRow> extends ITableProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
 }
 // tslint:disable-next-line:max-classes-per-file
-class TableDndOrder extends React.Component<IProps> {
+class TableDndOrder<TRow extends IRow> extends React.Component<IProps<TRow>> {
     public render() {
         const props = {
             ...this.props,

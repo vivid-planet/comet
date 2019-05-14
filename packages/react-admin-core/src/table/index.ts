@@ -3,7 +3,6 @@ export * from "./pagingStrategy";
 
 // Export files
 export * from "./AddButton";
-export * from "./Column";
 export * from "./DeleteButton";
 export * from "./LocalChangesToolbar";
 export * from "./Pagination";
