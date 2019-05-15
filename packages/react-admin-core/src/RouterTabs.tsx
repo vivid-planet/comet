@@ -36,10 +36,11 @@ interface IProps extends RouteComponentProps {
     };
     children: Array<React.ReactElement<ITabProps>> | React.ReactElement<ITabProps>;
     variant?: TabsProps["variant"];
+    indicatorColor?: TabsProps["indicatorColor"];
 }
 class RouterTabs extends React.Component<IProps> {
     public render() {
-        const { classes } = this.props;
+        const { classes, variant, indicatorColor } = this.props;
 
         const paths = React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
             if (child.type !== Tab) {
@@ -61,7 +62,12 @@ class RouterTabs extends React.Component<IProps> {
                                             const value = paths.indexOf(routePath);
                                             return (
                                                 <AppBar position="static">
-                                                    <Tabs value={value} onChange={this.handleChange} variant={this.props.variant}>
+                                                    <Tabs
+                                                        value={value}
+                                                        onChange={this.handleChange}
+                                                        variant={variant}
+                                                        indicatorColor={indicatorColor}
+                                                    >
                                                         {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
                                                             const { path, forceRender, ...restTabProps } = child.props;
                                                             return <MaterialTab {...restTabProps} />;
