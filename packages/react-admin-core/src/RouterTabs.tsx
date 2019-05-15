@@ -1,4 +1,4 @@
-import AppBar from "@material-ui/core/AppBar";
+import MaterialAppBar, { AppBarProps } from "@material-ui/core/AppBar";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import MaterialTab, { TabProps } from "@material-ui/core/Tab";
 import Tabs, { TabsProps } from "@material-ui/core/Tabs";
@@ -37,10 +37,12 @@ interface IProps extends RouteComponentProps {
     children: Array<React.ReactElement<ITabProps>> | React.ReactElement<ITabProps>;
     variant?: TabsProps["variant"];
     indicatorColor?: TabsProps["indicatorColor"];
+    appBarComponent?: React.ComponentType<AppBarProps>;
+    tabComponent?: React.ComponentType<TabProps>;
 }
 class RouterTabs extends React.Component<IProps> {
     public render() {
-        const { classes, variant, indicatorColor } = this.props;
+        const { classes, variant, indicatorColor, appBarComponent: AppBar = MaterialAppBar, tabComponent: TabComponent = MaterialTab } = this.props;
 
         const paths = React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
             if (child.type !== Tab) {
@@ -70,7 +72,7 @@ class RouterTabs extends React.Component<IProps> {
                                                     >
                                                         {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
                                                             const { path, forceRender, ...restTabProps } = child.props;
-                                                            return <MaterialTab {...restTabProps} />;
+                                                            return <TabComponent {...restTabProps} />;
                                                         })}
                                                     </Tabs>
                                                 </AppBar>
