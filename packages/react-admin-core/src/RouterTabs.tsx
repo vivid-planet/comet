@@ -17,7 +17,7 @@ export const Tab: React.SFC<ITabProps> = () => null;
 
 function TabContainer(props: any) {
     return (
-        <Typography component="div" style={{ padding: "24px 0", ...(props.style || {}) }}>
+        <Typography component="div" style={{ ...(props.style || {}) }}>
             {props.children}
         </Typography>
     );
