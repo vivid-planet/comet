@@ -1,7 +1,7 @@
 import ApolloClient from "apollo-client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
-import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./withDirtyHandlerApi";
+import { DirtyHandlerApiContext } from "../DirtyHandlerApiContext";
 
 export async function submitChangesWithMutation(options: {
     changes: { [id: string]: object };
@@ -26,7 +26,7 @@ export interface ITableLocalChangesApi {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
     submitLocalDataChanges: () => void;
 }
-interface IProps<TData> extends IWithDirtyHandlerApiProps {
+interface IProps<TData> {
     data: TData[];
     onSubmit: (changes: { [id: string]: Partial<TData> }) => Promise<void>;
     children: (injectedProps: {
@@ -43,7 +43,8 @@ interface IState<TData> {
     };
     loading: boolean;
 }
-class TableLocalChanges<TData extends { id: string; pos?: number }> extends React.Component<IProps<TData>, IState<TData>> {
+export class TableLocalChanges<TData extends { id: string; pos?: number }> extends React.Component<IProps<TData>, IState<TData>> {
+    public static contextType = DirtyHandlerApiContext;
     private tableLocalChangesApi: ITableLocalChangesApi;
     constructor(props: IProps<TData>) {
         super(props);
@@ -62,7 +63,7 @@ class TableLocalChanges<TData extends { id: string; pos?: number }> extends Reac
     public componentDidMount() {
         // register with the parent DirtyHandler
         // probably this needs to be configurable?
-        const dirtyApi = this.props.dirtyHandlerApi ? this.props.dirtyHandlerApi.getParent() : undefined;
+        const dirtyApi = this.context ? this.context.getParent() : undefined;
         if (dirtyApi) {
             dirtyApi.registerBinding(this, {
                 isDirty: () => {
@@ -84,7 +85,7 @@ class TableLocalChanges<TData extends { id: string; pos?: number }> extends Reac
     }
 
     public componentWillUnmount() {
-        const dirtyApi = this.props.dirtyHandlerApi ? this.props.dirtyHandlerApi.getParent() : undefined;
+        const dirtyApi = this.context ? this.context.getParent() : undefined;
         if (dirtyApi) {
             dirtyApi.unregisterBinding(this);
         }
@@ -166,6 +167,3 @@ class TableLocalChanges<TData extends { id: string; pos?: number }> extends Reac
         });
     }
 }
-
-const WrappedTableLocalChanges = withDirtyHandlerApi(TableLocalChanges);
-export { WrappedTableLocalChanges as TableLocalChanges };
