@@ -1,8 +1,25 @@
 import ApolloClient from "apollo-client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
-import { ApolloConsumer } from "react-apollo";
 import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./withDirtyHandlerApi";
+
+export async function submitChangesWithMutation(options: {
+    changes: { [id: string]: object };
+    variables?: object;
+    updateMutation: DocumentNode;
+    client: ApolloClient<any>;
+}) {
+    for (const id of Object.keys(options.changes)) {
+        await options.client.mutate({
+            mutation: options.updateMutation,
+            variables: {
+                ...(options.variables || {}),
+                id,
+                body: options.changes[id],
+            },
+        });
+    }
+}
 
 export interface ITableLocalChangesApi {
     setLocalDataChange: (id: string, column: string, value: any) => void;
@@ -11,8 +28,7 @@ export interface ITableLocalChangesApi {
 }
 interface IProps<TData> extends IWithDirtyHandlerApiProps {
     data: TData[];
-    updateMutation: DocumentNode;
-    variables?: object;
+    onSubmit: (changes: { [id: string]: Partial<TData> }) => Promise<void>;
     children: (injectedProps: {
         tableLocalChangesApi: ITableLocalChangesApi;
         localChangesCount: number;
@@ -29,7 +45,6 @@ interface IState<TData> {
 }
 class TableLocalChanges<TData extends { id: string; pos?: number }> extends React.Component<IProps<TData>, IState<TData>> {
     private tableLocalChangesApi: ITableLocalChangesApi;
-    private client: ApolloClient<any>;
     constructor(props: IProps<TData>) {
         super(props);
         this.tableLocalChangesApi = {
@@ -83,21 +98,14 @@ class TableLocalChanges<TData extends { id: string; pos?: number }> extends Reac
             });
         }
         return (
-            <ApolloConsumer>
-                {client => {
-                    this.client = client;
-                    return (
-                        <>
-                            {this.props.children({
-                                tableLocalChangesApi: this.tableLocalChangesApi,
-                                localChangesCount: Object.keys(this.state.changes).length,
-                                data: patchedData,
-                                loading: this.state.loading,
-                            })}
-                        </>
-                    );
-                }}
-            </ApolloConsumer>
+            <>
+                {this.props.children({
+                    tableLocalChangesApi: this.tableLocalChangesApi,
+                    localChangesCount: Object.keys(this.state.changes).length,
+                    data: patchedData,
+                    loading: this.state.loading,
+                })}
+            </>
         );
     }
 
@@ -151,23 +159,10 @@ class TableLocalChanges<TData extends { id: string; pos?: number }> extends Reac
         this.setState({
             loading: true,
         });
-        for (const id of Object.keys(this.state.changes)) {
-            await this.client.mutate({
-                mutation: this.props.updateMutation,
-                variables: {
-                    ...(this.props.variables || {}),
-                    id,
-                    body: this.state.changes[id],
-                },
-            });
-            const changes = { ...this.state.changes };
-            delete changes[id];
-            this.setState({
-                changes,
-            });
-        }
+        this.props.onSubmit(this.state.changes);
         this.setState({
             loading: false,
+            changes: {},
         });
     }
 }

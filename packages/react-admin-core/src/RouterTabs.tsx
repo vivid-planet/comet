@@ -1,4 +1,4 @@
-import AppBar from "@material-ui/core/AppBar";
+import MaterialAppBar, { AppBarProps } from "@material-ui/core/AppBar";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import MaterialTab, { TabProps } from "@material-ui/core/Tab";
 import Tabs, { TabsProps } from "@material-ui/core/Tabs";
@@ -17,7 +17,7 @@ export const Tab: React.SFC<ITabProps> = () => null;
 
 function TabContainer(props: any) {
     return (
-        <Typography component="div" style={{ padding: "24px 0", ...(props.style || {}) }}>
+        <Typography component="div" style={{ ...(props.style || {}) }}>
             {props.children}
         </Typography>
     );
@@ -36,10 +36,13 @@ interface IProps extends RouteComponentProps {
     };
     children: Array<React.ReactElement<ITabProps>> | React.ReactElement<ITabProps>;
     variant?: TabsProps["variant"];
+    indicatorColor?: TabsProps["indicatorColor"];
+    appBarComponent?: React.ComponentType<AppBarProps>;
+    tabComponent?: React.ComponentType<TabProps>;
 }
 class RouterTabs extends React.Component<IProps> {
     public render() {
-        const { classes } = this.props;
+        const { classes, variant, indicatorColor, appBarComponent: AppBar = MaterialAppBar, tabComponent: TabComponent = MaterialTab } = this.props;
 
         const paths = React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
             if (child.type !== Tab) {
@@ -61,10 +64,15 @@ class RouterTabs extends React.Component<IProps> {
                                             const value = paths.indexOf(routePath);
                                             return (
                                                 <AppBar position="static">
-                                                    <Tabs value={value} onChange={this.handleChange} variant={this.props.variant}>
+                                                    <Tabs
+                                                        value={value}
+                                                        onChange={this.handleChange}
+                                                        variant={variant}
+                                                        indicatorColor={indicatorColor}
+                                                    >
                                                         {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
                                                             const { path, forceRender, ...restTabProps } = child.props;
-                                                            return <MaterialTab {...restTabProps} />;
+                                                            return <TabComponent {...restTabProps} />;
                                                         })}
                                                     </Tabs>
                                                 </AppBar>

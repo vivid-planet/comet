@@ -86,7 +86,7 @@ interface IRowCollectedProps {
 }
 class DndOrderRow extends React.Component<IRowProps & IRowCollectedProps> {
     public render() {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isDragging, moveRow, ...rest } = this.props;
+        const { connectDropTarget, connectDragSource, connectDragPreview, isDragging, moveRow, id, ...rest } = this.props;
         const opacity = isDragging ? 0 : 1;
         return (
             <RootRef rootRef={this.handleRootRef}>
