@@ -1,7 +1,8 @@
-import { Collapse, IconButton, List } from "@material-ui/core";
+import { Collapse, List } from "@material-ui/core";
 import { ListProps } from "@material-ui/core/List";
 import { KeyboardArrowDown as ArrowDownIcon, KeyboardArrowUp as ArrowUpIcon } from "@material-ui/icons";
 import * as React from "react";
+import * as sc from "./CollapsibleItem.sc";
 import { IMenuItemProps, MenuItem } from "./Item";
 
 export interface IMenuLevel {
@@ -13,12 +14,17 @@ type MenuChild = React.ReactElement<IMenuLevel>;
 export interface ICollapsibleItemProps extends IMenuItemProps {
     children: MenuChild[];
     collapsible: boolean;
+    secondaryAction?: React.ComponentType<ICollapsibleItemSecondaryActionProps>;
     isOpen?: boolean;
 }
 
-const SecondaryAction = ({ open, onClick }: any) => {
-    return <IconButton onClick={onClick}>{open ? <ArrowUpIcon /> : <ArrowDownIcon />}</IconButton>;
-};
+export interface ICollapsibleItemSecondaryActionProps {
+    open: boolean;
+}
+
+export const DefaultSecondaryAction: React.FC<ICollapsibleItemSecondaryActionProps> = ({ open }) => (
+    <sc.ArrowWrapper>{open ? <ArrowUpIcon /> : <ArrowDownIcon />}</sc.ArrowWrapper>
+);
 
 export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps> = ({
     level,
@@ -27,6 +33,7 @@ export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps 
     text,
     icon,
     children,
+    secondaryAction: SecondaryAction = DefaultSecondaryAction,
     ...otherProps
 }) => {
     if (!level) level = 1;
