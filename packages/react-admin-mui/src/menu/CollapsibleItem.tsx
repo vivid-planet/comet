@@ -1,9 +1,11 @@
 import { Collapse, List } from "@material-ui/core";
 import { ListProps } from "@material-ui/core/List";
+import { ListItemIconProps } from "@material-ui/core/ListItemIcon";
+import { ListItemTextProps } from "@material-ui/core/ListItemText";
 import { KeyboardArrowDown as ArrowDownIcon, KeyboardArrowUp as ArrowUpIcon } from "@material-ui/icons";
 import * as React from "react";
 import * as sc from "./CollapsibleItem.sc";
-import { IMenuItemProps, MenuItem } from "./Item";
+import { IListItemProps, IMenuItemProps, IMenuItemSelected, IMenuItemTextProps, MenuItem } from "./Item";
 
 export interface IMenuLevel {
     level?: number;
@@ -15,6 +17,9 @@ export interface ICollapsibleItemProps extends IMenuItemProps {
     children: MenuChild[];
     collapsible: boolean;
     secondaryAction?: React.ComponentType<ICollapsibleItemSecondaryActionProps>;
+    listItemTextComponent?: React.ComponentType<IMenuItemTextProps & ListItemTextProps>;
+    listItemIconComponent?: React.ComponentType<IMenuItemSelected & ListItemIconProps>;
+    listItemComponent?: React.ComponentType<IListItemProps>;
     isOpen?: boolean;
 }
 
@@ -34,6 +39,9 @@ export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps 
     icon,
     children,
     secondaryAction: SecondaryAction = DefaultSecondaryAction,
+    listItemTextComponent,
+    listItemIconComponent,
+    listItemComponent,
     ...otherProps
 }) => {
     if (!level) level = 1;
@@ -48,6 +56,9 @@ export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps 
         <List {...otherProps} disablePadding={true}>
             <MenuItem
                 {...{ text, icon, level }}
+                listItemTextComponent={listItemTextComponent}
+                listItemIconComponent={listItemIconComponent}
+                listItemComponent={listItemComponent}
                 onClick={handleClick.bind(null, open, setOpen)}
                 secondaryAction={collapsible && <SecondaryAction open={open} />}
             />

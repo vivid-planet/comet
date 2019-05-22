@@ -9,17 +9,11 @@ import { ListItemSecondaryActionProps } from "@material-ui/core/ListItemSecondar
 import { ListItemTextProps } from "@material-ui/core/ListItemText";
 import * as React from "react";
 import { css, styled } from "../styled-components";
+import { IListItemProps, IMenuItemSelected, IMenuItemTextProps } from "./Item";
 
-interface IMenuItemStyleProps {
-    level: number;
-    hasIcon: boolean;
-    menuOpen: boolean;
-    enableMargin?: boolean;
-}
-
-export const ListItem = styled<IMenuItemStyleProps>(({ level, menuOpen, enableMargin, hasIcon = false, ...rest }) => (
+export const DefaultListItem = styled<IListItemProps>(({ level, menuOpen, enableMargin, hasIcon = false, ...rest }) => (
     <MuiListItem {...rest} classes={{ root: "root", selected: "selected" }} />
-))<IMenuItemStyleProps>`
+))<IListItemProps>`
     &.root {
         padding-top: ${({ hasIcon }) => (hasIcon ? `20px` : `10px`)};
         padding-bottom: ${({ hasIcon }) => (hasIcon ? `20px` : `10px`)};
@@ -43,17 +37,9 @@ export const ListItem = styled<IMenuItemStyleProps>(({ level, menuOpen, enableMa
     }
 `;
 
-interface IMenuItemSelected {
-    selected?: boolean;
-}
-
-interface IMenuItemTextStyleProps extends IMenuItemSelected {
-    level: number;
-}
-
-export const ListItemText = styled<IMenuItemTextStyleProps & ListItemTextProps>(({ selected, level, ...rest }) => (
+export const DefaultListItemText = styled<IMenuItemTextProps & ListItemTextProps>(({ selected, level, ...rest }) => (
     <MuiListItemText {...rest} classes={{ root: "root", primary: "primary", textDense: "textDense" }} />
-))<IMenuItemTextStyleProps>`
+))<IMenuItemTextProps>`
     &.root {
         &:first-child {
             ${({ inset }) => inset && `padding-left: 60px`};
@@ -68,7 +54,7 @@ export const ListItemText = styled<IMenuItemTextStyleProps & ListItemTextProps>(
     }
 `;
 
-export const ListItemIcon = styled<IMenuItemSelected & ListItemIconProps>(({ selected, ...rest }) => (
+export const DefaultListItemIcon = styled<IMenuItemSelected & ListItemIconProps>(({ selected, ...rest }) => (
     <MuiListItemIcon {...rest} classes={{ root: "root" }} />
 ))<IMenuItemSelected>`
     &.root {
