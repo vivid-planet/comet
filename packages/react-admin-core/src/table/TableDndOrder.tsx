@@ -5,76 +5,70 @@ import * as React from "react";
 import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropContext, DragSource, DropTarget, DropTargetMonitor } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { findDOMNode } from "react-dom";
-import { IRow, ITableProps, Table } from "./Table";
+import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
 
-const cardSource = {
-    beginDrag(props: IRowProps) {
-        return {
-            id: props.id,
-            index: props.index,
-        };
-    },
-};
+function cardSourceBeginDrag<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
+    return {
+        id: props.row.id,
+        index: props.index,
+    };
+}
 
-const cardTarget = {
-    hover(props: IRowProps, monitor: DropTargetMonitor, component: DndOrderRow): void {
-        // SOURCE for this code: https://github.com/react-dnd/react-dnd/tree/master/packages/documentation/examples/04%20Sortable/Simple
+function cardTargetHover<TRow extends IRow>(props: IDndOrderRowProps<TRow>, monitor: DropTargetMonitor, component: DndOrderRow<TRow>): void {
+    // SOURCE for this code: https://github.com/react-dnd/react-dnd/tree/master/packages/documentation/examples/04%20Sortable/Simple
 
-        if (!component) {
-            return;
-        }
+    if (!component) {
+        return;
+    }
 
-        const dragIndex = monitor.getItem().index;
-        const hoverIndex = props.index;
-        if (hoverIndex === undefined) return;
+    const dragIndex = monitor.getItem().index;
+    const hoverIndex = props.index;
+    if (hoverIndex === undefined) return;
 
-        // Don't replace items with themselves
-        if (dragIndex === hoverIndex) {
-            return;
-        }
+    // Don't replace items with themselves
+    if (dragIndex === hoverIndex) {
+        return;
+    }
 
-        // Determine rectangle on screen
-        const hoverBoundingRect = (findDOMNode(component) as any).getBoundingClientRect();
+    // Determine rectangle on screen
+    const hoverBoundingRect = (findDOMNode(component) as any).getBoundingClientRect();
 
-        // Get vertical middle
-        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+    // Get vertical middle
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 
-        // Determine mouse position
-        const clientOffset = monitor.getClientOffset();
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset();
 
-        if (!clientOffset) return;
+    if (!clientOffset) return;
 
-        // Get pixels to the top
-        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+    // Get pixels to the top
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
-        // Only perform the move when the mouse has crossed half of the items height
-        // When dragging downwards, only move when the cursor is below 50%
-        // When dragging upwards, only move when the cursor is above 50%
+    // Only perform the move when the mouse has crossed half of the items height
+    // When dragging downwards, only move when the cursor is below 50%
+    // When dragging upwards, only move when the cursor is above 50%
 
-        // Dragging downwards
-        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-            return;
-        }
+    // Dragging downwards
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+    }
 
-        // Dragging upwards
-        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-            return;
-        }
+    // Dragging upwards
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+    }
 
-        // Time to actually perform the action
-        props.moveRow(dragIndex, hoverIndex);
+    // Time to actually perform the action
+    props.moveRow(dragIndex, hoverIndex);
 
-        // Note: we're mutating the monitor item here!
-        // Generally it's better to avoid mutations,
-        // but it's good here for the sake of performance
-        // to avoid expensive index searches.
-        monitor.getItem().index = hoverIndex;
-    },
-};
+    // Note: we're mutating the monitor item here!
+    // Generally it's better to avoid mutations,
+    // but it's good here for the sake of performance
+    // to avoid expensive index searches.
+    monitor.getItem().index = hoverIndex;
+}
 
-interface IRowProps {
-    id?: string;
-    index?: number;
+interface IDndOrderRowProps<TRow extends IRow> extends ITableRowProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
 }
 
@@ -84,15 +78,15 @@ interface IRowCollectedProps {
     connectDragPreview: ConnectDragPreview;
     isDragging: boolean;
 }
-class DndOrderRow extends React.Component<IRowProps & IRowCollectedProps> {
+class DndOrderRow<TRow extends IRow> extends React.Component<IDndOrderRowProps<TRow> & IRowCollectedProps> {
     public render() {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isDragging, moveRow, id, ...rest } = this.props;
+        const { connectDragSource, isDragging, columns, row, rowProps } = this.props;
         const opacity = isDragging ? 0 : 1;
         return (
             <RootRef rootRef={this.handleRootRef}>
-                <TableRow {...rest} style={{ opacity }}>
+                <TableRow {...rowProps} style={{ opacity }}>
                     <TableCell>{connectDragSource(<span style={{ padding: 5 }}>::</span>)}</TableCell>
-                    {this.props.children}
+                    <TableColumns columns={columns} row={row} />
                 </TableRow>
             </RootRef>
         );
@@ -105,40 +99,50 @@ class DndOrderRow extends React.Component<IRowProps & IRowCollectedProps> {
     };
 }
 
-const ExtendedDndOrderRow = DragSource(
+const ExtendedDndOrderRow = DragSource<IDndOrderRowProps<IRow>>(
     "row", // TODO: configurable? unique per table?
-    cardSource,
+    {
+        beginDrag: cardSourceBeginDrag,
+    },
     (connect, monitor) => ({
         connectDragSource: connect.dragSource(),
         connectDragPreview: connect.dragPreview(),
         isDragging: monitor.isDragging(),
     }),
 )(
-    DropTarget("row", cardTarget, connect => ({
-        connectDropTarget: connect.dropTarget(),
-    }))(DndOrderRow),
+    DropTarget(
+        "row",
+        {
+            hover: cardTargetHover,
+        },
+        connect => ({
+            connectDropTarget: connect.dropTarget(),
+        }),
+    )(DndOrderRow),
 );
 
 interface IProps<TRow extends IRow> extends ITableProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
 }
+
 // tslint:disable-next-line:max-classes-per-file
 class TableDndOrder<TRow extends IRow> extends React.Component<IProps<TRow>> {
     public render() {
-        const props = {
+        const tableProps: ITableProps<TRow> = {
             ...this.props,
-            renderTableRow: (index: number) => {
-                return <ExtendedDndOrderRow moveRow={this.props.moveRow} index={index} />;
+            renderTableRow: props => {
+                return <ExtendedDndOrderRow moveRow={this.props.moveRow} index={props.index} {...props} />;
             },
-            renderHeadTableRow: () => {
+            renderHeadTableRow: props => {
                 return (
                     <TableRow>
                         <TableCell />
+                        <TableHeadColumns {...props} />
                     </TableRow>
                 );
             },
         };
-        return <Table {...props} />;
+        return <Table {...tableProps} />;
     }
 }
 const WrappedTableDndOrder = DragDropContext(HTML5Backend)(TableDndOrder);

@@ -11,44 +11,67 @@ import { IPagingActions } from "./pagingStrategy";
 import * as sc from "./Table.sc";
 import { TableQueryContext } from "./TableQueryContext";
 
-interface ITableHeadProps<TRow extends IRow> {
-    columns: Array<ITableColumn<TRow>>;
-    renderHeadTableRow?: () => React.ReactElement<TableRowProps>;
-    onSortClick: (ev: React.MouseEvent, column: string) => void;
-    sort?: string;
-    order: "asc" | "desc";
-}
-
-function EnhancedTableHead<TRow extends IRow>(props: ITableHeadProps<TRow>) {
-    const handleSortClick = (name: string, ev: React.MouseEvent) => {
-        props.onSortClick(ev, name);
-    };
-
-    const tableRow: React.ReactElement<TableRowProps> = props.renderHeadTableRow ? props.renderHeadTableRow() : <TableRow />;
+export interface ITableHeadRowProps<TRow extends IRow> extends ITableHeadColumnsProps<TRow> {}
+function DefaultHeadTableRow<TRow extends IRow>({ columns, sort, order, onSortClick }: ITableHeadRowProps<TRow>) {
     return (
-        <sc.StyledTableHead>
-            <tableRow.type {...tableRow.props}>
-                {tableRow.props.children}
-                {props.columns.map((column, index) => {
-                    if (column.visible === false) return null;
-                    const { name, header, sortable, headerProps } = column;
-                    return (
-                        <TableCell key={index} {...headerProps}>
-                            {sortable ? (
-                                <TableSortLabel active={props.sort === name} direction={props.order} onClick={handleSortClick.bind(null, name)}>
-                                    {header}
-                                </TableSortLabel>
-                            ) : (
-                                header
-                            )}
-                        </TableCell>
-                    );
-                })}
-            </tableRow.type>
-        </sc.StyledTableHead>
+        <TableRow>
+            <TableHeadColumns columns={columns} sort={sort} order={order} onSortClick={onSortClick} />
+        </TableRow>
     );
 }
 
+export interface ITableHeadColumnsProps<TRow extends IRow> {
+    columns: Array<ITableColumn<TRow>>;
+    sort: string;
+    order: "asc" | "desc";
+    onSortClick: (ev: React.MouseEvent, column: string) => void;
+}
+// render default TableCell fragments for given columns
+export function TableHeadColumns<TRow extends IRow>({ columns, sort, order, onSortClick }: ITableHeadColumnsProps<TRow>) {
+    const handleSortClick = (name: string, ev: React.MouseEvent) => {
+        onSortClick(ev, name);
+    };
+
+    return (
+        <>
+            {columns.map((column: any, colIndex: number) => {
+                if (column.visible === false) return null;
+                const { name, header, sortable, headerProps } = column;
+                return (
+                    <TableCell key={colIndex} {...headerProps}>
+                        {sortable ? (
+                            <TableSortLabel active={sort === name} direction={order} onClick={handleSortClick.bind(null, name)}>
+                                {header}
+                            </TableSortLabel>
+                        ) : (
+                            header
+                        )}
+                    </TableCell>
+                );
+            })}
+        </>
+    );
+}
+
+export interface ITableColumnsProps<TRow extends IRow> {
+    row: TRow;
+    columns: Array<ITableColumn<TRow>>;
+}
+// render default TableCell fragments for given columns
+export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsProps<TRow>) {
+    return (
+        <>
+            {columns.map((column: any, colIndex: number) => {
+                if (column.visible === false) return null;
+                return (
+                    <TableCell key={colIndex} {...column.cellProps}>
+                        {column.render ? column.render(row) : (row as any)[column.name]}
+                    </TableCell>
+                );
+            })}
+        </>
+    );
+}
 export interface IRow {
     id: string | number;
 }
@@ -61,6 +84,13 @@ interface ITableColumn<TRow extends IRow> {
     cellProps?: TableCellProps;
     headerProps?: TableCellProps;
 }
+
+export interface ITableRowProps<TRow extends IRow> extends ITableColumnsProps<TRow> {
+    index: number;
+    key: any;
+    rowProps: TableRowProps;
+}
+
 export interface ITableProps<TRow extends IRow> {
     data: TRow[];
     totalCount: number;
@@ -69,13 +99,21 @@ export interface ITableProps<TRow extends IRow> {
     sort?: string;
     order?: "asc" | "desc";
     page?: number;
-    renderTableRow?: (index: number) => React.ReactElement<TableRowProps>;
-    renderHeadTableRow?: () => React.ReactElement<TableRowProps>;
+    renderTableRow?: (props: ITableRowProps<TRow>) => React.ReactNode;
+    renderHeadTableRow?: (props: ITableHeadRowProps<TRow>) => React.ReactNode;
     selectionApi?: ISelectionApi;
     pagingActions?: IPagingActions;
     rowName?: string | ((count: number) => string);
     hideTableHead?: boolean;
     columns: Array<ITableColumn<TRow>>;
+}
+
+function DefaultTableRow<TRow extends IRow>({ columns, row, index, rowProps }: ITableRowProps<TRow>) {
+    return (
+        <TableRow {...rowProps}>
+            <TableColumns columns={columns} row={row} />
+        </TableRow>
+    );
 }
 
 export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>> {
@@ -86,49 +124,38 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
         const sort = this.props.sort !== undefined ? this.props.sort : this.context.sort;
         const order = this.props.order !== undefined ? this.props.order : this.context.order;
 
+        const renderHeadTableRow = this.props.renderHeadTableRow || (props => <DefaultHeadTableRow {...props} />);
+
         return (
             <MuiTable>
                 {!this.props.hideTableHead && (
-                    <EnhancedTableHead
-                        columns={this.props.columns}
-                        onSortClick={this.handleSortClick}
-                        sort={sort}
-                        order={order}
-                        renderHeadTableRow={this.props.renderHeadTableRow}
-                    />
+                    <sc.StyledTableHead>
+                        {renderHeadTableRow({
+                            columns: this.props.columns,
+                            onSortClick: this.handleSortClick,
+                            sort,
+                            order,
+                        })}
+                    </sc.StyledTableHead>
                 )}
                 <TableBody>
                     {data.map((row, index) => {
                         const isSelected = this.isSelected(row.id);
-                        const tableRow: React.ReactElement<TableRowProps> = this.props.renderTableRow ? (
-                            this.props.renderTableRow(index)
-                        ) : (
-                            <sc.StyledTableBodyRow hideTableHead={!!this.props.hideTableHead} />
-                        );
-                        return (
-                            <tableRow.type
-                                {...tableRow.props}
-                                hover={this.props.selectable}
-                                onClick={this.handleClick.bind(this, row.id)}
-                                role="checkbox"
-                                aria-checked={isSelected}
-                                tabIndex={-1}
-                                key={row.id}
-                                selected={isSelected}
-                                id={String(row.id)}
-                                onKeyDown={this.handleKeyDown}
-                            >
-                                {/*tableRow.props.columns*/}
-                                {this.props.columns.map((column, colIndex) => {
-                                    if (column.visible === false) return null;
-                                    return (
-                                        <TableCell key={colIndex} {...column.cellProps}>
-                                            {column.render ? column.render(row) : (row as any)[column.name]}
-                                        </TableCell>
-                                    );
-                                })}
-                            </tableRow.type>
-                        );
+                        const renderTableRow = this.props.renderTableRow || (props => <DefaultTableRow {...props} />);
+                        return renderTableRow({
+                            index,
+                            row,
+                            columns: this.props.columns,
+                            key: row.id,
+                            rowProps: {
+                                hover: this.props.selectable,
+                                onClick: this.handleClick.bind(this, row.id),
+                                role: "checkbox",
+                                tabIndex: -1,
+                                selected: isSelected,
+                                onKeyDown: this.handleKeyDown,
+                            },
+                        });
                     })}
                 </TableBody>
                 {this.props.pagingActions && (
