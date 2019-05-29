@@ -1,27 +1,25 @@
 import MuiTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
+import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
 import TableRow, { TableRowProps } from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
-import { ITableColumnProps } from "./Column";
 import { TablePagination } from "./Pagination";
 import { IPagingActions } from "./pagingStrategy";
 import * as sc from "./Table.sc";
 import { TableQueryContext } from "./TableQueryContext";
-import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
 
-interface ITableHeadProps {
-    columns: Array<React.ReactElement<ITableColumnProps> | undefined | false>;
+interface ITableHeadProps<TRow extends IRow> {
+    columns: Array<ITableColumn<TRow>>;
     renderHeadTableRow?: () => React.ReactElement<TableRowProps>;
     onSortClick: (ev: React.MouseEvent, column: string) => void;
     sort?: string;
     order: "asc" | "desc";
 }
 
-const EnhancedTableHead = (props: ITableHeadProps) => {
+function EnhancedTableHead<TRow extends IRow>(props: ITableHeadProps<TRow>) {
     const handleSortClick = (name: string, ev: React.MouseEvent) => {
         props.onSortClick(ev, name);
     };
@@ -31,9 +29,9 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
         <sc.StyledTableHead>
             <tableRow.type {...tableRow.props}>
                 {tableRow.props.children}
-                {React.Children.map(props.columns, (column: React.ReactElement<ITableColumnProps>, index) => {
-                    if (!column) return null;
-                    const { name, header, sortable, headerProps } = column.props;
+                {props.columns.map((column, index) => {
+                    if (column.visible === false) return null;
+                    const { name, header, sortable, headerProps } = column;
                     return (
                         <TableCell key={index} {...headerProps}>
                             {sortable ? (
@@ -49,14 +47,22 @@ const EnhancedTableHead = (props: ITableHeadProps) => {
             </tableRow.type>
         </sc.StyledTableHead>
     );
-};
+}
 
-interface IRow {
+export interface IRow {
     id: string | number;
 }
-export interface ITableProps {
-    data: IRow[];
-    children: Array<React.ReactElement<ITableColumnProps> | undefined | false>;
+interface ITableColumn<TRow extends IRow> {
+    name: string;
+    visible?: boolean;
+    header?: string | React.ReactNode;
+    render?: (row: TRow) => React.ReactNode;
+    sortable?: boolean;
+    cellProps?: TableCellProps;
+    headerProps?: TableCellProps;
+}
+export interface ITableProps<TRow extends IRow> {
+    data: TRow[];
     totalCount: number;
     selectedId?: string;
     selectable?: boolean;
@@ -69,9 +75,10 @@ export interface ITableProps {
     pagingActions?: IPagingActions;
     rowName?: string | ((count: number) => string);
     hideTableHead?: boolean;
+    columns: Array<ITableColumn<TRow>>;
 }
 
-class Table extends React.Component<ITableProps & IWithTableQueryProps> {
+export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>> {
     public static contextType = TableQueryContext;
     public render() {
         const { data } = this.props;
@@ -83,7 +90,7 @@ class Table extends React.Component<ITableProps & IWithTableQueryProps> {
             <MuiTable>
                 {!this.props.hideTableHead && (
                     <EnhancedTableHead
-                        columns={this.props.children}
+                        columns={this.props.columns}
                         onSortClick={this.handleSortClick}
                         sort={sort}
                         order={order}
@@ -111,12 +118,12 @@ class Table extends React.Component<ITableProps & IWithTableQueryProps> {
                                 id={String(row.id)}
                                 onKeyDown={this.handleKeyDown}
                             >
-                                {tableRow.props.children}
-                                {React.Children.map(this.props.children, (column: React.ReactElement<ITableColumnProps>, colIndex) => {
-                                    if (!column) return null;
+                                {/*tableRow.props.columns*/}
+                                {this.props.columns.map((column, colIndex) => {
+                                    if (column.visible === false) return null;
                                     return (
-                                        <TableCell key={colIndex} {...column.props.cellProps}>
-                                            {column.props.children ? column.props.children(row) : (row as any)[column.props.name]}
+                                        <TableCell key={colIndex} {...column.cellProps}>
+                                            {column.render ? column.render(row) : (row as any)[column.name]}
                                         </TableCell>
                                     );
                                 })}
@@ -165,11 +172,8 @@ class Table extends React.Component<ITableProps & IWithTableQueryProps> {
     }
 
     private handleSortClick(event: React.MouseEvent, name: string) {
-        if (this.props.tableQuery) {
-            this.props.tableQuery.api.changeSort(name);
+        if (this.context) {
+            this.context.api.changeSort(name);
         }
     }
 }
-
-const ExtendedTable = withTableQueryContext(Table);
-export { ExtendedTable as Table };

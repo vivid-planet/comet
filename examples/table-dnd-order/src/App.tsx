@@ -1,5 +1,5 @@
 import { Button } from "@material-ui/core";
-import { TableColumn as Column, TableDndOrder, TableLocalChanges } from "@vivid-planet/react-admin-core";
+import { TableDndOrder, TableLocalChanges } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
 interface IRow {
@@ -9,7 +9,7 @@ interface IRow {
     foo2: string;
 }
 export default function App() {
-    const data: IRow[] = [{ id: "1", pos: 1, foo1: "blub", foo2: "blub" }, { id: "2", pos: 2, foo1: "blub", foo2: "blub" }];
+    const data: IRow[] = [{ id: "1", pos: 1, foo1: "blub", foo2: "blub1" }, { id: "2", pos: 2, foo1: "blub", foo2: "blub2" }];
     return (
         <TableLocalChanges
             data={data}
@@ -19,12 +19,24 @@ export default function App() {
         >
             {({ tableLocalChangesApi, data: changedData }) => (
                 <>
-                    <TableDndOrder data={changedData} totalCount={changedData.length} sort="foo1" order="asc" moveRow={tableLocalChangesApi.moveRow}>
-                        <Column name="foo1" header="Foo1" />
-                        <Column name="foo2" header="Foo2">
-                            {row => <strong>{row.foo2}</strong>}
-                        </Column>
-                    </TableDndOrder>
+                    <TableDndOrder
+                        data={changedData}
+                        totalCount={changedData.length}
+                        sort="foo1"
+                        order="asc"
+                        moveRow={tableLocalChangesApi.moveRow}
+                        columns={[
+                            {
+                                name: "foo1",
+                                header: "Foo1",
+                            },
+                            {
+                                name: "foo2",
+                                header: "Foo2",
+                                render: row => <strong>{row.foo2}</strong>,
+                            },
+                        ]}
+                    />
                     <Button
                         onClick={() => {
                             tableLocalChangesApi.submitLocalDataChanges();
