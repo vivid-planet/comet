@@ -5,7 +5,7 @@ import * as React from "react";
 import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropContext, DragSource, DropTarget, DropTargetMonitor } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { findDOMNode } from "react-dom";
-import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
+import { IRow, ITableProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "./Table";
 
 function cardSourceBeginDrag<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
     return {
@@ -84,10 +84,10 @@ class DndOrderRow<TRow extends IRow> extends React.Component<IDndOrderRowProps<T
         const opacity = isDragging ? 0 : 1;
         return (
             <RootRef rootRef={this.handleRootRef}>
-                <TableRow {...rowProps} style={{ opacity }}>
+                <TableBodyRow {...rowProps} style={{ opacity }}>
                     <TableCell>{connectDragSource(<span style={{ padding: 5 }}>::</span>)}</TableCell>
                     <TableColumns columns={columns} row={row} />
-                </TableRow>
+                </TableBodyRow>
             </RootRef>
         );
     }
