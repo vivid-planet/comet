@@ -1,6 +1,5 @@
 {
     "name": "table-expanded-row-example",
-    "version": "0.1.0",
     "private": true,
     "dependencies": {
         "react": "^16.8",
