@@ -1,6 +1,7 @@
 import { Collapse, List } from "@material-ui/core";
 import { ListProps } from "@material-ui/core/List";
-import { KeyboardArrowDown as ArrowDownIcon, KeyboardArrowUp as ArrowUpIcon } from "@material-ui/icons";
+import ArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import ArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import * as React from "react";
 import * as sc from "./CollapsibleItem.sc";
 import { IMenuItemProps, MenuItem } from "./Item";
