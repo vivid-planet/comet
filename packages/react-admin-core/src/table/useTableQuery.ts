@@ -61,8 +61,13 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             onRowDeleted,
         };
 
+        const innerOptions = {
+            notifyOnNetworkStatusChange: true, // to get loading state correctly during paging
+            ...restOptions,
+            variables: getVariables(),
+        };
         const ret: ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> = {
-            ...useQueryKeepDataDuringLoad<TInnerData, TInnerVariables>(q, { ...restOptions, variables: getVariables() }),
+            ...useQueryKeepDataDuringLoad<TInnerData, TInnerVariables>(q, innerOptions),
             api,
         };
 
