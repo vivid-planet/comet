@@ -18,30 +18,26 @@ interface IProps {
     api: ITableQueryApi;
     loading: boolean;
     error?: ApolloError;
+    children: React.ReactNode;
 }
 
-export class TableQuery extends React.Component<IProps> {
-    private domRef = React.createRef<HTMLDivElement>();
-    constructor(props: IProps) {
-        super(props);
-    }
-    public render() {
-        return (
-            <RootRef rootRef={this.domRef}>
-                <TableQueryContext.Provider
-                    value={{
-                        api: this.props.api,
-                    }}
-                >
-                    {this.props.loading && (
-                        <sc.ProgressOverlayContainer>
-                            <CircularProgress />
-                        </sc.ProgressOverlayContainer>
-                    )}
-                    {this.props.error && <p>Error :( {this.props.error.toString()}</p>}
-                    {this.props.children}
-                </TableQueryContext.Provider>
-            </RootRef>
-        );
-    }
+export function TableQuery(props: IProps) {
+    const domRef = React.createRef<HTMLDivElement>();
+    return (
+        <RootRef rootRef={domRef}>
+            <TableQueryContext.Provider
+                value={{
+                    api: props.api,
+                }}
+            >
+                {props.loading && (
+                    <sc.ProgressOverlayContainer>
+                        <CircularProgress />
+                    </sc.ProgressOverlayContainer>
+                )}
+                {props.error && <p>Error :( {props.error.toString()}</p>}
+                {props.children}
+            </TableQueryContext.Provider>
+        </RootRef>
+    );
 }
