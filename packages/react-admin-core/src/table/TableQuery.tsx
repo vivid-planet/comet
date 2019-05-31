@@ -22,7 +22,8 @@ interface IProps {
 }
 
 export function TableQuery(props: IProps) {
-    const domRef = React.createRef<HTMLDivElement>();
+    const domRef = React.useRef<HTMLDivElement>();
+    props.api.attachTableQueryRef(domRef);
     return (
         <RootRef rootRef={domRef}>
             <TableQueryContext.Provider
