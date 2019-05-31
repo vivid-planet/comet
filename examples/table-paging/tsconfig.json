@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "module": "commonjs",
+        "target": "es5",
+        "jsx": "react",
+        "lib": ["dom", "es2015", "es2016", "es2017", "esnext.asynciterable"],
+        "baseUrl": "./",
+        "paths": {
+            "app/*": ["src/*"]
+        }
+    },
+    "compileOnSave": false
+}

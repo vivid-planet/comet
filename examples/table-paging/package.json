@@ -1,0 +1,31 @@
+{
+    "name": "table-paging-example",
+    "private": true,
+    "version": "0.0.0",
+    "dependencies": {
+        "react": "^16.8",
+        "react-dom": "^16.8",
+        "@vivid-planet/react-admin-core": "^1.0.0-alpha.11",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.1",
+        "webpack-dev-server": "^3.3.1",
+        "@types/webpack": "^4.4.27",
+        "@types/webpack-dev-server": "^3.1.5",
+        "ts-loader": "^5.4.3",
+        "ts-node": "^8.1.0",
+        "@material-ui/core": "^3.9.2",
+        "graphql": "^14.3.1",
+        "graphql-anywhere": "^4.2.2",
+        "graphql-tag": "^2.10.1",
+        "apollo-cache-inmemory": "^1.6.0",
+        "apollo-client": "^2.6.0",
+        "apollo-link": "^1.2.11",
+        "apollo-link-http": "^1.5.14",
+        "apollo-link-rest": "^0.7.3",
+        "react-apollo": "^2.5.6",
+        "react-apollo-hooks": "^0.4.5"
+    },
+    "scripts": {
+        "start": "webpack-dev-server --config ./webpack.config.js --env.production=0"
+    }
+}
