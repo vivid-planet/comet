@@ -158,6 +158,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                                 selected: isSelected,
                                 onKeyDown: this.handleKeyDown,
                                 index,
+                                hideTableHead: !!this.props.hideTableHead,
                             },
                         });
                     })}

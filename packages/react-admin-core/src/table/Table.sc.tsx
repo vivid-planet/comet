@@ -9,11 +9,12 @@ export const StyledTableHead = styled(TableHead)`
 
 export interface ITableBodyRowProps extends TableRowProps {
     index: number;
+    hideTableHead: boolean;
 }
 
-export const TableBodyRow = styled<ITableBodyRowProps>(({ index, ...rest }) => <TableRow {...rest} />)`
-    ${({ index }) =>
-        index % 2 === 1 &&
+export const TableBodyRow = styled<ITableBodyRowProps>(({ index, hideTableHead, ...rest }) => <TableRow {...rest} />)`
+    ${({ index, hideTableHead }) =>
+        (index + (hideTableHead ? 1 : 0)) % 2 === 1 &&
         css`
             background-color: ${props => props.theme.palette.grey["50"]};
         `}
