@@ -59,10 +59,16 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             getQuery: () => q,
             onRowCreated,
             onRowDeleted,
+            attachTableQueryRef,
         };
 
+        const innerOptions = {
+            notifyOnNetworkStatusChange: true, // to get loading state correctly during paging
+            ...restOptions,
+            variables: getVariables(),
+        };
         const ret: ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> = {
-            ...useQueryKeepDataDuringLoad<TInnerData, TInnerVariables>(q, { ...restOptions, variables: getVariables() }),
+            ...useQueryKeepDataDuringLoad<TInnerData, TInnerVariables>(q, innerOptions),
             api,
         };
 
@@ -70,11 +76,14 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             ret.refetch();
         }, []);
 
+        let tableQueryRef: React.MutableRefObject<HTMLDivElement | undefined> | undefined;
+        function attachTableQueryRef(ref: any) {
+            tableQueryRef = ref;
+        }
         function changePage(vars: object) {
-            // TODO
-            // if (this.domRef.current) {
-            //     this.domRef.current.scrollIntoView();
-            // }
+            if (tableQueryRef && tableQueryRef.current) {
+                tableQueryRef.current.scrollIntoView();
+            }
             return ret.fetchMore({
                 variables: vars,
                 updateQuery: ({}, { fetchMoreResult }: { fetchMoreResult: any }) => {
