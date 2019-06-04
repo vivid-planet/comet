@@ -4,16 +4,17 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
 import * as sc from "./Pagination.sc";
-import { IPagingActions } from "./pagingStrategy/PagingStrategy";
+import { IPagingInfo } from "./pagingStrategy/PagingStrategy";
 import { TableQueryContext } from "./TableQueryContext";
 
 interface IProps {
     totalCount: number;
-    pagingActions: IPagingActions;
+    currentPage?: number;
+    pagingInfo: IPagingInfo;
     rowName?: string | ((count: number) => string);
 }
 
-export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingActions, rowName }) => {
+export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, currentPage, pagingInfo, rowName }) => {
     const tableQueryContext = React.useContext(TableQueryContext);
     if (typeof rowName === "function") {
         rowName = rowName(totalCount);
@@ -28,21 +29,26 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                         </Typography>
                     </Grid>
                     <Grid item>
+                        {pagingInfo.totalPages && (
+                            <>
+                                Seite {currentPage} von {pagingInfo.totalPages}
+                            </>
+                        )}
                         <sc.Button
                             onClick={() => {
-                                if (tableQueryContext) pagingActions.fetchPreviousPage!(tableQueryContext.api);
+                                if (tableQueryContext) pagingInfo.fetchPreviousPage!(tableQueryContext.api);
                             }}
-                            disabled={!pagingActions.fetchPreviousPage}
+                            disabled={!pagingInfo.fetchPreviousPage}
                         >
-                            <KeyboardArrowLeft color={pagingActions.fetchPreviousPage ? "inherit" : "disabled"} />
+                            <KeyboardArrowLeft color={pagingInfo.fetchPreviousPage ? "inherit" : "disabled"} />
                         </sc.Button>
                         <sc.Button
                             onClick={() => {
-                                if (tableQueryContext) pagingActions.fetchNextPage!(tableQueryContext.api);
+                                if (tableQueryContext) pagingInfo.fetchNextPage!(tableQueryContext.api);
                             }}
-                            disabled={!pagingActions.fetchNextPage}
+                            disabled={!pagingInfo.fetchNextPage}
                         >
-                            <KeyboardArrowRight color={pagingActions.fetchNextPage ? "inherit" : "disabled"} />
+                            <KeyboardArrowRight color={pagingInfo.fetchNextPage ? "inherit" : "disabled"} />
                         </sc.Button>
                     </Grid>
                 </Grid>

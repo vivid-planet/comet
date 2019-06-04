@@ -4,7 +4,7 @@ import * as React from "react";
 export interface ITableQueryApi {
     changeFilters: (filters: object) => void;
     changeSort: (columnName: string) => void;
-    changePage: (variables: object) => void;
+    changePage: (variables: object, page?: number) => void;
     getVariables: () => object;
     getQuery: () => DocumentNode;
     onRowCreated: (id: string) => void;

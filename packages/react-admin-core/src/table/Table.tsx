@@ -7,7 +7,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
 import { TablePagination } from "./Pagination";
-import { IPagingActions } from "./pagingStrategy";
+import { IPagingInfo } from "./pagingStrategy";
 import * as sc from "./Table.sc";
 import { TableQueryContext } from "./TableQueryContext";
 
@@ -94,6 +94,7 @@ export interface ITableRowProps<TRow extends IRow> extends ITableColumnsProps<TR
 export interface ITableProps<TRow extends IRow> {
     data: TRow[];
     totalCount: number;
+    currentPage?: number;
     selectedId?: string;
     selectable?: boolean;
     sort?: string;
@@ -102,7 +103,7 @@ export interface ITableProps<TRow extends IRow> {
     renderTableRow?: (props: ITableRowProps<TRow>) => React.ReactNode;
     renderHeadTableRow?: (props: ITableHeadRowProps<TRow>) => React.ReactNode;
     selectionApi?: ISelectionApi;
-    pagingActions?: IPagingActions;
+    pagingInfo?: IPagingInfo;
     rowName?: string | ((count: number) => string);
     hideTableHead?: boolean;
     columns: Array<ITableColumn<TRow>>;
@@ -158,12 +159,13 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                         });
                     })}
                 </TableBody>
-                {this.props.pagingActions && (
+                {this.props.pagingInfo && (
                     <TableFooter>
                         <sc.StyledTableBodyRow hideTableHead={!!this.props.hideTableHead}>
                             <TablePagination
                                 totalCount={this.props.totalCount}
-                                pagingActions={this.props.pagingActions}
+                                currentPage={this.props.currentPage}
+                                pagingInfo={this.props.pagingInfo}
                                 rowName={this.props.rowName}
                             />
                         </sc.StyledTableBodyRow>

@@ -1,4 +1,4 @@
-import { createRestPagingActions, ITableQueryApi, Table, TableQuery, useTableQuery } from "@vivid-planet/react-admin-core";
+import { createRestPagingActions, Table, TableQuery, useTableQuery } from "@vivid-planet/react-admin-core";
 import gql from "graphql-tag";
 import * as React from "react";
 
@@ -46,7 +46,8 @@ export default function App() {
         resolveTableData: data => ({
             data: data.people.results.map(i => ({ ...i, id: i.url.match(/.*\/(\d+)\//)![1] })),
             totalCount: data.people.count,
-            pagingActions: createRestPagingActions({
+            pagingInfo: createRestPagingActions({
+                totalPages: Math.ceil(data.people.count / 10), // Don't calculate this in a real application
                 nextPage: data.people.next,
                 previousPage: data.people.previous,
             }),

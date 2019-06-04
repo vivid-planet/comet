@@ -1,5 +1,5 @@
 import { ITableQueryApi } from "../TableQueryContext";
-import { IPagingActions } from "./PagingStrategy";
+import { IPagingInfo } from "./PagingStrategy";
 
 interface IRelayPagingData {
     pageInfo: {
@@ -9,7 +9,7 @@ interface IRelayPagingData {
         endCursor: string;
     };
 }
-export function createRelayPagingActions<TData extends IRelayPagingData>(data: TData): IPagingActions {
+export function createRelayPagingActions<TData extends IRelayPagingData>(data: TData): IPagingInfo {
     return {
         fetchNextPage:
             data.pageInfo && data.pageInfo.hasNextPage
