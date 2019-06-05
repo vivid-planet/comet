@@ -1,5 +1,5 @@
-import { TableCell, TableRow } from "@material-ui/core";
-import { ITableRowProps, Table, TableColumns } from "@vivid-planet/react-admin-core";
+import { TableCell } from "@material-ui/core";
+import { ITableRowProps, Table, TableBodyRow, TableColumns } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
 // TODO this might be useful in it's own package
@@ -30,13 +30,13 @@ function useWindowSize() {
 function ExampleTableRow({ columns, row, showSecondRow, rowProps }: ITableRowProps<IExampleRow> & { showSecondRow: boolean }) {
     return (
         <>
-            <TableRow {...rowProps}>
+            <TableBodyRow {...rowProps}>
                 <TableColumns columns={columns} row={row} />
-            </TableRow>
+            </TableBodyRow>
             {showSecondRow && (
-                <TableRow>
+                <TableBodyRow index={rowProps.index}>
                     <TableCell colSpan={3}>Bar: {row.bar}</TableCell>
-                </TableRow>
+                </TableBodyRow>
             )}
         </>
     );

@@ -2,7 +2,7 @@ import MuiTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
-import TableRow, { TableRowProps } from "@material-ui/core/TableRow";
+import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
@@ -11,6 +11,9 @@ import { IPagingActions } from "./pagingStrategy";
 import * as sc from "./Table.sc";
 import { TableQueryContext } from "./TableQueryContext";
 
+export function TableBodyRow({ innerRef, ...props }: sc.ITableBodyRowProps) {
+    return <sc.TableBodyRow {...props} />;
+}
 export interface ITableHeadRowProps<TRow extends IRow> extends ITableHeadColumnsProps<TRow> {}
 function DefaultHeadTableRow<TRow extends IRow>({ columns, sort, order, onSortClick }: ITableHeadRowProps<TRow>) {
     return (
@@ -88,7 +91,7 @@ interface ITableColumn<TRow extends IRow> {
 export interface ITableRowProps<TRow extends IRow> extends ITableColumnsProps<TRow> {
     index: number;
     key: any;
-    rowProps: TableRowProps;
+    rowProps: sc.ITableBodyRowProps;
 }
 
 export interface ITableProps<TRow extends IRow> {
@@ -108,11 +111,11 @@ export interface ITableProps<TRow extends IRow> {
     columns: Array<ITableColumn<TRow>>;
 }
 
-function DefaultTableRow<TRow extends IRow>({ columns, row, index, rowProps }: ITableRowProps<TRow>) {
+function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRowProps<TRow>) {
     return (
-        <TableRow {...rowProps}>
+        <TableBodyRow {...rowProps}>
             <TableColumns columns={columns} row={row} />
-        </TableRow>
+        </TableBodyRow>
     );
 }
 
@@ -154,19 +157,21 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                                 tabIndex: -1,
                                 selected: isSelected,
                                 onKeyDown: this.handleKeyDown,
+                                index,
+                                hideTableHead: !!this.props.hideTableHead,
                             },
                         });
                     })}
                 </TableBody>
                 {this.props.pagingActions && (
                     <TableFooter>
-                        <sc.StyledTableBodyRow hideTableHead={!!this.props.hideTableHead}>
+                        <TableRow>
                             <TablePagination
                                 totalCount={this.props.totalCount}
                                 pagingActions={this.props.pagingActions}
                                 rowName={this.props.rowName}
                             />
-                        </sc.StyledTableBodyRow>
+                        </TableRow>
                     </TableFooter>
                 )}
             </MuiTable>

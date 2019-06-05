@@ -1,18 +1,21 @@
 import TableHead from "@material-ui/core/TableHead";
 import TableRow, { TableRowProps } from "@material-ui/core/TableRow";
 import * as React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const StyledTableHead = styled(TableHead)`
     background-color: ${props => props.theme.palette.grey["100"]};
 `;
 
-interface ITableRowProps extends TableRowProps {
+export interface ITableBodyRowProps extends TableRowProps {
+    index: number;
     hideTableHead: boolean;
 }
 
-export const StyledTableBodyRow = styled<ITableRowProps>(({ hideTableHead, ...rest }) => <TableRow {...rest} />)`
-    &:nth-child(${props => (props.hideTableHead ? "odd" : "even")}) {
-        background-color: ${props => props.theme.palette.grey["50"]};
-    }
+export const TableBodyRow = styled<ITableBodyRowProps>(({ index, hideTableHead, ...rest }) => <TableRow {...rest} />)`
+    ${({ index, hideTableHead }) =>
+        (index + (hideTableHead ? 1 : 0)) % 2 === 1 &&
+        css`
+            background-color: ${props => props.theme.palette.grey["50"]};
+        `}
 `;

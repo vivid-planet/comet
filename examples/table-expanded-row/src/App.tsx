@@ -1,6 +1,6 @@
 import { Button, TableCell } from "@material-ui/core";
 import TableRow from "@material-ui/core/TableRow";
-import { ITableHeadRowProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "@vivid-planet/react-admin-core";
+import { ITableHeadRowProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
 interface IRow {
@@ -13,7 +13,7 @@ function ExpandableTableRow({ rowProps, ...rest }: ITableRowProps<IRow>) {
     const [isExpanded, setIsExpanded] = React.useState(false);
     return (
         <>
-            <TableRow {...rowProps}>
+            <TableBodyRow {...rowProps}>
                 <TableColumns {...rest} />
                 <TableCell>
                     <Button
@@ -24,11 +24,11 @@ function ExpandableTableRow({ rowProps, ...rest }: ITableRowProps<IRow>) {
                         +
                     </Button>
                 </TableCell>
-            </TableRow>
+            </TableBodyRow>
             {isExpanded && (
-                <TableRow>
+                <TableBodyRow index={rowProps.index}>
                     <TableCell colSpan={999}>Deeetails</TableCell>
-                </TableRow>
+                </TableBodyRow>
             )}
         </>
     );
