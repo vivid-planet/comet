@@ -30,7 +30,7 @@ const styles = (theme: Theme) =>
         },
         valueContainer: {
             display: "flex",
-            flexWrap: "wrap",
+            flexWrap: "nowrap",
             flex: 1,
             alignItems: "center",
             overflow: "hidden",
@@ -46,6 +46,8 @@ const styles = (theme: Theme) =>
         },
         singleValue: {
             fontSize: 16,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
         },
         placeholder: {
             position: "absolute",
