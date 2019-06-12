@@ -9,7 +9,7 @@ export const StyledTableHead = styled(TableHead)`
 
 export interface ITableBodyRowProps extends TableRowProps {
     index: number;
-    hideTableHead: boolean;
+    hideTableHead?: boolean;
 }
 
 export const TableBodyRow = styled<ITableBodyRowProps>(({ index, hideTableHead, ...rest }) => <TableRow {...rest} />)`
