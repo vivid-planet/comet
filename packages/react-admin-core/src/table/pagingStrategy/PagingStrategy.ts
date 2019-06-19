@@ -1,6 +1,7 @@
 import { ITableQueryApi } from "../TableQueryContext";
 
-export interface IPagingActions {
+export interface IPagingInfo {
     fetchNextPage?: (tableQuery: ITableQueryApi) => void;
     fetchPreviousPage?: (tableQuery: ITableQueryApi) => void;
+    totalPages?: number;
 }
