@@ -43,7 +43,7 @@ export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITable
                     <TableCell key={colIndex} {...headerProps}>
                         {sortable ? (
                             <TableSortLabel
-                                active={sortApi && sortApi.current.field === name}
+                                active={sortApi && sortApi.current.columnName === name}
                                 direction={sortApi && sortApi.current.direction === SortDirection.DESC ? "desc" : "asc"}
                                 onClick={handleSortClick.bind(null, name)}
                             >
@@ -126,9 +126,6 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
     public static contextType = TableQueryContext;
     public render() {
         const { data } = this.props;
-
-        const sort = this.props.sortApi ? this.props.sortApi.current.field : undefined;
-        const order = this.props.sortApi ? this.props.sortApi.current.direction : undefined;
 
         const renderHeadTableRow = this.props.renderHeadTableRow || (props => <DefaultHeadTableRow {...props} />);
 

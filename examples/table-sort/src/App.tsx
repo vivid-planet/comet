@@ -38,13 +38,13 @@ interface IVariables {
 
 export default function App() {
     const sortApi = useTableQuerySort({
-        field: "name",
+        columnName: "name",
         direction: SortDirection.ASC,
     });
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
         variables: {
             blubId: 123,
-            sort: sortApi.current.field,
+            sort: sortApi.current.columnName,
             order: sortApi.current.direction,
         },
         resolveTableData: data => ({

@@ -5,7 +5,7 @@ export enum SortDirection {
     DESC = "desc",
 }
 export interface ISortInformation {
-    field: string;
+    columnName: string;
     direction: SortDirection;
 }
 export interface ISortApi {
@@ -18,11 +18,11 @@ export function useTableQuerySort(defaultSort: ISortInformation): ISortApi {
     function changeSort(columnName: string) {
         let direction = SortDirection.ASC;
 
-        if (sort && sort.field === columnName) {
+        if (sort && sort.columnName === columnName) {
             direction = sort.direction === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC;
         }
         setSort({
-            field: columnName,
+            columnName,
             direction,
         });
     }

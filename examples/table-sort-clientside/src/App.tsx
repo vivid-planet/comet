@@ -10,11 +10,11 @@ export default function App() {
     const data: IExampleRow[] = [{ id: 1, foo1: "blub1", foo2: "blub2" }, { id: 2, foo1: "blub2", foo2: "blub1" }];
 
     const sortApi = useTableQuerySort({
-        field: "foo1",
+        columnName: "foo1",
         direction: SortDirection.ASC,
     });
 
-    const sortColumn = sortApi.current.field as keyof IExampleRow;
+    const sortColumn = sortApi.current.columnName as keyof IExampleRow;
 
     const sortedData = data.sort((a, b) => (a[sortColumn] < b[sortColumn] ? -1 : 1));
     return (
