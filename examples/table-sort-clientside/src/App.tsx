@@ -1,4 +1,4 @@
-import { Table } from "@vivid-planet/react-admin-core";
+import { SortDirection, Table, useTableQuerySort } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
 interface IExampleRow {
@@ -7,20 +7,32 @@ interface IExampleRow {
     foo2: string;
 }
 export default function App() {
-    const data: IExampleRow[] = [{ id: 1, foo1: "blub", foo2: "blub" }, { id: 2, foo1: "blub", foo2: "blub" }];
+    const data: IExampleRow[] = [{ id: 1, foo1: "blub1", foo2: "blub2" }, { id: 2, foo1: "blub2", foo2: "blub1" }];
+
+    const sortApi = useTableQuerySort({
+        field: "foo1",
+        direction: SortDirection.ASC,
+    });
+
+    const sortColumn = sortApi.current.field as keyof IExampleRow;
+
+    const sortedData = data.sort((a, b) => (a[sortColumn] < b[sortColumn] ? -1 : 1));
     return (
         <Table
-            data={data}
+            sortApi={sortApi}
+            data={sortedData}
             totalCount={data.length}
             columns={[
                 {
                     name: "foo1",
                     header: "Foo1",
+                    sortable: true,
                 },
                 {
                     name: "foo2",
                     header: "Foo2",
                     render: row => <strong>{row.id}</strong>,
+                    sortable: true,
                 },
                 {
                     name: "bar",

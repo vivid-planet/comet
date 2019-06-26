@@ -49,8 +49,6 @@ export default function App() {
         <Table
             data={data}
             totalCount={data.length}
-            sort="foo1"
-            order="asc"
             renderTableRow={props => <ExpandableTableRow {...props} />}
             renderHeadTableRow={props => <ExampleHeadTableRow {...props} />}
             columns={[
