@@ -1,15 +1,14 @@
 {
     "name": "root",
     "workspaces": [
-        "packages/*",
-        "examples/*"
+        "packages/*"
     ],
     "private": true,
     "scripts": {
         "clean": "lerna run clean --stream --parallel",
         "build": "lerna run build --stream",
         "bootstrap": "lerna bootstrap",
-        "start": "lerna run start --stream"
+        "start": "lerna run --stream --no-sort --concurrency 999 start"
     },
     "devDependencies": {
         "@material-ui/core": "^3.9.2",
