@@ -15,6 +15,6 @@ export const StyledFormLabel = styled(FormLabel)`
         font-size: 13px;
         line-height: 20px;
         font-weight: bold;
-        color: ${props => (props.theme.palette.secondary as ColorPartial)["700"]};
+        color: ${props => (props.theme.palette.text.primary as ColorPartial)["700"]};
     }
 `;
