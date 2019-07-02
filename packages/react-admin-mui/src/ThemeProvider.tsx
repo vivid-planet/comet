@@ -10,6 +10,8 @@ interface IProps {
 
 export const MuiThemeProvider: React.FunctionComponent<IProps> = ({ theme, children }) => (
     <ThemeProvider theme={theme}>
-        <StyledThemeProvider theme={theme}>{children}</StyledThemeProvider>
+        <StyledThemeProvider theme={theme}>
+            <>{children}</>
+        </StyledThemeProvider>
     </ThemeProvider>
 );

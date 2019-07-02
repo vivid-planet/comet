@@ -17,7 +17,7 @@ import { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQu
 const styles = (theme: Theme) =>
     createStyles({
         saveButton: {
-            margin: theme.spacing.unit,
+            margin: theme.spacing(1),
         },
     });
 

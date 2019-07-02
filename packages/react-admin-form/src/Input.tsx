@@ -3,7 +3,9 @@ import { styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
-export const StyledInput = styled<InputBaseProps>(({ ...props }) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} />)`
+export const StyledInput = styled(({ ...props }: InputBaseProps) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} />)<
+    InputBaseProps
+>`
     &.root {
         border: 1px solid #d8dbdf;
         border-radius: 2px;
@@ -22,6 +24,6 @@ export const StyledInput = styled<InputBaseProps>(({ ...props }) => <MuiInputBas
     }
 `;
 
-export const Input: React.FunctionComponent<InputBaseProps & FieldRenderProps> = ({ meta, input, innerRef, ...props }) => (
+export const Input: React.FunctionComponent<InputBaseProps & FieldRenderProps<string, HTMLDivElement>> = ({ meta, input, innerRef, ...props }) => (
     <StyledInput {...input} {...props} />
 );

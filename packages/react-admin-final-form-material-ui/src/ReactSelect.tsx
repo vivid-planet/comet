@@ -11,29 +11,31 @@ import { Props as ReactSelectCreatableProps } from "react-select/lib/Creatable";
 import { Props as ReactSelectProps } from "react-select/lib/Select";
 
 // tslint:disable:max-classes-per-file
-export class ReactSelect<OptionType> extends React.Component<FieldRenderProps & ReactSelectProps<OptionType>> {
+export class ReactSelect<OptionType> extends React.Component<FieldRenderProps<OptionType, HTMLElement> & ReactSelectProps<OptionType>> {
     public render() {
         const { input, meta, ...rest } = this.props;
-        return <Select {...input} {...rest} />;
+        return <Select<OptionType> {...input} {...rest} />;
     }
 }
-export class ReactSelectAsync<OptionType> extends React.Component<FieldRenderProps & ReactSelectAsyncProps<OptionType>> {
+export class ReactSelectAsync<OptionType> extends React.Component<FieldRenderProps<OptionType, HTMLElement> & ReactSelectAsyncProps<OptionType>> {
     public render() {
         const { input, meta, ...rest } = this.props;
-        return <Async {...input} {...rest} />;
+        return <Async<OptionType> {...input} {...rest} />;
     }
 }
-export class ReactSelectCreatable<OptionType> extends React.Component<FieldRenderProps & ReactSelectCreatableProps<OptionType>> {
-    public render() {
-        const { input, meta, ...rest } = this.props;
-        return <Creatable {...input} {...rest} />;
-    }
-}
-export class ReactSelectAsyncCreatable<OptionType> extends React.Component<
-    FieldRenderProps & ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
+export class ReactSelectCreatable<OptionType> extends React.Component<
+    FieldRenderProps<OptionType, HTMLElement> & ReactSelectCreatableProps<OptionType>
 > {
     public render() {
         const { input, meta, ...rest } = this.props;
-        return <AsyncCreatable {...input} {...rest} />;
+        return <Creatable<OptionType> {...input} {...rest} />;
+    }
+}
+export class ReactSelectAsyncCreatable<OptionType> extends React.Component<
+    FieldRenderProps<OptionType, HTMLElement> & ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
+> {
+    public render() {
+        const { input, meta, ...rest } = this.props;
+        return <AsyncCreatable<OptionType> {...input} {...rest} />;
     }
 }

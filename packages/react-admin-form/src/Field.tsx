@@ -8,29 +8,29 @@ const requiredValidator = (value: any) => (value ? undefined : "Pflichtfeld");
 const composeValidators = (...validators: Array<(value: any, allValues: object) => any>) => (value: any, allValues: object) =>
     validators.reduce((error, validator) => error || validator(value, allValues), undefined);
 
-interface IVividFieldProps {
+interface IVividFieldProps<FieldValue = any, T extends HTMLElement = HTMLElement> {
     name: string;
     label?: string;
     component?: React.ComponentType<any> | string;
-    children?: (props: FieldRenderProps) => React.ReactNode;
+    children?: (props: FieldRenderProps<FieldValue, T>) => React.ReactNode;
     required?: boolean;
     validate?: (value: any, allValues: object) => any;
     fieldContainerComponent?: React.ComponentType<any>;
     [otherProp: string]: any;
 }
 
-export class Field extends React.Component<IVividFieldProps> {
+export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extends React.Component<IVividFieldProps<FieldValue, T>> {
     public render() {
         const { children, component, name, label, required, validate, fieldContainerComponent, ...rest } = this.props;
         const composedValidate = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
         return (
-            <FinalFormField name={name} validate={composedValidate} {...rest}>
+            <FinalFormField<FieldValue, T> name={name} validate={composedValidate} {...rest}>
                 {this.renderField.bind(this)}
             </FinalFormField>
         );
     }
 
-    private renderField({ input, meta, ...rest }: FieldRenderProps) {
+    private renderField({ input, meta, ...rest }: FieldRenderProps<FieldValue, T>) {
         const { children, component, name, label, required } = this.props;
         const UsedFieldContainer = this.props.fieldContainerComponent || FieldContainer;
 

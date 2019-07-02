@@ -12,13 +12,18 @@ import { StyledInput } from "./Input";
 
 registerLocale("de", de);
 
-const ExtendedStyledInput = styled<InputBaseProps>(StyledInput)`
+const ExtendedStyledInput = styled(StyledInput)<InputBaseProps>`
     & input {
         cursor: default;
     }
 `;
 
-export const DateRange: React.FunctionComponent<InputBaseProps & FieldRenderProps> = ({ meta, input, innerRef, ...props }) => {
+export const DateRange: React.FunctionComponent<InputBaseProps & FieldRenderProps<{ start: Date; end: Date }, HTMLElement>> = ({
+    meta,
+    input,
+    innerRef,
+    ...props
+}) => {
     const [startDate, setStartDate] = React.useState<Date | null>(null);
     const [endDate, setEndDate] = React.useState<Date | null>(null);
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
