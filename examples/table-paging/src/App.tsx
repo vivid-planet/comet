@@ -1,4 +1,4 @@
-import { createRestPagingActions, Table, TableQuery, useTableQuery } from "@vivid-planet/react-admin-core";
+import { createRestPagingActions, Table, TableQuery, useTableQueryHoh } from "@vivid-planet/react-admin-core";
 import gql from "graphql-tag";
 import * as React from "react";
 
@@ -39,7 +39,7 @@ interface IVariables {
 }
 
 export default function App() {
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
+    return useTableQueryHoh<IQueryData, IVariables>()(query, {
         variables: {
             page: 1,
         },
@@ -53,21 +53,15 @@ export default function App() {
             }),
         }),
         notifyOnNetworkStatusChange: true,
-    });
-
-    return (
-        <TableQuery api={api} loading={loading} error={error}>
-            {tableData && (
-                <Table
-                    {...tableData}
-                    columns={[
-                        {
-                            name: "name",
-                            header: "Name",
-                        },
-                    ]}
-                />
-            )}
-        </TableQuery>
-    );
+    })(({ tableData }) => (
+        <Table
+            {...tableData}
+            columns={[
+                {
+                    name: "name",
+                    header: "Name",
+                },
+            ]}
+        />
+    ));
 }

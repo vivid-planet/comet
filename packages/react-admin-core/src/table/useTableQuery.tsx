@@ -4,6 +4,7 @@ import * as React from "react";
 import { QueryHookOptions, QueryHookResult, useQuery } from "react-apollo-hooks";
 import { ISelectionApi } from "../SelectionApi";
 import { IPagingInfo } from "./pagingStrategy";
+import { TableQuery } from "./TableQuery";
 import { ITableQueryApi } from "./TableQueryContext";
 
 interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
@@ -154,4 +155,35 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         return ret;
     }
     return useTableQueryInner;
+}
+
+interface ITableQueryHookHohResult<TData, TVariables, TTableData extends ITableData> extends ITableQueryHookResult<TData, TVariables, TTableData> {
+    tableData: TTableData;
+}
+type RenderCallback<TData, TVariables, TTableData> = (
+    result: ITableQueryHookHohResult<TData, TVariables, TTableData>,
+) => React.ReactElement<any> | null;
+
+export function useTableQueryHoh<TInnerData, TInnerVariables>() {
+    function useTableQueryHohInner<TTableData extends ITableData>(
+        q: DocumentNode,
+        options: ITableQueryHookOptions<TInnerData, TInnerVariables, TTableData>,
+    ): (cb: RenderCallback<TInnerData, TInnerVariables, TTableData>) => React.ReactElement<any> | null {
+        const result = useTableQuery<TInnerData, TInnerVariables>()(q, options);
+        return (renderCallback: RenderCallback<TInnerData, TInnerVariables, TTableData>) => renderHoh({ result, renderCallback });
+    }
+    return useTableQueryHohInner;
+}
+
+interface ITableQueryHohProps {
+    result: ITableQueryHookResult<any, any, any>;
+    renderCallback: RenderCallback<any, any, any>;
+}
+
+function renderHoh({ result, renderCallback }: ITableQueryHohProps) {
+    return (
+        <TableQuery api={result.api} loading={result.loading} error={result.error}>
+            {result.tableData && renderCallback({ ...result, tableData: result.tableData })}
+        </TableQuery>
+    );
 }
