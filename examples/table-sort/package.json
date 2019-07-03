@@ -1,0 +1,54 @@
+{
+    "name": "table-sort-example",
+    "private": true,
+    "dependencies": {
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "react-scripts": "3.0.1",
+        "@vivid-planet/react-admin-core": "^1.0.0-alpha.11",
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.8",
+        "@material-ui/core": "^3.9.2",
+        "@material-ui/icons": "^3.0.2",
+        "@material-ui/styles": "^3.0.0-alpha.10",
+        "@types/react": "^16.8.10",
+        "@types/react-dom": "^16.8.3",
+        "jss": "^9.8.7",
+        "styled-components": "^3.4.10",
+        "typescript": "^3.4.1",
+        "react-router": "^4.3.1",
+        "react-router-dom": "^4.3.1",
+        "react-apollo": "^2.5.6",
+        "apollo-client": "^2.6.0",
+        "graphql": "^14.3.1",
+        "graphql-anywhere": "^4.2.2",
+        "graphql-tag": "^2.10.1",
+        "final-form": "^4.12.0",
+        "react-final-form": "^3.7.0",
+        "react-apollo-hooks": "^0.4.5",
+        "apollo-cache-inmemory": "^1.6.0",
+        "apollo-link": "^1.2.11",
+        "apollo-link-http": "^1.5.14",
+        "apollo-link-rest": "^0.7.3"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}
