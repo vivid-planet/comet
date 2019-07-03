@@ -22,8 +22,6 @@ export default function App() {
                     <TableDndOrder
                         data={changedData}
                         totalCount={changedData.length}
-                        sort="foo1"
-                        order="asc"
                         moveRow={tableLocalChangesApi.moveRow}
                         columns={[
                             {

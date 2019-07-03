@@ -26,8 +26,8 @@
         "@types/react-router-dom": "^4.3.4",
         "@types/react-select": "^2.0.19",
         "@types/recompose": "^0.30.6",
-        "@types/uuid": "^3.4.4",
         "@types/styled-components": "4.1.8",
+        "@types/uuid": "^3.4.4",
         "@vivid-planet/vplint": "^1.0.2",
         "apollo-client": "^2.6.3",
         "date-fns": "^2.0.0-alpha.37",
@@ -51,10 +51,10 @@
         "react-select": "^3.0.4",
         "rimraf": "^2.6.3",
         "styled-components": "^4.3.2",
-        "typescript": "^3.5.2",
         "tslint": "^5.18.0",
         "tslint-config-prettier": "^1.18.0",
-        "tslint-react": "^4.0.0"
+        "tslint-react": "^4.0.0",
+        "typescript": "^3.5.2"
     },
     "license": "BSD-2-Clause"
 }

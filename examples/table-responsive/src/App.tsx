@@ -57,8 +57,6 @@ export default function App() {
         <Table
             data={data}
             totalCount={data.length}
-            sort="foo1"
-            order="asc"
             renderTableRow={props => <ExampleTableRow {...props} showSecondRow={showSecondRow} />}
             columns={[
                 {

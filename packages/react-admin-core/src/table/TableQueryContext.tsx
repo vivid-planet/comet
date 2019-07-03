@@ -3,7 +3,6 @@ import * as React from "react";
 
 export interface ITableQueryApi {
     changeFilters: (filters: object) => void;
-    changeSort: (columnName: string) => void;
     changePage: (variables: object, page?: number) => void;
     getVariables: () => object;
     getQuery: () => DocumentNode;
@@ -14,8 +13,6 @@ export interface ITableQueryApi {
 
 export interface ITableQueryContext {
     api: ITableQueryApi;
-    // sort?: string;
-    // order: "asc" | "desc";
 }
 
 export const TableQueryContext = React.createContext<ITableQueryContext | undefined>(undefined);
