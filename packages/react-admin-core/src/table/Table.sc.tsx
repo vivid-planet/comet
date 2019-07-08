@@ -12,7 +12,7 @@ export interface ITableBodyRowProps extends TableRowProps {
     hideTableHead?: boolean;
 }
 
-export const TableBodyRow = styled<ITableBodyRowProps>(({ index, hideTableHead, ...rest }) => <TableRow {...rest} />)`
+export const TableBodyRow = styled(({ index, hideTableHead, ...rest }: ITableBodyRowProps) => <TableRow {...rest} />)<ITableBodyRowProps>`
     ${({ index, hideTableHead }) =>
         (index + (hideTableHead ? 1 : 0)) % 2 === 1 &&
         css`

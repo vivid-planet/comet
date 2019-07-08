@@ -14,7 +14,7 @@ const onChangeAdapter = (origOnChange: <T>(event: React.ChangeEvent<T> | any) =>
     origOnChange(date && format(date, valueFormat));
 };
 
-interface IProps extends FieldRenderProps, ReactDatePickerProps {
+interface IProps extends FieldRenderProps<string | Date, HTMLInputElement>, ReactDatePickerProps {
     width?: string;
 }
 export const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...rest }) => {
@@ -25,8 +25,10 @@ export const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, on
     };
     const valueFormat = rest.showTimeSelect ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd";
 
-    let parsedValue: Date | null = value;
-    if (parsedValue) {
+    let parsedValue: Date | null = null;
+    if (value instanceof Date) {
+        parsedValue = value;
+    } else if (typeof value === "string") {
         parsedValue = parseISO(value);
         if (!isValid(parsedValue)) {
             parsedValue = parse(value, valueFormat, new Date());

@@ -72,13 +72,15 @@ interface IDndOrderRowProps<TRow extends IRow> extends ITableRowProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
 }
 
-interface IRowCollectedProps {
-    connectDropTarget: ConnectDropTarget;
+interface IRowCollectedSourceProps {
     connectDragSource: ConnectDragSource;
     connectDragPreview: ConnectDragPreview;
     isDragging: boolean;
 }
-class DndOrderRow<TRow extends IRow> extends React.Component<IDndOrderRowProps<TRow> & IRowCollectedProps> {
+interface IRowCollectedTargetProps {
+    connectDropTarget: ConnectDropTarget;
+}
+class DndOrderRow<TRow extends IRow> extends React.Component<IDndOrderRowProps<TRow> & IRowCollectedSourceProps & IRowCollectedTargetProps> {
     public render() {
         const { connectDragSource, isDragging, columns, row, rowProps } = this.props;
         const opacity = isDragging ? 0 : 1;
@@ -99,7 +101,7 @@ class DndOrderRow<TRow extends IRow> extends React.Component<IDndOrderRowProps<T
     };
 }
 
-const ExtendedDndOrderRow = DragSource<IDndOrderRowProps<IRow>>(
+const ExtendedDndOrderRow = DragSource<IDndOrderRowProps<IRow>, IRowCollectedSourceProps>(
     "row", // TODO: configurable? unique per table?
     {
         beginDrag: cardSourceBeginDrag,
@@ -110,7 +112,7 @@ const ExtendedDndOrderRow = DragSource<IDndOrderRowProps<IRow>>(
         isDragging: monitor.isDragging(),
     }),
 )(
-    DropTarget(
+    DropTarget<{}, IRowCollectedTargetProps>(
         "row",
         {
             hover: cardTargetHover,

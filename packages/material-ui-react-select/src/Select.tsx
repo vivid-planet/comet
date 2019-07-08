@@ -36,13 +36,13 @@ const styles = (theme: Theme) =>
             overflow: "hidden",
         },
         chip: {
-            margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
+            margin: `${theme.spacing(0.5)}px ${theme.spacing(0.25)}px`,
         },
         chipFocused: {
             backgroundColor: emphasize(theme.palette.type === "light" ? theme.palette.grey[300] : theme.palette.grey[700], 0.08),
         },
         noOptionsMessage: {
-            padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+            padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
         },
         singleValue: {
             fontSize: 16,
@@ -57,12 +57,12 @@ const styles = (theme: Theme) =>
         paper: {
             position: "absolute",
             zIndex: 1,
-            marginTop: theme.spacing.unit,
+            marginTop: theme.spacing(1),
             left: 0,
             right: 0,
         },
         divider: {
-            height: theme.spacing.unit * 2,
+            height: theme.spacing(2),
         },
     });
 
