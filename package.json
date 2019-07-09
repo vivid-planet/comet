@@ -54,7 +54,8 @@
         "tslint": "^5.18.0",
         "tslint-config-prettier": "^1.18.0",
         "tslint-react": "^4.0.0",
-        "typescript": "^3.5.2"
+        "typescript": "^3.5.2",
+        "oidc-client": "^1.8.2"
     },
     "license": "BSD-2-Clause"
 }

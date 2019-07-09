@@ -4513,6 +4513,13 @@ octokit-pagination-methods@^1.1.0:
   resolved "https://registry.yarnpkg.com/octokit-pagination-methods/-/octokit-pagination-methods-1.1.0.tgz#cf472edc9d551055f9ef73f6e42b4dbb4c80bea4"
   integrity sha512-fZ4qZdQ2nxJvtcasX7Ghl+WlWS/d9IgnBIwFZXVNNZUmzpno91SX5bc5vuxiuKoCtK78XxGGNuSCrDC7xYB3OQ==
 
+oidc-client@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.npmjs.org/oidc-client/-/oidc-client-1.8.2.tgz#5a73c33858fe0e25489fdc6de31c8ce3075f6e0b"
+  integrity sha512-WwoSY8S6QyNN3qpne88YurjNqjTf6z1Xr0y+OrFVvdnVPYcefkTtXlZ5iOwR2JrmP4vBuq2j8eTjUJyDZFrFNQ==
+  dependencies:
+    uuid "^3.3.2"
+
 once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
