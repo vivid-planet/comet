@@ -119,7 +119,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             }
         }
 
-        if (!ret.data) {
+        if (!ret.data || Object.keys(ret.data).length === 0) {
             return ret;
         }
 
