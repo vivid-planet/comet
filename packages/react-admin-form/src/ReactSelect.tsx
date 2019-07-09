@@ -8,10 +8,10 @@ import {
 import { styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
-import { Props as ReactSelectAsyncProps } from "react-select/lib/Async";
-import { ControlProps } from "react-select/lib/components/Control";
-import { Props as ReactSelectCreatableProps } from "react-select/lib/Creatable";
-import { Props as ReactSelectProps } from "react-select/lib/Select";
+import { Props as ReactSelectAsyncProps } from "react-select/async";
+import { Props as ReactSelectProps } from "react-select/base";
+import { Props as ReactSelectCreatableProps } from "react-select/creatable";
+import { ControlProps } from "react-select/src/components/Control";
 
 // override the Control from @vivid-planet/react-admin-final-form-material-ui/ReactSelect with out own styled Input
 
@@ -27,6 +27,9 @@ export const ControlInput = styled(({ ...props }: InputBaseProps) => <MuiInputBa
         border-radius: 2px;
         background-color: #ffffff;
         padding: 0 0 0 10px;
+    }
+    & .MuiInputBase-input {
+        height: auto;
     }
     &.root.focused {
         border-color: #0081b8;
