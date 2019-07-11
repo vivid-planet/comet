@@ -1,27 +1,27 @@
+import { useApolloClient } from "@apollo/react-hooks";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import SaveIcon from "@material-ui/icons/Save";
-import ApolloClient from "apollo-client";
 import { FORM_ERROR } from "final-form";
 import * as React from "react";
-import { ApolloConsumer } from "react-apollo";
 import { Form, FormRenderProps } from "react-final-form";
+import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
-import { IStackApi, StackApiContext } from "./stack";
-import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirtyHandlerApi";
-import { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
+import { StackApiContext } from "./stack";
+import { TableQueryContext } from "./table";
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         saveButton: {
             margin: theme.spacing(1),
         },
-    });
+    }),
+);
 
-interface IProps extends IWithDirtyHandlerApiProps, IWithTableQueryProps {
+interface IProps {
     mode: "edit" | "add";
     doUpdate?: (variables: object) => any; // TODO return type Promise?
     doCreate?: (variables: object) => any; // TODO return type Promise?
@@ -32,90 +32,64 @@ interface IProps extends IWithDirtyHandlerApiProps, IWithTableQueryProps {
     };
     initialValues?: any;
     modifySubmitVariables?: <T = object>(variables: T, mode: "edit" | "add") => T;
+    children: React.ReactNode;
 }
 
-class FinalForm extends React.Component<IProps> {
-    private client: ApolloClient<any>;
-    private formRenderProps: FormRenderProps;
-    public componentDidMount() {
-        if (this.props.dirtyHandlerApi) {
-            this.props.dirtyHandlerApi.registerBinding(this, {
+export function FinalForm(props: IProps) {
+    const classes = useStyles();
+    const client = useApolloClient();
+    const dirtyHandler = React.useContext(DirtyHandlerApiContext);
+    const stackApi = React.useContext(StackApiContext);
+    const editDialog = React.useContext(EditDialogApiContext);
+    const tableQuery = React.useContext(TableQueryContext);
+    let formRenderProps: FormRenderProps | undefined;
+
+    React.useEffect(() => {
+        const ref = React.useRef();
+        if (dirtyHandler) {
+            dirtyHandler.registerBinding(ref, {
                 isDirty: () => {
-                    if (!this.formRenderProps) return false;
-                    return this.formRenderProps.dirty;
+                    if (!formRenderProps) return false;
+                    return formRenderProps.dirty;
                 },
                 submit: () => {
-                    return this.submit(undefined);
+                    return submit(undefined);
                 },
                 reset: () => {
-                    if (!this.formRenderProps) return;
-                    this.formRenderProps.form.reset();
+                    if (!formRenderProps) return;
+                    formRenderProps.form.reset();
                 },
             });
         }
-    }
+        return () => {
+            if (dirtyHandler) {
+                dirtyHandler.unregisterBinding(ref);
+            }
+        };
+    }, [dirtyHandler]);
 
-    public componentWillUnmount() {
-        if (this.props.dirtyHandlerApi) {
-            this.props.dirtyHandlerApi.unregisterBinding(this);
-        }
-    }
+    return <Form onSubmit={handleSubmit} initialValues={props.initialValues} render={renderForm} />;
 
-    public render() {
+    function renderForm(frmRP: FormRenderProps) {
+        formRenderProps = frmRP;
+
         return (
-            <ApolloConsumer>
-                {client => {
-                    this.client = client; // TODO port this component to hooks to avoid that
-                    return (
-                        <StackApiContext.Consumer>
-                            {stackApi => (
-                                <Form
-                                    onSubmit={this.handleSubmit.bind(this, stackApi)}
-                                    initialValues={this.props.initialValues}
-                                    render={this.renderForm}
-                                />
-                            )}
-                        </StackApiContext.Consumer>
-                    );
-                }}
-            </ApolloConsumer>
-        );
-    }
-
-    private renderForm = (formRenderProps: FormRenderProps) => {
-        this.formRenderProps = formRenderProps;
-        const { classes } = this.props;
-        return (
-            <form onSubmit={this.submit}>
-                <sc.InnerForm>{this.props.children}</sc.InnerForm>
+            <form onSubmit={submit}>
+                <sc.InnerForm>{props.children}</sc.InnerForm>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
-                <EditDialogApiContext.Consumer>
-                    {editDialogApi => {
-                        if (editDialogApi) return; // when inside EditDialog we don't need a save button
-
-                        if (formRenderProps.submitting) return <CircularProgress />;
-
-                        return (
+                {editDialog && (
+                    <>
+                        {formRenderProps.submitting && <CircularProgress />}
+                        {!formRenderProps.submitting && (
                             <>
-                                <StackApiContext.Consumer>
-                                    {stackApi => {
-                                        if (!stackApi) return null;
-
-                                        return (
-                                            <Button
-                                                className={classes.saveButton}
-                                                variant="text"
-                                                color="default"
-                                                onClick={this.handleCancelClick.bind(this, stackApi)}
-                                            >
-                                                <sc.ButtonIconWrapper>
-                                                    <CancelIcon fontSize={"inherit"} />
-                                                </sc.ButtonIconWrapper>
-                                                Abbrechen
-                                            </Button>
-                                        );
-                                    }}
-                                </StackApiContext.Consumer>
+                                {stackApi && (
+                                    <Button className={classes.saveButton} variant="text" color="default" onClick={handleCancelClick}>
+                                        <sc.ButtonIconWrapper>
+                                            <CancelIcon fontSize={"inherit"} />
+                                        </sc.ButtonIconWrapper>
+                                        Abbrechen
+                                    </Button>
+                                )}
                                 <Button
                                     className={classes.saveButton}
                                     variant="contained"
@@ -129,27 +103,29 @@ class FinalForm extends React.Component<IProps> {
                                     Speichern
                                 </Button>
                             </>
-                        );
-                    }}
-                </EditDialogApiContext.Consumer>
+                        )}
+                    </>
+                )}
             </form>
         );
-    };
+    }
 
-    private handleCancelClick = (stackApi: IStackApi) => {
-        stackApi.goBack();
-    };
+    function handleCancelClick() {
+        if (stackApi) stackApi.goBack();
+    }
 
-    private submit = (event: any) => {
-        if (!this.formRenderProps) return;
-        if (!this.formRenderProps.dirty) return;
+    function submit(event: any) {
+        if (!formRenderProps) return;
+        if (!formRenderProps.dirty) return;
         return new Promise((resolve, reject) => {
-            return Promise.resolve(this.formRenderProps.handleSubmit(event)).then(
+            if (!formRenderProps) return;
+            return Promise.resolve(formRenderProps.handleSubmit(event)).then(
                 data => {
-                    if (this.formRenderProps.submitSucceeded) {
+                    if (!formRenderProps) return;
+                    if (formRenderProps.submitSucceeded) {
                         resolve();
                     } else {
-                        resolve(this.formRenderProps.submitErrors);
+                        resolve(formRenderProps.submitErrors);
                     }
                 },
                 error => {
@@ -157,19 +133,19 @@ class FinalForm extends React.Component<IProps> {
                 },
             );
         });
-    };
+    }
 
-    private handleSubmit = (stackApi: IStackApi | undefined, values: object) => {
+    function handleSubmit(values: object) {
         let ret;
-        if (this.props.onSubmit) {
-            ret = this.props.onSubmit(values);
+        if (props.onSubmit) {
+            ret = props.onSubmit(values);
             ret = Promise.resolve(ret).then(data => {
-                if (this.props.mode === "add") {
-                    if (this.props.tableQuery) {
+                if (props.mode === "add") {
+                    if (tableQuery) {
                         // refetch TableQuery after adding
-                        this.client.query({
-                            query: this.props.tableQuery.api.getQuery(),
-                            variables: this.props.tableQuery.api.getVariables(),
+                        client.query({
+                            query: tableQuery.api.getQuery(),
+                            variables: tableQuery.api.getVariables(),
                             fetchPolicy: "network-only",
                         });
                     }
@@ -177,35 +153,35 @@ class FinalForm extends React.Component<IProps> {
                 return data;
             });
         } else {
-            const submitVariables = this.props.submitVariables || {};
-            if (this.props.mode === "edit") {
-                if (!this.props.doUpdate) throw new Error("doUpdate is required with mode=edit");
-                let variables = { ...submitVariables, id: this.props.initialValues.id, body: { ...values } };
-                if (this.props.modifySubmitVariables) {
-                    variables = this.props.modifySubmitVariables(variables, this.props.mode);
+            const submitVariables = props.submitVariables || {};
+            if (props.mode === "edit") {
+                if (!props.doUpdate) throw new Error("doUpdate is required with mode=edit");
+                let variables = { ...submitVariables, id: props.initialValues.id, body: { ...values } };
+                if (props.modifySubmitVariables) {
+                    variables = props.modifySubmitVariables(variables, props.mode);
                 }
-                ret = this.props.doUpdate({
+                ret = props.doUpdate({
                     variables,
                 });
-            } else if (this.props.mode === "add") {
-                if (!this.props.doCreate) throw new Error("doCreate is required with mode=add");
+            } else if (props.mode === "add") {
+                if (!props.doCreate) throw new Error("doCreate is required with mode=add");
                 const refetchQueries = [];
-                if (this.props.tableQuery) {
+                if (tableQuery) {
                     refetchQueries.push({
-                        query: this.props.tableQuery.api.getQuery(),
-                        variables: this.props.tableQuery.api.getVariables(),
+                        query: tableQuery.api.getQuery(),
+                        variables: tableQuery.api.getVariables(),
                     });
                 }
                 let variables = { ...submitVariables, body: { ...values } };
-                if (this.props.modifySubmitVariables) {
-                    variables = this.props.modifySubmitVariables(variables, this.props.mode);
+                if (props.modifySubmitVariables) {
+                    variables = props.modifySubmitVariables(variables, props.mode);
                 }
-                ret = this.props.doCreate({
+                ret = props.doCreate({
                     variables,
                     refetchQueries,
                     update: ({}, data: any) => {
-                        if (this.props.tableQuery) {
-                            this.props.tableQuery.api.onRowCreated(data.data.create.id);
+                        if (tableQuery) {
+                            tableQuery.api.onRowCreated(data.data.create.id);
                         }
                     },
                 });
@@ -215,7 +191,9 @@ class FinalForm extends React.Component<IProps> {
         }
         return Promise.resolve(ret)
             .then(data => {
-                this.formRenderProps.form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
+                if (formRenderProps) {
+                    formRenderProps.form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
+                }
                 if (stackApi) {
                     // if this form is inside a Stack goBack after save success
                     // do this after form.reset() to have a dirty form, so it won't ask for saving changes
@@ -236,8 +214,5 @@ class FinalForm extends React.Component<IProps> {
                     });
                 },
             );
-    };
+    }
 }
-
-const WrappedFinalForm = withStyles(styles)(withDirtyHandlerApi(withTableQueryContext(FinalForm)));
-export { WrappedFinalForm as FinalForm };

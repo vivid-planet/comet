@@ -1,5 +1,5 @@
+import { useMutation } from "@apollo/react-hooks";
 import * as React from "react";
-import { Mutation, MutationFn, MutationResult } from "react-apollo";
 
 interface IProps {
     updateMutation: any;
@@ -8,24 +8,14 @@ interface IProps {
     children: (actions: { update: () => void; create: () => void }, data: { loading: boolean; error: any }) => React.ReactNode;
 }
 
-export class FormMutation extends React.Component<IProps> {
-    public render() {
-        return (
-            <Mutation mutation={this.props.updateMutation}>
-                {(update: MutationFn, { loading: updateLoading, error: updateError }: MutationResult) => (
-                    <Mutation mutation={this.props.createMutation}>
-                        {(create: MutationFn, { loading: createLoading, error: createError }: MutationResult) =>
-                            this.props.children(
-                                { update, create },
-                                {
-                                    loading: updateLoading || createLoading,
-                                    error: updateError || createError,
-                                },
-                            )
-                        }
-                    </Mutation>
-                )}
-            </Mutation>
-        );
-    }
+export function FormMutation(props: IProps) {
+    const [update, { loading: updateLoading, error: updateError }] = useMutation(props.updateMutation);
+    const [create, { loading: createLoading, error: createError }] = useMutation(props.createMutation);
+    return this.props.children(
+        { update, create },
+        {
+            loading: updateLoading || createLoading,
+            error: updateError || createError,
+        },
+    );
 }

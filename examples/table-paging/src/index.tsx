@@ -1,3 +1,4 @@
+import { ApolloProvider } from "@apollo/react-common";
 import { createMuiTheme } from "@material-ui/core";
 import { MuiThemeProvider as ThemeProvider } from "@vivid-planet/react-admin-mui";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -5,7 +6,6 @@ import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
 import { RestLink } from "apollo-link-rest";
 import * as React from "react";
-import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 import * as ReactDOM from "react-dom";
 import App from "./App";
 
@@ -26,9 +26,9 @@ const client = new ApolloClient({
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>
-        <ApolloHooksProvider client={client}>
+        <ApolloProvider client={client}>
             <App />
-        </ApolloHooksProvider>
+        </ApolloProvider>
     </ThemeProvider>,
     document.getElementById("root"),
 );
