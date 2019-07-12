@@ -1,5 +1,6 @@
 import { Button, TableCell } from "@material-ui/core";
 import TableRow from "@material-ui/core/TableRow";
+import { storiesOf } from "@storybook/react";
 import { ITableHeadRowProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
@@ -43,8 +44,9 @@ function ExampleHeadTableRow<TRow extends IRow>(props: ITableHeadRowProps<TRow>)
     );
 }
 
-export default function App() {
+function Story() {
     const data: IRow[] = [{ id: 1, foo1: "blub", foo2: "blub" }, { id: 2, foo1: "blub", foo2: "blub" }];
+
     return (
         <Table
             data={data}
@@ -69,3 +71,5 @@ export default function App() {
         />
     );
 }
+
+storiesOf("react-admin-core", module).add("Table Expanded Row", () => <Story />);

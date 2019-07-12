@@ -1,4 +1,5 @@
 import { TableCell } from "@material-ui/core";
+import { storiesOf } from "@storybook/react";
 import { ITableRowProps, Table, TableBodyRow, TableColumns } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
@@ -48,7 +49,8 @@ interface IExampleRow {
     foo2: string;
     bar: string;
 }
-export default function App() {
+
+function Story() {
     const { width } = useWindowSize();
     const showSecondRow = width < 1024;
 
@@ -77,3 +79,5 @@ export default function App() {
         />
     );
 }
+
+storiesOf("react-admin-core", module).add("Table Responsive", () => <Story />);

@@ -1,6 +1,12 @@
+import { storiesOf } from "@storybook/react";
 import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } from "@vivid-planet/react-admin-core";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloClient } from "apollo-client";
+import { ApolloLink } from "apollo-link";
+import { RestLink } from "apollo-link-rest";
 import gql from "graphql-tag";
 import * as React from "react";
+import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 
 const gqlRest = gql;
 
@@ -36,7 +42,7 @@ interface IVariables {
     order: "desc" | "asc";
 }
 
-export default function App() {
+function Story() {
     const sortApi = useTableQuerySort({
         columnName: "name",
         direction: SortDirection.ASC,
@@ -81,3 +87,22 @@ export default function App() {
         </TableQuery>
     );
 }
+
+storiesOf("react-admin-core", module)
+    .addDecorator(story => {
+        const link = ApolloLink.from([
+            new RestLink({
+                uri: "https://jsonplaceholder.typicode.com/",
+            }),
+        ]);
+
+        const cache = new InMemoryCache();
+
+        const client = new ApolloClient({
+            link,
+            cache,
+        });
+
+        return <ApolloHooksProvider client={client}>{story()}</ApolloHooksProvider>;
+    })
+    .add("Table Sort", () => <Story />);

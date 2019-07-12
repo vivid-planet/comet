@@ -1,3 +1,4 @@
+import { storiesOf } from "@storybook/react";
 import { Table } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
@@ -6,8 +7,10 @@ interface IExampleRow {
     foo1: string;
     foo2: string;
 }
-export default function App() {
+
+function Story() {
     const data: IExampleRow[] = [{ id: 1, foo1: "blub", foo2: "blub" }, { id: 2, foo1: "blub", foo2: "blub" }];
+
     return (
         <Table
             data={data}
@@ -30,3 +33,5 @@ export default function App() {
         />
     );
 }
+
+storiesOf("react-admin-core", module).add("Table", () => <Story />);

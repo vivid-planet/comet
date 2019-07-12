@@ -1,4 +1,5 @@
 import { Button } from "@material-ui/core";
+import { storiesOf } from "@storybook/react";
 import { TableDndOrder, TableLocalChanges } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
@@ -8,8 +9,10 @@ interface IRow {
     foo1: string;
     foo2: string;
 }
-export default function App() {
+
+function Story() {
     const data: IRow[] = [{ id: "1", pos: 1, foo1: "blub", foo2: "blub1" }, { id: "2", pos: 2, foo1: "blub", foo2: "blub2" }];
+
     return (
         <TableLocalChanges
             data={data}
@@ -47,3 +50,5 @@ export default function App() {
         </TableLocalChanges>
     );
 }
+
+storiesOf("react-admin-core", module).add("Table DnD Order", () => <Story />);

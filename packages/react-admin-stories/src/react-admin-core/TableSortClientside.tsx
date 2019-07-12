@@ -1,3 +1,4 @@
+import { storiesOf } from "@storybook/react";
 import { SortDirection, Table, useTableQuerySort } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
@@ -6,7 +7,8 @@ interface IExampleRow {
     foo1: string;
     foo2: string;
 }
-export default function App() {
+
+function Story() {
     const data: IExampleRow[] = [{ id: 1, foo1: "blub1", foo2: "blub2" }, { id: 2, foo1: "blub2", foo2: "blub1" }];
 
     const sortApi = useTableQuerySort({
@@ -42,3 +44,5 @@ export default function App() {
         />
     );
 }
+
+storiesOf("react-admin-core", module).add("Table Sort Clientside", () => <Story />);
