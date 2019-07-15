@@ -6,9 +6,9 @@ import {
 } from "@vivid-planet/material-ui-react-select";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
-import { Props as ReactSelectAsyncProps } from "react-select/lib/Async";
-import { Props as ReactSelectCreatableProps } from "react-select/lib/Creatable";
-import { Props as ReactSelectProps } from "react-select/lib/Select";
+import { Props as ReactSelectAsyncProps } from "react-select/async";
+import { Props as ReactSelectProps } from "react-select/base";
+import { Props as ReactSelectCreatableProps } from "react-select/creatable";
 
 // tslint:disable:max-classes-per-file
 export class ReactSelect<OptionType> extends React.Component<FieldRenderProps<OptionType, HTMLElement> & ReactSelectProps<OptionType>> {

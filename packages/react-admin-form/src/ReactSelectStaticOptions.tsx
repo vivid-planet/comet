@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FieldInputProps, FieldMetaState, FieldRenderProps } from "react-final-form";
-import { Props as ReactSelectProps } from "react-select/lib/Select";
-import { OptionsType } from "react-select/lib/types";
+import { Props as ReactSelectProps } from "react-select/base";
+import { OptionsType } from "react-select/src/types";
 import { ReactSelect } from "./ReactSelect";
 
 interface IOptionType {
