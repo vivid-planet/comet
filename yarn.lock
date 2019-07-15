@@ -2330,10 +2330,10 @@ dir-glob@2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
-dnd-core@^8.0.3:
+dnd-core-cjs@^8.0.3:
   version "8.0.3"
-  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-8.0.3.tgz#96fdaae0f53ca86996ed50075000ebd758169682"
-  integrity sha512-jffgwAMsv5g6TRDmvjBW0EUntVXO8+X184zBRFnOmCfhFU8EV7/Aq+wPpJCeRAMge8fMYJGrjlm1xeH0wMrHYQ==
+  resolved "https://registry.yarnpkg.com/dnd-core-cjs/-/dnd-core-cjs-8.0.3.tgz#13182d471c051afcb3350ee9ba9e1712b87f3a4c"
+  integrity sha512-UHQbyI0oGCQR+vgmdIkjWyPHwhYcQUiDXqAXVJf+Y4kkjr/UAp7eWm6TDsuOooYNsHW4mi0+11SfZP6+v1wX5w==
   dependencies:
     "@types/asap" "^2.0.0"
     "@types/invariant" "^2.2.29"
@@ -5047,23 +5047,23 @@ react-datepicker@^2.7.0:
     react-onclickoutside "^6.7.1"
     react-popper "^1.0.2"
 
-react-dnd-html5-backend@^8.0.3:
+react-dnd-cjs@^8.0.3:
   version "8.0.3"
-  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-8.0.3.tgz#8f030444c7b79fd022f4ebd23ab5d20ed6ad248e"
-  integrity sha512-TOspnpF4x5AWVrYjh1G+ZllDPSSTTzS1nd8SUWK1N8OehZs5SngCAA6PjPWIe3vqGUwMBOiEPFWsuMyEqVWGAA==
-  dependencies:
-    dnd-core "^8.0.3"
-
-react-dnd@^8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-8.0.3.tgz#6226e1a6476bc7f9593b98def86fdab7d45100f8"
-  integrity sha512-wsdpZLJj8XqEl04GE1fd45/eNB+cZWEx0ZQC7PgrQ/URD2BfbwyQ5RiT23Cl/BPKJBUkTh1FltZ88LTUd7yGeg==
+  resolved "https://registry.yarnpkg.com/react-dnd-cjs/-/react-dnd-cjs-8.0.3.tgz#903aae3252528073d1459a641d7e6eed79319761"
+  integrity sha512-LENYp9cuiU+0T0Gsc1rSNAgonJZ38IqAouKiC/zHKM9tOVFKHutBSbfrXgUQCLclcO6H380f0PKz7k987RVpWA==
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.1"
     "@types/shallowequal" "^1.1.1"
-    dnd-core "^8.0.3"
+    dnd-core-cjs "^8.0.3"
     hoist-non-react-statics "^3.3.0"
     shallowequal "^1.1.0"
+
+react-dnd-html5-backend-cjs@^8.0.3:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend-cjs/-/react-dnd-html5-backend-cjs-8.0.3.tgz#cb1c40622dce61c17d4fffdddc369a9975933b4c"
+  integrity sha512-IojIjGskXDw2GO8CpREdtoraATJ5NE3j/dKeGs8iLFf++/QZVdFxXP62zoFBXdTHDVrpSiQcFCDezNjkJR/cXQ==
+  dependencies:
+    dnd-core-cjs "^8.0.3"
 
 react-dom@^16.8.6:
   version "16.8.6"
