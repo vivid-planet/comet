@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-stories",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "files": [
         "src"
     ],
@@ -22,8 +22,8 @@
         "react": "^16.8",
         "react-apollo": "^2.5.8",
         "react-apollo-hooks": "^0.4.5",
-        "react-final-form": "^6.3.0",
-        "react-dom": "^16.8"
+        "react-dom": "^16.8",
+        "react-final-form": "^6.3.0"
     },
     "devDependencies": {
         "@babel/core": "^7.5.4",

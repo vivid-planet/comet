@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-form",
-    "version": "1.0.0-alpha.15",
+    "version": "1.0.0-alpha.16",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -12,7 +12,7 @@
     "devDependencies": {
         "@vivid-planet/react-admin-date-fns": "^1.0.0-alpha.2",
         "@vivid-planet/react-admin-final-form-material-ui": "^1.0.0-alpha.8",
-        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.10"
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.11"
     },
     "peerDependencies": {
         "@material-ui/core": "^4.1.3",
