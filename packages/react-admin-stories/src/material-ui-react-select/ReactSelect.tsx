@@ -1,9 +1,10 @@
 import { Button, ListItem } from "@material-ui/core";
+import { storiesOf } from "@storybook/react";
 import { Field, FieldContainerLabelAbove, Input, ReactSelectStaticOptions } from "@vivid-planet/react-admin-form";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-export default function App() {
+function Story() {
     const options = [
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
@@ -39,5 +40,6 @@ export default function App() {
             />
         </div>
     );
-    // return <ReactSelectStaticOptions options={options} />;
 }
+
+storiesOf("material-ui-react-select", module).add("React Select", () => <Story />);
