@@ -1,3 +1,4 @@
+import { InputBaseProps } from "@material-ui/core/InputBase";
 import { format, isValid, parse, parseISO } from "date-fns";
 import * as de from "date-fns/locale/de";
 import * as React from "react";
@@ -7,7 +8,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FieldRenderProps } from "react-final-form";
 import * as sc from "./DatePicker.sc";
 import { StyledInput } from "./Input";
-
 registerLocale("de", de);
 
 const onChangeAdapter = (origOnChange: <T>(event: React.ChangeEvent<T> | any) => void, valueFormat: string, date?: Date) => {
@@ -17,6 +17,13 @@ const onChangeAdapter = (origOnChange: <T>(event: React.ChangeEvent<T> | any) =>
 interface IProps extends FieldRenderProps<string | Date, HTMLInputElement>, ReactDatePickerProps {
     width?: string;
 }
+
+class DPInput extends React.Component<InputBaseProps> {
+    public render() {
+        return <StyledInput type="text" {...this.props} />;
+    }
+}
+
 export const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...rest }) => {
     const inputProps = {
         style: {
@@ -43,7 +50,7 @@ export const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, on
                 locale="de"
                 selected={parsedValue}
                 onChange={onChangeAdapter.bind(this, onChange, valueFormat)}
-                customInput={<StyledInput type="text" {...inputProps} />}
+                customInput={<DPInput {...inputProps} />}
                 {...restInput}
                 {...rest}
             />

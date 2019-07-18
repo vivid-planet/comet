@@ -71,7 +71,7 @@ class RouterTabs extends React.Component<IProps> {
                                                         indicatorColor={indicatorColor}
                                                     >
                                                         {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
-                                                            const { path, forceRender, ...restTabProps } = child.props;
+                                                            const { path, forceRender, children, ...restTabProps } = child.props;
                                                             return <TabComponent {...restTabProps} />;
                                                         })}
                                                     </Tabs>
