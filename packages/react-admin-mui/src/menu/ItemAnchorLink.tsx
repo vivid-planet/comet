@@ -5,6 +5,6 @@ import { IMenuItemProps, MenuItem } from "./Item";
 export class MenuItemAnchorLink extends React.Component<IMenuItemProps & ListItemProps & React.HTMLProps<HTMLAnchorElement>> {
     public render() {
         const { ...otherProps } = this.props;
-        return <MenuItem selected={false} {...otherProps} />;
+        return <MenuItem selected={false} component="a" {...otherProps} />;
     }
 }
