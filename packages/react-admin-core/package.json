@@ -10,8 +10,8 @@
         "debounce": "^1.2.0",
         "lodash.isequal": "^4.5.0",
         "query-string": "^5.1.1",
-        "react-dnd-cjs": "^8.0.3",
-        "react-dnd-html5-backend-cjs": "^8.0.3",
+        "react-dnd": "^8.0.3",
+        "react-dnd-html5-backend": "^8.0.3",
         "uuid": "^3.3.2"
     },
     "devDependencies": {
