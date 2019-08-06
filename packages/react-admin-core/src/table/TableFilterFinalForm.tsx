@@ -2,34 +2,30 @@ import { Grid, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { debounce } from "debounce";
+import { AnyObject } from "final-form";
 import isEqual = require("lodash.isequal");
 import * as React from "react";
 import { Form, FormRenderProps, FormSpy, FormSpyRenderProps } from "react-final-form";
 import * as sc from "./TableFilterFinalForm.sc";
-import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
+import { IFilterApi } from "./useTableQueryFilter";
 
-interface IAutoSaveProps extends IWithTableQueryProps, FormSpyRenderProps {
+interface IAutoSaveProps<FilterValues> extends FormSpyRenderProps {
     values: any;
-    modifySubmitVariables?: <T = object>(variables: T) => T;
+    filterApi: IFilterApi<FilterValues>;
 }
 interface IAutoSaveState {
     values: any;
 }
-class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
+class AutoSave<FilterValues> extends React.Component<IAutoSaveProps<FilterValues>, IAutoSaveState> {
     private valueChanged = debounce(() => {
-        let { values } = this.props;
+        const { values } = this.props;
         if (!isEqual(this.state.values, values)) {
             this.setState({ values });
-            if (this.props.tableQuery) {
-                if (this.props.modifySubmitVariables) {
-                    values = this.props.modifySubmitVariables({ ...values });
-                }
-                this.props.tableQuery.api.changeFilters(values);
-            }
+            this.props.filterApi.changeFilters(values);
         }
     }, 500);
 
-    constructor(props: IAutoSaveProps) {
+    constructor(props: IAutoSaveProps<FilterValues>) {
         super(props);
         this.state = { values: props.values };
     }
@@ -43,15 +39,13 @@ class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
     }
 }
 
-const ExtendedAutoSave = withTableQueryContext(AutoSave);
-
-interface IProps {
-    modifySubmitVariables?: (variables: any) => any;
+interface IProps<FilterValues = AnyObject> {
     headline?: string;
     resetButton?: boolean;
+    filterApi: IFilterApi<FilterValues>;
 }
 // tslint:disable-next-line:max-classes-per-file
-export class TableFilterFinalForm extends React.Component<IProps> {
+export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Component<IProps<FilterValues>> {
     public render() {
         return <Form onSubmit={this.handleSubmit} render={this.renderForm} />;
     }
@@ -88,9 +82,7 @@ export class TableFilterFinalForm extends React.Component<IProps> {
                     </sc.FormHeader>
                 )}
                 {this.props.children}
-                <FormSpy subscription={{ values: true }}>
-                    {renderProps => <ExtendedAutoSave {...renderProps} modifySubmitVariables={this.props.modifySubmitVariables} />}
-                </FormSpy>
+                <FormSpy subscription={{ values: true }}>{renderProps => <AutoSave {...renderProps} filterApi={this.props.filterApi} />}</FormSpy>
             </form>
         );
     };

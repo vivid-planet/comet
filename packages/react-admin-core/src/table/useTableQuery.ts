@@ -3,7 +3,7 @@ import { DocumentNode } from "graphql";
 import * as React from "react";
 import { QueryHookOptions, QueryHookResult, useQuery } from "react-apollo-hooks";
 import { ISelectionApi } from "../SelectionApi";
-import { IPagingInfo } from "./pagingStrategy";
+import { IPagingInfo } from "./paging";
 import { ITableQueryApi } from "./TableQueryContext";
 
 interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
@@ -46,15 +46,9 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
     ): ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> {
         const { resolveTableData, selectionApi, variables, ...restOptions } = options;
 
-        const [filters, setFilters] = React.useState<object>({});
         const [currentPage, setCurrentPage] = React.useState<number | undefined>(1);
 
-        // TODO:
-        // order: "asc" | "desc";
-        // sort?: string;
-
         const api: ITableQueryApi = {
-            changeFilters,
             changePage,
             getVariables,
             getQuery: () => q,
@@ -99,12 +93,8 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         }
 
         function getVariables() {
-            const vars: any = { ...(options.variables as any), ...filters };
+            const vars: any = { ...(options.variables as any) };
             return vars;
-        }
-
-        function changeFilters(f: object) {
-            setFilters(f);
         }
 
         function onRowCreated(id: string) {

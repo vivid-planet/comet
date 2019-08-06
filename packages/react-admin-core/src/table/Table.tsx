@@ -7,7 +7,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
 import { TablePagination } from "./Pagination";
-import { IPagingInfo } from "./pagingStrategy";
+import { IPagingInfo } from "./paging";
 import * as sc from "./Table.sc";
 import { ITableQueryApi, ITableQueryContext, TableQueryContext } from "./TableQueryContext";
 import { ISortApi, SortDirection } from "./useTableQuerySort";
