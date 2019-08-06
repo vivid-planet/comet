@@ -2,21 +2,21 @@
 # yarn lockfile v1
 
 
-"@apollo/react-common@0.1.0-beta.8", "@apollo/react-common@^0.1.0-beta.8":
-  version "0.1.0-beta.8"
-  resolved "https://registry.yarnpkg.com/@apollo/react-common/-/react-common-0.1.0-beta.8.tgz#98978b0da1a12b5866655295dc46e8a8eaa33ea2"
-  integrity sha512-iNxF9gxxwe9oeovx8XgqU+2J5cOB3RnoSvIfahW2vhJrxtAahWg0AjTTvhQsnLi5OvIiVyivvU+R7xlj/9C0pg==
+"@apollo/react-common@3.0.0", "@apollo/react-common@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@apollo/react-common/-/react-common-3.0.0.tgz#2357518c4b3bf1fd680ee2ac114f565f527ec55d"
+  integrity sha512-EqHASkcmxipy2hU8rja+lD1S1HoTdodKKyJZZ3dgewnAHXnzXnnC3rw1+lkrgXPFsI2n2d2N2LYisD79OCdPmw==
   dependencies:
     ts-invariant "^0.4.4"
     tslib "^1.10.0"
 
-"@apollo/react-hooks@0.1.0-beta.10":
-  version "0.1.0-beta.10"
-  resolved "https://registry.yarnpkg.com/@apollo/react-hooks/-/react-hooks-0.1.0-beta.10.tgz#4069fad454c0a77eb09d00242dcd96b3bac7791b"
-  integrity sha512-txwIsFhhK4QvF/L5geh4Mh8d1XRje6It3HL9PEc4N83Q/fgzHMWDlvvbUo1HqZuyPKEbFOH7Hi7LsYJBGev6Sw==
+"@apollo/react-hooks@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@apollo/react-hooks/-/react-hooks-3.0.0.tgz#5fe4ff7812020f3e1b91b8628af8c03276496d78"
+  integrity sha512-7kaV6rkx2WZjDYcBmp52oyhTxbNn5Jc4AUmsXZVEnDu9uuvNYURA8bLlJNF8yu4zS7ed8D+ZebC0y0bhrz8wIg==
   dependencies:
-    "@apollo/react-common" "^0.1.0-beta.8"
-    apollo-utilities "^1.3.2"
+    "@apollo/react-common" "^3.0.0"
+    "@wry/equality" "^0.1.9"
     ts-invariant "^0.4.4"
     tslib "^1.10.0"
 
@@ -2780,7 +2780,7 @@
     "@types/node" ">=6"
     tslib "^1.9.3"
 
-"@wry/equality@^0.1.2":
+"@wry/equality@^0.1.2", "@wry/equality@^0.1.9":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@wry/equality/-/equality-0.1.9.tgz#b13e18b7a8053c6858aa6c85b54911fb31e3a909"
   integrity sha512-mB6ceGjpMGz1ZTza8HYnrPGos2mC6So4NhS1PtZ8s4Qt0K7fBiIGhpSxUbQmhwcSWE3no+bYxmI2OL6KuXYmoQ==
