@@ -55,7 +55,6 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
 
         const api: ITableQueryApi = {
             changeFilters,
-            changeSort,
             changePage,
             getVariables,
             getQuery: () => q,
@@ -101,36 +100,11 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
 
         function getVariables() {
             const vars: any = { ...(options.variables as any), ...filters };
-            // TODO
-            // vars.sort = this.state.sort;
-            // vars.order = this.state.order;
             return vars;
         }
 
         function changeFilters(f: object) {
             setFilters(f);
-        }
-
-        function changeSort(columnName: string) {
-            /* TODO
-            let order: "asc" | "desc" = "asc";
-            if (this.state.sort === columnName) {
-                order = this.state.order === "asc" ? "desc" : "asc";
-            }
-            this.fetchMore({
-                variables: {
-                    sort: columnName,
-                    order,
-                },
-                updateQuery: ({}, { fetchMoreResult }: { fetchMoreResult: any }) => {
-                    this.setState({
-                        sort: columnName,
-                        order,
-                    });
-                    return fetchMoreResult;
-                },
-            });
-            */
         }
 
         function onRowCreated(id: string) {
@@ -145,7 +119,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             }
         }
 
-        if (!ret.data) {
+        if (!ret.data || Object.keys(ret.data).length === 0) {
             return ret;
         }
 

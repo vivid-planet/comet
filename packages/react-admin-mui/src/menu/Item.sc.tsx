@@ -4,6 +4,7 @@ import {
     ListItemSecondaryAction as MuiListItemSecondaryAction,
     ListItemText as MuiListItemText,
 } from "@material-ui/core";
+import { ListItemProps } from "@material-ui/core/ListItem";
 import { ListItemIconProps } from "@material-ui/core/ListItemIcon";
 import { ListItemSecondaryActionProps } from "@material-ui/core/ListItemSecondaryAction";
 import { ListItemTextProps } from "@material-ui/core/ListItemText";
@@ -17,9 +18,10 @@ interface IMenuItemStyleProps {
     enableMargin?: boolean;
 }
 
-export const ListItem = styled<IMenuItemStyleProps>(({ level, menuOpen, enableMargin, hasIcon = false, ...rest }) => (
+export const ListItem = styled(({ level, menuOpen, enableMargin, hasIcon = false, ...rest }: IMenuItemStyleProps & ListItemProps) => (
+    // @ts-ignore
     <MuiListItem {...rest} classes={{ root: "root", selected: "selected" }} />
-))<IMenuItemStyleProps>`
+))<IMenuItemStyleProps & ListItemProps>`
     &.root {
         padding-top: ${({ hasIcon }) => (hasIcon ? `20px` : `10px`)};
         padding-bottom: ${({ hasIcon }) => (hasIcon ? `20px` : `10px`)};
@@ -28,7 +30,7 @@ export const ListItem = styled<IMenuItemStyleProps>(({ level, menuOpen, enableMa
         ${({ enableMargin, theme }) =>
             enableMargin &&
             css`
-                margin-bottom: ${theme.spacing.unit}px;
+                margin-bottom: ${theme.spacing(1)}px;
             `};
 
         &.selected,
@@ -51,9 +53,9 @@ interface IMenuItemTextStyleProps extends IMenuItemSelected {
     level: number;
 }
 
-export const ListItemText = styled<IMenuItemTextStyleProps & ListItemTextProps>(({ selected, level, ...rest }) => (
-    <MuiListItemText {...rest} classes={{ root: "root", primary: "primary", textDense: "textDense" }} />
-))<IMenuItemTextStyleProps>`
+export const ListItemText = styled(({ selected, level, ...rest }: IMenuItemTextStyleProps & ListItemTextProps) => (
+    <MuiListItemText {...rest} classes={{ root: "root", primary: "primary", dense: "dense" }} />
+))<IMenuItemTextStyleProps & ListItemTextProps>`
     &.root {
         &:first-child {
             ${({ inset }) => inset && `padding-left: 60px`};
@@ -68,9 +70,9 @@ export const ListItemText = styled<IMenuItemTextStyleProps & ListItemTextProps>(
     }
 `;
 
-export const ListItemIcon = styled<IMenuItemSelected & ListItemIconProps>(({ selected, ...rest }) => (
+export const ListItemIcon = styled(({ selected, ...rest }: IMenuItemSelected & ListItemIconProps) => (
     <MuiListItemIcon {...rest} classes={{ root: "root" }} />
-))<IMenuItemSelected>`
+))<IMenuItemSelected & ListItemIconProps>`
     &.root {
         > svg {
             font-size: 20px;
@@ -94,9 +96,11 @@ export const TextIcon = styled.div<IMenuItemSelected>`
         `};
 `;
 
-export const ListItemSecondaryAction = styled<IMenuItemSelected & ListItemSecondaryActionProps>(({ selected, ...rest }) => (
-    <MuiListItemSecondaryAction {...rest} classes={{ root: "root" }} />
-))<IMenuItemSelected>`
+export const ListItemSecondaryAction = styled(
+    ({ selected, ...rest }: IMenuItemSelected & ListItemSecondaryActionProps & { children: React.ReactNode }) => (
+        <MuiListItemSecondaryAction {...rest} classes={{ root: "root" }} />
+    ),
+)<IMenuItemSelected & ListItemSecondaryActionProps & { children: React.ReactNode }>`
     &.root {
         > svg {
             font-size: 20px;

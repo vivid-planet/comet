@@ -10,10 +10,7 @@ export const parseIdFromIri = (iri: string) => {
     return m[1];
 };
 
-export interface IDefaultVariables {
-    order?: "asc" | "desc";
-    sort?: string;
-}
+export interface IDefaultVariables {}
 interface IProps {
     api: ITableQueryApi;
     loading: boolean;

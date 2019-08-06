@@ -19,7 +19,7 @@ export const FieldContainer: React.FunctionComponent<IProps> = props => (
                 )}
             </Grid>
             <Grid item xs={8}>
-                <Typography>{props.children}</Typography>
+                {props.children}
             </Grid>
         </Grid>
     </sc.StyledFormControl>

@@ -9,30 +9,29 @@ import { ISelectionApi } from "../SelectionApi";
 import { TablePagination } from "./Pagination";
 import { IPagingInfo } from "./pagingStrategy";
 import * as sc from "./Table.sc";
-import { TableQueryContext } from "./TableQueryContext";
+import { ITableQueryApi, ITableQueryContext, TableQueryContext } from "./TableQueryContext";
+import { ISortApi, SortDirection } from "./useTableQuerySort";
 
 export function TableBodyRow({ innerRef, ...props }: sc.ITableBodyRowProps) {
     return <sc.TableBodyRow {...props} />;
 }
 export interface ITableHeadRowProps<TRow extends IRow> extends ITableHeadColumnsProps<TRow> {}
-function DefaultHeadTableRow<TRow extends IRow>({ columns, sort, order, onSortClick }: ITableHeadRowProps<TRow>) {
+function DefaultHeadTableRow<TRow extends IRow>({ columns, sortApi }: ITableHeadRowProps<TRow>) {
     return (
         <TableRow>
-            <TableHeadColumns columns={columns} sort={sort} order={order} onSortClick={onSortClick} />
+            <TableHeadColumns columns={columns} sortApi={sortApi} />
         </TableRow>
     );
 }
 
 export interface ITableHeadColumnsProps<TRow extends IRow> {
     columns: Array<ITableColumn<TRow>>;
-    sort: string;
-    order: "asc" | "desc";
-    onSortClick: (ev: React.MouseEvent, column: string) => void;
+    sortApi?: ISortApi;
 }
 // render default TableCell fragments for given columns
-export function TableHeadColumns<TRow extends IRow>({ columns, sort, order, onSortClick }: ITableHeadColumnsProps<TRow>) {
+export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITableHeadColumnsProps<TRow>) {
     const handleSortClick = (name: string, ev: React.MouseEvent) => {
-        onSortClick(ev, name);
+        if (sortApi) sortApi.changeSort(name);
     };
 
     return (
@@ -43,7 +42,11 @@ export function TableHeadColumns<TRow extends IRow>({ columns, sort, order, onSo
                 return (
                     <TableCell key={colIndex} {...headerProps}>
                         {sortable ? (
-                            <TableSortLabel active={sort === name} direction={order} onClick={handleSortClick.bind(null, name)}>
+                            <TableSortLabel
+                                active={sortApi && sortApi.current.columnName === name}
+                                direction={sortApi && sortApi.current.direction === SortDirection.DESC ? "desc" : "asc"}
+                                onClick={handleSortClick.bind(null, name)}
+                            >
                                 {header}
                             </TableSortLabel>
                         ) : (
@@ -100,8 +103,6 @@ export interface ITableProps<TRow extends IRow> {
     currentPage?: number;
     selectedId?: string;
     selectable?: boolean;
-    sort?: string;
-    order?: "asc" | "desc";
     page?: number;
     renderTableRow?: (props: ITableRowProps<TRow>) => React.ReactNode;
     renderHeadTableRow?: (props: ITableHeadRowProps<TRow>) => React.ReactNode;
@@ -110,6 +111,7 @@ export interface ITableProps<TRow extends IRow> {
     rowName?: string | ((count: number) => string);
     hideTableHead?: boolean;
     columns: Array<ITableColumn<TRow>>;
+    sortApi?: ISortApi;
 }
 
 function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRowProps<TRow>) {
@@ -125,9 +127,6 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
     public render() {
         const { data } = this.props;
 
-        const sort = this.props.sort !== undefined ? this.props.sort : this.context.sort;
-        const order = this.props.order !== undefined ? this.props.order : this.context.order;
-
         const renderHeadTableRow = this.props.renderHeadTableRow || (props => <DefaultHeadTableRow {...props} />);
 
         return (
@@ -136,9 +135,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                     <sc.StyledTableHead>
                         {renderHeadTableRow({
                             columns: this.props.columns,
-                            onSortClick: this.handleSortClick,
-                            sort,
-                            order,
+                            sortApi: this.props.sortApi,
                         })}
                     </sc.StyledTableHead>
                 )}
@@ -203,11 +200,5 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
 
     private isSelected(id: string | number) {
         return String(this.props.selectedId) === String(id); //  as strings as selectedId might come from url
-    }
-
-    private handleSortClick(event: React.MouseEvent, name: string) {
-        if (this.context) {
-            this.context.api.changeSort(name);
-        }
     }
 }

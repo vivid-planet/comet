@@ -17,7 +17,7 @@ import { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQu
 const styles = (theme: Theme) =>
     createStyles({
         saveButton: {
-            margin: theme.spacing.unit,
+            margin: theme.spacing(1),
         },
     });
 
@@ -215,13 +215,16 @@ class FinalForm extends React.Component<IProps> {
         }
         return Promise.resolve(ret)
             .then(data => {
-                this.formRenderProps.form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
-                if (stackApi) {
-                    // if this form is inside a Stack goBack after save success
-                    // do this after form.reset() to have a dirty form, so it won't ask for saving changes
-                    // TODO we probably shouldn't have a hard dependency to Stack
-                    stackApi.goBack();
-                }
+                // setTimeout is required because of https://github.com/final-form/final-form/pull/229
+                setTimeout(() => {
+                    this.formRenderProps.form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
+                    if (stackApi) {
+                        // if this form is inside a Stack goBack after save success
+                        // do this after form.reset() to have a dirty form, so it won't ask for saving changes
+                        // TODO we probably shouldn't have a hard dependency to Stack
+                        stackApi.goBack();
+                    }
+                });
                 return data;
             })
             .then(

@@ -14,5 +14,6 @@ export * from "./TableQuery";
 export * from "./TableQueryContext";
 
 export * from "./useTableQuery";
+export * from "./useTableQuerySort";
 export * from "./withDirtyHandlerApi";
 export * from "./withTableQueryContext";
