@@ -2,22 +2,22 @@ import { CssBaseline, Grid, IconButton, Theme, Toolbar, Typography } from "@mate
 import MenuIcon from "@material-ui/icons/Menu";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
-import { Header } from "./Master.sc";
+import { Header } from "./MasterLayout.sc";
 import { MenuContext } from "./menu/Context";
 
-export interface IMasterProps extends WithStyles<typeof styles> {
+export interface IMasterLayoutProps extends WithStyles<typeof styles> {
     children: React.ReactNode;
     menuComponent: React.ComponentType;
-    renderHeader: () => React.ReactNode;
+    headerComponent?: React.ComponentType;
 }
 
-function Master(props: IMasterProps) {
+function MasterLayout(props: IMasterLayoutProps) {
     const [open, setOpen] = React.useState(true);
 
     const toggleOpen = () => {
         setOpen(!open);
     };
-    const { classes, children, menuComponent: Menu } = props;
+    const { classes, children, menuComponent: Menu, headerComponent: HeaderComponent } = props;
 
     return (
         <MenuContext.Provider
@@ -33,7 +33,7 @@ function Master(props: IMasterProps) {
                         <IconButton color="primary" onClick={toggleOpen}>
                             <MenuIcon />
                         </IconButton>
-                        {props.renderHeader()}
+                        {HeaderComponent && <HeaderComponent />}
                     </Toolbar>
                 </Header>
                 <Menu />
@@ -59,5 +59,5 @@ const styles = (theme: Theme) =>
         },
     });
 
-const ExtendedMaster = withStyles(styles)(Master);
-export { ExtendedMaster as Master };
+const ExtendedMasterLayout = withStyles(styles)(MasterLayout);
+export { ExtendedMasterLayout as MasterLayout };

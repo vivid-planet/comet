@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core";
 import { CalendarToday, Home, School, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import { Master, Menu, MenuCollapsibleItem, MenuItemRouterLink } from "@vivid-planet/react-admin-mui";
+import { MasterLayout, Menu, MenuCollapsibleItem, MenuItemRouterLink } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
@@ -19,16 +19,17 @@ function AppMenu() {
     );
 }
 
+function AppHeader() {
+    return (
+        <Typography variant="h5" color="primary">
+            Example
+        </Typography>
+    );
+}
+
 function Story() {
     return (
-        <Master
-            renderHeader={() => (
-                <Typography variant="h5" color="primary">
-                    Example
-                </Typography>
-            )}
-            menuComponent={AppMenu}
-        >
+        <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
             <Switch>
                 aaa
                 <Route path="/foo1" render={() => <div>Foo 1</div>} />
@@ -36,7 +37,7 @@ function Story() {
                 <Route path="/foo4" render={() => <div>Foo 4</div>} />
                 <Route path="/foo5" render={() => <div>Foo 5</div>} />
             </Switch>
-        </Master>
+        </MasterLayout>
     );
 }
 
