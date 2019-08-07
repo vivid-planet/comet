@@ -34,14 +34,15 @@ query users(
         order: $order
         query: $query
     ) @rest(type: "UsersPayload", path: "users?q={args.query}&_page={args.page}&_limit=5&_sort={args.sort}&_order={args.order}") {
-        meta: {
+        meta @type(name: "UsersMeta") {
             totalCount
+            links
         }
         data @type(name: "User") {
             id
             name
             username
-            email    
+            email
         }
     }
 }
@@ -89,11 +90,17 @@ function Story() {
         resolveTableData: data => ({
             data: data.users.data,
             totalCount: data.users.meta.totalCount,
-            pagingInfo: createRestPagingActions(pagingApi, {
-                nextPage: data.users.meta.links.next,
-                previousPage: data.users.meta.links.prev,
-                totalPages: data.users.meta.totalCount / 5,
-            }),
+            pagingInfo: createRestPagingActions(
+                pagingApi,
+                {
+                    nextPage: data.users.meta.links.next,
+                    previousPage: data.users.meta.links.prev,
+                    totalPages: data.users.meta.totalCount / 5,
+                },
+                {
+                    pageParameterName: "_page",
+                },
+            ),
         }),
     });
 
@@ -161,7 +168,7 @@ storiesOf("react-admin-core", module)
                             }
                         });
                     return {
-                        data: response.json(),
+                        data: await response.json(),
                         meta: {
                             links,
                             totalCount: response.headers.get("x-total-count"),

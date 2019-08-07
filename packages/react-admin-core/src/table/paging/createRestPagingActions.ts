@@ -2,9 +2,9 @@ import * as queryString from "query-string";
 import { IPagingApi } from "../useTableQueryPaging";
 import { IPagingInfo } from "./IPagingInfo";
 
-function getPageParameterFromUrl(url: string) {
+function getPageParameterFromUrl(url: string, options: IOptions) {
     const params = queryString.parse(queryString.extract(url));
-    return params && params.page ? parseInt(params.page as string, 10) : null;
+    return params && params[options.pageParameterName] ? parseInt(params[options.pageParameterName] as string, 10) : null;
 }
 
 interface IRestPagingData {
@@ -13,9 +13,17 @@ interface IRestPagingData {
     totalPages?: number;
 }
 
-export function createRestPagingActions<TData extends IRestPagingData>(pagingApi: IPagingApi<number>, data: TData): IPagingInfo {
-    const nextPage = data.nextPage ? getPageParameterFromUrl(data.nextPage) : null;
-    const previousPage = data.previousPage ? getPageParameterFromUrl(data.previousPage) : null;
+interface IOptions {
+    pageParameterName: string;
+}
+
+export function createRestPagingActions<TData extends IRestPagingData>(
+    pagingApi: IPagingApi<number>,
+    data: TData,
+    options: IOptions = { pageParameterName: "page" },
+): IPagingInfo {
+    const nextPage = data.nextPage ? getPageParameterFromUrl(data.nextPage, options) : null;
+    const previousPage = data.previousPage ? getPageParameterFromUrl(data.previousPage, options) : null;
     return {
         fetchNextPage: nextPage
             ? () => {
