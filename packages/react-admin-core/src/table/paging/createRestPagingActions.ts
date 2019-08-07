@@ -37,5 +37,6 @@ export function createRestPagingActions<TData extends IRestPagingData>(
             : undefined,
         totalPages: data.totalPages,
         currentPage: pagingApi.currentPage,
+        attachTableRef: pagingApi.attachTableRef,
     };
 }

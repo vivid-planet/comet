@@ -50,7 +50,6 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             getQuery: () => q,
             onRowCreated,
             onRowDeleted,
-            attachTableQueryRef,
         };
 
         const innerOptions = {
@@ -66,29 +65,6 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         React.useEffect(() => {
             ret.refetch();
         }, []);
-
-        let tableQueryRef: React.MutableRefObject<HTMLDivElement | undefined> | undefined;
-        function attachTableQueryRef(ref: any) {
-            tableQueryRef = ref;
-        }
-        /*
-        function changePage(vars: object, page?: number) {
-            if (tableQueryRef && tableQueryRef.current) {
-                tableQueryRef.current.scrollIntoView();
-            }
-            return ret
-                .fetchMore({
-                    variables: vars,
-                    updateQuery: ({}, { fetchMoreResult }: { fetchMoreResult: any }) => {
-                        return fetchMoreResult;
-                    },
-                })
-                .then(data => {
-                    setCurrentPage(page);
-                    return data;
-                });
-        }
-        */
 
         function getVariables() {
             const vars: any = { ...(options.variables as any) };

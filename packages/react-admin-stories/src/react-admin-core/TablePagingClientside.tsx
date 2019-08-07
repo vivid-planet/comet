@@ -30,6 +30,7 @@ function Story() {
                 : undefined,
         fetchPreviousPage: pagingApi.current > 1 ? () => pagingApi.changePage(pagingApi.current - 1) : undefined,
         totalPages,
+        attachTableRef: pagingApi.attachTableRef,
     };
     const pagedData = data.slice((pagingApi.current - 1) * pageSize, pagingApi.current * pageSize);
     return (

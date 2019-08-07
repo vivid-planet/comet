@@ -1,3 +1,4 @@
+import { RootRef } from "@material-ui/core";
 import MuiTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
@@ -9,7 +10,6 @@ import { ISelectionApi } from "../SelectionApi";
 import { TablePagination } from "./Pagination";
 import { IPagingInfo } from "./paging";
 import * as sc from "./Table.sc";
-import { ITableQueryApi, ITableQueryContext, TableQueryContext } from "./TableQueryContext";
 import { ISortApi, SortDirection } from "./useTableQuerySort";
 
 export function TableBodyRow({ innerRef, ...props }: sc.ITableBodyRowProps) {
@@ -122,52 +122,63 @@ function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRo
 }
 
 export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>> {
-    public static contextType = TableQueryContext;
+    private domRef: React.RefObject<HTMLDivElement>;
+    constructor(props: ITableProps<TRow>) {
+        super(props);
+        this.domRef = React.createRef<HTMLDivElement>();
+    }
+
     public render() {
         const { data } = this.props;
 
         const renderHeadTableRow = this.props.renderHeadTableRow || (props => <DefaultHeadTableRow {...props} />);
 
+        if (this.props.pagingInfo) {
+            this.props.pagingInfo.attachTableRef(this.domRef);
+        }
+
         return (
-            <MuiTable>
-                {!this.props.hideTableHead && (
-                    <sc.StyledTableHead>
-                        {renderHeadTableRow({
-                            columns: this.props.columns,
-                            sortApi: this.props.sortApi,
-                        })}
-                    </sc.StyledTableHead>
-                )}
-                <TableBody>
-                    {data.map((row, index) => {
-                        const isSelected = this.isSelected(row.id);
-                        const renderTableRow = this.props.renderTableRow || (props => <DefaultTableRow {...props} />);
-                        return renderTableRow({
-                            index,
-                            row,
-                            columns: this.props.columns,
-                            key: row.id,
-                            rowProps: {
-                                hover: this.props.selectable,
-                                onClick: this.handleClick.bind(this, row.id),
-                                role: "checkbox",
-                                tabIndex: -1,
-                                selected: isSelected,
-                                onKeyDown: this.handleKeyDown,
+            <RootRef rootRef={this.domRef}>
+                <MuiTable>
+                    {!this.props.hideTableHead && (
+                        <sc.StyledTableHead>
+                            {renderHeadTableRow({
+                                columns: this.props.columns,
+                                sortApi: this.props.sortApi,
+                            })}
+                        </sc.StyledTableHead>
+                    )}
+                    <TableBody>
+                        {data.map((row, index) => {
+                            const isSelected = this.isSelected(row.id);
+                            const renderTableRow = this.props.renderTableRow || (props => <DefaultTableRow {...props} />);
+                            return renderTableRow({
                                 index,
-                                hideTableHead: !!this.props.hideTableHead,
-                            },
-                        });
-                    })}
-                </TableBody>
-                {this.props.pagingInfo && (
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination totalCount={this.props.totalCount} pagingInfo={this.props.pagingInfo} rowName={this.props.rowName} />
-                        </TableRow>
-                    </TableFooter>
-                )}
-            </MuiTable>
+                                row,
+                                columns: this.props.columns,
+                                key: row.id,
+                                rowProps: {
+                                    hover: this.props.selectable,
+                                    onClick: this.handleClick.bind(this, row.id),
+                                    role: "checkbox",
+                                    tabIndex: -1,
+                                    selected: isSelected,
+                                    onKeyDown: this.handleKeyDown,
+                                    index,
+                                    hideTableHead: !!this.props.hideTableHead,
+                                },
+                            });
+                        })}
+                    </TableBody>
+                    {this.props.pagingInfo && (
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination totalCount={this.props.totalCount} pagingInfo={this.props.pagingInfo} rowName={this.props.rowName} />
+                            </TableRow>
+                        </TableFooter>
+                    )}
+                </MuiTable>
+            </RootRef>
         );
     }
 

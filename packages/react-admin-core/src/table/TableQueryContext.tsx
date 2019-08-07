@@ -6,7 +6,6 @@ export interface ITableQueryApi {
     getQuery: () => DocumentNode;
     onRowCreated: (id: string) => void;
     onRowDeleted: () => void;
-    attachTableQueryRef: (ref: React.MutableRefObject<HTMLDivElement | undefined>) => void;
 }
 
 export interface ITableQueryContext {
