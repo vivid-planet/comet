@@ -22,5 +22,6 @@ export function createPagePagingActions<TData extends IPagePagingData>(pagingApi
               }
             : undefined,
         totalPages: data.totalPages,
+        currentPage: pagingApi.currentPage,
     };
 }

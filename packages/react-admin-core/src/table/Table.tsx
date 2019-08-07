@@ -100,7 +100,6 @@ export interface ITableRowProps<TRow extends IRow> extends ITableColumnsProps<TR
 export interface ITableProps<TRow extends IRow> {
     data: TRow[];
     totalCount: number;
-    currentPage?: number;
     selectedId?: string;
     selectable?: boolean;
     page?: number;
@@ -164,12 +163,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                 {this.props.pagingInfo && (
                     <TableFooter>
                         <TableRow>
-                            <TablePagination
-                                totalCount={this.props.totalCount}
-                                currentPage={this.props.currentPage}
-                                pagingInfo={this.props.pagingInfo}
-                                rowName={this.props.rowName}
-                            />
+                            <TablePagination totalCount={this.props.totalCount} pagingInfo={this.props.pagingInfo} rowName={this.props.rowName} />
                         </TableRow>
                     </TableFooter>
                 )}

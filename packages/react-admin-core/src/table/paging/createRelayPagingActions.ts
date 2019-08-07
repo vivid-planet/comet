@@ -31,5 +31,6 @@ export function createRelayPagingActions<TData extends IRelayPagingData>(pagingA
                       });
                   }
                 : undefined,
+        currentPage: pagingApi.currentPage,
     };
 }

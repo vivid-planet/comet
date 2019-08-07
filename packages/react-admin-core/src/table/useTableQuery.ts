@@ -9,7 +9,6 @@ import { ITableQueryApi } from "./TableQueryContext";
 interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
     data?: TRow[];
     totalCount?: number;
-    currentPage?: number;
     pagingInfo?: IPagingInfo;
 }
 interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableData, TCache = object> extends QueryHookOptions<TVariables, TCache> {
@@ -46,10 +45,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
     ): ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> {
         const { resolveTableData, selectionApi, variables, ...restOptions } = options;
 
-        const [currentPage, setCurrentPage] = React.useState<number | undefined>(1);
-
         const api: ITableQueryApi = {
-            changePage,
             getVariables,
             getQuery: () => q,
             onRowCreated,
@@ -75,6 +71,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         function attachTableQueryRef(ref: any) {
             tableQueryRef = ref;
         }
+        /*
         function changePage(vars: object, page?: number) {
             if (tableQueryRef && tableQueryRef.current) {
                 tableQueryRef.current.scrollIntoView();
@@ -91,6 +88,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
                     return data;
                 });
         }
+        */
 
         function getVariables() {
             const vars: any = { ...(options.variables as any) };
@@ -114,7 +112,6 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         }
 
         ret.tableData = resolveTableData(ret.data);
-        ret.tableData.currentPage = currentPage;
         return ret;
     }
     return useTableQueryInner;

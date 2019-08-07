@@ -8,12 +8,11 @@ import { IPagingInfo } from "./paging/IPagingInfo";
 
 interface IProps {
     totalCount: number;
-    currentPage?: number;
     pagingInfo: IPagingInfo;
     rowName?: string | ((count: number) => string);
 }
 
-export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, currentPage, pagingInfo, rowName }) => {
+export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingInfo, rowName }) => {
     if (typeof rowName === "function") {
         rowName = rowName(totalCount);
     }
@@ -27,9 +26,9 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, c
                         </Typography>
                     </Grid>
                     <Grid item>
-                        {pagingInfo.totalPages && currentPage && (
+                        {pagingInfo.totalPages && pagingInfo.currentPage && (
                             <>
-                                Seite {currentPage} von {pagingInfo.totalPages}
+                                Seite {pagingInfo.currentPage} von {pagingInfo.totalPages}
                             </>
                         )}
                         <sc.Button
