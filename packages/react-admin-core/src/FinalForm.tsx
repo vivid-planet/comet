@@ -10,6 +10,7 @@ import { ApolloConsumer } from "react-apollo";
 import { Form, FormRenderProps } from "react-final-form";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
+import { CorrectFormRenderProps, renderComponent } from "./finalFormRenderComponent";
 import { IStackApi, StackApiContext } from "./stack";
 import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirtyHandlerApi";
 import { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
@@ -82,12 +83,12 @@ class FinalForm extends React.Component<IProps> {
         );
     }
 
-    private renderForm = (formRenderProps: FormRenderProps) => {
+    private renderForm = (formRenderProps: CorrectFormRenderProps) => {
         this.formRenderProps = formRenderProps;
         const { classes } = this.props;
         return (
             <form onSubmit={this.submit}>
-                <sc.InnerForm>{this.props.children}</sc.InnerForm>
+                <sc.InnerForm>{renderComponent(formRenderProps)}</sc.InnerForm>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
                 <EditDialogApiContext.Consumer>
                     {editDialogApi => {
