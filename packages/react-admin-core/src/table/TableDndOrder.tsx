@@ -2,8 +2,8 @@ import RootRef from "@material-ui/core/RootRef";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import * as React from "react";
-import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropContext, DragSource, DropTarget, DropTargetMonitor } from "react-dnd-cjs";
-import HTML5Backend from "react-dnd-html5-backend-cjs";
+import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropContext, DragSource, DropTarget, DropTargetMonitor } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
 import { findDOMNode } from "react-dom";
 import { IRow, ITableProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "./Table";
 

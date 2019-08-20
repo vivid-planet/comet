@@ -10,6 +10,7 @@ import { ApolloConsumer } from "react-apollo";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
+import { CorrectFormRenderProps, renderComponent } from "./finalFormRenderComponent";
 import { IStackApi, StackApiContext } from "./stack";
 import { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirtyHandlerApi";
 import { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
@@ -78,12 +79,12 @@ class FinalForm<FormValues = AnyObject> extends React.Component<IProps<FormValue
         );
     }
 
-    private renderForm = (formRenderProps: FormRenderProps<FormValues>) => {
+    private renderForm = (formRenderProps: CorrectFormRenderProps<FormValues>) => {
         this.formRenderProps = formRenderProps;
         const { classes } = this.props;
         return (
             <form onSubmit={this.submit}>
-                <sc.InnerForm>{this.props.children}</sc.InnerForm>
+                <sc.InnerForm>{renderComponent(formRenderProps)}</sc.InnerForm>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
                 <EditDialogApiContext.Consumer>
                     {editDialogApi => {
@@ -179,13 +180,16 @@ class FinalForm<FormValues = AnyObject> extends React.Component<IProps<FormValue
 
         return Promise.resolve(ret)
             .then(data => {
-                this.formRenderProps.form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
-                if (stackApi) {
-                    // if this form is inside a Stack goBack after save success
-                    // do this after form.reset() to have a dirty form, so it won't ask for saving changes
-                    // TODO we probably shouldn't have a hard dependency to Stack
-                    stackApi.goBack();
-                }
+                // setTimeout is required because of https://github.com/final-form/final-form/pull/229
+                setTimeout(() => {
+                    this.formRenderProps.form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
+                    if (stackApi) {
+                        // if this form is inside a Stack goBack after save success
+                        // do this after form.reset() to have a dirty form, so it won't ask for saving changes
+                        // TODO we probably shouldn't have a hard dependency to Stack
+                        stackApi.goBack();
+                    }
+                });
                 return data;
             })
             .then(
