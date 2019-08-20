@@ -4,10 +4,10 @@ import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import SaveIcon from "@material-ui/icons/Save";
 import ApolloClient from "apollo-client";
-import { FORM_ERROR } from "final-form";
+import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
 import * as React from "react";
 import { ApolloConsumer } from "react-apollo";
-import { Form, FormRenderProps } from "react-final-form";
+import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
 import { CorrectFormRenderProps, renderComponent } from "./finalFormRenderComponent";
@@ -22,16 +22,14 @@ const styles = (theme: Theme) =>
         },
     });
 
-interface IProps extends IWithDirtyHandlerApiProps, IWithTableQueryProps {
+interface IProps<FormValues = AnyObject> extends IWithDirtyHandlerApiProps, IWithTableQueryProps, FormProps<FormValues> {
     mode: "edit" | "add";
-    onSubmit: (values: object) => any; // TODO return type Promise?
     classes: {
         saveButton: string;
     };
-    initialValues?: any;
 }
 
-class FinalForm extends React.Component<IProps> {
+class FinalForm<FormValues = AnyObject> extends React.Component<IProps<FormValues>> {
     private client: ApolloClient<any>;
     private formRenderProps: FormRenderProps;
     public componentDidMount() {
@@ -59,6 +57,7 @@ class FinalForm extends React.Component<IProps> {
     }
 
     public render() {
+        const { mode, onSubmit, classes, initialValues, dirtyHandlerApi, tableQuery, ...rest } = this.props;
         return (
             <ApolloConsumer>
                 {client => {
@@ -70,6 +69,7 @@ class FinalForm extends React.Component<IProps> {
                                     onSubmit={this.handleSubmit.bind(this, stackApi)}
                                     initialValues={this.props.initialValues}
                                     render={this.renderForm}
+                                    {...rest}
                                 />
                             )}
                         </StackApiContext.Consumer>
@@ -79,7 +79,7 @@ class FinalForm extends React.Component<IProps> {
         );
     }
 
-    private renderForm = (formRenderProps: CorrectFormRenderProps) => {
+    private renderForm = (formRenderProps: CorrectFormRenderProps<FormValues>) => {
         this.formRenderProps = formRenderProps;
         const { classes } = this.props;
         return (
@@ -156,9 +156,14 @@ class FinalForm extends React.Component<IProps> {
         });
     };
 
-    private handleSubmit = (stackApi: IStackApi | undefined, values: object) => {
-        let ret;
-        ret = this.props.onSubmit(values);
+    private handleSubmit = (
+        stackApi: IStackApi | undefined,
+        values: FormValues,
+        form: FormApi<FormValues>,
+        callback?: (errors?: SubmissionErrors) => void,
+    ) => {
+        let ret = this.props.onSubmit(values, form, callback);
+        if (ret === undefined) return ret;
         ret = Promise.resolve(ret).then(data => {
             if (this.props.mode === "add") {
                 if (this.props.tableQuery) {
