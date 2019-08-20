@@ -24,15 +24,11 @@ const styles = (theme: Theme) =>
 
 interface IProps extends IWithDirtyHandlerApiProps, IWithTableQueryProps {
     mode: "edit" | "add";
-    doUpdate?: (variables: object) => any; // TODO return type Promise?
-    doCreate?: (variables: object) => any; // TODO return type Promise?
-    onSubmit?: (values: object) => any; // TODO return type Promise?
-    submitVariables?: object;
+    onSubmit: (values: object) => any; // TODO return type Promise?
     classes: {
         saveButton: string;
     };
     initialValues?: any;
-    modifySubmitVariables?: <T = object>(variables: T, mode: "edit" | "add") => T;
 }
 
 class FinalForm extends React.Component<IProps> {
@@ -162,58 +158,21 @@ class FinalForm extends React.Component<IProps> {
 
     private handleSubmit = (stackApi: IStackApi | undefined, values: object) => {
         let ret;
-        if (this.props.onSubmit) {
-            ret = this.props.onSubmit(values);
-            ret = Promise.resolve(ret).then(data => {
-                if (this.props.mode === "add") {
-                    if (this.props.tableQuery) {
-                        // refetch TableQuery after adding
-                        this.client.query({
-                            query: this.props.tableQuery.api.getQuery(),
-                            variables: this.props.tableQuery.api.getVariables(),
-                            fetchPolicy: "network-only",
-                        });
-                    }
-                }
-                return data;
-            });
-        } else {
-            const submitVariables = this.props.submitVariables || {};
-            if (this.props.mode === "edit") {
-                if (!this.props.doUpdate) throw new Error("doUpdate is required with mode=edit");
-                let variables = { ...submitVariables, id: this.props.initialValues.id, body: { ...values } };
-                if (this.props.modifySubmitVariables) {
-                    variables = this.props.modifySubmitVariables(variables, this.props.mode);
-                }
-                ret = this.props.doUpdate({
-                    variables,
-                });
-            } else if (this.props.mode === "add") {
-                if (!this.props.doCreate) throw new Error("doCreate is required with mode=add");
-                const refetchQueries = [];
+        ret = this.props.onSubmit(values);
+        ret = Promise.resolve(ret).then(data => {
+            if (this.props.mode === "add") {
                 if (this.props.tableQuery) {
-                    refetchQueries.push({
+                    // refetch TableQuery after adding
+                    this.client.query({
                         query: this.props.tableQuery.api.getQuery(),
                         variables: this.props.tableQuery.api.getVariables(),
+                        fetchPolicy: "network-only",
                     });
                 }
-                let variables = { ...submitVariables, body: { ...values } };
-                if (this.props.modifySubmitVariables) {
-                    variables = this.props.modifySubmitVariables(variables, this.props.mode);
-                }
-                ret = this.props.doCreate({
-                    variables,
-                    refetchQueries,
-                    update: ({}, data: any) => {
-                        if (this.props.tableQuery) {
-                            this.props.tableQuery.api.onRowCreated(data.data.create.id);
-                        }
-                    },
-                });
-            } else {
-                throw new Error("mode prop is required");
             }
-        }
+            return data;
+        });
+
         return Promise.resolve(ret)
             .then(data => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
