@@ -12,7 +12,7 @@ export interface IWithMenu {
 export const MenuContext = React.createContext<IMenuContext>({
     open: false,
     toggleOpen: () => {
-        return undefined;
+        // nothing
     },
 });
 
