@@ -31,7 +31,6 @@ function Story() {
     return (
         <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
             <Switch>
-                aaa
                 <Route path="/foo1" render={() => <div>Foo 1</div>} />
                 <Route path="/foo2" render={() => <div>Foo 2</div>} />
                 <Route path="/foo4" render={() => <div>Foo 4</div>} />
