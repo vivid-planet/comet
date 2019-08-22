@@ -11,6 +11,7 @@ interface ITabProps extends TabProps {
     path: string;
     label: string;
     forceRender?: boolean;
+    tabLabel?: React.ReactNode;
     children: React.ReactNode;
 }
 export const Tab: React.SFC<ITabProps> = () => null;
@@ -71,8 +72,8 @@ class RouterTabs extends React.Component<IProps> {
                                                         indicatorColor={indicatorColor}
                                                     >
                                                         {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
-                                                            const { path, forceRender, children, ...restTabProps } = child.props;
-                                                            return <TabComponent {...restTabProps} />;
+                                                            const { path, forceRender, children, label, tabLabel, ...restTabProps } = child.props;
+                                                            return <TabComponent label={tabLabel ? tabLabel : label} {...restTabProps} />;
                                                         })}
                                                     </Tabs>
                                                 </AppBar>
