@@ -16,6 +16,7 @@
         "@vivid-planet/react-admin-form": "*",
         "@vivid-planet/react-admin-layout": "*",
         "@vivid-planet/react-admin-mui": "*",
+        "@vivid-planet/fetch-provider": "*",
         "apollo-client": "^2.6.3",
         "graphql": "^14.4.1",
         "graphql-tag": "^2.10.1",
