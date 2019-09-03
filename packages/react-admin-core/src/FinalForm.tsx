@@ -4,12 +4,13 @@ import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import SaveIcon from "@material-ui/icons/Save";
-import { FORM_ERROR } from "final-form";
+import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
 import * as React from "react";
-import { Form, FormRenderProps } from "react-final-form";
+import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
+import { CorrectFormRenderProps, renderComponent } from "./finalFormRenderComponent";
 import { StackApiContext } from "./stack";
 import { TableQueryContext } from "./table";
 
@@ -21,21 +22,14 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface IProps {
+interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
-    doUpdate?: (variables: object) => any; // TODO return type Promise?
-    doCreate?: (variables: object) => any; // TODO return type Promise?
-    onSubmit?: (values: object) => any; // TODO return type Promise?
-    submitVariables?: object;
     classes: {
         saveButton: string;
     };
-    initialValues?: any;
-    modifySubmitVariables?: <T = object>(variables: T, mode: "edit" | "add") => T;
-    children: React.ReactNode;
 }
 
-export function FinalForm(props: IProps) {
+export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const classes = useStyles();
     const client = useApolloClient();
     const dirtyHandler = React.useContext(DirtyHandlerApiContext);
@@ -70,12 +64,11 @@ export function FinalForm(props: IProps) {
 
     return <Form onSubmit={handleSubmit} initialValues={props.initialValues} render={renderForm} />;
 
-    function renderForm(frmRP: FormRenderProps) {
+    function renderForm(frmRP: CorrectFormRenderProps<FormValues>) {
         formRenderProps = frmRP;
-
         return (
             <form onSubmit={submit}>
-                <sc.InnerForm>{props.children}</sc.InnerForm>
+                <sc.InnerForm>{renderComponent(formRenderProps)}</sc.InnerForm>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
                 {editDialog && (
                     <>
@@ -135,60 +128,23 @@ export function FinalForm(props: IProps) {
         });
     }
 
-    function handleSubmit(values: object) {
-        let ret;
-        if (props.onSubmit) {
-            ret = props.onSubmit(values);
-            ret = Promise.resolve(ret).then(data => {
-                if (props.mode === "add") {
-                    if (tableQuery) {
-                        // refetch TableQuery after adding
-                        client.query({
-                            query: tableQuery.api.getQuery(),
-                            variables: tableQuery.api.getVariables(),
-                            fetchPolicy: "network-only",
-                        });
-                    }
-                }
-                return data;
-            });
-        } else {
-            const submitVariables = props.submitVariables || {};
-            if (props.mode === "edit") {
-                if (!props.doUpdate) throw new Error("doUpdate is required with mode=edit");
-                let variables = { ...submitVariables, id: props.initialValues.id, body: { ...values } };
-                if (props.modifySubmitVariables) {
-                    variables = props.modifySubmitVariables(variables, props.mode);
-                }
-                ret = props.doUpdate({
-                    variables,
-                });
-            } else if (props.mode === "add") {
-                if (!props.doCreate) throw new Error("doCreate is required with mode=add");
-                const refetchQueries = [];
+    function handleSubmit(values: FormValues, form: FormApi<FormValues>, callback?: (errors?: SubmissionErrors) => void) {
+        let ret = props.onSubmit(values, form, callback);
+        if (ret === undefined) return ret;
+        ret = Promise.resolve(ret).then(data => {
+            if (props.mode === "add") {
                 if (tableQuery) {
-                    refetchQueries.push({
+                    // refetch TableQuery after adding
+                    client.query({
                         query: tableQuery.api.getQuery(),
                         variables: tableQuery.api.getVariables(),
+                        fetchPolicy: "network-only",
                     });
                 }
-                let variables = { ...submitVariables, body: { ...values } };
-                if (props.modifySubmitVariables) {
-                    variables = props.modifySubmitVariables(variables, props.mode);
-                }
-                ret = props.doCreate({
-                    variables,
-                    refetchQueries,
-                    update: ({}, data: any) => {
-                        if (tableQuery) {
-                            tableQuery.api.onRowCreated(data.data.create.id);
-                        }
-                    },
-                });
-            } else {
-                throw new Error("mode prop is required");
             }
-        }
+            return data;
+        });
+
         return Promise.resolve(ret)
             .then(data => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229

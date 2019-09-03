@@ -4,7 +4,8 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import { debounce } from "debounce";
 import isEqual = require("lodash.isequal");
 import * as React from "react";
-import { Form, FormRenderProps, FormSpy, FormSpyRenderProps } from "react-final-form";
+import { AnyObject, Form, FormProps, FormSpy, FormSpyRenderProps } from "react-final-form";
+import { CorrectFormRenderProps, renderComponent } from "../finalFormRenderComponent";
 import * as sc from "./TableFilterFinalForm.sc";
 import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
 
@@ -45,17 +46,43 @@ class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
 
 const ExtendedAutoSave = withTableQueryContext(AutoSave);
 
-interface IProps {
+type Props<FormValues> = Omit<FormProps<FormValues>, "onSubmit"> & {
     modifySubmitVariables?: (variables: any) => any;
     headline?: string;
     resetButton?: boolean;
-}
+    onSubmit?: FormProps<FormValues>["onSubmit"];
+};
+
 // tslint:disable-next-line:max-classes-per-file
-export class TableFilterFinalForm extends React.Component<IProps> {
+export class TableFilterFinalForm<FormValues = AnyObject> extends React.Component<Props<FormValues>> {
     public render() {
-        return <Form onSubmit={this.handleSubmit} render={this.renderForm} />;
+        // remove render, children and component from forwardProps as we define render and those would interfere
+        const { modifySubmitVariables, headline, resetButton, render, children, component, ...forwardProps } = this.props;
+        return (
+            <Form
+                onSubmit={
+                    this.props.onSubmit
+                        ? this.props.onSubmit
+                        : () => {
+                              return;
+                          }
+                }
+                render={this.renderForm}
+                {...forwardProps}
+            />
+        );
     }
-    private renderForm = (formRenderProps: FormRenderProps) => {
+    private renderForm = (formRenderProps: CorrectFormRenderProps<FormValues>) => {
+        // remove render as this is defined by us and should not be contained in childFormRenderProps
+        const { render: ownRender, ...finalFormChildrenRenderProps } = formRenderProps;
+        const { render, children, component } = this.props;
+        // add render, children and component from own-props to childFormRenderProps as they are used to render the children
+        const completeFinalFormChildRenderProps = {
+            ...finalFormChildrenRenderProps,
+            render,
+            children,
+            component,
+        };
         return (
             <form>
                 {(this.props.headline || this.props.resetButton) && (
@@ -87,14 +114,11 @@ export class TableFilterFinalForm extends React.Component<IProps> {
                         </Grid>
                     </sc.FormHeader>
                 )}
-                {this.props.children}
+                {renderComponent<FormValues>(completeFinalFormChildRenderProps)}
                 <FormSpy subscription={{ values: true }}>
                     {renderProps => <ExtendedAutoSave {...renderProps} modifySubmitVariables={this.props.modifySubmitVariables} />}
                 </FormSpy>
             </form>
         );
-    };
-    private handleSubmit = () => {
-        return;
     };
 }

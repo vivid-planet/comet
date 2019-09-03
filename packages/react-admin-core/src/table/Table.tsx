@@ -59,6 +59,17 @@ export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITable
     );
 }
 
+const safeColumnGet = (row: any, path: string): string | number | null => {
+    const splitPath = path.split(".");
+    const nextRow = row[splitPath[0]];
+    if (!nextRow) return null;
+
+    if (splitPath.length === 1) return nextRow;
+
+    const remainingPath = splitPath.slice(1).join(".");
+    return safeColumnGet(nextRow, remainingPath);
+};
+
 export interface ITableColumnsProps<TRow extends IRow> {
     row: TRow;
     columns: Array<ITableColumn<TRow>>;
@@ -71,7 +82,7 @@ export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsP
                 if (column.visible === false) return null;
                 return (
                     <TableCell key={colIndex} {...column.cellProps}>
-                        {column.render ? column.render(row) : (row as any)[column.name]}
+                        {column.render ? column.render(row) : safeColumnGet(row, column.name)}
                     </TableCell>
                 );
             })}
