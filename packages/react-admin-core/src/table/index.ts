@@ -1,5 +1,5 @@
 // Export folders
-export * from "./pagingStrategy";
+export * from "./paging";
 
 // Export files
 export * from "./AddButton";
@@ -15,5 +15,7 @@ export * from "./TableQueryContext";
 
 export * from "./useTableQuery";
 export * from "./useTableQuerySort";
+export * from "./useTableQueryPaging";
+export * from "./useTableQueryFilter";
 export * from "./withDirtyHandlerApi";
 export * from "./withTableQueryContext";

@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
-import { createRestPagingActions, Table, TableQuery, useTableQuery } from "@vivid-planet/react-admin-core";
+import { createRestPagingActions, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@vivid-planet/react-admin-core";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
@@ -45,14 +45,15 @@ interface IVariables {
 }
 
 function Story() {
+    const pagingApi = useTableQueryPaging(1);
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
         variables: {
-            page: 1,
+            page: pagingApi.current,
         },
         resolveTableData: data => ({
             data: data.people.results.map(i => ({ ...i, id: i.url.match(/.*\/(\d+)\//)![1] })),
             totalCount: data.people.count,
-            pagingInfo: createRestPagingActions({
+            pagingInfo: createRestPagingActions(pagingApi, {
                 totalPages: Math.ceil(data.people.count / 10), // Don't calculate this in a real application
                 nextPage: data.people.next,
                 previousPage: data.people.previous,

@@ -1,5 +1,5 @@
-import { ITableQueryApi } from "../TableQueryContext";
-import { IPagingInfo } from "./PagingStrategy";
+import { IPagingApi } from "../useTableQueryPaging";
+import { IPagingInfo } from "./IPagingInfo";
 
 interface IRelayPagingData {
     pageInfo: {
@@ -9,23 +9,29 @@ interface IRelayPagingData {
         endCursor: string;
     };
 }
-export function createRelayPagingActions<TData extends IRelayPagingData>(data: TData): IPagingInfo {
+interface IRelayPagingVariables {
+    after?: string;
+    before?: string;
+}
+export function createRelayPagingActions<TData extends IRelayPagingData>(pagingApi: IPagingApi<IRelayPagingVariables>, data: TData): IPagingInfo {
     return {
         fetchNextPage:
             data.pageInfo && data.pageInfo.hasNextPage
-                ? (tableQuery: ITableQueryApi) => {
-                      tableQuery.changePage({
+                ? () => {
+                      pagingApi.changePage({
                           after: data.pageInfo.endCursor,
                       });
                   }
                 : undefined,
         fetchPreviousPage:
             data.pageInfo && data.pageInfo.hasPreviousPage
-                ? (tableQuery: ITableQueryApi) => {
-                      tableQuery.changePage({
+                ? () => {
+                      pagingApi.changePage({
                           before: data.pageInfo.startCursor,
                       });
                   }
                 : undefined,
+        currentPage: pagingApi.currentPage,
+        attachTableRef: pagingApi.attachTableRef,
     };
 }

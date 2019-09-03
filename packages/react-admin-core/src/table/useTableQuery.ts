@@ -3,13 +3,12 @@ import { QueryHookOptions, useQuery } from "@apollo/react-hooks";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
-import { IPagingInfo } from "./pagingStrategy";
+import { IPagingInfo } from "./paging";
 import { ITableQueryApi } from "./TableQueryContext";
 
 interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
     data?: TRow[];
     totalCount?: number;
-    currentPage?: number;
     pagingInfo?: IPagingInfo;
 }
 interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableData> extends QueryHookOptions<TData, TVariables> {
@@ -29,21 +28,11 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
     ): ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> {
         const { resolveTableData, selectionApi, variables, ...restOptions } = options;
 
-        const [filters, setFilters] = React.useState<object>({});
-        const [currentPage, setCurrentPage] = React.useState<number | undefined>(1);
-
-        // TODO:
-        // order: "asc" | "desc";
-        // sort?: string;
-
         const api: ITableQueryApi = {
-            changeFilters,
-            changePage,
             getVariables,
             getQuery: () => q,
             onRowCreated,
             onRowDeleted,
-            attachTableQueryRef,
         };
 
         const innerOptions = {
@@ -60,34 +49,9 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             ret.refetch();
         }, []);
 
-        let tableQueryRef: React.MutableRefObject<HTMLDivElement | undefined> | undefined;
-        function attachTableQueryRef(ref: any) {
-            tableQueryRef = ref;
-        }
-        function changePage(vars: object, page?: number) {
-            if (tableQueryRef && tableQueryRef.current) {
-                tableQueryRef.current.scrollIntoView();
-            }
-            return ret
-                .fetchMore({
-                    variables: vars,
-                    updateQuery: ({}, { fetchMoreResult }: { fetchMoreResult: any }) => {
-                        return fetchMoreResult;
-                    },
-                })
-                .then(data => {
-                    setCurrentPage(page);
-                    return data;
-                });
-        }
-
         function getVariables() {
-            const vars: any = { ...(options.variables as any), ...filters };
+            const vars: any = { ...(options.variables as any) };
             return vars;
-        }
-
-        function changeFilters(f: object) {
-            setFilters(f);
         }
 
         function onRowCreated(id: string) {
@@ -107,7 +71,6 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         }
 
         ret.tableData = resolveTableData(ret.data);
-        ret.tableData.currentPage = currentPage;
         return ret;
     }
     return useTableQueryInner;

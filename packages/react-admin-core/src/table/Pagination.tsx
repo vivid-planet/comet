@@ -4,18 +4,15 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
 import * as sc from "./Pagination.sc";
-import { IPagingInfo } from "./pagingStrategy/PagingStrategy";
-import { TableQueryContext } from "./TableQueryContext";
+import { IPagingInfo } from "./paging/IPagingInfo";
 
 interface IProps {
     totalCount: number;
-    currentPage?: number;
     pagingInfo: IPagingInfo;
     rowName?: string | ((count: number) => string);
 }
 
-export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, currentPage, pagingInfo, rowName }) => {
-    const tableQueryContext = React.useContext(TableQueryContext);
+export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingInfo, rowName }) => {
     if (typeof rowName === "function") {
         rowName = rowName(totalCount);
     }
@@ -29,14 +26,14 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, c
                         </Typography>
                     </Grid>
                     <Grid item>
-                        {pagingInfo.totalPages && (
+                        {pagingInfo.totalPages && pagingInfo.currentPage && (
                             <>
-                                Seite {currentPage} von {pagingInfo.totalPages}
+                                Seite {pagingInfo.currentPage} von {pagingInfo.totalPages}
                             </>
                         )}
                         <sc.Button
                             onClick={() => {
-                                if (tableQueryContext) pagingInfo.fetchPreviousPage!(tableQueryContext.api);
+                                pagingInfo.fetchPreviousPage!();
                             }}
                             disabled={!pagingInfo.fetchPreviousPage}
                         >
@@ -44,7 +41,7 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, c
                         </sc.Button>
                         <sc.Button
                             onClick={() => {
-                                if (tableQueryContext) pagingInfo.fetchNextPage!(tableQueryContext.api);
+                                pagingInfo.fetchNextPage!();
                             }}
                             disabled={!pagingInfo.fetchNextPage}
                         >

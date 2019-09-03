@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
-import { Table, TableFilterFinalForm, TableQuery, useTableQuery } from "@vivid-planet/react-admin-core";
+import { Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@vivid-planet/react-admin-core";
 import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admin-form";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
@@ -35,14 +35,16 @@ interface IQueryData {
     }>;
 }
 
-interface IVariables {
+interface IFilterValues {
     query: string;
 }
+interface IVariables extends IFilterValues {}
 
 function Story() {
+    const filterApi = useTableQueryFilter<IFilterValues>({ query: "" });
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
         variables: {
-            query: "",
+            ...filterApi.current,
         },
         resolveTableData: data => ({
             data: data.users,
@@ -54,7 +56,7 @@ function Story() {
         <TableQuery api={api} loading={loading} error={error}>
             {tableData && (
                 <>
-                    <TableFilterFinalForm>
+                    <TableFilterFinalForm filterApi={filterApi}>
                         <Field
                             name="query"
                             type="text"

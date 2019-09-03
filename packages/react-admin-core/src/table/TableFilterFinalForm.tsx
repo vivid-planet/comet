@@ -2,35 +2,31 @@ import { Grid, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { debounce } from "debounce";
+import { AnyObject } from "final-form";
 import isEqual = require("lodash.isequal");
 import * as React from "react";
-import { AnyObject, Form, FormProps, FormSpy, FormSpyRenderProps } from "react-final-form";
+import { Form, FormProps, FormSpy, FormSpyRenderProps } from "react-final-form";
 import { CorrectFormRenderProps, renderComponent } from "../finalFormRenderComponent";
 import * as sc from "./TableFilterFinalForm.sc";
-import { IWithTableQueryProps, withTableQueryContext } from "./withTableQueryContext";
+import { IFilterApi } from "./useTableQueryFilter";
 
-interface IAutoSaveProps extends IWithTableQueryProps, FormSpyRenderProps {
+interface IAutoSaveProps<FilterValues> extends FormSpyRenderProps {
     values: any;
-    modifySubmitVariables?: <T = object>(variables: T) => T;
+    filterApi: IFilterApi<FilterValues>;
 }
 interface IAutoSaveState {
     values: any;
 }
-class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
+class AutoSave<FilterValues> extends React.Component<IAutoSaveProps<FilterValues>, IAutoSaveState> {
     private valueChanged = debounce(() => {
-        let { values } = this.props;
+        const { values } = this.props;
         if (!isEqual(this.state.values, values)) {
             this.setState({ values });
-            if (this.props.tableQuery) {
-                if (this.props.modifySubmitVariables) {
-                    values = this.props.modifySubmitVariables({ ...values });
-                }
-                this.props.tableQuery.api.changeFilters(values);
-            }
+            this.props.filterApi.changeFilters(values);
         }
     }, 500);
 
-    constructor(props: IAutoSaveProps) {
+    constructor(props: IAutoSaveProps<FilterValues>) {
         super(props);
         this.state = { values: props.values };
     }
@@ -44,20 +40,18 @@ class AutoSave extends React.Component<IAutoSaveProps, IAutoSaveState> {
     }
 }
 
-const ExtendedAutoSave = withTableQueryContext(AutoSave);
-
-type Props<FormValues> = Omit<FormProps<FormValues>, "onSubmit"> & {
-    modifySubmitVariables?: (variables: any) => any;
+type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit"> & {
     headline?: string;
     resetButton?: boolean;
-    onSubmit?: FormProps<FormValues>["onSubmit"];
+    onSubmit?: FormProps<FilterValues>["onSubmit"];
+    filterApi: IFilterApi<FilterValues>;
 };
 
 // tslint:disable-next-line:max-classes-per-file
-export class TableFilterFinalForm<FormValues = AnyObject> extends React.Component<Props<FormValues>> {
+export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Component<Props<FilterValues>> {
     public render() {
         // remove render, children and component from forwardProps as we define render and those would interfere
-        const { modifySubmitVariables, headline, resetButton, render, children, component, ...forwardProps } = this.props;
+        const { headline, resetButton, render, children, component, ...forwardProps } = this.props;
         return (
             <Form
                 onSubmit={
@@ -72,7 +66,7 @@ export class TableFilterFinalForm<FormValues = AnyObject> extends React.Componen
             />
         );
     }
-    private renderForm = (formRenderProps: CorrectFormRenderProps<FormValues>) => {
+    private renderForm = (formRenderProps: CorrectFormRenderProps<FilterValues>) => {
         // remove render as this is defined by us and should not be contained in childFormRenderProps
         const { render: ownRender, ...finalFormChildrenRenderProps } = formRenderProps;
         const { render, children, component } = this.props;
@@ -114,10 +108,8 @@ export class TableFilterFinalForm<FormValues = AnyObject> extends React.Componen
                         </Grid>
                     </sc.FormHeader>
                 )}
-                {renderComponent<FormValues>(completeFinalFormChildRenderProps)}
-                <FormSpy subscription={{ values: true }}>
-                    {renderProps => <ExtendedAutoSave {...renderProps} modifySubmitVariables={this.props.modifySubmitVariables} />}
-                </FormSpy>
+                {renderComponent<FilterValues>(completeFinalFormChildRenderProps)}
+                <FormSpy subscription={{ values: true }}>{renderProps => <AutoSave {...renderProps} filterApi={this.props.filterApi} />}</FormSpy>
             </form>
         );
     };

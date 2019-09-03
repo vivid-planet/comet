@@ -1,4 +1,4 @@
-import { CircularProgress, RootRef } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 import { ApolloError } from "apollo-client";
 import * as React from "react";
 import * as sc from "./TableQuery.sc";
@@ -19,23 +19,19 @@ interface IProps {
 }
 
 export function TableQuery(props: IProps) {
-    const domRef = React.useRef<HTMLDivElement>();
-    props.api.attachTableQueryRef(domRef);
     return (
-        <RootRef rootRef={domRef}>
-            <TableQueryContext.Provider
-                value={{
-                    api: props.api,
-                }}
-            >
-                {props.loading && (
-                    <sc.ProgressOverlayContainer>
-                        <CircularProgress />
-                    </sc.ProgressOverlayContainer>
-                )}
-                {props.error && <p>Error :( {props.error.toString()}</p>}
-                {props.children}
-            </TableQueryContext.Provider>
-        </RootRef>
+        <TableQueryContext.Provider
+            value={{
+                api: props.api,
+            }}
+        >
+            {props.loading && (
+                <sc.ProgressOverlayContainer>
+                    <CircularProgress />
+                </sc.ProgressOverlayContainer>
+            )}
+            {props.error && <p>Error :( {props.error.toString()}</p>}
+            {props.children}
+        </TableQueryContext.Provider>
     );
 }
