@@ -3,3 +3,4 @@ export * from "./Context";
 export * from "./Item";
 export * from "./ItemRouterLink";
 export * from "./ItemAnchorLink";
+export * from "./Menu";

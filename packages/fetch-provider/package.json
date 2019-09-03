@@ -1,22 +1,14 @@
 {
-    "name": "@vivid-planet/react-admin-final-form-material-ui",
-    "version": "1.0.0-alpha.9",
+    "name": "@vivid-planet/fetch-provider",
+    "version": "1.0.0-alpha.1",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
-    "devDependencies": {
-        "@vivid-planet/material-ui-react-select": "^1.0.0-alpha.8"
-    },
     "peerDependencies": {
-        "@material-ui/core": "^4.1.3",
-        "@vivid-planet/material-ui-react-select": "^1.0.0-alpha.0",
-        "final-form": "^4.16.1",
         "react": "^16.8",
-        "react-dom": "^16.8",
-        "react-final-form": "^6.3.0",
-        "react-select": "^3.0.4"
+        "react-dom": "^16.8"
     },
     "scripts": {
         "prebuild": "rimraf lib",

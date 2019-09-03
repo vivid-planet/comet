@@ -9,7 +9,12 @@ export interface IWithMenu {
     menu: IMenuContext;
 }
 
-export const MenuContext = React.createContext<IMenuContext | null>(null);
+export const MenuContext = React.createContext<IMenuContext>({
+    open: false,
+    toggleOpen: () => {
+        // nothing
+    },
+});
 
 export const withMenu = <P extends object>(WrappedComponent: React.ComponentType<P & IWithMenu>): React.FunctionComponent<P> => {
     return (props: P) => {

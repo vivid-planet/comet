@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-core",
-    "version": "1.0.0-alpha.23",
+    "version": "1.0.0-alpha.25",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -27,8 +27,8 @@
         "graphql-tag": "^2.10.1",
         "history": "^4.9.0",
         "react": "^16.8",
-        "react-apollo": "^2.5.8",
-        "react-apollo-hooks": "^0.4.5",
+        "@apollo/react-hooks": "^0.1.0-beta.10",
+        "@apollo/react-common": "^0.1.0-beta.8",
         "react-dom": "^16.8",
         "react-final-form": "^6.3.0",
         "react-router": "^5.0.1",

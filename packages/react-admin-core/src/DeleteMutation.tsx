@@ -1,3 +1,4 @@
+import { useApolloClient } from "@apollo/react-hooks";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -5,87 +6,72 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import * as React from "react";
-import { withApollo, WithApolloClient } from "react-apollo";
-import { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
+import { TableQueryContext } from "./table";
 
 interface IProps {
     mutation: any;
     children: (action: (options: { variables: object }) => void, data: { loading: boolean; error: any }) => React.ReactNode;
 }
-interface IState {
-    dialogOpen: boolean;
-    loading: boolean;
-    pendingVariables?: object;
-}
-type IncludingInjectedProps = WithApolloClient<IProps> & IWithTableQueryProps;
-class DeleteMutation extends React.Component<IncludingInjectedProps, IState> {
-    constructor(props: IncludingInjectedProps) {
-        super(props);
+export function DeleteMutation(props: IProps) {
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [pendingVariables, setPendingVariables] = React.useState<object | undefined>(undefined);
+    const client = useApolloClient();
+    const tableQuery = React.useContext(TableQueryContext);
+    return (
+        <React.Fragment>
+            {props.children(
+                options => {
+                    setDialogOpen(true);
+                    setPendingVariables(options.variables);
+                },
+                {
+                    loading,
+                    error: null, // TODO
+                },
+            )}
 
-        this.state = {
-            dialogOpen: false,
-            loading: false,
-            pendingVariables: undefined,
-        };
-    }
-    public render() {
-        return (
-            <React.Fragment>
-                {this.props.children(
-                    options => {
-                        this.setState({ dialogOpen: true, pendingVariables: options.variables });
-                    },
-                    {
-                        loading: this.state.loading,
-                        error: null, // TODO
-                    },
-                )}
+            <Dialog open={dialogOpen} onClose={handleNoClick}>
+                <DialogTitle>Datensatz löschen?</DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleYesClick} color="primary" autoFocus={true} variant="contained">
+                        Ja
+                    </Button>
+                    <Button onClick={handleNoClick} color="primary">
+                        Nein
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </React.Fragment>
+    );
 
-                <Dialog open={this.state.dialogOpen} onClose={this.handleNoClick}>
-                    <DialogTitle>Datensatz löschen?</DialogTitle>
-                    <DialogActions>
-                        <Button onClick={this.handleYesClick} color="primary" autoFocus={true} variant="contained">
-                            Ja
-                        </Button>
-                        <Button onClick={this.handleNoClick} color="primary">
-                            Nein
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </React.Fragment>
-        );
-    }
-
-    private handleYesClick = () => {
-        this.setState({ dialogOpen: false });
-        this.setState({ loading: true });
+    function handleYesClick() {
+        setDialogOpen(false);
+        setLoading(true);
         const refetchQueries = [];
-        if (this.props.tableQuery) {
+        if (tableQuery) {
             refetchQueries.push({
-                query: this.props.tableQuery.api.getQuery(),
-                variables: this.props.tableQuery.api.getVariables(),
+                query: tableQuery.api.getQuery(),
+                variables: tableQuery.api.getVariables(),
             });
         }
-        this.props.client
+        client
             .mutate({
-                mutation: this.props.mutation,
-                variables: this.state.pendingVariables,
+                mutation: props.mutation,
+                variables: pendingVariables,
                 refetchQueries,
             })
             .then(() => {
-                this.setState({ loading: false });
-                if (this.state.pendingVariables) {
-                    if (this.props.tableQuery) {
-                        this.props.tableQuery.api.onRowDeleted();
+                setLoading(false);
+                if (pendingVariables) {
+                    if (tableQuery) {
+                        tableQuery.api.onRowDeleted();
                     }
                 }
             });
-    };
+    }
 
-    private handleNoClick = () => {
-        this.setState({ dialogOpen: false });
-    };
+    function handleNoClick() {
+        setDialogOpen(false);
+    }
 }
-
-const WrappedDeleteMutation = withTableQueryContext(withApollo(DeleteMutation));
-export { WrappedDeleteMutation as DeleteMutation };

@@ -6,10 +6,16 @@ interface IExampleRow {
     id: number;
     foo1: string;
     foo2: string;
+    nestedFoo: {
+        foo: string;
+    };
 }
 
 function Story() {
-    const data: IExampleRow[] = [{ id: 1, foo1: "blub", foo2: "blub" }, { id: 2, foo1: "blub", foo2: "blub" }];
+    const data: IExampleRow[] = [
+        { id: 1, foo1: "blub", foo2: "blub", nestedFoo: { foo: "bar" } },
+        { id: 2, foo1: "blub", foo2: "blub", nestedFoo: { foo: "bar" } },
+    ];
 
     return (
         <Table
@@ -28,6 +34,10 @@ function Story() {
                 {
                     name: "bar",
                     visible: false,
+                },
+                {
+                    name: "nestedFoo.foo",
+                    header: "Nested foo",
                 },
             ]}
         />
