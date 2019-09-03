@@ -6,8 +6,8 @@ export interface IDirtyHandlerApiBinding {
     reset: () => void;
 }
 export interface IDirtyHandlerApi {
-    registerBinding: (cmp: React.Component, binding: IDirtyHandlerApiBinding) => void;
-    unregisterBinding: (cmp: React.Component) => void;
+    registerBinding: (cmp: object, binding: IDirtyHandlerApiBinding) => void;
+    unregisterBinding: (cmp: object) => void;
     isBindingDirty: () => Promise<boolean>;
     resetBindings: () => Promise<void>;
     submitBindings: () => Promise<void>;

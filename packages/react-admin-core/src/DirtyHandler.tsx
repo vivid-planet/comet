@@ -5,7 +5,7 @@ import { RouterPrompt } from "./router";
 interface IProps {}
 
 interface IBinding {
-    obj: React.Component;
+    obj: object;
     binding: IDirtyHandlerApiBinding;
 }
 type Bindings = IBinding[];
@@ -93,10 +93,10 @@ export class DirtyHandler extends React.Component<IProps> {
         );
     }
 
-    private registerBinding(obj: React.Component, binding: IDirtyHandlerApiBinding) {
+    private registerBinding(obj: object, binding: IDirtyHandlerApiBinding) {
         this.bindings.push({ obj, binding });
     }
-    private unregisterBinding(obj: React.Component) {
+    private unregisterBinding(obj: object) {
         this.bindings = this.bindings.filter(item => item.obj !== obj);
     }
 

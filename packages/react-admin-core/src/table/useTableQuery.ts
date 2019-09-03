@@ -1,7 +1,7 @@
-import { OperationVariables } from "apollo-client";
+import { QueryResult } from "@apollo/react-common";
+import { QueryHookOptions, useQuery } from "@apollo/react-hooks";
 import { DocumentNode } from "graphql";
 import * as React from "react";
-import { QueryHookOptions, QueryHookResult, useQuery } from "react-apollo-hooks";
 import { ISelectionApi } from "../SelectionApi";
 import { IPagingInfo } from "./pagingStrategy";
 import { ITableQueryApi } from "./TableQueryContext";
@@ -12,31 +12,14 @@ interface ITableData<TRow extends { id: string | number } = { id: string | numbe
     currentPage?: number;
     pagingInfo?: IPagingInfo;
 }
-interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableData, TCache = object> extends QueryHookOptions<TVariables, TCache> {
+interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableData> extends QueryHookOptions<TData, TVariables> {
     resolveTableData: (data: TData) => TTableData;
     selectionApi?: ISelectionApi;
 }
 
-interface ITableQueryHookResult<TData, TVariables, TTableData extends ITableData> extends QueryHookResult<TData, TVariables> {
+interface ITableQueryHookResult<TData, TVariables, TTableData extends ITableData> extends QueryResult<TData, TVariables> {
     tableData?: TTableData;
     api: ITableQueryApi;
-}
-
-// works around https://github.com/trojanowski/react-apollo-hooks/issues/117
-function useQueryKeepDataDuringLoad<TData = any, TVariables = OperationVariables, TCache = object>(
-    q: DocumentNode,
-    options?: QueryHookOptions<TVariables, TCache>,
-): QueryHookResult<TData, TVariables> {
-    const [notNullData, setNotNullData] = React.useState<TData>();
-    const ret = useQuery(q, options);
-
-    React.useEffect(() => {
-        if (ret.data && !ret.loading) {
-            setNotNullData(ret.data);
-        }
-    }, [ret.data]);
-
-    return { ...ret, data: notNullData };
 }
 
 export function useTableQuery<TInnerData, TInnerVariables>() {
@@ -69,7 +52,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             variables: getVariables(),
         };
         const ret: ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> = {
-            ...useQueryKeepDataDuringLoad<TInnerData, TInnerVariables>(q, innerOptions),
+            ...useQuery<TInnerData, TInnerVariables>(q, innerOptions),
             api,
         };
 
