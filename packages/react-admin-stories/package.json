@@ -21,8 +21,8 @@
         "graphql": "^14.4.1",
         "graphql-tag": "^2.10.1",
         "react": "^16.8",
-        "@apollo/react-common": "3.0.0",
-        "@apollo/react-hooks": "3.0.0",
+        "@apollo/react-common": "^3.0.0",
+        "@apollo/react-hooks": "^3.0.0",
         "react-dom": "^16.8",
         "react-final-form": "^6.3.0"
     },
