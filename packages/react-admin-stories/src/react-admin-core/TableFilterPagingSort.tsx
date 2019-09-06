@@ -1,3 +1,4 @@
+import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
 import {
     createRestPagingActions,
@@ -17,7 +18,6 @@ import { ApolloLink } from "apollo-link";
 import { RestLink } from "apollo-link-rest";
 import gql from "graphql-tag";
 import * as React from "react";
-import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 
 const gqlRest = gql;
 
@@ -185,6 +185,6 @@ storiesOf("react-admin-core", module)
             cache,
         });
 
-        return <ApolloHooksProvider client={client}>{story()}</ApolloHooksProvider>;
+        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
     })
     .add("Table Filter Paging Sort", () => <Story />);
