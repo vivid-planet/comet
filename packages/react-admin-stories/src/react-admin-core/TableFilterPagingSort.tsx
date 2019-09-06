@@ -158,15 +158,13 @@ storiesOf("react-admin-core", module)
                 uri: "https://jsonplaceholder.typicode.com/",
                 responseTransformer: async response => {
                     const links: IResponseLinks = {};
-                    response.headers
-                        .get("link")
-                        .match(/<(.*?)>; rel="(.*?)"/g)
-                        .forEach((i: string) => {
-                            const m = i.match(/<(.*?)>; rel="(.*?)"/);
-                            if (m) {
-                                links[m[2] as keyof IResponseLinks] = m[1];
-                            }
-                        });
+                    const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];
+                    linkMatches.forEach((i: string) => {
+                        const m = i.match(/<(.*?)>; rel="(.*?)"/);
+                        if (m) {
+                            links[m[2] as keyof IResponseLinks] = m[1];
+                        }
+                    });
                     return {
                         data: await response.json(),
                         meta: {
