@@ -14,14 +14,11 @@ export function createFetch(options: ICreateFetchOptions) {
         if (options.interceptHeaders) await options.interceptHeaders(init.headers);
 
         // make sure we deal with a Request object even if we got a URL string
-        const req = input instanceof Request ? input : new Request(input);
-
-        let modifiedUrl = req.url;
-        if (options.baseUrl && !isUrlAbsolute(modifiedUrl)) {
-            modifiedUrl = options.baseUrl + modifiedUrl;
+        if (options.baseUrl && typeof input === "string" && !isUrlAbsolute(input)) {
+            input = options.baseUrl + input;
         }
-        const modifiedRequest = new Request(modifiedUrl, req);
-        return fetch(modifiedRequest, init);
+        const req = new Request(input, init);
+        return fetch(req, init);
     }
     return appFetch;
 }
