@@ -4,13 +4,10 @@ import DateRangeIcon from "@material-ui/icons/DateRange";
 import { LocaleContext } from "@vivid-planet/react-admin-date-fns";
 import { styled } from "@vivid-planet/react-admin-mui";
 import { format } from "date-fns";
-import * as de from "date-fns/locale/de";
 import * as React from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { FieldRenderProps } from "react-final-form";
 import { StyledInput } from "./Input";
-
-registerLocale("de", de);
 
 const ExtendedStyledInput = styled(StyledInput)<InputBaseProps>`
     & input {
@@ -63,7 +60,7 @@ export const DateRange: React.FunctionComponent<InputBaseProps & FieldRenderProp
             >
                 <DatePicker
                     inline
-                    locale="de"
+                    locale={locale}
                     selected={startDate}
                     selectsStart
                     startDate={startDate || undefined}
@@ -78,7 +75,7 @@ export const DateRange: React.FunctionComponent<InputBaseProps & FieldRenderProp
                 />
                 <DatePicker
                     inline
-                    locale="de"
+                    locale={locale}
                     selected={endDate}
                     selectsEnd
                     startDate={startDate || undefined}

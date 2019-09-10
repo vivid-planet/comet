@@ -1,14 +1,13 @@
 import { InputBaseProps } from "@material-ui/core/InputBase";
+import { LocaleContext } from "@vivid-planet/react-admin-date-fns";
 import { format, isValid, parse, parseISO } from "date-fns";
-import * as de from "date-fns/locale/de";
 import * as React from "react";
-import DatePickerOrig, { ReactDatePickerProps, registerLocale } from "react-datepicker";
+import DatePickerOrig, { ReactDatePickerProps } from "react-datepicker";
 // tslint:disable-next-line:no-submodule-imports
 import "react-datepicker/dist/react-datepicker.css";
 import { FieldRenderProps } from "react-final-form";
 import * as sc from "./DatePicker.sc";
 import { StyledInput } from "./Input";
-registerLocale("de", de);
 
 const onChangeAdapter = (origOnChange: <T>(event: React.ChangeEvent<T> | any) => void, valueFormat: string, date?: Date) => {
     origOnChange(date && format(date, valueFormat));
@@ -25,6 +24,7 @@ class DPInput extends React.Component<InputBaseProps> {
 }
 
 export const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...rest }) => {
+    const locale = React.useContext(LocaleContext);
     const inputProps = {
         style: {
             width,
@@ -47,7 +47,7 @@ export const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, on
     return (
         <sc.DatePickerRoot>
             <DatePickerOrig
-                locale="de"
+                locale={locale}
                 selected={parsedValue}
                 onChange={onChangeAdapter.bind(this, onChange, valueFormat)}
                 customInput={<DPInput {...inputProps} />}
