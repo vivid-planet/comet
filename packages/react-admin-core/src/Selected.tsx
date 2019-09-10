@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/react-hooks";
 import { CircularProgress } from "@material-ui/core";
+import { DocumentNode } from "graphql";
 import * as React from "react";
 import styled from "styled-components";
 
@@ -7,7 +8,7 @@ interface IProps {
     selectionMode: "edit" | "add";
     selectedId?: string;
     rows?: Array<{ id: string | number }>;
-    query?: any;
+    query?: DocumentNode;
     dataAccessor?: string;
     children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
 }
@@ -22,10 +23,12 @@ export function Selected(props: IProps) {
     if (props.rows) {
         row = props.rows.find(i => String(i.id) === String(props.selectedId)); // compare as strings as selectedId might come from url
     }
-    const queryResult = useQuery(props.query, { variables: { id: props.selectedId } });
+    const queryResult = props.query ? useQuery(props.query, { variables: { id: props.selectedId } }) : undefined;
 
-    // console.log(props.selectionMode, props.selectedId, row, props.rows);
     if (props.selectionMode === "edit" && !row) {
+        if (!props.query || !queryResult) {
+            return null;
+        }
         if (queryResult.loading || !queryResult.data) {
             return (
                 <ProgressContainer>
@@ -37,7 +40,7 @@ export function Selected(props: IProps) {
         if (!props.dataAccessor) {
             throw new Error("dataChild prop is required");
         }
-        return props.children(queryResult.data[props.dataAccessor], { selectionMode: "edit" });
+        return <>{props.children(queryResult.data[props.dataAccessor], { selectionMode: "edit" })}</>;
     } else {
         return (
             <React.Fragment>
