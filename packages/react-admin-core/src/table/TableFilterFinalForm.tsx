@@ -5,8 +5,8 @@ import { debounce } from "debounce";
 import { AnyObject } from "final-form";
 import isEqual = require("lodash.isequal");
 import * as React from "react";
-import { Form, FormProps, FormSpy, FormSpyRenderProps } from "react-final-form";
-import { CorrectFormRenderProps, renderComponent } from "../finalFormRenderComponent";
+import { Form, FormProps, FormRenderProps, FormSpy, FormSpyRenderProps } from "react-final-form";
+import { renderComponent } from "../finalFormRenderComponent";
 import * as sc from "./TableFilterFinalForm.sc";
 import { IFilterApi } from "./useTableQueryFilter";
 
@@ -66,17 +66,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
             />
         );
     }
-    private renderForm = (formRenderProps: CorrectFormRenderProps<FilterValues>) => {
-        // remove render as this is defined by us and should not be contained in childFormRenderProps
-        const { render: ownRender, ...finalFormChildrenRenderProps } = formRenderProps;
-        const { render, children, component } = this.props;
-        // add render, children and component from own-props to childFormRenderProps as they are used to render the children
-        const completeFinalFormChildRenderProps = {
-            ...finalFormChildrenRenderProps,
-            render,
-            children,
-            component,
-        };
+    private renderForm = (formRenderProps: FormRenderProps<FilterValues>) => {
         return (
             <form>
                 {(this.props.headline || this.props.resetButton) && (
@@ -108,7 +98,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                         </Grid>
                     </sc.FormHeader>
                 )}
-                {renderComponent<FilterValues>(completeFinalFormChildRenderProps)}
+                {renderComponent(this.props, formRenderProps)}
                 <FormSpy subscription={{ values: true }}>{renderProps => <AutoSave {...renderProps} filterApi={this.props.filterApi} />}</FormSpy>
             </form>
         );

@@ -10,7 +10,7 @@ import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
-import { CorrectFormRenderProps, renderComponent } from "./finalFormRenderComponent";
+import { renderComponent } from "./finalFormRenderComponent";
 import { StackApiContext } from "./stack";
 import { TableQueryContext } from "./table";
 
@@ -24,9 +24,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
-    classes: {
-        saveButton: string;
-    };
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -36,10 +33,10 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const stackApi = React.useContext(StackApiContext);
     const editDialog = React.useContext(EditDialogApiContext);
     const tableQuery = React.useContext(TableQueryContext);
-    let formRenderProps: FormRenderProps | undefined;
+    let formRenderProps: FormRenderProps<FormValues> | undefined;
 
+    const ref = React.useRef();
     React.useEffect(() => {
-        const ref = React.useRef();
         if (dirtyHandler) {
             dirtyHandler.registerBinding(ref, {
                 isDirty: () => {
@@ -64,11 +61,20 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
     return <Form onSubmit={handleSubmit} initialValues={props.initialValues} render={renderForm} />;
 
-    function renderForm(frmRP: CorrectFormRenderProps<FormValues>) {
+    function renderForm(frmRP: FormRenderProps<FormValues>) {
         formRenderProps = frmRP;
         return (
             <form onSubmit={submit}>
-                <sc.InnerForm>{renderComponent(formRenderProps)}</sc.InnerForm>
+                <sc.InnerForm>
+                    {renderComponent<FormValues>(
+                        {
+                            children: props.children,
+                            component: props.component,
+                            render: props.render,
+                        },
+                        formRenderProps,
+                    )}
+                </sc.InnerForm>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
                 {editDialog && (
                     <>
