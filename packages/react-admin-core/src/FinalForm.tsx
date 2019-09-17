@@ -76,7 +76,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     )}
                 </sc.InnerForm>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
-                {editDialog && (
+                {!editDialog && (
                     <>
                         {formRenderProps.submitting && <CircularProgress />}
                         {!formRenderProps.submitting && (
