@@ -9,7 +9,7 @@ export interface IMasterLayoutProps extends WithStyles<typeof styles> {
     children: React.ReactNode;
     menuComponent: React.ComponentType;
     headerComponent?: React.ComponentType;
-    hideToolbarMenuIcon?: boolean | null;
+    hideToolbarMenuIcon?: boolean;
 }
 
 function MasterLayout(props: IMasterLayoutProps) {
