@@ -49,6 +49,7 @@ const styles = (theme: Theme) =>
             fontSize: 16,
             overflow: "hidden",
             textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
         },
         placeholder: {
             position: "absolute",
