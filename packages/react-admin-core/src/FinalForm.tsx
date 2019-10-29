@@ -59,7 +59,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         };
     }, [dirtyHandler]);
 
-    return <Form onSubmit={handleSubmit} initialValues={props.initialValues} render={renderForm} validate={props.validate} />;
+    return <Form {...props} onSubmit={handleSubmit} render={renderForm} />;
 
     function renderForm(frmRP: FormRenderProps<FormValues>) {
         formRenderProps = frmRP;
