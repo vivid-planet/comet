@@ -14,7 +14,7 @@ interface IDateRangePickerProps extends FieldRenderProps<IDateRange, HTMLElement
     isClearable?: boolean;
 }
 
-const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & InputBaseProps> = ({ meta, input, innerRef, ...props }) => {
+export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & InputBaseProps> = ({ meta, input, innerRef, ...props }) => {
     moment.locale("de");
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
     const start = input.value.start ? moment(input.value.start) : moment();
@@ -43,5 +43,3 @@ const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & InputBase
         </sc.DateRangePickerWrapper>
     );
 };
-
-export default DateRangePicker;
