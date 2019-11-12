@@ -1,0 +1,33 @@
+{
+    "name": "@vivid-planet/react-daterange-picker",
+    "version": "1.0.0-alpha.1",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib"
+    ],
+    "dependencies": {
+        "moment": "^2.24.0",
+        "react-dates": "^21.3.2"
+    },
+    "devDependencies": {
+        "@types/react-dates": "^17.1.5",
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.13"
+    },
+    "peerDependencies": {
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.1",
+        "react": "^16.8",
+        "react-final-form": "^6.3.0"
+    },
+    "scripts": {
+        "prebuild": "rimraf lib",
+        "build": "tsc --project ./tsconfig.json",
+        "start": "tsc --project ./tsconfig.json --watch",
+        "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
+        "prepare": "npm run build"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "license": "BSD-2-Clause"
+}
