@@ -1,3 +1,4 @@
+import { InputBaseProps } from "@material-ui/core/InputBase";
 import * as moment from "moment";
 import * as React from "react";
 import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
@@ -9,15 +10,15 @@ interface IDateRange {
     end: Date | null;
 }
 
-interface IDateRangePickerProps extends FieldRenderProps<IDateRange, HTMLInputElement> {
+interface IDateRangePickerProps extends FieldRenderProps<IDateRange, HTMLElement> {
     isClearable?: boolean;
 }
 
-const DateRangePicker: React.FunctionComponent<IDateRangePickerProps> = props => {
+const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & InputBaseProps> = ({ meta, input, innerRef, ...props }) => {
     moment.locale("de");
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
-    const start = props.input.value.start ? moment(props.input.value.start) : moment();
-    const end = props.input.value.end ? moment(props.input.value.end) : null;
+    const start = input.value.start ? moment(input.value.start) : moment();
+    const end = input.value.end ? moment(input.value.end) : null;
 
     return (
         <sc.DateRangePickerWrapper>
@@ -29,7 +30,7 @@ const DateRangePicker: React.FunctionComponent<IDateRangePickerProps> = props =>
                 endDatePlaceholderText=""
                 endDateId="end_date_id"
                 onDatesChange={({ startDate, endDate }: { startDate: moment.Moment | null; endDate: moment.Moment | null }) => {
-                    props.input.onChange({ start: startDate ? startDate.toDate() : null, end: endDate ? endDate.toDate() : null });
+                    input.onChange({ start: startDate ? startDate.toDate() : null, end: endDate ? endDate.toDate() : null });
                 }}
                 focusedInput={focusedInputField}
                 onFocusChange={setFocusedInputField}

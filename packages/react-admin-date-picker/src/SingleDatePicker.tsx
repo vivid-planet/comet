@@ -8,10 +8,10 @@ interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     width?: string;
 }
 
-const SingleDatePicker: React.FunctionComponent<IProps> = props => {
+export const SingleDatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...rest }) => {
     moment.locale("de");
     const [focused, setFocus] = React.useState();
-    const selectedDate = props.input.value ? moment(props.input.value) : moment();
+    const selectedDate = value ? moment(value) : moment();
 
     return (
         <sc.SingleDatePickerWrapper>
@@ -19,7 +19,7 @@ const SingleDatePicker: React.FunctionComponent<IProps> = props => {
                 date={selectedDate}
                 id="single_date_picker"
                 onDateChange={(date: moment.Moment) => {
-                    props.input.onChange(date ? date.toDate() : null);
+                    onChange(date ? date.toDate() : null);
                 }}
                 focused={focused}
                 onFocusChange={setFocus}
@@ -30,9 +30,9 @@ const SingleDatePicker: React.FunctionComponent<IProps> = props => {
                 numberOfMonths={1}
                 showDefaultInputIcon
                 inputIconPosition="after"
+                {...restInput}
+                {...rest}
             />
         </sc.SingleDatePickerWrapper>
     );
 };
-
-export default SingleDatePicker;
