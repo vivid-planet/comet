@@ -2,6 +2,7 @@ import * as moment from "moment";
 import * as React from "react";
 import { SingleDatePicker as AirBNBDatePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
+import { setMomentLocale } from "./moment";
 import * as sc from "./SingleDatePicker.sc";
 
 interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
@@ -9,11 +10,13 @@ interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     colorSelected?: string;
     colorHover?: string;
     colorHoverSelected?: string;
+    locale?: string;
 }
 
-export const SingleDatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...rest }) => {
+export const SingleDatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...props }) => {
+    const locale = setMomentLocale(props.locale);
     const [focused, setFocus] = React.useState();
-    const selectedDate = value ? moment(value) : moment();
+    const selectedDate = value ? moment(value) : locale;
 
     return (
         <sc.SingleDatePickerWrapper>
@@ -33,7 +36,7 @@ export const SingleDatePicker: React.FunctionComponent<IProps> = ({ input: { val
                 showDefaultInputIcon
                 inputIconPosition="after"
                 {...restInput}
-                {...rest}
+                {...props}
             />
         </sc.SingleDatePickerWrapper>
     );

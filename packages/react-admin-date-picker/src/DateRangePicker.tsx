@@ -4,6 +4,7 @@ import * as React from "react";
 import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
 import * as sc from "./DateRangePicker.sc";
+import { setMomentLocale } from "./moment";
 
 interface IDateRange {
     start: Date | null;
@@ -17,11 +18,13 @@ interface IDateRangePickerProps extends FieldRenderProps<IDateRange, HTMLElement
     colorDaysBetween?: string;
     colorHover?: string;
     colorHoverSelected?: string;
+    locale?: string;
 }
 
 export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & InputBaseProps> = ({ meta, input, innerRef, ...props }) => {
+    const locale = setMomentLocale(props.locale);
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
-    const start = input.value.start ? moment(input.value.start) : moment();
+    const start = input.value.start ? moment(input.value.start) : locale;
     const end = input.value.end ? moment(input.value.end) : null;
 
     return (
@@ -33,7 +36,7 @@ export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & In
         >
             <AirBNBDateRangePicker
                 startDate={start}
-                startDatePlaceholderText={String(moment().format("L"))}
+                startDatePlaceholderText={String(locale.format("L"))}
                 startDateId="start_date_id"
                 endDate={end}
                 endDatePlaceholderText=""

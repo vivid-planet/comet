@@ -2,15 +2,16 @@ import { storiesOf } from "@storybook/react";
 import * as moment from "moment";
 import * as React from "react";
 import { SingleDatePicker as AirBNBDatePicker } from "react-dates";
+import { setMomentLocale } from "./moment";
 import * as sc from "./Picker.sc";
 
 const Story = () => {
-    moment.locale("de");
+    const locale = setMomentLocale();
     const [focusedField, setFocus] = React.useState<boolean | null>(false);
-    const [pickedDate, setPickedDate] = React.useState<moment.Moment | null>(moment());
+    const [pickedDate, setPickedDate] = React.useState<moment.Moment | null>(locale);
 
     return (
-        <sc.SingleDatePickerWrapper colorSelectedDate={"#000"}>
+        <sc.SingleDatePickerWrapper>
             <AirBNBDatePicker
                 date={pickedDate}
                 id="single_date_picker"

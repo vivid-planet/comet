@@ -2,19 +2,20 @@ import { storiesOf } from "@storybook/react";
 import * as moment from "moment";
 import * as React from "react";
 import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
+import { setMomentLocale } from "./moment";
 import * as sc from "./Picker.sc";
 
 const Story = () => {
-    moment.locale("de");
+    const locale = setMomentLocale();
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
-    const [pickedStartDate, setPickedStartDate] = React.useState<moment.Moment | null>(moment());
+    const [pickedStartDate, setPickedStartDate] = React.useState<moment.Moment | null>(locale);
     const [pickedEndDate, setPickedEndDate] = React.useState<moment.Moment | null>(null);
 
     return (
         <sc.DateRangePickerWrapper>
             <AirBNBDateRangePicker
                 startDate={pickedStartDate}
-                startDatePlaceholderText={String(moment().format("L"))}
+                startDatePlaceholderText={String(locale.format("L"))}
                 startDateId="start_date"
                 endDate={pickedEndDate}
                 endDatePlaceholderText=""
