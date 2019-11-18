@@ -4,7 +4,14 @@ import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 /* tslint:enable */
 
-export const DateRangePickerWrapper = styled.div`
+interface IColorProps {
+    colorSelectedDate?: string;
+    colorDaysBetween?: string;
+    colorHover?: string;
+    colorHoverSelected?: string;
+}
+
+export const DateRangePickerWrapper = styled.div<IColorProps>`
     .DateRangePickerInput_clearDates__small {
         display: flex;
     }
@@ -18,21 +25,21 @@ export const DateRangePickerWrapper = styled.div`
     }
 
     .CalendarDay__selected_span {
-        background: #7d98b0;
+        background: ${props => (props.colorDaysBetween ? props.colorDaysBetween : "#7d98b0")};
         color: white;
     }
 
     .CalendarDay__selected_span:hover {
-        background: #607384;
+        background: ${props => (props.colorHoverSelected ? props.colorHoverSelected : "#607384")};
     }
 
     .CalendarDay__selected {
-        background: #607384;
+        background: ${props => (props.colorSelectedDate ? props.colorSelectedDate : "#607384")};
         color: white;
     }
 
     .CalendarDay__selected:hover {
-        background: #607384;
+        background: ${props => (props.colorHoverSelected ? props.colorHoverSelected : "#607384")};
     }
 
     td {
@@ -48,36 +55,27 @@ export const DateRangePickerWrapper = styled.div`
     }
 
     .CalendarDay__hovered_span {
-        background-color: #7d98b0;
+        background-color: ${props => (props.colorDaysBetween ? props.colorDaysBetween : "#7d98b0")};
         color: white;
     }
 
     .CalendarDay__hovered_span:hover {
-        background-color: #607384;
+        background-color: ${props => (props.colorHoverSelected ? props.colorHoverSelected : "#607384")};
     }
 `;
 
-export const SingleDatePickerWrapper = styled.div`
+export const SingleDatePickerWrapper = styled.div<IColorProps>`
     .DayPickerNavigation_button__default {
         border: none;
     }
 
-    .CalendarDay__selected_span {
-        background: #7d98b0;
-        color: white;
-    }
-
-    .CalendarDay__selected_span:hover {
-        background: #607384;
-    }
-
     .CalendarDay__selected {
-        background: #607384;
+        background: ${props => (props.colorSelectedDate ? props.colorSelectedDate : "#607384")};
         color: white;
     }
 
     .CalendarDay__selected:hover {
-        background: #607384;
+        background: ${props => (props.colorHoverSelected ? props.colorHoverSelected : "#607384")};
     }
 
     td {
@@ -90,14 +88,5 @@ export const SingleDatePickerWrapper = styled.div`
         border: none;
         border-radius: 50%;
         color: white;
-    }
-
-    .CalendarDay__hovered_span {
-        background-color: #7d98b0;
-        color: white;
-    }
-
-    .CalendarDay__hovered_span:hover {
-        background-color: #607384;
     }
 `;

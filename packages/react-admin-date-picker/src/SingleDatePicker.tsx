@@ -6,10 +6,12 @@ import * as sc from "./SingleDatePicker.sc";
 
 interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     width?: string;
+    colorSelected?: string;
+    colorHover?: string;
+    colorHoverSelected?: string;
 }
 
 export const SingleDatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...rest }) => {
-    moment.locale("de");
     const [focused, setFocus] = React.useState();
     const selectedDate = value ? moment(value) : moment();
 

@@ -10,7 +10,7 @@ const Story = () => {
     const [pickedDate, setPickedDate] = React.useState<moment.Moment | null>(moment());
 
     return (
-        <sc.SingleDatePickerWrapper>
+        <sc.SingleDatePickerWrapper colorSelectedDate={"#000"}>
             <AirBNBDatePicker
                 date={pickedDate}
                 id="single_date_picker"

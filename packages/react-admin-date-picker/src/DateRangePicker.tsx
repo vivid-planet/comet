@@ -12,16 +12,25 @@ interface IDateRange {
 
 interface IDateRangePickerProps extends FieldRenderProps<IDateRange, HTMLElement> {
     isClearable?: boolean;
+    colorSelectedStartDate?: string;
+    colorSelectedEndDate?: string;
+    colorDaysBetween?: string;
+    colorHover?: string;
+    colorHoverSelected?: string;
 }
 
 export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & InputBaseProps> = ({ meta, input, innerRef, ...props }) => {
-    moment.locale("de");
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
     const start = input.value.start ? moment(input.value.start) : moment();
     const end = input.value.end ? moment(input.value.end) : null;
 
     return (
-        <sc.DateRangePickerWrapper>
+        <sc.DateRangePickerWrapper
+            colorSelectedDate={props.colorSelectedStartDate}
+            colorDaysBetween={props.colorDaysBetween}
+            colorHover={props.colorHover}
+            colorHoverSelected={props.colorHoverSelected}
+        >
             <AirBNBDateRangePicker
                 startDate={start}
                 startDatePlaceholderText={String(moment().format("L"))}
