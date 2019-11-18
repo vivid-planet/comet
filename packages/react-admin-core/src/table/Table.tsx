@@ -122,6 +122,7 @@ export interface ITableProps<TRow extends IRow> {
     hideTableHead?: boolean;
     columns: Array<ITableColumn<TRow>>;
     sortApi?: ISortApi;
+    pagination?: "bottom" | "top" | "both" | "none";
 }
 
 function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRowProps<TRow>) {
@@ -148,11 +149,24 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
             this.props.pagingInfo.attachTableRef(this.domRef);
         }
 
+        const pagination = this.props.pagination || "bottom";
+        const shouldRenderTopPagination = pagination === "top" || pagination === "both";
+        const shouldRenderBottomPagination = pagination === "bottom" || pagination === "both";
+
         return (
             <RootRef rootRef={this.domRef}>
                 <MuiTable>
                     {!this.props.hideTableHead && (
                         <sc.StyledTableHead>
+                            {this.props.pagingInfo && shouldRenderTopPagination && (
+                                <TableRow>
+                                    <TablePagination
+                                        totalCount={this.props.totalCount}
+                                        pagingInfo={this.props.pagingInfo}
+                                        rowName={this.props.rowName}
+                                    />
+                                </TableRow>
+                            )}
                             {renderHeadTableRow({
                                 columns: this.props.columns,
                                 sortApi: this.props.sortApi,
@@ -181,7 +195,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                             });
                         })}
                     </TableBody>
-                    {this.props.pagingInfo && (
+                    {this.props.pagingInfo && shouldRenderBottomPagination && (
                         <TableFooter>
                             <TableRow>
                                 <TablePagination totalCount={this.props.totalCount} pagingInfo={this.props.pagingInfo} rowName={this.props.rowName} />
