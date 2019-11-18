@@ -1,36 +1,20 @@
 import { storiesOf } from "@storybook/react";
-import * as moment from "moment";
+import { SingleDatePicker } from "@vivid-planet/react-admin-date-picker";
 import * as React from "react";
-import { SingleDatePicker as AirBNBDatePicker } from "react-dates";
-import { setMomentLocale } from "./moment";
-import * as sc from "./Picker.sc";
+import { Field, Form } from "react-final-form";
 
 const Story = () => {
-    const locale = setMomentLocale();
-    const [focusedField, setFocus] = React.useState<boolean | null>(false);
-    const [pickedDate, setPickedDate] = React.useState<moment.Moment | null>(locale);
-
     return (
-        <sc.SingleDatePickerWrapper>
-            <AirBNBDatePicker
-                date={pickedDate}
-                id="single_date_picker"
-                onDateChange={date => {
-                    setPickedDate(date);
-                }}
-                focused={focusedField ? focusedField : false}
-                onFocusChange={({ focused }) => {
-                    setFocus(focused);
-                }}
-                small
-                hideKeyboardShortcutsPanel
-                isOutsideRange={() => false}
-                showClearDate
-                numberOfMonths={1}
-                showDefaultInputIcon
-                inputIconPosition="after"
-            />
-        </sc.SingleDatePickerWrapper>
+        <Form
+            onSubmit={() => {
+                // do nothing
+            }}
+            render={() => (
+                <form>
+                    <Field name="date" label="Zeitraum" component={SingleDatePicker} fullWidth showClearDate />
+                </form>
+            )}
+        />
     );
 };
 

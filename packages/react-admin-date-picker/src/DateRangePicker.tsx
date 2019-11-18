@@ -1,4 +1,3 @@
-import { InputBaseProps } from "@material-ui/core/InputBase";
 import * as moment from "moment";
 import * as React from "react";
 import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
@@ -11,8 +10,7 @@ interface IDateRange {
     end: Date | null;
 }
 
-interface IDateRangePickerProps extends FieldRenderProps<IDateRange, HTMLElement> {
-    isClearable?: boolean;
+interface IDateRangePickerProps extends FieldRenderProps<IDateRange, HTMLInputElement> {
     colorSelectedStartDate?: string;
     colorSelectedEndDate?: string;
     colorDaysBetween?: string;
@@ -21,11 +19,11 @@ interface IDateRangePickerProps extends FieldRenderProps<IDateRange, HTMLElement
     locale?: string;
 }
 
-export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & InputBaseProps> = ({ meta, input, innerRef, ...props }) => {
+export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps> = ({ input: { value, onChange }, meta, ...props }) => {
     const locale = setMomentLocale(props.locale);
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
-    const start = input.value.start ? moment(input.value.start) : locale;
-    const end = input.value.end ? moment(input.value.end) : null;
+    const start = value.start ? moment(value.start) : locale;
+    const end = value.end ? moment(value.end) : null;
 
     return (
         <sc.DateRangePickerWrapper
@@ -42,7 +40,7 @@ export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & In
                 endDatePlaceholderText=""
                 endDateId="end_date_id"
                 onDatesChange={({ startDate, endDate }: { startDate: moment.Moment | null; endDate: moment.Moment | null }) => {
-                    input.onChange({ start: startDate ? startDate.toDate() : null, end: endDate ? endDate.toDate() : null });
+                    onChange({ start: startDate ? startDate.toDate() : null, end: endDate ? endDate.toDate() : null });
                 }}
                 focusedInput={focusedInputField}
                 onFocusChange={setFocusedInputField}
@@ -50,7 +48,9 @@ export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps & In
                 hideKeyboardShortcutsPanel
                 isOutsideRange={() => false}
                 minimumNights={0}
-                showClearDates={props.isClearable}
+                showDefaultInputIcon
+                inputIconPosition="after"
+                {...props}
             />
         </sc.DateRangePickerWrapper>
     );

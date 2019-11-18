@@ -1,5 +1,5 @@
 {
-    "name": "@vivid-planet/react-daterange-picker",
+    "name": "@vivid-planet/react-admin-date-picker",
     "version": "1.0.0-alpha.1",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",

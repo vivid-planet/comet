@@ -7,6 +7,10 @@ interface IColorProps {
 }
 
 export const SingleDatePickerWrapper = styled.div<IColorProps>`
+    * {
+        font: inherit;
+    }
+
     .DayPickerNavigation_button__default {
         border: none;
     }

@@ -1,40 +1,20 @@
 import { storiesOf } from "@storybook/react";
-import * as moment from "moment";
+import { DateRangePicker } from "@vivid-planet/react-admin-date-picker";
 import * as React from "react";
-import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
-import { setMomentLocale } from "./moment";
-import * as sc from "./Picker.sc";
+import { Field, Form } from "react-final-form";
 
 const Story = () => {
-    const locale = setMomentLocale();
-    const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
-    const [pickedStartDate, setPickedStartDate] = React.useState<moment.Moment | null>(locale);
-    const [pickedEndDate, setPickedEndDate] = React.useState<moment.Moment | null>(null);
-
     return (
-        <sc.DateRangePickerWrapper>
-            <AirBNBDateRangePicker
-                startDate={pickedStartDate}
-                startDatePlaceholderText={String(locale.format("L"))}
-                startDateId="start_date"
-                endDate={pickedEndDate}
-                endDatePlaceholderText=""
-                endDateId="end_date"
-                onDatesChange={({ startDate, endDate }) => {
-                    setPickedStartDate(startDate);
-                    setPickedEndDate(endDate);
-                }}
-                focusedInput={focusedInputField}
-                onFocusChange={setFocusedInputField}
-                small
-                hideKeyboardShortcutsPanel
-                isOutsideRange={() => false}
-                minimumNights={0}
-                showClearDates
-                showDefaultInputIcon
-                inputIconPosition="after"
-            />
-        </sc.DateRangePickerWrapper>
+        <Form
+            onSubmit={() => {
+                // do nothing
+            }}
+            render={() => (
+                <form>
+                    <Field name="date" label="Zeitraum" component={DateRangePicker} fullWidth />
+                </form>
+            )}
+        />
     );
 };
 

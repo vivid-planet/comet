@@ -6,14 +6,13 @@ import { setMomentLocale } from "./moment";
 import * as sc from "./SingleDatePicker.sc";
 
 interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
-    width?: string;
     colorSelected?: string;
     colorHover?: string;
     colorHoverSelected?: string;
     locale?: string;
 }
 
-export const SingleDatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, width, ...props }) => {
+export const SingleDatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, ...props }) => {
     const locale = setMomentLocale(props.locale);
     const [focused, setFocus] = React.useState();
     const selectedDate = value ? moment(value) : locale;
@@ -31,7 +30,6 @@ export const SingleDatePicker: React.FunctionComponent<IProps> = ({ input: { val
                 small
                 hideKeyboardShortcutsPanel
                 isOutsideRange={() => false}
-                showClearDate
                 numberOfMonths={1}
                 showDefaultInputIcon
                 inputIconPosition="after"
