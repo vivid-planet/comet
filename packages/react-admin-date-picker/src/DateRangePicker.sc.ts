@@ -16,6 +16,10 @@ export const DateRangePickerWrapper = styled.div<IColorProps>`
         font: inherit;
     }
 
+    .DateInput {
+        position: static;
+    }
+
     .DateRangePickerInput_clearDates__small {
         display: flex;
     }

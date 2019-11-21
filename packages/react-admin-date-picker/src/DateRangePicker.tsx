@@ -1,9 +1,9 @@
+import { LocaleContext } from "@vivid-planet/react-admin-date-fns";
 import * as moment from "moment";
 import * as React from "react";
 import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
 import * as sc from "./DateRangePicker.sc";
-import { setMomentLocale } from "./moment";
 
 interface IDateRange {
     start: Date | null;
@@ -16,13 +16,13 @@ interface IDateRangePickerProps extends FieldRenderProps<IDateRange, HTMLInputEl
     colorDaysBetween?: string;
     colorHover?: string;
     colorHoverSelected?: string;
-    locale?: string;
 }
 
 export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps> = ({ input: { value, onChange }, meta, ...props }) => {
-    const locale = setMomentLocale(props.locale);
+    const localeContext = React.useContext(LocaleContext);
+    const locale = moment().locale(localeContext.localeName ? localeContext.localeName : "de");
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
-    const start = value.start ? moment(value.start) : locale;
+    const start = value.start ? moment(value.start) : null;
     const end = value.end ? moment(value.end) : null;
 
     return (
@@ -37,7 +37,7 @@ export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps> = (
                 startDatePlaceholderText={String(locale.format("L"))}
                 startDateId="start_date_id"
                 endDate={end}
-                endDatePlaceholderText=""
+                endDatePlaceholderText={String(locale.format("L"))}
                 endDateId="end_date_id"
                 onDatesChange={({ startDate, endDate }: { startDate: moment.Moment | null; endDate: moment.Moment | null }) => {
                     onChange({ start: startDate ? startDate.toDate() : null, end: endDate ? endDate.toDate() : null });
@@ -48,8 +48,7 @@ export const DateRangePicker: React.FunctionComponent<IDateRangePickerProps> = (
                 hideKeyboardShortcutsPanel
                 isOutsideRange={() => false}
                 minimumNights={0}
-                showDefaultInputIcon
-                inputIconPosition="after"
+                displayFormat={() => locale.localeData().longDateFormat("L")}
                 {...props}
             />
         </sc.DateRangePickerWrapper>

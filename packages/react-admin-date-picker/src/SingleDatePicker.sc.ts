@@ -15,6 +15,14 @@ export const SingleDatePickerWrapper = styled.div<IColorProps>`
         border: none;
     }
 
+    .DateRangePickerInput_clearDates__small {
+        display: flex;
+    }
+
+    .DateRangePickerInput_clearDates_default:hover {
+        background: unset;
+    }
+
     .CalendarDay__selected {
         background: ${props => (props.colorSelectedDate ? props.colorSelectedDate : "#607384")};
         color: white;

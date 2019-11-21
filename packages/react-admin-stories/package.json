@@ -59,5 +59,7 @@
         "access": "public"
     },
     "license": "BSD-2-Clause",
-    "dependencies": {}
+    "dependencies": {
+        "date-fns": "^2.8.0"
+    }
 }
