@@ -89,7 +89,8 @@ export interface ITableColumn<TRow extends IRow> {
     header?: string | React.ReactNode;
     headerExcel?: string;
     render?: (row: TRow) => React.ReactNode;
-    renderExcel?: (row: TRow) => string;
+    renderExcel?: (row: TRow) => string | number;
+    formatForExcel?: string;
     sortable?: boolean;
     cellProps?: TableCellProps;
     headerProps?: TableCellProps;

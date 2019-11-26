@@ -56,6 +56,19 @@ export async function createExcelExportDownload<TRow extends IRow>(
         });
     }
 
+    // apply number format
+    columns.forEach(column => {
+        try {
+            const currentColumn = worksheet.getColumn(column.name);
+
+            if (column.formatForExcel != null) {
+                currentColumn.numFmt = column.formatForExcel;
+            }
+        } catch (e) {
+            // not present column e.g. hidden
+        }
+    });
+
     if (styling != null) {
         styling(worksheet);
     } else {
