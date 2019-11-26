@@ -7,8 +7,10 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
+import { IExportExcelApi } from "./excelexport/IExportExcelApi";
 import { TablePagination } from "./Pagination";
 import { IPagingInfo } from "./paging";
+import { safeColumnGet } from "./safeColumnGet";
 import * as sc from "./Table.sc";
 import { ISortApi, SortDirection } from "./useTableQuerySort";
 
@@ -59,17 +61,6 @@ export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITable
     );
 }
 
-const safeColumnGet = (row: any, path: string): string | number | null => {
-    const splitPath = path.split(".");
-    const nextRow = row[splitPath[0]];
-    if (!nextRow) return null;
-
-    if (splitPath.length === 1) return nextRow;
-
-    const remainingPath = splitPath.slice(1).join(".");
-    return safeColumnGet(nextRow, remainingPath);
-};
-
 export interface ITableColumnsProps<TRow extends IRow> {
     row: TRow;
     columns: Array<ITableColumn<TRow>>;
@@ -92,11 +83,13 @@ export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsP
 export interface IRow {
     id: string | number;
 }
-interface ITableColumn<TRow extends IRow> {
+export interface ITableColumn<TRow extends IRow> {
     name: string;
     visible?: boolean;
     header?: string | React.ReactNode;
+    headerExcel?: string;
     render?: (row: TRow) => React.ReactNode;
+    renderExcel?: (row: TRow) => string;
     sortable?: boolean;
     cellProps?: TableCellProps;
     headerProps?: TableCellProps;
@@ -123,6 +116,7 @@ export interface ITableProps<TRow extends IRow> {
     columns: Array<ITableColumn<TRow>>;
     sortApi?: ISortApi;
     paginationPosition?: "bottom" | "top" | "both";
+    exportExcelApi?: IExportExcelApi<TRow>;
 }
 
 function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRowProps<TRow>) {
@@ -147,6 +141,9 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
 
         if (this.props.pagingInfo) {
             this.props.pagingInfo.attachTableRef(this.domRef);
+        }
+        if (this.props.exportExcelApi) {
+            this.props.exportExcelApi.attachTable(this);
         }
 
         const paginationPosition = this.props.paginationPosition || "bottom";

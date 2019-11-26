@@ -6,7 +6,7 @@ import { ISelectionApi } from "../SelectionApi";
 import { IPagingInfo } from "./paging";
 import { ITableQueryApi } from "./TableQueryContext";
 
-interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
+export interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
     data?: TRow[];
     totalCount?: number;
     pagingInfo?: IPagingInfo;
@@ -16,7 +16,7 @@ interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableDat
     selectionApi?: ISelectionApi;
 }
 
-interface ITableQueryHookResult<TData, TVariables, TTableData extends ITableData> extends QueryResult<TData, TVariables> {
+export interface ITableQueryHookResult<TData, TVariables, TTableData extends ITableData> extends QueryResult<TData, TVariables> {
     tableData?: TTableData;
     api: ITableQueryApi;
 }
@@ -30,6 +30,8 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
 
         const api: ITableQueryApi = {
             getVariables,
+            getInnerOptions,
+            getResolveTableData,
             getQuery: () => q,
             onRowCreated,
             onRowDeleted,
@@ -52,6 +54,14 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         function getVariables() {
             const vars: any = { ...(options.variables as any) };
             return vars;
+        }
+
+        function getInnerOptions() {
+            return innerOptions;
+        }
+
+        function getResolveTableData(data: any) {
+            return resolveTableData(data);
         }
 
         function onRowCreated(id: string) {

@@ -36,6 +36,7 @@
         "@types/react-router-dom": "^4.3.4",
         "@types/storybook-react-router": "^1.0.0",
         "@types/storybook__react": "^4.0.2",
+        "@types/file-saver": "^2.0.1",
         "@types/webpack": "^4.4.34",
         "apollo-cache-inmemory": "^1.6.2",
         "apollo-link": "^1.2.12",

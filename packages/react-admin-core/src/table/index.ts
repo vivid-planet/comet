@@ -1,9 +1,11 @@
 // Export folders
 export * from "./paging";
+export * from "./excelexport";
 
 // Export files
 export * from "./AddButton";
 export * from "./DeleteButton";
+export * from "./ExcelExportButton";
 export * from "./LocalChangesToolbar";
 export * from "./Pagination";
 export * from "./Table";
