@@ -54,6 +54,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
         const { headline, resetButton, render, children, component, ...forwardProps } = this.props;
         return (
             <Form
+                initialValues={this.props.filterApi.defaultValues}
                 onSubmit={
                     this.props.onSubmit
                         ? this.props.onSubmit

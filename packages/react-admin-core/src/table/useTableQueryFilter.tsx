@@ -4,6 +4,7 @@ import * as React from "react";
 export interface IFilterApi<FilterValues extends AnyObject> {
     current: FilterValues;
     changeFilters: (values: FilterValues) => void;
+    defaultValues: FilterValues;
 }
 export function useTableQueryFilter<FilterValues extends AnyObject>(defaultValues: FilterValues): IFilterApi<FilterValues> {
     const [filters, setFilters] = React.useState<FilterValues>(defaultValues);
@@ -15,5 +16,6 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(defaultValue
     return {
         current: filters,
         changeFilters,
+        defaultValues,
     };
 }
