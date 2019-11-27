@@ -1,4 +1,6 @@
-import * as Excel from "exceljs";
+// TODO: Normal import: import * as Excel from "exceljs"; is currently not working due to https://github.com/exceljs/exceljs/pull/1038 as soon pull request is merged into exceljs change import and update package version
+// @ts-ignore
+import * as Excel from "exceljs/dist/exceljs.js";
 import { saveAs } from "file-saver";
 import * as React from "react";
 import { safeColumnGet } from "../safeColumnGet";
@@ -75,9 +77,12 @@ export async function createExcelExportDownload<TRow extends IRow>(
         applyDefaultStyling(worksheet);
     }
 
-    workbook.xlsx.writeBuffer().then(buffer => {
-        saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
-    });
+    workbook.xlsx.writeBuffer().then(
+        // @ts-ignore
+        buffer => {
+            saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
+        },
+    );
 }
 
 function safeFileNameWithExtension(fileName: string): string {
