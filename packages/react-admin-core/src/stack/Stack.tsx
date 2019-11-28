@@ -8,6 +8,7 @@ import { DirtyHandler } from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
+import * as sc from "./Stack.sc";
 
 interface ISortNode {
     id: string;
@@ -56,6 +57,9 @@ interface IProps {
     topLevelTitle: string;
     showBackButton?: boolean;
     showBreadcrumbs?: boolean;
+    components?: {
+        breadcrumbsContainer?: React.ComponentType;
+    };
 }
 interface IBreadcrumbItem {
     id: string;
@@ -87,6 +91,10 @@ export class Stack extends React.Component<IProps, IState> {
 
     public render() {
         const breadcrumbs = this.getVisibleBreadcrumbs();
+        const BreadcrumbsContainer =
+            this.props.components && this.props.components.breadcrumbsContainer
+                ? this.props.components.breadcrumbsContainer
+                : sc.BreadcrumbsContainer;
         return (
             <StackApiContext.Provider
                 value={{
@@ -107,7 +115,11 @@ export class Stack extends React.Component<IProps, IState> {
                         this.history = routerProps.history;
                         return (
                             <>
-                                {showBreadcrumbs && <Breadcrumbs pages={breadcrumbs} />}
+                                {showBreadcrumbs && (
+                                    <BreadcrumbsContainer>
+                                        <Breadcrumbs pages={breadcrumbs} />
+                                    </BreadcrumbsContainer>
+                                )}
                                 {this.props.showBackButton && (
                                     <Button color="default" disabled={breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
                                         Zurück
