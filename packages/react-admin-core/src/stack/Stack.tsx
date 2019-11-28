@@ -10,6 +10,8 @@ import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
 import * as sc from "./Stack.sc";
 
+export const StackBreadcrumbsContainer = sc.BreadcrumbsContainer;
+
 interface ISortNode {
     id: string;
     parentId: string;
