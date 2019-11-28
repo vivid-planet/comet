@@ -122,7 +122,7 @@ export interface ITableProps<TRow extends IRow> {
     hideTableHead?: boolean;
     columns: Array<ITableColumn<TRow>>;
     sortApi?: ISortApi;
-    pagination?: "bottom" | "top" | "both" | "none";
+    paginationPosition?: "bottom" | "top" | "both";
 }
 
 function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRowProps<TRow>) {
@@ -149,9 +149,9 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
             this.props.pagingInfo.attachTableRef(this.domRef);
         }
 
-        const pagination = this.props.pagination || "bottom";
-        const shouldRenderTopPagination = pagination === "top" || pagination === "both";
-        const shouldRenderBottomPagination = pagination === "bottom" || pagination === "both";
+        const paginationPosition = this.props.paginationPosition || "bottom";
+        const shouldRenderTopPagination = paginationPosition === "top" || paginationPosition === "both";
+        const shouldRenderBottomPagination = paginationPosition === "bottom" || paginationPosition === "both";
 
         return (
             <RootRef rootRef={this.domRef}>
