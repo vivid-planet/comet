@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { ExcelExportButton, IRow, Table, useTableCurrentPageExportExcel } from "@vivid-planet/react-admin-core";
+import { ExcelExportButton, IRow, Table, useExportDisplayedTableData } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
 interface IExampleRow extends IRow {
@@ -24,13 +24,13 @@ function Story() {
         { id: 4, foo1: null, foo2: "blub", currency: -88.6682, nestedFoo: { foo: "bar" } },
         { id: 5, foo1: 32, foo2: "blub", currency: 10000.46584, nestedFoo: { foo: "bar" } },
     ];
-    const exportExcelApi = useTableCurrentPageExportExcel<IExampleRow>();
+    const exportApi = useExportDisplayedTableData<IExampleRow>();
 
     return (
         <>
-            <ExcelExportButton exportApi={exportExcelApi} />
+            <ExcelExportButton exportApi={exportApi} />
             <Table
-                exportExcelApi={exportExcelApi}
+                exportApis={[exportApi]}
                 data={data}
                 totalCount={data.length}
                 columns={[
@@ -69,4 +69,4 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module).add("Table Excel Export", () => <Story />);
+storiesOf("react-admin-core", module).add("Table Export Displayed Table Data", () => <Story />);

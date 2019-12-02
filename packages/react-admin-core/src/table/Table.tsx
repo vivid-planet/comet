@@ -7,7 +7,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
-import { IExportExcelApi } from "./excelexport/IExportExcelApi";
+import { IExportApi } from "./excelexport/IExportApi";
 import { TablePagination } from "./Pagination";
 import { IPagingInfo } from "./paging";
 import { safeColumnGet } from "./safeColumnGet";
@@ -117,7 +117,7 @@ export interface ITableProps<TRow extends IRow> {
     columns: Array<ITableColumn<TRow>>;
     sortApi?: ISortApi;
     paginationPosition?: "bottom" | "top" | "both";
-    exportExcelApi?: IExportExcelApi<TRow>;
+    exportApis?: Array<IExportApi<TRow>>;
 }
 
 function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRowProps<TRow>) {
@@ -136,16 +136,16 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
     }
 
     public render() {
-        const { data } = this.props;
+        const { data, exportApis = [] } = this.props;
 
         const renderHeadTableRow = this.props.renderHeadTableRow || (props => <DefaultHeadTableRow {...props} />);
 
         if (this.props.pagingInfo) {
             this.props.pagingInfo.attachTableRef(this.domRef);
         }
-        if (this.props.exportExcelApi) {
-            this.props.exportExcelApi.attachTable(this);
-        }
+        exportApis.forEach(exportApi => {
+            exportApi.attachTable(this);
+        });
 
         const paginationPosition = this.props.paginationPosition || "bottom";
         const shouldRenderTopPagination = paginationPosition === "top" || paginationPosition === "both";

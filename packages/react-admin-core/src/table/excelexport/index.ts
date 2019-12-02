@@ -1,3 +1,3 @@
 export * from "./createExcelExportDownload";
-export * from "./useTableCurrentPageExportExcel";
-export * from "./useTableQueryAllPagesExportExcel";
+export * from "./useExportDisplayedTableData";
+export * from "./useExportTableQuery";

@@ -21,8 +21,6 @@ export async function createExcelExportDownload<TRow extends IRow>(
     // create columns
     const excelColumns: Excel.Column[] = [];
     columns.forEach((column, columnIndex) => {
-        // TODO: should we hide hidden columns or not export?
-        // TODO: maybe extra property in ITableColumn? shouldExport?
         const hidden = column.visible !== undefined && column.visible != null ? !column.visible : false;
 
         const header = column.headerExcel != null ? column.headerExcel : safeStringFromReactNode(column.header);
@@ -30,7 +28,6 @@ export async function createExcelExportDownload<TRow extends IRow>(
             excelColumns.push({
                 header,
                 key: column.name,
-                hidden,
                 width: 20,
                 outlineLevel: 0,
                 style: {},

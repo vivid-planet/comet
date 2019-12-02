@@ -1,13 +1,16 @@
 import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
 import {
+    createRestStartLimitPagingActions,
     ExcelExportButton,
     Table,
     TableFilterFinalForm,
     TableQuery,
-    useTableCurrentPageExportExcel,
+    useExportDisplayedTableData,
+    useExportTableQuery,
     useTableQuery,
     useTableQueryFilter,
+    useTableQueryPaging,
 } from "@vivid-planet/react-admin-core";
 import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admin-form";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -22,46 +25,65 @@ const gqlRest = gql;
 const query = gqlRest`
 query users(
     $query: String
+    $start : Int
+    $limit : Int
 ) {
-    users(
+    photos(
         query: $query
-    ) @rest(type: "User", path: "users?q={args.query}") {
+        start: $start
+        limit: $limit
+    ) @rest(type: "Photos", path: "photos?q={args.query}&_start={args.start}&_limit={args.limit}") {
         id
-        name
-        username
-        email
+        albumId
+        title
+        thumbnailUrl
     }
 }
 `;
-interface IUser {
+interface IPhoto {
     id: number;
-    name: string;
-    username: string;
-    email: string;
+    albumId: number;
+    title: string;
+    thumbnailUrl: string;
 }
 
 interface IQueryData {
-    users: IUser[];
+    photos: IPhoto[];
 }
 
 interface IFilterValues {
     query: string;
 }
-interface IVariables extends IFilterValues {}
+interface IVariables extends IFilterValues {
+    start: number;
+    limit: number;
+}
 
 function Story() {
+    const totalCount = 5000;
+    const loadLimit = 50;
+    const pagingApi = useTableQueryPaging(0);
+
     const filterApi = useTableQueryFilter<IFilterValues>({ query: "" });
-    const exportExcelApi = useTableCurrentPageExportExcel<IUser>();
 
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
         variables: {
+            start: pagingApi.current,
             ...filterApi.current,
+            limit: loadLimit,
         },
         resolveTableData: data => ({
-            data: data.users,
-            totalCount: data.users.length,
+            data: data.photos,
+            totalCount,
+            pagingInfo: createRestStartLimitPagingActions(pagingApi, {
+                totalPages: Math.ceil(totalCount / loadLimit), // Don't calculate this in a real application
+                loadLimit,
+            }),
         }),
     });
+
+    const exportCurrentPageApi = useExportDisplayedTableData();
+    const exportApi = useExportTableQuery<IVariables>(api, { ...filterApi.current, start: 0, limit: 5000 });
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
@@ -77,25 +99,28 @@ function Story() {
                             fieldContainerComponent={FieldContainerLabelAbove}
                         />
                     </TableFilterFinalForm>
-                    <ExcelExportButton exportApi={exportExcelApi} />
+                    <ExcelExportButton exportApi={exportCurrentPageApi}>Aktuelle Seite exportieren</ExcelExportButton>
+                    <ExcelExportButton exportApi={exportApi}>Export All (max. 5000 Rows)</ExcelExportButton>
 
                     <Table
-                        exportExcelApi={exportExcelApi}
+                        exportApis={[exportCurrentPageApi, exportApi]}
                         {...tableData}
                         columns={[
                             {
-                                name: "name",
-                                header: "Name",
+                                name: "thumbnailUrl",
+                                header: "Thumbnail",
                                 sortable: true,
+                                render: (row: IPhoto) => {
+                                    return <img src={row.thumbnailUrl} />;
+                                },
+                                headerExcel: "Thumbnail Url",
+                                renderExcel: (row: IPhoto) => {
+                                    return row.thumbnailUrl;
+                                },
                             },
                             {
-                                name: "username",
-                                header: "Username",
-                                sortable: true,
-                            },
-                            {
-                                name: "email",
-                                header: "E-Mail",
+                                name: "title",
+                                header: "Title",
                                 sortable: true,
                             },
                         ]}
@@ -123,4 +148,4 @@ storiesOf("react-admin-core", module)
 
         return <ApolloProvider client={client}>{story()}</ApolloProvider>;
     })
-    .add("Table Filter Excel Export", () => <Story />);
+    .add("Table Export Paged Filter", () => <Story />);
