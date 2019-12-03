@@ -8,6 +8,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
 import { IExportApi } from "./excelexport/IExportApi";
+import { isVisible } from "./isVisible";
 import { TablePagination } from "./Pagination";
 import { IPagingInfo } from "./paging";
 import { safeColumnGet } from "./safeColumnGet";
@@ -39,7 +40,7 @@ export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITable
     return (
         <>
             {columns.map((column: any, colIndex: number) => {
-                if (column.visible === false) return null;
+                if (!isVisible(VisibleType.Browser, column.visible)) return null;
                 const { name, header, sortable, headerProps } = column;
                 return (
                     <TableCell key={colIndex} {...headerProps}>
@@ -70,7 +71,7 @@ export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsP
     return (
         <>
             {columns.map((column: any, colIndex: number) => {
-                if (column.visible === false) return null;
+                if (!isVisible(VisibleType.Browser, column.visible)) return null;
                 return (
                     <TableCell key={colIndex} {...column.cellProps}>
                         {column.render ? column.render(row) : safeColumnGet(row, column.name)}
@@ -83,9 +84,15 @@ export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsP
 export interface IRow {
     id: string | number;
 }
+
+export enum VisibleType {
+    Browser = "browser",
+    Export = "export",
+}
+export type Visible = boolean | { [key in VisibleType]?: boolean };
 export interface ITableColumn<TRow extends IRow> {
     name: string;
-    visible?: boolean;
+    visible?: Visible;
     header?: string | React.ReactNode;
     headerExcel?: string;
     render?: (row: TRow) => React.ReactNode;

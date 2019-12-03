@@ -11,6 +11,8 @@ import {
     useTableQuery,
     useTableQueryFilter,
     useTableQueryPaging,
+    Visible,
+    VisibleType,
 } from "@vivid-planet/react-admin-core";
 import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admin-form";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -110,6 +112,7 @@ function Story() {
                                 name: "thumbnailUrl",
                                 header: "Thumbnail",
                                 sortable: true,
+                                visible: { [VisibleType.Browser]: false, [VisibleType.Export]: false },
                                 render: (row: IPhoto) => {
                                     return <img src={row.thumbnailUrl} />;
                                 },
@@ -120,6 +123,7 @@ function Story() {
                             },
                             {
                                 name: "title",
+                                visible: { [VisibleType.Browser]: true },
                                 header: "Title",
                                 sortable: true,
                             },

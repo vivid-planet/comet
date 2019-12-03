@@ -3,8 +3,9 @@
 import * as Excel from "exceljs/dist/exceljs.js";
 import { saveAs } from "file-saver";
 import * as React from "react";
+import { isVisible } from "../isVisible";
 import { safeColumnGet } from "../safeColumnGet";
-import { IRow, ITableColumn } from "../Table";
+import { IRow, ITableColumn, VisibleType } from "../Table";
 import { applyDefaultStyling } from "./applyDefaultStyling";
 
 export interface IExcelExportOptions {
@@ -28,7 +29,7 @@ export async function createExcelExportDownload<TRow extends IRow>(
         const hidden = column.visible !== undefined && column.visible != null ? !column.visible : false;
 
         const header = column.headerExcel != null ? column.headerExcel : safeStringFromReactNode(column.header);
-        if (!hidden) {
+        if (isVisible(VisibleType.Export, column.visible)) {
             excelColumns.push({
                 header,
                 key: column.name,
