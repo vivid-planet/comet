@@ -2,15 +2,10 @@ import { useApolloClient } from "@apollo/react-hooks";
 import * as React from "react";
 import { Table } from "../Table";
 import { ITableQueryApi } from "../TableQueryContext";
-import { createExcelExportDownload } from "./createExcelExportDownload";
+import { createExcelExportDownload, IExcelExportOptions } from "./createExcelExportDownload";
 import { IExportApi } from "./IExportApi";
 
-export function useExportTableQuery<IVariables>(
-    api: ITableQueryApi,
-    variables: IVariables,
-    fileName?: string,
-    worksheetName?: string,
-): IExportApi<any> {
+export function useExportTableQuery<IVariables>(api: ITableQueryApi, variables: IVariables, options?: IExcelExportOptions): IExportApi<any> {
     let tableRef: Table<any> | undefined;
 
     function attachTable(ref: Table<any>) {
@@ -30,10 +25,10 @@ export function useExportTableQuery<IVariables>(
                 variables: { ...variables },
             });
 
-            const data = api.getResolveTableData(response.data);
+            const data = api.resolveTableData(response.data);
 
             if (data && data.data) {
-                createExcelExportDownload<any>(tableRef.props.columns, data.data, fileName, worksheetName);
+                createExcelExportDownload<any>(tableRef.props.columns, data.data, options);
             }
         }
     }

@@ -73,8 +73,8 @@ function Story() {
         }),
     });
 
-    const exportCurrentPageApi = useExportDisplayedTableData();
-    const exportApi = useExportTableQuery<IVariables>(api, { start: 0, limit: 5000 });
+    const exportCurrentPageApi = useExportDisplayedTableData({ fileName: "Custom File Name Displayed Data" });
+    const exportApi = useExportTableQuery<IVariables>(api, { start: 0, limit: 5000 }, { fileName: "Custom File Name Limit 5000" });
 
     return (
         <TableQuery api={api} loading={loading} error={error}>

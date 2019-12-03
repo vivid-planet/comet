@@ -6,7 +6,7 @@ export interface ITableQueryApi {
     getVariables: () => object;
     getInnerOptions: () => object;
     getQuery: () => DocumentNode;
-    getResolveTableData: (data: object) => ITableData<any>;
+    resolveTableData: (data: object) => ITableData<any>;
     onRowCreated: (id: string) => void;
     onRowDeleted: () => void;
 }

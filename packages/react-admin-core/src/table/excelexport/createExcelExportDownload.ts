@@ -7,13 +7,17 @@ import { safeColumnGet } from "../safeColumnGet";
 import { IRow, ITableColumn } from "../Table";
 import { applyDefaultStyling } from "./applyDefaultStyling";
 
+export interface IExcelExportOptions {
+    fileName?: string;
+    worksheetName?: string;
+    styling?: (worksheet: Excel.Worksheet) => void;
+}
 export async function createExcelExportDownload<TRow extends IRow>(
     columns: Array<ITableColumn<TRow>>,
     data: TRow[],
-    fileName: string = "ExcelExport",
-    worksheetName: string = "Tabelle 1",
-    styling?: (worksheet: Excel.Worksheet) => void,
+    options: IExcelExportOptions = {},
 ) {
+    const { fileName = "ExcelExport", worksheetName = "Tabelle 1", styling } = options;
     const workbook = new Excel.Workbook();
 
     const worksheet = workbook.addWorksheet(worksheetName);

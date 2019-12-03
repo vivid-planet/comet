@@ -26,12 +26,12 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         q: DocumentNode,
         options: ITableQueryHookOptions<TInnerData, TInnerVariables, TTableData>,
     ): ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> {
-        const { resolveTableData, selectionApi, variables, ...restOptions } = options;
+        const { selectionApi, variables, ...restOptions } = options;
 
         const api: ITableQueryApi = {
             getVariables,
             getInnerOptions,
-            getResolveTableData,
+            resolveTableData,
             getQuery: () => q,
             onRowCreated,
             onRowDeleted,
@@ -60,8 +60,8 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             return innerOptions;
         }
 
-        function getResolveTableData(data: any) {
-            return resolveTableData(data);
+        function resolveTableData(data: any) {
+            return options.resolveTableData(data);
         }
 
         function onRowCreated(id: string) {
@@ -80,7 +80,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             return ret;
         }
 
-        ret.tableData = resolveTableData(ret.data);
+        ret.tableData = options.resolveTableData(ret.data);
         return ret;
     }
     return useTableQueryInner;
