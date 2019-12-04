@@ -29,6 +29,7 @@
         "@types/recompose": "^0.30.6",
         "@types/styled-components": "4.1.8",
         "@types/uuid": "^3.4.4",
+        "@types/file-saver": "^2.0.1",
         "@vivid-planet/vplint": "^1.0.2",
         "apollo-client": "^2.6.3",
         "date-fns": "^2.0.0-alpha.37",
@@ -55,7 +56,9 @@
         "tslint": "^5.18.0",
         "tslint-config-prettier": "^1.18.0",
         "tslint-react": "^4.0.0",
-        "typescript": "^3.5.3"
+        "typescript": "^3.5.3",
+        "exceljs": "^3.4.0",
+        "file-saver": "^2.0.2"
     },
     "license": "BSD-2-Clause"
 }
