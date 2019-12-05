@@ -11,9 +11,20 @@ import { ISelectionApi } from "./SelectionApi";
 import { SelectionRoute } from "./SelectionRoute";
 
 interface IProps {
+    title?: {
+        edit: string;
+        add: string;
+    };
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
 export class EditDialog extends React.Component<IProps> {
+    public static defaultProps = {
+        title: {
+            edit: "Edit",
+            add: "Add",
+        },
+    };
+
     private editDialogApi: IEditDialogApi;
     private selectionRef: React.RefObject<SelectionRoute> = React.createRef<SelectionRoute>();
 
@@ -34,7 +45,7 @@ export class EditDialog extends React.Component<IProps> {
                         {({ selectedId, selectionMode, selectionApi }) => (
                             <Dialog open={!!selectionMode} onClose={this.handleCancelClick.bind(this, selectionApi)}>
                                 <div>
-                                    <DialogTitle>{selectionMode === "edit" ? "Edit" : "Add"}</DialogTitle>
+                                    <DialogTitle>{selectionMode === "edit" ? this.props.title!.edit : this.props.title!.add}</DialogTitle>
                                     <DialogContent>{this.props.children({ selectedId, selectionMode })}</DialogContent>
                                     <DialogActions>
                                         <Button onClick={this.handleCancelClick.bind(this, selectionApi)} color="primary">
