@@ -1,6 +1,7 @@
 import * as React from "react";
 
 export interface IPagingApi<T> {
+    init: T;
     current: T;
     currentPage?: number;
     changePage: (variables: T, page?: number) => void;
@@ -24,6 +25,7 @@ export function useTableQueryPaging<T>(init: T): IPagingApi<T> {
     }
 
     return {
+        init,
         current: variables,
         currentPage: page,
         changePage,
