@@ -1,23 +1,27 @@
 import * as React from "react";
-import { IRow, Table } from "../Table";
+import { Table } from "../Table";
 import { IExportApi } from "./IExportApi";
 import { createExcelExportDownload, IExcelExportOptions } from "./index";
 
-export function useExportDisplayedTableData<TRow extends IRow>(options?: IExcelExportOptions): IExportApi<TRow> {
-    let tableRef: Table<TRow> | undefined;
+export function useExportDisplayedTableData(options?: IExcelExportOptions): IExportApi<any> {
+    let tableRef: Table<any> | undefined;
 
-    function attachTable(ref: Table<TRow>) {
+    const [loading, setLoading] = React.useState(false);
+    function attachTable(ref: Table<any>) {
         tableRef = ref;
     }
 
     async function exportTable() {
         return new Promise<void>(async (resolve, reject) => {
             if (tableRef != null) {
+                await setLoading(true);
                 try {
                     createExcelExportDownload(tableRef.props.columns, tableRef.props.data, options);
                     resolve();
                 } catch (e) {
                     reject(e);
+                } finally {
+                    await setLoading(false);
                 }
             } else {
                 reject("No table ref set");
@@ -26,6 +30,7 @@ export function useExportDisplayedTableData<TRow extends IRow>(options?: IExcelE
     }
 
     return {
+        loading,
         exportTable,
         attachTable,
     };

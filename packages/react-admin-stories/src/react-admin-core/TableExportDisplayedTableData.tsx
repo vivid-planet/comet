@@ -24,7 +24,7 @@ function Story() {
         { id: 4, foo1: null, foo2: "blub", currency: -88.6682, nestedFoo: { foo: "bar" } },
         { id: 5, foo1: 32, foo2: "blub", currency: 10000.46584, nestedFoo: { foo: "bar" } },
     ];
-    const exportApi = useExportDisplayedTableData<IExampleRow>({ fileName: "Custom File Name", worksheetName: "Custom Worksheet Name" });
+    const exportApi = useExportDisplayedTableData({ fileName: "Custom File Name", worksheetName: "Custom Worksheet Name" });
 
     return (
         <>

@@ -19,7 +19,7 @@ function Story() {
         { id: 4, column1: 1, column2: 2, column3: 3, column4: 4, column5: 5 },
         { id: 5, column1: 1, column2: 2, column3: 3, column4: 4, column5: 5 },
     ];
-    const exportApi = useExportDisplayedTableData<IExampleRow>({ fileName: "Custom File Name", worksheetName: "Custom Worksheet Name" });
+    const exportApi = useExportDisplayedTableData({ fileName: "Custom File Name", worksheetName: "Custom Worksheet Name" });
 
     /*
      * Browser: Show columns 1 and 5
