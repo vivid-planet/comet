@@ -168,7 +168,9 @@ export class Stack extends React.Component<IProps, IState> {
 
     private goBack() {
         const breadcrumbs = this.getVisibleBreadcrumbs();
-        this.history.push(breadcrumbs[breadcrumbs.length - 2].url);
+        !!breadcrumbs[breadcrumbs.length - 2]
+            ? this.history.push(breadcrumbs[breadcrumbs.length - 2].url)
+            : this.history.push(breadcrumbs[breadcrumbs.length - 1].url);
     }
 
     private goAllBack() {
