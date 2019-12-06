@@ -7,7 +7,7 @@ import { IExportApi } from "./IExportApi";
 
 export function useExportTableQuery<IVariables>(api: ITableQueryApi, variables: IVariables, options?: IExcelExportOptions): IExportApi<any> {
     let tableRef: Table<any> | undefined;
-
+    const [loading, setLoading] = React.useState(false);
     function attachTable(ref: Table<any>) {
         tableRef = ref;
     }
@@ -16,24 +16,32 @@ export function useExportTableQuery<IVariables>(api: ITableQueryApi, variables: 
 
     async function exportTable() {
         if (tableRef != null) {
-            const query = api.getQuery();
-            const innerOptions = api.getInnerOptions();
+            await setLoading(true);
+            try {
+                const query = api.getQuery();
+                const innerOptions = api.getInnerOptions();
 
-            const response = await client.query<any, IVariables>({
-                query,
-                ...innerOptions,
-                variables: { ...variables },
-            });
+                const response = await client.query<any, IVariables>({
+                    query,
+                    ...innerOptions,
+                    variables: { ...variables },
+                });
 
-            const data = api.resolveTableData(response.data);
+                const data = api.resolveTableData(response.data);
 
-            if (data && data.data) {
-                createExcelExportDownload<any>(tableRef.props.columns, data.data, options);
+                if (data && data.data) {
+                    createExcelExportDownload<any>(tableRef.props.columns, data.data, options);
+                }
+            } catch (e) {
+                throw new Error("Error happend while exporting data");
+            } finally {
+                await setLoading(false);
             }
         }
     }
 
     return {
+        loading,
         exportTable,
         attachTable,
     };

@@ -1,3 +1,4 @@
+import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { FileIcon } from "@vivid-planet/file-icons";
 import * as React from "react";
@@ -23,9 +24,12 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
         }
     };
 
+    const { loading } = exportApi;
+
     return (
         <Button color="default" onClick={onClickButtonPressed}>
-            <FileIcon fileType={"application/msexcel"} />
+            {loading ? <>{loadingComponent ? loadingComponent : <CircularProgress size={23} />}</> : <FileIcon fileType={"application/msexcel"} />}
+
             <TextContainer>{children != null ? children : "Export"}</TextContainer>
         </Button>
     );
