@@ -16,7 +16,7 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
         setFilters(v);
 
         if (pagingApi) {
-            pagingApi.changePage(pagingApi.init);
+            pagingApi.changePage(pagingApi.init, 1);
         }
     }
 
