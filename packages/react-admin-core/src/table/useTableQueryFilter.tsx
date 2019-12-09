@@ -5,6 +5,7 @@ import { IPagingApi } from "./useTableQueryPaging";
 export interface IFilterApi<FilterValues extends AnyObject> {
     current: FilterValues;
     changeFilters: (values: FilterValues) => void;
+    defaultValues: FilterValues;
 }
 export function useTableQueryFilter<FilterValues extends AnyObject>(
     defaultValues: FilterValues,
@@ -23,5 +24,6 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
     return {
         current: filters,
         changeFilters,
+        defaultValues,
     };
 }
