@@ -10,11 +10,13 @@ import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
 import { ISelectionApi } from "./SelectionApi";
 import { SelectionRoute } from "./SelectionRoute";
 
+interface ITitle {
+    edit: string;
+    add: string;
+}
+
 interface IProps {
-    title?: {
-        edit: string;
-        add: string;
-    };
+    title: ITitle | string;
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
 export class EditDialog extends React.Component<IProps> {
@@ -38,6 +40,8 @@ export class EditDialog extends React.Component<IProps> {
     }
 
     public render() {
+        const { children, title } = this.props;
+
         return (
             <EditDialogApiContext.Provider value={this.editDialogApi}>
                 <DirtyHandler>
@@ -45,8 +49,8 @@ export class EditDialog extends React.Component<IProps> {
                         {({ selectedId, selectionMode, selectionApi }) => (
                             <Dialog open={!!selectionMode} onClose={this.handleCancelClick.bind(this, selectionApi)}>
                                 <div>
-                                    <DialogTitle>{selectionMode === "edit" ? this.props.title!.edit : this.props.title!.add}</DialogTitle>
-                                    <DialogContent>{this.props.children({ selectedId, selectionMode })}</DialogContent>
+                                    <DialogTitle>{typeof title === "string" ? title : selectionMode === "edit" ? title.edit : title.add}</DialogTitle>
+                                    <DialogContent>{children({ selectedId, selectionMode })}</DialogContent>
                                     <DialogActions>
                                         <Button onClick={this.handleCancelClick.bind(this, selectionApi)} color="primary">
                                             Abbrechen
