@@ -22,8 +22,8 @@ interface IProps {
 export class EditDialog extends React.Component<IProps> {
     public static defaultProps = {
         title: {
-            edit: "Edit",
-            add: "Add",
+            edit: "Bearbeiten",
+            add: "Hinzufügen",
         },
     };
 
