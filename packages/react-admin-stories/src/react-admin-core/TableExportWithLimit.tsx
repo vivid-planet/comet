@@ -129,4 +129,4 @@ storiesOf("react-admin-core", module)
 
         return <ApolloProvider client={client}>{story()}</ApolloProvider>;
     })
-    .add("Table Export Paged", () => <Story />);
+    .add("Table Export With Limit", () => <Story />);
