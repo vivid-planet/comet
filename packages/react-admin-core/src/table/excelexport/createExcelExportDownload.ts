@@ -32,7 +32,7 @@ export async function createExcelExportDownload<TRow extends IRow>(
         if (isVisible(VisibleType.Export, column.visible)) {
             excelColumns.push({
                 header,
-                key: column.name,
+                key: column.name + columnIndex,
                 width: 20,
                 outlineLevel: 0,
                 style: {},
@@ -48,12 +48,12 @@ export async function createExcelExportDownload<TRow extends IRow>(
         data.map(row => {
             const newRow: { [key: string]: string | number | null } = {};
 
-            columns.forEach(column => {
+            columns.forEach((column, index) => {
                 if (column.renderExcel) {
-                    newRow[column.name] = column.renderExcel(row);
+                    newRow[column.name + index] = column.renderExcel(row);
                 } else {
                     const render = column.render != null ? safeStringFromReactNode(column.render(row)) : null;
-                    newRow[column.name] = render != null ? render : safeColumnGet(row, column.name);
+                    newRow[column.name + index] = render != null ? render : safeColumnGet(row, column.name);
                 }
             });
             worksheet.addRow({ ...newRow });
