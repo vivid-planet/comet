@@ -24,11 +24,21 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
         }
     };
 
-    const { loading } = exportApi;
+    const { loading, progress } = exportApi;
 
     return (
         <Button color="default" onClick={onClickButtonPressed}>
-            {loading ? <>{loadingComponent ? loadingComponent : <CircularProgress size={23} />}</> : <FileIcon fileType={"application/msexcel"} />}
+            {loading ? (
+                <>
+                    {loadingComponent ? (
+                        loadingComponent
+                    ) : (
+                        <CircularProgress size={23} variant={progress ? "determinate" : "indeterminate"} value={progress} />
+                    )}
+                </>
+            ) : (
+                <FileIcon fileType={"application/msexcel"} />
+            )}
 
             <TextContainer>{children != null ? children : "Export"}</TextContainer>
         </Button>
