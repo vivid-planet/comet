@@ -1,5 +1,6 @@
 import { AnyObject } from "final-form";
 import * as React from "react";
+import { usePersistedState } from "./usePersistedState";
 import { IPagingApi } from "./useTableQueryPaging";
 
 export interface IFilterApi<FilterValues extends AnyObject> {
@@ -9,15 +10,18 @@ export interface IFilterApi<FilterValues extends AnyObject> {
 }
 export function useTableQueryFilter<FilterValues extends AnyObject>(
     defaultValues: FilterValues,
-    pagingApi?: IPagingApi<any>,
+    options: {
+        pagingApi?: IPagingApi<any>;
+        persistedStateId?: string;
+    } = {},
 ): IFilterApi<FilterValues> {
-    const [filters, setFilters] = React.useState<FilterValues>(defaultValues);
+    const [filters, setFilters] = usePersistedState<FilterValues>(defaultValues, { persistedStateId: options.persistedStateId + "_filter" });
 
     function changeFilters(v: FilterValues) {
         setFilters(v);
 
-        if (pagingApi) {
-            pagingApi.changePage(pagingApi.init, 1);
+        if (options.pagingApi) {
+            options.pagingApi.changePage(options.pagingApi.init, 1);
         }
     }
 

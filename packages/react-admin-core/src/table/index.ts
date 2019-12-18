@@ -19,5 +19,7 @@ export * from "./useTableQuery";
 export * from "./useTableQuerySort";
 export * from "./useTableQueryPaging";
 export * from "./useTableQueryFilter";
+export * from "./useCreatePersistedStateId";
+export * from "./usePersistedState";
 export * from "./withDirtyHandlerApi";
 export * from "./withTableQueryContext";
