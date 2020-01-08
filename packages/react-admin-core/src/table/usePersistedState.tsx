@@ -15,7 +15,7 @@ export function usePersistedState<T>(defaultValue: T, options: IOptions = {}): [
 
     React.useEffect(() => {
         return () => {
-            // on unmount we backukp the current state into allStates
+            // on unmount we backup the current state into allStates
             if (stateId) allStates[stateId] = state;
         };
     }, [state]);
