@@ -34,7 +34,7 @@
         "@types/uuid": "^3.4.4",
         "@vivid-planet/vplint": "^1.0.2",
         "apollo-client": "^2.6.3",
-        "date-fns": "^2.0.0-alpha.37",
+        "date-fns": "^2.9.0",
         "exceljs": "^3.4.0",
         "file-saver": "^2.0.2",
         "final-form": "^4.16.1",

@@ -20,7 +20,7 @@
         "@vivid-planet/react-admin-date-fns": "^1.0.0-alpha.0",
         "@vivid-planet/react-admin-final-form-material-ui": "^1.0.0-alpha.0",
         "@vivid-planet/react-admin-mui": "^1.0.0-alpha.1",
-        "date-fns": "^2.0.0-alpha.37",
+        "date-fns": "^2.0.0",
         "final-form": "^4.16.1",
         "react": "^16.8",
         "react-dom": "^16.8",
