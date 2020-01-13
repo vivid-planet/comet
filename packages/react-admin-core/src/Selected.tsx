@@ -5,7 +5,7 @@ import * as React from "react";
 import styled from "styled-components";
 
 interface IProps {
-    selectionMode: "edit" | "add";
+    selectionMode?: "edit" | "add";
     selectedId?: string;
     rows?: Array<{ id: string | number }>;
     query?: DocumentNode;
