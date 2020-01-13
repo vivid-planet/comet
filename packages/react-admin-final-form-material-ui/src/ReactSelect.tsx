@@ -11,20 +11,22 @@ import { Props as ReactSelectProps } from "react-select/base";
 import { Props as ReactSelectCreatableProps } from "react-select/creatable";
 
 // tslint:disable:max-classes-per-file
-export class ReactSelect<OptionType> extends React.Component<FieldRenderProps<OptionType, HTMLElement> & ReactSelectProps<OptionType>> {
+export class ReactSelect<OptionType> extends React.Component<FieldRenderProps<OptionType | undefined, HTMLElement> & ReactSelectProps<OptionType>> {
     public render() {
         const { input, meta, ...rest } = this.props;
         return <Select<OptionType> {...input} {...rest} />;
     }
 }
-export class ReactSelectAsync<OptionType> extends React.Component<FieldRenderProps<OptionType, HTMLElement> & ReactSelectAsyncProps<OptionType>> {
+export class ReactSelectAsync<OptionType> extends React.Component<
+    FieldRenderProps<OptionType | undefined, HTMLElement> & ReactSelectAsyncProps<OptionType>
+> {
     public render() {
         const { input, meta, ...rest } = this.props;
         return <Async<OptionType> {...input} {...rest} />;
     }
 }
 export class ReactSelectCreatable<OptionType> extends React.Component<
-    FieldRenderProps<OptionType, HTMLElement> & ReactSelectCreatableProps<OptionType>
+    FieldRenderProps<OptionType | undefined, HTMLElement> & ReactSelectCreatableProps<OptionType>
 > {
     public render() {
         const { input, meta, ...rest } = this.props;
@@ -32,7 +34,7 @@ export class ReactSelectCreatable<OptionType> extends React.Component<
     }
 }
 export class ReactSelectAsyncCreatable<OptionType> extends React.Component<
-    FieldRenderProps<OptionType, HTMLElement> & ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
+    FieldRenderProps<OptionType | undefined, HTMLElement> & ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
 > {
     public render() {
         const { input, meta, ...rest } = this.props;
