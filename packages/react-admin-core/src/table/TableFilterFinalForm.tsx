@@ -10,7 +10,7 @@ import { renderComponent } from "../finalFormRenderComponent";
 import * as sc from "./TableFilterFinalForm.sc";
 import { IFilterApi } from "./useTableQueryFilter";
 
-type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit"> & {
+type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" | "initialValues"> & {
     headline?: string;
     resetButton?: boolean;
     onSubmit?: FormProps<FilterValues>["onSubmit"];
