@@ -27,6 +27,9 @@
         "react-final-form": "^6.3.0",
         "styled-components": "^4.3.2"
     },
+    "dependencies": {
+        "qs": "^6.9.1"
+    },
     "devDependencies": {
         "@babel/core": "^7.5.4",
         "@storybook/addon-actions": "^5.1.9",
@@ -38,6 +41,7 @@
         "@types/storybook-react-router": "^1.0.0",
         "@types/storybook__react": "^4.0.2",
         "@types/webpack": "^4.4.34",
+        "@types/qs": "^6.9.0",
         "apollo-cache-inmemory": "^1.6.2",
         "apollo-link": "^1.2.12",
         "apollo-link-http": "^1.5.15",

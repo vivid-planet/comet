@@ -10,36 +10,6 @@ import { renderComponent } from "../finalFormRenderComponent";
 import * as sc from "./TableFilterFinalForm.sc";
 import { IFilterApi } from "./useTableQueryFilter";
 
-interface IAutoSaveProps<FilterValues> extends FormSpyRenderProps {
-    values: any;
-    filterApi: IFilterApi<FilterValues>;
-}
-interface IAutoSaveState {
-    values: any;
-}
-class AutoSave<FilterValues> extends React.Component<IAutoSaveProps<FilterValues>, IAutoSaveState> {
-    private valueChanged = debounce(() => {
-        const { values } = this.props;
-        if (!isEqual(this.state.values, values)) {
-            this.setState({ values });
-            this.props.filterApi.changeFilters(values);
-        }
-    }, 500);
-
-    constructor(props: IAutoSaveProps<FilterValues>) {
-        super(props);
-        this.state = { values: props.values };
-    }
-
-    public componentDidUpdate() {
-        this.valueChanged();
-    }
-
-    public render() {
-        return <div />;
-    }
-}
-
 type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit"> & {
     headline?: string;
     resetButton?: boolean;
@@ -51,17 +21,17 @@ type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit">
 export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Component<Props<FilterValues>> {
     public render() {
         // remove render, children and component from forwardProps as we define render and those would interfere
-        const { headline, resetButton, render, children, component, ...forwardProps } = this.props;
+        const { headline, resetButton, render, children, component, onSubmit, ...forwardProps } = this.props;
         return (
             <Form
-                initialValues={this.props.filterApi.defaultValues}
                 onSubmit={
-                    this.props.onSubmit
-                        ? this.props.onSubmit
+                    onSubmit
+                        ? onSubmit
                         : () => {
                               return;
                           }
                 }
+                form={this.props.filterApi.formApi}
                 render={this.renderForm}
                 {...forwardProps}
             />
@@ -100,7 +70,6 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                     </sc.FormHeader>
                 )}
                 {renderComponent(this.props, formRenderProps)}
-                <FormSpy subscription={{ values: true }}>{renderProps => <AutoSave {...renderProps} filterApi={this.props.filterApi} />}</FormSpy>
             </form>
         );
     };

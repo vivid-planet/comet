@@ -1,11 +1,12 @@
-import { AnyObject } from "final-form";
+import { debounce } from "debounce";
+import { AnyObject, createForm, FormApi } from "final-form";
+import isEqual = require("lodash.isequal");
 import * as React from "react";
 import { IPagingApi } from "./useTableQueryPaging";
 
 export interface IFilterApi<FilterValues extends AnyObject> {
     current: FilterValues;
-    changeFilters: (values: FilterValues) => void;
-    defaultValues: FilterValues;
+    formApi: FormApi<FilterValues>;
 }
 export function useTableQueryFilter<FilterValues extends AnyObject>(
     defaultValues: FilterValues,
@@ -13,17 +14,31 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
 ): IFilterApi<FilterValues> {
     const [filters, setFilters] = React.useState<FilterValues>(defaultValues);
 
-    function changeFilters(v: FilterValues) {
-        setFilters(v);
-
-        if (pagingApi) {
-            pagingApi.changePage(pagingApi.init, 1);
-        }
+    const ref = React.useRef<FormApi<FilterValues>>();
+    if (!ref.current) {
+        ref.current = createForm({
+            initialValues: defaultValues,
+            onSubmit: values => {
+                // Nothing todo
+            },
+        });
     }
+
+    const formApi = ref.current;
+    formApi.subscribe(
+        debounce(formState => {
+            if (!isEqual(filters, formState.values)) {
+                setFilters(formState.values);
+                if (pagingApi) {
+                    pagingApi.changePage(pagingApi.init, 1);
+                }
+            }
+        }, 500),
+        { values: true },
+    );
 
     return {
         current: filters,
-        changeFilters,
-        defaultValues,
+        formApi,
     };
 }
