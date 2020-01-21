@@ -1,12 +1,6 @@
 import { styled } from "@vivid-planet/react-admin-mui";
 
-interface IColorProps {
-    colorSelectedDate?: string;
-    colorHover?: string;
-    colorHoverSelected?: string;
-}
-
-export const SingleDatePickerWrapper = styled.div<IColorProps>`
+export const SingleDatePickerWrapper = styled.div`
     * {
         font: inherit;
     }
@@ -24,12 +18,12 @@ export const SingleDatePickerWrapper = styled.div<IColorProps>`
     }
 
     .CalendarDay__selected {
-        background: ${props => (props.colorSelectedDate ? props.colorSelectedDate : "#607384")};
+        background: ${({ theme }) => theme.palette.primary.main};
         color: white;
     }
 
     .CalendarDay__selected:hover {
-        background: ${props => (props.colorHoverSelected ? props.colorHoverSelected : "#607384")};
+        background: ${({ theme }) => theme.palette.primary.main};
     }
 
     td {

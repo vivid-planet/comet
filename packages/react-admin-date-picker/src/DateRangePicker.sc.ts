@@ -4,14 +4,7 @@ import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 /* tslint:enable */
 
-interface IColorProps {
-    colorSelectedDate?: string;
-    colorDaysBetween?: string;
-    colorHover?: string;
-    colorHoverSelected?: string;
-}
-
-export const DateRangePickerWrapper = styled.div<IColorProps>`
+export const DateRangePickerWrapper = styled.div`
     * {
         font: inherit;
     }
@@ -33,21 +26,21 @@ export const DateRangePickerWrapper = styled.div<IColorProps>`
     }
 
     .CalendarDay__selected_span {
-        background: ${props => (props.colorDaysBetween ? props.colorDaysBetween : "#7d98b0")};
+        background: ${({ theme }) => theme.palette.secondary.main};
         color: white;
     }
 
     .CalendarDay__selected_span:hover {
-        background: ${props => (props.colorHoverSelected ? props.colorHoverSelected : "#607384")};
+        background: ${({ theme }) => theme.palette.primary.main};
     }
 
     .CalendarDay__selected {
-        background: ${props => (props.colorSelectedDate ? props.colorSelectedDate : "#607384")};
+        background: ${({ theme }) => theme.palette.primary.main};
         color: white;
     }
 
     .CalendarDay__selected:hover {
-        background: ${props => (props.colorHoverSelected ? props.colorHoverSelected : "#607384")};
+        background: ${({ theme }) => theme.palette.primary.main};
     }
 
     td {
@@ -63,11 +56,11 @@ export const DateRangePickerWrapper = styled.div<IColorProps>`
     }
 
     .CalendarDay__hovered_span {
-        background-color: ${props => (props.colorDaysBetween ? props.colorDaysBetween : "#7d98b0")};
+        background-color: ${({ theme }) => theme.palette.secondary.main};
         color: white;
     }
 
     .CalendarDay__hovered_span:hover {
-        background-color: ${props => (props.colorHoverSelected ? props.colorHoverSelected : "#607384")};
+        background-color: ${({ theme }) => theme.palette.primary.main};
     }
 `;
