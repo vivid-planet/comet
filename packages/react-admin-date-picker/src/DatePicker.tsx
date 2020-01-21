@@ -3,7 +3,7 @@ import * as moment from "moment";
 import * as React from "react";
 import { SingleDatePicker as AirBNBDatePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
-import * as sc from "./SingleDatePicker.sc";
+import * as sc from "./DatePicker.sc";
 
 interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     colorSelected?: string;
@@ -11,7 +11,7 @@ interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     colorHoverSelected?: string;
 }
 
-export const SingleDatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, ...props }) => {
+export const DatePicker: React.FunctionComponent<IProps> = ({ input: { value, onChange, ...restInput }, meta, ...props }) => {
     const localeContext = React.useContext(LocaleContext);
     const locale = moment().locale(localeContext.localeName ? localeContext.localeName : "de");
     const [focused, setFocus] = React.useState();

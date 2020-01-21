@@ -1,6 +1,6 @@
 import { storiesOf } from "@storybook/react";
 import { LocaleContext } from "@vivid-planet/react-admin-date-fns";
-import { DateRangePicker } from "@vivid-planet/react-admin-date-picker";
+import { DatePicker } from "@vivid-planet/react-admin-date-picker";
 import { de as dateFnsLocaleDe } from "date-fns/locale";
 import * as React from "react";
 import { Field, Form } from "react-final-form";
@@ -12,16 +12,14 @@ const Story = () => {
                 onSubmit={() => {
                     // do nothing
                 }}
-                render={() => {
-                    return (
-                        <form>
-                            <Field name="date" label="Zeitraum" component={DateRangePicker} showClearDates />
-                        </form>
-                    );
-                }}
+                render={() => (
+                    <form>
+                        <Field name="date" label="Zeitraum" component={DatePicker} showClearDate />
+                    </form>
+                )}
             />
         </LocaleContext.Provider>
     );
 };
 
-storiesOf("react-admin-date-picker", module).add("Date Range Picker", () => <Story />);
+storiesOf("react-admin-date-picker", module).add("Date Picker", () => <Story />);

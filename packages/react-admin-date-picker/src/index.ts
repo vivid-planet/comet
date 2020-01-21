@@ -1,2 +1,2 @@
 export * from "./DateRangePicker";
-export * from "./SingleDatePicker";
+export * from "./DatePicker";
