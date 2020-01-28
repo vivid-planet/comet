@@ -3,7 +3,6 @@ node_js:
     - "8"
 cache: yarn
 before_install:
-    - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
     - curl -o- -L https://yarnpkg.com/install.sh | bash
     - export PATH="$HOME/.yarn/bin:$PATH"
 before_script:
