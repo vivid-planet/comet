@@ -22,23 +22,21 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
                 // Nothing todo
             },
         });
-    }
-
-    const formApi = ref.current;
-    formApi.subscribe(
-        debounce(formState => {
-            if (!isEqual(filters, formState.values)) {
-                setFilters(formState.values);
-                if (pagingApi) {
-                    pagingApi.changePage(pagingApi.init, 1);
+        ref.current.subscribe(
+            debounce(formState => {
+                if (!isEqual(filters, formState.values)) {
+                    setFilters(formState.values);
+                    if (pagingApi) {
+                        pagingApi.changePage(pagingApi.init, 1);
+                    }
                 }
-            }
-        }, 500),
-        { values: true },
-    );
+            }, 500),
+            { values: true },
+        );
+    }
 
     return {
         current: filters,
-        formApi,
+        formApi: ref.current,
     };
 }
