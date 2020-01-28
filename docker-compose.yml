@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+    react-admin:
+        image: eu.gcr.io/vivid-planet-public/dev/node-10-dev:node-yarn
+        user: "${RUN_AS_UID}:0"
+        volumes:
+            - ./:/opt/app-root/src
+        ports:
+            - 8080:8080
+        command: bash -c "yarn install && yarn run build && cd packages/react-admin-stories && yarn start-storybook --port=8080"
+    githook:
+        image: "eu.gcr.io/vivid-planet-public/dev/githook-lint-installer:master"
+        volumes:
+            - .:/tmp

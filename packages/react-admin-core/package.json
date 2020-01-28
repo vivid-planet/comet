@@ -44,7 +44,8 @@
         "build": "tsc --project ./tsconfig.json",
         "start": "tsc --project ./tsconfig.json --watch",
         "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
-        "prepare": "npm run build"
+        "prepare": "npm run build",
+        "lint:tslint": "tslint --project ."
     },
     "publishConfig": {
         "access": "public"
