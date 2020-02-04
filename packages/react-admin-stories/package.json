@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-stories",
-    "version": "1.0.7",
+    "version": "1.0.8-alpha.0",
     "files": [
         "src"
     ],
@@ -36,12 +36,12 @@
         "@storybook/addon-storysource": "^5.3.9",
         "@storybook/react": "^5.3.9",
         "@types/file-saver": "^2.0.1",
+        "@types/qs": "^6.9.0",
         "@types/react-router": "^5.0.3",
         "@types/react-router-dom": "^4.3.4",
         "@types/storybook-react-router": "^1.0.1",
         "@types/storybook__react": "^5.2.1",
         "@types/webpack": "^4.4.34",
-        "@types/qs": "^6.9.0",
         "apollo-cache-inmemory": "^1.6.2",
         "apollo-link": "^1.2.12",
         "apollo-link-http": "^1.5.15",

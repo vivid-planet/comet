@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-core",
-    "version": "1.0.0-alpha.32",
+    "version": "1.0.0-alpha.33",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -12,11 +12,11 @@
         "query-string": "^6.8.1",
         "react-dnd": "^8.0.3",
         "react-dnd-html5-backend": "^8.0.3",
-        "uuid": "^3.3.2",
-        "use-constant": "^1.0.0"
+        "use-constant": "^1.0.0",
+        "uuid": "^3.3.2"
     },
     "devDependencies": {
-        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.14"
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.15"
     },
     "peerDependencies": {
         "@apollo/react-common": "^3.0.0",
