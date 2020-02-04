@@ -11,7 +11,7 @@ import {
     Table,
     TableFilterFinalForm,
     TableQuery,
-    useCreatePersistedStateId,
+    usePersistedStateId,
     useTableQuery,
     useTableQueryFilter,
 } from "@vivid-planet/react-admin-core";
@@ -154,7 +154,7 @@ function ExampleForm(props: IExampleFormProps) {
 }
 
 function Story() {
-    const persistedStateId = useCreatePersistedStateId();
+    const persistedStateId = usePersistedStateId();
     return (
         <Stack topLevelTitle="Stack">
             <StackSwitch>
