@@ -14,7 +14,7 @@ interface ITabProps extends TabProps {
     tabLabel?: React.ReactNode;
     children: React.ReactNode;
 }
-export const Tab: React.SFC<ITabProps> = () => null;
+export const RouterTab: React.SFC<ITabProps> = () => null;
 
 function TabContainer(props: any) {
     return (
@@ -46,7 +46,7 @@ class RouterTabs extends React.Component<IProps> {
         const { classes, variant, indicatorColor, appBarComponent: AppBar = MaterialAppBar, tabComponent: TabComponent = MaterialTab } = this.props;
 
         const paths = React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
-            if (child.type !== Tab) {
+            if (child.type !== RouterTab) {
                 throw new Error("RouterTabs must contain only Tab children");
             }
             return child.props.path;
