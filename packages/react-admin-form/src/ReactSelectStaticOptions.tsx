@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FieldInputProps, FieldMetaState, FieldRenderProps } from "react-final-form";
+import { FieldInputProps, FieldRenderProps } from "react-final-form";
 import { Props as ReactSelectProps } from "react-select/base";
 import { OptionsType } from "react-select/src/types";
 import { ReactSelect } from "./ReactSelect";
@@ -9,7 +9,7 @@ interface IOptionType {
     label: string;
 }
 
-interface IProps extends FieldRenderProps<string, HTMLElement>, ReactSelectProps<IOptionType | undefined> {
+interface IProps extends FieldRenderProps<string, HTMLElement>, ReactSelectProps<IOptionType> {
     options: OptionsType<IOptionType>;
 }
 export class ReactSelectStaticOptions extends React.Component<IProps> {
@@ -22,10 +22,13 @@ export class ReactSelectStaticOptions extends React.Component<IProps> {
             value: optionValue,
         };
         return (
-            <ReactSelect<IOptionType | undefined>
+            <ReactSelect<IOptionType>
                 {...rest}
                 input={selectInput}
-                meta={meta}
+                meta={{
+                    ...meta,
+                    initial: this.props.options.find(({ value }) => value === meta.initial),
+                }}
                 getOptionLabel={this.getOptionLabel}
                 getOptionValue={this.getOptionValue}
                 onChange={this.onChange}
