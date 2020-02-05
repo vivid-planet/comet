@@ -42,4 +42,4 @@ function Story() {
     );
 }
 
-storiesOf("material-ui-react-select", module).add("React Select", () => <Story />);
+storiesOf("react-admin-form", module).add("React Select", () => <Story />);

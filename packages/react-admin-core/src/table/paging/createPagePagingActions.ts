@@ -4,7 +4,7 @@ import { IPagingInfo } from "./IPagingInfo";
 interface IPagePagingData {
     nextPage: number | null;
     previousPage: number | null;
-    totalPages?: number;
+    totalPages?: number | null;
 }
 
 export function createPagePagingActions<TData extends IPagePagingData>(pagingApi: IPagingApi<number>, data: TData): IPagingInfo {

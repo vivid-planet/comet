@@ -24,7 +24,7 @@ export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extend
         const { children, component, name, label, required, validate, fieldContainerComponent, ...rest } = this.props;
         const composedValidate = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
         return (
-            <FinalFormField<FieldValue, T> name={name} validate={composedValidate} {...rest}>
+            <FinalFormField<FieldValue, FieldRenderProps<FieldValue, T>, T> name={name} validate={composedValidate} {...rest}>
                 {this.renderField.bind(this)}
             </FinalFormField>
         );

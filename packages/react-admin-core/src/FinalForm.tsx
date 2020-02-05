@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
+    components?: {
+        buttonsContainer?: React.ComponentType;
+    };
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -59,10 +62,12 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         };
     }, [dirtyHandler]);
 
-    return <Form onSubmit={handleSubmit} initialValues={props.initialValues} render={renderForm} />;
+    return <Form {...props} onSubmit={handleSubmit} render={renderForm} />;
 
     function renderForm(frmRP: FormRenderProps<FormValues>) {
         formRenderProps = frmRP;
+        const ButtonsContainer = props.components && props.components.buttonsContainer ? props.components.buttonsContainer : sc.ButtonsContainer;
+
         return (
             <form onSubmit={submit}>
                 <sc.InnerForm>
@@ -81,26 +86,28 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         {formRenderProps.submitting && <CircularProgress />}
                         {!formRenderProps.submitting && (
                             <>
-                                {stackApi && (
-                                    <Button className={classes.saveButton} variant="text" color="default" onClick={handleCancelClick}>
+                                <ButtonsContainer>
+                                    {stackApi && (
+                                        <Button className={classes.saveButton} variant="text" color="default" onClick={handleCancelClick}>
+                                            <sc.ButtonIconWrapper>
+                                                <CancelIcon fontSize={"inherit"} />
+                                            </sc.ButtonIconWrapper>
+                                            Abbrechen
+                                        </Button>
+                                    )}
+                                    <Button
+                                        className={classes.saveButton}
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
+                                    >
                                         <sc.ButtonIconWrapper>
-                                            <CancelIcon fontSize={"inherit"} />
+                                            <SaveIcon fontSize={"inherit"} />
                                         </sc.ButtonIconWrapper>
-                                        Abbrechen
+                                        Speichern
                                     </Button>
-                                )}
-                                <Button
-                                    className={classes.saveButton}
-                                    variant="contained"
-                                    color="primary"
-                                    type="submit"
-                                    disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
-                                >
-                                    <sc.ButtonIconWrapper>
-                                        <SaveIcon fontSize={"inherit"} />
-                                    </sc.ButtonIconWrapper>
-                                    Speichern
-                                </Button>
+                                </ButtonsContainer>
                             </>
                         )}
                     </>

@@ -10,7 +10,7 @@ function getPageParameterFromUrl(url: string, options: IOptions) {
 interface IRestPagingData {
     nextPage?: string;
     previousPage?: string;
-    totalPages?: number;
+    totalPages?: number | null;
 }
 
 interface IOptions {

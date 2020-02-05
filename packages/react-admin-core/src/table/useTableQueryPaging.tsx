@@ -1,14 +1,21 @@
 import * as React from "react";
+import { usePersistedState } from "./usePersistedState";
 
 export interface IPagingApi<T> {
+    init: T;
     current: T;
     currentPage?: number;
     changePage: (variables: T, page?: number) => void;
     attachTableRef: (ref: React.RefObject<HTMLDivElement | undefined>) => void;
 }
-export function useTableQueryPaging<T>(init: T): IPagingApi<T> {
-    const [page, setPage] = React.useState(1);
-    const [variables, setVariables] = React.useState<T>(init);
+export function useTableQueryPaging<T>(
+    init: T,
+    options: {
+        persistedStateId?: string;
+    } = {},
+): IPagingApi<T> {
+    const [page, setPage] = usePersistedState(1, { persistedStateId: options.persistedStateId + "_pagingPage" });
+    const [variables, setVariables] = usePersistedState<T>(init, { persistedStateId: options.persistedStateId + "_pagingVariables" });
 
     let tableRef: React.RefObject<HTMLDivElement | undefined> | undefined;
     function attachTableRef(ref: any) {
@@ -24,6 +31,7 @@ export function useTableQueryPaging<T>(init: T): IPagingApi<T> {
     }
 
     return {
+        init,
         current: variables,
         currentPage: page,
         changePage,

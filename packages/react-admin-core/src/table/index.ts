@@ -1,9 +1,11 @@
 // Export folders
 export * from "./paging";
+export * from "./excelexport";
 
 // Export files
 export * from "./AddButton";
 export * from "./DeleteButton";
+export * from "./ExcelExportButton";
 export * from "./LocalChangesToolbar";
 export * from "./Pagination";
 export * from "./Table";
@@ -17,5 +19,7 @@ export * from "./useTableQuery";
 export * from "./useTableQuerySort";
 export * from "./useTableQueryPaging";
 export * from "./useTableQueryFilter";
+export * from "./usePersistedStateId";
+export * from "./usePersistedState";
 export * from "./withDirtyHandlerApi";
 export * from "./withTableQueryContext";

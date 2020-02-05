@@ -9,3 +9,5 @@ export const ButtonIconWrapper = styled.div`
     font-size: 20px;
     line-height: 28px;
 `;
+
+export const ButtonsContainer = styled.div``;

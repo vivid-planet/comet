@@ -49,6 +49,7 @@ const styles = (theme: Theme) =>
             fontSize: 16,
             overflow: "hidden",
             textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
         },
         placeholder: {
             position: "absolute",
@@ -102,6 +103,7 @@ function Option<OptionType>(props: OptionProps<OptionType>) {
         <MenuItem
             buttonRef={props.innerRef}
             selected={props.isFocused}
+            disabled={props.isDisabled}
             component="div"
             style={{
                 fontWeight: props.isSelected ? 500 : 400,
