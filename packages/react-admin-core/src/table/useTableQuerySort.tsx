@@ -1,4 +1,5 @@
 import * as React from "react";
+import { usePersistedState } from "./usePersistedState";
 
 export enum SortDirection {
     ASC = "asc",
@@ -12,8 +13,13 @@ export interface ISortApi {
     current: ISortInformation;
     changeSort: (columnName: string) => void;
 }
-export function useTableQuerySort(defaultSort: ISortInformation): ISortApi {
-    const [sort, setSort] = React.useState<ISortInformation>(defaultSort);
+export function useTableQuerySort(
+    defaultSort: ISortInformation,
+    options: {
+        persistedStateId?: string;
+    } = {},
+): ISortApi {
+    const [sort, setSort] = usePersistedState<ISortInformation>(defaultSort, { persistedStateId: options.persistedStateId + "_sort" });
 
     function changeSort(columnName: string) {
         let direction = SortDirection.ASC;

@@ -17,12 +17,14 @@ import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
 import { RestLink } from "apollo-link-rest";
 import gql from "graphql-tag";
+import * as qs from "qs";
 import * as React from "react";
 
 const gqlRest = gql;
 
 const query = gqlRest`
 query users(
+    $pathFunction: any
     $page: Int
     $sort: String
     $order: String
@@ -33,7 +35,7 @@ query users(
         sort: $sort
         order: $order
         query: $query
-    ) @rest(type: "UsersPayload", path: "users?q={args.query}&_page={args.page}&_limit=5&_sort={args.sort}&_order={args.order}") {
+    ) @rest(type: "UsersPayload", pathBuilder: $pathFunction) {
         meta @type(name: "UsersMeta") {
             totalCount
             links
@@ -63,17 +65,38 @@ interface IQueryData {
     };
 }
 
+function pathFunction({ args }: { args: { [key: string]: any } }) {
+    interface IPathMapping {
+        [arg: string]: string;
+    }
+    const paramMapping: IPathMapping = {
+        query: "q",
+        page: "_page",
+        sort: "_sort",
+        order: "_order",
+    };
+
+    const q = Object.keys(args).reduce((acc: { [key: string]: any }, key: string): { [key: string]: any } => {
+        if (paramMapping[key] && args[key]) {
+            acc[paramMapping[key]] = args[key];
+        }
+        return acc;
+    }, {});
+    return "users?_limit=5&" + qs.stringify(q, { arrayFormat: "brackets" });
+}
+
 interface IVariables extends IFilterValues {
+    pathFunction: any;
     page: number;
     sort: string;
     order: string;
 }
 interface IFilterValues {
-    query: string;
+    query?: string;
 }
 
 function Story() {
-    const filterApi = useTableQueryFilter<IFilterValues>({ query: "" });
+    const filterApi = useTableQueryFilter<IFilterValues>({});
 
     const pagingApi = useTableQueryPaging(1);
     const sortApi = useTableQuerySort({
@@ -82,6 +105,7 @@ function Story() {
     });
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
         variables: {
+            pathFunction,
             sort: sortApi.current.columnName,
             order: sortApi.current.direction,
             page: pagingApi.current,

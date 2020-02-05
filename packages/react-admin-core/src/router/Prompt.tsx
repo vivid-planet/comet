@@ -1,4 +1,5 @@
 import * as React from "react";
+import useConstant from "use-constant";
 import { RouterContext } from "./Context";
 const UUID = require("uuid");
 
@@ -7,7 +8,7 @@ interface IProps {
     message: () => boolean | string;
 }
 export const RouterPrompt: React.FunctionComponent<IProps> = ({ message }) => {
-    const id = React.useMemo(() => UUID.v4(), []);
+    const id = useConstant<string>(() => UUID.v4());
     const context = React.useContext(RouterContext);
     React.useEffect(() => {
         if (context) {
