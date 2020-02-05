@@ -2869,11 +2869,6 @@
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
   integrity sha512-te5lMAWii1uEJ4FwLjzdlbw3+n0FZNOvFXHxQDKeT0dilh7HOzdMzV2TrJVUzq8ep7J4Na8OUYPRLSQkJHAlrg==
 
-"@vivid-planet/vplint@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@vivid-planet/vplint/-/vplint-1.0.2.tgz#e8552d6ce24579fa6013d2e6747c4fbc58681558"
-  integrity sha512-9HEe58kjdTEdu5N52Ssaxgqe1DFBiMeRM8PMN2Gow/ybmelEPlI5OTZ6FIkPHFJoFlChNe9FvsfdNRLI0I+TDg==
-
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"
