@@ -128,7 +128,7 @@ export class Stack extends React.Component<IProps, IState> {
                                         <ArrowBackIcon />
                                     </Button>
                                 )}
-                                <StackBreadcrumb title={this.props.topLevelTitle} url={routerProps.match.url}>
+                                <StackBreadcrumb title={this.props.topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
                                     <DirtyHandler
                                         ref={ref => {
                                             this.dirtyHandlerApi = ref ? ref.dirtyHandlerApi : undefined;

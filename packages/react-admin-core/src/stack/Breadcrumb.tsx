@@ -6,6 +6,7 @@ interface IProps {
     url: string;
     title: string;
     invisible?: boolean;
+    ignoreParentId?: boolean;
 }
 
 const BreadcrumbContext = React.createContext<string>("");
@@ -22,7 +23,7 @@ export class StackBreadcrumb extends React.Component<IProps> {
         return (
             <BreadcrumbContext.Consumer>
                 {parentId => {
-                    this.parentId = parentId;
+                    this.parentId = !this.props.ignoreParentId ? parentId : "";
                     return <BreadcrumbContext.Provider value={this.id}>{this.props.children}</BreadcrumbContext.Provider>;
                 }}
             </BreadcrumbContext.Consumer>
