@@ -3,7 +3,7 @@ import * as React from "react";
 import { SingleDatePicker as AirBNBDatePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
 import * as sc from "./DatePicker.sc";
-import { useLocaleName } from "./LocaleContextProvider";
+import { useLocaleName } from "@vivid-planet/react-admin-date-fns";
 
 export const DatePicker: React.FunctionComponent<FieldRenderProps<string | Date, HTMLInputElement>> = ({
     input: { value, onChange, ...restInput },

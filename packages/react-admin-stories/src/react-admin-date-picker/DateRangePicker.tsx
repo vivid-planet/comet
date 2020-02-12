@@ -1,5 +1,6 @@
 import { storiesOf } from "@storybook/react";
-import { DateRangePicker, LocaleContextProvider } from "@vivid-planet/react-admin-date-picker";
+import { LocaleContextProvider } from "@vivid-planet/react-admin-date-fns";
+import { DateRangePicker } from "@vivid-planet/react-admin-date-picker";
 import { de as dateFnsLocaleDe } from "date-fns/locale";
 import * as React from "react";
 import { Field, Form } from "react-final-form";

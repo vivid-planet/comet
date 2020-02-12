@@ -29,7 +29,8 @@
         "styled-components": "^4.3.2"
     },
     "dependencies": {
-        "qs": "^6.9.1"
+        "qs": "^6.9.1",
+        "date-fns": "^2.8.0"
     },
     "devDependencies": {
         "@babel/core": "^7.8.3",
@@ -65,8 +66,5 @@
     "publishConfig": {
         "access": "public"
     },
-    "license": "BSD-2-Clause",
-    "dependencies": {
-        "date-fns": "^2.8.0"
-    }
+    "license": "BSD-2-Clause"
 }

@@ -1,21 +1,16 @@
-import { LocaleContext } from "@vivid-planet/react-admin-date-fns";
-import { Locale } from "date-fns";
+import { Locale as DateFnsLocale } from "date-fns";
 import { de } from "date-fns/locale";
 import * as React from "react";
 
 interface IInternalLocaleContext {
-    locale: Locale;
+    locale: DateFnsLocale;
     name: string;
 }
 
 const InternalLocaleContext = React.createContext<IInternalLocaleContext>({ locale: de, name: "de" });
 
 export const LocaleContextProvider: React.FunctionComponent<IInternalLocaleContext> = ({ locale, name, children }) => {
-    return (
-        <InternalLocaleContext.Provider value={{ locale, name }}>
-            <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>
-        </InternalLocaleContext.Provider>
-    );
+    return <InternalLocaleContext.Provider value={{ locale, name }}>{children}</InternalLocaleContext.Provider>;
 };
 
 export function useLocale(): Locale {
