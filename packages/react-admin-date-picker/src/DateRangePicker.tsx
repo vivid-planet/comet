@@ -1,9 +1,9 @@
-import { LocaleContext } from "@vivid-planet/react-admin-date-fns";
 import * as moment from "moment";
 import * as React from "react";
 import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
 import * as sc from "./DateRangePicker.sc";
+import { useLocaleName } from "./LocaleContextProvider";
 
 interface IDateRange {
     start: Date | null;
@@ -15,8 +15,8 @@ export const DateRangePicker: React.FunctionComponent<FieldRenderProps<IDateRang
     meta,
     ...props
 }) => {
-    const localeContext = React.useContext(LocaleContext);
-    const locale = moment().locale(localeContext.localeName ? localeContext.localeName : "de");
+    const localeName = useLocaleName();
+    const locale = moment().locale(localeName);
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
     const start = value.start ? moment(value.start) : null;
     const end = value.end ? moment(value.end) : null;

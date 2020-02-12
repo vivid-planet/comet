@@ -1,17 +1,17 @@
-import { LocaleContext } from "@vivid-planet/react-admin-date-fns";
 import * as moment from "moment";
 import * as React from "react";
 import { SingleDatePicker as AirBNBDatePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
 import * as sc from "./DatePicker.sc";
+import { useLocaleName } from "./LocaleContextProvider";
 
 export const DatePicker: React.FunctionComponent<FieldRenderProps<string | Date, HTMLInputElement>> = ({
     input: { value, onChange, ...restInput },
     meta,
     ...props
 }) => {
-    const localeContext = React.useContext(LocaleContext);
-    const locale = moment().locale(localeContext.localeName ? localeContext.localeName : "de");
+    const localeName = useLocaleName();
+    const locale = moment().locale(localeName);
     const [focused, setFocus] = React.useState();
     const selectedDate = value ? moment(value) : null;
 

@@ -1,13 +1,12 @@
 import { storiesOf } from "@storybook/react";
-import { LocaleContext } from "@vivid-planet/react-admin-date-fns";
-import { DateRangePicker } from "@vivid-planet/react-admin-date-picker";
+import { DateRangePicker, LocaleContextProvider } from "@vivid-planet/react-admin-date-picker";
 import { de as dateFnsLocaleDe } from "date-fns/locale";
 import * as React from "react";
 import { Field, Form } from "react-final-form";
 
 const Story = () => {
     return (
-        <LocaleContext.Provider value={{ ...dateFnsLocaleDe, localeName: "de" }}>
+        <LocaleContextProvider name="de" locale={dateFnsLocaleDe}>
             <Form
                 onSubmit={() => {
                     // do nothing
@@ -20,7 +19,7 @@ const Story = () => {
                     );
                 }}
             />
-        </LocaleContext.Provider>
+        </LocaleContextProvider>
     );
 };
 
