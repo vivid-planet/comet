@@ -1,7 +1,0 @@
-{
-    "linters": {
-        "*.{ts,tsx,js,jsx,json,css,scss,md}": ["prettylint"],
-        "*.{ts,tsx}": ["tslint", "lerna --loglevel silent run --stream tsc -- --silent"]
-    },
-    "ignore": ["package-lock.json", "*.lock"]
-}

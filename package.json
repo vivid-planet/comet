@@ -9,7 +9,10 @@
         "build": "lerna run build --stream",
         "bootstrap": "lerna bootstrap",
         "start": "lerna run --stream --no-sort --concurrency 999 start",
-        "storybook": "yarn --cwd packages/react-admin-stories storybook"
+        "storybook": "yarn --cwd packages/react-admin-stories storybook",
+        "lint": "npm run lint:prettylint && npm run lint:tslint && npm run build",
+        "lint:prettylint": "prettylint \"**/src/**/*.ts\"",
+        "lint:tslint": "lerna run lint:tslint"
     },
     "devDependencies": {
         "@apollo/react-common": "^3.0.0",
