@@ -7,8 +7,11 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
+import { IExportApi } from "./excelexport/IExportApi";
+import { isVisible } from "./isVisible";
 import { TablePagination } from "./Pagination";
 import { IPagingInfo } from "./paging";
+import { safeColumnGet } from "./safeColumnGet";
 import * as sc from "./Table.sc";
 import { ISortApi, SortDirection } from "./useTableQuerySort";
 
@@ -37,7 +40,7 @@ export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITable
     return (
         <>
             {columns.map((column: any, colIndex: number) => {
-                if (column.visible === false) return null;
+                if (!isVisible(VisibleType.Browser, column.visible)) return null;
                 const { name, header, sortable, headerProps } = column;
                 return (
                     <TableCell key={colIndex} {...headerProps}>
@@ -59,17 +62,6 @@ export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITable
     );
 }
 
-const safeColumnGet = (row: any, path: string): string | number | null => {
-    const splitPath = path.split(".");
-    const nextRow = row[splitPath[0]];
-    if (!nextRow) return null;
-
-    if (splitPath.length === 1) return nextRow;
-
-    const remainingPath = splitPath.slice(1).join(".");
-    return safeColumnGet(nextRow, remainingPath);
-};
-
 export interface ITableColumnsProps<TRow extends IRow> {
     row: TRow;
     columns: Array<ITableColumn<TRow>>;
@@ -79,7 +71,7 @@ export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsP
     return (
         <>
             {columns.map((column: any, colIndex: number) => {
-                if (column.visible === false) return null;
+                if (!isVisible(VisibleType.Browser, column.visible)) return null;
                 return (
                     <TableCell key={colIndex} {...column.cellProps}>
                         {column.render ? column.render(row) : safeColumnGet(row, column.name)}
@@ -92,11 +84,20 @@ export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsP
 export interface IRow {
     id: string | number;
 }
-interface ITableColumn<TRow extends IRow> {
+
+export enum VisibleType {
+    Browser = "browser",
+    Export = "export",
+}
+export type Visible = boolean | { [key in VisibleType]?: boolean };
+export interface ITableColumn<TRow extends IRow> {
     name: string;
-    visible?: boolean;
+    visible?: Visible;
     header?: string | React.ReactNode;
+    headerExcel?: string;
     render?: (row: TRow) => React.ReactNode;
+    renderExcel?: (row: TRow) => string | number;
+    formatForExcel?: string;
     sortable?: boolean;
     cellProps?: TableCellProps;
     headerProps?: TableCellProps;
@@ -122,6 +123,8 @@ export interface ITableProps<TRow extends IRow> {
     hideTableHead?: boolean;
     columns: Array<ITableColumn<TRow>>;
     sortApi?: ISortApi;
+    paginationPosition?: "bottom" | "top" | "both";
+    exportApis?: Array<IExportApi<TRow>>;
 }
 
 function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRowProps<TRow>) {
@@ -140,19 +143,35 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
     }
 
     public render() {
-        const { data } = this.props;
+        const { data, exportApis = [] } = this.props;
 
         const renderHeadTableRow = this.props.renderHeadTableRow || (props => <DefaultHeadTableRow {...props} />);
 
         if (this.props.pagingInfo) {
             this.props.pagingInfo.attachTableRef(this.domRef);
         }
+        exportApis.forEach(exportApi => {
+            exportApi.attachTable(this);
+        });
+
+        const paginationPosition = this.props.paginationPosition || "bottom";
+        const shouldRenderTopPagination = paginationPosition === "top" || paginationPosition === "both";
+        const shouldRenderBottomPagination = paginationPosition === "bottom" || paginationPosition === "both";
 
         return (
             <RootRef rootRef={this.domRef}>
                 <MuiTable>
                     {!this.props.hideTableHead && (
                         <sc.StyledTableHead>
+                            {this.props.pagingInfo && shouldRenderTopPagination && (
+                                <TableRow>
+                                    <TablePagination
+                                        totalCount={this.props.totalCount}
+                                        pagingInfo={this.props.pagingInfo}
+                                        rowName={this.props.rowName}
+                                    />
+                                </TableRow>
+                            )}
                             {renderHeadTableRow({
                                 columns: this.props.columns,
                                 sortApi: this.props.sortApi,
@@ -181,7 +200,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                             });
                         })}
                     </TableBody>
-                    {this.props.pagingInfo && (
+                    {this.props.pagingInfo && shouldRenderBottomPagination && (
                         <TableFooter>
                             <TableRow>
                                 <TablePagination totalCount={this.props.totalCount} pagingInfo={this.props.pagingInfo} rowName={this.props.rowName} />

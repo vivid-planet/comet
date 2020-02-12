@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-final-form-material-ui",
-    "version": "1.0.0-alpha.10",
+    "version": "1.0.0-alpha.11",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -15,7 +15,7 @@
         "final-form": "^4.16.1",
         "react": "^16.8",
         "react-dom": "^16.8",
-        "react-final-form": "^6.3.0",
+        "react-final-form": "^6.3.1",
         "react-select": "^3.0.4"
     },
     "scripts": {
@@ -23,7 +23,8 @@
         "build": "tsc --project ./tsconfig.json",
         "start": "tsc --project ./tsconfig.json --watch",
         "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
-        "prepare": "npm run build"
+        "prepare": "npm run build",
+        "lint:tslint": "tslint --project ."
     },
     "publishConfig": {
         "access": "public"

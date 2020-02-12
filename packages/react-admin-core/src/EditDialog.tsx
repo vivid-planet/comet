@@ -10,10 +10,23 @@ import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
 import { ISelectionApi } from "./SelectionApi";
 import { SelectionRoute } from "./SelectionRoute";
 
+interface ITitle {
+    edit: string;
+    add: string;
+}
+
 interface IProps {
+    title: ITitle | string;
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
 export class EditDialog extends React.Component<IProps> {
+    public static defaultProps = {
+        title: {
+            edit: "Bearbeiten",
+            add: "Hinzufügen",
+        },
+    };
+
     private editDialogApi: IEditDialogApi;
     private selectionRef: React.RefObject<SelectionRoute> = React.createRef<SelectionRoute>();
 
@@ -27,6 +40,8 @@ export class EditDialog extends React.Component<IProps> {
     }
 
     public render() {
+        const { children, title } = this.props;
+
         return (
             <EditDialogApiContext.Provider value={this.editDialogApi}>
                 <DirtyHandler>
@@ -34,8 +49,8 @@ export class EditDialog extends React.Component<IProps> {
                         {({ selectedId, selectionMode, selectionApi }) => (
                             <Dialog open={!!selectionMode} onClose={this.handleCancelClick.bind(this, selectionApi)}>
                                 <div>
-                                    <DialogTitle>{selectionMode === "edit" ? "Edit" : "Add"}</DialogTitle>
-                                    <DialogContent>{this.props.children({ selectedId, selectionMode })}</DialogContent>
+                                    <DialogTitle>{typeof title === "string" ? title : selectionMode === "edit" ? title.edit : title.add}</DialogTitle>
+                                    <DialogContent>{children({ selectedId, selectionMode })}</DialogContent>
                                     <DialogActions>
                                         <Button onClick={this.handleCancelClick.bind(this, selectionApi)} color="primary">
                                             Abbrechen

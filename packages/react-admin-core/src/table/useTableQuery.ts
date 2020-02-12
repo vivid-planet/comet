@@ -6,7 +6,7 @@ import { ISelectionApi } from "../SelectionApi";
 import { IPagingInfo } from "./paging";
 import { ITableQueryApi } from "./TableQueryContext";
 
-interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
+export interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
     data?: TRow[];
     totalCount?: number;
     pagingInfo?: IPagingInfo;
@@ -16,7 +16,7 @@ interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableDat
     selectionApi?: ISelectionApi;
 }
 
-interface ITableQueryHookResult<TData, TVariables, TTableData extends ITableData> extends QueryResult<TData, TVariables> {
+export interface ITableQueryHookResult<TData, TVariables, TTableData extends ITableData> extends QueryResult<TData, TVariables> {
     tableData?: TTableData;
     api: ITableQueryApi;
 }
@@ -26,10 +26,12 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         q: DocumentNode,
         options: ITableQueryHookOptions<TInnerData, TInnerVariables, TTableData>,
     ): ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> {
-        const { resolveTableData, selectionApi, variables, ...restOptions } = options;
+        const { selectionApi, variables, ...restOptions } = options;
 
         const api: ITableQueryApi = {
             getVariables,
+            getInnerOptions,
+            resolveTableData,
             getQuery: () => q,
             onRowCreated,
             onRowDeleted,
@@ -54,6 +56,14 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             return vars;
         }
 
+        function getInnerOptions() {
+            return innerOptions;
+        }
+
+        function resolveTableData(data: any) {
+            return options.resolveTableData(data);
+        }
+
         function onRowCreated(id: string) {
             if (selectionApi) {
                 selectionApi.handleSelectId(id);
@@ -70,7 +80,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             return ret;
         }
 
-        ret.tableData = resolveTableData(ret.data);
+        ret.tableData = options.resolveTableData(ret.data);
         return ret;
     }
     return useTableQueryInner;
