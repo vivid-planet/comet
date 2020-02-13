@@ -16,8 +16,8 @@ export class ReactSelectStaticOptions extends React.Component<IProps> {
     public render() {
         const { input, meta, ...rest } = this.props;
 
-        const optionValue = this.props.options.find(({ value }) => value === this.props.input.value);
-        const selectInput: FieldInputProps<IOptionType | undefined, HTMLElement> = {
+        const optionValue = this.props.options.find(({ value }) => value === this.props.input.value) || null;
+        const selectInput: FieldInputProps<IOptionType | null, HTMLElement> = {
             ...input,
             value: optionValue,
         };
