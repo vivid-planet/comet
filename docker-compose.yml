@@ -4,13 +4,13 @@ services:
         image: eu.gcr.io/vivid-planet-public/dev/node-10-dev:master
         user: "${RUN_AS_UID}:0"
         volumes:
-            - ./:/opt/app-root/src
+            - react-admin-sync:/opt/app-root/src
         command: bash -c "touch .starting && yarn install && yarn run build && rm .starting && yarn run start"
     react-admin-storybook:
         image: eu.gcr.io/vivid-planet-public/dev/node-10-dev:master
         user: "${RUN_AS_UID}:0"
         volumes:
-            - ./:/opt/app-root/src
+            - react-admin-sync:/opt/app-root/src
         ports:
             - 8080:8080
         command: bash -c "./wait-while-starting.sh && cd packages/react-admin-stories && yarn start-storybook --port=8080"
@@ -19,4 +19,8 @@ services:
     githook:
         image: "eu.gcr.io/vivid-planet-public/dev/githook-lint-installer:master"
         volumes:
-            - .:/tmp
+            - react-admin-sync:/tmp
+
+volumes:
+    react-admin-sync:
+        external: true
