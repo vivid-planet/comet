@@ -15,6 +15,7 @@
         "@vivid-planet/material-ui-react-select": "*",
         "@vivid-planet/react-admin-core": "*",
         "@vivid-planet/react-admin-date-fns": "*",
+        "@vivid-planet/react-admin-date-picker": "*",
         "@vivid-planet/react-admin-final-form-material-ui": "*",
         "@vivid-planet/react-admin-form": "*",
         "@vivid-planet/react-admin-layout": "*",
@@ -28,7 +29,8 @@
         "styled-components": "^4.3.2"
     },
     "dependencies": {
-        "qs": "^6.9.1"
+        "qs": "^6.9.1",
+        "date-fns": "^2.8.0"
     },
     "devDependencies": {
         "@babel/core": "^7.8.3",
