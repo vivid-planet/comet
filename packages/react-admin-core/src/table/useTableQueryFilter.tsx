@@ -29,7 +29,7 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
 
     React.useEffect(() => {
         if (!ref.current) return;
-        return ref.current.subscribe(
+        const unsubscribe = ref.current.subscribe(
             debounce(formState => {
                 const newValues = formState.values;
                 if (!isEqual(filters, newValues)) {
@@ -41,6 +41,7 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
             }, 500),
             { values: true },
         );
+        return unsubscribe;
     }, [filters]);
 
     return {
