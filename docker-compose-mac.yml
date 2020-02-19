@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  react-admin:
+    volumes:
+      - react-admin-sync:/opt/app-root/src:nocopy
+  react-admin-storybook:
+    volumes:
+      - react-admin-sync:/opt/app-root/src:nocopy
+  githook:
+    volumes:
+      - react-admin-sync:/tmp:nocopy
+
+volumes:
+  react-admin-sync:
+    external: true

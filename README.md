@@ -5,10 +5,12 @@
 ### Requirements
 
 -   [docker & docker-compose](https://docs.docker.com/compose/)
+-   [docker-sync](https://docker-sync.readthedocs.io/en/latest/) (**OSX only**)
 
 ### Run build and storybook
 
-    docker-compose up
+    Linux: `docker-compose up`
+    OSX: `docker-sync-stack start`
 
 ### use yarn
 
