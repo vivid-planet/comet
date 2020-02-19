@@ -42,7 +42,7 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
             { values: true },
         );
         return unsubscribe;
-    }, [filters]);
+    }, [filters, setFilters]);
 
     return {
         current: filters,
