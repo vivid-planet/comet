@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-stories",
-    "version": "1.0.8-alpha.1",
+    "version": "1.0.8-alpha.2",
     "files": [
         "src"
     ],
@@ -29,8 +29,8 @@
         "styled-components": "^4.3.2"
     },
     "dependencies": {
-        "qs": "^6.9.1",
-        "date-fns": "^2.8.0"
+        "date-fns": "^2.8.0",
+        "qs": "^6.9.1"
     },
     "devDependencies": {
         "@babel/core": "^7.8.3",
