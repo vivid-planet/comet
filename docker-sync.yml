@@ -1,0 +1,9 @@
+version: "2"
+
+options:
+  compose-dev-file-path: 'docker-compose-mac.yml'
+
+syncs:
+  react-admin-sync: # tip: add -sync and you keep consistent names as a convention
+    src: "./"
+    sync_userid: "${RUN_AS_UID}"

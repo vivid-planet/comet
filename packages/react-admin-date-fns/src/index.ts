@@ -1,2 +1,2 @@
 export * from "./FormatLocalized";
-export * from "./LocaleContext";
+export * from "./LocaleContextProvider";
