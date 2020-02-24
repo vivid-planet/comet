@@ -19,4 +19,4 @@ services:
     githook:
         image: "eu.gcr.io/vivid-planet-public/dev/githook-lint-installer:master"
         volumes:
-            - .:/tmp
+            - ./:/tmp
