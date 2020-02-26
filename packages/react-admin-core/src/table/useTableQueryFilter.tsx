@@ -17,7 +17,6 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
     } = {},
 ): IFilterApi<FilterValues> {
     const [filters, setFilters] = usePersistedState<FilterValues>(defaultValues, { persistedStateId: options.persistedStateId + "_filter" });
-
     const ref = React.useRef<FormApi<FilterValues>>();
     if (!ref.current) {
         ref.current = createForm({
@@ -26,10 +25,15 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
                 // Nothing todo
             },
         });
-        ref.current.subscribe(
+    }
+
+    React.useEffect(() => {
+        if (!ref.current) return;
+        const unsubscribe = ref.current.subscribe(
             debounce(formState => {
-                if (!isEqual(filters, formState.values)) {
-                    setFilters(formState.values);
+                const newValues = formState.values;
+                if (!isEqual(filters, newValues)) {
+                    setFilters(newValues);
                     if (options.pagingApi) {
                         options.pagingApi.changePage(options.pagingApi.init, 1);
                     }
@@ -37,7 +41,8 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
             }, 500),
             { values: true },
         );
-    }
+        return unsubscribe;
+    }, [filters, setFilters]);
 
     return {
         current: filters,
