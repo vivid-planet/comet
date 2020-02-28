@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.5"
 services:
     react-admin:
         image: eu.gcr.io/vivid-planet-public/dev/node-10-dev:master
