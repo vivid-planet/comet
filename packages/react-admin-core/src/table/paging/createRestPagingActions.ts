@@ -35,6 +35,9 @@ export function createRestPagingActions<TData extends IRestPagingData>(
                   pagingApi.changePage(previousPage, previousPage);
               }
             : undefined,
+        fetchPage: (page: number) => {
+            pagingApi.changePage(page, page);
+        },
         totalPages: data.totalPages,
         currentPage: pagingApi.currentPage,
         attachTableRef: pagingApi.attachTableRef,

@@ -21,6 +21,9 @@ export function createPagePagingActions<TData extends IPagePagingData>(pagingApi
                   pagingApi.changePage(previousPage, previousPage);
               }
             : undefined,
+        fetchPage: (page: number) => {
+            pagingApi.changePage(page, page);
+        },
         totalPages: data.totalPages,
         currentPage: pagingApi.currentPage,
         attachTableRef: pagingApi.attachTableRef,

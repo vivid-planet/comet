@@ -28,6 +28,9 @@ export function createRestStartLimitPagingActions<TData extends IRestPagingData>
                       pagingApi.changePage(previousStart, previousPage);
                   }
                 : undefined,
+        fetchPage: (page: number) => {
+            pagingApi.changePage(page, page);
+        },
         totalPages: data.totalPages,
         currentPage: pagingApi.currentPage,
         attachTableRef: pagingApi.attachTableRef,
