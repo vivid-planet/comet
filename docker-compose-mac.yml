@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.5"
 services:
   react-admin:
     volumes:
@@ -6,9 +6,6 @@ services:
   react-admin-storybook:
     volumes:
       - react-admin-sync:/opt/app-root/src:nocopy
-  githook:
-    volumes:
-      - react-admin-sync:/tmp:nocopy
 
 volumes:
   react-admin-sync:
