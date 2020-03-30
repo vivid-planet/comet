@@ -19,7 +19,9 @@ export function useTableQuerySort(
         persistedStateId?: string;
     } = {},
 ): ISortApi {
-    const [sort, setSort] = usePersistedState<ISortInformation>(defaultSort, { persistedStateId: options.persistedStateId + "_sort" });
+    const [sort, setSort] = usePersistedState<ISortInformation>(defaultSort, {
+        persistedStateId: options.persistedStateId ? options.persistedStateId + "_sort" : undefined,
+    });
 
     function changeSort(columnName: string) {
         let direction = SortDirection.ASC;
