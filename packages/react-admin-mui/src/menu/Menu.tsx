@@ -8,8 +8,9 @@ interface IProps {
     children: React.ReactNode;
 }
 
-const Menu = ({ classes, children }: WithStyles<typeof styles, true> & IProps) => {
+const Menu = ({ classes, children, theme }: WithStyles<typeof styles, true> & IProps) => {
     const { open } = React.useContext(MenuContext);
+    const themeStyles = styles(theme);
 
     return (
         <Drawer
@@ -20,7 +21,7 @@ const Menu = ({ classes, children }: WithStyles<typeof styles, true> & IProps) =
             }}
             open={open}
         >
-            <sc.MenuItemsWrapper>
+            <sc.MenuItemsWrapper width={`${(themeStyles.drawer as { width: number }).width}px`}>
                 <div className={classes.toolbar} />
                 {children}
             </sc.MenuItemsWrapper>
