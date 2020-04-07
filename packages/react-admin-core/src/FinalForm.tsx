@@ -36,36 +36,51 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const stackApi = React.useContext(StackApiContext);
     const editDialog = React.useContext(EditDialogApiContext);
     const tableQuery = React.useContext(TableQueryContext);
-    let formRenderProps: FormRenderProps<FormValues> | undefined;
 
     const ref = React.useRef();
-    React.useEffect(() => {
-        if (dirtyHandler) {
-            dirtyHandler.registerBinding(ref, {
-                isDirty: () => {
-                    if (!formRenderProps) return false;
-                    return formRenderProps.dirty;
-                },
-                submit: () => {
-                    return submit(undefined);
-                },
-                reset: () => {
-                    if (!formRenderProps) return;
-                    formRenderProps.form.reset();
-                },
-            });
-        }
-        return () => {
-            if (dirtyHandler) {
-                dirtyHandler.unregisterBinding(ref);
-            }
-        };
-    }, [dirtyHandler]);
 
     return <Form {...props} onSubmit={handleSubmit} render={renderForm} />;
 
-    function renderForm(frmRP: FormRenderProps<FormValues>) {
-        formRenderProps = frmRP;
+    function renderForm(formRenderProps: FormRenderProps<FormValues>) {
+        React.useEffect(() => {
+            if (dirtyHandler) {
+                dirtyHandler.registerBinding(ref, {
+                    isDirty: () => {
+                        return formRenderProps.dirty;
+                    },
+                    submit: () => {
+                        return submit(undefined);
+                    },
+                    reset: () => {
+                        formRenderProps.form.reset();
+                    },
+                });
+            }
+            return () => {
+                if (dirtyHandler) {
+                    dirtyHandler.unregisterBinding(ref);
+                }
+            };
+        }, [dirtyHandler, formRenderProps]);
+
+        function submit(event: any) {
+            if (!formRenderProps.dirty) return;
+            return new Promise(resolve => {
+                Promise.resolve(formRenderProps.handleSubmit(event)).then(
+                    () => {
+                        if (formRenderProps.submitSucceeded) {
+                            resolve();
+                        } else {
+                            resolve(formRenderProps.submitErrors);
+                        }
+                    },
+                    error => {
+                        resolve(error);
+                    },
+                );
+            });
+        }
+
         const ButtonsContainer = props.components && props.components.buttonsContainer ? props.components.buttonsContainer : sc.ButtonsContainer;
 
         return (
@@ -120,57 +135,37 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         if (stackApi) stackApi.goBack();
     }
 
-    function submit(event: any) {
-        if (!formRenderProps) return;
-        if (!formRenderProps.dirty) return;
-        return new Promise((resolve, reject) => {
-            if (!formRenderProps) return;
-            return Promise.resolve(formRenderProps.handleSubmit(event)).then(
-                data => {
-                    if (!formRenderProps) return;
-                    if (formRenderProps.submitSucceeded) {
-                        resolve();
-                    } else {
-                        resolve(formRenderProps.submitErrors);
-                    }
-                },
-                error => {
-                    resolve(error);
-                },
-            );
-        });
-    }
-
     function handleSubmit(values: FormValues, form: FormApi<FormValues>, callback?: (errors?: SubmissionErrors) => void) {
-        let ret = props.onSubmit(values, form, callback);
+        const ret = props.onSubmit(values, form, callback);
         if (ret === undefined) return ret;
-        ret = Promise.resolve(ret).then(data => {
-            if (props.mode === "add") {
-                if (tableQuery) {
-                    // refetch TableQuery after adding
-                    client.query({
-                        query: tableQuery.api.getQuery(),
-                        variables: tableQuery.api.getVariables(),
-                        fetchPolicy: "network-only",
-                    });
-                }
-            }
-            return data;
-        });
 
         return Promise.resolve(ret)
             .then(data => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
                 setTimeout(() => {
-                    if (formRenderProps) {
-                        formRenderProps.form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
+                    if (props.mode === "add") {
+                        form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
+
+                        if (tableQuery) {
+                            // refetch TableQuery after adding
+                            client.query({
+                                query: tableQuery.api.getQuery(),
+                                variables: tableQuery.api.getVariables(),
+                                fetchPolicy: "network-only",
+                            });
+                        }
                     }
-                    if (stackApi) {
-                        // if this form is inside a Stack goBack after save success
-                        // do this after form.reset() to have a dirty form, so it won't ask for saving changes
-                        // TODO we probably shouldn't have a hard dependency to Stack
-                        stackApi.goBack();
-                    }
+
+                    // We call setTimeout here to allow React to render the form once more before navigating back.
+                    // This ensures that a submitted form isn't dirty anymore upon navigating.
+                    setTimeout(() => {
+                        if (stackApi) {
+                            // if this form is inside a Stack goBack after save success
+                            // do this after form.reset() to have a dirty form, so it won't ask for saving changes
+                            // TODO we probably shouldn't have a hard dependency to Stack
+                            stackApi.goBack();
+                        }
+                    });
                 });
                 return data;
             })
