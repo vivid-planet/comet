@@ -14,8 +14,12 @@ export function useTableQueryPaging<T>(
         persistedStateId?: string;
     } = {},
 ): IPagingApi<T> {
-    const [page, setPage] = usePersistedState(1, { persistedStateId: options.persistedStateId + "_pagingPage" });
-    const [variables, setVariables] = usePersistedState<T>(init, { persistedStateId: options.persistedStateId + "_pagingVariables" });
+    const [page, setPage] = usePersistedState(1, {
+        persistedStateId: options.persistedStateId ? options.persistedStateId + "_pagingPage" : undefined,
+    });
+    const [variables, setVariables] = usePersistedState<T>(init, {
+        persistedStateId: options.persistedStateId ? options.persistedStateId + "_pagingVariables" : undefined,
+    });
 
     let tableRef: React.RefObject<HTMLDivElement | undefined> | undefined;
     function attachTableRef(ref: any) {

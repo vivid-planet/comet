@@ -16,7 +16,9 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
         persistedStateId?: string;
     } = {},
 ): IFilterApi<FilterValues> {
-    const [filters, setFilters] = usePersistedState<FilterValues>(defaultValues, { persistedStateId: options.persistedStateId + "_filter" });
+    const [filters, setFilters] = usePersistedState<FilterValues>(defaultValues, {
+        persistedStateId: options.persistedStateId ? options.persistedStateId + "_filter" : undefined,
+    });
     const ref = React.useRef<FormApi<FilterValues>>();
     if (!ref.current) {
         ref.current = createForm({
