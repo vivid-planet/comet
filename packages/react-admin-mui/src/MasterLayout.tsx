@@ -9,6 +9,7 @@ export interface IMasterLayoutProps extends WithStyles<typeof styles> {
     children: React.ReactNode;
     menuComponent: React.ComponentType;
     headerComponent?: React.ComponentType;
+    hideToolbarMenuIcon?: boolean;
 }
 
 function MasterLayout(props: IMasterLayoutProps) {
@@ -17,7 +18,7 @@ function MasterLayout(props: IMasterLayoutProps) {
     const toggleOpen = () => {
         setOpen(!open);
     };
-    const { classes, children, menuComponent: Menu, headerComponent: HeaderComponent } = props;
+    const { classes, children, menuComponent: Menu, headerComponent: HeaderComponent, hideToolbarMenuIcon } = props;
 
     return (
         <MenuContext.Provider
@@ -30,9 +31,11 @@ function MasterLayout(props: IMasterLayoutProps) {
                 <CssBaseline />
                 <Header position="fixed" className={classes.appBar} color="inherit">
                     <Toolbar disableGutters={true}>
-                        <IconButton color="primary" onClick={toggleOpen}>
-                            <MenuIcon />
-                        </IconButton>
+                        {!hideToolbarMenuIcon && (
+                            <IconButton color="primary" onClick={toggleOpen}>
+                                <MenuIcon />
+                            </IconButton>
+                        )}
                         {HeaderComponent && <HeaderComponent />}
                     </Toolbar>
                 </Header>
