@@ -1,5 +1,3 @@
-import { Button } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
 import { ListItemProps } from "@material-ui/core/ListItem";
 import * as React from "react";
 import { IMenuLevel, MenuContext } from "./index";

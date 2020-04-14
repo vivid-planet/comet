@@ -55,13 +55,11 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                                     <Button
                                         variant="text"
                                         color="default"
+                                        startIcon={<CancelIcon />}
                                         onClick={() => {
                                             formRenderProps.form.reset();
                                         }}
                                     >
-                                        <sc.FilterCancelIconWrapper>
-                                            <CancelIcon fontSize={"small"} />
-                                        </sc.FilterCancelIconWrapper>
                                         Filter zurücksetzen
                                     </Button>
                                 </Grid>

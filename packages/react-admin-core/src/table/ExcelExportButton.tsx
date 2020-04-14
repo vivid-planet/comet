@@ -1,8 +1,6 @@
-import { CircularProgress } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { FileIcon } from "@vivid-planet/file-icons";
 import * as React from "react";
-import styled from "styled-components";
 import { IExportApi } from "./excelexport/IExportApi";
 
 interface IProps {
@@ -10,10 +8,6 @@ interface IProps {
     onClick?: () => void;
     loadingComponent?: React.ReactNode;
 }
-
-const TextContainer = styled.div`
-    margin-left: 8px;
-`;
 
 export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, children, exportApi, loadingComponent }) => {
     const onClickButtonPressed = () => {
@@ -27,20 +21,24 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
     const { loading, progress } = exportApi;
 
     return (
-        <Button color="default" onClick={onClickButtonPressed}>
-            {loading ? (
-                <>
-                    {loadingComponent ? (
-                        loadingComponent
-                    ) : (
-                        <CircularProgress size={23} variant={progress ? "determinate" : "indeterminate"} value={progress} />
-                    )}
-                </>
-            ) : (
-                <FileIcon fileType={"application/msexcel"} />
-            )}
-
-            <TextContainer>{children != null ? children : "Export"}</TextContainer>
+        <Button
+            color="default"
+            onClick={onClickButtonPressed}
+            startIcon={
+                loading ? (
+                    <>
+                        {loadingComponent ? (
+                            loadingComponent
+                        ) : (
+                            <CircularProgress size={23} variant={progress ? "determinate" : "indeterminate"} value={progress} />
+                        )}
+                    </>
+                ) : (
+                    <FileIcon fileType={"application/msexcel"} />
+                )
+            }
+        >
+            <Typography>{children != null ? children : "Export"}</Typography>
         </Button>
     );
 };
