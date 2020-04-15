@@ -2,8 +2,14 @@ import styled from "styled-components";
 
 export const ProgressOverlayContainer = styled.div`
     position: relative;
-    min-height: 500px;
     z-index: 1;
+`;
+
+export const ProgressOverlayInnerContainer = styled.div`
+    transform: translate(50%, 200px);
+    position: sticky;
+    width: 100%;
+    top: 0;
 `;
 
 export const TableCircularProgressContainer = styled.div`
@@ -18,8 +24,6 @@ export const TableCircularProgressContainer = styled.div`
     height: 100px;
     width: 100px;
     display: flex;
-    left: 50%;
-    top: 50%;
 `;
 
 export const ProgressContainer = styled.div`

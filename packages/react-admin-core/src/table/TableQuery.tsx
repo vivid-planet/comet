@@ -26,11 +26,13 @@ export function TableQuery(props: IProps) {
             }}
         >
             <sc.ProgressOverlayContainer>
-                {props.loading && (
-                    <sc.TableCircularProgressContainer>
-                        <CircularProgress />
-                    </sc.TableCircularProgressContainer>
-                )}
+                <sc.ProgressOverlayInnerContainer>
+                    {props.loading && (
+                        <sc.TableCircularProgressContainer>
+                            <CircularProgress />
+                        </sc.TableCircularProgressContainer>
+                    )}
+                </sc.ProgressOverlayInnerContainer>
                 {props.error && <p>Error :( {props.error.toString()}</p>}
                 {props.children}
             </sc.ProgressOverlayContainer>
