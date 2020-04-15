@@ -1,6 +1,6 @@
 {
     "rules": {
-        "no-submodule-imports": [true, "@material-ui", "@storybook", "react-select", "date-fns", "exceljs"],
+        "no-submodule-imports": [true, "@material-ui", "@storybook", "react-select", "date-fns", "exceljs", "draft-js"],
         "no-implicit-dependencies": [true, "dev", ["@vivid-planet"]],
         "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"],
         "object-literal-sort-keys": false,
