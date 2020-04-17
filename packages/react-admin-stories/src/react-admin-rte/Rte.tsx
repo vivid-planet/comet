@@ -1,12 +1,12 @@
 import { storiesOf } from "@storybook/react";
 import { IRteRef, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
-import { PrintEditorState, RteLayout, useAutoFocus } from "./helper";
+import { exampleContent, PrintEditorState, RteLayout, useAutoFocus } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
 function Story() {
-    const { editorState, setEditorState } = useRteApi();
+    const { editorState, setEditorState } = useRteApi({ defaultValue: JSON.stringify(exampleContent) }); // defaultValue is optional
 
     // focus the editor to see the cursor immediately
     const editorRef = React.useRef<IRteRef>();
