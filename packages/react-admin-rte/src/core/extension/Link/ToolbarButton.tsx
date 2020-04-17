@@ -96,22 +96,25 @@ function LinkDialog(props: {
 
     return (
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-            <DialogTitle id="simple-dialog-title">Link</DialogTitle>
+            <DialogTitle>Link</DialogTitle>
             <DialogContent>
                 <TextField
                     // autoFocus
                     label="Url"
                     variant="outlined"
                     value={newUrl}
-                    onChange={(e) => {
+                    onChange={e => {
                         setNewUrl(e.target.value);
                     }}
                 />
             </DialogContent>
             <DialogActions>
+                <Button onClick={handleClose} color="default">
+                    Abbrechen
+                </Button>
                 {linkData && (
                     <Button onClick={handleRemove} color="primary">
-                        Remove
+                        Entfernen
                     </Button>
                 )}
 

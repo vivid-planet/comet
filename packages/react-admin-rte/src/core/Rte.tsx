@@ -177,15 +177,15 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     const standardBlockTypeSelectOptions: BlockTypeSelectOptions = [
         {
             type: "header-one",
-            label: "Header 1",
+            label: "Überschrift 1",
         },
         {
             type: "header-two",
-            label: "Header 2",
+            label: "Überschrift 2",
         },
         {
             type: "header-three",
-            label: "Header 3",
+            label: "Überschrift 3",
         },
     ];
 
@@ -325,7 +325,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
                             onChange={handleBlockTypeChange} // change is handled via mousedown events
                         >
                             <MenuItem value="unstyled">
-                                <>P</>
+                                <>Standard</>
                             </MenuItem>
                             {standardBlockTypeSelectOptions
                                 .filter(c => supportsBlockType(c.type, options.supports))
@@ -341,7 +341,6 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
                                     </MenuItem>
                                 ))}
                         </Select>
-                        <FormHelperText>Heading</FormHelperText>
                     </FormControl>
                 )}
                 <ButtonGroup>
