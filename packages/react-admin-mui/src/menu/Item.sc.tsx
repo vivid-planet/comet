@@ -57,15 +57,12 @@ export const ListItemText = styled(({ selected, level, ...rest }: IMenuItemTextS
     <MuiListItemText {...rest} classes={{ root: "root", primary: "primary", dense: "dense" }} />
 ))<IMenuItemTextStyleProps & ListItemTextProps>`
     &.root {
-        &:first-child {
+        :first-child {
             ${({ inset }) => inset && `padding-left: 60px`};
         }
 
         .primary {
-            font-size: 15px;
-            line-height: 20px;
             color: ${({ selected, theme }) => (selected ? theme.palette.primary.contrastText : theme.palette.text.primary)};
-            font-weight: ${({ selected, level }) => (selected || level === 1 ? "bold" : "normal")};
         }
     }
 `;
