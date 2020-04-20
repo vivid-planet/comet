@@ -34,7 +34,9 @@ export function PrintAnything({ children, label }: { children: any; label: strin
 }
 
 export function RteLayout({ children }: { children: React.ReactNode }) {
-    return <div style={{ border: "1px solid black", padding: "10px", width: "600px" }}>{children}</div>;
+    return (
+        <div style={{ border: "1px solid black", padding: "10px", width: window && window.innerWidth >= 800 ? "800px" : "500px" }}>{children}</div>
+    );
 }
 
 // tslint:disable-next-line
