@@ -8,28 +8,29 @@ import TextField from "@material-ui/core/TextField";
 import LinkIcon from "@material-ui/icons/Link";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
-
+import { IControlProps } from "../../types";
 import findEntityDataInCurrentSelection from "../../utils/findEntityDataInCurrentSelection";
 import findEntityInCurrentSelection from "../../utils/findEntityInCurrentSelection";
 import selectionIsInOneBlock from "../../utils/selectionIsInOneBlock";
 import { ENTITY_TYPE } from "./Decorator";
 import { ILinkProps } from "./EditorComponent";
 
-export default function ToolbarButton(props: { editorState: EditorState; onChange: (editorState: EditorState) => void }) {
+export default function ToolbarButton(props: IControlProps) {
     const [open, setOpen] = React.useState(false);
     const linkData = findEntityDataInCurrentSelection<ILinkProps>(props.editorState, ENTITY_TYPE);
     const { entity: previousLinkEntity, entitySelection: linkEntitySelection } = findEntityInCurrentSelection(props.editorState, ENTITY_TYPE);
     const selection = props.editorState.getSelection();
     const linkEditCreateDisabled = (selection.isCollapsed() && !linkData) || !selectionIsInOneBlock(props.editorState);
 
-    function handleClick() {
+    function handleClick(e: React.MouseEvent) {
+        e.preventDefault();
         if (linkEditCreateDisabled) {
             return;
         }
         if (previousLinkEntity && linkEntitySelection) {
             // when there is a previous LINK entity found in the selection, force-shrink the selection to the text of this link entity
             // like this we avoid nested links
-            props.onChange(EditorState.forceSelection(props.editorState, linkEntitySelection));
+            props.setEditorState(EditorState.forceSelection(props.editorState, linkEntitySelection));
         }
 
         setOpen(true);
@@ -39,7 +40,7 @@ export default function ToolbarButton(props: { editorState: EditorState; onChang
             <LinkIcon />
             <LinkDialog
                 editorState={props.editorState}
-                onChange={props.onChange}
+                onChange={props.setEditorState}
                 linkData={linkData}
                 open={open}
                 onClose={() => {

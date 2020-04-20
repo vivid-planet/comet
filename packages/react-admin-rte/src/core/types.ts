@@ -1,11 +1,5 @@
-import type { SvgIconProps } from "@material-ui/core/SvgIcon";
-import {
-    DraftBlockRenderConfig,
-    DraftBlockType,
-    DraftInlineStyleType,
-    Editor,
-    EditorState,
-} from "draft-js";
+import { SvgIconProps } from "@material-ui/core/SvgIcon";
+import { DraftBlockRenderConfig, DraftBlockType, DraftInlineStyleType, Editor, EditorState } from "draft-js";
 import { IRteOptions } from "./Rte";
 
 export interface ICustomBlockType {
@@ -23,7 +17,7 @@ export interface IFeatureConfig<T extends string = string> {
     disabled?: boolean;
     selected?: boolean;
     onButtonClick?: (e: React.MouseEvent) => void;
-    Icon?: (props: SvgIconProps) => JSX.Element; 
+    Icon?: (props: SvgIconProps) => JSX.Element;
 }
 
 type CustomInlineStyleType = "SUP" | "SUB";
@@ -37,3 +31,4 @@ export interface IControlProps {
     editorRef: React.RefObject<Editor>;
 }
 
+export type ToolbarButtonComponent = (props: IControlProps) => JSX.Element;

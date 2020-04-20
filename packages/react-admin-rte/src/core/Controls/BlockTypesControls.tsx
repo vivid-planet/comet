@@ -1,9 +1,7 @@
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import { Editor, EditorState } from "draft-js";
 import * as React from "react";
-import { SuportedThings } from "../Rte";
 import { IControlProps } from "../types";
 import useBlockTypes from "./useBlockTypes";
 
