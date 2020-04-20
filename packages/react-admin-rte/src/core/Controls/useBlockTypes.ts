@@ -32,12 +32,12 @@ const defaultDropdownFeatures: IFeatureConfig[] = [
 const defaultListsFeatures: IFeatureConfig[] = [
     {
         name: "unordered-list",
-        label: "Ungeordnete Liste",
+        label: "Aufzählungszeichen",
         Icon: FormatListBulletedIcon,
     },
     {
         name: "ordered-list",
-        label: "Geordnete Liste",
+        label: "Nummerierte Liste",
         Icon: FormatListNumberedIcon,
     },
 ];
