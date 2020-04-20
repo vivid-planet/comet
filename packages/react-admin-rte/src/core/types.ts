@@ -24,7 +24,6 @@ export interface IFeatureConfig<T extends string = string> {
     selected?: boolean;
     onButtonClick?: (e: React.MouseEvent) => void;
     Icon?: (props: SvgIconProps) => JSX.Element; 
-    draftValue?: InlineStyleType | DraftBlockType | string;
 }
 
 type CustomInlineStyleType = "SUP" | "SUB";
