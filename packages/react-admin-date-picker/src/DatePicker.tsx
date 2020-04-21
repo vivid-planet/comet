@@ -7,16 +7,17 @@ import * as sc from "./DatePicker.sc";
 
 interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     fullWidth?: boolean;
+    color?: "primary" | "secondary" | "default";
 }
 
-export const DatePicker: React.FC<IProps> = ({ input: { value, onChange, ...restInput }, meta, fullWidth = false, ...props }) => {
+export const DatePicker: React.FC<IProps> = ({ input: { value, onChange, ...restInput }, meta, fullWidth = false, color = "default", ...props }) => {
     const localeName = useLocaleName();
     const locale = moment().locale(localeName);
     const [focused, setFocus] = React.useState();
     const selectedDate = value ? moment(value) : null;
 
     return (
-        <sc.SingleDatePickerWrapper fullWidth={fullWidth}>
+        <sc.SingleDatePickerWrapper fullWidth={fullWidth} color={color}>
             <AirBNBDatePicker
                 date={selectedDate}
                 id="single_date_picker"

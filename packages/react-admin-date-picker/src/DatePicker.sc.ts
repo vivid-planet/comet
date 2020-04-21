@@ -2,6 +2,7 @@ import { css, styled } from "@vivid-planet/react-admin-mui";
 
 interface ISingleDatePickerWrapperProps {
     fullWidth: boolean;
+    color: "primary" | "secondary" | "default";
 }
 
 export const SingleDatePickerWrapper = styled.div<ISingleDatePickerWrapperProps>`
@@ -34,24 +35,47 @@ export const SingleDatePickerWrapper = styled.div<ISingleDatePickerWrapperProps>
         background: unset;
     }
 
-    .CalendarDay__selected {
-        background: ${({ theme }) => theme.palette.primary.main};
-        color: white;
-    }
-
-    .CalendarDay__selected:hover {
-        background: ${({ theme }) => theme.palette.primary.main};
-    }
-
-    td {
+    td.CalendarDay {
         border: none;
         margin: 5px;
         border-radius: 50%;
-    }
 
-    td:hover {
-        border: none;
-        border-radius: 50%;
-        color: white;
+        :hover {
+            border: none;
+            border-radius: 50%;
+
+            ${({ theme, color }) =>
+                color === "primary" || color === "secondary"
+                    ? css`
+                          background-color: ${theme.palette[color].light};
+                          color: ${theme.palette[color].contrastText};
+                      `
+                    : css`
+                          background-color: ${theme.palette.grey["200"]};
+                          color: ${theme.palette.grey["700"]};
+                      `};
+        }
+
+        &__selected {
+            ${({ theme, color }) =>
+                color === "primary" || color === "secondary"
+                    ? css`
+                          background: ${theme.palette[color].main};
+                          color: ${theme.palette[color].contrastText};
+
+                          :hover {
+                              background: ${theme.palette[color].light};
+                          }
+                      `
+                    : css`
+                          background-color: ${theme.palette.grey["400"]};
+                          color: ${theme.palette.grey["100"]};
+
+                          :hover {
+                              background-color: ${theme.palette.grey["300"]};
+                              color: ${theme.palette.grey["100"]};
+                          }
+                      `};
+        }
     }
 `;

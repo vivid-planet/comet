@@ -14,7 +14,7 @@ const Story = () => {
                 }}
                 render={() => (
                     <form>
-                        <Field name="date" label="Zeitraum" component={DatePicker} showClearDate />
+                        <Field name="date" label="Zeitraum" color="primary" component={DatePicker} showClearDate />
                     </form>
                 )}
             />

@@ -15,7 +15,7 @@ const Story = () => {
                 render={() => {
                     return (
                         <form>
-                            <Field name="date" label="Zeitraum" component={DateRangePicker} showClearDates />
+                            <Field name="date" label="Zeitraum" color="primary" component={DateRangePicker} showClearDates />
                         </form>
                     );
                 }}

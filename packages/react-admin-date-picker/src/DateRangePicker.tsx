@@ -12,9 +12,10 @@ interface IDateRange {
 
 interface IProps extends FieldRenderProps<IDateRange, HTMLInputElement> {
     fullWidth?: boolean;
+    color?: "primary" | "secondary" | "default";
 }
 
-export const DateRangePicker: React.FC<IProps> = ({ input: { value, onChange }, meta, fullWidth = false, ...props }) => {
+export const DateRangePicker: React.FC<IProps> = ({ input: { value, onChange }, meta, fullWidth = false, color = "default", ...props }) => {
     const localeName = useLocaleName();
     const locale = moment().locale(localeName);
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
@@ -22,7 +23,7 @@ export const DateRangePicker: React.FC<IProps> = ({ input: { value, onChange }, 
     const end = value.end ? moment(value.end) : null;
 
     return (
-        <sc.DateRangePickerWrapper fullWidth={fullWidth}>
+        <sc.DateRangePickerWrapper fullWidth={fullWidth} color={color}>
             <AirBNBDateRangePicker
                 startDate={start}
                 startDatePlaceholderText={String(locale.format("L"))}
