@@ -6,14 +6,16 @@ interface IProps {
     required?: boolean;
 }
 
-export const FieldContainerLabelAbove: React.FunctionComponent<IProps> = props => (
+export const FieldContainerLabelAbove: React.FunctionComponent<IProps> = ({ label, required, children }) => (
     <FormControl fullWidth={true}>
-        <div>
-            <FormLabel>
-                {props.label}
-                {props.required && "*"}
-            </FormLabel>
-        </div>
-        <div>{props.children}</div>
+        {label && (
+            <div>
+                <FormLabel>
+                    {label}
+                    {required && "*"}
+                </FormLabel>
+            </div>
+        )}
+        {children}
     </FormControl>
 );
