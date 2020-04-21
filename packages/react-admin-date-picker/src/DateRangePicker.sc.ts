@@ -1,13 +1,26 @@
-import { styled } from "@vivid-planet/react-admin-mui";
+import { css, styled } from "@vivid-planet/react-admin-mui";
 /* tslint:disable */
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 /* tslint:enable */
 
-export const DateRangePickerWrapper = styled.div`
+interface IDateRangePickerWrapperProps {
+    fullWidth: boolean;
+}
+
+export const DateRangePickerWrapper = styled.div<IDateRangePickerWrapperProps>`
     * {
         font: inherit;
     }
+
+    ${({ fullWidth }) =>
+        fullWidth &&
+        css`
+            .DateRangePicker,
+            .DateRangePickerInput {
+                display: block;
+            }
+        `};
 
     .DateInput {
         position: static;

@@ -1,9 +1,26 @@
-import { styled } from "@vivid-planet/react-admin-mui";
+import { css, styled } from "@vivid-planet/react-admin-mui";
 
-export const SingleDatePickerWrapper = styled.div`
+interface ISingleDatePickerWrapperProps {
+    fullWidth: boolean;
+}
+
+export const SingleDatePickerWrapper = styled.div<ISingleDatePickerWrapperProps>`
     * {
         font: inherit;
     }
+
+    ${({ fullWidth }) =>
+        fullWidth &&
+        css`
+            .SingleDatePicker,
+            .SingleDatePickerInput {
+                display: block;
+            }
+
+            .DateInput {
+                width: 100%;
+            }
+        `};
 
     .DayPickerNavigation_button__default {
         border: none;
