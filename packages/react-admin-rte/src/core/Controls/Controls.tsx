@@ -11,7 +11,8 @@ import Toolbar from "./Toolbar";
 
 export default function Controls(p: IControlProps) {
     const {
-        options: { splitToolbar, customToolbarButtons },
+        splitToolbar,
+        options: { customToolbarButtons },
     } = p;
     const hasCustomButtons = customToolbarButtons && customToolbarButtons.length > 0;
     return splitToolbar ? (

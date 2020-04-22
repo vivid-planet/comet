@@ -50,7 +50,7 @@ export const rteOptions: IRteOptions = {
             },
         },
     },
-    splitToolbar: window && window.innerWidth < 800 ? true : false,
+    splitToolbar: (rteWidth?: number) => (!rteWidth ? false : rteWidth < 750),
 };
 
 const [useRteApi] = makeRteApi<ContentFormat>(makeApiOptions);
