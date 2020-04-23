@@ -25,7 +25,7 @@
         "prebuild": "rimraf lib",
         "build": "tsc --project ./tsconfig.json",
         "start": "tsc --project ./tsconfig.json --watch",
-        "tsc": "../../node_modules/.bin/tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
+        "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
         "prepare": "npm run build",
         "lint:tslint": "tslint --project ."
     },
