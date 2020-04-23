@@ -1,6 +1,6 @@
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import RemoveIcon from "@material-ui/icons/Remove";
+import DeleteIcon from "@material-ui/icons/Delete";
 import * as React from "react";
 import { DeleteMutation } from "../DeleteMutation";
 
@@ -17,9 +17,13 @@ export class TableDeleteButton extends React.Component<IProps> {
                     <>
                         {loading && <CircularProgress />}
                         {!loading && (
-                            <Button color="default" disabled={!this.props.selectedId} onClick={this.handleDeleteClick.bind(this, deleteBrand)}>
+                            <Button
+                                color="default"
+                                disabled={!this.props.selectedId}
+                                onClick={this.handleDeleteClick.bind(this, deleteBrand)}
+                                startIcon={<DeleteIcon />}
+                            >
                                 Löschen
-                                <RemoveIcon />
                             </Button>
                         )}
                     </>

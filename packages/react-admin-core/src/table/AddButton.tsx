@@ -10,9 +10,8 @@ interface IProps {
 export class TableAddButton extends React.Component<IProps> {
     public render() {
         return (
-            <Button color="default" onClick={this.handleAddClick}>
+            <Button color="default" onClick={this.handleAddClick} startIcon={<AddIcon />}>
                 Hinzufügen
-                <AddIcon />
             </Button>
         );
     }

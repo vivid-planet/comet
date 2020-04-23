@@ -18,9 +18,8 @@ export class TableLocalChangesToolbar extends React.Component<IProps> {
                 {this.props.loading && <CircularProgress />}
                 {!this.props.loading && (
                     <Toolbar>
-                        <Button color="default" onClick={this.handleSaveClick}>
+                        <Button color="default" onClick={this.handleSaveClick} startIcon={<SaveIcon />}>
                             Speichern
-                            <SaveIcon />
                         </Button>
                         {this.props.localChangesCount} unsaved change(s)
                     </Toolbar>

@@ -2,8 +2,7 @@ import { useApolloClient } from "@apollo/react-hooks";
 import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import CancelIcon from "@material-ui/icons/Cancel";
-import SaveIcon from "@material-ui/icons/Save";
+import { Cancel as CancelIcon, Save as SaveIcon } from "@material-ui/icons";
 import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
@@ -103,23 +102,24 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                             <>
                                 <ButtonsContainer>
                                     {stackApi && (
-                                        <Button className={classes.saveButton} variant="text" color="default" onClick={handleCancelClick}>
-                                            <sc.ButtonIconWrapper>
-                                                <CancelIcon fontSize={"inherit"} />
-                                            </sc.ButtonIconWrapper>
+                                        <Button
+                                            className={classes.saveButton}
+                                            startIcon={<CancelIcon />}
+                                            variant="text"
+                                            color="default"
+                                            onClick={handleCancelClick}
+                                        >
                                             Abbrechen
                                         </Button>
                                     )}
                                     <Button
                                         className={classes.saveButton}
+                                        startIcon={<SaveIcon />}
                                         variant="contained"
                                         color="primary"
                                         type="submit"
                                         disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
                                     >
-                                        <sc.ButtonIconWrapper>
-                                            <SaveIcon fontSize={"inherit"} />
-                                        </sc.ButtonIconWrapper>
                                         Speichern
                                     </Button>
                                 </ButtonsContainer>
