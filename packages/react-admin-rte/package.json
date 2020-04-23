@@ -1,12 +1,11 @@
 {
     "name": "@vivid-planet/react-admin-rte",
-    "version": "0.0.0",
+    "version": "1.0.0-alpha.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
-    "dependencies": {},
     "devDependencies": {
         "@types/draft-js": "^0.10.38",
         "@types/immutable": "^3.8.7"
