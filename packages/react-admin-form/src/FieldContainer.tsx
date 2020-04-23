@@ -1,6 +1,5 @@
-import { Grid, Typography } from "@material-ui/core";
+import { FormControl, FormLabel, Grid } from "@material-ui/core";
 import * as React from "react";
-import * as sc from "./FieldContainer.sc";
 
 interface IProps {
     label?: string | React.ReactNode;
@@ -8,19 +7,19 @@ interface IProps {
 }
 
 export const FieldContainer: React.FunctionComponent<IProps> = props => (
-    <sc.StyledFormControl fullWidth={true}>
-        <Grid container>
+    <FormControl fullWidth={true}>
+        <Grid container alignItems="center">
             <Grid item xs={4}>
                 {props.label && (
-                    <sc.StyledFormLabel>
+                    <FormLabel>
                         {props.label}
                         {props.required && "*"}
-                    </sc.StyledFormLabel>
+                    </FormLabel>
                 )}
             </Grid>
             <Grid item xs={8}>
                 {props.children}
             </Grid>
         </Grid>
-    </sc.StyledFormControl>
+    </FormControl>
 );

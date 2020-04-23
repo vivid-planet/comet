@@ -1,5 +1,5 @@
+import { FormControl, FormLabel } from "@material-ui/core";
 import * as React from "react";
-import * as sc from "./FieldContainerLabelAbove.sc";
 
 interface IProps {
     label?: string | React.ReactNode;
@@ -7,13 +7,13 @@ interface IProps {
 }
 
 export const FieldContainerLabelAbove: React.FunctionComponent<IProps> = props => (
-    <sc.StyledFormControl fullWidth={true}>
+    <FormControl fullWidth={true}>
         <div>
-            <sc.StyledFormLabel>
+            <FormLabel>
                 {props.label}
                 {props.required && "*"}
-            </sc.StyledFormLabel>
+            </FormLabel>
         </div>
         <div>{props.children}</div>
-    </sc.StyledFormControl>
+    </FormControl>
 );
