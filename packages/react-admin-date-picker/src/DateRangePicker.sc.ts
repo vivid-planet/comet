@@ -1,13 +1,27 @@
-import { styled } from "@vivid-planet/react-admin-mui";
+import { css, styled } from "@vivid-planet/react-admin-mui";
 /* tslint:disable */
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 /* tslint:enable */
 
-export const DateRangePickerWrapper = styled.div`
+interface IDateRangePickerWrapperProps {
+    fullWidth: boolean;
+    color: "primary" | "secondary" | "default";
+}
+
+export const DateRangePickerWrapper = styled.div<IDateRangePickerWrapperProps>`
     * {
         font: inherit;
     }
+
+    ${({ fullWidth }) =>
+        fullWidth &&
+        css`
+            .DateRangePicker,
+            .DateRangePickerInput {
+                display: block;
+            }
+        `};
 
     .DateInput {
         position: static;
@@ -25,42 +39,85 @@ export const DateRangePickerWrapper = styled.div`
         border: none;
     }
 
-    .CalendarDay__selected_span {
-        background: ${({ theme }) => theme.palette.secondary.main};
-        color: white;
-    }
-
-    .CalendarDay__selected_span:hover {
-        background: ${({ theme }) => theme.palette.primary.main};
-    }
-
-    .CalendarDay__selected {
-        background: ${({ theme }) => theme.palette.primary.main};
-        color: white;
-    }
-
-    .CalendarDay__selected:hover {
-        background: ${({ theme }) => theme.palette.primary.main};
-    }
-
-    td {
+    td.CalendarDay {
         border: none;
         margin: 5px;
         border-radius: 50%;
-    }
 
-    td:hover {
-        border: none;
-        border-radius: 50%;
-        color: white;
-    }
+        :hover {
+            border: none;
+            border-radius: 50%;
 
-    .CalendarDay__hovered_span {
-        background-color: ${({ theme }) => theme.palette.secondary.main};
-        color: white;
-    }
+            ${({ theme, color }) =>
+                color === "primary" || color === "secondary"
+                    ? css`
+                          background-color: ${theme.palette[color].light};
+                          color: ${theme.palette[color].contrastText};
+                      `
+                    : css`
+                          background-color: ${theme.palette.grey["200"]};
+                          color: ${theme.palette.grey["700"]};
+                      `};
+        }
 
-    .CalendarDay__hovered_span:hover {
-        background-color: ${({ theme }) => theme.palette.primary.main};
+        &__selected {
+            &_start,
+            &_end {
+                ${({ theme, color }) =>
+                    color === "primary" || color === "secondary"
+                        ? css`
+                              background: ${theme.palette[color].dark};
+                              color: ${theme.palette[color].contrastText};
+
+                              :hover {
+                                  background: ${theme.palette[color].light};
+                              }
+                          `
+                        : css`
+                              background-color: ${theme.palette.grey["500"]};
+                              color: white;
+
+                              :hover {
+                                  background-color: ${theme.palette.grey["400"]};
+                                  color: white;
+                              }
+                          `};
+            }
+
+            &_span {
+                ${({ theme, color }) =>
+                    color === "primary" || color === "secondary"
+                        ? css`
+                              background: ${theme.palette[color].main};
+                              color: ${theme.palette[color].contrastText};
+
+                              :hover {
+                                  background: ${theme.palette[color].light};
+                              }
+                          `
+                        : css`
+                              background-color: ${theme.palette.grey["300"]};
+                              color: ${theme.palette.grey["700"]};
+
+                              :hover {
+                                  background-color: ${theme.palette.grey["200"]};
+                                  color: ${theme.palette.grey["700"]};
+                              }
+                          `};
+            }
+        }
+
+        &__hovered_span {
+            ${({ theme, color }) =>
+                color === "primary" || color === "secondary"
+                    ? css`
+                          background-color: ${theme.palette[color].light};
+                          color: ${theme.palette[color].contrastText};
+                      `
+                    : css`
+                          background-color: ${theme.palette.grey["200"]};
+                          color: ${theme.palette.grey["700"]};
+                      `};
+        }
     }
 `;
