@@ -5,10 +5,16 @@ import { MasterLayout, Menu, MenuCollapsibleItem, MenuItemRouterLink } from "@vi
 import * as React from "react";
 import { Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
+import { ThemeContext } from "styled-components";
+import { useWindowSize } from "./hooks";
 
 function AppMenu() {
+    const windowSize = useWindowSize();
+    const themeContext = React.useContext(ThemeContext);
+    const showTemporaryMenu = windowSize.width < themeContext.breakpoints.values.lg;
+
     return (
-        <Menu>
+        <Menu variant={showTemporaryMenu ? "temporary" : "permanent"}>
             <MenuItemRouterLink text="Foo1" icon={<CalendarToday />} to="/foo1" />
             <MenuItemRouterLink text="Foo2" icon={<School />} to="/foo2" />
             <MenuCollapsibleItem text="Foo3" icon={<Settings />} collapsible={true} isOpen={false}>
