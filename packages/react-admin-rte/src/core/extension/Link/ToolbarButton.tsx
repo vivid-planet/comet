@@ -23,7 +23,6 @@ export default function ToolbarButton(props: IControlProps) {
     const linkEditCreateDisabled = (selection.isCollapsed() && !linkData) || !selectionIsInOneBlock(props.editorState);
 
     function handleClick(e: React.MouseEvent) {
-        e.preventDefault();
         if (linkEditCreateDisabled) {
             return;
         }
