@@ -16,11 +16,6 @@ interface IProps {
 
 const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
-        name: "UNDERLINE",
-        label: "unterstrichen",
-        Icon: FormatUnderlinedIcon,
-    },
-    {
         name: "BOLD",
         label: "fett",
         Icon: FormatBoldIcon,
@@ -29,6 +24,11 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
         name: "ITALIC",
         label: "italic",
         Icon: FormatItalicIcon,
+    },
+    {
+        name: "UNDERLINE",
+        label: "unterstrichen",
+        Icon: FormatUnderlinedIcon,
     },
     {
         name: "SUP",

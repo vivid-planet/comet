@@ -103,18 +103,18 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
         return supported
             ? [
                   {
+                      name: "list-indent-right",
+                      label: "",
+                      disabled: !canIndentRight,
+                      onButtonClick: handleListIndentRightClick,
+                      Icon: FormatIndentIncreaseIcon,
+                  },
+                  {
                       name: "list-indent-left",
                       label: "",
                       disabled: !canIndentLeft,
                       onButtonClick: handleListIndentLeftClick,
                       Icon: FormatIndentDecreaseIcon,
-                  },
-                  {
-                      name: "list-indent-rigth",
-                      label: "",
-                      disabled: !canIndentRight,
-                      onButtonClick: handleListIndentRightClick,
-                      Icon: FormatIndentIncreaseIcon,
                   },
               ]
             : [];
