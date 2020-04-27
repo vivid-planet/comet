@@ -18,6 +18,7 @@ export interface IFeatureConfig<T extends string = string> {
     selected?: boolean;
     onButtonClick?: (e: React.MouseEvent) => void;
     Icon?: (props: SvgIconProps) => JSX.Element;
+    tooltipText?: string;
 }
 
 type CustomInlineStyleType = "SUP" | "SUB";

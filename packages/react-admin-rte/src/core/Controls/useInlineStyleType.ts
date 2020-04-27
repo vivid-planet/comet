@@ -19,16 +19,19 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
         name: "BOLD",
         label: "fett",
         Icon: FormatBoldIcon,
+        tooltipText: "Ctrl+B",
     },
     {
         name: "ITALIC",
         label: "italic",
         Icon: FormatItalicIcon,
+        tooltipText: "Ctrl+I",
     },
     {
         name: "UNDERLINE",
         label: "unterstrichen",
         Icon: FormatUnderlinedIcon,
+        tooltipText: "Ctrl+U",
     },
     {
         name: "SUP",

@@ -45,6 +45,7 @@ export default function useHistory({ editorState, setEditorState, supportedThing
                           disabled: !canUndo,
                           onButtonClick: handleUndoClick,
                           Icon: UndoIcon,
+                          tooltipText: "Ctrl+Z",
                       },
                       {
                           name: "redo",
@@ -52,6 +53,7 @@ export default function useHistory({ editorState, setEditorState, supportedThing
                           disabled: !canRedo,
                           onButtonClick: handleRedoClick,
                           Icon: RedoIcon,
+                          tooltipText: "Ctrl+Y",
                       },
                   ]
                 : [],

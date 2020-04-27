@@ -108,6 +108,7 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       disabled: !canIndentRight,
                       onButtonClick: handleListIndentRightClick,
                       Icon: FormatIndentIncreaseIcon,
+                      tooltipText: "Tab",
                   },
                   {
                       name: "list-indent-left",
@@ -115,6 +116,7 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       disabled: !canIndentLeft,
                       onButtonClick: handleListIndentLeftClick,
                       Icon: FormatIndentDecreaseIcon,
+                      tooltipText: "Shift+Tab",
                   },
               ]
             : [];
