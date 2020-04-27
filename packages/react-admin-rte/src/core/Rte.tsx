@@ -25,7 +25,6 @@ export interface IRteOptions {
     supports: SuportedThings[];
     listLevelMax: number;
     customBlockMap?: ICustomBlockTypeMap;
-    splitToolbar: ((rteWidth?: number) => boolean) | boolean;
     overwriteLinkButton?: ToolbarButtonComponent;
     overwriteLinksRemoveButton?: ToolbarButtonComponent;
     customToolbarButtons?: ToolbarButtonComponent[];
@@ -40,8 +39,6 @@ export interface IProps {
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
 }
-
-const DEFAULT_SPLIT_TOOLBAR_BREAKPOINT = 750;
 
 const defaultOptions: IRteOptions = {
     supports: [
@@ -60,7 +57,6 @@ const defaultOptions: IRteOptions = {
     ],
     listLevelMax: 4,
     customToolbarButtons: [],
-    splitToolbar: (rteWidth?: number) => (!rteWidth ? false : rteWidth < DEFAULT_SPLIT_TOOLBAR_BREAKPOINT),
 };
 
 export interface IRteRef {
@@ -71,11 +67,6 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
     const options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions; // merge default options with passed options
-    const rteWidth = editorWrapperRef && editorWrapperRef.current ? editorWrapperRef.current.getBoundingClientRect().width : undefined; // @TODO: maybe add resize listener on window to get updated rte-width
-    const splitToolbar = React.useMemo(() => (typeof options.splitToolbar === "boolean" ? options.splitToolbar : options.splitToolbar(rteWidth)), [
-        options.splitToolbar,
-        rteWidth,
-    ]);
 
     /**
      * Expose methods
@@ -130,7 +121,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
 
     return (
         <div ref={editorWrapperRef}>
-            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} splitToolbar={splitToolbar} />
+            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} />
             <DraftJsEditor
                 ref={editorRef}
                 editorState={editorState}

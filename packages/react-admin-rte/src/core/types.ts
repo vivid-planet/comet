@@ -30,7 +30,6 @@ export interface IControlProps {
     setEditorState: (s: EditorState) => void;
     options: IRteOptions;
     editorRef: React.RefObject<Editor>;
-    splitToolbar: boolean;
 }
 
 export type ToolbarButtonComponent = (props: IControlProps) => JSX.Element;
