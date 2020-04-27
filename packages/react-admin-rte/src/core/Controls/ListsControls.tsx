@@ -10,7 +10,7 @@ export default function ListsControls({
     options: { supports: supportedThings, customBlockMap: customBlockTypeMap },
 }: IControlProps) {
     const { listsFeatures } = useBlockTypes({ editorState, setEditorState, supportedThings, customBlockTypeMap, editorRef });
-    if (!listsFeatures) {
+    if (listsFeatures.length < 1) {
         return null;
     }
     return <FeaturesButtonGroup features={listsFeatures} />;

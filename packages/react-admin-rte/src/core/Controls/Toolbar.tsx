@@ -18,18 +18,25 @@ function Seperator() {
 }
 
 export default function Toolbar({ children, ...rest }: IProps) {
+    const childrenElements = children
+        .filter(c => {
+            const Comp = c;
+            return Comp(rest) !== null; // filter out unused control components
+        })
+        .map(c => {
+            const Comp = c;
+            return React.createElement(Comp, rest);
+        });
+
     return (
         <div>
-            {children
-                .filter(c => c)
-                .map((c, idx) => {
-                    const Comp = c;
-                    return (
-                        <ToolbarSlot key={idx} isLast={idx + 1 === children.length}>
-                            <Comp {...rest} />
-                        </ToolbarSlot>
-                    );
-                })}
+            {childrenElements.map((c, idx) => {
+                return (
+                    <ToolbarSlot key={idx} isLast={idx + 1 === childrenElements.length}>
+                        {c}
+                    </ToolbarSlot>
+                );
+            })}
         </div>
     );
 }

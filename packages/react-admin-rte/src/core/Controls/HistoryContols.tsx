@@ -5,7 +5,7 @@ import useHistory from "./useHistory";
 
 export default function HistoryControls({ editorState, setEditorState, options }: IControlProps) {
     const { features } = useHistory({ editorState, setEditorState, supportedThings: options.supports });
-    if (!features) {
+    if (features.length < 1) {
         return null;
     }
     return <FeaturesButtonGroup features={features} />;

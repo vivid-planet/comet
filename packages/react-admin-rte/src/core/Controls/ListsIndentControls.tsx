@@ -5,7 +5,7 @@ import useListIndent from "./useListIndent";
 
 export default function ListsIndentControls({ editorState, setEditorState, options: { supports: supportedThings, listLevelMax } }: IControlProps) {
     const { features } = useListIndent({ editorState, setEditorState, supportedThings, listLevelMax });
-    if (!features) {
+    if (features.length < 1) {
         return null;
     }
     return <FeaturesButtonGroup features={features} />;
