@@ -39,7 +39,7 @@ export default function FeaturesButtonGroup({ features }: IProps) {
                         </span>
                     </Tooltip>
                 ) : (
-                    <IconButton onMouseDown={onButtonClick} {...rest} />
+                    <IconButton key={name} onMouseDown={onButtonClick} {...rest} />
                 ),
             )}
         </ButtonGroup>
