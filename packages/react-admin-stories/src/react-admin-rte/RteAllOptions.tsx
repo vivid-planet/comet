@@ -39,6 +39,7 @@ export const rteOptions: IRteOptions = {
         "unordered-list",
         "history",
         "link",
+        "links-remove",
     ],
     listLevelMax: 2,
     customBlockMap: {
@@ -50,7 +51,6 @@ export const rteOptions: IRteOptions = {
             },
         },
     },
-    splitToolbar: (rteWidth?: number) => (!rteWidth ? false : rteWidth < 750),
 };
 
 const [useRteApi] = makeRteApi<ContentFormat>(makeApiOptions);
