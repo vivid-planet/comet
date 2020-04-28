@@ -38,6 +38,7 @@
         "@storybook/addon-actions": "^5.3.9",
         "@storybook/addon-storysource": "^5.3.9",
         "@storybook/react": "^5.3.9",
+        "@storybook/storybook-deployer": "^2.8.5",
         "@types/draft-js": "^0.10.38",
         "@types/file-saver": "^2.0.1",
         "@types/qs": "^6.9.0",
@@ -68,7 +69,8 @@
     "scripts": {
         "storybook": "start-storybook",
         "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
-        "lint:tslint": "tslint --project ."
+        "lint:tslint": "tslint --project .",
+        "deploy": "storybook-to-ghpages"
     },
     "publishConfig": {
         "access": "public"
