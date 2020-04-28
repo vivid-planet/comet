@@ -12,7 +12,8 @@
         "storybook": "yarn --cwd packages/react-admin-stories storybook",
         "lint": "npm run lint:prettylint && npm run lint:tslint && npm run build",
         "lint:prettylint": "prettylint \"**/src/**/*.ts\"",
-        "lint:tslint": "lerna run lint:tslint"
+        "lint:tslint": "lerna run lint:tslint",
+        "deploy:storybook": "yarn workspace @vivid-planet/react-admin-stories deploy"
     },
     "devDependencies": {
         "@apollo/react-common": "^3.0.0",

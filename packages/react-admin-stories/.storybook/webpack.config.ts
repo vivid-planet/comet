@@ -18,6 +18,7 @@ module.exports = async ({ config }: { config: webpack.Configuration }): Promise<
         },
     );
     config.resolve!.extensions!.push(".ts", ".tsx");
+    config.optimization!.minimize = false;
 
     return config;
 };
