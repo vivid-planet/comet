@@ -2,8 +2,8 @@ import * as React from "react";
 import { usePersistedState } from "./usePersistedState";
 
 export enum SortDirection {
-    ASC = "asc",
-    DESC = "desc",
+    ASC = "ASC",
+    DESC = "DESC",
 }
 export interface ISortInformation {
     columnName: string;
