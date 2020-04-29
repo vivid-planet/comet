@@ -30,12 +30,13 @@ interface IProps {
     indicatorColor?: TabsProps["indicatorColor"];
     appBarComponent?: React.ComponentType<AppBarProps>;
     tabComponent?: React.ComponentType<TabProps>;
+    defaultIndex?: number;
 }
 
 export function Tabs(props: IProps) {
     const { variant, indicatorColor, appBarComponent: AppBar = MaterialAppBar, tabComponent: TabComponent = MaterialTab } = props;
 
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(props.defaultIndex !== undefined ? props.defaultIndex : 0);
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
     };
