@@ -3,6 +3,7 @@ import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 import { DraftEditorCommand, Editor as DraftJsEditor, EditorState, getDefaultKeyBinding, RichUtils } from "draft-js";
 import * as React from "react";
 import Controls from "./Controls";
+import * as sc from "./Rte.sc";
 import { ICustomBlockTypeMap, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
@@ -120,19 +121,21 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     };
 
     return (
-        <div ref={editorWrapperRef}>
+        <sc.Root ref={editorWrapperRef}>
             <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} />
-            <DraftJsEditor
-                ref={editorRef}
-                editorState={editorState}
-                onChange={onChange}
-                handleKeyCommand={handleKeyCommand}
-                keyBindingFn={keyBindingFn}
-                customStyleMap={styleMap}
-                onTab={handleOnTab}
-                blockRenderMap={blockRenderMap}
-            />
-        </div>
+            <sc.EditorWrapper>
+                <DraftJsEditor
+                    ref={editorRef}
+                    editorState={editorState}
+                    onChange={onChange}
+                    handleKeyCommand={handleKeyCommand}
+                    keyBindingFn={keyBindingFn}
+                    customStyleMap={styleMap}
+                    onTab={handleOnTab}
+                    blockRenderMap={blockRenderMap}
+                />
+            </sc.EditorWrapper>
+        </sc.Root>
     );
 };
 

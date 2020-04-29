@@ -3,11 +3,11 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import LinkIcon from "@material-ui/icons/Link";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
+import ControlButton from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
 import findEntityDataInCurrentSelection from "../../utils/findEntityDataInCurrentSelection";
 import findEntityInCurrentSelection from "../../utils/findEntityInCurrentSelection";
@@ -34,9 +34,10 @@ export default function ToolbarButton(props: IControlProps) {
 
         setOpen(true);
     }
+
     return (
-        <IconButton color={linkData ? "primary" : "default"} disabled={linkEditCreateDisabled} onMouseDown={handleClick}>
-            <LinkIcon />
+        <>
+            <ControlButton selected={!!linkData} disabled={linkEditCreateDisabled} Icon={LinkIcon} onButtonClick={handleClick} />
             <LinkDialog
                 editorState={props.editorState}
                 onChange={props.setEditorState}
@@ -46,7 +47,7 @@ export default function ToolbarButton(props: IControlProps) {
                     setOpen(false);
                 }}
             />
-        </IconButton>
+        </>
     );
 }
 
