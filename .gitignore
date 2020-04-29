@@ -2,3 +2,4 @@
 **/lib
 **/.watchmanconfig
 /.docker-sync
+storybook-static/
