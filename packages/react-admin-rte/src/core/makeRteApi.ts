@@ -75,7 +75,8 @@ function makeRteApi<T = any>(o?: IMakeRteApiProps<T>) {
             setEditorState,
         };
     }
-    const api: [typeof useRteApi] = [useRteApi];
+    const staticFunctions = { createEmptyState, createStateFromRawContent, convertStateToRawContent };
+    const api: [typeof useRteApi, typeof staticFunctions] = [useRteApi, staticFunctions];
     return api;
 }
 

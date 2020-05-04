@@ -1,18 +1,11 @@
-import { ButtonGroup } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
 import FormatIndentDecreaseIcon from "@material-ui/icons/FormatIndentDecrease";
 import FormatIndentIncreaseIcon from "@material-ui/icons/FormatIndentIncrease";
 import { BlockMap, ContentState, EditorState } from "draft-js";
 import * as React from "react";
-
-import getCurrentBlock from "./utils/getCurrentBlock";
-import selectionIsInOneBlock from "./utils/selectionIsInOneBlock";
-
-interface IProps {
-    editorState: EditorState;
-    onChange: (editorState: EditorState) => void;
-    listLevelMax?: number;
-}
+import { SuportedThings } from "../Rte";
+import { IFeatureConfig } from "../types";
+import getCurrentBlock from "../utils/getCurrentBlock";
+import selectionIsInOneBlock from "../utils/selectionIsInOneBlock";
 
 // https://github.com/facebook/draft-js/blob/v0.11.4/src/model/transaction/adjustBlockDepthForContentState.js
 // https://github.com/facebook/draft-js/blob/v0.11.4/src/model/modifier/RichTextEditorUtil.js
@@ -66,8 +59,18 @@ function adjustBlockDepth(type: "increase" | "decrease", editorState: EditorStat
     return EditorState.push(editorState, newContent, "adjust-depth");
 }
 
-export default function ContextButtonGroupLists({ editorState, onChange, listLevelMax = 4 }: IProps) {
-    const buttonGroupActive = React.useMemo(() => {
+interface IProps {
+    editorState: EditorState;
+    setEditorState: (es: EditorState) => void;
+    supportedThings: SuportedThings[];
+    listLevelMax?: number;
+}
+
+export default function useListIndent({ editorState, setEditorState, supportedThings, listLevelMax = 4 }: IProps) {
+    // can check if indenting lists is supported
+    const supported = React.useMemo(() => supportedThings.some(c => ["ordered-list", "unordered-list"].includes(c)), [supportedThings]);
+
+    const active = React.useMemo(() => {
         const currentBlock = getCurrentBlock(editorState);
         if (!currentBlock) {
             return false;
@@ -75,36 +78,51 @@ export default function ContextButtonGroupLists({ editorState, onChange, listLev
         return ["ordered-list-item", "unordered-list-item"].includes(currentBlock.getType()) && selectionIsInOneBlock(editorState);
     }, [editorState]);
 
-    const canIndentLeft = buttonGroupActive && getCurrentBlock(editorState)!.getDepth() > 0;
-    const canIndentRight = buttonGroupActive && getCurrentBlock(editorState)!.getDepth() < listLevelMax - 1;
+    const canIndentLeft = React.useMemo(() => active && getCurrentBlock(editorState)!.getDepth() > 0, [active, editorState]);
+    const canIndentRight = React.useMemo(() => active && getCurrentBlock(editorState)!.getDepth() < listLevelMax - 1, [
+        active,
+        editorState,
+        listLevelMax,
+    ]);
 
     const handleListIndentLeftClick = React.useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
-            onChange(adjustBlockDepth("decrease", editorState, listLevelMax));
+            setEditorState(adjustBlockDepth("decrease", editorState, listLevelMax));
         },
-        [editorState, onChange, listLevelMax],
+        [editorState, setEditorState, listLevelMax],
     );
     const handleListIndentRightClick = React.useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
-            onChange(adjustBlockDepth("increase", editorState, listLevelMax));
+            setEditorState(adjustBlockDepth("increase", editorState, listLevelMax));
         },
-        [editorState, onChange, listLevelMax],
+        [editorState, setEditorState, listLevelMax],
     );
+    const features: IFeatureConfig[] = React.useMemo(() => {
+        return supported
+            ? [
+                  {
+                      name: "list-indent-right",
+                      label: "",
+                      disabled: !canIndentRight,
+                      onButtonClick: handleListIndentRightClick,
+                      Icon: FormatIndentIncreaseIcon,
+                      tooltipText: "Tab",
+                  },
+                  {
+                      name: "list-indent-left",
+                      label: "",
+                      disabled: !canIndentLeft,
+                      onButtonClick: handleListIndentLeftClick,
+                      Icon: FormatIndentDecreaseIcon,
+                      tooltipText: "Shift+Tab",
+                  },
+              ]
+            : [];
+    }, [supported, canIndentLeft, canIndentRight, handleListIndentLeftClick, handleListIndentRightClick]);
 
-    if (!buttonGroupActive) {
-        return null;
-    }
-
-    return (
-        <ButtonGroup>
-            <IconButton color="default" onMouseDown={handleListIndentLeftClick} disabled={!canIndentLeft}>
-                <FormatIndentDecreaseIcon />
-            </IconButton>
-            <IconButton color="default" onMouseDown={handleListIndentRightClick} disabled={!canIndentRight}>
-                <FormatIndentIncreaseIcon />
-            </IconButton>
-        </ButtonGroup>
-    );
+    return {
+        features,
+    };
 }

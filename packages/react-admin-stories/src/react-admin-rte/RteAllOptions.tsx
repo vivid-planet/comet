@@ -1,45 +1,17 @@
 import { storiesOf } from "@storybook/react";
-import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
-import { convertFromRaw, convertToRaw, RawDraftContentState } from "draft-js";
+import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
+import { convertFromRaw, convertToRaw } from "draft-js";
 import * as React from "react";
-import { PrintEditorState, RteLayout, useAutoFocus } from "./helper";
+import { exampleContent, PrintEditorState, RteLayout, useAutoFocus } from "./helper";
 
 type StringifiedRawDraftContentState = string;
 
 export type ContentFormat = StringifiedRawDraftContentState;
 
-export const defaultContent: ContentFormat = JSON.stringify({
-    blocks: [
-        {
-            key: "3v61q",
-            text: "Hallo RTE!",
-            type: "unstyled",
-            depth: 0,
-            inlineStyleRanges: [
-                {
-                    offset: 6,
-                    length: 3,
-                    style: "BOLD",
-                },
-            ],
-            entityRanges: [],
-            data: {},
-        },
-        {
-            key: "7cbdf",
-            text: "",
-            type: "unstyled",
-            depth: 0,
-            inlineStyleRanges: [],
-            entityRanges: [],
-            data: {},
-        },
-    ],
-    entityMap: {},
-});
+export const defaultContent: ContentFormat = JSON.stringify(exampleContent);
 
 export const makeApiOptions: IMakeRteApiProps<ContentFormat> = {
-    decorators: [], // define additional Draft decorators, https://draftjs.org/docs/advanced-topics-decorators/
+    decorators: [LinkDecorator], // define additional Draft decorators, https://draftjs.org/docs/advanced-topics-decorators/
     parse: v => convertFromRaw(JSON.parse(v)), // parse your content-format to draft-js internal ContentState
     format: v => JSON.stringify(convertToRaw(v)), // format draft-js internal ContentState to your content-format
 };
@@ -67,6 +39,7 @@ export const rteOptions: IRteOptions = {
         "unordered-list",
         "history",
         "link",
+        "links-remove",
     ],
     listLevelMax: 2,
     customBlockMap: {
