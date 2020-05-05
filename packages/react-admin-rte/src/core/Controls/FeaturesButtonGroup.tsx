@@ -16,21 +16,17 @@ export default function FeaturesButtonGroup({ features }: IProps) {
 
     return (
         <Box display="inline-flex" justifyContent="flex-start">
-            {features.map(({ name, onButtonClick, tooltipText, ...rest }) => {
-                const Button: React.FC = () => <ControlButton onButtonClick={onButtonClick} {...rest} />;
-
-                return (
-                    <sc.ButtonWrapper key={name}>
-                        {tooltipText ? (
-                            <Tooltip title={tooltipText} placement="top">
-                                <Button />
-                            </Tooltip>
-                        ) : (
-                            <Button />
-                        )}
-                    </sc.ButtonWrapper>
-                );
-            })}
+            {features.map(({ name, onButtonClick, tooltipText, ...rest }) => (
+                <sc.ButtonWrapper key={name}>
+                    {tooltipText ? (
+                        <Tooltip title={tooltipText} placement="top">
+                            <ControlButton onButtonClick={onButtonClick} {...rest} />
+                        </Tooltip>
+                    ) : (
+                        <ControlButton onButtonClick={onButtonClick} {...rest} />
+                    )}
+                </sc.ButtonWrapper>
+            ))}
         </Box>
     );
 }
