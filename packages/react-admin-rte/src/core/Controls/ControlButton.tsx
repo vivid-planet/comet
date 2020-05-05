@@ -6,15 +6,14 @@ export interface IProps {
     disabled?: boolean;
     selected?: boolean;
     onButtonClick?: (e: React.MouseEvent) => void;
-    label?: string;
     Icon?: (props: SvgIconProps) => JSX.Element;
     children?: React.ReactNode;
 }
 
-export default function ControlButton({ disabled = false, selected = false, onButtonClick, label = "", Icon, children }: IProps) {
+export default function ControlButton({ disabled = false, selected = false, onButtonClick, Icon, children }: IProps) {
     return (
-        <sc.Root selected={selected} disabled={disabled} onMouseDown={onButtonClick}>
-            {Icon ? <Icon fontSize="inherit" color="inherit" /> : label}
+        <sc.Root selected={selected} disabled={disabled} onMouseDown={onButtonClick} renderAsIcon={!!Icon}>
+            {!!Icon && <Icon fontSize="inherit" color="inherit" />}
             {children}
         </sc.Root>
     );

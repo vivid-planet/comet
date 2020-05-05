@@ -3,6 +3,7 @@ import { css, styled } from "@vivid-planet/react-admin-mui";
 interface IRootProps {
     disabled: boolean;
     selected: boolean;
+    renderAsIcon: boolean;
 }
 
 export const Root = styled.div<IRootProps>`
@@ -10,7 +11,6 @@ export const Root = styled.div<IRootProps>`
     justify-content: center;
     align-items: center;
     cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-    width: 24px;
     height: 24px;
     background-color: transparent;
     border: 1px solid transparent;
@@ -18,6 +18,12 @@ export const Root = styled.div<IRootProps>`
     transition: background-color 200ms, border-color 200ms, color 200ms;
     font-size: 20px;
     color: ${({ theme }) => theme.palette.grey[500]};
+
+    ${({ renderAsIcon }) =>
+        renderAsIcon &&
+        css`
+            width: 24px;
+        `};
 
     :hover {
         background-color: ${({ theme }) => theme.palette.grey[100]};
