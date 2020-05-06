@@ -7,3 +7,4 @@ export { default as selectionIsInOneBlock } from "./core/utils/selectionIsInOneB
 export { default as findEntityInCurrentSelection } from "./core/utils/findEntityInCurrentSelection";
 
 export { default as LinkDecorator } from "./core/extension/Link/Decorator";
+export { default as ControlButton, IProps as IControlButtonProps } from "./core/Controls/ControlButton";

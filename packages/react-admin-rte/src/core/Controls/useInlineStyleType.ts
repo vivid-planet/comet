@@ -1,10 +1,10 @@
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import FormatBoldIcon from "@material-ui/icons/FormatBold";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
+import TextFormatSub from "../../icons/TextFormatSub";
+import TextFormatSup from "../../icons/TextFormatSup";
 import { SuportedThings } from "../Rte";
 import { IFeatureConfig, InlineStyleType } from "../types";
 
@@ -36,12 +36,12 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
         name: "SUP",
         label: "super",
-        Icon: ArrowDropUpIcon, // @TODO, better icon
+        Icon: TextFormatSup,
     },
     {
         name: "SUB",
         label: "sub",
-        Icon: ArrowDropDownIcon, // @TODO, better icon
+        Icon: TextFormatSub,
     },
 ];
 

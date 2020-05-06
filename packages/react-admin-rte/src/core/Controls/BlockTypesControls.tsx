@@ -1,6 +1,5 @@
+import { MenuItem, Select } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 import * as React from "react";
 import { IControlProps } from "../types";
@@ -8,7 +7,10 @@ import useBlockTypes from "./useBlockTypes";
 
 const useStylesForSelect = makeStyles({
     select: {
-        minWidth: 200, // @TODO: adapt this value when component is styled
+        padding: 0,
+        minWidth: "180px",
+        lineHeight: "24px",
+        fontSize: "14px",
     },
 });
 
@@ -33,12 +35,12 @@ export default function BlockTypesControls({
 
     return (
         <FormControl>
-            <Select classes={classesForSelect} value={activeDropdownBlockType} displayEmpty onChange={handleBlockTypeChange}>
-                <MenuItem value="unstyled">
-                    <>Standard</>
+            <Select classes={classesForSelect} value={activeDropdownBlockType} displayEmpty disableUnderline onChange={handleBlockTypeChange}>
+                <MenuItem value="unstyled" dense>
+                    Standard
                 </MenuItem>
                 {dropdownFeatures.map(c => (
-                    <MenuItem key={c.name} value={c.name}>
+                    <MenuItem key={c.name} value={c.name} dense>
                         {c.label}
                     </MenuItem>
                 ))}

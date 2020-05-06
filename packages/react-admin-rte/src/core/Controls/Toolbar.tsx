@@ -1,20 +1,9 @@
 import * as React from "react";
 import { IControlProps } from "../types";
+import * as sc from "./Toolbar.sc";
 
 interface IProps extends IControlProps {
     children: Array<(p: IControlProps) => JSX.Element | null>;
-}
-
-function ToolbarSlot({ children, isLast }: { children: React.ReactNode; isLast?: boolean }) {
-    return (
-        <span>
-            {children}
-            {!isLast && <Seperator />}
-        </span>
-    );
-}
-function Seperator() {
-    return <>|</>;
 }
 
 export default function Toolbar({ children, ...rest }: IProps) {
@@ -29,14 +18,10 @@ export default function Toolbar({ children, ...rest }: IProps) {
         });
 
     return (
-        <div>
+        <sc.Root>
             {childrenElements.map((c, idx) => {
-                return (
-                    <ToolbarSlot key={idx} isLast={idx + 1 === childrenElements.length}>
-                        {c}
-                    </ToolbarSlot>
-                );
+                return <sc.ToolbarSlot key={idx}>{c}</sc.ToolbarSlot>;
             })}
-        </div>
+        </sc.Root>
     );
 }
