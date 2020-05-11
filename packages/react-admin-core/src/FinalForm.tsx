@@ -45,6 +45,10 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             if (dirtyHandler) {
                 dirtyHandler.registerBinding(ref, {
                     isDirty: () => {
+                        if (formRenderProps.submitSucceeded || formRenderProps.submitFailed) {
+                            return formRenderProps.dirtySinceLastSubmit;
+                        }
+
                         return formRenderProps.dirty;
                     },
                     submit: () => {
