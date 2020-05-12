@@ -5,6 +5,9 @@ export const Root = styled.div`
 `;
 
 export const EditorWrapper = styled.div`
-    padding: 20px;
-    box-sizing: border-box;
+    .public-DraftEditor-content {
+        min-height: 240px;
+        padding: 20px;
+        box-sizing: border-box;
+    }
 `;
