@@ -6,21 +6,25 @@ interface IProps extends IControlProps {
     children: Array<(p: IControlProps) => JSX.Element | null>;
 }
 
-export default function Toolbar({ children, ...rest }: IProps) {
+export default function Toolbar({ children, colors, ...rest }: IProps) {
     const childrenElements = children
         .filter(c => {
             const Comp = c;
-            return Comp(rest) !== null; // filter out unused control components
+            return Comp({ colors, ...rest }) !== null; // filter out unused control components
         })
         .map(c => {
             const Comp = c;
-            return React.createElement(Comp, rest);
+            return React.createElement(Comp, { colors, ...rest });
         });
 
     return (
-        <sc.Root>
+        <sc.Root colors={colors}>
             {childrenElements.map((c, idx) => {
-                return <sc.ToolbarSlot key={idx}>{c}</sc.ToolbarSlot>;
+                return (
+                    <sc.ToolbarSlot colors={colors} key={idx}>
+                        {c}
+                    </sc.ToolbarSlot>
+                );
             })}
         </sc.Root>
     );

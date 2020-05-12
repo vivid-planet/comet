@@ -1,6 +1,6 @@
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
 import { DraftBlockRenderConfig, DraftBlockType, DraftInlineStyleType, Editor, EditorState } from "draft-js";
-import { IRteOptions } from "./Rte";
+import { IColors, IRteOptions } from "./Rte";
 
 export interface ICustomBlockType {
     renderConfig: DraftBlockRenderConfig;
@@ -30,6 +30,7 @@ export interface IControlProps {
     setEditorState: (s: EditorState) => void;
     options: IRteOptions;
     editorRef: React.RefObject<Editor>;
+    colors: IColors;
 }
 
 export type ToolbarButtonComponent = (props: IControlProps) => JSX.Element;

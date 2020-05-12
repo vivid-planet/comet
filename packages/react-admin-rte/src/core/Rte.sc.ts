@@ -1,7 +1,12 @@
 import { styled } from "@vivid-planet/react-admin-mui";
+import { IColors } from "./Rte";
 
-export const Root = styled.div`
-    border: 1px solid ${({ theme }) => theme.palette.grey[100]};
+interface IRootProps {
+    colors: IColors;
+}
+
+export const Root = styled.div<IRootProps>`
+    border: 1px solid ${({ colors }) => colors.border};
 `;
 
 export const EditorWrapper = styled.div`

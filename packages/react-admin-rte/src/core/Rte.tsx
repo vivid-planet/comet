@@ -1,3 +1,4 @@
+import { useTheme } from "@material-ui/core";
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
 import { DraftEditorCommand, Editor as DraftJsEditor, EditorState, getDefaultKeyBinding, RichUtils } from "draft-js";
@@ -35,10 +36,21 @@ export type IOptions = Partial<IRteOptions>;
 
 type OnEditorStateChangeFn = (newValue: EditorState) => void;
 
+export interface IColors {
+    border: string;
+    toolbarBackground: string;
+    buttonIcon: string;
+    buttonIconDisabled: string;
+    buttonBackgroundHover: string;
+    buttonBorderHover: string;
+    buttonBorderDisabled: string;
+}
+
 export interface IProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
+    colors?: IColors;
 }
 
 const defaultOptions: IRteOptions = {
@@ -63,8 +75,21 @@ const defaultOptions: IRteOptions = {
 export interface IRteRef {
     focus: () => void;
 }
+
 const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
-    const { value: editorState, onChange, options: passedOptions } = props;
+    const theme = useTheme();
+
+    const defaultColors: IColors = {
+        border: theme.palette.grey[400],
+        toolbarBackground: theme.palette.grey[100],
+        buttonIcon: theme.palette.grey[600],
+        buttonIconDisabled: theme.palette.grey[300],
+        buttonBackgroundHover: theme.palette.grey[200],
+        buttonBorderHover: theme.palette.grey[400],
+        buttonBorderDisabled: theme.palette.grey[100],
+    };
+
+    const { value: editorState, onChange, options: passedOptions, colors = defaultColors } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
     const options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions; // merge default options with passed options
@@ -121,8 +146,8 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     };
 
     return (
-        <sc.Root ref={editorWrapperRef}>
-            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} />
+        <sc.Root ref={editorWrapperRef} colors={colors}>
+            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} colors={colors} />
             <sc.EditorWrapper>
                 <DraftJsEditor
                     ref={editorRef}

@@ -1,9 +1,11 @@
 import { css, styled } from "@vivid-planet/react-admin-mui";
+import { IColors } from "../Rte";
 
 interface IRootProps {
     disabled: boolean;
     selected: boolean;
     renderAsIcon: boolean;
+    colors: IColors;
 }
 
 export const Root = styled.div<IRootProps>`
@@ -17,7 +19,7 @@ export const Root = styled.div<IRootProps>`
     box-sizing: border-box;
     transition: background-color 200ms, border-color 200ms, color 200ms;
     font-size: 20px;
-    color: ${({ theme }) => theme.palette.grey[500]};
+    color: ${({ colors }) => colors.buttonIcon};
 
     ${({ renderAsIcon }) =>
         renderAsIcon &&
@@ -26,29 +28,29 @@ export const Root = styled.div<IRootProps>`
         `};
 
     :hover {
-        background-color: ${({ theme }) => theme.palette.grey[100]};
-        border-color: ${({ theme }) => theme.palette.grey[200]};
+        background-color: ${({ colors }) => colors.buttonBackgroundHover};
+        border-color: ${({ colors }) => colors.buttonBorderHover};
     }
 
-    ${({ disabled, selected, theme }) =>
+    ${({ disabled, selected, colors }) =>
         selected &&
         !disabled &&
         css`
             &,
             :hover {
-                border-color: ${theme.palette.grey[100]};
+                border-color: ${colors.buttonBorderHover};
                 background-color: white;
             }
         `};
 
-    ${({ disabled, theme }) =>
+    ${({ disabled, colors }) =>
         disabled &&
         css`
             &,
             :hover {
                 background-color: transparent;
                 border-color: transparent;
-                color: ${theme.palette.grey[200]};
+                color: ${colors.buttonIconDisabled};
             }
         `};
 `;

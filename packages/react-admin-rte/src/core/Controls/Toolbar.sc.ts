@@ -1,15 +1,20 @@
 import { styled } from "@vivid-planet/react-admin-mui";
+import { IColors } from "../Rte";
 
-export const Root = styled.div`
+interface IColorProps {
+    colors: IColors;
+}
+
+export const Root = styled.div<IColorProps>`
     display: flex;
     flex-wrap: wrap;
-    background-color: ${({ theme }) => theme.palette.grey[50]};
+    background-color: ${({ colors }) => colors.toolbarBackground};
     padding-left: 6px;
     padding-right: 6px;
     overflow: hidden;
 `;
 
-export const ToolbarSlot = styled.div`
+export const ToolbarSlot = styled.div<IColorProps>`
     position: relative;
     flex-shrink: 0;
     flex-grow: 0;
@@ -27,7 +32,7 @@ export const ToolbarSlot = styled.div`
         height: 1px;
         left: -100vw;
         right: -100vw;
-        background-color: ${({ theme }) => theme.palette.grey[100]};
+        background-color: ${({ colors }) => colors.border};
     }
 
     :after {
@@ -37,7 +42,7 @@ export const ToolbarSlot = styled.div`
         right: 0;
         bottom: 8px;
         width: 1px;
-        background-color: ${({ theme }) => theme.palette.grey[100]};
+        background-color: ${({ colors }) => colors.border};
     }
 
     :last-child {
