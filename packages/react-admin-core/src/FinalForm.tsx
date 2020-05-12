@@ -45,7 +45,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             if (dirtyHandler) {
                 dirtyHandler.registerBinding(ref, {
                     isDirty: () => {
-                        return formRenderProps.dirty;
+                        return formRenderProps.form.getState().dirty;
                     },
                     submit: () => {
                         return submit(undefined);
@@ -156,16 +156,12 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         }
                     }
 
-                    // We call setTimeout here to allow React to render the form once more before navigating back.
-                    // This ensures that a submitted form isn't dirty anymore upon navigating.
-                    setTimeout(() => {
-                        if (stackApi) {
-                            // if this form is inside a Stack goBack after save success
-                            // do this after form.reset() to have a dirty form, so it won't ask for saving changes
-                            // TODO we probably shouldn't have a hard dependency to Stack
-                            stackApi.goBack();
-                        }
-                    });
+                    if (stackApi) {
+                        // if this form is inside a Stack goBack after save success
+                        // do this after form.reset() to have a clean form, so it won't ask for saving changes
+                        // TODO we probably shouldn't have a hard dependency to Stack
+                        stackApi.goBack();
+                    }
                 });
                 return data;
             })
