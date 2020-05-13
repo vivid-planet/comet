@@ -46,11 +46,15 @@ export interface IColors {
     buttonBorderDisabled: string;
 }
 
+export interface IRteTheme {
+    colors: IColors;
+}
+
 export interface IProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
-    colors?: IColors;
+    theme?: IRteTheme;
 }
 
 const defaultOptions: IRteOptions = {
@@ -76,20 +80,11 @@ export interface IRteRef {
     focus: () => void;
 }
 
+export const RteThemeContext = React.createContext<IRteTheme | undefined>(undefined);
+
 const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
-    const theme = useTheme();
-
-    const defaultColors: IColors = {
-        border: theme.palette.grey[400],
-        toolbarBackground: theme.palette.grey[100],
-        buttonIcon: theme.palette.grey[600],
-        buttonIconDisabled: theme.palette.grey[300],
-        buttonBackgroundHover: theme.palette.grey[200],
-        buttonBorderHover: theme.palette.grey[400],
-        buttonBorderDisabled: theme.palette.grey[100],
-    };
-
-    const { value: editorState, onChange, options: passedOptions, colors = defaultColors } = props;
+    const { value: editorState, onChange, options: passedOptions, theme: passedRteTheme } = props;
+    const materialUITheme = useTheme();
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
     const options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions; // merge default options with passed options
@@ -145,22 +140,38 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         },
     };
 
+    const defaultRteTheme: IRteTheme = {
+        colors: {
+            border: materialUITheme.palette.grey[400],
+            toolbarBackground: materialUITheme.palette.grey[100],
+            buttonIcon: materialUITheme.palette.grey[600],
+            buttonIconDisabled: materialUITheme.palette.grey[300],
+            buttonBackgroundHover: materialUITheme.palette.grey[200],
+            buttonBorderHover: materialUITheme.palette.grey[400],
+            buttonBorderDisabled: materialUITheme.palette.grey[100],
+        },
+    };
+
+    const rteTheme = passedRteTheme ? passedRteTheme : defaultRteTheme;
+
     return (
-        <sc.Root ref={editorWrapperRef} colors={colors}>
-            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} colors={colors} />
-            <sc.EditorWrapper>
-                <DraftJsEditor
-                    ref={editorRef}
-                    editorState={editorState}
-                    onChange={onChange}
-                    handleKeyCommand={handleKeyCommand}
-                    keyBindingFn={keyBindingFn}
-                    customStyleMap={styleMap}
-                    onTab={handleOnTab}
-                    blockRenderMap={blockRenderMap}
-                />
-            </sc.EditorWrapper>
-        </sc.Root>
+        <RteThemeContext.Provider value={rteTheme}>
+            <sc.Root ref={editorWrapperRef} colors={rteTheme.colors}>
+                <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} />
+                <sc.EditorWrapper>
+                    <DraftJsEditor
+                        ref={editorRef}
+                        editorState={editorState}
+                        onChange={onChange}
+                        handleKeyCommand={handleKeyCommand}
+                        keyBindingFn={keyBindingFn}
+                        customStyleMap={styleMap}
+                        onTab={handleOnTab}
+                        blockRenderMap={blockRenderMap}
+                    />
+                </sc.EditorWrapper>
+            </sc.Root>
+        </RteThemeContext.Provider>
     );
 };
 

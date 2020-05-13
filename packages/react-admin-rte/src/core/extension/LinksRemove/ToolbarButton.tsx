@@ -16,5 +16,5 @@ export default function ToolbarButton(props: IControlProps) {
         }
     }
 
-    return <ControlButton Icon={LinkOffIcon} disabled={!buttonEnabled} onButtonClick={handleClick} colors={props.colors} />;
+    return <ControlButton Icon={LinkOffIcon} disabled={!buttonEnabled} onButtonClick={handleClick} />;
 }

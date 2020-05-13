@@ -1,27 +1,30 @@
 import * as React from "react";
 import { IControlProps } from "../types";
+import useRteTheme from "../useRteTheme";
 import * as sc from "./Toolbar.sc";
 
 interface IProps extends IControlProps {
     children: Array<(p: IControlProps) => JSX.Element | null>;
 }
 
-export default function Toolbar({ children, colors, ...rest }: IProps) {
+export default function Toolbar({ children, ...rest }: IProps) {
+    const rteTheme = useRteTheme();
+
     const childrenElements = children
         .filter(c => {
             const Comp = c;
-            return Comp({ colors, ...rest }) !== null; // filter out unused control components
+            return Comp(rest) !== null; // filter out unused control components
         })
         .map(c => {
             const Comp = c;
-            return React.createElement(Comp, { colors, ...rest });
+            return React.createElement(Comp, rest);
         });
 
     return (
-        <sc.Root colors={colors}>
+        <sc.Root colors={rteTheme.colors}>
             {childrenElements.map((c, idx) => {
                 return (
-                    <sc.ToolbarSlot colors={colors} key={idx}>
+                    <sc.ToolbarSlot colors={rteTheme.colors} key={idx}>
                         {c}
                     </sc.ToolbarSlot>
                 );
