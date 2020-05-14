@@ -2,18 +2,24 @@ import { Drawer, Theme } from "@material-ui/core";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { useHistory } from "react-router";
+import { ThemeContext } from "styled-components";
 import { MenuContext } from "./Context";
 import * as sc from "./Menu.sc";
+import useWindowSize from "./useWindowSize";
 
 interface IProps {
     children: React.ReactNode;
-    variant?: "permanent" | "temporary";
+    permanentMenuMinWidth?: number;
 }
 
-const Menu = ({ classes, children, variant = "permanent", theme }: WithStyles<typeof styles, true> & IProps) => {
+const Menu = ({ classes, children, permanentMenuMinWidth: passedPermanentMenuMinWidth, theme }: WithStyles<typeof styles, true> & IProps) => {
     const { open, toggleOpen } = React.useContext(MenuContext);
-    const themeStyles = styles(theme);
+    const themeContext = React.useContext(ThemeContext);
     const history = useHistory();
+    const windowSize = useWindowSize();
+    const themeStyles = styles(theme);
+    const permanentMenuMinWidth = passedPermanentMenuMinWidth ? passedPermanentMenuMinWidth : themeContext.breakpoints.values.lg;
+    const variant = windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent";
 
     React.useEffect(() => {
         if (variant === "temporary" && open) {
