@@ -8,8 +8,8 @@
 
 ### Run build and storybook
 
-    Linux: `docker-compose up`
-    OSX: `docker-compose -f docker-compose.yml -f docker-compose.mac.yml up`
+    docker-compose up # on linux
+    docker-compose -f docker-compose.yml -f docker-compose.mac.yml up # on OSX
 
 ### use yarn
 
