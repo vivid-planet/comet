@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const ProgressOverlayContainer = styled.div`
     position: relative;
-    z-index: 1;
 `;
 
 export const ProgressOverlayInnerContainer = styled.div`
