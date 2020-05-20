@@ -26,7 +26,7 @@ const Root = styled.div`
 
 interface ITabsState {
     value: number;
-    onChange: (value: number) => void;
+    setValue: (value: number) => void;
 }
 
 interface IProps {
@@ -43,7 +43,7 @@ export function Tabs(props: IProps) {
     const { variant, indicatorColor, appBarComponent: AppBar = MaterialAppBar, tabComponent: TabComponent = MaterialTab, defaultIndex } = props;
 
     let value: ITabsState["value"];
-    let setValue: ITabsState["onChange"];
+    let setValue: ITabsState["setValue"];
 
     if (props.tabsState === undefined) {
         const state = React.useState(defaultIndex !== undefined ? defaultIndex : 0);
@@ -51,7 +51,7 @@ export function Tabs(props: IProps) {
         setValue = state[1];
     } else {
         value = props.tabsState.value;
-        setValue = props.tabsState.onChange;
+        setValue = props.tabsState.setValue;
     }
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
