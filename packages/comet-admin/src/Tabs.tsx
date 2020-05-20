@@ -31,6 +31,7 @@ interface IProps {
     appBarComponent?: React.ComponentType<AppBarProps>;
     tabComponent?: React.ComponentType<TabProps>;
     defaultIndex?: number;
+    onChange?: (value: number) => void;
 }
 
 export function Tabs(props: IProps) {
@@ -39,6 +40,10 @@ export function Tabs(props: IProps) {
     const [value, setValue] = React.useState(props.defaultIndex !== undefined ? props.defaultIndex : 0);
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
+
+        if (props.onChange) {
+            props.onChange(newValue);
+        }
     };
 
     React.Children.forEach(props.children, (child: React.ReactElement<ITabProps>) => {
