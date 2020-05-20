@@ -24,6 +24,11 @@ const Root = styled.div`
     flex-grow: 1;
 `;
 
+interface ITabsState {
+    value: number;
+    onChange: (value: number) => void;
+}
+
 interface IProps {
     children: Array<React.ReactElement<ITabProps>> | React.ReactElement<ITabProps>;
     variant?: TabsProps["variant"];
@@ -31,19 +36,26 @@ interface IProps {
     appBarComponent?: React.ComponentType<AppBarProps>;
     tabComponent?: React.ComponentType<TabProps>;
     defaultIndex?: number;
-    onChange?: (value: number) => void;
+    tabsState?: ITabsState;
 }
 
 export function Tabs(props: IProps) {
-    const { variant, indicatorColor, appBarComponent: AppBar = MaterialAppBar, tabComponent: TabComponent = MaterialTab } = props;
+    const { variant, indicatorColor, appBarComponent: AppBar = MaterialAppBar, tabComponent: TabComponent = MaterialTab, defaultIndex } = props;
 
-    const [value, setValue] = React.useState(props.defaultIndex !== undefined ? props.defaultIndex : 0);
+    let value: ITabsState["value"];
+    let setValue: ITabsState["onChange"];
+
+    if (props.tabsState === undefined) {
+        const state = React.useState(defaultIndex !== undefined ? defaultIndex : 0);
+        value = state[0];
+        setValue = state[1];
+    } else {
+        value = props.tabsState.value;
+        setValue = props.tabsState.onChange;
+    }
+
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
-
-        if (props.onChange) {
-            props.onChange(newValue);
-        }
     };
 
     React.Children.forEach(props.children, (child: React.ReactElement<ITabProps>) => {
