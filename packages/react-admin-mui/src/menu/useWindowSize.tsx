@@ -11,7 +11,7 @@ export default function useWindowSize(): IWindowSize {
         height: window.innerHeight,
     });
 
-    const [windowSize, setWindowSize] = React.useState(getSize);
+    const [windowSize, setWindowSize] = React.useState<IWindowSize>(getSize());
 
     React.useEffect(() => {
         const handleResize = () => {
