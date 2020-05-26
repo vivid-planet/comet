@@ -45,8 +45,8 @@ export function Tabs(props: IProps) {
     let value: ITabsState["value"];
     let setValue: ITabsState["setValue"];
 
+    const state = React.useState(defaultIndex !== undefined ? defaultIndex : 0);
     if (props.tabsState === undefined) {
-        const state = React.useState(defaultIndex !== undefined ? defaultIndex : 0);
         value = state[0];
         setValue = state[1];
     } else {
