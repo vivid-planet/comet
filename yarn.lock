@@ -2713,11 +2713,6 @@
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
   integrity sha512-te5lMAWii1uEJ4FwLjzdlbw3+n0FZNOvFXHxQDKeT0dilh7HOzdMzV2TrJVUzq8ep7J4Na8OUYPRLSQkJHAlrg==
 
-"@vivid-planet/react-admin-mui@^1.0.0-alpha.18":
-  version "1.0.0-alpha.18"
-  resolved "https://registry.yarnpkg.com/@vivid-planet/react-admin-mui/-/react-admin-mui-1.0.0-alpha.18.tgz#250605b75664cb88c6b440996f08b11b43a42f25"
-  integrity sha512-uDR5WdhuZ2fFuFVoESMVMEOCKW/fFAt8Lw+QKfNmNucdDuwKoLjhF74/KEvUfduBLvfGLvUbbqbzaHy2g2yvIg==
-
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"

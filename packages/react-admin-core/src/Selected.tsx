@@ -1,16 +1,16 @@
 import { useQuery } from "@apollo/react-hooks";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Typography } from "@material-ui/core";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import styled from "styled-components";
 
 interface IProps {
-    selectionMode?: "edit" | "add";
+    selectionMode?: "edit" | "add" | string;
     selectedId?: string;
     rows?: Array<{ id: string | number }>;
     query?: DocumentNode;
     dataAccessor?: string;
-    children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
+    children: (data: any, options: { selectionMode?: "edit" | "add" | string }) => React.ReactNode;
 }
 const ProgressContainer = styled.div`
     padding-top: 30px;
@@ -25,7 +25,7 @@ export function Selected(props: IProps) {
     }
     const queryResult = props.query ? useQuery(props.query, { variables: { id: props.selectedId } }) : undefined;
 
-    if (props.selectionMode === "edit" && !row) {
+    if (props.selectionMode !== "add" && !row) {
         if (!props.query || !queryResult) {
             return null;
         }
@@ -36,17 +36,12 @@ export function Selected(props: IProps) {
                 </ProgressContainer>
             );
         }
-        if (queryResult.error) return <p>Error :( {queryResult.error.toString()}</p>;
+        if (queryResult.error) return <Typography>Error :( {queryResult.error.toString()}</Typography>;
         if (!props.dataAccessor) {
             throw new Error("dataChild prop is required");
         }
-        return <>{props.children(queryResult.data[props.dataAccessor], { selectionMode: "edit" })}</>;
+        return <>{props.children(queryResult.data[props.dataAccessor], { selectionMode: props.selectionMode })}</>;
     } else {
-        return (
-            <React.Fragment>
-                {props.selectionMode === "edit" && row && props.children(row, { selectionMode: "edit" })}
-                {props.selectionMode === "add" && props.children(row, { selectionMode: "add" })}
-            </React.Fragment>
-        );
+        return <>{props.children(row, { selectionMode: props.selectionMode })}</>;
     }
 }
