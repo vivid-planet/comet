@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
+    skipResetAfterSave?: boolean;
     components?: {
         buttonsContainer?: React.ComponentType;
     };
@@ -141,28 +142,30 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
         return Promise.resolve(ret)
             .then(data => {
-                // setTimeout is required because of https://github.com/final-form/final-form/pull/229
-                setTimeout(() => {
-                    if (props.mode === "add") {
-                        form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
+                if (props.skipResetAfterSave !== true) {
+                    // setTimeout is required because of https://github.com/final-form/final-form/pull/229
+                    setTimeout(() => {
+                        if (props.mode === "add") {
+                            form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
 
-                        if (tableQuery) {
-                            // refetch TableQuery after adding
-                            client.query({
-                                query: tableQuery.api.getQuery(),
-                                variables: tableQuery.api.getVariables(),
-                                fetchPolicy: "network-only",
-                            });
+                            if (tableQuery) {
+                                // refetch TableQuery after adding
+                                client.query({
+                                    query: tableQuery.api.getQuery(),
+                                    variables: tableQuery.api.getVariables(),
+                                    fetchPolicy: "network-only",
+                                });
+                            }
                         }
-                    }
 
-                    if (stackApi) {
-                        // if this form is inside a Stack goBack after save success
-                        // do this after form.reset() to have a clean form, so it won't ask for saving changes
-                        // TODO we probably shouldn't have a hard dependency to Stack
-                        stackApi.goBack();
-                    }
-                });
+                        if (stackApi) {
+                            // if this form is inside a Stack goBack after save success
+                            // do this after form.reset() to have a clean form, so it won't ask for saving changes
+                            // TODO we probably shouldn't have a hard dependency to Stack
+                            stackApi.goBack();
+                        }
+                    });
+                }
                 return data;
             })
             .then(
