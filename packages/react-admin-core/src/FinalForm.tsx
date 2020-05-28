@@ -3,6 +3,7 @@ import { CircularProgress } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Cancel as CancelIcon, Save as SaveIcon } from "@material-ui/icons";
+import ApolloClient from "apollo-client";
 import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
@@ -10,8 +11,8 @@ import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
 import { renderComponent } from "./finalFormRenderComponent";
-import { StackApiContext } from "./stack";
-import { TableQueryContext } from "./table";
+import { IStackApi, StackApiContext } from "./stack";
+import { ITableQueryContext, TableQueryContext } from "./table";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,11 +22,42 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+interface ISubmitSideEffectsOptions<FormValues = AnyObject> {
+    mode: "edit" | "add";
+    form: FormApi<FormValues>;
+    client: ApolloClient<object>;
+    tableQuery?: ITableQueryContext;
+    stackApi?: IStackApi;
+}
+
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
     components?: {
         buttonsContainer?: React.ComponentType;
     };
+    submitSideEffects?: (o: ISubmitSideEffectsOptions<FormValues>) => void;
+}
+
+function submitSideEffectsDefault({ mode, form, tableQuery, client, stackApi }: ISubmitSideEffectsOptions) {
+    if (mode === "add") {
+        form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
+
+        if (tableQuery) {
+            // refetch TableQuery after adding
+            client.query({
+                query: tableQuery.api.getQuery(),
+                variables: tableQuery.api.getVariables(),
+                fetchPolicy: "network-only",
+            });
+        }
+    }
+
+    if (stackApi) {
+        // if this form is inside a Stack goBack after save success
+        // do this after form.reset() to have a clean form, so it won't ask for saving changes
+        // TODO we probably shouldn't have a hard dependency to Stack
+        stackApi.goBack();
+    }
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -35,7 +67,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const stackApi = React.useContext(StackApiContext);
     const editDialog = React.useContext(EditDialogApiContext);
     const tableQuery = React.useContext(TableQueryContext);
-
+    const runSubmitSideEffects = props.submitSideEffects || submitSideEffectsDefault;
     const ref = React.useRef();
 
     return <Form {...props} onSubmit={handleSubmit} render={renderForm} />;
@@ -143,25 +175,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             .then(data => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
                 setTimeout(() => {
-                    if (props.mode === "add") {
-                        form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
-
-                        if (tableQuery) {
-                            // refetch TableQuery after adding
-                            client.query({
-                                query: tableQuery.api.getQuery(),
-                                variables: tableQuery.api.getVariables(),
-                                fetchPolicy: "network-only",
-                            });
-                        }
-                    }
-
-                    if (stackApi) {
-                        // if this form is inside a Stack goBack after save success
-                        // do this after form.reset() to have a clean form, so it won't ask for saving changes
-                        // TODO we probably shouldn't have a hard dependency to Stack
-                        stackApi.goBack();
-                    }
+                    runSubmitSideEffects({ mode: props.mode, form, client, tableQuery, stackApi });
                 });
                 return data;
             })
