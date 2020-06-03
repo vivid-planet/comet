@@ -1,28 +1,58 @@
 import { Drawer, Theme } from "@material-ui/core";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
+import { useHistory } from "react-router";
+import { ThemeContext } from "styled-components";
 import { MenuContext } from "./Context";
 import * as sc from "./Menu.sc";
+import useWindowSize from "./useWindowSize";
 
 interface IProps {
     children: React.ReactNode;
+    permanentMenuMinWidth?: number;
 }
 
-const Menu = ({ classes, children, theme }: WithStyles<typeof styles, true> & IProps) => {
-    const { open } = React.useContext(MenuContext);
+const Menu = ({ classes, children, permanentMenuMinWidth: passedPermanentMenuMinWidth, theme }: WithStyles<typeof styles, true> & IProps) => {
+    const { open, toggleOpen } = React.useContext(MenuContext);
+    const themeContext = React.useContext(ThemeContext);
+    const history = useHistory();
+    const windowSize = useWindowSize();
     const themeStyles = styles(theme);
+    const permanentMenuMinWidth = passedPermanentMenuMinWidth ? passedPermanentMenuMinWidth : themeContext.breakpoints.values.lg;
+    const variant = windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent";
+
+    React.useEffect(() => {
+        if (variant === "temporary" && open) {
+            toggleOpen();
+        }
+    }, []);
+
+    React.useEffect(() => {
+        return history.listen(() => {
+            if (variant === "temporary" && open) {
+                toggleOpen();
+            }
+        });
+    }, [history, variant, open]);
+
+    const getVariantDependantDrawerProps = () => {
+        if (variant === "temporary") {
+            return {
+                onBackdropClick: toggleOpen,
+            };
+        }
+        return {};
+    };
+
+    let menuClasses: string = classes.drawer;
+    if (variant === "permanent") {
+        menuClasses += " " + (open ? classes.permanentDrawerOpen : classes.permanentDrawerClose);
+    }
 
     return (
-        <Drawer
-            variant="permanent"
-            className={classes.drawer + " " + (open ? classes.drawerOpen : classes.drawerClose)}
-            classes={{
-                paper: classes.drawer + " " + (open ? classes.drawerOpen : classes.drawerClose),
-            }}
-            open={open}
-        >
+        <Drawer variant={variant} className={menuClasses} classes={{ paper: menuClasses }} open={open} {...getVariantDependantDrawerProps()}>
             <sc.MenuItemsWrapper width={`${(themeStyles.drawer as { width: number }).width}px`}>
-                <div className={classes.toolbar} />
+                {variant === "permanent" && <div className={classes.toolbar} />}
                 {children}
             </sc.MenuItemsWrapper>
         </Drawer>
@@ -34,19 +64,19 @@ const styles = (theme: Theme) => {
         drawer: {
             width: 300, //  theme.appDrawer.width,
         },
-        drawerOpen: {
+        permanentDrawerOpen: {
             transition: theme.transitions.create("width", {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
             }),
         },
-        drawerClose: {
+        permanentDrawerClose: {
             transition: theme.transitions.create("width", {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
             }),
             overflowX: "hidden",
-            width: 60,
+            width: 0,
         },
         toolbar: theme.mixins.toolbar,
     });
