@@ -13,8 +13,12 @@ interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
 export const DatePicker: React.FC<IProps> = ({ input: { value, onChange, ...restInput }, meta, fullWidth = false, color = "default", ...props }) => {
     const localeName = useLocaleName();
     const locale = moment().locale(localeName);
-    const [focused, setFocus] = React.useState();
+    const [focused, setFocus] = React.useState(false);
     const selectedDate = value ? moment(value) : null;
+
+    React.useEffect(() => {
+        moment.locale(localeName);
+    }, [localeName]);
 
     return (
         <sc.SingleDatePickerWrapper fullWidth={fullWidth} color={color}>
