@@ -16,7 +16,7 @@ function createRteField<T = any>(config: IConfig<T> = defaultConfig) {
     const { rteApiOptions, rteOptions } = config;
     const [useRteApi] = makeRteApi(rteApiOptions);
 
-    const RteField: React.FunctionComponent<FieldRenderProps<T, HTMLInputElement> & RteProps> = ({
+    const RteField: React.FunctionComponent<FieldRenderProps<T, HTMLInputElement> & Pick<RteProps, "options">> = ({
         input: { value, onChange, ...restInput },
         meta,
         ...rest
