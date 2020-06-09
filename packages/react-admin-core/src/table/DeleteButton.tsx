@@ -2,6 +2,7 @@ import { Button, IconButton } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { PureQueryOptions } from "apollo-client";
 import * as React from "react";
 import { DeleteMutation } from "../DeleteMutation";
 
@@ -11,15 +12,16 @@ interface IProps {
     icon?: React.ReactNode | null;
     text?: string;
     color?: ButtonProps["color"];
+    refetchQueries?: Array<string | PureQueryOptions>;
 }
 
 export class TableDeleteButton extends React.Component<IProps> {
     public render() {
-        const { selectedId, mutation, icon = <DeleteIcon />, text = "Löschen", color } = this.props;
+        const { selectedId, mutation, refetchQueries, icon = <DeleteIcon />, text = "Löschen", color } = this.props;
         const disabled: boolean = !selectedId;
 
         return (
-            <DeleteMutation mutation={mutation}>
+            <DeleteMutation mutation={mutation} refetchQueries={refetchQueries}>
                 {(deleteBrand, { loading }) => {
                     if (loading) return <CircularProgress />;
 

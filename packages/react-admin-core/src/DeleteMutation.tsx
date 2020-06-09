@@ -2,15 +2,15 @@ import { useApolloClient } from "@apollo/react-hooks";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { PureQueryOptions } from "apollo-client";
 import * as React from "react";
 import { TableQueryContext } from "./table";
 
 interface IProps {
     mutation: any;
     children: (action: (options: { variables: object }) => void, data: { loading: boolean; error: any }) => React.ReactNode;
+    refetchQueries?: Array<string | PureQueryOptions>;
 }
 export function DeleteMutation(props: IProps) {
     const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -18,6 +18,8 @@ export function DeleteMutation(props: IProps) {
     const [pendingVariables, setPendingVariables] = React.useState<object | undefined>(undefined);
     const client = useApolloClient();
     const tableQuery = React.useContext(TableQueryContext);
+    const {refetchQueries = []} = props
+
     return (
         <React.Fragment>
             {props.children(
@@ -48,7 +50,6 @@ export function DeleteMutation(props: IProps) {
     function handleYesClick() {
         setDialogOpen(false);
         setLoading(true);
-        const refetchQueries = [];
         if (tableQuery) {
             refetchQueries.push({
                 query: tableQuery.api.getQuery(),
