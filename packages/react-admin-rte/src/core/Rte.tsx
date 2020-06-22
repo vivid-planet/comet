@@ -39,6 +39,7 @@ export interface IProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
+    className?: string;
 }
 
 const defaultOptions: IRteOptions = {
@@ -64,7 +65,7 @@ export interface IRteRef {
     focus: () => void;
 }
 const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
-    const { value: editorState, onChange, options: passedOptions } = props;
+    const { value: editorState, onChange, options: passedOptions, className } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
     const options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions; // merge default options with passed options
@@ -121,7 +122,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     };
 
     return (
-        <sc.Root ref={editorWrapperRef}>
+        <sc.Root ref={editorWrapperRef} className={className}>
             <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} />
             <sc.EditorWrapper>
                 <DraftJsEditor
