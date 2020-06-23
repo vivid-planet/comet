@@ -1,12 +1,11 @@
 import * as React from "react";
 
-interface IWindowSize {
+export interface IWindowSize {
     width: number;
     height: number;
 }
 
-// TODO after next publish: Remove and replace with hook from `@vivid-planet/react-admin-core`
-export default function useWindowSize(): IWindowSize {
+export const useWindowSize = (): IWindowSize => {
     const getSize = (): IWindowSize => ({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -26,4 +25,4 @@ export default function useWindowSize(): IWindowSize {
     }, []);
 
     return windowSize;
-}
+};
