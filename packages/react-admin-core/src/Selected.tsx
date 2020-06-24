@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/react-hooks";
 import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
+import { ApolloError } from "apollo-client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import styled from "styled-components";
@@ -11,7 +12,7 @@ export interface IProps {
     query?: DocumentNode;
     dataAccessor?: string;
     children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
-    ErrorComponent?: React.FC<any>;
+    ErrorComponent?: React.ComponentType<ApolloError>;
 }
 const ProgressContainer = styled.div`
     padding-top: 30px;
@@ -33,7 +34,7 @@ export function Selected(props: IProps) {
         }
         if (queryResult.error) {
             return ErrorComponent !== undefined ? (
-                <ErrorComponent {...queryResult} />
+                <ErrorComponent {...queryResult.error} />
             ) : (
                 <Card>
                     <Box padding={4}>
