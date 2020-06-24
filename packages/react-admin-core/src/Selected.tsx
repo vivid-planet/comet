@@ -12,7 +12,7 @@ export interface IProps {
     query?: DocumentNode;
     dataAccessor?: string;
     children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
-    ErrorComponent?: React.ComponentType<ApolloError>;
+    ErrorComponent?: React.ComponentType<{ error: ApolloError }>;
 }
 const ProgressContainer = styled.div`
     padding-top: 30px;
@@ -34,7 +34,7 @@ export function Selected(props: IProps) {
         }
         if (queryResult.error) {
             return ErrorComponent !== undefined ? (
-                <ErrorComponent {...queryResult.error} />
+                <ErrorComponent error={queryResult.error} />
             ) : (
                 <Card>
                     <Box padding={4}>
