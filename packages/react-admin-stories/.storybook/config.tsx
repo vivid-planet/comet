@@ -10,7 +10,24 @@ function loadStories() {
 }
 
 addDecorator(story => {
-    const theme = createMuiTheme({});
+    const theme = createMuiTheme({
+        spacing: 5,
+        overrides: {
+            MuiFormControl: {
+                root: {
+                    marginBottom: "20px",
+                },
+            },
+            MuiInputBase: {
+                input: {
+                    border: "1px solid #d8dbdf",
+                    borderRadius: "2px",
+                    padding: "0 10px",
+                    height: "32px",
+                },
+            },
+        },
+    });
 
     return <ThemeProvider theme={theme}>{story()}</ThemeProvider>;
 });
