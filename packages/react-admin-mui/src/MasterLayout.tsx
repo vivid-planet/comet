@@ -1,4 +1,4 @@
-import { CssBaseline, Grid, IconButton, Theme, Toolbar, Typography } from "@material-ui/core";
+import { CssBaseline, Grid, IconButton, Theme, Toolbar } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
@@ -13,12 +13,12 @@ export interface IMasterLayoutProps extends WithStyles<typeof styles> {
 }
 
 function MasterLayout(props: IMasterLayoutProps) {
+    const { classes, children, menuComponent: Menu, headerComponent: HeaderComponent, hideToolbarMenuIcon } = props;
     const [open, setOpen] = React.useState(true);
 
     const toggleOpen = () => {
         setOpen(!open);
     };
-    const { classes, children, menuComponent: Menu, headerComponent: HeaderComponent, hideToolbarMenuIcon } = props;
 
     return (
         <MenuContext.Provider
@@ -41,7 +41,7 @@ function MasterLayout(props: IMasterLayoutProps) {
                 </Header>
                 <Menu />
                 <Grid container component="main" wrap="nowrap" direction="column" alignItems="stretch" className={classes.grid}>
-                    <Toolbar style={{ margin: "6px 0" }} />
+                    <Toolbar />
                     {children}
                 </Grid>
             </Grid>

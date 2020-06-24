@@ -85,7 +85,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
         return (
             <form onSubmit={submit}>
-                <sc.InnerForm>
+                <div>
                     {renderComponent<FormValues>(
                         {
                             children: props.children,
@@ -94,7 +94,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         },
                         formRenderProps,
                     )}
-                </sc.InnerForm>
+                </div>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
                 {!editDialog && (
                     <>

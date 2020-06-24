@@ -1,7 +1,7 @@
-import { Link } from "@material-ui/core";
+import { Grid, Link, Typography } from "@material-ui/core";
+import { KeyboardArrowRight as ArrowIcon } from "@material-ui/icons";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
-import * as sc from "./Breadcrumbs.sc";
 
 export interface IBreadcrumbItem {
     id: string;
@@ -19,21 +19,23 @@ const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>((pro
 
 export const Breadcrumbs = ({ pages }: IBreadcrumbProps) => {
     return (
-        <sc.Root>
+        <Grid container alignItems="center" spacing={2}>
             {pages.map(({ id, url, title }, index) => {
                 const isLast = index + 1 >= pages.length;
 
                 return (
                     <React.Fragment key={id}>
-                        <sc.LinkWrapper>
+                        <Grid item>
                             <Link to={url} component={BreadcrumbLink} color={isLast ? "primary" : "inherit"}>
-                                <sc.Title color={isLast ? "primary" : "inherit"}>{title}</sc.Title>
+                                <Typography variant="body2" color={isLast ? "primary" : "inherit"}>
+                                    {title}
+                                </Typography>
                             </Link>
-                        </sc.LinkWrapper>
-                        {!isLast && <sc.ArrowIcon />}
+                        </Grid>
+                        {!isLast && <ArrowIcon />}
                     </React.Fragment>
                 );
             })}
-        </sc.Root>
+        </Grid>
     );
 };

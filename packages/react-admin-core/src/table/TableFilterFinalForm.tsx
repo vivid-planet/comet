@@ -1,13 +1,9 @@
-import { Grid, Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import { Button, Grid, Typography } from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel";
-import { debounce } from "debounce";
 import { AnyObject } from "final-form";
-import isEqual = require("lodash.isequal");
 import * as React from "react";
-import { Form, FormProps, FormRenderProps, FormSpy, FormSpyRenderProps } from "react-final-form";
+import { Form, FormProps, FormRenderProps } from "react-final-form";
 import { renderComponent } from "../finalFormRenderComponent";
-import * as sc from "./TableFilterFinalForm.sc";
 import { IFilterApi } from "./useTableQueryFilter";
 
 type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" | "initialValues"> & {
@@ -40,34 +36,36 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
     private renderForm = (formRenderProps: FormRenderProps<FilterValues>) => {
         return (
             <form>
-                {(this.props.headline || this.props.resetButton) && (
-                    <sc.FormHeader>
-                        <Grid container justify="space-between">
-                            {this.props.headline && (
-                                <Grid item>
-                                    <Typography variant="h4" color="primary">
-                                        {this.props.headline}
-                                    </Typography>
-                                </Grid>
-                            )}
-                            {this.props.resetButton && (
-                                <Grid item>
-                                    <Button
-                                        variant="text"
-                                        color="default"
-                                        startIcon={<CancelIcon />}
-                                        onClick={() => {
-                                            formRenderProps.form.reset();
-                                        }}
-                                    >
-                                        Filter zurücksetzen
-                                    </Button>
-                                </Grid>
-                            )}
+                <Grid container justify="space-between" alignItems="center" spacing={2}>
+                    {(this.props.headline || this.props.resetButton) && (
+                        <Grid item xs={12}>
+                            <Grid container justify="space-between" alignItems="center" spacing={2}>
+                                {this.props.headline && (
+                                    <Grid item>
+                                        <Typography variant="h4">{this.props.headline}</Typography>
+                                    </Grid>
+                                )}
+                                {this.props.resetButton && (
+                                    <Grid item>
+                                        <Button
+                                            variant="text"
+                                            color="default"
+                                            startIcon={<CancelIcon />}
+                                            onClick={() => {
+                                                formRenderProps.form.reset();
+                                            }}
+                                        >
+                                            Filter zurücksetzen
+                                        </Button>
+                                    </Grid>
+                                )}
+                            </Grid>
                         </Grid>
-                    </sc.FormHeader>
-                )}
-                {renderComponent(this.props, formRenderProps)}
+                    )}
+                    <Grid item xs={12}>
+                        {renderComponent(this.props, formRenderProps)}
+                    </Grid>
+                </Grid>
             </form>
         );
     };

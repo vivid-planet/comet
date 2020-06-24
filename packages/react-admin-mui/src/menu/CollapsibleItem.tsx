@@ -3,7 +3,6 @@ import { ListProps } from "@material-ui/core/List";
 import ArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import ArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import * as React from "react";
-import * as sc from "./CollapsibleItem.sc";
 import { IMenuItemProps, MenuItem } from "./Item";
 
 export interface IMenuLevel {
@@ -23,9 +22,9 @@ export interface ICollapsibleItemSecondaryActionProps {
     open: boolean;
 }
 
-export const DefaultSecondaryAction: React.FC<ICollapsibleItemSecondaryActionProps> = ({ open }) => (
-    <sc.ArrowWrapper>{open ? <ArrowUpIcon /> : <ArrowDownIcon />}</sc.ArrowWrapper>
-);
+export const DefaultSecondaryAction: React.FC<ICollapsibleItemSecondaryActionProps> = ({ open }) => {
+    return open ? <ArrowUpIcon /> : <ArrowDownIcon />;
+};
 
 export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps> = ({
     level,
