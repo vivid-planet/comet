@@ -19,22 +19,9 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-export const ControlInput = styled(({ ...props }: InputBaseProps) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} />)<
-    InputBaseProps
->`
-    &.root {
-        border: 1px solid #d8dbdf;
-        border-radius: 2px;
-        background-color: #ffffff;
-        padding: 0 0 0 10px;
-    }
-    & .MuiInputBase-input {
-        height: auto;
-    }
-    &.root.focused {
-        border-color: #0081b8;
-    }
-`;
+export const ControlInput = styled(({ ...props }: InputBaseProps) => (
+    <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} value={null} />
+))<InputBaseProps>``;
 
 function Control<OptionType>(props: ControlProps<OptionType>) {
     const InputProps = {
@@ -50,8 +37,8 @@ function Control<OptionType>(props: ControlProps<OptionType>) {
 }
 
 const vividStyles = {
-    dropdownIndicator: (styles: any) => ({ ...styles, padding: "6px" }),
-    clearIndicator: (styles: any) => ({ ...styles, padding: "6px" }),
+    dropdownIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
+    clearIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
 };
 
 // tslint:disable:max-classes-per-file
