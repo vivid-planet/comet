@@ -1,6 +1,5 @@
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
 import * as React from "react";
-import useRteTheme from "../useRteTheme";
 import * as sc from "./ControlButton.sc";
 
 export interface IProps {
@@ -12,10 +11,8 @@ export interface IProps {
 }
 
 export default function ControlButton({ disabled = false, selected = false, onButtonClick, Icon, children }: IProps) {
-    const rteTheme = useRteTheme();
-
     return (
-        <sc.Root selected={selected} disabled={disabled} onMouseDown={onButtonClick} renderAsIcon={!!Icon} colors={rteTheme.colors}>
+        <sc.Root selected={selected} disabled={disabled} onMouseDown={onButtonClick} renderAsIcon={!!Icon}>
             {!!Icon && <Icon fontSize="inherit" color="inherit" />}
             {children}
         </sc.Root>

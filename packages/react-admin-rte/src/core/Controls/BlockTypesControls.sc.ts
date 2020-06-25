@@ -1,14 +1,9 @@
 import { Select as MuiSelect } from "@material-ui/core";
 import { styled } from "@vivid-planet/react-admin-mui";
-import { IColors } from "../Rte";
 
-interface ISelectProps {
-    colors: IColors;
-}
-
-export const Select = styled(MuiSelect)<ISelectProps>`
+export const Select = styled(MuiSelect)`
     && {
-        color: ${({ colors }) => colors.buttonIcon};
+        color: ${({ theme }) => theme.rte.colors.buttonIcon};
         min-width: 180px;
         line-height: 24px;
         font-size: 14px;

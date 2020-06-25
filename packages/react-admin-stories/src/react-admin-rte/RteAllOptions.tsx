@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, IRteTheme, LinkDecorator, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
+import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
 import { convertFromRaw, convertToRaw } from "draft-js";
 import * as React from "react";
 import { exampleContent, PrintEditorState, RteLayout, useAutoFocus } from "./helper";

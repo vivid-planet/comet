@@ -1,6 +1,5 @@
 import * as React from "react";
 import { IControlProps } from "../types";
-import useRteTheme from "../useRteTheme";
 import * as sc from "./Toolbar.sc";
 
 interface IProps extends IControlProps {
@@ -8,8 +7,6 @@ interface IProps extends IControlProps {
 }
 
 export default function Toolbar({ children, ...rest }: IProps) {
-    const rteTheme = useRteTheme();
-
     const childrenElements = children
         .filter(c => {
             const Comp = c;
@@ -21,13 +18,9 @@ export default function Toolbar({ children, ...rest }: IProps) {
         });
 
     return (
-        <sc.Root colors={rteTheme.colors}>
+        <sc.Root>
             {childrenElements.map((c, idx) => {
-                return (
-                    <sc.ToolbarSlot colors={rteTheme.colors} key={idx}>
-                        {c}
-                    </sc.ToolbarSlot>
-                );
+                return <sc.ToolbarSlot key={idx}>{c}</sc.ToolbarSlot>;
             })}
         </sc.Root>
     );

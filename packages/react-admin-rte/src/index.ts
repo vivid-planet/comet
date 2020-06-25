@@ -1,4 +1,4 @@
-export { default as Rte, IRteRef, IOptions as IRteOptions, IProps as IRteProps, IRteTheme, IColors as IRteThemeColors } from "./core/Rte";
+export { default as Rte, IRteRef, IOptions as IRteOptions, IProps as IRteProps } from "./core/Rte";
 export { default as RteReadOnly, IOptions as IRteReadOnlyOptions, IProps as IRteReadOnlyProps } from "./core/RteReadOnly";
 export { default as makeRteApi, IMakeRteApiProps, OnDebouncedContentChangeFn, IRteApiProps } from "./core/makeRteApi";
 export { default as createRteField } from "./field/createRteField";
