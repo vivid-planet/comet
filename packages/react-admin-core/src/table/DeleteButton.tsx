@@ -26,7 +26,11 @@ export class TableDeleteButton extends React.Component<IProps> {
                     const onClick = this.handleDeleteClick.bind(this, deleteBrand);
 
                     if (!text.length && icon) {
-                        return <IconButton color={color}>{icon}</IconButton>;
+                        return (
+                            <IconButton onClick={onClick} disabled={disabled} color={color}>
+                                {icon}
+                            </IconButton>
+                        );
                     }
 
                     return (

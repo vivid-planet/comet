@@ -82,6 +82,17 @@ export interface IRteRef {
 
 export const RteThemeContext = React.createContext<IRteTheme | undefined>(undefined);
 
+export const styleMap = {
+    SUP: {
+        verticalAlign: "super",
+        fontSize: "smaller",
+    },
+    SUB: {
+        verticalAlign: "sub",
+        fontSize: "smaller",
+    },
+};
+
 const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     const { value: editorState, onChange, options: passedOptions, theme: passedRteTheme } = props;
     const materialUITheme = useTheme();
@@ -128,17 +139,6 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
             onChange(newEditorState);
         }
     }
-
-    const styleMap = {
-        SUP: {
-            verticalAlign: "super",
-            fontSize: "smaller",
-        },
-        SUB: {
-            verticalAlign: "sub",
-            fontSize: "smaller",
-        },
-    };
 
     const defaultRteTheme: IRteTheme = {
         colors: {

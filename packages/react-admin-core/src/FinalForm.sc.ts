@@ -1,4 +1,4 @@
-import { styled } from "@vivid-planet/react-admin-mui";
+import styled from "styled-components";
 
 export const InnerForm = styled.div`
     margin-bottom: 20px;
