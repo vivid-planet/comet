@@ -5,7 +5,6 @@ import {
     ReactSelectAsyncCreatable as AsyncCreatable,
     ReactSelectCreatable as Creatable,
 } from "@vivid-planet/react-admin-final-form-material-ui";
-import { styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { Props as ReactSelectAsyncProps } from "react-select/async";
@@ -19,9 +18,7 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-export const ControlInput = styled(({ ...props }: InputBaseProps) => (
-    <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} value={null} />
-))<InputBaseProps>``;
+export const ControlInput = ({ ...props }: InputBaseProps) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} value={null} />;
 
 function Control<OptionType>(props: ControlProps<OptionType>) {
     const InputProps = {
