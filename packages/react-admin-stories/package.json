@@ -18,6 +18,7 @@
         "@vivid-planet/react-admin-date-picker": "*",
         "@vivid-planet/react-admin-final-form-material-ui": "*",
         "@vivid-planet/react-admin-form": "*",
+        "@vivid-planet/react-admin-i18n": "*",
         "@vivid-planet/react-admin-layout": "*",
         "@vivid-planet/react-admin-mui": "*",
         "@vivid-planet/react-admin-rte": "*",
