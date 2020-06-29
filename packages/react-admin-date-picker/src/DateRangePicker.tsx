@@ -15,7 +15,17 @@ interface IProps extends FieldRenderProps<IDateRange, HTMLInputElement> {
     color?: "primary" | "secondary" | "default";
 }
 
-export const DateRangePicker: React.FC<IProps> = ({ input: { value, onChange }, meta, fullWidth = false, color = "default", ...props }) => {
+export const DateRangePicker: React.FC<IProps> = ({
+    input: { value, onChange },
+    fullWidth = false,
+    color = "default",
+    meta,
+    label,
+    name,
+    children,
+    render,
+    ...props
+}) => {
     const localeName = useLocaleName();
     const locale = moment().locale(localeName);
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);

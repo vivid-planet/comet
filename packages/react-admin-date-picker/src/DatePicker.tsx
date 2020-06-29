@@ -10,10 +10,20 @@ interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     color?: "primary" | "secondary" | "default";
 }
 
-export const DatePicker: React.FC<IProps> = ({ input: { value, onChange, ...restInput }, meta, fullWidth = false, color = "default", ...props }) => {
+export const DatePicker: React.FC<IProps> = ({
+    input: { value, onChange },
+    fullWidth = false,
+    color = "default",
+    meta,
+    label,
+    name,
+    children,
+    render,
+    ...props
+}) => {
     const localeName = useLocaleName();
     const locale = moment().locale(localeName);
-    const [focused, setFocus] = React.useState(false);
+    const [focused, setFocus] = React.useState<boolean>(false);
     const selectedDate = value ? moment(value) : null;
 
     React.useEffect(() => {
@@ -36,7 +46,6 @@ export const DatePicker: React.FC<IProps> = ({ input: { value, onChange, ...rest
                 isOutsideRange={() => false}
                 numberOfMonths={1}
                 displayFormat={() => locale.localeData().longDateFormat("L")}
-                {...restInput}
                 {...props}
             />
         </sc.SingleDatePickerWrapper>
