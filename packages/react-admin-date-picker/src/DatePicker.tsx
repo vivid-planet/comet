@@ -8,6 +8,7 @@ import * as sc from "./DatePicker.sc";
 interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     fullWidth?: boolean;
     color?: "primary" | "secondary" | "default";
+    placeholder?: string;
 }
 
 export const DatePicker: React.FC<IProps> = ({
@@ -19,6 +20,7 @@ export const DatePicker: React.FC<IProps> = ({
     name,
     children,
     render,
+    placeholder,
     ...props
 }) => {
     const localeName = useLocaleName();
@@ -38,7 +40,7 @@ export const DatePicker: React.FC<IProps> = ({
                 onDateChange={(date: moment.Moment) => {
                     onChange(date ? date.toDate() : null);
                 }}
-                placeholder={String(locale.format("L"))}
+                placeholder={placeholder === undefined ? String(locale.format("L")) : placeholder}
                 focused={focused}
                 onFocusChange={() => (focused ? setFocus(false) : setFocus(true))}
                 small
