@@ -1,10 +1,9 @@
-import { Button } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { Field } from "@vivid-planet/react-admin-form";
 import { createRteField } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
 import { Form } from "react-final-form";
-import { Typography } from "@material-ui/core";
 
 const { RteField, RteReadOnly } = createRteField();
 
