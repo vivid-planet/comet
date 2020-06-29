@@ -15,6 +15,7 @@ interface IProps extends FieldRenderProps<IDateRange, HTMLInputElement> {
     color?: "primary" | "secondary" | "default";
     startPlaceholder?: string;
     endPlaceholder?: string;
+    onChange?: (dateRange: { start: Date | null; end: Date | null } | null) => void;
 }
 
 export const DateRangePicker: React.FC<IProps> = ({
@@ -28,6 +29,7 @@ export const DateRangePicker: React.FC<IProps> = ({
     render,
     startPlaceholder,
     endPlaceholder,
+    onChange: customOnChangFunction,
     ...props
 }) => {
     const localeName = useLocaleName();
@@ -51,6 +53,9 @@ export const DateRangePicker: React.FC<IProps> = ({
                 endDateId="end_date_id"
                 onDatesChange={({ startDate, endDate }: { startDate: moment.Moment | null; endDate: moment.Moment | null }) => {
                     onChange({ start: startDate ? startDate.toDate() : null, end: endDate ? endDate.toDate() : null });
+                    if (customOnChangFunction) {
+                        customOnChangFunction({ start: startDate ? startDate.toDate() : null, end: endDate ? endDate.toDate() : null });
+                    }
                 }}
                 focusedInput={focusedInputField}
                 onFocusChange={setFocusedInputField}

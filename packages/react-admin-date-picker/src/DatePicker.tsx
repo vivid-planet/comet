@@ -9,6 +9,7 @@ interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     fullWidth?: boolean;
     color?: "primary" | "secondary" | "default";
     placeholder?: string;
+    onChange?: (date: Date | null) => void;
 }
 
 export const DatePicker: React.FC<IProps> = ({
@@ -21,6 +22,7 @@ export const DatePicker: React.FC<IProps> = ({
     children,
     render,
     placeholder,
+    onChange: customOnChangFunction,
     ...props
 }) => {
     const localeName = useLocaleName();
@@ -39,6 +41,9 @@ export const DatePicker: React.FC<IProps> = ({
                 id="single_date_picker"
                 onDateChange={(date: moment.Moment) => {
                     onChange(date ? date.toDate() : null);
+                    if (customOnChangFunction) {
+                        customOnChangFunction(date ? date.toDate() : null);
+                    }
                 }}
                 placeholder={placeholder === undefined ? String(locale.format("L")) : placeholder}
                 focused={focused}
