@@ -26,6 +26,10 @@ export const DatePicker: React.FC<IProps> = ({
     const [focused, setFocus] = React.useState<boolean>(false);
     const selectedDate = value ? moment(value) : null;
 
+    React.useEffect(() => {
+        moment.locale(localeName);
+    }, [localeName]);
+
     return (
         <sc.SingleDatePickerWrapper fullWidth={fullWidth} color={color}>
             <AirBNBDatePicker

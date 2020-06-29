@@ -32,6 +32,10 @@ export const DateRangePicker: React.FC<IProps> = ({
     const start = value.start ? moment(value.start) : null;
     const end = value.end ? moment(value.end) : null;
 
+    React.useEffect(() => {
+        moment.locale(localeName);
+    }, [localeName]);
+
     return (
         <sc.DateRangePickerWrapper fullWidth={fullWidth} color={color}>
             <AirBNBDateRangePicker

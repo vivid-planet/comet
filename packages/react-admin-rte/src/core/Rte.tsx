@@ -63,6 +63,18 @@ const defaultOptions: IRteOptions = {
 export interface IRteRef {
     focus: () => void;
 }
+
+export const styleMap = {
+    SUP: {
+        verticalAlign: "super",
+        fontSize: "smaller",
+    },
+    SUB: {
+        verticalAlign: "sub",
+        fontSize: "smaller",
+    },
+};
+
 const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     const { value: editorState, onChange, options: passedOptions } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
@@ -108,17 +120,6 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
             onChange(newEditorState);
         }
     }
-
-    const styleMap = {
-        SUP: {
-            verticalAlign: "super",
-            fontSize: "smaller",
-        },
-        SUB: {
-            verticalAlign: "sub",
-            fontSize: "smaller",
-        },
-    };
 
     return (
         <sc.Root ref={editorWrapperRef}>

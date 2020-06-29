@@ -4,6 +4,7 @@ import { FieldRenderProps } from "react-final-form";
 
 import makeRteApi, { IMakeRteApiProps, OnDebouncedContentChangeFn } from "../core/makeRteApi";
 import Rte, { IOptions as RteOptions, IProps as RteProps } from "../core/Rte";
+import RteReadOnlyBase from "../core/RteReadOnly";
 
 interface IConfig<T = any> {
     rteApiOptions?: IMakeRteApiProps<T>;
@@ -14,11 +15,12 @@ const defaultConfig: IConfig = {};
 
 function createRteField<T = any>(config: IConfig<T> = defaultConfig) {
     const { rteApiOptions, rteOptions } = config;
-    const [useRteApi] = makeRteApi(rteApiOptions);
+    const [useRteApi, { createStateFromRawContent }] = makeRteApi(rteApiOptions);
 
-    const RteField: React.FunctionComponent<FieldRenderProps<T, HTMLInputElement> & RteProps> = ({
+    const RteField: React.FunctionComponent<FieldRenderProps<T, HTMLInputElement> & Pick<RteProps, "options">> = ({
         input: { value, onChange, ...restInput },
         meta,
+        value: remove,
         ...rest
     }) => {
         const ref = React.useRef<any>();
@@ -46,7 +48,22 @@ function createRteField<T = any>(config: IConfig<T> = defaultConfig) {
         );
     };
 
-    return { RteField };
+    const RteReadOnly: React.FunctionComponent<{ content?: T; plainTextOnly?: boolean }> = ({ content, plainTextOnly }) => {
+        if (!content) {
+            return null;
+        }
+        return (
+            <RteReadOnlyBase
+                value={createStateFromRawContent(content)}
+                plainTextOnly={plainTextOnly}
+                options={{
+                    customBlockMap: rteOptions ? rteOptions.customBlockMap : undefined,
+                }}
+            />
+        );
+    };
+
+    return { RteField, RteReadOnly };
 }
 
 export default createRteField;
