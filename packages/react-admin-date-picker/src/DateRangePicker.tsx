@@ -15,7 +15,7 @@ interface IProps extends FieldRenderProps<IDateRange, HTMLInputElement> {
     color?: "primary" | "secondary" | "default";
     startPlaceholder?: string;
     endPlaceholder?: string;
-    onChange?: (dateRange: { start: Date | null; end: Date | null } | null) => void;
+    onChange?: (dateRange: { start: Date | null; end: Date | null }) => void;
 }
 
 export const DateRangePicker: React.FC<IProps> = ({
