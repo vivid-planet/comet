@@ -18,7 +18,7 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-export const ControlInput = ({ ...props }: InputBaseProps) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} value={null} />;
+export const ControlInput = ({ ...props }: InputBaseProps) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} />;
 
 function Control<OptionType>(props: ControlProps<OptionType>) {
     const InputProps = {
