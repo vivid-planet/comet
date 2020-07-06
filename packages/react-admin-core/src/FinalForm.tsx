@@ -10,7 +10,7 @@ import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
 import { renderComponent } from "./finalFormRenderComponent";
-import { StackApiContext } from "./stack";
+import { IStackApi, StackApiContext } from "./stack";
 import { TableQueryContext } from "./table";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -21,12 +21,20 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+interface IButtonsContainerProps<FormValues = AnyObject> {
+    stackApi?: IStackApi;
+    formRenderProps: FormRenderProps<FormValues>;
+}
+
+
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
     components?: {
-        buttonsContainer?: React.ComponentType;
+        buttonsContainer?: React.ComponentType<IButtonsContainerProps<FormValues>>;
     };
 }
+
+
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const classes = useStyles();
@@ -100,7 +108,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         {formRenderProps.submitting && <CircularProgress />}
                         {!formRenderProps.submitting && (
                             <>
-                                <ButtonsContainer>
+                                <ButtonsContainer stackApi={stackApi} formRenderProps={formRenderProps}>
                                     {stackApi && (
                                         <Button
                                             className={classes.saveButton}
