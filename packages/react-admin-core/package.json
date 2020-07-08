@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-core",
-    "version": "1.0.0-alpha.42",
+    "version": "1.0.0-alpha.43",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -16,7 +16,7 @@
         "uuid": "^3.3.2"
     },
     "devDependencies": {
-        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.20"
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.21"
     },
     "peerDependencies": {
         "@apollo/react-common": "^3.0.0",

@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-rte",
-    "version": "1.0.0-alpha.3",
+    "version": "1.0.0-alpha.4",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -9,7 +9,7 @@
     "devDependencies": {
         "@types/draft-js": "^0.10.38",
         "@types/immutable": "^3.8.7",
-        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.20"
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.21"
     },
     "peerDependencies": {
         "@material-ui/core": "^4.1.3",

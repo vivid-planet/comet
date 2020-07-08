@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-date-picker",
-    "version": "1.0.0-alpha.6",
+    "version": "1.0.0-alpha.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -13,7 +13,7 @@
     },
     "devDependencies": {
         "@types/react-dates": "^17.1.5",
-        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.20"
+        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.21"
     },
     "peerDependencies": {
         "@material-ui/core": "^4.1.3",
