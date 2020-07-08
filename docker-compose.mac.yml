@@ -3,6 +3,9 @@ services:
     react-admin:
         volumes:
             - ra-node_modules:/opt/app-root/src/node_modules
+    react-admin-storybook:
+        volumes:
+            - ra-node_modules:/opt/app-root/src/node_modules
 
 volumes:
     ra-node_modules:
