@@ -1,21 +1,33 @@
 import * as React from "react";
 import { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
 import { RouterPrompt } from "./router";
+import { useIntl, WrappedComponentProps, defineMessages } from "react-intl";
 
-interface IProps {}
+interface IProps {
+    children?: React.ReactNode;
+}
 
 interface IBinding {
     obj: object;
     binding: IDirtyHandlerApiBinding;
 }
 type Bindings = IBinding[];
-export class DirtyHandler extends React.Component<IProps> {
+
+const messages = defineMessages({
+    discardChanges: {
+        id: "reactAdmin.core.dirtyHandler.discardChanges",
+        defaultMessage: "Nicht gespeicherte Änderungen verwerfen?",
+        description: "Prompt to discard unsaved changes",
+    },
+});
+
+class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentProps> {
     public static contextType = DirtyHandlerApiContext;
 
     public dirtyHandlerApi: IDirtyHandlerApi;
     private bindings: Bindings;
 
-    constructor(props: IProps) {
+    constructor(props: IProps & WrappedComponentProps) {
         super(props);
 
         this.bindings = [];
@@ -65,7 +77,7 @@ export class DirtyHandler extends React.Component<IProps> {
         if (!this.isBindingDirty()) {
             return true;
         } else {
-            return "Nicht gespeicherte Änderungen verwerfen?";
+            return this.props.intl.formatMessage(messages.discardChanges);
         }
     };
 
@@ -104,3 +116,8 @@ export class DirtyHandler extends React.Component<IProps> {
         return this.context;
     }
 }
+
+export const DirtyHandler = React.forwardRef<DirtyHandlerComponent, IProps>((props, ref) => {
+    const intl = useIntl();
+    return <DirtyHandlerComponent ref={ref} intl={intl} {...props} />;
+});

@@ -9,6 +9,7 @@ import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
 import * as sc from "./Stack.sc";
+import { FormattedMessage } from "react-intl";
 
 export const StackBreadcrumbsContainer = sc.BreadcrumbsContainer;
 
@@ -124,7 +125,7 @@ export class Stack extends React.Component<IProps, IState> {
                                 )}
                                 {this.props.showBackButton && (
                                     <Button color="default" disabled={breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
-                                        Zurück
+                                        <FormattedMessage id="reactAdmin.core.stack.stack.back" defaultMessage="Zurück" description="Back Button" />
                                         <ArrowBackIcon />
                                     </Button>
                                 )}

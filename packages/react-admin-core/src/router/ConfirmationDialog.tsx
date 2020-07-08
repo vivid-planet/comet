@@ -3,6 +3,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 interface IProps {
     isOpen: boolean;
@@ -16,10 +17,18 @@ export const RouterConfirmationDialog: React.FunctionComponent<IProps> = ({ mess
             <DialogTitle>{message}</DialogTitle>
             <DialogActions>
                 <Button onClick={handleClose.bind(this, true)} color="primary" autoFocus={true}>
-                    OK
+                    <FormattedMessage
+                        id="reactAdmin.core.router.confirmationDialog.confirm"
+                        defaultMessage="OK"
+                        description="Confirmation Prompt OK"
+                    />
                 </Button>
                 <Button onClick={handleClose.bind(this, false)} color="primary">
-                    Abbrechen
+                    <FormattedMessage
+                        id="reactAdmin.core.router.confirmationDialog.abort"
+                        defaultMessage="Abbrechen"
+                        description="Confirmation Prompt Abort"
+                    />
                 </Button>
             </DialogActions>
         </Dialog>

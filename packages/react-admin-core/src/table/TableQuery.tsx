@@ -3,6 +3,7 @@ import { ApolloError } from "apollo-client";
 import * as React from "react";
 import * as sc from "./TableQuery.sc";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
+import { FormattedMessage } from "react-intl";
 
 export const parseIdFromIri = (iri: string) => {
     const m = iri.match(/\/(\d+)/);
@@ -33,7 +34,18 @@ export function TableQuery(props: IProps) {
                         </sc.TableCircularProgressContainer>
                     )}
                 </sc.ProgressOverlayInnerContainer>
-                {props.error && <p>Error :( {props.error.toString()}</p>}
+                {props.error && (
+                    <p>
+                        <FormattedMessage
+                            id="reactAdmin.core.table.tableQuery.error"
+                            defaultMessage="Error :( {error}"
+                            description="Display apollo error message"
+                            values={{
+                                error: props.error.toString(),
+                            }}
+                        />
+                    </p>
+                )}
                 {props.children}
             </sc.ProgressOverlayContainer>
         </TableQueryContext.Provider>

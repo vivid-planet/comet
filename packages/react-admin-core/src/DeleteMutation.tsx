@@ -7,6 +7,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import * as React from "react";
 import { TableQueryContext } from "./table";
+import { FormattedMessage } from "react-intl";
 
 interface IProps {
     mutation: any;
@@ -32,13 +33,19 @@ export function DeleteMutation(props: IProps) {
             )}
 
             <Dialog open={dialogOpen} onClose={handleNoClick}>
-                <DialogTitle>Datensatz löschen?</DialogTitle>
+                <DialogTitle>
+                    <FormattedMessage
+                        id="reactAdmin.core.deleteMutation.promptDelete"
+                        defaultMessage="Datensatz löschen?"
+                        description="Prompt to delete an item"
+                    />
+                </DialogTitle>
                 <DialogActions>
                     <Button onClick={handleYesClick} color="primary" autoFocus={true} variant="contained">
-                        Ja
+                        <FormattedMessage id="reactAdmin.core.deleteMutation.yes" defaultMessage="Ja" description="delete yes" />
                     </Button>
                     <Button onClick={handleNoClick} color="primary">
-                        Nein
+                        <FormattedMessage id="reactAdmin.core.deleteMutation.no" defaultMessage="Nein" description="delete no" />
                     </Button>
                 </DialogActions>
             </Dialog>

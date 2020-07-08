@@ -9,6 +9,7 @@ import { Form, FormProps, FormRenderProps, FormSpy, FormSpyRenderProps } from "r
 import { renderComponent } from "../finalFormRenderComponent";
 import * as sc from "./TableFilterFinalForm.sc";
 import { IFilterApi } from "./useTableQueryFilter";
+import { FormattedMessage } from "react-intl";
 
 type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" | "initialValues"> & {
     headline?: string;
@@ -60,7 +61,10 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                                             formRenderProps.form.reset();
                                         }}
                                     >
-                                        Filter zurücksetzen
+                                        <FormattedMessage
+                                            id="reactAdmin.core.table.tableFilterFinalForm.resetButton"
+                                            defaultMessage="Filter zurücksetzen"
+                                        />
                                     </Button>
                                 </Grid>
                             )}

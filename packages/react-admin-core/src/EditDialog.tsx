@@ -9,6 +9,7 @@ import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiConte
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
 import { ISelectionApi } from "./SelectionApi";
 import { SelectionRoute } from "./SelectionRoute";
+import { useIntl, WrappedComponentProps, defineMessages } from "react-intl";
 
 interface ITitle {
     edit: string;
@@ -16,21 +17,26 @@ interface ITitle {
 }
 
 interface IProps {
-    title: ITitle | string;
+    title?: ITitle | string;
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
-export class EditDialog extends React.Component<IProps> {
-    public static defaultProps = {
-        title: {
-            edit: "Bearbeiten",
-            add: "Hinzufügen",
-        },
-    };
 
+const messages = defineMessages({
+    edit: {
+        id: "reactAdmin.core.editDialog.edit",
+        defaultMessage: "Bearbeiten",
+    },
+    add: {
+        id: "reactAdmin.core.editDialog.add",
+        defaultMessage: "Hinzufügen",
+    },
+});
+
+export class EditDialogComponent extends React.Component<IProps & WrappedComponentProps> {
     private editDialogApi: IEditDialogApi;
     private selectionRef: React.RefObject<SelectionRoute> = React.createRef<SelectionRoute>();
 
-    constructor(props: IProps) {
+    constructor(props: IProps & WrappedComponentProps) {
         super(props);
 
         this.editDialogApi = {
@@ -40,7 +46,12 @@ export class EditDialog extends React.Component<IProps> {
     }
 
     public render() {
-        const { children, title } = this.props;
+        const { children, title: maybeTitle, intl } = this.props;
+
+        const title = maybeTitle ?? {
+            edit: intl.formatMessage(messages.edit),
+            add: intl.formatMessage(messages.add),
+        };
 
         return (
             <EditDialogApiContext.Provider value={this.editDialogApi}>
@@ -90,3 +101,8 @@ export class EditDialog extends React.Component<IProps> {
         selectionApi.handleDeselect();
     };
 }
+
+export const EditDialog = React.forwardRef<EditDialogComponent, IProps>((props, ref) => {
+    const intl = useIntl();
+    return <EditDialogComponent ref={ref} intl={intl} {...props} />;
+});

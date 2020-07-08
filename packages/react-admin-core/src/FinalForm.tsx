@@ -12,6 +12,7 @@ import * as sc from "./FinalForm.sc";
 import { renderComponent } from "./finalFormRenderComponent";
 import { StackApiContext } from "./stack";
 import { TableQueryContext } from "./table";
+import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -109,7 +110,11 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                                             color="default"
                                             onClick={handleCancelClick}
                                         >
-                                            Abbrechen
+                                            <FormattedMessage
+                                                id="reactAdmin.core.finalForm.abort"
+                                                defaultMessage="Abbrechen"
+                                                description="Abort button"
+                                            />
                                         </Button>
                                     )}
                                     <Button
@@ -120,7 +125,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                                         type="submit"
                                         disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
                                     >
-                                        Speichern
+                                        <FormattedMessage id="reactAdmin.core.finalForm.save" defaultMessage="Speichern" description="Save button" />
                                     </Button>
                                 </ButtonsContainer>
                             </>
