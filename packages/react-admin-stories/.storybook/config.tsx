@@ -14,11 +14,30 @@ function loadStories() {
 addDecorator((story, context) => {
     const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
     const messages = {
-        de: {
-            "reactAdmin.core.finalForm.save": "Speichern",
-        },
         en: {
+            "reactAdmin.core.deleteMutation.promptDelete": "Delete data?",
+            "reactAdmin.core.deleteMutation.yes": "Yes",
+            "reactAdmin.core.deleteMutation.no": "No",
+            "reactAdmin.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
+            "reactAdmin.core.editDialog.edit": "Edit",
+            "reactAdmin.core.editDialog.add": "Add",
+            "reactAdmin.core.finalForm.abort": "Cancel",
             "reactAdmin.core.finalForm.save": "Save",
+            "reactAdmin.core.router.confirmationDialog.confirm": "OK",
+            "reactAdmin.core.router.confirmationDialog.abort": "Cancel",
+            "reactAdmin.core.stack.stack.back": "Back",
+            "reactAdmin.core.table.addButton": "Add",
+            "reactAdmin.core.table.excelExportButton": "Export",
+            "reactAdmin.core.table.localChangesToolbar.save": "Save",
+            "reactAdmin.core.table.localChangesToolbar.unsavedItems":
+                "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
+            "reactAdmin.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
+            "reactAdmin.core.table.tableQuery.error": "Error :( {error}",
+        },
+        de: {
+            "reactAdmin.core.table.localChangesToolbar.unsavedItems":
+                "{count, plural, =0 {keine ungespeicherten Änderungen} one {# ungespeicherte Änderung} other {# ungespeicherte Änderungen}}",
+            "reactAdmin.core.table.tableQuery.error": "Fehler :( {error}",
         },
     };
     return (
