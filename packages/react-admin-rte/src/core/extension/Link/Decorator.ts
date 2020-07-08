@@ -7,7 +7,7 @@ export const ENTITY_TYPE = "LINK";
 const Decorator: DraftDecorator = {
     strategy: (contentBlock, callback, contentState) => {
         // findEntities
-        contentBlock.findEntityRanges((character) => {
+        contentBlock.findEntityRanges(character => {
             const entityKey = character.getEntity();
             return entityKey !== null && contentState.getEntity(entityKey).getType() === ENTITY_TYPE;
         }, callback);

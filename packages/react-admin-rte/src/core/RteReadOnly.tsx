@@ -2,9 +2,9 @@ import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
 import { Editor as DraftJsEditor, EditorState } from "draft-js";
 import * as React from "react";
+import { styleMap } from "./Rte";
 import { ICustomBlockTypeMap } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
-import { styleMap } from "./Rte";
 
 export interface IRteReadOnlyOptions {
     customBlockMap?: ICustomBlockTypeMap;

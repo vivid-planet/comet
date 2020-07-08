@@ -4,6 +4,7 @@ import { ToolbarButton as LinkToolbarButton } from "../extension/Link";
 import { ToolbarButton as LinksRemoveToolbarButton } from "../extension/LinksRemove";
 
 import { IControlProps } from "../types";
+import * as sc from "./LinkControls.sc";
 
 export default function ListsControls(p: IControlProps) {
     const {
@@ -19,8 +20,8 @@ export default function ListsControls(p: IControlProps) {
 
     return (
         <ButtonGroup>
-            {supportedThings.includes("link") && <LinkButtonComponent {...p} />}
-            {supportedThings.includes("links-remove") && <LinksRemoveButtonComponent {...p} />}
+            <sc.ButtonWrapper>{supportedThings.includes("link") && <LinkButtonComponent {...p} />}</sc.ButtonWrapper>
+            <sc.ButtonWrapper>{supportedThings.includes("links-remove") && <LinksRemoveButtonComponent {...p} />}</sc.ButtonWrapper>
         </ButtonGroup>
     );
 }

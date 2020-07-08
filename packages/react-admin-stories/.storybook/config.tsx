@@ -1,6 +1,5 @@
-import { createMuiTheme } from "@material-ui/core";
 import { addDecorator, configure } from "@storybook/react";
-import { MuiThemeProvider as ThemeProvider } from "@vivid-planet/react-admin-mui";
+import { createMuiTheme, MuiThemeProvider as ThemeProvider } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 
 const req = require.context("../src", true, /\.tsx$/);

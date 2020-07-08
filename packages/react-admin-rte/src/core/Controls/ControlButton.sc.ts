@@ -17,7 +17,7 @@ export const Root = styled.div<IRootProps>`
     box-sizing: border-box;
     transition: background-color 200ms, border-color 200ms, color 200ms;
     font-size: 20px;
-    color: ${({ theme }) => theme.palette.grey[500]};
+    color: ${({ theme }) => theme.rte.colors.buttonIcon};
 
     ${({ renderAsIcon }) =>
         renderAsIcon &&
@@ -26,8 +26,8 @@ export const Root = styled.div<IRootProps>`
         `};
 
     :hover {
-        background-color: ${({ theme }) => theme.palette.grey[100]};
-        border-color: ${({ theme }) => theme.palette.grey[200]};
+        background-color: ${({ theme }) => theme.rte.colors.buttonBackgroundHover};
+        border-color: ${({ theme }) => theme.rte.colors.buttonBorderHover};
     }
 
     ${({ disabled, selected, theme }) =>
@@ -36,7 +36,7 @@ export const Root = styled.div<IRootProps>`
         css`
             &,
             :hover {
-                border-color: ${theme.palette.grey[100]};
+                border-color: ${theme.rte.colors.buttonBorderHover};
                 background-color: white;
             }
         `};
@@ -48,7 +48,7 @@ export const Root = styled.div<IRootProps>`
             :hover {
                 background-color: transparent;
                 border-color: transparent;
-                color: ${theme.palette.grey[200]};
+                color: ${theme.rte.colors.buttonIconDisabled};
             }
         `};
 `;
