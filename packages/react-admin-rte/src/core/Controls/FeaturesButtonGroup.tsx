@@ -20,7 +20,9 @@ export default function FeaturesButtonGroup({ features }: IProps) {
                 <sc.ButtonWrapper key={name}>
                     {tooltipText ? (
                         <Tooltip title={tooltipText} placement="top">
-                            <ControlButton onButtonClick={onButtonClick} {...rest} />
+                            <span>
+                                <ControlButton onButtonClick={onButtonClick} {...rest} />
+                            </span>
                         </Tooltip>
                     ) : (
                         <ControlButton onButtonClick={onButtonClick} {...rest} />
