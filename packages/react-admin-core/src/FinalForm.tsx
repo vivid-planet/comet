@@ -10,7 +10,7 @@ import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import * as sc from "./FinalForm.sc";
 import { renderComponent } from "./finalFormRenderComponent";
-import { IStackApi, StackApiContext } from "./stack";
+import { StackApiContext } from "./stack";
 import { TableQueryContext } from "./table";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -21,20 +21,13 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface IButtonsContainerProps<FormValues = AnyObject> {
-    stackApi?: IStackApi;
-    formRenderProps: FormRenderProps<FormValues>;
-}
-
-
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
     components?: {
-        buttonsContainer?: React.ComponentType<IButtonsContainerProps<FormValues>>;
+        buttonsContainer?: React.ComponentType;
     };
+    renderButtons?: (formRenderProps: FormRenderProps<FormValues>) => React.ReactNode;
 }
-
-
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const classes = useStyles();
@@ -108,29 +101,33 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         {formRenderProps.submitting && <CircularProgress />}
                         {!formRenderProps.submitting && (
                             <>
-                                <ButtonsContainer stackApi={stackApi} formRenderProps={formRenderProps}>
-                                    {stackApi && (
+                                {props.renderButtons ? (
+                                    props.renderButtons(formRenderProps)
+                                ) : (
+                                    <ButtonsContainer>
+                                        {stackApi && (
+                                            <Button
+                                                className={classes.saveButton}
+                                                startIcon={<CancelIcon />}
+                                                variant="text"
+                                                color="default"
+                                                onClick={handleCancelClick}
+                                            >
+                                                Abbrechen
+                                            </Button>
+                                        )}
                                         <Button
                                             className={classes.saveButton}
-                                            startIcon={<CancelIcon />}
-                                            variant="text"
-                                            color="default"
-                                            onClick={handleCancelClick}
+                                            startIcon={<SaveIcon />}
+                                            variant="contained"
+                                            color="primary"
+                                            type="submit"
+                                            disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
                                         >
-                                            Abbrechen
+                                            Speichern
                                         </Button>
-                                    )}
-                                    <Button
-                                        className={classes.saveButton}
-                                        startIcon={<SaveIcon />}
-                                        variant="contained"
-                                        color="primary"
-                                        type="submit"
-                                        disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
-                                    >
-                                        Speichern
-                                    </Button>
-                                </ButtonsContainer>
+                                    </ButtonsContainer>
+                                )}
                             </>
                         )}
                     </>
