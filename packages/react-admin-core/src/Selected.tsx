@@ -5,14 +5,16 @@ import { DocumentNode } from "graphql";
 import * as React from "react";
 import styled from "styled-components";
 
-export interface IProps {
+interface IProps {
     selectionMode?: "edit" | "add";
     selectedId?: string;
     rows?: Array<{ id: string | number }>;
     query?: DocumentNode;
     dataAccessor?: string;
     children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
-    ErrorComponent?: React.ComponentType<{ error: ApolloError }>;
+    components?: {
+        error?: React.ComponentType<{ error: ApolloError }>;
+    };
 }
 const ProgressContainer = styled.div`
     padding-top: 30px;
@@ -21,7 +23,7 @@ const ProgressContainer = styled.div`
 `;
 
 export function Selected(props: IProps) {
-    const { ErrorComponent } = props;
+    const ErrorComponent = props.components?.error;
     let row;
     if (props.rows) {
         row = props.rows.find(i => String(i.id) === String(props.selectedId)); // compare as strings as selectedId might come from url
