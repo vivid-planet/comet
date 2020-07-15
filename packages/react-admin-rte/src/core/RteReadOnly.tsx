@@ -26,7 +26,9 @@ const RteReadOnly: React.FC<IProps> = ({ value: editorState, options: passedOpti
     const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
 
     function handleOnChange() {
-        editorRef.current && editorRef.current.blur();
+        if (editorRef.current) {
+            editorRef.current.blur();
+        }
     }
 
     if (plainTextOnly) {
