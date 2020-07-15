@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
+    resolveSubmitErrors?: (error: SubmissionErrors) => Promise<SubmissionErrors>;
     components?: {
         buttonsContainer?: React.ComponentType;
     };
@@ -63,7 +64,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
         function submit(event: any) {
             if (!formRenderProps.dirty) return;
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 Promise.resolve(formRenderProps.handleSubmit(event)).then(
                     () => {
                         if (formRenderProps.submitSucceeded) {
@@ -72,7 +73,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                             resolve(formRenderProps.submitErrors);
                         }
                     },
-                    (error) => {
+                    error => {
                         resolve(error);
                     },
                 );
@@ -143,7 +144,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         if (ret === undefined) return ret;
 
         return Promise.resolve(ret)
-            .then((data) => {
+            .then(data => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
                 setTimeout(() => {
                     if (props.mode === "add") {
@@ -169,11 +170,14 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 return data;
             })
             .then(
-                (data) => {
+                data => {
                     // for final-form undefined means success, an obj means error
                     return undefined;
                 },
-                (error) => {
+                error => {
+                    if (props.resolveSubmitErrors) {
+                        return props.resolveSubmitErrors(error);
+                    }
                     // resolve with FORM_ERROR
                     return Promise.resolve({
                         [FORM_ERROR]: error.toString(),
