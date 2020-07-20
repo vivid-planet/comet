@@ -70,6 +70,7 @@ function cardTargetHover<TRow extends IRow>(props: IDndOrderRowProps<TRow>, moni
 
 interface IDndOrderRowProps<TRow extends IRow> extends ITableRowProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
+    onDragEnd?: () => void;
 }
 
 interface IRowCollectedSourceProps {
@@ -87,7 +88,7 @@ class DndOrderRow<TRow extends IRow> extends React.Component<IDndOrderRowProps<T
         return (
             <RootRef rootRef={this.handleRootRef}>
                 <TableBodyRow {...rowProps} style={{ opacity }}>
-                    <TableCell>{connectDragSource(<span style={{ padding: 5 }}>::</span>)}</TableCell>
+                    <TableCell>{connectDragSource(<span style={{ padding: 5, cursor: "grab" }}>::</span>)}</TableCell>
                     <TableColumns columns={columns} row={row} />
                 </TableBodyRow>
             </RootRef>
@@ -105,6 +106,11 @@ const ExtendedDndOrderRow = DragSource<IDndOrderRowProps<IRow>, IRowCollectedSou
     "row", // TODO: configurable? unique per table?
     {
         beginDrag: cardSourceBeginDrag,
+        endDrag: props => {
+            if (props.onDragEnd) {
+                props.onDragEnd();
+            }
+        },
     },
     (connect, monitor) => ({
         connectDragSource: connect.dragSource(),
@@ -125,6 +131,7 @@ const ExtendedDndOrderRow = DragSource<IDndOrderRowProps<IRow>, IRowCollectedSou
 
 interface IProps<TRow extends IRow> extends ITableProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
+    onDragEnd?: () => void;
 }
 
 // tslint:disable-next-line:max-classes-per-file
@@ -133,7 +140,7 @@ class TableDndOrder<TRow extends IRow> extends React.Component<IProps<TRow>> {
         const tableProps: ITableProps<TRow> = {
             ...this.props,
             renderTableRow: props => {
-                return <ExtendedDndOrderRow moveRow={this.props.moveRow} index={props.index} {...props} />;
+                return <ExtendedDndOrderRow moveRow={this.props.moveRow} onDragEnd={this.props.onDragEnd} index={props.index} {...props} />;
             },
             renderHeadTableRow: props => {
                 return (

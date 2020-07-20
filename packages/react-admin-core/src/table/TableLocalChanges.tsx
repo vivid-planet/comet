@@ -29,6 +29,7 @@ export interface ITableLocalChangesApi {
 interface IProps<TData> {
     data: TData[];
     onSubmit: (changes: { [id: string]: Partial<TData> }) => Promise<void>;
+    posProp: string;
     children: (injectedProps: {
         tableLocalChangesApi: ITableLocalChangesApi;
         localChangesCount: number;
@@ -43,9 +44,13 @@ interface IState<TData> {
     };
     loading: boolean;
 }
-export class TableLocalChanges<TData extends { id: string; pos?: number }> extends React.Component<IProps<TData>, IState<TData>> {
+export class TableLocalChanges<TData extends { id: string; [key: string]: any }> extends React.Component<IProps<TData>, IState<TData>> {
     public static contextType = DirtyHandlerApiContext;
+    protected static defaultProps = {
+        posProp: "pos",
+    };
     private tableLocalChangesApi: ITableLocalChangesApi;
+
     constructor(props: IProps<TData>) {
         super(props);
         this.tableLocalChangesApi = {
@@ -146,7 +151,7 @@ export class TableLocalChanges<TData extends { id: string; pos?: number }> exten
 
         const hoverId = changedOrder[hoverIndex];
         const hoverRow = patchedData.find(i => i.id === hoverId);
-        this.setLocalDataChange(dragId, "pos", hoverRow.pos);
+        this.setLocalDataChange(dragId, this.props.posProp, hoverRow[this.props.posProp]);
 
         changedOrder.splice(dragIndex, 1);
         changedOrder.splice(hoverIndex, 0, dragId);

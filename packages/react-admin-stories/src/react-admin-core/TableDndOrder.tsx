@@ -5,13 +5,18 @@ import * as React from "react";
 
 interface IRow {
     id: string; // TODO add support for number in TableLocalChanges
-    pos: number;
-    foo1: string;
-    foo2: string;
+    order: number;
+    task: string;
 }
 
 function Story() {
-    const data: IRow[] = [{ id: "1", pos: 1, foo1: "blub", foo2: "blub1" }, { id: "2", pos: 2, foo1: "blub", foo2: "blub2" }];
+    const data: IRow[] = [
+        { id: "1", order: 1, task: "Write a cool JS library" },
+        { id: "2", order: 2, task: "Make it generic enough" },
+        { id: "3", order: 3, task: "Write README" },
+        { id: "4", order: 4, task: "Create some examples" },
+        { id: "5", order: 5, task: "PROFIT" },
+    ];
 
     return (
         <TableLocalChanges
@@ -19,6 +24,7 @@ function Story() {
             onSubmit={async changes => {
                 alert(JSON.stringify(changes));
             }}
+            posProp="order" // if anything but 'pos' is used
         >
             {({ tableLocalChangesApi, data: changedData }) => (
                 <>
@@ -26,15 +32,14 @@ function Story() {
                         data={changedData}
                         totalCount={changedData.length}
                         moveRow={tableLocalChangesApi.moveRow}
+                        onDragEnd={() => {
+                            // alternative to submit button
+                            // tableLocalChangesApi.submitLocalDataChanges();
+                        }}
                         columns={[
                             {
-                                name: "foo1",
-                                header: "Foo1",
-                            },
-                            {
-                                name: "foo2",
-                                header: "Foo2",
-                                render: row => <strong>{row.foo2}</strong>,
+                                name: "task",
+                                header: "Task",
                             },
                         ]}
                     />
