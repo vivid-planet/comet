@@ -24,7 +24,7 @@ function Story() {
             onSubmit={async changes => {
                 alert(JSON.stringify(changes));
             }}
-            posProp="order" // if anything but 'pos' is used
+            orderColumn="order" // if anything but 'pos' is used
         >
             {({ tableLocalChangesApi, data: changedData }) => (
                 <>
