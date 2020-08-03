@@ -1,9 +1,8 @@
-import { Grid, Toolbar, Typography } from "@material-ui/core";
+import { Box, Grid, IconButton, Toolbar, Typography } from "@material-ui/core";
 import TableCell from "@material-ui/core/TableCell";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
-import * as sc from "./Pagination.sc";
 import { IPagingInfo } from "./paging/IPagingInfo";
 
 interface IProps {
@@ -26,27 +25,23 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                         </Typography>
                     </Grid>
                     <Grid item>
-                        {pagingInfo.totalPages && pagingInfo.currentPage && (
-                            <>
-                                Seite {pagingInfo.currentPage} von {pagingInfo.totalPages}
-                            </>
-                        )}
-                        <sc.Button
-                            onClick={() => {
-                                pagingInfo.fetchPreviousPage!();
-                            }}
-                            disabled={!pagingInfo.fetchPreviousPage}
-                        >
-                            <KeyboardArrowLeft color={pagingInfo.fetchPreviousPage ? "inherit" : "disabled"} />
-                        </sc.Button>
-                        <sc.Button
-                            onClick={() => {
-                                pagingInfo.fetchNextPage!();
-                            }}
-                            disabled={!pagingInfo.fetchNextPage}
-                        >
-                            <KeyboardArrowRight color={pagingInfo.fetchNextPage ? "inherit" : "disabled"} />
-                        </sc.Button>
+                        <Grid container alignItems="center" spacing={2}>
+                            {pagingInfo.totalPages && pagingInfo.currentPage && (
+                                <Grid item>
+                                    <Typography color="textSecondary" variant="body2">
+                                        Seite {pagingInfo.currentPage} von {pagingInfo.totalPages}
+                                    </Typography>
+                                </Grid>
+                            )}
+                            <Grid item>
+                                <IconButton disabled={!pagingInfo.fetchPreviousPage} onClick={() => pagingInfo.fetchPreviousPage!()}>
+                                    <KeyboardArrowLeft />
+                                </IconButton>
+                                <IconButton disabled={!pagingInfo.fetchNextPage} onClick={() => pagingInfo.fetchNextPage!()}>
+                                    <KeyboardArrowRight />
+                                </IconButton>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Toolbar>

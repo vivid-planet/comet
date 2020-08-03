@@ -99,6 +99,9 @@ export const ListItemSecondaryAction = styled(
     ),
 )<IMenuItemSelected & ListItemSecondaryActionProps & { children: React.ReactNode }>`
     &.root {
+        display: flex;
+        align-items: center;
+
         > svg {
             font-size: 20px;
             color: ${({ selected, theme }) => (selected ? theme.palette.primary.contrastText : theme.palette.text.primary)};

@@ -8,7 +8,6 @@ import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
-import * as sc from "./FinalForm.sc";
 import { renderComponent } from "./finalFormRenderComponent";
 import { StackApiContext } from "./stack";
 import { TableQueryContext } from "./table";
@@ -81,11 +80,11 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             });
         }
 
-        const ButtonsContainer = props.components && props.components.buttonsContainer ? props.components.buttonsContainer : sc.ButtonsContainer;
+        const ButtonsContainer = props.components && props.components.buttonsContainer ? props.components.buttonsContainer : "div";
 
         return (
             <form onSubmit={submit}>
-                <sc.InnerForm>
+                <div>
                     {renderComponent<FormValues>(
                         {
                             children: props.children,
@@ -94,7 +93,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         },
                         formRenderProps,
                     )}
-                </sc.InnerForm>
+                </div>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
                 {!editDialog && (
                     <>

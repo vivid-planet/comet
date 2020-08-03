@@ -24,9 +24,3 @@ export const TableCircularProgressContainer = styled.div`
     width: 100px;
     display: flex;
 `;
-
-export const ProgressContainer = styled.div`
-    padding-top: 30px;
-    display: flex;
-    justify-content: center;
-`;
