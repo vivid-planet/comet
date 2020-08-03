@@ -4,14 +4,13 @@ import { Breadcrumbs } from "@vivid-planet/react-admin-mui";
 import * as history from "history";
 import * as React from "react";
 import { Route, RouteComponentProps } from "react-router";
-import styled from "styled-components";
 import { DirtyHandler } from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
 import * as sc from "./Stack.sc";
 
-export const StackBreadcrumbsContainer = styled.div``;
+export const StackBreadcrumbsContainer = sc.BreadcrumbsContainer;
 
 interface ISortNode {
     id: string;
