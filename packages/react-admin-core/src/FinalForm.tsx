@@ -6,7 +6,6 @@ import { Cancel as CancelIcon, Save as SaveIcon } from "@material-ui/icons";
 import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
-import styled from "styled-components";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
@@ -81,7 +80,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             });
         }
 
-        const ButtonsContainer = props.components && props.components.buttonsContainer ? props.components.buttonsContainer : styled.div;
+        const ButtonsContainer = props.components && props.components.buttonsContainer ? props.components.buttonsContainer : "div";
 
         return (
             <form onSubmit={submit}>
