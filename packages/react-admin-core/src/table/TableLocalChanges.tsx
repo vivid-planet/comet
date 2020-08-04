@@ -169,6 +169,7 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
         this.setState({
             loading: false,
             changes: {},
+            changedOrder: null,
         });
     }
 }
