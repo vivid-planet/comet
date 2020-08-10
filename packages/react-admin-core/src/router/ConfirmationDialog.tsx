@@ -1,7 +1,4 @@
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import { Button,Dialog,DialogActions ,DialogTitle,Typography} from "@material-ui/core";
 import * as React from "react";
 
 interface IProps {
@@ -16,10 +13,10 @@ export const RouterConfirmationDialog: React.FunctionComponent<IProps> = ({ mess
             <DialogTitle>{message}</DialogTitle>
             <DialogActions>
                 <Button onClick={handleClose.bind(this, true)} color="primary" autoFocus={true}>
-                    OK
+                    <Typography variant="button">OK</Typography>
                 </Button>
                 <Button onClick={handleClose.bind(this, false)} color="primary">
-                    Abbrechen
+                    <Typography variant="button">Abbrechen</Typography>
                 </Button>
             </DialogActions>
         </Dialog>

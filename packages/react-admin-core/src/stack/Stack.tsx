@@ -1,4 +1,4 @@
-import Button from "@material-ui/core/Button";
+import { Button, Typography } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { Breadcrumbs } from "@vivid-planet/react-admin-mui";
 import * as history from "history";
@@ -123,9 +123,13 @@ export class Stack extends React.Component<IProps, IState> {
                                     </BreadcrumbsContainer>
                                 )}
                                 {this.props.showBackButton && (
-                                    <Button color="default" disabled={breadcrumbs.length <= 1} onClick={this.handleGoBackClick}>
-                                        Zurück
-                                        <ArrowBackIcon />
+                                    <Button
+                                        color="default"
+                                        disabled={breadcrumbs.length <= 1}
+                                        onClick={this.handleGoBackClick}
+                                        endIcon={<ArrowBackIcon />}
+                                    >
+                                        <Typography variant="button">Zurück</Typography>
                                     </Button>
                                 )}
                                 <StackBreadcrumb title={this.props.topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>

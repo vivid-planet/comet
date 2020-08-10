@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { TableDndOrder, TableLocalChanges } from "@vivid-planet/react-admin-core";
 import * as React from "react";
@@ -48,7 +48,7 @@ function Story() {
                             tableLocalChangesApi.submitLocalDataChanges();
                         }}
                     >
-                        Submit
+                        <Typography variant="button">Submit</Typography>
                     </Button>
                 </>
             )}

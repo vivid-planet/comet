@@ -55,7 +55,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                                                 formRenderProps.form.reset();
                                             }}
                                         >
-                                            Filter zurücksetzen
+                                            <Typography variant="button">Filter zurücksetzen</Typography>
                                         </Button>
                                     </Grid>
                                 )}

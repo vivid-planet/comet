@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Typography from "@material-ui/core/Typography";
 import { PureQueryOptions } from "apollo-client";
 import * as React from "react";
 import { TableQueryContext } from "./table";
@@ -18,12 +19,12 @@ export function DeleteMutation(props: IProps) {
     const [pendingVariables, setPendingVariables] = React.useState<object | undefined>(undefined);
     const client = useApolloClient();
     const tableQuery = React.useContext(TableQueryContext);
-    const {refetchQueries = []} = props
+    const { refetchQueries = [] } = props;
 
     return (
         <React.Fragment>
             {props.children(
-                options => {
+                (options) => {
                     setDialogOpen(true);
                     setPendingVariables(options.variables);
                 },
@@ -37,10 +38,10 @@ export function DeleteMutation(props: IProps) {
                 <DialogTitle>Datensatz löschen?</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleYesClick} color="primary" autoFocus={true} variant="contained">
-                        Ja
+                        <Typography variant="button">Ja</Typography>
                     </Button>
                     <Button onClick={handleNoClick} color="primary">
-                        Nein
+                        <Typography variant="button">Nein</Typography>
                     </Button>
                 </DialogActions>
             </Dialog>

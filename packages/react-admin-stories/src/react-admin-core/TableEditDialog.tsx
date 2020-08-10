@@ -1,5 +1,5 @@
 import { ApolloProvider } from "@apollo/react-hooks";
-import { Button, IconButton, Toolbar } from "@material-ui/core";
+import { Button, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import { EditDialog, FinalForm, Selected, Table } from "@vivid-planet/react-admin-core";
@@ -46,12 +46,12 @@ function Story() {
             <Toolbar>
                 <Button
                     color="default"
+                    endIcon={<AddIcon />}
                     onClick={ev => {
                         if (editDialog) editDialog.openAddDialog();
                     }}
                 >
-                    Hinzufügen
-                    <AddIcon />
+                    <Typography variant="button">Hinzufügen</Typography>
                 </Button>
             </Toolbar>
             <Table
