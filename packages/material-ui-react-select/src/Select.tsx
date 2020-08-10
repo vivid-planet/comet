@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
         },
         input: {
             display: "flex",
-            padding: 0,
+            paddingRight: 0,
         },
         valueContainer: {
             display: "flex",
@@ -46,15 +46,12 @@ const styles = (theme: Theme) =>
             padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
         },
         singleValue: {
-            fontSize: 16,
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
         },
         placeholder: {
-            position: "absolute",
-            left: 2,
-            fontSize: 16,
+            color: theme.palette.text.disabled,
         },
         paper: {
             position: "absolute",
@@ -117,17 +114,17 @@ function Option<OptionType>(props: OptionProps<OptionType>) {
 
 function Placeholder<OptionType>(props: PlaceholderProps<OptionType>) {
     return (
-        <Typography color="textSecondary" className={props.selectProps.classes.placeholder} {...props.innerProps}>
+        <div className={props.selectProps.classes.placeholder} {...props.innerProps}>
             {props.children}
-        </Typography>
+        </div>
     );
 }
 
 function SingleValue<OptionType>(props: SingleValueProps<OptionType>) {
     return (
-        <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
+        <div className={props.selectProps.classes.singleValue} {...props.innerProps}>
             {props.children}
-        </Typography>
+        </div>
     );
 }
 
