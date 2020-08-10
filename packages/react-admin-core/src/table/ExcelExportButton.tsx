@@ -38,7 +38,7 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
                 )
             }
         >
-            <Typography>{children != null ? children : "Export"}</Typography>
+            <Typography variant="button">{children != null ? children : "Export"}</Typography>
         </Button>
     );
 };

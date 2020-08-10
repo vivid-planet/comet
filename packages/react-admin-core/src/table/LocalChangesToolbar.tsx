@@ -1,5 +1,4 @@
-import { CircularProgress, Toolbar } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import { Button, CircularProgress, Toolbar, Typography } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
 import * as React from "react";
 import { ITableLocalChangesApi } from "./TableLocalChanges";
@@ -19,7 +18,7 @@ export class TableLocalChangesToolbar extends React.Component<IProps> {
                 {!this.props.loading && (
                     <Toolbar>
                         <Button color="default" onClick={this.handleSaveClick} startIcon={<SaveIcon />}>
-                            Speichern
+                            <Typography variant="button">Speichern</Typography>
                         </Button>
                         {this.props.localChangesCount} unsaved change(s)
                     </Toolbar>

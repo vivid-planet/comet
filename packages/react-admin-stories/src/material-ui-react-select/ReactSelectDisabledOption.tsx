@@ -1,4 +1,4 @@
-import { Button, ListItem } from "@material-ui/core";
+import { Button, ListItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { ReactSelect } from "@vivid-planet/material-ui-react-select";
 import * as React from "react";
@@ -13,7 +13,7 @@ function Story() {
         <div style={{ width: "300px" }}>
             <ListItem>
                 <Button component={"button"} disableTouchRipple>
-                    blah
+                    <Typography variant="button">blah</Typography>
                 </Button>
             </ListItem>
 

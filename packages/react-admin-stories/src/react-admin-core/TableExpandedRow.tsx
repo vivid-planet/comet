@@ -1,5 +1,6 @@
-import { Button, TableCell } from "@material-ui/core";
+import { IconButton, TableCell } from "@material-ui/core";
 import TableRow from "@material-ui/core/TableRow";
+import { Add as AddIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import { ITableHeadRowProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "@vivid-planet/react-admin-core";
 import * as React from "react";
@@ -17,13 +18,13 @@ function ExpandableTableRow({ rowProps, ...rest }: ITableRowProps<IRow>) {
             <TableBodyRow {...rowProps}>
                 <TableColumns {...rest} />
                 <TableCell>
-                    <Button
+                    <IconButton
                         onClick={() => {
                             setIsExpanded(!isExpanded);
                         }}
                     >
-                        +
-                    </Button>
+                        <AddIcon />
+                    </IconButton>
                 </TableCell>
             </TableBodyRow>
             {isExpanded && (
@@ -45,7 +46,10 @@ function ExampleHeadTableRow<TRow extends IRow>(props: ITableHeadRowProps<TRow>)
 }
 
 function Story() {
-    const data: IRow[] = [{ id: 1, foo1: "blub", foo2: "blub" }, { id: 2, foo1: "blub", foo2: "blub" }];
+    const data: IRow[] = [
+        { id: 1, foo1: "blub", foo2: "blub" },
+        { id: 2, foo1: "blub", foo2: "blub" },
+    ];
 
     return (
         <Table

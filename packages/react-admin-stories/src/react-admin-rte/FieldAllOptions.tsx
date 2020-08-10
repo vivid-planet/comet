@@ -29,7 +29,7 @@ function Story() {
                         <form onSubmit={handleSubmit}>
                             <Field name="rteContent" label="Rich Text" component={RteField} />
                             <Button color="primary" variant="contained" type="submit" component={"button"} disableTouchRipple>
-                                Submit
+                                <Typography variant="button">Submit</Typography>
                             </Button>
                         </form>
                     )}

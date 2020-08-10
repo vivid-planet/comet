@@ -1,4 +1,4 @@
-import Button from "@material-ui/core/Button";
+import { Button, Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";
@@ -11,7 +11,7 @@ export class TableAddButton extends React.Component<IProps> {
     public render() {
         return (
             <Button color="default" onClick={this.handleAddClick} startIcon={<AddIcon />}>
-                Hinzufügen
+                <Typography variant="button">Hinzufügen</Typography>
             </Button>
         );
     }

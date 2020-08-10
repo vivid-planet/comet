@@ -1,4 +1,4 @@
-import { Box, Grid, IconButton, Toolbar, Typography } from "@material-ui/core";
+import { Grid, IconButton, Toolbar, Typography } from "@material-ui/core";
 import TableCell from "@material-ui/core/TableCell";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
