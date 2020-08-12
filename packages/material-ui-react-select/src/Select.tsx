@@ -1,5 +1,6 @@
 import { Chip, MenuItem, Paper, TextField, Theme, Typography } from "@material-ui/core";
 import { emphasize } from "@material-ui/core/styles/colorManipulator";
+import zIndex from "@material-ui/core/styles/zIndex";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { createStyles, withStyles } from "@material-ui/styles";
 import classNames from "classnames";
@@ -55,8 +56,7 @@ const styles = (theme: Theme) =>
         },
         paper: {
             position: "absolute",
-            zIndex: 1,
-            marginTop: theme.spacing(1),
+            zIndex: zIndex.modal,
             left: 0,
             right: 0,
         },
