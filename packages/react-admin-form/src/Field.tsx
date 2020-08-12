@@ -1,6 +1,6 @@
-import { Typography } from "@material-ui/core";
+import { FormHelperText } from "@material-ui/core";
 import * as React from "react";
-import { Field as FinalFormField, FieldRenderProps, RenderableProps } from "react-final-form";
+import { Field as FinalFormField, FieldRenderProps } from "react-final-form";
 import { FieldContainer } from "./FieldContainer";
 
 const requiredValidator = (value: any) => (value ? undefined : "Pflichtfeld");
@@ -38,7 +38,7 @@ export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extend
             return (
                 <UsedFieldContainer label={label} required={required}>
                     {React.createElement(component, { ...rest, input, meta })}
-                    {meta.error && meta.touched && <Typography color="error">{meta.error}</Typography>}
+                    {meta.error && meta.touched && <FormHelperText error>{meta.error}</FormHelperText>}
                 </UsedFieldContainer>
             );
         } else {
