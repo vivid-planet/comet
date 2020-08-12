@@ -18,12 +18,11 @@ interface IProps extends FieldRenderProps<IDateRange, HTMLInputElement> {
 }
 
 export const DateRangePicker: React.FC<IProps> = ({
-    input: { value, onChange },
+    input: { value, onChange, name },
     fullWidth = false,
     color = "default",
     meta,
     label,
-    name,
     children,
     render,
     startPlaceholder,
@@ -45,10 +44,10 @@ export const DateRangePicker: React.FC<IProps> = ({
             <AirBNBDateRangePicker
                 startDate={start}
                 startDatePlaceholderText={startPlaceholder === undefined ? String(locale.format("L")) : startPlaceholder}
-                startDateId="start_date_id"
+                startDateId={`date-range-picker-start-${name}`}
                 endDate={end}
                 endDatePlaceholderText={endPlaceholder === undefined ? String(locale.format("L")) : endPlaceholder}
-                endDateId="end_date_id"
+                endDateId={`date-range-picker-end-${name}`}
                 onDatesChange={({ startDate, endDate }: { startDate: moment.Moment | null; endDate: moment.Moment | null }) => {
                     onChange({ start: startDate ? startDate.toDate() : null, end: endDate ? endDate.toDate() : null });
                 }}
