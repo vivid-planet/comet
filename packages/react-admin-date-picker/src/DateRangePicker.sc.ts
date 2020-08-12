@@ -1,3 +1,4 @@
+import zIndex from "@material-ui/core/styles/zIndex";
 import { css, styled } from "@vivid-planet/react-admin-mui";
 /* tslint:disable */
 import "react-dates/initialize";
@@ -22,6 +23,14 @@ export const DateRangePickerWrapper = styled.div<IDateRangePickerWrapperProps>`
                 display: block;
             }
         `};
+
+    .DateRangePicker_picker {
+        z-index: ${zIndex.modal};
+    }
+
+    .DateInput_fang {
+        z-index: ${zIndex.modal + 1};
+    }
 
     .DateInput {
         position: static;
