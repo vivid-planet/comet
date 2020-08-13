@@ -30,7 +30,6 @@ function Story() {
                             label="Flavor"
                             fieldContainerComponent={FieldContainerLabelAbove}
                             component={ReactSelectStaticOptions}
-                            placeholder=""
                             isClearable
                             defaultOptions
                             options={options}
