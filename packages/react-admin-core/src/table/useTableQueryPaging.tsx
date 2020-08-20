@@ -5,7 +5,7 @@ export interface IPagingApi<T> {
     init: T;
     current: T;
     currentPage?: number;
-    changePage: (variables: T, page?: number) => void;
+    changePage: (variables: T, page?: number, noScrollToTop?: boolean) => void;
     attachTableRef: (ref: React.RefObject<HTMLDivElement | undefined>) => void;
 }
 export function useTableQueryPaging<T>(
@@ -26,10 +26,10 @@ export function useTableQueryPaging<T>(
         tableRef = ref;
     }
 
-    function changePage(vars: T, p?: number) {
+    function changePage(vars: T, p?: number, noScrollToTop?: boolean) {
         setVariables(vars);
         if (p) setPage(p);
-        if (tableRef && tableRef.current) {
+        if (tableRef && tableRef.current && !noScrollToTop) {
             tableRef.current.scrollIntoView();
         }
     }

@@ -14,7 +14,10 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
     options: {
         pagingApi?: IPagingApi<any>;
         persistedStateId?: string;
-    } = {},
+        noScrollToTableTopOnFilter?: boolean;
+    } = {
+        noScrollToTableTopOnFilter: false,
+    },
 ): IFilterApi<FilterValues> {
     const [filters, setFilters] = usePersistedState<FilterValues>(defaultValues, {
         persistedStateId: options.persistedStateId ? options.persistedStateId + "_filter" : undefined,
@@ -37,7 +40,7 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
                 if (!isEqual(filters, newValues)) {
                     setFilters(newValues);
                     if (options.pagingApi) {
-                        options.pagingApi.changePage(options.pagingApi.init, 1);
+                        options.pagingApi.changePage(options.pagingApi.init, 1, options.noScrollToTableTopOnFilter);
                     }
                 }
             }, 500),
