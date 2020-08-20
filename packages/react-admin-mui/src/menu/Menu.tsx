@@ -1,13 +1,11 @@
 import { Drawer, Theme } from "@material-ui/core";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
+import { useWindowSize } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 import { useHistory } from "react-router";
 import { ThemeContext } from "styled-components";
 import { MenuContext } from "./Context";
 import * as sc from "./Menu.sc";
-
-// TODO after next publish: Replace with hook from `@vivid-planet/react-admin-core`
-import useWindowSize from "./useWindowSize";
 
 interface IProps {
     children: React.ReactNode;
