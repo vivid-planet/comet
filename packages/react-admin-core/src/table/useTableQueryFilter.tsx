@@ -14,7 +14,7 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
     options: {
         pagingApi?: IPagingApi<any>;
         persistedStateId?: string;
-    },
+    } = {},
 ): IFilterApi<FilterValues> {
     const [filters, setFilters] = usePersistedState<FilterValues>(defaultValues, {
         persistedStateId: options.persistedStateId ? options.persistedStateId + "_filter" : undefined,
