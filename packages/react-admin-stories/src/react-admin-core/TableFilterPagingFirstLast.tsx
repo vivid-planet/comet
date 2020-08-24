@@ -131,6 +131,7 @@ function Story() {
                     pageParameterName: "_page",
                     firstLastPage: true,
                     specificPage: true,
+                    showTotalCount: false,
                 },
             ),
         }),

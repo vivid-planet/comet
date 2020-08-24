@@ -22,8 +22,8 @@ export const PageInput: React.FC<{ pagingInfo: IPagingInfo }> = ({ pagingInfo: {
         fetchSpecificPage && fetchSpecificPage(values.page);
     };
 
-    const onChanged = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        fetchSpecificPage && fetchSpecificPage(parseInt(e.target.value));
+    const onChanged = async (e: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
+        fetchSpecificPage && fetchSpecificPage(parseInt((e as React.ChangeEvent<HTMLInputElement>).target.value));
     };
 
     return (
@@ -65,7 +65,11 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                 <Grid container justify="space-between" alignItems="center">
                     <Grid item>
                         <Typography color="textPrimary" variant="body2">
-                            {totalCount} {rowName}
+                            {pagingInfo.showTotalCount && (
+                                <>
+                                    {totalCount} {rowName}
+                                </>
+                            )}
                         </Typography>
                     </Grid>
                     <Grid item>

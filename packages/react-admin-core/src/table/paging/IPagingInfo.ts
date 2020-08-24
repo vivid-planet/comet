@@ -8,6 +8,7 @@ export interface IPagingInfo {
     fetchLastPage?: () => void;
     fetchSpecificPage?: (page: number) => void;
     totalPages?: number | null;
+    showTotalCount?: boolean;
     currentPage?: number;
     attachTableRef: (ref: React.RefObject<HTMLDivElement | undefined>) => void;
 }

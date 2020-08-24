@@ -17,12 +17,13 @@ interface IOptions {
     pageParameterName: string;
     firstLastPage?: boolean;
     specificPage?: boolean;
+    showTotalCount?: boolean;
 }
 
 export function createRestPagingActions<TData extends IRestPagingData>(
     pagingApi: IPagingApi<number>,
     data: TData,
-    options: IOptions = { pageParameterName: "page", firstLastPage: false, specificPage: false },
+    options: IOptions = { pageParameterName: "page", firstLastPage: false, specificPage: false, showTotalCount: true },
 ): IPagingInfo {
     const nextPage = data.nextPage ? getPageParameterFromUrl(data.nextPage, options) : null;
     const previousPage = data.previousPage ? getPageParameterFromUrl(data.previousPage, options) : null;
