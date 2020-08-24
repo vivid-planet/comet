@@ -15,16 +15,29 @@ interface IRestPagingData {
 
 interface IOptions {
     pageParameterName: string;
+    firstLastPage?: boolean;
+    specificPage?: boolean;
 }
 
 export function createRestPagingActions<TData extends IRestPagingData>(
     pagingApi: IPagingApi<number>,
     data: TData,
-    options: IOptions = { pageParameterName: "page" },
+    options: IOptions = { pageParameterName: "page", firstLastPage: false, specificPage: false },
 ): IPagingInfo {
     const nextPage = data.nextPage ? getPageParameterFromUrl(data.nextPage, options) : null;
     const previousPage = data.previousPage ? getPageParameterFromUrl(data.previousPage, options) : null;
     return {
+        fetchFirstPage: options.firstLastPage
+            ? () => {
+                  pagingApi.changePage(1, 1);
+              }
+            : undefined,
+        fetchLastPage:
+            data.totalPages && options.firstLastPage
+                ? () => {
+                      data.totalPages && pagingApi.changePage(data.totalPages, data.totalPages);
+                  }
+                : undefined,
         fetchNextPage: nextPage
             ? () => {
                   pagingApi.changePage(nextPage, nextPage);
@@ -33,6 +46,11 @@ export function createRestPagingActions<TData extends IRestPagingData>(
         fetchPreviousPage: previousPage
             ? () => {
                   pagingApi.changePage(previousPage, previousPage);
+              }
+            : undefined,
+        fetchSpecificPage: options.specificPage
+            ? (page: number) => {
+                  pagingApi.changePage(page, page);
               }
             : undefined,
         totalPages: data.totalPages,
