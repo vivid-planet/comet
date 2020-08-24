@@ -5,9 +5,14 @@ export interface IPagingApi<T> {
     init: T;
     current: T;
     currentPage?: number;
-    changePage: (variables: T, page?: number, noScrollToTop?: boolean) => void;
+    changePage: (variables: T, page?: number, changePageOptions?: IChangePageOptions) => void;
     attachTableRef: (ref: React.RefObject<HTMLDivElement | undefined>) => void;
 }
+
+export interface IChangePageOptions {
+    noScrollToTop?: boolean;
+}
+
 export function useTableQueryPaging<T>(
     init: T,
     options: {
@@ -26,10 +31,10 @@ export function useTableQueryPaging<T>(
         tableRef = ref;
     }
 
-    function changePage(vars: T, p?: number, noScrollToTop?: boolean) {
+    function changePage(vars: T, p?: number, changePageOptions?: IChangePageOptions) {
         setVariables(vars);
         if (p) setPage(p);
-        if (tableRef && tableRef.current && !noScrollToTop) {
+        if (tableRef && tableRef.current && !changePageOptions?.noScrollToTop) {
             tableRef.current.scrollIntoView();
         }
     }

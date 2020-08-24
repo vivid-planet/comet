@@ -40,7 +40,7 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
                 if (!isEqual(filters, newValues)) {
                     setFilters(newValues);
                     if (options.pagingApi) {
-                        options.pagingApi.changePage(options.pagingApi.init, 1, options.noScrollToTableTopOnFilter);
+                        options.pagingApi.changePage(options.pagingApi.init, 1, { noScrollToTop: options.noScrollToTableTopOnFilter });
                     }
                 }
             }, 500),
