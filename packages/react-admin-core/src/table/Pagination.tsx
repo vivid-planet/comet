@@ -9,13 +9,23 @@ import { Form } from "react-final-form";
 import * as sc from "./Pagination.sc";
 import { IPagingInfo } from "./paging/IPagingInfo";
 
-interface IProps {
+interface IPaginationProps {
     totalCount: number;
     pagingInfo: IPagingInfo;
     rowName?: string | ((count: number) => string);
 }
 
-export const PageInput: React.FC<{ pagingInfo: IPagingInfo }> = ({ pagingInfo: { fetchSpecificPage, totalPages } }) => {
+interface IInputProps {
+    pagingInfo: IPagingInfo;
+    lastInteraction?: "button" | "input";
+    setLastInteraction: React.Dispatch<React.SetStateAction<"button" | "input" | undefined>>;
+}
+
+export const PageInput: React.FC<IInputProps> = ({
+    pagingInfo: { fetchSpecificPage, totalPages, currentPage },
+    lastInteraction,
+    setLastInteraction,
+}) => {
     const validate = (value: number): string | undefined | null => (value >= 1 && value <= totalPages! ? undefined : "Required");
 
     const onSubmit = async (values: any) => {
@@ -31,23 +41,35 @@ export const PageInput: React.FC<{ pagingInfo: IPagingInfo }> = ({ pagingInfo: {
             <Form onSubmit={onSubmit} initialValues={{ page: 1 }}>
                 {({ values }) => (
                     <Field name="page" type="number" validate={validate}>
-                        {({ input, meta }) => (
-                            <sc.InputField
-                                type="number"
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    if (Math.abs(values.page - parseInt(e.target.value)) === 1) {
-                                        onChanged(e);
-                                    }
-                                    input.onChange(e);
-                                }}
-                                onBlur={onChanged}
-                                onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                                    if (e.key === "Enter") {
-                                        onChanged(e);
-                                    }
-                                }}
-                            />
-                        )}
+                        {({ input, meta }) => {
+                            console.log("");
+                            console.log(lastInteraction);
+                            console.log("currentPage " + currentPage);
+                            console.log("input.value " + input.value);
+                            console.log("values.page " + values.page);
+                            return (
+                                <sc.InputField
+                                    //placeholder={}
+                                    value={lastInteraction === "button" ? currentPage : input.value}
+                                    // defaultValue={currentPage}
+                                    type="number"
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        // debugger;
+                                        if (Math.abs(parseInt(values.page) - parseInt(e.target.value)) === 1) {
+                                            onChanged(e);
+                                        }
+                                        setLastInteraction("input");
+                                        input.onChange(e);
+                                    }}
+                                    // onBlur={onChanged}
+                                    onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                        if (e.key === "Enter") {
+                                            onChanged(e);
+                                        }
+                                    }}
+                                />
+                            );
+                        }}
                     </Field>
                 )}
             </Form>
@@ -55,7 +77,9 @@ export const PageInput: React.FC<{ pagingInfo: IPagingInfo }> = ({ pagingInfo: {
     );
 };
 
-export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingInfo, rowName }) => {
+export const TablePagination: React.FunctionComponent<IPaginationProps> = ({ totalCount, pagingInfo, rowName }) => {
+    const [lastInteraction, setLastInteraction] = React.useState<"input" | "button" | undefined>();
+
     if (typeof rowName === "function") {
         rowName = rowName(totalCount);
     }
@@ -65,7 +89,7 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                 <Grid container justify="space-between" alignItems="center">
                     <Grid item>
                         <Typography color="textPrimary" variant="body2">
-                            {pagingInfo.showTotalCount && (
+                            {!pagingInfo.hideTotalCount && (
                                 <>
                                     {totalCount} {rowName}
                                 </>
@@ -81,7 +105,11 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                                             <>
                                                 Seite{" "}
                                                 {pagingInfo && pagingInfo.fetchSpecificPage ? (
-                                                    <PageInput pagingInfo={pagingInfo} />
+                                                    <PageInput
+                                                        pagingInfo={pagingInfo}
+                                                        lastInteraction={lastInteraction}
+                                                        setLastInteraction={setLastInteraction}
+                                                    />
                                                 ) : (
                                                     pagingInfo.currentPage
                                                 )}{" "}
@@ -96,22 +124,36 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                                     <IconButton
                                         onClick={() => {
                                             pagingInfo.fetchFirstPage && pagingInfo.fetchFirstPage();
+                                            setLastInteraction("button");
                                         }}
                                         disabled={!pagingInfo.fetchPreviousPage}
                                     >
                                         <FirstPage />
                                     </IconButton>
                                 )}
-                                <IconButton disabled={!pagingInfo.fetchPreviousPage} onClick={() => pagingInfo.fetchPreviousPage!()}>
+                                <IconButton
+                                    disabled={!pagingInfo.fetchPreviousPage}
+                                    onClick={() => {
+                                        pagingInfo.fetchPreviousPage!();
+                                        setLastInteraction("button");
+                                    }}
+                                >
                                     <KeyboardArrowLeft />
                                 </IconButton>
-                                <IconButton disabled={!pagingInfo.fetchNextPage} onClick={() => pagingInfo.fetchNextPage!()}>
+                                <IconButton
+                                    disabled={!pagingInfo.fetchNextPage}
+                                    onClick={() => {
+                                        pagingInfo.fetchNextPage!();
+                                        setLastInteraction("button");
+                                    }}
+                                >
                                     <KeyboardArrowRight />
                                 </IconButton>
                                 {pagingInfo.fetchLastPage && (
                                     <IconButton
                                         onClick={() => {
                                             pagingInfo.fetchLastPage && pagingInfo.fetchLastPage();
+                                            setLastInteraction("button");
                                         }}
                                         disabled={!pagingInfo.fetchNextPage}
                                     >

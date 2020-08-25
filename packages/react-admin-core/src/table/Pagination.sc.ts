@@ -18,7 +18,7 @@ export const InputField = styled(Input)`
         padding-left: 10px;
         padding-right: 5px;
         margin: 0 10px;
-        border: 1px solid black;
+        border: 1px solid grey;
         border-radius: 9px;
         text-align: center;
     }

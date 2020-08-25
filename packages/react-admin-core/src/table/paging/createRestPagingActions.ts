@@ -17,13 +17,13 @@ interface IOptions {
     pageParameterName: string;
     firstLastPage?: boolean;
     specificPage?: boolean;
-    showTotalCount?: boolean;
+    hideTotalCount?: boolean;
 }
 
 export function createRestPagingActions<TData extends IRestPagingData>(
     pagingApi: IPagingApi<number>,
     data: TData,
-    options: IOptions = { pageParameterName: "page", firstLastPage: false, specificPage: false, showTotalCount: true },
+    options: IOptions = { pageParameterName: "page", firstLastPage: false, specificPage: false, hideTotalCount: false },
 ): IPagingInfo {
     const nextPage = data.nextPage ? getPageParameterFromUrl(data.nextPage, options) : null;
     const previousPage = data.previousPage ? getPageParameterFromUrl(data.previousPage, options) : null;
@@ -56,6 +56,7 @@ export function createRestPagingActions<TData extends IRestPagingData>(
             : undefined,
         totalPages: data.totalPages,
         currentPage: pagingApi.currentPage,
+        hideTotalCount: options.hideTotalCount,
         attachTableRef: pagingApi.attachTableRef,
     };
 }
