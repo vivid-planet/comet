@@ -27,9 +27,6 @@ export default function BlockTypesControls({
     return (
         <FormControl>
             <sc.Select value={activeDropdownBlockType} displayEmpty disableUnderline onChange={handleBlockTypeChange}>
-                <MenuItem value="unstyled" dense>
-                    Standard
-                </MenuItem>
                 {dropdownFeatures.map(c => (
                     <MenuItem key={c.name} value={c.name} dense>
                         {c.label}

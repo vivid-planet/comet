@@ -37,7 +37,6 @@ const StyledH1Wrapper = styled(Typography)`
     letter-spacing: 10px;
     font-weight: bold;
 `;
-
 const StyledH2 = styled.h2`
     text-transform: uppercase;
     letter-spacing: 5px;
@@ -70,6 +69,13 @@ export const rteOptions: IRteOptions = {
         },
     },
     coreBlockMap: {
+        unstyled: {
+            label: "Unstyled (custom label)",
+            renderConfig: {
+                element: "p",
+                wrapper: <Typography variant="body1" />,
+            },
+        },
         "header-one": {
             label: "Headline 1 (custom label)",
             renderConfig: {
@@ -80,7 +86,7 @@ export const rteOptions: IRteOptions = {
         "header-two": {
             label: "Headline 2 (custom label)",
             renderConfig: {
-                element: StyledH2, // React-Components can be used instead of elements, but then pasted html (h2) is not mapped to this block, so better use a wrapper for styling like in 'header-one'
+                element: StyledH2, // React-Components can be used instead of html-elements, but then pasted html (h2) is not mapped to this block, so better use a wrapper for styling like in 'header-one'
             },
         },
         "unordered-list-item": {

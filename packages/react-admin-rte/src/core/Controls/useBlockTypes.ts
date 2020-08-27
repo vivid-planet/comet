@@ -17,6 +17,10 @@ interface IProps {
 
 const coreDropdownFeatures: IFeatureConfig[] = [
     {
+        name: "unstyled",
+        label: "Standard",
+    },
+    {
         name: "header-one",
         label: "Überschrift 1",
     },
@@ -58,6 +62,8 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
     const supports = React.useCallback(
         (blockType: DraftBlockType) => {
             switch (blockType) {
+                case "unstyled":
+                    return true; // "unstyled" is the default block and must be supported
                 case "unordered-list-item":
                     return supportedThings.includes("unordered-list");
                 case "ordered-list-item":
