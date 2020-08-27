@@ -3,11 +3,12 @@ import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 import { Editor as DraftJsEditor, EditorState } from "draft-js";
 import * as React from "react";
 import { styleMap } from "./Rte";
-import { ICustomBlockTypeMap } from "./types";
+import { ICoreBlockTypeMap, ICustomBlockTypeMap } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
 export interface IRteReadOnlyOptions {
     customBlockMap?: ICustomBlockTypeMap;
+    coreBlockMap?: ICoreBlockTypeMap;
 }
 
 export type IOptions = Partial<IRteReadOnlyOptions>;
@@ -23,8 +24,12 @@ const defaultOptions: IRteReadOnlyOptions = {};
 const RteReadOnly: React.FC<IProps> = ({ value: editorState, options: passedOptions, plainTextOnly }) => {
     const editorRef = React.useRef<DraftJsEditor>(null);
     const options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions; // merge default options with passed options
-    const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
-
+    const blockRenderMap = createBlockRenderMap({
+        customBlockTypeMap: {
+            ...(options.coreBlockMap ? options.coreBlockMap : {}),
+            ...(options.customBlockMap ? options.customBlockMap : {}),
+        },
+    });
     function handleOnChange() {
         if (editorRef.current) {
             editorRef.current.blur();

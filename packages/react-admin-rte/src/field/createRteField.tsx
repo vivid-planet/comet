@@ -58,6 +58,7 @@ function createRteField<T = any>(config: IConfig<T> = defaultConfig) {
                 plainTextOnly={plainTextOnly}
                 options={{
                     customBlockMap: rteOptions ? rteOptions.customBlockMap : undefined,
+                    coreBlockMap: rteOptions ? rteOptions.coreBlockMap : undefined,
                 }}
             />
         );
