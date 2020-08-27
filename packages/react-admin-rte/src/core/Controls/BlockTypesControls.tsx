@@ -9,7 +9,7 @@ export default function BlockTypesControls({
     editorState,
     setEditorState,
     editorRef,
-    options: { supports: supportedThings, customBlockMap: customBlockTypeMap },
+    options: { supports: supportedThings, customBlockMap: customBlockTypeMap, coreBlockMap: coreBlockTypeMap },
 }: IControlProps) {
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = useBlockTypes({
         editorState,
@@ -17,6 +17,7 @@ export default function BlockTypesControls({
         supportedThings,
         customBlockTypeMap,
         editorRef,
+        coreBlockTypeMap,
     });
 
     if (!dropdownFeatures.length) {

@@ -3,7 +3,7 @@ import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { SuportedThings } from "../Rte";
-import { ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "../types";
+import { ICoreBlockTypeMap, ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
 
 interface IProps {
@@ -11,10 +11,11 @@ interface IProps {
     setEditorState: (es: EditorState) => void;
     supportedThings: SuportedThings[];
     customBlockTypeMap?: ICustomBlockTypeMap;
+    coreBlockTypeMap?: ICoreBlockTypeMap;
     editorRef: React.RefObject<Editor>;
 }
 
-const defaultDropdownFeatures: IFeatureConfig[] = [
+const coreDropdownFeatures: IFeatureConfig[] = [
     {
         name: "header-one",
         label: "Überschrift 1",
@@ -29,7 +30,7 @@ const defaultDropdownFeatures: IFeatureConfig[] = [
     },
 ];
 
-const defaultListsFeatures: IFeatureConfig[] = [
+const coreListsFeatures: IFeatureConfig[] = [
     {
         name: "unordered-list",
         label: "Aufzählungszeichen",
@@ -52,7 +53,7 @@ function getBlockTypeForFeatureName(name: string): DraftBlockType {
             return name;
     }
 }
-export default function useBlockTypes({ editorState, setEditorState, supportedThings, customBlockTypeMap, editorRef }: IProps) {
+export default function useBlockTypes({ editorState, setEditorState, supportedThings, customBlockTypeMap, editorRef, coreBlockTypeMap }: IProps) {
     // can check if blocktype is supported by the editor
     const supports = React.useCallback(
         (blockType: DraftBlockType) => {
@@ -132,17 +133,26 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
 
     const dropdownFeatures: IFeatureConfig[] = React.useMemo(
         () =>
-            [...defaultDropdownFeatures.filter(c => supports(c.name)), ...customDropdownFeatures].map(c => ({
+            [
+                ...coreDropdownFeatures
+                    .filter(c => supports(c.name)) // keep only supported features
+                    .map(c =>
+                        coreBlockTypeMap && coreBlockTypeMap[c.name] && coreBlockTypeMap[c.name].label
+                            ? { ...c, label: coreBlockTypeMap[c.name].label || c.label }
+                            : c,
+                    ), // replace label of core-blockTypes if specified in the options
+                ...customDropdownFeatures,
+            ].map(c => ({
                 ...c,
                 selected: blockTypeActive(getBlockTypeForFeatureName(c.name)),
                 onButtonClick: handleBlockTypeButtonClick.bind(null, getBlockTypeForFeatureName(c.name)),
             })),
-        [supports, blockTypeActive, handleBlockTypeButtonClick, customDropdownFeatures],
+        [supports, blockTypeActive, handleBlockTypeButtonClick, customDropdownFeatures, coreBlockTypeMap],
     );
 
     const listsFeatures: IFeatureConfig[] = React.useMemo(
         () =>
-            defaultListsFeatures
+            coreListsFeatures
                 .filter(c => supports(getBlockTypeForFeatureName(c.name)))
                 .map(c => ({
                     ...c,

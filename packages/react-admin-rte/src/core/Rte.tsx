@@ -4,7 +4,7 @@ import { DraftEditorCommand, Editor as DraftJsEditor, EditorState, getDefaultKey
 import * as React from "react";
 import Controls from "./Controls";
 import * as sc from "./Rte.sc";
-import { ICustomBlockTypeMap, ToolbarButtonComponent } from "./types";
+import { ICoreBlockTypeMap, ICustomBlockTypeMap, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
 export type SuportedThings =
@@ -26,6 +26,7 @@ export interface IRteOptions {
     supports: SuportedThings[];
     listLevelMax: number;
     customBlockMap?: ICustomBlockTypeMap;
+    coreBlockMap?: ICoreBlockTypeMap;
     overwriteLinkButton?: ToolbarButtonComponent;
     overwriteLinksRemoveButton?: ToolbarButtonComponent;
     customToolbarButtons?: ToolbarButtonComponent[];
@@ -92,7 +93,12 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         },
     }));
 
-    const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
+    const blockRenderMap = createBlockRenderMap({
+        customBlockTypeMap: {
+            ...(options.coreBlockMap ? options.coreBlockMap : {}),
+            ...(options.customBlockMap ? options.customBlockMap : {}),
+        },
+    });
 
     function handleKeyCommand(command: DraftEditorCommand) {
         const newState = RichUtils.handleKeyCommand(editorState, command);

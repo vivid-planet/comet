@@ -1,7 +1,9 @@
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
 import { convertFromRaw, convertToRaw } from "draft-js";
 import * as React from "react";
+import styled from "styled-components";
 import { exampleContent, PrintEditorState, RteLayout, useAutoFocus } from "./helper";
 
 type StringifiedRawDraftContentState = string;
@@ -25,6 +27,22 @@ export const apiOptions: IRteApiProps<ContentFormat> = {
 };
 
 const GreenCustomHeader: React.FC = ({ children }) => <span style={{ color: "green" }}>{children}</span>;
+const StyledUnorderedList = styled.ul`
+    text-transform: uppercase;
+    background-color: lightblue;
+    color: red;
+`;
+const StyledH1Wrapper = styled(Typography)`
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    font-weight: bold;
+`;
+
+const StyledH2 = styled.h2`
+    text-transform: uppercase;
+    letter-spacing: 5px;
+`;
+
 export const rteOptions: IRteOptions = {
     supports: [
         "bold",
@@ -48,6 +66,27 @@ export const rteOptions: IRteOptions = {
             renderConfig: {
                 element: "h1",
                 wrapper: <GreenCustomHeader />,
+            },
+        },
+    },
+    coreBlockMap: {
+        "header-one": {
+            label: "Headline 1 (custom label)",
+            renderConfig: {
+                element: "h1",
+                wrapper: <StyledH1Wrapper />,
+            },
+        },
+        "header-two": {
+            label: "Headline 2 (custom label)",
+            renderConfig: {
+                element: StyledH2, // React-Components can be used instead of elements, but then pasted html (h2) is not mapped to this block, so better use a wrapper for styling like in 'header-one'
+            },
+        },
+        "unordered-list-item": {
+            renderConfig: {
+                element: "li",
+                wrapper: <StyledUnorderedList />,
             },
         },
     },

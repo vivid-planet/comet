@@ -7,8 +7,17 @@ export interface ICustomBlockType {
     label: string;
 }
 
+export interface ICoreBlockType {
+    renderConfig: DraftBlockRenderConfig;
+    label?: string;
+}
+
 export interface ICustomBlockTypeMap {
     [key: string]: ICustomBlockType;
+}
+
+export interface ICoreBlockTypeMap {
+    [key: string]: ICoreBlockType;
 }
 
 export interface IFeatureConfig<T extends string = string> {
