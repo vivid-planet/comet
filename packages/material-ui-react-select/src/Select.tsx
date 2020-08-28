@@ -1,8 +1,9 @@
 import { Chip, MenuItem, Paper, TextField, Theme, Typography } from "@material-ui/core";
-import { emphasize } from "@material-ui/core/styles/colorManipulator";
-import zIndex from "@material-ui/core/styles/zIndex";
+import { SvgIconComponent } from "@material-ui/icons";
 import CancelIcon from "@material-ui/icons/Cancel";
-import { createStyles, withStyles } from "@material-ui/styles";
+import ClearIcon from "@material-ui/icons/Clear";
+import DropdownIcon from "@material-ui/icons/KeyboardArrowDown";
+import { withStyles } from "@material-ui/styles";
 import classNames from "classnames";
 import * as React from "react";
 import Select from "react-select";
@@ -10,64 +11,19 @@ import AsyncSelect, { Props as ReactSelectAsyncProps } from "react-select/async"
 import AsyncCreatableSelect from "react-select/async-creatable";
 import { Props as ReactSelectProps } from "react-select/base";
 import CreatableSelect, { Props as ReactSelectCreatableProps } from "react-select/creatable";
-import { ValueContainerProps } from "react-select/src/components/containers";
+import { IndicatorContainerProps, ValueContainerProps } from "react-select/src/components/containers";
 import { ControlProps } from "react-select/src/components/Control";
+import { IndicatorProps } from "react-select/src/components/indicators";
 import { MenuProps, NoticeProps } from "react-select/src/components/Menu";
 import { MultiValueProps } from "react-select/src/components/MultiValue";
 import { OptionProps } from "react-select/src/components/Option";
 import { PlaceholderProps } from "react-select/src/components/Placeholder";
 import { SingleValueProps } from "react-select/src/components/SingleValue";
-
-// based on https://github.com/mui-org/material-ui/blob/master/docs/src/pages/demos/autocomplete/IntegrationReactSelect.js
-
-const styles = (theme: Theme) =>
-    createStyles({
-        root: {
-            flexGrow: 1,
-            height: 250,
-        },
-        input: {
-            display: "flex",
-            paddingRight: 0,
-        },
-        valueContainer: {
-            display: "flex",
-            flexWrap: "nowrap",
-            flex: 1,
-            alignItems: "center",
-            overflow: "hidden",
-        },
-        chip: {
-            margin: `${theme.spacing(0.5)}px ${theme.spacing(0.25)}px`,
-        },
-        chipFocused: {
-            backgroundColor: emphasize(theme.palette.type === "light" ? theme.palette.grey[300] : theme.palette.grey[700], 0.08),
-        },
-        noOptionsMessage: {
-            padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-        },
-        singleValue: {
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-        },
-        placeholder: {
-            color: theme.palette.text.disabled,
-        },
-        paper: {
-            position: "absolute",
-            zIndex: zIndex.modal,
-            left: 0,
-            right: 0,
-        },
-        divider: {
-            height: theme.spacing(2),
-        },
-    });
+import styles from "./Select.styles";
 
 function NoOptionsMessage<OptionType>(props: NoticeProps<OptionType>) {
     return (
-        <Typography color="textSecondary" className={props.selectProps.classes.noOptionsMessage} {...props.innerProps}>
+        <Typography className={props.selectProps.classes.noOptionsMessage} {...props.innerProps}>
             {props.children}
         </Typography>
     );
@@ -148,9 +104,38 @@ function MultiValue<OptionType>(props: MultiValueProps<OptionType>) {
 
 function Menu<OptionType>(props: MenuProps<OptionType>) {
     return (
-        <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
+        <Paper className={props.selectProps.classes.paper} {...props.innerProps}>
             {props.children}
         </Paper>
+    );
+}
+
+function IndicatorsContainer<OptionType>(props: IndicatorContainerProps<OptionType>) {
+    return <div className={props.selectProps.classes.indicatorsContainer}>{props.children}</div>;
+}
+
+function IndicatorSeparator<OptionType>(props: IndicatorContainerProps<OptionType>) {
+    return <span className={props.selectProps.classes.indicatorSeparator} />;
+}
+
+function ClearIndicator<OptionType>({ selectProps, clearValue }: IndicatorProps<OptionType>) {
+    const Icon = selectProps.clearIcon ? selectProps.clearIcon : ClearIcon;
+    return (
+        <div className={`${selectProps.classes.indicator} ${selectProps.classes.clearIndicator}`} onClick={clearValue}>
+            <Icon fontSize="inherit" color="inherit" />
+        </div>
+    );
+}
+
+function DropdownIndicator<OptionType>({ selectProps }: IndicatorProps<OptionType>) {
+    const DefaultIcon = selectProps.dropdownIcon ? selectProps.dropdownIcon : DropdownIcon;
+    const OpenIcon = selectProps.dropdownIconOpen ? selectProps.dropdownIconOpen : DropdownIcon;
+    const Icon = selectProps.menuIsOpen ? OpenIcon : DefaultIcon;
+
+    return (
+        <div className={`${selectProps.classes.indicator} ${selectProps.classes.dropdownIndicator}`}>
+            <Icon fontSize="inherit" color="inherit" />
+        </div>
     );
 }
 
@@ -163,11 +148,14 @@ const components = {
     Placeholder,
     SingleValue,
     ValueContainer,
+    IndicatorsContainer,
+    IndicatorSeparator,
+    ClearIndicator,
+    DropdownIndicator,
 };
 
-interface IProps<OptionType> {
+export interface IVPAdminSelectProps<OptionType> {
     classes: {
-        root: string;
         input: string;
         valueContainer: string;
         chip: string;
@@ -176,14 +164,19 @@ interface IProps<OptionType> {
         singleValue: string;
         placeholder: string;
         paper: string;
-        divider: string;
+        indicatorSeparator: string;
+        indicatorsContainer: string;
     };
     theme: Theme;
     selectComponent: React.ComponentType<ReactSelectProps<OptionType>>;
+    clearIcon?: SvgIconComponent;
+    dropdownIcon?: SvgIconComponent;
+    dropdownIconOpen?: SvgIconComponent;
 }
-class SelectWrapper<OptionType> extends React.Component<IProps<OptionType> & ReactSelectProps<OptionType>> {
+
+class SelectWrapper<OptionType> extends React.Component<IVPAdminSelectProps<OptionType> & ReactSelectProps<OptionType>> {
     public render() {
-        const { classes, theme, components: origComponents, ...rest } = this.props;
+        const { classes, theme, components: origComponents, selectComponent, ...rest } = this.props;
         const selectStyles = {
             input: (base: any) => ({
                 ...base,
@@ -194,11 +187,10 @@ class SelectWrapper<OptionType> extends React.Component<IProps<OptionType> & Rea
             }),
         };
         const SelectComponent = this.props.selectComponent;
-        // @ts-ignore (classes is not supported but we use it to pass it down to other components)
         return <SelectComponent classes={classes} styles={selectStyles} components={{ ...components, ...origComponents }} placeholder="" {...rest} />;
     }
 }
-const ExtendedSelectWrapper = withStyles(styles, { withTheme: true })(SelectWrapper);
+const ExtendedSelectWrapper = withStyles(styles, { name: "VPAdminSelect", withTheme: true })(SelectWrapper);
 
 // tslint:disable:max-classes-per-file
 export class ReactSelect<OptionType> extends React.Component<ReactSelectProps<OptionType>> {

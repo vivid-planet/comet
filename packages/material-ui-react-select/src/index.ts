@@ -1,1 +1,2 @@
-export * from "./Select";
+export { ReactSelect, ReactSelectAsync, ReactSelectAsyncCreatable, ReactSelectCreatable } from "./Select";
+export * from "./themeAugmentation";
