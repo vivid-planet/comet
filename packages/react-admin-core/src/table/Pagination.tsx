@@ -42,19 +42,11 @@ export const PageInput: React.FC<IInputProps> = ({
                 {({ values }) => (
                     <Field name="page" type="number" validate={validate}>
                         {({ input, meta }) => {
-                            console.log("");
-                            console.log(lastInteraction);
-                            console.log("currentPage " + currentPage);
-                            console.log("input.value " + input.value);
-                            console.log("values.page " + values.page);
                             return (
                                 <sc.InputField
-                                    //placeholder={}
                                     value={lastInteraction === "button" ? currentPage : input.value}
-                                    // defaultValue={currentPage}
                                     type="number"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        // debugger;
                                         if (Math.abs(parseInt(values.page) - parseInt(e.target.value)) === 1) {
                                             onChanged(e);
                                         }
