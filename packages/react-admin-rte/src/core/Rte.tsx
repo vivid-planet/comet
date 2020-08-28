@@ -25,6 +25,7 @@ export type SuportedThings =
 export interface IRteOptions {
     supports: SuportedThings[];
     listLevelMax: number;
+    enableNewlines: boolean;
     customBlockMap?: ICustomBlockTypeMap;
     overwriteLinkButton?: ToolbarButtonComponent;
     overwriteLinksRemoveButton?: ToolbarButtonComponent;
@@ -58,6 +59,7 @@ const defaultOptions: IRteOptions = {
     ],
     listLevelMax: 4,
     customToolbarButtons: [],
+    enableNewlines: false, // @TODO set default value to "true" on next major version
 };
 
 export interface IRteRef {
@@ -105,6 +107,16 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         return "not-handled";
     }
 
+    function handleReturn(e: React.KeyboardEvent, innerEditorState: EditorState) {
+        if (options.enableNewlines) {
+            if (e.shiftKey) {
+                onChange(RichUtils.insertSoftNewline(innerEditorState));
+                return "handled";
+            }
+        }
+        return "not-handled";
+    }
+
     function keyBindingFn(e: React.KeyboardEvent) {
         if (e.keyCode === 13 /* ENTER */) {
             //
@@ -130,6 +142,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
                     editorState={editorState}
                     onChange={onChange}
                     handleKeyCommand={handleKeyCommand}
+                    handleReturn={handleReturn}
                     keyBindingFn={keyBindingFn}
                     customStyleMap={styleMap}
                     onTab={handleOnTab}

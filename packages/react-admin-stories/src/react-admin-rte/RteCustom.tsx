@@ -7,6 +7,7 @@ import { PrintEditorState, RteLayout, useAutoFocus } from "./helper";
 const rteOptions: IRteOptions = {
     supports: ["bold", "italic", "header-one", "header-two", "ordered-list", "unordered-list"],
     listLevelMax: 3,
+    enableNewlines: true,
 };
 
 const [useRteApi] = makeRteApi();

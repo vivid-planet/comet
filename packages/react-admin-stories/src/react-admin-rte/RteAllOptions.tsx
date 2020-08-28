@@ -51,6 +51,7 @@ export const rteOptions: IRteOptions = {
             },
         },
     },
+    enableNewlines: true,
 };
 
 const [useRteApi] = makeRteApi<ContentFormat>(makeApiOptions);
