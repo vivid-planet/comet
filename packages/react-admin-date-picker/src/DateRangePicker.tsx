@@ -4,6 +4,7 @@ import * as React from "react";
 import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
 import * as sc from "./DateRangePicker.sc";
+import useUniqueId from "./useUniqueId";
 
 interface IDateRange {
     start: Date | null;
@@ -34,6 +35,7 @@ export const DateRangePicker: React.FC<IProps> = ({
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
     const start = value.start ? moment(value.start) : null;
     const end = value.end ? moment(value.end) : null;
+    const datePickerUniqueId = useUniqueId();
 
     React.useEffect(() => {
         moment.locale(localeName);
@@ -44,10 +46,10 @@ export const DateRangePicker: React.FC<IProps> = ({
             <AirBNBDateRangePicker
                 startDate={start}
                 startDatePlaceholderText={startPlaceholder === undefined ? String(locale.format("L")) : startPlaceholder}
-                startDateId={`date-range-picker-start-${name}`}
+                startDateId={`date-range-picker-start-${name}-${datePickerUniqueId}`}
                 endDate={end}
                 endDatePlaceholderText={endPlaceholder === undefined ? String(locale.format("L")) : endPlaceholder}
-                endDateId={`date-range-picker-end-${name}`}
+                endDateId={`date-range-picker-end-${name}-${datePickerUniqueId}`}
                 onDatesChange={({ startDate, endDate }: { startDate: moment.Moment | null; endDate: moment.Moment | null }) => {
                     onChange({ start: startDate ? startDate.toDate() : null, end: endDate ? endDate.toDate() : null });
                 }}

@@ -4,6 +4,7 @@ import * as React from "react";
 import { SingleDatePicker as AirBNBDatePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
 import * as sc from "./DatePicker.sc";
+import useUniqueId from "./useUniqueId";
 
 interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     fullWidth?: boolean;
@@ -26,6 +27,7 @@ export const DatePicker: React.FC<IProps> = ({
     const locale = moment().locale(localeName);
     const [focused, setFocus] = React.useState<boolean>(false);
     const selectedDate = value ? moment(value) : null;
+    const datePickerUniqueId = useUniqueId();
 
     React.useEffect(() => {
         moment.locale(localeName);
@@ -35,7 +37,7 @@ export const DatePicker: React.FC<IProps> = ({
         <sc.SingleDatePickerWrapper fullWidth={fullWidth} color={color}>
             <AirBNBDatePicker
                 date={selectedDate}
-                id={`date-picker-${name}`}
+                id={`date-picker-${name}-${datePickerUniqueId}`}
                 onDateChange={(date: moment.Moment) => {
                     onChange(date ? date.toDate() : null);
                 }}
