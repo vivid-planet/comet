@@ -25,6 +25,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
         buttonsContainer?: React.ComponentType;
     };
     renderButtons?: (formRenderProps: FormRenderProps<FormValues>) => React.ReactNode;
+    onCancel?: () => void;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -135,7 +136,8 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     }
 
     function handleCancelClick() {
-        if (stackApi) stackApi.goBack();
+        if (props.onCancel) props.onCancel();
+        else if (stackApi) stackApi.goBack();
     }
 
     function handleSubmit(values: FormValues, form: FormApi<FormValues>, callback?: (errors?: SubmissionErrors) => void) {
