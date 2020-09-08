@@ -20,8 +20,15 @@ const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
     return Promise.reject({ errors });
 };
 
-const resolveSubmitErrors = (error: SubmissionErrors): Promise<SubmissionErrors> => {
-    return error.errors.reduce((acc: { [key: string]: any }, cur: { [key: string]: any }) => ({ ...acc, ...cur }), {});
+const resolveSubmitErrors = async (error: SubmissionErrors) => {
+    // error = { errors: [{fieldName: errorMessage},...] }
+
+    const result = {};
+    for (const submitError of error.errors) {
+        Object.assign(result, submitError);
+    }
+    // result = {fieldName: errorMessage, ...}
+    return result;
 };
 
 function Story() {
