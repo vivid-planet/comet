@@ -26,7 +26,12 @@ export const PageInput: React.FC<IInputProps> = ({
     lastInteraction,
     setLastInteraction,
 }) => {
-    const validate = (value: number): string | undefined | null => (value >= 1 && value <= totalPages! ? undefined : "Required");
+    const validation = (value: number, totalPages: number | null | undefined) => {
+        if (totalPages && value >= 1 && value <= totalPages) {
+            return true;
+        }
+        return false;
+    };
 
     const onSubmit = async (values: any) => {
         fetchSpecificPage && fetchSpecificPage(values.page);
@@ -40,7 +45,7 @@ export const PageInput: React.FC<IInputProps> = ({
         <sc.PageInputWrapper>
             <Form onSubmit={onSubmit} initialValues={{ page: 1 }}>
                 {({ values }) => (
-                    <Field name="page" type="number" validate={validate}>
+                    <Field name="page" type="number">
                         {({ input, meta }) => {
                             return (
                                 <sc.InputField
@@ -48,15 +53,23 @@ export const PageInput: React.FC<IInputProps> = ({
                                     type="number"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         if (Math.abs(parseInt(values.page) - parseInt(e.target.value)) === 1) {
-                                            onChanged(e);
+                                            if (validation(parseInt(e.target.value), totalPages)) {
+                                                onChanged(e);
+                                            }
                                         }
                                         setLastInteraction("input");
                                         input.onChange(e);
                                     }}
-                                    // onBlur={onChanged}
-                                    onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                                        if (e.key === "Enter") {
+                                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        if (validation(parseInt(e.target.value), totalPages)) {
                                             onChanged(e);
+                                        }
+                                    }}
+                                    onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                        if (validation(input.value, totalPages)) {
+                                            if (e.key === "Enter") {
+                                                onChanged(e);
+                                            }
                                         }
                                     }}
                                 />
