@@ -3,19 +3,19 @@ import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { SuportedThings } from "../Rte";
-import { ICoreBlockTypeMap, ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "../types";
+import { CoreBlockType, CoreBlockTypeMap, CustomBlockTypeMap, ICustomBlockType, IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
 
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
     supportedThings: SuportedThings[];
-    customBlockTypeMap?: ICustomBlockTypeMap;
-    coreBlockTypeMap?: ICoreBlockTypeMap;
+    customBlockTypeMap?: CustomBlockTypeMap;
+    coreBlockTypeMap?: CoreBlockTypeMap;
     editorRef: React.RefObject<Editor>;
 }
 
-const coreDropdownFeatures: IFeatureConfig[] = [
+const coreDropdownFeatures: Array<IFeatureConfig<Partial<CoreBlockType>>> = [
     {
         name: "unstyled",
         label: "Standard",
@@ -104,11 +104,12 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
         let customDropdownFeaturesInner: IFeatureConfig[] = [];
 
         if (customBlockTypeMap) {
-            customDropdownFeaturesInner = Object.entries<ICustomBlockType>(customBlockTypeMap).reduce<IFeatureConfig[]>((a, [key, config]) => {
+            customDropdownFeaturesInner = Object.entries(customBlockTypeMap).reduce<IFeatureConfig[]>((a, [key, config]) => {
                 a.push({
                     name: key,
                     label: config.label,
                 });
+
                 return a;
             }, []);
         }
@@ -143,8 +144,8 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
                 ...coreDropdownFeatures
                     .filter(c => supports(c.name)) // keep only supported features
                     .map(c =>
-                        coreBlockTypeMap && coreBlockTypeMap[c.name] && coreBlockTypeMap[c.name].label
-                            ? { ...c, label: coreBlockTypeMap[c.name].label || c.label }
+                        coreBlockTypeMap && coreBlockTypeMap[c.name] && coreBlockTypeMap[c.name]!.label
+                            ? { ...c, label: coreBlockTypeMap[c.name]!.label || c.label }
                             : c,
                     ), // replace label of core-blockTypes if specified in the options
                 ...customDropdownFeatures,

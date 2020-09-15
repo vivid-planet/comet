@@ -4,7 +4,7 @@ import { DraftEditorCommand, Editor as DraftJsEditor, EditorState, getDefaultKey
 import * as React from "react";
 import Controls from "./Controls";
 import * as sc from "./Rte.sc";
-import { ICoreBlockTypeMap, ICustomBlockTypeMap, ToolbarButtonComponent } from "./types";
+import { CoreBlockTypeMap, CustomBlockTypeMap, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
 export type SuportedThings =
@@ -25,8 +25,8 @@ export type SuportedThings =
 export interface IRteOptions {
     supports: SuportedThings[];
     listLevelMax: number;
-    customBlockMap?: ICustomBlockTypeMap;
-    coreBlockMap?: ICoreBlockTypeMap;
+    customBlockMap?: CustomBlockTypeMap;
+    coreBlockMap?: CoreBlockTypeMap;
     overwriteLinkButton?: ToolbarButtonComponent;
     overwriteLinksRemoveButton?: ToolbarButtonComponent;
     customToolbarButtons?: ToolbarButtonComponent[];
