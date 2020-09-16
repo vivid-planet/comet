@@ -105,6 +105,15 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         return "not-handled";
     }
 
+    function handleReturn(e: React.KeyboardEvent, innerEditorState: EditorState) {
+        // inserts a newline "\n" on SHIFT+ENTER-key
+        if (e.shiftKey) {
+            onChange(RichUtils.insertSoftNewline(innerEditorState));
+            return "handled";
+        }
+        return "not-handled";
+    }
+
     function keyBindingFn(e: React.KeyboardEvent) {
         if (e.keyCode === 13 /* ENTER */) {
             //
@@ -130,6 +139,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
                     editorState={editorState}
                     onChange={onChange}
                     handleKeyCommand={handleKeyCommand}
+                    handleReturn={handleReturn}
                     keyBindingFn={keyBindingFn}
                     customStyleMap={styleMap}
                     onTab={handleOnTab}
