@@ -45,7 +45,12 @@ class RouterTabs extends React.Component<IProps> {
     public render() {
         const { classes, variant, indicatorColor, appBarComponent: AppBar = MaterialAppBar, tabComponent: TabComponent = MaterialTab } = this.props;
 
-        const paths = React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
+        const paths = React.Children.map(this.props.children, child => {
+            // as seen in https://github.com/mui-org/material-ui/blob/v4.11.0/packages/material-ui/src/Tabs/Tabs.js#L390
+            if (!React.isValidElement<ITabProps>(child)) {
+                return null;
+            }
+
             if (child.type !== RouterTab) {
                 throw new Error("RouterTabs must contain only Tab children");
             }
@@ -71,7 +76,10 @@ class RouterTabs extends React.Component<IProps> {
                                                         variant={variant}
                                                         indicatorColor={indicatorColor}
                                                     >
-                                                        {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
+                                                        {React.Children.map(this.props.children, child => {
+                                                            if (!React.isValidElement<ITabProps>(child)) {
+                                                                return null;
+                                                            }
                                                             const { path, forceRender, children, label, tabLabel, ...restTabProps } = child.props;
                                                             return <TabComponent label={tabLabel ? tabLabel : label} {...restTabProps} />;
                                                         })}
@@ -97,8 +105,8 @@ class RouterTabs extends React.Component<IProps> {
                         </StackSwitchApiContext.Consumer>
                     )}
                 </StackApiContext.Consumer>
-                {React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
-                    return (
+                {React.Children.map(this.props.children, child => {
+                    return React.isValidElement<ITabProps>(child) ? (
                         <Route path={`${this.props.match.url}${child.props.path}`} exact={child.props.path === ""}>
                             {({ match }) => {
                                 if (!match && !child.props.forceRender) {
@@ -119,15 +127,15 @@ class RouterTabs extends React.Component<IProps> {
                                 }
                             }}
                         </Route>
-                    );
+                    ) : null;
                 })}
             </div>
         );
     }
 
     private handleChange = (event: {}, value: number) => {
-        const paths = React.Children.map(this.props.children, (child: React.ReactElement<ITabProps>) => {
-            return child.props.path;
+        const paths = React.Children.map(this.props.children, child => {
+            return React.isValidElement<ITabProps>(child) ? child.props.path : null;
         });
         this.props.history.push(this.props.match.url + paths[value]);
     };
