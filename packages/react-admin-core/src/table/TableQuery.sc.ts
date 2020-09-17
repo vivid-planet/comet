@@ -1,3 +1,4 @@
+import zIndex from "@material-ui/core/styles/zIndex";
 import styled from "styled-components";
 
 export const ProgressOverlayContainer = styled.div`
@@ -9,6 +10,7 @@ export const ProgressOverlayInnerContainer = styled.div`
     position: sticky;
     width: 100%;
     top: 0;
+    z-index: ${zIndex.modal};
 `;
 
 export const TableCircularProgressContainer = styled.div`
