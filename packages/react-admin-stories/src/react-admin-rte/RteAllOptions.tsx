@@ -51,6 +51,16 @@ export const rteOptions: IRteOptions = {
             },
         },
     },
+    draftJsProps: {
+        placeholder: "Your Content...",
+        autoCorrect: "on",
+        autoComplete: "on",
+        editorKey: "id-for-ssr",
+        readOnly: false,
+        spellCheck: true,
+        stripPastedStyles: true,
+        tabIndex: 0,
+    },
 };
 
 const [useRteApi] = makeRteApi<ContentFormat>(makeApiOptions);
