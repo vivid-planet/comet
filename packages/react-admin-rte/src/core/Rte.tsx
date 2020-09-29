@@ -1,6 +1,13 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { DraftEditorCommand, Editor as DraftJsEditor, EditorState, getDefaultKeyBinding, RichUtils } from "draft-js";
+import {
+    DraftEditorCommand,
+    Editor as DraftJsEditor,
+    EditorProps as DraftJsEditorProps,
+    EditorState,
+    getDefaultKeyBinding,
+    RichUtils,
+} from "draft-js";
 import * as React from "react";
 import Controls from "./Controls";
 import * as sc from "./Rte.sc";
@@ -29,6 +36,12 @@ export interface IRteOptions {
     overwriteLinkButton?: ToolbarButtonComponent;
     overwriteLinksRemoveButton?: ToolbarButtonComponent;
     customToolbarButtons?: ToolbarButtonComponent[];
+    draftJsProps: Partial<
+        Pick<
+            DraftJsEditorProps,
+            "placeholder" | "autoComplete" | "autoCorrect" | "readOnly" | "spellCheck" | "stripPastedStyles" | "tabIndex" | "editorKey"
+        >
+    >;
 }
 
 export type IOptions = Partial<IRteOptions>;
@@ -58,6 +71,7 @@ const defaultOptions: IRteOptions = {
     ],
     listLevelMax: 4,
     customToolbarButtons: [],
+    draftJsProps: {},
 };
 
 export interface IRteRef {
@@ -144,6 +158,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
                     customStyleMap={styleMap}
                     onTab={handleOnTab}
                     blockRenderMap={blockRenderMap}
+                    {...options.draftJsProps}
                 />
             </sc.EditorWrapper>
         </sc.Root>
