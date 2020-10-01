@@ -10,6 +10,7 @@ import {
 } from "draft-js";
 import * as React from "react";
 import Controls from "./Controls";
+import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import * as sc from "./Rte.sc";
 import { ICustomBlockTypeMap, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
@@ -42,12 +43,13 @@ export interface IRteOptions {
             "placeholder" | "autoComplete" | "autoCorrect" | "readOnly" | "spellCheck" | "stripPastedStyles" | "tabIndex" | "editorKey"
         >
     >;
+    filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
 }
 
 export type IOptions = Partial<IRteOptions>;
 
 type OnEditorStateChangeFn = (newValue: EditorState) => void;
-
+export type FilterEditorStateBeforeUpdateFn = (newState: EditorState, context: { supports: SuportedThings[]; listLevelMax: number }) => EditorState;
 export interface IProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
@@ -72,6 +74,7 @@ const defaultOptions: IRteOptions = {
     listLevelMax: 4,
     customToolbarButtons: [],
     draftJsProps: {},
+    filterEditorStateBeforeUpdate: defaultFilterEditorStateBeforeUpdate,
 };
 
 export interface IRteRef {
@@ -105,6 +108,17 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
             }
         },
     }));
+
+    const decoratedOnChange = React.useCallback(
+        (nextEditorState: EditorState) => {
+            if (options.filterEditorStateBeforeUpdate) {
+                onChange(options.filterEditorStateBeforeUpdate(nextEditorState, { supports: options.supports, listLevelMax: options.listLevelMax })); // apply filter before onChange
+            } else {
+                onChange(nextEditorState); // default: undecorated
+            }
+        },
+        [options.filterEditorStateBeforeUpdate, options.supports, options.listLevelMax],
+    );
 
     const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
 
@@ -151,7 +165,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
                 <DraftJsEditor
                     ref={editorRef}
                     editorState={editorState}
-                    onChange={onChange}
+                    onChange={decoratedOnChange}
                     handleKeyCommand={handleKeyCommand}
                     handleReturn={handleReturn}
                     keyBindingFn={keyBindingFn}

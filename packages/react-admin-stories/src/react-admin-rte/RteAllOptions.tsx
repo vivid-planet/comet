@@ -58,9 +58,10 @@ export const rteOptions: IRteOptions = {
         editorKey: "id-for-ssr",
         readOnly: false,
         spellCheck: true,
-        stripPastedStyles: true,
+        stripPastedStyles: false,
         tabIndex: 0,
     },
+    filterEditorStateBeforeUpdate: state => state, // removes default filter
 };
 
 const [useRteApi] = makeRteApi<ContentFormat>(makeApiOptions);
