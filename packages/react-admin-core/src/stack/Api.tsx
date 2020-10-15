@@ -15,6 +15,9 @@ export interface IStackApi {
     }>;
 }
 export const StackApiContext = React.createContext<IStackApi | undefined>(undefined);
+export function useStackApi() {
+    return React.useContext(StackApiContext);
+}
 
 /*
 export function withStackApi(WrappedComponent: React.ComponentClass) {

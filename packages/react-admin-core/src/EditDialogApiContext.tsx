@@ -6,3 +6,6 @@ export interface IEditDialogApi {
 }
 
 export const EditDialogApiContext = React.createContext<IEditDialogApi | null>(null);
+export function useEditDialogApi() {
+    return React.useContext(EditDialogApiContext);
+}

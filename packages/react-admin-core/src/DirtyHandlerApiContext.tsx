@@ -15,3 +15,6 @@ export interface IDirtyHandlerApi {
 }
 
 export const DirtyHandlerApiContext = React.createContext<IDirtyHandlerApi | undefined>(undefined);
+export function useDirtyHandlerApi() {
+    return React.useContext(DirtyHandlerApiContext);
+}

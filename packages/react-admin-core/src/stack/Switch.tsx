@@ -25,6 +25,10 @@ export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
         return;
     },
 });
+export function useStackSwitchApi() {
+    return React.useContext(StackSwitchApiContext);
+}
+
 export interface IStackSwitchApi {
     activatePage: (pageName: string, payload: string, subUrl?: string) => void;
     updatePageBreadcrumbTitle: (title?: string) => void;
