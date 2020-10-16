@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
-    resolveSubmitErrors?: (error: SubmissionErrors) => Promise<SubmissionErrors>;
+    resolveSubmitErrors?: (error: SubmissionErrors) => SubmissionErrors;
     components?: {
         buttonsContainer?: React.ComponentType;
     };

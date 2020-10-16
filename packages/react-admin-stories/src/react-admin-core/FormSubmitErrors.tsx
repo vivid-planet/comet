@@ -20,7 +20,7 @@ const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
     return Promise.reject({ errors });
 };
 
-const resolveSubmitErrors = async (error: SubmissionErrors) => {
+const resolveSubmitErrors = (error: SubmissionErrors) => {
     // error = { errors: [{fieldName: errorMessage},...] }
 
     const result = {};
