@@ -44,6 +44,36 @@ export function StackSwitch(props: IProps) {
     const id = useUuid();
     let activePage: string | undefined;
 
+    function activatePage(pageName: string, payload: string, subUrl?: string) {
+        if (isInitialPage(pageName)) {
+            history.push(match.url);
+            if (payload) throw new Error("activating the initialPage must not have a payload");
+            if (subUrl) throw new Error("activating the initialPage must not have a subUrl");
+        } else {
+            history.push(match.url + "/" + payload + "/" + pageName + (subUrl ? "/" + subUrl : ""));
+        }
+    }
+
+    function getInitialPage() {
+        let initialPage = props.initialPage;
+        if (!initialPage) {
+            initialPage = props.children[0].props.name;
+        }
+        return initialPage;
+    }
+    function isInitialPage(pageName?: string) {
+        if (!pageName) return true;
+        return getInitialPage() === pageName;
+    }
+
+    function updatePageBreadcrumbTitle(t?: string) {
+        if (activePage) {
+            const title = { ...pageBreadcrumbTitle };
+            title[activePage] = t;
+            setPageBreadcrumbTitle(title);
+        }
+    }
+
     if (!match) return null;
 
     return React.Children.map(props.children, (page: any) => {
@@ -88,36 +118,4 @@ export function StackSwitch(props: IProps) {
             </Route>
         );
     });
-
-
-
-    function activatePage(pageName: string, payload: string, subUrl?: string) {
-        if (isInitialPage(pageName)) {
-            history.push(match.url);
-            if (payload) throw new Error("activating the initialPage must not have a payload");
-            if (subUrl) throw new Error("activating the initialPage must not have a subUrl");
-        } else {
-            history.push(match.url + "/" + payload + "/" + pageName + (subUrl ? "/" + subUrl : ""));
-        }
-    }
-
-    function getInitialPage() {
-        let initialPage = props.initialPage;
-        if (!initialPage) {
-            initialPage = props.children[0].props.name;
-        }
-        return initialPage;
-    }
-    function isInitialPage(pageName?: string) {
-        if (!pageName) return true;
-        return getInitialPage() === pageName;
-    }
-
-    function updatePageBreadcrumbTitle(t?: string) {
-        if (activePage) {
-            const title = { ...pageBreadcrumbTitle };
-            title[activePage] = t;
-            setPageBreadcrumbTitle(title);
-        }
-    }
 }
