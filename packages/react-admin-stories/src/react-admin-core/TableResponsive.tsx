@@ -54,7 +54,10 @@ function Story() {
     const { width } = useWindowSize();
     const showSecondRow = width < 1024;
 
-    const data: IExampleRow[] = [{ id: 1, foo1: "blub", foo2: "blub", bar: "barr" }, { id: 2, foo1: "blub", foo2: "blub", bar: "barr" }];
+    const data: IExampleRow[] = [
+        { id: 1, foo1: "blub", foo2: "blub", bar: "barr" },
+        { id: 2, foo1: "blub", foo2: "blub", bar: "barr" },
+    ];
     return (
         <Table
             data={data}

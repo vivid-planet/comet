@@ -9,9 +9,13 @@ function Story() {
     const ref = React.useRef<IStackSwitchApi>(null);
     return (
         <div>
-            <button onClick={() => {
-                ref.current?.activatePage("page2", "foo");
-            }}>page2</button>
+            <button
+                onClick={() => {
+                    ref.current?.activatePage("page2", "foo");
+                }}
+            >
+                page2
+            </button>
             <Stack topLevelTitle="Stack">
                 <StackSwitch ref={ref}>
                     <StackPage name="page1">

@@ -13,7 +13,10 @@ interface IFilterValues {
 }
 
 function Story() {
-    const data: IExampleRow[] = [{ id: 1, foo1: "blub1", foo2: "blub2" }, { id: 2, foo1: "blub2", foo2: "blub1" }];
+    const data: IExampleRow[] = [
+        { id: 1, foo1: "blub1", foo2: "blub2" },
+        { id: 2, foo1: "blub2", foo2: "blub1" },
+    ];
 
     const filterApi = useTableQueryFilter<IFilterValues>({});
 

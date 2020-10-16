@@ -9,13 +9,23 @@ function Page2() {
     const ref = React.useRef<IStackSwitchApi>();
     return (
         <div>
-            <button onClick={() => { setCounter(counter+1); }}>{counter}</button>
+            <button
+                onClick={() => {
+                    setCounter(counter + 1);
+                }}
+            >
+                {counter}
+            </button>
             <StackSwitch ref={ref}>
                 <StackPage name="page2-1">
                     <div>page2-1</div>
-                    <button onClick={() => {
-                        ref.current?.activatePage("page2-2", "foo");
-                    }}>page2-2</button>   
+                    <button
+                        onClick={() => {
+                            ref.current?.activatePage("page2-2", "foo");
+                        }}
+                    >
+                        page2-2
+                    </button>
                 </StackPage>
                 <StackPage name="page2-2">
                     <StackPageTitle title={`Foobar Page2-2: ${counter}`}>
@@ -31,18 +41,32 @@ function Story() {
     const [counter, setCounter] = React.useState(0);
     const ref = React.useRef<IStackSwitchApi>();
     return (
-        <div>      
-            <button onClick={() => { setCounter(counter+1); }}>{counter}</button>
+        <div>
+            <button
+                onClick={() => {
+                    setCounter(counter + 1);
+                }}
+            >
+                {counter}
+            </button>
             <Stack topLevelTitle="Stack">
                 <StackSwitch ref={ref}>
                     <StackPage name="page1">
                         <div>page1</div>
-                        <button onClick={() => {
-                            ref.current?.activatePage("page2", "foo");
-                        }}>page2</button>  
-                        <button onClick={() => {
-                            ref.current?.activatePage("page3", "foo");
-                        }}>page3</button>  
+                        <button
+                            onClick={() => {
+                                ref.current?.activatePage("page2", "foo");
+                            }}
+                        >
+                            page2
+                        </button>
+                        <button
+                            onClick={() => {
+                                ref.current?.activatePage("page3", "foo");
+                            }}
+                        >
+                            page3
+                        </button>
                     </StackPage>
                     <StackPage name="page2">
                         <StackPageTitle title={`Foobar Page2: ${counter}`}>
@@ -79,4 +103,3 @@ function App() {
 storiesOf("react-admin-core", module)
     .addDecorator(StoryRouter())
     .add("Stack Page Title", () => <App />);
-

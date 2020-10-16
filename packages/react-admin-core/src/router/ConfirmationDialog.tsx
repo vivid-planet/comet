@@ -1,4 +1,4 @@
-import { Button,Dialog,DialogActions ,DialogTitle,Typography} from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogTitle, Typography } from "@material-ui/core";
 import * as React from "react";
 
 interface IProps {
