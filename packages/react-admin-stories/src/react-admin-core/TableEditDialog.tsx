@@ -2,7 +2,7 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { Button, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import { EditDialog, FinalForm, Selected, Table } from "@vivid-planet/react-admin-core";
+import { EditDialog, FinalForm, IEditDialogApi, Selected, Table } from "@vivid-planet/react-admin-core";
 import { TextField } from "@vivid-planet/react-admin-final-form-material-ui";
 import { Field } from "@vivid-planet/react-admin-form";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -37,9 +37,12 @@ function EditForm(props: IEditFormProps) {
 }
 
 function Story() {
-    const data: IExampleRow[] = [{ id: 1, foo: "blub", bar: "blub" }, { id: 2, foo: "blub", bar: "blub" }];
+    const data: IExampleRow[] = [
+        { id: 1, foo: "blub", bar: "blub" },
+        { id: 2, foo: "blub", bar: "blub" },
+    ];
 
-    let editDialog: EditDialog | undefined;
+    const editDialog = React.useRef<IEditDialogApi>(null);
 
     return (
         <>
@@ -48,7 +51,7 @@ function Story() {
                     color="default"
                     endIcon={<AddIcon />}
                     onClick={ev => {
-                        if (editDialog) editDialog.openAddDialog();
+                        editDialog.current?.openAddDialog();
                     }}
                 >
                     <Typography variant="button">Hinzufügen</Typography>
@@ -72,7 +75,7 @@ function Story() {
                         render: row => (
                             <IconButton
                                 onClick={ev => {
-                                    if (editDialog) editDialog.openEditDialog(String(row.id));
+                                    editDialog.current?.openEditDialog(String(row.id));
                                 }}
                             >
                                 <EditIcon />
@@ -82,7 +85,7 @@ function Story() {
                 ]}
             />
 
-            <EditDialog ref={ref => (editDialog = ref ? ref : undefined)}>
+            <EditDialog ref={editDialog}>
                 {({ selectedId, selectionMode }) => (
                     <>
                         {selectionMode && (

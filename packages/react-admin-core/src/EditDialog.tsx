@@ -12,77 +12,78 @@ interface ITitle {
 }
 
 interface IProps {
-    title: ITitle | string;
+    title?: ITitle | string;
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
-export class EditDialog extends React.Component<IProps> {
-    public static defaultProps = {
-        title: {
-            edit: "Bearbeiten",
-            add: "Hinzufügen",
+
+const EditDialogInner: React.RefForwardingComponent<IEditDialogApi, IProps> = (
+    { children, title = { edit: "Bearbeiten", add: "Hinzufügen" } }: IProps,
+    ref,
+) => {
+    const selectionRef = React.useRef<SelectionRoute>(null);
+    const openAddDialog = React.useCallback(() => {
+        if (selectionRef.current) selectionRef.current.selectionApi.handleAdd();
+    }, [selectionRef]);
+
+    const openEditDialog = React.useCallback(
+        (id: string) => {
+            if (selectionRef.current) selectionRef.current.selectionApi.handleSelectId(id);
         },
-    };
+        [selectionRef],
+    );
 
-    private editDialogApi: IEditDialogApi;
-    private selectionRef: React.RefObject<SelectionRoute> = React.createRef<SelectionRoute>();
+    const api: IEditDialogApi = React.useMemo(
+        () => ({
+            openAddDialog,
+            openEditDialog,
+        }),
+        [openAddDialog, openEditDialog],
+    );
+    React.useImperativeHandle(ref, () => api);
 
-    constructor(props: IProps) {
-        super(props);
-
-        this.editDialogApi = {
-            openAddDialog: this.openAddDialog.bind(this),
-            openEditDialog: this.openEditDialog.bind(this),
-        };
-    }
-
-    public render() {
-        const { children, title } = this.props;
-
-        return (
-            <EditDialogApiContext.Provider value={this.editDialogApi}>
-                <DirtyHandler>
-                    <SelectionRoute ref={this.selectionRef}>
-                        {({ selectedId, selectionMode, selectionApi }) => (
-                            <Dialog open={!!selectionMode} onClose={this.handleCancelClick.bind(this, selectionApi)}>
-                                <div>
-                                    <DialogTitle>{typeof title === "string" ? title : selectionMode === "edit" ? title.edit : title.add}</DialogTitle>
-                                    <DialogContent>{children({ selectedId, selectionMode })}</DialogContent>
-                                    <DialogActions>
-                                        <Button onClick={this.handleCancelClick.bind(this, selectionApi)} color="primary">
-                                            <Typography variant="button">Abbrechen</Typography>
-                                        </Button>
-                                        <DirtyHandlerApiContext.Consumer>
-                                            {dirtyHandlerApi => (
-                                                <Button onClick={this.handleSaveClick.bind(this, dirtyHandlerApi, selectionApi)} color="primary">
-                                                    <Typography variant="button">Speichern</Typography>
-                                                </Button>
-                                            )}
-                                        </DirtyHandlerApiContext.Consumer>
-                                    </DialogActions>
-                                </div>
-                            </Dialog>
-                        )}
-                    </SelectionRoute>
-                </DirtyHandler>
-            </EditDialogApiContext.Provider>
-        );
-    }
-
-    public openAddDialog() {
-        if (this.selectionRef.current) this.selectionRef.current.selectionApi.handleAdd();
-    }
-
-    public openEditDialog(id: string) {
-        if (this.selectionRef.current) this.selectionRef.current.selectionApi.handleSelectId(id);
-    }
-    private handleSaveClick = (dirtyHandlerApi: IDirtyHandlerApi | undefined, selectionApi: ISelectionApi) => {
+    let dirtyHandlerApi: IDirtyHandlerApi | undefined;
+    const handleSaveClick = () => {
         if (dirtyHandlerApi) {
             dirtyHandlerApi.submitBindings().then(() => {
-                selectionApi.handleDeselect();
+                selectionRef.current?.selectionApi.handleDeselect();
             });
         }
     };
-    private handleCancelClick = (selectionApi: ISelectionApi) => {
-        selectionApi.handleDeselect();
+
+    const handleCancelClick = () => {
+        selectionRef.current?.selectionApi.handleDeselect();
     };
-}
+
+    return (
+        <EditDialogApiContext.Provider value={api}>
+            <DirtyHandler>
+                <SelectionRoute ref={selectionRef}>
+                    {({ selectedId, selectionMode, selectionApi }) => (
+                        <Dialog open={!!selectionMode} onClose={handleCancelClick}>
+                            <div>
+                                <DialogTitle>{typeof title === "string" ? title : selectionMode === "edit" ? title.edit : title.add}</DialogTitle>
+                                <DialogContent>{children({ selectedId, selectionMode })}</DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleCancelClick} color="primary">
+                                        <Typography variant="button">Abbrechen</Typography>
+                                    </Button>
+                                    <DirtyHandlerApiContext.Consumer>
+                                        {injectedDirtyHandlerApi => {
+                                            dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
+                                            return (
+                                                <Button onClick={handleSaveClick} color="primary">
+                                                    <Typography variant="button">Speichern</Typography>
+                                                </Button>
+                                            );
+                                        }}
+                                    </DirtyHandlerApiContext.Consumer>
+                                </DialogActions>
+                            </div>
+                        </Dialog>
+                    )}
+                </SelectionRoute>
+            </DirtyHandler>
+        </EditDialogApiContext.Provider>
+    );
+};
+export const EditDialog = React.forwardRef(EditDialogInner);
