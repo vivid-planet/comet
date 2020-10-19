@@ -40,8 +40,8 @@ export class Selection extends React.Component<IProps, IState> {
         this.setState({ selectedId: undefined, selectionMode: undefined });
     }
 
-    public handleAdd() {
-        this.setState({ selectedId: undefined, selectionMode: "add" });
+    public handleAdd(id?: string) {
+        this.setState({ selectedId: id, selectionMode: "add" });
     }
 
     public render() {
