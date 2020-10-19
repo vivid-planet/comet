@@ -2,56 +2,28 @@ import { Theme } from "@material-ui/core";
 import { createStyles } from "@material-ui/styles";
 
 export type VPAdminColorPickerClassKeys =
-    | "wrapper"
-    | "field"
+    | "input"
+    | "popover"
     | "pickedColorIndicator"
-    | "pickerWrapper"
     | "saturationWrapper"
     | "saturationPointer"
     | "hueWrapper"
     | "hueSliderMarker"
     | "paletteWrapper"
-    | "colorTile";
+    | "paletteItem";
 
 const styles = (theme: Theme) =>
     createStyles({
-        wrapper: {
-            position: "relative",
-            width: "100%",
-            height: "100%",
-        },
-        field: {
-            position: "relative",
-            height: "32px",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            padding: "0 10px",
-            border: `1px solid ${theme.palette.grey[300]}`,
-            borderRadius: "2px",
-            cursor: "pointer",
-        },
+        input: {},
+        popper: {},
         pickedColorIndicator: {
             width: "20px",
             height: "20px",
             marginRight: "10px",
-            borderRadius: "5px",
-        },
-        pickerWrapper: {
-            position: "absolute",
-            top: "32px",
-            left: 0,
-            width: "100%",
-            height: "auto",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: 0,
-            boxSizing: "border-box",
+            borderRadius: `${theme.shape.borderRadius}`,
             border: `1px solid ${theme.palette.grey[300]}`,
-            borderRadius: "2px",
-            zIndex: 1,
+            flexGrow: 0,
+            flexShrink: 0,
         },
         saturationWrapper: {
             position: "relative",
@@ -86,27 +58,20 @@ const styles = (theme: Theme) =>
             cursor: "pointer",
         },
         paletteWrapper: {
-            position: "relative",
-            width: "100%",
             display: "flex",
             flexDirection: "row",
             flexWrap: "wrap",
             justifyContent: "flex-start",
             alignItems: "center",
-            padding: "10px",
-            background: "white",
-            boxSizing: "border-box",
-            borderRadius: "2px",
-            zIndex: 1,
+            padding: "10px 10px 15px 15px",
         },
-        colorTile: {
+        paletteItem: {
             width: "20px",
             height: "20px",
-            marginRight: "5px",
-            borderRadius: "5px",
+            margin: "5px 5px 0 0",
+            borderRadius: `${theme.shape.borderRadius}`,
             boxShadow: "0 0 2px rgba(0, 0, 0, 0.6)",
             cursor: "pointer",
-            zIndex: 2,
-        }
+        },
     });
 export default styles;

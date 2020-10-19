@@ -1,15 +1,19 @@
-import { ColorState } from "react-color";
+import { HSLColor, HSVColor } from "react-color";
 import * as tinycolor from "tinycolor2";
 
-export function getColorSpaces(colorValue: tinycolor.ColorInputWithoutInstance): ColorState {
-    const color = tinycolor(colorValue);
+export function colorToHex(colorValue: string | tinycolor.ColorInputWithoutInstance | undefined): string {
+    if (typeof colorValue === "string" && colorValue.length === 0) return "";
 
-    return {
-        hex: color.toHex(),
-        hsl: color.toHsl(),
-        hsv: color.toHsv(),
-        rgb: color.toRgb(),
-        source: color.getFormat(),
-        oldHue: 0,
-    };
+    const color = tinycolor(colorValue);
+    return color.toHex();
+}
+
+export function stringToHSL(colorValue: string): HSLColor {
+    const color = tinycolor(colorValue);
+    return color.toHsl();
+}
+
+export function stringToHSV(colorValue: string): HSVColor {
+    const color = tinycolor(colorValue);
+    return color.toHsv();
 }

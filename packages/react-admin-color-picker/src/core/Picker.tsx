@@ -1,22 +1,32 @@
 import * as React from "react";
-import { ColorState } from "react-color";
 // tslint:disable-next-line: no-submodule-imports
 import { Hue, Saturation } from "react-color/lib/components/common";
-import { ColorInputWithoutInstance } from "tinycolor2";
+import * as tinycolor from "tinycolor2";
+import { colorToHex, stringToHSL, stringToHSV } from "../utils/colorSpaces";
 import { IVPAdminColorPickerProps } from "./ColorPicker";
 
 interface IPickerProps {
-    color: ColorState;
-    onChange: (colorValue: ColorState | ColorInputWithoutInstance) => void;
+    color: string;
+    onChange: (colorValue: string) => void;
 }
 
 const Picker: React.FC<IPickerProps & IVPAdminColorPickerProps> = ({ color, onChange, classes }) => (
     <>
         <div className={classes.saturationWrapper}>
-            <Saturation hsl={color.hsl} hsv={color.hsv} pointer={() => <div className={classes.saturationPointer} />} onChange={onChange} />
+            <Saturation
+                hsl={stringToHSL(color)}
+                hsv={stringToHSV(color)}
+                pointer={() => <div className={classes.saturationPointer} />}
+                onChange={value => onChange(colorToHex((value as unknown) as tinycolor.ColorInputWithoutInstance))}
+            />
         </div>
         <div className={classes.hueWrapper}>
-            <Hue hsl={color.hsl} pointer={() => <div className={classes.hueSliderMarker} />} direction={"horizontal"} onChange={onChange} />
+            <Hue
+                hsl={stringToHSL(color)}
+                pointer={() => <div className={classes.hueSliderMarker} />}
+                direction={"horizontal"}
+                onChange={value => onChange(colorToHex((value as unknown) as tinycolor.ColorInputWithoutInstance))}
+            />
         </div>
     </>
 );
