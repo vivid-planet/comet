@@ -127,11 +127,21 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
 
     function handleKeyCommand(command: DraftEditorCommand) {
-        const newState = RichUtils.handleKeyCommand(editorState, command);
+        const commandToSupportsMap: Partial<Record<DraftEditorCommand, SuportedThings>> = {
+            bold: "bold",
+            italic: "italic",
+            strikethrough: "strikethrough",
+            underline: "underline",
+        };
 
-        if (newState) {
-            onChange(newState);
-            return "handled";
+        const relevantSupports = commandToSupportsMap[command];
+        if (relevantSupports && options.supports.includes(relevantSupports)) {
+            const newState = RichUtils.handleKeyCommand(editorState, command);
+
+            if (newState) {
+                onChange(newState);
+                return "handled";
+            }
         }
 
         return "not-handled";
