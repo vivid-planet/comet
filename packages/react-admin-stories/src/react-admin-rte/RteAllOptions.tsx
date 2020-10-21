@@ -30,6 +30,7 @@ export const rteOptions: IRteOptions = {
         "bold",
         "italic",
         "underline",
+        "strikethrough",
         "sub",
         "sup",
         "header-one",

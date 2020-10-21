@@ -60,7 +60,7 @@ export const exampleContent = {
         },
         {
             key: "ceuje",
-            text: "bold italic underlined mixed",
+            text: "bold italic underlined mixed strokethrough",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -93,6 +93,11 @@ export const exampleContent = {
                     offset: 23,
                     length: 5,
                     style: "UNDERLINE",
+                },
+                {
+                    offset: 29,
+                    length: 13,
+                    style: "STRIKETHROUGH",
                 },
             ],
             entityRanges: [],

@@ -19,6 +19,7 @@ export type SuportedThings =
     | "bold"
     | "italic"
     | "underline"
+    | "strikethrough"
     | "sub"
     | "sup"
     | "header-one"

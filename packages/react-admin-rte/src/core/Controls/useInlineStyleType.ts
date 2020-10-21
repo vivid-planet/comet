@@ -1,6 +1,7 @@
 import FormatBoldIcon from "@material-ui/icons/FormatBold";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
+import StrikethroughSIcon from "@material-ui/icons/StrikethroughS";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import TextFormatSub from "../../icons/TextFormatSub";
@@ -34,6 +35,11 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
         tooltipText: "Ctrl+U",
     },
     {
+        name: "STRIKETHROUGH",
+        label: "durchgestrichen",
+        Icon: StrikethroughSIcon,
+    },
+    {
         name: "SUP",
         label: "super",
         Icon: TextFormatSup,
@@ -56,6 +62,8 @@ export default function useInlineStyleType({ editorState, setEditorState, suppor
                     return supportedThings.includes("italic");
                 case "UNDERLINE":
                     return supportedThings.includes("underline");
+                case "STRIKETHROUGH":
+                    return supportedThings.includes("strikethrough");
                 case "SUB":
                     return supportedThings.includes("sub");
                 case "SUP":

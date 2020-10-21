@@ -10,6 +10,7 @@ const removeUnsupportedInlineStyles: FilterEditorStateBeforeUpdateFn = (newState
         bold: "BOLD",
         italic: "ITALIC",
         underline: "UNDERLINE",
+        strikethrough: "STRIKETHROUGH",
         sub: "SUB",
         sup: "SUP",
     };
