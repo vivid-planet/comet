@@ -27,6 +27,18 @@ const defaultDropdownFeatures: IFeatureConfig[] = [
         name: "header-three",
         label: "Überschrift 3",
     },
+    {
+        name: "header-four",
+        label: "Überschrift 4",
+    },
+    {
+        name: "header-five",
+        label: "Überschrift 5",
+    },
+    {
+        name: "header-six",
+        label: "Überschrift 6",
+    },
 ];
 
 const defaultListsFeatures: IFeatureConfig[] = [
@@ -67,6 +79,12 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
                     return supportedThings.includes("header-two");
                 case "header-three":
                     return supportedThings.includes("header-three");
+                case "header-four":
+                    return supportedThings.includes("header-four");
+                case "header-five":
+                    return supportedThings.includes("header-five");
+                case "header-six":
+                    return supportedThings.includes("header-six");
                 default:
                     return false;
             }

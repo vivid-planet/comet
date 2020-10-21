@@ -11,6 +11,9 @@ const removeUnsupportedBlocks: FilterEditorStateBeforeUpdateFn = (newState, { su
         "header-one": "header-one",
         "header-two": "header-two",
         "header-three": "header-three",
+        "header-four": "header-four",
+        "header-five": "header-five",
+        "header-six": "header-six",
         "ordered-list": "ordered-list-item",
         "unordered-list": "unordered-list-item",
     };
