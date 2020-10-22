@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@vivid-planet/react-admin-core";
+import { Stack, StackPage, StackSwitchApiContext, useStackSwitch } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
@@ -19,6 +19,7 @@ function Page1() {
 }
 
 function Page2() {
+    const { StackSwitch } = useStackSwitch();
     return (
         <Stack topLevelTitle="Stack Nested">
             <StackSwitch>
@@ -32,6 +33,7 @@ function Page2() {
 }
 
 function Story() {
+    const { StackSwitch } = useStackSwitch();
     return (
         <Stack topLevelTitle="Stack">
             <StackSwitch>

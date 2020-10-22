@@ -6,12 +6,12 @@ import {
     FinalForm,
     Stack,
     StackPage,
-    StackSwitch,
     StackSwitchApiContext,
     Table,
     TableFilterFinalForm,
     TableQuery,
     usePersistedStateId,
+    useStackSwitch,
     useTableQuery,
     useTableQueryFilter,
 } from "@vivid-planet/react-admin-core";
@@ -155,6 +155,7 @@ function ExampleForm(props: IExampleFormProps) {
 
 function Story() {
     const persistedStateId = usePersistedStateId();
+    const { StackSwitch } = useStackSwitch();
     return (
         <Stack topLevelTitle="Stack">
             <StackSwitch>

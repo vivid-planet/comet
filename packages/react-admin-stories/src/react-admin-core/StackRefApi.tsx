@@ -1,23 +1,23 @@
 import { storiesOf } from "@storybook/react";
-import { IStackSwitchApi, Stack, StackPage, StackSwitch } from "@vivid-planet/react-admin-core";
+import { Stack, StackPage, useStackSwitch } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
 
 function Story() {
+    const { StackSwitch, api } = useStackSwitch();
     // demonstrate how to access the StackSwitchApi in the component where StackSwich is created (useStackSwitchApi doesn't work)
-    const ref = React.useRef<IStackSwitchApi>(null);
     return (
         <div>
             <button
                 onClick={() => {
-                    ref.current?.activatePage("page2", "foo");
+                    api.activatePage("page2", "foo");
                 }}
             >
                 page2
             </button>
             <Stack topLevelTitle="Stack">
-                <StackSwitch ref={ref}>
+                <StackSwitch>
                     <StackPage name="page1">
                         <div>page1</div>
                     </StackPage>

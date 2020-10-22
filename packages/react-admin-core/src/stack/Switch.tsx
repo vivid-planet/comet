@@ -37,8 +37,35 @@ function useUuid() {
     return ref.current;
 }
 
-const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps> = (props, ref) => {
+export function useStackSwitch() {
+    let injectedApi: IStackSwitchApi | null = null;
     const id = useUuid();
+    const api: IStackSwitchApi = {
+        id,
+        activatePage: (pageName: string, payload: string, subUrl?: string) => {
+            injectedApi?.activatePage(pageName, payload, subUrl);
+        },
+        updatePageBreadcrumbTitle: (title?: string) => {
+            injectedApi?.updatePageBreadcrumbTitle(title);
+        }
+    }
+    return {
+        api,
+        StackSwitch: (props: IProps) => {
+            return <StackSwitch {...props} id={id} injectApi={(a: IStackSwitchApi) => {
+                injectedApi = a;
+            }} />
+        }
+    }
+}
+
+interface IHookProps {
+    id: string;
+    injectApi: (api: IStackSwitchApi) => void;
+}
+
+const StackSwitch: React.FunctionComponent<IProps & IHookProps> = (props) => {
+    const { id } = props;
     const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = React.useState<Record<string, string | undefined>>({});
     const history = useHistory();
     const match = useRouteMatch<IRouteParams>();
@@ -79,8 +106,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps> = 
         id,
         updatePageBreadcrumbTitle,
     }), [activatePage, id, updatePageBreadcrumbTitle]);
-    React.useImperativeHandle(ref, () => (api));
-
+    props.injectApi(api);
 
     if (!match) return null;
 
@@ -123,4 +149,3 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps> = 
         );
     });
 }
-export const StackSwitch = React.forwardRef(StackSwitchInner);

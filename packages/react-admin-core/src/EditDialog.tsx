@@ -3,6 +3,7 @@ import * as React from "react";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
+import { ISelectionApi } from "./SelectionApi";
 import { SelectionRoute } from "./SelectionRoute";
 
 interface ITitle {

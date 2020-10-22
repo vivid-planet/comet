@@ -1,12 +1,12 @@
 import { storiesOf } from "@storybook/react";
-import { IStackSwitchApi, Stack, StackPage, StackPageTitle, StackSwitch } from "@vivid-planet/react-admin-core";
+import { IStackSwitchApi, Stack, StackPage, StackPageTitle, useStackSwitch } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
 
 function Page2() {
     const [counter, setCounter] = React.useState(0);
-    const ref = React.useRef<IStackSwitchApi>();
+    const { StackSwitch, api } = useStackSwitch();
     return (
         <div>
             <button
@@ -16,12 +16,12 @@ function Page2() {
             >
                 {counter}
             </button>
-            <StackSwitch ref={ref}>
+            <StackSwitch>
                 <StackPage name="page2-1">
                     <div>page2-1</div>
                     <button
                         onClick={() => {
-                            ref.current?.activatePage("page2-2", "foo");
+                            api.activatePage("page2-2", "foo");
                         }}
                     >
                         page2-2
@@ -39,7 +39,7 @@ function Page2() {
 
 function Story() {
     const [counter, setCounter] = React.useState(0);
-    const ref = React.useRef<IStackSwitchApi>();
+    const { StackSwitch, api } = useStackSwitch();
     return (
         <div>
             <button
@@ -50,19 +50,19 @@ function Story() {
                 {counter}
             </button>
             <Stack topLevelTitle="Stack">
-                <StackSwitch ref={ref}>
+                <StackSwitch>
                     <StackPage name="page1">
                         <div>page1</div>
                         <button
                             onClick={() => {
-                                ref.current?.activatePage("page2", "foo");
+                                api.activatePage("page2", "foo");
                             }}
                         >
                             page2
                         </button>
                         <button
                             onClick={() => {
-                                ref.current?.activatePage("page3", "foo");
+                                api.activatePage("page3", "foo");
                             }}
                         >
                             page3

@@ -7,11 +7,11 @@ import {
     IFilterApi,
     Stack,
     StackPage,
-    StackSwitch,
     StackSwitchApiContext,
     Table,
     TableFilterFinalForm,
     TableQuery,
+    useStackSwitch,
     useTableQuery,
     useTableQueryFilter,
 } from "@vivid-planet/react-admin-core";
@@ -149,6 +149,8 @@ function Story() {
             totalCount: data.users.length,
         }),
     });
+
+    const { StackSwitch } = useStackSwitch();
 
     return (
         <Stack topLevelTitle="Stack">
