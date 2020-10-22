@@ -11,6 +11,7 @@ import {
 import * as React from "react";
 import Controls from "./Controls";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
+import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
 import * as sc from "./Rte.sc";
 import { ICustomBlockTypeMap, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
@@ -48,12 +49,16 @@ export interface IRteOptions {
         >
     >;
     filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
+    maxBlocks?: number;
 }
 
 export type IOptions = Partial<IRteOptions>;
 
 type OnEditorStateChangeFn = (newValue: EditorState) => void;
-export type FilterEditorStateBeforeUpdateFn = (newState: EditorState, context: { supports: SupportedThings[]; listLevelMax: number }) => EditorState;
+export type FilterEditorStateBeforeUpdateFn = (
+    newState: EditorState,
+    context: Pick<IRteOptions, "supports" | "listLevelMax" | "maxBlocks">,
+) => EditorState;
 export interface IProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
@@ -79,6 +84,7 @@ const defaultOptions: IRteOptions = {
     customToolbarButtons: [],
     draftJsProps: {},
     filterEditorStateBeforeUpdate: defaultFilterEditorStateBeforeUpdate,
+    maxBlocks: undefined,
 };
 
 export interface IRteRef {
@@ -115,13 +121,23 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
 
     const decoratedOnChange = React.useCallback(
         (nextEditorState: EditorState) => {
+            let modifiedState = nextEditorState;
+            const context = {
+                supports: options.supports,
+                listLevelMax: options.listLevelMax,
+                maxBlocks: options.maxBlocks,
+            };
+            // apply optional filter to editorState
             if (options.filterEditorStateBeforeUpdate) {
-                onChange(options.filterEditorStateBeforeUpdate(nextEditorState, { supports: options.supports, listLevelMax: options.listLevelMax })); // apply filter before onChange
-            } else {
-                onChange(nextEditorState); // default: undecorated
+                modifiedState = options.filterEditorStateBeforeUpdate(modifiedState, context);
             }
+            // apply mandatory filter to editorState
+            modifiedState = removeBlocksExceedingBlockLimit(modifiedState, context);
+
+            // pass the modified filter to original onChange
+            onChange(modifiedState);
         },
-        [options.filterEditorStateBeforeUpdate, options.supports, options.listLevelMax],
+        [options.filterEditorStateBeforeUpdate, options.supports, options.listLevelMax, onChange],
     );
 
     const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
@@ -144,6 +160,16 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
             }
         }
 
+        // disallow user to add a new block when block limit is already reached
+        if (command === "split-block" && options.maxBlocks) {
+            const content = editorState.getCurrentContent();
+            const blockSize = content.getBlockMap().count();
+
+            const userTriesToAddTooMuchBlocks = blockSize >= options.maxBlocks;
+            if (userTriesToAddTooMuchBlocks) {
+                return "handled"; // do nothing
+            }
+        }
         return "not-handled";
     }
 
