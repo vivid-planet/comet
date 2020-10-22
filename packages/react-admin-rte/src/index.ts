@@ -11,7 +11,7 @@ export { default as LinkDecorator } from "./core/extension/Link/Decorator";
 export { default as ControlButton, IProps as IControlButtonProps } from "./core/Controls/ControlButton";
 
 export { default as filterEditorStateDefault } from "./core/filterEditor/default";
-export { default as filterEditorStateRemoveUnsupportedBlocks } from "./core/filterEditor/removeUnsupportedBlocks";
+export { default as filterEditorStateremoveUnsupportedBlockTypes } from "./core/filterEditor/removeUnsupportedBlockTypes";
 export { default as filterEditorStateRemoveUnsupportedEntities } from "./core/filterEditor/removeUnsupportedEntities";
 export { default as filterEditorStateRemoveUnsupportedInlineStyles } from "./core/filterEditor/removeUnsupportedInlineStyles";
 export { default as filterEditorUtilsManipulateEntityData } from "./core/filterEditor/utils/manipulateEntityData";

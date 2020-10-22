@@ -3,7 +3,7 @@ import { FilterEditorStateBeforeUpdateFn, SupportedThings } from "../Rte";
 import { FilterEditorStateFn, InlineStyleType } from "../types";
 import unstyleBlocks from "./utils/unstyleBlocks";
 
-const removeUnsupportedBlocks: FilterEditorStateBeforeUpdateFn = (newState, { supports }) => {
+const removeUnsupportedBlockTypes: FilterEditorStateBeforeUpdateFn = (newState, { supports }) => {
     // unstyle all core-blocks which are not supported
     const blackListBlocks: DraftBlockType[] = ["paragraph", "header-four", "header-five", "header-six", "blockquote", "code-block", "atomic"]; // these are not supported at all by our rte
 
@@ -30,4 +30,4 @@ const removeUnsupportedBlocks: FilterEditorStateBeforeUpdateFn = (newState, { su
     return unstyleBlocks(blackListBlocks)(newState);
 };
 
-export default removeUnsupportedBlocks;
+export default removeUnsupportedBlockTypes;

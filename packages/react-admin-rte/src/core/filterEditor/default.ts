@@ -1,10 +1,10 @@
 import { FilterEditorStateBeforeUpdateFn } from "../Rte";
-import removeUnsupportedBlocks from "./removeUnsupportedBlocks";
+import removeUnsupportedBlockTypes from "./removeUnsupportedBlockTypes";
 import removeUnsupportedEntities from "./removeUnsupportedEntities";
 import removeUnsupportedInlineStyles from "./removeUnsupportedInlineStyles";
 
 const defaultFilterEditorStateBeforeUpdate: FilterEditorStateBeforeUpdateFn = (newState, ctx) => {
-    const fns: FilterEditorStateBeforeUpdateFn[] = [removeUnsupportedEntities, removeUnsupportedBlocks, removeUnsupportedInlineStyles];
+    const fns: FilterEditorStateBeforeUpdateFn[] = [removeUnsupportedEntities, removeUnsupportedBlockTypes, removeUnsupportedInlineStyles];
 
     const shouldFilter = newState.getLastChangeType() === "insert-fragment";
     if (shouldFilter) {
