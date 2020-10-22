@@ -2,14 +2,14 @@ import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
-import { SuportedThings } from "../Rte";
+import { SupportedThings } from "../Rte";
 import { ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
 
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
-    supportedThings: SuportedThings[];
+    supportedThings: SupportedThings[];
     customBlockTypeMap?: ICustomBlockTypeMap;
     editorRef: React.RefObject<Editor>;
 }

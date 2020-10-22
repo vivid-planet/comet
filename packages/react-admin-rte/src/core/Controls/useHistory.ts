@@ -2,13 +2,13 @@ import RedoIcon from "@material-ui/icons/Redo";
 import UndoIcon from "@material-ui/icons/Undo";
 import { EditorState } from "draft-js";
 import * as React from "react";
-import { SuportedThings } from "../Rte";
+import { SupportedThings } from "../Rte";
 import { IFeatureConfig } from "../types";
 
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
-    supportedThings: SuportedThings[];
+    supportedThings: SupportedThings[];
 }
 
 export default function useHistory({ editorState, setEditorState, supportedThings }: IProps) {

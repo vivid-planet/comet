@@ -1,5 +1,5 @@
 import { DraftBlockType, DraftEntityType, Editor as DraftJsEditor, EditorProps as DraftJsEditorProps } from "draft-js";
-import { FilterEditorStateBeforeUpdateFn, SuportedThings } from "../Rte";
+import { FilterEditorStateBeforeUpdateFn, SupportedThings } from "../Rte";
 import { FilterEditorStateFn, InlineStyleType } from "../types";
 import removeEntities from "./utils/removeEntities";
 import unstyleBlocks from "./utils/unstyleBlocks";

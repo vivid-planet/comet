@@ -6,13 +6,13 @@ import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import TextFormatSub from "../../icons/TextFormatSub";
 import TextFormatSup from "../../icons/TextFormatSup";
-import { SuportedThings } from "../Rte";
+import { SupportedThings } from "../Rte";
 import { IFeatureConfig, InlineStyleType } from "../types";
 
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
-    supportedThings: SuportedThings[];
+    supportedThings: SupportedThings[];
 }
 
 const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [

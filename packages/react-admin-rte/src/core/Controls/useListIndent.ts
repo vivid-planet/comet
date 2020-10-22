@@ -2,7 +2,7 @@ import FormatIndentDecreaseIcon from "@material-ui/icons/FormatIndentDecrease";
 import FormatIndentIncreaseIcon from "@material-ui/icons/FormatIndentIncrease";
 import { BlockMap, ContentState, EditorState } from "draft-js";
 import * as React from "react";
-import { SuportedThings } from "../Rte";
+import { SupportedThings } from "../Rte";
 import { IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
 import selectionIsInOneBlock from "../utils/selectionIsInOneBlock";
@@ -62,7 +62,7 @@ function adjustBlockDepth(type: "increase" | "decrease", editorState: EditorStat
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
-    supportedThings: SuportedThings[];
+    supportedThings: SupportedThings[];
     listLevelMax?: number;
 }
 
