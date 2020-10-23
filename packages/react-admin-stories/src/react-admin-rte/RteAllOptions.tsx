@@ -66,6 +66,7 @@ export const rteOptions: IRteOptions = {
         tabIndex: 0,
     },
     filterEditorStateBeforeUpdate: state => state, // removes default filter
+    maxBlocks: undefined,
 };
 
 const [useRteApi] = makeRteApi<ContentFormat>(makeApiOptions);
