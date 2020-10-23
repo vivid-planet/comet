@@ -1,4 +1,5 @@
 import { FilterEditorStateBeforeUpdateFn } from "../Rte";
+import composeFilterEditorFns from "./composeFilterEditorFns";
 import removeUnsupportedBlockTypes from "./removeUnsupportedBlockTypes";
 import removeUnsupportedEntities from "./removeUnsupportedEntities";
 import removeUnsupportedInlineStyles from "./removeUnsupportedInlineStyles";
@@ -9,7 +10,7 @@ const defaultFilterEditorStateBeforeUpdate: FilterEditorStateBeforeUpdateFn = (n
     const shouldFilter = newState.getLastChangeType() === "insert-fragment";
     if (shouldFilter) {
         // apply all filters from left to right
-        return fns.reduce((nextState, filterFn) => filterFn(nextState, ctx), newState);
+        return composeFilterEditorFns(fns)(newState, ctx);
     }
     return newState;
 };

@@ -5,10 +5,11 @@ import { PrintEditorState, useAutoFocus } from "./helper";
 
 const rteOptions: IRteOptions = {
     supports: ["italic", "header-one", "header-two"],
-    maxBlocks: 1,
     draftJsProps: {
         placeholder: "Placeholder",
     },
+    maxBlocks: 1,
+    standardBlockType: "header-two",
 };
 
 const [useRteApi] = makeRteApi();
