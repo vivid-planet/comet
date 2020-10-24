@@ -38,24 +38,27 @@ function useUuid() {
 }
 
 export function useStackSwitch() {
-    let injectedApi: IStackSwitchApi | null = null;
+    const apiRef = React.useRef<IStackSwitchApi>();
     const id = useUuid();
     const api: IStackSwitchApi = {
         id,
         activatePage: (pageName: string, payload: string, subUrl?: string) => {
-            injectedApi?.activatePage(pageName, payload, subUrl);
+            apiRef.current?.activatePage(pageName, payload, subUrl);
         },
         updatePageBreadcrumbTitle: (title?: string) => {
-            injectedApi?.updatePageBreadcrumbTitle(title);
+            apiRef.current?.updatePageBreadcrumbTitle(title);
         }
     }
+    const StackSwitchWithHookProps = React.useMemo(() => {
+        return (props: IProps) => {
+            return <StackSwitch {...props} id={id} injectApi={(a: IStackSwitchApi) => {
+                apiRef.current = a;
+            }} />
+        };
+    }, [id, apiRef]);
     return {
         api,
-        StackSwitch: (props: IProps) => {
-            return <StackSwitch {...props} id={id} injectApi={(a: IStackSwitchApi) => {
-                injectedApi = a;
-            }} />
-        }
+        StackSwitch: StackSwitchWithHookProps
     }
 }
 
