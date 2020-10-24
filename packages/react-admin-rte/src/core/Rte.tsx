@@ -15,15 +15,19 @@ import * as sc from "./Rte.sc";
 import { ICustomBlockTypeMap, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
-export type SuportedThings =
+export type SupportedThings =
     | "bold"
     | "italic"
     | "underline"
+    | "strikethrough"
     | "sub"
     | "sup"
     | "header-one"
     | "header-two"
     | "header-three"
+    | "header-four"
+    | "header-five"
+    | "header-six"
     | "ordered-list"
     | "unordered-list"
     | "history"
@@ -31,7 +35,7 @@ export type SuportedThings =
     | "links-remove";
 
 export interface IRteOptions {
-    supports: SuportedThings[];
+    supports: SupportedThings[];
     listLevelMax: number;
     customBlockMap?: ICustomBlockTypeMap;
     overwriteLinkButton?: ToolbarButtonComponent;
@@ -49,7 +53,7 @@ export interface IRteOptions {
 export type IOptions = Partial<IRteOptions>;
 
 type OnEditorStateChangeFn = (newValue: EditorState) => void;
-export type FilterEditorStateBeforeUpdateFn = (newState: EditorState, context: { supports: SuportedThings[]; listLevelMax: number }) => EditorState;
+export type FilterEditorStateBeforeUpdateFn = (newState: EditorState, context: { supports: SupportedThings[]; listLevelMax: number }) => EditorState;
 export interface IProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
@@ -123,11 +127,21 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
 
     function handleKeyCommand(command: DraftEditorCommand) {
-        const newState = RichUtils.handleKeyCommand(editorState, command);
+        const commandToSupportsMap: Partial<Record<DraftEditorCommand, SupportedThings>> = {
+            bold: "bold",
+            italic: "italic",
+            strikethrough: "strikethrough",
+            underline: "underline",
+        };
 
-        if (newState) {
-            onChange(newState);
-            return "handled";
+        const relevantSupports = commandToSupportsMap[command];
+        if (relevantSupports && options.supports.includes(relevantSupports)) {
+            const newState = RichUtils.handleKeyCommand(editorState, command);
+
+            if (newState) {
+                onChange(newState);
+                return "handled";
+            }
         }
 
         return "not-handled";

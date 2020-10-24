@@ -1,4 +1,4 @@
-import { FilterEditorStateBeforeUpdateFn, SuportedThings } from "../Rte";
+import { FilterEditorStateBeforeUpdateFn, SupportedThings } from "../Rte";
 import { InlineStyleType } from "../types";
 import removeInlineStyles from "./utils/removeInlineStyles";
 
@@ -6,14 +6,15 @@ const removeUnsupportedInlineStyles: FilterEditorStateBeforeUpdateFn = (newState
     // unstyle all core-blocks which are not supported
     const blackListInlineStyles: InlineStyleType[] = ["STRIKETHROUGH", "CODE"]; // these are not supported at all by our rte
 
-    const supportsToInlineStyleMap: Partial<Record<SuportedThings, InlineStyleType>> = {
+    const supportsToInlineStyleMap: Partial<Record<SupportedThings, InlineStyleType>> = {
         bold: "BOLD",
         italic: "ITALIC",
         underline: "UNDERLINE",
+        strikethrough: "STRIKETHROUGH",
         sub: "SUB",
         sup: "SUP",
     };
-    const supportsToTest = Object.keys(supportsToInlineStyleMap) as SuportedThings[];
+    const supportsToTest = Object.keys(supportsToInlineStyleMap) as SupportedThings[];
     supportsToTest.forEach(support => {
         if (!supports.includes(support) && supportsToInlineStyleMap[support]) {
             const inlineStyle = supportsToInlineStyleMap[support];
