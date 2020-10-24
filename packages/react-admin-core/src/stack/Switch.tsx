@@ -1,9 +1,7 @@
-import { History } from "history";
 import * as React from "react";
-import { match, Route, RouteComponentProps } from "react-router";
-import { StackApiContext } from "./Api";
+import { Route, RouteComponentProps, useHistory, useRouteMatch } from "react-router";
 import { StackBreadcrumb } from "./Breadcrumb";
-import { IStackPageProps, StackPage } from "./Page";
+import { IStackPageProps } from "./Page";
 import { StackSwitchMeta } from "./SwitchMeta";
 const UUID = require("uuid");
 
@@ -12,11 +10,7 @@ interface IProps {
     title?: string;
     children: Array<React.ReactElement<IStackPageProps>>;
 }
-interface IState {
-    pageBreadcrumbTitle: {
-        [pageName: string]: string | undefined;
-    };
-}
+
 export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
     activatePage: (pageName: string, payload: string, subUrl?: string) => {
         return;
@@ -37,104 +31,95 @@ export interface IStackSwitchApi {
 interface IRouteParams {
     id?: string;
 }
-export class StackSwitch extends React.Component<IProps, IState> {
-    public static contextType = StackApiContext;
-    public match: match<IRouteParams>;
-    private history: History;
-    private id: string;
-    private activePage: string;
 
-    constructor(props: IProps) {
-        super(props);
-        this.id = UUID.v4();
-        this.state = {
-            pageBreadcrumbTitle: {},
-        };
+
+function useUuid() {
+    const ref = React.useRef<string | undefined>(undefined);
+    if (ref.current === undefined) {
+        ref.current = UUID.v4() as string;
     }
+    return ref.current;
+} 
 
-    public render() {
-        return (
-            <Route>
-                {(routerProps: RouteComponentProps<IRouteParams>) => {
-                    this.history = routerProps.history;
-                    this.match = routerProps.match;
-                    if (!this.match) return null;
+export function StackSwitch(props: IProps) {
+    const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = React.useState<Record<string, string | undefined>>({});
+    const history = useHistory();
+    const match = useRouteMatch<IRouteParams>();
+    const id = useUuid();
+    let activePage: string | undefined;
 
-                    return React.Children.map(this.props.children, (page: any) => {
-                        const path = this.isInitialPage(page.props.name) ? `${this.match.url}` : `${this.match.url}/:id/${page.props.name}`;
-                        return (
-                            <Route path={path} exact={this.isInitialPage(page.props.name)}>
-                                {(props: RouteComponentProps<IRouteParams>) => {
-                                    if (!props.match) return null;
-                                    this.activePage = page.props.name;
-                                    const ret = (
-                                        <StackSwitchMeta
-                                            id={this.id}
-                                            activePage={page.props.name}
-                                            isInitialPageActive={this.isInitialPage(page.props.name)}
-                                        >
-                                            <StackSwitchApiContext.Provider
-                                                value={{
-                                                    activatePage: this.activatePage,
-                                                    id: this.id,
-                                                    updatePageBreadcrumbTitle: this.updatePageBreadcrumbTitle,
-                                                }}
-                                            >
-                                                {typeof page.props.children === "function"
-                                                    ? page.props.children(props.match.params.id)
-                                                    : page.props.children}
-                                            </StackSwitchApiContext.Provider>
-                                        </StackSwitchMeta>
-                                    );
-                                    if (this.isInitialPage(page.props.name)) {
-                                        return ret;
-                                    } else {
-                                        return (
-                                            <StackBreadcrumb
-                                                url={props.match.url}
-                                                title={this.state.pageBreadcrumbTitle[page.props.name] || page.props.title || page.props.name}
-                                            >
-                                                {ret}
-                                            </StackBreadcrumb>
-                                        );
-                                    }
-                                }}
-                            </Route>
-                        );
-                    });
-                }}
-            </Route>
-        );
-    }
-    public activatePage = (pageName: string, payload: string, subUrl?: string) => {
-        if (this.isInitialPage(pageName)) {
-            this.history.push(this.match.url);
+    function activatePage(pageName: string, payload: string, subUrl?: string) {
+        if (isInitialPage(pageName)) {
+            history.push(match.url);
             if (payload) throw new Error("activating the initialPage must not have a payload");
             if (subUrl) throw new Error("activating the initialPage must not have a subUrl");
         } else {
-            this.history.push(this.match.url + "/" + payload + "/" + pageName + (subUrl ? "/" + subUrl : ""));
+            history.push(match.url + "/" + payload + "/" + pageName + (subUrl ? "/" + subUrl : ""));
         }
-    };
+    }
 
-    private getInitialPage() {
-        let initialPage = this.props.initialPage;
+    function getInitialPage() {
+        let initialPage = props.initialPage;
         if (!initialPage) {
-            initialPage = this.props.children[0].props.name;
+            initialPage = props.children[0].props.name;
         }
         return initialPage;
     }
-    private isInitialPage(pageName?: string) {
+    function isInitialPage(pageName?: string) {
         if (!pageName) return true;
-        return this.getInitialPage() === pageName;
+        return getInitialPage() === pageName;
     }
 
-    private updatePageBreadcrumbTitle = (title?: string) => {
-        if (this.activePage) {
-            const pageBreadcrumbTitle = { ...this.state.pageBreadcrumbTitle };
-            pageBreadcrumbTitle[this.activePage] = title;
-            this.setState({
-                pageBreadcrumbTitle,
-            });
+    function updatePageBreadcrumbTitle(t?: string) {
+        if (activePage) {
+            const title = { ...pageBreadcrumbTitle };
+            title[activePage] = t;
+            setPageBreadcrumbTitle(title);
         }
-    };
+    }
+
+    if (!match) return null;
+
+    return React.Children.map(props.children, (page: any) => {
+        const path = isInitialPage(page.props.name) ? `${match.url}` : `${match.url}/:id/${page.props.name}`;
+        return (
+            <Route path={path} exact={isInitialPage(page.props.name)}>
+                {(routeProps: RouteComponentProps<IRouteParams>) => {
+                    if (!routeProps.match) return null;
+                    activePage = page.props.name;
+                    const ret = (
+                        <StackSwitchMeta
+                            id={id}
+                            activePage={page.props.name}
+                            isInitialPageActive={isInitialPage(page.props.name)}
+                        >
+                            <StackSwitchApiContext.Provider
+                                value={{
+                                    activatePage,
+                                    id,
+                                    updatePageBreadcrumbTitle,
+                                }}
+                            >
+                                {typeof page.props.children === "function"
+                                    ? page.props.children(routeProps.match.params.id)
+                                    : page.props.children}
+                            </StackSwitchApiContext.Provider>
+                        </StackSwitchMeta>
+                    );
+                    if (isInitialPage(page.props.name)) {
+                        return ret;
+                    } else {
+                        return (
+                            <StackBreadcrumb
+                                url={routeProps.match.url}
+                                title={pageBreadcrumbTitle[page.props.name] || page.props.title || page.props.name}
+                            >
+                                {ret}
+                            </StackBreadcrumb>
+                        );
+                    }
+                }}
+            </Route>
+        );
+    });
 }
