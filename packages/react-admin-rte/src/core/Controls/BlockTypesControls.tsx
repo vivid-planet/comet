@@ -9,7 +9,7 @@ export default function BlockTypesControls({
     editorState,
     setEditorState,
     editorRef,
-    options: { supports: supportedThings, customBlockMap: customBlockTypeMap },
+    options: { supports: supportedThings, customBlockMap: customBlockTypeMap, standardBlockType },
 }: IControlProps) {
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = useBlockTypes({
         editorState,
@@ -26,9 +26,11 @@ export default function BlockTypesControls({
     return (
         <FormControl>
             <sc.Select value={activeDropdownBlockType} displayEmpty disableUnderline onChange={handleBlockTypeChange}>
-                <MenuItem value="unstyled" dense>
-                    Standard
-                </MenuItem>
+                {standardBlockType === "unstyled" && (
+                    <MenuItem value="unstyled" dense>
+                        Standard
+                    </MenuItem>
+                )}
                 {dropdownFeatures.map(c => (
                     <MenuItem key={c.name} value={c.name} dense>
                         {c.label}

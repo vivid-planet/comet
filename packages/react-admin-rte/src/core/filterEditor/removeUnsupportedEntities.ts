@@ -1,8 +1,6 @@
-import { DraftBlockType, DraftEntityType, Editor as DraftJsEditor, EditorProps as DraftJsEditorProps } from "draft-js";
-import { FilterEditorStateBeforeUpdateFn, SupportedThings } from "../Rte";
-import { FilterEditorStateFn, InlineStyleType } from "../types";
+import { DraftEntityType } from "draft-js";
+import { FilterEditorStateBeforeUpdateFn } from "../Rte";
 import removeEntities from "./utils/removeEntities";
-import unstyleBlocks from "./utils/unstyleBlocks";
 
 const removeUnsupportedEntities: FilterEditorStateBeforeUpdateFn = (newState, { supports }) => {
     // remove links and images
