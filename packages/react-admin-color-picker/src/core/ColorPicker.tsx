@@ -5,7 +5,7 @@ import { FieldRenderProps } from "react-final-form";
 import * as tinycolor from "tinycolor2";
 import { colorToHex } from "../utils/colorSpaces";
 import styles from "./ColorPicker.styles";
-import CustomEditableInput from "./CustomEditableInput";
+import HexInput from "./HexInput";
 import Palette from "./Palette";
 import Picker from "./Picker";
 
@@ -20,6 +20,7 @@ export interface IVPAdminColorPickerProps {
         hueSliderMarker: string;
         paletteWrapper: string;
         paletteItem: string;
+        readOnlyInput: string;
     };
 }
 
@@ -63,9 +64,15 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
             <div>
                 <InputBase
                     ref={inputRef}
-                    inputComponent={CustomEditableInput as React.ComponentType}
+                    inputComponent={HexInput as React.ComponentType}
                     value={value ? tinycolor(value).toHexString() : ""}
-                    inputProps={{ pickedColorIndicatorClass: classes.pickedColorIndicator }}
+                    inputProps={{
+                        value: value ? tinycolor(value).toHexString() : "",
+                        classes,
+                        picker: !!showPicker,
+                        palette: !!colorPalette?.length,
+                        pickerWidth,
+                    }}
                     onChange={newColor => onChange(colorToHex((newColor as unknown) as tinycolor.ColorInputWithoutInstance))}
                     className={classes.input}
                     onClick={handleFieldClick}

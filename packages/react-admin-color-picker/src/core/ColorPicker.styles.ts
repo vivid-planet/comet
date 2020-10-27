@@ -10,7 +10,8 @@ export type VPAdminColorPickerClassKeys =
     | "hueWrapper"
     | "hueSliderMarker"
     | "paletteWrapper"
-    | "paletteItem";
+    | "paletteItem"
+    | "readOnlyInput";
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -72,6 +73,10 @@ const styles = (theme: Theme) =>
             borderRadius: `${theme.shape.borderRadius}`,
             boxShadow: "0 0 2px rgba(0, 0, 0, 0.6)",
             cursor: "pointer",
+        },
+        readOnlyInput: {
+            cursor: "pointer",
+            width: "100%",
         },
     });
 export default styles;

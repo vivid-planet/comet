@@ -19,6 +19,7 @@ addDecorator(story => {
                     borderRadius: "2px",
                     padding: "0 10px",
                     height: "32px",
+                    width: "200px",
                 },
             },
         },
