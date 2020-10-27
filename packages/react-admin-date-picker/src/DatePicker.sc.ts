@@ -1,3 +1,4 @@
+import zIndex from "@material-ui/core/styles/zIndex";
 import { css, styled } from "@vivid-planet/react-admin-mui";
 
 interface ISingleDatePickerWrapperProps {
@@ -22,6 +23,14 @@ export const SingleDatePickerWrapper = styled.div<ISingleDatePickerWrapperProps>
                 width: 100%;
             }
         `};
+
+    .SingleDatePicker_picker {
+        z-index: ${zIndex.modal};
+    }
+
+    .DateInput_fang {
+        z-index: ${zIndex.modal + 1};
+    }
 
     .DayPickerNavigation_button__default {
         border: none;
