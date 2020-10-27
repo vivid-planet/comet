@@ -150,7 +150,7 @@ function Story() {
         }),
     });
 
-    const { StackSwitch } = useStackSwitch();
+    const { StackSwitch } = useStackSwitch({ initialPage: "table" });
 
     return (
         <Stack topLevelTitle="Stack">

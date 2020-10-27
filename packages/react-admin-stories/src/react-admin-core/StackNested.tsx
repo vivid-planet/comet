@@ -19,7 +19,7 @@ function Page1() {
 }
 
 function Page2() {
-    const { StackSwitch } = useStackSwitch();
+    const { StackSwitch } = useStackSwitch({ initialPage: "page1" });
     return (
         <Stack topLevelTitle="Stack Nested">
             <StackSwitch>
@@ -33,7 +33,7 @@ function Page2() {
 }
 
 function Story() {
-    const { StackSwitch } = useStackSwitch();
+    const { StackSwitch } = useStackSwitch({ initialPage: "page1" });
     return (
         <Stack topLevelTitle="Stack">
             <StackSwitch>

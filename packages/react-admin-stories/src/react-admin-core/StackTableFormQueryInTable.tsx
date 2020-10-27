@@ -155,7 +155,7 @@ function ExampleForm(props: IExampleFormProps) {
 
 function Story() {
     const persistedStateId = usePersistedStateId();
-    const { StackSwitch } = useStackSwitch();
+    const { StackSwitch } = useStackSwitch({ initialPage: "table" });
     return (
         <Stack topLevelTitle="Stack">
             <StackSwitch>

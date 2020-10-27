@@ -5,7 +5,7 @@ import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
 
 function Story() {
-    const { StackSwitch, api } = useStackSwitch();
+    const { StackSwitch, api } = useStackSwitch({ initialPage: "page1" });
     // demonstrate how to access the StackSwitchApi in the component where StackSwich is created (useStackSwitchApi doesn't work)
     return (
         <div>

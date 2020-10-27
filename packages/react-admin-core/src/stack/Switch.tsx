@@ -6,7 +6,6 @@ import { StackSwitchMeta } from "./SwitchMeta";
 const UUID = require("uuid");
 
 interface IProps {
-    initialPage?: string;
     title?: string;
     children: Array<React.ReactElement<IStackPageProps>>;
 }
@@ -37,53 +36,19 @@ function useUuid() {
     return ref.current;
 }
 
-export function useStackSwitch() {
-    const apiRef = React.useRef<IStackSwitchApi>();
+export function useStackSwitch(options: {
+    initialPage: string
+}) {
     const id = useUuid();
-    const api: IStackSwitchApi = {
-        id,
-        activatePage: (pageName: string, payload: string, subUrl?: string) => {
-            apiRef.current?.activatePage(pageName, payload, subUrl);
-        },
-        updatePageBreadcrumbTitle: (title?: string) => {
-            apiRef.current?.updatePageBreadcrumbTitle(title);
-        }
-    }
-    const StackSwitchWithHookProps = React.useMemo(() => {
-        return (props: IProps) => {
-            return <StackSwitch {...props} id={id} injectApi={(a: IStackSwitchApi) => {
-                apiRef.current = a;
-            }} />
-        };
-    }, [id, apiRef]);
-    return {
-        api,
-        StackSwitch: StackSwitchWithHookProps
-    }
-}
-
-interface IHookProps {
-    id: string;
-    injectApi: (api: IStackSwitchApi) => void;
-}
-
-const StackSwitch: React.FunctionComponent<IProps & IHookProps> = (props) => {
-    const { id } = props;
     const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = React.useState<Record<string, string | undefined>>({});
     const history = useHistory();
     const match = useRouteMatch<IRouteParams>();
 
-    let activePage: string | undefined;
-
+    
     const isInitialPage = React.useCallback((pageName?: string) => {
         if (!pageName) return true;
-
-        let initialPage = props.initialPage;
-        if (!initialPage) {
-            initialPage = props.children[0].props.name;
-        }
-        return initialPage === pageName;
-    }, [props]);
+        return options.initialPage === pageName;
+    }, [options]);
     
     const activatePage = React.useCallback((pageName: string, payload: string, subUrl?: string) => {
         if (isInitialPage(pageName)) {
@@ -94,6 +59,10 @@ const StackSwitch: React.FunctionComponent<IProps & IHookProps> = (props) => {
             history.push(match.url + "/" + payload + "/" + pageName + (subUrl ? "/" + subUrl : ""));
         }
     }, [history, isInitialPage, match]);
+
+
+    // TODO this does not work at all (activePage lives in component, not hook)
+    const activePage: string | undefined = undefined;
 
 
     const updatePageBreadcrumbTitle = (t?: string) => {
@@ -109,7 +78,31 @@ const StackSwitch: React.FunctionComponent<IProps & IHookProps> = (props) => {
         id,
         updatePageBreadcrumbTitle,
     }), [activatePage, id, updatePageBreadcrumbTitle]);
-    props.injectApi(api);
+
+    const StackSwitchWithHookProps = React.useMemo(() => {
+        return (props: IProps) => {
+            return <StackSwitch {...props} id={id} api={api} isInitialPage={isInitialPage} pageBreadcrumbTitle={pageBreadcrumbTitle} />
+        };
+    }, [id, api]);
+
+    return {
+        api,
+        StackSwitch: StackSwitchWithHookProps
+    }
+}
+
+interface IHookProps {
+    id: string;
+    api: IStackSwitchApi;
+    isInitialPage: (pageName?: string) => boolean;
+    pageBreadcrumbTitle: Record<string, string | undefined>
+}
+
+const StackSwitch: React.FunctionComponent<IProps & IHookProps> = (props) => {
+    const { id, api, isInitialPage, pageBreadcrumbTitle } = props;
+    const match = useRouteMatch<IRouteParams>();
+
+    let activePage: string | undefined;
 
     if (!match) return null;
 
