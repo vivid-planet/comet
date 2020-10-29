@@ -54,8 +54,8 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
     }, []);
 
     React.useEffect(() => {
-        if (!pickerWidth && inputRef.current) setInputWidth(inputRef.current.offsetWidth);
-    }, [inputRef]);
+        if (!pickerWidth && inputRef.current && inputRef.current.offsetWidth) setInputWidth(inputRef.current.offsetWidth);
+    }, [inputRef, inputRef?.current?.offsetWidth]);
 
     const isOpen = Boolean(anchorEl);
 
