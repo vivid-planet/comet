@@ -1,4 +1,4 @@
-import { ClickAwayListener, InputBase, Popper, withStyles } from "@material-ui/core";
+import { ClickAwayListener, InputBase, Paper, Popper, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { CustomPicker } from "react-color";
 import { FieldRenderProps } from "react-final-form";
@@ -46,6 +46,12 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
     const [inputWidth, setInputWidth] = React.useState<number>(pickerWidth ? pickerWidth : 300);
     const inputRef = React.useRef<HTMLInputElement>();
 
+    const setPopperWidth = () => {
+        if (!pickerWidth && inputRef.current && inputRef.current.offsetWidth) {
+            setInputWidth(inputRef.current.offsetWidth);
+        }
+    };
+
     const handleAwayClick = () => {
         setAnchorEl(null);
     };
@@ -53,6 +59,7 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
     const handleFieldClick = (event: React.MouseEvent) => {
         const clickedElement = event.target as HTMLElement;
         if (clickedElement.tagName === "INPUT" || clickedElement.tagName === "DIV") {
+            setPopperWidth();
             setAnchorEl(event.currentTarget as HTMLInputElement);
         }
     };
@@ -60,10 +67,6 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
     React.useEffect(() => {
         onChange(colorToHex(value)); // convert initial color to hex
     }, []);
-
-    React.useEffect(() => {
-        if (!pickerWidth && inputRef.current && inputRef.current.offsetWidth) setInputWidth(inputRef.current.offsetWidth);
-    }, [inputRef, inputRef?.current?.offsetWidth]);
 
     const isOpen = Boolean(anchorEl);
 
@@ -86,8 +89,10 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
                     onClick={handleFieldClick}
                 />
                 <Popper open={isOpen} anchorEl={anchorEl} placement={"bottom"} style={{ width: `${inputWidth}px` }} className={classes.popper}>
-                    {showPicker && <Picker classes={classes} color={value} onChange={onChange} />}
-                    {colorPalette?.length && <Palette classes={classes} colors={colorPalette} onChange={onChange} />}
+                    <Paper>
+                        {showPicker && <Picker classes={classes} color={value} onChange={onChange} />}
+                        {colorPalette?.length && <Palette classes={classes} colors={colorPalette} onChange={onChange} />}
+                    </Paper>
                 </Popper>
             </div>
         </ClickAwayListener>

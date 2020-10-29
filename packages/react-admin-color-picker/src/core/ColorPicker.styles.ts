@@ -69,7 +69,6 @@ const styles = (theme: Theme) =>
         hueWrapper: {
             position: "relative",
             height: "20px",
-            margin: "3px",
             cursor: "pointer",
         },
         hueSliderMarker: {
