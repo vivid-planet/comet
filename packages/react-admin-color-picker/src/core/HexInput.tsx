@@ -1,3 +1,5 @@
+import { IconButton } from "@material-ui/core";
+import { Clear as ClearIcon } from "@material-ui/icons";
 import * as React from "react";
 import { ColorChangeHandler } from "react-color";
 // tslint:disable-next-line: no-submodule-imports
@@ -14,7 +16,6 @@ interface IComponentProps {
 
 interface IPickedColorProps {
     value: string;
-    pickedColorClass: string;
 }
 
 const resetedInputStyles = {
@@ -27,24 +28,29 @@ const resetedInputStyles = {
         padding: "inherit",
         margin: "inherit",
         cursor: "inherit",
+        width: "100%",
     },
 };
 
-const PickedColor: React.FC<IPickedColorProps> = ({ value, pickedColorClass }) => (
-    <div className={pickedColorClass} style={{ background: value ? tinycolor(value).toHexString() : undefined }} />
+const PickedColor: React.FC<IPickedColorProps & IVPAdminColorPickerProps> = ({ value, classes }) => (
+    <div className={classes.pickedColorWrapper}>
+        {!value && <div className={classes.noColorStroke} />}
+        <div className={classes.pickedColorIndicator} style={{ background: value ? tinycolor(value).toHexString() : undefined }} />
+    </div>
 );
 
-const HexInput: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({ value, classes, onChange, picker, palette }) => {
-    return (
-        <>
-            <PickedColor value={value} pickedColorClass={classes.pickedColorIndicator} />
-            {!palette || (palette && picker) ? (
-                <EditableInput style={resetedInputStyles} value={value} onChange={(onChange as unknown) as ColorChangeHandler} />
-            ) : (
-                <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
-            )}
-        </>
-    );
-};
+const HexInput: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({ value, classes, onChange, picker, palette }) => (
+    <div className={classes.inputInner}>
+        <PickedColor value={value} classes={classes} />
+        {!palette || (palette && picker) ? (
+            <EditableInput style={resetedInputStyles} value={value} onChange={(onChange as unknown) as ColorChangeHandler} />
+        ) : (
+            <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
+        )}
+        <IconButton classes={{ root: classes.clearButton }} onClick={() => onChange("")}>
+            <ClearIcon className={classes.clearIcon} />
+        </IconButton>
+    </div>
+);
 
 export default HexInput;

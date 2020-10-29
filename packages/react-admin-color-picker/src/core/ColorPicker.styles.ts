@@ -3,7 +3,12 @@ import { createStyles } from "@material-ui/styles";
 
 export type VPAdminColorPickerClassKeys =
     | "input"
+    | "inputInner"
+    | "clearButton"
+    | "clearIcon"
     | "popover"
+    | "pickedColorWrapper"
+    | "noColorStroke"
     | "pickedColorIndicator"
     | "saturationWrapper"
     | "saturationPointer"
@@ -16,15 +21,34 @@ export type VPAdminColorPickerClassKeys =
 const styles = (theme: Theme) =>
     createStyles({
         input: {},
+        inputInner: {
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            width: "100%",
+        },
+        clearButton: {},
+        clearIcon: {},
         popper: {},
+        pickedColorWrapper: {
+            position: "relative",
+            marginRight: "10px",
+            flexGrow: 0,
+            flexShrink: 0,
+        },
+        noColorStroke: {
+            position: "absolute",
+            width: "2px",
+            height: "100%",
+            background: "red",
+            transform: "rotate(45deg)",
+            right: "10px",
+        },
         pickedColorIndicator: {
             width: "20px",
             height: "20px",
-            marginRight: "10px",
             borderRadius: `${theme.shape.borderRadius}`,
             border: `1px solid ${theme.palette.grey[300]}`,
-            flexGrow: 0,
-            flexShrink: 0,
         },
         saturationWrapper: {
             position: "relative",

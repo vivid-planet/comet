@@ -12,7 +12,12 @@ import Picker from "./Picker";
 export interface IVPAdminColorPickerProps {
     classes: {
         input: string;
+        inputInner: string;
+        clearButton: string;
+        clearIcon: string;
         popper: string;
+        pickedColorWrapper: string;
+        noColorStroke: string;
         pickedColorIndicator: string;
         saturationWrapper: string;
         saturationPointer: string;
@@ -46,7 +51,10 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
     };
 
     const handleFieldClick = (event: React.MouseEvent) => {
-        setAnchorEl(event.currentTarget as HTMLInputElement);
+        const clickedElement = event.target as HTMLElement;
+        if (clickedElement.tagName === "INPUT" || clickedElement.tagName === "DIV") {
+            setAnchorEl(event.currentTarget as HTMLInputElement);
+        }
     };
 
     React.useEffect(() => {
