@@ -38,7 +38,7 @@ function useUuid() {
 }
 
 export function useStackSwitch() {
-    const apiRef = React.useRef<IStackSwitchApi>();
+    const apiRef = React.useRef<IStackSwitchApi>(null);
     const id = useUuid();
     const api: IStackSwitchApi = {
         id,
@@ -51,9 +51,7 @@ export function useStackSwitch() {
     }
     const StackSwitchWithHookProps = React.useMemo(() => {
         return (props: IProps) => {
-            return <StackSwitch {...props} id={id} injectApi={(a: IStackSwitchApi) => {
-                apiRef.current = a;
-            }} />
+            return <StackSwitchWithRef {...props} id={id} ref={apiRef} />
         };
     }, [id, apiRef]);
     return {
@@ -64,10 +62,9 @@ export function useStackSwitch() {
 
 interface IHookProps {
     id: string;
-    injectApi: (api: IStackSwitchApi) => void;
 }
 
-const StackSwitch: React.FunctionComponent<IProps & IHookProps> = (props) => {
+const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & IHookProps> = (props, ref) => {
     const { id } = props;
     const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = React.useState<Record<string, string | undefined>>({});
     const history = useHistory();
@@ -109,7 +106,7 @@ const StackSwitch: React.FunctionComponent<IProps & IHookProps> = (props) => {
         id,
         updatePageBreadcrumbTitle,
     }), [activatePage, id, updatePageBreadcrumbTitle]);
-    props.injectApi(api);
+    React.useImperativeHandle(ref, () => (api));
 
     if (!match) return null;
 
@@ -151,4 +148,11 @@ const StackSwitch: React.FunctionComponent<IProps & IHookProps> = (props) => {
             </Route>
         );
     });
+}
+const StackSwitchWithRef = React.forwardRef(StackSwitchInner);
+
+
+export function StackSwitch(props: IProps) {
+    const { StackSwitch: StackSwitchWithApi }  = useStackSwitch();
+    return <StackSwitchWithApi {...props} />
 }
