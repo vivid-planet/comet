@@ -37,7 +37,7 @@ function useUuid() {
     return ref.current;
 }
 
-export function useStackSwitch() {
+export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi] {
     const apiRef = React.useRef<IStackSwitchApi>(null);
     const id = useUuid();
     const api: IStackSwitchApi = {
@@ -54,10 +54,10 @@ export function useStackSwitch() {
             return <StackSwitchWithRef {...props} id={id} ref={apiRef} />
         };
     }, [id, apiRef]);
-    return {
+    return [
+        StackSwitchWithHookProps,
         api,
-        StackSwitch: StackSwitchWithHookProps
-    }
+    ]
 }
 
 interface IHookProps {
@@ -153,6 +153,6 @@ const StackSwitchWithRef = React.forwardRef(StackSwitchInner);
 
 
 export function StackSwitch(props: IProps) {
-    const { StackSwitch: StackSwitchWithApi }  = useStackSwitch();
+    const [ StackSwitchWithApi ]  = useStackSwitch();
     return <StackSwitchWithApi {...props} />
 }

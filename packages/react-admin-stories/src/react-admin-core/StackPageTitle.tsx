@@ -6,7 +6,7 @@ import StoryRouter from "storybook-react-router";
 
 function Page2() {
     const [counter, setCounter] = React.useState(0);
-    const { StackSwitch, api } = useStackSwitch();
+    const [ StackSwitch, api ] = useStackSwitch();
     return (
         <div>
             <button
@@ -39,7 +39,7 @@ function Page2() {
 
 function Story() {
     const [counter, setCounter] = React.useState(0);
-    const { StackSwitch, api } = useStackSwitch();
+    const [ StackSwitch, api ] = useStackSwitch();
     return (
         <div>
             <button
