@@ -1,6 +1,7 @@
 import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
 import { DirtyHandler, FinalForm, ISelectionApi, Selected, SelectionRoute, Table, TableQuery, useTableQuery } from "@vivid-planet/react-admin-core";
+import { useSelectionRoute } from "@vivid-planet/react-admin-core/lib/SelectionRoute";
 import { Field, Input } from "@vivid-planet/react-admin-form";
 import { FixedLeftRightLayout } from "@vivid-planet/react-admin-layout";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -81,6 +82,7 @@ function ExampleForm(props: IExampleFormProps) {
 }
 
 function Story() {
+    const [ Selection, selection, selectionApi ] = useSelectionRoute();
     const { tableData, api, loading, error } = useTableQuery<IQueryData, {}>()(query, {
         resolveTableData: data => ({
             data: data.users,
@@ -92,22 +94,20 @@ function Story() {
 
     return (
         <DirtyHandler>
-            <SelectionRoute>
-                {({ selectedId, selectionMode, selectionApi }) => (
-                    <TableQuery api={api} loading={loading} error={error}>
-                        <FixedLeftRightLayout>
-                            <FixedLeftRightLayout.Left>
-                                <ExampleTable tableData={tableData} selectedId={selectedId} selectionApi={selectionApi} />
-                            </FixedLeftRightLayout.Left>
-                            <FixedLeftRightLayout.Right>
-                                <Selected selectionMode={selectionMode} selectedId={selectedId} rows={tableData.data}>
-                                    {(user, { selectionMode: selectedSelectionMode }) => <ExampleForm mode={selectedSelectionMode} user={user} />}
-                                </Selected>
-                            </FixedLeftRightLayout.Right>
-                        </FixedLeftRightLayout>
-                    </TableQuery>
-                )}
-            </SelectionRoute>
+            <Selection>
+                <TableQuery api={api} loading={loading} error={error}>
+                    <FixedLeftRightLayout>
+                        <FixedLeftRightLayout.Left>
+                            <ExampleTable tableData={tableData} selectedId={selection.id} selectionApi={selectionApi} />
+                        </FixedLeftRightLayout.Left>
+                        <FixedLeftRightLayout.Right>
+                            <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
+                                {(user, { selectionMode: selectedSelectionMode }) => <ExampleForm mode={selectedSelectionMode} user={user} />}
+                            </Selected>
+                        </FixedLeftRightLayout.Right>
+                    </FixedLeftRightLayout>
+                </TableQuery>
+            </Selection>
         </DirtyHandler>
     );
 }
@@ -143,4 +143,4 @@ storiesOf("react-admin-core", module)
         return <ApolloProvider client={client}>{story()}</ApolloProvider>;
     })
     .addDecorator(StoryRouter())
-    .add("Table Besides Form", () => <App />);
+    .add("Table Besides Form Selection Hooks", () => <App />);
