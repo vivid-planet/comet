@@ -33,3 +33,5 @@ export interface IControlProps {
 }
 
 export type ToolbarButtonComponent = (props: IControlProps) => JSX.Element;
+
+export type FilterEditorStateFn = (nextState: EditorState) => EditorState;

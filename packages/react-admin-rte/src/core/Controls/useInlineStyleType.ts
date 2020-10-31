@@ -1,17 +1,18 @@
 import FormatBoldIcon from "@material-ui/icons/FormatBold";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
+import StrikethroughSIcon from "@material-ui/icons/StrikethroughS";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import TextFormatSub from "../../icons/TextFormatSub";
 import TextFormatSup from "../../icons/TextFormatSup";
-import { SuportedThings } from "../Rte";
+import { SupportedThings } from "../Rte";
 import { IFeatureConfig, InlineStyleType } from "../types";
 
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
-    supportedThings: SuportedThings[];
+    supportedThings: SupportedThings[];
 }
 
 const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
@@ -32,6 +33,11 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
         label: "unterstrichen",
         Icon: FormatUnderlinedIcon,
         tooltipText: "Ctrl+U",
+    },
+    {
+        name: "STRIKETHROUGH",
+        label: "durchgestrichen",
+        Icon: StrikethroughSIcon,
     },
     {
         name: "SUP",
@@ -56,6 +62,8 @@ export default function useInlineStyleType({ editorState, setEditorState, suppor
                     return supportedThings.includes("italic");
                 case "UNDERLINE":
                     return supportedThings.includes("underline");
+                case "STRIKETHROUGH":
+                    return supportedThings.includes("strikethrough");
                 case "SUB":
                     return supportedThings.includes("sub");
                 case "SUP":

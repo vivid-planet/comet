@@ -2,14 +2,14 @@ import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
-import { SuportedThings } from "../Rte";
+import { SupportedThings } from "../Rte";
 import { ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
 
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
-    supportedThings: SuportedThings[];
+    supportedThings: SupportedThings[];
     customBlockTypeMap?: ICustomBlockTypeMap;
     editorRef: React.RefObject<Editor>;
 }
@@ -26,6 +26,18 @@ const defaultDropdownFeatures: IFeatureConfig[] = [
     {
         name: "header-three",
         label: "Überschrift 3",
+    },
+    {
+        name: "header-four",
+        label: "Überschrift 4",
+    },
+    {
+        name: "header-five",
+        label: "Überschrift 5",
+    },
+    {
+        name: "header-six",
+        label: "Überschrift 6",
     },
 ];
 
@@ -67,6 +79,12 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
                     return supportedThings.includes("header-two");
                 case "header-three":
                     return supportedThings.includes("header-three");
+                case "header-four":
+                    return supportedThings.includes("header-four");
+                case "header-five":
+                    return supportedThings.includes("header-five");
+                case "header-six":
+                    return supportedThings.includes("header-six");
                 default:
                     return false;
             }

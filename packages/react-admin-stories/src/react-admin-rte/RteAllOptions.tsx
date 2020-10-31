@@ -30,11 +30,15 @@ export const rteOptions: IRteOptions = {
         "bold",
         "italic",
         "underline",
+        "strikethrough",
         "sub",
         "sup",
         "header-one",
         "header-two",
         "header-three",
+        "header-four",
+        "header-five",
+        "header-six",
         "ordered-list",
         "unordered-list",
         "history",
@@ -58,9 +62,12 @@ export const rteOptions: IRteOptions = {
         editorKey: "id-for-ssr",
         readOnly: false,
         spellCheck: true,
-        stripPastedStyles: true,
+        stripPastedStyles: false,
         tabIndex: 0,
     },
+    filterEditorStateBeforeUpdate: state => state, // removes default filter
+    maxBlocks: undefined,
+    standardBlockType: "unstyled",
 };
 
 const [useRteApi] = makeRteApi<ContentFormat>(makeApiOptions);
