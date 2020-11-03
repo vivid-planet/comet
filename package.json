@@ -13,11 +13,13 @@
         "lint": "npm run lint:prettylint && npm run lint:tslint && npm run build",
         "lint:prettylint": "prettylint \"**/src/**/*.ts\"",
         "lint:tslint": "lerna run lint:tslint",
-        "build:storybook": "yarn build && yarn workspace @vivid-planet/react-admin-stories build-storybook"
+        "build:storybook": "yarn build && yarn workspace @vivid-planet/react-admin-stories build-storybook",
+        "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/de.json --ignore ./**.d.ts --ignore ./packages/react-admin-stories/**/* --format simple"
     },
     "devDependencies": {
         "@apollo/react-common": "^3.0.0",
         "@apollo/react-hooks": "^3.0.0",
+        "@formatjs/cli": "^2.13.2",
         "@material-ui/core": "^4.10.1",
         "@material-ui/icons": "^4.9.1",
         "@material-ui/styles": "^4.10.0",

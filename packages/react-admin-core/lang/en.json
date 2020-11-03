@@ -1,0 +1,11 @@
+{
+  "reactAdmin.core.router.confirmationDialog.abort": "Abbrechen",
+  "reactAdmin.core.router.confirmationDialog.confirm": "OK",
+  "reactAdmin.core.stack.stack.back": "Zurück",
+  "reactAdmin.core.table.addButton": "Hinzufügen",
+  "reactAdmin.core.table.excelExportButton": "Export",
+  "reactAdmin.core.table.localChangesToolbar.save": "Speichern",
+  "reactAdmin.core.table.localChangesToolbar.unsavedItems": "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
+  "reactAdmin.core.table.tableFilterFinalForm.resetButton": "Filter zurücksetzen",
+  "reactAdmin.core.table.tableQuery.error": "Error :( {error}"
+}

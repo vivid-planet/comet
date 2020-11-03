@@ -46,7 +46,9 @@
         "start": "tsc --project ./tsconfig.json --watch",
         "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
         "prepare": "npm run build",
-        "lint:tslint": "tslint --project ."
+        "lint:tslint": "tslint --project .",
+        "extract": "formatjs extract ./src/**/*.ts* --out-file lang/en.json --format simple",
+        "compile": "formatjs compile"
     },
     "publishConfig": {
         "access": "public"

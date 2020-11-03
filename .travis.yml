@@ -1,4 +1,29 @@
-sudo: false
 language: minimal
-script:
-    - INSTALL_DEPS=1 RUN_AS_UID=`id -u` ./lint.sh
+
+before_install:
+    - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+    - sudo apt install nodejs
+    - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    - sudo apt update && sudo apt install yarn
+
+jobs:
+    include:
+        - name: "Linting"
+          script:
+              - INSTALL_DEPS=1 RUN_AS_UID=`id -u` ./lint.sh
+        - name: "Extracting String Resources"
+          if: branch = master
+          script:
+              - yarn install
+              - npm run intl:extract
+              - git clone https://github.com/vivid-planet/react-admin-lang.git
+              - cp -r lang/* react-admin-lang/
+              - cd react-admin-lang
+              - git config user.email "vivid-planet-bot@vivid-planet.com"
+              - git add .
+              - if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for $TRAVIS_COMMIT" && git remote rm origin && git remote add origin https://vivid-planet-bot:${GH_TOKEN}@github.com/vivid-planet/react-admin-lang.git && git push --set-upstream origin master; fi
+
+addons:
+    apt:
+        update: true
