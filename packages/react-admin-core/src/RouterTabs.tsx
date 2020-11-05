@@ -4,7 +4,7 @@ import MaterialTab, { TabProps } from "@material-ui/core/Tab";
 import Tabs, { TabsProps } from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import * as React from "react";
-import { Route, RouteComponentProps, withRouter } from "react-router-dom";
+import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 import { StackApiContext, StackBreadcrumb, StackSwitchApiContext } from "./stack";
 
 interface ITabProps extends TabProps {
@@ -57,6 +57,16 @@ class RouterTabs extends React.Component<IProps> {
             return child.props.path;
         });
 
+        const rearrangedChildren = React.Children.toArray(this.props.children);
+        const defaultPathIndex = paths.indexOf("");
+
+        if (defaultPathIndex >= 0) {
+            const defaultPathChild = rearrangedChildren[defaultPathIndex];
+
+            rearrangedChildren.splice(defaultPathIndex, 1);
+            rearrangedChildren.push(defaultPathChild);
+        }
+
         return (
             <div className={classes.root}>
                 <StackApiContext.Consumer>
@@ -67,7 +77,7 @@ class RouterTabs extends React.Component<IProps> {
                                     <Route path={`${this.props.match.url}/:tab`}>
                                         {({ match }) => {
                                             const routePath = match ? "/" + match.params.tab : "";
-                                            const value = paths.indexOf(routePath);
+                                            const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
                                             return (
                                                 <AppBar position="static">
                                                     <Tabs
@@ -105,30 +115,32 @@ class RouterTabs extends React.Component<IProps> {
                         </StackSwitchApiContext.Consumer>
                     )}
                 </StackApiContext.Consumer>
-                {React.Children.map(this.props.children, child => {
-                    return React.isValidElement<ITabProps>(child) ? (
-                        <Route path={`${this.props.match.url}${child.props.path}`} exact={child.props.path === ""}>
-                            {({ match }) => {
-                                if (!match && !child.props.forceRender) {
-                                    return null;
-                                }
-                                if (match) {
-                                    return (
-                                        <StackBreadcrumb
-                                            url={`${this.props.match.url}${child.props.path}`}
-                                            title={child.props.label}
-                                            invisible={true}
-                                        >
-                                            <TabContainer>{child.props.children}</TabContainer>
-                                        </StackBreadcrumb>
-                                    );
-                                } else {
-                                    return <TabContainer style={{ display: "none" }}>{child.props.children}</TabContainer>;
-                                }
-                            }}
-                        </Route>
-                    ) : null;
-                })}
+                <Switch>
+                    {React.Children.map(rearrangedChildren, child => {
+                        return React.isValidElement<ITabProps>(child) ? (
+                            <Route path={`${this.props.match.url}${child.props.path}`}>
+                                {({ match }) => {
+                                    if (!match && !child.props.forceRender) {
+                                        return null;
+                                    }
+                                    if (match) {
+                                        return (
+                                            <StackBreadcrumb
+                                                url={`${this.props.match.url}${child.props.path}`}
+                                                title={child.props.label}
+                                                invisible={true}
+                                            >
+                                                <TabContainer>{child.props.children}</TabContainer>
+                                            </StackBreadcrumb>
+                                        );
+                                    } else {
+                                        return <TabContainer style={{ display: "none" }}>{child.props.children}</TabContainer>;
+                                    }
+                                }}
+                            </Route>
+                        ) : null;
+                    })}
+                </Switch>
             </div>
         );
     }
