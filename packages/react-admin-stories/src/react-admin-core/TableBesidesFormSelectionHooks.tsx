@@ -1,7 +1,6 @@
 import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
-import { DirtyHandler, FinalForm, ISelectionApi, Selected, SelectionRoute, Table, TableQuery, useTableQuery } from "@vivid-planet/react-admin-core";
-import { useSelectionRoute } from "@vivid-planet/react-admin-core/lib/SelectionRoute";
+import { DirtyHandler, FinalForm, ISelectionApi, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@vivid-planet/react-admin-core";
 import { Field, Input } from "@vivid-planet/react-admin-form";
 import { FixedLeftRightLayout } from "@vivid-planet/react-admin-layout";
 import { InMemoryCache } from "apollo-cache-inmemory";
