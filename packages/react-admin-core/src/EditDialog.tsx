@@ -44,7 +44,7 @@ const EditDialogInner: React.RefForwardingComponent<IEditDialogApi, IProps> = (
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then((foo) => {
+            dirtyHandlerApi.submitBindings().then(() => {
                 setTimeout(() => {
                     selectionRef.current?.selectionApi.handleDeselect();
                 });
