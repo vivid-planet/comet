@@ -38,7 +38,7 @@ export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extend
             return (
                 <UsedFieldContainer label={label} required={required}>
                     {React.createElement(component, { ...rest, input, meta })}
-                    {meta.error && meta.touched && <FormHelperText error>{meta.error}</FormHelperText>}
+                    {(meta.error || meta.submitError) && meta.touched && <FormHelperText error>{meta.error || meta.submitError}</FormHelperText>}
                 </UsedFieldContainer>
             );
         } else {

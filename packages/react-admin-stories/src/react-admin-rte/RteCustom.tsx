@@ -5,7 +5,7 @@ import * as React from "react";
 import { PrintEditorState, RteLayout, useAutoFocus } from "./helper";
 
 const rteOptions: IRteOptions = {
-    supports: ["bold", "italic", "header-one", "header-two", "ordered-list", "unordered-list"],
+    supports: ["italic", "header-one", "header-two", "ordered-list", "unordered-list"],
     listLevelMax: 3,
 };
 
@@ -20,6 +20,11 @@ function Story() {
 
     return (
         <>
+            Copy and paste content from{" "}
+            <a target="_blank" href="https://docs.google.com/document/d/1YjqkIMC3q4jAzy__-S4fb6mC_w9EssmA6aZbGYWFv80/edit#">
+                https://docs.google.com/document/d/1YjqkIMC3q4jAzy__-S4fb6mC_w9EssmA6aZbGYWFv80/edit#
+            </a>{" "}
+            to test filtering
             <RteLayout>
                 <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
             </RteLayout>

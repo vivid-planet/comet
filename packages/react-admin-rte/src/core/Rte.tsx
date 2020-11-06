@@ -1,6 +1,7 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
 import {
+    DraftBlockType,
     DraftEditorCommand,
     Editor as DraftJsEditor,
     EditorProps as DraftJsEditorProps,
@@ -10,19 +11,29 @@ import {
 } from "draft-js";
 import * as React from "react";
 import Controls from "./Controls";
+import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
+import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
+import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
+import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
 import * as sc from "./Rte.sc";
 import { ICustomBlockTypeMap, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
-export type SuportedThings =
+const mandatoryFilterEditorStateFn = composeFilterEditorFns([removeBlocksExceedingBlockLimit, manageDefaultBlockType]);
+
+export type SupportedThings =
     | "bold"
     | "italic"
     | "underline"
+    | "strikethrough"
     | "sub"
     | "sup"
     | "header-one"
     | "header-two"
     | "header-three"
+    | "header-four"
+    | "header-five"
+    | "header-six"
     | "ordered-list"
     | "unordered-list"
     | "history"
@@ -30,7 +41,7 @@ export type SuportedThings =
     | "links-remove";
 
 export interface IRteOptions {
-    supports: SuportedThings[];
+    supports: SupportedThings[];
     listLevelMax: number;
     customBlockMap?: ICustomBlockTypeMap;
     overwriteLinkButton?: ToolbarButtonComponent;
@@ -42,12 +53,18 @@ export interface IRteOptions {
             "placeholder" | "autoComplete" | "autoCorrect" | "readOnly" | "spellCheck" | "stripPastedStyles" | "tabIndex" | "editorKey"
         >
     >;
+    filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
+    maxBlocks?: number;
+    standardBlockType: DraftBlockType;
 }
 
 export type IOptions = Partial<IRteOptions>;
 
 type OnEditorStateChangeFn = (newValue: EditorState) => void;
-
+export type FilterEditorStateBeforeUpdateFn = (
+    newState: EditorState,
+    context: Pick<IRteOptions, "supports" | "listLevelMax" | "maxBlocks" | "standardBlockType">,
+) => EditorState;
 export interface IProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
@@ -72,6 +89,11 @@ const defaultOptions: IRteOptions = {
     listLevelMax: 4,
     customToolbarButtons: [],
     draftJsProps: {},
+    filterEditorStateBeforeUpdate: defaultFilterEditorStateBeforeUpdate,
+    maxBlocks: undefined,
+    // standardBlockType can be set to any supported block-type,
+    // when set to something other than "unstyled" the unstyled-blockType is disabled (does not show up in the Dropdown)
+    standardBlockType: "unstyled",
 };
 
 export interface IRteRef {
@@ -106,16 +128,58 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         },
     }));
 
+    const decoratedOnChange = React.useCallback(
+        (nextEditorState: EditorState) => {
+            let modifiedState = nextEditorState;
+            const context = {
+                supports: options.supports,
+                listLevelMax: options.listLevelMax,
+                maxBlocks: options.maxBlocks,
+                standardBlockType: options.standardBlockType,
+            };
+            // apply optional filter to editorState
+            if (options.filterEditorStateBeforeUpdate) {
+                modifiedState = options.filterEditorStateBeforeUpdate(modifiedState, context);
+            }
+            // apply mandatory filter to editorState
+            modifiedState = mandatoryFilterEditorStateFn(modifiedState, context);
+
+            // pass the modified filter to original onChange
+            onChange(modifiedState);
+        },
+        [options.filterEditorStateBeforeUpdate, options.supports, options.listLevelMax, onChange],
+    );
+
     const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
 
     function handleKeyCommand(command: DraftEditorCommand) {
-        const newState = RichUtils.handleKeyCommand(editorState, command);
+        const commandToSupportsMap: Partial<Record<DraftEditorCommand, SupportedThings>> = {
+            bold: "bold",
+            italic: "italic",
+            strikethrough: "strikethrough",
+            underline: "underline",
+        };
 
-        if (newState) {
-            onChange(newState);
-            return "handled";
+        const relevantSupports = commandToSupportsMap[command];
+        if (relevantSupports && options.supports.includes(relevantSupports)) {
+            const newState = RichUtils.handleKeyCommand(editorState, command);
+
+            if (newState) {
+                onChange(newState);
+                return "handled";
+            }
         }
 
+        // disallow user to add a new block when block limit is already reached
+        if (command === "split-block" && options.maxBlocks) {
+            const content = editorState.getCurrentContent();
+            const blockSize = content.getBlockMap().count();
+
+            const userTriesToAddTooMuchBlocks = blockSize >= options.maxBlocks;
+            if (userTriesToAddTooMuchBlocks) {
+                return "handled"; // do nothing
+            }
+        }
         return "not-handled";
     }
 
@@ -151,7 +215,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
                 <DraftJsEditor
                     ref={editorRef}
                     editorState={editorState}
-                    onChange={onChange}
+                    onChange={decoratedOnChange}
                     handleKeyCommand={handleKeyCommand}
                     handleReturn={handleReturn}
                     keyBindingFn={keyBindingFn}
