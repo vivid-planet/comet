@@ -20,13 +20,13 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
 
     const openAddDialog = React.useCallback(() => {
         selectionApi.handleAdd();
-    }, [selection]);
+    }, [selectionApi]);
 
     const openEditDialog = React.useCallback(
         (id: string) => {
             selectionApi.handleSelectId(id);
         },
-        [selection],
+        [selectionApi],
     );
 
     const api: IEditDialogApi = {
