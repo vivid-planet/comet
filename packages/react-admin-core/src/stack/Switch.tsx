@@ -167,8 +167,13 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
             <Route>
                 {(routeProps: RouteComponentProps<IRouteParams>) => {
                     // now render initial page (as last route so it's a fallback)
-                    const children = React.Children.toArray(props.children) as Array<React.ReactElement<IStackPageProps>>;
-                    return renderRoute(children[0], routeProps);
+                    let initialPage: React.ReactElement<IStackPageProps> | null = null;
+                    React.Children.forEach(props.children, (page) => {
+                        if (isInitialPage(page.props.name)) {
+                            initialPage = page;
+                        }
+                    });
+                    return renderRoute(initialPage!, routeProps);
                 }}
             </Route>
     </Switch>
