@@ -1,4 +1,4 @@
-import { useApolloClient } from "@apollo/react-hooks";
+import { useApolloClient } from "@apollo/client";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Cancel as CancelIcon, Save as SaveIcon } from "@material-ui/icons";

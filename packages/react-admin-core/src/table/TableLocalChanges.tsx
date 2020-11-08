@@ -1,4 +1,4 @@
-import ApolloClient from "apollo-client";
+import { ApolloClient } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import { DirtyHandlerApiContext } from "../DirtyHandlerApiContext";

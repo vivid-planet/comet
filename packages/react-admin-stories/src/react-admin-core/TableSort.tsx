@@ -1,12 +1,8 @@
-import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
 import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } from "@vivid-planet/react-admin-core";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { RestLink } from "apollo-link-rest";
 import gql from "graphql-tag";
 import * as React from "react";
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
 
@@ -89,20 +85,5 @@ function Story() {
 }
 
 storiesOf("react-admin-core", module)
-    .addDecorator(story => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: "https://jsonplaceholder.typicode.com/",
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
-        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
-    })
+    .addDecorator(apolloStoryDecorator())
     .add("Table Sort", () => <Story />);

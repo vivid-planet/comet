@@ -1,5 +1,4 @@
-import { QueryResult } from "@apollo/react-common";
-import { QueryHookOptions, useQuery } from "@apollo/react-hooks";
+import { QueryHookOptions, QueryResult, useQuery } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import { ISelectionApi } from "../SelectionApi";

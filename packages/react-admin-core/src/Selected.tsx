@@ -1,6 +1,5 @@
-import { useQuery } from "@apollo/react-hooks";
+import { ApolloError, useQuery } from "@apollo/client";
 import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
-import { ApolloError } from "apollo-client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import styled from "styled-components";

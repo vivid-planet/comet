@@ -1,16 +1,12 @@
-import { ApolloProvider } from "@apollo/react-hooks";
 import { Button } from "@material-ui/core";
 import { BeachAccess as BeachAccessIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import { FinalForm } from "@vivid-planet/react-admin-core";
 import { Field, FormPaper, Input } from "@vivid-planet/react-admin-form";
 import { styled } from "@vivid-planet/react-admin-mui";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import ApolloClient from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { RestLink } from "apollo-link-rest";
 import * as React from "react";
 import { AnyObject } from "react-final-form";
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 interface IProps {
     formRenderProps: AnyObject;
@@ -67,20 +63,5 @@ function Story() {
 }
 
 storiesOf("react-admin-core", module)
-    .addDecorator(story => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: "https://jsonplaceholder.typicode.com/",
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
-        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
-    })
+    .addDecorator(apolloStoryDecorator())
     .add("FormCustomButtons", () => <Story />);

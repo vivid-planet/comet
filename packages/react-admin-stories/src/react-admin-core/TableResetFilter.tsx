@@ -1,15 +1,11 @@
-import { ApolloProvider } from "@apollo/react-hooks";
 import { Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@vivid-planet/react-admin-core";
 import { Field, FieldContainerLabelAbove, ReactSelectStaticOptions } from "@vivid-planet/react-admin-form";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { RestLink } from "apollo-link-rest";
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
 
@@ -123,20 +119,5 @@ function Story() {
 }
 
 storiesOf("react-admin-core", module)
-    .addDecorator(story => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: "https://jsonplaceholder.typicode.com/",
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
-        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
-    })
+    .addDecorator(apolloStoryDecorator())
     .add("Table Reset Filter", () => <Story />);
