@@ -21,8 +21,8 @@ const EditDialogInner: React.RefForwardingComponent<IEditDialogApi, IProps> = (
     ref,
 ) => {
     const selectionRef = React.useRef<SelectionRoute>(null);
-    const openAddDialog = React.useCallback(() => {
-        if (selectionRef.current) selectionRef.current.selectionApi.handleAdd();
+    const openAddDialog = React.useCallback((id?: string) => {
+        if (selectionRef.current) selectionRef.current.selectionApi.handleAdd(id);
     }, [selectionRef]);
 
     const openEditDialog = React.useCallback(
