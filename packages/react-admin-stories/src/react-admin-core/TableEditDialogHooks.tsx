@@ -1,16 +1,12 @@
-import { ApolloProvider } from "@apollo/react-hooks";
 import { Button, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import { FinalForm, IEditDialogApi, Selected, Table, useEditDialog } from "@vivid-planet/react-admin-core";
 import { TextField } from "@vivid-planet/react-admin-final-form-material-ui";
 import { Field } from "@vivid-planet/react-admin-form";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import ApolloClient from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { RestLink } from "apollo-link-rest";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 interface IExampleRow {
     id: number;
@@ -42,7 +38,7 @@ function Story() {
         { id: 2, foo: "blub", bar: "blub" },
     ];
 
-    const [ EditDialog, selection, api ] = useEditDialog();
+    const [EditDialog, selection, api] = useEditDialog();
 
     return (
         <>
@@ -98,20 +94,5 @@ function Story() {
 
 storiesOf("react-admin-core", module)
     .addDecorator(StoryRouter())
-    .addDecorator(story => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: "https://jsonplaceholder.typicode.com/",
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
-        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
-    })
+    .addDecorator(apolloStoryDecorator())
     .add("Table EditDialog Hooks", () => <Story />);

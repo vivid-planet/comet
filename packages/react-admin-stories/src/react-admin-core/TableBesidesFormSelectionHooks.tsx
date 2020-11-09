@@ -1,16 +1,21 @@
-import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
-import { DirtyHandler, FinalForm, ISelectionApi, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@vivid-planet/react-admin-core";
+import {
+    DirtyHandler,
+    FinalForm,
+    ISelectionApi,
+    Selected,
+    Table,
+    TableQuery,
+    useSelectionRoute,
+    useTableQuery,
+} from "@vivid-planet/react-admin-core";
 import { Field, Input } from "@vivid-planet/react-admin-form";
 import { FixedLeftRightLayout } from "@vivid-planet/react-admin-layout";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import ApolloClient from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { RestLink } from "apollo-link-rest";
 import gql from "graphql-tag";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
 
@@ -81,7 +86,7 @@ function ExampleForm(props: IExampleFormProps) {
 }
 
 function Story() {
-    const [ Selection, selection, selectionApi ] = useSelectionRoute();
+    const [Selection, selection, selectionApi] = useSelectionRoute();
     const { tableData, api, loading, error } = useTableQuery<IQueryData, {}>()(query, {
         resolveTableData: data => ({
             data: data.users,
@@ -125,21 +130,6 @@ function App() {
 }
 
 storiesOf("react-admin-core", module)
-    .addDecorator(story => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: "https://jsonplaceholder.typicode.com/",
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
-        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
-    })
+    .addDecorator(apolloStoryDecorator())
     .addDecorator(StoryRouter())
     .add("Table Besides Form Selection Hooks", () => <App />);
