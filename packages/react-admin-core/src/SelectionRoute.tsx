@@ -49,8 +49,8 @@ export class SelectionRoute extends React.Component<IProps> {
                             {(props: RouteComponentProps<IRouteParams>) => {
                                 let selectedId: string | undefined;
                                 let selectionMode: "edit" | "add" | undefined;
-                                if (props.match && props.match.params.id === "add") {
-                                    selectedId = undefined;
+                                if (props.match && (props.match.params.id === "add" || props.match.params.id?.startsWith("add-"))) {
+                                    selectedId = props.match.params.id?.startsWith("add-") ? props.match.params.id.substr(4) : undefined;
                                     selectionMode = "add";
                                 } else if (props.match) {
                                     selectedId = props.match.params.id;
@@ -77,7 +77,7 @@ export class SelectionRoute extends React.Component<IProps> {
         this.history.push(`${this.match.url}`);
     }
 
-    private handleAdd() {
-        this.history.push(`${this.match.url}/add`);
+    private handleAdd(id?: string) {
+        this.history.push(`${this.match.url}/add${id ? '-' + id : ''}`);
     }
 }
