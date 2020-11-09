@@ -18,7 +18,7 @@ interface IProps {
 export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi] {
     const [ Selection, selection, selectionApi]  = useSelectionRoute();
 
-    const openAddDialog = React.useCallback((id?: strin) => {
+    const openAddDialog = React.useCallback((id?: string) => {
         selectionApi.handleAdd(id);
     }, [selectionApi]);
 
