@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export interface IEditDialogApi {
-    openAddDialog: () => void;
+    openAddDialog: (id?: string) => void;
     openEditDialog: (id: string) => void;
 }
 

@@ -18,8 +18,8 @@ interface IProps {
 export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi] {
     const [ Selection, selection, selectionApi]  = useSelectionRoute();
 
-    const openAddDialog = React.useCallback(() => {
-        selectionApi.handleAdd();
+    const openAddDialog = React.useCallback((id?: strin) => {
+        selectionApi.handleAdd(id);
     }, [selectionApi]);
 
     const openEditDialog = React.useCallback(
@@ -59,7 +59,9 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
             dirtyHandlerApi.submitBindings().then(() => {
-                selectionApi.handleDeselect();
+                setTimeout(() => {
+                    selectionApi.handleDeselect();
+                });
             });
         }
     };

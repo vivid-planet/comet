@@ -19,8 +19,8 @@ export function useSelectionRoute(): [React.ComponentType<IProps>, { id?: string
         history.push(`${parentMatch.url}`);
     }, [history, parentMatch]);
 
-    const handleAdd = React.useCallback(() => {
-        history.push(`${parentMatch.url}/add`);
+    const handleAdd = React.useCallback((id?: string) => {
+        history.push(`${parentMatch.url}/add${id ? '-' + id : ''}`);
     }, [history, parentMatch]);
 
     const api: ISelectionApi = React.useMemo(() => ({
@@ -31,8 +31,8 @@ export function useSelectionRoute(): [React.ComponentType<IProps>, { id?: string
 
     let selectedId: string | undefined;
     let selectionMode: "edit" | "add" | undefined;
-    if (match && match.params.id === "add") {
-        selectedId = undefined;
+    if (match && (match.params.id === "add" || match.params.id?.startsWith("add-"))) {
+        selectedId = match.params.id?.startsWith("add-") ? match.params.id.substr(4) : undefined;
         selectionMode = "add";
     } else if (match) {
         selectedId = match.params.id;

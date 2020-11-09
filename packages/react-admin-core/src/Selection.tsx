@@ -16,8 +16,8 @@ export function useSelection(): [{ id?: string; mode?: "edit" | "add" }, ISelect
         setSelection({ id: undefined, mode: undefined });
     }, [setSelection]);
 
-    const handleAdd = React.useCallback(() => {
-        setSelection({ id: undefined, mode: "add" });
+    const handleAdd = React.useCallback((id?: string) => {
+        setSelection({ id, mode: "add" });
     }, [setSelection]);
 
     const api: ISelectionApi = React.useMemo(() => ({
@@ -51,4 +51,5 @@ export function Selection({ children }: IProps) {
             selectionApi: api,
         })}
     </>;
+
 }
