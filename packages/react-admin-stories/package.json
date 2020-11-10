@@ -37,6 +37,7 @@
     "devDependencies": {
         "@babel/core": "^7.8.3",
         "@storybook/addon-actions": "^5.3.9",
+        "@storybook/addon-knobs": "^5.3.19",
         "@storybook/addon-storysource": "^5.3.9",
         "@storybook/react": "^5.3.9",
         "@types/draft-js": "^0.10.38",
@@ -59,6 +60,7 @@
         "graphql-anywhere": "^4.2.4",
         "immutable": "~3.7.4",
         "react-docgen-typescript-loader": "^3.1.0",
+        "react-intl": "^5.10.0",
         "react-router": "^5.0.1",
         "react-router-dom": "^5.0.1",
         "storybook-react-router": "^1.0.8",

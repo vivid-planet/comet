@@ -3,6 +3,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { Breadcrumbs } from "@vivid-planet/react-admin-mui";
 import * as history from "history";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 import { Route, RouteComponentProps } from "react-router";
 import { DirtyHandler } from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
@@ -129,7 +130,13 @@ export class Stack extends React.Component<IProps, IState> {
                                         onClick={this.handleGoBackClick}
                                         endIcon={<ArrowBackIcon />}
                                     >
-                                        <Typography variant="button">Zurück</Typography>
+                                        <Typography variant="button">
+                                            <FormattedMessage
+                                                id="reactAdmin.core.stack.stack.back"
+                                                defaultMessage="Zurück"
+                                                description="Back Button"
+                                            />
+                                        </Typography>
                                     </Button>
                                 )}
                                 <StackBreadcrumb title={this.props.topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>

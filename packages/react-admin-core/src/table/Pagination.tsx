@@ -3,6 +3,7 @@ import TableCell from "@material-ui/core/TableCell";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 import { IPagingInfo } from "./paging/IPagingInfo";
 
 interface IProps {
@@ -29,7 +30,12 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                             {pagingInfo.totalPages && pagingInfo.currentPage && (
                                 <Grid item>
                                     <Typography color="textSecondary" variant="body2">
-                                        Seite {pagingInfo.currentPage} von {pagingInfo.totalPages}
+                                        <FormattedMessage
+                                            id="reactAdmin.core.table.pagination.pageInfo"
+                                            values={{ total: pagingInfo.totalPages, current: pagingInfo.currentPage }}
+                                            defaultMessage="Seite {current} von {total}"
+                                            description="Pagination-info"
+                                        />
                                     </Typography>
                                 </Grid>
                             )}

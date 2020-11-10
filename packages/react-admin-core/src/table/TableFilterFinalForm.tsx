@@ -3,6 +3,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import { AnyObject } from "final-form";
 import * as React from "react";
 import { Form, FormProps, FormRenderProps } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 import { renderComponent } from "../finalFormRenderComponent";
 import { IFilterApi } from "./useTableQueryFilter";
 
@@ -55,7 +56,12 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                                                 formRenderProps.form.reset();
                                             }}
                                         >
-                                            <Typography variant="button">Filter zurücksetzen</Typography>
+                                            <Typography variant="button">
+                                                <FormattedMessage
+                                                    id="reactAdmin.core.table.tableFilterFinalForm.resetButton"
+                                                    defaultMessage="Filter zurücksetzen"
+                                                />
+                                            </Typography>
                                         </Button>
                                     </Grid>
                                 )}
