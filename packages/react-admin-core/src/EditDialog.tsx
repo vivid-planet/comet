@@ -4,7 +4,7 @@ import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
 import { ISelectionApi } from "./SelectionApi";
-import { SelectionRoute } from "./SelectionRoute";
+import { useSelectionRoute } from "./SelectionRoute";
 
 interface ITitle {
     edit: string;
@@ -12,77 +12,103 @@ interface ITitle {
 }
 
 interface IProps {
-    title: ITitle | string;
-    children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
+    title?: ITitle | string;
 }
-export class EditDialog extends React.Component<IProps> {
-    public static defaultProps = {
-        title: {
-            edit: "Bearbeiten",
-            add: "Hinzufügen",
+
+export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi] {
+    const [ Selection, selection, selectionApi]  = useSelectionRoute();
+
+    const openAddDialog = React.useCallback((id?: string) => {
+        selectionApi.handleAdd(id);
+    }, [selectionApi]);
+
+    const openEditDialog = React.useCallback(
+        (id: string) => {
+            selectionApi.handleSelectId(id);
         },
-    };
+        [selectionApi],
+    );
 
-    private editDialogApi: IEditDialogApi;
-    private selectionRef: React.RefObject<SelectionRoute> = React.createRef<SelectionRoute>();
-
-    constructor(props: IProps) {
-        super(props);
-
-        this.editDialogApi = {
-            openAddDialog: this.openAddDialog.bind(this),
-            openEditDialog: this.openEditDialog.bind(this),
+    const api: IEditDialogApi = {
+        openAddDialog,
+        openEditDialog,
+    }
+    const EditDialogWithHookProps = React.useMemo(() => {
+        return (props: IProps) => {
+            return <Selection>
+                <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
+            </Selection>;
         };
-    }
+    }, [selection]);
 
-    public render() {
-        const { children, title } = this.props;
+    return [EditDialogWithHookProps, selection, api];
+}
 
-        return (
-            <EditDialogApiContext.Provider value={this.editDialogApi}>
-                <DirtyHandler>
-                    <SelectionRoute ref={this.selectionRef}>
-                        {({ selectedId, selectionMode, selectionApi }) => (
-                            <Dialog open={!!selectionMode} onClose={this.handleCancelClick.bind(this, selectionApi)}>
-                                <div>
-                                    <DialogTitle>{typeof title === "string" ? title : selectionMode === "edit" ? title.edit : title.add}</DialogTitle>
-                                    <DialogContent>{children({ selectedId, selectionMode })}</DialogContent>
-                                    <DialogActions>
-                                        <Button onClick={this.handleCancelClick.bind(this, selectionApi)} color="primary">
-                                            <Typography variant="button">Abbrechen</Typography>
-                                        </Button>
-                                        <DirtyHandlerApiContext.Consumer>
-                                            {dirtyHandlerApi => (
-                                                <Button onClick={this.handleSaveClick.bind(this, dirtyHandlerApi, selectionApi)} color="primary">
-                                                    <Typography variant="button">Speichern</Typography>
-                                                </Button>
-                                            )}
-                                        </DirtyHandlerApiContext.Consumer>
-                                    </DialogActions>
-                                </div>
-                            </Dialog>
-                        )}
-                    </SelectionRoute>
-                </DirtyHandler>
-            </EditDialogApiContext.Provider>
-        );
-    }
+interface IHookProps {
+    selection: {
+        id?: string;
+        mode?: "edit" | "add"
+    };
+    selectionApi: ISelectionApi
+    api: IEditDialogApi
+}
 
-    public openAddDialog() {
-        if (this.selectionRef.current) this.selectionRef.current.selectionApi.handleAdd();
-    }
+const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selection, selectionApi, api, title = { edit: "Bearbeiten", add: "Hinzufügen" }, children }) => {
 
-    public openEditDialog(id: string) {
-        if (this.selectionRef.current) this.selectionRef.current.selectionApi.handleSelectId(id);
-    }
-    private handleSaveClick = (dirtyHandlerApi: IDirtyHandlerApi | undefined, selectionApi: ISelectionApi) => {
+    let dirtyHandlerApi: IDirtyHandlerApi | undefined;
+    const handleSaveClick = () => {
         if (dirtyHandlerApi) {
             dirtyHandlerApi.submitBindings().then(() => {
-                selectionApi.handleDeselect();
+                setTimeout(() => {
+                    selectionApi.handleDeselect();
+                });
             });
         }
     };
-    private handleCancelClick = (selectionApi: ISelectionApi) => {
+
+    const handleCancelClick = () => {
         selectionApi.handleDeselect();
     };
+
+    return (
+        <EditDialogApiContext.Provider value={api}>
+            <DirtyHandler>
+                <Dialog open={!!selection.mode} onClose={handleCancelClick}>
+                    <div>
+                        <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
+                        <DialogContent>{children}</DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleCancelClick} color="primary">
+                                <Typography variant="button">Abbrechen</Typography>
+                            </Button>
+                            <DirtyHandlerApiContext.Consumer>
+                                {injectedDirtyHandlerApi => {
+                                    dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
+                                    return (
+                                        <Button onClick={handleSaveClick} color="primary">
+                                            <Typography variant="button">Speichern</Typography>
+                                        </Button>
+                                    );
+                                }}
+                            </DirtyHandlerApiContext.Consumer>
+                        </DialogActions>
+                    </div>
+                </Dialog>
+            </DirtyHandler>
+        </EditDialogApiContext.Provider>
+    );
 }
+
+interface IEditDialogHooklessProps extends IProps {
+    children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
+}
+
+const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = (
+    { children, title = { edit: "Bearbeiten", add: "Hinzufügen" } },
+    ref,
+) => {
+    const [ EditDialogConfigured, selection, api ] = useEditDialog();
+    React.useImperativeHandle(ref, () => api);
+    return <EditDialogConfigured title={title}>{children({ selectedId: selection.id, selectionMode: selection.mode })}</EditDialogConfigured>;
+};
+export const EditDialog = React.forwardRef(EditDialogHooklessInner);

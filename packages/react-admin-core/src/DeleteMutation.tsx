@@ -24,7 +24,7 @@ export function DeleteMutation(props: IProps) {
     return (
         <React.Fragment>
             {props.children(
-                (options) => {
+                options => {
                     setDialogOpen(true);
                     setPendingVariables(options.variables);
                 },

@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-stories",
-    "version": "1.0.8-alpha.13",
+    "version": "1.0.8-alpha.14",
     "files": [
         "src"
     ],
@@ -22,6 +22,7 @@
         "@vivid-planet/react-admin-mui": "*",
         "@vivid-planet/react-admin-rte": "*",
         "apollo-client": "^2.6.3",
+        "final-form": "^4.16.1",
         "graphql": "^14.4.1",
         "graphql-tag": "^2.10.1",
         "react": "^16.8",

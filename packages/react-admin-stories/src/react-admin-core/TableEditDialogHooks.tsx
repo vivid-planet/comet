@@ -2,7 +2,7 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { Button, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import { EditDialog, FinalForm, IEditDialogApi, Selected, Table } from "@vivid-planet/react-admin-core";
+import { FinalForm, IEditDialogApi, Selected, Table, useEditDialog } from "@vivid-planet/react-admin-core";
 import { TextField } from "@vivid-planet/react-admin-final-form-material-ui";
 import { Field } from "@vivid-planet/react-admin-form";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -42,7 +42,7 @@ function Story() {
         { id: 2, foo: "blub", bar: "blub" },
     ];
 
-    const editDialog = React.useRef<IEditDialogApi>(null);
+    const [ EditDialog, selection, api ] = useEditDialog();
 
     return (
         <>
@@ -51,7 +51,7 @@ function Story() {
                     color="default"
                     endIcon={<AddIcon />}
                     onClick={ev => {
-                        editDialog.current?.openAddDialog();
+                        api.openAddDialog();
                     }}
                 >
                     <Typography variant="button">Hinzufügen</Typography>
@@ -75,7 +75,7 @@ function Story() {
                         render: row => (
                             <IconButton
                                 onClick={ev => {
-                                    editDialog.current?.openEditDialog(String(row.id));
+                                    api.openEditDialog(String(row.id));
                                 }}
                             >
                                 <EditIcon />
@@ -85,15 +85,11 @@ function Story() {
                 ]}
             />
 
-            <EditDialog ref={editDialog}>
-                {({ selectedId, selectionMode }) => (
-                    <>
-                        {selectionMode && (
-                            <Selected selectionMode={selectionMode} selectedId={selectedId} rows={data}>
-                                {(row, { selectionMode: sm }) => <EditForm mode={sm} row={row} />}
-                            </Selected>
-                        )}
-                    </>
+            <EditDialog>
+                {selection.mode && (
+                    <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
+                        {(row, { selectionMode: sm }) => <EditForm mode={sm} row={row} />}
+                    </Selected>
                 )}
             </EditDialog>
         </>
@@ -118,4 +114,4 @@ storiesOf("react-admin-core", module)
 
         return <ApolloProvider client={client}>{story()}</ApolloProvider>;
     })
-    .add("Table EditDialog", () => <Story />);
+    .add("Table EditDialog Hooks", () => <Story />);
