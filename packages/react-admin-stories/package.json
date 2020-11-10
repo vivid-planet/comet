@@ -28,6 +28,7 @@
         "react": "^16.8",
         "react-dom": "^16.8",
         "react-final-form": "^6.3.1",
+        "react-intl": "5.0.2",
         "styled-components": "^4.3.2"
     },
     "dependencies": {
@@ -60,7 +61,6 @@
         "graphql-anywhere": "^4.2.4",
         "immutable": "~3.7.4",
         "react-docgen-typescript-loader": "^3.1.0",
-        "react-intl": "^5.10.0",
         "react-router": "^5.0.1",
         "react-router-dom": "^5.0.1",
         "storybook-react-router": "^1.0.8",
