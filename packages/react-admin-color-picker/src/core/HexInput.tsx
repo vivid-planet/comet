@@ -1,4 +1,4 @@
-import { IconButton } from "@material-ui/core";
+import { ButtonBase } from "@material-ui/core";
 import { Clear as ClearIcon } from "@material-ui/icons";
 import * as React from "react";
 import { ColorChangeHandler } from "react-color";
@@ -40,17 +40,21 @@ const PickedColor: React.FC<IPickedColorProps & IVPAdminColorPickerProps> = ({ v
 );
 
 const HexInput: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({ value, classes, onChange, picker, palette }) => (
-    <div className={classes.inputInner}>
-        <PickedColor value={value} classes={classes} />
-        {!palette || (palette && picker) ? (
-            <EditableInput style={resetedInputStyles} value={value} onChange={(onChange as unknown) as ColorChangeHandler} />
-        ) : (
-            <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
-        )}
-        <IconButton classes={{ root: classes.clearButton }} onClick={() => onChange("")}>
-            <ClearIcon className={classes.clearIcon} />
-        </IconButton>
-    </div>
+    <>
+        <div className={classes.inputInner}>
+            <div className={classes.inputInnerLeftContent}>
+                <PickedColor value={value} classes={classes} />
+                {!palette || (palette && picker) ? (
+                    <EditableInput style={resetedInputStyles} value={value} onChange={(onChange as unknown) as ColorChangeHandler} />
+                ) : (
+                    <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
+                )}
+            </div>
+        </div>
+        <ButtonBase classes={{ root: classes.clearButton }} onClick={() => onChange("")}>
+            <ClearIcon className={classes.clearIcon} fontSize="small" />
+        </ButtonBase>
+    </>
 );
 
 export default HexInput;

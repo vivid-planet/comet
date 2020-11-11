@@ -1,9 +1,11 @@
 import { Theme } from "@material-ui/core";
 import { createStyles } from "@material-ui/styles";
+import { getDefaultVPAdminInputStyles } from "@vivid-planet/react-admin-form";
 
 export type VPAdminColorPickerClassKeys =
     | "input"
     | "inputInner"
+    | "inputInnerLeftContent"
     | "clearButton"
     | "clearIcon"
     | "popover"
@@ -18,16 +20,31 @@ export type VPAdminColorPickerClassKeys =
     | "paletteItem"
     | "readOnlyInput";
 
-const styles = (theme: Theme) =>
-    createStyles({
-        input: {},
+const styles = (theme: Theme) => {
+    const inputDefaultStyles = getDefaultVPAdminInputStyles(theme);
+
+    return createStyles({
+        input: {
+            ...inputDefaultStyles,
+            display: "flex",
+            paddingRight: 0,
+        },
         inputInner: {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "space-between",
             width: "100%",
         },
-        clearButton: {},
+        inputInnerLeftContent: {
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+        },
+        clearButton: {
+            height: inputDefaultStyles.height,
+            width: inputDefaultStyles.height,
+        },
         clearIcon: {},
         popper: {},
         pickedColorWrapper: {
@@ -102,4 +119,5 @@ const styles = (theme: Theme) =>
             width: "100%",
         },
     });
+};
 export default styles;

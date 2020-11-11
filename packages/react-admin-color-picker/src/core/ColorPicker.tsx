@@ -13,6 +13,7 @@ export interface IVPAdminColorPickerProps {
     classes: {
         input: string;
         inputInner: string;
+        inputInnerLeftContent: string;
         clearButton: string;
         clearIcon: string;
         popper: string;
