@@ -1,12 +1,11 @@
 import * as React from "react";
 
-interface IWindowSize {
+export interface IWindowSize {
     width: number;
     height: number;
 }
 
-// TODO: Use from "@vivid-planet/react-admin-common" when published
-export default function useWindowSize(): IWindowSize {
+const useWindowSize = (): IWindowSize => {
     const getSize = (): IWindowSize => ({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -26,4 +25,6 @@ export default function useWindowSize(): IWindowSize {
     }, []);
 
     return windowSize;
-}
+};
+
+export default useWindowSize;

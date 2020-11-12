@@ -6,7 +6,7 @@ import { ThemeContext } from "styled-components";
 import { MenuContext } from "./Context";
 import * as sc from "./Menu.sc";
 
-// TODO after next publish: Replace with hook from `@vivid-planet/react-admin-core`
+// TODO: Use from "@vivid-planet/react-admin-common" when published
 import useWindowSize from "./useWindowSize";
 
 interface IProps {

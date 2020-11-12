@@ -3,7 +3,7 @@ import { emphasize } from "@material-ui/core/styles/colorManipulator";
 import zIndex from "@material-ui/core/styles/zIndex";
 import { createStyles } from "@material-ui/styles";
 
-// TODO: import from "@vivid-planet/react-admin-form" after publish.
+// TODO: Use from "@vivid-planet/react-admin-common" when published
 const getDefaultVPAdminInputStyles = (theme: Theme) => {
     return {
         border: `1px solid ${theme.palette.grey[300]}`,
