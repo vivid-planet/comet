@@ -26,6 +26,16 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
         buttonsContainer?: React.ComponentType;
     };
     renderButtons?: (formRenderProps: FormRenderProps<FormValues>) => React.ReactNode;
+
+    // override final-form onSubmit and remove callback as we don't support that (return pomise instead)
+    onSubmit: (
+        values: FormValues,
+        form: FormApi<FormValues>,
+      ) =>
+        | SubmissionErrors
+        | Promise<SubmissionErrors | undefined>
+        | undefined
+        | void
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -47,8 +57,8 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     isDirty: () => {
                         return formRenderProps.form.getState().dirty;
                     },
-                    submit: () => {
-                        return submit(undefined);
+                    submit: async (): Promise<void> => {
+                        await formRenderProps.form.submit();
                     },
                     reset: () => {
                         formRenderProps.form.reset();
@@ -139,8 +149,9 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         if (stackApi) stackApi.goBack();
     }
 
-    function handleSubmit(values: FormValues, form: FormApi<FormValues>, callback?: (errors?: SubmissionErrors) => void) {
-        const ret = props.onSubmit(values, form, callback);
+    function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+        const ret = props.onSubmit(values, form);
+
         if (ret === undefined) return ret;
 
         return Promise.resolve(ret)
