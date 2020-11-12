@@ -13,6 +13,7 @@
         "@vivid-planet/fetch-provider": "*",
         "@vivid-planet/file-icons": "*",
         "@vivid-planet/material-ui-react-select": "*",
+        "@vivid-planet/react-admin-color-picker": "*",
         "@vivid-planet/react-admin-core": "*",
         "@vivid-planet/react-admin-date-fns": "*",
         "@vivid-planet/react-admin-date-picker": "*",
