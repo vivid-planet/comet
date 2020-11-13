@@ -1,18 +1,15 @@
-import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { FinalForm, Tab, Tabs } from "@vivid-planet/react-admin-core";
-import { Radio } from "@vivid-planet/react-admin-final-form-material-ui";
-import { DatePicker, Field, FieldContainer, FormPaper, Input } from "@vivid-planet/react-admin-form";
-import { styled } from "@vivid-planet/react-admin-mui";
+import { Field, FormPaper, Input } from "@vivid-planet/react-admin-form";
 import * as React from "react";
-import { Field as FinalFormField } from "react-final-form";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 function Story() {
     return (
         <FinalForm
             mode="edit"
-            onSubmit={values => {
+            onSubmit={(values) => {
                 alert(JSON.stringify(values));
             }}
             initialValues={{

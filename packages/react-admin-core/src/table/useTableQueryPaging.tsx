@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { usePersistedState } from "./usePersistedState";
 
 export interface IPagingApi<T> {
@@ -20,10 +21,10 @@ export function useTableQueryPaging<T>(
     } = {},
 ): IPagingApi<T> {
     const [page, setPage] = usePersistedState(1, {
-        persistedStateId: options.persistedStateId ? options.persistedStateId + "_pagingPage" : undefined,
+        persistedStateId: options.persistedStateId ? `${options.persistedStateId}_pagingPage` : undefined,
     });
     const [variables, setVariables] = usePersistedState<T>(init, {
-        persistedStateId: options.persistedStateId ? options.persistedStateId + "_pagingVariables" : undefined,
+        persistedStateId: options.persistedStateId ? `${options.persistedStateId}_pagingVariables` : undefined,
     });
 
     let tableRef: React.RefObject<HTMLDivElement | undefined> | undefined;

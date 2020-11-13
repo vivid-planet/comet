@@ -6,6 +6,7 @@ import gql from "graphql-tag";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
@@ -66,7 +67,7 @@ function ExampleForm(props: IExampleFormProps) {
     return (
         <FinalForm
             mode="edit"
-            onSubmit={values => {
+            onSubmit={(values) => {
                 // submit here
             }}
             initialValues={props.user}
@@ -78,7 +79,7 @@ function ExampleForm(props: IExampleFormProps) {
 
 function Story() {
     const { tableData, api, loading, error } = useTableQuery<IQueryData, {}>()(query, {
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.users,
             totalCount: data.users.length,
         }),

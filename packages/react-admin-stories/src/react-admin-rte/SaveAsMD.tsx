@@ -1,10 +1,9 @@
 import { storiesOf } from "@storybook/react";
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@vivid-planet/react-admin-rte";
-import { ContentState } from "draft-js";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
-
 import * as React from "react";
+
 import { PrintAnything, RteLayout } from "./helper";
 
 type Markdown = string;
@@ -16,10 +15,10 @@ This is markdown
 `;
 
 const makeRteApiProps: IMakeRteApiProps<Markdown> = {
-    parse: v => {
+    parse: (v) => {
         return stateFromMarkdown(v);
     },
-    format: v => {
+    format: (v) => {
         return stateToMarkdown(v);
     },
 };

@@ -4,7 +4,6 @@ import { ThemeProvider } from "@material-ui/styles";
 import * as React from "react";
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
 
-// tslint:disable:interface-name
 declare module "@material-ui/core/styles/createMuiTheme" {
     interface Theme {
         rte: {
@@ -33,7 +32,6 @@ declare module "@material-ui/core/styles/createMuiTheme" {
         };
     }
 }
-// tslint:enable:interface-name
 
 export const createMuiTheme = ({ rte, ...otherOptions }: ThemeOptions): Theme => {
     const defaultTheme = createOriginalMuiTheme(otherOptions);

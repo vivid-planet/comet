@@ -2,6 +2,7 @@ import { storiesOf } from "@storybook/react";
 import { createRestPagingActions, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@vivid-planet/react-admin-core";
 import gql from "graphql-tag";
 import * as React from "react";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
@@ -46,8 +47,8 @@ function Story() {
         variables: {
             page: pagingApi.current,
         },
-        resolveTableData: data => ({
-            data: data.people.results.map(i => ({ ...i, id: i.url.match(/.*\/(\d+)\//)![1] })),
+        resolveTableData: (data) => ({
+            data: data.people.results.map((i) => ({ ...i, id: i.url.match(/.*\/(\d+)\//)![1] })),
             totalCount: data.people.count,
             pagingInfo: createRestPagingActions(pagingApi, {
                 totalPages: Math.ceil(data.people.count / 10), // Don't calculate this in a real application

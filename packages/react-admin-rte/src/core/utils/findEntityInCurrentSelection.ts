@@ -29,7 +29,7 @@ export default function findEntityInCurrentSelection(
 
     // iterating over all entity ranges in the block
     blockAtBeginning.findEntityRanges(
-        char => {
+        (char) => {
             // we are only interested in entities of type {entityType}
             if (char.getEntity()) {
                 const entity = contentState.getEntity(char.getEntity());

@@ -4,6 +4,7 @@ import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import StrikethroughSIcon from "@material-ui/icons/StrikethroughS";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
+
 import TextFormatSub from "../../icons/TextFormatSub";
 import TextFormatSup from "../../icons/TextFormatSup";
 import { SupportedThings } from "../Rte";
@@ -94,8 +95,8 @@ export default function useInlineStyleType({ editorState, setEditorState, suppor
     const features: Array<IFeatureConfig<InlineStyleType>> = React.useMemo(
         () =>
             defaultFeatures
-                .filter(c => supports(c.name))
-                .map(c => ({
+                .filter((c) => supports(c.name))
+                .map((c) => ({
                     ...c,
                     selected: inlineStyleActive(c.name),
                     onButtonClick: handleInlineStyleButtonClick.bind(null, c.name),

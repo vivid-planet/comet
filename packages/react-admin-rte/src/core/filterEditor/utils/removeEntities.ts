@@ -1,16 +1,17 @@
 import { CharacterMetadata, EditorState, EntityInstance } from "draft-js";
+
 import { FilterEditorStateFn } from "../../types";
 
 type FilterFn = (entity: EntityInstance) => boolean; // when function returns false the entity is removed
 
 // inspired by https://github.com/thibaudcolas/draftjs-filters/blob/31d89177090b815b968ac2d8ec95c89d975f1e44/src/lib/filters/entities.js#L77
-const removeEntities: (filterFn: FilterFn) => FilterEditorStateFn = filterFn => nextState => {
+const removeEntities: (filterFn: FilterFn) => FilterEditorStateFn = (filterFn) => (nextState) => {
     const content = nextState.getCurrentContent();
     const blockMap = content.getBlockMap();
 
-    const blocks: any = blockMap.map(block => {
+    const blocks: any = blockMap.map((block) => {
         let altered = false;
-        const chars = block!.getCharacterList().map(char => {
+        const chars = block!.getCharacterList().map((char) => {
             if (!char) {
                 return undefined;
             }

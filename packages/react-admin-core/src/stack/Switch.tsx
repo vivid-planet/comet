@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router";
+
 import { StackBreadcrumb } from "./Breadcrumb";
 import { IStackPageProps } from "./Page";
 import { StackSwitchMeta } from "./SwitchMeta";
@@ -50,17 +51,14 @@ export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi]
         },
         updatePageBreadcrumbTitle: (title?: string) => {
             apiRef.current?.updatePageBreadcrumbTitle(title);
-        }
-    }
+        },
+    };
     const StackSwitchWithHookProps = React.useMemo(() => {
         return (props: IProps) => {
-            return <StackSwitchWithRef {...props} id={id} ref={apiRef} />
+            return <StackSwitchWithRef {...props} id={id} ref={apiRef} />;
         };
     }, [id, apiRef]);
-    return [
-        StackSwitchWithHookProps,
-        api,
-    ]
+    return [StackSwitchWithHookProps, api];
 }
 
 interface IHookProps {
@@ -95,7 +93,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
                 if (payload) throw new Error("activating the initialPage must not have a payload");
                 if (subUrl) throw new Error("activating the initialPage must not have a subUrl");
             } else {
-                history.push(match.url + "/" + payload + "/" + pageName + (subUrl ? "/" + subUrl : ""));
+                history.push(`${match.url}/${payload}/${pageName}${subUrl ? `/${subUrl}` : ""}`);
             }
         },
         [history, isInitialPage, match],
@@ -119,18 +117,12 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
     );
     React.useImperativeHandle(ref, () => api);
 
-    function renderRoute(page: React.ReactElement<IStackPageProps>, routeProps: RouteComponentProps<IRouteParams>) {        
+    function renderRoute(page: React.ReactElement<IStackPageProps>, routeProps: RouteComponentProps<IRouteParams>) {
         activePage = page.props.name;
         const ret = (
-            <StackSwitchMeta
-                id={id}
-                activePage={page.props.name}
-                isInitialPageActive={isInitialPage(page.props.name)}
-            >
+            <StackSwitchMeta id={id} activePage={page.props.name} isInitialPageActive={isInitialPage(page.props.name)}>
                 <StackSwitchApiContext.Provider value={api}>
-                    {typeof page.props.children === "function"
-                        ? page.props.children(routeProps.match.params.id!)
-                        : page.props.children}
+                    {typeof page.props.children === "function" ? page.props.children(routeProps.match.params.id!) : page.props.children}
                 </StackSwitchApiContext.Provider>
             </StackSwitchMeta>
         );
@@ -138,10 +130,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
             return ret;
         } else {
             return (
-                <StackBreadcrumb
-                    url={routeProps.match.url}
-                    title={pageBreadcrumbTitle[page.props.name] || page.props.title || page.props.name}
-                >
+                <StackBreadcrumb url={routeProps.match.url} title={pageBreadcrumbTitle[page.props.name] || page.props.title || page.props.name}>
                     {ret}
                 </StackBreadcrumb>
             );
@@ -176,14 +165,12 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
                     return renderRoute(initialPage!, routeProps);
                 }}
             </Route>
-    </Switch>
-    )
-}
+        </Switch>
+    );
+};
 const StackSwitchWithRef = React.forwardRef(StackSwitchInner);
 
-
 export function StackSwitch(props: IProps) {
-    const [ StackSwitchWithApi ]  = useStackSwitch();
-    return <StackSwitchWithApi {...props} />
+    const [StackSwitchWithApi] = useStackSwitch();
+    return <StackSwitchWithApi {...props} />;
 }
-

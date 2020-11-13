@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { ITableQueryContext, TableQueryContext } from "./TableQueryContext";
 
 export interface IWithTableQueryProps {
@@ -21,5 +22,5 @@ type Subtract<T, K> = Omit<T, keyof K>;
 export const withTableQueryContext = <P extends IWithTableQueryProps>(
     WrappedComponent: React.ComponentType<P>,
 ): React.SFC<Subtract<P, IWithTableQueryProps>> => (props: any) => (
-    <TableQueryContext.Consumer>{tableQuery => <WrappedComponent {...props} tableQuery={tableQuery} />}</TableQueryContext.Consumer>
+    <TableQueryContext.Consumer>{(tableQuery) => <WrappedComponent {...props} tableQuery={tableQuery} />}</TableQueryContext.Consumer>
 );

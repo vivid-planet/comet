@@ -4,13 +4,13 @@ import {
     ExcelExportButton,
     Table,
     TableQuery,
-    useExportDisplayedTableData,
     useExportPagedTableQuery,
     useTableQuery,
     useTableQueryPaging,
 } from "@vivid-planet/react-admin-core";
 import gql from "graphql-tag";
 import * as React from "react";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
@@ -59,7 +59,7 @@ function Story() {
             start: pagingApi.current,
             limit: loadLimit,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.photos,
             totalCount,
             pagingInfo: createRestStartLimitPagingActions(pagingApi, {
@@ -72,7 +72,7 @@ function Story() {
     const exportApi = useExportPagedTableQuery<IVariables>(api, {
         fromPage: 0,
         toPage: totalCount / loadLimit,
-        variablesForPage: page => {
+        variablesForPage: (page) => {
             return {
                 start: page * loadLimit,
                 limit: loadLimit,

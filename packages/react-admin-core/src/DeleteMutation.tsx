@@ -5,6 +5,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 import * as React from "react";
+
 import { TableQueryContext } from "./table";
 
 interface IProps {
@@ -23,7 +24,7 @@ export function DeleteMutation(props: IProps) {
     return (
         <React.Fragment>
             {props.children(
-                options => {
+                (options) => {
                     setDialogOpen(true);
                     setPendingVariables(options.variables);
                 },

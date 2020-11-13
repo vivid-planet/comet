@@ -1,4 +1,3 @@
-import * as React from "react";
 import { usePersistedState } from "./usePersistedState";
 
 export enum SortDirection {
@@ -20,7 +19,7 @@ export function useTableQuerySort(
     } = {},
 ): ISortApi {
     const [sort, setSort] = usePersistedState<ISortInformation>(defaultSort, {
-        persistedStateId: options.persistedStateId ? options.persistedStateId + "_sort" : undefined,
+        persistedStateId: options.persistedStateId ? `${options.persistedStateId}_sort` : undefined,
     });
 
     function changeSort(columnName: string) {

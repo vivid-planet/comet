@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { IControlProps } from "../types";
 import FeaturesButtonGroup from "./FeaturesButtonGroup";
 import useHistory from "./useHistory";

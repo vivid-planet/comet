@@ -1,4 +1,5 @@
-import { CircularProgress, Grid, IconButton, Typography } from "@material-ui/core";
+import { useQuery } from "@apollo/client";
+import { CircularProgress, Grid, IconButton } from "@material-ui/core";
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import {
@@ -18,6 +19,7 @@ import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admi
 import gql from "graphql-tag";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
@@ -58,7 +60,7 @@ function ExampleTable(props: { persistedStateId: string }) {
         variables: {
             ...filterApi.current,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.users,
             totalCount: data.users.length,
         }),
@@ -92,7 +94,7 @@ function ExampleTable(props: { persistedStateId: string }) {
                                 header: "",
                                 cellProps: { padding: "none" },
 
-                                render: row => (
+                                render: (row) => (
                                     <Grid item>
                                         <IconButton
                                             onClick={() => {
@@ -139,7 +141,7 @@ function ExampleForm(props: IExampleFormProps) {
     return (
         <FinalForm
             mode="edit"
-            onSubmit={values => {
+            onSubmit={(values) => {
                 // submit here
             }}
             initialValues={data.user}
@@ -158,7 +160,7 @@ function Story() {
                     <ExampleTable persistedStateId={persistedStateId} />
                 </StackPage>
                 <StackPage name="form" title="bearbeiten">
-                    {selectedId => <ExampleForm id={+selectedId} />}
+                    {(selectedId) => <ExampleForm id={+selectedId} />}
                 </StackPage>
             </StackSwitch>
         </Stack>

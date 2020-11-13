@@ -10,7 +10,6 @@ import { Props as ReactSelectAsyncProps } from "react-select/async";
 import { Props as ReactSelectProps } from "react-select/base";
 import { Props as ReactSelectCreatableProps } from "react-select/creatable";
 
-// tslint:disable:max-classes-per-file
 export class ReactSelect<OptionType> extends React.Component<FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectProps<OptionType>> {
     public render() {
         const { input, meta, ...rest } = this.props;

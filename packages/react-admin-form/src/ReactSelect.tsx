@@ -38,7 +38,6 @@ const vividStyles = {
     clearIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
 };
 
-// tslint:disable:max-classes-per-file
 export class ReactSelect<OptionType> extends React.Component<FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectProps<OptionType>> {
     public render() {
         const { components, styles, ...rest } = this.props;

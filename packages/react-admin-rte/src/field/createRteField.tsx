@@ -38,7 +38,7 @@ function createRteField<T = any>(config: IConfig<T> = defaultConfig) {
             <Rte
                 ref={ref}
                 value={editorState}
-                onChange={c => {
+                onChange={(c) => {
                     setEditorState(c);
                 }}
                 options={rteOptions}

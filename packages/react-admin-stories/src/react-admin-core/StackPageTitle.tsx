@@ -1,12 +1,12 @@
 import { storiesOf } from "@storybook/react";
-import { IStackSwitchApi, Stack, StackPage, StackPageTitle, useStackSwitch } from "@vivid-planet/react-admin-core";
+import { Stack, StackPage, StackPageTitle, useStackSwitch } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
 
 function Page2() {
     const [counter, setCounter] = React.useState(0);
-    const [ StackSwitch, api ] = useStackSwitch();
+    const [StackSwitch, api] = useStackSwitch();
     return (
         <div>
             <button
@@ -39,7 +39,7 @@ function Page2() {
 
 function Story() {
     const [counter, setCounter] = React.useState(0);
-    const [ StackSwitch, api ] = useStackSwitch();
+    const [StackSwitch, api] = useStackSwitch();
     return (
         <div>
             <button

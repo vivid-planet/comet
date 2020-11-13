@@ -1,6 +1,7 @@
 import { Button, CircularProgress, Toolbar, Typography } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
 import * as React from "react";
+
 import { ITableLocalChangesApi } from "./TableLocalChanges";
 
 interface IProps {

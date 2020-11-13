@@ -1,7 +1,7 @@
 import * as React from "react";
-// tslint:disable-next-line: no-submodule-imports
 import { Hue, Saturation } from "react-color/lib/components/common";
 import * as tinycolor from "tinycolor2";
+
 import { colorToHex, stringToHSL, stringToHSV } from "../utils/colorSpaces";
 import { IVPAdminColorPickerProps } from "./ColorPicker";
 
@@ -17,7 +17,7 @@ const Picker: React.FC<IPickerProps & IVPAdminColorPickerProps> = ({ color, onCh
                 hsl={stringToHSL(color)}
                 hsv={stringToHSV(color)}
                 pointer={() => <div className={classes.saturationPointer} />}
-                onChange={value => onChange(colorToHex((value as unknown) as tinycolor.ColorInputWithoutInstance))}
+                onChange={(value) => onChange(colorToHex((value as unknown) as tinycolor.ColorInputWithoutInstance))}
             />
         </div>
         <div className={classes.hueWrapper}>
@@ -25,7 +25,7 @@ const Picker: React.FC<IPickerProps & IVPAdminColorPickerProps> = ({ color, onCh
                 hsl={stringToHSL(color)}
                 pointer={() => <div className={classes.hueSliderMarker} />}
                 direction={"horizontal"}
-                onChange={value => onChange(colorToHex((value as unknown) as tinycolor.ColorInputWithoutInstance))}
+                onChange={(value) => onChange(colorToHex((value as unknown) as tinycolor.ColorInputWithoutInstance))}
             />
         </div>
     </>

@@ -3,6 +3,7 @@ import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@
 import { ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import * as React from "react";
+
 import { PrintAnything, RteLayout } from "./helper";
 
 type Html = string;
@@ -10,11 +11,11 @@ type Html = string;
 const defaultValue: Html = "<p>save-format is <b>HTML</b></p>";
 
 const makeRteApiProps: IMakeRteApiProps<Html> = {
-    parse: v => {
+    parse: (v) => {
         const blocksFromHTML = convertFromHTML(v);
         return ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
     },
-    format: v => {
+    format: (v) => {
         return stateToHTML(v);
     },
 };

@@ -2,6 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, T
 import LinkIcon from "@material-ui/icons/Link";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
+
 import ControlButton from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
 import findEntityDataInCurrentSelection from "../../utils/findEntityDataInCurrentSelection";
@@ -98,7 +99,7 @@ function LinkDialog(props: {
                     label="Url"
                     variant="outlined"
                     value={newUrl}
-                    onChange={e => {
+                    onChange={(e) => {
                         setNewUrl(e.target.value);
                     }}
                 />

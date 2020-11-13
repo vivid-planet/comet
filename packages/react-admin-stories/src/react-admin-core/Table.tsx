@@ -29,7 +29,7 @@ function Story() {
                 {
                     name: "foo2",
                     header: "Foo2",
-                    render: row => <strong>{row.id}</strong>,
+                    render: (row) => <strong>{row.id}</strong>,
                 },
                 {
                     name: "bar",

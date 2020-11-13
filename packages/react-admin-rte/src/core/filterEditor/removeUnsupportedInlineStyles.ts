@@ -15,7 +15,7 @@ const removeUnsupportedInlineStyles: FilterEditorStateBeforeUpdateFn = (newState
         sup: "SUP",
     };
     const supportsToTest = Object.keys(supportsToInlineStyleMap) as SupportedThings[];
-    supportsToTest.forEach(support => {
+    supportsToTest.forEach((support) => {
         if (!supports.includes(support) && supportsToInlineStyleMap[support]) {
             const inlineStyle = supportsToInlineStyleMap[support];
             if (inlineStyle) {

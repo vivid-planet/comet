@@ -2,9 +2,9 @@ import { ButtonBase } from "@material-ui/core";
 import { Clear as ClearIcon } from "@material-ui/icons";
 import * as React from "react";
 import { ColorChangeHandler } from "react-color";
-// tslint:disable-next-line: no-submodule-imports
 import { EditableInput } from "react-color/lib/components/common";
 import * as tinycolor from "tinycolor2";
+
 import { IVPAdminColorPickerProps } from "./ColorPicker";
 
 interface IComponentProps {

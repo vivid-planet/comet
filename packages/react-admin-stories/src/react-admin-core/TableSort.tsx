@@ -2,6 +2,7 @@ import { storiesOf } from "@storybook/react";
 import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } from "@vivid-planet/react-admin-core";
 import gql from "graphql-tag";
 import * as React from "react";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
@@ -35,7 +36,7 @@ interface IQueryData {
 interface IVariables {
     blubId: number;
     sort: string;
-    order: "desc" | "asc";
+    order: SortDirection;
 }
 
 function Story() {
@@ -49,7 +50,7 @@ function Story() {
             sort: sortApi.current.columnName,
             order: sortApi.current.direction,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.users,
             totalCount: data.users.length,
         }),

@@ -6,6 +6,7 @@ import { Field, FormPaper, Input } from "@vivid-planet/react-admin-form";
 import { styled } from "@vivid-planet/react-admin-mui";
 import * as React from "react";
 import { AnyObject } from "react-final-form";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 interface IProps {
@@ -52,7 +53,7 @@ function Story() {
             onSubmit={() => {
                 // add your form-submit function here
             }}
-            renderButtons={props => <FormCustomButtons formRenderProps={props} />}
+            renderButtons={(props) => <FormCustomButtons formRenderProps={props} />}
         >
             <FormPaper>
                 <Field label="Foo" name="foo" component={Input} />

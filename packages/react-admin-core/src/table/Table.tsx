@@ -6,6 +6,7 @@ import TableFooter from "@material-ui/core/TableFooter";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
+
 import { ISelectionApi } from "../SelectionApi";
 import { IExportApi } from "./excelexport/IExportApi";
 import { isVisible } from "./isVisible";
@@ -145,12 +146,12 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
     public render() {
         const { data, exportApis = [] } = this.props;
 
-        const renderHeadTableRow = this.props.renderHeadTableRow || (props => <DefaultHeadTableRow {...props} />);
+        const renderHeadTableRow = this.props.renderHeadTableRow || ((props) => <DefaultHeadTableRow {...props} />);
 
         if (this.props.pagingInfo) {
             this.props.pagingInfo.attachTableRef(this.domRef);
         }
-        exportApis.forEach(exportApi => {
+        exportApis.forEach((exportApi) => {
             exportApi.attachTable(this);
         });
 
@@ -181,7 +182,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                     <TableBody>
                         {data.map((row, index) => {
                             const isSelected = this.isSelected(row.id);
-                            const renderTableRow = this.props.renderTableRow || (props => <DefaultTableRow {...props} />);
+                            const renderTableRow = this.props.renderTableRow || ((props) => <DefaultTableRow {...props} />);
                             return renderTableRow({
                                 index,
                                 row,
@@ -221,7 +222,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
     private handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
             if (this.props.selectable && this.props.selectionApi) {
-                const selectedIndex = this.props.data.findIndex(i => String(this.props.selectedId) === String(i.id));
+                const selectedIndex = this.props.data.findIndex((i) => String(this.props.selectedId) === String(i.id));
                 if (selectedIndex !== -1) {
                     const nextSelectedIndex = event.key === "ArrowDown" ? selectedIndex + 1 : selectedIndex - 1;
                     if (this.props.data[nextSelectedIndex]) {

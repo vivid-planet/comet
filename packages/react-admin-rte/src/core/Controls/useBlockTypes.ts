@@ -2,6 +2,7 @@ import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
+
 import { SupportedThings } from "../Rte";
 import { ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
@@ -150,7 +151,7 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
 
     const dropdownFeatures: IFeatureConfig[] = React.useMemo(
         () =>
-            [...defaultDropdownFeatures.filter(c => supports(c.name)), ...customDropdownFeatures].map(c => ({
+            [...defaultDropdownFeatures.filter((c) => supports(c.name)), ...customDropdownFeatures].map((c) => ({
                 ...c,
                 selected: blockTypeActive(getBlockTypeForFeatureName(c.name)),
                 onButtonClick: handleBlockTypeButtonClick.bind(null, getBlockTypeForFeatureName(c.name)),
@@ -161,8 +162,8 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
     const listsFeatures: IFeatureConfig[] = React.useMemo(
         () =>
             defaultListsFeatures
-                .filter(c => supports(getBlockTypeForFeatureName(c.name)))
-                .map(c => ({
+                .filter((c) => supports(getBlockTypeForFeatureName(c.name)))
+                .map((c) => ({
                     ...c,
                     selected: blockTypeActive(getBlockTypeForFeatureName(c.name)),
                     onButtonClick: handleBlockTypeButtonClick.bind(null, getBlockTypeForFeatureName(c.name)),
@@ -171,7 +172,7 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
     );
 
     const activeDropdownBlockType = React.useMemo(() => {
-        const activeFeature = dropdownFeatures.find(c => c.selected);
+        const activeFeature = dropdownFeatures.find((c) => c.selected);
         return activeFeature ? activeFeature.name : "unstyled";
     }, [dropdownFeatures]);
 

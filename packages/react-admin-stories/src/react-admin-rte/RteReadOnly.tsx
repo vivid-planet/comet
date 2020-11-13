@@ -1,13 +1,14 @@
 import { storiesOf } from "@storybook/react";
-import { IRteRef, makeRteApi, RteReadOnly, RteReadOnlyOptions } from "@vivid-planet/react-admin-rte";
+import { IRteReadOnlyOptions, makeRteApi, RteReadOnly } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
+
 import { exampleContent, PrintEditorState, RteLayout } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
 const GreenCustomHeader: React.FC = ({ children }) => <span style={{ color: "green" }}>{children}</span>;
 
-const rteOptions: RteReadOnlyOptions = {
+const rteOptions: IRteReadOnlyOptions = {
     customBlockMap: {
         "header-custom-green": {
             label: "Custom Green Header",

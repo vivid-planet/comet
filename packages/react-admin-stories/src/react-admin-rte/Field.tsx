@@ -14,7 +14,7 @@ function Story() {
         <div>
             <div style={{ maxWidth: "800px" }}>
                 <Form
-                    onSubmit={values => {
+                    onSubmit={(values: { rteContent: any }) => {
                         //
                         setSubmittedValue(values);
                     }}

@@ -9,8 +9,7 @@ const Story = () => (
     <div style={{ width: "500px" }}>
         <Form
             initialValues={{ colorPicker: "#ff00ff", colorPickerPalette: "navy" }}
-            onSubmit={values => {
-                // tslint:disable-next-line: no-console
+            onSubmit={(values) => {
                 console.log("values: ", values);
             }}
             render={({ handleSubmit }) => (

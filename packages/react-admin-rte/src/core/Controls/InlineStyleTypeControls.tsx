@@ -1,5 +1,5 @@
-import { EditorState } from "draft-js";
 import * as React from "react";
+
 import { IControlProps } from "../types";
 import FeaturesButtonGroup from "./FeaturesButtonGroup";
 import useInlineStyleType from "./useInlineStyleType";

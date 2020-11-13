@@ -1,4 +1,5 @@
 import { DraftBlockType, EditorState } from "draft-js";
+
 import { FilterEditorStateFn } from "../../types";
 
 type BlockTypeList = DraftBlockType[];
@@ -11,11 +12,11 @@ const changeBlockType: (blockTypeList: BlockTypeList, blockType: DraftBlockType,
     blockTypeList,
     blockType = "unstyled",
     options = {},
-) => nextState => {
+) => (nextState) => {
     const content = nextState.getCurrentContent();
     const blockMap = content.getBlockMap();
     const changedBlocks: any = blockMap
-        .filter(block => {
+        .filter((block) => {
             if (!block) {
                 return false;
             }
@@ -31,7 +32,7 @@ const changeBlockType: (blockTypeList: BlockTypeList, blockType: DraftBlockType,
                 return false;
             }
         })
-        .map(block => {
+        .map((block) => {
             return block!.merge({
                 type: blockType,
                 depth: 0,

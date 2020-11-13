@@ -2,6 +2,7 @@ import { debounce } from "debounce";
 import { AnyObject, createForm, FormApi } from "final-form";
 import isEqual = require("lodash.isequal");
 import * as React from "react";
+
 import { usePersistedState } from "./usePersistedState";
 import { IPagingApi } from "./useTableQueryPaging";
 
@@ -17,13 +18,13 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
     } = {},
 ): IFilterApi<FilterValues> {
     const [filters, setFilters] = usePersistedState<FilterValues>(defaultValues, {
-        persistedStateId: options.persistedStateId ? options.persistedStateId + "_filter" : undefined,
+        persistedStateId: options.persistedStateId ? `${options.persistedStateId}_filter` : undefined,
     });
     const ref = React.useRef<FormApi<FilterValues>>();
     if (!ref.current) {
         ref.current = createForm({
             initialValues: filters,
-            onSubmit: values => {
+            onSubmit: (values) => {
                 // Nothing todo
             },
         });
@@ -32,7 +33,7 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
     React.useEffect(() => {
         if (!ref.current) return;
         const unsubscribe = ref.current.subscribe(
-            debounce(formState => {
+            debounce((formState) => {
                 const newValues = formState.values;
                 if (!isEqual(filters, newValues)) {
                     setFilters(newValues);
