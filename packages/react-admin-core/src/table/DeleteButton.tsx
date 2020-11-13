@@ -4,6 +4,7 @@ import { ButtonProps } from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 import { DeleteMutation } from "../DeleteMutation";
 
@@ -11,14 +12,16 @@ interface IProps {
     selectedId?: string;
     mutation: any;
     icon?: React.ReactNode | null;
-    text?: string;
+    text?: React.ReactNode; // typically a string or a FormattedMessage (intl) is passed
     color?: ButtonProps["color"];
     refetchQueries?: Array<string | PureQueryOptions>;
 }
 
+const DeleteMessage = () => <FormattedMessage id="reactAdmin.core.table.deleteButton" defaultMessage="Löschen" description="Delete Button" />;
+
 export class TableDeleteButton extends React.Component<IProps> {
     public render() {
-        const { selectedId, mutation, refetchQueries, icon = <DeleteIcon />, text = "Löschen", color } = this.props;
+        const { selectedId, mutation, refetchQueries, icon = <DeleteIcon />, text = <DeleteMessage />, color } = this.props;
         const disabled: boolean = !selectedId;
 
         return (
@@ -28,7 +31,7 @@ export class TableDeleteButton extends React.Component<IProps> {
 
                     const onClick = this.handleDeleteClick.bind(this, deleteBrand);
 
-                    if (!text.length && icon) {
+                    if (!text && icon) {
                         return (
                             <IconButton onClick={onClick} disabled={disabled} color={color}>
                                 {icon}

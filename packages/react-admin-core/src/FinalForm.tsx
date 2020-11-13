@@ -5,6 +5,7 @@ import { Cancel as CancelIcon, Save as SaveIcon } from "@material-ui/icons";
 import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
@@ -113,7 +114,13 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                                                 color="default"
                                                 onClick={handleCancelClick}
                                             >
-                                                <Typography variant="button">Abbrechen</Typography>
+                                                <Typography variant="button">
+                                                    <FormattedMessage
+                                                        id="reactAdmin.core.finalForm.abort"
+                                                        defaultMessage="Abbrechen"
+                                                        description="Abort button"
+                                                    />
+                                                </Typography>
                                             </Button>
                                         )}
                                         <Button
@@ -124,7 +131,13 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                                             type="submit"
                                             disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
                                         >
-                                            <Typography variant="button">Speichern</Typography>
+                                            <Typography variant="button">
+                                                <FormattedMessage
+                                                    id="reactAdmin.core.finalForm.save"
+                                                    defaultMessage="Speichern"
+                                                    description="Save button"
+                                                />
+                                            </Typography>
                                         </Button>
                                     </ButtonsContainer>
                                 )}

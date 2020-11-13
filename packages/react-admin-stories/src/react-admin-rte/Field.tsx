@@ -16,7 +16,7 @@ function Story() {
                 <Form
                     onSubmit={(values: { rteContent: any }) => {
                         //
-                        setSubmittedValue(values);
+                        setSubmittedValue({ rteContent: values });
                     }}
                     render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>

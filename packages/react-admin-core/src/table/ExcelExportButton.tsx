@@ -1,6 +1,7 @@
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { FileIcon } from "@vivid-planet/file-icons";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 import { IExportApi } from "./excelexport/IExportApi";
 
@@ -39,7 +40,13 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
                 )
             }
         >
-            <Typography variant="button">{children != null ? children : "Export"}</Typography>
+            <Typography variant="button">
+                {children != null ? (
+                    children
+                ) : (
+                    <FormattedMessage id="reactAdmin.core.table.excelExportButton" defaultMessage="Export" description="Export Button" />
+                )}
+            </Typography>
         </Button>
     );
 };

@@ -141,7 +141,7 @@ class TableDndOrder<TRow extends IRow> extends React.Component<IProps<TRow>> {
         const tableProps: ITableProps<TRow> = {
             ...this.props,
             renderTableRow: (props) => {
-                return <ExtendedDndOrderRow moveRow={this.props.moveRow} onDragEnd={this.props.onDragEnd} index={props.index} {...props} />;
+                return <ExtendedDndOrderRow moveRow={this.props.moveRow} onDragEnd={this.props.onDragEnd} {...props} />;
             },
             renderHeadTableRow: (props) => {
                 return (
