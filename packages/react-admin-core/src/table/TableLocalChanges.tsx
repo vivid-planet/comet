@@ -1,6 +1,7 @@
-import ApolloClient from "apollo-client";
+import { ApolloClient } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
+
 import { DirtyHandlerApiContext } from "../DirtyHandlerApiContext";
 
 export async function submitChangesWithMutation(options: {
@@ -99,8 +100,8 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
     public render() {
         let patchedData = this.patchedData();
         if (this.state.changedOrder) {
-            patchedData = this.state.changedOrder.map(id => {
-                return patchedData.find(i => i.id === id);
+            patchedData = this.state.changedOrder.map((id) => {
+                return patchedData.find((i) => i.id === id);
             });
         }
         return (
@@ -116,7 +117,7 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
     }
 
     private patchedData() {
-        return this.props.data.map(i => {
+        return this.props.data.map((i) => {
             return { ...(i as any), ...(this.state.changes[i.id] as any) };
         });
     }
@@ -125,8 +126,8 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
         const changes = { ...this.state.changes };
         if (!changes[id]) changes[id] = {};
 
-        this.props.data.find(i => i.id === id);
-        const row = this.props.data.find(i => i.id === id);
+        this.props.data.find((i) => i.id === id);
+        const row = this.props.data.find((i) => i.id === id);
 
         if (row) {
             if (value === row[column]) {
@@ -144,13 +145,13 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
     }
 
     private moveRow(dragIndex: number, hoverIndex: number) {
-        const changedOrder = this.state.changedOrder ? [...this.state.changedOrder] : this.props.data.map(i => i.id);
+        const changedOrder = this.state.changedOrder ? [...this.state.changedOrder] : this.props.data.map((i) => i.id);
 
         const patchedData = this.patchedData();
         const dragId = changedOrder[dragIndex];
 
         const hoverId = changedOrder[hoverIndex];
-        const hoverRow = patchedData.find(i => i.id === hoverId);
+        const hoverRow = patchedData.find((i) => i.id === hoverId);
         this.setLocalDataChange(dragId, this.props.orderColumn, hoverRow[this.props.orderColumn]);
 
         changedOrder.splice(dragIndex, 1);

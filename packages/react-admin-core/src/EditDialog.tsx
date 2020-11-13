@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
 import * as React from "react";
 import { defineMessages, FormattedMessage, useIntl } from "react-intl";
+
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
@@ -111,7 +112,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                                 </Typography>
                             </Button>
                             <DirtyHandlerApiContext.Consumer>
-                                {injectedDirtyHandlerApi => {
+                                {(injectedDirtyHandlerApi) => {
                                     dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
                                     return (
                                         <Button onClick={handleSaveClick} color="primary">

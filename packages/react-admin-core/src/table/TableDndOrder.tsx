@@ -5,6 +5,7 @@ import * as React from "react";
 import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropContext, DragSource, DropTarget, DropTargetMonitor } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { findDOMNode } from "react-dom";
+
 import { IRow, ITableProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "./Table";
 
 function cardSourceBeginDrag<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
@@ -31,6 +32,7 @@ function cardTargetHover<TRow extends IRow>(props: IDndOrderRowProps<TRow>, moni
     }
 
     // Determine rectangle on screen
+    // eslint-disable-next-line react/no-find-dom-node
     const hoverBoundingRect = (findDOMNode(component) as any).getBoundingClientRect();
 
     // Get vertical middle
@@ -106,7 +108,7 @@ const ExtendedDndOrderRow = DragSource<IDndOrderRowProps<IRow>, IRowCollectedSou
     "row", // TODO: configurable? unique per table?
     {
         beginDrag: cardSourceBeginDrag,
-        endDrag: props => {
+        endDrag: (props) => {
             if (props.onDragEnd) {
                 props.onDragEnd();
             }
@@ -123,7 +125,7 @@ const ExtendedDndOrderRow = DragSource<IDndOrderRowProps<IRow>, IRowCollectedSou
         {
             hover: cardTargetHover,
         },
-        connect => ({
+        (connect) => ({
             connectDropTarget: connect.dropTarget(),
         }),
     )(DndOrderRow),
@@ -134,15 +136,14 @@ interface IProps<TRow extends IRow> extends ITableProps<TRow> {
     onDragEnd?: () => void;
 }
 
-// tslint:disable-next-line:max-classes-per-file
 class TableDndOrder<TRow extends IRow> extends React.Component<IProps<TRow>> {
     public render() {
         const tableProps: ITableProps<TRow> = {
             ...this.props,
-            renderTableRow: props => {
+            renderTableRow: (props) => {
                 return <ExtendedDndOrderRow moveRow={this.props.moveRow} onDragEnd={this.props.onDragEnd} {...props} />;
             },
-            renderHeadTableRow: props => {
+            renderHeadTableRow: (props) => {
                 return (
                     <TableRow>
                         <TableCell />

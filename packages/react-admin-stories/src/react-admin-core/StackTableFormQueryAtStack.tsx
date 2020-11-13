@@ -1,4 +1,4 @@
-import { ApolloProvider, useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import { CircularProgress, Grid, IconButton } from "@material-ui/core";
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
@@ -16,13 +16,11 @@ import {
     useTableQueryFilter,
 } from "@vivid-planet/react-admin-core";
 import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admin-form";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import ApolloClient from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { RestLink } from "apollo-link-rest";
 import gql from "graphql-tag";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
+
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
 
@@ -82,7 +80,7 @@ function ExampleTable(props: IExampleTableProps) {
                         header: "",
                         cellProps: { padding: "none" },
 
-                        render: row => (
+                        render: (row) => (
                             <Grid item>
                                 <IconButton
                                     onClick={() => {
@@ -127,7 +125,7 @@ function ExampleForm(props: IExampleFormProps) {
     return (
         <FinalForm
             mode="edit"
-            onSubmit={values => {
+            onSubmit={(values) => {
                 // submit here
             }}
             initialValues={data.user}
@@ -144,7 +142,7 @@ function Story() {
         variables: {
             ...filterApi.current,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.users,
             totalCount: data.users.length,
         }),
@@ -156,7 +154,7 @@ function Story() {
                 <StackSwitch>
                     <StackPage name="table">{tableData && <ExampleTable tableData={tableData} filterApi={filterApi} />}</StackPage>
                     <StackPage name="form" title="bearbeiten">
-                        {selectedId => <ExampleForm id={+selectedId} />}
+                        {(selectedId) => <ExampleForm id={+selectedId} />}
                     </StackPage>
                 </StackSwitch>
             </TableQuery>
@@ -165,21 +163,6 @@ function Story() {
 }
 
 storiesOf("react-admin-core", module)
-    .addDecorator(story => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: "https://jsonplaceholder.typicode.com/",
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
-        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
-    })
+    .addDecorator(apolloStoryDecorator())
     .addDecorator(StoryRouter())
     .add("Stack Table Form Query at stack", () => <Story />);

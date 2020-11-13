@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as ReactBrowserRouter, BrowserRouterProps } from "react-router-dom";
+
 import { RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterPromptHandler } from "./PromptHandler";
 

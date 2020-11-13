@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { ISelectionApi } from "./SelectionApi";
 
 interface IState {
@@ -8,28 +9,40 @@ interface IState {
 export function useSelection(): [{ id?: string; mode?: "edit" | "add" }, ISelectionApi] {
     const [selection, setSelection] = React.useState<IState>({ id: undefined, mode: undefined });
 
-    const handleSelectId = React.useCallback(async (id: string) => {
-        setSelection({ id, mode: "edit" });
-    }, [setSelection]);
+    const handleSelectId = React.useCallback(
+        async (id: string) => {
+            setSelection({ id, mode: "edit" });
+        },
+        [setSelection],
+    );
 
     const handleDeselect = React.useCallback(async () => {
         setSelection({ id: undefined, mode: undefined });
     }, [setSelection]);
 
-    const handleAdd = React.useCallback((id?: string) => {
-        setSelection({ id, mode: "add" });
-    }, [setSelection]);
+    const handleAdd = React.useCallback(
+        (id?: string) => {
+            setSelection({ id, mode: "add" });
+        },
+        [setSelection],
+    );
 
-    const api: ISelectionApi = React.useMemo(() => ({
-        handleSelectId,
-        handleDeselect,
-        handleAdd,
-    }), [handleSelectId, handleDeselect, handleAdd]);
+    const api: ISelectionApi = React.useMemo(
+        () => ({
+            handleSelectId,
+            handleDeselect,
+            handleAdd,
+        }),
+        [handleSelectId, handleDeselect, handleAdd],
+    );
 
-    return [{
-        id: selection.id,
-        mode: selection.mode
-    }, api];
+    return [
+        {
+            id: selection.id,
+            mode: selection.mode,
+        },
+        api,
+    ];
 }
 
 export interface ISelectionRenderPropArgs {
@@ -43,13 +56,14 @@ interface IProps {
 }
 
 export function Selection({ children }: IProps) {
-    const [ selection, api ]  = useSelection();
-    return <>
-        {children({
-            selectedId: selection.id,
-            selectionMode: selection.mode,
-            selectionApi: api,
-        })}
-    </>;
-
+    const [selection, api] = useSelection();
+    return (
+        <>
+            {children({
+                selectedId: selection.id,
+                selectionMode: selection.mode,
+                selectionApi: api,
+            })}
+        </>
+    );
 }

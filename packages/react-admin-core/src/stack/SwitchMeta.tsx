@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { StackApiContext } from "./Api";
 
 interface IProps {
@@ -16,7 +17,7 @@ export class StackSwitchMeta extends React.Component<IProps> {
     public render() {
         return (
             <SwitchMetaContext.Consumer>
-                {parentId => {
+                {(parentId) => {
                     this.parentId = parentId;
                     return <SwitchMetaContext.Provider value={this.props.id}>{this.props.children}</SwitchMetaContext.Provider>;
                 }}

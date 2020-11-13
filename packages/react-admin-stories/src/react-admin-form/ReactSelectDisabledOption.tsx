@@ -13,7 +13,7 @@ function Story() {
     return (
         <div style={{ width: "300px" }}>
             <Form
-                onSubmit={values => {
+                onSubmit={(values) => {
                     //
                 }}
                 render={({ handleSubmit, pristine, invalid }) => (

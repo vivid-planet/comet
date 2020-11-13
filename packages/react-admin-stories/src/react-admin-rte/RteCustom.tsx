@@ -1,7 +1,7 @@
 import { storiesOf } from "@storybook/react";
-import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
-import { convertFromRaw, convertToRaw, RawDraftContentState } from "draft-js";
+import { IRteOptions, IRteRef, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
+
 import { PrintEditorState, RteLayout, useAutoFocus } from "./helper";
 
 const rteOptions: IRteOptions = {
@@ -21,7 +21,7 @@ function Story() {
     return (
         <>
             Copy and paste content from{" "}
-            <a target="_blank" href="https://docs.google.com/document/d/1YjqkIMC3q4jAzy__-S4fb6mC_w9EssmA6aZbGYWFv80/edit#">
+            <a target="_blank" rel="noreferrer" href="https://docs.google.com/document/d/1YjqkIMC3q4jAzy__-S4fb6mC_w9EssmA6aZbGYWFv80/edit#">
                 https://docs.google.com/document/d/1YjqkIMC3q4jAzy__-S4fb6mC_w9EssmA6aZbGYWFv80/edit#
             </a>{" "}
             to test filtering

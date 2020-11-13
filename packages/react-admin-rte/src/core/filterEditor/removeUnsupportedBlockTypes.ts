@@ -1,4 +1,5 @@
 import { DraftBlockType } from "draft-js";
+
 import { FilterEditorStateBeforeUpdateFn, SupportedThings } from "../Rte";
 import changeBlockType from "./utils/changeBlockType";
 
@@ -17,7 +18,7 @@ const removeUnsupportedBlockTypes: FilterEditorStateBeforeUpdateFn = (newState, 
         "unordered-list": "unordered-list-item",
     };
     const supportsToTest = Object.keys(supportsToBlockMap) as SupportedThings[];
-    supportsToTest.forEach(support => {
+    supportsToTest.forEach((support) => {
         if (!supports.includes(support) && supportsToBlockMap[support]) {
             const blockType = supportsToBlockMap[support];
             if (blockType) {

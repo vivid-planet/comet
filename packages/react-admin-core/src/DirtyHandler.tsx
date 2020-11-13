@@ -1,5 +1,6 @@
 import * as React from "react";
 import { defineMessages, useIntl, WrappedComponentProps } from "react-intl";
+
 import { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
 import { RouterPrompt } from "./router";
 
@@ -82,7 +83,7 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
 
     private isBindingDirty() {
         return this.bindings
-            .map(binding => {
+            .map((binding) => {
                 return binding.binding.isDirty();
             })
             .reduce((accumulator, currentValue) => accumulator || currentValue, false);
@@ -90,7 +91,7 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
 
     private submitBindings() {
         return Promise.all(
-            this.bindings.map(binding => {
+            this.bindings.map((binding) => {
                 return binding.binding.submit();
             }),
         );
@@ -98,7 +99,7 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
 
     private resetBindings() {
         return Promise.all(
-            this.bindings.map(binding => {
+            this.bindings.map((binding) => {
                 return binding.binding.reset();
             }),
         );
@@ -108,7 +109,7 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
         this.bindings.push({ obj, binding });
     }
     private unregisterBinding(obj: object) {
-        this.bindings = this.bindings.filter(item => item.obj !== obj);
+        this.bindings = this.bindings.filter((item) => item.obj !== obj);
     }
 
     private getParent(): IDirtyHandlerApi | undefined {

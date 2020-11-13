@@ -1,5 +1,6 @@
-import { useApolloClient } from "@apollo/react-hooks";
+import { useApolloClient } from "@apollo/client";
 import * as React from "react";
+
 import { Table } from "../Table";
 import { ITableQueryApi } from "../TableQueryContext";
 import { createExcelExportDownload, IExcelExportOptions } from "./createExcelExportDownload";

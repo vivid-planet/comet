@@ -1,21 +1,17 @@
-import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
 import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
     Table,
     TableQuery,
-    useExportDisplayedTableData,
     useExportPagedTableQuery,
     useTableQuery,
     useTableQueryPaging,
 } from "@vivid-planet/react-admin-core";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { RestLink } from "apollo-link-rest";
 import gql from "graphql-tag";
 import * as React from "react";
+
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
 
@@ -63,7 +59,7 @@ function Story() {
             start: pagingApi.current,
             limit: loadLimit,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.photos,
             totalCount,
             pagingInfo: createRestStartLimitPagingActions(pagingApi, {
@@ -76,7 +72,7 @@ function Story() {
     const exportApi = useExportPagedTableQuery<IVariables>(api, {
         fromPage: 0,
         toPage: totalCount / loadLimit,
-        variablesForPage: page => {
+        variablesForPage: (page) => {
             return {
                 start: page * loadLimit,
                 limit: loadLimit,
@@ -120,20 +116,5 @@ function Story() {
 }
 
 storiesOf("react-admin-core", module)
-    .addDecorator(story => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: "https://jsonplaceholder.typicode.com/",
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
-        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
-    })
+    .addDecorator(apolloStoryDecorator())
     .add("Table Export All Pages", () => <Story />);

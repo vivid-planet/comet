@@ -1,0 +1,45 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/eslint-recommended", "plugin:prettier/recommended"],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": ["react", "react-hooks", "@typescript-eslint", "simple-import-sort", "unused-imports"],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "rules": {
+        "simple-import-sort/sort": "error",
+        "react/display-name": "off",
+        "react/prop-types": "off",
+        "sort-imports": "off",
+        "import/order": "off",
+        "no-unused-vars": ["error", { "args": "none", "ignoreRestSiblings": true }],
+        "prefer-template": "error",
+        "unused-imports/no-unused-imports": "error"
+    },
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx"],
+            "rules": {
+                "@typescript-eslint/no-unused-vars": ["error", { "args": "none", "ignoreRestSiblings": true }],
+                "react-hooks/rules-of-hooks": "error",
+                "react-hooks/exhaustive-deps": "warn"
+            }
+        }
+    ]
+}

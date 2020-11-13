@@ -4,6 +4,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
 import { IPagingInfo } from "./paging/IPagingInfo";
 
 interface IProps {

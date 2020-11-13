@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Route, useHistory, useRouteMatch } from "react-router";
+
 import { ISelectionApi } from "./SelectionApi";
 
 interface IRouteParams {
@@ -11,23 +12,32 @@ export function useSelectionRoute(): [React.ComponentType<IProps>, { id?: string
     const parentMatch = useRouteMatch();
     const match = useRouteMatch<IRouteParams>(`${parentMatch.path}/:id`);
 
-    const handleSelectId = React.useCallback(async (id: string) => {
-        history.push(`${parentMatch.url}/${id}`);
-    }, [history, parentMatch]);
+    const handleSelectId = React.useCallback(
+        async (id: string) => {
+            history.push(`${parentMatch.url}/${id}`);
+        },
+        [history, parentMatch],
+    );
 
     const handleDeselect = React.useCallback(async () => {
         history.push(`${parentMatch.url}`);
     }, [history, parentMatch]);
 
-    const handleAdd = React.useCallback((id?: string) => {
-        history.push(`${parentMatch.url}/add${id ? '-' + id : ''}`);
-    }, [history, parentMatch]);
+    const handleAdd = React.useCallback(
+        (id?: string) => {
+            history.push(`${parentMatch.url}/add${id ? `-${id}` : ""}`);
+        },
+        [history, parentMatch],
+    );
 
-    const api: ISelectionApi = React.useMemo(() => ({
-        handleSelectId,
-        handleDeselect,
-        handleAdd,
-    }), [handleSelectId, handleDeselect, handleAdd]);
+    const api: ISelectionApi = React.useMemo(
+        () => ({
+            handleSelectId,
+            handleDeselect,
+            handleAdd,
+        }),
+        [handleSelectId, handleDeselect, handleAdd],
+    );
 
     let selectedId: string | undefined;
     let selectionMode: "edit" | "add" | undefined;
@@ -39,12 +49,15 @@ export function useSelectionRoute(): [React.ComponentType<IProps>, { id?: string
         selectionMode = "edit";
     }
 
-    return [ SelectionRouteInner, {
-        id: selectedId,
-        mode: selectionMode
-    }, api];
+    return [
+        SelectionRouteInner,
+        {
+            id: selectedId,
+            mode: selectionMode,
+        },
+        api,
+    ];
 }
-
 
 export interface ISelectionRouterRenderPropArgs {
     selectedId?: string;
@@ -52,21 +65,21 @@ export interface ISelectionRouterRenderPropArgs {
     selectionApi: ISelectionApi;
 }
 
-interface IProps {
-}
+interface IProps {}
 export const SelectionRouteInner: React.FunctionComponent<IProps> = ({ children }) => {
     const { path } = useRouteMatch();
-    return <Route path={`${path}/:id`}>
-        {() => <>{children}</>}
-    </Route>;
-}
-
+    return <Route path={`${path}/:id`}>{() => <>{children}</>}</Route>;
+};
 
 interface ISelectionRouteHooklessProps extends IProps {
-    children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add", selectionApi: ISelectionApi }) => React.ReactNode;
+    children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add"; selectionApi: ISelectionApi }) => React.ReactNode;
 }
 
 export const SelectionRoute: React.FunctionComponent<ISelectionRouteHooklessProps> = ({ children }) => {
-    const [ SelectionRouteConfigured, selection, api ] = useSelectionRoute();
-    return <SelectionRouteConfigured>{children({ selectedId: selection.id, selectionMode: selection.mode, selectionApi: api })}</SelectionRouteConfigured>;
+    const [SelectionRouteConfigured, selection, api] = useSelectionRoute();
+    return (
+        <SelectionRouteConfigured>
+            {children({ selectedId: selection.id, selectionMode: selection.mode, selectionApi: api })}
+        </SelectionRouteConfigured>
+    );
 };

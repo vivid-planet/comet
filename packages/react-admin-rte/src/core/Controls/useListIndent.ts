@@ -2,6 +2,7 @@ import FormatIndentDecreaseIcon from "@material-ui/icons/FormatIndentDecrease";
 import FormatIndentIncreaseIcon from "@material-ui/icons/FormatIndentIncrease";
 import { BlockMap, ContentState, EditorState } from "draft-js";
 import * as React from "react";
+
 import { SupportedThings } from "../Rte";
 import { IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
@@ -42,7 +43,7 @@ function adjustBlockDepth(type: "increase" | "decrease", editorState: EditorStat
         .skipUntil((_, k) => k === startKey)
         .takeUntil((_, k) => k === endKey)
         .concat([[endKey, blockMap.get(endKey)]])
-        .map(curBlock => {
+        .map((curBlock) => {
             let blockDepth = curBlock!.getDepth() + adjustment;
             blockDepth = Math.max(0, Math.min(blockDepth, maxDepth));
             return curBlock!.set("depth", blockDepth);
@@ -68,7 +69,7 @@ interface IProps {
 
 export default function useListIndent({ editorState, setEditorState, supportedThings, listLevelMax = 4 }: IProps) {
     // can check if indenting lists is supported
-    const supported = React.useMemo(() => supportedThings.some(c => ["ordered-list", "unordered-list"].includes(c)), [supportedThings]);
+    const supported = React.useMemo(() => supportedThings.some((c) => ["ordered-list", "unordered-list"].includes(c)), [supportedThings]);
 
     const active = React.useMemo(() => {
         const currentBlock = getCurrentBlock(editorState);

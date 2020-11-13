@@ -1,4 +1,3 @@
-import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
 import {
     createRestPagingActions,
@@ -12,13 +11,11 @@ import {
     useTableQuerySort,
 } from "@vivid-planet/react-admin-core";
 import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admin-form";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { RestLink } from "apollo-link-rest";
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
+
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
 
@@ -82,7 +79,7 @@ function pathFunction({ args }: { args: { [key: string]: any } }) {
         }
         return acc;
     }, {});
-    return "users?_limit=5&" + qs.stringify(q, { arrayFormat: "brackets" });
+    return `users?_limit=5&${qs.stringify(q, { arrayFormat: "brackets" })}`;
 }
 
 interface IVariables extends IFilterValues {
@@ -111,7 +108,7 @@ function Story() {
             page: pagingApi.current,
             ...filterApi.current,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.users.data,
             totalCount: data.users.meta.totalCount,
             pagingInfo: createRestPagingActions(
@@ -176,37 +173,25 @@ interface IResponseLinks {
     last?: string;
 }
 storiesOf("react-admin-core", module)
-    .addDecorator(story => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: "https://jsonplaceholder.typicode.com/",
-                responseTransformer: async response => {
-                    const links: IResponseLinks = {};
-                    const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];
-                    linkMatches.forEach((i: string) => {
-                        const m = i.match(/<(.*?)>; rel="(.*?)"/);
-                        if (m) {
-                            links[m[2] as keyof IResponseLinks] = m[1];
-                        }
-                    });
-                    return {
-                        data: await response.json(),
-                        meta: {
-                            links,
-                            totalCount: response.headers.get("x-total-count"),
-                        },
-                    };
-                },
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
-        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
-    })
+    .addDecorator(
+        apolloStoryDecorator({
+            responseTransformer: async (response) => {
+                const links: IResponseLinks = {};
+                const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];
+                linkMatches.forEach((i: string) => {
+                    const m = i.match(/<(.*?)>; rel="(.*?)"/);
+                    if (m) {
+                        links[m[2] as keyof IResponseLinks] = m[1];
+                    }
+                });
+                return {
+                    data: await response.json(),
+                    meta: {
+                        links,
+                        totalCount: response.headers.get("x-total-count"),
+                    },
+                };
+            },
+        }),
+    )
     .add("Table Filter Paging Sort", () => <Story />);

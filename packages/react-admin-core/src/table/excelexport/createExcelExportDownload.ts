@@ -3,6 +3,7 @@
 import * as Excel from "exceljs/dist/exceljs.js";
 import { saveAs } from "file-saver";
 import * as React from "react";
+
 import { isVisible } from "../isVisible";
 import { safeColumnGet } from "../safeColumnGet";
 import { IRow, ITableColumn, VisibleType } from "../Table";
@@ -26,8 +27,6 @@ export async function createExcelExportDownload<TRow extends IRow>(
     // create columns
     const excelColumns: Excel.Column[] = [];
     columns.forEach((column, columnIndex) => {
-        const hidden = column.visible !== undefined && column.visible != null ? !column.visible : false;
-
         const header = column.headerExcel != null ? column.headerExcel : safeStringFromReactNode(column.header);
         if (isVisible(VisibleType.Export, column.visible)) {
             excelColumns.push({
@@ -45,7 +44,7 @@ export async function createExcelExportDownload<TRow extends IRow>(
 
     // create Rows
     {
-        data.map(row => {
+        data.map((row) => {
             const newRow: { [key: string]: string | number | null } = {};
 
             columns.forEach((column, index) => {
@@ -61,7 +60,7 @@ export async function createExcelExportDownload<TRow extends IRow>(
     }
 
     // apply number format
-    columns.forEach(column => {
+    columns.forEach((column) => {
         try {
             const currentColumn = worksheet.getColumn(column.name);
 
@@ -81,7 +80,7 @@ export async function createExcelExportDownload<TRow extends IRow>(
 
     workbook.xlsx.writeBuffer().then(
         // @ts-ignore
-        buffer => {
+        (buffer) => {
             saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
         },
     );

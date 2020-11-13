@@ -1,6 +1,5 @@
-import { useQuery } from "@apollo/react-hooks";
+import { ApolloError, useQuery } from "@apollo/client";
 import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
-import { ApolloError } from "apollo-client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import styled from "styled-components";
@@ -26,9 +25,10 @@ export function Selected(props: IProps) {
     const ErrorComponent = props.components?.error;
     let row;
     if (props.rows) {
-        row = props.rows.find(i => String(i.id) === String(props.selectedId)); // compare as strings as selectedId might come from url
+        row = props.rows.find((i) => String(i.id) === String(props.selectedId)); // compare as strings as selectedId might come from url
     }
-    const queryResult = props.query ? useQuery(props.query, { variables: { id: props.selectedId } }) : undefined;
+
+    const queryResult = useQuery(props.query!, { variables: { id: props.selectedId }, skip: props.query === undefined });
 
     if (props.selectionMode === "edit" && !row) {
         if (!props.query || !queryResult) {

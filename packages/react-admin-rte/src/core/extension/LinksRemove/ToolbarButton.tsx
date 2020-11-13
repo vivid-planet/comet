@@ -1,10 +1,9 @@
 import LinkOffIcon from "@material-ui/icons/LinkOff";
 import { RichUtils } from "draft-js";
 import * as React from "react";
+
 import ControlButton from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
-import { ENTITY_TYPE } from "../Link/Decorator"; // will be needed
-
 export default function ToolbarButton(props: IControlProps) {
     const selection = props.editorState.getSelection();
 

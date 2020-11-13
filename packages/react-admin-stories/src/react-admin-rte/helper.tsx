@@ -37,7 +37,6 @@ export function RteLayout({ children }: { children: React.ReactNode }) {
     return <div style={{ border: "1px solid black", padding: "10px" }}>{children}</div>;
 }
 
-// tslint:disable-next-line
 export const exampleContent = {
     blocks: [
         {

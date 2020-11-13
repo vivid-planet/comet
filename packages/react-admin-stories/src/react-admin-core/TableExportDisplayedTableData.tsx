@@ -41,8 +41,8 @@ function Story() {
                     {
                         name: "foo2",
                         header: "Expo",
-                        render: row => <strong>{row.id}</strong>,
-                        renderExcel: row => row.id.toString(), // HTML Nodes / React Nodes (from above render) can not be exported to excel -> use renderExcel to generate an exportable string
+                        render: (row) => <strong>{row.id}</strong>,
+                        renderExcel: (row) => row.id.toString(), // HTML Nodes / React Nodes (from above render) can not be exported to excel -> use renderExcel to generate an exportable string
                     },
                     {
                         name: "bar",
@@ -51,7 +51,7 @@ function Story() {
                     {
                         name: "currency",
                         header: "Currency",
-                        formatForExcel: `#,##0.00 "€";[Red]"\-"#,##0.00" €"`,
+                        formatForExcel: `#,##0.00 "€";[Red]"-"#,##0.00" €"`,
                     },
                     {
                         name: "nestedFoo.foo",
@@ -61,7 +61,7 @@ function Story() {
                         name: "customheader",
                         header: <CustomHeader>Custom Header</CustomHeader>,
                         headerExcel: "Overrided Excel Export Header", // HTML Nodes / React Nodes (from above header) can not be exported to excel -> use headerExcel to set an exportable column header
-                        render: row => "Custom Row Content", // if render returns a string -> excel export can export this string
+                        render: (row) => "Custom Row Content", // if render returns a string -> excel export can export this string
                     },
                 ]}
             />

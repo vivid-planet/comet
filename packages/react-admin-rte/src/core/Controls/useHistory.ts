@@ -2,6 +2,7 @@ import RedoIcon from "@material-ui/icons/Redo";
 import UndoIcon from "@material-ui/icons/Undo";
 import { EditorState } from "draft-js";
 import * as React from "react";
+
 import { SupportedThings } from "../Rte";
 import { IFeatureConfig } from "../types";
 

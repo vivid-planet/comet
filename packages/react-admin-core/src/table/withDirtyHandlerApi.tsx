@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 
 export interface IWithDirtyHandlerApiProps {
@@ -13,6 +14,6 @@ export const withDirtyHandlerApi = <P extends IWithDirtyHandlerApiProps>(
     WrappedComponent: React.ComponentType<P>,
 ): React.SFC<Subtract<P, IWithDirtyHandlerApiProps>> => (props: any) => (
     <DirtyHandlerApiContext.Consumer>
-        {dirtyHandlerApi => <WrappedComponent {...props} dirtyHandlerApi={dirtyHandlerApi} />}
+        {(dirtyHandlerApi) => <WrappedComponent {...props} dirtyHandlerApi={dirtyHandlerApi} />}
     </DirtyHandlerApiContext.Consumer>
 );

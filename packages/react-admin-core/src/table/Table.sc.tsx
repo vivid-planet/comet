@@ -4,7 +4,7 @@ import * as React from "react";
 import styled, { css } from "styled-components";
 
 export const StyledTableHead = styled(TableHead)`
-    background-color: ${props => props.theme.palette.grey["100"]};
+    background-color: ${(props) => props.theme.palette.grey["100"]};
 `;
 
 export interface ITableBodyRowProps extends TableRowProps {
@@ -16,6 +16,6 @@ export const TableBodyRow = styled(({ index, hideTableHead, ...rest }: ITableBod
     ${({ index, hideTableHead }) =>
         ((index || 0) + (hideTableHead ? 1 : 0)) % 2 === 1 &&
         css`
-            background-color: ${props => props.theme.palette.grey["50"]};
+            background-color: ${(props) => props.theme.palette.grey["50"]};
         `}
 `;

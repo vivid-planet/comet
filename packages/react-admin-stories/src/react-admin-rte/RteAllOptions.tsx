@@ -2,6 +2,7 @@ import { storiesOf } from "@storybook/react";
 import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
 import { convertFromRaw, convertToRaw } from "draft-js";
 import * as React from "react";
+
 import { exampleContent, PrintEditorState, RteLayout, useAutoFocus } from "./helper";
 
 type StringifiedRawDraftContentState = string;
@@ -12,14 +13,14 @@ export const defaultContent: ContentFormat = JSON.stringify(exampleContent);
 
 export const makeApiOptions: IMakeRteApiProps<ContentFormat> = {
     decorators: [LinkDecorator], // define additional Draft decorators, https://draftjs.org/docs/advanced-topics-decorators/
-    parse: v => convertFromRaw(JSON.parse(v)), // parse your content-format to draft-js internal ContentState
-    format: v => JSON.stringify(convertToRaw(v)), // format draft-js internal ContentState to your content-format
+    parse: (v) => convertFromRaw(JSON.parse(v)), // parse your content-format to draft-js internal ContentState
+    format: (v) => JSON.stringify(convertToRaw(v)), // format draft-js internal ContentState to your content-format
 };
 
 export const apiOptions: IRteApiProps<ContentFormat> = {
     defaultValue: defaultContent, // initial content of the editor
     onDebouncedContentChange: (editorState, convertEditorStateToRawContent) => {
-        const saveableContent = convertEditorStateToRawContent(editorState); // save this result to your api
+        convertEditorStateToRawContent(editorState); // save this result to your api
     }, // receive updates of editorstate
     debounceDelay: 400, // delay when onDebouncedContentChange after editor content changed
 };
@@ -65,7 +66,7 @@ export const rteOptions: IRteOptions = {
         stripPastedStyles: false,
         tabIndex: 0,
     },
-    filterEditorStateBeforeUpdate: state => state, // removes default filter
+    filterEditorStateBeforeUpdate: (state) => state, // removes default filter
     maxBlocks: undefined,
     standardBlockType: "unstyled",
 };

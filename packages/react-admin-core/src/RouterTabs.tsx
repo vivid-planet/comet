@@ -4,7 +4,8 @@ import MaterialTab, { TabProps } from "@material-ui/core/Tab";
 import Tabs, { TabsProps } from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import * as React from "react";
-import { Route, RouteComponentProps, withRouter } from "react-router-dom";
+import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
+
 import { StackApiContext, StackBreadcrumb, StackSwitchApiContext } from "./stack";
 
 interface ITabProps extends TabProps {
@@ -45,7 +46,7 @@ class RouterTabs extends React.Component<IProps> {
     public render() {
         const { classes, variant, indicatorColor, appBarComponent: AppBar = MaterialAppBar, tabComponent: TabComponent = MaterialTab } = this.props;
 
-        const paths = React.Children.map(this.props.children, child => {
+        const paths = React.Children.map(this.props.children, (child) => {
             // as seen in https://github.com/mui-org/material-ui/blob/v4.11.0/packages/material-ui/src/Tabs/Tabs.js#L390
             if (!React.isValidElement<ITabProps>(child)) {
                 return null;
@@ -57,17 +58,27 @@ class RouterTabs extends React.Component<IProps> {
             return child.props.path;
         });
 
+        const rearrangedChildren = React.Children.toArray(this.props.children);
+        const defaultPathIndex = paths.indexOf("");
+
+        if (defaultPathIndex >= 0) {
+            const defaultPathChild = rearrangedChildren[defaultPathIndex];
+
+            rearrangedChildren.splice(defaultPathIndex, 1);
+            rearrangedChildren.push(defaultPathChild);
+        }
+
         return (
             <div className={classes.root}>
                 <StackApiContext.Consumer>
-                    {stackApi => (
+                    {(stackApi) => (
                         <StackSwitchApiContext.Consumer>
-                            {stackSwitchApi => {
+                            {(stackSwitchApi) => {
                                 const ret = (
                                     <Route path={`${this.props.match.url}/:tab`}>
                                         {({ match }) => {
-                                            const routePath = match ? "/" + match.params.tab : "";
-                                            const value = paths.indexOf(routePath);
+                                            const routePath = match ? `/${match.params.tab}` : "";
+                                            const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
                                             return (
                                                 <AppBar position="static">
                                                     <Tabs
@@ -76,7 +87,7 @@ class RouterTabs extends React.Component<IProps> {
                                                         variant={variant}
                                                         indicatorColor={indicatorColor}
                                                     >
-                                                        {React.Children.map(this.props.children, child => {
+                                                        {React.Children.map(this.props.children, (child) => {
                                                             if (!React.isValidElement<ITabProps>(child)) {
                                                                 return null;
                                                             }
@@ -92,7 +103,7 @@ class RouterTabs extends React.Component<IProps> {
 
                                 if (stackApi && stackSwitchApi) {
                                     // When inside a Stack show only the last TabBar
-                                    const ownSwitchIndex = stackSwitchApi.id ? stackApi.switches.findIndex(i => i.id === stackSwitchApi.id) : -1;
+                                    const ownSwitchIndex = stackSwitchApi.id ? stackApi.switches.findIndex((i) => i.id === stackSwitchApi.id) : -1;
                                     const nextSwitchShowsInitialPage =
                                         stackApi.switches[ownSwitchIndex + 1] && stackApi.switches[ownSwitchIndex + 1].isInitialPageActive;
                                     const shouldShowTabBar = ownSwitchIndex === stackApi.switches.length - (nextSwitchShowsInitialPage ? 2 : 1);
@@ -105,36 +116,38 @@ class RouterTabs extends React.Component<IProps> {
                         </StackSwitchApiContext.Consumer>
                     )}
                 </StackApiContext.Consumer>
-                {React.Children.map(this.props.children, child => {
-                    return React.isValidElement<ITabProps>(child) ? (
-                        <Route path={`${this.props.match.url}${child.props.path}`} exact={child.props.path === ""}>
-                            {({ match }) => {
-                                if (!match && !child.props.forceRender) {
-                                    return null;
-                                }
-                                if (match) {
-                                    return (
-                                        <StackBreadcrumb
-                                            url={`${this.props.match.url}${child.props.path}`}
-                                            title={child.props.label}
-                                            invisible={true}
-                                        >
-                                            <TabContainer>{child.props.children}</TabContainer>
-                                        </StackBreadcrumb>
-                                    );
-                                } else {
-                                    return <TabContainer style={{ display: "none" }}>{child.props.children}</TabContainer>;
-                                }
-                            }}
-                        </Route>
-                    ) : null;
-                })}
+                <Switch>
+                    {React.Children.map(rearrangedChildren, (child) => {
+                        return React.isValidElement<ITabProps>(child) ? (
+                            <Route path={`${this.props.match.url}${child.props.path}`}>
+                                {({ match }) => {
+                                    if (!match && !child.props.forceRender) {
+                                        return null;
+                                    }
+                                    if (match) {
+                                        return (
+                                            <StackBreadcrumb
+                                                url={`${this.props.match.url}${child.props.path}`}
+                                                title={child.props.label}
+                                                invisible={true}
+                                            >
+                                                <TabContainer>{child.props.children}</TabContainer>
+                                            </StackBreadcrumb>
+                                        );
+                                    } else {
+                                        return <TabContainer style={{ display: "none" }}>{child.props.children}</TabContainer>;
+                                    }
+                                }}
+                            </Route>
+                        ) : null;
+                    })}
+                </Switch>
             </div>
         );
     }
 
     private handleChange = (event: {}, value: number) => {
-        const paths = React.Children.map(this.props.children, child => {
+        const paths = React.Children.map(this.props.children, (child) => {
             return React.isValidElement<ITabProps>(child) ? child.props.path : null;
         });
         this.props.history.push(this.props.match.url + paths[value]);

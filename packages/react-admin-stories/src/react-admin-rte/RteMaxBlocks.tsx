@@ -1,6 +1,7 @@
 import { storiesOf } from "@storybook/react";
-import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
+import { IRteOptions, IRteRef, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
+
 import { PrintEditorState, useAutoFocus } from "./helper";
 
 const rteOptions: IRteOptions = {

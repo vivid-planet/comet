@@ -5,6 +5,7 @@ import * as history from "history";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { Route, RouteComponentProps } from "react-router";
+
 import { DirtyHandler } from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import { StackApiContext } from "./Api";
@@ -31,7 +32,7 @@ const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
             node,
             children: [],
         };
-        nodes.forEach(e => {
+        nodes.forEach((e) => {
             if (e.parentId === currentNodeId) {
                 sortTreeNode.children.push(addChildrenToNode(e));
             }
@@ -43,7 +44,7 @@ const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
     // then traverse this tree
     const preOrderTraverse = (sortTreeNode: ISortTree<TSortNode>, fn: (node: TSortNode) => void) => {
         if (sortTreeNode.node) fn(sortTreeNode.node);
-        sortTreeNode.children.forEach(e => {
+        sortTreeNode.children.forEach((e) => {
             preOrderTraverse(e, fn);
         });
     };
@@ -141,7 +142,7 @@ export class Stack extends React.Component<IProps, IState> {
                                 )}
                                 <StackBreadcrumb title={this.props.topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
                                     <DirtyHandler
-                                        ref={ref => {
+                                        ref={(ref) => {
                                             this.dirtyHandlerApi = ref ? ref.dirtyHandlerApi : undefined;
                                         }}
                                     >
@@ -159,10 +160,10 @@ export class Stack extends React.Component<IProps, IState> {
     private getVisibleBreadcrumbs() {
         let prev: IBreadcrumbItem;
         const breadcrumbs = sortByParentId(this.state.breadcrumbs)
-            .map(i => {
+            .map((i) => {
                 return { ...i }; // clone so we can modify in filter below
             })
-            .filter(i => {
+            .filter((i) => {
                 if (i.invisible) {
                     prev.url = i.url;
                     return false;
@@ -179,7 +180,7 @@ export class Stack extends React.Component<IProps, IState> {
 
     private goBack() {
         const breadcrumbs = this.getVisibleBreadcrumbs();
-        if (!!breadcrumbs[breadcrumbs.length - 2]) {
+        if (breadcrumbs[breadcrumbs.length - 2]) {
             this.history.push(breadcrumbs[breadcrumbs.length - 2].url);
         } else {
             this.history.push(breadcrumbs[breadcrumbs.length - 1].url);
@@ -191,7 +192,7 @@ export class Stack extends React.Component<IProps, IState> {
     }
 
     private addBreadcrumb(id: string, parentId: string, url: string, title: string, invisible: boolean) {
-        this.setState(state => {
+        this.setState((state) => {
             const breadcrumbs = [
                 ...state.breadcrumbs,
                 {
@@ -210,8 +211,8 @@ export class Stack extends React.Component<IProps, IState> {
     }
 
     private updateBreadcrumb(id: string, parentId: string, url: string, title: string, invisible: boolean) {
-        this.setState(state => {
-            const breadcrumbs = state.breadcrumbs.map(crumb => {
+        this.setState((state) => {
+            const breadcrumbs = state.breadcrumbs.map((crumb) => {
                 return crumb.id === id ? { id, parentId, url, title, invisible } : crumb;
             });
             return {
@@ -221,8 +222,8 @@ export class Stack extends React.Component<IProps, IState> {
     }
 
     private removeBreadcrumb(id: string) {
-        this.setState(state => {
-            const breadcrumbs = state.breadcrumbs.filter(crumb => {
+        this.setState((state) => {
+            const breadcrumbs = state.breadcrumbs.filter((crumb) => {
                 return crumb.id !== id;
             });
             return {
@@ -232,9 +233,9 @@ export class Stack extends React.Component<IProps, IState> {
     }
 
     private addSwitchMeta = (id: string, options: { parentId: string; activePage: string; isInitialPageActive: boolean }) => {
-        this.setState(state => {
+        this.setState((state) => {
             const switches = [...state.switches];
-            const index = switches.findIndex(i => i.id === id);
+            const index = switches.findIndex((i) => i.id === id);
             if (index === -1) {
                 switches.push({ id, ...options });
             } else {
@@ -247,8 +248,8 @@ export class Stack extends React.Component<IProps, IState> {
     };
 
     private removeSwitchMeta = (id: string) => {
-        this.setState(state => {
-            const switches = state.switches.filter(item => item.id !== id);
+        this.setState((state) => {
+            const switches = state.switches.filter((item) => item.id !== id);
             return {
                 switches,
             };

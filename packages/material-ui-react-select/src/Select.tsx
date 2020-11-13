@@ -19,6 +19,7 @@ import { MultiValueProps } from "react-select/src/components/MultiValue";
 import { OptionProps } from "react-select/src/components/Option";
 import { PlaceholderProps } from "react-select/src/components/Placeholder";
 import { SingleValueProps } from "react-select/src/components/SingleValue";
+
 import styles from "./Select.styles";
 
 function NoOptionsMessage<OptionType>(props: NoticeProps<OptionType>) {
@@ -192,7 +193,6 @@ class SelectWrapper<OptionType> extends React.Component<IVPAdminSelectProps<Opti
 }
 const ExtendedSelectWrapper = withStyles(styles, { name: "VPAdminSelect", withTheme: true })(SelectWrapper);
 
-// tslint:disable:max-classes-per-file
 export class ReactSelect<OptionType> extends React.Component<ReactSelectProps<OptionType>> {
     public render() {
         return <ExtendedSelectWrapper selectComponent={Select} {...this.props} />;

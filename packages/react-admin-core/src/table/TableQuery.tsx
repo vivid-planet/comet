@@ -1,7 +1,8 @@
+import { ApolloError } from "@apollo/client";
 import { CircularProgress } from "@material-ui/core";
-import { ApolloError } from "apollo-client";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
 import * as sc from "./TableQuery.sc";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 

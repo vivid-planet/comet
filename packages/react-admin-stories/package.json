@@ -5,14 +5,14 @@
         "src"
     ],
     "peerDependencies": {
-        "@apollo/react-common": "^3.0.0",
-        "@apollo/react-hooks": "^3.0.0",
+        "@apollo/client": "^3.2.5",
         "@material-ui/core": "^4.1.3",
         "@material-ui/icons": "^4.2.1",
         "@material-ui/styles": "^4.1.2",
         "@vivid-planet/fetch-provider": "*",
         "@vivid-planet/file-icons": "*",
         "@vivid-planet/material-ui-react-select": "*",
+        "@vivid-planet/react-admin-color-picker": "*",
         "@vivid-planet/react-admin-core": "*",
         "@vivid-planet/react-admin-date-fns": "*",
         "@vivid-planet/react-admin-date-picker": "*",
@@ -21,10 +21,9 @@
         "@vivid-planet/react-admin-layout": "*",
         "@vivid-planet/react-admin-mui": "*",
         "@vivid-planet/react-admin-rte": "*",
-        "apollo-client": "^2.6.3",
         "final-form": "^4.16.1",
-        "graphql": "^14.4.1",
-        "graphql-tag": "^2.10.1",
+        "graphql": "^15.4.0",
+        "graphql-tag": "^2.11.0",
         "react": "^16.8",
         "react-dom": "^16.8",
         "react-final-form": "^6.3.1",
@@ -40,6 +39,7 @@
         "@storybook/addon-actions": "^5.3.9",
         "@storybook/addon-knobs": "^5.3.19",
         "@storybook/addon-storysource": "^5.3.9",
+        "@storybook/addons": "^5.3.9",
         "@storybook/react": "^5.3.9",
         "@types/draft-js": "^0.10.38",
         "@types/file-saver": "^2.0.1",
@@ -49,10 +49,7 @@
         "@types/storybook-react-router": "^1.0.1",
         "@types/storybook__react": "^5.2.1",
         "@types/webpack": "^4.4.34",
-        "apollo-cache-inmemory": "^1.6.2",
-        "apollo-link": "^1.2.12",
-        "apollo-link-http": "^1.5.15",
-        "apollo-link-rest": "^0.7.3",
+        "apollo-link-rest": "^0.8.0-beta.0",
         "babel-loader": "^8.0.6",
         "draft-js": "^0.11.5",
         "draft-js-export-html": "^1.4.1",
@@ -70,8 +67,7 @@
     },
     "scripts": {
         "storybook": "start-storybook",
-        "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
-        "lint:tslint": "tslint --project ."
+        "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
         "access": "public"

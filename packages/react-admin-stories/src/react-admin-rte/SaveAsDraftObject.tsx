@@ -2,6 +2,7 @@ import { storiesOf } from "@storybook/react";
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@vivid-planet/react-admin-rte";
 import { convertFromRaw, convertToRaw, RawDraftContentState } from "draft-js";
 import * as React from "react";
+
 import { PrintAnything, RteLayout } from "./helper";
 
 const defaultValue: RawDraftContentState = {
@@ -35,8 +36,8 @@ const defaultValue: RawDraftContentState = {
 };
 
 const makeRteApiProps: IMakeRteApiProps<RawDraftContentState> = {
-    parse: v => convertFromRaw(v),
-    format: v => convertToRaw(v),
+    parse: (v) => convertFromRaw(v),
+    format: (v) => convertToRaw(v),
 };
 
 const [useRteApi] = makeRteApi<RawDraftContentState>(makeRteApiProps);
