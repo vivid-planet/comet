@@ -1,8 +1,8 @@
+import { PureQueryOptions } from "@apollo/client";
 import { Button, IconButton, Typography } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { PureQueryOptions } from "apollo-client";
 import * as React from "react";
 import { DeleteMutation } from "../DeleteMutation";
 

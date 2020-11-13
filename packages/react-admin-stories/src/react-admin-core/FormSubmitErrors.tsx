@@ -1,13 +1,9 @@
-import { ApolloProvider } from "@apollo/react-hooks";
 import { storiesOf } from "@storybook/react";
 import { FinalForm } from "@vivid-planet/react-admin-core";
 import { Field, FormPaper, Input } from "@vivid-planet/react-admin-form";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import ApolloClient from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { RestLink } from "apollo-link-rest";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
+import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
     const errors = [];
@@ -51,20 +47,5 @@ function Story() {
 }
 
 storiesOf("react-admin-core", module)
-    .addDecorator(story => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: "https://jsonplaceholder.typicode.com/",
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
-        return <ApolloProvider client={client}>{story()}</ApolloProvider>;
-    })
+    .addDecorator(apolloStoryDecorator())
     .add("FormSubmitErrors", () => <Story />);
