@@ -18,6 +18,6 @@ export const MenuContext = React.createContext<IMenuContext>({
 
 export const withMenu = <P extends object>(WrappedComponent: React.ComponentType<P & IWithMenu>): React.FunctionComponent<P> => {
     return (props: P) => {
-        return <MenuContext.Consumer>{value => <WrappedComponent {...props} menu={value!} />}</MenuContext.Consumer>;
+        return <MenuContext.Consumer>{(value) => <WrappedComponent {...props} menu={value!} />}</MenuContext.Consumer>;
     };
 };

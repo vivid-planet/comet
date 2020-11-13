@@ -1,5 +1,6 @@
 import { DocumentNode } from "graphql";
 import * as React from "react";
+
 import { ITableData } from "./useTableQuery";
 
 export interface ITableQueryApi {

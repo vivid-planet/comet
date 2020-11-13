@@ -3,6 +3,7 @@ import TableCell from "@material-ui/core/TableCell";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
+
 import { IPagingInfo } from "./paging/IPagingInfo";
 
 interface IProps {

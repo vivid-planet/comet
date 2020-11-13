@@ -1,7 +1,7 @@
 import * as React from "react";
 
-const Left: React.SFC<any> = props => props.children;
-const Right: React.SFC<any> = props => props.children;
+const Left: React.SFC<any> = (props) => props.children;
+const Right: React.SFC<any> = (props) => props.children;
 Left.displayName = "FixedLeftRightLayout.Left";
 Right.displayName = "FixedLeftRightLayout.Right";
 

@@ -1,8 +1,8 @@
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import * as React from "react";
+
 import { ToolbarButton as LinkToolbarButton } from "../extension/Link";
 import { ToolbarButton as LinksRemoveToolbarButton } from "../extension/LinksRemove";
-
 import { IControlProps } from "../types";
 import * as sc from "./LinkControls.sc";
 

@@ -2,6 +2,7 @@ import { CssBaseline, Grid, IconButton, Theme, Toolbar } from "@material-ui/core
 import MenuIcon from "@material-ui/icons/Menu";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
+
 import { Header } from "./MasterLayout.sc";
 import { MenuContext } from "./menu/Context";
 

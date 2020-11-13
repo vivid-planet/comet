@@ -3,6 +3,7 @@ import * as React from "react";
 import { CustomPicker } from "react-color";
 import { FieldRenderProps } from "react-final-form";
 import * as tinycolor from "tinycolor2";
+
 import { colorToHex } from "../utils/colorSpaces";
 import styles from "./ColorPicker.styles";
 import HexInput from "./HexInput";
@@ -85,7 +86,7 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
                         palette: !!colorPalette?.length,
                         pickerWidth,
                     }}
-                    onChange={newColor => onChange(colorToHex((newColor as unknown) as tinycolor.ColorInputWithoutInstance))}
+                    onChange={(newColor) => onChange(colorToHex((newColor as unknown) as tinycolor.ColorInputWithoutInstance))}
                     className={classes.input}
                     onClick={handleFieldClick}
                 />

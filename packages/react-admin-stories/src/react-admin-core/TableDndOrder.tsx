@@ -21,7 +21,7 @@ function Story() {
     return (
         <TableLocalChanges
             data={data}
-            onSubmit={async changes => {
+            onSubmit={async (changes) => {
                 alert(JSON.stringify(changes));
             }}
             orderColumn="order" // if anything but 'pos' is used

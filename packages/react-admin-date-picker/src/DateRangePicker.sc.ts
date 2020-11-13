@@ -1,9 +1,8 @@
-import zIndex from "@material-ui/core/styles/zIndex";
-import { css, styled } from "@vivid-planet/react-admin-mui";
-/* tslint:disable */
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
-/* tslint:enable */
+
+import zIndex from "@material-ui/core/styles/zIndex";
+import { css, styled } from "@vivid-planet/react-admin-mui";
 
 interface IDateRangePickerWrapperProps {
     fullWidth: boolean;

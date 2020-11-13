@@ -14,6 +14,7 @@ import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admi
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
@@ -78,7 +79,7 @@ function pathFunction({ args }: { args: { [key: string]: any } }) {
         }
         return acc;
     }, {});
-    return "users?_limit=5&" + qs.stringify(q, { arrayFormat: "brackets" });
+    return `users?_limit=5&${qs.stringify(q, { arrayFormat: "brackets" })}`;
 }
 
 interface IVariables extends IFilterValues {
@@ -107,7 +108,7 @@ function Story() {
             page: pagingApi.current,
             ...filterApi.current,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.users.data,
             totalCount: data.users.meta.totalCount,
             pagingInfo: createRestPagingActions(
@@ -174,7 +175,7 @@ interface IResponseLinks {
 storiesOf("react-admin-core", module)
     .addDecorator(
         apolloStoryDecorator({
-            responseTransformer: async response => {
+            responseTransformer: async (response) => {
                 const links: IResponseLinks = {};
                 const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];
                 linkMatches.forEach((i: string) => {

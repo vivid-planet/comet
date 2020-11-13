@@ -4,6 +4,7 @@ import { Field } from "@vivid-planet/react-admin-form";
 import { createRteField } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
 import { Form } from "react-final-form";
+
 import { ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions";
 
 const { RteField, RteReadOnly } = createRteField<ContentFormat>({
@@ -21,7 +22,7 @@ function Story() {
                     initialValues={{
                         rteContent: defaultContent,
                     }}
-                    onSubmit={values => {
+                    onSubmit={(values) => {
                         //
                         setSubmittedValue(values);
                     }}

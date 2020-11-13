@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
 import { RouterPrompt } from "./router";
 
@@ -71,7 +72,7 @@ export class DirtyHandler extends React.Component<IProps> {
 
     private isBindingDirty() {
         return this.bindings
-            .map(binding => {
+            .map((binding) => {
                 return binding.binding.isDirty();
             })
             .reduce((accumulator, currentValue) => accumulator || currentValue, false);
@@ -79,7 +80,7 @@ export class DirtyHandler extends React.Component<IProps> {
 
     private submitBindings() {
         return Promise.all(
-            this.bindings.map(binding => {
+            this.bindings.map((binding) => {
                 return binding.binding.submit();
             }),
         );
@@ -87,7 +88,7 @@ export class DirtyHandler extends React.Component<IProps> {
 
     private resetBindings() {
         return Promise.all(
-            this.bindings.map(binding => {
+            this.bindings.map((binding) => {
                 return binding.binding.reset();
             }),
         );
@@ -97,7 +98,7 @@ export class DirtyHandler extends React.Component<IProps> {
         this.bindings.push({ obj, binding });
     }
     private unregisterBinding(obj: object) {
-        this.bindings = this.bindings.filter(item => item.obj !== obj);
+        this.bindings = this.bindings.filter((item) => item.obj !== obj);
     }
 
     private getParent(): IDirtyHandlerApi | undefined {

@@ -1,6 +1,7 @@
 import { Box } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 import * as React from "react";
+
 import { IFeatureConfig } from "../types";
 import ControlButton from "./ControlButton";
 import * as sc from "./FeaturesButtonGroup.sc";

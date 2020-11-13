@@ -11,6 +11,7 @@ import {
 } from "@vivid-planet/react-admin-core";
 import gql from "graphql-tag";
 import * as React from "react";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
@@ -59,7 +60,7 @@ function Story() {
             start: pagingApi.current,
             limit: loadLimit,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.photos,
             totalCount,
             pagingInfo: createRestStartLimitPagingActions(pagingApi, {

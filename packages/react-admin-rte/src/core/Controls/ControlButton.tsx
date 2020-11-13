@@ -1,5 +1,6 @@
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
 import * as React from "react";
+
 import * as sc from "./ControlButton.sc";
 
 export interface IProps {

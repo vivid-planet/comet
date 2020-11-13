@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Prompt } from "react-router";
+
 import { RouterContext } from "./Context";
 
 interface IMessages {
@@ -19,7 +20,7 @@ export const RouterPromptHandler: React.FunctionComponent<{}> = ({ children, ...
 
     const promptMessage = (): boolean | string => {
         let ret: boolean | string = true;
-        Object.keys(registeredMessages.current).forEach(id => {
+        Object.keys(registeredMessages.current).forEach((id) => {
             const message = registeredMessages.current[id]();
             if (message !== true) {
                 ret = message;

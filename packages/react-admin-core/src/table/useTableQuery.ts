@@ -1,6 +1,7 @@
 import { QueryHookOptions, QueryResult, useQuery } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
+
 import { ISelectionApi } from "../SelectionApi";
 import { IPagingInfo } from "./paging";
 import { ITableQueryApi } from "./TableQueryContext";

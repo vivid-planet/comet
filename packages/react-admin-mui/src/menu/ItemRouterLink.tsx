@@ -1,6 +1,7 @@
 import { ListItemProps } from "@material-ui/core/ListItem";
 import * as React from "react";
 import { Link, LinkProps, Route } from "react-router-dom";
+
 import { IMenuItemProps, MenuItem } from "./Item";
 
 interface IMenuItemRouterLinkProps {
@@ -12,7 +13,7 @@ export class MenuItemRouterLink extends React.Component<IMenuItemRouterLinkProps
             <Route
                 path={this.props.to}
                 strict={false}
-                children={({ location, match }) => {
+                render={({ location, match }) => {
                     return <MenuItem selected={!!match} component={Link} {...this.props} />;
                 }}
             />

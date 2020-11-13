@@ -3,6 +3,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import { AnyObject } from "final-form";
 import * as React from "react";
 import { Form, FormProps, FormRenderProps } from "react-final-form";
+
 import { renderComponent } from "../finalFormRenderComponent";
 import { IFilterApi } from "./useTableQueryFilter";
 
@@ -13,7 +14,6 @@ type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" 
     filterApi: IFilterApi<FilterValues>;
 };
 
-// tslint:disable-next-line:max-classes-per-file
 export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Component<Props<FilterValues>> {
     public render() {
         // remove render, children and component from forwardProps as we define render and those would interfere

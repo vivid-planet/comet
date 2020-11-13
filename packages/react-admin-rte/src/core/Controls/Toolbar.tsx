@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { IControlProps } from "../types";
 import * as sc from "./Toolbar.sc";
 
@@ -8,11 +9,11 @@ interface IProps extends IControlProps {
 
 export default function Toolbar({ children, ...rest }: IProps) {
     const childrenElements = children
-        .filter(c => {
+        .filter((c) => {
             const Comp = c;
             return Comp(rest) !== null; // filter out unused control components
         })
-        .map(c => {
+        .map((c) => {
             const Comp = c;
             return React.createElement(Comp, rest);
         });

@@ -1,4 +1,3 @@
-import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@vivid-planet/react-admin-core";
 import * as React from "react";
@@ -9,7 +8,7 @@ function Page1() {
     const switchApi = React.useContext(StackSwitchApiContext);
     return (
         <button
-            onClick={e => {
+            onClick={(e) => {
                 switchApi.activatePage("page2", "test");
             }}
         >

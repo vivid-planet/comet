@@ -1,5 +1,6 @@
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
 import { DraftBlockRenderConfig, DraftInlineStyleType, Editor, EditorState } from "draft-js";
+
 import { IRteOptions } from "./Rte";
 
 export interface ICustomBlockType {

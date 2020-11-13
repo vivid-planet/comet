@@ -5,6 +5,7 @@ import { Field, FieldContainerLabelAbove, ReactSelectStaticOptions } from "@vivi
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const gqlRest = gql;
@@ -38,7 +39,7 @@ function pathFunction({ args }: { args: { [key: string]: any } }) {
         }
         return acc;
     }, {});
-    return "users?" + qs.stringify(q, { arrayFormat: "brackets" });
+    return `users?${qs.stringify(q, { arrayFormat: "brackets" })}`;
 }
 
 interface IQueryData {
@@ -64,7 +65,7 @@ function Story() {
             ...filterApi.current,
             pathFunction,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.users,
             totalCount: data.users.length,
         }),

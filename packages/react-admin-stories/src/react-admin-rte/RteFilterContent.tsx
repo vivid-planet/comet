@@ -9,6 +9,7 @@ import {
 } from "@vivid-planet/react-admin-rte";
 import { EditorState, EntityInstance } from "draft-js";
 import * as React from "react";
+
 import { PrintEditorState, RteLayout, useAutoFocus } from "./helper";
 
 const [useRteApi] = makeRteApi();

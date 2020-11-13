@@ -6,7 +6,7 @@ interface IProps {
     required?: boolean;
 }
 
-export const FieldContainer: React.FunctionComponent<IProps> = props => (
+export const FieldContainer: React.FunctionComponent<IProps> = (props) => (
     <FormControl fullWidth={true}>
         <Grid container alignItems="center">
             <Grid item xs={4}>

@@ -1,5 +1,6 @@
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import * as React from "react";
+
 import { IControlProps } from "../types";
 
 export default function BlockTypesControls(p: IControlProps) {

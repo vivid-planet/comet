@@ -62,7 +62,7 @@ function Story() {
         <Table
             data={data}
             totalCount={data.length}
-            renderTableRow={props => <ExampleTableRow {...props} showSecondRow={showSecondRow} />}
+            renderTableRow={(props) => <ExampleTableRow {...props} showSecondRow={showSecondRow} />}
             columns={[
                 {
                     name: "foo1",
@@ -71,7 +71,7 @@ function Story() {
                 {
                     name: "foo2",
                     header: "Foo2",
-                    render: row => <strong>{row.id}</strong>,
+                    render: (row) => <strong>{row.id}</strong>,
                 },
                 {
                     name: "bar",

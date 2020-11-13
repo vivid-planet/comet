@@ -1,6 +1,7 @@
 import { storiesOf } from "@storybook/react";
 import { IRteRef, makeRteApi, Rte } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
+
 import { exampleContent, PrintEditorState, RteLayout, useAutoFocus } from "./helper";
 
 const [useRteApi] = makeRteApi();

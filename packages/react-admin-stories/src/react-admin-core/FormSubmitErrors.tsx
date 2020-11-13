@@ -3,6 +3,7 @@ import { FinalForm } from "@vivid-planet/react-admin-core";
 import { Field, FormPaper, Input } from "@vivid-planet/react-admin-form";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
+
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {

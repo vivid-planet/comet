@@ -10,6 +10,7 @@ import {
     RichUtils,
 } from "draft-js";
 import * as React from "react";
+
 import Controls from "./Controls";
 import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";

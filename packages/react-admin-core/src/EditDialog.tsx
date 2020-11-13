@@ -1,5 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
 import * as React from "react";
+
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
@@ -16,11 +17,14 @@ interface IProps {
 }
 
 export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi] {
-    const [ Selection, selection, selectionApi]  = useSelectionRoute();
+    const [Selection, selection, selectionApi] = useSelectionRoute();
 
-    const openAddDialog = React.useCallback((id?: string) => {
-        selectionApi.handleAdd(id);
-    }, [selectionApi]);
+    const openAddDialog = React.useCallback(
+        (id?: string) => {
+            selectionApi.handleAdd(id);
+        },
+        [selectionApi],
+    );
 
     const openEditDialog = React.useCallback(
         (id: string) => {
@@ -32,12 +36,14 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
     const api: IEditDialogApi = {
         openAddDialog,
         openEditDialog,
-    }
+    };
     const EditDialogWithHookProps = React.useMemo(() => {
         return (props: IProps) => {
-            return <Selection>
-                <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
-            </Selection>;
+            return (
+                <Selection>
+                    <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
+                </Selection>
+            );
         };
     }, [selection]);
 
@@ -47,14 +53,19 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
 interface IHookProps {
     selection: {
         id?: string;
-        mode?: "edit" | "add"
+        mode?: "edit" | "add";
     };
-    selectionApi: ISelectionApi
-    api: IEditDialogApi
+    selectionApi: ISelectionApi;
+    api: IEditDialogApi;
 }
 
-const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selection, selectionApi, api, title = { edit: "Bearbeiten", add: "Hinzufügen" }, children }) => {
-
+const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({
+    selection,
+    selectionApi,
+    api,
+    title = { edit: "Bearbeiten", add: "Hinzufügen" },
+    children,
+}) => {
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
@@ -82,7 +93,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                                 <Typography variant="button">Abbrechen</Typography>
                             </Button>
                             <DirtyHandlerApiContext.Consumer>
-                                {injectedDirtyHandlerApi => {
+                                {(injectedDirtyHandlerApi) => {
                                     dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
                                     return (
                                         <Button onClick={handleSaveClick} color="primary">
@@ -97,7 +108,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
             </DirtyHandler>
         </EditDialogApiContext.Provider>
     );
-}
+};
 
 interface IEditDialogHooklessProps extends IProps {
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
@@ -107,7 +118,7 @@ const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEdi
     { children, title = { edit: "Bearbeiten", add: "Hinzufügen" } },
     ref,
 ) => {
-    const [ EditDialogConfigured, selection, api ] = useEditDialog();
+    const [EditDialogConfigured, selection, api] = useEditDialog();
     React.useImperativeHandle(ref, () => api);
     return <EditDialogConfigured title={title}>{children({ selectedId: selection.id, selectionMode: selection.mode })}</EditDialogConfigured>;
 };

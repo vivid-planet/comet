@@ -1,23 +1,24 @@
 import { CharacterMetadata, EditorState } from "draft-js";
+
 import { FilterEditorStateFn, InlineStyleType } from "../../types";
 
 type StyleBlacklist = InlineStyleType[];
 
 // inspired by export const filterInlineStyles = (
-const removeInlineStyles: (blockBlacklist: StyleBlacklist) => FilterEditorStateFn = blockBlacklist => nextState => {
+const removeInlineStyles: (blockBlacklist: StyleBlacklist) => FilterEditorStateFn = (blockBlacklist) => (nextState) => {
     const content = nextState.getCurrentContent();
     const blockMap = content.getBlockMap();
 
-    const changedBlocks: any = blockMap.map(block => {
+    const changedBlocks: any = blockMap.map((block) => {
         let altered = false;
 
-        const chars = block!.getCharacterList().map(char => {
+        const chars = block!.getCharacterList().map((char) => {
             let newChar = char!;
 
             char!
                 .getStyle()
-                .filter(type => blockBlacklist.includes(type! as InlineStyleType))
-                .forEach(type => {
+                .filter((type) => blockBlacklist.includes(type! as InlineStyleType))
+                .forEach((type) => {
                     altered = true;
                     newChar = CharacterMetadata.removeStyle(newChar, type!);
                 });

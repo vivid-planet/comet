@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { StackApiContext } from "./Api";
 const UUID = require("uuid");
 
@@ -22,7 +23,7 @@ export class StackBreadcrumb extends React.Component<IProps> {
     public render() {
         return (
             <BreadcrumbContext.Consumer>
-                {parentId => {
+                {(parentId) => {
                     this.parentId = !this.props.ignoreParentId ? parentId : "";
                     return <BreadcrumbContext.Provider value={this.id}>{this.props.children}</BreadcrumbContext.Provider>;
                 }}

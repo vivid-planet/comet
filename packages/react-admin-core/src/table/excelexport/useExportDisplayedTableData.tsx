@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { Table } from "../Table";
 import { IExportApi } from "./IExportApi";
 import { createExcelExportDownload, IExcelExportOptions } from "./index";
@@ -12,21 +13,16 @@ export function useExportDisplayedTableData(options?: IExcelExportOptions): IExp
     }
 
     async function exportTable() {
-        return new Promise<void>(async (resolve, reject) => {
-            if (tableRef != null) {
-                await setLoading(true);
-                try {
-                    createExcelExportDownload(tableRef.props.columns, tableRef.props.data, options);
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                } finally {
-                    await setLoading(false);
-                }
-            } else {
-                reject("No table ref set");
+        if (tableRef != null) {
+            await setLoading(true);
+            try {
+                await createExcelExportDownload(tableRef.props.columns, tableRef.props.data, options);
+            } finally {
+                await setLoading(false);
             }
-        });
+        } else {
+            throw new Error("No table ref set");
+        }
     }
 
     return {

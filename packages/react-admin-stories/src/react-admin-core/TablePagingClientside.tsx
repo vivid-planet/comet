@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { IPagingApi, IPagingInfo, Table, useTableQueryPaging } from "@vivid-planet/react-admin-core";
+import { IPagingInfo, Table, useTableQueryPaging } from "@vivid-planet/react-admin-core";
 import * as React from "react";
 
 interface IExampleRow {
@@ -12,8 +12,8 @@ function Story() {
     const data = Array.from(Array(100).keys()).map(
         (i): IExampleRow => ({
             id: i,
-            foo1: "blub1 " + i,
-            foo2: "blub2 " + i,
+            foo1: `blub1 ${i}`,
+            foo2: `blub2 ${i}`,
         }),
     );
 
@@ -48,7 +48,7 @@ function Story() {
                     {
                         name: "foo2",
                         header: "Foo2",
-                        render: row => <strong>{row.id}</strong>,
+                        render: (row) => <strong>{row.id}</strong>,
                         sortable: true,
                     },
                     {

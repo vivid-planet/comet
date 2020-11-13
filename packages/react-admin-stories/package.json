@@ -65,8 +65,7 @@
     },
     "scripts": {
         "storybook": "start-storybook",
-        "tsc": "tsc --noEmit --skipLibCheck --project ./tsconfig.json && :",
-        "lint:tslint": "tslint --project ."
+        "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
         "access": "public"

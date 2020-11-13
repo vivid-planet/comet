@@ -19,7 +19,7 @@ function Story() {
             </ListItem>
 
             <Form
-                onSubmit={values => {
+                onSubmit={(values) => {
                     //
                 }}
                 render={({ handleSubmit, pristine, invalid }) => (

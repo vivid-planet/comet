@@ -13,7 +13,7 @@ function Story() {
                         <StackSwitch>
                             <StackPage name="table">
                                 <StackSwitchApiContext.Consumer>
-                                    {stackApi => (
+                                    {(stackApi) => (
                                         <Button color="primary" variant="contained" onClick={() => stackApi.activatePage("edit", "test")}>
                                             Test
                                         </Button>
