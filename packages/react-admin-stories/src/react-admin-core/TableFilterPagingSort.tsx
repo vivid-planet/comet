@@ -110,7 +110,7 @@ function Story() {
             page: pagingApi.current,
             ...filterApi.current,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.users.data,
             totalCount: data.users.meta.totalCount,
             pagingInfo: createRestPagingActions(
@@ -177,7 +177,7 @@ interface IResponseLinks {
 storiesOf("react-admin", module)
     .addDecorator(
         apolloStoryDecorator({
-            responseTransformer: async response => {
+            responseTransformer: async (response) => {
                 const links: IResponseLinks = {};
                 const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];
                 linkMatches.forEach((i: string) => {

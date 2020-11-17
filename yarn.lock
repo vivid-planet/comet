@@ -3239,7 +3239,7 @@
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.8.tgz#49348387983075705fe8f4e02fb67f7daaec4934"
   integrity sha512-S78QIYirQcUoo6UJZx9CSP0O2ix9IaeAXwQi26Rhr/+mg7qqPy8TzaxHSUut7eGjL8WmLccT7/MXf304WjqHcA==
 
-"@types/hoist-non-react-statics@^3.3.1":
+"@types/hoist-non-react-statics@*", "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
   integrity sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==
@@ -3411,6 +3411,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-native@*":
+  version "0.63.35"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.63.35.tgz#c9d6c3c0461b1aa0dff89c6b53ef509461a19183"
+  integrity sha512-2uyPZoHtoUVsVO55HdrRCpgwwG2zVHLttTaR9f/BThoBAQngNWuZQ0eMGmfgRHBKXmi3TmtWjbWPxohkITLlkw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-router-dom@^4.3.4":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@types/react-router-dom/-/react-router-dom-4.3.5.tgz#72f229967690c890d00f96e6b85e9ee5780db31f"
@@ -3516,14 +3523,15 @@
   dependencies:
     "@storybook/react" "*"
 
-"@types/styled-components@4.1.8":
-  version "4.1.8"
-  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-4.1.8.tgz#15c8a53bb4b9066e528fafb7558963dee5690ae0"
-  integrity sha512-NrG0wmB9Rafy5i00GFxUM/uEge148bX2QPr+Q/MI2fXrew6WOp1hN2A3YEG0AeT45z47CMdJ3BEffPsdQCWayA==
+"@types/styled-components@^5.0.0":
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-5.1.4.tgz#11f167dbde268635c66adc89b5a5db2e69d75384"
+  integrity sha512-78f5Zuy0v/LTQNOYfpH+CINHpchzMMmAt9amY2YNtSgsk1TmlKm8L2Wijss/mtTrsUAVTm2CdGB8VOM65vA8xg==
   dependencies:
-    "@types/node" "*"
+    "@types/hoist-non-react-statics" "*"
     "@types/react" "*"
-    csstype "^2.2.0"
+    "@types/react-native" "*"
+    csstype "^3.0.2"
 
 "@types/tapable@*", "@types/tapable@^1.0.5":
   version "1.0.6"
@@ -6036,7 +6044,7 @@ csso@^4.0.2:
   dependencies:
     css-tree "^1.0.0"
 
-csstype@^2.2.0, csstype@^2.5.2, csstype@^2.5.7:
+csstype@^2.5.2, csstype@^2.5.7:
   version "2.6.14"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.14.tgz#004822a4050345b55ad4dcc00be1d9cf2f4296de"
   integrity sha512-2mSc+VEpGPblzAxyeR+vZhJKgYg0Og0nnRi7pmRXFYYxSfnOnW8A5wwQb4n4cE2nIOzqKOAzLCaEX6aBmNEv8A==

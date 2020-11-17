@@ -65,7 +65,7 @@ function Story() {
             ...filterApi.current,
             pathFunction,
         },
-        resolveTableData: data => ({
+        resolveTableData: (data) => ({
             data: data.users,
             totalCount: data.users.length,
         }),
