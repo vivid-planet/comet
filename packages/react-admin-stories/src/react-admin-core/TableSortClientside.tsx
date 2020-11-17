@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { SortDirection, Table, useTableQuerySort } from "@vivid-planet/react-admin-core";
+import { SortDirection, Table, useTableQuerySort } from "@vivid-planet/react-admin";
 import * as React from "react";
 
 interface IExampleRow {
@@ -48,4 +48,4 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module).add("Table Sort Clientside", () => <Story />);
+storiesOf("react-admin", module).add("Table Sort Clientside", () => <Story />);

@@ -1,6 +1,6 @@
 import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { TableDndOrder, TableLocalChanges } from "@vivid-planet/react-admin-core";
+import { TableDndOrder, TableLocalChanges } from "@vivid-planet/react-admin";
 import * as React from "react";
 
 interface IRow {
@@ -56,4 +56,4 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module).add("Table DnD Order", () => <Story />);
+storiesOf("react-admin", module).add("Table DnD Order", () => <Story />);

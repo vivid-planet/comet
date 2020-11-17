@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { IPagingInfo, Table, useTableQueryPaging } from "@vivid-planet/react-admin-core";
+import { IPagingInfo, Table, useTableQueryPaging } from "@vivid-planet/react-admin";
 import * as React from "react";
 
 interface IExampleRow {
@@ -61,4 +61,4 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module).add("Table Paging Clientside", () => <Story />);
+storiesOf("react-admin", module).add("Table Paging Clientside", () => <Story />);

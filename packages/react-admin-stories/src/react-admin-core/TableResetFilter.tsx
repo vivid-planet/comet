@@ -1,12 +1,13 @@
 import { Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@vivid-planet/react-admin-core";
-import { Field, FieldContainerLabelAbove, ReactSelectStaticOptions } from "@vivid-planet/react-admin-form";
+import { Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@vivid-planet/react-admin";
+import { form } from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
+const { Field, FieldContainerLabelAbove, ReactSelectStaticOptions } = form;
 
 const gqlRest = gql;
 
@@ -65,7 +66,7 @@ function Story() {
             ...filterApi.current,
             pathFunction,
         },
-        resolveTableData: (data) => ({
+        resolveTableData: data => ({
             data: data.users,
             totalCount: data.users.length,
         }),
@@ -119,6 +120,6 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(apolloStoryDecorator())
     .add("Table Reset Filter", () => <Story />);

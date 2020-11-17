@@ -1,6 +1,6 @@
 import { TableCell } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { ITableRowProps, Table, TableBodyRow, TableColumns } from "@vivid-planet/react-admin-core";
+import { ITableRowProps, Table, TableBodyRow, TableColumns } from "@vivid-planet/react-admin";
 import * as React from "react";
 
 // TODO this might be useful in it's own package
@@ -83,4 +83,4 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module).add("Table Responsive", () => <Story />);
+storiesOf("react-admin", module).add("Table Responsive", () => <Story />);

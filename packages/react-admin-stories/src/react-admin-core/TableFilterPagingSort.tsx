@@ -9,13 +9,15 @@ import {
     useTableQueryFilter,
     useTableQueryPaging,
     useTableQuerySort,
-} from "@vivid-planet/react-admin-core";
-import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admin-form";
+} from "@vivid-planet/react-admin";
+import { form } from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
+
+const { Field, FieldContainerLabelAbove, Input } = form;
 
 const gqlRest = gql;
 
@@ -108,7 +110,7 @@ function Story() {
             page: pagingApi.current,
             ...filterApi.current,
         },
-        resolveTableData: (data) => ({
+        resolveTableData: data => ({
             data: data.users.data,
             totalCount: data.users.meta.totalCount,
             pagingInfo: createRestPagingActions(
@@ -172,10 +174,10 @@ interface IResponseLinks {
     next?: string;
     last?: string;
 }
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(
         apolloStoryDecorator({
-            responseTransformer: async (response) => {
+            responseTransformer: async response => {
                 const links: IResponseLinks = {};
                 const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];
                 linkMatches.forEach((i: string) => {

@@ -1,8 +1,8 @@
 import { storiesOf } from "@storybook/react";
-import { FinalForm } from "@vivid-planet/react-admin-core";
-import { Field, FormPaper, Input } from "@vivid-planet/react-admin-form";
+import { FinalForm, form } from "@vivid-planet/react-admin";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
+const { Field, FormPaper, Input } = form;
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
@@ -47,6 +47,6 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(apolloStoryDecorator())
     .add("FormSubmitErrors", () => <Story />);

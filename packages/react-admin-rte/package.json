@@ -9,12 +9,12 @@
     "devDependencies": {
         "@types/draft-js": "^0.10.38",
         "@types/immutable": "^3.8.7",
-        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.22"
+        "@vivid-planet/react-admin": "^1.0.0-alpha.18"
     },
     "peerDependencies": {
         "@material-ui/core": "^4.1.3",
         "@material-ui/icons": "^4.2.1",
-        "@vivid-planet/react-admin-mui": "^1.0.0-alpha.18",
+        "@vivid-planet/react-admin": "^1.0.0-alpha.18",
         "draft-js": "^0.11.4",
         "final-form": "^4.16.1",
         "immutable": "~3.7.4",
