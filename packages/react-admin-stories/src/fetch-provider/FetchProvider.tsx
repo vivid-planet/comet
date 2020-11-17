@@ -13,7 +13,7 @@ function ExampleFetch() {
             setData(await response.json());
         };
         fetchData();
-    }, []);
+    }, [fetch]);
     return <div>{JSON.stringify(data)}</div>;
 }
 

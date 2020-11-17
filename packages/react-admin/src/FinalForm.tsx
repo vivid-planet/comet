@@ -43,6 +43,27 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     return <Form {...props} onSubmit={handleSubmit} render={RenderForm} />;
 
     function RenderForm(formRenderProps: FormRenderProps<FormValues>) {
+        const submit = React.useCallback(
+            (event: any) => {
+                if (!formRenderProps.dirty) return;
+                return new Promise((resolve) => {
+                    Promise.resolve(formRenderProps.handleSubmit(event)).then(
+                        () => {
+                            if (formRenderProps.submitSucceeded) {
+                                resolve();
+                            } else {
+                                resolve(formRenderProps.submitErrors);
+                            }
+                        },
+                        (error) => {
+                            resolve(error);
+                        },
+                    );
+                });
+            },
+            [formRenderProps],
+        );
+
         React.useEffect(() => {
             if (dirtyHandler) {
                 dirtyHandler.registerBinding(ref, {
@@ -62,25 +83,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     dirtyHandler.unregisterBinding(ref);
                 }
             };
-        }, [dirtyHandler, formRenderProps]);
-
-        function submit(event: any) {
-            if (!formRenderProps.dirty) return;
-            return new Promise((resolve) => {
-                Promise.resolve(formRenderProps.handleSubmit(event)).then(
-                    () => {
-                        if (formRenderProps.submitSucceeded) {
-                            resolve();
-                        } else {
-                            resolve(formRenderProps.submitErrors);
-                        }
-                    },
-                    (error) => {
-                        resolve(error);
-                    },
-                );
-            });
-        }
+        }, [formRenderProps, submit]);
 
         const ButtonsContainer = props.components && props.components.buttonsContainer ? props.components.buttonsContainer : "div";
 

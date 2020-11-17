@@ -18,6 +18,6 @@ export function usePersistedState<T>(defaultValue: T, options: IOptions = {}): [
             // on unmount we backup the current state into allStates
             if (stateId) allStates[stateId] = state;
         };
-    }, [state]);
+    }, [state, stateId]);
     return [state, setState];
 }

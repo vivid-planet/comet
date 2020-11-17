@@ -45,10 +45,13 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
         [selectionApi],
     );
 
-    const api: IEditDialogApi = {
-        openAddDialog,
-        openEditDialog,
-    };
+    const api: IEditDialogApi = React.useMemo(() => {
+        return {
+            openAddDialog,
+            openEditDialog,
+        };
+    }, [openAddDialog, openEditDialog]);
+
     const EditDialogWithHookProps = React.useMemo(() => {
         return (props: IProps) => {
             return (
@@ -57,7 +60,7 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
                 </Selection>
             );
         };
-    }, [selection]);
+    }, [Selection, api, selection, selectionApi]);
 
     return [EditDialogWithHookProps, selection, api];
 }

@@ -45,7 +45,7 @@ export function useTableQueryFilter<FilterValues>(
             { values: true },
         );
         return unsubscribe;
-    }, [filters, setFilters]);
+    }, [filters, options.pagingApi, setFilters]);
 
     return {
         current: filters,

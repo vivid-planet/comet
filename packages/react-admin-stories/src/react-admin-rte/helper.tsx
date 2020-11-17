@@ -8,7 +8,7 @@ export function useAutoFocus(editorRef: React.MutableRefObject<IRteRef | undefin
         if (editorRef && editorRef.current) {
             editorRef.current.focus();
         }
-    }, []);
+    }, [editorRef]);
 }
 
 export function PrintEditorState({ editorState }: { editorState: EditorState }) {

@@ -47,9 +47,10 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             api,
         };
 
+        const { refetch } = ret;
         React.useEffect(() => {
-            ret.refetch();
-        }, []);
+            refetch();
+        }, [refetch]);
 
         function getVariables() {
             const vars: any = { ...(options.variables as any) };
