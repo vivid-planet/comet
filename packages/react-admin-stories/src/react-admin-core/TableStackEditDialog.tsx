@@ -1,13 +1,14 @@
 import { Button, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import { EditDialog, FinalForm, IEditDialogApi, Selected, Stack, StackPage, StackSwitch, Table } from "@vivid-planet/react-admin-core";
-import { TextField } from "@vivid-planet/react-admin-final-form-material-ui";
-import { Field } from "@vivid-planet/react-admin-form";
+import { EditDialog, FinalForm, IEditDialogApi, Selected, Stack, StackPage, StackSwitch, Table } from "@vivid-planet/react-admin";
+import { TextField } from "@vivid-planet/react-admin";
+import { form } from "@vivid-planet/react-admin";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
+const { Field } = form;
 
 interface IExampleRow {
     id: number;
@@ -24,7 +25,7 @@ function EditForm(props: IEditFormProps) {
         <FinalForm
             mode={props.mode}
             initialValues={props.row}
-            onSubmit={(values) => {
+            onSubmit={values => {
                 alert(JSON.stringify(values));
             }}
         >
@@ -51,7 +52,7 @@ function Story() {
                             <Button
                                 color="default"
                                 endIcon={<AddIcon />}
-                                onClick={(ev) => {
+                                onClick={ev => {
                                     editDialog.current?.openAddDialog();
                                 }}
                             >
@@ -74,9 +75,9 @@ function Story() {
                                 {
                                     name: "edit",
                                     header: "Edit",
-                                    render: (row) => (
+                                    render: row => (
                                         <IconButton
-                                            onClick={(ev) => {
+                                            onClick={ev => {
                                                 editDialog.current?.openEditDialog(String(row.id));
                                             }}
                                         >
@@ -108,7 +109,7 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(StoryRouter())
     .addDecorator(apolloStoryDecorator())
     .add("Table Stack+EditDialog", () => <Story />);

@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { ExcelExportButton, IRow, Table, useExportDisplayedTableData, VisibleType } from "@vivid-planet/react-admin-core";
+import { ExcelExportButton, IRow, Table, useExportDisplayedTableData, VisibleType } from "@vivid-planet/react-admin";
 import * as React from "react";
 
 interface IExampleRow extends IRow {
@@ -64,4 +64,4 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module).add("Table Export Visibility", () => <Story />);
+storiesOf("react-admin", module).add("Table Export Visibility", () => <Story />);

@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { Stack, StackBreadcrumbsContainer } from "@vivid-planet/react-admin-core";
+import { Stack, StackBreadcrumbsContainer } from "@vivid-planet/react-admin";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
 import styled from "styled-components";
@@ -17,6 +17,6 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(StoryRouter())
     .add("Stack", () => <Story />);

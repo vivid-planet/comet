@@ -1,7 +1,8 @@
 import { storiesOf } from "@storybook/react";
-import { FinalForm, Tab, Tabs } from "@vivid-planet/react-admin-core";
-import { Field, FormPaper, Input } from "@vivid-planet/react-admin-form";
+import { FinalForm, form, Tab, Tabs } from "@vivid-planet/react-admin";
 import * as React from "react";
+
+const { Field, FormPaper, Input } = form;
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
@@ -33,6 +34,6 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(apolloStoryDecorator())
     .add("FormTabs", () => <Story />);

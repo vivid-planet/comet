@@ -1,4 +1,6 @@
-import { styled } from "@vivid-planet/react-admin-mui";
+import { mui } from "@vivid-planet/react-admin";
+
+const { styled } = mui;
 
 export const Root = styled.div`
     display: flex;

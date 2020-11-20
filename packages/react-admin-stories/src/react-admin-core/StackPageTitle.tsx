@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { Stack, StackPage, StackPageTitle, useStackSwitch } from "@vivid-planet/react-admin-core";
+import { Stack, StackPage, StackPageTitle, useStackSwitch } from "@vivid-planet/react-admin";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
@@ -100,6 +100,6 @@ function App() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(StoryRouter())
     .add("Stack Page Title", () => <App />);
