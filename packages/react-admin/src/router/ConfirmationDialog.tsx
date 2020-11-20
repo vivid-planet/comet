@@ -15,20 +15,12 @@ export const RouterConfirmationDialog: React.FunctionComponent<IProps> = ({ mess
             <DialogActions>
                 <Button onClick={handleClose.bind(this, true)} color="primary" autoFocus={true}>
                     <Typography variant="button">
-                        <FormattedMessage
-                            id="reactAdmin.core.router.confirmationDialog.confirm"
-                            defaultMessage="OK"
-                            description="Confirmation Prompt OK"
-                        />
+                        <FormattedMessage id="reactAdmin.generic.ok" defaultMessage="OK" />
                     </Typography>
                 </Button>
                 <Button onClick={handleClose.bind(this, false)} color="primary">
                     <Typography variant="button">
-                        <FormattedMessage
-                            id="reactAdmin.core.router.confirmationDialog.abort"
-                            defaultMessage="Abbrechen"
-                            description="Confirmation Prompt Abort"
-                        />
+                        <FormattedMessage id="reactAdmin.generic.cancel" defaultMessage="Cancel" />
                     </Typography>
                 </Button>
             </DialogActions>

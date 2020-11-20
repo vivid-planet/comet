@@ -19,12 +19,12 @@ interface IProps {
 
 const messages = defineMessages({
     edit: {
-        id: "reactAdmin.core.editDialog.edit",
-        defaultMessage: "Bearbeiten",
+        id: "reactAdmin.generic.edit",
+        defaultMessage: "Edit",
     },
     add: {
-        id: "reactAdmin.core.editDialog.add",
-        defaultMessage: "Hinzufügen",
+        id: "reactAdmin.generic.add",
+        defaultMessage: "Add",
     },
 });
 
@@ -107,11 +107,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                         <DialogActions>
                             <Button onClick={handleCancelClick} color="primary">
                                 <Typography variant="button">
-                                    <FormattedMessage
-                                        id="reactAdmin.core.editDialog.cancel"
-                                        defaultMessage="Abbrechen"
-                                        description="Button to discard the changes of the dialog"
-                                    />
+                                    <FormattedMessage id="reactAdmin.generic.cancel" defaultMessage="Cancel" />
                                 </Typography>
                             </Button>
                             <DirtyHandlerApiContext.Consumer>
@@ -120,11 +116,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                                     return (
                                         <Button onClick={handleSaveClick} color="primary">
                                             <Typography variant="button">
-                                                <FormattedMessage
-                                                    id="reactAdmin.core.editDialog.save"
-                                                    defaultMessage="Speichern"
-                                                    description="Button to save the changes of the dialog"
-                                                />
+                                                <FormattedMessage id="reactAdmin.generic.save" defaultMessage="Save" />
                                             </Typography>
                                         </Button>
                                     );

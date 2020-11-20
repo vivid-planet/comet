@@ -38,20 +38,20 @@ export function DeleteMutation(props: IProps) {
             <Dialog open={dialogOpen} onClose={handleNoClick}>
                 <DialogTitle>
                     <FormattedMessage
-                        id="reactAdmin.core.deleteMutation.promptDelete"
-                        defaultMessage="Datensatz löschen?"
+                        id="reactAdmin.deleteMutation.promptDelete"
+                        defaultMessage="Delete item?"
                         description="Prompt to delete an item"
                     />
                 </DialogTitle>
                 <DialogActions>
                     <Button onClick={handleYesClick} color="primary" autoFocus={true} variant="contained">
                         <Typography variant="button">
-                            <FormattedMessage id="reactAdmin.core.deleteMutation.yes" defaultMessage="Ja" description="Delete: yes" />
+                            <FormattedMessage id="reactAdmin.generic.yes" defaultMessage="Yes" />
                         </Typography>
                     </Button>
                     <Button onClick={handleNoClick} color="primary">
                         <Typography variant="button">
-                            <FormattedMessage id="reactAdmin.core.deleteMutation.no" defaultMessage="Nein" description="Delete: No" />
+                            <FormattedMessage id="reactAdmin.generic.no" defaultMessage="No" />
                         </Typography>
                     </Button>
                 </DialogActions>

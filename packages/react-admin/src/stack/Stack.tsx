@@ -132,11 +132,7 @@ export class Stack extends React.Component<IProps, IState> {
                                         endIcon={<ArrowBackIcon />}
                                     >
                                         <Typography variant="button">
-                                            <FormattedMessage
-                                                id="reactAdmin.core.stack.stack.back"
-                                                defaultMessage="Zurück"
-                                                description="Back Button"
-                                            />
+                                            <FormattedMessage id="reactAdmin.generic.back" defaultMessage="Back" />
                                         </Typography>
                                     </Button>
                                 )}
