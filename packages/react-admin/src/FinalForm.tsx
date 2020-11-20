@@ -30,14 +30,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     renderButtons?: (formRenderProps: FormRenderProps<FormValues>) => React.ReactNode;
 
     // override final-form onSubmit and remove callback as we don't support that (return pomise instead)
-    onSubmit: (
-        values: FormValues,
-        form: FormApi<FormValues>,
-      ) =>
-        | SubmissionErrors
-        | Promise<SubmissionErrors | undefined>
-        | undefined
-        | void
+    onSubmit: (values: FormValues, form: FormApi<FormValues>) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
