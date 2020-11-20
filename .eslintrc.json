@@ -16,7 +16,7 @@
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
-    "plugins": ["react", "react-hooks", "@typescript-eslint", "simple-import-sort", "unused-imports"],
+    "plugins": ["react", "react-hooks", "@typescript-eslint", "simple-import-sort", "unused-imports", "formatjs"],
     "settings": {
         "react": {
             "version": "detect"
@@ -30,7 +30,9 @@
         "import/order": "off",
         "no-unused-vars": ["error", { "args": "none", "ignoreRestSiblings": true }],
         "prefer-template": "error",
-        "unused-imports/no-unused-imports": "error"
+        "unused-imports/no-unused-imports": "error",
+        "formatjs/enforce-placeholders": "error",
+        "formatjs/enforce-default-message": "error"
     },
     "overrides": [
         {
