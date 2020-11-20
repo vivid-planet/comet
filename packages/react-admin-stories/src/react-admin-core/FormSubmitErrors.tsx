@@ -1,8 +1,7 @@
 import { storiesOf } from "@storybook/react";
-import { FinalForm, form } from "@vivid-planet/react-admin";
+import { Field, FinalForm, FormPaper, Input } from "@vivid-planet/react-admin";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
-const { Field, FormPaper, Input } = form;
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 

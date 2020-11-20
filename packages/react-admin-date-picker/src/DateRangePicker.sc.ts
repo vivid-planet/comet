@@ -2,9 +2,7 @@ import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 
 import zIndex from "@material-ui/core/styles/zIndex";
-import { mui } from "@vivid-planet/react-admin";
-
-const { css, styled } = mui;
+import { css, styled } from "@vivid-planet/react-admin";
 
 interface IDateRangePickerWrapperProps {
     fullWidth: boolean;

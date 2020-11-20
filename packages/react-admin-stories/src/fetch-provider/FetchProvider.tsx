@@ -1,8 +1,6 @@
 import { storiesOf } from "@storybook/react";
-import { fetchProvider } from "@vivid-planet/react-admin";
+import { createFetch, FetchProvider, useFetch } from "@vivid-planet/react-admin";
 import * as React from "react";
-
-const { createFetch, FetchProvider, useFetch } = fetchProvider;
 
 function ExampleFetch() {
     const fetch = useFetch();

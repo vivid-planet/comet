@@ -1,9 +1,8 @@
 import { Button, ListItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { form } from "@vivid-planet/react-admin";
+import { Field, FieldContainerLabelAbove, Input, ReactSelectStaticOptions } from "@vivid-planet/react-admin";
 import * as React from "react";
 import { Form } from "react-final-form";
-const { Field, FieldContainerLabelAbove, Input, ReactSelectStaticOptions } = form;
 
 function Story() {
     const options = [

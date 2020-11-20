@@ -1,8 +1,7 @@
 import { storiesOf } from "@storybook/react";
-import { form } from "@vivid-planet/react-admin";
+import { Field, FieldContainerLabelAbove, ReactSelectStaticOptions } from "@vivid-planet/react-admin";
 import * as React from "react";
 import { Form } from "react-final-form";
-const { Field, FieldContainerLabelAbove, ReactSelectStaticOptions } = form;
 
 function Story() {
     const options = [

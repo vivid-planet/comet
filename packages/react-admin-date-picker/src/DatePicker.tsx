@@ -1,4 +1,4 @@
-import { dateFns } from "@vivid-planet/react-admin";
+import { useLocaleName } from "@vivid-planet/react-admin";
 import * as moment from "moment";
 import * as React from "react";
 import { SingleDatePicker as AirBNBDatePicker } from "react-dates";
@@ -6,8 +6,6 @@ import { FieldRenderProps } from "react-final-form";
 
 import * as sc from "./DatePicker.sc";
 import useUniqueId from "./useUniqueId";
-
-const { useLocaleName } = dateFns;
 
 interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     fullWidth?: boolean;

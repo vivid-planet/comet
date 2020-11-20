@@ -1,11 +1,9 @@
 import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { form } from "@vivid-planet/react-admin";
+import { Field } from "@vivid-planet/react-admin";
 import { ColorPicker } from "@vivid-planet/react-admin-color-picker";
 import * as React from "react";
 import { Form } from "react-final-form";
-
-const { Field } = form;
 
 const Story = () => (
     <div style={{ width: "500px" }}>

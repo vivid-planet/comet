@@ -1,24 +1,11 @@
 import { Button, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import {
-    EditDialog,
-    FinalForm,
-    finalFormMaterialUi,
-    IEditDialogApi,
-    Selected,
-    Stack,
-    StackPage,
-    StackSwitch,
-    Table,
-} from "@vivid-planet/react-admin";
-import { form } from "@vivid-planet/react-admin";
+import { EditDialog, Field, FinalForm, IEditDialogApi, Selected, Stack, StackPage, StackSwitch, Table, TextField } from "@vivid-planet/react-admin";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
-const { Field } = form;
-const { TextField } = finalFormMaterialUi;
 
 interface IExampleRow {
     id: number;

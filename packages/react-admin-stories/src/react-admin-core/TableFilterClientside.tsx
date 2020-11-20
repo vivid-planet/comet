@@ -1,9 +1,6 @@
 import { storiesOf } from "@storybook/react";
-import { Table, TableFilterFinalForm, useTableQueryFilter } from "@vivid-planet/react-admin";
-import { form } from "@vivid-planet/react-admin";
+import { Field, FieldContainerLabelAbove, Input, Table, TableFilterFinalForm, useTableQueryFilter } from "@vivid-planet/react-admin";
 import * as React from "react";
-
-const { Field, FieldContainerLabelAbove, Input } = form;
 
 interface IExampleRow {
     id: number;

@@ -7,10 +7,10 @@ import { Props as ReactSelectCreatableProps } from "react-select/creatable";
 import { ControlProps } from "react-select/src/components/Control";
 
 import {
-    ReactSelect as Select,
-    ReactSelectAsync as Async,
-    ReactSelectAsyncCreatable as AsyncCreatable,
-    ReactSelectCreatable as Creatable,
+    MaterialUiReactSelect as Select,
+    MaterialUiReactSelectAsync as Async,
+    MaterialUiReactSelectAsyncCreatable as AsyncCreatable,
+    MaterialUiReactSelectCreatable as Creatable,
 } from "../materialUiReactSelect";
 
 // override the Control from @vivid-planet/react-admin/ReactSelect with out own styled Input

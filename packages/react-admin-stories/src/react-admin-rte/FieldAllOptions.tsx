@@ -1,11 +1,9 @@
 import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { form } from "@vivid-planet/react-admin";
+import { Field } from "@vivid-planet/react-admin";
 import { createRteField } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
 import { Form } from "react-final-form";
-
-const { Field } = form;
 
 import { ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions";
 

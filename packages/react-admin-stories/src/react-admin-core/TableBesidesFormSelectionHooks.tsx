@@ -1,16 +1,23 @@
 import { storiesOf } from "@storybook/react";
-import { DirtyHandler, FinalForm, ISelectionApi, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@vivid-planet/react-admin";
-import { layout } from "@vivid-planet/react-admin";
-import { form } from "@vivid-planet/react-admin";
+import {
+    DirtyHandler,
+    Field,
+    FinalForm,
+    FixedLeftRightLayout,
+    Input,
+    ISelectionApi,
+    Selected,
+    Table,
+    TableQuery,
+    useSelectionRoute,
+    useTableQuery,
+} from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
-const { Field, Input } = form;
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
-
-const { FixedLeftRightLayout } = layout;
 
 const gqlRest = gql;
 
