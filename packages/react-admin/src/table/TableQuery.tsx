@@ -38,7 +38,7 @@ export function TableQuery(props: IProps) {
                 {props.error && (
                     <p>
                         <FormattedMessage
-                            id="reactAdmin.core.table.tableQuery.error"
+                            id="reactAdmin.table.tableQuery.error"
                             defaultMessage="Error :( {error}"
                             description="Display apollo error message"
                             values={{

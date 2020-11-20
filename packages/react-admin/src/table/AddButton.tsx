@@ -14,7 +14,7 @@ export class TableAddButton extends React.Component<IProps> {
         return (
             <Button color="default" onClick={this.handleAddClick} startIcon={<AddIcon />}>
                 <Typography variant="button">
-                    <FormattedMessage id="reactAdmin.core.table.addButton" defaultMessage="Hinzufügen" description="Add button" />
+                    <FormattedMessage id="reactAdmin.generic.add" defaultMessage="Add" />
                 </Typography>
             </Button>
         );

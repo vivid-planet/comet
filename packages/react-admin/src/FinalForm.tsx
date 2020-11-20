@@ -121,11 +121,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                                                 onClick={handleCancelClick}
                                             >
                                                 <Typography variant="button">
-                                                    <FormattedMessage
-                                                        id="reactAdmin.core.finalForm.abort"
-                                                        defaultMessage="Abbrechen"
-                                                        description="Abort button"
-                                                    />
+                                                    <FormattedMessage id="reactAdmin.generic.cancel" defaultMessage="Cancel" />
                                                 </Typography>
                                             </Button>
                                         )}
@@ -138,11 +134,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                                             disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
                                         >
                                             <Typography variant="button">
-                                                <FormattedMessage
-                                                    id="reactAdmin.core.finalForm.save"
-                                                    defaultMessage="Speichern"
-                                                    description="Save button"
-                                                />
+                                                <FormattedMessage id="reactAdmin.generic.save" defaultMessage="Save" />
                                             </Typography>
                                         </Button>
                                     </ButtonsContainer>

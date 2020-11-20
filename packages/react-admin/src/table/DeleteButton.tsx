@@ -17,7 +17,7 @@ interface IProps {
     refetchQueries?: Array<string | PureQueryOptions>;
 }
 
-const DeleteMessage = () => <FormattedMessage id="reactAdmin.core.table.deleteButton" defaultMessage="Löschen" description="Delete Button" />;
+const DeleteMessage = () => <FormattedMessage id="reactAdmin.generic.delete" defaultMessage="Delete" />;
 
 export class TableDeleteButton extends React.Component<IProps> {
     public render() {

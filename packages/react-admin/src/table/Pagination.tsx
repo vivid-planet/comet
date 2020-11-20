@@ -32,9 +32,9 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                                 <Grid item>
                                     <Typography color="textSecondary" variant="body2">
                                         <FormattedMessage
-                                            id="reactAdmin.core.table.pagination.pageInfo"
+                                            id="reactAdmin.table.pagination.pageInfo"
                                             values={{ total: pagingInfo.totalPages, current: pagingInfo.currentPage }}
-                                            defaultMessage="Seite {current} von {total}"
+                                            defaultMessage="Page {current} of {total}"
                                             description="Pagination-info"
                                         />
                                     </Typography>
