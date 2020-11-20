@@ -21,16 +21,12 @@ export class TableLocalChangesToolbar extends React.Component<IProps> {
                     <Toolbar>
                         <Button color="default" onClick={this.handleSaveClick} startIcon={<SaveIcon />}>
                             <Typography variant="button">
-                                <FormattedMessage
-                                    id="reactAdmin.core.table.localChangesToolbar.save"
-                                    defaultMessage="Speichern"
-                                    description="Save button"
-                                />
+                                <FormattedMessage id="reactAdmin.generic.save" defaultMessage="Save" />
                             </Typography>
                         </Button>
                         <FormattedMessage
                             values={{ count: this.props.localChangesCount }}
-                            id="reactAdmin.core.table.localChangesToolbar.unsavedItems"
+                            id="reactAdmin.table.localChangesToolbar.unsavedItems"
                             defaultMessage="{count, plural, =0 {No unsaved changes} one {# unsaved change} other {# unsaved changes}}"
                         />
                     </Toolbar>

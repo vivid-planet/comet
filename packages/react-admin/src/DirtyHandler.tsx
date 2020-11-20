@@ -16,8 +16,8 @@ type Bindings = IBinding[];
 
 const messages = defineMessages({
     discardChanges: {
-        id: "reactAdmin.core.dirtyHandler.discardChanges",
-        defaultMessage: "Nicht gespeicherte Änderungen verwerfen?",
+        id: "reactAdmin.dirtyHandler.discardChanges",
+        defaultMessage: "Discard unsaved changes?",
         description: "Prompt to discard unsaved changes",
     },
 });

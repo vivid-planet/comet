@@ -3,3 +3,5 @@
 **/.watchmanconfig
 /.docker-sync
 storybook-static/
+react-admin-lang/
+lang/

@@ -44,7 +44,7 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
                 {children != null ? (
                     children
                 ) : (
-                    <FormattedMessage id="reactAdmin.core.table.excelExportButton" defaultMessage="Export" description="Export Button" />
+                    <FormattedMessage id="reactAdmin.table.excelExportButton" defaultMessage="Export" description="Export Button" />
                 )}
             </Typography>
         </Button>

@@ -58,8 +58,8 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                                         >
                                             <Typography variant="button">
                                                 <FormattedMessage
-                                                    id="reactAdmin.core.table.tableFilterFinalForm.resetButton"
-                                                    defaultMessage="Filter zurücksetzen"
+                                                    id="reactAdmin.table.tableFilterFinalForm.resetButton"
+                                                    defaultMessage="Reset filter"
                                                 />
                                             </Typography>
                                         </Button>
