@@ -21,41 +21,45 @@ const ProgressContainer = styled.div`
     justify-content: center;
 `;
 
+const SelectEdit = (props: IProps) => {
+    console.log(props.query);
+    const queryResult = useQuery(props.query!, { variables: { id: props.selectedId } });
+    if (queryResult.error) {
+        const ErrorComponent = props.components?.error;
+        return ErrorComponent !== undefined ? (
+            <ErrorComponent error={queryResult.error} />
+        ) : (
+            <Card>
+                <Box padding={4}>
+                    <Typography>Error :( {queryResult.error.toString()}</Typography>
+                </Box>
+            </Card>
+        );
+    }
+    if (queryResult.loading || !queryResult.data) {
+        return (
+            <ProgressContainer>
+                <CircularProgress />
+            </ProgressContainer>
+        );
+    }
+    if (!props.dataAccessor) {
+        throw new Error("dataChild prop is required");
+    }
+    return <>{props.children(queryResult.data[props.dataAccessor], { selectionMode: "edit" })}</>;
+};
+
 export function Selected(props: IProps) {
-    const ErrorComponent = props.components?.error;
     let row;
     if (props.rows) {
         row = props.rows.find((i) => String(i.id) === String(props.selectedId)); // compare as strings as selectedId might come from url
     }
 
-    const queryResult = useQuery(props.query!, { variables: { id: props.selectedId }, skip: props.query === undefined });
-
     if (props.selectionMode === "edit" && !row) {
-        if (!props.query || !queryResult) {
+        if (!props.query) {
             return null;
         }
-        if (queryResult.error) {
-            return ErrorComponent !== undefined ? (
-                <ErrorComponent error={queryResult.error} />
-            ) : (
-                <Card>
-                    <Box padding={4}>
-                        <Typography>Error :( {queryResult.error.toString()}</Typography>
-                    </Box>
-                </Card>
-            );
-        }
-        if (queryResult.loading || !queryResult.data) {
-            return (
-                <ProgressContainer>
-                    <CircularProgress />
-                </ProgressContainer>
-            );
-        }
-        if (!props.dataAccessor) {
-            throw new Error("dataChild prop is required");
-        }
-        return <>{props.children(queryResult.data[props.dataAccessor], { selectionMode: "edit" })}</>;
+        return <SelectEdit {...props} />;
     } else {
         return (
             <React.Fragment>
