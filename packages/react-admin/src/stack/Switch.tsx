@@ -99,22 +99,20 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
         [history, isInitialPage, match],
     );
 
-    const updatePageBreadcrumbTitle = (t?: string) => {
-        if (activePage) {
-            const title = { ...pageBreadcrumbTitle };
-            title[activePage] = t;
-            setPageBreadcrumbTitle(title);
-        }
-    };
-
-    const api: IStackSwitchApi = React.useMemo(
-        () => ({
+    const api: IStackSwitchApi = React.useMemo(() => {
+        const updatePageBreadcrumbTitle = (t?: string) => {
+            if (activePage) {
+                const title = { ...pageBreadcrumbTitle };
+                title[activePage] = t;
+                setPageBreadcrumbTitle(title);
+            }
+        };
+        return {
             activatePage,
             id,
             updatePageBreadcrumbTitle,
-        }),
-        [activatePage, id, updatePageBreadcrumbTitle],
-    );
+        };
+    }, [activatePage, activePage, id, pageBreadcrumbTitle]);
     React.useImperativeHandle(ref, () => api);
 
     function renderRoute(page: React.ReactElement<IStackPageProps>, routeProps: RouteComponentProps<IRouteParams>) {

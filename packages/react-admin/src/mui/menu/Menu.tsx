@@ -27,7 +27,7 @@ const Menu = ({ classes, children, permanentMenuMinWidth: passedPermanentMenuMin
         if (variant === "temporary" && open) {
             toggleOpen();
         }
-    }, []);
+    }, [open, toggleOpen, variant]);
 
     React.useEffect(() => {
         return history.listen(() => {
@@ -35,7 +35,7 @@ const Menu = ({ classes, children, permanentMenuMinWidth: passedPermanentMenuMin
                 toggleOpen();
             }
         });
-    }, [history, variant, open]);
+    }, [history, variant, open, toggleOpen]);
 
     const getVariantDependantDrawerProps = () => {
         if (variant === "temporary") {

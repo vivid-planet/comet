@@ -10,7 +10,7 @@ export interface IFilterApi<FilterValues extends AnyObject> {
     current: FilterValues;
     formApi: FormApi<FilterValues>;
 }
-export function useTableQueryFilter<FilterValues extends AnyObject>(
+export function useTableQueryFilter<FilterValues>(
     defaultValues: FilterValues,
     options: {
         pagingApi?: IPagingApi<any>;
@@ -45,7 +45,7 @@ export function useTableQueryFilter<FilterValues extends AnyObject>(
             { values: true },
         );
         return unsubscribe;
-    }, [filters, setFilters]);
+    }, [filters, options.pagingApi, setFilters]);
 
     return {
         current: filters,

@@ -68,7 +68,7 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
 
     React.useEffect(() => {
         onChange(colorToHex(value)); // convert initial color to hex
-    }, []);
+    }, [onChange, value]);
 
     const isOpen = Boolean(anchorEl);
 
