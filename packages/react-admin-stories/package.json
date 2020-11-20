@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/react-admin-stories",
-    "version": "1.0.8-alpha.14",
+    "version": "0.1.0",
     "files": [
         "src"
     ],
@@ -9,17 +9,8 @@
         "@material-ui/core": "^4.1.3",
         "@material-ui/icons": "^4.2.1",
         "@material-ui/styles": "^4.1.2",
-        "@vivid-planet/fetch-provider": "*",
-        "@vivid-planet/file-icons": "*",
-        "@vivid-planet/material-ui-react-select": "*",
+        "@vivid-planet/react-admin": "*",
         "@vivid-planet/react-admin-color-picker": "*",
-        "@vivid-planet/react-admin-core": "*",
-        "@vivid-planet/react-admin-date-fns": "*",
-        "@vivid-planet/react-admin-date-picker": "*",
-        "@vivid-planet/react-admin-final-form-material-ui": "*",
-        "@vivid-planet/react-admin-form": "*",
-        "@vivid-planet/react-admin-layout": "*",
-        "@vivid-planet/react-admin-mui": "*",
         "@vivid-planet/react-admin-rte": "*",
         "final-form": "^4.16.1",
         "graphql": "^15.4.0",

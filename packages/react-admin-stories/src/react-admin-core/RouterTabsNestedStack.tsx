@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { RouterTab, RouterTabs, Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@vivid-planet/react-admin-core";
+import { RouterTab, RouterTabs, Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@vivid-planet/react-admin";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
 
@@ -38,6 +38,6 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(StoryRouter())
     .add("RouterTabs with nested Stack", () => <Story />);

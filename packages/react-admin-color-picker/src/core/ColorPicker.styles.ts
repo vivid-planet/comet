@@ -1,6 +1,8 @@
 import { Theme } from "@material-ui/core";
 import { createStyles } from "@material-ui/styles";
-import { getDefaultVPAdminInputStyles } from "@vivid-planet/react-admin-form";
+import { form } from "@vivid-planet/react-admin";
+
+const { getDefaultVPAdminInputStyles } = form;
 
 export type VPAdminColorPickerClassKeys =
     | "input"

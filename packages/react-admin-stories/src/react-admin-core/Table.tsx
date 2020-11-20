@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { Table } from "@vivid-planet/react-admin-core";
+import { Table } from "@vivid-planet/react-admin";
 import * as React from "react";
 
 interface IExampleRow {
@@ -44,4 +44,4 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module).add("Table", () => <Story />);
+storiesOf("react-admin", module).add("Table", () => <Story />);

@@ -2,7 +2,7 @@ import { IconButton, TableCell } from "@material-ui/core";
 import TableRow from "@material-ui/core/TableRow";
 import { Add as AddIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import { ITableHeadRowProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "@vivid-planet/react-admin-core";
+import { ITableHeadRowProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "@vivid-planet/react-admin";
 import * as React from "react";
 
 interface IRow {
@@ -76,4 +76,4 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module).add("Table Expanded Row", () => <Story />);
+storiesOf("react-admin", module).add("Table Expanded Row", () => <Story />);

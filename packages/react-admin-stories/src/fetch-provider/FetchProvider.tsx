@@ -1,6 +1,8 @@
 import { storiesOf } from "@storybook/react";
-import { createFetch, FetchProvider, useFetch } from "@vivid-planet/fetch-provider";
+import { fetchProvider } from "@vivid-planet/react-admin";
 import * as React from "react";
+
+const { createFetch, FetchProvider, useFetch } = fetchProvider;
 
 function ExampleFetch() {
     const fetch = useFetch();
@@ -11,7 +13,7 @@ function ExampleFetch() {
             setData(await response.json());
         };
         fetchData();
-    }, []);
+    }, [fetch]);
     return <div>{JSON.stringify(data)}</div>;
 }
 

@@ -14,11 +14,13 @@ import {
     usePersistedStateId,
     useTableQuery,
     useTableQueryFilter,
-} from "@vivid-planet/react-admin-core";
-import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admin-form";
+} from "@vivid-planet/react-admin";
+import { form } from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
+
+const { Field, FieldContainerLabelAbove, Input } = form;
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
@@ -167,7 +169,7 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(apolloStoryDecorator())
     .addDecorator(StoryRouter())
     .add("Stack Table Form Query in Table", () => <Story />);

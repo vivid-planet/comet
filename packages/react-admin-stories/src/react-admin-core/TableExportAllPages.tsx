@@ -7,7 +7,7 @@ import {
     useExportPagedTableQuery,
     useTableQuery,
     useTableQueryPaging,
-} from "@vivid-planet/react-admin-core";
+} from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as React from "react";
 
@@ -115,6 +115,6 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(apolloStoryDecorator())
     .add("Table Export All Pages", () => <Story />);

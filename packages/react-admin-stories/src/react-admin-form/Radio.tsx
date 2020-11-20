@@ -1,9 +1,12 @@
 import { FormControlLabel } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { Radio } from "@vivid-planet/react-admin-final-form-material-ui";
-import { Field, FieldContainer, Input } from "@vivid-planet/react-admin-form";
+import { finalFormMaterialUi, form } from "@vivid-planet/react-admin";
 import * as React from "react";
 import { Form } from "react-final-form";
+
+const { Field, FieldContainer, Input } = form;
+const { Radio } = finalFormMaterialUi;
+
 function Story() {
     return (
         <div style={{ width: "300px" }}>

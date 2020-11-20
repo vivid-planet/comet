@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { createRestPagingActions, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@vivid-planet/react-admin-core";
+import { createRestPagingActions, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as React from "react";
 
@@ -76,7 +76,7 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(
         apolloStoryDecorator({
             uri: "https://swapi.co/api/",

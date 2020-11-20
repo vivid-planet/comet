@@ -9,13 +9,15 @@ import {
     useTableQueryFilter,
     useTableQueryPaging,
     useTableQuerySort,
-} from "@vivid-planet/react-admin-core";
-import { Field, FieldContainerLabelAbove, Input } from "@vivid-planet/react-admin-form";
+} from "@vivid-planet/react-admin";
+import { form } from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
+
+const { Field, FieldContainerLabelAbove, Input } = form;
 
 const gqlRest = gql;
 
@@ -172,7 +174,7 @@ interface IResponseLinks {
     next?: string;
     last?: string;
 }
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(
         apolloStoryDecorator({
             responseTransformer: async (response) => {

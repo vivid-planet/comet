@@ -14,7 +14,7 @@
 ### use yarn
 
     docker-compose exec react-admin bash -c "yarn --help"
-    docker-compose exec react-admin bash -c "cd packages/react-admin-core && yarn --help"
+    docker-compose exec react-admin bash -c "cd packages/react-admin && yarn --help"
 
 ### Develop in an project
 

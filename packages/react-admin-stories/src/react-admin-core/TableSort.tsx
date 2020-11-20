@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } from "@vivid-planet/react-admin-core";
+import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as React from "react";
 
@@ -85,6 +85,6 @@ function Story() {
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("react-admin", module)
     .addDecorator(apolloStoryDecorator())
     .add("Table Sort", () => <Story />);

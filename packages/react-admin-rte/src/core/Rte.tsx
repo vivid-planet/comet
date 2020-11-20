@@ -129,18 +129,20 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         },
     }));
 
+    const { filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType } = options;
+
     const decoratedOnChange = React.useCallback(
         (nextEditorState: EditorState) => {
             let modifiedState = nextEditorState;
             const context = {
-                supports: options.supports,
-                listLevelMax: options.listLevelMax,
-                maxBlocks: options.maxBlocks,
-                standardBlockType: options.standardBlockType,
+                supports: supports,
+                listLevelMax: listLevelMax,
+                maxBlocks: maxBlocks,
+                standardBlockType: standardBlockType,
             };
             // apply optional filter to editorState
-            if (options.filterEditorStateBeforeUpdate) {
-                modifiedState = options.filterEditorStateBeforeUpdate(modifiedState, context);
+            if (filterEditorStateBeforeUpdate) {
+                modifiedState = filterEditorStateBeforeUpdate(modifiedState, context);
             }
             // apply mandatory filter to editorState
             modifiedState = mandatoryFilterEditorStateFn(modifiedState, context);
@@ -148,7 +150,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
             // pass the modified filter to original onChange
             onChange(modifiedState);
         },
-        [options.filterEditorStateBeforeUpdate, options.supports, options.listLevelMax, onChange],
+        [filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType, onChange],
     );
 
     const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
