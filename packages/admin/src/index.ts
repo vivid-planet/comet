@@ -64,6 +64,7 @@ export { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirt
 export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
 export { useFetch, createFetch, FetchProvider, FetchContext } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
+export { useAutocompleteAsyncProps, Autocomplete } from "./form/Autocomplete";
 export { Field } from "./form/Field";
 export { FieldContainerClassKey, FieldContainer, FieldContainerComponent, FieldContainerProps } from "./form/FieldContainer";
 export { FormSectionKey, FormSection, FormSectionProps } from "./form/FormSection";
