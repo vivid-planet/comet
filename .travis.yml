@@ -13,7 +13,7 @@ jobs:
           script:
               - INSTALL_DEPS=1 RUN_AS_UID=`id -u` ./lint.sh
         - name: "Extracting String Resources"
-          if: branch = master
+          if: branch = next
           script:
               - yarn install
               - npm run intl:extract
