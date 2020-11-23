@@ -9,7 +9,6 @@ export * from "./fetchProvider";
 export * from "./fileIcons";
 export * from "./form";
 export * from "./layout";
-export * from "./materialUiReactSelect";
 export * from "./mui";
 
 // Export Files
