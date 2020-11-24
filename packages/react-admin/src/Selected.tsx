@@ -22,7 +22,6 @@ const ProgressContainer = styled.div`
 `;
 
 const SelectEdit = (props: IProps) => {
-    console.log(props.query);
     const queryResult = useQuery(props.query!, { variables: { id: props.selectedId } });
     if (queryResult.error) {
         const ErrorComponent = props.components?.error;
