@@ -3,8 +3,8 @@ import {
     DirtyHandler,
     Field,
     FinalForm,
+    FinalFormInput,
     FixedLeftRightLayout,
-    Input,
     ISelectionApi,
     Selected,
     SelectionRoute,
@@ -82,7 +82,7 @@ function ExampleForm(props: IExampleFormProps) {
             }}
             initialValues={props.user}
         >
-            <Field label="Name" name="name" defaultOptions required component={Input} />
+            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
         </FinalForm>
     );
 }

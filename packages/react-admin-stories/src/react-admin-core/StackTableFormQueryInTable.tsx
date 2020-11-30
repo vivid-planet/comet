@@ -6,7 +6,7 @@ import {
     Field,
     FieldContainerLabelAbove,
     FinalForm,
-    Input,
+    FinalFormInput,
     Stack,
     StackPage,
     StackSwitch,
@@ -79,7 +79,7 @@ function ExampleTable(props: { persistedStateId: string }) {
                             name="query"
                             type="text"
                             label="Query"
-                            component={Input}
+                            component={FinalFormInput}
                             fullWidth
                             fieldContainerComponent={FieldContainerLabelAbove}
                         />
@@ -148,7 +148,7 @@ function ExampleForm(props: IExampleFormProps) {
             }}
             initialValues={data.user}
         >
-            <Field label="Name" name="name" defaultOptions required component={Input} />
+            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
         </FinalForm>
     );
 }

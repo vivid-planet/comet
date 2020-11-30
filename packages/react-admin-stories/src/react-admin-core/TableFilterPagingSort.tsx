@@ -3,7 +3,7 @@ import {
     createRestPagingActions,
     Field,
     FieldContainerLabelAbove,
-    Input,
+    FinalFormInput,
     SortDirection,
     Table,
     TableFilterFinalForm,
@@ -136,7 +136,7 @@ function Story() {
                             name="query"
                             type="text"
                             label="Query"
-                            component={Input}
+                            component={FinalFormInput}
                             fullWidth
                             fieldContainerComponent={FieldContainerLabelAbove}
                         />

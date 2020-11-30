@@ -2,7 +2,7 @@ import { storiesOf } from "@storybook/react";
 import {
     Field,
     FieldContainerLabelAbove,
-    Input,
+    FinalFormInput,
     Table,
     TableFilterFinalForm,
     TableQuery,
@@ -87,7 +87,7 @@ function Story() {
                             name="query"
                             type="text"
                             label="Query"
-                            component={Input}
+                            component={FinalFormInput}
                             fullWidth
                             fieldContainerComponent={FieldContainerLabelAbove}
                         />

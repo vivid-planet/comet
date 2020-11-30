@@ -3,7 +3,7 @@ import { FieldInputProps, FieldRenderProps } from "react-final-form";
 import { Props as ReactSelectProps } from "react-select/base";
 import { OptionsType } from "react-select/src/types";
 
-import { ReactSelect } from "./ReactSelect";
+import { FinalFormReactSelect } from "./ReactSelect";
 
 interface IOptionType {
     value: string;
@@ -13,7 +13,7 @@ interface IOptionType {
 interface IProps extends FieldRenderProps<string, HTMLElement>, ReactSelectProps<IOptionType> {
     options: OptionsType<IOptionType>;
 }
-export class ReactSelectStaticOptions extends React.Component<IProps> {
+export class FinalFormReactSelectStaticOptions extends React.Component<IProps> {
     public render() {
         const { input, meta, ...rest } = this.props;
 
@@ -23,7 +23,7 @@ export class ReactSelectStaticOptions extends React.Component<IProps> {
             value: optionValue,
         };
         return (
-            <ReactSelect<IOptionType>
+            <FinalFormReactSelect<IOptionType>
                 {...rest}
                 input={selectInput}
                 meta={{

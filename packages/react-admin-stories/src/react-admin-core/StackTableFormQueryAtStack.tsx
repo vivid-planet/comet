@@ -6,8 +6,8 @@ import {
     Field,
     FieldContainerLabelAbove,
     FinalForm,
+    FinalFormInput,
     IFilterApi,
-    Input,
     Stack,
     StackPage,
     StackSwitch,
@@ -68,7 +68,14 @@ function ExampleTable(props: IExampleTableProps) {
     return (
         <>
             <TableFilterFinalForm filterApi={props.filterApi}>
-                <Field name="query" type="text" label="Query" component={Input} fullWidth fieldContainerComponent={FieldContainerLabelAbove} />
+                <Field
+                    name="query"
+                    type="text"
+                    label="Query"
+                    component={FinalFormInput}
+                    fullWidth
+                    fieldContainerComponent={FieldContainerLabelAbove}
+                />
             </TableFilterFinalForm>
             <Table
                 {...props.tableData}
@@ -132,7 +139,7 @@ function ExampleForm(props: IExampleFormProps) {
             }}
             initialValues={data.user}
         >
-            <Field label="Name" name="name" defaultOptions required component={Input} />
+            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
         </FinalForm>
     );
 }

@@ -13,7 +13,7 @@ interface IConfig<T = any> {
 
 const defaultConfig: IConfig = {};
 
-function createRteField<T = any>(config: IConfig<T> = defaultConfig) {
+function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
     const { rteApiOptions, rteOptions } = config;
     const [useRteApi, { createStateFromRawContent }] = makeRteApi(rteApiOptions);
 
@@ -66,4 +66,4 @@ function createRteField<T = any>(config: IConfig<T> = defaultConfig) {
     return { RteField, RteReadOnly };
 }
 
-export default createRteField;
+export default createFinalFormRte;

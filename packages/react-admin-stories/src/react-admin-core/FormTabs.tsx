@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { Field, FinalForm, FormPaper, Input, Tab, Tabs } from "@vivid-planet/react-admin";
+import { Field, FinalForm, FinalFormInput, FormPaper, Tab, Tabs } from "@vivid-planet/react-admin";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
@@ -19,12 +19,12 @@ function Story() {
             <Tabs>
                 <Tab label="Example 1">
                     <FormPaper>
-                        <Field label="Foo" name="foo" component={Input} />
+                        <Field label="Foo" name="foo" component={FinalFormInput} />
                     </FormPaper>
                 </Tab>
                 <Tab label="Example 2">
                     <FormPaper>
-                        <Field label="Bar" name="bar" component={Input} />
+                        <Field label="Bar" name="bar" component={FinalFormInput} />
                     </FormPaper>
                 </Tab>
             </Tabs>

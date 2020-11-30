@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import {
     Field,
     FieldContainerLabelAbove,
-    ReactSelectStaticOptions,
+    FinalFormReactSelectStaticOptions,
     Table,
     TableFilterFinalForm,
     TableQuery,
@@ -89,7 +89,7 @@ function Story() {
                                 <Field
                                     name="selectQuery"
                                     label="Name"
-                                    component={ReactSelectStaticOptions}
+                                    component={FinalFormReactSelectStaticOptions}
                                     fieldContainerComponent={FieldContainerLabelAbove}
                                     options={[
                                         { label: "Leanne Graham", value: "Leanne Graham" },

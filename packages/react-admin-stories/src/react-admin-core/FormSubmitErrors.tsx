@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { Field, FinalForm, FormPaper, Input } from "@vivid-planet/react-admin";
+import { Field, FinalForm, FinalFormInput, FormPaper } from "@vivid-planet/react-admin";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
 
@@ -36,10 +36,10 @@ function Story() {
         <FinalForm mode="edit" onSubmit={onSubmit} initialValues={initialValues} resolveSubmitErrors={resolveSubmitErrors}>
             <div>
                 <FormPaper>
-                    <Field label="Foo" name="foo" component={Input} />
+                    <Field label="Foo" name="foo" component={FinalFormInput} />
                 </FormPaper>
                 <FormPaper>
-                    <Field label="Bar" name="bar" component={Input} />
+                    <Field label="Bar" name="bar" component={FinalFormInput} />
                 </FormPaper>
             </div>
         </FinalForm>

@@ -1,5 +1,5 @@
 import { storiesOf } from "@storybook/react";
-import { Field, FieldContainerLabelAbove, Input, Table, TableFilterFinalForm, useTableQueryFilter } from "@vivid-planet/react-admin";
+import { Field, FieldContainerLabelAbove, FinalFormInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@vivid-planet/react-admin";
 import * as React from "react";
 
 interface IExampleRow {
@@ -23,7 +23,14 @@ function Story() {
     return (
         <>
             <TableFilterFinalForm filterApi={filterApi}>
-                <Field name="query" type="text" label="Query" component={Input} fullWidth fieldContainerComponent={FieldContainerLabelAbove} />
+                <Field
+                    name="query"
+                    type="text"
+                    label="Query"
+                    component={FinalFormInput}
+                    fullWidth
+                    fieldContainerComponent={FieldContainerLabelAbove}
+                />
             </TableFilterFinalForm>
             <Table
                 data={filteredData}

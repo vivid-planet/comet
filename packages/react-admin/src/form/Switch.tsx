@@ -4,6 +4,10 @@ import { FieldRenderProps } from "react-final-form";
 
 interface IProps extends FieldRenderProps<string, HTMLInputElement> {}
 
-export const Switch: React.FunctionComponent<IProps & SwitchProps> = ({ input: { checked, name, onChange, ...restInput }, meta, ...rest }) => {
+export const FinalFormSwitch: React.FunctionComponent<IProps & SwitchProps> = ({
+    input: { checked, name, onChange, ...restInput },
+    meta,
+    ...rest
+}) => {
     return <MuiSwitch {...rest} name={name} inputProps={restInput} onChange={onChange} checked={checked} />;
 };

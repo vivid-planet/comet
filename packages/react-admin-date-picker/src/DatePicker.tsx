@@ -13,7 +13,7 @@ interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     placeholder?: string;
 }
 
-export const DatePicker: React.FC<IProps> = ({
+export const FinalFormDatePicker: React.FC<IProps> = ({
     input: { value, onChange, name },
     fullWidth = false,
     color = "default",

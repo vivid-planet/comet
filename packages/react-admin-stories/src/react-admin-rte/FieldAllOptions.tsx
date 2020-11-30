@@ -1,13 +1,13 @@
 import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { Field } from "@vivid-planet/react-admin";
-import { createRteField } from "@vivid-planet/react-admin-rte";
+import { createFinalFormRte } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
 import { Form } from "react-final-form";
 
 import { ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions";
 
-const { RteField, RteReadOnly } = createRteField<ContentFormat>({
+const { RteField, RteReadOnly } = createFinalFormRte<ContentFormat>({
     rteApiOptions: makeApiOptions, // see ./RteAllOptions for details
     rteOptions, // see ./RteAllOptions for details
 });

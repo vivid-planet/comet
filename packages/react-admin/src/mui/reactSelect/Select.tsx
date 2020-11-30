@@ -1,4 +1,5 @@
-import { Chip, MenuItem, Paper, TextField, Theme, Typography } from "@material-ui/core";
+import { Chip, MenuItem, Paper, Theme, Typography } from "@material-ui/core";
+import MuiInputBase, { InputBaseProps } from "@material-ui/core/InputBase";
 import { SvgIconComponent } from "@material-ui/icons";
 import CancelIcon from "@material-ui/icons/Cancel";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -34,22 +35,19 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
+export const ControlInput = ({ ...props }: InputBaseProps) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} />;
+
 function Control<OptionType>(props: ControlProps<OptionType>) {
-    return (
-        <TextField
-            fullWidth
-            InputProps={{
-                inputComponent,
-                inputProps: {
-                    className: props.selectProps.classes.input,
-                    inputRef: props.innerRef,
-                    children: props.children,
-                    ...props.innerProps,
-                },
-            }}
-            {...props.selectProps.textFieldProps}
-        />
-    );
+    const InputProps = {
+        inputComponent,
+        inputProps: {
+            className: props.selectProps.classes.input,
+            inputRef: props.innerRef,
+            children: props.children,
+            ...props.innerProps,
+        },
+    };
+    return <ControlInput type="text" fullWidth {...InputProps} {...props.selectProps.textFieldProps} />;
 }
 
 function Option<OptionType>(props: OptionProps<OptionType>) {
@@ -193,25 +191,30 @@ class SelectWrapper<OptionType> extends React.Component<IVPAdminSelectProps<Opti
 }
 const ExtendedSelectWrapper = withStyles(styles, { name: "VPAdminSelect", withTheme: true })(SelectWrapper);
 
+const vividStyles = {
+    dropdownIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
+    clearIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
+};
+
 export class ReactSelect<OptionType> extends React.Component<ReactSelectProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={Select} {...this.props} />;
+        return <ExtendedSelectWrapper selectComponent={Select} {...this.props} styles={{ ...vividStyles }} />;
     }
 }
 export class ReactSelectAsync<OptionType> extends React.Component<ReactSelectAsyncProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={AsyncSelect} {...this.props} />;
+        return <ExtendedSelectWrapper selectComponent={AsyncSelect} {...this.props} styles={{ ...vividStyles }} />;
     }
 }
 export class ReactSelectCreatable<OptionType> extends React.Component<ReactSelectCreatableProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={CreatableSelect} {...this.props} />;
+        return <ExtendedSelectWrapper selectComponent={CreatableSelect} {...this.props} styles={{ ...vividStyles }} />;
     }
 }
 export class ReactSelectAsyncCreatable<OptionType> extends React.Component<
     ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
 > {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={AsyncCreatableSelect} {...this.props} />;
+        return <ExtendedSelectWrapper selectComponent={AsyncCreatableSelect} {...this.props} styles={{ ...vividStyles }} />;
     }
 }

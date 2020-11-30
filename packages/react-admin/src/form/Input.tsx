@@ -29,4 +29,4 @@ const InputBase: React.FunctionComponent<InputBaseProps & FieldRenderProps<strin
     return <MuiInputBase {...input} {...props} />;
 };
 
-export const Input = withStyles(styles, { name: "VPAdminInputBase", withTheme: true })(InputBase);
+export const FinalFormInput = withStyles(styles, { name: "VPAdminInputBase", withTheme: true })(InputBase);
