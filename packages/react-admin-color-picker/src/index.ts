@@ -1,2 +1,2 @@
-export { default as ColorPicker } from "./core/ColorPicker";
+export { default as FinalFormColorPicker } from "./core/ColorPicker";
 export * from "./themeAugmentation";

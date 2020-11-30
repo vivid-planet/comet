@@ -2,6 +2,9 @@ import { storiesOf } from "@storybook/react";
 import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
+    Field,
+    FieldContainerLabelAbove,
+    FinalFormInput,
     Table,
     TableFilterFinalForm,
     TableQuery,
@@ -12,12 +15,10 @@ import {
     useTableQueryPaging,
     VisibleType,
 } from "@vivid-planet/react-admin";
-import { form } from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
-const { Field, FieldContainerLabelAbove, Input } = form;
 
 const gqlRest = gql;
 
@@ -93,7 +94,7 @@ function Story() {
                             name="query"
                             type="text"
                             label="Query"
-                            component={Input}
+                            component={FinalFormInput}
                             fullWidth
                             fieldContainerComponent={FieldContainerLabelAbove}
                         />

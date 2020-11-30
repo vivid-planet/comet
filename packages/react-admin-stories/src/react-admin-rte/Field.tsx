@@ -1,12 +1,11 @@
 import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { form } from "@vivid-planet/react-admin";
-import { createRteField } from "@vivid-planet/react-admin-rte";
+import { Field } from "@vivid-planet/react-admin";
+import { createFinalFormRte } from "@vivid-planet/react-admin-rte";
 import * as React from "react";
 import { Form } from "react-final-form";
-const { Field } = form;
 
-const { RteField, RteReadOnly } = createRteField();
+const { RteField, RteReadOnly } = createFinalFormRte();
 
 function Story() {
     const [submitedValue, setSubmittedValue] = React.useState<{ rteContent: any }>({ rteContent: undefined });

@@ -1,13 +1,9 @@
 import { Button } from "@material-ui/core";
 import { BeachAccess as BeachAccessIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import { FinalForm, form, mui } from "@vivid-planet/react-admin";
+import { Field, FinalForm, FinalFormInput, FormPaper, styled } from "@vivid-planet/react-admin";
 import * as React from "react";
 import { AnyObject } from "react-final-form";
-
-const { Field, FormPaper, Input } = form;
-
-const { styled } = mui;
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
@@ -58,8 +54,8 @@ function Story() {
             renderButtons={(props) => <FormCustomButtons formRenderProps={props} />}
         >
             <FormPaper>
-                <Field label="Foo" name="foo" component={Input} />
-                <Field label="Bar" name="bar" component={Input} />
+                <Field label="Foo" name="foo" component={FinalFormInput} />
+                <Field label="Bar" name="bar" component={FinalFormInput} />
             </FormPaper>
         </FinalForm>
     );

@@ -1,9 +1,8 @@
 import { Button, ListItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { form } from "@vivid-planet/react-admin";
+import { Field, FieldContainerLabelAbove, FinalFormInput, FinalFormReactSelectStaticOptions } from "@vivid-planet/react-admin";
 import * as React from "react";
 import { Form } from "react-final-form";
-const { Field, FieldContainerLabelAbove, Input, ReactSelectStaticOptions } = form;
 
 function Story() {
     const options = [
@@ -25,12 +24,19 @@ function Story() {
                 }}
                 render={({ handleSubmit, pristine, invalid }) => (
                     <form onSubmit={handleSubmit}>
-                        <Field name="name" label="Name" type="text" fieldContainerComponent={FieldContainerLabelAbove} component={Input} fullWidth />
+                        <Field
+                            name="name"
+                            label="Name"
+                            type="text"
+                            fieldContainerComponent={FieldContainerLabelAbove}
+                            component={FinalFormInput}
+                            fullWidth
+                        />
                         <Field
                             name="flavor"
                             label="Flavor"
                             fieldContainerComponent={FieldContainerLabelAbove}
-                            component={ReactSelectStaticOptions}
+                            component={FinalFormReactSelectStaticOptions}
                             isClearable
                             defaultOptions
                             options={options}

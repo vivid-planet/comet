@@ -1,13 +1,9 @@
 import { Button, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import { EditDialog, FinalForm, IEditDialogApi, Selected, Table } from "@vivid-planet/react-admin";
-import { finalFormMaterialUi } from "@vivid-planet/react-admin";
-import { form } from "@vivid-planet/react-admin";
+import { EditDialog, Field, FinalForm, FinalFormTextField, IEditDialogApi, Selected, Table } from "@vivid-planet/react-admin";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
-const { Field } = form;
-const { TextField } = finalFormMaterialUi;
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
@@ -30,7 +26,7 @@ function EditForm(props: IEditFormProps) {
                 alert(JSON.stringify(values));
             }}
         >
-            <Field name="foo" component={TextField} type="text" label="Name" />
+            <Field name="foo" component={FinalFormTextField} type="text" label="Name" />
         </FinalForm>
     );
 }

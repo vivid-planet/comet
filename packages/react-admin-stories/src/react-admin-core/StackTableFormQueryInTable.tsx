@@ -3,7 +3,10 @@ import { CircularProgress, Grid, IconButton } from "@material-ui/core";
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import {
+    Field,
+    FieldContainerLabelAbove,
     FinalForm,
+    FinalFormInput,
     Stack,
     StackPage,
     StackSwitch,
@@ -15,12 +18,9 @@ import {
     useTableQuery,
     useTableQueryFilter,
 } from "@vivid-planet/react-admin";
-import { form } from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
-
-const { Field, FieldContainerLabelAbove, Input } = form;
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
@@ -79,7 +79,7 @@ function ExampleTable(props: { persistedStateId: string }) {
                             name="query"
                             type="text"
                             label="Query"
-                            component={Input}
+                            component={FinalFormInput}
                             fullWidth
                             fieldContainerComponent={FieldContainerLabelAbove}
                         />
@@ -148,7 +148,7 @@ function ExampleForm(props: IExampleFormProps) {
             }}
             initialValues={data.user}
         >
-            <Field label="Name" name="name" defaultOptions required component={Input} />
+            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
         </FinalForm>
     );
 }

@@ -3,8 +3,9 @@ import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import {
     EditDialog,
+    Field,
     FinalForm,
-    finalFormMaterialUi,
+    FinalFormTextField,
     IEditDialogApi,
     Selected,
     Stack,
@@ -12,13 +13,10 @@ import {
     StackSwitch,
     Table,
 } from "@vivid-planet/react-admin";
-import { form } from "@vivid-planet/react-admin";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
-const { Field } = form;
-const { TextField } = finalFormMaterialUi;
 
 interface IExampleRow {
     id: number;
@@ -39,7 +37,7 @@ function EditForm(props: IEditFormProps) {
                 alert(JSON.stringify(values));
             }}
         >
-            <Field name="foo" component={TextField} type="text" label="Name" />
+            <Field name="foo" component={FinalFormTextField} type="text" label="Name" />
         </FinalForm>
     );
 }

@@ -1,7 +1,5 @@
 import { Select as MuiSelect } from "@material-ui/core";
-import { mui } from "@vivid-planet/react-admin";
-
-const { styled } = mui;
+import { styled } from "@vivid-planet/react-admin";
 
 export const Select = styled(MuiSelect)`
     && {

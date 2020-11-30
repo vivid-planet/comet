@@ -1,4 +1,4 @@
-import { dateFns } from "@vivid-planet/react-admin";
+import { useLocaleName } from "@vivid-planet/react-admin";
 import * as moment from "moment";
 import * as React from "react";
 import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
@@ -6,8 +6,6 @@ import { FieldRenderProps } from "react-final-form";
 
 import * as sc from "./DateRangePicker.sc";
 import useUniqueId from "./useUniqueId";
-
-const { useLocaleName } = dateFns;
 
 interface IDateRange {
     start: Date | null;
@@ -21,7 +19,7 @@ interface IProps extends FieldRenderProps<IDateRange, HTMLInputElement> {
     endPlaceholder?: string;
 }
 
-export const DateRangePicker: React.FC<IProps> = ({
+export const FinalFormDateRangePicker: React.FC<IProps> = ({
     input: { value, onChange, name },
     fullWidth = false,
     color = "default",

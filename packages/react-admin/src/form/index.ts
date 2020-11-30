@@ -7,3 +7,7 @@ export * from "./Input";
 export * from "./ReactSelect";
 export * from "./ReactSelectStaticOptions";
 export * from "./themeAugmentation";
+export * from "./Checkbox";
+export * from "./Radio";
+export * from "./Switch";
+export * from "./TextField";

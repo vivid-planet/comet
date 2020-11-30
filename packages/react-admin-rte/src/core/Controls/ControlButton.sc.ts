@@ -1,6 +1,4 @@
-import { mui } from "@vivid-planet/react-admin";
-
-const { css, styled } = mui;
+import { css, styled } from "@vivid-planet/react-admin";
 
 interface IRootProps {
     disabled: boolean;

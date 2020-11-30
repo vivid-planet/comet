@@ -1,12 +1,19 @@
 import { storiesOf } from "@storybook/react";
-import { Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@vivid-planet/react-admin";
-import { form } from "@vivid-planet/react-admin";
+import {
+    Field,
+    FieldContainerLabelAbove,
+    FinalFormInput,
+    Table,
+    TableFilterFinalForm,
+    TableQuery,
+    useTableQuery,
+    useTableQueryFilter,
+} from "@vivid-planet/react-admin";
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
-const { Field, FieldContainerLabelAbove, Input } = form;
 
 const gqlRest = gql;
 
@@ -80,7 +87,7 @@ function Story() {
                             name="query"
                             type="text"
                             label="Query"
-                            component={Input}
+                            component={FinalFormInput}
                             fullWidth
                             fieldContainerComponent={FieldContainerLabelAbove}
                         />

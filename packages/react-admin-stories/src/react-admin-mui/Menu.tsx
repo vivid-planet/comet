@@ -1,12 +1,10 @@
 import { Typography } from "@material-ui/core";
 import { CalendarToday, Home, School, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import { mui } from "@vivid-planet/react-admin";
+import { MasterLayout, Menu, MenuCollapsibleItem, MenuItemRouterLink } from "@vivid-planet/react-admin";
 import * as React from "react";
 import { Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
-
-const { MasterLayout, Menu, MenuCollapsibleItem, MenuItemRouterLink } = mui;
 
 const AppMenu: React.FC = () => (
     <Menu>

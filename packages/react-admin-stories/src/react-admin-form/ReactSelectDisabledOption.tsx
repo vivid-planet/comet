@@ -1,8 +1,7 @@
 import { storiesOf } from "@storybook/react";
-import { form } from "@vivid-planet/react-admin";
+import { Field, FieldContainerLabelAbove, FinalFormReactSelectStaticOptions } from "@vivid-planet/react-admin";
 import * as React from "react";
 import { Form } from "react-final-form";
-const { Field, FieldContainerLabelAbove, ReactSelectStaticOptions } = form;
 
 function Story() {
     const options = [
@@ -23,7 +22,7 @@ function Story() {
                             name="flavor"
                             label="Flavor"
                             fieldContainerComponent={FieldContainerLabelAbove}
-                            component={ReactSelectStaticOptions}
+                            component={FinalFormReactSelectStaticOptions}
                             placeholder=""
                             isClearable
                             defaultOptions

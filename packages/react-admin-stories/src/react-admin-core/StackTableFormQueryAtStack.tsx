@@ -3,8 +3,10 @@ import { CircularProgress, Grid, IconButton } from "@material-ui/core";
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import {
+    Field,
+    FieldContainerLabelAbove,
     FinalForm,
-    form,
+    FinalFormInput,
     IFilterApi,
     Stack,
     StackPage,
@@ -19,8 +21,6 @@ import {
 import gql from "graphql-tag";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
-
-const { Field, FieldContainerLabelAbove, Input } = form;
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 
@@ -68,7 +68,14 @@ function ExampleTable(props: IExampleTableProps) {
     return (
         <>
             <TableFilterFinalForm filterApi={props.filterApi}>
-                <Field name="query" type="text" label="Query" component={Input} fullWidth fieldContainerComponent={FieldContainerLabelAbove} />
+                <Field
+                    name="query"
+                    type="text"
+                    label="Query"
+                    component={FinalFormInput}
+                    fullWidth
+                    fieldContainerComponent={FieldContainerLabelAbove}
+                />
             </TableFilterFinalForm>
             <Table
                 {...props.tableData}
@@ -132,7 +139,7 @@ function ExampleForm(props: IExampleFormProps) {
             }}
             initialValues={data.user}
         >
-            <Field label="Name" name="name" defaultOptions required component={Input} />
+            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
         </FinalForm>
     );
 }

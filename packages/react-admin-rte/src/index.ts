@@ -1,7 +1,7 @@
 export { default as Rte, IRteRef, IOptions as IRteOptions, IProps as IRteProps, FilterEditorStateBeforeUpdateFn } from "./core/Rte";
 export { default as RteReadOnly, IOptions as IRteReadOnlyOptions, IProps as IRteReadOnlyProps } from "./core/RteReadOnly";
 export { default as makeRteApi, IMakeRteApiProps, OnDebouncedContentChangeFn, IRteApiProps } from "./core/makeRteApi";
-export { default as createRteField } from "./field/createRteField";
+export { default as createFinalFormRte } from "./field/createFinalFormRte";
 
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
 export { default as selectionIsInOneBlock } from "./core/utils/selectionIsInOneBlock";

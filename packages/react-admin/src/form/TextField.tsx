@@ -4,7 +4,11 @@ import { FieldRenderProps } from "react-final-form";
 
 interface IProps extends FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> {}
 
-export const TextField: React.FunctionComponent<IProps & TextFieldProps> = ({ input: { name, onChange, value, ...restInput }, meta, ...rest }) => (
+export const FinalFormTextField: React.FunctionComponent<IProps & TextFieldProps> = ({
+    input: { name, onChange, value, ...restInput },
+    meta,
+    ...rest
+}) => (
     <MuiTextField
         {...rest}
         name={name}
