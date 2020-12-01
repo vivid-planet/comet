@@ -2,6 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, T
 import LinkIcon from "@material-ui/icons/Link";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import ControlButton from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
@@ -54,6 +55,9 @@ function LinkDialog(props: {
     onChange: (editorState: EditorState) => void;
 }) {
     const { onClose, open, linkData, editorState, onChange } = props;
+
+    const intl = useIntl();
+
     const linkDataUrl = linkData ? linkData.url : "";
     const [newUrl, setNewUrl] = React.useState(linkDataUrl);
 
@@ -96,7 +100,7 @@ function LinkDialog(props: {
             <DialogContent>
                 <TextField
                     // autoFocus
-                    label="Url"
+                    label={intl.formatMessage({ id: "reactAdmin.rte.extensions.link.url", defaultMessage: "Url" })}
                     variant="outlined"
                     value={newUrl}
                     onChange={(e) => {
@@ -106,17 +110,23 @@ function LinkDialog(props: {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="default">
-                    <Typography variant="button">Abbrechen</Typography>
+                    <Typography variant="button">
+                        <FormattedMessage id="reactAdmin.generic.cancel" defaultMessage="Cancel" />
+                    </Typography>
                 </Button>
                 {linkData && (
                     <Button onClick={handleRemove} color="primary">
-                        <Typography variant="button">Entfernen</Typography>
+                        <Typography variant="button">
+                            <FormattedMessage id="reactAdmin.generic.delete" defaultMessage="Delete" />
+                        </Typography>
                     </Button>
                 )}
 
                 {newUrl && (
                     <Button onClick={handleUpdate} color="primary">
-                        <Typography variant="button">OK</Typography>
+                        <Typography variant="button">
+                            <FormattedMessage id="reactAdmin.generic.ok" defaultMessage="OK" />
+                        </Typography>
                     </Button>
                 )}
             </DialogActions>

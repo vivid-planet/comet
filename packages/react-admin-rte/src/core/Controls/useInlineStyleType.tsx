@@ -2,13 +2,13 @@ import FormatBoldIcon from "@material-ui/icons/FormatBold";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import StrikethroughSIcon from "@material-ui/icons/StrikethroughS";
+import { SupportedThings } from "@vivid-planet/react-admin-rte/src/core/Rte";
+import { IFeatureConfig, InlineStyleType } from "@vivid-planet/react-admin-rte/src/core/types";
+import TextFormatSub from "@vivid-planet/react-admin-rte/src/icons/TextFormatSub";
+import TextFormatSup from "@vivid-planet/react-admin-rte/src/icons/TextFormatSup";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
-
-import TextFormatSub from "../../icons/TextFormatSub";
-import TextFormatSup from "../../icons/TextFormatSup";
-import { SupportedThings } from "../Rte";
-import { IFeatureConfig, InlineStyleType } from "../types";
+import { FormattedMessage } from "react-intl";
 
 interface IProps {
     editorState: EditorState;
@@ -19,35 +19,35 @@ interface IProps {
 const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
         name: "BOLD",
-        label: "fett",
+        label: <FormattedMessage id="reactAdmin.rte.controls.blockType.bold.label" defaultMessage="bold" />,
         Icon: FormatBoldIcon,
-        tooltipText: "Ctrl+B",
+        tooltipText: <FormattedMessage id="reactAdmin.rte.controls.blockType.bold.tooltip" defaultMessage="Ctrl+B" />,
     },
     {
         name: "ITALIC",
-        label: "italic",
+        label: <FormattedMessage id="reactAdmin.rte.controls.blockType.italic.label" defaultMessage="italic" />,
         Icon: FormatItalicIcon,
-        tooltipText: "Ctrl+I",
+        tooltipText: <FormattedMessage id="reactAdmin.rte.controls.blockType.italic.tooltip" defaultMessage="Ctrl+I" />,
     },
     {
         name: "UNDERLINE",
-        label: "unterstrichen",
+        label: <FormattedMessage id="reactAdmin.rte.controls.blockType.underlined.label" defaultMessage="underlined" />,
         Icon: FormatUnderlinedIcon,
-        tooltipText: "Ctrl+U",
+        tooltipText: <FormattedMessage id="reactAdmin.rte.controls.blockType.underlined.tooltip" defaultMessage="Ctrl+U" />,
     },
     {
         name: "STRIKETHROUGH",
-        label: "durchgestrichen",
+        label: <FormattedMessage id="reactAdmin.rte.controls.blockType.strikethrough.label" defaultMessage="strikethrough" />,
         Icon: StrikethroughSIcon,
     },
     {
         name: "SUP",
-        label: "super",
+        label: <FormattedMessage id="reactAdmin.rte.controls.blockType.super.label" defaultMessage="super" />,
         Icon: TextFormatSup,
     },
     {
         name: "SUB",
-        label: "sub",
+        label: <FormattedMessage id="reactAdmin.rte.controls.blockType.sub.label" defaultMessage="sub" />,
         Icon: TextFormatSub,
     },
 ];

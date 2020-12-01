@@ -14,12 +14,12 @@ export interface ICustomBlockTypeMap {
 
 export interface IFeatureConfig<T extends string = string> {
     name: T;
-    label: string;
+    label: React.ReactNode;
     disabled?: boolean;
     selected?: boolean;
     onButtonClick?: (e: React.MouseEvent) => void;
     Icon?: (props: SvgIconProps) => JSX.Element;
-    tooltipText?: string;
+    tooltipText?: React.ReactNode;
 }
 
 type CustomInlineStyleType = "SUP" | "SUB";

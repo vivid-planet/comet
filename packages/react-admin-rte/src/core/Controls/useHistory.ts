@@ -2,6 +2,7 @@ import RedoIcon from "@material-ui/icons/Redo";
 import UndoIcon from "@material-ui/icons/Undo";
 import { EditorState } from "draft-js";
 import * as React from "react";
+import { useIntl } from "react-intl";
 
 import { SupportedThings } from "../Rte";
 import { IFeatureConfig } from "../types";
@@ -13,6 +14,8 @@ interface IProps {
 }
 
 export default function useHistory({ editorState, setEditorState, supportedThings }: IProps) {
+    const intl = useIntl();
+
     // can check if history is supported
     const supported = React.useMemo(() => supportedThings.includes("history"), [supportedThings]);
     const canRedo = React.useMemo(() => !editorState.getRedoStack().isEmpty(), [editorState]);
@@ -42,23 +45,23 @@ export default function useHistory({ editorState, setEditorState, supportedThing
                 ? [
                       {
                           name: "undo",
-                          label: "Undo",
+                          label: intl.formatMessage({ id: "reactAdmin.rte.controls.undo.label", defaultMessage: "Undo" }),
                           disabled: !canUndo,
                           onButtonClick: handleUndoClick,
                           Icon: UndoIcon,
-                          tooltipText: "Ctrl+Z",
+                          tooltipText: intl.formatMessage({ id: "reactAdmin.rte.controls.undo.tooltip", defaultMessage: "Ctrl+Z" }),
                       },
                       {
                           name: "redo",
-                          label: "Redo",
+                          label: intl.formatMessage({ id: "reactAdmin.rte.controls.redo.label", defaultMessage: "Redo" }),
                           disabled: !canRedo,
                           onButtonClick: handleRedoClick,
                           Icon: RedoIcon,
-                          tooltipText: "Ctrl+Y",
+                          tooltipText: intl.formatMessage({ id: "reactAdmin.rte.controls.redo.tooltip", defaultMessage: "Ctrl+Y" }),
                       },
                   ]
                 : [],
-        [supported, canRedo, canUndo, handleUndoClick, handleRedoClick],
+        [supported, canRedo, canUndo, handleUndoClick, handleRedoClick, intl],
     );
 
     return {
