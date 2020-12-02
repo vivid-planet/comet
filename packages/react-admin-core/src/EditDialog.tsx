@@ -1,4 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
+import { ReactElement } from "react";
 import * as React from "react";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
@@ -13,6 +14,7 @@ interface ITitle {
 
 interface IProps {
     title?: ITitle | string;
+    renderSaveButton?: ReactElement;
 }
 
 export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi] {
@@ -53,7 +55,7 @@ interface IHookProps {
     api: IEditDialogApi
 }
 
-const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selection, selectionApi, api, title = { edit: "Bearbeiten", add: "Hinzufügen" }, children }) => {
+const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selection, selectionApi, api, title = { edit: "Bearbeiten", add: "Hinzufügen" }, renderSaveButton, children }) => {
 
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
@@ -84,7 +86,9 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                             <DirtyHandlerApiContext.Consumer>
                                 {injectedDirtyHandlerApi => {
                                     dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
-                                    return (
+                                    return renderSaveButton ? (
+                                        React.cloneElement(renderSaveButton, { onClick: handleSaveClick })
+                                    ) : (
                                         <Button onClick={handleSaveClick} color="primary">
                                             <Typography variant="button">Speichern</Typography>
                                         </Button>
