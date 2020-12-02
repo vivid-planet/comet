@@ -186,8 +186,18 @@ class SelectWrapper<OptionType> extends React.Component<IVPAdminSelectProps<Opti
                 },
             }),
         };
+
         const SelectComponent = this.props.selectComponent;
-        return <SelectComponent classes={classes} styles={selectStyles} components={{ ...components, ...origComponents }} placeholder="" {...rest} />;
+        return (
+            <SelectComponent
+                classes={classes}
+                menuPortalTarget={document.body}
+                styles={selectStyles}
+                components={{ ...components, ...origComponents }}
+                placeholder=""
+                {...rest}
+            />
+        );
     }
 }
 const ExtendedSelectWrapper = withStyles(styles, { name: "VPAdminSelect", withTheme: true })(SelectWrapper);
