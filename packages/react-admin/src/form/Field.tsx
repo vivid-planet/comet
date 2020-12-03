@@ -35,18 +35,21 @@ export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extend
         const { children, component, name, label, required } = this.props;
         const UsedFieldContainer = this.props.fieldContainerComponent || FieldContainer;
 
-        if (component) {
-            return (
-                <UsedFieldContainer label={label} required={required}>
-                    {React.createElement(component, { ...rest, input, meta })}
-                    {(meta.error || meta.submitError) && meta.touched && <FormHelperText error>{meta.error || meta.submitError}</FormHelperText>}
-                </UsedFieldContainer>
-            );
-        } else {
-            if (typeof children !== "function") {
-                throw new Error(`Warning: Must specify either a render function as children, or a component prop to ${name}`);
+        function render() {
+            if (component) {
+                return React.createElement(component, { ...rest, input, meta });
+            } else {
+                if (typeof children !== "function") {
+                    throw new Error(`Warning: Must specify either a render function as children, or a component prop to ${name}`);
+                }
+                return children({ input, meta });
             }
-            return children({ input, meta });
         }
+        return (
+            <UsedFieldContainer label={label} required={required}>
+                {render()}
+                {(meta.error || meta.submitError) && meta.touched && <FormHelperText error>{meta.error || meta.submitError}</FormHelperText>}
+            </UsedFieldContainer>
+        );
     }
 }
