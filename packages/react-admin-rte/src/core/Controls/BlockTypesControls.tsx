@@ -1,6 +1,7 @@
 import { MenuItem } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 import { IControlProps } from "../types";
 import * as sc from "./BlockTypesControls.sc";
@@ -29,7 +30,7 @@ export default function BlockTypesControls({
             <sc.Select value={activeDropdownBlockType} displayEmpty disableUnderline onChange={handleBlockTypeChange}>
                 {standardBlockType === "unstyled" && (
                     <MenuItem value="unstyled" dense>
-                        Standard
+                        <FormattedMessage id="reactAdmin.rte.controls.blockType.default" defaultMessage="Default" />
                     </MenuItem>
                 )}
                 {dropdownFeatures.map((c) => (

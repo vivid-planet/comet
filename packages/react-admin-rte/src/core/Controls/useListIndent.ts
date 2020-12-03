@@ -2,6 +2,7 @@ import FormatIndentDecreaseIcon from "@material-ui/icons/FormatIndentDecrease";
 import FormatIndentIncreaseIcon from "@material-ui/icons/FormatIndentIncrease";
 import { BlockMap, ContentState, EditorState } from "draft-js";
 import * as React from "react";
+import { useIntl } from "react-intl";
 
 import { SupportedThings } from "../Rte";
 import { IFeatureConfig } from "../types";
@@ -68,6 +69,8 @@ interface IProps {
 }
 
 export default function useListIndent({ editorState, setEditorState, supportedThings, listLevelMax = 4 }: IProps) {
+    const intl = useIntl();
+
     // can check if indenting lists is supported
     const supported = React.useMemo(() => supportedThings.some((c) => ["ordered-list", "unordered-list"].includes(c)), [supportedThings]);
 
@@ -109,7 +112,7 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       disabled: !canIndentRight,
                       onButtonClick: handleListIndentRightClick,
                       Icon: FormatIndentIncreaseIcon,
-                      tooltipText: "Tab",
+                      tooltipText: intl.formatMessage({ id: "reactAdmin.rte.controls.listIndent.right.tooltip", defaultMessage: "Tab" }),
                   },
                   {
                       name: "list-indent-left",
@@ -117,11 +120,11 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       disabled: !canIndentLeft,
                       onButtonClick: handleListIndentLeftClick,
                       Icon: FormatIndentDecreaseIcon,
-                      tooltipText: "Shift+Tab",
+                      tooltipText: intl.formatMessage({ id: "reactAdmin.rte.controls.listIndent.left.tooltip", defaultMessage: "Shift+Tab" }),
                   },
               ]
             : [];
-    }, [supported, canIndentLeft, canIndentRight, handleListIndentLeftClick, handleListIndentRightClick]);
+    }, [supported, canIndentLeft, canIndentRight, handleListIndentLeftClick, handleListIndentRightClick, intl]);
 
     return {
         features,

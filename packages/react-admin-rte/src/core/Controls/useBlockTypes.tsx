@@ -1,11 +1,11 @@
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
+import { SupportedThings } from "@vivid-planet/react-admin-rte/src/core/Rte";
+import { ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "@vivid-planet/react-admin-rte/src/core/types";
+import getCurrentBlock from "@vivid-planet/react-admin-rte/src/core/utils/getCurrentBlock";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
-
-import { SupportedThings } from "../Rte";
-import { ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "../types";
-import getCurrentBlock from "../utils/getCurrentBlock";
+import { defineMessage, FormattedMessage } from "react-intl";
 
 interface IProps {
     editorState: EditorState;
@@ -15,42 +15,43 @@ interface IProps {
     editorRef: React.RefObject<Editor>;
 }
 
-const defaultDropdownFeatures: IFeatureConfig[] = [
+const headerMessage = defineMessage({ id: "reactAdmin.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
+const defaultDropdownFeatures = [
     {
         name: "header-one",
-        label: "Überschrift 1",
+        label: <FormattedMessage {...headerMessage} values={{ level: 1 }} />,
     },
     {
         name: "header-two",
-        label: "Überschrift 2",
+        label: <FormattedMessage {...headerMessage} values={{ level: 2 }} />,
     },
     {
         name: "header-three",
-        label: "Überschrift 3",
+        label: <FormattedMessage {...headerMessage} values={{ level: 3 }} />,
     },
     {
         name: "header-four",
-        label: "Überschrift 4",
+        label: <FormattedMessage {...headerMessage} values={{ level: 4 }} />,
     },
     {
         name: "header-five",
-        label: "Überschrift 5",
+        label: <FormattedMessage {...headerMessage} values={{ level: 5 }} />,
     },
     {
         name: "header-six",
-        label: "Überschrift 6",
+        label: <FormattedMessage {...headerMessage} values={{ level: 6 }} />,
     },
 ];
 
-const defaultListsFeatures: IFeatureConfig[] = [
+const defaultListsFeatures = [
     {
         name: "unordered-list",
-        label: "Aufzählungszeichen",
+        label: <FormattedMessage id="reactAdmin.rte.controls.blockType.unorderedList" defaultMessage="Bulletpoints" />,
         Icon: FormatListBulletedIcon,
     },
     {
         name: "ordered-list",
-        label: "Nummerierte Liste",
+        label: <FormattedMessage id="reactAdmin.rte.controls.blockType.orderedList" defaultMessage="Numbering" />,
         Icon: FormatListNumberedIcon,
     },
 ];
