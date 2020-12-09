@@ -1,5 +1,5 @@
-import { IVPAdminSelectProps } from "./Select";
-import { VPAdminSelectClassKeys } from "./Select.styles";
+import { IVPAdminSelectProps } from "./ReactSelect";
+import { VPAdminSelectClassKeys } from "./ReactSelect.styles";
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
