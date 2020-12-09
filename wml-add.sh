@@ -25,7 +25,7 @@ target=$(custom_realpath "$1/node_modules/@vivid-planet");
 source=$(custom_realpath "$(dirname "$0")")
 echo $target
 echo $source
-packages=( react-admin react-admin-rte )
+packages=( comet-admin comet-admin-rte )
 for package in "${packages[@]}"; do
     cmd="wml add $source/packages/$package $target/$package"
     echo $cmd

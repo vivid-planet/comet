@@ -3,5 +3,5 @@
 **/.watchmanconfig
 /.docker-sync
 storybook-static/
-react-admin-lang/
+comet-admin-lang/
 lang/
