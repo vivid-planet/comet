@@ -36,6 +36,7 @@ function Control<OptionType>(props: ControlProps<OptionType>) {
 const vividStyles = {
     dropdownIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
     clearIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
+    menuPortal: (styles: any) => ({ ...styles, zIndex: 1500 }),
 };
 
 // tslint:disable:max-classes-per-file
