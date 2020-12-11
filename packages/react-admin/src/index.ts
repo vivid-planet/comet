@@ -4,7 +4,6 @@ export * from "./router";
 export * from "./stack";
 export * from "./table";
 // Export ...
-export * from "./dateFns";
 export * from "./fetchProvider";
 export * from "./fileIcons";
 export * from "./form";

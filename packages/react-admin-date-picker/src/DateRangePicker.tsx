@@ -1,8 +1,8 @@
-import { useLocaleName } from "@vivid-planet/react-admin";
 import * as moment from "moment";
 import * as React from "react";
 import { DateRangePicker as AirBNBDateRangePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
+import { useIntl } from "react-intl";
 
 import * as sc from "./DateRangePicker.sc";
 import useUniqueId from "./useUniqueId";
@@ -31,7 +31,9 @@ export const FinalFormDateRangePicker: React.FC<IProps> = ({
     endPlaceholder,
     ...props
 }) => {
-    const localeName = useLocaleName();
+    const intl = useIntl();
+    const localeName = intl.locale;
+
     const locale = moment().locale(localeName);
     const [focusedInputField, setFocusedInputField] = React.useState<"startDate" | "endDate" | null>(null);
     const start = value.start ? moment(value.start) : null;

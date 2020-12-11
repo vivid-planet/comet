@@ -22,7 +22,6 @@
         "styled-components": "^4.3.2"
     },
     "dependencies": {
-        "date-fns": "^2.8.0",
         "qs": "^6.9.1"
     },
     "devDependencies": {
