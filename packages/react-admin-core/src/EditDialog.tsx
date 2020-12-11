@@ -1,5 +1,4 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
-import { ReactElement } from "react";
 import * as React from "react";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
