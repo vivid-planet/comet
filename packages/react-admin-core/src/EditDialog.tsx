@@ -12,9 +12,13 @@ interface ITitle {
     add: string;
 }
 
+interface IEditDialogRenderSaveButtonProps {
+    onClick: () => void;
+}
+
 interface IProps {
     title?: ITitle | string;
-    renderSaveButton?: ReactElement;
+    renderSaveButton?: (renderSaveButtonProps: IEditDialogRenderSaveButtonProps) => React.ReactNode;
 }
 
 export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi] {
@@ -87,7 +91,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                                 {injectedDirtyHandlerApi => {
                                     dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
                                     return renderSaveButton ? (
-                                        React.cloneElement(renderSaveButton, { onClick: handleSaveClick })
+                                        renderSaveButton({ onClick: handleSaveClick })
                                     ) : (
                                         <Button onClick={handleSaveClick} color="primary">
                                             <Typography variant="button">Speichern</Typography>
