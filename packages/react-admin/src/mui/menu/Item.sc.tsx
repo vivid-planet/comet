@@ -9,8 +9,7 @@ import { ListItemIconProps } from "@material-ui/core/ListItemIcon";
 import { ListItemSecondaryActionProps } from "@material-ui/core/ListItemSecondaryAction";
 import { ListItemTextProps } from "@material-ui/core/ListItemText";
 import * as React from "react";
-
-import { css, styled } from "../styled-components";
+import styled, { css } from "styled-components";
 
 interface IMenuItemStyleProps {
     level: number;
