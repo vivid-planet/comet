@@ -5,13 +5,13 @@ import * as React from "react";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import { SupportedThings } from "../Rte";
-import { ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "../types";
+import { IBlocktypeConfig, IBlocktypeMap, IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
     supportedThings: SupportedThings[];
-    customBlockTypeMap?: ICustomBlockTypeMap;
+    blocktypeMap?: IBlocktypeMap;
     editorRef: React.RefObject<Editor>;
 }
 
@@ -70,7 +70,7 @@ function getBlockTypeForFeatureName(name: string): DraftBlockType {
             return name;
     }
 }
-export default function useBlockTypes({ editorState, setEditorState, supportedThings, customBlockTypeMap, editorRef }: IProps) {
+export default function useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef }: IProps) {
     // can check if blocktype is supported by the editor
     const supports = React.useCallback(
         (blockType: DraftBlockType) => {
@@ -122,8 +122,8 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
     const customDropdownFeatures = React.useMemo(() => {
         let customDropdownFeaturesInner: IFeatureConfig[] = [];
 
-        if (customBlockTypeMap) {
-            customDropdownFeaturesInner = Object.entries<ICustomBlockType>(customBlockTypeMap).reduce<IFeatureConfig[]>((a, [key, config]) => {
+        if (blocktypeMap) {
+            customDropdownFeaturesInner = Object.entries<IBlocktypeConfig>(blocktypeMap).reduce<IFeatureConfig[]>((a, [key, config]) => {
                 a.push({
                     name: key,
                     label: config.label,
@@ -132,7 +132,7 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
             }, []);
         }
         return customDropdownFeaturesInner;
-    }, [customBlockTypeMap]);
+    }, [blocktypeMap]);
 
     const handleBlockTypeChange = React.useCallback(
         (e: React.ChangeEvent<{ value: DraftBlockType }>) => {

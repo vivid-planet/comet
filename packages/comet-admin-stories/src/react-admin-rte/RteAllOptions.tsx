@@ -48,7 +48,7 @@ export const rteOptions: IRteOptions = {
         "links-remove",
     ],
     listLevelMax: 2,
-    customBlockMap: {
+    blocktypeMap: {
         "header-custom-green": {
             label: "Custom Green Header",
             renderConfig: {

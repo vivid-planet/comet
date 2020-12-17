@@ -4,11 +4,11 @@ import { Editor as DraftJsEditor, EditorState } from "draft-js";
 import * as React from "react";
 
 import { styleMap } from "./Rte";
-import { ICustomBlockTypeMap } from "./types";
+import { IBlocktypeMap as IBlocktypeMap } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
 export interface IRteReadOnlyOptions {
-    customBlockMap?: ICustomBlockTypeMap;
+    blocktypeMap?: IBlocktypeMap;
 }
 
 export type IOptions = Partial<IRteReadOnlyOptions>;
@@ -24,7 +24,7 @@ const defaultOptions: IRteReadOnlyOptions = {};
 const RteReadOnly: React.FC<IProps> = ({ value: editorState, options: passedOptions, plainTextOnly }) => {
     const editorRef = React.useRef<DraftJsEditor>(null);
     const options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions; // merge default options with passed options
-    const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
+    const blockRenderMap = createBlockRenderMap({ blocktypeMap: options.blocktypeMap });
 
     function handleOnChange() {
         if (editorRef.current) {

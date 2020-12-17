@@ -17,7 +17,7 @@ import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
 import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
 import * as sc from "./Rte.sc";
-import { ICustomBlockTypeMap, ToolbarButtonComponent } from "./types";
+import { IBlocktypeMap, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
 const mandatoryFilterEditorStateFn = composeFilterEditorFns([removeBlocksExceedingBlockLimit, manageDefaultBlockType]);
@@ -45,7 +45,7 @@ export type SupportedThings =
 export interface IRteOptions {
     supports: SupportedThings[];
     listLevelMax: number;
-    customBlockMap?: ICustomBlockTypeMap;
+    blocktypeMap?: IBlocktypeMap;
     overwriteLinkButton?: ToolbarButtonComponent;
     overwriteLinksRemoveButton?: ToolbarButtonComponent;
     customToolbarButtons?: ToolbarButtonComponent[];
@@ -154,7 +154,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         [filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType, onChange],
     );
 
-    const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
+    const blockRenderMap = createBlockRenderMap({ blocktypeMap: options.blocktypeMap });
 
     function handleKeyCommand(command: DraftEditorCommand) {
         const commandToSupportsMap: Partial<Record<DraftEditorCommand, SupportedThings>> = {

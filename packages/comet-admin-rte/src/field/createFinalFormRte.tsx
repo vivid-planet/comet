@@ -57,7 +57,7 @@ function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
                 value={createStateFromRawContent(content)}
                 plainTextOnly={plainTextOnly}
                 options={{
-                    customBlockMap: rteOptions ? rteOptions.customBlockMap : undefined,
+                    blocktypeMap: rteOptions ? rteOptions.blocktypeMap : undefined,
                 }}
             />
         );

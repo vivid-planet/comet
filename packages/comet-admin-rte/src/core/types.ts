@@ -3,13 +3,13 @@ import { DraftBlockRenderConfig, DraftInlineStyleType, Editor, EditorState } fro
 
 import { IRteOptions } from "./Rte";
 
-export interface ICustomBlockType {
+export interface IBlocktypeConfig {
     renderConfig: DraftBlockRenderConfig;
-    label: string;
+    label?: string;
 }
 
-export interface ICustomBlockTypeMap {
-    [key: string]: ICustomBlockType;
+export interface IBlocktypeMap {
+    [key: string]: IBlocktypeConfig;
 }
 
 export interface IFeatureConfig<T extends string = string> {
