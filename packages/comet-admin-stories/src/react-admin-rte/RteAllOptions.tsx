@@ -40,6 +40,7 @@ export const rteOptions: IRteOptions = {
         "header-four",
         "header-five",
         "header-six",
+        "blockquote",
         "ordered-list",
         "unordered-list",
         "history",
