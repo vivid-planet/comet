@@ -9,7 +9,7 @@ This version ist the first stable version.
 ### Highlights
 
 -   Renamed from react-admin to comet-admin (!!!)
--   Make comet-admin translateable with react-intl
+-   Made comet-admin translateable with react-intl
 -   Updated apollo
 
 ### Incompatible Changes
