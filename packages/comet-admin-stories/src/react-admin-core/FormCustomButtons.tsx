@@ -1,9 +1,10 @@
 import { Button } from "@material-ui/core";
 import { BeachAccess as BeachAccessIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import { Field, FinalForm, FinalFormInput, FormPaper, styled } from "@vivid-planet/comet-admin";
+import { Field, FinalForm, FinalFormInput, FormPaper } from "@vivid-planet/comet-admin";
 import * as React from "react";
 import { AnyObject } from "react-final-form";
+import styled from "styled-components";
 
 import { apolloStoryDecorator } from "../apollo-story.decorator";
 

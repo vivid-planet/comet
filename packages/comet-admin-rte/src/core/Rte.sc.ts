@@ -1,4 +1,4 @@
-import { styled } from "@vivid-planet/comet-admin";
+import styled from "styled-components";
 
 export const Root = styled.div`
     border: 1px solid ${({ theme }) => theme.rte.colors.border};

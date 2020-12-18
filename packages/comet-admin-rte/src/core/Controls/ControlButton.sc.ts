@@ -1,4 +1,4 @@
-import { css, styled } from "@vivid-planet/comet-admin";
+import styled, { css } from "styled-components";
 
 interface IRootProps {
     disabled: boolean;

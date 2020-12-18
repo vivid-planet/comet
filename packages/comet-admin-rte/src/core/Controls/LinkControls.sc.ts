@@ -1,4 +1,4 @@
-import { styled } from "@vivid-planet/comet-admin";
+import styled from "styled-components";
 
 export const ButtonWrapper = styled.div`
     margin-right: 1px;

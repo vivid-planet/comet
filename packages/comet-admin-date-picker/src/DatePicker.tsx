@@ -1,8 +1,8 @@
-import { useLocaleName } from "@vivid-planet/comet-admin";
 import * as moment from "moment";
 import * as React from "react";
 import { SingleDatePicker as AirBNBDatePicker } from "react-dates";
 import { FieldRenderProps } from "react-final-form";
+import { useIntl } from "react-intl";
 
 import * as sc from "./DatePicker.sc";
 import useUniqueId from "./useUniqueId";
@@ -24,7 +24,9 @@ export const FinalFormDatePicker: React.FC<IProps> = ({
     placeholder,
     ...props
 }) => {
-    const localeName = useLocaleName();
+    const intl = useIntl();
+    const localeName = intl.locale;
+
     const locale = moment().locale(localeName);
     const [focused, setFocus] = React.useState<boolean>(false);
     const selectedDate = value ? moment(value) : null;
