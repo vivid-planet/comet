@@ -1,6 +1,5 @@
 import zIndex from "@material-ui/core/styles/zIndex";
-import { css, styled } from "@vivid-planet/react-admin";
-
+import styled, { css } from "styled-components";
 interface ISingleDatePickerWrapperProps {
     fullWidth: boolean;
     color: "primary" | "secondary" | "default";
