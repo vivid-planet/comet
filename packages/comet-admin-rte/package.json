@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/comet-admin-rte",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -9,7 +9,7 @@
     "devDependencies": {
         "@types/draft-js": "^0.10.38",
         "@types/immutable": "^3.8.7",
-        "@vivid-planet/comet-admin": "^0.0.0"
+        "@vivid-planet/comet-admin": "^1.0.0"
     },
     "peerDependencies": {
         "@material-ui/core": "^4.1.3",
