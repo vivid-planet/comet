@@ -1,4 +1,4 @@
-import { styled } from "@vivid-planet/react-admin";
+import styled from "styled-components";
 
 export const Root = styled.div`
     display: flex;

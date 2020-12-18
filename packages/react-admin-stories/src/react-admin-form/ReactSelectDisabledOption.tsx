@@ -1,5 +1,6 @@
 import { storiesOf } from "@storybook/react";
-import { Field, FieldContainerLabelAbove, FinalFormReactSelectStaticOptions } from "@vivid-planet/react-admin";
+import { Field, FieldContainerLabelAbove } from "@vivid-planet/react-admin";
+import { FinalFormReactSelectStaticOptions } from "@vivid-planet/react-admin-react-select";
 import * as React from "react";
 import { Form } from "react-final-form";
 

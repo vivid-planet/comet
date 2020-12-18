@@ -3,13 +3,13 @@ import { storiesOf } from "@storybook/react";
 import {
     Field,
     FieldContainerLabelAbove,
-    FinalFormReactSelectStaticOptions,
     Table,
     TableFilterFinalForm,
     TableQuery,
     useTableQuery,
     useTableQueryFilter,
 } from "@vivid-planet/react-admin";
+import { FinalFormReactSelectStaticOptions } from "@vivid-planet/react-admin-react-select";
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";

@@ -9,7 +9,7 @@ import {
     ReactSelectAsync as Async,
     ReactSelectAsyncCreatable as AsyncCreatable,
     ReactSelectCreatable as Creatable,
-} from "../mui/reactSelect";
+} from "./ReactSelect";
 
 // tslint:disable:max-classes-per-file
 export class FinalFormReactSelect<OptionType> extends React.Component<
