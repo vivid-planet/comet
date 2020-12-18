@@ -12,6 +12,7 @@
         "@vivid-planet/comet-admin": "*",
         "@vivid-planet/comet-admin-color-picker": "*",
         "@vivid-planet/comet-admin-rte": "*",
+        "@vivid-planet/comet-admin-react-select": "*",
         "final-form": "^4.16.1",
         "graphql": "^15.4.0",
         "graphql-tag": "^2.11.0",
