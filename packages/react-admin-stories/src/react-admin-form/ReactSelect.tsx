@@ -1,6 +1,7 @@
 import { Button, ListItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { Field, FieldContainerLabelAbove, FinalFormInput, FinalFormReactSelectStaticOptions } from "@vivid-planet/react-admin";
+import { Field, FieldContainerLabelAbove, FinalFormInput } from "@vivid-planet/react-admin";
+import { FinalFormReactSelectStaticOptions } from "@vivid-planet/react-admin-react-select";
 import * as React from "react";
 import { Form } from "react-final-form";
 

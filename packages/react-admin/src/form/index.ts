@@ -5,8 +5,6 @@ export * from "./FormPaper";
 export * from "./FormSection";
 export * from "./Input";
 export * from "./FinalFormInput";
-export * from "./ReactSelect";
-export * from "./ReactSelectStaticOptions";
 export * from "./themeAugmentation";
 export * from "./Checkbox";
 export * from "./Radio";

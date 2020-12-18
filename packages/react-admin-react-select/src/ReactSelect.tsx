@@ -21,7 +21,7 @@ import { OptionProps } from "react-select/src/components/Option";
 import { PlaceholderProps } from "react-select/src/components/Placeholder";
 import { SingleValueProps } from "react-select/src/components/SingleValue";
 
-import styles from "./Select.styles";
+import styles from "./ReactSelect.styles";
 
 function NoOptionsMessage<OptionType>(props: NoticeProps<OptionType>) {
     return (

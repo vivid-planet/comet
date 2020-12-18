@@ -1,6 +1,6 @@
 import { Button, ListItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { ReactSelect } from "@vivid-planet/react-admin";
+import { ReactSelect } from "@vivid-planet/react-admin-react-select";
 import * as React from "react";
 
 function Story() {
