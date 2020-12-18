@@ -1,104 +1,53 @@
-import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
-import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
-import { defineMessage, FormattedMessage } from "react-intl";
 
 import { SupportedThings } from "../Rte";
-import { IBlocktypeConfig, IBlocktypeMap, IFeatureConfig } from "../types";
+import { IBlocktypeMap, IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
     supportedThings: SupportedThings[];
-    blocktypeMap?: IBlocktypeMap;
+    blocktypeMap: IBlocktypeMap;
     editorRef: React.RefObject<Editor>;
 }
 
-const headerMessage = defineMessage({ id: "cometAdmin.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
-const defaultDropdownFeatures = [
-    {
-        name: "header-one",
-        label: <FormattedMessage {...headerMessage} values={{ level: 1 }} />,
-    },
-    {
-        name: "header-two",
-        label: <FormattedMessage {...headerMessage} values={{ level: 2 }} />,
-    },
-    {
-        name: "header-three",
-        label: <FormattedMessage {...headerMessage} values={{ level: 3 }} />,
-    },
-    {
-        name: "header-four",
-        label: <FormattedMessage {...headerMessage} values={{ level: 4 }} />,
-    },
-    {
-        name: "header-five",
-        label: <FormattedMessage {...headerMessage} values={{ level: 5 }} />,
-    },
-    {
-        name: "header-six",
-        label: <FormattedMessage {...headerMessage} values={{ level: 6 }} />,
-    },
-    {
-        name: "blockquote",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.blockquote" defaultMessage="Blockquote" />,
-    },
-];
-
-const defaultListsFeatures = [
-    {
-        name: "unordered-list",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.unorderedList" defaultMessage="Bulletpoints" />,
-        Icon: FormatListBulletedIcon,
-    },
-    {
-        name: "ordered-list",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.orderedList" defaultMessage="Numbering" />,
-        Icon: FormatListNumberedIcon,
-    },
-];
-
-function getBlockTypeForFeatureName(name: string): DraftBlockType {
-    switch (name) {
-        case "unordered-list":
-            return "unordered-list-item";
-        case "ordered-list":
-            return "ordered-list-item";
-        default:
-            return name;
-    }
+interface IFeaturesFromBlocktypeMapArg {
+    blocktypeMap: IBlocktypeMap;
+    supports: (a?: SupportedThings) => boolean;
+    blockTypeActive: (a: DraftBlockType) => boolean;
+    handleBlockTypeButtonClick: (blockType: DraftBlockType, e: React.MouseEvent) => void;
 }
+
+const DEFAULT_GROUP = "dropdown";
+
+const createFeaturesFromBlocktypeMap = (group: "dropdown" | "button") => ({
+    blocktypeMap,
+    supports,
+    blockTypeActive,
+    handleBlockTypeButtonClick,
+}: IFeaturesFromBlocktypeMapArg): IFeatureConfig[] => [
+    ...Object.entries(blocktypeMap)
+        .filter(
+            ([key, config]) =>
+                ((!config.group && group === DEFAULT_GROUP) || (config.group && config.group === group)) && // empty groups are ok for the default group OR group must match
+                (!config.supportedBy || supports(config.supportedBy)) && // either no supportedBy given or the specific "supportedBy"-value is in the supports array
+                key !== "unstyled", // unstyled is a special type, it needs special consideration (extra logic with default types, supportedBy cant be changed,...)
+        )
+        .map(([blocktype, config]) => ({
+            name: blocktype,
+            label: config.label ?? blocktype,
+            selected: blockTypeActive(blocktype),
+            onButtonClick: handleBlockTypeButtonClick.bind(null, blocktype),
+            Icon: config.Icon,
+        })),
+];
+
 export default function useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef }: IProps) {
     // can check if blocktype is supported by the editor
-    const supports = React.useCallback(
-        (blockType: DraftBlockType) => {
-            switch (blockType) {
-                case "unordered-list-item":
-                    return supportedThings.includes("unordered-list");
-                case "ordered-list-item":
-                    return supportedThings.includes("ordered-list");
-                case "header-one":
-                    return supportedThings.includes("header-one");
-                case "header-two":
-                    return supportedThings.includes("header-two");
-                case "header-three":
-                    return supportedThings.includes("header-three");
-                case "header-four":
-                    return supportedThings.includes("header-four");
-                case "header-five":
-                    return supportedThings.includes("header-five");
-                case "header-six":
-                    return supportedThings.includes("header-six");
-                case "blockquote":
-                    return supportedThings.includes("blockquote");
-                default:
-                    return false;
-            }
-        },
-        [supportedThings],
-    );
+    const supports = React.useCallback((supportedBy?: SupportedThings) => (supportedBy ? supportedThings.includes(supportedBy) : true), [
+        supportedThings,
+    ]);
 
     const blockTypeActive = React.useCallback(
         (blockType: DraftBlockType) => {
@@ -118,21 +67,6 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
         },
         [setEditorState, editorState],
     );
-
-    const customDropdownFeatures = React.useMemo(() => {
-        let customDropdownFeaturesInner: IFeatureConfig[] = [];
-
-        if (blocktypeMap) {
-            customDropdownFeaturesInner = Object.entries<IBlocktypeConfig>(blocktypeMap).reduce<IFeatureConfig[]>((a, [key, config]) => {
-                a.push({
-                    name: key,
-                    label: config.label,
-                });
-                return a;
-            }, []);
-        }
-        return customDropdownFeaturesInner;
-    }, [blocktypeMap]);
 
     const handleBlockTypeChange = React.useCallback(
         (e: React.ChangeEvent<{ value: DraftBlockType }>) => {
@@ -157,25 +91,13 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
     );
 
     const dropdownFeatures: IFeatureConfig[] = React.useMemo(
-        () =>
-            [...defaultDropdownFeatures.filter((c) => supports(c.name)), ...customDropdownFeatures].map((c) => ({
-                ...c,
-                selected: blockTypeActive(getBlockTypeForFeatureName(c.name)),
-                onButtonClick: handleBlockTypeButtonClick.bind(null, getBlockTypeForFeatureName(c.name)),
-            })),
-        [supports, blockTypeActive, handleBlockTypeButtonClick, customDropdownFeatures],
+        () => createFeaturesFromBlocktypeMap("dropdown")({ supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap }),
+        [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap],
     );
 
     const listsFeatures: IFeatureConfig[] = React.useMemo(
-        () =>
-            defaultListsFeatures
-                .filter((c) => supports(getBlockTypeForFeatureName(c.name)))
-                .map((c) => ({
-                    ...c,
-                    selected: blockTypeActive(getBlockTypeForFeatureName(c.name)),
-                    onButtonClick: handleBlockTypeButtonClick.bind(null, getBlockTypeForFeatureName(c.name)),
-                })),
-        [supports, blockTypeActive, handleBlockTypeButtonClick],
+        () => createFeaturesFromBlocktypeMap("button")({ supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap }),
+        [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap],
     );
 
     const activeDropdownBlockType = React.useMemo(() => {

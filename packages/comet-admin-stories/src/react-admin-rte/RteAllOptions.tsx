@@ -1,3 +1,4 @@
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@vivid-planet/comet-admin-rte";
 import { convertFromRaw, convertToRaw } from "draft-js";
@@ -25,7 +26,13 @@ export const apiOptions: IRteApiProps<ContentFormat> = {
     debounceDelay: 400, // delay when onDebouncedContentChange after editor content changed
 };
 
-const GreenCustomHeader: React.FC = ({ children }) => <span style={{ color: "green" }}>{children}</span>;
+const RedCustomHeader: React.FC = ({ children }) => (
+    <Typography variant="h1" style={{ color: "red" }}>
+        {children}
+    </Typography>
+);
+const GreenCustomHeader: React.FC = ({ children }) => <h2 style={{ color: "green" }}>{children}</h2>;
+
 export const rteOptions: IRteOptions = {
     supports: [
         "bold",
@@ -49,12 +56,28 @@ export const rteOptions: IRteOptions = {
     ],
     listLevelMax: 2,
     blocktypeMap: {
+        // overwrite built-in blocktypes
+        "header-one": {
+            label: "HEADING 1",
+            // more on this setting here:
+            // https://draftjs.org/docs/advanced-topics-custom-block-render-map/#configuring-block-render-map
+            renderConfig: {
+                element: (p) => <RedCustomHeader {...p} />,
+                aliasedElements: ["h1"],
+            },
+        },
+        // define new blocktypes
         "header-custom-green": {
             label: "Custom Green Header",
             renderConfig: {
-                element: "h1",
-                wrapper: <GreenCustomHeader />,
+                element: (p) => <GreenCustomHeader {...p} />,
+                aliasedElements: ["h2"],
             },
+        },
+
+        "ordered-list-item": {
+            // this is funky: moves the ordered-list-item to the dropdown (not recommended to change the default behaviour)
+            group: "dropdown",
         },
     },
     draftJsProps: {

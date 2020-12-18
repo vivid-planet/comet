@@ -12,6 +12,7 @@ import {
 import * as React from "react";
 
 import Controls from "./Controls";
+import defaultBlocktypeMap, { mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
@@ -45,7 +46,7 @@ export type SupportedThings =
 export interface IRteOptions {
     supports: SupportedThings[];
     listLevelMax: number;
-    blocktypeMap?: IBlocktypeMap;
+    blocktypeMap: IBlocktypeMap;
     overwriteLinkButton?: ToolbarButtonComponent;
     overwriteLinksRemoveButton?: ToolbarButtonComponent;
     customToolbarButtons?: ToolbarButtonComponent[];
@@ -96,6 +97,7 @@ const defaultOptions: IRteOptions = {
     // standardBlockType can be set to any supported block-type,
     // when set to something other than "unstyled" the unstyled-blockType is disabled (does not show up in the Dropdown)
     standardBlockType: "unstyled",
+    blocktypeMap: defaultBlocktypeMap,
 };
 
 export interface IRteRef {
@@ -117,7 +119,15 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     const { value: editorState, onChange, options: passedOptions } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
-    const options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions; // merge default options with passed options
+
+    // merge default options with passed options
+    let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
+
+    // blocktypes need an extra merge as they have their own merge strategy
+    options = {
+        ...options,
+        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, options.blocktypeMap),
+    };
 
     /**
      * Expose methods

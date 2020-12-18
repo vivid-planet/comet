@@ -1,11 +1,21 @@
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
-import { DraftBlockRenderConfig, DraftInlineStyleType, Editor, EditorState } from "draft-js";
+import { DraftInlineStyleType, Editor, EditorState } from "draft-js";
 
-import { IRteOptions } from "./Rte";
+import { IRteOptions, SupportedThings } from "./Rte";
+
+// overwrite draftjs' insufficient type for Draft.DraftBlockRenderConfig
+interface DraftBlockRenderConfig {
+    element: string | React.ComponentType;
+    wrapper?: React.ReactNode;
+    aliasedElements?: string[];
+}
 
 export interface IBlocktypeConfig {
-    renderConfig: DraftBlockRenderConfig;
-    label?: string;
+    renderConfig?: DraftBlockRenderConfig; // visual appearance of the blocktype
+    label?: string | React.ReactNode; // displayed in the dropdown
+    group?: "dropdown" | "button"; // displays the element in the dropdown or as button
+    Icon?: (props: SvgIconProps) => JSX.Element;
+    supportedBy?: SupportedThings; // blocktype is active when this "supported thing" is active
 }
 
 export interface IBlocktypeMap {
