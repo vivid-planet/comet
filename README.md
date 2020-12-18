@@ -1,4 +1,4 @@
-# react-admin
+# comet-admin
 
 ## Developoment
 
@@ -13,8 +13,8 @@
 
 ### use yarn
 
-    docker-compose exec react-admin bash -c "yarn --help"
-    docker-compose exec react-admin bash -c "cd packages/react-admin-core && yarn --help"
+    docker-compose exec comet-admin bash -c "yarn --help"
+    docker-compose exec comet-admin bash -c "cd packages/comet-admin && yarn --help"
 
 ### Develop in an project
 

@@ -1,9 +1,9 @@
 version: "3.5"
 services:
-    react-admin:
+    comet-admin:
         volumes:
             - ra-node_modules:/opt/app-root/src/node_modules
-    react-admin-storybook:
+    comet-admin-storybook:
         volumes:
             - ra-node_modules:/opt/app-root/src/node_modules
 
