@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/comet-admin-stories",
-    "version": "1.0.0",
+    "version": "0.0.0",
     "files": [
         "src"
     ],
@@ -11,8 +11,8 @@
         "@material-ui/styles": "^4.1.2",
         "@vivid-planet/comet-admin": "*",
         "@vivid-planet/comet-admin-color-picker": "*",
-        "@vivid-planet/comet-admin-rte": "*",
         "@vivid-planet/comet-admin-react-select": "*",
+        "@vivid-planet/comet-admin-rte": "*",
         "final-form": "^4.16.1",
         "graphql": "^15.4.0",
         "graphql-tag": "^2.11.0",
