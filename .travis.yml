@@ -17,12 +17,12 @@ jobs:
           script:
               - yarn install
               - npm run intl:extract
-              - git clone https://github.com/vivid-planet/react-admin-lang.git
-              - cp -r lang/* react-admin-lang/
-              - cd react-admin-lang
+              - git clone https://github.com/vivid-planet/comet-admin-lang.git
+              - cp -r lang/* comet-admin-lang/
+              - cd comet-admin-lang
               - git config user.email "vivid-planet-bot@vivid-planet.com"
               - git add .
-              - if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for $TRAVIS_COMMIT" && git remote rm origin && git remote add origin https://vivid-planet-bot:${GH_TOKEN}@github.com/vivid-planet/react-admin-lang.git && git push --set-upstream origin master; fi
+              - if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for $TRAVIS_COMMIT" && git remote rm origin && git remote add origin https://vivid-planet-bot:${GH_TOKEN}@github.com/vivid-planet/comet-admin-lang.git && git push --set-upstream origin master; fi
 
 addons:
     apt:
