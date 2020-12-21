@@ -1,9 +1,10 @@
 import { Typography } from "@material-ui/core";
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
-import { IBlocktypeMap } from "@vivid-planet/comet-admin-rte/src/core/types";
 import * as React from "react";
 import { defineMessage, FormattedMessage } from "react-intl";
+
+import { IBlocktypeMap } from "./types";
 
 const headerMessage = defineMessage({ id: "cometAdmin.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
 
