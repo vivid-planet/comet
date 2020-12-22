@@ -2,13 +2,14 @@ import FormatBoldIcon from "@material-ui/icons/FormatBold";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import StrikethroughSIcon from "@material-ui/icons/StrikethroughS";
-import { SupportedThings } from "@vivid-planet/comet-admin-rte/src/core/Rte";
-import { IFeatureConfig, InlineStyleType } from "@vivid-planet/comet-admin-rte/src/core/types";
-import TextFormatSub from "@vivid-planet/comet-admin-rte/src/icons/TextFormatSub";
-import TextFormatSup from "@vivid-planet/comet-admin-rte/src/icons/TextFormatSup";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
+import TextFormatSub from "../../icons/TextFormatSub";
+import TextFormatSup from "../../icons/TextFormatSup";
+import { SupportedThings } from "../Rte";
+import { IFeatureConfig, InlineStyleType } from "../types";
 
 interface IProps {
     editorState: EditorState;

@@ -1,12 +1,12 @@
 import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
-import { SupportedThings } from "@vivid-planet/comet-admin-rte/src/core/Rte";
-import { ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "@vivid-planet/comet-admin-rte/src/core/types";
-import getCurrentBlock from "@vivid-planet/comet-admin-rte/src/core/utils/getCurrentBlock";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { defineMessage, FormattedMessage } from "react-intl";
 
+import { SupportedThings } from "../Rte";
+import { ICustomBlockType, ICustomBlockTypeMap, IFeatureConfig } from "../types";
+import getCurrentBlock from "../utils/getCurrentBlock";
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
