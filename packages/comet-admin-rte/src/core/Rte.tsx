@@ -37,6 +37,7 @@ export type SupportedThings =
     | "header-six"
     | "ordered-list"
     | "unordered-list"
+    | "blockquote"
     | "history"
     | "link"
     | "links-remove";

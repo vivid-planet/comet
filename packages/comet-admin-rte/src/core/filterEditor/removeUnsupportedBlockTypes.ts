@@ -14,6 +14,7 @@ const removeUnsupportedBlockTypes: FilterEditorStateBeforeUpdateFn = (newState, 
         "header-four": "header-four",
         "header-five": "header-five",
         "header-six": "header-six",
+        blockquote: "blockquote",
         "ordered-list": "ordered-list-item",
         "unordered-list": "unordered-list-item",
     };

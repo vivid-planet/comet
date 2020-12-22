@@ -166,6 +166,15 @@ export const exampleContent = {
             data: {},
         },
         {
+            key: "eggda",
+            text: "Blockquote",
+            type: "blockquote",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+        },
+        {
             key: "2fi99",
             text: "Überschrift Custom",
             type: "header-custom-green",

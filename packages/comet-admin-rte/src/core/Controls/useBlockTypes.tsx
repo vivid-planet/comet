@@ -41,6 +41,10 @@ const defaultDropdownFeatures = [
         name: "header-six",
         label: <FormattedMessage {...headerMessage} values={{ level: 6 }} />,
     },
+    {
+        name: "blockquote",
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.blockquote" defaultMessage="Blockquote" />,
+    },
 ];
 
 const defaultListsFeatures = [
@@ -87,6 +91,8 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
                     return supportedThings.includes("header-five");
                 case "header-six":
                     return supportedThings.includes("header-six");
+                case "blockquote":
+                    return supportedThings.includes("blockquote");
                 default:
                     return false;
             }
