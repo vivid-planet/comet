@@ -8280,7 +8280,7 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphql-anywhere@^4.2.4:
+graphql-anywhere@^4.2.7:
   version "4.2.7"
   resolved "https://registry.yarnpkg.com/graphql-anywhere/-/graphql-anywhere-4.2.7.tgz#c06fb40b1d62b39470c80e3731478dbbef060067"
   integrity sha512-fJHvVywWVWjiHuPIMs16Nfjf4zdQUwSO1LKycwBJCWIPeoeQ8LqXK2BgYoZAHkhKEFktZZeYyzS4o/uIUG0z5A==

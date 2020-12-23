@@ -39,7 +39,6 @@
         "@types/uuid": "^3.4.4",
         "@typescript-eslint/eslint-plugin": "^4.7.0",
         "@typescript-eslint/parser": "^4.7.0",
-        "apollo-link-rest": "^0.8.0-beta.0",
         "eslint": "^7.13.0",
         "eslint-config-prettier": "^6.15.0",
         "eslint-plugin-formatjs": "^2.9.3",
