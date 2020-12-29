@@ -27,7 +27,9 @@ const Menu = ({ classes, children, permanentMenuMinWidth: passedPermanentMenuMin
         if (variant === "temporary" && open) {
             toggleOpen();
         }
-    }, [open, toggleOpen, variant]);
+        // useEffect dependencies need to stay empty, because the function should only be called on first render.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     React.useEffect(() => {
         return history.listen(() => {
