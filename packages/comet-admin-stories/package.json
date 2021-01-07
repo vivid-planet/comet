@@ -15,7 +15,6 @@
         "@vivid-planet/comet-admin-rte": "*",
         "final-form": "^4.16.1",
         "graphql": "^15.4.0",
-        "graphql-tag": "^2.11.0",
         "react": "^16.8",
         "react-dom": "^16.8",
         "react-final-form": "^6.3.1",
@@ -23,6 +22,8 @@
         "styled-components": "^4.3.2"
     },
     "dependencies": {
+        "apollo-link-rest": "^0.8.0-beta.0",
+        "graphql-anywhere": "^4.2.7",
         "qs": "^6.9.1"
     },
     "devDependencies": {
@@ -40,13 +41,11 @@
         "@types/storybook-react-router": "^1.0.1",
         "@types/storybook__react": "^5.2.1",
         "@types/webpack": "^4.4.34",
-        "apollo-link-rest": "^0.8.0-beta.0",
         "babel-loader": "^8.0.6",
         "draft-js": "^0.11.5",
         "draft-js-export-html": "^1.4.1",
         "draft-js-export-markdown": "^1.4.0",
         "draft-js-import-markdown": "^1.4.0",
-        "graphql-anywhere": "^4.2.4",
         "immutable": "~3.7.4",
         "react-docgen-typescript-loader": "^3.1.0",
         "react-router": "^5.0.1",

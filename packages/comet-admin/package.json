@@ -24,7 +24,6 @@
         "file-saver": "^2.0.2",
         "final-form": "^4.16.1",
         "graphql": "^15.4.0",
-        "graphql-tag": "^2.11.0",
         "history": "^4.10.1",
         "react": "^16.8",
         "react-dom": "^16.8",
