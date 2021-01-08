@@ -9,7 +9,7 @@ This version ist the first stable version.
 ### Highlights
 
 -   Renamed from react-admin to comet-admin (!!!)
--   Made comet-admin translateable with react-intl
+-   Made comet-admin translatable with react-intl
 -   Updated apollo
 
 ### Incompatible Changes
@@ -22,4 +22,96 @@ This version ist the first stable version.
 -   FinalForm wrappers (e.g. Checkbox, Input, ...) are now prefixed with FinalForm
 
 ### Internal Changes
+
 -   Switched form TSLint to ESLint
+
+### Migration Guide
+
+Clone this repository into your project repository. If you have a monorepo, you have to clone it into the right subfolder.
+
+An example can be found [here](https://github.com/vivid-planet/comet-admin-starter/pull/36).
+
+**Package Renaming**
+
+Automatic migrations using codeshift are available (use -d for dry-run):
+
+```
+npx jscodeshift --extensions=ts --parser=ts -t comet-admin/codemods/1.0.0/package-renames.ts src/
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/1.0.0/package-renames.ts src/
+```
+
+**Styled Components**
+
+Automatic migrations using codeshift are available (use -d for dry-run):
+
+```
+npx jscodeshift --extensions=ts --parser=ts -t comet-admin/codemods/1.0.0/styled-components.ts src/
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/1.0.0/styled-components.ts src/
+```
+
+**Apollo-Client**
+
+Detailed instructions can be found [here](https://www.apollographql.com/docs/react/migrating/apollo-client-3-migration). Automatic migrations using codeshift are available (use -d for dry-run):
+
+```
+git clone https://github.com/apollographql/apollo-client.git
+npx jscodeshift -t apollo-client/codemods/ac2-to-ac3/imports.js --extensions ts --parser ts src/
+npx jscodeshift -t apollo-client/codemods/ac2-to-ac3/imports.js --extensions tsx --parser tsx src/
+```
+
+**Component-Renames**
+
+FinalForm fields are now prefixed with FinalForm. Automatic migrations using codeshift are available (use -d for dry-run):
+
+```
+npx jscodeshift --extensions=ts --parser=ts -t comet-admin/codemods/1.0.0/component-renames.ts src/
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/1.0.0/component-renames.ts src/
+```
+
+**FormatLocalized**
+
+`FormatLocalized` has been removed in favor of `FormattedDate` and `FormattedTime` of react-intl. An example migration can look like this:
+
+Before:
+
+```
+<FormatLocalized date={parseISO(publishDate)} format="dd.MM.yyyy - HH:mm" />
+```
+
+After:
+
+```
+<FormattedDate value={date} day="2-digit" month="2-digit" year="numeric" />
+{" - "}
+<FormattedTime value={date} />
+```
+
+As an alternative, FormatLocalized can be created inside the project by using:
+
+```
+import { format } from "date-fns";
+import * as React from "react";
+import { useIntl } from "react-intl";
+
+interface IProps {
+    format: string;
+    date: Date | number;
+}
+export const FormatLocalized: React.FunctionComponent<IProps> = ({ date, format: formatString }) => {
+    const intl = useIntl();
+    const locale = intl.locale;
+    return <>{format(date, formatString, { locale })}</>;
+};
+```
+
+However, imports need to be adjusted manually.
+
+**Internationalization**
+
+Strings are now prepared for internationalization. The default language is switched from German to English. A sample setup can be found [here](https://github.com/vivid-planet/comet-admin-starter/pull/36).
+
+**Fix Eslint Errors**
+
+```
+npx eslint --ext .ts,.tsx,.js,.jsx,.json,.md --fix src/
+```
