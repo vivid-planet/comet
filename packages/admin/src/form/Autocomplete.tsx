@@ -3,9 +3,9 @@ import MuiAutocomplete, { AutocompleteProps } from "@material-ui/lab/Autocomplet
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
-interface IProps extends FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> {
-    optionValue?: string;
-    optionLabel?: string;
+interface IProps<T> extends FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> {
+    optionValue?: keyof T;
+    optionLabel?: keyof T;
 }
 
 interface AutocompleteAsyncProps<T> {
@@ -45,18 +45,26 @@ export function useAutocompleteAsyncProps<T>(loadOptions: () => Promise<T[]>): A
     };
 }
 
-export const Autocomplete: React.FunctionComponent<
-    IProps & AutocompleteProps<any, boolean | undefined, boolean | undefined, boolean | undefined>
-> = ({ input: { name, onChange, value, ...restInput }, meta, optionLabel = "label", optionValue = "value", ...rest }) => (
+export const Autocomplete = <
+    T extends Record<string, any>,
+    Multiple extends boolean | undefined,
+    DisableClearable extends boolean | undefined,
+    FreeSolo extends boolean | undefined
+>({
+    input: { name, onChange, value, ...restInput },
+    meta,
+    optionLabel = "label",
+    optionValue = "value",
+    ...rest
+}: IProps<T> & AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) => (
     <MuiAutocomplete
-        getOptionSelected={(option, value) => {
+        getOptionSelected={(option: T, value: T) => {
             if (!value) return false;
             return optionValue ? option[optionValue] === value[optionValue] : option === value;
         }}
-        getOptionLabel={(option) => {
-            return optionLabel ? option[optionLabel] : "--unknown--";
+        getOptionLabel={(option: T) => {
+            return optionLabel && option[optionLabel] !== undefined ? option[optionLabel].toString() : "--unknown--";
         }}
-        value={value ? value : null}
         onChange={(_e, option) => {
             onChange(option);
         }}
