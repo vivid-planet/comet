@@ -1,6 +1,6 @@
 {
     "name": "@vivid-planet/comet-admin-react-select",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -10,7 +10,7 @@
         "classnames": "^2.2.6"
     },
     "devDependencies": {
-        "@vivid-planet/comet-admin": "^1.0.0"
+        "@vivid-planet/comet-admin": "^1.1.0"
     },
     "peerDependencies": {
         "@material-ui/core": "^4.1.3",
