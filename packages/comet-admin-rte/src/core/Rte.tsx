@@ -18,7 +18,7 @@ import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
 import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
 import * as sc from "./Rte.sc";
-import { IBlocktypeMap, ToolbarButtonComponent } from "./types";
+import { IBlocktypeMap, ICustomBlockTypeMap_Deprecated, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
 const mandatoryFilterEditorStateFn = composeFilterEditorFns([removeBlocksExceedingBlockLimit, manageDefaultBlockType]);
@@ -59,6 +59,9 @@ export interface IRteOptions {
     filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
     maxBlocks?: number;
     standardBlockType: DraftBlockType;
+
+    // @deprecated
+    customBlockMap?: ICustomBlockTypeMap_Deprecated;
 }
 
 export type IOptions = Partial<IRteOptions>;
@@ -123,10 +126,17 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     // merge default options with passed options
     let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
 
+    // extract deprecated options and handle them specially
+    let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
+    if (options.customBlockMap) {
+        deprecatedCustomBlockMap = options.customBlockMap;
+        delete options.customBlockMap;
+    }
+
     // blocktypes need an extra merge as they have their own merge strategy
     options = {
         ...options,
-        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, options.blocktypeMap),
+        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, deprecatedCustomBlockMap, options.blocktypeMap),
     };
 
     /**

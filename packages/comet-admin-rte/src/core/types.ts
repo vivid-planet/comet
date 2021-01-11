@@ -46,3 +46,18 @@ export interface IControlProps {
 export type ToolbarButtonComponent = (props: IControlProps) => JSX.Element;
 
 export type FilterEditorStateFn = (nextState: EditorState) => EditorState;
+
+/**
+ * @deprecated use IBlocktypeConfig instead
+ */
+interface ICustomBlockType_Deprecated {
+    renderConfig: DraftBlockRenderConfig;
+    label: string;
+}
+
+/**
+ * @deprecated use IBlocktypeMap instead
+ */
+export interface ICustomBlockTypeMap_Deprecated {
+    [key: string]: ICustomBlockType_Deprecated;
+}

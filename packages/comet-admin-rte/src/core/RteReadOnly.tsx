@@ -5,11 +5,13 @@ import * as React from "react";
 
 import defaultBlocktypeMap, { mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import { styleMap } from "./Rte";
-import { IBlocktypeMap as IBlocktypeMap } from "./types";
+import { IBlocktypeMap as IBlocktypeMap, ICustomBlockTypeMap_Deprecated } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
 export interface IRteReadOnlyOptions {
     blocktypeMap: IBlocktypeMap;
+    // @deprecated
+    customBlockMap?: ICustomBlockTypeMap_Deprecated;
 }
 
 export type IOptions = Partial<IRteReadOnlyOptions>;
@@ -30,10 +32,17 @@ const RteReadOnly: React.FC<IProps> = ({ value: editorState, options: passedOpti
     // merge default options with passed options
     let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
 
+    // extract deprecated options and handle them specially
+    let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
+    if (options.customBlockMap) {
+        deprecatedCustomBlockMap = options.customBlockMap;
+        delete options.customBlockMap;
+    }
+
     // blocktypes need an extra merge as they have their own merge strategy
     options = {
         ...options,
-        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, options.blocktypeMap),
+        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, deprecatedCustomBlockMap, options.blocktypeMap),
     };
 
     const blockRenderMap = createBlockRenderMap({ blocktypeMap: options.blocktypeMap });
