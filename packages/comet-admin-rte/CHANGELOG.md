@@ -8,12 +8,19 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Add default styles (MUI) to built-in blocktypes
 -   Make built-in blocktypes styleable
+
+### Changes
+
 -   Rename prop-name "customBlockMap" to "blocktypeMap"
 -   Deprecate prop-name "customBlockMap"
-
-### Incompatible Changes
 
 ### Internal Changes
 
 -   Rename interface ICustomBlockTypeMap to IBlocktypeMap
 -   Change interface IBlocktypeMap, label is now optional
+
+## [1.1.0] - 22. Dec 2020
+
+### Changes
+
+-   Add `blockquote` support
