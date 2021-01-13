@@ -1,16 +1,16 @@
 import { Transform } from "jscodeshift";
 
 const renameMap: { [key: string]: string } = {
-    "@vivid-planet/react-admin-core": "@vivid-planet/comet-admin",
-    "@vivid-planet/fetch-provider": "@vivid-planet/comet-admin",
-    "@vivid-planet/file-icons": "@vivid-planet/comet-admin",
-    "@vivid-planet/react-admin-final-form-material-ui": "@vivid-planet/comet-admin",
-    "@vivid-planet/react-admin-form": "@vivid-planet/comet-admin",
-    "@vivid-planet/react-admin-layout": "@vivid-planet/comet-admin",
-    "@vivid-planet/react-select": "@vivid-planet/comet-admin-react-select",
-    "@vivid-planet/react-admin-date-picker": "@vivid-planet/comet-admin-date-picker",
-    "@vivid-planet/react-admin-color-picker": "@vivid-planet/comet-admin-color-picker",
-    "@vivid-planet/react-admin-rte": "@vivid-planet/comet-admin-rte",
+    "@vivid-planet/react-admin-core": "@comet/admin",
+    "@vivid-planet/fetch-provider": "@comet/admin",
+    "@vivid-planet/file-icons": "@comet/admin",
+    "@vivid-planet/react-admin-final-form-material-ui": "@comet/admin",
+    "@vivid-planet/react-admin-form": "@comet/admin",
+    "@vivid-planet/react-admin-layout": "@comet/admin",
+    "@vivid-planet/react-select": "@comet/admin-react-select",
+    "@vivid-planet/react-admin-date-picker": "@comet/admin-date-picker",
+    "@vivid-planet/react-admin-color-picker": "@comet/admin-color-picker",
+    "@vivid-planet/react-admin-rte": "@comet/admin-rte",
 };
 
 const transform: Transform = (file, api, options) => {
