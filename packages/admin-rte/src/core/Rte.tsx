@@ -75,6 +75,7 @@ export interface IProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
+    disabled?: boolean;
 }
 
 const defaultOptions: IRteOptions = {
@@ -119,7 +120,7 @@ export const styleMap = {
 };
 
 const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
-    const { value: editorState, onChange, options: passedOptions } = props;
+    const { value: editorState, onChange, options: passedOptions, disabled } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -138,6 +139,11 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         ...options,
         blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, deprecatedCustomBlockMap, options.blocktypeMap),
     };
+
+    // force draftjs to be readonly when rte is disabled
+    if (disabled) {
+        options.draftJsProps = { ...options.draftJsProps, readOnly: true };
+    }
 
     /**
      * Expose methods
@@ -234,7 +240,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
 
     return (
         <sc.Root ref={editorWrapperRef}>
-            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} />
+            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
             <sc.EditorWrapper>
                 <DraftJsEditor
                     ref={editorRef}

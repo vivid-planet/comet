@@ -6,6 +6,7 @@ import ControlButton from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
 export default function ToolbarButton(props: IControlProps) {
     const selection = props.editorState.getSelection();
+    const globallyDisabled = !!props.disabled;
 
     const buttonEnabled = !selection.isCollapsed(); // @TODO: better to scan the selection if any link-entities are in the selection
     function handleClick(e: React.MouseEvent) {
@@ -15,5 +16,5 @@ export default function ToolbarButton(props: IControlProps) {
         }
     }
 
-    return <ControlButton Icon={LinkOffIcon} disabled={!buttonEnabled} onButtonClick={handleClick} />;
+    return <ControlButton Icon={LinkOffIcon} disabled={globallyDisabled || !buttonEnabled} onButtonClick={handleClick} />;
 }
