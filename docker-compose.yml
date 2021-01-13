@@ -13,7 +13,7 @@ services:
             - ./:/opt/app-root/src
         ports:
             - 8080:8080
-        command: bash -c "./wait-while-starting.sh && cd packages/comet-admin-stories && yarn start-storybook --port=8080"
+        command: bash -c "./wait-while-starting.sh && cd packages/admin-stories && yarn start-storybook --port=8080"
         depends_on:
             - comet-admin
     githook:

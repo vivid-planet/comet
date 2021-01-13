@@ -1,4 +1,4 @@
-# comet-admin
+# @comet/admin
 
 ## Developoment
 
@@ -14,7 +14,7 @@
 ### use yarn
 
     docker-compose exec comet-admin bash -c "yarn --help"
-    docker-compose exec comet-admin bash -c "cd packages/comet-admin && yarn --help"
+    docker-compose exec comet-admin bash -c "cd packages/admin && yarn --help"
 
 ### Develop in an project
 
@@ -27,7 +27,6 @@
 
     ./wml-add.sh ../example
     wml start
-
 
 ### Notes
 
