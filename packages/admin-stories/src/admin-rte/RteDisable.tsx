@@ -1,6 +1,6 @@
+import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { IRteRef, makeRteApi, Rte } from "@vivid-planet/comet-admin-rte";
 import * as React from "react";
 
 import { exampleContent, PrintEditorState, RteLayout, useAutoFocus } from "./helper";
