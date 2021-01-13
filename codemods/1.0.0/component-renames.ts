@@ -25,9 +25,9 @@ const transform: Transform = (file, api, options) => {
     for (const candidateElement of Object.keys(renameMap)) {
         const touched = {};
         root.findJSXElements(candidateElement).forEach((element, i) => {
-            // Check if we can find an import from comet-admin and rename that as well
+            // Check if we can find an import from admin and rename that as well
             root.find(j.ImportDeclaration).forEach((imp) => {
-                if (imp.value.source.value === "@vivid-planet/comet-admin") {
+                if (imp.value.source.value === "@comet/admin") {
                     imp.value.specifiers.forEach((specifier) => {
                         if (specifier.local.name === candidateElement) {
                             specifier.local.name = renameMap[candidateElement];

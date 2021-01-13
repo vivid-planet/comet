@@ -8,8 +8,8 @@ if [ ! -d "$1" ]; then
     echo "error: $1 is not a directory";
     exit 1
 fi
-if [ ! -d "$1/node_modules/@vivid-planet" ]; then
-    echo "error: $1 must be a directory that contains node_modules/@vivid-planet";
+if [ ! -d "$1/node_modules/@comet" ]; then
+    echo "error: $1 must be a directory that contains node_modules/@comet";
     exit 1
 fi
 
@@ -21,11 +21,11 @@ custom_realpath() {
     fi
 }
 
-target=$(custom_realpath "$1/node_modules/@vivid-planet");
+target=$(custom_realpath "$1/node_modules/@comet");
 source=$(custom_realpath "$(dirname "$0")")
 echo $target
 echo $source
-packages=( comet-admin comet-admin-rte )
+packages=( admin admin-rte )
 for package in "${packages[@]}"; do
     cmd="wml add $source/packages/$package $target/$package"
     echo $cmd
