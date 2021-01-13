@@ -6,7 +6,8 @@ interface IRootProps {
     renderAsIcon: boolean;
 }
 
-export const Root = styled.div<IRootProps>`
+// must be a button to support "disabled" - attribute
+export const Root = styled.button<IRootProps>`
     display: flex;
     justify-content: center;
     align-items: center;
