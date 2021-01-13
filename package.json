@@ -9,14 +9,14 @@
         "build": "lerna run build --stream",
         "bootstrap": "lerna bootstrap",
         "start": "lerna run --stream --no-sort --concurrency 999 start",
-        "storybook": "yarn --cwd packages/comet-admin-stories storybook",
+        "storybook": "yarn --cwd packages/admin-stories storybook",
         "lint": "npm run lint:eslint && npm run lint:tsc",
         "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/**/src/",
         "prelint:tsc": "yarn build",
         "lint:tsc": "lerna run lint:tsc --stream",
         "prebuild:storybook": "yarn build",
-        "build:storybook": "yarn workspace @vivid-planet/comet-admin-stories build-storybook",
-        "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/comet-admin-stories/**/* --format simple"
+        "build:storybook": "yarn workspace @comet/admin-stories build-storybook",
+        "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin-stories/**/* --format simple"
     },
     "devDependencies": {
         "@apollo/client": "^3.2.5",
