@@ -10,12 +10,15 @@ import { StackApiContext, StackBreadcrumb, StackSwitchApiContext } from "./stack
 
 interface ITabProps extends TabProps {
     path: string;
-    label: string;
+    label: React.ReactNode;
     forceRender?: boolean;
+    /**
+     * @deprecated Use label instead.
+     */
     tabLabel?: React.ReactNode;
     children: React.ReactNode;
 }
-export const RouterTab: React.SFC<ITabProps> = () => null;
+export const RouterTab: React.FC<ITabProps> = () => null;
 
 function TabContainer(props: any) {
     return (

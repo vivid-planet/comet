@@ -5,7 +5,7 @@ const UUID = require("uuid");
 
 interface IProps {
     url: string;
-    title: string;
+    title: React.ReactNode;
     invisible?: boolean;
     ignoreParentId?: boolean;
 }
