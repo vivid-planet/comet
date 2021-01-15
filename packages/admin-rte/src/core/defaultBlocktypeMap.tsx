@@ -85,7 +85,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
         supportedBy: "unordered-list",
         group: "button",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.unorderedList" defaultMessage="Bulletpoints" />,
-        Icon: FormatListBulletedIcon,
+        icon: FormatListBulletedIcon,
         renderConfig: {
             wrapper: <Typography component="ul" />,
             element: "li", // Do not change this to a react component (<Typography {...p}/>) unless you implement the css for nesting lists yourself!
@@ -97,7 +97,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
         supportedBy: "ordered-list",
         group: "button",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.orderedList" defaultMessage="Numbering" />,
-        Icon: FormatListNumberedIcon,
+        icon: FormatListNumberedIcon,
         renderConfig: {
             wrapper: <Typography component="ol" style={{ marginLeft: 0, paddingLeft: 0 }} />,
             element: "li", // same thing that applies to unordered-list-item applies here too!

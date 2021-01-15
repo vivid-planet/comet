@@ -39,7 +39,7 @@ const createFeaturesFromBlocktypeMap = (group: "dropdown" | "button") => ({
             label: config.label ?? blocktype,
             selected: blockTypeActive(blocktype),
             onButtonClick: handleBlockTypeButtonClick.bind(null, blocktype),
-            Icon: config.Icon,
+            Icon: config.icon,
         })),
 ];
 

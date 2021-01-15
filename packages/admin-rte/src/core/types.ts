@@ -14,7 +14,7 @@ export interface IBlocktypeConfig {
     renderConfig?: DraftBlockRenderConfig; // visual appearance of the blocktype
     label?: string | React.ReactNode; // displayed in the dropdown
     group?: "dropdown" | "button"; // displays the element in the dropdown or as button
-    Icon?: (props: SvgIconProps) => JSX.Element;
+    icon?: (props: SvgIconProps) => JSX.Element;
     supportedBy?: SupportedThings; // blocktype is active when this "supported thing" is active
 }
 
