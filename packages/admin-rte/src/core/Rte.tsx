@@ -241,7 +241,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
     return (
         <sc.Root ref={editorWrapperRef}>
             <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
-            <sc.EditorWrapper>
+            <sc.EditorWrapper disabled={disabled}>
                 <DraftJsEditor
                     ref={editorRef}
                     editorState={editorState}
