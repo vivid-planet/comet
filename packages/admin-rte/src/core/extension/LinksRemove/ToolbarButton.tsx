@@ -16,5 +16,5 @@ export default function ToolbarButton(props: IControlProps) {
         }
     }
 
-    return <ControlButton Icon={LinkOffIcon} disabled={globallyDisabled || !buttonEnabled} onButtonClick={handleClick} />;
+    return <ControlButton icon={LinkOffIcon} disabled={globallyDisabled || !buttonEnabled} onButtonClick={handleClick} />;
 }

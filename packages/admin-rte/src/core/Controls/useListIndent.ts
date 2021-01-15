@@ -111,7 +111,7 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       label: "",
                       disabled: !canIndentRight,
                       onButtonClick: handleListIndentRightClick,
-                      Icon: FormatIndentIncreaseIcon,
+                      icon: FormatIndentIncreaseIcon,
                       tooltipText: intl.formatMessage({ id: "cometAdmin.rte.controls.listIndent.right.tooltip", defaultMessage: "Tab" }),
                   },
                   {
@@ -119,7 +119,7 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       label: "",
                       disabled: !canIndentLeft,
                       onButtonClick: handleListIndentLeftClick,
-                      Icon: FormatIndentDecreaseIcon,
+                      icon: FormatIndentDecreaseIcon,
                       tooltipText: intl.formatMessage({ id: "cometAdmin.rte.controls.listIndent.left.tooltip", defaultMessage: "Shift+Tab" }),
                   },
               ]
