@@ -37,16 +37,21 @@ function makeRteApi<T = any>(o?: IMakeRteApiProps<T>) {
     const { decorators = [LinkDecorator], parse = defaultParseContent, format = defaultFormatContent }: IMakeRteApiProps<T> = o || {};
     const decorator = new CompositeDecorator(decorators);
 
-    function createEmptyState() {
+    function createEmptyState(): EditorState {
         return EditorState.createEmpty(decorator);
     }
 
-    function createStateFromRawContent(rawContent: T) {
+    function createStateFromRawContent(rawContent: T): EditorState {
         return EditorState.createWithContent(parse(rawContent), decorator);
     }
 
-    function convertStateToRawContent(es: EditorState) {
+    function convertStateToRawContent(es: EditorState): T {
         return format(es.getCurrentContent());
+    }
+
+    function createRawContentFromText(text: string = ""): T {
+        const content = ContentState.createFromText(text);
+        return format(content);
     }
 
     function useRteApi(passedProps?: IRteApiProps<T>) {
@@ -75,7 +80,12 @@ function makeRteApi<T = any>(o?: IMakeRteApiProps<T>) {
             setEditorState,
         };
     }
-    const staticFunctions = { createEmptyState, createStateFromRawContent, convertStateToRawContent };
+    const staticFunctions = {
+        createEmptyState,
+        createStateFromRawContent,
+        convertStateToRawContent,
+        createRawContentFromText,
+    };
     const api: [typeof useRteApi, typeof staticFunctions] = [useRteApi, staticFunctions];
     return api;
 }

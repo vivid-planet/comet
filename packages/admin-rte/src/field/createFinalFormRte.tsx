@@ -15,12 +15,11 @@ const defaultConfig: IConfig = {};
 
 function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
     const { rteApiOptions, rteOptions } = config;
-    const [useRteApi, { createStateFromRawContent }] = makeRteApi(rteApiOptions);
+    const [useRteApi, { createStateFromRawContent, createRawContentFromText }] = makeRteApi(rteApiOptions);
 
     const RteField: React.FunctionComponent<FieldRenderProps<T, HTMLInputElement> & Pick<RteProps, "options">> = ({
         input: { value, onChange, ...restInput },
         meta,
-        value: remove,
         ...rest
     }) => {
         const ref = React.useRef<any>();
@@ -64,7 +63,13 @@ function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
         );
     };
 
-    return { RteField, RteReadOnly };
+    return {
+        RteField,
+        RteReadOnly,
+        createRawContentFromText,
+        // syntactic sugar
+        emptyContent: () => createRawContentFromText(),
+    };
 }
 
 export default createFinalFormRte;
