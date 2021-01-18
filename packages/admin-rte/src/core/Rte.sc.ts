@@ -8,7 +8,9 @@ export const EditorWrapper = styled.div<{ disabled?: boolean }>`
     ${({ disabled, theme }) =>
         disabled &&
         css`
-            color: ${theme.palette.text.disabled} !important;
+            &&& {
+                color: ${theme.palette.text.disabled};
+            }
         `};
     .public-DraftEditor-content {
         min-height: 240px;
