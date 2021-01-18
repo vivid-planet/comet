@@ -87,7 +87,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.unorderedList" defaultMessage="Bulletpoints" />,
         icon: FormatListBulletedIcon,
         renderConfig: {
-            wrapper: <Typography component="ul" />,
+            wrapper: <Typography component="ul" style={{ padding: 0 }} />,
             element: "li", // Do not change this to a react component (<Typography {...p}/>) unless you implement the css for nesting lists yourself!
             // This css is used by default and it handles the nesting: https://github.com/facebook/draft-js/blob/master/src/component/utils/DraftStyleDefault.css#L152
             // But for this css to be applied "element" needs to be an (undecorated) li-element
@@ -99,7 +99,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.orderedList" defaultMessage="Numbering" />,
         icon: FormatListNumberedIcon,
         renderConfig: {
-            wrapper: <Typography component="ol" style={{ marginLeft: 0, paddingLeft: 0 }} />,
+            wrapper: <Typography component="ol" style={{ padding: 0 }} />,
             element: "li", // same thing that applies to unordered-list-item applies here too!
         },
     },
