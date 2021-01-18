@@ -6,12 +6,12 @@ export type CometAdminMenuClassKeys = "drawer" | "permanent" | "temporary" | "op
 export const styles = (theme: Theme) =>
     createStyles<CometAdminMenuClassKeys, any>({
         drawer: {
-            "& .MuiPaper-root": {
+            "& [class*='MuiPaper-root']": {
                 flexGrow: 1,
                 overflowX: "hidden",
             },
             "&$permanent": {
-                "& .MuiPaper-root": {
+                "& [class*='MuiPaper-root']": {
                     top: 64,
                     height: "calc(100% - 64px)",
                 },
@@ -20,7 +20,7 @@ export const styles = (theme: Theme) =>
                         easing: theme.transitions.easing.sharp,
                         duration: theme.transitions.duration.enteringScreen,
                     }),
-                    "& .MuiPaper-root": {
+                    "& [class*='MuiPaper-root']": {
                         transition: theme.transitions.create("margin", {
                             easing: theme.transitions.easing.sharp,
                             duration: theme.transitions.duration.leavingScreen,
@@ -32,7 +32,7 @@ export const styles = (theme: Theme) =>
                         easing: theme.transitions.easing.easeOut,
                         duration: theme.transitions.duration.leavingScreen,
                     }),
-                    "& .MuiPaper-root": {
+                    "& [class*='MuiPaper-root']": {
                         transition: theme.transitions.create("margin", {
                             easing: theme.transitions.easing.easeOut,
                             duration: theme.transitions.duration.enteringScreen,
