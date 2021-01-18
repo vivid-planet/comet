@@ -49,7 +49,7 @@ const Content = ({ children }: { children: string }) => (
     </Box>
 );
 
-const Story: React.FC = () => (
+export const Story: React.FC = () => (
     <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
         <Switch>
             <Route path="/" exact render={() => <Content>Root</Content>} />
