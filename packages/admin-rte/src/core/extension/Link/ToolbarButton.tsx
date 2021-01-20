@@ -34,7 +34,7 @@ export default function ToolbarButton(props: IControlProps) {
     }
 
     return (
-        <ControlButton selected={!!linkData} disabled={linkEditCreateDisabled || globallyDisabled} Icon={LinkIcon} onButtonClick={handleClick}>
+        <ControlButton selected={!!linkData} disabled={linkEditCreateDisabled || globallyDisabled} icon={LinkIcon} onButtonClick={handleClick}>
             <LinkDialog
                 editorState={props.editorState}
                 onChange={props.setEditorState}

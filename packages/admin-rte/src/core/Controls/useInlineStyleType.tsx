@@ -21,35 +21,35 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
         name: "BOLD",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.label" defaultMessage="bold" />,
-        Icon: FormatBoldIcon,
+        icon: FormatBoldIcon,
         tooltipText: <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.tooltip" defaultMessage="Ctrl+B" />,
     },
     {
         name: "ITALIC",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.label" defaultMessage="italic" />,
-        Icon: FormatItalicIcon,
+        icon: FormatItalicIcon,
         tooltipText: <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.tooltip" defaultMessage="Ctrl+I" />,
     },
     {
         name: "UNDERLINE",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.underlined.label" defaultMessage="underlined" />,
-        Icon: FormatUnderlinedIcon,
+        icon: FormatUnderlinedIcon,
         tooltipText: <FormattedMessage id="cometAdmin.rte.controls.blockType.underlined.tooltip" defaultMessage="Ctrl+U" />,
     },
     {
         name: "STRIKETHROUGH",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.strikethrough.label" defaultMessage="strikethrough" />,
-        Icon: StrikethroughSIcon,
+        icon: StrikethroughSIcon,
     },
     {
         name: "SUP",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.super.label" defaultMessage="super" />,
-        Icon: TextFormatSup,
+        icon: TextFormatSup,
     },
     {
         name: "SUB",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.sub.label" defaultMessage="sub" />,
-        Icon: TextFormatSub,
+        icon: TextFormatSub,
     },
 ];
 
