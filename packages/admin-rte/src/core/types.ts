@@ -1,15 +1,25 @@
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
-import { DraftBlockRenderConfig, DraftInlineStyleType, Editor, EditorState } from "draft-js";
+import { DraftInlineStyleType, Editor, EditorState } from "draft-js";
 
-import { IRteOptions } from "./Rte";
+import { IRteOptions, SupportedThings } from "./Rte";
 
-export interface ICustomBlockType {
-    renderConfig: DraftBlockRenderConfig;
-    label: string;
+// overwrite draftjs' insufficient type for Draft.DraftBlockRenderConfig
+interface DraftBlockRenderConfig {
+    element: string | React.ComponentType;
+    wrapper?: React.ReactNode;
+    aliasedElements?: string[];
 }
 
-export interface ICustomBlockTypeMap {
-    [key: string]: ICustomBlockType;
+export interface IBlocktypeConfig {
+    renderConfig?: DraftBlockRenderConfig; // visual appearance of the blocktype
+    label?: string | React.ReactNode; // displayed in the dropdown
+    group?: "dropdown" | "button"; // displays the element in the dropdown or as button
+    icon?: (props: SvgIconProps) => JSX.Element;
+    supportedBy?: SupportedThings; // blocktype is active when this "supported thing" is active
+}
+
+export interface IBlocktypeMap {
+    [key: string]: IBlocktypeConfig;
 }
 
 export interface IFeatureConfig<T extends string = string> {
@@ -36,3 +46,18 @@ export interface IControlProps {
 export type ToolbarButtonComponent = (props: IControlProps) => JSX.Element;
 
 export type FilterEditorStateFn = (nextState: EditorState) => EditorState;
+
+/**
+ * @deprecated use IBlocktypeConfig instead
+ */
+interface ICustomBlockType_Deprecated {
+    renderConfig: DraftBlockRenderConfig;
+    label: string;
+}
+
+/**
+ * @deprecated use IBlocktypeMap instead
+ */
+export interface ICustomBlockTypeMap_Deprecated {
+    [key: string]: ICustomBlockType_Deprecated;
+}

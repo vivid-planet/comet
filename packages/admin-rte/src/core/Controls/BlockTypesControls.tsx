@@ -11,13 +11,13 @@ export default function BlockTypesControls({
     editorState,
     setEditorState,
     editorRef,
-    options: { supports: supportedThings, customBlockMap: customBlockTypeMap, standardBlockType },
+    options: { supports: supportedThings, blocktypeMap, standardBlockType },
 }: IControlProps) {
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = useBlockTypes({
         editorState,
         setEditorState,
         supportedThings,
-        customBlockTypeMap,
+        blocktypeMap,
         editorRef,
     });
 

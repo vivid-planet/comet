@@ -8,9 +8,9 @@ export default function ListsControls({
     editorState,
     setEditorState,
     editorRef,
-    options: { supports: supportedThings, customBlockMap: customBlockTypeMap },
+    options: { supports: supportedThings, blocktypeMap },
 }: IControlProps) {
-    const { listsFeatures } = useBlockTypes({ editorState, setEditorState, supportedThings, customBlockTypeMap, editorRef });
+    const { listsFeatures } = useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef });
     if (listsFeatures.length < 1) {
         return null;
     }

@@ -3,12 +3,15 @@ import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 import { Editor as DraftJsEditor, EditorState } from "draft-js";
 import * as React from "react";
 
+import defaultBlocktypeMap, { mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import { styleMap } from "./Rte";
-import { ICustomBlockTypeMap } from "./types";
+import { IBlocktypeMap as IBlocktypeMap, ICustomBlockTypeMap_Deprecated } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
 export interface IRteReadOnlyOptions {
-    customBlockMap?: ICustomBlockTypeMap;
+    blocktypeMap: IBlocktypeMap;
+    // @deprecated
+    customBlockMap?: ICustomBlockTypeMap_Deprecated;
 }
 
 export type IOptions = Partial<IRteReadOnlyOptions>;
@@ -19,12 +22,30 @@ export interface IProps {
     options?: IOptions;
 }
 
-const defaultOptions: IRteReadOnlyOptions = {};
+const defaultOptions: IRteReadOnlyOptions = {
+    blocktypeMap: defaultBlocktypeMap,
+};
 
 const RteReadOnly: React.FC<IProps> = ({ value: editorState, options: passedOptions, plainTextOnly }) => {
     const editorRef = React.useRef<DraftJsEditor>(null);
-    const options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions; // merge default options with passed options
-    const blockRenderMap = createBlockRenderMap({ customBlockTypeMap: options.customBlockMap });
+
+    // merge default options with passed options
+    let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
+
+    // extract deprecated options and handle them specially
+    let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
+    if (options.customBlockMap) {
+        deprecatedCustomBlockMap = options.customBlockMap;
+        delete options.customBlockMap;
+    }
+
+    // blocktypes need an extra merge as they have their own merge strategy
+    options = {
+        ...options,
+        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, deprecatedCustomBlockMap, options.blocktypeMap),
+    };
+
+    const blockRenderMap = createBlockRenderMap({ blocktypeMap: options.blocktypeMap });
 
     function handleOnChange() {
         if (editorRef.current) {

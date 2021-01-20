@@ -9,7 +9,7 @@ const [useRteApi] = makeRteApi();
 const GreenCustomHeader: React.FC = ({ children }) => <span style={{ color: "green" }}>{children}</span>;
 
 const rteOptions: IRteReadOnlyOptions = {
-    customBlockMap: {
+    blocktypeMap: {
         "header-custom-green": {
             label: "Custom Green Header",
             renderConfig: {
