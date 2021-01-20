@@ -9,10 +9,11 @@ export default function ListsControls({
     setEditorState,
     editorRef,
     options: { supports: supportedThings, blocktypeMap },
+    disabled,
 }: IControlProps) {
     const { listsFeatures } = useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef });
     if (listsFeatures.length < 1) {
         return null;
     }
-    return <FeaturesButtonGroup features={listsFeatures} />;
+    return <FeaturesButtonGroup features={listsFeatures} disabled={disabled} />;
 }

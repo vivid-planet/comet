@@ -18,6 +18,7 @@ export default function ToolbarButton(props: IControlProps) {
     const { entity: previousLinkEntity, entitySelection: linkEntitySelection } = findEntityInCurrentSelection(props.editorState, ENTITY_TYPE);
     const selection = props.editorState.getSelection();
     const linkEditCreateDisabled = (selection.isCollapsed() && !linkData) || !selectionIsInOneBlock(props.editorState);
+    const globallyDisabled = !!props.disabled;
 
     function handleClick(e: React.MouseEvent) {
         if (linkEditCreateDisabled) {
@@ -33,7 +34,7 @@ export default function ToolbarButton(props: IControlProps) {
     }
 
     return (
-        <ControlButton selected={!!linkData} disabled={linkEditCreateDisabled} Icon={LinkIcon} onButtonClick={handleClick}>
+        <ControlButton selected={!!linkData} disabled={linkEditCreateDisabled || globallyDisabled} Icon={LinkIcon} onButtonClick={handleClick}>
             <LinkDialog
                 editorState={props.editorState}
                 onChange={props.setEditorState}

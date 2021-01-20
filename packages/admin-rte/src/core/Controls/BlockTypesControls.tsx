@@ -12,6 +12,7 @@ export default function BlockTypesControls({
     setEditorState,
     editorRef,
     options: { supports: supportedThings, blocktypeMap, standardBlockType },
+    disabled,
 }: IControlProps) {
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = useBlockTypes({
         editorState,
@@ -27,7 +28,7 @@ export default function BlockTypesControls({
 
     return (
         <FormControl>
-            <sc.Select value={activeDropdownBlockType} displayEmpty disableUnderline onChange={handleBlockTypeChange}>
+            <sc.Select disabled={disabled} value={activeDropdownBlockType} displayEmpty disableUnderline onChange={handleBlockTypeChange}>
                 {standardBlockType === "unstyled" && (
                     <MenuItem value="unstyled" dense>
                         <FormattedMessage id="cometAdmin.rte.controls.blockType.default" defaultMessage="Default" />
