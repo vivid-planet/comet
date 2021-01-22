@@ -2,5 +2,10 @@
     "npmClient": "yarn",
     "packages": ["packages/*"],
     "useWorkspaces": true,
-    "version": "independent"
+    "version": "independent",
+    "command": {
+        "publish": {
+            "ignoreChanges": ["CHANGELOG.md"]
+        }
+    }
 }
