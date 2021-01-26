@@ -9,7 +9,9 @@ export type CometAdminMenuItemClassKeys = "root" | "level1" | "level2" | "hasIco
 
 const styles = () =>
     createStyles<CometAdminMenuItemClassKeys, any>({
-        root: {},
+        root: {
+            flexShrink: 0,
+        },
         level1: {},
         level2: {},
         hasIcon: {},
