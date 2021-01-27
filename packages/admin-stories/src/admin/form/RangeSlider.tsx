@@ -1,5 +1,5 @@
+import { Field, RangeSlider } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
-import { Field, RangeSlider } from "@vivid-planet/react-admin-form";
 import * as React from "react";
 import { Form } from "react-final-form";
 import styled from "styled-components";
@@ -42,14 +42,14 @@ const Thumb = styled.div`
 const InputFieldContainer = styled.div`
     text-align: center;
     line-height: 90px;
-    width: 150px;
 
     input {
         text-align: center;
+        min-width: 50px;
     }
 `;
 
-const ThumbComponent: React.FunctionComponent = props => {
+const ThumbComponent: React.FunctionComponent = (props) => {
     return <Thumb {...props} />;
 };
 
@@ -57,28 +57,25 @@ function Story() {
     return (
         <div style={{ width: "300px" }}>
             <Form
-                onSubmit={values => {
+                onSubmit={(values) => {
                     // values
                 }}
                 render={({ handleSubmit }) => (
-                    <form onSubmit={handleSubmit}>
-                        <Field
-                            name="facets"
-                            component={RangeSlider}
-                            rangeValues={{ min: 0, max: 100 }}
-                            fieldContainerComponent={SliderWrapper}
-                            rangeSliderType={"price"}
-                            handleSubmit={handleSubmit}
-                            thumb={ThumbComponent}
-                            components={{
-                                inputFieldContainer: InputFieldContainer,
-                            }}
-                        />
-                    </form>
+                    <Field
+                        name="price"
+                        component={RangeSlider}
+                        rangeValues={{ min: 0, max: 100 }}
+                        fieldContainerComponent={SliderWrapper}
+                        thumb={ThumbComponent}
+                        endAdornment={<span>€</span>}
+                        components={{
+                            inputFieldContainer: InputFieldContainer,
+                        }}
+                    />
                 )}
             />
         </div>
     );
 }
 
-storiesOf("react-admin-form", module).add("React Slider", () => <Story />);
+storiesOf("@comet/admin/form", module).add("Range Slider", () => <Story />);

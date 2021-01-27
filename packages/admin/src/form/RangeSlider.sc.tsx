@@ -1,22 +1,23 @@
-import { styled } from "@vivid-planet/react-admin-mui";
+import styled from "styled-components";
 
 export const Wrapper = styled.div`
     padding: 0 20px;
+    width: 100%;
 `;
 
 export const InputsWrapper = styled.div`
-    align-content: space-between;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     display: flex;
 `;
 
 export const InputFieldContainer = styled.div`
     text-align: center;
     line-height: 90px;
-    width: 90px;
 
     input {
         text-align: center;
+        min-width: 50px;
     }
 `;
 
