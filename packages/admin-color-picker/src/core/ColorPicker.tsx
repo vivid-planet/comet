@@ -1,3 +1,4 @@
+import { ClearInputButton } from "@comet/admin";
 import { ClickAwayListener, InputBase, Paper, Popper, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { CustomPicker } from "react-color";
@@ -15,8 +16,6 @@ export interface IVPAdminColorPickerProps {
         input: string;
         inputInner: string;
         inputInnerLeftContent: string;
-        clearButton: string;
-        clearIcon: string;
         popper: string;
         pickedColorWrapper: string;
         noColorStroke: string;
@@ -89,6 +88,7 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
                     onChange={(newColor) => onChange(colorToHex((newColor as unknown) as tinycolor.ColorInputWithoutInstance))}
                     className={classes.input}
                     onClick={handleFieldClick}
+                    endAdornment={<ClearInputButton onClick={() => onChange("")} disabled={!value} />}
                 />
                 <Popper open={isOpen} anchorEl={anchorEl} placement={"bottom"} style={{ width: `${inputWidth}px` }} className={classes.popper}>
                     <Paper>

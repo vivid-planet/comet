@@ -6,8 +6,6 @@ export type VPAdminColorPickerClassKeys =
     | "input"
     | "inputInner"
     | "inputInnerLeftContent"
-    | "clearButton"
-    | "clearIcon"
     | "popover"
     | "pickedColorWrapper"
     | "noColorStroke"
@@ -41,11 +39,6 @@ const styles = (theme: Theme) => {
             flexDirection: "row",
             alignItems: "center",
         },
-        clearButton: {
-            height: inputDefaultStyles.height,
-            width: inputDefaultStyles.height,
-        },
-        clearIcon: {},
         popper: {},
         pickedColorWrapper: {
             position: "relative",
