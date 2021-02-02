@@ -4,10 +4,6 @@ import * as React from "react";
 import { Form } from "react-final-form";
 import styled from "styled-components";
 
-const SliderWrapper = styled.div`
-    padding: 0 20px;
-`;
-
 const Thumb = styled.div`
     && {
         margin-top: -9px;
@@ -41,7 +37,6 @@ const Thumb = styled.div`
 
 const InputFieldContainer = styled.div`
     text-align: center;
-    line-height: 90px;
 
     input {
         text-align: center;
@@ -60,12 +55,13 @@ function Story() {
                 onSubmit={(values) => {
                     // values
                 }}
-                render={({ handleSubmit }) => (
+                initialValues={{ price: { min: 0, max: 100 } }}
+                render={({ handleSubmit, values }) => (
                     <Field
-                        name="price"
                         component={RangeSlider}
-                        rangeValues={{ min: 0, max: 100 }}
-                        fieldContainerComponent={SliderWrapper}
+                        name="price"
+                        min={0}
+                        max={100}
                         thumb={ThumbComponent}
                         endAdornment={<span>€</span>}
                         components={{

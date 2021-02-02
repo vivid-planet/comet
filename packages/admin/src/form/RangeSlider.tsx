@@ -1,17 +1,12 @@
-import { Slider } from "@material-ui/core";
+import { FormControl, Input, Slider } from "@material-ui/core";
 import * as React from "react";
-import { useField } from "react-final-form";
+import { FieldRenderProps } from "react-final-form";
 
-import { Input } from "./Input";
 import * as sc from "./RangeSlider.sc";
-
-interface IMinMaxValue {
+interface IRangeSliderProps extends FieldRenderProps<any, HTMLInputElement> {
+    name: string;
     min: number;
     max: number;
-}
-
-interface IRangeSliderProps {
-    rangeValues: IMinMaxValue;
     startAdornment?: string | React.ReactElement;
     endAdornment?: string | React.ReactElement;
     thumb?: React.ElementType<React.HTMLAttributes<HTMLSpanElement | HTMLDivElement>>;
@@ -19,98 +14,83 @@ interface IRangeSliderProps {
         inputFieldContainer?: React.ComponentType;
     };
 }
-
-export const RangeSlider: React.FunctionComponent<IRangeSliderProps> = ({ rangeValues, thumb, components, startAdornment, endAdornment }) => {
-    const [minValue, setMinValue] = React.useState<number>(rangeValues?.min || 0);
-    const [maxValue, setMaxValue] = React.useState<number>(rangeValues?.max || 0);
-
+export const RangeSlider: React.FunctionComponent<IRangeSliderProps> = ({
+    min,
+    max,
+    thumb,
+    components,
+    startAdornment,
+    endAdornment,
+    input: { name, onChange, value: fieldValue },
+}) => {
     const InputFieldContainer = components && components.inputFieldContainer ? components.inputFieldContainer : sc.InputFieldContainer;
-
-    const minField = useField<number, HTMLInputElement>("min", {
-        initialValue: minValue,
-    });
-    const maxField = useField<number, HTMLInputElement>("max", {
-        initialValue: maxValue,
-    });
-
     const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: number[]) => {
-        if (minValue !== newValue[0]) {
-            setMinValue(newValue[0]);
-            minField.input.onChange(newValue[0]);
-        }
-        if (maxValue !== newValue[1]) {
-            setMaxValue(newValue[1]);
-            maxField.input.onChange(newValue[1]);
-        }
+        onChange({ min: newValue[0], max: newValue[1] });
     };
 
     return (
         <sc.Wrapper>
-            {!!rangeValues && (
-                <>
-                    <sc.InputsWrapper>
-                        <InputFieldContainer>
-                            <Input
-                                {...minField}
-                                inputProps={{
-                                    min: rangeValues.min,
-                                    max: maxField.input.value,
-                                    value: minValue,
-                                    type: "number",
-                                }}
-                                startAdornment={startAdornment ? startAdornment : ""}
-                                endAdornment={endAdornment ? endAdornment : ""}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    const min = Number(e.target.value);
-                                    setMinValue(Number(e.target.value));
-                                    minField.input.onChange(min > maxValue ? maxValue : min);
-                                }}
-                                onBlur={() => {
-                                    const minInputValue = Math.min(minValue, maxValue);
-                                    if (minValue !== minInputValue) {
-                                        setMinValue(minInputValue);
-                                    }
-                                }}
-                            />
-                        </InputFieldContainer>
-                        <sc.InputFieldsSeperatorContainer>-</sc.InputFieldsSeperatorContainer>
-                        <InputFieldContainer>
-                            <Input
-                                {...maxField}
-                                inputProps={{
-                                    min: minField.input.value,
-                                    max: rangeValues.max,
-                                    value: maxValue,
-                                    type: "number",
-                                }}
-                                startAdornment={startAdornment ? startAdornment : ""}
-                                endAdornment={endAdornment ? endAdornment : ""}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    const max = Number(e.target.value);
-                                    setMaxValue(max);
-                                    maxField.input.onChange(max < minValue ? minValue : max);
-                                }}
-                                onBlur={() => {
-                                    const maxInputValue = Math.max(minValue, maxValue);
-                                    if (maxValue !== maxInputValue) {
-                                        setMaxValue(maxInputValue);
-                                    }
-                                }}
-                            />
-                        </InputFieldContainer>
-                    </sc.InputsWrapper>
-                    <sc.SliderWrapper>
-                        <Slider
-                            min={rangeValues.min}
-                            max={rangeValues.max}
-                            value={[minField.input.value, maxField.input.value]}
-                            aria-labelledby="range-slider"
-                            ThumbComponent={thumb ? thumb : "span"}
-                            onChange={handleSliderChange}
+            <sc.InputsWrapper>
+                <InputFieldContainer>
+                    <FormControl>
+                        <Input
+                            name={`${name}.min`}
+                            inputProps={{
+                                min: min,
+                                max: fieldValue.max,
+                                value: fieldValue.min,
+                                type: "number",
+                            }}
+                            startAdornment={startAdornment ? startAdornment : ""}
+                            endAdornment={endAdornment ? endAdornment : ""}
+                            onBlur={() => {
+                                const minfieldValue = Math.min(fieldValue.min, fieldValue.max);
+                                if (fieldValue.min !== minfieldValue) {
+                                    onChange({ ...fieldValue, min: minfieldValue });
+                                }
+                            }}
+                            onChange={(e) => {
+                                onChange({ ...fieldValue, min: Number(e.target.value) });
+                            }}
                         />
-                    </sc.SliderWrapper>
-                </>
-            )}
+                    </FormControl>
+                </InputFieldContainer>
+                <sc.InputFieldsSeperatorContainer>-</sc.InputFieldsSeperatorContainer>
+                <InputFieldContainer>
+                    <FormControl>
+                        <Input
+                            name={`${name}.max`}
+                            inputProps={{
+                                min: fieldValue.min,
+                                max: max,
+                                value: fieldValue.max,
+                                type: "number",
+                            }}
+                            startAdornment={startAdornment ? startAdornment : ""}
+                            endAdornment={endAdornment ? endAdornment : ""}
+                            onBlur={() => {
+                                const maxfieldValue = Math.max(fieldValue.min, fieldValue.max);
+                                if (fieldValue.max !== maxfieldValue) {
+                                    onChange({ ...fieldValue, max: maxfieldValue });
+                                }
+                            }}
+                            onChange={(e) => {
+                                onChange({ ...fieldValue, max: Number(e.target.value) });
+                            }}
+                        />
+                    </FormControl>
+                </InputFieldContainer>
+            </sc.InputsWrapper>
+            <sc.SliderWrapper>
+                <Slider
+                    min={min}
+                    max={max}
+                    value={[fieldValue.min, fieldValue.max]}
+                    aria-labelledby="range-slider"
+                    ThumbComponent={thumb ? thumb : "span"}
+                    onChange={handleSliderChange}
+                />
+            </sc.SliderWrapper>
         </sc.Wrapper>
     );
 };
