@@ -1,4 +1,4 @@
-import { Field, FieldContainerLabelAbove } from "@comet/admin";
+import { Field } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -22,7 +22,6 @@ function Story() {
                         <Field
                             name="flavor"
                             label="Flavor"
-                            fieldContainerComponent={FieldContainerLabelAbove}
                             component={FinalFormReactSelectStaticOptions}
                             placeholder=""
                             isClearable

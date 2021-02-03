@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
     Field,
-    FieldContainerLabelAbove,
     FinalForm,
     FinalFormInput,
     Stack,
@@ -75,14 +74,7 @@ function ExampleTable(props: { persistedStateId: string }) {
             {tableData && (
                 <>
                     <TableFilterFinalForm filterApi={filterApi}>
-                        <Field
-                            name="query"
-                            type="text"
-                            label="Query"
-                            component={FinalFormInput}
-                            fullWidth
-                            fieldContainerComponent={FieldContainerLabelAbove}
-                        />
+                        <Field name="query" type="text" label="Query" component={FinalFormInput} fullWidth />
                     </TableFilterFinalForm>
                     <Table
                         {...tableData}
