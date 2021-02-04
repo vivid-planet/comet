@@ -23,8 +23,12 @@ export const RangeSlider: React.FunctionComponent<IRangeSliderProps> = ({
     endAdornment,
     input: { name, onChange, value: fieldValue },
 }) => {
+    const [minInput, setMinInput] = React.useState(fieldValue.min || 0);
+    const [maxInput, setMaxInput] = React.useState(fieldValue.max || 0);
     const InputFieldContainer = components && components.inputFieldContainer ? components.inputFieldContainer : sc.InputFieldContainer;
     const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: number[]) => {
+        setMinInput(newValue[0]);
+        setMaxInput(newValue[1]);
         onChange({ min: newValue[0], max: newValue[1] });
     };
 
@@ -38,19 +42,20 @@ export const RangeSlider: React.FunctionComponent<IRangeSliderProps> = ({
                             inputProps={{
                                 min: min,
                                 max: fieldValue.max,
-                                value: fieldValue.min,
+                                value: minInput,
                                 type: "number",
                             }}
                             startAdornment={startAdornment ? startAdornment : ""}
                             endAdornment={endAdornment ? endAdornment : ""}
                             onBlur={() => {
-                                const minfieldValue = Math.min(fieldValue.min, fieldValue.max);
-                                if (fieldValue.min !== minfieldValue) {
-                                    onChange({ ...fieldValue, min: minfieldValue });
+                                const minFieldValue = Math.min(minInput, fieldValue.max);
+                                if (fieldValue.min !== minFieldValue) {
+                                    onChange({ ...fieldValue, min: minFieldValue });
+                                    setMinInput(minFieldValue);
                                 }
                             }}
                             onChange={(e) => {
-                                onChange({ ...fieldValue, min: Number(e.target.value) });
+                                setMinInput(Number(e.target.value));
                             }}
                         />
                     </FormControl>
@@ -63,19 +68,20 @@ export const RangeSlider: React.FunctionComponent<IRangeSliderProps> = ({
                             inputProps={{
                                 min: fieldValue.min,
                                 max: max,
-                                value: fieldValue.max,
+                                value: maxInput,
                                 type: "number",
                             }}
                             startAdornment={startAdornment ? startAdornment : ""}
                             endAdornment={endAdornment ? endAdornment : ""}
                             onBlur={() => {
-                                const maxfieldValue = Math.max(fieldValue.min, fieldValue.max);
-                                if (fieldValue.max !== maxfieldValue) {
-                                    onChange({ ...fieldValue, max: maxfieldValue });
+                                const maxFieldValue = Math.max(fieldValue.min, maxInput);
+                                if (fieldValue.max !== maxFieldValue) {
+                                    onChange({ ...fieldValue, max: maxFieldValue });
+                                    setMaxInput(maxFieldValue);
                                 }
                             }}
                             onChange={(e) => {
-                                onChange({ ...fieldValue, max: Number(e.target.value) });
+                                setMaxInput(Number(e.target.value));
                             }}
                         />
                     </FormControl>
