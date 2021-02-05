@@ -1,5 +1,6 @@
 {
     "name": "root",
+    "license": "BSD-2-Clause",
     "workspaces": [
         "packages/*"
     ],
@@ -10,7 +11,7 @@
         "bootstrap": "lerna bootstrap",
         "start": "lerna run --stream --no-sort --concurrency 999 start",
         "storybook": "yarn --cwd packages/admin-stories storybook",
-        "lint": "npm run lint:eslint && npm run lint:tsc",
+        "lint": "yarn run lint:eslint && yarn run lint:tsc",
         "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/**/src/",
         "prelint:tsc": "yarn build",
         "lint:tsc": "lerna run lint:tsc --stream",
@@ -53,8 +54,10 @@
         "graphql": "^15.4.0",
         "graphql-tag": "^2.11.0",
         "history": "^4.10.1",
+        "husky": "^4.3.8",
         "jss": "^9.8.7",
         "lerna": "^3.15.0",
+        "lint-staged": "^10.5.3",
         "prettier": "^2.1.2",
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
@@ -67,5 +70,9 @@
         "styled-components": "^4.3.2",
         "typescript": "^3.9.2"
     },
-    "license": "BSD-2-Clause"
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    }
 }

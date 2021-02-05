@@ -1,20 +1,19 @@
 # @comet/admin
 
-## Developoment
+## Development
 
 ### Requirements
 
--   [docker & docker-compose](https://docs.docker.com/compose/)
+-   [nvm](https://github.com/nvm-sh/nvm)
+
+Run `install.sh` once.
 
 ### Run build and storybook
 
-    docker-compose up # on linux
-    docker-compose -f docker-compose.yml -f docker-compose.mac.yml up # on OSX
-
-### use yarn
-
-    docker-compose exec comet-admin bash -c "yarn --help"
-    docker-compose exec comet-admin bash -c "cd packages/admin && yarn --help"
+```
+yarn run start
+yarn run storybook
+```
 
 ### Develop in an project
 
