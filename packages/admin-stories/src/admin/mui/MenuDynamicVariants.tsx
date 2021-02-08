@@ -111,6 +111,6 @@ const Story: React.FC = () => (
     </MasterLayout>
 );
 
-storiesOf("comet-admin-mui", module)
+storiesOf("@comet/admin/mui", module)
     .addDecorator(StoryRouter())
     .add("Menu (dynamic variants)", () => <Story />);

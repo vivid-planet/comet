@@ -129,7 +129,7 @@ const cometCmsTheme = createMuiTheme({
     },
 });
 
-storiesOf("comet-admin-mui", module)
+storiesOf("@comet/admin/mui", module)
     .addDecorator(StoryRouter())
     .add("Menu (Comet Theme)", () => (
         <ThemeProvider theme={cometCmsTheme}>
