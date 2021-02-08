@@ -1,4 +1,4 @@
-import { Field, FieldContainerLabelAbove, FinalFormInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
+import { Field, FinalFormInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -23,14 +23,7 @@ function Story() {
     return (
         <>
             <TableFilterFinalForm filterApi={filterApi}>
-                <Field
-                    name="query"
-                    type="text"
-                    label="Query"
-                    component={FinalFormInput}
-                    fullWidth
-                    fieldContainerComponent={FieldContainerLabelAbove}
-                />
+                <Field name="query" type="text" label="Query" component={FinalFormInput} fullWidth />
             </TableFilterFinalForm>
             <Table
                 data={filteredData}

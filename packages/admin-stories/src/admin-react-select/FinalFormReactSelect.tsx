@@ -1,4 +1,4 @@
-import { Field, FieldContainerLabelAbove, FinalFormInput } from "@comet/admin";
+import { Field, FinalFormInput } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Button, ListItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
@@ -25,18 +25,10 @@ function Story() {
                 }}
                 render={({ handleSubmit, pristine, invalid }) => (
                     <form onSubmit={handleSubmit}>
-                        <Field
-                            name="name"
-                            label="Name"
-                            type="text"
-                            fieldContainerComponent={FieldContainerLabelAbove}
-                            component={FinalFormInput}
-                            fullWidth
-                        />
+                        <Field name="name" label="Name" type="text" component={FinalFormInput} fullWidth />
                         <Field
                             name="flavor"
                             label="Flavor"
-                            fieldContainerComponent={FieldContainerLabelAbove}
                             component={FinalFormReactSelectStaticOptions}
                             isClearable
                             defaultOptions

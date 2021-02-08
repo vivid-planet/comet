@@ -1,4 +1,4 @@
-import { Field, FieldContainerLabelAbove } from "@comet/admin";
+import { Field } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
@@ -25,7 +25,6 @@ function Story() {
                                 <Field
                                     name="flavor"
                                     label="Flavor"
-                                    fieldContainerComponent={FieldContainerLabelAbove}
                                     component={FinalFormReactSelectStaticOptions}
                                     isClearable
                                     defaultOptions

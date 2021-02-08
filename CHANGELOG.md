@@ -6,8 +6,40 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Highlights
 
-- Added `ClearInputButton`, this component can be used as `endAdornment`, to clear inputs
-  - Can be themed with `CometAdminClearInputButton` (props and overrides)
+-   Added `ClearInputButton`, this component can be used as `endAdornment`, to clear inputs
+    -   Can be themed with `CometAdminClearInputButton` (props and overrides)
+-   New methods of customization and default layout for `Field`
+    -   Added theme-augmentation for `FieldContainer`
+    -   New `variant` prop to select between vertical and horizontal positioning of label and input
+    -   Label is now positioned above input by default (`variant={"vertical"}`)
+
+### Incompatible Changes
+
+- Usage and default layout of `Field` has changed
+    -   The `fieldContainer` prop has been removed, in favour of the `variant` prop and theme-augmentation of `CometAdminFormFieldContainer`
+    -   Removed `FieldContainerLabelAbove` component (the new default looks like this)
+    -   The old default layout of `Field` can be restored by adding the following to the theme:
+        ```js
+        {
+            props: {
+                CometAdminFormFieldContainer: {
+                    variant: 'horizontal'
+                }
+            },
+            overrides: {
+                CometAdminFormFieldContainer: {
+                    horizontal: {
+                        "& $label": {
+                            width: `${100 / 3}%`
+                        },
+                        "& $inputContainer": {
+                            width: `${200 / 3}%`
+                        }
+                    }
+                }
+            }
+        }
+        ```
 
 ## [1.1.0] - 12. Jan 2021 - re-release under new name
 
