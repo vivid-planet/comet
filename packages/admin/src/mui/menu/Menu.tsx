@@ -6,23 +6,18 @@ import { useHistory } from "react-router";
 import { MenuContext } from "./Context";
 import { styles } from "./Menu.styles";
 
-interface MenuProps {
-    children: React.ReactNode;
-}
-
 export interface MenuThemeProps {
     variant?: "permanent" | "temporary";
     drawerWidth?: number;
 }
 
-const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuThemeProps & MenuProps> = ({
-    classes,
-    children,
-    drawerWidth = 300,
-    variant = "permanent",
-}) => {
+export interface MenuProps extends MenuThemeProps {
+    children: React.ReactNode;
+}
+
+const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({ classes, children, drawerWidth = 300, variant = "permanent" }) => {
     const history = useHistory();
-    const { open, toggleOpen } = React.useContext(MenuContext);
+    const { open, toggleOpen, headerHeight } = React.useContext(MenuContext);
 
     // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
     React.useEffect(() => {
@@ -68,7 +63,14 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuThemeProps & MenuProp
                 className={permanentDrawerClasses.join(" ")}
                 open={permanentOpen}
                 style={{ width: permanentOpen ? drawerWidth : 0 }}
-                PaperProps={{ style: { width: drawerWidth, marginLeft: permanentOpen ? 0 : -drawerWidth } }}
+                PaperProps={{
+                    style: {
+                        top: headerHeight,
+                        height: `calc(100% - ${headerHeight}px)`,
+                        width: drawerWidth,
+                        marginLeft: permanentOpen ? 0 : -drawerWidth,
+                    },
+                }}
             >
                 {children}
             </Drawer>

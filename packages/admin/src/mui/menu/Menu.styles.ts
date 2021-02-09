@@ -11,10 +11,6 @@ export const styles = (theme: Theme) =>
                 overflowX: "hidden",
             },
             "&$permanent": {
-                "& [class*='MuiPaper-root']": {
-                    top: 64,
-                    height: "calc(100% - 64px)",
-                },
                 "&$open": {
                     transition: theme.transitions.create("width", {
                         easing: theme.transitions.easing.sharp,
