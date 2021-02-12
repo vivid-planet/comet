@@ -19,6 +19,9 @@ interface IProps extends FieldRenderProps<IDateRange, HTMLInputElement> {
     endPlaceholder?: string;
 }
 
+/**
+ * @deprecated @comet/admin-date-picker will be replaced by @comet/admin-date-time
+ */
 export const FinalFormDateRangePicker: React.FC<IProps> = ({
     input: { value, onChange, name },
     fullWidth = false,
