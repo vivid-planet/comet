@@ -4,10 +4,16 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [2.0.0]
 
+### Highlights
+-   Allow custom icons/adornment for color-input
+-   The clear-button is now optional (using the `showClearButton` prop)
+
 ### Incompatible Changes
 
-- Removed `clearButton` and `clearIcon` classes from color-picker
-    - Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
+-   Renamed `VPAdminColorPicker` to `CometAdminColorPicker`
+-   Removed `clearButton` and `clearIcon` classes from color-picker
+    -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
+-   The clear-button is no longer shown by default
 
 ## [1.0.1] - 12. Jan 2021 - re-release under new name
 

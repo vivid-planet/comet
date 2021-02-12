@@ -1,12 +1,15 @@
-import { getDefaultVPAdminInputStyles } from "@comet/admin";
 import { Theme } from "@material-ui/core";
+import zIndex from "@material-ui/core/styles/zIndex";
 import { createStyles } from "@material-ui/styles";
 
-export type VPAdminColorPickerClassKeys =
+export type CometAdminColorPickerClassKeys =
+    | "root"
+    | "fullWidth"
     | "input"
     | "inputInner"
     | "inputInnerLeftContent"
-    | "popover"
+    | "popper"
+    | "popperPaper"
     | "pickedColorWrapper"
     | "noColorStroke"
     | "pickedColorIndicator"
@@ -19,13 +22,15 @@ export type VPAdminColorPickerClassKeys =
     | "readOnlyInput";
 
 const styles = (theme: Theme) => {
-    const inputDefaultStyles = getDefaultVPAdminInputStyles(theme);
-
-    return createStyles({
+    return createStyles<CometAdminColorPickerClassKeys, any>({
+        root: {
+            width: 160,
+        },
+        fullWidth: {
+            width: "100%",
+        },
         input: {
-            ...inputDefaultStyles,
-            display: "flex",
-            paddingRight: 0,
+            width: "100%",
         },
         inputInner: {
             display: "flex",
@@ -38,11 +43,19 @@ const styles = (theme: Theme) => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            width: "100%",
         },
-        popper: {},
+        popper: {
+            zIndex: zIndex.modal,
+        },
+        popperPaper: {
+            width: 300,
+            overflow: "hidden",
+        },
         pickedColorWrapper: {
             position: "relative",
-            marginRight: "10px",
             flexGrow: 0,
             flexShrink: 0,
         },
@@ -57,7 +70,7 @@ const styles = (theme: Theme) => {
         pickedColorIndicator: {
             width: "20px",
             height: "20px",
-            borderRadius: `${theme.shape.borderRadius}`,
+            borderRadius: theme.shape.borderRadius,
             border: `1px solid ${theme.palette.grey[300]}`,
         },
         saturationWrapper: {
@@ -103,7 +116,7 @@ const styles = (theme: Theme) => {
             width: "20px",
             height: "20px",
             margin: "5px 5px 0 0",
-            borderRadius: `${theme.shape.borderRadius}`,
+            borderRadius: theme.shape.borderRadius,
             boxShadow: "0 0 2px rgba(0, 0, 0, 0.6)",
             cursor: "pointer",
         },
@@ -113,4 +126,5 @@ const styles = (theme: Theme) => {
         },
     });
 };
+
 export default styles;

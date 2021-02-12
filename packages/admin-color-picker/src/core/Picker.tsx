@@ -1,16 +1,17 @@
+import { WithStyles } from "@material-ui/core";
 import * as React from "react";
 import { Hue, Saturation } from "react-color/lib/components/common";
 import * as tinycolor from "tinycolor2";
 
 import { colorToHex, stringToHSL, stringToHSV } from "../utils/colorSpaces";
-import { IVPAdminColorPickerProps } from "./ColorPicker";
+import styles from "./ColorPicker.styles";
 
 interface IPickerProps {
     color: string;
     onChange: (colorValue: string) => void;
 }
 
-const Picker: React.FC<IPickerProps & IVPAdminColorPickerProps> = ({ color, onChange, classes }) => (
+const Picker: React.FC<WithStyles<typeof styles> & IPickerProps> = ({ color, onChange, classes }) => (
     <>
         <div className={classes.saturationWrapper}>
             <Saturation
