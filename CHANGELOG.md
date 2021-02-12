@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Highlights
 
 -   RouterPrompt: comet-admin's [react-router Prompt Component](https://reactrouter.com/core/api/Prompt) Wrapper (that adds support for multiple Prompt instances) adds missing message callback parameters for full react-router compatibility
+-   Open-state of menu in MasterLayout is (optionally) controllable
 
 ## [1.1.0] - 12. Jan 2021 - re-release under new name
 

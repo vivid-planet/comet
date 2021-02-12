@@ -11,15 +11,17 @@ export interface IMasterLayoutProps extends WithStyles<typeof styles> {
     menuComponent: React.ComponentType;
     headerComponent?: React.ComponentType;
     hideToolbarMenuIcon?: boolean;
+    openStateApi?: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 }
 
 function MasterLayout(props: IMasterLayoutProps) {
     const { classes, children, menuComponent: Menu, headerComponent: HeaderComponent, hideToolbarMenuIcon } = props;
-    const [open, setOpen] = React.useState(true);
+    const internalOpenStateApi = React.useState(true);
+    const [open, setOpen] = props.openStateApi || internalOpenStateApi;
 
-    const toggleOpen = () => {
-        setOpen(!open);
-    };
+    const toggleOpen = React.useCallback(() => {
+        setOpen((s) => !s);
+    }, [setOpen]);
 
     return (
         <MenuContext.Provider
