@@ -4,6 +4,7 @@ import * as React from "react";
 import { SupportedThings } from "../Rte";
 import { IBlocktypeMap, IFeatureConfig } from "../types";
 import getCurrentBlock from "../utils/getCurrentBlock";
+
 interface IProps {
     editorState: EditorState;
     setEditorState: (es: EditorState) => void;
@@ -43,7 +44,14 @@ const createFeaturesFromBlocktypeMap = (group: "dropdown" | "button") => ({
         })),
 ];
 
-export default function useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef }: IProps) {
+export interface BlockTypes {
+    dropdownFeatures: IFeatureConfig[];
+    activeDropdownBlockType: string;
+    handleBlockTypeChange: (e: React.ChangeEvent<{ value: DraftBlockType }>) => void;
+    listsFeatures: IFeatureConfig[];
+}
+
+export default function useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef }: IProps): BlockTypes {
     // can check if blocktype is supported by the editor
     const supports = React.useCallback((supportedBy?: SupportedThings) => (supportedBy ? supportedThings.includes(supportedBy) : true), [
         supportedThings,
@@ -100,7 +108,7 @@ export default function useBlockTypes({ editorState, setEditorState, supportedTh
         [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap],
     );
 
-    const activeDropdownBlockType = React.useMemo(() => {
+    const activeDropdownBlockType: string = React.useMemo(() => {
         const activeFeature = dropdownFeatures.find((c) => c.selected);
         return activeFeature ? activeFeature.name : "unstyled";
     }, [dropdownFeatures]);

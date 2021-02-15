@@ -1,5 +1,8 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
+import { createStyles, WithStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
 import {
     DraftBlockType,
     DraftEditorCommand,
@@ -17,7 +20,6 @@ import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
 import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
-import * as sc from "./Rte.sc";
 import { IBlocktypeMap, ICustomBlockTypeMap_Deprecated, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
@@ -119,8 +121,8 @@ export const styleMap = {
     },
 };
 
-const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
-    const { value: editorState, onChange, options: passedOptions, disabled } = props;
+const Rte: React.RefForwardingComponent<any, IProps & WithStyles<typeof styles>> = (props, ref) => {
+    const { classes, value: editorState, onChange, options: passedOptions, disabled } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -238,10 +240,13 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         }
     }
 
+    const rootClasses: string[] = [classes.root];
+    if (disabled) rootClasses.push(classes.disabled);
+
     return (
-        <sc.Root ref={editorWrapperRef}>
+        <div ref={editorWrapperRef} className={rootClasses.join(" ")}>
             <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
-            <sc.EditorWrapper disabled={disabled}>
+            <div className={classes.editor}>
                 <DraftJsEditor
                     ref={editorRef}
                     editorState={editorState}
@@ -254,9 +259,30 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
                     blockRenderMap={blockRenderMap}
                     {...options.draftJsProps}
                 />
-            </sc.EditorWrapper>
-        </sc.Root>
+            </div>
+        </div>
     );
 };
 
-export default React.forwardRef(Rte);
+export type CometAdminRteClassKeys = "root" | "disabled" | "editor";
+
+const styles = (theme: Theme) =>
+    createStyles<CometAdminRteClassKeys, any>({
+        root: {
+            border: `1px solid ${theme.rte.colors.border}`,
+        },
+        disabled: {
+            "& $editor": {
+                color: theme.palette.text.disabled,
+            },
+        },
+        editor: {
+            "& .public-DraftEditor-content": {
+                minHeight: 240,
+                padding: 20,
+                boxSizing: "border-box",
+            },
+        },
+    });
+
+export default withStyles(styles, { name: "CometAdminRte" })(React.forwardRef(Rte));
