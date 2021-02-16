@@ -117,6 +117,7 @@ const Picker: React.FC<WithStyles<typeof styles, false> & DateRangePickerThemePr
     const onDatesChange: DayPickerRangeControllerShape["onDatesChange"] = (range) => {
         const newStartDate = range.startDate ? range.startDate.toDate() : null;
         const newEndDate = range.endDate ? range.endDate.toDate() : null;
+        if (!focusedOnStartingDate) hidePicker();
         setFocusedOnStartingDate(!focusedOnStartingDate);
         onChange({ start: newStartDate, end: newEndDate });
     };

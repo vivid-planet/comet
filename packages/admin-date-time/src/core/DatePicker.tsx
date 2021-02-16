@@ -90,6 +90,7 @@ const Picker: React.FC<WithStyles<typeof styles, false> & DatePickerThemeProps &
 
     const onDateChange: DayPickerSingleDateControllerShape["onDateChange"] = (date) => {
         onChange(date ? date.toDate() : null);
+        hidePicker();
     };
 
     const rootClasses: string[] = [classes.root];
