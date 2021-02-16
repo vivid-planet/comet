@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Replaced form/Input (`VPAdminInputBase`) with form/InputBase (`CometAdminInputBase`)
     -   Deprecated `getDefaultVPAdminInputStyles` because the styled are included in InputBase, which should be used for all custom inputs in Comet
+-   Replaced `@comet/admin-date-picker` with `@comet/admin-date-time`
 - Usage and default layout of `Field` has changed
     -   The `fieldContainer` prop has been removed, in favour of the `variant` prop and theme-augmentation of `CometAdminFormFieldContainer`
     -   Removed `FieldContainerLabelAbove` component (the new default looks like this)

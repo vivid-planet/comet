@@ -3492,14 +3492,6 @@
     "@types/react" "*"
     "@types/reactcss" "*"
 
-"@types/react-dates@^17.1.5":
-  version "17.1.15"
-  resolved "https://registry.yarnpkg.com/@types/react-dates/-/react-dates-17.1.15.tgz#e23424ae409ccfc313e20d45a2a387ff55b5c1f2"
-  integrity sha512-TUiO5SsnNL6rJtDxiRlpbTl7G5Kk/Tq5hHqzfaBzPlcEj0G9NhhAujgX3ZTTxFnD7N61J3rK45bhWFYtGivj8g==
-  dependencies:
-    "@types/react" "*"
-    moment "^2.26.0"
-
 "@types/react-dates@^21.8.1":
   version "21.8.1"
   resolved "https://registry.yarnpkg.com/@types/react-dates/-/react-dates-21.8.1.tgz#f90b30895e22d15f42c64be6bbafb1796b5f05f8"
@@ -12086,7 +12078,7 @@ react-color@^2.17.0, react-color@^2.18.1:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
-react-dates@^21.3.2, react-dates@^21.8.0:
+react-dates@^21.8.0:
   version "21.8.0"
   resolved "https://registry.yarnpkg.com/react-dates/-/react-dates-21.8.0.tgz#355c3c7a243a7c29568fe00aca96231e171a5e94"
   integrity sha512-PPriGqi30CtzZmoHiGdhlA++YPYPYGCZrhydYmXXQ6RAvAsaONcPtYgXRTLozIOrsQ5mSo40+DiA5eOFHnZ6xw==
