@@ -72,11 +72,13 @@ const Picker: React.FC<WithStyles<typeof styles, false> & DateRangePickerThemePr
         setTimeout(() => setShowDayPicker(true), 0);
     };
 
-    const hidePicker = () => {
+    const setEndValueIfNotSet = () => {
         if (input.value && input.value.start && !input.value.end) {
             onChange({ start: input.value.start, end: input.value.start });
         }
+    };
 
+    const hidePicker = () => {
         onBlur();
         setShowPopper(false);
         setShowDayPicker(false);
@@ -116,7 +118,8 @@ const Picker: React.FC<WithStyles<typeof styles, false> & DateRangePickerThemePr
 
     const onDatesChange: DayPickerRangeControllerShape["onDatesChange"] = (range) => {
         const newStartDate = range.startDate ? range.startDate.toDate() : null;
-        const newEndDate = range.endDate ? range.endDate.toDate() : null;
+        const newEndDate = focusedOnStartingDate ? null : range.endDate ? range.endDate.toDate() : null;
+
         if (!focusedOnStartingDate) hidePicker();
         setFocusedOnStartingDate(!focusedOnStartingDate);
         onChange({ start: newStartDate, end: newEndDate });
@@ -127,7 +130,12 @@ const Picker: React.FC<WithStyles<typeof styles, false> & DateRangePickerThemePr
     if (fullWidth) rootClasses.push(classes.fullWidth);
 
     return (
-        <ClickAwayListener onClickAway={hidePicker}>
+        <ClickAwayListener
+            onClickAway={() => {
+                setEndValueIfNotSet();
+                hidePicker();
+            }}
+        >
             <div ref={rootRef} className={rootClasses.join(" ")}>
                 <InputBase
                     classes={{ root: classes.inputBase }}
@@ -144,6 +152,7 @@ const Picker: React.FC<WithStyles<typeof styles, false> & DateRangePickerThemePr
                             if (e.key === "Tab") {
                                 // Hide picker, if tab is pressed. This cannot be done in `onBlur` because the input-blur-event is also called,
                                 // when clicking inside the picker and the picker would be hidden, before `onDateChange` could be called.
+                                setEndValueIfNotSet();
                                 hidePicker();
                             }
                         },
