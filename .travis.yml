@@ -3,25 +3,23 @@ language: minimal
 before_install:
     - curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
     - sudo apt install nodejs
-    - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-    - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    - sudo apt update && sudo apt install yarn
+    - npm i -g npm@7
 
 jobs:
     include:
         - name: "Linting Project Root"
           script:
-              - yarn install
-              - yarn prettier -c .
+              - npm install
+              - npx prettier -c .
         - name: "Linting Packages"
           script:
-              - yarn install
-              - yarn run lint
+              - npm install
+              - npm run lint
         - name: "Extracting String Resources"
           if: branch = master
           script:
-              - yarn install
-              - yarn run intl:extract
+              - npm install
+              - npm run intl:extract
               - git clone https://github.com/vivid-planet/comet-admin-lang.git
               - cp -r lang/* comet-admin-lang/
               - cd comet-admin-lang

@@ -10,13 +10,13 @@
         "build": "lerna run build --stream",
         "bootstrap": "lerna bootstrap",
         "start": "lerna run --stream --no-sort --concurrency 999 start",
-        "storybook": "yarn --cwd packages/admin-stories storybook",
-        "lint": "yarn run lint:eslint && yarn run lint:tsc",
+        "storybook": "npm run --prefix packages/admin-stories storybook",
+        "lint": "npm run lint:eslint && npm run lint:tsc",
         "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/**/src/",
-        "prelint:tsc": "yarn build",
+        "prelint:tsc": "npm run build",
         "lint:tsc": "lerna run lint:tsc --stream",
-        "prebuild:storybook": "yarn build",
-        "build:storybook": "yarn workspace @comet/admin-stories build-storybook",
+        "prebuild:storybook": "npm run build",
+        "build:storybook": "npm workspace @comet/admin-stories build-storybook",
         "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin-stories/**/* --format simple"
     },
     "devDependencies": {
