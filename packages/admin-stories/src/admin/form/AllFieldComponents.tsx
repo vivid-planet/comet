@@ -7,7 +7,6 @@ import {
     FinalFormRadio,
     FinalFormSelect,
     FinalFormSwitch,
-    FinalFormTextField,
 } from "@comet/admin";
 import { Button, FormControlLabel, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
@@ -54,7 +53,6 @@ function Story() {
                                     )}
                                 </Field>
                                 <Field name="switch" label="FinalFormSwitch" component={FinalFormSwitch} />
-                                <Field name="textField" label="FinalFormTextField" component={FinalFormTextField} />
                                 <Button color="primary" variant="contained" onClick={handleSubmit} style={{ marginTop: "20px" }}>
                                     Submit
                                 </Button>
