@@ -1,8 +1,6 @@
-language: minimal
+language: node_js # version is specified in .nvmrc
 
 before_install:
-    - curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-    - sudo apt install nodejs
     - npm i -g npm@7
 
 jobs:
