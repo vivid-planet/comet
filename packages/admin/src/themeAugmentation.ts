@@ -1,5 +1,5 @@
 import { ClearInputButtonThemeProps, CometAdminClearInputButtonClassKeys } from "./common";
-import { CometAdminFormFieldContainerClassKeys, FieldContainerThemeProps } from "./form";
+import { CometAdminFormFieldContainerClassKeys, CometAdminInputBaseClassKeys, FieldContainerThemeProps } from "./form";
 import {
     CometAdminMasterLayoutClassKeys,
     CometAdminMenuClassKeys,
@@ -18,6 +18,7 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminMenuItem: CometAdminMenuItemClassKeys;
         CometAdminMenuCollapsibleItem: CometAdminMenuCollapsibleItemClassKeys;
         CometAdminMasterLayout: CometAdminMasterLayoutClassKeys;
+        CometAdminInputBase: CometAdminInputBaseClassKeys;
     }
 }
 
