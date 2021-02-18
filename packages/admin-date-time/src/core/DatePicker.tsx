@@ -1,3 +1,6 @@
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
+
 import { ClearInputButton, InputBase } from "@comet/admin";
 import { ClickAwayListener, InputBaseProps, Paper, Popper, Typography, WithStyles } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
