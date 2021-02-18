@@ -19,7 +19,7 @@ export interface DatePickerThemeProps extends InputBaseProps {
     dateControllerProps?: DayPickerSingleDateController;
 }
 
-const Picker: React.FC<WithStyles<typeof styles, false> & DatePickerThemeProps & FieldRenderProps<Date, HTMLInputElement>> = ({
+const Picker: React.FC<WithStyles<typeof styles> & DatePickerThemeProps & FieldRenderProps<Date, HTMLInputElement>> = ({
     classes,
     input,
     disabled,
@@ -148,4 +148,4 @@ const Picker: React.FC<WithStyles<typeof styles, false> & DatePickerThemeProps &
     );
 };
 
-export const DatePicker = withStyles(styles, { name: "CometAdminDatePicker", withTheme: false })(Picker);
+export const FinalFormDatePicker = withStyles(styles, { name: "CometAdminDatePicker" })(Picker);

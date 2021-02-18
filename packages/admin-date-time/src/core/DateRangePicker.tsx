@@ -33,7 +33,7 @@ const getFormattedValue = (value: DateRangePickerValue, format: string): string 
     return `${startValue} - ${endValue}`;
 };
 
-const Picker: React.FC<WithStyles<typeof styles, false> & DateRangePickerThemeProps & FieldRenderProps<DateRangePickerValue, HTMLInputElement>> = ({
+const Picker: React.FC<WithStyles<typeof styles> & DateRangePickerThemeProps & FieldRenderProps<DateRangePickerValue, HTMLInputElement>> = ({
     classes,
     input,
     disabled,
@@ -189,4 +189,4 @@ const Picker: React.FC<WithStyles<typeof styles, false> & DateRangePickerThemePr
     );
 };
 
-export const DateRangePicker = withStyles(styles, { name: "CometAdminDateRangePicker", withTheme: false })(Picker);
+export const FinalFormDateRangePicker = withStyles(styles, { name: "CometAdminDateRangePicker" })(Picker);

@@ -5,9 +5,9 @@ import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { DatePicker, DatePickerThemeProps } from "./DatePicker";
+import { DatePickerThemeProps, FinalFormDatePicker } from "./DatePicker";
 import styles from "./DateTimePicker.styles";
-import { TimePicker, TimePickerProps } from "./TimePicker";
+import { FinalFormTimePicker, TimePickerProps } from "./TimePicker";
 
 export interface DateTimePickerProps {
     fullWidth?: boolean;
@@ -18,7 +18,7 @@ export interface DateTimePickerProps {
     timePickerProps?: TimePickerProps;
 }
 
-const DateTime: React.FC<WithStyles<typeof styles, false> & DateTimePickerProps & FieldRenderProps<string | Date, HTMLInputElement>> = ({
+const DateTime: React.FC<WithStyles<typeof styles> & DateTimePickerProps & FieldRenderProps<string | Date, HTMLInputElement>> = ({
     classes,
     input,
     fullWidth = false,
@@ -74,7 +74,7 @@ const DateTime: React.FC<WithStyles<typeof styles, false> & DateTimePickerProps 
         <div className={rootClasses.join(" ")}>
             <FormControl classes={{ root: classes.date }}>
                 {dateInputLabel && <FormLabel disabled={disabled}>{dateInputLabel}</FormLabel>}
-                <DatePicker
+                <FinalFormDatePicker
                     input={{ ...otherInput, onChange: onDateChange, value: dateStringValue }}
                     meta={meta}
                     disabled={disabled}
@@ -84,7 +84,7 @@ const DateTime: React.FC<WithStyles<typeof styles, false> & DateTimePickerProps 
             </FormControl>
             <FormControl classes={{ root: classes.time }}>
                 {dateInputLabel && <FormLabel disabled={disabled}>{timeInputLabel}</FormLabel>}
-                <TimePicker
+                <FinalFormTimePicker
                     input={{ ...otherInput, onChange: onTimeChange, value: timeStringValue }}
                     meta={meta}
                     disabled={disabled}
@@ -96,4 +96,4 @@ const DateTime: React.FC<WithStyles<typeof styles, false> & DateTimePickerProps 
     );
 };
 
-export const DateTimePicker = withStyles(styles, { name: "CometAdminDateTimePicker", withTheme: false })(DateTime);
+export const FinalFormDateTimePicker = withStyles(styles, { name: "CometAdminDateTimePicker" })(DateTime);

@@ -1,5 +1,5 @@
 import { Field } from "@comet/admin";
-import { DatePicker } from "@comet/admin-date-time";
+import { FinalFormDatePicker } from "@comet/admin-date-time";
 import TodayIcon from "@material-ui/icons/Today";
 import { storiesOf } from "@storybook/react";
 import * as moment from "moment";
@@ -18,17 +18,17 @@ const Story = () => {
             <Form onSubmit={() => {}} initialValues={initialValues}>
                 {() => (
                     <form style={{ width: 350 }}>
-                        <Field name="date1" label="Date" component={DatePicker} fullWidth />
-                        <Field name="date2" label="Date, with icon" component={DatePicker} endAdornment={<TodayIcon fontSize={"small"} />} />
-                        <Field name="date3" label="Date, with clear-button" component={DatePicker} showClearButton />
+                        <Field name="date1" label="Date" component={FinalFormDatePicker} fullWidth />
+                        <Field name="date2" label="Date, with icon" component={FinalFormDatePicker} endAdornment={<TodayIcon fontSize={"small"} />} />
+                        <Field name="date3" label="Date, with clear-button" component={FinalFormDatePicker} showClearButton />
                         <Field
                             name="date4"
                             label="Date, required"
                             required
-                            component={DatePicker}
+                            component={FinalFormDatePicker}
                             startAdornment={<TodayIcon fontSize={"small"} />}
                         />
-                        <Field name="date5" label="Date, disabled" disabled component={DatePicker} />
+                        <Field name="date5" label="Date, disabled" disabled component={FinalFormDatePicker} />
                     </form>
                 )}
             </Form>

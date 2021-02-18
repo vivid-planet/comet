@@ -1,5 +1,5 @@
 import { Field } from "@comet/admin";
-import { DateRangePicker, DateRangePickerValue } from "@comet/admin-date-time";
+import { DateRangePickerValue, FinalFormDateRangePicker } from "@comet/admin-date-time";
 import TodayIcon from "@material-ui/icons/Today";
 import { storiesOf } from "@storybook/react";
 import * as moment from "moment";
@@ -16,23 +16,23 @@ const Story = () => {
             <Form onSubmit={() => {}} initialValues={initialValues}>
                 {() => (
                     <form style={{ width: 350 }}>
-                        <Field name="date1" label="Date" component={DateRangePicker} fullWidth />
+                        <Field name="date1" label="Date" component={FinalFormDateRangePicker} fullWidth />
                         <Field
                             name="date2"
                             label="Date, with icons"
-                            component={DateRangePicker}
+                            component={FinalFormDateRangePicker}
                             startAdornment={<TodayIcon fontSize={"small"} />}
                             endAdornment={<TodayIcon fontSize={"small"} />}
                         />
-                        <Field name="date3" label="Date, with clear-button" component={DateRangePicker} showClearButton />
+                        <Field name="date3" label="Date, with clear-button" component={FinalFormDateRangePicker} showClearButton />
                         <Field
                             name="date4"
                             label="Date, required"
                             required
-                            component={DateRangePicker}
+                            component={FinalFormDateRangePicker}
                             startAdornment={<TodayIcon fontSize={"small"} />}
                         />
-                        <Field name="date5" label="Date, disabled" disabled component={DateRangePicker} />
+                        <Field name="date5" label="Date, disabled" disabled component={FinalFormDateRangePicker} />
                     </form>
                 )}
             </Form>

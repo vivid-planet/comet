@@ -1,5 +1,5 @@
 import { Field } from "@comet/admin";
-import { TimePicker } from "@comet/admin-date-time";
+import { FinalFormTimePicker } from "@comet/admin-date-time";
 import Schedule from "@material-ui/icons/Schedule";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -13,24 +13,30 @@ const Story = () => {
             <Form onSubmit={() => {}} initialValues={initialValues}>
                 {() => (
                     <form style={{ width: 350 }}>
-                        <Field name="time1" label="Time - default" component={TimePicker} endAdornment={<Schedule fontSize={"small"} />} fullWidth />
-                        <Field name="time2" label="Time - with clear-button" component={TimePicker} showClearButton />
+                        <Field
+                            name="time1"
+                            label="Time - default"
+                            component={FinalFormTimePicker}
+                            endAdornment={<Schedule fontSize={"small"} />}
+                            fullWidth
+                        />
+                        <Field name="time2" label="Time - with clear-button" component={FinalFormTimePicker} showClearButton />
                         <Field
                             name="time3"
                             label="Time - with clear-button and icon"
-                            component={TimePicker}
+                            component={FinalFormTimePicker}
                             startAdornment={<Schedule fontSize={"small"} />}
                             showClearButton
                         />
                         <Field
                             name="time4"
                             label="Time - with icons"
-                            component={TimePicker}
+                            component={FinalFormTimePicker}
                             startAdornment={<Schedule fontSize={"small"} />}
                             endAdornment={<Schedule fontSize={"small"} />}
                         />
-                        <Field name="time5" disabled label="Time - disabled" component={TimePicker} />
-                        <Field name="time6" required label="Time - required" component={TimePicker} />
+                        <Field name="time5" disabled label="Time - disabled" component={FinalFormTimePicker} />
+                        <Field name="time6" required label="Time - required" component={FinalFormTimePicker} />
                     </form>
                 )}
             </Form>

@@ -1,5 +1,5 @@
 import { Field } from "@comet/admin";
-import { DateTimePicker } from "@comet/admin-date-time";
+import { FinalFormDateTimePicker } from "@comet/admin-date-time";
 import { AccessTime, Today } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as moment from "moment";
@@ -21,14 +21,14 @@ const Story = () => {
                             name="datetime1"
                             dateInputLabel={"Date"}
                             timeInputLabel={"Time"}
-                            component={DateTimePicker}
+                            component={FinalFormDateTimePicker}
                             datePickerProps={{ endAdornment: <Today fontSize={"small"} /> }}
                             timePickerProps={{ endAdornment: <AccessTime fontSize={"small"} /> }}
                             fullWidth
                         />
-                        <Field name="datetime2" label={"Date & Time"} component={DateTimePicker} />
-                        <Field name="datetime3" label={"Date & Time"} component={DateTimePicker} required />
-                        <Field name="datetime4" dateInputLabel={"Date"} timeInputLabel={"Time"} component={DateTimePicker} disabled />
+                        <Field name="datetime2" label={"Date & Time"} component={FinalFormDateTimePicker} />
+                        <Field name="datetime3" label={"Date & Time"} component={FinalFormDateTimePicker} required />
+                        <Field name="datetime4" dateInputLabel={"Date"} timeInputLabel={"Time"} component={FinalFormDateTimePicker} disabled />
                     </form>
                 )}
             </Form>

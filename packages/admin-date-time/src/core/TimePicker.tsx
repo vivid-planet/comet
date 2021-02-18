@@ -53,7 +53,7 @@ const getListOfTimes = (minuteStep: number): TimeOption[] => {
     return options;
 };
 
-const Picker: React.FC<WithStyles<typeof styles, false> & TimePickerProps & FieldRenderProps<string, HTMLInputElement>> = ({
+const Picker: React.FC<WithStyles<typeof styles> & TimePickerProps & FieldRenderProps<string, HTMLInputElement>> = ({
     classes,
     input,
     disabled,
@@ -218,4 +218,4 @@ const Picker: React.FC<WithStyles<typeof styles, false> & TimePickerProps & Fiel
     );
 };
 
-export const TimePicker = withStyles(styles, { name: "CometAdminTimePicker", withTheme: false })(Picker);
+export const FinalFormTimePicker = withStyles(styles, { name: "CometAdminTimePicker" })(Picker);
