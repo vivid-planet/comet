@@ -2,7 +2,7 @@ import { InputBaseProps } from "@material-ui/core/InputBase";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
-import { Input } from "./Input";
+import { InputBase } from "./InputBase";
 
 export const FinalFormInput: React.FunctionComponent<InputBaseProps & FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>> = ({
     meta,
@@ -10,5 +10,5 @@ export const FinalFormInput: React.FunctionComponent<InputBaseProps & FieldRende
     innerRef,
     ...props
 }) => {
-    return <Input {...input} {...props} />;
+    return <InputBase {...input} {...props} />;
 };
