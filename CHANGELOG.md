@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file. This projec
     -   Added theme-augmentation for `FieldContainer`
     -   New `variant` prop to select between vertical and horizontal positioning of label and input
     -   Label is now positioned above input by default (`variant={"vertical"}`)
+-   The Menu component and it's items can be customized using the material-ui theme
+    -   Allows custom styling of the Menu, MenuItem and MenuCollapsibleItem *(theme -> overrides -> CometAdminMenu/CometAdminMenuItem/CometAdminMenuCollapsibleItem)*
+    -   Allows using custom open/close icons for CollapsibleItem *(theme -> props -> CometAdminMenuCollapsibleItem -> openedIcon/closedIcon)*
 
 ### Incompatible Changes
 
@@ -43,6 +46,11 @@ All notable changes to this project will be documented in this file. This projec
             }
         }
         ```
+-   Changes to Menu component
+    -   Removed default styling in favour of the ability to style the component using the theme without the need to override these default styles
+    -   Removed the `permanentMenuMinWidth` prop, now `variant` can be passed instead
+        -   This allows for more control, like giving certain pages more width by always using the temporary variant on those pages
+    -   Allows maximum item-nesting of two levels
 
 ## [1.1.0] - 12. Jan 2021 - re-release under new name
 
