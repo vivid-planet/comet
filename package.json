@@ -16,7 +16,7 @@
         "prelint:tsc": "npm run build",
         "lint:tsc": "lerna run lint:tsc --stream",
         "prebuild:storybook": "npm run build",
-        "build:storybook": "npm workspace @comet/admin-stories build-storybook",
+        "build:storybook": "npm --prefix packages/admin-stories run build-storybook",
         "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin-stories/**/* --format simple"
     },
     "devDependencies": {
@@ -74,5 +74,9 @@
         "hooks": {
             "pre-commit": "lint-staged"
         }
+    },
+    "engines": {
+        "node": "14",
+        "npm": "7"
     }
 }
