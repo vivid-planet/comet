@@ -38,8 +38,12 @@ export type CometAdminRteToolbarClassKeys = "root" | "slot";
 export const styles = (theme: Theme) =>
     createStyles<CometAdminRteToolbarClassKeys, any>({
         root: {
+            position: "sticky",
+            top: 0,
+            zIndex: 2,
             display: "flex",
             flexWrap: "wrap",
+            borderTop: `1px solid ${theme.rte.colors.border}`,
             backgroundColor: theme.rte.colors.toolbarBackground,
             paddingLeft: 6,
             paddingRight: 6,

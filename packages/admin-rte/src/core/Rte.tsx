@@ -270,6 +270,7 @@ const styles = (theme: Theme) =>
     createStyles<CometAdminRteClassKeys, any>({
         root: {
             border: `1px solid ${theme.rte.colors.border}`,
+            borderTopWidth: 0,
         },
         disabled: {
             "& $editor": {
