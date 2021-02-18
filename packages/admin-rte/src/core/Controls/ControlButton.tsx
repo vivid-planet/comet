@@ -28,7 +28,6 @@ function ControlButton({
 
     const rootClasses: string[] = [classes.root];
     if (selected) rootClasses.push(classes.selected);
-    if (disabled) rootClasses.push(classes.disabled);
     if (Icon) rootClasses.push(classes.renderAsIcon);
 
     return (
@@ -39,7 +38,7 @@ function ControlButton({
     );
 }
 
-export type CometAdminRteControlButtonClassKeys = "root" | "selected" | "disabled" | "renderAsIcon";
+export type CometAdminRteControlButtonClassKeys = "root" | "selected" | "renderAsIcon";
 
 const styles = (theme: Theme) =>
     createStyles<CometAdminRteControlButtonClassKeys, any>({
@@ -59,19 +58,20 @@ const styles = (theme: Theme) =>
                 backgroundColor: theme.rte.colors.buttonBackgroundHover,
                 borderColor: theme.rte.colors.buttonBorderHover,
             },
-        },
-        selected: {
-            "&:not($disabled), &:not($disabled):hover": {
-                borderColor: theme.rte.colors.buttonBorderHover,
-                backgroundColor: "white",
+            "&:disabled": {
+                cursor: "not-allowed",
+                "&, &:hover": {
+                    backgroundColor: "transparent",
+                    borderColor: "transparent",
+                    color: theme.rte.colors.buttonIconDisabled,
+                },
             },
         },
-        disabled: {
-            cursor: "not-allowed",
-            "&, &:hover": {
-                backgroundColor: "transparent",
-                borderColor: "transparent",
-                color: theme.rte.colors.buttonIconDisabled,
+        selected: {
+            "&:not(:disabled), &:not(:disabled):hover": {
+                borderColor: theme.rte.colors.buttonBorderHover,
+                backgroundColor: "white",
+                color: "red",
             },
         },
         renderAsIcon: {
