@@ -45,6 +45,26 @@ All notable changes to this project will be documented in this file. This projec
         }
         ```
 
+### Migration Guide
+
+**Package Renaming**
+
+Automatic migrations using codeshift are available (use -d for dry-run):
+
+```angular2html
+npx jscodeshift --extensions=ts --parser=ts -t comet-admin/codemods/2.0.0/package-renames.ts src/
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/package-renames.ts src/
+```
+
+**Admin-Date-Time Prop Renaming**
+
+Automatic migrations using codeshift are available (use -d for dry-run):
+
+```angular2html
+npx jscodeshift --extensions=ts --parser=ts -t comet-admin/codemods/2.0.0/admin-date-time.ts src/
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/admin-date-time.ts src/
+```
+
 ## [1.1.0] - 12. Jan 2021 - re-release under new name
 
 This package has been renamed to @comet/admin
