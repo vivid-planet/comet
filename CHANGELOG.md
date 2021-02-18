@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Highlights
 
+-   Added a new InputBase (`CometAdminInputBase`) for use in all custom input-components in Comet 
 -   Added `ClearInputButton`, this component can be used as `endAdornment`, to clear inputs
     -   Can be themed with `CometAdminClearInputButton` (props and overrides)
 -   New methods of customization and default layout for `Field`
@@ -15,6 +16,8 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
+-   Replaced form/Input (`VPAdminInputBase`) with form/InputBase (`CometAdminInputBase`)
+    -   Deprecated `getDefaultVPAdminInputStyles` because the styled are included in InputBase, which should be used for all custom inputs in Comet
 - Usage and default layout of `Field` has changed
     -   The `fieldContainer` prop has been removed, in favour of the `variant` prop and theme-augmentation of `CometAdminFormFieldContainer`
     -   Removed `FieldContainerLabelAbove` component (the new default looks like this)
