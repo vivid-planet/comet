@@ -29,7 +29,7 @@ const ClearButton: React.FC<WithStyles<typeof styles, true> & ClearInputButtonTh
     ...otherButtonBaseProps
 }) => {
     return (
-        <ButtonBase classes={{ root: classes.root, disabled: classes.disabled }} disabled={disabled} {...otherButtonBaseProps}>
+        <ButtonBase classes={{ root: classes.root, disabled: classes.disabled }} disabled={disabled} tabIndex={-1} {...otherButtonBaseProps}>
             {icon ? icon(disabled) : <ClearIcon className={classes.defaultIcon} fontSize={"small"} color={disabled ? "disabled" : "action"} />}
         </ButtonBase>
     );
