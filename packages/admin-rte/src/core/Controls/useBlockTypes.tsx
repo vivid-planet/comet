@@ -44,14 +44,14 @@ const createFeaturesFromBlocktypeMap = (group: "dropdown" | "button") => ({
         })),
 ];
 
-export interface BlockTypes {
+export interface BlockTypesApi {
     dropdownFeatures: IFeatureConfig[];
     activeDropdownBlockType: string;
     handleBlockTypeChange: (e: React.ChangeEvent<{ value: DraftBlockType }>) => void;
     listsFeatures: IFeatureConfig[];
 }
 
-export default function useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef }: IProps): BlockTypes {
+export default function useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef }: IProps): BlockTypesApi {
     // can check if blocktype is supported by the editor
     const supports = React.useCallback((supportedBy?: SupportedThings) => (supportedBy ? supportedThings.includes(supportedBy) : true), [
         supportedThings,

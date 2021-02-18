@@ -5,10 +5,10 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { IControlProps } from "../types";
-import useBlockTypes, { BlockTypes } from "./useBlockTypes";
+import useBlockTypes, { BlockTypesApi } from "./useBlockTypes";
 
 interface Props extends IControlProps {
-    blockTypes: BlockTypes;
+    blockTypes: BlockTypesApi;
 }
 
 function BlockTypesControls({ classes, options: { standardBlockType }, disabled, blockTypes }: Props & WithStyles<typeof styles>) {
