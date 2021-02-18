@@ -1,4 +1,5 @@
-import { CssBaseline, Grid, IconButton, Theme, Toolbar } from "@material-ui/core";
+import { CssBaseline, IconButton, Toolbar } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
@@ -6,33 +7,62 @@ import * as React from "react";
 import { Header } from "./MasterLayout.sc";
 import { MenuContext } from "./menu";
 
-export interface IMasterLayoutProps extends WithStyles<typeof styles> {
+export interface MasterLayoutProps {
     children: React.ReactNode;
     menuComponent: React.ComponentType;
     headerComponent?: React.ComponentType;
-    hideToolbarMenuIcon?: boolean;
-    openByDefault?: boolean;
 }
 
-function MasterLayout(props: IMasterLayoutProps) {
-    const { classes, children, menuComponent: Menu, headerComponent: HeaderComponent, hideToolbarMenuIcon, openByDefault = true } = props;
-    const [open, setOpen] = React.useState(openByDefault);
+export interface MasterLayoutThemeProps {
+    hideToolbarMenuIcon?: boolean;
+    openMenuByDefault?: boolean;
+    headerHeight?: number;
+}
+
+export type CometAdminMasterLayoutClassKeys = "root" | "header" | "toolbar" | "contentWrapper" | "mainContent";
+
+const styles = (theme: Theme) =>
+    createStyles<CometAdminMasterLayoutClassKeys, any>({
+        root: {
+            display: "flex",
+            flexWrap: "nowrap",
+        },
+        header: {},
+        toolbar: {
+            minHeight: 0,
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+        },
+        contentWrapper: {
+            flexGrow: 1,
+        },
+        mainContent: {
+            padding: theme.spacing(4),
+        },
+    });
+
+const MasterLayout: React.FC<WithStyles<typeof styles> & MasterLayoutProps & MasterLayoutThemeProps> = (props) => {
+    const {
+        classes,
+        children,
+        menuComponent: Menu,
+        headerComponent: HeaderComponent,
+        hideToolbarMenuIcon,
+        openMenuByDefault = true,
+        headerHeight = 60,
+    } = props;
+    const [open, setOpen] = React.useState(openMenuByDefault);
 
     const toggleOpen = () => {
         setOpen(!open);
     };
 
     return (
-        <MenuContext.Provider
-            value={{
-                open,
-                toggleOpen,
-            }}
-        >
-            <Grid container wrap="nowrap">
-                <CssBaseline />
-                <Header position="fixed" className={classes.appBar} color="inherit">
-                    <Toolbar disableGutters={true}>
+        <MenuContext.Provider value={{ open, toggleOpen, headerHeight }}>
+            <CssBaseline />
+            <div className={classes.root}>
+                <Header position="fixed" color="inherit" classes={{ root: classes.header }}>
+                    <Toolbar style={{ height: headerHeight }} classes={{ root: classes.toolbar }}>
                         {!hideToolbarMenuIcon && (
                             <IconButton color="primary" onClick={toggleOpen}>
                                 <MenuIcon />
@@ -42,27 +72,13 @@ function MasterLayout(props: IMasterLayoutProps) {
                     </Toolbar>
                 </Header>
                 <Menu />
-                <Grid container component="main" wrap="nowrap" direction="column" alignItems="stretch" className={classes.grid}>
-                    <Toolbar />
-                    {children}
-                </Grid>
-            </Grid>
+                <div style={{ paddingTop: headerHeight }} className={classes.contentWrapper}>
+                    <main className={classes.mainContent}>{children}</main>
+                </div>
+            </div>
         </MenuContext.Provider>
     );
-}
+};
 
-const styles = (theme: Theme) =>
-    createStyles({
-        appBar: {
-            transition: theme.transitions.create(["width", "margin"], {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-            }),
-        },
-        grid: {
-            padding: "0 30px",
-        },
-    });
-
-const ExtendedMasterLayout = withStyles(styles)(MasterLayout);
-export { ExtendedMasterLayout as MasterLayout };
+const StyledMasterLayout = withStyles(styles, { name: "CometAdminMasterLayout", withTheme: true })(MasterLayout);
+export { StyledMasterLayout as MasterLayout };

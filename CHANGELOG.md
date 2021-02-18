@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file. This projec
 -   The Menu component and it's items can be customized using the material-ui theme
     -   Allows custom styling of the Menu, MenuItem and MenuCollapsibleItem *(theme -> overrides -> CometAdminMenu/CometAdminMenuItem/CometAdminMenuCollapsibleItem)*
     -   Allows using custom open/close icons for CollapsibleItem *(theme -> props -> CometAdminMenuCollapsibleItem -> openedIcon/closedIcon)*
+-   The MasterLayout component can be customized using the material-ui theme
+    -   Using the new `headerHeight` prop, the top-spacing of the content and the menu, will now be adjusted automatically
 
 ### Incompatible Changes
 
@@ -51,6 +53,8 @@ All notable changes to this project will be documented in this file. This projec
     -   Removed the `permanentMenuMinWidth` prop, now `variant` can be passed instead
         -   This allows for more control, like giving certain pages more width by always using the temporary variant on those pages
     -   Allows maximum item-nesting of two levels
+-   Changes to MasterLayout
+    -   The default values for content-spacing and header-height have changed slightly
 
 ## [1.1.0] - 12. Jan 2021 - re-release under new name
 

@@ -1,5 +1,5 @@
 import { MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
-import { Box, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { Dashboard, GitHub, Launch, List, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -42,11 +42,11 @@ const AppHeader: React.FC = () => (
 );
 
 const Content = ({ children }: { children: string }) => (
-    <Box paddingTop={2}>
+    <>
         <Typography variant={"h4"}>{children}</Typography>
         <br />
         <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>
-    </Box>
+    </>
 );
 
 export const Story: React.FC = () => (

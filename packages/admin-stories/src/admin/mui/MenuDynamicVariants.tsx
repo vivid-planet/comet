@@ -1,5 +1,5 @@
 import { MasterLayout, Menu, MenuCollapsibleItem, MenuContext, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
-import { Box, Divider, Typography } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
 import { Dashboard, GitHub, Launch, List, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -61,7 +61,7 @@ const AppHeader: React.FC = () => (
 );
 
 const Content = ({ children }: { children: string }) => (
-    <Box paddingTop={2}>
+    <>
         <Typography variant={"h4"}>{children}</Typography>
         <br />
         <Typography>
@@ -94,7 +94,7 @@ const Content = ({ children }: { children: string }) => (
                 <Link to={"/foo4"}>Foo4</Link>
             </li>
         </ul>
-    </Box>
+    </>
 );
 
 const Story: React.FC = () => (
