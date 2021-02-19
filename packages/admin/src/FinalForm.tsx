@@ -73,8 +73,8 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     isDirty: () => {
                         return formRenderProps.form.getState().dirty;
                     },
-                    submit: async (): Promise<void> => {
-                        await formRenderProps.form.submit();
+                    submit: async (): Promise<undefined | SubmissionErrors> => {
+                        return formRenderProps.form.submit();
                     },
                     reset: () => {
                         formRenderProps.form.reset();

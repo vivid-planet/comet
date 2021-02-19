@@ -85,10 +85,13 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then(() => {
-                setTimeout(() => {
-                    selectionApi.handleDeselect();
-                });
+            dirtyHandlerApi.submitBindings().then((value) => {
+                // for final-form undefined means success, an obj means error
+                if (value === undefined) {
+                    setTimeout(() => {
+                        selectionApi.handleDeselect();
+                    });
+                }
             });
         }
     };

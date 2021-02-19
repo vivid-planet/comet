@@ -2,7 +2,7 @@ import * as React from "react";
 
 export interface IDirtyHandlerApiBinding {
     isDirty: () => boolean;
-    submit: () => Promise<void>;
+    submit: () => Promise<unknown>;
     reset: () => void;
 }
 export interface IDirtyHandlerApi {
