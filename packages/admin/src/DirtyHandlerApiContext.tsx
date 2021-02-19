@@ -10,7 +10,7 @@ export interface IDirtyHandlerApi {
     unregisterBinding: (cmp: object) => void;
     isBindingDirty: () => Promise<boolean>;
     resetBindings: () => Promise<void>;
-    submitBindings: () => Promise<void>;
+    submitBindings: () => Promise<unknown[]>;
     getParent: () => IDirtyHandlerApi | undefined;
 }
 

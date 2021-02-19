@@ -1,4 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
+import { SubmissionErrors } from "final-form";
 import * as React from "react";
 import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 
@@ -85,9 +86,11 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then((value) => {
+            dirtyHandlerApi.submitBindings().then((values: Array<undefined | SubmissionErrors>) => {
                 // for final-form undefined means success, an obj means error
-                if (value === undefined) {
+                const failed = values.reduce((accumulator, value) => accumulator || value !== undefined, false);
+
+                if (!failed) {
                     setTimeout(() => {
                         selectionApi.handleDeselect();
                     });
