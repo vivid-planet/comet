@@ -1,5 +1,6 @@
-import { Chip, MenuItem, Paper, Theme, Typography } from "@material-ui/core";
-import MuiInputBase, { InputBaseProps } from "@material-ui/core/InputBase";
+import { InputBase } from "@comet/admin";
+import { Chip, InputBaseProps, MenuItem, Paper, Theme, Typography, WithStyles } from "@material-ui/core";
+import zIndex from "@material-ui/core/styles/zIndex";
 import { SvgIconComponent } from "@material-ui/icons";
 import CancelIcon from "@material-ui/icons/Cancel";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -35,7 +36,7 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-export const ControlInput = ({ ...props }: InputBaseProps) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} />;
+export const ControlInput = ({ ...props }: InputBaseProps) => <InputBase classes={{ root: "root", focused: "focused" }} {...props} />;
 
 function Control<OptionType>(props: ControlProps<OptionType>) {
     const InputProps = {
@@ -153,19 +154,7 @@ const components = {
     DropdownIndicator,
 };
 
-export interface IVPAdminSelectProps<OptionType> {
-    classes: {
-        input: string;
-        valueContainer: string;
-        chip: string;
-        chipFocused: string;
-        noOptionsMessage: string;
-        singleValue: string;
-        placeholder: string;
-        paper: string;
-        indicatorSeparator: string;
-        indicatorsContainer: string;
-    };
+export interface CometAdminSelectProps<OptionType> {
     theme: Theme;
     selectComponent: React.ComponentType<ReactSelectProps<OptionType>>;
     clearIcon?: SvgIconComponent;
@@ -173,25 +162,16 @@ export interface IVPAdminSelectProps<OptionType> {
     dropdownIconOpen?: SvgIconComponent;
 }
 
-class SelectWrapper<OptionType> extends React.Component<IVPAdminSelectProps<OptionType> & ReactSelectProps<OptionType>> {
+class SelectWrapper<OptionType> extends React.Component<
+    WithStyles<typeof styles> & CometAdminSelectProps<OptionType> & ReactSelectProps<OptionType>
+> {
     public render() {
         const { classes, theme, components: origComponents, selectComponent, ...rest } = this.props;
-        const selectStyles = {
-            input: (base: any) => ({
-                ...base,
-                color: theme.palette.text.primary,
-                "& input": {
-                    font: "inherit",
-                },
-            }),
-        };
-
         const SelectComponent = this.props.selectComponent;
         return (
             <SelectComponent
                 classes={classes}
                 menuPortalTarget={document.body}
-                styles={selectStyles}
                 components={{ ...components, ...origComponents }}
                 placeholder=""
                 {...rest}
@@ -199,33 +179,31 @@ class SelectWrapper<OptionType> extends React.Component<IVPAdminSelectProps<Opti
         );
     }
 }
-const ExtendedSelectWrapper = withStyles(styles, { name: "VPAdminSelect", withTheme: true })(SelectWrapper);
+const ExtendedSelectWrapper = withStyles(styles, { name: "CometAdminSelect", withTheme: true })(SelectWrapper);
 
-const vividStyles = {
-    dropdownIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
-    clearIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
-    menuPortal: (styles: any) => ({ ...styles, zIndex: 1500 }),
+const reactSelectStyles = {
+    menuPortal: (styles: any) => ({ ...styles, zIndex: zIndex.modal }),
 };
 
 export class ReactSelect<OptionType> extends React.Component<ReactSelectProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={Select} {...this.props} styles={{ ...vividStyles }} />;
+        return <ExtendedSelectWrapper selectComponent={Select} {...this.props} styles={{ ...reactSelectStyles }} />;
     }
 }
 export class ReactSelectAsync<OptionType> extends React.Component<ReactSelectAsyncProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={AsyncSelect} {...this.props} styles={{ ...vividStyles }} />;
+        return <ExtendedSelectWrapper selectComponent={AsyncSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
     }
 }
 export class ReactSelectCreatable<OptionType> extends React.Component<ReactSelectCreatableProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={CreatableSelect} {...this.props} styles={{ ...vividStyles }} />;
+        return <ExtendedSelectWrapper selectComponent={CreatableSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
     }
 }
 export class ReactSelectAsyncCreatable<OptionType> extends React.Component<
     ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
 > {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={AsyncCreatableSelect} {...this.props} styles={{ ...vividStyles }} />;
+        return <ExtendedSelectWrapper selectComponent={AsyncCreatableSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
     }
 }
