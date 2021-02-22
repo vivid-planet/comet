@@ -126,6 +126,7 @@ export interface ITableProps<TRow extends IRow> {
     sortApi?: ISortApi;
     paginationPosition?: "bottom" | "top" | "both";
     exportApis?: Array<IExportApi<TRow>>;
+    renderTotalCount?: (totalCount: number) => React.ReactNode;
 }
 
 function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRowProps<TRow>) {
@@ -170,6 +171,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                                         totalCount={this.props.totalCount}
                                         pagingInfo={this.props.pagingInfo}
                                         rowName={this.props.rowName}
+                                        renderTotalCount={this.props.renderTotalCount}
                                     />
                                 </TableRow>
                             )}
@@ -204,7 +206,12 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                     {this.props.pagingInfo && shouldRenderBottomPagination && (
                         <TableFooter>
                             <TableRow>
-                                <TablePagination totalCount={this.props.totalCount} pagingInfo={this.props.pagingInfo} rowName={this.props.rowName} />
+                                <TablePagination
+                                    totalCount={this.props.totalCount}
+                                    pagingInfo={this.props.pagingInfo}
+                                    rowName={this.props.rowName}
+                                    renderTotalCount={this.props.renderTotalCount}
+                                />
                             </TableRow>
                         </TableFooter>
                     )}
