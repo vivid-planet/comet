@@ -3,8 +3,6 @@ import { storiesOf } from "@storybook/react";
 import * as numeral from "numeral";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
-
 function Story() {
     const tableData = {
         data: [
@@ -35,32 +33,4 @@ function getFormattedNumber(totalCount: number) {
     return numeral(totalCount).format("0,0.00");
 }
 
-interface IResponseLinks {
-    first?: string;
-    prev?: string;
-    next?: string;
-    last?: string;
-}
-storiesOf("@comet/admin/table", module)
-    .addDecorator(
-        apolloStoryDecorator({
-            responseTransformer: async (response) => {
-                const links: IResponseLinks = {};
-                const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];
-                linkMatches.forEach((i: string) => {
-                    const m = i.match(/<(.*?)>; rel="(.*?)"/);
-                    if (m) {
-                        links[m[2] as keyof IResponseLinks] = m[1];
-                    }
-                });
-                return {
-                    data: await response.json(),
-                    meta: {
-                        links,
-                        totalCount: response.headers.get("x-total-count"),
-                    },
-                };
-            },
-        }),
-    )
-    .add("Formatted Total Count", () => <Story />);
+storiesOf("@comet/admin/table", module).add("Formatted Total Count", () => <Story />);
