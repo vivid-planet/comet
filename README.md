@@ -11,7 +11,7 @@ Run `install.sh` once.
 ### Run build and storybook
 
 ```
-npm run start
+npm start
 npm run storybook
 ```
 
