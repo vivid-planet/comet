@@ -11,9 +11,10 @@ interface IProps {
     totalCount: number;
     pagingInfo: IPagingInfo;
     rowName?: string | ((count: number) => string);
+    renderTotalCount?: (totalCount: number) => React.ReactNode;
 }
 
-export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingInfo, rowName }) => {
+export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingInfo, rowName, renderTotalCount }) => {
     if (typeof rowName === "function") {
         rowName = rowName(totalCount);
     }
@@ -23,7 +24,7 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                 <Grid container justify="space-between" alignItems="center">
                     <Grid item>
                         <Typography color="textPrimary" variant="body2">
-                            {totalCount} {rowName}
+                            {renderTotalCount ? renderTotalCount(totalCount) : `${totalCount} ${rowName}`}
                         </Typography>
                     </Grid>
                     <Grid item>
