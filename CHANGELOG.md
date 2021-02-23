@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file. This projec
 
 -   RouterPrompt: comet-admin's [react-router Prompt Component](https://reactrouter.com/core/api/Prompt) Wrapper (that adds support for multiple Prompt instances) adds missing message callback parameters for full react-router compatibility
 
+### Internal Changes
+
+-   TotalCount of the tables Pagination is now formatted with FormattedNumber from react-intl.
+
 ## [1.1.0] - 12. Jan 2021 - re-release under new name
 
 This package has been renamed to @comet/admin
