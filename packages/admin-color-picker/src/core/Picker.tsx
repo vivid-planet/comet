@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Hue, Saturation } from "react-color/lib/components/common";
-import * as tinycolor from "tinycolor2";
 
 import { colorToHex, stringToHSL, stringToHSV } from "../utils/colorSpaces";
 import { IVPAdminColorPickerProps } from "./ColorPicker";

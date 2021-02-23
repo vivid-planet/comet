@@ -1,8 +1,12 @@
 import styled from "styled-components";
 
 export const Root = styled.div`
+    position: sticky;
+    top: 0;
+    z-index: 2;
     display: flex;
     flex-wrap: wrap;
+    border-top: 1px solid ${({ theme }) => theme.rte.colors.border};
     background-color: ${({ theme }) => theme.rte.colors.toolbarBackground};
     padding-left: 6px;
     padding-right: 6px;
