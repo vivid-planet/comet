@@ -1,4 +1,4 @@
-import { Field, FieldContainerLabelAbove, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormSelect } from "@comet/admin";
 import { MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -18,7 +18,7 @@ function Story() {
                 }}
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
-                        <Field name="flavor" label="Flavor" fieldContainerComponent={FieldContainerLabelAbove}>
+                        <Field name="flavor" label="Flavor">
                             {(props) => (
                                 <FinalFormSelect {...props}>
                                     {options.map((option) => (

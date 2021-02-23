@@ -1,13 +1,4 @@
-import {
-    Field,
-    FieldContainerLabelAbove,
-    FinalFormInput,
-    Table,
-    TableFilterFinalForm,
-    TableQuery,
-    useTableQuery,
-    useTableQueryFilter,
-} from "@comet/admin";
+import { Field, FinalFormInput, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import gql from "graphql-tag";
 import * as qs from "qs";
@@ -83,14 +74,7 @@ function Story() {
             {tableData && (
                 <>
                     <TableFilterFinalForm filterApi={filterApi}>
-                        <Field
-                            name="query"
-                            type="text"
-                            label="Query"
-                            component={FinalFormInput}
-                            fullWidth
-                            fieldContainerComponent={FieldContainerLabelAbove}
-                        />
+                        <Field name="query" type="text" label="Query" component={FinalFormInput} fullWidth />
                     </TableFilterFinalForm>
                     <Table
                         {...tableData}

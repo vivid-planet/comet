@@ -1,5 +1,3 @@
-import { ButtonBase } from "@material-ui/core";
-import { Clear as ClearIcon } from "@material-ui/icons";
 import * as React from "react";
 import { ColorChangeHandler } from "react-color";
 import { EditableInput } from "react-color/lib/components/common";
@@ -18,7 +16,7 @@ interface IPickedColorProps {
     value: string;
 }
 
-const resetedInputStyles = {
+const resetInputStyles = {
     input: {
         border: "inherit",
         outline: "inherit",
@@ -45,15 +43,12 @@ const HexInput: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({ value,
             <div className={classes.inputInnerLeftContent}>
                 <PickedColor value={value} classes={classes} />
                 {!palette || (palette && picker) ? (
-                    <EditableInput style={resetedInputStyles} value={value} onChange={(onChange as unknown) as ColorChangeHandler} />
+                    <EditableInput style={resetInputStyles} value={value} onChange={(onChange as unknown) as ColorChangeHandler} />
                 ) : (
                     <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
                 )}
             </div>
         </div>
-        <ButtonBase classes={{ root: classes.clearButton }} onClick={() => onChange("")}>
-            <ClearIcon className={classes.clearIcon} fontSize="small" />
-        </ButtonBase>
     </>
 );
 

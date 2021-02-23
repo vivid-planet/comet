@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Add ability to customize the styling using theme-overrides
 
+## [1.2.1] - 23. Feb 2021
+
+### Bugfixes
+
+-   Make controls for RTE sticky
+-   Use mui-grey-palette for default colors
+-   Remove min-width of link buttons (MuiButtonGroup)
+
 ## [1.2.0] - 22. Jan 2021
 
 ### Highlights
@@ -24,6 +32,7 @@ All notable changes to this project will be documented in this file. This projec
 ## [1.1.1] - 12. Jan 2021 - re-release under new name
 
 This package has been renamed to @comet/admin-rte
+
 ## [1.1.1] - 11. Jan 2021
 
 This is a bugfix/maintenance release
