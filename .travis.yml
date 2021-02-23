@@ -1,21 +1,22 @@
-language: minimal
+language: node_js # version is specified in .nvmrc
 
 before_install:
-    - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-    - sudo apt install nodejs
-    - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-    - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    - sudo apt update && sudo apt install yarn
+    - npm i -g npm@7
 
 jobs:
     include:
-        - name: "Linting"
+        - name: "Linting Project Root"
           script:
-              - INSTALL_DEPS=1 RUN_AS_UID=`id -u` ./lint.sh
+              - npm install
+              - npx prettier -c .
+        - name: "Linting Packages"
+          script:
+              - npm install
+              - npm run lint
         - name: "Extracting String Resources"
           if: branch = master
           script:
-              - yarn install
+              - npm install
               - npm run intl:extract
               - git clone https://github.com/vivid-planet/comet-admin-lang.git
               - cp -r lang/* comet-admin-lang/

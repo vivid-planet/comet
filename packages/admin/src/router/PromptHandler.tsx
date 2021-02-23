@@ -1,16 +1,17 @@
+import * as History from "history";
 import * as React from "react";
 import { Prompt } from "react-router";
 
 import { RouterContext } from "./Context";
 
 interface IMessages {
-    [id: string]: () => boolean | string;
+    [id: string]: (location: History.Location, action: History.Action) => boolean | string;
 }
 
 export const RouterPromptHandler: React.FunctionComponent<{}> = ({ children, ...props }) => {
     const registeredMessages = React.useRef<IMessages>({});
 
-    const register = (id: string, message: () => string | boolean) => {
+    const register = (id: string, message: (location: History.Location, action: History.Action) => string | boolean) => {
         registeredMessages.current[id] = message;
     };
 
@@ -18,10 +19,10 @@ export const RouterPromptHandler: React.FunctionComponent<{}> = ({ children, ...
         delete registeredMessages.current[id];
     };
 
-    const promptMessage = (): boolean | string => {
+    const promptMessage = (location: History.Location, action: History.Action): boolean | string => {
         let ret: boolean | string = true;
         Object.keys(registeredMessages.current).forEach((id) => {
-            const message = registeredMessages.current[id]();
+            const message = registeredMessages.current[id](location, action);
             if (message !== true) {
                 ret = message;
                 return false;

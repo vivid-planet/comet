@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0]
+## [next]
 
 ### Highlights
 
@@ -55,6 +55,16 @@ All notable changes to this project will be documented in this file. This projec
     -   Allows maximum item-nesting of two levels
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
+
+## [1.2.0] - 23. Feb 2021
+
+### Highlights
+
+-   RouterPrompt: comet-admin's [react-router Prompt Component](https://reactrouter.com/core/api/Prompt) Wrapper (that adds support for multiple Prompt instances) adds missing message callback parameters for full react-router compatibility
+
+### Internal Changes
+
+-   TotalCount of the tables Pagination is now formatted with FormattedNumber from react-intl.
 
 ## [1.1.0] - 12. Jan 2021 - re-release under new name
 
