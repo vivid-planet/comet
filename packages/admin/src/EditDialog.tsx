@@ -87,7 +87,6 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
             dirtyHandlerApi.submitBindings().then((errors: Array<undefined | CometAdminError<unknown>>) => {
-                console.log(errors);
                 // for final-form undefined means success, an obj means error
                 const failed = errors.reduce((accumulator, value) => accumulator || value !== undefined, false);
 
