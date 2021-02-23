@@ -1,8 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
-import { SubmissionErrors } from "final-form";
 import * as React from "react";
 import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 
+import { CometAdminError } from "./CometAdminError";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
@@ -86,9 +86,10 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then((values: Array<undefined | SubmissionErrors>) => {
+            dirtyHandlerApi.submitBindings().then((errors: Array<undefined | CometAdminError<unknown>>) => {
+                console.log(errors);
                 // for final-form undefined means success, an obj means error
-                const failed = values.reduce((accumulator, value) => accumulator || value !== undefined, false);
+                const failed = errors.reduce((accumulator, value) => accumulator || value !== undefined, false);
 
                 if (!failed) {
                     setTimeout(() => {

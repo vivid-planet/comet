@@ -2,11 +2,12 @@ import { useApolloClient } from "@apollo/client";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Cancel as CancelIcon, Save as SaveIcon } from "@material-ui/icons";
-import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
+import { FORM_ERROR, FormApi, SubmissionErrors, ValidationErrors } from "final-form";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { CometAdminError } from "./CometAdminError";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
@@ -73,8 +74,14 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     isDirty: () => {
                         return formRenderProps.form.getState().dirty;
                     },
-                    submit: async (): Promise<undefined | SubmissionErrors> => {
-                        return formRenderProps.form.submit();
+                    submit: async (): Promise<undefined | CometAdminError<SubmissionErrors | ValidationErrors>> => {
+                        if (formRenderProps.hasValidationErrors) {
+                            return { message: "Form has Validation Errors", error: formRenderProps.errors };
+                        }
+                        const errors = await formRenderProps.form.submit();
+                        if (errors) {
+                            return { message: "Error while submitting Form", error: errors };
+                        }
                     },
                     reset: () => {
                         formRenderProps.form.reset();
