@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Internal Changes
 
 -   TotalCount of the tables Pagination is now formatted with FormattedNumber from react-intl.
+-   switched from yarn to npm 7 (updated all dependencies)
 
 ## [1.1.0] - 12. Jan 2021 - re-release under new name
 
