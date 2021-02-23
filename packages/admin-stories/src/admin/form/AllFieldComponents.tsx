@@ -1,13 +1,4 @@
-import {
-    Field,
-    FieldContainer,
-    FieldContainerLabelAbove,
-    FinalFormCheckbox,
-    FinalFormInput,
-    FinalFormRadio,
-    FinalFormSelect,
-    FinalFormSwitch,
-} from "@comet/admin";
+import { Field, FieldContainer, FinalFormCheckbox, FinalFormInput, FinalFormRadio, FinalFormSelect, FinalFormSwitch } from "@comet/admin";
 import { Button, FormControlLabel, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -41,7 +32,7 @@ function Story() {
                                         {(props) => <FormControlLabel label="Bar" control={<FinalFormRadio {...props} />} />}
                                     </Field>
                                 </FieldContainer>
-                                <Field name="select" label="FinalFormSelect" fieldContainerComponent={FieldContainerLabelAbove}>
+                                <Field name="select" label="FinalFormSelect">
                                     {(props) => (
                                         <FinalFormSelect {...props}>
                                             {options.map((option) => (
