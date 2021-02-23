@@ -3,7 +3,7 @@ import TableCell from "@material-ui/core/TableCell";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { IPagingInfo } from "./paging/IPagingInfo";
 
@@ -23,7 +23,7 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                 <Grid container justify="space-between" alignItems="center">
                     <Grid item>
                         <Typography color="textPrimary" variant="body2">
-                            {totalCount} {rowName}
+                            <FormattedNumber value={totalCount} /> {rowName}
                         </Typography>
                     </Grid>
                     <Grid item>
