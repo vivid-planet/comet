@@ -1,4 +1,5 @@
 import { Theme } from "@material-ui/core";
+import greyPalette from "@material-ui/core/colors/grey";
 import { createMuiTheme as createOriginalMuiTheme, ThemeOptions } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import * as React from "react";
@@ -34,17 +35,16 @@ declare module "@material-ui/core/styles/createMuiTheme" {
 }
 
 export const createMuiTheme = ({ rte, ...otherOptions }: ThemeOptions): Theme => {
-    const defaultTheme = createOriginalMuiTheme(otherOptions);
     return createOriginalMuiTheme({
         rte: {
             colors: {
-                border: rte?.colors?.border ? rte.colors.border : defaultTheme.palette.grey[400],
-                toolbarBackground: rte?.colors?.toolbarBackground ? rte.colors.toolbarBackground : defaultTheme.palette.grey[100],
-                buttonIcon: rte?.colors?.buttonIcon ? rte.colors.buttonIcon : defaultTheme.palette.grey[600],
-                buttonIconDisabled: defaultTheme.palette.grey[300],
-                buttonBackgroundHover: rte?.colors?.buttonBackgroundHover ? rte.colors.buttonBackgroundHover : defaultTheme.palette.grey[200],
-                buttonBorderHover: rte?.colors?.buttonBorderHover ? rte.colors.buttonBorderHover : defaultTheme.palette.grey[400],
-                buttonBorderDisabled: rte?.colors?.buttonBorderDisabled ? rte.colors.buttonBorderDisabled : defaultTheme.palette.grey[100],
+                border: rte?.colors?.border ? rte.colors.border : greyPalette[400],
+                toolbarBackground: rte?.colors?.toolbarBackground ? rte.colors.toolbarBackground : greyPalette[100],
+                buttonIcon: rte?.colors?.buttonIcon ? rte.colors.buttonIcon : greyPalette[600],
+                buttonIconDisabled: greyPalette[300],
+                buttonBackgroundHover: rte?.colors?.buttonBackgroundHover ? rte.colors.buttonBackgroundHover : greyPalette[200],
+                buttonBorderHover: rte?.colors?.buttonBorderHover ? rte.colors.buttonBorderHover : greyPalette[400],
+                buttonBorderDisabled: rte?.colors?.buttonBorderDisabled ? rte.colors.buttonBorderDisabled : greyPalette[100],
             },
         },
         ...otherOptions,
