@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file. This projec
 -   Use mui-grey-palette for default colors
 -   Remove min-width of link buttons (MuiButtonGroup)
 
+### Internal Changes
+
+-   switched from yarn to npm 7 (updated all dependencies)
+
 ## [1.2.0] - 22. Jan 2021
 
 ### Highlights
@@ -26,6 +30,7 @@ All notable changes to this project will be documented in this file. This projec
 ## [1.1.1] - 12. Jan 2021 - re-release under new name
 
 This package has been renamed to @comet/admin-rte
+
 ## [1.1.1] - 11. Jan 2021
 
 This is a bugfix/maintenance release
