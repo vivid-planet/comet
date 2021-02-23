@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Highlights
 
--   Added a new InputBase (`CometAdminInputBase`) for use in all custom input-components in Comet 
+-   Added a new InputBase (`CometAdminInputBase`) for use in all custom input-components in Comet
 -   Added `ClearInputButton`, this component can be used as `endAdornment`, to clear inputs
     -   Can be themed with `CometAdminClearInputButton` (props and overrides)
 -   New methods of customization and default layout for `Field`
@@ -14,8 +14,8 @@ All notable changes to this project will be documented in this file. This projec
     -   New `variant` prop to select between vertical and horizontal positioning of label and input
     -   Label is now positioned above input by default (`variant={"vertical"}`)
 -   The Menu component and it's items can be customized using the material-ui theme
-    -   Allows custom styling of the Menu, MenuItem and MenuCollapsibleItem *(theme -> overrides -> CometAdminMenu/CometAdminMenuItem/CometAdminMenuCollapsibleItem)*
-    -   Allows using custom open/close icons for CollapsibleItem *(theme -> props -> CometAdminMenuCollapsibleItem -> openedIcon/closedIcon)*
+    -   Allows custom styling of the Menu, MenuItem and MenuCollapsibleItem _(theme -> overrides -> CometAdminMenu/CometAdminMenuItem/CometAdminMenuCollapsibleItem)_
+    -   Allows using custom open/close icons for CollapsibleItem _(theme -> props -> CometAdminMenuCollapsibleItem -> openedIcon/closedIcon)_
 -   The MasterLayout component can be customized using the material-ui theme
     -   Using the new `headerHeight` prop, the top-spacing of the content and the menu, will now be adjusted automatically
 
@@ -23,7 +23,7 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Replaced form/Input (`VPAdminInputBase`) with form/InputBase (`CometAdminInputBase`)
     -   Deprecated `getDefaultVPAdminInputStyles` because the styled are included in InputBase, which should be used for all custom inputs in Comet
-- Usage and default layout of `Field` has changed
+-   Usage and default layout of `Field` has changed
     -   The `fieldContainer` prop has been removed, in favour of the `variant` prop and theme-augmentation of `CometAdminFormFieldContainer`
     -   Removed `FieldContainerLabelAbove` component (the new default looks like this)
     -   The old default layout of `Field` can be restored by adding the following to the theme:

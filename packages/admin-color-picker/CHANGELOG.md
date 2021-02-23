@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
-- Removed `clearButton` and `clearIcon` classes from color-picker
-    - Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
+-   Removed `clearButton` and `clearIcon` classes from color-picker
+    -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
 
 ## [1.0.2] - 23. Feb 2021
 
