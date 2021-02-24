@@ -16,7 +16,7 @@ import { safeColumnGet } from "./safeColumnGet";
 import * as sc from "./Table.sc";
 import { ISortApi, SortDirection } from "./useTableQuerySort";
 
-export function TableBodyRow({ innerRef, ...props }: sc.ITableBodyRowProps) {
+export function TableBodyRow({ ...props }: sc.ITableBodyRowProps) {
     return <sc.TableBodyRow {...props} />;
 }
 export interface ITableHeadRowProps<TRow extends IRow> extends ITableHeadColumnsProps<TRow> {}
