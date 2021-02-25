@@ -1,68 +1,89 @@
 import { Collapse, List } from "@material-ui/core";
-import { ListProps } from "@material-ui/core/List";
 import ArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import ArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
+import { matchPath, useLocation } from "react-router";
 
-import { IMenuItemProps, MenuItem } from "./Item";
+import { MenuItem, MenuItemProps } from "./Item";
+import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
-export interface IMenuLevel {
-    level?: number;
+export type CometAdminMenuCollapsibleItemClassKeys = "root" | "childSelected" | "listItem" | "open";
+
+const styles = () =>
+    createStyles<CometAdminMenuCollapsibleItemClassKeys, any>({
+        root: {},
+        childSelected: {},
+        listItem: {},
+        open: {},
+    });
+
+export interface MenuLevel {
+    level?: 1 | 2;
 }
 
-type MenuChild = React.ReactElement<IMenuLevel>;
+type MenuChild = React.ReactElement<MenuItemRouterLinkProps>;
 
-export interface ICollapsibleItemProps extends IMenuItemProps {
+interface MenuCollapsibleItemProps extends MenuItemProps {
     children: MenuChild[];
-    collapsible: boolean;
-    secondaryAction?: React.ComponentType<ICollapsibleItemSecondaryActionProps>;
-    isOpen?: boolean;
 }
 
-export interface ICollapsibleItemSecondaryActionProps {
-    open: boolean;
+export interface MenuCollapsibleItemThemeProps {
+    openByDefault?: boolean;
+    openedIcon?: React.ReactNode;
+    closedIcon?: React.ReactNode;
 }
 
-export const DefaultSecondaryAction: React.FC<ICollapsibleItemSecondaryActionProps> = ({ open }) => {
-    return open ? <ArrowUpIcon /> : <ArrowDownIcon />;
-};
-
-export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps & ListProps> = ({
+const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemThemeProps & MenuCollapsibleItemProps> = ({
+    classes,
+    theme,
     level,
-    collapsible,
-    isOpen,
-    text,
+    primary,
+    secondary,
     icon,
+    openByDefault = false,
+    openedIcon = <ArrowUpIcon />,
+    closedIcon = <ArrowDownIcon />,
     children,
-    secondaryAction: SecondaryAction = DefaultSecondaryAction,
     ...otherProps
 }) => {
     if (!level) level = 1;
-    const [open, setOpen] = React.useState(isOpen !== undefined ? isOpen : true);
-    const childElements = React.Children.map(children, (child: MenuChild) =>
-        React.cloneElement<IMenuLevel>(child, {
-            level: level! + 1,
-        }),
-    );
+    let hasSelectedChild: boolean = false;
+    const location = useLocation();
+
+    const childElements = React.Children.map(children, (child: MenuChild) => {
+        if (matchPath(location.pathname, { path: child.props.to, strict: true })) {
+            hasSelectedChild = true;
+        }
+
+        return React.cloneElement<MenuLevel>(child, {
+            level: level + 1,
+        });
+    });
+
+    const [open, setOpen] = React.useState<boolean>(openByDefault || hasSelectedChild);
+
+    const listClasses = [classes.root];
+    if (hasSelectedChild) listClasses.push(classes.childSelected);
+    if (open) listClasses.push(classes.open);
 
     return (
-        <List {...otherProps} disablePadding={true}>
-            <MenuItem
-                {...{ text, icon, level }}
-                onClick={handleClick.bind(null, open, setOpen)}
-                secondaryAction={collapsible && <SecondaryAction open={open} />}
-            />
-            {collapsible ? (
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    {childElements}
-                </Collapse>
-            ) : (
-                childElements
-            )}
-        </List>
+        <div {...otherProps} className={listClasses.join(" ")}>
+            <div className={classes.listItem}>
+                <MenuItem
+                    primary={primary}
+                    secondary={secondary}
+                    icon={icon}
+                    level={level}
+                    onClick={() => setOpen(!open)}
+                    secondaryAction={open ? openedIcon : closedIcon}
+                />
+            </div>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+                <List>{childElements}</List>
+            </Collapse>
+        </div>
     );
 };
 
-const handleClick = (open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
-    setOpen(!open);
-};
+export const MenuCollapsibleItem = withStyles(styles, { name: "CometAdminMenuCollapsibleItem", withTheme: true })(CollapsibleItem);
