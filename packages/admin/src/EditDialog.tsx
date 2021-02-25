@@ -2,7 +2,6 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography }
 import * as React from "react";
 import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 
-import { CometAdminError } from "./CometAdminError";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
@@ -86,7 +85,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then((errors: Array<undefined | CometAdminError<unknown>>) => {
+            dirtyHandlerApi.submitBindings().then((errors: Array<undefined | Object>) => {
                 // for final-form undefined means success, an obj means error
                 const failed = errors.reduce((accumulator, value) => accumulator || value !== undefined, false);
 

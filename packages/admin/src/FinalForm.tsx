@@ -7,7 +7,6 @@ import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { CometAdminError } from "./CometAdminError";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
@@ -74,14 +73,11 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     isDirty: () => {
                         return formRenderProps.form.getState().dirty;
                     },
-                    submit: async (): Promise<undefined | CometAdminError<SubmissionErrors | ValidationErrors>> => {
+                    submit: async (): Promise<undefined | ValidationErrors | SubmissionErrors> => {
                         if (formRenderProps.hasValidationErrors) {
-                            return { message: "Form has Validation Errors", error: formRenderProps.errors };
+                            return formRenderProps.errors;
                         }
-                        const errors = await formRenderProps.form.submit();
-                        if (errors) {
-                            return { message: "Error while submitting Form", error: errors };
-                        }
+                        return formRenderProps.form.submit();
                     },
                     reset: () => {
                         formRenderProps.form.reset();
