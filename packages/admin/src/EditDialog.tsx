@@ -87,7 +87,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
         if (dirtyHandlerApi) {
             dirtyHandlerApi.submitBindings().then((errors: Array<undefined | Object>) => {
                 // for final-form undefined means success, an obj means error
-                const failed = errors.reduce((accumulator, value) => accumulator || value !== undefined, false);
+                const failed = errors.some((error) => error !== undefined);
 
                 if (!failed) {
                     setTimeout(() => {
