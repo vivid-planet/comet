@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Highlights
 
+-   This package has been renamed to @comet/admin-core
 -   Added a new InputBase (`CometAdminInputBase`) for use in all custom input-components in Comet
 -   Added `ClearInputButton`, this component can be used as `endAdornment`, to clear inputs
     -   Can be themed with `CometAdminClearInputButton` (props and overrides)
@@ -55,6 +56,17 @@ All notable changes to this project will be documented in this file. This projec
     -   Allows maximum item-nesting of two levels
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
+
+### Migration Guide
+
+**Package Renaming**
+
+Automatic migrations using codeshift are available (use -d for dry-run):
+
+```
+npx jscodeshift --extensions=ts --parser=ts -t comet-admin/codemods/2.0.0/package-renames.ts src/
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/package-renames.ts src/
+```
 
 ## [1.2.0] - 23. Feb 2021
 

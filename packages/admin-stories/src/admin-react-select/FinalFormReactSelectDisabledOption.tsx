@@ -1,4 +1,4 @@
-import { Field } from "@comet/admin";
+import { Field } from "@comet/admin-core";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";

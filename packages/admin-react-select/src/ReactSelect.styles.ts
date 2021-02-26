@@ -3,7 +3,7 @@ import { emphasize } from "@material-ui/core/styles/colorManipulator";
 import zIndex from "@material-ui/core/styles/zIndex";
 import { createStyles } from "@material-ui/styles";
 
-// TODO: import from "@comet/admin" after publish.
+// TODO: import from "@comet/admin-core" after publish.
 const getDefaultVPAdminInputStyles = (theme: Theme) => {
     return {
         border: `1px solid ${theme.palette.grey[300]}`,

@@ -1,5 +1,5 @@
-import { Field } from "@comet/admin";
 import { FinalFormColorPicker } from "@comet/admin-color-picker";
+import { Field } from "@comet/admin-core";
 import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";

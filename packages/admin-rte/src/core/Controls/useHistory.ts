@@ -45,19 +45,19 @@ export default function useHistory({ editorState, setEditorState, supportedThing
                 ? [
                       {
                           name: "undo",
-                          label: intl.formatMessage({ id: "cometAdmin.rte.controls.undo.label", defaultMessage: "Undo" }),
+                          label: intl.formatMessage({ id: "cometAdminCore.rte.controls.undo.label", defaultMessage: "Undo" }),
                           disabled: !canUndo,
                           onButtonClick: handleUndoClick,
                           icon: UndoIcon,
-                          tooltipText: intl.formatMessage({ id: "cometAdmin.rte.controls.undo.tooltip", defaultMessage: "Ctrl+Z" }),
+                          tooltipText: intl.formatMessage({ id: "cometAdminCore.rte.controls.undo.tooltip", defaultMessage: "Ctrl+Z" }),
                       },
                       {
                           name: "redo",
-                          label: intl.formatMessage({ id: "cometAdmin.rte.controls.redo.label", defaultMessage: "Redo" }),
+                          label: intl.formatMessage({ id: "cometAdminCore.rte.controls.redo.label", defaultMessage: "Redo" }),
                           disabled: !canRedo,
                           onButtonClick: handleRedoClick,
                           icon: RedoIcon,
-                          tooltipText: intl.formatMessage({ id: "cometAdmin.rte.controls.redo.tooltip", defaultMessage: "Ctrl+Y" }),
+                          tooltipText: intl.formatMessage({ id: "cometAdminCore.rte.controls.redo.tooltip", defaultMessage: "Ctrl+Y" }),
                       },
                   ]
                 : [],
