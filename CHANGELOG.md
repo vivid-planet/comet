@@ -83,8 +83,8 @@ Detailed instructions can be found [here](https://www.apollographql.com/docs/rea
 
 ```
 git clone https://github.com/apollographql/apollo-client.git
-npx jscodeshift -t apollo-client/codemods/ac2-to-ac3/imports.js --extensions ts --parser ts src/
-npx jscodeshift -t apollo-client/codemods/ac2-to-ac3/imports.js --extensions tsx --parser tsx src/
+npx jscodeshift -t apollo-client/scripts/codemods/ac2-to-ac3/imports.js --extensions ts --parser ts src/
+npx jscodeshift -t apollo-client/scripts/codemods/ac2-to-ac3/imports.js --extensions tsx --parser tsx src/
 ```
 
 **Component-Renames**
