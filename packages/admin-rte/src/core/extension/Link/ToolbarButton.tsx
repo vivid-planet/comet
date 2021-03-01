@@ -101,7 +101,7 @@ function LinkDialog(props: {
             <DialogContent>
                 <TextField
                     // autoFocus
-                    label={intl.formatMessage({ id: "cometAdmin.rte.extensions.link.url", defaultMessage: "Url" })}
+                    label={intl.formatMessage({ id: "cometAdminCore.rte.extensions.link.url", defaultMessage: "Url" })}
                     variant="outlined"
                     value={newUrl}
                     onChange={(e) => {
@@ -112,13 +112,13 @@ function LinkDialog(props: {
             <DialogActions>
                 <Button onClick={handleClose} color="default">
                     <Typography variant="button">
-                        <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
+                        <FormattedMessage id="cometAdminCore.generic.cancel" defaultMessage="Cancel" />
                     </Typography>
                 </Button>
                 {linkData && (
                     <Button onClick={handleRemove} color="primary">
                         <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />
+                            <FormattedMessage id="cometAdminCore.generic.delete" defaultMessage="Delete" />
                         </Typography>
                     </Button>
                 )}
@@ -126,7 +126,7 @@ function LinkDialog(props: {
                 {newUrl && (
                     <Button onClick={handleUpdate} color="primary">
                         <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.ok" defaultMessage="OK" />
+                            <FormattedMessage id="cometAdminCore.generic.ok" defaultMessage="OK" />
                         </Typography>
                     </Button>
                 )}

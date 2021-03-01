@@ -6,7 +6,7 @@ import { defineMessage, FormattedMessage } from "react-intl";
 
 import { IBlocktypeMap } from "./types";
 
-const headerMessage = defineMessage({ id: "cometAdmin.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
+const headerMessage = defineMessage({ id: "cometAdminCore.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
 
 const defaultBlocktypeMap: IBlocktypeMap = {
     // "unstyled" is special: only the value for renderConfig is considered,
@@ -74,7 +74,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
     },
     blockquote: {
         supportedBy: "blockquote",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.blockquote" defaultMessage="Blockquote" />,
+        label: <FormattedMessage id="cometAdminCore.rte.controls.blockType.blockquote" defaultMessage="Blockquote" />,
         renderConfig: {
             // @TODO: A better default styling is needed
             element: (p) => <Typography variant="overline" {...p} />, //@TODO: what should be default MUI-element here?
@@ -84,7 +84,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
     "unordered-list-item": {
         supportedBy: "unordered-list",
         group: "button",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.unorderedList" defaultMessage="Bulletpoints" />,
+        label: <FormattedMessage id="cometAdminCore.rte.controls.blockType.unorderedList" defaultMessage="Bulletpoints" />,
         icon: FormatListBulletedIcon,
         renderConfig: {
             wrapper: <Typography component="ul" style={{ padding: 0 }} />,
@@ -96,7 +96,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
     "ordered-list-item": {
         supportedBy: "ordered-list",
         group: "button",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.orderedList" defaultMessage="Numbering" />,
+        label: <FormattedMessage id="cometAdminCore.rte.controls.blockType.orderedList" defaultMessage="Numbering" />,
         icon: FormatListNumberedIcon,
         renderConfig: {
             wrapper: <Typography component="ol" style={{ padding: 0 }} />,

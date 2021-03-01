@@ -31,7 +31,7 @@ export default function BlockTypesControls({
             <sc.Select disabled={disabled} value={activeDropdownBlockType} displayEmpty disableUnderline onChange={handleBlockTypeChange}>
                 {standardBlockType === "unstyled" && (
                     <MenuItem value="unstyled" dense>
-                        <FormattedMessage id="cometAdmin.rte.controls.blockType.default" defaultMessage="Default" />
+                        <FormattedMessage id="cometAdminCore.rte.controls.blockType.default" defaultMessage="Default" />
                     </MenuItem>
                 )}
                 {dropdownFeatures.map((c) => (

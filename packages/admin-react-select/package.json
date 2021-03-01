@@ -10,12 +10,12 @@
         "classnames": "^2.2.6"
     },
     "devDependencies": {
-        "@comet/admin": "^1.1.0"
+        "@comet/admin-core": "^1.1.0"
     },
     "peerDependencies": {
         "@material-ui/core": "^4.1.3",
         "@material-ui/icons": "^4.2.1",
-        "@comet/admin": "^1.0.0",
+        "@comet/admin-core": "^1.0.0",
         "final-form": "^4.16.1",
         "react": "^16.8",
         "react-final-form": "^6.3.1",
