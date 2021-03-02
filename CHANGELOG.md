@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Next
+
+### Internal Changes
+
+-   The `styled-components` peer dependency has been changed to `^4.0.0 || ^5.0.0` to include v5.
+-   The `graphql` peer dependency has been changed to `^14.0.0 || ^15.0.0` to include v14.
+
 ## [1.2.0] - 23. Feb 2021
 
 ### Highlights
