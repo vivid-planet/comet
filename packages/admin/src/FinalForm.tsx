@@ -10,7 +10,7 @@ import { FormattedMessage } from "react-intl";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
-import { SubmitError } from "./form/SubmitError";
+import { SubmitError, SubmitResult } from "./form/SubmitResult";
 import { StackApiContext } from "./stack";
 import { TableQueryContext } from "./table";
 
@@ -74,15 +74,24 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     isDirty: () => {
                         return formRenderProps.form.getState().dirty;
                     },
-                    submit: async (): Promise<undefined | SubmitError<ValidationErrors | SubmissionErrors>> => {
+                    submit: async (): Promise<SubmitResult<ValidationErrors | SubmissionErrors>> => {
                         if (formRenderProps.hasValidationErrors) {
-                            return new SubmitError<ValidationErrors>({ message: "Form has Validation Errors", error: formRenderProps.errors });
+                            return {
+                                error: new SubmitError<SubmissionErrors>({
+                                    message: "Form has Validation Errors",
+                                    submitError: formRenderProps.errors,
+                                }),
+                            };
                         }
 
                         const submissionErrors = await formRenderProps.form.submit();
                         if (submissionErrors) {
-                            return new SubmitError<SubmissionErrors>({ message: "Error while submitting Form", error: submissionErrors });
+                            return {
+                                error: new SubmitError<SubmissionErrors>({ message: "Form has Submission Errors", submitError: submissionErrors }),
+                            };
                         }
+
+                        return {};
                     },
                     reset: () => {
                         formRenderProps.form.reset();

@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
-import { SubmitError } from "./form/SubmitError";
+import { SubmitResult } from "./form/SubmitResult";
 import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
@@ -86,9 +86,8 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then((errors: Array<undefined | SubmitError<Object>>) => {
-                // for final-form undefined means success, an obj means error
-                const failed = errors.some((error) => error instanceof SubmitError);
+            dirtyHandlerApi.submitBindings().then((submitResults: Array<SubmitResult>) => {
+                const failed = submitResults.some((submitResult) => !!submitResult.error);
 
                 if (!failed) {
                     setTimeout(() => {
