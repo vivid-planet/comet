@@ -1,7 +1,6 @@
 import { ButtonBase } from "@material-ui/core";
 import { Clear as ClearIcon } from "@material-ui/icons";
 import * as React from "react";
-import { ColorChangeHandler } from "react-color";
 import { EditableInput } from "react-color/lib/components/common";
 import * as tinycolor from "tinycolor2";
 
@@ -45,7 +44,7 @@ const HexInput: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({ value,
             <div className={classes.inputInnerLeftContent}>
                 <PickedColor value={value} classes={classes} />
                 {!palette || (palette && picker) ? (
-                    <EditableInput style={resetedInputStyles} value={value} onChange={(onChange as unknown) as ColorChangeHandler} />
+                    <EditableInput style={resetedInputStyles} value={value} onChange={onChange} />
                 ) : (
                     <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
                 )}
