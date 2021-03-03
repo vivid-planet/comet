@@ -94,7 +94,7 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
             this.bindings.map(async (binding) => {
                 let submitResult = await binding.binding.submit();
 
-                if(!submitResult) {
+                if (submitResult === undefined) {
                     submitResult = {}
                 }
 
