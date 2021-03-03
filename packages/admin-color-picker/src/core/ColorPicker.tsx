@@ -1,4 +1,4 @@
-import { ClearInputButton } from "@comet/admin-core";
+import { ClearInputButton } from "@comet/admin";
 import { ClickAwayListener, InputBase, Paper, Popper, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { CustomPicker } from "react-color";

@@ -1,4 +1,4 @@
-# @comet/admin-core
+# @comet/admin
 
 ## Development
 

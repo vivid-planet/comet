@@ -20,35 +20,35 @@ interface IProps {
 const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
         name: "BOLD",
-        label: <FormattedMessage id="cometAdminCore.rte.controls.blockType.bold.label" defaultMessage="bold" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.label" defaultMessage="bold" />,
         icon: FormatBoldIcon,
-        tooltipText: <FormattedMessage id="cometAdminCore.rte.controls.blockType.bold.tooltip" defaultMessage="Ctrl+B" />,
+        tooltipText: <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.tooltip" defaultMessage="Ctrl+B" />,
     },
     {
         name: "ITALIC",
-        label: <FormattedMessage id="cometAdminCore.rte.controls.blockType.italic.label" defaultMessage="italic" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.label" defaultMessage="italic" />,
         icon: FormatItalicIcon,
-        tooltipText: <FormattedMessage id="cometAdminCore.rte.controls.blockType.italic.tooltip" defaultMessage="Ctrl+I" />,
+        tooltipText: <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.tooltip" defaultMessage="Ctrl+I" />,
     },
     {
         name: "UNDERLINE",
-        label: <FormattedMessage id="cometAdminCore.rte.controls.blockType.underlined.label" defaultMessage="underlined" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.underlined.label" defaultMessage="underlined" />,
         icon: FormatUnderlinedIcon,
-        tooltipText: <FormattedMessage id="cometAdminCore.rte.controls.blockType.underlined.tooltip" defaultMessage="Ctrl+U" />,
+        tooltipText: <FormattedMessage id="cometAdmin.rte.controls.blockType.underlined.tooltip" defaultMessage="Ctrl+U" />,
     },
     {
         name: "STRIKETHROUGH",
-        label: <FormattedMessage id="cometAdminCore.rte.controls.blockType.strikethrough.label" defaultMessage="strikethrough" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.strikethrough.label" defaultMessage="strikethrough" />,
         icon: StrikethroughSIcon,
     },
     {
         name: "SUP",
-        label: <FormattedMessage id="cometAdminCore.rte.controls.blockType.super.label" defaultMessage="super" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.super.label" defaultMessage="super" />,
         icon: TextFormatSup,
     },
     {
         name: "SUB",
-        label: <FormattedMessage id="cometAdminCore.rte.controls.blockType.sub.label" defaultMessage="sub" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.sub.label" defaultMessage="sub" />,
         icon: TextFormatSub,
     },
 ];
