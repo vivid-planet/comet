@@ -86,8 +86,8 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then((submitResults: Array<SubmitResult>) => {
-                const failed = submitResults.some((submitResult) => !!submitResult.error);
+            dirtyHandlerApi.submitBindings().then((submitResults: Array<SubmitResult | undefined>) => {
+                const failed = submitResults.some((submitResult) => !!submitResult?.error);
 
                 if (!failed) {
                     setTimeout(() => {
