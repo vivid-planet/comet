@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Bugfixes
 
+-   Handle submit error in EditDialog (#209)
 -   Pass `innerRef` from `TableBodyRow` to `sc.TableBodyRow`
 
 ### Internal Changes
