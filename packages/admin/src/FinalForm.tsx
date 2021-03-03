@@ -2,7 +2,7 @@ import { useApolloClient } from "@apollo/client";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Cancel as CancelIcon, Save as SaveIcon } from "@material-ui/icons";
-import { FORM_ERROR, FormApi, SubmissionErrors, ValidationErrors } from "final-form";
+import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -74,20 +74,17 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     isDirty: () => {
                         return formRenderProps.form.getState().dirty;
                     },
-                    submit: async (): Promise<SubmitResult<ValidationErrors | SubmissionErrors>> => {
+                    submit: async (): Promise<SubmitResult> => {
                         if (formRenderProps.hasValidationErrors) {
                             return {
-                                error: new SubmitError<ValidationErrors>({
-                                    message: "Form has Validation Errors",
-                                    submitError: formRenderProps.errors,
-                                }),
+                                error: new SubmitError("Form has Validation Errors", formRenderProps.errors),
                             };
                         }
 
                         const submissionErrors = await formRenderProps.form.submit();
                         if (submissionErrors) {
                             return {
-                                error: new SubmitError<SubmissionErrors>({ message: "Form has Submission Errors", submitError: submissionErrors }),
+                                error: new SubmitError("Form has Submission Errors", submissionErrors),
                             };
                         }
 
