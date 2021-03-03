@@ -77,7 +77,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     submit: async (): Promise<SubmitResult<ValidationErrors | SubmissionErrors>> => {
                         if (formRenderProps.hasValidationErrors) {
                             return {
-                                error: new SubmitError<SubmissionErrors>({
+                                error: new SubmitError<ValidationErrors>({
                                     message: "Form has Validation Errors",
                                     submitError: formRenderProps.errors,
                                 }),
