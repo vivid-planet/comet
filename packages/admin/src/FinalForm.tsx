@@ -10,6 +10,7 @@ import { FormattedMessage } from "react-intl";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
+import { SubmitError } from "./form/SubmitError";
 import { StackApiContext } from "./stack";
 import { TableQueryContext } from "./table";
 
@@ -73,11 +74,15 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     isDirty: () => {
                         return formRenderProps.form.getState().dirty;
                     },
-                    submit: async (): Promise<undefined | ValidationErrors | SubmissionErrors> => {
+                    submit: async (): Promise<undefined | SubmitError<ValidationErrors | SubmissionErrors>> => {
                         if (formRenderProps.hasValidationErrors) {
-                            return formRenderProps.errors;
+                            return new SubmitError<ValidationErrors>({ message: "Form has Validation Errors", error: formRenderProps.errors });
                         }
-                        return formRenderProps.form.submit();
+
+                        const submissionErrors = await formRenderProps.form.submit();
+                        if (submissionErrors) {
+                            return new SubmitError<SubmissionErrors>({ message: "Error while submitting Form", error: submissionErrors });
+                        }
                     },
                     reset: () => {
                         formRenderProps.form.reset();
