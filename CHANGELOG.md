@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## Next
 
+### Bugfixes
+
+-   Pass `innerRef` from `TableBodyRow` to `sc.TableBodyRow`
+
 ### Internal Changes
 
 -   The `styled-components` peer dependency has been changed to `^4.0.0 || ^5.0.0` to include v5.
