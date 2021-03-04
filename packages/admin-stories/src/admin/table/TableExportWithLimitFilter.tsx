@@ -2,7 +2,6 @@ import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
     Field,
-    FieldContainerLabelAbove,
     FinalFormInput,
     Table,
     TableFilterFinalForm,
@@ -90,14 +89,7 @@ function Story() {
             {tableData && (
                 <>
                     <TableFilterFinalForm filterApi={filterApi}>
-                        <Field
-                            name="query"
-                            type="text"
-                            label="Query"
-                            component={FinalFormInput}
-                            fullWidth
-                            fieldContainerComponent={FieldContainerLabelAbove}
-                        />
+                        <Field name="query" type="text" label="Query" component={FinalFormInput} fullWidth />
                     </TableFilterFinalForm>
                     <ExcelExportButton exportApi={exportCurrentPageApi}>Aktuelle Seite exportieren</ExcelExportButton>
                     <ExcelExportButton exportApi={exportApi}>Export All (max. 5000 Rows)</ExcelExportButton>

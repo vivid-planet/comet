@@ -1,7 +1,6 @@
 import {
     createRestPagingActions,
     Field,
-    FieldContainerLabelAbove,
     FinalFormInput,
     SortDirection,
     Table,
@@ -132,14 +131,7 @@ function Story() {
             {tableData && (
                 <>
                     <TableFilterFinalForm<IFilterValues> filterApi={filterApi}>
-                        <Field
-                            name="query"
-                            type="text"
-                            label="Query"
-                            component={FinalFormInput}
-                            fullWidth
-                            fieldContainerComponent={FieldContainerLabelAbove}
-                        />
+                        <Field name="query" type="text" label="Query" component={FinalFormInput} fullWidth />
                     </TableFilterFinalForm>
                     <Table
                         sortApi={sortApi}

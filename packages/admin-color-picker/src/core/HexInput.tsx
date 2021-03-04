@@ -1,5 +1,3 @@
-import { ButtonBase } from "@material-ui/core";
-import { Clear as ClearIcon } from "@material-ui/icons";
 import * as React from "react";
 import { EditableInput } from "react-color/lib/components/common";
 import * as tinycolor from "tinycolor2";
@@ -52,9 +50,6 @@ const HexInput: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({ value,
                 )}
             </div>
         </div>
-        <ButtonBase classes={{ root: classes.clearButton }} onClick={() => onChange("")}>
-            <ClearIcon className={classes.clearIcon} fontSize="small" />
-        </ButtonBase>
     </>
 );
 

@@ -1,11 +1,8 @@
 import { ListItemProps } from "@material-ui/core/ListItem";
 import * as React from "react";
 
-import { IMenuItemProps, MenuItem } from "./Item";
+import { MenuItem, MenuItemProps } from "./Item";
 
-export class MenuItemAnchorLink extends React.Component<IMenuItemProps & ListItemProps & React.HTMLProps<HTMLAnchorElement>> {
-    public render() {
-        const { ...otherProps } = this.props;
-        return <MenuItem selected={false} component="a" {...otherProps} />;
-    }
-}
+export const MenuItemAnchorLink: React.FC<MenuItemProps & ListItemProps & React.HTMLProps<HTMLAnchorElement>> = (props) => (
+    <MenuItem selected={false} component="a" {...props} />
+);
