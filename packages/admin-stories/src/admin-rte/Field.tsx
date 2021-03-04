@@ -1,4 +1,4 @@
-import { Field, FinalFormInput } from "@comet/admin-core";
+import { Field, FinalFormInput } from "@comet/admin";
 import { createFinalFormRte } from "@comet/admin-rte";
 import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";

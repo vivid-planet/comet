@@ -1,4 +1,4 @@
-import { getDefaultVPAdminInputStyles } from "@comet/admin-core";
+import { getDefaultVPAdminInputStyles } from "@comet/admin";
 import { Theme } from "@material-ui/core";
 import { createStyles } from "@material-ui/styles";
 

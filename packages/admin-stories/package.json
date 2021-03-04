@@ -6,7 +6,7 @@
     ],
     "peerDependencies": {
         "@apollo/client": "^3.2.5",
-        "@comet/admin-core": "*",
+        "@comet/admin": "*",
         "@comet/admin-color-picker": "*",
         "@comet/admin-react-select": "*",
         "@comet/admin-rte": "*",
