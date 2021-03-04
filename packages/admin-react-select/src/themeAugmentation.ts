@@ -1,14 +1,14 @@
-import { IVPAdminSelectProps } from "./ReactSelect";
-import { VPAdminSelectClassKeys } from "./ReactSelect.styles";
+import { CometAdminSelectProps } from "./ReactSelect";
+import { CometAdminSelectClassKeys } from "./ReactSelect.styles";
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
-        VPAdminSelect: VPAdminSelectClassKeys;
+        CometAdminSelect: CometAdminSelectClassKeys;
     }
 }
 
 declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
-        VPAdminSelect: IVPAdminSelectProps<any>;
+        CometAdminSelect: CometAdminSelectProps<any>;
     }
 }
