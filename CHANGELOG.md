@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [1.3.0] - 2. March 2021
 
-This is a maintenance release.
+This is a bugfix/maintenance release.
 
 ### Bugfixes
 
