@@ -1,8 +1,10 @@
 import * as React from "react";
 
+import { SubmitResult } from "./form/SubmitResult";
+
 export interface IDirtyHandlerApiBinding {
     isDirty: () => boolean;
-    submit: () => Promise<void>;
+    submit: () => Promise<SubmitResult | void>;
     reset: () => void;
 }
 export interface IDirtyHandlerApi {
@@ -10,7 +12,7 @@ export interface IDirtyHandlerApi {
     unregisterBinding: (cmp: object) => void;
     isBindingDirty: () => Promise<boolean>;
     resetBindings: () => Promise<void>;
-    submitBindings: () => Promise<void>;
+    submitBindings: () => Promise<Array<SubmitResult>>;
     getParent: () => IDirtyHandlerApi | undefined;
 }
 

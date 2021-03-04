@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file. This projec
 -   Use mui-grey-palette for default colors
 -   Remove min-width of link buttons (MuiButtonGroup)
 
+### Internal Changes
+
+-   switched from yarn to npm 7 (updated all dependencies)
+
 ## [1.2.0] - 22. Jan 2021
 
 ### Highlights

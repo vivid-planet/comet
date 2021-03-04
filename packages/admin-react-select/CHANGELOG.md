@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Renamed theme-key from `VPAdminSelect` to `CometAdminSelect`
 
+## [1.0.2] - 23. Feb 2021
+
+switched from yarn to npm 7 (updated all dependencies)
+
 ## [1.0.1] - 12. Jan 2021 - re-release under new name
 
 This package has been renamed to @comet/admin-react-select
