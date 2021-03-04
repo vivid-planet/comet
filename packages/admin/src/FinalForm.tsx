@@ -50,7 +50,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         const submit = React.useCallback(
             (event: any) => {
                 if (!formRenderProps.dirty) return;
-                return new Promise((resolve) => {
+                return new Promise<SubmissionErrors | void>((resolve) => {
                     Promise.resolve(formRenderProps.handleSubmit(event)).then(
                         () => {
                             if (formRenderProps.submitSucceeded) {
