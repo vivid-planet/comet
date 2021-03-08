@@ -15,7 +15,7 @@ interface IPickedColorProps {
     value: string;
 }
 
-const resetInputStyles = {
+const resetedInputStyles = {
     input: {
         border: "inherit",
         outline: "inherit",
@@ -42,7 +42,9 @@ const HexInput: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({ value,
             <div className={classes.inputInnerLeftContent}>
                 <PickedColor value={value} classes={classes} />
                 {!palette || (palette && picker) ? (
-                    <EditableInput style={resetInputStyles} value={value} onChange={onChange} />
+                    <EditableInput style={resetedInputStyles} value={value} onChange={(colorState)=>{
+                        onChange(colorState.hex)
+                    }} />
                 ) : (
                     <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
                 )}
