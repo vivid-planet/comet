@@ -1,5 +1,6 @@
-import { ClearInputButton } from "@comet/admin";
-import { ClickAwayListener, InputBase, Paper, Popper, withStyles } from "@material-ui/core";
+import { ClearInputButton, InputBase } from "@comet/admin";
+import { ClickAwayListener, Paper, Popper, WithStyles, withStyles } from "@material-ui/core";
+import { InputBaseProps } from "@material-ui/core/InputBase";
 import * as React from "react";
 import { CustomPicker } from "react-color";
 import { FieldRenderProps } from "react-final-form";
@@ -9,49 +10,32 @@ import { colorToHex } from "../utils/colorSpaces";
 import styles from "./ColorPicker.styles";
 import HexInput from "./HexInput";
 import Palette from "./Palette";
+import PickedColor from "./PickedColor";
 import Picker from "./Picker";
 
-export interface IVPAdminColorPickerProps {
-    classes: {
-        input: string;
-        inputInner: string;
-        inputInnerLeftContent: string;
-        popper: string;
-        pickedColorWrapper: string;
-        noColorStroke: string;
-        pickedColorIndicator: string;
-        saturationWrapper: string;
-        saturationPointer: string;
-        hueWrapper: string;
-        hueSliderMarker: string;
-        paletteWrapper: string;
-        paletteItem: string;
-        readOnlyInput: string;
-    };
-}
-
-interface IComponentProps extends FieldRenderProps<string, HTMLInputElement> {
+export interface ColorPickerThemeProps {
     colorPalette?: string[];
     showPicker?: boolean;
-    pickerWidth?: number;
+    showClearButton?: boolean;
+    fullWidth?: boolean;
+    startAdornment?: InputBaseProps["startAdornment"];
+    endAdornment?: InputBaseProps["endAdornment"];
 }
 
-const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
+export type ColorPickerProps = WithStyles<typeof styles> & ColorPickerThemeProps & FieldRenderProps<string, HTMLInputElement>;
+
+const ColorPicker: React.FC<ColorPickerProps> = ({
     colorPalette,
     showPicker,
-    pickerWidth,
+    fullWidth,
+    showClearButton,
+    startAdornment,
+    endAdornment,
     classes,
     input: { value, onChange },
 }) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLInputElement | null>(null);
-    const [inputWidth, setInputWidth] = React.useState<number>(pickerWidth ? pickerWidth : 300);
     const inputRef = React.useRef<HTMLInputElement>();
-
-    const setPopperWidth = () => {
-        if (!pickerWidth && inputRef.current && inputRef.current.offsetWidth) {
-            setInputWidth(inputRef.current.offsetWidth);
-        }
-    };
 
     const handleAwayClick = () => {
         setAnchorEl(null);
@@ -60,7 +44,6 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
     const handleFieldClick = (event: React.MouseEvent) => {
         const clickedElement = event.target as HTMLElement;
         if (clickedElement.tagName === "INPUT" || clickedElement.tagName === "DIV") {
-            setPopperWidth();
             setAnchorEl(event.currentTarget as HTMLInputElement);
         }
     };
@@ -71,10 +54,21 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
 
     const isOpen = Boolean(anchorEl);
 
+    const rootClasses: string[] = [classes.root];
+    if (fullWidth) rootClasses.push(classes.fullWidth);
+
     return (
         <ClickAwayListener onClickAway={handleAwayClick}>
-            <div>
+            <div className={rootClasses.join(" ")}>
                 <InputBase
+                    startAdornment={startAdornment ? startAdornment : <PickedColor value={value} classes={classes} />}
+                    endAdornment={
+                        endAdornment ? (
+                            endAdornment
+                        ) : showClearButton ? (
+                            <ClearInputButton onClick={() => onChange("")} disabled={!value} />
+                        ) : undefined
+                    }
                     ref={inputRef}
                     inputComponent={HexInput as React.ComponentType}
                     value={value ? tinycolor(value).toHexString() : ""}
@@ -83,15 +77,13 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
                         classes,
                         picker: !!showPicker,
                         palette: !!colorPalette?.length,
-                        pickerWidth,
                     }}
-                    onChange={(newColor) => onChange(colorToHex((newColor as unknown) as tinycolor.ColorInputWithoutInstance))}
+                    onChange={(newColor: string) => onChange(colorToHex(newColor as tinycolor.ColorInputWithoutInstance))}
                     className={classes.input}
                     onClick={handleFieldClick}
-                    endAdornment={<ClearInputButton onClick={() => onChange("")} disabled={!value} />}
                 />
-                <Popper open={isOpen} anchorEl={anchorEl} placement={"bottom"} style={{ width: `${inputWidth}px` }} className={classes.popper}>
-                    <Paper>
+                <Popper open={isOpen} anchorEl={anchorEl} placement={"bottom-start"} className={classes.popper} disablePortal>
+                    <Paper classes={{ root: classes.popperPaper }}>
                         {showPicker && <Picker classes={classes} color={value} onChange={onChange} />}
                         {colorPalette?.length && <Palette classes={classes} colors={colorPalette} onChange={onChange} />}
                     </Paper>
@@ -101,4 +93,4 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
     );
 };
 
-export default withStyles(styles, { name: "VPAdminColorPicker", withTheme: true })(CustomPicker(ColorPicker));
+export default withStyles(styles, { name: "CometAdminColorPicker", withTheme: true })(CustomPicker(ColorPicker));
