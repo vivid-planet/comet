@@ -1,5 +1,4 @@
 import * as React from "react";
-import { ColorChangeHandler } from "react-color";
 import { EditableInput } from "react-color/lib/components/common";
 
 import { ColorPickerProps } from "./ColorPicker";
@@ -32,7 +31,9 @@ const HexInput: React.FC<IComponentProps & ColorPickerProps> = ({ value, classes
     <div className={classes.inputInner}>
         <div className={classes.inputInnerLeftContent}>
             {!palette || (palette && picker) ? (
-                <EditableInput style={resetInputStyles} value={value} onChange={(onChange as unknown) as ColorChangeHandler} />
+                <EditableInput style={resetInputStyles} value={value} onChange={(colorState)=>{
+                    onChange(colorState.hex)
+                }}  />
             ) : (
                 <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
             )}

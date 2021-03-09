@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file. This projec
 ## [1.0.2] - 23. Feb 2021
 
 use fixed version of react-color
+switched from yarn to npm 7 (updated all dependencies)
 
 ## [1.0.1] - 12. Jan 2021 - re-release under new name
 

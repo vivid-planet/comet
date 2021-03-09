@@ -56,6 +56,20 @@ All notable changes to this project will be documented in this file. This projec
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
 
+## [1.3.0] - 4. March 2021
+
+This is a bugfix/maintenance release.
+
+### Bugfixes
+
+-   Handle submit error in EditDialog (#209)
+-   Pass `innerRef` from `TableBodyRow` to `sc.TableBodyRow`
+
+### Internal Changes
+
+-   The `styled-components` peer dependency has been changed to `^4.0.0 || ^5.0.0` to include v5.
+-   The `graphql` peer dependency has been changed to `^14.0.0 || ^15.0.0` to include v14.
+
 ## [1.2.0] - 23. Feb 2021
 
 ### Highlights
@@ -65,6 +79,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Internal Changes
 
 -   TotalCount of the tables Pagination is now formatted with FormattedNumber from react-intl.
+-   switched from yarn to npm 7 (updated all dependencies)
 
 ## [1.1.0] - 12. Jan 2021 - re-release under new name
 
@@ -137,8 +152,8 @@ Detailed instructions can be found [here](https://www.apollographql.com/docs/rea
 
 ```
 git clone https://github.com/apollographql/apollo-client.git
-npx jscodeshift -t apollo-client/codemods/ac2-to-ac3/imports.js --extensions ts --parser ts src/
-npx jscodeshift -t apollo-client/codemods/ac2-to-ac3/imports.js --extensions tsx --parser tsx src/
+npx jscodeshift -t apollo-client/scripts/codemods/ac2-to-ac3/imports.js --extensions ts --parser ts src/
+npx jscodeshift -t apollo-client/scripts/codemods/ac2-to-ac3/imports.js --extensions tsx --parser tsx src/
 ```
 
 **Component-Renames**

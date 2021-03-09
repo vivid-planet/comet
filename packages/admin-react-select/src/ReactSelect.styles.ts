@@ -1,19 +1,8 @@
 import { Theme } from "@material-ui/core";
 import { emphasize } from "@material-ui/core/styles/colorManipulator";
-import zIndex from "@material-ui/core/styles/zIndex";
 import { createStyles } from "@material-ui/styles";
 
-// TODO: import from "@comet/admin" after publish.
-const getDefaultVPAdminInputStyles = (theme: Theme) => {
-    return {
-        border: `1px solid ${theme.palette.grey[300]}`,
-        borderRadius: "2px",
-        padding: "0 10px",
-        height: "32px",
-    };
-};
-
-export type VPAdminSelectClassKeys =
+export type CometAdminSelectClassKeys =
     | "input"
     | "valueContainer"
     | "chip"
@@ -29,9 +18,8 @@ export type VPAdminSelectClassKeys =
     | "dropdownIndicator";
 
 const styles = (theme: Theme) =>
-    createStyles({
+    createStyles<CometAdminSelectClassKeys, any>({
         input: {
-            ...getDefaultVPAdminInputStyles(theme),
             display: "flex",
             paddingRight: 0,
         },
@@ -60,20 +48,13 @@ const styles = (theme: Theme) =>
         placeholder: {
             color: theme.palette.text.disabled,
         },
-        paper: {
-            position: "absolute",
-            zIndex: zIndex.modal,
-            left: 0,
-            right: 0,
-        },
+        paper: {},
         indicatorsContainer: {
             display: "flex",
         },
         indicatorSeparator: {
             width: 1,
             flexGrow: 1,
-            marginTop: theme.spacing(1),
-            marginBottom: theme.spacing(1),
             backgroundColor: theme.palette.divider,
         },
         indicator: {
