@@ -1,15 +1,15 @@
-import { Paper } from "@material-ui/core";
+import { Paper, WithStyles } from "@material-ui/core";
 import * as React from "react";
 import * as tinycolor from "tinycolor2";
 
-import { IVPAdminColorPickerProps } from "./ColorPicker";
+import styles from "./ColorPicker.styles";
 
 interface IProps {
     colors: string[];
     onChange: (colorValue: string) => void;
 }
 
-export const Palette: React.FC<IProps & IVPAdminColorPickerProps> = ({ colors, onChange, classes }) => (
+export const Palette: React.FC<WithStyles<typeof styles> & IProps> = ({ colors, onChange, classes }) => (
     <Paper className={classes.paletteWrapper}>
         {colors.map((color, index) => (
             <div
