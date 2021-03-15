@@ -3,16 +3,25 @@ import { Typography } from "@material-ui/core";
 import { CalendarToday, Home, School, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 import { Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
 
 const AppMenu: React.FC = () => (
     <Menu>
-        <MenuItemRouterLink text="Foo1" icon={<CalendarToday />} to="/foo1" />
-        <MenuItemRouterLink text="Foo2" icon={<School />} to="/foo2" />
-        <MenuCollapsibleItem text="Foo3" icon={<Settings />} collapsible={true} isOpen={false}>
-            <MenuItemRouterLink text="Foo4" icon={<Home />} to="/foo4" />
-            <MenuItemRouterLink text="Foo5" icon={<Home />} to="/foo5" />
+        <MenuItemRouterLink  icon={<CalendarToday />} to="/foo1" >
+            <FormattedMessage id="comet.stories.foo1" defaultMessage="Foo1"/>
+        </MenuItemRouterLink>
+        <MenuItemRouterLink icon={<School />} to="/foo2" >
+            <FormattedMessage id="comet.stories.foo2" defaultMessage="Foo2"/>
+        </MenuItemRouterLink>
+        <MenuCollapsibleItem text={<FormattedMessage id="comet.stories.foo3" defaultMessage="Foo3"/>} icon={<Settings />} collapsible={true} isOpen={false}>
+            <MenuItemRouterLink icon={<Home />} to="/foo4" >
+                <FormattedMessage id="comet.stories.foo4" defaultMessage="Foo4"/>
+            </MenuItemRouterLink>
+            <MenuItemRouterLink text="Foo5" icon={<Home />} to="/foo5" >
+                <FormattedMessage id="comet.stories.foo5" defaultMessage="Foo5"/>
+            </MenuItemRouterLink>
         </MenuCollapsibleItem>
     </Menu>
 );
