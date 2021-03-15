@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
--   Removed `text` property from `MenuItem`
+-   Removed `text` property from `MenuItem` in favor of more flexibel `children`. 
 -   `children` can now be passed to `MenuItem` to render text
 
 ## [1.3.0] - 4. March 2021
