@@ -15,7 +15,7 @@ const AppMenu: React.FC = () => (
         <MenuItemRouterLink icon={<School />} to="/foo2" >
             <FormattedMessage id="comet.stories.foo2" defaultMessage="Foo2"/>
         </MenuItemRouterLink>
-        <MenuCollapsibleItem textComponent={<FormattedMessage id="comet.stories.foo3" defaultMessage="Foo3"/>} icon={<Settings />} collapsible={true} isOpen={false}>
+        <MenuCollapsibleItem text={<FormattedMessage id="comet.stories.foo3" defaultMessage="Foo3"/>} icon={<Settings />} collapsible={true} isOpen={false}>
             <MenuItemRouterLink icon={<Home />} to="/foo4" >
                 <FormattedMessage id="comet.stories.foo4" defaultMessage="Foo4"/>
             </MenuItemRouterLink>

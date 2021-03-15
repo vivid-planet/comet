@@ -4,10 +4,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## Next
 
-### Internal Changes
+### Incompatible Changes
 
--   Pass `children` to `MenuItem` component
--   Pass `textComponent` to `MenuCollapsibleItem` component
+-   Removed `text` property from `MenuItem`
+-   `children` can now be passed to `MenuItem` to render text
 
 ## [1.3.0] - 4. March 2021
 

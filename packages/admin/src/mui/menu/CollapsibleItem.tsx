@@ -17,7 +17,7 @@ export interface ICollapsibleItemProps extends IMenuItemProps {
     collapsible: boolean;
     secondaryAction?: React.ComponentType<ICollapsibleItemSecondaryActionProps>;
     isOpen?: boolean;
-    textComponent?: React.ReactNode;
+    text: React.ReactNode;
 }
 
 export interface ICollapsibleItemSecondaryActionProps {
@@ -35,7 +35,6 @@ export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps 
     text,
     icon,
     children,
-    textComponent,
     secondaryAction: SecondaryAction = DefaultSecondaryAction,
     ...otherProps
 }) => {
@@ -53,7 +52,7 @@ export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps 
                 {...{ text, icon, level }}
                 onClick={handleClick.bind(null, open, setOpen)}
                 secondaryAction={collapsible && <SecondaryAction open={open} />}
-            >{textComponent}</MenuItem>
+            >{text}</MenuItem>
             {collapsible ? (
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     {childElements}
