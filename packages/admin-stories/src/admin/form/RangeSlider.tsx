@@ -35,15 +35,6 @@ const Thumb = styled.div`
     }
 `;
 
-const InputFieldContainer = styled.div`
-    text-align: center;
-
-    input {
-        text-align: center;
-        min-width: 50px;
-    }
-`;
-
 const ThumbComponent: React.FunctionComponent = (props) => {
     return <Thumb {...props} />;
 };
@@ -62,11 +53,8 @@ function Story() {
                         name="price"
                         min={0}
                         max={100}
-                        thumb={ThumbComponent}
                         endAdornment={<span>€</span>}
-                        components={{
-                            inputFieldContainer: InputFieldContainer,
-                        }}
+                        sliderProps={{ ThumbComponent: ThumbComponent }}
                     />
                 )}
             />
