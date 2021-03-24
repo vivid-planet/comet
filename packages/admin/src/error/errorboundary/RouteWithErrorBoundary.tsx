@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Route, RouteProps } from "react-router";
 
-import { ErrorBoundary } from "./errorboundary/ErrorBoundary";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 const RouteWithErrorBoundary: React.FunctionComponent<RouteProps> = (props) => {
     return (
