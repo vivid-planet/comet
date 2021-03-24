@@ -13,9 +13,11 @@
         "react-dnd": "^8.0.3",
         "react-dnd-html5-backend": "^8.0.3",
         "use-constant": "^1.0.0",
-        "uuid": "^3.3.2"
+        "uuid": "^3.3.2",
+        "@material-ui/lab": "^4.0.0-alpha.57"
     },
     "devDependencies": {
+
         "@types/styled-components": "^5.1.7",
         "@types/debounce": "^1.2.0",
         "@types/lodash.isequal": "^4.5.5",

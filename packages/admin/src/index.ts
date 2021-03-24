@@ -26,3 +26,5 @@ export * from "./Selection";
 export * from "./SelectionApi";
 export * from "./SelectionRoute";
 export * from "./Tabs";
+
+export * from "./error";
