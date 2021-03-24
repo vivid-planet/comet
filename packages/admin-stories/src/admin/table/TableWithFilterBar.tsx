@@ -1,11 +1,19 @@
-import { Field, FilterBar, FinalFormInput, IField, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
+import {
+    Field,
+    FilterBar,
+    FinalFormInput,
+    IFilterBarField,
+    Table,
+    TableFilterFinalForm,
+    TableQuery,
+    useTableQuery,
+    useTableQueryFilter,
+} from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { storiesOf } from "@storybook/react";
 import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
-import { FormSpy } from "react-final-form";
-import styled from "styled-components";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
@@ -56,7 +64,6 @@ interface IQueryData {
 
 interface IFilterValues {
     name: string;
-    // username: string;
     nameBlub: string;
 }
 
@@ -64,22 +71,8 @@ interface IVariables extends IFilterValues {
     pathFunction: any;
 }
 
-export const FieldContainerComponent = styled.div``;
-
-// const RangeSliderField: React.FC = () => {
-//     return (
-//         <Field
-//             name="username"
-//             component={RangeSlider}
-//             rangeValues={{ min: 1, max: 100 }}
-//             fullWidth
-//             fieldContainerComponent={FieldContainerComponent}
-//         />
-//     );
-// };
-
 const Name: React.FC = () => {
-    return <Field name="name" type="text" component={FinalFormInput} fullWidth fieldContainerComponent={FieldContainerComponent} />;
+    return <Field name="name" type="text" component={FinalFormInput} fullWidth />;
 };
 
 const NameBlub: React.FC = () => {
@@ -88,34 +81,18 @@ const NameBlub: React.FC = () => {
         { value: "strawberry", label: "Strawberry", isDisabled: true },
         { value: "vanilla", label: "Vanilla" },
     ];
-    return (
-        <Field
-            name="nameBlub"
-            type="text"
-            component={FinalFormReactSelectStaticOptions}
-            fullWidth
-            fieldContainerComponent={FieldContainerComponent}
-            options={options}
-        />
-    );
+    return <Field name="nameBlub" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
 };
 
-const fields: IField[] = [
-    // {
-    //     type: "range",
-    //     name: "username",
-    //     label: "Username",
-    //     component: RangeSliderField,
-    //     placeHolder: "x - x",
-    // },
+const fields: IFilterBarField[] = [
+    { name: "nameBlub", label: "nameBlub", component: NameBlub, placeHolder: "Bitte wählen", labelValueFunction: (value: string) => value },
     {
-        type: "text",
         name: "name",
         label: "name",
         component: Name,
         placeHolder: "Suche...",
+        labelValueFunction: (value: string) => value,
     },
-    { type: "text", name: "nameBlub", label: "nameBlub", component: NameBlub, placeHolder: "Bitte wählen" },
 ];
 
 function Story() {
@@ -133,38 +110,32 @@ function Story() {
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
+            <TableFilterFinalForm filterApi={filterApi}>
+                <FilterBar fieldBarWidth={200} fieldSidebarHeight={550} fields={fields} />
+            </TableFilterFinalForm>
             {tableData && (
-                <>
-                    <TableFilterFinalForm filterApi={filterApi}>
-                        <FormSpy subscription={{ values: true }}>
-                            {(props) => {
-                                return <FilterBar fieldBarWidth={200} fieldSidebarHeight={550} fields={fields} />;
-                            }}
-                        </FormSpy>
-                    </TableFilterFinalForm>
-                    <Table
-                        {...tableData}
-                        columns={[
-                            {
-                                name: "name",
-                                header: "Name",
-                            },
-                            {
-                                name: "username",
-                                header: "Username",
-                            },
-                            {
-                                name: "email",
-                                header: "E-Mail",
-                            },
-                        ]}
-                    />
-                </>
+                <Table
+                    {...tableData}
+                    columns={[
+                        {
+                            name: "name",
+                            header: "Name",
+                        },
+                        {
+                            name: "username",
+                            header: "Username",
+                        },
+                        {
+                            name: "email",
+                            header: "E-Mail",
+                        },
+                    ]}
+                />
             )}
         </TableQuery>
     );
 }
 
-storiesOf("react-admin-core", module)
+storiesOf("@comet/admin/table", module)
     .addDecorator(apolloStoryDecorator())
     .add("Table with Filterbar", () => <Story />);
