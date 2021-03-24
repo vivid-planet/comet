@@ -1,2 +1,2 @@
-export * from "./errorboundary/ErrorBoundary";
+export * from "./errorboundary";
 export * from "./RouteWithErrorBoundary";
