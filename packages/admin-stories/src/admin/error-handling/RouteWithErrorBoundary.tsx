@@ -12,7 +12,7 @@ const ViewWithNoError: React.FunctionComponent = () => {
             <Typography variant={"h5"}>View with No Error</Typography>
 
             <Alert severity={"info"}>
-                <Typography>Use the ErrorBoundary component to create a boundary for app routes.</Typography>
+                <Typography>Use the RouteWithErrorBoundary component to create a boundary for app routes.</Typography>
                 <Typography>Try to click on the second route (Error Route) to display a route which throws an error.</Typography>
             </Alert>
         </div>
