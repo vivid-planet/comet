@@ -1,5 +1,6 @@
 import { MasterLayout, Menu, MenuItemRouterLink, RouteWithErrorBoundary } from "@comet/admin";
 import { Typography } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
@@ -8,16 +9,18 @@ import StoryRouter from "storybook-react-router";
 const ViewWithNoError: React.FunctionComponent = () => {
     return (
         <div>
-            <Typography>View with No Error</Typography>
+            <Typography variant={"h5"}>View with No Error</Typography>
+
+            <Alert severity={"info"}>
+                <Typography>Use the ErrorBoundary component to create a boundary for app routes.</Typography>
+                <Typography>Try to click on the second route (Error Route) to display a route which throws an error.</Typography>
+            </Alert>
         </div>
     );
 };
 
 const ViewWithError: React.FunctionComponent = () => {
-    const potentialError = null;
-
-    //@ts-ignore This should really throw an error ;-)
-    potentialError.produceError();
+    throw new Error("Some error occured");
     return (
         <div>
             <Typography>Error</Typography>

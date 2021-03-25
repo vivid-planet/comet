@@ -15,10 +15,7 @@ const ViewWithNoError: React.FunctionComponent = () => {
 };
 
 const ViewWithError: React.FunctionComponent = () => {
-    const potentialError = null;
-
-    //@ts-ignore This should really throw an error ;-)
-    potentialError.produceError();
+    throw new Error("Some error occured");
     return (
         <div>
             <Typography>Error</Typography>
