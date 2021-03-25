@@ -30,11 +30,16 @@ function Story() {
             <Alert severity={"info"}>
                 <Typography paragraph={true}>
                     Error boundaries do not work out of the box in event handler. With the useErrorBoundary() Hook we can use the error boundary
-                    explicitly e.g. in event handler or any where else.
+                    explicitly e.g. in event handler or any where else.The useErrorBoundary() hook throws an error directly in the jsx, which than be
+                    handled from the ErrorBoundary.
                 </Typography>
                 <Typography paragraph={true}>
                     More infos to Error Boundaries:{" "}
                     <Link href={"https://reactjs.org/docs/error-boundaries.html"}>https://reactjs.org/docs/error-boundaries.html</Link>
+                </Typography>
+
+                <Typography paragraph={true}>
+                    Try to press the <b>Throw Error in Event Handler</b> button below to produce a runtime error.
                 </Typography>
             </Alert>
 
@@ -48,4 +53,4 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/error-handling", module).add("ErrorBoundaryInEventHandler", () => <Story />);
+storiesOf("@comet/admin/error-handling/error-boundaries", module).add("ErrorBoundaryInEventHandler", () => <Story />);

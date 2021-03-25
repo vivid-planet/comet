@@ -51,6 +51,6 @@ function App() {
     );
 }
 
-storiesOf("@comet/admin/error-handling", module)
+storiesOf("@comet/admin/error-handling/error-boundaries", module)
     .addDecorator(StoryRouter())
     .add("RouteWithErrorBoundary", () => <App />);
