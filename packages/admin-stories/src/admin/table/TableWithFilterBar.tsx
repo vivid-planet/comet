@@ -10,6 +10,7 @@ import {
     useTableQueryFilter,
 } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import gql from "graphql-tag";
 import * as qs from "qs";
@@ -22,17 +23,21 @@ const gqlRest = gql;
 const query = gqlRest`
 query users(
     $pathFunction: any
-    $query: String
-    $name: String
     $username: String
+    $name: String
+    $email: String
 ) {
     users(
-        query: $name
+        email: $email
+        username: $username
+        name: $name
     ) @rest(type: "User", pathBuilder: $pathFunction) {
         id
         name
         username
         email
+        phone
+        website
     }
 }
 `;
@@ -41,7 +46,9 @@ function pathFunction({ args }: { args: { [key: string]: any } }) {
         [arg: string]: string;
     }
     const paramMapping: IPathMapping = {
-        query: "q",
+        email: "email",
+        username: "username",
+        name: "name",
     };
 
     const q = Object.keys(args).reduce((acc: { [key: string]: any }, key: string): { [key: string]: any } => {
@@ -50,6 +57,7 @@ function pathFunction({ args }: { args: { [key: string]: any } }) {
         }
         return acc;
     }, {});
+
     return `users?${qs.stringify(q, { arrayFormat: "brackets" })}`;
 }
 
@@ -59,40 +67,50 @@ interface IQueryData {
         name: string;
         username: string;
         email: string;
+        phone: string;
+        website: string;
     }>;
 }
 
 interface IFilterValues {
+    username: string;
     name: string;
-    nameBlub: string;
+    email: string;
 }
 
 interface IVariables extends IFilterValues {
     pathFunction: any;
 }
 
+const Username: React.FC = () => {
+    return <Field name="username" type="text" component={FinalFormInput} fullWidth />;
+};
+
 const Name: React.FC = () => {
     return <Field name="name" type="text" component={FinalFormInput} fullWidth />;
 };
 
-const NameBlub: React.FC = () => {
+const ExampleWithSelect: React.FC = () => {
     const options = [
-        { value: "chocolate", label: "Chocolate" },
-        { value: "strawberry", label: "Strawberry", isDisabled: true },
-        { value: "vanilla", label: "Vanilla" },
+        { value: "Sincere@april.biz", label: "Sincere@april.biz" },
+        { value: "Shanna@melissa.tv", label: "Shanna@melissa.tv" },
+        { value: "Nathan@yesenia.net", label: "Nathan@yesenia.net" },
     ];
-    return <Field name="nameBlub" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
+    return <Field name="email" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
 };
 
 const fields: IFilterBarField[] = [
-    { name: "nameBlub", label: "nameBlub", component: NameBlub, placeHolder: "Bitte wählen", labelValueFunction: (value: string) => value },
+    {
+        name: "username",
+        label: "Username",
+        component: Username,
+    },
     {
         name: "name",
-        label: "name",
+        label: "Name",
         component: Name,
-        placeHolder: "Suche...",
-        labelValueFunction: (value: string) => value,
     },
+    { name: "email", label: "Email Select", component: ExampleWithSelect },
 ];
 
 function Story() {
@@ -111,7 +129,8 @@ function Story() {
     return (
         <TableQuery api={api} loading={loading} error={error}>
             <TableFilterFinalForm filterApi={filterApi}>
-                <FilterBar fieldBarWidth={200} fieldSidebarHeight={550} fields={fields} />
+                <Typography variant="h5">FilterBar</Typography>
+                <FilterBar fieldBarWidth={150} fields={fields} />
             </TableFilterFinalForm>
             {tableData && (
                 <Table
@@ -128,6 +147,14 @@ function Story() {
                         {
                             name: "email",
                             header: "E-Mail",
+                        },
+                        {
+                            name: "phone",
+                            header: "TelNr.",
+                        },
+                        {
+                            name: "website",
+                            header: "Homepage",
                         },
                     ]}
                 />
