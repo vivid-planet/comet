@@ -10,6 +10,8 @@ import { IFilterBarField } from "./FilterBar";
 export type CometAdminFilterBarPopOverFormFieldClassKeys =
     | "root"
     | "styledBox"
+    | "labelWrapper"
+    | "hasValueCount"
     | "popoverContentContainer"
     | "buttonsContainer"
     | "submitContainer"
@@ -42,7 +44,10 @@ const useStyles = makeStyles(
         },
         styledBox: {
             position: "relative",
-            padding: "20px",
+            display: "flex",
+            alignItems: "center",
+            padding: "10px 20px",
+            cursor: "pointer",
 
             "&:after": {
                 borderRight: "4px solid transparent",
@@ -53,10 +58,15 @@ const useStyles = makeStyles(
                 content: "''",
                 height: 0,
                 width: 0,
-                right: "20px",
+                right: "10px",
                 top: "50%",
             },
         },
+        labelWrapper: {
+            marginRight: "15px",
+            boxSizing: "border-box",
+        },
+        hasValueCount: {},
         popoverContentContainer: {
             border: `1px solid ${theme.palette.grey[300]}`,
 
@@ -112,10 +122,18 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps>
             {({ form, handleSubmit }) => (
                 <div className={classes.root}>
                     <div className={classes.styledBox} onClick={handleClick}>
-                        <Typography variant="subtitle2">{field.label}</Typography>
-                        <Typography display="block" variant="caption" style={{ textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
-                            {values[field.name] === undefined ? field.placeHolder : field.labelValueFunction(values[field.name])}
-                        </Typography>
+                        <div className={classes.labelWrapper}>
+                            <Typography variant="subtitle2">{field.label}</Typography>
+                        </div>
+                        {outerForm.getFieldState(field.name)?.value !== undefined && (
+                            <div className={classes.hasValueCount}>
+                                <Typography variant={"subtitle2"}>
+                                    {Array.isArray(outerForm.getFieldState(field.name)?.value)
+                                        ? outerForm.getFieldState(field.name)?.value.length
+                                        : 1}
+                                </Typography>
+                            </div>
+                        )}
                     </div>
                     <Popover
                         open={open}
