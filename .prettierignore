@@ -5,3 +5,4 @@ package-lock.json
 *.dist
 lang/
 .watchmanconfig
+lib/
