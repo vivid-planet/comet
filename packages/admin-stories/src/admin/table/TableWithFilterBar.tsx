@@ -26,11 +26,13 @@ query users(
     $username: String
     $name: String
     $email: String
+    $website: String
 ) {
     users(
         email: $email
         username: $username
         name: $name
+        website: $website
     ) @rest(type: "User", pathBuilder: $pathFunction) {
         id
         name
@@ -49,6 +51,7 @@ function pathFunction({ args }: { args: { [key: string]: any } }) {
         email: "email",
         username: "username",
         name: "name",
+        website: "website",
     };
 
     const q = Object.keys(args).reduce((acc: { [key: string]: any }, key: string): { [key: string]: any } => {
@@ -76,6 +79,7 @@ interface IFilterValues {
     username: string;
     name: string;
     email: string;
+    website: string;
 }
 
 interface IVariables extends IFilterValues {
@@ -88,6 +92,10 @@ const Username: React.FC = () => {
 
 const Name: React.FC = () => {
     return <Field name="name" type="text" component={FinalFormInput} fullWidth />;
+};
+
+const HomePage: React.FC = () => {
+    return <Field name="website" type="text" component={FinalFormInput} fullWidth />;
 };
 
 const ExampleWithSelect: React.FC = () => {
@@ -111,6 +119,11 @@ const fields: IFilterBarField[] = [
         component: Name,
     },
     { name: "email", label: "Email Select", component: ExampleWithSelect },
+    {
+        name: "website",
+        label: "Homepage",
+        component: HomePage,
+    },
 ];
 
 function Story() {
@@ -130,7 +143,7 @@ function Story() {
         <TableQuery api={api} loading={loading} error={error}>
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
-                <FilterBar fieldBarWidth={150} fields={fields} />
+                <FilterBar fieldBarWidth={150} fields={fields} maxCountInitialShown={2} />
             </TableFilterFinalForm>
             {tableData && (
                 <Table
