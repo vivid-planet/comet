@@ -58,7 +58,7 @@ const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
 };
 
 interface IProps {
-    topLevelTitle: string;
+    topLevelTitle: React.ReactNode;
     showBackButton?: boolean;
     showBreadcrumbs?: boolean;
     components?: {
@@ -69,7 +69,7 @@ interface IBreadcrumbItem {
     id: string;
     parentId: string;
     url: string;
-    title: string;
+    title: React.ReactNode;
     invisible: boolean;
 }
 interface ISwitchItem {
@@ -187,7 +187,7 @@ export class Stack extends React.Component<IProps, IState> {
         this.history.push(this.state.breadcrumbs[0].url);
     }
 
-    private addBreadcrumb(id: string, parentId: string, url: string, title: string, invisible: boolean) {
+    private addBreadcrumb(id: string, parentId: string, url: string, title: React.ReactNode, invisible: boolean) {
         this.setState((state) => {
             const breadcrumbs = [
                 ...state.breadcrumbs,
@@ -206,7 +206,7 @@ export class Stack extends React.Component<IProps, IState> {
         });
     }
 
-    private updateBreadcrumb(id: string, parentId: string, url: string, title: string, invisible: boolean) {
+    private updateBreadcrumb(id: string, parentId: string, url: string, title: React.ReactNode, invisible: boolean) {
         this.setState((state) => {
             const breadcrumbs = state.breadcrumbs.map((crumb) => {
                 return crumb.id === id ? { id, parentId, url, title, invisible } : crumb;
