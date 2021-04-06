@@ -1,6 +1,6 @@
 import { Box, Button, Popover, Typography } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
-import { Cancel, Refresh } from "@material-ui/icons";
+import { Refresh } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
 import { FieldRenderProps, Form, useForm } from "react-final-form";
@@ -77,16 +77,15 @@ const useStyles = makeStyles(
             },
         },
         buttonsContainer: {
+            display: "flex",
+            justifyContent: "space-between",
             borderTop: `1px solid ${theme.palette.grey[300]}`,
             padding: "20px",
         },
         submitContainer: {
-            marginBottom: "20px",
+            marginRight: "15px",
         },
-        resetCloseContainer: {
-            justifyContent: "space-between",
-            display: "flex",
-        },
+        resetContainer: {},
     }),
     { name: "CometAdminFilterBarPopOverFormField" },
 );
@@ -103,10 +102,6 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps>
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
     };
 
     const { values } = outerForm.getState();
@@ -138,7 +133,10 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps>
                     <Popover
                         open={open}
                         anchorEl={anchorEl}
-                        onClose={handleClose}
+                        onClose={() => {
+                            setAnchorEl(null);
+                            handleSubmit();
+                        }}
                         anchorOrigin={{
                             vertical: "bottom",
                             horizontal: "left",
@@ -164,13 +162,13 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps>
                                             variant="contained"
                                             onClick={() => {
                                                 handleSubmit();
-                                                handleClose();
+                                                setAnchorEl(null);
                                             }}
                                         >
                                             {"Übernehmen"}
                                         </Button>
                                     </div>
-                                    <div className={classes.resetCloseContainer}>
+                                    <div className={classes.resetContainer}>
                                         <Button
                                             startIcon={<Refresh />}
                                             type="reset"
@@ -178,13 +176,10 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps>
                                             onClick={() => {
                                                 outerForm.change(field.name, undefined);
                                                 form.change(field.name, undefined);
-                                                handleClose();
+                                                setAnchorEl(null);
                                             }}
                                         >
                                             <Typography variant={"button"}>{"Zurücksetzen"}</Typography>
-                                        </Button>
-                                        <Button startIcon={<Cancel />} type="button" variant="text" onClick={handleClose}>
-                                            <Typography variant={"button"}>{"Abbrechen"}</Typography>
                                         </Button>
                                     </div>
                                 </div>
