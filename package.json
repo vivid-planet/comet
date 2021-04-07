@@ -17,7 +17,8 @@
         "lint:tsc": "lerna run lint:tsc --stream",
         "prebuild:storybook": "npm run build",
         "build:storybook": "npm --prefix packages/admin-stories run build-storybook",
-        "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin-stories/**/* --format simple"
+        "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin-stories/**/* --format simple",
+        "prepare": "husky install"
     },
     "devDependencies": {
         "@apollo/client": "^3.2.5",
@@ -54,10 +55,10 @@
         "graphql": "^15.4.0",
         "graphql-tag": "^2.11.0",
         "history": "^4.10.1",
-        "husky": "^4.3.8",
+        "husky": "^6.0.0",
         "jss": "^9.8.7",
         "lerna": "^3.15.0",
-        "lint-staged": "^10.5.3",
+        "lint-staged": "^10.5.4",
         "prettier": "^2.1.2",
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
@@ -69,11 +70,6 @@
         "rimraf": "^2.6.3",
         "styled-components": "^4.3.2",
         "typescript": "^3.9.2"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
     },
     "engines": {
         "node": "14",
