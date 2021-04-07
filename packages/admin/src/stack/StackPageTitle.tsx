@@ -3,7 +3,7 @@ import * as React from "react";
 import { StackSwitchApiContext } from "./Switch";
 
 interface IProps {
-    title?: string;
+    title?: React.ReactNode;
     children: React.ReactNode;
 }
 

@@ -2,7 +2,7 @@ import * as React from "react";
 
 export interface IStackPageProps {
     name: string;
-    title?: string;
+    title?: React.ReactNode;
     children: ((id: string) => React.ReactNode) | React.ReactNode;
 }
 
