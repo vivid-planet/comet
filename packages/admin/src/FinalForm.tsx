@@ -32,9 +32,13 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
 
     // override final-form onSubmit and remove callback as we don't support that (return pomise instead)
     onSubmit: (values: FormValues, form: FormApi<FormValues>) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
+    autoNavigationEnabled?: boolean;
 }
 
-export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
+export function FinalForm<FormValues = AnyObject>({
+    autoNavigationEnabled = true, //set autoNavigationEnabled default to true to be downward compatible
+    ...props
+}: IProps<FormValues>) {
     const classes = useStyles();
     const client = useApolloClient();
     const dirtyHandler = React.useContext(DirtyHandlerApiContext);
@@ -126,7 +130,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                                     props.renderButtons(formRenderProps)
                                 ) : (
                                     <ButtonsContainer>
-                                        {stackApi && (
+                                        {stackApi && autoNavigationEnabled && (
                                             <Button
                                                 className={classes.saveButton}
                                                 startIcon={<CancelIcon />}
@@ -187,11 +191,13 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         }
                     }
 
-                    if (stackApi) {
+                    if (stackApi && autoNavigationEnabled) {
                         // if this form is inside a Stack goBack after save success
                         // do this after form.reset() to have a clean form, so it won't ask for saving changes
                         // TODO we probably shouldn't have a hard dependency to Stack
                         stackApi.goBack();
+                    } else {
+                        form.reset(values); // reset with new initial values so it is not dirty anymore (needed when autoNavigation is disabled)
                     }
                 });
                 return data;
