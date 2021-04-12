@@ -3,7 +3,6 @@ import { Table } from "@comet/admin";
 import { Field, FinalForm, FinalFormInput, FormPaper } from "@comet/admin";
 import { IconButton, Typography } from "@material-ui/core";
 import { ArrowBack, Edit } from "@material-ui/icons";
-import { boolean } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Switch } from "react-router";
@@ -77,7 +76,7 @@ const SampleForm: React.FunctionComponent = () => {
         alert("Submit successful");
         return Promise.resolve();
     };
-    const enableAutoNavigation = boolean("Enable Auto Navigation", false);
+
     return (
         <>
             <Toolbar>
@@ -94,8 +93,14 @@ const SampleForm: React.FunctionComponent = () => {
                     <Typography>Sample Form</Typography>
                 </ToolbarItem>
             </Toolbar>
-            <Typography variant={"h3"}>Auto Navigation: {enableAutoNavigation ? "enabled" : "disabled"}</Typography>
-            <FinalForm mode={"edit"} onSubmit={onSubmit} autoNavigationEnabled={enableAutoNavigation}>
+
+            <FinalForm
+                mode={"edit"}
+                onSubmit={onSubmit}
+                onAfterSubmit={(values, form) => {
+                    form.reset(values); //Reset values to new values so dirty state is correct after submitting
+                }}
+            >
                 <FormPaper>
                     <Field label="Foo" name="foo" component={FinalFormInput} />
                 </FormPaper>

@@ -30,21 +30,29 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     };
     renderButtons?: (formRenderProps: FormRenderProps<FormValues>) => React.ReactNode;
 
-    // override final-form onSubmit and remove callback as we don't support that (return pomise instead)
+    // override final-form onSubmit and remove callback as we don't support that (return promise instead)
     onSubmit: (values: FormValues, form: FormApi<FormValues>) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
-    autoNavigationEnabled?: boolean;
+
+    /* override onAfterSubmit. This method will be called at the end of a submit process.
+     *
+     * default implementation : go back if a stackApi context exists
+     */
+    onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
 }
 
-export function FinalForm<FormValues = AnyObject>({
-    autoNavigationEnabled = true, //set autoNavigationEnabled default to true to be downward compatible
-    ...props
-}: IProps<FormValues>) {
+export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const classes = useStyles();
     const client = useApolloClient();
     const dirtyHandler = React.useContext(DirtyHandlerApiContext);
     const stackApi = React.useContext(StackApiContext);
     const editDialog = React.useContext(EditDialogApiContext);
     const tableQuery = React.useContext(TableQueryContext);
+
+    const {
+        onAfterSubmit = () => {
+            stackApi?.goBack();
+        },
+    } = props;
 
     const ref = React.useRef();
 
@@ -130,7 +138,7 @@ export function FinalForm<FormValues = AnyObject>({
                                     props.renderButtons(formRenderProps)
                                 ) : (
                                     <ButtonsContainer>
-                                        {stackApi && autoNavigationEnabled && (
+                                        {stackApi && (
                                             <Button
                                                 className={classes.saveButton}
                                                 startIcon={<CancelIcon />}
@@ -191,14 +199,7 @@ export function FinalForm<FormValues = AnyObject>({
                         }
                     }
 
-                    if (stackApi && autoNavigationEnabled) {
-                        // if this form is inside a Stack goBack after save success
-                        // do this after form.reset() to have a clean form, so it won't ask for saving changes
-                        // TODO we probably shouldn't have a hard dependency to Stack
-                        stackApi.goBack();
-                    } else {
-                        form.reset(values); // reset with new initial values so it is not dirty anymore (needed when autoNavigation is disabled)
-                    }
+                    onAfterSubmit(values, form);
                 });
                 return data;
             })
