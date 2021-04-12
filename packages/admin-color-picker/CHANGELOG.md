@@ -2,22 +2,6 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [next]
-
-### Highlights
-
--   Allow custom icons/adornment for color-input
--   The clear-button is now optional (using the `showClearButton` prop)
-
-### Incompatible Changes
-
--   Renamed `VPAdminColorPicker` to `CometAdminColorPicker`
--   Removed `clearButton` and `clearIcon` classes from color-picker
-    -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
--   The clear-button is no longer shown by default
--   Removed `clearButton` and `clearIcon` classes from color-picker
-    -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
-
 ## [1.0.2] - 23. Feb 2021
 
 use fixed version of react-color
