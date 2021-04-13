@@ -7,7 +7,6 @@ import styled from "styled-components";
 
 const Root = styled.div`
     display: flex;
-
     flex-wrap: wrap;
 `;
 const IconContainer = styled.div`
@@ -27,32 +26,21 @@ const IconWrapper = styled.div`
 `;
 
 function Story() {
-    const iconSet: Array<{ key: string; Icon: typeof SvgIcon }> = [];
-
-    {
-        Object.keys(icons).map((key) => {
-            if (key !== "__esModule" && key != null) {
-                // @ts-ignore
-                const Icon = icons[key];
-                if (Icon != null) {
-                    iconSet.push({ key: key, Icon: Icon });
-                }
-            }
-        });
-    }
-
     return (
         <Root>
-            {iconSet.map((values, index) => {
-                const { key, Icon } = values;
-                return (
-                    <IconContainer key={key}>
-                        <IconWrapper>
-                            <Icon key={index} htmlColor={color("Tint Color", "#000000")} />
-                        </IconWrapper>
-                        <Typography>{key}</Typography>
-                    </IconContainer>
-                );
+            {Object.keys(icons).map((key) => {
+                if (key !== "__esModule" && key != null) {
+                    const Icon = (icons as { [key: string]: typeof SvgIcon })[key];
+
+                    return (
+                        <IconContainer key={key}>
+                            <IconWrapper>
+                                <Icon htmlColor={color("Tint Color", "#000000")} />
+                            </IconWrapper>
+                            <Typography>{key}</Typography>
+                        </IconContainer>
+                    );
+                }
             })}
         </Root>
     );
