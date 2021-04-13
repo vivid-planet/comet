@@ -8,15 +8,15 @@ const UUID = require("uuid");
 
 interface IProps {
     initialPage?: string;
-    title?: string;
+    title?: React.ReactNode;
     children: Array<React.ReactElement<IStackPageProps>>;
 }
 
 export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
-    activatePage: (pageName: string, payload: string, subUrl?: string) => {
+    activatePage: () => {
         return;
     },
-    updatePageBreadcrumbTitle: (title?: string) => {
+    updatePageBreadcrumbTitle: () => {
         return;
     },
 });
@@ -26,7 +26,7 @@ export function useStackSwitchApi() {
 
 export interface IStackSwitchApi {
     activatePage: (pageName: string, payload: string, subUrl?: string) => void;
-    updatePageBreadcrumbTitle: (title?: string) => void;
+    updatePageBreadcrumbTitle: (title?: React.ReactNode) => void;
     id?: string;
 }
 interface IRouteParams {
@@ -49,7 +49,7 @@ export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi]
         activatePage: (pageName: string, payload: string, subUrl?: string) => {
             apiRef.current?.activatePage(pageName, payload, subUrl);
         },
-        updatePageBreadcrumbTitle: (title?: string) => {
+        updatePageBreadcrumbTitle: (title?: React.ReactNode) => {
             apiRef.current?.updatePageBreadcrumbTitle(title);
         },
     };

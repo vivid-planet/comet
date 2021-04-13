@@ -56,6 +56,7 @@ All notable changes to this project will be documented in this file. This projec
     -   Allows maximum item-nesting of two levels
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
+-   add onAfterSubmit to FinalForm
 
 ## [1.3.0] - 4. March 2021
 

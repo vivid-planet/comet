@@ -6,7 +6,7 @@ import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-d
 export interface IBreadcrumbItem {
     id: string;
     url: string;
-    title: string;
+    title: React.ReactNode;
 }
 
 export interface IBreadcrumbProps {
