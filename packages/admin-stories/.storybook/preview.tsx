@@ -1,15 +1,9 @@
 import { select, withKnobs } from "@storybook/addon-knobs";
-import { addDecorator, configure } from "@storybook/react";
+import { addDecorator } from "@storybook/react";
 import "@comet/admin-color-picker/src/themeAugmentation";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { createMuiTheme, MuiThemeProvider as ThemeProvider } from "@comet/admin";
-
-const req = require.context("../src", true, /\.tsx$/);
-
-function loadStories() {
-    req.keys().forEach(req);
-}
 
 addDecorator((story, context) => {
     const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
@@ -57,5 +51,3 @@ addDecorator((story) => {
 
     return <ThemeProvider theme={theme}>{story()}</ThemeProvider>;
 });
-
-configure(loadStories, module);

@@ -1,3 +1,4 @@
 module.exports = {
-    addons: ["@storybook/addon-knobs"],
+    stories: ["../src/**/*.@(mdx|tsx)"],
+    addons: ["@storybook/addon-knobs", "@storybook/addon-docs"],
 };
