@@ -1,8 +1,8 @@
 import * as React from "react";
 
 export interface IStackApi {
-    addBreadcrumb: (id: string, parentId: string, url: string, title: string) => void;
-    updateBreadcrumb: (id: string, parentId: string, url: string, title: string) => void;
+    addBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode) => void;
+    updateBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode) => void;
     removeBreadcrumb: (id: string) => void;
     goBack: () => void;
     goAllBack: () => void;
