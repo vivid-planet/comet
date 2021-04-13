@@ -4,6 +4,9 @@ import "@comet/admin-color-picker/src/themeAugmentation";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { createMuiTheme, MuiThemeProvider as ThemeProvider } from "@comet/admin";
+import { Theme } from "@material-ui/core";
+import { getTheme } from "@comet/admin-theme";
+import styled, { createGlobalStyle } from "styled-components";
 
 addDecorator((story, context) => {
     const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
@@ -46,10 +49,35 @@ addDecorator((story, context) => {
     );
 });
 
-addDecorator((story) => {
-    const theme = createMuiTheme({});
+const themeOptions = {
+    comet: "Comet",
+    defaultMui: "Default MUI",
+};
 
-    return <ThemeProvider theme={theme}>{story()}</ThemeProvider>;
+const GlobalStyles = createGlobalStyle`
+    body {
+        margin: 0;
+    }
+`;
+
+const StoryWrapper = styled.div`
+    padding: ${({ theme }) => theme.spacing(4)}px;
+    min-height: 100vh;
+    box-sizing: border-box;
+`;
+
+addDecorator((story) => {
+    const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);
+    const theme = selectedTheme == themeOptions.defaultMui ? createMuiTheme({}) : getTheme();
+
+    return (
+        <>
+            <GlobalStyles />
+            <ThemeProvider theme={theme}>
+                <StoryWrapper>{story()}</StoryWrapper>
+            </ThemeProvider>
+        </>
+    );
 });
 
 const order = ["intro-", "admin-", "comet-"];
