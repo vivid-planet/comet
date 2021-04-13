@@ -1,5 +1,5 @@
 import { select, withKnobs } from "@storybook/addon-knobs";
-import { addDecorator } from "@storybook/react";
+import { addDecorator, addParameters } from "@storybook/react";
 import "@comet/admin-color-picker/src/themeAugmentation";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
@@ -50,4 +50,22 @@ addDecorator((story) => {
     const theme = createMuiTheme({});
 
     return <ThemeProvider theme={theme}>{story()}</ThemeProvider>;
+});
+
+const order = ["intro-", "mdx-test-", "comet-"];
+
+addParameters({
+    layout: "padded",
+    options: {
+        storySort: (a, b) => {
+            const aName = a[0];
+            const bName = b[0];
+
+            const aIdx = order.findIndex((i) => aName.indexOf(i) > -1);
+            const bIdx = order.findIndex((i) => bName.indexOf(i) > -1);
+            return aIdx - bIdx;
+
+            return aName < bName ? -1 : 1;
+        },
+    },
 });

@@ -1,0 +1,46 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Mdx Test" />
+
+# MDX Test
+
+## Markdown
+
+rendering markdown here
+
+## JSX
+
+Lorem Ipsum Dolor
+
+### Usage
+
+```
+import { ThreeDotSaving } from "@comet/admin-icons";
+
+<ThreeDotSaving />
+```
+
+import { ThreeDotSaving, Error, Cookie } from "@comet/admin-icons";
+
+<Canvas>
+    <Story name="Icons">
+        <ThreeDotSaving />
+        <Error htmlColor={"#ff0000"} />
+        <Cookie />
+    </Story>
+</Canvas>
+
+import { Button } from "@material-ui/core";
+
+<Canvas>
+    <Story name="MUI-Button-primary">
+        <Button variant={"contained"} color={"primary"}>
+            Primary Button
+        </Button>
+    </Story>
+    <Story name="MUI-Button-secondary">
+        <Button variant={"contained"} color={"secondary"}>
+            Secondary Button
+        </Button>
+    </Story>
+</Canvas>
