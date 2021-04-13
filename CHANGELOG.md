@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file. This projec
     -   Allows using custom open/close icons for CollapsibleItem _(theme -> props -> CometAdminMenuCollapsibleItem -> openedIcon/closedIcon)_
 -   The MasterLayout component can be customized using the material-ui theme
     -   Using the new `headerHeight` prop, the top-spacing of the content and the menu, will now be adjusted automatically
+-   add new package @comet/admin-icons
 
 ### Incompatible Changes
 
