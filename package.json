@@ -20,6 +20,7 @@
         "prepare": "husky install"
     },
     "devDependencies": {
+        "@formatjs/cli": "^2.13.12",
         "@typescript-eslint/eslint-plugin": "^4.7.0",
         "@typescript-eslint/parser": "^4.7.0",
         "eslint": "^7.13.0",
