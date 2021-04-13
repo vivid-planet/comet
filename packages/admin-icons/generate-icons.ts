@@ -62,7 +62,9 @@ const writeComponent = async (componentName: string, pathData: string) => {
         }  
     `);
 
-    writeFileSync(`src/generated/${componentName}.tsx`, component);
+    if (componentName != null && component != null) {
+        writeFileSync(`src/generated/${componentName}.tsx`, component);
+    }
 };
 
 const writeIndexFile = async (files: string[]) => {
@@ -73,7 +75,9 @@ const writeIndexFile = async (files: string[]) => {
 
     const indexFile = await getFormattedText(exports.join("\n"));
 
-    writeFileSync(`src/generated/index.ts`, indexFile);
+    if (indexFile != null) {
+        writeFileSync(`src/generated/index.ts`, indexFile);
+    }
 };
 
 main();
