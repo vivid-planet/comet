@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file. This projec
     -   Using the new `headerHeight` prop, the top-spacing of the content and the menu, will now be adjusted automatically
 -   add new package @comet/admin-icons
 -   add onAfterSubmit to FinalForm
+-   add useStoredState() hook
 
 ### Incompatible Changes
 
