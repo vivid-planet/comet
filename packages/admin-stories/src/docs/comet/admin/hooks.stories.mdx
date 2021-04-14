@@ -10,8 +10,18 @@ import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
 
 ## useStoredState()
 
-The `useStoredState()` hook has a similar api like the `React.useState()` hook. The main difference is, that `useStoredState()` saves and loads the state from and to local storage, so the state is persistent over tabs, and browser restarts.
+The `useStoredState()` hook has a similar api like the `React.useState()` hook. The main difference is, that `useStoredState()` saves and loads the state by default to local storage, so the state is persistent over tabs, and browser restarts.
+
+### Local Storage
 
 <Canvas>
-    <Story id="comet-admin-hooks-usestoredstate--increment-stored-state" />
+    <Story id="comet-admin-hooks-usestoredstate--local-storage" />
+</Canvas>
+
+### Session Storage
+
+There is also the possibility to store the state in session storage by setting the kind of storage (`window.localStorage` or `window.sessionStorage`) after the initial state. The session storage is not persistent over tabs and lasts only for the current session.
+
+<Canvas>
+    <Story id="comet-admin-hooks-usestoredstate--session-storage" />
 </Canvas>
