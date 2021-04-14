@@ -52,7 +52,7 @@ addDecorator((story) => {
     return <ThemeProvider theme={theme}>{story()}</ThemeProvider>;
 });
 
-const order = ["intro-", "comet-"];
+const order = ["intro-", "admin-", "comet-"];
 
 addParameters({
     layout: "padded",

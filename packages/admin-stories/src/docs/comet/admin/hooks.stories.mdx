@@ -1,0 +1,19 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+
+# Hooks
+
+> Hooks were introduced in React 16.8. They let you use state and other React features without writing a class.
+>
+> More infos on hooks can be found [React Hooks](https://reactjs.org/docs/hooks-intro.html)
+
+<Meta title="docs/@comet/admin/hooks" />
+
+## useStoredState()
+
+The `useStoredState()` hook has a similar api like the `React.useState()` hook. The main difference is, that `useStoredState()` saves and loads the state from and to local storage, so the state is persistent over tabs, and browser restarts.
+
+<Canvas>
+    <Story id="comet-admin-hooks-usestoredstate--increment-stored-state"/>
+</Canvas>
+
+
