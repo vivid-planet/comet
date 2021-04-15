@@ -6,3 +6,4 @@ package-lock.json
 lang/
 .watchmanconfig
 lib/
+lerna.json
