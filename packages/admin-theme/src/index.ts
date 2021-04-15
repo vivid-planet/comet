@@ -1,1 +1,1 @@
-export * from "./getTheme";
+export { default as getThemeOptions } from "./getThemeOptions";

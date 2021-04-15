@@ -3,8 +3,7 @@ import "@comet/admin-rte/src/themeAugmentation";
 import "@comet/admin-react-select/src/themeAugmentation";
 import "@comet/admin-color-picker/src/themeAugmentation";
 
-import { createMuiTheme } from "@comet/admin";
-import { Theme } from "@material-ui/core/styles";
+import { ThemeOptions } from "@material-ui/core/styles";
 
 import cometAdminColorPickerOverrides from "./cometAdminColorPickerOverrides/colorPicker";
 import cometAdminClearInputButtonOverrides from "./cometAdminOverrides/clearInputButton";
@@ -22,31 +21,29 @@ import cometAdminRteRteOverrides from "./cometAdminRteOverrides/rte";
 import cometAdminRteToolbarOverrides from "./cometAdminRteOverrides/toolbar";
 import cometAdminSelectOverrides from "./cometAdminSelectOverrides/select";
 
-export const getTheme = (): Theme => {
-    return createMuiTheme({
-        spacing: 5,
-        palette: {
-            text: {
-                primary: "#242424",
-            },
+export default (): ThemeOptions => ({
+    spacing: 5,
+    palette: {
+        text: {
+            primary: "#242424",
         },
-        typography: {},
-        overrides: {
-            CometAdminClearInputButton: cometAdminClearInputButtonOverrides(),
-            CometAdminFormFieldContainer: cometAdminFormFieldContainerOverrides(),
-            CometAdminMenu: cometAdminMenuOverrides(),
-            CometAdminMenuItem: cometAdminMenuItemOverrides(),
-            CometAdminMenuCollapsibleItem: cometAdminMenuCollapsibleItemOverrides(),
-            CometAdminMasterLayout: cometAdminMasterLayoutOverrides(),
-            CometAdminInputBase: cometAdminInputBaseOverrides(),
-            CometAdminRte: cometAdminRteRteOverrides(),
-            CometAdminRteToolbar: cometAdminRteToolbarOverrides(),
-            CometAdminRteControlButton: cometAdminRteControlButtonOverrides(),
-            CometAdminRteFeaturesButtonGroup: cometAdminRteFeaturesButtonGroupOverrides(),
-            CometAdminRteBlockTypeControls: cometAdminRteBlockTypeControlsOverrides(),
-            CometAdminRteLinkControls: cometAdminRteLinkControlsOverrides(),
-            CometAdminSelect: cometAdminSelectOverrides(),
-            CometAdminColorPicker: cometAdminColorPickerOverrides(),
-        },
-    });
-};
+    },
+    typography: {},
+    overrides: {
+        CometAdminClearInputButton: cometAdminClearInputButtonOverrides(),
+        CometAdminFormFieldContainer: cometAdminFormFieldContainerOverrides(),
+        CometAdminMenu: cometAdminMenuOverrides(),
+        CometAdminMenuItem: cometAdminMenuItemOverrides(),
+        CometAdminMenuCollapsibleItem: cometAdminMenuCollapsibleItemOverrides(),
+        CometAdminMasterLayout: cometAdminMasterLayoutOverrides(),
+        CometAdminInputBase: cometAdminInputBaseOverrides(),
+        CometAdminRte: cometAdminRteRteOverrides(),
+        CometAdminRteToolbar: cometAdminRteToolbarOverrides(),
+        CometAdminRteControlButton: cometAdminRteControlButtonOverrides(),
+        CometAdminRteFeaturesButtonGroup: cometAdminRteFeaturesButtonGroupOverrides(),
+        CometAdminRteBlockTypeControls: cometAdminRteBlockTypeControlsOverrides(),
+        CometAdminRteLinkControls: cometAdminRteLinkControlsOverrides(),
+        CometAdminSelect: cometAdminSelectOverrides(),
+        CometAdminColorPicker: cometAdminColorPickerOverrides(),
+    },
+});

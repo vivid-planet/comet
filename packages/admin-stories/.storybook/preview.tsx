@@ -3,9 +3,9 @@ import { addDecorator, addParameters } from "@storybook/react";
 import "@comet/admin-color-picker/src/themeAugmentation";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
-import { createMuiTheme, MuiThemeProvider as ThemeProvider } from "@comet/admin";
-import { Theme } from "@material-ui/core";
-import { getTheme } from "@comet/admin-theme";
+import { MuiThemeProvider as ThemeProvider } from "@comet/admin";
+import { createMuiTheme, Theme } from "@material-ui/core";
+import { getThemeOptions } from "@comet/admin-theme";
 import styled, { createGlobalStyle } from "styled-components";
 
 addDecorator((story, context) => {
@@ -68,7 +68,7 @@ const StoryWrapper = styled.div`
 
 addDecorator((story) => {
     const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);
-    const theme = selectedTheme == themeOptions.defaultMui ? createMuiTheme({}) : getTheme();
+    const theme = createMuiTheme(selectedTheme === themeOptions.defaultMui ? {} : getThemeOptions());
 
     return (
         <>
