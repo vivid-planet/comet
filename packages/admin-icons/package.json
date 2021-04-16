@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "1.0.0",
+    "version": "2.0.0-alpha.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
@@ -21,6 +21,8 @@
         "react-dom": "^16.8.0"
     },
     "devDependencies": {
+        "@types/cli-progress": "^3.8.0",
+        "cli-progress": "^3.8.2",
         "eslint": "^7.13.0",
         "eslint-config-prettier": "^6.15.0",
         "eslint-plugin-prettier": "^3.1.4",
@@ -31,10 +33,11 @@
         "fast-xml-parser": "^3.18.0",
         "pascal-case": "^3.1.2",
         "prettier": "^2.1.2",
-        "ts-node": "^8.8.1",
-        "typescript": "^4.2.2",
         "rimraf": "^3.0.2",
-        "cli-progress": "^3.8.2",
-        "@types/cli-progress": "^3.8.0"
+        "ts-node": "^8.8.1",
+        "typescript": "^4.2.2"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
