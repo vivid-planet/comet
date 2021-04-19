@@ -3,7 +3,7 @@ import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("@comet/admin/hooks/useStoredState", module).add("Increment Stored State", () => {
+storiesOf("@comet/admin/hooks/useStoredState", module).add("Local Storage", () => {
     const [storedState, setStoredState] = useStoredState<number>("stored_state_stories_key", 0);
     return (
         <div>
