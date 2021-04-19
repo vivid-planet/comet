@@ -37,7 +37,7 @@ export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
         onClose?: (event: React.SyntheticEvent, reason: SnackbarCloseReason) => void,
     ) => {
         if (reason === "timeout") {
-            setSnackbarProps(undefined);
+            hideSnackbar();
         }
 
         onClose?.(event, reason);
