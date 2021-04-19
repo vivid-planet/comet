@@ -1,6 +1,6 @@
 import { SnackbarProvider, useSnackbarApi } from "@comet/admin/lib/snackbar/SnackbarProvider";
 import { useUndoSnackbar } from "@comet/admin/lib/snackbar/UndoSnackbar";
-import { Button, List, ListItem, Slide, Snackbar, SnackbarCloseReason } from "@material-ui/core";
+import { Button, List, ListItem, Slide } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -35,41 +35,27 @@ const UndoButton = styled(Button)`
 let counter = 0;
 
 const CustomSnackbar = () => {
-    const [open, setOpen] = React.useState<boolean>(false);
     const snackbarApi = useSnackbarApi();
 
-    const handleClose = (event: React.SyntheticEvent, reason: SnackbarCloseReason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-
-        setOpen(false);
+    const showCustomSnackbar = () => {
+        snackbarApi.showSnackbar({
+            anchorOrigin: { vertical: "bottom", horizontal: "left" },
+            // Use uuid or object id in production
+            key: counter++,
+            autoHideDuration: 5000,
+            message: "This is a completely customizable snackbar",
+            action: (
+                <Button color="secondary" size="small" onClick={handleActionButtonClick}>
+                    <FormattedMessage id="cometAdmin.generic.undo" defaultMessage="Undo" />
+                </Button>
+            ),
+            TransitionComponent: (props: TransitionProps) => <Slide {...props} direction="up" />,
+        });
     };
 
     const handleActionButtonClick = () => {
-        setOpen(false);
         console.log("Do stuff here");
-    };
-
-    const showCustomSnackbar = () => {
-        setOpen(true);
-
-        snackbarApi.showSnackbar(
-            <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "left" }}
-                open={open}
-                key={counter++}
-                autoHideDuration={5000}
-                onClose={handleClose}
-                message={"This is a completely customizable snackbar"}
-                action={
-                    <Button color="secondary" size="small" onClick={handleActionButtonClick}>
-                        <FormattedMessage id="cometAdmin.generic.ok" defaultMessage="OK" />
-                    </Button>
-                }
-                TransitionComponent={(props: TransitionProps) => <Slide {...props} direction="down" />}
-            />,
-        );
+        snackbarApi.hideSnackbar();
     };
 
     return <CustomSnackbarButton onClick={showCustomSnackbar}>Custom Snackbar</CustomSnackbarButton>;
@@ -85,7 +71,7 @@ const UndoSnackbar = () => {
 
     const showUndoSnackbar = () => {
         snackbarApi.showUndoSnackbar({
-            // Use uuid in production
+            // Use uuid or object id in production
             key: counter++,
             message: "This is a undo snackbar",
             onActionButtonClick: handleClick,
