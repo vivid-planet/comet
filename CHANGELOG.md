@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
+-   `createMuiTheme` has been removed from `@comet/admin` in favour of `createMuiTheme` from `@material-ui/core`
 -   Replaced form/Input (`VPAdminInputBase`) with form/InputBase (`CometAdminInputBase`)
     -   Deprecated `getDefaultVPAdminInputStyles` because the styled are included in InputBase, which should be used for all custom inputs in Comet
 -   Usage and default layout of `Field` has changed
@@ -92,6 +93,11 @@ All notable changes to this project will be documented in this file. This projec
 ### Highlights
 
 -   Add ability to customize the styling using theme-overrides
+
+### Incompatible Changes
+
+-   Removed `rte` key from theme
+    -   The rte-colors should now be defined under `props` -> `CometAdminRte` -> `colors` instead of `rte` -> `colors`
 
 # @comet/admin
 

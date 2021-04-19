@@ -5,11 +5,10 @@ import "@fontsource/roboto/700.css";
 
 import { select, withKnobs } from "@storybook/addon-knobs";
 import { addDecorator, addParameters } from "@storybook/react";
-import "@comet/admin-color-picker/src/themeAugmentation";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
-import { createMuiTheme, MuiThemeProvider as ThemeProvider } from "@comet/admin";
-import { Theme } from "@material-ui/core";
+import { MuiThemeProvider } from "@comet/admin";
+import { Theme, createMuiTheme } from "@material-ui/core";
 import { getThemeOptions } from "@comet/admin-theme";
 import styled, { createGlobalStyle } from "styled-components";
 
@@ -78,9 +77,9 @@ addDecorator((story) => {
     return (
         <>
             <GlobalStyles />
-            <ThemeProvider theme={theme}>
+            <MuiThemeProvider theme={theme}>
                 <StoryWrapper>{story()}</StoryWrapper>
-            </ThemeProvider>
+            </MuiThemeProvider>
         </>
     );
 });
