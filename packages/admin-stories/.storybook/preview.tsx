@@ -3,8 +3,8 @@ import { addDecorator, addParameters } from "@storybook/react";
 import "@comet/admin-color-picker/src/themeAugmentation";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
-import { MuiThemeProvider as ThemeProvider } from "@comet/admin";
-import { createMuiTheme, Theme } from "@material-ui/core";
+import { createMuiTheme, MuiThemeProvider as ThemeProvider } from "@comet/admin";
+import { Theme } from "@material-ui/core";
 import { getThemeOptions } from "@comet/admin-theme";
 import styled, { createGlobalStyle } from "styled-components";
 
