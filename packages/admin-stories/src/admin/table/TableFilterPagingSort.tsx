@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import {
     createRestPagingActions,
     Field,
@@ -12,7 +13,6 @@ import {
     useTableQuerySort,
 } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
 
