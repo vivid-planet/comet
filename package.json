@@ -35,7 +35,6 @@
         "file-saver": "^2.0.2",
         "final-form": "^4.16.1",
         "graphql": "^15.4.0",
-        "graphql-tag": "^2.11.0",
         "history": "^4.10.1",
         "husky": "^6.0.0",
         "jss": "^9.8.7",

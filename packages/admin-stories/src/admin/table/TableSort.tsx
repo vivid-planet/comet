@@ -1,6 +1,6 @@
+import { gql } from "@apollo/client";
 import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
