@@ -4,7 +4,6 @@ import { Button, List, ListItem, Slide } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 import StoryRouter from "storybook-react-router";
 import styled from "styled-components";
 
@@ -44,6 +43,11 @@ const CustomSnackbar = () => {
             key: counter++,
             autoHideDuration: 5000,
             message: "This is a completely customizable snackbar",
+            action: (
+                <Button color="secondary" size="small" onClick={handleActionButtonClick}>
+                    Custom Button
+                </Button>
+            ),
             TransitionComponent: (props: TransitionProps) => <Slide {...props} direction="up" />,
         });
     };
@@ -68,7 +72,7 @@ const UndoSnackbar = () => {
         snackbarApi.showUndoSnackbar({
             // Use uuid or object id in production
             key: counter++,
-            message: "This is a undo snackbar",
+            message: "This is an undo snackbar",
             onActionButtonClick: handleClick,
             payload: { name: "Payload", description: "This is a sample payload" },
         });
