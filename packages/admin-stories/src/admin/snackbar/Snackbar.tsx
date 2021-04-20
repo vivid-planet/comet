@@ -1,5 +1,5 @@
-import { SnackbarProvider, useSnackbarApi } from "@comet/admin/lib/snackbar/SnackbarProvider";
-import { useUndoSnackbar } from "@comet/admin/lib/snackbar/UndoSnackbar";
+import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
+import { useUndoSnackbar } from "@comet/admin";
 import { Button, List, ListItem, Slide } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { storiesOf } from "@storybook/react";
@@ -44,11 +44,6 @@ const CustomSnackbar = () => {
             key: counter++,
             autoHideDuration: 5000,
             message: "This is a completely customizable snackbar",
-            action: (
-                <Button color="secondary" size="small" onClick={handleActionButtonClick}>
-                    <FormattedMessage id="cometAdmin.generic.undo" defaultMessage="Undo" />
-                </Button>
-            ),
             TransitionComponent: (props: TransitionProps) => <Slide {...props} direction="up" />,
         });
     };
