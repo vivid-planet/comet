@@ -1,0 +1,105 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+
+# Snackbar
+
+> Snackbars inform users of a process that an app has performed or will perform. They appear temporarily, towards the bottom of the screen. They shouldn’t interrupt the user experience, and they don’t require user input to disappear.
+
+Snackbars contain a single line of text directly related to the operation performed. They may contain a text action, but no icons. You can use them to display notifications.
+
+More Info: [Snackbar in Material UI Docs](https://material-ui.com/components/snackbars/)
+
+<Meta title="docs/@comet/admin/snackbar" />
+
+## SnackbarProvider
+
+The `SnackbarProvider` provides the `SnackbarContext` to its children.
+It also takes care of rendering the `Snackbar` and should be placed at the topmost level of an app.
+This ensures that there is only one snackbar at a time as recommended by the [Material UI Docs](https://material-ui.com/components/snackbars/).
+
+```tsx
+// App.tsx
+<SnackbarProvider>
+    <MainComponent />
+</SnackbarProvider>
+```
+
+## useSnackbarApi()
+
+The `useSnackbarApi()` hook provides an Api to interact with the snackbar.
+It is only available if a `SnackbarProvider` is present higher up in the tree.
+
+```tsx
+const snackbarApi = useSnackbarApi();
+```
+
+<Canvas>
+    <Story id="comet-admin-snackbar--custom-snackbar" />
+</Canvas>
+
+### showSnackbar()
+
+`showSnackbar()` displays a snackbar.
+It can be customised using the same props as the Material UI Snackbar.
+A list of available props can be found [here](https://material-ui.com/api/snackbar/#props).
+
+Only `open` is not available since the `SnackbarProvider` manages the open state.
+
+```tsx
+snackbarApi.showSnackbar({
+    anchorOrigin: { vertical: "bottom", horizontal: "left" },
+    key: uuid.v4(),
+    autoHideDuration: 5000,
+    message: "Minimal snackbar",
+});
+```
+
+### hideSnackbar()
+
+`hideSnackbar()` hides the currently visible snackbar.
+A common use case is to hide a snackbar after performing an action.
+
+```tsx
+const handleActionButtonClick = () => {
+    // Perform action ...
+    snackbarApi.hideSnackbar();
+};
+
+snackbarApi.showSnackbar({
+    // Other props ...
+    action: <Button onClick={handleActionButtonClick}>Perform Action</Button>,
+});
+```
+
+## useUndoSnackbar()
+
+`useUndoSnackbar()` is a convenience component based on `useSnackbarApi()`.
+It provides a minimal Api for creating an undo snackbar.
+
+<Canvas>
+    <Story id="comet-admin-snackbar--undo-snackbar" />
+</Canvas>
+
+### showUndoSnackbar()
+
+A payload can be passed to `showUndoSnackbar()` to preserve the previous application state.
+This payload is then passed into `onActionButtonClick()` in which the undo can be performed.
+
+```tsx
+const undoSnackbarApi = useUndoSnackbar();
+
+const handleChange = (event: React.MouseEvent<HTMLElement>, newState: any) => {
+    undoSnackbarApi.showUndoSnackbar({
+        key: uuid.v4(),
+        message: `Changed State`,
+        payload: previousState,
+        onActionButtonClick: handleUndo,
+    });
+
+    // Perform Change ...
+};
+
+// previousState === payload
+const handleUndo = (previousState: any) => {
+    // Revert Change ...
+};
+```
