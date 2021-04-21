@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-color-picker",
-    "version": "2.0.0-alpha.1",
+    "version": "2.0.0-alpha.2",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -11,7 +11,7 @@
         "tinycolor2": "^1.4.1"
     },
     "devDependencies": {
-        "@comet/admin": "^2.0.0-alpha.0",
+        "@comet/admin": "^2.0.0-alpha.2",
         "@types/react-color": "2.17.4",
         "@types/tinycolor2": "^1.4.2"
     },
