@@ -1,16 +1,16 @@
 {
     "name": "@comet/admin-stories",
-    "version": "2.0.0-alpha.2",
+    "version": "2.0.0-alpha.3",
     "files": [
         "src"
     ],
     "dependencies": {
         "@apollo/client": "^3.2.5",
-        "@comet/admin": "^2.0.0-alpha.2",
-        "@comet/admin-color-picker": "^2.0.0-alpha.2",
-        "@comet/admin-icons": "^2.0.0-alpha.2",
-        "@comet/admin-react-select": "^2.0.0-alpha.2",
-        "@comet/admin-rte": "^2.0.0-alpha.2",
+        "@comet/admin": "^2.0.0-alpha.3",
+        "@comet/admin-color-picker": "^2.0.0-alpha.3",
+        "@comet/admin-icons": "^2.0.0-alpha.3",
+        "@comet/admin-react-select": "^2.0.0-alpha.3",
+        "@comet/admin-rte": "^2.0.0-alpha.3",
         "@comet/admin-theme": "^2.0.0",
         "@fontsource/roboto": "^4.2.3",
         "@material-ui/core": "^4.1.3",
