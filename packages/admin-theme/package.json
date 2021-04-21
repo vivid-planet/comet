@@ -26,6 +26,7 @@
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
+        "registry": "https://registry.npmjs.org",
         "access": "public"
     },
     "license": "BSD-2-Clause"
