@@ -21,7 +21,7 @@ const UndoSnackbar = () => {
             message: `Changed from ${chosenOption} to ${newOption}`,
             // Payload is passed into onActionButtonClick method
             payload: chosenOption,
-            onActionButtonClick: handleUndo,
+            onUndoClick: handleUndo,
         });
 
         setChosenOption(newOption);

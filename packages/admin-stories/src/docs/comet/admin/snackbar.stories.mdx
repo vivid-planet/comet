@@ -45,12 +45,9 @@ A list of available props can be found [here](https://material-ui.com/api/snackb
 Only `open` is not available since the `SnackbarProvider` manages the open state.
 
 ```tsx
-snackbarApi.showSnackbar({
-    anchorOrigin: { vertical: "bottom", horizontal: "left" },
-    key: uuid.v4(),
-    autoHideDuration: 5000,
-    message: "Minimal snackbar",
-});
+snackbarApi.showSnackbar(
+    <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} key={uuid.v4()} autoHideDuration={5000} message={"Minimal snackbar"} />,
+);
 ```
 
 ### hideSnackbar()
@@ -64,10 +61,12 @@ const handleActionButtonClick = () => {
     snackbarApi.hideSnackbar();
 };
 
-snackbarApi.showSnackbar({
-    // Other props ...
-    action: <Button onClick={handleActionButtonClick}>Perform Action</Button>,
-});
+snackbarApi.showSnackbar(
+    <Snackbar
+        // Other Props ...
+        action={<Button onClick={handleActionButtonClick}>Perform Action</Button>}
+    />,
+);
 ```
 
 ## useUndoSnackbar()
@@ -92,7 +91,7 @@ const handleChange = (event: React.MouseEvent<HTMLElement>, newState: any) => {
         key: uuid.v4(),
         message: `Changed State`,
         payload: previousState,
-        onActionButtonClick: handleUndo,
+        onUndoClick: handleUndo,
     });
 
     // Perform Change ...

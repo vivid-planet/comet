@@ -1,10 +1,8 @@
-import { Snackbar, SnackbarCloseReason, SnackbarProps } from "@material-ui/core";
+import { SnackbarCloseReason, SnackbarProps } from "@material-ui/core";
 import * as React from "react";
 
-type SnackbarPropsWithoutOpen = Omit<SnackbarProps, "open">;
-
 export interface SnackbarApi {
-    showSnackbar: (newSnackbarProps: SnackbarPropsWithoutOpen) => void;
+    showSnackbar: (newSnackbar: React.ReactElement) => void;
     hideSnackbar: () => void;
 }
 
@@ -21,14 +19,22 @@ export const useSnackbarApi = () => {
 };
 
 export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
-    const [snackbarProps, setSnackbarProps] = React.useState<SnackbarPropsWithoutOpen>();
+    const [open, setOpen] = React.useState<boolean>(false);
+    const [snackbar, setSnackbar] = React.useState<React.ReactElement>();
 
-    const updateSnackbar = (newSnackbarProps: SnackbarPropsWithoutOpen) => {
-        setSnackbarProps(newSnackbarProps);
+    const updateSnackbar = (newSnackbar: React.ReactElement) => {
+        setSnackbar(newSnackbar);
+        if (newSnackbar !== undefined) {
+            setOpen(true);
+        }
     };
 
     const hideSnackbar = () => {
-        setSnackbarProps(undefined);
+        setOpen(false);
+        // setTimeout is needed, otherwise the onClose event is not triggered
+        setTimeout(() => {
+            setSnackbar(undefined);
+        }, 0);
     };
 
     const handleClose = (
@@ -51,11 +57,11 @@ export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
             }}
         >
             {children}
-            <Snackbar
-                {...snackbarProps}
-                open={Boolean(snackbarProps)}
-                onClose={(event, reason) => handleClose(event, reason, snackbarProps?.onClose)}
-            />
+            {snackbar !== undefined &&
+                React.cloneElement<SnackbarProps>(snackbar, {
+                    open: open,
+                    onClose: (event, reason) => handleClose(event, reason, snackbar?.props.onClose),
+                })}
         </SnackbarContext.Provider>
     );
 };

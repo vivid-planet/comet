@@ -1,6 +1,5 @@
 import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
-import { Button, List, ListItem, Slide } from "@material-ui/core";
-import { TransitionProps } from "@material-ui/core/transitions";
+import { Button, List, ListItem, Snackbar } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import styled from "styled-components";
@@ -40,19 +39,20 @@ const CustomSnackbar = () => {
     };
 
     const showCustomSnackbar = () => {
-        snackbarApi.showSnackbar({
-            anchorOrigin: { vertical: "bottom", horizontal: "left" },
-            // Use uuid or object id in production
-            key: counter++,
-            autoHideDuration: 5000,
-            message: "This is a completely customizable snackbar",
-            action: (
-                <Button color="secondary" size="small" onClick={handleActionButtonClick}>
-                    Custom Button
-                </Button>
-            ),
-            TransitionComponent: (props: TransitionProps) => <Slide {...props} direction="up" />,
-        });
+        snackbarApi.showSnackbar(
+            <Snackbar
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                // Use uuid or object id in production
+                key={counter++}
+                autoHideDuration={5000}
+                message="This is a completely customizable snackbar"
+                action={
+                    <Button color="secondary" size="small" onClick={handleActionButtonClick}>
+                        Custom Button
+                    </Button>
+                }
+            />,
+        );
     };
 
     return (
