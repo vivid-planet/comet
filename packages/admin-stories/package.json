@@ -11,6 +11,7 @@
         "@comet/admin-icons": "^2.0.0-alpha.2",
         "@comet/admin-react-select": "^2.0.0-alpha.2",
         "@comet/admin-rte": "^2.0.0-alpha.2",
+        "@comet/admin-theme": "^2.0.0",
         "@fontsource/roboto": "^4.2.3",
         "@material-ui/core": "^4.1.3",
         "@material-ui/icons": "^4.2.1",
