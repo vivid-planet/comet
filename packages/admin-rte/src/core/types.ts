@@ -4,22 +4,6 @@ import * as React from "react";
 
 import { IRteOptions, SupportedThings } from "./Rte";
 
-declare module "@material-ui/core/styles/createMuiTheme" {
-    interface Theme {
-        rte: {
-            colors: {
-                border: React.CSSProperties["color"];
-                toolbarBackground: React.CSSProperties["color"];
-                buttonIcon: React.CSSProperties["color"];
-                buttonIconDisabled: React.CSSProperties["color"];
-                buttonBackgroundHover: React.CSSProperties["color"];
-                buttonBorderHover: React.CSSProperties["color"];
-                buttonBorderDisabled: React.CSSProperties["color"];
-            };
-        };
-    }
-}
-
 // overwrite draftjs' insufficient type for Draft.DraftBlockRenderConfig
 interface DraftBlockRenderConfig {
     element: string | React.ComponentType;
