@@ -12,6 +12,7 @@ import cometAdminMasterLayoutOverrides from "./cometAdminOverrides/masterLayout"
 import cometAdminMenuOverrides from "./cometAdminOverrides/menu";
 import cometAdminMenuCollapsibleItemOverrides from "./cometAdminOverrides/menuCollapsibleItem";
 import cometAdminMenuItemOverrides from "./cometAdminOverrides/menuItem";
+import cometAdminMenuProps from "./cometAdminProps/menu";
 import cometAdminRteBlockTypeControlsOverrides from "./cometAdminRteOverrides/blockTypeControls";
 import cometAdminRteControlButtonOverrides from "./cometAdminRteOverrides/controlButton";
 import cometAdminRteFeaturesButtonGroupOverrides from "./cometAdminRteOverrides/featuresButtonGroup";
@@ -20,6 +21,7 @@ import cometAdminRteRteOverrides from "./cometAdminRteOverrides/rte";
 import cometAdminRteToolbarOverrides from "./cometAdminRteOverrides/toolbar";
 import cometAdminSelectOverrides from "./cometAdminSelectOverrides/select";
 import getPaletteOptions from "./getPaletteOptions";
+import getShadows from "./getShadows";
 import getTypographyOptions from "./getTypographyOptions";
 
 export default (): ThemeOptions => ({
@@ -28,6 +30,13 @@ export default (): ThemeOptions => ({
     typography: getTypographyOptions(),
     shape: {
         borderRadius: 2,
+    },
+    shadows: getShadows(),
+    props: {
+        CometAdminMenu: cometAdminMenuProps(),
+        MuiAppBar: {
+            elevation: 0,
+        },
     },
     overrides: {
         CometAdminClearInputButton: cometAdminClearInputButtonOverrides(),
