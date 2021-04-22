@@ -19,15 +19,16 @@ import cometAdminRteLinkControlsOverrides from "./cometAdminRteOverrides/linkCon
 import cometAdminRteRteOverrides from "./cometAdminRteOverrides/rte";
 import cometAdminRteToolbarOverrides from "./cometAdminRteOverrides/toolbar";
 import cometAdminSelectOverrides from "./cometAdminSelectOverrides/select";
+import getPaletteOptions from "./getPaletteOptions";
+import getTypographyOptions from "./getTypographyOptions";
 
 export default (): ThemeOptions => ({
     spacing: 5,
-    palette: {
-        text: {
-            primary: "#242424",
-        },
+    palette: getPaletteOptions(),
+    typography: getTypographyOptions(),
+    shape: {
+        borderRadius: 2,
     },
-    typography: {},
     overrides: {
         CometAdminClearInputButton: cometAdminClearInputButtonOverrides(),
         CometAdminFormFieldContainer: cometAdminFormFieldContainerOverrides(),

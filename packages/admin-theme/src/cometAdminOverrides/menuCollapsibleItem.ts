@@ -1,7 +1,7 @@
 import { CometAdminMenuCollapsibleItemClassKeys } from "@comet/admin";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { cometBlue } from "../colors";
+import { bluePalette } from "../colors";
 
 export default (): StyleRules<{}, CometAdminMenuCollapsibleItemClassKeys> => ({
     root: {
@@ -11,14 +11,14 @@ export default (): StyleRules<{}, CometAdminMenuCollapsibleItemClassKeys> => ({
         },
     },
     childSelected: {
-        color: cometBlue.main,
+        color: bluePalette.main,
 
         "& $listItem": {
             "& [class*='MuiListItemText-root']": {
-                color: cometBlue.main,
+                color: bluePalette.main,
             },
             "& [class*='MuiListItemIcon-root']": {
-                color: cometBlue.main,
+                color: bluePalette.main,
             },
         },
     },

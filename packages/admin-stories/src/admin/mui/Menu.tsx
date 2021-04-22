@@ -43,7 +43,7 @@ const AppHeader: React.FC = () => (
 
 const Content = ({ children }: { children: string }) => (
     <>
-        <Typography variant={"h4"}>{children}</Typography>
+        <Typography variant={"h1"}>{children}</Typography>
         <br />
         <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>
     </>
