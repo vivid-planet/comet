@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import {
     DirtyHandler,
     Field,
@@ -12,7 +13,6 @@ import {
     useTableQuery,
 } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";

@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
@@ -17,7 +17,6 @@ import {
 import { CircularProgress, Grid, IconButton } from "@material-ui/core";
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as React from "react";
 import StoryRouter from "storybook-react-router";
 
