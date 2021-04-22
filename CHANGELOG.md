@@ -62,7 +62,6 @@ All notable changes to this project will be documented in this file. This projec
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
 
-
 ### Migration Guide
 
 Clone this repository into your project repository. If you have a monorepo, you have to clone it into the right subfolder.
