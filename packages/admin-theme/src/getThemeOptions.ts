@@ -1,8 +1,7 @@
-import "@comet/admin/src/themeAugmentation";
-import "@comet/admin-rte/src/themeAugmentation";
-import "@comet/admin-react-select/src/themeAugmentation";
-import "@comet/admin-color-picker/src/themeAugmentation";
-
+import type {} from "@comet/admin-color-picker/src/themeAugmentation";
+import type {} from "@comet/admin-react-select/src/themeAugmentation";
+import type {} from "@comet/admin-rte/src/themeAugmentation";
+import type {} from "@comet/admin/src/themeAugmentation";
 import { ThemeOptions } from "@material-ui/core/styles";
 
 import cometAdminColorPickerOverrides from "./cometAdminColorPickerOverrides/colorPicker";
