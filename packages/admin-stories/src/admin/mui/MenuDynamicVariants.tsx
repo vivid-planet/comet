@@ -1,11 +1,13 @@
 import { MasterLayout, Menu, MenuCollapsibleItem, MenuContext, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
-import { Divider, Typography } from "@material-ui/core";
+import { Box, Divider, Typography } from "@material-ui/core";
 import { Dashboard, GitHub, Launch, List, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import StoryRouter from "storybook-react-router";
+
+import CometLogo from "../../../.storybook/CometLogo";
 
 const permanentMenuMinWidth = 1024;
 const pathsToAlwaysUseTemporaryMenu = ["/foo3", "/foo4"];
@@ -55,9 +57,10 @@ const AppMenu: React.FC = () => {
 };
 
 const AppHeader: React.FC = () => (
-    <Typography variant="h5" color="primary">
-        Example
-    </Typography>
+    <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} style={{ width: "100%" }}>
+        <CometLogo />
+        <Typography variant="h5">Menu Example</Typography>
+    </Box>
 );
 
 const Content = ({ children }: { children: string }) => (

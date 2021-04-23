@@ -64,7 +64,7 @@ const MasterLayout: React.FC<WithStyles<typeof styles> & MasterLayoutProps & Mas
                 <Header position="fixed" color="inherit" classes={{ root: classes.header }}>
                     <Toolbar style={{ height: headerHeight }} classes={{ root: classes.toolbar }}>
                         {!hideToolbarMenuIcon && (
-                            <IconButton color="primary" onClick={toggleOpen}>
+                            <IconButton onClick={toggleOpen}>
                                 <MenuIcon />
                             </IconButton>
                         )}

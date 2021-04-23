@@ -1,10 +1,10 @@
 import { CometAdminMenuItemClassKeys } from "@comet/admin";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { cometBlue } from "../colors";
+import { bluePalette, neutrals } from "../colors";
+import { fontWeights } from "../getTypographyOptions";
 
 const colors = {
-    lightGrey: "#F2F2F2",
     textLevel1: "#242424",
     textLevel2: "#17181A",
 };
@@ -34,27 +34,27 @@ export default (): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
         },
     },
     level1: {
-        borderBottom: `1px solid ${colors.lightGrey}`,
+        borderBottom: `1px solid ${neutrals[50]}`,
         boxSizing: "border-box",
         color: colors.textLevel1,
         paddingTop: 16,
         paddingBottom: 16,
 
         "&[class*='Mui-selected']": {
-            backgroundColor: colors.lightGrey,
-            color: cometBlue.main,
+            backgroundColor: neutrals[50],
+            color: bluePalette.main,
 
             "&:after": {
-                backgroundColor: cometBlue.main,
+                backgroundColor: bluePalette.main,
             },
 
             "& [class*='MuiListItemIcon-root']": {
-                color: cometBlue.main,
+                color: bluePalette.main,
             },
         },
 
         "& [class*='MuiListItemText-primary']": {
-            fontWeight: 500,
+            fontWeight: fontWeights.fontWeightMedium,
             fontSize: 16,
             lineHeight: "20px",
         },
@@ -65,24 +65,24 @@ export default (): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
         paddingBottom: 10,
 
         "&:last-child": {
-            borderBottom: `1px solid ${colors.lightGrey}`,
+            borderBottom: `1px solid ${neutrals[50]}`,
             boxSizing: "border-box",
         },
 
         "&[class*='Mui-selected']": {
-            backgroundColor: cometBlue.main,
+            backgroundColor: bluePalette.main,
             color: "#fff",
 
             "&:after": {
-                backgroundColor: cometBlue.mainDim,
+                backgroundColor: bluePalette.dark,
             },
 
             "&:hover": {
-                backgroundColor: cometBlue.mainDim,
+                backgroundColor: bluePalette.dark,
             },
 
             "& [class*='MuiListItemText-primary']": {
-                fontWeight: 500,
+                fontWeight: fontWeights.fontWeightBold,
             },
         },
 
@@ -91,7 +91,7 @@ export default (): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
         },
 
         "& [class*='MuiListItemText-primary']": {
-            fontWeight: 300,
+            fontWeight: fontWeights.fontWeightRegular,
             fontSize: 14,
             lineHeight: "20px",
         },
