@@ -7,8 +7,7 @@ import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import StoryRouter from "storybook-react-router";
 
-// @ts-ignore
-import CometLogo from "../../../.storybook/assets/comet-logo-header.svg";
+import CometLogo from "../../../.storybook/CometLogo";
 
 const permanentMenuMinWidth = 1024;
 const pathsToAlwaysUseTemporaryMenu = ["/foo3", "/foo4"];
@@ -59,7 +58,7 @@ const AppMenu: React.FC = () => {
 
 const AppHeader: React.FC = () => (
     <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} style={{ width: "100%" }}>
-        <img src={CometLogo} alt="COMET Logo" />
+        <CometLogo />
         <Typography variant="h5">Menu Example</Typography>
     </Box>
 );
