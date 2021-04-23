@@ -1,4 +1,4 @@
-import { Drawer } from "@material-ui/core";
+import { Drawer, DrawerProps, PaperProps } from "@material-ui/core";
 import { WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { useHistory } from "react-router";
@@ -9,13 +9,26 @@ import { styles } from "./Menu.styles";
 export interface MenuThemeProps {
     variant?: "permanent" | "temporary";
     drawerWidth?: number;
+    temporaryDrawerProps?: DrawerProps;
+    permanentDrawerProps?: DrawerProps;
+    temporaryDrawerPaperProps?: PaperProps;
+    permanentDrawerPaperProps?: PaperProps;
 }
 
 export interface MenuProps extends MenuThemeProps {
     children: React.ReactNode;
 }
 
-const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({ classes, children, drawerWidth = 300, variant = "permanent" }) => {
+const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
+    classes,
+    children,
+    drawerWidth = 300,
+    variant = "permanent",
+    temporaryDrawerProps = {},
+    permanentDrawerProps = {},
+    temporaryDrawerPaperProps = {},
+    permanentDrawerPaperProps = {},
+}) => {
     const history = useHistory();
     const { open, toggleOpen, headerHeight } = React.useContext(MenuContext);
 
@@ -53,8 +66,9 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({ classes, 
                 variant={"temporary"}
                 className={temporaryDrawerClasses.join(" ")}
                 open={temporaryOpen}
-                PaperProps={{ style: { width: drawerWidth } }}
+                PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
                 onBackdropClick={toggleOpen}
+                {...temporaryDrawerProps}
             >
                 {children}
             </Drawer>
@@ -70,7 +84,9 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({ classes, 
                         width: drawerWidth,
                         marginLeft: permanentOpen ? 0 : -drawerWidth,
                     },
+                    ...permanentDrawerPaperProps,
                 }}
+                {...permanentDrawerProps}
             >
                 {children}
             </Drawer>

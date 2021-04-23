@@ -1,10 +1,12 @@
 import { MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
-import { Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import { Dashboard, GitHub, Launch, List, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
+
+import CometLogo from "../../../.storybook/CometLogo";
 
 const permanentMenuMinWidth = 1024;
 
@@ -36,14 +38,15 @@ const AppMenu: React.FC = () => {
 };
 
 const AppHeader: React.FC = () => (
-    <Typography variant="h5" color="primary">
-        Example
-    </Typography>
+    <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} style={{ width: "100%" }}>
+        <CometLogo />
+        <Typography variant="h5">Menu Example</Typography>
+    </Box>
 );
 
 const Content = ({ children }: { children: string }) => (
     <>
-        <Typography variant={"h4"}>{children}</Typography>
+        <Typography variant={"h1"}>{children}</Typography>
         <br />
         <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>
     </>
