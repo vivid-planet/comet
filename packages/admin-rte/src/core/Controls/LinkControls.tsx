@@ -1,17 +1,17 @@
-import { createStyles, WithStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import { withStyles } from "@material-ui/styles";
+import { Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
 import { ToolbarButton as LinkToolbarButton } from "../extension/Link";
 import { ToolbarButton as LinksRemoveToolbarButton } from "../extension/LinksRemove";
 import { IControlProps } from "../types";
 
-function LinkControls(p: IControlProps & WithStyles<typeof styles>) {
+function LinkControls(p: IControlProps) {
     const {
-        classes,
         options: { supports: supportedThings, overwriteLinkButton, overwriteLinksRemoveButton },
     } = p;
+    const classes = useStyles();
 
     const LinkButtonComponent = overwriteLinkButton ? overwriteLinkButton : LinkToolbarButton;
     const LinksRemoveButtonComponent = overwriteLinksRemoveButton ? overwriteLinksRemoveButton : LinksRemoveToolbarButton;
@@ -26,19 +26,23 @@ function LinkControls(p: IControlProps & WithStyles<typeof styles>) {
 
 export type CometAdminRteLinkControlsClassKeys = "root" | "item";
 
-export const styles = () =>
-    createStyles<CometAdminRteLinkControlsClassKeys, any>({
-        root: {},
-        item: {
-            marginRight: 1,
-            minWidth: 0,
-            "&:last-child": {
-                marginRight: 0,
+const useStyles = makeStyles<Theme, {}, CometAdminRteLinkControlsClassKeys>(
+    () => {
+        return {
+            root: {},
+            item: {
+                marginRight: 1,
+                minWidth: 0,
+                "&:last-child": {
+                    marginRight: 0,
+                },
             },
-        },
-    });
+        };
+    },
+    { name: "CometAdminRteLinkControls" },
+);
 
-const StyledLinkControls = withStyles(styles, { name: "CometAdminRteLinkControls" })(LinkControls);
+const StyledLinkControls = LinkControls;
 
 // If there are no link-actions, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
 export default (p: IControlProps) => {

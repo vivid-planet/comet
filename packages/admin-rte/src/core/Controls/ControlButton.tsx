@@ -1,8 +1,9 @@
-import { createStyles, WithStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
-import { withStyles } from "@material-ui/styles";
 import * as React from "react";
+
+import getRteTheme from "../utils/getRteTheme";
 
 export interface IProps {
     disabled?: boolean;
@@ -15,16 +16,9 @@ export interface IProps {
     Icon?: (props: SvgIconProps) => JSX.Element;
 }
 
-function ControlButton({
-    classes,
-    disabled = false,
-    selected = false,
-    onButtonClick,
-    icon,
-    children,
-    Icon: deprecatedIcon,
-}: IProps & WithStyles<typeof styles>) {
+function ControlButton({ disabled = false, selected = false, onButtonClick, icon, children, Icon: deprecatedIcon }: IProps) {
     const Icon = icon || deprecatedIcon;
+    const classes = useStyles();
 
     const rootClasses: string[] = [classes.root];
     if (selected) rootClasses.push(classes.selected);
@@ -40,43 +34,49 @@ function ControlButton({
 
 export type CometAdminRteControlButtonClassKeys = "root" | "selected" | "renderAsIcon";
 
-const styles = (theme: Theme) =>
-    createStyles<CometAdminRteControlButtonClassKeys, any>({
-        root: {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "pointer",
-            height: 24,
-            backgroundColor: "transparent",
-            border: "1px solid transparent",
-            boxSizing: "border-box",
-            transition: "background-color 200ms, border-color 200ms, color 200ms",
-            fontSize: 20,
-            color: theme.rte.colors.buttonIcon,
-            "&:hover": {
-                backgroundColor: theme.rte.colors.buttonBackgroundHover,
-                borderColor: theme.rte.colors.buttonBorderHover,
-            },
-            "&:disabled": {
-                cursor: "not-allowed",
-                "&, &:hover": {
-                    backgroundColor: "transparent",
-                    borderColor: "transparent",
-                    color: theme.rte.colors.buttonIconDisabled,
+const useStyles = makeStyles<Theme, {}, CometAdminRteControlButtonClassKeys>(
+    (theme: Theme) => {
+        const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+
+        return {
+            root: {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+                height: 24,
+                backgroundColor: "transparent",
+                border: "1px solid transparent",
+                boxSizing: "border-box",
+                transition: "background-color 200ms, border-color 200ms, color 200ms",
+                fontSize: 20,
+                color: rteTheme.colors.buttonIcon,
+                "&:hover": {
+                    backgroundColor: rteTheme.colors.buttonBackgroundHover,
+                    borderColor: rteTheme.colors.buttonBorderHover,
+                },
+                "&:disabled": {
+                    cursor: "not-allowed",
+                    "&, &:hover": {
+                        backgroundColor: "transparent",
+                        borderColor: "transparent",
+                        color: rteTheme.colors.buttonIconDisabled,
+                    },
                 },
             },
-        },
-        selected: {
-            "&:not(:disabled), &:not(:disabled):hover": {
-                borderColor: theme.rte.colors.buttonBorderHover,
-                backgroundColor: "white",
-                color: "red",
+            selected: {
+                "&:not(:disabled), &:not(:disabled):hover": {
+                    borderColor: rteTheme.colors.buttonBorderHover,
+                    backgroundColor: "white",
+                    color: "red",
+                },
             },
-        },
-        renderAsIcon: {
-            width: 24,
-        },
-    });
+            renderAsIcon: {
+                width: 24,
+            },
+        };
+    },
+    { name: "CometAdminRteControlButton" },
+);
 
-export default withStyles(styles, { name: "CometAdminRteControlButton" })(ControlButton);
+export default ControlButton;

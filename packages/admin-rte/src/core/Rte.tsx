@@ -1,8 +1,7 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { createStyles, WithStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/styles";
 import {
     DraftBlockType,
     DraftEditorCommand,
@@ -22,6 +21,7 @@ import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
 import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
 import { IBlocktypeMap, ICustomBlockTypeMap_Deprecated, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
+import getRteTheme from "./utils/getRteTheme";
 
 const mandatoryFilterEditorStateFn = composeFilterEditorFns([removeBlocksExceedingBlockLimit, manageDefaultBlockType]);
 
@@ -69,11 +69,25 @@ export interface IRteOptions {
 export type IOptions = Partial<IRteOptions>;
 
 type OnEditorStateChangeFn = (newValue: EditorState) => void;
+
 export type FilterEditorStateBeforeUpdateFn = (
     newState: EditorState,
     context: Pick<IRteOptions, "supports" | "listLevelMax" | "maxBlocks" | "standardBlockType">,
 ) => EditorState;
-export interface IProps {
+
+export interface CometAdminRteThemeProps {
+    colors?: {
+        border?: React.CSSProperties["color"];
+        toolbarBackground?: React.CSSProperties["color"];
+        buttonIcon?: React.CSSProperties["color"];
+        buttonIconDisabled?: React.CSSProperties["color"];
+        buttonBackgroundHover?: React.CSSProperties["color"];
+        buttonBorderHover?: React.CSSProperties["color"];
+        buttonBorderDisabled?: React.CSSProperties["color"];
+    };
+}
+
+export interface IProps extends CometAdminRteThemeProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
@@ -121,8 +135,8 @@ export const styleMap = {
     },
 };
 
-const Rte: React.RefForwardingComponent<any, IProps & WithStyles<typeof styles>> = (props, ref) => {
-    const { classes, value: editorState, onChange, options: passedOptions, disabled } = props;
+const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
+    const { value: editorState, onChange, options: passedOptions, disabled } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -240,6 +254,8 @@ const Rte: React.RefForwardingComponent<any, IProps & WithStyles<typeof styles>>
         }
     }
 
+    const classes = useStyles({ colors: props.colors });
+
     const rootClasses: string[] = [classes.root];
     if (disabled) rootClasses.push(classes.disabled);
 
@@ -266,24 +282,30 @@ const Rte: React.RefForwardingComponent<any, IProps & WithStyles<typeof styles>>
 
 export type CometAdminRteClassKeys = "root" | "disabled" | "editor";
 
-const styles = (theme: Theme) =>
-    createStyles<CometAdminRteClassKeys, any>({
-        root: {
-            border: `1px solid ${theme.rte.colors.border}`,
-            borderTopWidth: 0,
-        },
-        disabled: {
-            "& $editor": {
-                color: theme.palette.text.disabled,
-            },
-        },
-        editor: {
-            "& .public-DraftEditor-content": {
-                minHeight: 240,
-                padding: 20,
-                boxSizing: "border-box",
-            },
-        },
-    });
+const useStyles = makeStyles<Theme, CometAdminRteThemeProps, CometAdminRteClassKeys>(
+    (theme: Theme) => {
+        const rteTheme = getRteTheme(theme.props?.CometAdminRte);
 
-export default withStyles(styles, { name: "CometAdminRte" })(React.forwardRef(Rte));
+        return {
+            root: {
+                border: `1px solid ${rteTheme.colors.border}`,
+                borderTopWidth: 0,
+            },
+            disabled: {
+                "& $editor": {
+                    color: theme.palette.text.disabled,
+                },
+            },
+            editor: {
+                "& .public-DraftEditor-content": {
+                    minHeight: 240,
+                    padding: 20,
+                    boxSizing: "border-box",
+                },
+            },
+        };
+    },
+    { name: "CometAdminRte" },
+);
+
+export default React.forwardRef(Rte);

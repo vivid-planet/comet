@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
+-   `createMuiTheme` has been removed from `@comet/admin` in favour of `createMuiTheme` from `@material-ui/core`
 -   Replaced form/Input (`VPAdminInputBase`) with form/InputBase (`CometAdminInputBase`)
     -   Deprecated `getDefaultVPAdminInputStyles` because the styled are included in InputBase, which should be used for all custom inputs in Comet
 -   Usage and default layout of `Field` has changed
@@ -61,6 +62,21 @@ All notable changes to this project will be documented in this file. This projec
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
 
+### Migration Guide
+
+Clone this repository into your project repository. If you have a monorepo, you have to clone it into the right subfolder.
+
+An example can be found [here](https://github.com/vivid-planet/comet-admin-starter/pull/36).
+
+**Migrate Theme**
+
+Automatic migrations using codeshift are available (use -d for dry-run):
+
+```
+npx jscodeshift --extensions=ts --parser=ts -t comet-admin/codemods/2.0.0/update-theme.ts src/
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/update-theme.ts src/
+```
+
 ## @comet/admin-color-picker
 
 ### Highlights
@@ -92,6 +108,11 @@ All notable changes to this project will be documented in this file. This projec
 ### Highlights
 
 -   Add ability to customize the styling using theme-overrides
+
+### Incompatible Changes
+
+-   Removed `rte` key from theme
+    -   The rte-colors should now be defined under `props` -> `CometAdminRte` -> `colors` instead of `rte` -> `colors`
 
 # @comet/admin
 
