@@ -10,6 +10,7 @@ import { FormattedMessage } from "react-intl";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
+import { SubmitError, SubmitResult } from "./form/SubmitResult";
 import { StackApiContext } from "./stack";
 import { TableQueryContext } from "./table";
 
@@ -29,8 +30,14 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     };
     renderButtons?: (formRenderProps: FormRenderProps<FormValues>) => React.ReactNode;
 
-    // override final-form onSubmit and remove callback as we don't support that (return pomise instead)
+    // override final-form onSubmit and remove callback as we don't support that (return promise instead)
     onSubmit: (values: FormValues, form: FormApi<FormValues>) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
+
+    /* override onAfterSubmit. This method will be called at the end of a submit process.
+     *
+     * default implementation : go back if a stackApi context exists
+     */
+    onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -41,6 +48,12 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const editDialog = React.useContext(EditDialogApiContext);
     const tableQuery = React.useContext(TableQueryContext);
 
+    const {
+        onAfterSubmit = () => {
+            stackApi?.goBack();
+        },
+    } = props;
+
     const ref = React.useRef();
 
     return <Form {...props} onSubmit={handleSubmit} render={RenderForm} />;
@@ -49,7 +62,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         const submit = React.useCallback(
             (event: any) => {
                 if (!formRenderProps.dirty) return;
-                return new Promise((resolve) => {
+                return new Promise<SubmissionErrors | void>((resolve) => {
                     Promise.resolve(formRenderProps.handleSubmit(event)).then(
                         () => {
                             if (formRenderProps.submitSucceeded) {
@@ -73,8 +86,21 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     isDirty: () => {
                         return formRenderProps.form.getState().dirty;
                     },
-                    submit: async (): Promise<void> => {
-                        await formRenderProps.form.submit();
+                    submit: async (): Promise<SubmitResult> => {
+                        if (formRenderProps.hasValidationErrors) {
+                            return {
+                                error: new SubmitError("Form has Validation Errors", formRenderProps.errors),
+                            };
+                        }
+
+                        const submissionErrors = await formRenderProps.form.submit();
+                        if (submissionErrors) {
+                            return {
+                                error: new SubmitError("Form has Submission Errors", submissionErrors),
+                            };
+                        }
+
+                        return {};
                     },
                     reset: () => {
                         formRenderProps.form.reset();
@@ -173,12 +199,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         }
                     }
 
-                    if (stackApi) {
-                        // if this form is inside a Stack goBack after save success
-                        // do this after form.reset() to have a clean form, so it won't ask for saving changes
-                        // TODO we probably shouldn't have a hard dependency to Stack
-                        stackApi.goBack();
-                    }
+                    onAfterSubmit(values, form);
                 });
                 return data;
             })

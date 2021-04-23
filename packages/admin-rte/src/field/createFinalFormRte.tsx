@@ -38,7 +38,7 @@ function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
             <Rte
                 ref={ref}
                 value={editorState}
-                onChange={(c) => {
+                onChange={(c: EditorState) => {
                     setEditorState(c);
                 }}
                 options={rteOptions}

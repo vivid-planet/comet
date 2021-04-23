@@ -5,6 +5,7 @@ import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
+import { SubmitResult } from "./form/SubmitResult";
 import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
@@ -22,6 +23,7 @@ const messages = defineMessages({
         id: "cometAdmin.generic.edit",
         defaultMessage: "Edit",
     },
+
     add: {
         id: "cometAdmin.generic.add",
         defaultMessage: "Add",
@@ -85,10 +87,14 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then(() => {
-                setTimeout(() => {
-                    selectionApi.handleDeselect();
-                });
+            dirtyHandlerApi.submitBindings().then((submitResults: Array<SubmitResult>) => {
+                const failed = submitResults.some((submitResult) => !!submitResult.error);
+
+                if (!failed) {
+                    setTimeout(() => {
+                        selectionApi.handleDeselect();
+                    });
+                }
             });
         }
     };

@@ -8,7 +8,6 @@
     "scripts": {
         "clean": "lerna run clean --stream --parallel",
         "build": "lerna run build --stream",
-        "bootstrap": "lerna bootstrap",
         "start": "lerna run --stream --no-sort --concurrency 999 start",
         "storybook": "npm run --prefix packages/admin-stories storybook",
         "lint": "npm run lint:eslint && npm run lint:tsc",
@@ -17,27 +16,11 @@
         "lint:tsc": "lerna run lint:tsc --stream",
         "prebuild:storybook": "npm run build",
         "build:storybook": "npm --prefix packages/admin-stories run build-storybook",
-        "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin-stories/**/* --format simple"
+        "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin-stories/**/* --format simple",
+        "prepare": "husky install"
     },
     "devDependencies": {
-        "@apollo/client": "^3.2.5",
         "@formatjs/cli": "^2.13.12",
-        "@material-ui/core": "^4.10.1",
-        "@material-ui/icons": "^4.9.1",
-        "@material-ui/styles": "^4.10.0",
-        "@types/classnames": "^2.2.9",
-        "@types/debounce": "^1.2.0",
-        "@types/file-saver": "^2.0.1",
-        "@types/lodash.isequal": "^4.5.5",
-        "@types/node": "^12.6.1",
-        "@types/react": "^16.8.23",
-        "@types/react-dom": "^16.8.4",
-        "@types/react-router": "^5.1.4",
-        "@types/react-router-dom": "^5.1.3",
-        "@types/react-select": "^3.0.0",
-        "@types/recompose": "^0.30.6",
-        "@types/styled-components": "^5.0.0",
-        "@types/uuid": "^3.4.4",
         "@typescript-eslint/eslint-plugin": "^4.7.0",
         "@typescript-eslint/parser": "^4.7.0",
         "eslint": "^7.13.0",
@@ -52,28 +35,14 @@
         "file-saver": "^2.0.2",
         "final-form": "^4.16.1",
         "graphql": "^15.4.0",
-        "graphql-tag": "^2.11.0",
         "history": "^4.10.1",
-        "husky": "^4.3.8",
+        "husky": "^6.0.0",
         "jss": "^9.8.7",
-        "lerna": "^3.15.0",
-        "lint-staged": "^10.5.3",
+        "lerna": "^4.0.0",
+        "lint-staged": "^10.5.4",
         "prettier": "^2.1.2",
-        "react": "^16.8.6",
-        "react-dom": "^16.8.6",
-        "react-final-form": "^6.3.1",
-        "react-intl": "^5.10.0",
-        "react-router": "^5.1.2",
-        "react-router-dom": "^5.1.2",
-        "react-select": "^3.0.4",
-        "rimraf": "^2.6.3",
-        "styled-components": "^4.3.2",
-        "typescript": "^3.9.2"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
+        "rimraf": "^3.0.2",
+        "typescript": "^4.2.2"
     },
     "engines": {
         "node": "14",

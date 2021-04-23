@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [next]
 
+## @comet/admin
+
 ### Highlights
 
 -   Added a new InputBase (`CometAdminInputBase`) for use in all custom input-components in Comet
@@ -18,6 +20,9 @@ All notable changes to this project will be documented in this file. This projec
     -   Allows using custom open/close icons for CollapsibleItem _(theme -> props -> CometAdminMenuCollapsibleItem -> openedIcon/closedIcon)_
 -   The MasterLayout component can be customized using the material-ui theme
     -   Using the new `headerHeight` prop, the top-spacing of the content and the menu, will now be adjusted automatically
+-   add new package @comet/admin-icons
+-   add onAfterSubmit to FinalForm
+-   add useStoredState() hook
 
 ### Incompatible Changes
 
@@ -57,6 +62,54 @@ All notable changes to this project will be documented in this file. This projec
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
 
+## @comet/admin-color-picker
+
+### Highlights
+
+-   Allow custom icons/adornment for color-input
+-   The clear-button is now optional (using the `showClearButton` prop)
+
+### Incompatible Changes
+
+-   Renamed `VPAdminColorPicker` to `CometAdminColorPicker`
+-   Removed `clearButton` and `clearIcon` classes from color-picker
+    -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
+-   The clear-button is no longer shown by default
+-   Removed `clearButton` and `clearIcon` classes from color-picker
+    -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
+
+## @comet/admin-react-select
+
+### Highlights
+
+-   Added theming-ability for input with `CometAdminInputBase`
+
+### Incompatible Changes
+
+-   Renamed theme-key from `VPAdminSelect` to `CometAdminSelect`
+
+## @comet/admin-rte
+
+### Highlights
+
+-   Add ability to customize the styling using theme-overrides
+
+# @comet/admin
+
+## [1.3.0] - 4. March 2021
+
+This is a bugfix/maintenance release.
+
+### Bugfixes
+
+-   Handle submit error in EditDialog (#209)
+-   Pass `innerRef` from `TableBodyRow` to `sc.TableBodyRow`
+
+### Internal Changes
+
+-   The `styled-components` peer dependency has been changed to `^4.0.0 || ^5.0.0` to include v5.
+-   The `graphql` peer dependency has been changed to `^14.0.0 || ^15.0.0` to include v14.
+
 ## [1.2.0] - 23. Feb 2021
 
 ### Highlights
@@ -66,6 +119,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Internal Changes
 
 -   TotalCount of the tables Pagination is now formatted with FormattedNumber from react-intl.
+-   switched from yarn to npm 7 (updated all dependencies)
 
 ### Migration Guide
 
@@ -158,8 +212,8 @@ Detailed instructions can be found [here](https://www.apollographql.com/docs/rea
 
 ```
 git clone https://github.com/apollographql/apollo-client.git
-npx jscodeshift -t apollo-client/codemods/ac2-to-ac3/imports.js --extensions ts --parser ts src/
-npx jscodeshift -t apollo-client/codemods/ac2-to-ac3/imports.js --extensions tsx --parser tsx src/
+npx jscodeshift -t apollo-client/scripts/codemods/ac2-to-ac3/imports.js --extensions ts --parser ts src/
+npx jscodeshift -t apollo-client/scripts/codemods/ac2-to-ac3/imports.js --extensions tsx --parser tsx src/
 ```
 
 **Component-Renames**
@@ -218,3 +272,99 @@ Strings are now prepared for internationalization. The default language is switc
 ```
 npx eslint --ext .ts,.tsx,.js,.jsx,.json,.md --fix src/
 ```
+
+# @comet/admin-color-picker
+
+## [1.0.2] - 23. Feb 2021
+
+use fixed version of react-color
+switched from yarn to npm 7 (updated all dependencies)
+
+## [1.0.1] - 12. Jan 2021 - re-release under new name
+
+This package has been renamed to @comet/admin-color-picker
+
+## [1.0.1] - 11. Jan 2021
+
+This is a bugfix/maintenance release
+
+## [1.0.0] - 22. Dec 2020
+
+This version ist the first stable version.
+
+# @comet/admin-date-picker
+
+## [1.0.2] - 23. Feb 2021
+
+switched from yarn to npm 7 (updated all dependencies)
+
+## [1.0.1] - 12. Jan 2021 - re-release under new name
+
+This package has been renamed to @comet/admin-date-picker
+
+## [1.0.1] - 11. Jan 2021
+
+This is a bugfix/maintenance release
+
+## [1.0.0] - 22. Dec 2020
+
+This version ist the first stable version.
+
+# @comet/admin-react-select
+
+## [1.0.2] - 23. Feb 2021
+
+switched from yarn to npm 7 (updated all dependencies)
+
+## [1.0.1] - 12. Jan 2021 - re-release under new name
+
+This package has been renamed to @comet/admin-react-select
+
+## [1.0.1] - 11. Jan 2021
+
+This is a bugfix/maintenance release
+
+## [1.0.0] - 22. Dec 2020
+
+This version ist the first stable version.
+
+# @comet/admin-rte
+
+## [1.2.1] - 23. Feb 2021
+
+### Bugfixes
+
+-   Make controls for RTE sticky
+-   Use mui-grey-palette for default colors
+-   Remove min-width of link buttons (MuiButtonGroup)
+
+### Internal Changes
+
+-   switched from yarn to npm 7 (updated all dependencies)
+
+## [1.2.0] - 22. Jan 2021
+
+### Highlights
+
+-   Add default styles (MUI) to built-in blocktypes
+-   Make built-in blocktypes styleable
+-   Supports disabled-attribute
+
+### Internal Changes
+
+-   Rename prop-name "customBlockMap" to "blocktypeMap", deprecate prop-name "customBlockMap"
+-   Rename prop-name "Icon" to "icon", deprecate prop-name "Icon"
+
+## [1.1.1] - 12. Jan 2021 - re-release under new name
+
+This package has been renamed to @comet/admin-rte
+
+## [1.1.1] - 11. Jan 2021
+
+This is a bugfix/maintenance release
+
+## [1.1.0] - 22. Dec 2020
+
+### Changes
+
+-   Add `blockquote` support

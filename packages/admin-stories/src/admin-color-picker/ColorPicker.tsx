@@ -1,37 +1,70 @@
 import { Field } from "@comet/admin";
 import { FinalFormColorPicker } from "@comet/admin-color-picker";
 import { Button } from "@material-ui/core";
+import { Dashboard, DashboardOutlined, PaletteOutlined } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
+const initialFormValues = { color1: "#ff00ff", color2: "navy", color4: "lime", color5: "peachpuff", color6: "salmon", color7: "teal" };
+const colorPalette1 = ["f94144", "f3722c", "f8961e", "f9844a", "f9c74f", "90be6d", "43aa8b", "4d908e", "577590", "277da1"];
+const colorPalette2 = ["crimson", "cornsilk", "lightblue", "steelblue", "midnightblue", "orange"];
+
 const Story = () => (
-    <div style={{ width: "500px" }}>
+    <div style={{ width: 350 }}>
         <Form
-            initialValues={{ colorPicker: "#ff00ff", colorPickerPalette: "navy" }}
+            initialValues={initialFormValues}
             onSubmit={(values) => {
                 console.log("values: ", values);
             }}
-            render={({ handleSubmit }) => (
+            render={({ handleSubmit, values }) => (
                 <form onSubmit={handleSubmit}>
-                    <Field name="colorPicker" label="Color-Picker" type="text" fullWidth component={FinalFormColorPicker} showPicker />
+                    <Field name="color1" label="Color-Picker" type="text" component={FinalFormColorPicker} showPicker />
+                    <Field name="color2" label="Color-Palette" type="text" component={FinalFormColorPicker} colorPalette={colorPalette1} />
                     <Field
-                        name="colorPalette"
-                        label="Color-Palette"
+                        name="color3"
+                        label="Color-Palette & Picker"
                         type="text"
-                        fullWidth
-                        component={FinalFormColorPicker}
-                        colorPalette={["f94144", "f3722c", "f8961e", "f9844a", "f9c74f", "90be6d", "43aa8b", "4d908e", "577590", "277da1"]}
-                    />
-                    <Field
-                        name="colorPickerPalette"
-                        label="Color-Palette &amp; Picker"
-                        type="text"
-                        fullWidth
                         component={FinalFormColorPicker}
                         showPicker
-                        colorPalette={["crimson", "cornsilk", "lightblue", "steelblue", "midnightblue", "orange"]}
-                        pickerWidth={300}
+                        colorPalette={colorPalette2}
+                    />
+                    <Field
+                        name="color4"
+                        label="Color-Palette & Picker, full-width"
+                        type="text"
+                        component={FinalFormColorPicker}
+                        showPicker
+                        colorPalette={colorPalette2}
+                        fullWidth
+                    />
+                    <Field
+                        name="color5"
+                        label="Color-Palette & Picker, with clear-button"
+                        type="text"
+                        component={FinalFormColorPicker}
+                        showPicker
+                        colorPalette={colorPalette2}
+                        showClearButton
+                    />
+                    <Field
+                        name="color6"
+                        label="Color-Palette & Picker, with icon"
+                        type="text"
+                        component={FinalFormColorPicker}
+                        showPicker
+                        colorPalette={colorPalette2}
+                        endAdornment={<PaletteOutlined fontSize={"small"} />}
+                    />
+                    <Field
+                        name="color7"
+                        label="Color-Palette & Picker, colored icon"
+                        type="text"
+                        component={FinalFormColorPicker}
+                        showPicker
+                        colorPalette={colorPalette2}
+                        startAdornment={values.color7 ? <Dashboard htmlColor={`#${values.color7}`} /> : <DashboardOutlined color={"disabled"} />}
+                        showClearButton
                     />
                     <Button variant="contained" color="primary" onClick={handleSubmit}>
                         Submit

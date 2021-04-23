@@ -3,5 +3,7 @@ package-lock.json
 *.lock
 *.gql
 *.dist
-packages/
 lang/
+.watchmanconfig
+lib/
+lerna.json

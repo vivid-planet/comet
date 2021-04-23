@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-date-time",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -11,12 +11,13 @@
         "react-dates": "^21.8.0"
     },
     "devDependencies": {
-        "@types/react-dates": "^21.8.1",
-        "@comet/admin": "^1.0.0"
+        "@comet/admin": "^2.0.0-alpha.3",
+        "@types/react": "^16.8.25",
+        "@types/react-dates": "^21.8.1"
     },
     "peerDependencies": {
+        "@comet/admin": "^2.0.0-alpha.3",
         "@material-ui/core": "^4.1.3",
-        "@comet/admin": "^1.0.0",
         "react": "^16.8",
         "react-final-form": "^6.3.0",
         "react-intl": "^5.10.0"
@@ -29,6 +30,7 @@
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
+        "registry": "https://registry.npmjs.org",
         "access": "public"
     },
     "license": "BSD-2-Clause"
