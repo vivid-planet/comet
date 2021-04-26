@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
--   Removed `text` property from `MenuItem` in favor of more flexibel `children`.
+-   change type of `text` property at `MenuItem` to node in favor of more flexibel `children`.
 
 ### Feature
 

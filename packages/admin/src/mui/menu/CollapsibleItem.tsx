@@ -17,7 +17,6 @@ export interface ICollapsibleItemProps extends IMenuItemProps {
     collapsible: boolean;
     secondaryAction?: React.ComponentType<ICollapsibleItemSecondaryActionProps>;
     isOpen?: boolean;
-    text: React.ReactNode;
 }
 
 export interface ICollapsibleItemSecondaryActionProps {
