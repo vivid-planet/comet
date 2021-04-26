@@ -23,6 +23,7 @@ const messages = defineMessages({
         id: "cometAdmin.generic.edit",
         defaultMessage: "Edit",
     },
+
     add: {
         id: "cometAdmin.generic.add",
         defaultMessage: "Add",

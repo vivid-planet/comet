@@ -24,7 +24,9 @@ export const MenuItem: React.FunctionComponent<IMenuItemProps & MuiListItemProps
     return (
         <sc.ListItem level={level} hasIcon={hasIcon} button menuOpen={context.open} {...otherProps}>
             {!!icon && <sc.ListItemIcon selected={otherProps.selected}>{icon}</sc.ListItemIcon>}
-            <sc.ListItemText level={level} selected={otherProps.selected} inset={!icon}>{children}</sc.ListItemText>
+            <sc.ListItemText level={level} selected={otherProps.selected} inset={!icon}>
+                {children}
+            </sc.ListItemText>
             {!!secondaryAction && context.open && (
                 <sc.ListItemSecondaryAction selected={otherProps.selected}>{secondaryAction}</sc.ListItemSecondaryAction>
             )}

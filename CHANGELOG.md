@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Removed `text` property from `MenuItem` in favor of more flexibel `children`.
 
+### Feature
+
+-   add onAfterSubmit to FinalForm
+
 ## [1.3.0] - 4. March 2021
 
 This is a bugfix/maintenance release.

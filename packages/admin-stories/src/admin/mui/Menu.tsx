@@ -9,18 +9,23 @@ import StoryRouter from "storybook-react-router";
 
 const AppMenu: React.FC = () => (
     <Menu>
-        <MenuItemRouterLink  icon={<CalendarToday />} to="/foo1" >
-            <FormattedMessage id="comet.stories.foo1" defaultMessage="Foo1"/>
+        <MenuItemRouterLink icon={<CalendarToday />} to="/foo1">
+            <FormattedMessage id="comet.stories.foo1" defaultMessage="Foo1" />
         </MenuItemRouterLink>
-        <MenuItemRouterLink icon={<School />} to="/foo2" >
-            <FormattedMessage id="comet.stories.foo2" defaultMessage="Foo2"/>
+        <MenuItemRouterLink icon={<School />} to="/foo2">
+            <FormattedMessage id="comet.stories.foo2" defaultMessage="Foo2" />
         </MenuItemRouterLink>
-        <MenuCollapsibleItem text={<FormattedMessage id="comet.stories.foo3" defaultMessage="Foo3"/>} icon={<Settings />} collapsible={true} isOpen={false}>
-            <MenuItemRouterLink icon={<Home />} to="/foo4" >
-                <FormattedMessage id="comet.stories.foo4" defaultMessage="Foo4"/>
+        <MenuCollapsibleItem
+            text={<FormattedMessage id="comet.stories.foo3" defaultMessage="Foo3" />}
+            icon={<Settings />}
+            collapsible={true}
+            isOpen={false}
+        >
+            <MenuItemRouterLink icon={<Home />} to="/foo4">
+                <FormattedMessage id="comet.stories.foo4" defaultMessage="Foo4" />
             </MenuItemRouterLink>
-            <MenuItemRouterLink icon={<Home />} to="/foo5" >
-                <FormattedMessage id="comet.stories.foo5" defaultMessage="Foo5"/>
+            <MenuItemRouterLink icon={<Home />} to="/foo5">
+                <FormattedMessage id="comet.stories.foo5" defaultMessage="Foo5" />
             </MenuItemRouterLink>
         </MenuCollapsibleItem>
     </Menu>
