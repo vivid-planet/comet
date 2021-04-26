@@ -52,9 +52,7 @@ export const MenuCollapsibleItem: React.FunctionComponent<ICollapsibleItemProps 
                 {...{ text, icon, level }}
                 onClick={handleClick.bind(null, open, setOpen)}
                 secondaryAction={collapsible && <SecondaryAction open={open} />}
-            >
-                {text}
-            </MenuItem>
+            />
             {collapsible ? (
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     {childElements}
