@@ -1,4 +1,4 @@
-import { Field, RangeSlider } from "@comet/admin";
+import { Field, FinalFormRangeSlider } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -35,10 +35,6 @@ const Thumb = styled.div`
     }
 `;
 
-const ThumbComponent: React.FunctionComponent = (props) => {
-    return <Thumb {...props} />;
-};
-
 function Story() {
     return (
         <div style={{ width: "300px" }}>
@@ -49,12 +45,12 @@ function Story() {
                 initialValues={{ price: { min: 0, max: 100 } }}
                 render={({ handleSubmit, values }) => (
                     <Field
-                        component={RangeSlider}
+                        component={FinalFormRangeSlider}
                         name="price"
                         min={0}
                         max={100}
                         endAdornment={<span>€</span>}
-                        sliderProps={{ ThumbComponent: ThumbComponent }}
+                        sliderProps={{ ThumbComponent: Thumb }}
                     />
                 )}
             />
