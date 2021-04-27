@@ -19,7 +19,7 @@ import {
     MenuCollapsibleItemThemeProps,
     MenuThemeProps,
 } from "./mui";
-import { CometAdminFilterBarClassKeys, CometAdminFilterBarPopOverFormFieldClassKeys } from "./table";
+import { CometAdminFilterBarClassKeys, CometAdminFilterBarPopOverFormFieldClassKeys, PopoverFormFieldThemeProps } from "./table";
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
@@ -49,5 +49,6 @@ declare module "@material-ui/core/styles/props" {
         CometAdminMasterLayout: MasterLayoutThemeProps;
         CometAdminErrorBoundary: ErrorBoundaryThemeProps;
         CometAdminBreadcrumbs: CometAdminBreadcrumbsThemeProps;
+        CometAdminFilterBarPopOverFormField: PopoverFormFieldThemeProps;
     }
 }

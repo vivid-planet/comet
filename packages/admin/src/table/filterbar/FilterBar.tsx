@@ -35,13 +35,13 @@ const useStyles = makeStyles(
         showMoreWrapper: {
             minWidth: (props: StyleProps) => `${props.fieldBarWidth}px`,
             border: `1px solid ${theme.palette.grey[300]}`,
+            justifyContent: "center",
             position: "relative",
             marginBottom: "10px",
-            marginRight: "10px",
-            display: "flex",
-            justifyContent: "center",
             alignItems: "center",
+            marginRight: "10px",
             cursor: "pointer",
+            display: "flex",
         },
         showMoreTextWrapper: {
             marginLeft: "15px",
