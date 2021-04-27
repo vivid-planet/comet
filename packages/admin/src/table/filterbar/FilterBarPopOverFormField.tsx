@@ -2,9 +2,11 @@ import { Box, Button, ButtonProps, Popover, Typography } from "@material-ui/core
 import { makeStyles, Theme, ThemeOptions, useTheme } from "@material-ui/core/styles";
 import isEqual = require("lodash.isequal");
 import get = require("lodash.get");
+import { FieldState } from "final-form";
 import * as React from "react";
 import { FieldRenderProps, Form, useForm } from "react-final-form";
 
+import { difference } from "./difference";
 import { IFilterBarField } from "./FilterBar";
 
 export interface PopoverFormFieldThemeProps {
@@ -92,6 +94,14 @@ export const isEqualFunction = (nextValue?: any, preValue?: any) => {
     }
 };
 
+export const dirtyFieldsCount = (fieldState?: FieldState<any>) => {
+    if (fieldState?.initial) {
+        const diff = difference<any, Record<string, any>>(fieldState?.value, fieldState?.initial);
+        return Object.keys(diff).length;
+    }
+    return Object.keys(fieldState?.value).length;
+};
+
 export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps & PopoverFormFieldThemeProps> = ({ field }) => {
     const outerForm = useForm();
     const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
@@ -131,7 +141,7 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps 
                                         {Array.isArray(outerForm.getFieldState(field.name)?.value)
                                             ? outerForm.getFieldState(field.name)?.value.length
                                             : typeof outerForm.getFieldState(field.name)?.value === "object"
-                                            ? Object.keys(outerForm.getFieldState(field.name)?.value).length
+                                            ? dirtyFieldsCount(outerForm.getFieldState(field.name))
                                             : 1}
                                     </Typography>
                                 </div>
