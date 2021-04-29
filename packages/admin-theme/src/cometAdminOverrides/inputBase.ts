@@ -1,13 +1,17 @@
 import { CometAdminInputBaseClassKeys } from "@comet/admin";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
+import { bluePalette, neutrals } from "../colors";
+
 export default (): StyleRules<{}, CometAdminInputBaseClassKeys> => ({
     root: {
-        borderColor: "#D9D9D9",
-        borderRadius: 0,
+        borderColor: neutrals[100],
+        borderRadius: 2,
         height: 36,
     },
-    focused: {},
+    focused: {
+        borderColor: bluePalette.main,
+    },
     adornedStart: {},
     adornedEnd: {},
     input: {

@@ -11,7 +11,7 @@ export default (): PaletteOptions => ({
     grey: neutrals,
     divider: neutrals[100],
     text: {
-        primary: "#16171a",
+        primary: neutrals[900],
         secondary: "#757575",
         disabled: neutrals[300],
     },
