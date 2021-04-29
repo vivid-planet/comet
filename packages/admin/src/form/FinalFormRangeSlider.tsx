@@ -37,12 +37,12 @@ const styles = (theme: Theme) => {
     });
 };
 
-interface IFinalFormRangeSliderProps extends FieldRenderProps<any, HTMLInputElement> {
+interface IFinalFormRangeSliderProps extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement> {
     min: number;
     max: number;
     startAdornment?: string | React.ReactElement;
     endAdornment?: string | React.ReactElement;
-    sliderProps?: SliderProps;
+    sliderProps?: Omit<SliderProps, "min" | "max">;
 }
 
 const FinalFormRangeSliderComponent: React.FunctionComponent<WithStyles<typeof styles, true> & IFinalFormRangeSliderProps> = ({
