@@ -1,3 +1,4 @@
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import * as React from "react";
 import { Field as FinalFormField, FieldRenderProps } from "react-final-form";
 
@@ -32,7 +33,8 @@ export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extend
     }
 
     private renderField({ input, meta, fieldContainerProps, ...rest }: FieldRenderProps<FieldValue, T>) {
-        const { children, component, name, label, required, disabled, variant } = this.props;
+        const { children, component, name, label, required, disabled, variant, type } = this.props;
+        const renderUsingFormControlLabel: boolean = type === "checkbox" || type === "radio";
 
         function render() {
             if (component) {
@@ -46,13 +48,13 @@ export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extend
         }
         return (
             <FieldContainer
-                label={label}
+                label={renderUsingFormControlLabel ? undefined : label}
                 required={required}
                 disabled={disabled}
                 error={(meta.error || meta.submitError) && meta.touched && (meta.error || meta.submitError)}
                 variant={variant}
             >
-                {render()}
+                {renderUsingFormControlLabel ? <FormControlLabel control={<>{render()}</>} label={label} /> : render()}
             </FieldContainer>
         );
     }

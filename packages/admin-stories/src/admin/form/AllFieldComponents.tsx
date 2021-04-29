@@ -1,5 +1,5 @@
 import { Field, FieldContainer, FinalFormCheckbox, FinalFormInput, FinalFormRadio, FinalFormSelect, FinalFormSwitch } from "@comet/admin";
-import { Button, FormControlLabel, MenuItem } from "@material-ui/core";
+import { Button, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -25,12 +25,8 @@ function Story() {
                                 <Field name="checkbox" label="FinalFormCheckbox" type="checkbox" component={FinalFormCheckbox} />
                                 <Field name="input" label="FinalFormInput" component={FinalFormInput} />
                                 <FieldContainer label="FinalFormRadio">
-                                    <Field name="radio" type="radio" value="foo">
-                                        {(props) => <FormControlLabel label="Foo" control={<FinalFormRadio {...props} />} />}
-                                    </Field>
-                                    <Field name="radio" type="radio" value="bar">
-                                        {(props) => <FormControlLabel label="Bar" control={<FinalFormRadio {...props} />} />}
-                                    </Field>
+                                    <Field name="radio" type="radio" value="foo" label="Foo" component={FinalFormRadio} />
+                                    <Field name="radio" type="radio" value="bar" label="Bar" component={FinalFormRadio} />
                                 </FieldContainer>
                                 <Field name="select" label="FinalFormSelect">
                                     {(props) => (
