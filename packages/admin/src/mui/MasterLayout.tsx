@@ -19,7 +19,7 @@ export interface MasterLayoutThemeProps {
     menuIcon?: React.ComponentType;
 }
 
-export type CometAdminMasterLayoutClassKeys = "root" | "header" | "toolbar" | "menuButton" | "contentWrapper" | "mainContent";
+export type CometAdminMasterLayoutClassKeys = "root" | "header" | "toolbar" | "menuButton" | "contentWrapper";
 
 const styles = (theme: Theme) =>
     createStyles<CometAdminMasterLayoutClassKeys, any>({
@@ -38,9 +38,6 @@ const styles = (theme: Theme) =>
         menuButton: {},
         contentWrapper: {
             flexGrow: 1,
-        },
-        mainContent: {
-            padding: theme.spacing(4),
         },
     });
 
@@ -77,7 +74,7 @@ const MasterLayout: React.FC<WithStyles<typeof styles> & MasterLayoutProps & Mas
                 </AppBar>
                 <Menu />
                 <div style={{ paddingTop: headerHeight }} className={classes.contentWrapper}>
-                    <main className={classes.mainContent}>{children}</main>
+                    {children}
                 </div>
             </div>
         </MenuContext.Provider>
