@@ -9,6 +9,8 @@ export default (): StyleRules<{}, CometAdminErrorBoundaryClassKeys> => ({
         paddingTop: 10,
     },
     exceptionSummaryIcon: {},
+    exceptionSummaryIconOpened: {},
+    exceptionSummaryIconClosed: {},
     exceptionSummaryTitle: {},
     exceptionStackTrace: {},
 });

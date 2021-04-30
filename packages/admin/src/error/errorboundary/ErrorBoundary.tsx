@@ -1,6 +1,6 @@
-import { ChevronRight } from "@comet/admin-icons";
 import { createStyles, Typography, WithStyles, withStyles } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
+import { KeyboardArrowDown, KeyboardArrowRight } from "@material-ui/icons";
 import { Alert, AlertProps } from "@material-ui/lab";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -11,12 +11,16 @@ export type CometAdminErrorBoundaryClassKeys =
     | "exceptionDetails"
     | "exceptionSummary"
     | "exceptionSummaryIcon"
+    | "exceptionSummaryIconOpened"
+    | "exceptionSummaryIconClosed"
     | "exceptionSummaryTitle"
     | "exceptionStackTrace";
 
 export interface ErrorBoundaryThemeProps {
     variant?: AlertProps["variant"];
     icon?: AlertProps["icon"];
+    toggleDetailsOpenedIcon?: React.ReactNode;
+    toggleDetailsClosedIcon?: React.ReactNode;
 }
 
 interface ErrorBoundaryProps extends ErrorBoundaryThemeProps, WithStyles<CometAdminErrorBoundaryClassKeys> {
@@ -39,7 +43,13 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, IErrorBoundarySt
     }
 
     public render() {
-        const { classes, variant, icon } = this.props;
+        const {
+            classes,
+            variant,
+            icon,
+            toggleDetailsOpenedIcon = <KeyboardArrowRight />,
+            toggleDetailsClosedIcon = <KeyboardArrowDown />,
+        } = this.props;
         const { error, errorInfo } = this.state;
 
         if (errorInfo != null) {
@@ -56,7 +66,12 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, IErrorBoundarySt
                     {process.env.NODE_ENV === "development" && (
                         <details className={classes.exceptionDetails}>
                             <summary className={classes.exceptionSummary}>
-                                <ChevronRight classes={{ root: classes.exceptionSummaryIcon }} />
+                                <div className={`${classes.exceptionSummaryIcon} ${classes.exceptionSummaryIconOpened}`}>
+                                    {toggleDetailsOpenedIcon}
+                                </div>
+                                <div className={`${classes.exceptionSummaryIcon} ${classes.exceptionSummaryIconClosed}`}>
+                                    {toggleDetailsClosedIcon}
+                                </div>
                                 <Typography classes={{ root: classes.exceptionSummaryTitle }}>{error != null && error.toString()}</Typography>
                             </summary>
 
@@ -76,8 +91,13 @@ const styles = (theme: Theme) =>
         message: {},
         exceptionDetails: {
             whiteSpace: "pre-wrap",
-            "&[open] $exceptionSummaryIcon": {
-                transform: "rotate(90deg)",
+            "&[open]": {
+                "& $exceptionSummaryIconClosed": {
+                    display: "flex",
+                },
+                "& $exceptionSummaryIconOpened": {
+                    display: "none",
+                },
             },
         },
         exceptionSummary: {
@@ -91,7 +111,13 @@ const styles = (theme: Theme) =>
             },
         },
         exceptionSummaryIcon: {
-            fontSize: 16,
+            alignItems: "center",
+        },
+        exceptionSummaryIconOpened: {
+            display: "flex",
+        },
+        exceptionSummaryIconClosed: {
+            display: "none",
         },
         exceptionSummaryTitle: {
             fontWeight: theme.typography.fontWeightBold,
