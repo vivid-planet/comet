@@ -1,11 +1,25 @@
-import { Typography } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { ChevronRight } from "@comet/admin-icons";
+import { createStyles, Typography, WithStyles, withStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import { Alert, AlertProps } from "@material-ui/lab";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { ExceptionContainerDetails, ExceptionContainerSummary } from "./ErrorBoundary.sc";
+export type CometAdminErrorBoundaryClassKeys =
+    | "alert"
+    | "message"
+    | "exceptionDetails"
+    | "exceptionSummary"
+    | "exceptionSummaryIcon"
+    | "exceptionSummaryTitle"
+    | "exceptionStackTrace";
 
-interface IErrorBoundaryProps {
+export interface ErrorBoundaryThemeProps {
+    variant?: AlertProps["variant"];
+    icon?: AlertProps["icon"];
+}
+
+interface ErrorBoundaryProps extends ErrorBoundaryThemeProps, WithStyles<CometAdminErrorBoundaryClassKeys> {
     userErrorMessage?: string;
 }
 
@@ -14,8 +28,8 @@ interface IErrorBoundaryState {
     errorInfo?: React.ErrorInfo;
 }
 
-class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryState> {
-    constructor(props: IErrorBoundaryProps) {
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, IErrorBoundaryState> {
+    constructor(props: ErrorBoundaryProps) {
         super(props);
         this.state = {};
     }
@@ -25,11 +39,13 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryS
     }
 
     public render() {
+        const { classes, variant, icon } = this.props;
         const { error, errorInfo } = this.state;
+
         if (errorInfo != null) {
             return (
-                <Alert variant="filled" severity="error">
-                    <Typography>
+                <Alert variant={variant} icon={icon} severity="error" classes={{ root: classes.alert }}>
+                    <Typography classes={{ root: classes.message }}>
                         {this.props.userErrorMessage ? (
                             this.props.userErrorMessage
                         ) : (
@@ -38,13 +54,14 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryS
                     </Typography>
 
                     {process.env.NODE_ENV === "development" && (
-                        <ExceptionContainerDetails>
-                            <ExceptionContainerSummary>Details</ExceptionContainerSummary>
+                        <details className={classes.exceptionDetails}>
+                            <summary className={classes.exceptionSummary}>
+                                <ChevronRight classes={{ root: classes.exceptionSummaryIcon }} />
+                                <Typography classes={{ root: classes.exceptionSummaryTitle }}>{error != null && error.toString()}</Typography>
+                            </summary>
 
-                            <Typography>{error != null && error.toString()}</Typography>
-
-                            <Typography>{errorInfo.componentStack}</Typography>
-                        </ExceptionContainerDetails>
+                            <Typography classes={{ root: classes.exceptionStackTrace }}>{errorInfo.componentStack}</Typography>
+                        </details>
                     )}
                 </Alert>
             );
@@ -52,4 +69,37 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryS
         return <>{this.props.children}</>;
     }
 }
-export { ErrorBoundary };
+
+const styles = (theme: Theme) =>
+    createStyles<CometAdminErrorBoundaryClassKeys, any>({
+        alert: {},
+        message: {},
+        exceptionDetails: {
+            whiteSpace: "pre-wrap",
+            "&[open] $exceptionSummaryIcon": {
+                transform: "rotate(90deg)",
+            },
+        },
+        exceptionSummary: {
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+            outline: "none",
+            paddingTop: theme.spacing(1),
+            "&:first-of-type ": {
+                listStyleType: "none",
+            },
+        },
+        exceptionSummaryIcon: {
+            fontSize: 16,
+        },
+        exceptionSummaryTitle: {
+            fontWeight: theme.typography.fontWeightBold,
+            paddingLeft: theme.spacing(1),
+        },
+        exceptionStackTrace: {},
+    });
+
+const StyledErrorBoundary = withStyles(styles, { name: "CometAdminErrorBoundary" })(ErrorBoundary);
+
+export { StyledErrorBoundary as ErrorBoundary };
