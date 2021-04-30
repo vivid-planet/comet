@@ -10,17 +10,19 @@ import cometAdminClearInputButtonOverrides from "./cometAdminOverrides/clearInpu
 import cometAdminErrorBoundaryOverrides from "./cometAdminOverrides/errorBoundary";
 import cometAdminFormFieldContainerOverrides from "./cometAdminOverrides/formFieldContainer";
 import cometAdminInputBaseOverrides from "./cometAdminOverrides/inputBase";
-import cometAdminMainContentOverrides from "./cometAdminOverrides/maincontentmasterLayout";
+import cometAdminMainContentOverrides from "./cometAdminOverrides/maincontent";
 import cometAdminMasterLayoutOverrides from "./cometAdminOverrides/masterLayout";
 import cometAdminMenuOverrides from "./cometAdminOverrides/menu";
 import cometAdminMenuCollapsibleItemOverrides from "./cometAdminOverrides/menuCollapsibleItem";
 import cometAdminMenuItemOverrides from "./cometAdminOverrides/menuItem";
+import cometAdminToolbarOverrides from "./cometAdminOverrides/toolbar";
 import { cometAdminBreadcrumbsProps } from "./cometAdminProps/breadcrumbs";
 import { cometAdminClearInputButtonProps } from "./cometAdminProps/clearInputButton";
 import cometAdminErrorBoundaryProps from "./cometAdminProps/errorBoundary";
 import cometAdminMasterLayoutProps from "./cometAdminProps/masterLayout";
 import cometAdminMenuProps from "./cometAdminProps/menu";
 import cometAdminMenuCollapsibleItemProps from "./cometAdminProps/menuCollapsibleItem";
+import { cometAdminToolbarProps } from "./cometAdminProps/toolbar";
 import cometAdminRteBlockTypeControlsOverrides from "./cometAdminRteOverrides/blockTypeControls";
 import cometAdminRteControlButtonOverrides from "./cometAdminRteOverrides/controlButton";
 import cometAdminRteFeaturesButtonGroupOverrides from "./cometAdminRteOverrides/featuresButtonGroup";
@@ -50,6 +52,10 @@ export default (): ThemeOptions => ({
         CometAdminBreadcrumbs: cometAdminBreadcrumbsProps(),
         CometAdminClearInputButton: cometAdminClearInputButtonProps(),
         ...getMuiProps(),
+        CometAdminToolbar: cometAdminToolbarProps(),
+        MuiAppBar: {
+            elevation: 0,
+        },
     },
     overrides: {
         CometAdminClearInputButton: cometAdminClearInputButtonOverrides(),
@@ -59,14 +65,21 @@ export default (): ThemeOptions => ({
         CometAdminMenuCollapsibleItem: cometAdminMenuCollapsibleItemOverrides(),
         CometAdminMainContent: cometAdminMainContentOverrides(),
         CometAdminMasterLayout: cometAdminMasterLayoutOverrides(),
+        CometAdminToolbar: cometAdminToolbarOverrides(),
         CometAdminInputBase: cometAdminInputBaseOverrides(),
+
+        /*RTE*/
         CometAdminRte: cometAdminRteRteOverrides(),
         CometAdminRteToolbar: cometAdminRteToolbarOverrides(),
         CometAdminRteControlButton: cometAdminRteControlButtonOverrides(),
         CometAdminRteFeaturesButtonGroup: cometAdminRteFeaturesButtonGroupOverrides(),
         CometAdminRteBlockTypeControls: cometAdminRteBlockTypeControlsOverrides(),
         CometAdminRteLinkControls: cometAdminRteLinkControlsOverrides(),
+
+        /*Select*/
         CometAdminSelect: cometAdminSelectOverrides(),
+
+        /* Color Picker*/
         CometAdminColorPicker: cometAdminColorPickerOverrides(),
         CometAdminErrorBoundary: cometAdminErrorBoundaryOverrides(),
         CometAdminBreadcrumbs: cometAdminBreadcrumbsOverrides(),

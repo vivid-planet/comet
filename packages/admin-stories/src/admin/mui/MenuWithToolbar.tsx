@@ -1,5 +1,5 @@
 import { MainContent, MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, Toolbar, useWindowSize } from "@comet/admin";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Container, Typography } from "@material-ui/core";
 import { Dashboard, GitHub, Launch, List, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -61,7 +61,20 @@ export const Story: React.FC = () => (
                 render={() => (
                     <>
                         <Toolbar />
-                        <MainContent>Root</MainContent>
+                        <MainContent>
+                            <Container>
+                                <Box>
+                                    {[...new Array(50)]
+                                        .map(
+                                            () => `Cras mattis consectetur purus sit amet fermentum.
+Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
+                                        )
+                                        .join("\n")}
+                                </Box>
+                            </Container>
+                        </MainContent>
                     </>
                 )}
             />
