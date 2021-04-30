@@ -10,6 +10,7 @@ import cometAdminClearInputButtonOverrides from "./cometAdminOverrides/clearInpu
 import cometAdminErrorBoundaryOverrides from "./cometAdminOverrides/errorBoundary";
 import cometAdminFormFieldContainerOverrides from "./cometAdminOverrides/formFieldContainer";
 import cometAdminInputBaseOverrides from "./cometAdminOverrides/inputBase";
+import cometAdminMainContentOverrides from "./cometAdminOverrides/maincontentmasterLayout";
 import cometAdminMasterLayoutOverrides from "./cometAdminOverrides/masterLayout";
 import cometAdminMenuOverrides from "./cometAdminOverrides/menu";
 import cometAdminMenuCollapsibleItemOverrides from "./cometAdminOverrides/menuCollapsibleItem";
@@ -56,6 +57,7 @@ export default (): ThemeOptions => ({
         CometAdminMenu: cometAdminMenuOverrides(),
         CometAdminMenuItem: cometAdminMenuItemOverrides(),
         CometAdminMenuCollapsibleItem: cometAdminMenuCollapsibleItemOverrides(),
+        CometAdminMainContent: cometAdminMainContentOverrides(),
         CometAdminMasterLayout: cometAdminMasterLayoutOverrides(),
         CometAdminInputBase: cometAdminInputBaseOverrides(),
         CometAdminRte: cometAdminRteRteOverrides(),
