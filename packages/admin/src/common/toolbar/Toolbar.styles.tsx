@@ -1,16 +1,13 @@
 import { Theme } from "@material-ui/core/styles";
-import { ArrowBack } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
-import * as React from "react";
 
 import { useComponentThemeProps } from "../../mui/useComponentThemeProps";
 
 export interface ToolbarThemeProps {
-    backIcon?: React.ReactNode;
     elevation?: number;
 }
 
-export type CometAdminToolbarClassKeys = "root" | "muiToolbar" | "historyContainer" | "mainContentContainer" | "actionContainer";
+export type CometAdminToolbarClassKeys = "root" | "muiToolbar" | "mainContentContainer" | "actionContainer";
 
 export const useToolbarStyles = makeStyles<Theme, { headerHeight: number }, CometAdminToolbarClassKeys>(
     () => ({
@@ -30,17 +27,6 @@ export const useToolbarStyles = makeStyles<Theme, { headerHeight: number }, Come
             flex: 1,
             alignItems: "stretch",
         },
-
-        historyContainer: {
-            flex: 0,
-            display: "flex",
-            alignItems: "stretch",
-
-            "& [class*='ToolbarItem']": {
-                padding: 0,
-                paddingRight: 5,
-            },
-        },
         mainContentContainer: {
             display: "flex",
             flex: 1,
@@ -58,8 +44,8 @@ export const useToolbarStyles = makeStyles<Theme, { headerHeight: number }, Come
 );
 
 export function useThemeProps() {
-    const { elevation = 4, backIcon = <ArrowBack />, ...restProps } = useComponentThemeProps<ToolbarThemeProps>("CometAdminToolbar") ?? {};
-    return { elevation, backIcon, ...restProps };
+    const { elevation = 4, ...restProps } = useComponentThemeProps<ToolbarThemeProps>("CometAdminToolbar") ?? {};
+    return { elevation, ...restProps };
 }
 
 // Theme Augmentation
