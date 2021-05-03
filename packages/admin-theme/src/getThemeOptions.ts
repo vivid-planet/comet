@@ -15,7 +15,8 @@ import cometAdminMasterLayoutOverrides from "./cometAdminOverrides/masterLayout"
 import cometAdminMenuOverrides from "./cometAdminOverrides/menu";
 import cometAdminMenuCollapsibleItemOverrides from "./cometAdminOverrides/menuCollapsibleItem";
 import cometAdminMenuItemOverrides from "./cometAdminOverrides/menuItem";
-import cometAdminToolbarOverrides from "./cometAdminOverrides/toolbar";
+import { cometAdminToolbarOverrides } from "./cometAdminOverrides/toolbar";
+import { cometAdminToolbarItemOverrides } from "./cometAdminOverrides/toolbaritem";
 import { cometAdminBreadcrumbsProps } from "./cometAdminProps/breadcrumbs";
 import { cometAdminClearInputButtonProps } from "./cometAdminProps/clearInputButton";
 import cometAdminErrorBoundaryProps from "./cometAdminProps/errorBoundary";
@@ -66,6 +67,7 @@ export default (): ThemeOptions => ({
         CometAdminMainContent: cometAdminMainContentOverrides(),
         CometAdminMasterLayout: cometAdminMasterLayoutOverrides(),
         CometAdminToolbar: cometAdminToolbarOverrides(),
+        CometAdminToolbarItem: cometAdminToolbarItemOverrides(),
         CometAdminInputBase: cometAdminInputBaseOverrides(),
 
         /*RTE*/

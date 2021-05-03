@@ -4,4 +4,5 @@ import * as React from "react";
 
 export const cometAdminToolbarProps = (): ToolbarThemeProps => ({
     backIcon: <ArrowLeft />,
+    elevation: 1,
 });

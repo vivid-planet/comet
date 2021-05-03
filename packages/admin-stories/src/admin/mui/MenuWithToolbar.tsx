@@ -1,8 +1,20 @@
-import { MainContent, MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, Toolbar, useWindowSize } from "@comet/admin";
-import { Box, Container, Typography } from "@material-ui/core";
+import {
+    MainContent,
+    MasterLayout,
+    Menu,
+    MenuCollapsibleItem,
+    MenuItemAnchorLink,
+    MenuItemRouterLink,
+    Toolbar,
+    ToolbarItem,
+    useWindowSize,
+} from "@comet/admin";
+import { Preview } from "@comet/admin-icons";
+import { Box, Button, Container, Typography } from "@material-ui/core";
 import { Dashboard, GitHub, Launch, List, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 import { Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
 
@@ -60,7 +72,30 @@ export const Story: React.FC = () => (
                 exact
                 render={() => (
                     <>
-                        <Toolbar />
+                        <Toolbar
+                            actionItems={
+                                <>
+                                    <Button startIcon={<Preview />}>
+                                        <Typography>
+                                            <FormattedMessage id={"comet.web_preview"} defaultMessage={"Web Preview"} />
+                                        </Typography>
+                                    </Button>
+                                    <Button variant={"contained"} color={"primary"}>
+                                        <Typography>Primary Action</Typography>
+                                    </Button>
+                                </>
+                            }
+                        >
+                            <ToolbarItem>
+                                <Typography>blubb</Typography>
+                            </ToolbarItem>
+                            <ToolbarItem>
+                                <Typography>blubb</Typography>
+                            </ToolbarItem>
+                            <ToolbarItem>
+                                <Typography>blubb</Typography>
+                            </ToolbarItem>
+                        </Toolbar>
                         <MainContent>
                             <Container>
                                 <Box>
