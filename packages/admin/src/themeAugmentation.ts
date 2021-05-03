@@ -1,4 +1,5 @@
 import { ClearInputButtonThemeProps, CometAdminClearInputButtonClassKeys } from "./common";
+import { CometAdminErrorBoundaryClassKeys, ErrorBoundaryThemeProps } from "./error";
 import { CometAdminFormFieldContainerClassKeys, CometAdminInputBaseClassKeys, FieldContainerThemeProps } from "./form";
 import {
     CometAdminMasterLayoutClassKeys,
@@ -19,6 +20,7 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminMenuCollapsibleItem: CometAdminMenuCollapsibleItemClassKeys;
         CometAdminMasterLayout: CometAdminMasterLayoutClassKeys;
         CometAdminInputBase: CometAdminInputBaseClassKeys;
+        CometAdminErrorBoundary: CometAdminErrorBoundaryClassKeys;
     }
 }
 
@@ -29,5 +31,6 @@ declare module "@material-ui/core/styles/props" {
         CometAdminMenu: MenuThemeProps;
         CometAdminMenuCollapsibleItem: MenuCollapsibleItemThemeProps;
         CometAdminMasterLayout: MasterLayoutThemeProps;
+        CometAdminErrorBoundary: ErrorBoundaryThemeProps;
     }
 }

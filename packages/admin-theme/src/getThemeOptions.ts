@@ -6,12 +6,14 @@ import { ThemeOptions } from "@material-ui/core/styles";
 
 import cometAdminColorPickerOverrides from "./cometAdminColorPickerOverrides/colorPicker";
 import cometAdminClearInputButtonOverrides from "./cometAdminOverrides/clearInputButton";
+import cometAdminErrorBoundaryOverrides from "./cometAdminOverrides/errorBoundary";
 import cometAdminFormFieldContainerOverrides from "./cometAdminOverrides/formFieldContainer";
 import cometAdminInputBaseOverrides from "./cometAdminOverrides/inputBase";
 import cometAdminMasterLayoutOverrides from "./cometAdminOverrides/masterLayout";
 import cometAdminMenuOverrides from "./cometAdminOverrides/menu";
 import cometAdminMenuCollapsibleItemOverrides from "./cometAdminOverrides/menuCollapsibleItem";
 import cometAdminMenuItemOverrides from "./cometAdminOverrides/menuItem";
+import cometAdminErrorBoundaryProps from "./cometAdminProps/errorBoundary";
 import cometAdminMasterLayoutProps from "./cometAdminProps/masterLayout";
 import cometAdminMenuProps from "./cometAdminProps/menu";
 import cometAdminMenuCollapsibleItemProps from "./cometAdminProps/menuCollapsibleItem";
@@ -40,6 +42,7 @@ export default (): ThemeOptions => ({
         CometAdminMenu: cometAdminMenuProps(),
         CometAdminMenuCollapsibleItem: cometAdminMenuCollapsibleItemProps(),
         CometAdminMasterLayout: cometAdminMasterLayoutProps(),
+        CometAdminErrorBoundary: cometAdminErrorBoundaryProps(),
         ...getMuiProps(),
     },
     overrides: {
@@ -58,6 +61,7 @@ export default (): ThemeOptions => ({
         CometAdminRteLinkControls: cometAdminRteLinkControlsOverrides(),
         CometAdminSelect: cometAdminSelectOverrides(),
         CometAdminColorPicker: cometAdminColorPickerOverrides(),
+        CometAdminErrorBoundary: cometAdminErrorBoundaryOverrides(),
         ...getMuiOverrides(),
     },
 });
