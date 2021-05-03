@@ -1,5 +1,5 @@
 export { default as getThemeOptions } from "./getThemeOptions";
-export { default as getPaletteOptions } from "./getPaletteOptions";
-export { default as getTypographyOptions } from "./getTypographyOptions";
+export * from "./paletteOptions";
+export * from "./typographyOptions";
 export * from "./getShadows";
 export * from "./colors";

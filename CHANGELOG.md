@@ -61,6 +61,8 @@ All notable changes to this project will be documented in this file. This projec
     -   Allows maximum item-nesting of two levels
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
+-   Changes to Stack
+    -   Removed prop `components.breadcrumbsContainer` in favour of a div that can be styled using the theme (`overrides -> CometAdminStack -> breadcrumbs`)
 
 ### Migration Guide
 

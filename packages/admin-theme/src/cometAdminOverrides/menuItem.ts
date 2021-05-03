@@ -2,7 +2,7 @@ import { CometAdminMenuItemClassKeys } from "@comet/admin";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
 import { bluePalette, neutrals } from "../colors";
-import { fontWeights } from "../getTypographyOptions";
+import { fontWeights } from "../typographyOptions";
 
 const colors = {
     textLevel1: "#242424",
