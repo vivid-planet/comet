@@ -107,6 +107,7 @@ class StackComponent extends React.Component<IProps, IState> {
                     addSwitchMeta: this.addSwitchMeta,
                     removeSwitchMeta: this.removeSwitchMeta,
                     switches: sortByParentId(this.state.switches),
+                    breadCrumbs: breadcrumbs,
                 }}
             >
                 <Route>

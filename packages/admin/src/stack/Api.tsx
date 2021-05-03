@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { IBreadcrumbItem, ISwitchItem } from "./Stack";
+
 export interface IStackApi {
     addBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode) => void;
     updateBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode) => void;
@@ -9,10 +11,8 @@ export interface IStackApi {
 
     addSwitchMeta: (id: string, options: { activePage: string; isInitialPageActive: boolean }) => void;
     removeSwitchMeta: (id: string) => void;
-    switches: Array<{
-        id: string;
-        isInitialPageActive: boolean;
-    }>;
+    switches: ISwitchItem[];
+    breadCrumbs: IBreadcrumbItem[];
 }
 export const StackApiContext = React.createContext<IStackApi | undefined>(undefined);
 export function useStackApi() {

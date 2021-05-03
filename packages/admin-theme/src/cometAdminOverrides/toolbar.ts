@@ -11,7 +11,6 @@ export const cometAdminToolbarOverrides = (): StyleRules<{}, CometAdminToolbarCl
             alignItems: "center",
         },
     },
-    historyContainer: {},
     mainContentContainer: {},
     actionContainer: {},
 });
