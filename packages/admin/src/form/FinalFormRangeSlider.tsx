@@ -54,14 +54,17 @@ const FinalFormRangeSliderComponent: React.FunctionComponent<WithStyles<typeof s
     endAdornment,
     input: { name, onChange, value: fieldValue },
 }) => {
-    const [minInput, setMinInput] = React.useState(fieldValue.min || 0);
-    const [maxInput, setMaxInput] = React.useState(fieldValue.max || 0);
+    const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || 0);
+    const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || 0);
 
     const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: number[]) => {
-        setMinInput(newValue[0]);
-        setMaxInput(newValue[1]);
         onChange({ min: newValue[0], max: newValue[1] });
     };
+
+    React.useEffect(() => {
+        setInternalMinInput(fieldValue.min);
+        setInternalMaxInput(fieldValue.max);
+    }, [fieldValue.min, fieldValue.max]);
 
     return (
         <div className={classes.root}>
@@ -73,20 +76,19 @@ const FinalFormRangeSliderComponent: React.FunctionComponent<WithStyles<typeof s
                             inputProps={{
                                 min: min,
                                 max: fieldValue.max,
-                                value: minInput,
+                                value: internalMinInput,
                                 type: "number",
                             }}
                             startAdornment={startAdornment ? startAdornment : ""}
                             endAdornment={endAdornment ? endAdornment : ""}
                             onBlur={() => {
-                                const minFieldValue = Math.min(minInput, fieldValue.max);
+                                const minFieldValue = Math.min(internalMinInput, fieldValue.max);
                                 if (fieldValue.min !== minFieldValue) {
                                     onChange({ ...fieldValue, min: minFieldValue < min ? min : minFieldValue });
-                                    setMinInput(minFieldValue < min ? min : minFieldValue);
                                 }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setMinInput(Number(e.target.value));
+                                setInternalMinInput(Number(e.target.value));
                             }}
                         />
                     </FormControl>
@@ -99,20 +101,19 @@ const FinalFormRangeSliderComponent: React.FunctionComponent<WithStyles<typeof s
                             inputProps={{
                                 min: fieldValue.min,
                                 max: max,
-                                value: maxInput,
+                                value: internalMaxInput,
                                 type: "number",
                             }}
                             startAdornment={startAdornment ? startAdornment : ""}
                             endAdornment={endAdornment ? endAdornment : ""}
                             onBlur={() => {
-                                const maxFieldValue = Math.max(fieldValue.min, maxInput);
+                                const maxFieldValue = Math.max(fieldValue.min, internalMaxInput);
                                 if (fieldValue.max !== maxFieldValue) {
                                     onChange({ ...fieldValue, max: maxFieldValue > max ? max : maxFieldValue });
-                                    setMaxInput(maxFieldValue > max ? max : maxFieldValue);
                                 }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setMaxInput(Number(e.target.value));
+                                setInternalMaxInput(Number(e.target.value));
                             }}
                         />
                     </FormControl>
