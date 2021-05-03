@@ -1,9 +1,9 @@
-import { CheckboxClassKey } from "@material-ui/core/Checkbox";
+import { RadioClassKey } from "@material-ui/core/Radio";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
 import { bluePalette, greenPalette, neutrals } from "../colors";
 
-export const getMuiCheckboxOverrides = (): StyleRules<{}, CheckboxClassKey> => ({
+export const getMuiRadioOverrides = (): StyleRules<{}, RadioClassKey> => ({
     root: {
         "& [class*='MuiSvgIcon-root']": {
             "& .border": {
@@ -14,7 +14,7 @@ export const getMuiCheckboxOverrides = (): StyleRules<{}, CheckboxClassKey> => (
             },
         },
         "&$checked [class*='MuiSvgIcon-root']": {
-            "& .checkIcon": {
+            "& .circle": {
                 fill: "#fff",
             },
         },
@@ -27,7 +27,7 @@ export const getMuiCheckboxOverrides = (): StyleRules<{}, CheckboxClassKey> => (
             },
         },
         "&$disabled$checked [class*='MuiSvgIcon-root']": {
-            "& .checkIcon": {
+            "& .circle": {
                 fill: "#fff",
             },
             "& .background": {
@@ -38,7 +38,6 @@ export const getMuiCheckboxOverrides = (): StyleRules<{}, CheckboxClassKey> => (
     checked: {},
     disabled: {},
     input: {},
-    indeterminate: {},
     colorPrimary: {
         "&$checked [class*='MuiSvgIcon-root']": {
             "& .background": {
