@@ -8,7 +8,7 @@
     "scripts": {
         "clean": "lerna run clean --stream --parallel",
         "build": "lerna run build --stream",
-        "start": "lerna run --stream --no-sort --concurrency 999 start",
+        "start": "lerna run --stream --concurrency 999 start",
         "storybook": "npm run --prefix packages/admin-stories storybook",
         "lint": "npm run lint:eslint && npm run lint:tsc",
         "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/**/src/",
