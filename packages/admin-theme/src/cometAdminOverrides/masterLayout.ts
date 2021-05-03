@@ -13,8 +13,22 @@ export default (): StyleRules<{}, CometAdminMasterLayoutClassKeys> => ({
         "& [class*='MuiIconButton']": {
             color: darkPalette.contrastText,
         },
+        "& [class*='MuiPaper']": {
+            "& [class*='MuiTypography']": {
+                color: "inherit",
+            },
+            "& [class*='MuiIconButton']": {
+                color: "inherit",
+            },
+        },
     },
     toolbar: {},
+    menuButton: {
+        marginRight: 10,
+        "& [class*='MuiSvgIcon-root']": {
+            fontSize: 20,
+        },
+    },
     contentWrapper: {},
     mainContent: {},
 });

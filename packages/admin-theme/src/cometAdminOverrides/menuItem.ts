@@ -22,21 +22,23 @@ export default (): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
 
         "& [class*='MuiListItemIcon-root']": {
             color: colors.textLevel1,
-            minWidth: 34,
+            minWidth: 28,
         },
 
         "& [class*='MuiListItemText-inset']": {
-            paddingLeft: 34,
+            paddingLeft: 28,
         },
 
         "& [class*='MuiSvgIcon-root']": {
-            fontSize: 21,
+            fontSize: 16,
         },
     },
     level1: {
         borderBottom: `1px solid ${neutrals[50]}`,
         boxSizing: "border-box",
         color: colors.textLevel1,
+        paddingLeft: 20,
+        paddingRight: 20,
         paddingTop: 16,
         paddingBottom: 16,
 
@@ -61,6 +63,8 @@ export default (): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
     },
     level2: {
         color: colors.textLevel2,
+        paddingLeft: 20,
+        paddingRight: 20,
         paddingTop: 10,
         paddingBottom: 10,
 
@@ -98,5 +102,7 @@ export default (): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
     },
     hasIcon: {},
     hasSecondaryText: {},
-    hasSecondaryAction: {},
+    hasSecondaryAction: {
+        paddingRight: 18,
+    },
 });

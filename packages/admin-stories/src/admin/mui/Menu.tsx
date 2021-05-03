@@ -1,6 +1,6 @@
 import { MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
+import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
 import { Box, Typography } from "@material-ui/core";
-import { Dashboard, GitHub, Launch, List, Settings } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
@@ -17,11 +17,11 @@ const AppMenu: React.FC = () => {
         <Menu variant={windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent"}>
             <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
             <MenuItemRouterLink primary="Settings" icon={<Settings />} to="/settings" />
-            <MenuCollapsibleItem primary="More Items" icon={<List />}>
+            <MenuCollapsibleItem primary="More Items" icon={<Sort />}>
                 <MenuItemRouterLink primary="Foo1" to="/foo1" />
                 <MenuItemRouterLink primary="Foo2" to="/foo2" />
             </MenuCollapsibleItem>
-            <MenuCollapsibleItem primary="Even More Items" icon={<List />}>
+            <MenuCollapsibleItem primary="Even More Items" icon={<Sort />}>
                 <MenuItemRouterLink primary="Foo3" to="/foo3" />
                 <MenuItemRouterLink primary="Foo4" to="/foo4" />
             </MenuCollapsibleItem>
@@ -30,8 +30,8 @@ const AppMenu: React.FC = () => {
                 secondary="View on GitHub"
                 target="_blank"
                 href="https://github.com/vivid-planet/comet-admin"
-                icon={<GitHub />}
-                secondaryAction={<Launch />}
+                icon={<CometColor />}
+                secondaryAction={<LinkExternal />}
             />
         </Menu>
     );
