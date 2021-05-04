@@ -22,7 +22,9 @@ function Story() {
                     <>
                         <div style={{ border: "solid 1px grey", padding: "20px" }}>
                             <form onSubmit={handleSubmit}>
-                                <Field name="checkbox" label="FinalFormCheckbox" type="checkbox" component={FinalFormCheckbox} />
+                                <Field name="checkbox" type="checkbox">
+                                    {(props) => <FormControlLabel label="FinalFormCheckbox" control={<FinalFormCheckbox {...props} />} />}
+                                </Field>
                                 <Field name="input" label="FinalFormInput" component={FinalFormInput} />
                                 <FieldContainer label="FinalFormRadio">
                                     <Field name="radio" type="radio" value="foo">
