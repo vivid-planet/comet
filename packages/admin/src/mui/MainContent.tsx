@@ -2,10 +2,6 @@ import { Theme } from "@material-ui/core/styles";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-export interface MainContentProps {
-    children: React.ReactNode;
-}
-
 export type CometAdminMainContentClassKeys = "root";
 
 const styles = (theme: Theme) =>
@@ -21,3 +17,9 @@ const MainContent: React.FC<WithStyles<typeof styles> & CometAdminMainContentCla
 
 const StyledCometAdminMainContent = withStyles(styles, { name: "CometAdminMainContent", withTheme: true })(MainContent);
 export { StyledCometAdminMainContent as MainContent };
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminMainContent: CometAdminMainContentClassKeys;
+    }
+}
