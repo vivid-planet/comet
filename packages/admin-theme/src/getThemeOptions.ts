@@ -5,6 +5,7 @@ import type {} from "@comet/admin/src/themeAugmentation";
 import { ThemeOptions } from "@material-ui/core/styles";
 
 import cometAdminColorPickerOverrides from "./cometAdminColorPickerOverrides/colorPicker";
+import { cometAdminBreadcrumbsOverrides } from "./cometAdminOverrides/breadcrumbs";
 import cometAdminClearInputButtonOverrides from "./cometAdminOverrides/clearInputButton";
 import cometAdminErrorBoundaryOverrides from "./cometAdminOverrides/errorBoundary";
 import cometAdminFormFieldContainerOverrides from "./cometAdminOverrides/formFieldContainer";
@@ -13,6 +14,7 @@ import cometAdminMasterLayoutOverrides from "./cometAdminOverrides/masterLayout"
 import cometAdminMenuOverrides from "./cometAdminOverrides/menu";
 import cometAdminMenuCollapsibleItemOverrides from "./cometAdminOverrides/menuCollapsibleItem";
 import cometAdminMenuItemOverrides from "./cometAdminOverrides/menuItem";
+import { cometAdminBreadcrumbsProps } from "./cometAdminProps/breadcrumbs";
 import cometAdminErrorBoundaryProps from "./cometAdminProps/errorBoundary";
 import cometAdminMasterLayoutProps from "./cometAdminProps/masterLayout";
 import cometAdminMenuProps from "./cometAdminProps/menu";
@@ -24,16 +26,16 @@ import cometAdminRteLinkControlsOverrides from "./cometAdminRteOverrides/linkCon
 import cometAdminRteRteOverrides from "./cometAdminRteOverrides/rte";
 import cometAdminRteToolbarOverrides from "./cometAdminRteOverrides/toolbar";
 import cometAdminSelectOverrides from "./cometAdminSelectOverrides/select";
-import getPaletteOptions from "./getPaletteOptions";
 import getShadows from "./getShadows";
-import getTypographyOptions from "./getTypographyOptions";
 import getMuiOverrides from "./MuiOverrides";
 import getMuiProps from "./MuiProps";
+import { paletteOptions } from "./paletteOptions";
+import { typographyOptions } from "./typographyOptions";
 
 export default (): ThemeOptions => ({
     spacing: 5,
-    palette: getPaletteOptions(),
-    typography: getTypographyOptions(),
+    palette: paletteOptions,
+    typography: typographyOptions,
     shape: {
         borderRadius: 2,
     },
@@ -43,6 +45,7 @@ export default (): ThemeOptions => ({
         CometAdminMenuCollapsibleItem: cometAdminMenuCollapsibleItemProps(),
         CometAdminMasterLayout: cometAdminMasterLayoutProps(),
         CometAdminErrorBoundary: cometAdminErrorBoundaryProps(),
+        CometAdminBreadcrumbs: cometAdminBreadcrumbsProps(),
         ...getMuiProps(),
     },
     overrides: {
@@ -62,6 +65,7 @@ export default (): ThemeOptions => ({
         CometAdminSelect: cometAdminSelectOverrides(),
         CometAdminColorPicker: cometAdminColorPickerOverrides(),
         CometAdminErrorBoundary: cometAdminErrorBoundaryOverrides(),
+        CometAdminBreadcrumbs: cometAdminBreadcrumbsOverrides(),
         ...getMuiOverrides(),
     },
 });

@@ -9,7 +9,7 @@ export const fontWeights = {
     fontWeightBold: 500,
 };
 
-export default (): TypographyOptions => ({
+export const typographyOptions: TypographyOptions = {
     ...fontWeights,
     h1: {
         fontFamily,
@@ -59,4 +59,4 @@ export default (): TypographyOptions => ({
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightRegular,
     },
-});
+};

@@ -2,7 +2,7 @@ import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
 import { bluePalette, errorPalette, greenPalette, infoPalette, neutrals, successPalette } from "./colors";
 
-export default (): PaletteOptions => ({
+export const paletteOptions: PaletteOptions = {
     primary: bluePalette,
     secondary: greenPalette,
     error: errorPalette,
@@ -15,4 +15,4 @@ export default (): PaletteOptions => ({
         secondary: "#757575",
         disabled: neutrals[300],
     },
-});
+};
