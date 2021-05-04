@@ -109,8 +109,8 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps 
     return (
         <Form
             onSubmit={(values) => {
-                const formFieldValues = get(values, field.name);
-                outerForm.change(field.name, formFieldValues);
+                const formFieldValue = get(values, field.name);
+                outerForm.change(field.name, formFieldValue);
             }}
             initialValues={values}
         >

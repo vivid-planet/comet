@@ -73,12 +73,7 @@ export const FilterBar: React.FunctionComponent<IFilterBarProps> = ({ fieldBarWi
             <div className={classes.barWrapper}>
                 {Array.from(
                     {
-                        length:
-                            hasExtended && maxCountInitialShown < fields.length
-                                ? fields.length
-                                : maxCountInitialShown > fields.length
-                                ? fields.length
-                                : maxCountInitialShown,
+                        length: hasExtended ? fields.length : Math.min(maxCountInitialShown, fields.length),
                     },
                     (_, i) => i,
                 ).map((i) => {
