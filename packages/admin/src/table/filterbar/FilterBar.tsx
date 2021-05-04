@@ -93,7 +93,7 @@ export const FilterBar: React.FunctionComponent<IFilterBarProps> = ({ fieldBarWi
                         <MoreHoriz />
                         <div className={classes.showMoreTextWrapper}>
                             <Typography variant="subtitle2">
-                                <FormattedMessage id="cometAdmin.generic.moreFilter" defaultMessage="Mehr Filter" />
+                                <FormattedMessage id="cometAdmin.generic.moreFilter" defaultMessage="More Filter" />
                             </Typography>
                         </div>
                     </div>
