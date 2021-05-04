@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { MenuContext } from "../../mui";
 import { IStackSwitchApi, useStackSwitchApi } from "../../stack";
-import { useThemeProps, useToolbarStyles } from "./Toolbar.styles";
+import { useStyles, useThemeProps } from "./Toolbar.styles";
 
 interface ToolbarProps {
     actionItems?: (stackSwitchApi: IStackSwitchApi | undefined) => React.ReactNode;
@@ -11,7 +11,7 @@ interface ToolbarProps {
 const Toolbar: React.FunctionComponent<ToolbarProps> = ({ actionItems, children }) => {
     const themeProps = useThemeProps();
     const { headerHeight } = React.useContext(MenuContext);
-    const classes = useToolbarStyles({ headerHeight });
+    const classes = useStyles({ headerHeight });
     const stackSwitchApiContext = useStackSwitchApi();
 
     return (

@@ -9,7 +9,7 @@ export interface ToolbarThemeProps {
 
 export type CometAdminToolbarClassKeys = "root" | "muiToolbar" | "mainContentContainer" | "actionContainer";
 
-export const useToolbarStyles = makeStyles<Theme, { headerHeight: number }, CometAdminToolbarClassKeys>(
+export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminToolbarClassKeys>(
     () => ({
         root: {
             position: "sticky",

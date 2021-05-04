@@ -1,5 +1,5 @@
 import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { StoryContext, StoryFn } from "@storybook/addons/dist/types";
+import { StoryContext, StoryFn } from "@storybook/addons";
 import { RestLink } from "apollo-link-rest";
 import * as React from "react";
 

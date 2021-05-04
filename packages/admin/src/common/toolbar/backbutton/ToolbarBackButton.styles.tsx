@@ -3,7 +3,7 @@ import { ArrowBack } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { useComponentThemeProps } from "../../mui/useComponentThemeProps";
+import { useComponentThemeProps } from "../../../mui/useComponentThemeProps";
 
 export interface ToolbarBackButtonThemeProps {
     backIcon?: React.ReactNode;
@@ -11,7 +11,7 @@ export interface ToolbarBackButtonThemeProps {
 
 export type CometAdminToolbarBackButtonClassKeys = "root";
 
-export const useToolbarBackButtonStyles = makeStyles<Theme, {}, CometAdminToolbarBackButtonClassKeys>(
+export const useStyles = makeStyles<Theme, {}, CometAdminToolbarBackButtonClassKeys>(
     () => ({
         root: {
             flex: 0,

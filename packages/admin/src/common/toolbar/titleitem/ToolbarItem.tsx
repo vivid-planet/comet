@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { useToolbarItemStyles } from "./ToolbarItem.styles";
+import { useStyles } from "../item/ToolbarItem.styles";
 
 const ToolbarItem: React.FunctionComponent = ({ children }) => {
-    const classes = useToolbarItemStyles();
+    const classes = useStyles();
 
     return <div className={classes.root}>{children}</div>;
 };
