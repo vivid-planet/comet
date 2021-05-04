@@ -25,7 +25,16 @@ function Story() {
                                 <Field name="checkbox" type="checkbox">
                                     {(props) => <FormControlLabel label="FinalFormCheckbox" control={<FinalFormCheckbox {...props} />} />}
                                 </Field>
-                                <Field name="input" label="FinalFormInput" component={FinalFormInput} />
+                                <Field name="input" label="FinalFormInput" fullWidth component={FinalFormInput} />
+                                <Field
+                                    name="text"
+                                    label="FinalFormInput (multiline)"
+                                    multiline
+                                    rows={3}
+                                    rowsMax={5}
+                                    fullWidth
+                                    component={FinalFormInput}
+                                />
                                 <FieldContainer label="FinalFormRadio">
                                     <Field name="radio" type="radio" value="foo">
                                         {(props) => <FormControlLabel label="Foo" control={<FinalFormRadio {...props} />} />}

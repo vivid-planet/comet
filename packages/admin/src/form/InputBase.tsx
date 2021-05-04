@@ -1,16 +1,18 @@
-import { Theme } from "@material-ui/core";
+import { InputBaseClassKey, Theme } from "@material-ui/core";
 import MuiInputBase from "@material-ui/core/InputBase";
 import { createStyles, withStyles } from "@material-ui/styles";
 
-export type CometAdminInputBaseClassKeys = "root" | "focused" | "adornedStart" | "adornedEnd" | "input";
+export type CometAdminInputBaseClassKeys = InputBaseClassKey;
 
 const styles = (theme: Theme) =>
     createStyles<CometAdminInputBaseClassKeys, any>({
         root: {
             border: `1px solid ${theme.palette.grey[300]}`,
-            borderRadius: "2px",
-            height: "32px",
+            borderRadius: 2,
             backgroundColor: "#fff",
+            "&:not($multiline)": {
+                height: 32,
+            },
             "& [class*='MuiSvgIcon-root']": {
                 pointerEvents: "none",
             },
@@ -21,15 +23,22 @@ const styles = (theme: Theme) =>
                 },
             },
         },
+        formControl: {},
         focused: {
             borderColor: theme.palette.grey[400],
+        },
+        disabled: {},
+        adornedEnd: {
+            paddingRight: theme.spacing(1),
         },
         adornedStart: {
             paddingLeft: theme.spacing(1),
         },
-        adornedEnd: {
-            paddingRight: theme.spacing(1),
-        },
+        error: {},
+        marginDense: {},
+        multiline: {},
+        fullWidth: {},
+        colorSecondary: {},
         input: {
             paddingLeft: theme.spacing(1),
             paddingRight: theme.spacing(1),
@@ -37,6 +46,12 @@ const styles = (theme: Theme) =>
                 display: "none",
             },
         },
+        inputMarginDense: {},
+        inputMultiline: {},
+        inputTypeSearch: {},
+        inputAdornedStart: {},
+        inputAdornedEnd: {},
+        inputHiddenLabel: {},
     });
 
 export const InputBase = withStyles(styles, { name: "CometAdminInputBase", withTheme: false })(MuiInputBase);
