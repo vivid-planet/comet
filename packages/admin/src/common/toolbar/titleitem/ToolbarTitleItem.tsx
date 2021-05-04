@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core";
 import * as React from "react";
 
 import { useStackApi } from "../../../stack";
-import { ToolbarItem } from "../titleitem/ToolbarItem";
+import { ToolbarItem } from "../item/ToolbarItem";
 
 interface ToolbarTitleItemProps {
     title?: React.ReactNode;
