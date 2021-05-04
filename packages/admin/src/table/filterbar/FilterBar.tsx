@@ -1,6 +1,7 @@
 import { Theme, Typography } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
+import { FieldState } from "final-form";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -54,6 +55,7 @@ export interface IFilterBarField {
     name: string;
     label: string;
     component: React.ComponentType<any>;
+    dirtyFieldsBadge?: (fieldState?: FieldState<any>) => React.Component;
 }
 
 interface IFilterBarProps {
