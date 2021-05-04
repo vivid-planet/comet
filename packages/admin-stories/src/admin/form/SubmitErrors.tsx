@@ -20,7 +20,7 @@ const resolveSubmitErrors = (error: SubmissionErrors) => {
     // error = { errors: [{fieldName: errorMessage},...] }
 
     const result = {};
-    for (const submitError of error.errors) {
+    for (const submitError of error?.errors) {
         Object.assign(result, submitError);
     }
     // result = {fieldName: errorMessage, ...}

@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/styles";
 
 export type CometAdminToolbarItemClassKeys = "root";
 
-export const useToolbarItemStyles = makeStyles<Theme, {}, CometAdminToolbarItemClassKeys>(
+export const useStyles = makeStyles<Theme, {}, CometAdminToolbarItemClassKeys>(
     () => ({
         root: {
             padding: 15,
