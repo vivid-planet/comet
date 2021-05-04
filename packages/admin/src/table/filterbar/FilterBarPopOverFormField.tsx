@@ -1,13 +1,11 @@
 import { Box, Button, ButtonProps, Popover, Typography } from "@material-ui/core";
 import { makeStyles, Theme, ThemeOptions, useTheme } from "@material-ui/core/styles";
-import isEqual = require("lodash.isequal");
-import get = require("lodash.get");
-import { FieldState } from "final-form";
+import { get } from "lodash";
 import * as React from "react";
 import { FieldRenderProps, Form, useForm } from "react-final-form";
 
-import { difference } from "./difference";
 import { IFilterBarField } from "./FilterBar";
+import { FilterBarActiveFilterBadge } from "./FilterBarActiveFilterBadge";
 
 export interface PopoverFormFieldThemeProps {
     submitButton?: ButtonProps;
@@ -18,7 +16,6 @@ export type CometAdminFilterBarPopOverFormFieldClassKeys =
     | "root"
     | "styledBox"
     | "labelWrapper"
-    | "hasValueCount"
     | "popoverContentContainer"
     | "buttonsContainer"
     | "submitContainer"
@@ -53,13 +50,6 @@ const useStyles = makeStyles(
             marginRight: "15px",
             boxSizing: "border-box",
         },
-        hasValueCount: {
-            backgroundColor: `${theme.palette.grey[100]}`,
-            textAlign: "center",
-            borderRadius: "4px",
-            height: "20px",
-            width: "17px",
-        },
         popoverContentContainer: {
             "& [class*='CometAdminFormFieldContainer-root']": {
                 boxSizing: "border-box",
@@ -86,23 +76,8 @@ interface IFormFieldProps extends FieldRenderProps<any> {
     handleSubmit: () => void;
 }
 
-export const isEqualFunction = (nextValue?: any, preValue?: any) => {
-    if (preValue === nextValue) {
-        return true;
-    } else {
-        return isEqual(nextValue, preValue);
-    }
-};
-
-export const dirtyFieldsCount = (fieldState?: FieldState<any>) => {
-    if (fieldState?.initial) {
-        const diff = difference<any, Record<string, any>>(fieldState?.value, fieldState?.initial);
-        return Object.keys(diff).length;
-    }
-    return Object.keys(fieldState?.value).length;
-};
-
 export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps & PopoverFormFieldThemeProps> = ({ field }) => {
+    const FilterBarActiveFilterBadgeComponent = field.dirtyFieldsBadge ? field.dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const outerForm = useForm();
     const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
     const open = Boolean(anchorEl);
@@ -135,17 +110,7 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps 
                             <div className={classes.labelWrapper}>
                                 <Typography variant="subtitle2">{field.label}</Typography>
                             </div>
-                            {!isEqualFunction(outerForm.getFieldState(field.name)?.value, outerForm.getFieldState(field.name)?.initial) && (
-                                <div className={classes.hasValueCount}>
-                                    <Typography variant={"subtitle2"}>
-                                        {Array.isArray(outerForm.getFieldState(field.name)?.value)
-                                            ? outerForm.getFieldState(field.name)?.value.length
-                                            : typeof outerForm.getFieldState(field.name)?.value === "object"
-                                            ? dirtyFieldsCount(outerForm.getFieldState(field.name))
-                                            : 1}
-                                    </Typography>
-                                </div>
-                            )}
+                            <FilterBarActiveFilterBadgeComponent fieldState={outerForm.getFieldState(field.name)} />
                         </div>
                         <Popover
                             open={open}

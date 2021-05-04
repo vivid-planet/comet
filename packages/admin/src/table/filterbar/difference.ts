@@ -3,10 +3,7 @@
 import { isEqual, isObject, transform } from "lodash";
 
 /**
- * Deep diff between two object, using lodash
- * @param  {Object} object Object compared
- * @param  {Object} base   Object to compare with
- * @return {Object}        Return a new object who represent the diff
+ * Returns a new object representing the diff between two objects using lodash
  */
 function difference<T extends object, TResult>(object: T, base: T): TResult {
     return transform(object, (result, value, key) => {
