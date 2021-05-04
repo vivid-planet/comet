@@ -1,4 +1,4 @@
-import { Box, Button, ButtonProps, Popover, Typography } from "@material-ui/core";
+import { Button, ButtonProps, Popover, Typography } from "@material-ui/core";
 import { makeStyles, Theme, ThemeOptions, useTheme } from "@material-ui/core/styles";
 import { get } from "lodash";
 import * as React from "react";
@@ -17,6 +17,8 @@ export type CometAdminFilterBarPopOverFormFieldClassKeys =
     | "styledBox"
     | "labelWrapper"
     | "popoverContentContainer"
+    | "popoverInnerContentContainer"
+    | "paper"
     | "buttonsContainer"
     | "submitContainer"
     | "resetCloseContainer";
@@ -57,6 +59,9 @@ const useStyles = makeStyles(
                 marginBottom: 0,
             },
         },
+        popoverInnerContentContainer: {
+            minWidth: 300,
+        },
         buttonsContainer: {
             borderTop: `1px solid ${theme.palette.grey[300]}`,
             justifyContent: "space-between",
@@ -66,6 +71,10 @@ const useStyles = makeStyles(
         submitContainer: {},
         resetContainer: {
             marginRight: "15px",
+        },
+        paper: {
+            border: "1px solid grey",
+            marginLeft: -1, //due to border of popover, but now overrideable with styling if needed
         },
     }),
     { name: "CometAdminFilterBarPopOverFormField" },
@@ -123,18 +132,14 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps 
                                 vertical: "bottom",
                                 horizontal: "left",
                             }}
-                            transformOrigin={{
-                                vertical: -1,
-                                horizontal: 0,
-                            }}
                             PaperProps={{ square: true }}
                             classes={{
-                                paper: "paper",
+                                paper: classes.paper,
                             }}
                             elevation={2}
                         >
                             <div className={classes.popoverContentContainer}>
-                                <Box style={{ minWidth: 300 }}>
+                                <div className={classes.popoverInnerContentContainer}>
                                     {React.createElement(field.component)}
                                     <div className={classes.buttonsContainer}>
                                         <div className={classes.resetContainer}>
@@ -175,7 +180,7 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps 
                                             </Button>
                                         </div>
                                     </div>
-                                </Box>
+                                </div>
                             </div>
                         </Popover>
                     </div>
