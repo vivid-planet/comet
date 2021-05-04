@@ -63,6 +63,7 @@ All notable changes to this project will be documented in this file. This projec
     -   The default values for content-spacing and header-height have changed slightly
 -   Changes to Stack
     -   Removed prop `components.breadcrumbsContainer` in favour of a div that can be styled using the theme (`overrides -> CometAdminStack -> breadcrumbs`)
+-   Removed component `FixedLeftRightLayout`
 
 ### Migration Guide
 

@@ -4,7 +4,6 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
-    FixedLeftRightLayout,
     ISelectionApi,
     Selected,
     Table,
@@ -12,6 +11,7 @@ import {
     useSelectionRoute,
     useTableQuery,
 } from "@comet/admin";
+import { Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
@@ -102,16 +102,16 @@ function Story() {
         <DirtyHandler>
             <Selection>
                 <TableQuery api={api} loading={loading} error={error}>
-                    <FixedLeftRightLayout>
-                        <FixedLeftRightLayout.Left>
+                    <Grid container spacing={4}>
+                        <Grid item xs={2}>
                             <ExampleTable tableData={tableData} selectedId={selection.id} selectionApi={selectionApi} />
-                        </FixedLeftRightLayout.Left>
-                        <FixedLeftRightLayout.Right>
+                        </Grid>
+                        <Grid item xs={2}>
                             <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
                                 {(user, { selectionMode: selectedSelectionMode }) => <ExampleForm mode={selectedSelectionMode} user={user} />}
                             </Selected>
-                        </FixedLeftRightLayout.Right>
-                    </FixedLeftRightLayout>
+                        </Grid>
+                    </Grid>
                 </TableQuery>
             </Selection>
         </DirtyHandler>
