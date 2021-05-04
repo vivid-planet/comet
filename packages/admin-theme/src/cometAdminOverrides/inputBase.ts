@@ -8,7 +8,7 @@ export default (): StyleRules<{}, CometAdminInputBaseClassKeys> => ({
         borderColor: neutrals[100],
         borderRadius: 2,
         "&:not($multiline)": {
-            height: 36,
+            height: 40,
         },
     },
     formControl: {},

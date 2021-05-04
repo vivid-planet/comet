@@ -1,7 +1,7 @@
 import { Field } from "@comet/admin";
 import { FinalFormColorPicker } from "@comet/admin-color-picker";
+import { Favorite, Warning } from "@comet/admin-icons";
 import { Button } from "@material-ui/core";
-import { Dashboard, DashboardOutlined, PaletteOutlined } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -54,7 +54,7 @@ const Story = () => (
                         component={FinalFormColorPicker}
                         showPicker
                         colorPalette={colorPalette2}
-                        endAdornment={<PaletteOutlined fontSize={"small"} />}
+                        endAdornment={<Favorite />}
                     />
                     <Field
                         name="color7"
@@ -63,7 +63,7 @@ const Story = () => (
                         component={FinalFormColorPicker}
                         showPicker
                         colorPalette={colorPalette2}
-                        startAdornment={values.color7 ? <Dashboard htmlColor={`#${values.color7}`} /> : <DashboardOutlined color={"disabled"} />}
+                        startAdornment={values.color7 ? <Favorite htmlColor={`#${values.color7}`} /> : <Warning color={"disabled"} />}
                         showClearButton
                     />
                     <Button variant="contained" color="primary" onClick={handleSubmit}>

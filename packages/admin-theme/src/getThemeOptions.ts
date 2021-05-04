@@ -15,6 +15,7 @@ import cometAdminMenuOverrides from "./cometAdminOverrides/menu";
 import cometAdminMenuCollapsibleItemOverrides from "./cometAdminOverrides/menuCollapsibleItem";
 import cometAdminMenuItemOverrides from "./cometAdminOverrides/menuItem";
 import { cometAdminBreadcrumbsProps } from "./cometAdminProps/breadcrumbs";
+import { cometAdminClearInputButtonProps } from "./cometAdminProps/clearInputButton";
 import cometAdminErrorBoundaryProps from "./cometAdminProps/errorBoundary";
 import cometAdminMasterLayoutProps from "./cometAdminProps/masterLayout";
 import cometAdminMenuProps from "./cometAdminProps/menu";
@@ -26,10 +27,10 @@ import cometAdminRteLinkControlsOverrides from "./cometAdminRteOverrides/linkCon
 import cometAdminRteRteOverrides from "./cometAdminRteOverrides/rte";
 import cometAdminRteToolbarOverrides from "./cometAdminRteOverrides/toolbar";
 import cometAdminSelectOverrides from "./cometAdminSelectOverrides/select";
-import getShadows from "./getShadows";
 import getMuiOverrides from "./MuiOverrides";
 import getMuiProps from "./MuiProps";
 import { paletteOptions } from "./paletteOptions";
+import { shadows } from "./shadows";
 import { typographyOptions } from "./typographyOptions";
 
 export default (): ThemeOptions => ({
@@ -39,13 +40,14 @@ export default (): ThemeOptions => ({
     shape: {
         borderRadius: 2,
     },
-    shadows: getShadows(),
+    shadows,
     props: {
         CometAdminMenu: cometAdminMenuProps(),
         CometAdminMenuCollapsibleItem: cometAdminMenuCollapsibleItemProps(),
         CometAdminMasterLayout: cometAdminMasterLayoutProps(),
         CometAdminErrorBoundary: cometAdminErrorBoundaryProps(),
         CometAdminBreadcrumbs: cometAdminBreadcrumbsProps(),
+        CometAdminClearInputButton: cometAdminClearInputButtonProps(),
         ...getMuiProps(),
     },
     overrides: {

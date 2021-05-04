@@ -28,7 +28,9 @@ export type CometAdminFormFieldContainerClassKeys =
 const styles = (theme: Theme) => {
     return createStyles<CometAdminFormFieldContainerClassKeys, any>({
         root: {
-            marginBottom: theme.spacing(3),
+            "&:not(:last-child)": {
+                marginBottom: theme.spacing(3),
+            },
         },
         vertical: {
             "& $label": {

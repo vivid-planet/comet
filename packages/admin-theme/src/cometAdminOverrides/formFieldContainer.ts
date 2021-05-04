@@ -5,7 +5,9 @@ import { errorPalette, neutrals } from "../colors";
 
 export default (): StyleRules<{}, CometAdminFormFieldContainerClassKeys> => ({
     root: {
-        marginBottom: 20,
+        "&:not(:last-child)": {
+            marginBottom: 20,
+        },
     },
     vertical: {
         "& $label": {
