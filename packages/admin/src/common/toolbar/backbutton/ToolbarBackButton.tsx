@@ -2,7 +2,7 @@ import { IconButton } from "@material-ui/core";
 import * as React from "react";
 
 import { useStackApi } from "../../../stack";
-import { ToolbarItem } from "../titleitem/ToolbarItem";
+import { ToolbarItem } from "../item/ToolbarItem";
 import { useStyles, useToolbarBackButtonThemeProps } from "./ToolbarBackButton.styles";
 
 interface ToolbarBackButtonProps {
