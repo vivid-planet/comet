@@ -23,7 +23,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add new package @comet/admin-icons
 -   add onAfterSubmit to FinalForm
 -   add useStoredState() hook
--   Added a new FinalForm Range Slider Component
+-   Added a new FinalFormRangeInput Component
 
 ### Incompatible Changes
 

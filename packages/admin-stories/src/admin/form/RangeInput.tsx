@@ -1,4 +1,4 @@
-import { Field, FinalFormRangeSlider } from "@comet/admin";
+import { Field, FinalFormRangeInput } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -45,7 +45,7 @@ function Story() {
                 initialValues={{ price: { min: 0, max: 100 } }}
                 render={({ handleSubmit, values }) => (
                     <Field
-                        component={FinalFormRangeSlider}
+                        component={FinalFormRangeInput}
                         name="price"
                         min={0}
                         max={100}
@@ -58,4 +58,4 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module).add("Range Slider", () => <Story />);
+storiesOf("@comet/admin/form", module).add("Range Input", () => <Story />);

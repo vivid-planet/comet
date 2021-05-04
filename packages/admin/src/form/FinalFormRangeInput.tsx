@@ -5,7 +5,7 @@ import { FieldRenderProps } from "react-final-form";
 
 import { InputBase } from "./InputBase";
 
-export type CometAdminFinalFormRangeSliderClassKeys =
+export type CometAdminFinalFormRangeInputClassKeys =
     | "root"
     | "inputsWrapper"
     | "inputFieldsSeperatorContainer"
@@ -13,7 +13,7 @@ export type CometAdminFinalFormRangeSliderClassKeys =
     | "inputFieldContainer";
 
 const styles = (theme: Theme) => {
-    return createStyles<CometAdminFinalFormRangeSliderClassKeys, any>({
+    return createStyles<CometAdminFinalFormRangeInputClassKeys, any>({
         root: {
             padding: "0 20px",
             width: "100%",
@@ -37,7 +37,7 @@ const styles = (theme: Theme) => {
     });
 };
 
-interface IFinalFormRangeSliderProps extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement> {
+interface IFinalFormRangeInputProps extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement> {
     min: number;
     max: number;
     startAdornment?: string | React.ReactElement;
@@ -45,7 +45,7 @@ interface IFinalFormRangeSliderProps extends FieldRenderProps<{ min: number; max
     sliderProps?: Omit<SliderProps, "min" | "max">;
 }
 
-const FinalFormRangeSliderComponent: React.FunctionComponent<WithStyles<typeof styles, true> & IFinalFormRangeSliderProps> = ({
+const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof styles, true> & IFinalFormRangeInputProps> = ({
     classes,
     min,
     max,
@@ -64,7 +64,7 @@ const FinalFormRangeSliderComponent: React.FunctionComponent<WithStyles<typeof s
     React.useEffect(() => {
         setInternalMinInput(fieldValue.min);
         setInternalMaxInput(fieldValue.max);
-    }, [fieldValue.min, fieldValue.max]);
+    }, [fieldValue]);
 
     return (
         <div className={classes.root}>
@@ -133,4 +133,4 @@ const FinalFormRangeSliderComponent: React.FunctionComponent<WithStyles<typeof s
     );
 };
 
-export const FinalFormRangeSlider = withStyles(styles, { name: "CometAdminFinalFormRangeSlider", withTheme: true })(FinalFormRangeSliderComponent);
+export const FinalFormRangeInput = withStyles(styles, { name: "CometAdminFinalFormRangeInput", withTheme: true })(FinalFormRangeInputComponent);
