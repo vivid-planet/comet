@@ -11,7 +11,6 @@ import {
 import {
     CometAdminBreadcrumbsClassKeys,
     CometAdminBreadcrumbsThemeProps,
-    CometAdminMainContentClassKeys,
     CometAdminMasterLayoutClassKeys,
     CometAdminMenuClassKeys,
     CometAdminMenuCollapsibleItemClassKeys,
@@ -28,7 +27,6 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminMenu: CometAdminMenuClassKeys;
         CometAdminMenuItem: CometAdminMenuItemClassKeys;
         CometAdminMenuCollapsibleItem: CometAdminMenuCollapsibleItemClassKeys;
-        CometAdminMainContent: CometAdminMainContentClassKeys;
         CometAdminMasterLayout: CometAdminMasterLayoutClassKeys;
         CometAdminInputBase: CometAdminInputBaseClassKeys;
         CometAdminErrorBoundary: CometAdminErrorBoundaryClassKeys;
