@@ -3,6 +3,7 @@ import { makeStyles, Theme, ThemeOptions, useTheme } from "@material-ui/core/sty
 import { get } from "lodash";
 import * as React from "react";
 import { FieldRenderProps, Form, useForm } from "react-final-form";
+import { useIntl } from "react-intl";
 
 import { IFilterBarField } from "./FilterBar";
 import { FilterBarActiveFilterBadge } from "./FilterBarActiveFilterBadge";
@@ -103,6 +104,7 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps 
         themeProps && themeProps["CometAdminFilterBarPopOverFormField"] ? { ...themeProps["CometAdminFilterBarPopOverFormField"]?.resetButton } : {};
 
     const classes = useStyles({ open: open });
+    const intl = useIntl();
 
     return (
         <Form
@@ -161,7 +163,9 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps 
                                                 }}
                                                 {...resetButtonProps}
                                             >
-                                                <Typography variant={"button"}>{"Zurücksetzen"}</Typography>
+                                                <Typography variant={"button"}>
+                                                    {intl.formatMessage({ id: "cometAdmin.generic.resetButton", defaultMessage: "Reset" })}
+                                                </Typography>
                                             </Button>
                                         </div>
                                         <div className={classes.submitContainer}>
@@ -176,7 +180,9 @@ export const FilterBarPopOverFormField: React.FunctionComponent<IFormFieldProps 
                                                 }}
                                                 {...submitButtonProps}
                                             >
-                                                <Typography variant={"button"}>{"Übernehmen"}</Typography>
+                                                <Typography variant={"button"}>
+                                                    {intl.formatMessage({ id: "cometAdmin.generic.applyButton", defaultMessage: "Apply" })}
+                                                </Typography>
                                             </Button>
                                         </div>
                                     </div>
