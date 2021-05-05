@@ -1,6 +1,7 @@
 import { ClearInputButtonThemeProps, CometAdminClearInputButtonClassKeys } from "./common";
 import { CometAdminErrorBoundaryClassKeys, ErrorBoundaryThemeProps } from "./error";
 import {
+    CometAdminFinalFormRangeInputClassKeys,
     CometAdminFormFieldContainerClassKeys,
     CometAdminFormPaperKeys,
     CometAdminFormSectionKeys,
@@ -34,6 +35,7 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminFormSection: CometAdminFormSectionKeys;
         CometAdminFixedLeftRightLayout: CometAdminFixedLeftRightLayoutKeys;
         CometAdminBreadcrumbs: CometAdminBreadcrumbsClassKeys;
+        CometAdminFinalFormRangeInput: CometAdminFinalFormRangeInputClassKeys;
     }
 }
 
