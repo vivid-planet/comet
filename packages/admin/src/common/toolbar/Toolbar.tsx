@@ -11,7 +11,7 @@ const Toolbar: React.FunctionComponent<ToolbarProps> = ({ children }) => {
     const classes = useStyles({ headerHeight });
 
     return (
-        <Paper elevation={themeProps.elevation} className={classes.root}>
+        <Paper elevation={themeProps.elevation} classes={{ root: classes.root }}>
             <MuiToolbar classes={{ root: classes.muiToolbar }}>
                 <div className={classes.mainContentContainer}>{children}</div>
             </MuiToolbar>
