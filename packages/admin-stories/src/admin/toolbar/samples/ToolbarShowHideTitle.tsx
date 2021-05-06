@@ -1,4 +1,15 @@
-import { IStackSwitchApi, MainContent, Stack, StackPage, StackSwitch, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import {
+    MainContent,
+    Stack,
+    StackPage,
+    StackSwitch,
+    StackSwitchApiContext,
+    Toolbar,
+    ToolbarActions,
+    ToolbarBackButton,
+    ToolbarFillSpace,
+    ToolbarTitleItem,
+} from "@comet/admin";
 import { Box, Button, Checkbox, Container, Typography } from "@material-ui/core";
 import * as React from "react";
 
@@ -9,10 +20,13 @@ export const ToolbarShowHideTitle = () => {
             <StackSwitch initialPage="root">
                 <StackPage name={"root"}>
                     <>
-                        <Toolbar
-                            actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => {
-                                return (
-                                    <>
+                        <Toolbar>
+                            <ToolbarBackButton />
+                            {showTitle && <ToolbarTitleItem />}
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <StackSwitchApiContext.Consumer>
+                                    {(stackSwitchApi) => (
                                         <Button
                                             variant={"contained"}
                                             color={"primary"}
@@ -22,12 +36,9 @@ export const ToolbarShowHideTitle = () => {
                                         >
                                             <Typography>Details</Typography>
                                         </Button>
-                                    </>
-                                );
-                            }}
-                        >
-                            <ToolbarBackButton />
-                            {showTitle && <ToolbarTitleItem />}
+                                    )}
+                                </StackSwitchApiContext.Consumer>
+                            </ToolbarActions>
                         </Toolbar>
 
                         <MainContent>

@@ -1,7 +1,7 @@
 import { MasterLayout, Menu, MenuItemRouterLink, RouteWithErrorBoundary, useWindowSize } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
 import { Box, Typography } from "@material-ui/core";
-import { AccountTree, Autorenew, ListAlt, Texture, Title } from "@material-ui/icons";
+import { AccountTree, Autorenew, FormatAlignCenter, ListAlt, Texture, Title } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Switch } from "react-router";
@@ -11,6 +11,7 @@ import CometLogo from "../../../.storybook/CometLogo";
 import { ToolbarTableForm } from "./samples/TableForm";
 import { ToolbarAutomaticTitle } from "./samples/ToolbarAutomaticTitle";
 import { ToolbarBreadcrumbsSample } from "./samples/ToolbarBreadcrumbs";
+import { ToolbarCenteredActions } from "./samples/ToolbarCenteredActions";
 import { ToolbarCustomBackButton } from "./samples/ToolbarCustomBackButton";
 import { ToolbarSearch } from "./samples/ToolbarSearch";
 import { ToolbarShowHideTitle } from "./samples/ToolbarShowHideTitle";
@@ -28,6 +29,7 @@ const AppMenu: React.FC = () => {
             <MenuItemRouterLink primary="Breadcrumbs" icon={<AccountTree />} to="/breadcrumbs" />
             <MenuItemRouterLink primary="Search" icon={<Search />} to="/search" />
             <MenuItemRouterLink primary="Table / Form" icon={<ListAlt />} to="/exampleTable" />
+            <MenuItemRouterLink primary="Centered Actions Buttons" icon={<FormatAlignCenter />} to="/centeredActions" />
         </Menu>
     );
 };
@@ -49,6 +51,7 @@ export const Story: React.FC = () => {
                 <RouteWithErrorBoundary path="/breadcrumbs" component={ToolbarBreadcrumbsSample} />
                 <RouteWithErrorBoundary path="/search" component={ToolbarSearch} />
                 <RouteWithErrorBoundary path="/exampleTable" component={ToolbarTableForm} />
+                <RouteWithErrorBoundary path="/centeredActions" component={ToolbarCenteredActions} />
                 <Redirect to={"/automaticTitle"} />
             </Switch>
         </MasterLayout>

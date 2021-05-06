@@ -1,4 +1,16 @@
-import { IStackSwitchApi, MainContent, Stack, StackPage, StackSwitch, Toolbar, ToolbarItem, ToolbarTitleItem, useStackApi } from "@comet/admin";
+import {
+    MainContent,
+    Stack,
+    StackPage,
+    StackSwitch,
+    StackSwitchApiContext,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+    ToolbarTitleItem,
+    useStackApi,
+} from "@comet/admin";
 import { ArrowRight, ChevronLeft } from "@comet/admin-icons";
 import { Box, Button, Container, IconButton, Typography } from "@material-ui/core";
 import * as React from "react";
@@ -27,10 +39,12 @@ export const ToolbarCustomBackButton = () => {
             <StackSwitch initialPage="root">
                 <StackPage name={"root"}>
                     <>
-                        <Toolbar
-                            actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => {
-                                return (
-                                    <>
+                        <Toolbar>
+                            <ToolbarTitleItem />
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <StackSwitchApiContext.Consumer>
+                                    {(stackSwitchApi) => (
                                         <Button
                                             variant={"contained"}
                                             color={"primary"}
@@ -41,11 +55,9 @@ export const ToolbarCustomBackButton = () => {
                                         >
                                             <Typography>Details</Typography>
                                         </Button>
-                                    </>
-                                );
-                            }}
-                        >
-                            <ToolbarTitleItem />
+                                    )}
+                                </StackSwitchApiContext.Consumer>
+                            </ToolbarActions>
                         </Toolbar>
 
                         <MainContent>
@@ -61,7 +73,6 @@ export const ToolbarCustomBackButton = () => {
                     <>
                         <Toolbar>
                             <CustomToolbarBackButton />
-
                             <ToolbarTitleItem />
                         </Toolbar>
                         <MainContent>

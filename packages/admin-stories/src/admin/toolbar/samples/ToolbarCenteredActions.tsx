@@ -13,7 +13,7 @@ import {
 import { Box, Button, Container, Typography } from "@material-ui/core";
 import * as React from "react";
 
-export const ToolbarAutomaticTitle = () => {
+export const ToolbarCenteredActions = () => {
     return (
         <Stack topLevelTitle={"Automatic Title"} showBreadcrumbs={false} showBackButton={false}>
             <StackSwitch initialPage="automaticTitle">
@@ -21,7 +21,7 @@ export const ToolbarAutomaticTitle = () => {
                     <>
                         <Toolbar>
                             <ToolbarBackButton />
-                            <ToolbarTitleItem />
+
                             <ToolbarFillSpace />
                             <ToolbarActions>
                                 <StackSwitchApiContext.Consumer>
@@ -40,6 +40,8 @@ export const ToolbarAutomaticTitle = () => {
                                     )}
                                 </StackSwitchApiContext.Consumer>
                             </ToolbarActions>
+                            <ToolbarFillSpace />
+                            <ToolbarTitleItem />
                         </Toolbar>
 
                         <MainContent>
@@ -53,6 +55,7 @@ export const ToolbarAutomaticTitle = () => {
                     <>
                         <Toolbar>
                             <ToolbarBackButton />
+                            <ToolbarFillSpace />
                             <ToolbarTitleItem />
                         </Toolbar>
 
