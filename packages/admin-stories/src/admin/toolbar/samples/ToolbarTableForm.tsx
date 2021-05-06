@@ -9,6 +9,7 @@ import {
     ToolbarActions,
     ToolbarBackButton,
     ToolbarFillSpace,
+    ToolbarItem,
     ToolbarTitleItem,
     useStackSwitchApi,
 } from "@comet/admin";
@@ -119,7 +120,9 @@ export const ToolbarTableForm = () => {
             <>
                 <Toolbar>
                     <ToolbarBackButton />
-                    <ToolbarTitleItem title={<Typography variant={"h4"}>{mode === "create" ? "Create" : `Edit Id: ${id}`}</Typography>} />
+                    <ToolbarItem>
+                        <Typography variant={"h4"}>{mode === "create" ? "Create" : `Edit Id: ${id}`}</Typography>
+                    </ToolbarItem>
                 </Toolbar>
                 <MainContent>
                     {mode === "create" ? (

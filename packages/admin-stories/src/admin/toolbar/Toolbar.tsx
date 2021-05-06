@@ -8,13 +8,13 @@ import { Redirect, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
 
 import CometLogo from "../../../.storybook/CometLogo";
-import { ToolbarTableForm } from "./samples/TableForm";
 import { ToolbarAutomaticTitle } from "./samples/ToolbarAutomaticTitle";
 import { ToolbarBreadcrumbsSample } from "./samples/ToolbarBreadcrumbs";
 import { ToolbarCenteredActions } from "./samples/ToolbarCenteredActions";
 import { ToolbarCustomBackButton } from "./samples/ToolbarCustomBackButton";
 import { ToolbarSearch } from "./samples/ToolbarSearch";
 import { ToolbarShowHideTitle } from "./samples/ToolbarShowHideTitle";
+import { ToolbarTableForm } from "./samples/ToolbarTableForm";
 
 const permanentMenuMinWidth = 1024;
 
