@@ -1,7 +1,25 @@
-import { IStackSwitchApi, MainContent, Stack, StackPage, StackSwitch, Toolbar, ToolbarBackButton, ToolbarItem, ToolbarTitleItem } from "@comet/admin";
+import { IStackSwitchApi, MainContent, Stack, StackPage, StackSwitch, Toolbar, ToolbarItem, ToolbarTitleItem, useStackApi } from "@comet/admin";
 import { ArrowRight, ChevronLeft } from "@comet/admin-icons";
 import { Box, Button, Container, IconButton, Typography } from "@material-ui/core";
 import * as React from "react";
+
+const CustomToolbarBackButton = () => {
+    const stackApi = useStackApi();
+
+    return stackApi && stackApi.breadCrumbs.length > 1 ? (
+        <ToolbarItem>
+            <IconButton
+                color={"primary"}
+                onClick={() => {
+                    stackApi.goBack?.();
+                }}
+            >
+                <ChevronLeft />
+                <Typography>Back</Typography>
+            </IconButton>
+        </ToolbarItem>
+    ) : null;
+};
 
 export const ToolbarCustomBackButton = () => {
     return (
@@ -42,23 +60,7 @@ export const ToolbarCustomBackButton = () => {
                 <StackPage name={"details"} title={"Details"}>
                     <>
                         <Toolbar>
-                            <ToolbarBackButton
-                                component={(goBack) => {
-                                    return (
-                                        <ToolbarItem>
-                                            <IconButton
-                                                color={"primary"}
-                                                onClick={() => {
-                                                    goBack?.();
-                                                }}
-                                            >
-                                                <ChevronLeft />
-                                                <Typography>Back</Typography>
-                                            </IconButton>
-                                        </ToolbarItem>
-                                    );
-                                }}
-                            />
+                            <CustomToolbarBackButton />
 
                             <ToolbarTitleItem />
                         </Toolbar>
