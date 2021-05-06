@@ -1,12 +1,14 @@
 import {
-    IStackSwitchApi,
     MainContent,
     Stack,
     StackPage,
     StackSwitch,
+    StackSwitchApiContext,
     Table,
     Toolbar,
+    ToolbarActions,
     ToolbarBackButton,
+    ToolbarFillSpace,
     ToolbarTitleItem,
     useStackSwitchApi,
 } from "@comet/admin";
@@ -36,24 +38,28 @@ export const ToolbarTableForm = () => {
         const stackSwitchApi = useStackSwitchApi();
         return (
             <>
-                <Toolbar
-                    actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => (
-                        <>
-                            <Button
-                                variant={"contained"}
-                                color={"primary"}
-                                startIcon={<Add />}
-                                onClick={() => {
-                                    stackSwitchApi?.activatePage("create", "new");
-                                }}
-                            >
-                                <Typography>Add</Typography>
-                            </Button>
-                        </>
-                    )}
-                >
+                <Toolbar>
                     <ToolbarBackButton />
                     <ToolbarTitleItem />
+                    <ToolbarFillSpace />
+                    <ToolbarActions>
+                        <StackSwitchApiContext.Consumer>
+                            {(stackSwitchApi) => (
+                                <>
+                                    <Button
+                                        variant={"contained"}
+                                        color={"primary"}
+                                        startIcon={<Add />}
+                                        onClick={() => {
+                                            stackSwitchApi?.activatePage("create", "new");
+                                        }}
+                                    >
+                                        <Typography>Add</Typography>
+                                    </Button>
+                                </>
+                            )}
+                        </StackSwitchApiContext.Consumer>
+                    </ToolbarActions>
                 </Toolbar>
                 <MainContent>
                     <Table

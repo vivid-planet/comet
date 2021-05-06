@@ -1,4 +1,16 @@
-import { IStackSwitchApi, MainContent, Stack, StackPage, StackSwitch, Toolbar, ToolbarBackButton, ToolbarItem, ToolbarTitleItem } from "@comet/admin";
+import {
+    MainContent,
+    Stack,
+    StackPage,
+    StackSwitch,
+    StackSwitchApiContext,
+    Toolbar,
+    ToolbarActions,
+    ToolbarBackButton,
+    ToolbarFillSpace,
+    ToolbarItem,
+    ToolbarTitleItem,
+} from "@comet/admin";
 import { Box, Button, Container, TextField, Typography } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
 import { Autocomplete } from "@material-ui/lab";
@@ -47,23 +59,7 @@ export const ToolbarSearch = () => {
             <StackSwitch initialPage="root">
                 <StackPage name={"root"}>
                     <>
-                        <Toolbar
-                            actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => {
-                                return (
-                                    <>
-                                        <Button
-                                            variant={"contained"}
-                                            color={"primary"}
-                                            onClick={() => {
-                                                stackSwitchApi?.activatePage("details", "foo");
-                                            }}
-                                        >
-                                            <Typography>Details</Typography>
-                                        </Button>
-                                    </>
-                                );
-                            }}
-                        >
+                        <Toolbar>
                             <ToolbarBackButton />
                             <ToolbarTitleItem />
                             <ToolbarItem>
@@ -79,6 +75,22 @@ export const ToolbarSearch = () => {
                                     renderInput={(params) => <TextField {...params} label="Search" variant="outlined" placeholder={"Search"} />}
                                 />
                             </ToolbarItem>
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <StackSwitchApiContext.Consumer>
+                                    {(stackSwitchApi) => (
+                                        <Button
+                                            variant={"contained"}
+                                            color={"primary"}
+                                            onClick={() => {
+                                                stackSwitchApi?.activatePage("details", "foo");
+                                            }}
+                                        >
+                                            <Typography>Details</Typography>
+                                        </Button>
+                                    )}
+                                </StackSwitchApiContext.Consumer>
+                            </ToolbarActions>
                         </Toolbar>
 
                         <MainContent>

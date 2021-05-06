@@ -1,15 +1,17 @@
 import {
     IStackApi,
-    IStackSwitchApi,
     MainContent,
     Stack,
     StackApiContext,
     StackPage,
     StackPageTitle,
     StackSwitch,
+    StackSwitchApiContext,
     Toolbar,
+    ToolbarActions,
     ToolbarBackButton,
     ToolbarBreadcrumbs,
+    ToolbarFillSpace,
     useStackSwitch,
 } from "@comet/admin";
 import { Box, Button, Container, Grid, Typography } from "@material-ui/core";
@@ -43,49 +45,51 @@ const ToolbarBreadcrumb = () => {
 const Page1 = () => {
     return (
         <>
-            <Toolbar
-                actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => {
-                    return (
-                        <Grid container spacing={4}>
-                            <Grid item>
-                                <Button
-                                    variant={"contained"}
-                                    color={"primary"}
-                                    onClick={() => {
-                                        stackSwitchApi?.activatePage("page2", "foo");
-                                    }}
-                                >
-                                    <Typography>Go to Page 2</Typography>
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    variant={"contained"}
-                                    color={"primary"}
-                                    onClick={() => {
-                                        stackSwitchApi?.activatePage("page3", "foo");
-                                    }}
-                                >
-                                    <Typography>Go to Page 3</Typography>
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    variant={"contained"}
-                                    color={"primary"}
-                                    onClick={() => {
-                                        stackSwitchApi?.activatePage("page4", "foo");
-                                    }}
-                                >
-                                    <Typography>Go to Page 4</Typography>
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    );
-                }}
-            >
+            <Toolbar>
                 <ToolbarBackButton />
                 <ToolbarBreadcrumb />
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <StackSwitchApiContext.Consumer>
+                        {(stackSwitchApi) => (
+                            <Grid container spacing={4}>
+                                <Grid item>
+                                    <Button
+                                        variant={"contained"}
+                                        color={"primary"}
+                                        onClick={() => {
+                                            stackSwitchApi?.activatePage("page2", "foo");
+                                        }}
+                                    >
+                                        <Typography>Go to Page 2</Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        variant={"contained"}
+                                        color={"primary"}
+                                        onClick={() => {
+                                            stackSwitchApi?.activatePage("page3", "foo");
+                                        }}
+                                    >
+                                        <Typography>Go to Page 3</Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        variant={"contained"}
+                                        color={"primary"}
+                                        onClick={() => {
+                                            stackSwitchApi?.activatePage("page4", "foo");
+                                        }}
+                                    >
+                                        <Typography>Go to Page 4</Typography>
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        )}
+                    </StackSwitchApiContext.Consumer>
+                </ToolbarActions>
             </Toolbar>
 
             <MainContent>
@@ -106,38 +110,40 @@ const Page2 = () => {
         <StackSwitch initialPage={"page2-0"}>
             <StackPage name="page2-0">
                 <>
-                    <Toolbar
-                        actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => {
-                            return (
-                                <Grid container spacing={4}>
-                                    <Grid item>
-                                        <Button
-                                            variant={"contained"}
-                                            color={"primary"}
-                                            onClick={() => {
-                                                stackSwitchApi?.activatePage("page2-1", "foo");
-                                            }}
-                                        >
-                                            <Typography>Page 2-1</Typography>
-                                        </Button>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button
-                                            variant={"contained"}
-                                            color={"primary"}
-                                            onClick={() => {
-                                                stackSwitchApi?.activatePage("page2-2", "foo");
-                                            }}
-                                        >
-                                            <Typography>Page 2-2</Typography>
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            );
-                        }}
-                    >
+                    <Toolbar>
                         <ToolbarBackButton />
                         <ToolbarBreadcrumb />
+                        <ToolbarFillSpace />
+                        <ToolbarActions>
+                            <StackSwitchApiContext.Consumer>
+                                {(stackSwitchApi) => (
+                                    <Grid container spacing={4} style={{ flex: 1 }}>
+                                        <Grid item>
+                                            <Button
+                                                variant={"contained"}
+                                                color={"primary"}
+                                                onClick={() => {
+                                                    stackSwitchApi?.activatePage("page2-1", "foo");
+                                                }}
+                                            >
+                                                <Typography>Page 2-1</Typography>
+                                            </Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button
+                                                variant={"contained"}
+                                                color={"primary"}
+                                                onClick={() => {
+                                                    stackSwitchApi?.activatePage("page2-2", "foo");
+                                                }}
+                                            >
+                                                <Typography>Page 2-2</Typography>
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                )}
+                            </StackSwitchApiContext.Consumer>
+                        </ToolbarActions>
                     </Toolbar>
                     <MainContent>
                         <Container>
@@ -204,38 +210,40 @@ const Page3 = () => {
         <StackSwitch initialPage={"page3-0"}>
             <StackPage name="page3-0">
                 <>
-                    <Toolbar
-                        actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => {
-                            return (
-                                <Grid container spacing={4}>
-                                    <Grid item>
-                                        <Button
-                                            variant={"contained"}
-                                            color={"primary"}
-                                            onClick={() => {
-                                                stackSwitchApi?.activatePage("page3-1", "foo");
-                                            }}
-                                        >
-                                            <Typography>Page 3-1</Typography>
-                                        </Button>
-                                    </Grid>
-                                    <Grid item>
-                                        <Button
-                                            variant={"contained"}
-                                            color={"primary"}
-                                            onClick={() => {
-                                                stackSwitchApi?.activatePage("page3-2", "foo");
-                                            }}
-                                        >
-                                            <Typography>Page 3-2</Typography>
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            );
-                        }}
-                    >
+                    <Toolbar>
                         <ToolbarBackButton />
                         <ToolbarBreadcrumb />
+                        <ToolbarFillSpace />
+                        <ToolbarActions>
+                            <StackSwitchApiContext.Consumer>
+                                {(stackSwitchApi) => (
+                                    <Grid container spacing={4} style={{ flex: 1 }}>
+                                        <Grid item>
+                                            <Button
+                                                variant={"contained"}
+                                                color={"primary"}
+                                                onClick={() => {
+                                                    stackSwitchApi?.activatePage("page3-1", "foo");
+                                                }}
+                                            >
+                                                <Typography>Page 3-1</Typography>
+                                            </Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button
+                                                variant={"contained"}
+                                                color={"primary"}
+                                                onClick={() => {
+                                                    stackSwitchApi?.activatePage("page3-2", "foo");
+                                                }}
+                                            >
+                                                <Typography>Page 3-2</Typography>
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                )}
+                            </StackSwitchApiContext.Consumer>
+                        </ToolbarActions>
                     </Toolbar>
                     <MainContent>
                         <Container>

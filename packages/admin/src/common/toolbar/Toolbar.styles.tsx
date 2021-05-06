@@ -7,7 +7,7 @@ export interface ToolbarThemeProps {
     elevation?: number;
 }
 
-export type CometAdminToolbarClassKeys = "root" | "muiToolbar" | "mainContentContainer" | "actionContainer";
+export type CometAdminToolbarClassKeys = "root" | "muiToolbar" | "mainContentContainer";
 
 export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminToolbarClassKeys>(
     () => ({
@@ -27,10 +27,6 @@ export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminT
         mainContentContainer: {
             display: "flex",
             flex: 1,
-        },
-        actionContainer: {
-            display: "flex",
-            alignItems: "center",
         },
     }),
     { name: "CometAdminToolbar" },

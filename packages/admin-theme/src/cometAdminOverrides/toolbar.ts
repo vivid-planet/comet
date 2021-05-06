@@ -12,5 +12,4 @@ export const cometAdminToolbarOverrides = (): StyleRules<{}, CometAdminToolbarCl
         },
     },
     mainContentContainer: {},
-    actionContainer: {},
 });
