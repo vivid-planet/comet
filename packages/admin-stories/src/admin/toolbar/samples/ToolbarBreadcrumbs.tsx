@@ -12,7 +12,7 @@ import {
     ToolbarBreadcrumbs,
     useStackSwitch,
 } from "@comet/admin";
-import { Box, Button, Container, Typography } from "@material-ui/core";
+import { Box, Button, Container, Grid, Typography } from "@material-ui/core";
 import { TreeItem, TreeView } from "@material-ui/lab";
 import * as React from "react";
 
@@ -46,35 +46,41 @@ const Page1 = () => {
             <Toolbar
                 actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => {
                     return (
-                        <>
-                            <Button
-                                variant={"contained"}
-                                color={"primary"}
-                                onClick={() => {
-                                    stackSwitchApi?.activatePage("page2", "foo");
-                                }}
-                            >
-                                <Typography>Go to Page 2</Typography>
-                            </Button>
-                            <Button
-                                variant={"contained"}
-                                color={"primary"}
-                                onClick={() => {
-                                    stackSwitchApi?.activatePage("page3", "foo");
-                                }}
-                            >
-                                <Typography>Go to Page 3</Typography>
-                            </Button>
-                            <Button
-                                variant={"contained"}
-                                color={"primary"}
-                                onClick={() => {
-                                    stackSwitchApi?.activatePage("page4", "foo");
-                                }}
-                            >
-                                <Typography>Go to Page 4</Typography>
-                            </Button>
-                        </>
+                        <Grid container spacing={4}>
+                            <Grid item>
+                                <Button
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    onClick={() => {
+                                        stackSwitchApi?.activatePage("page2", "foo");
+                                    }}
+                                >
+                                    <Typography>Go to Page 2</Typography>
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    onClick={() => {
+                                        stackSwitchApi?.activatePage("page3", "foo");
+                                    }}
+                                >
+                                    <Typography>Go to Page 3</Typography>
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    onClick={() => {
+                                        stackSwitchApi?.activatePage("page4", "foo");
+                                    }}
+                                >
+                                    <Typography>Go to Page 4</Typography>
+                                </Button>
+                            </Grid>
+                        </Grid>
                     );
                 }}
             >
@@ -103,26 +109,30 @@ const Page2 = () => {
                     <Toolbar
                         actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => {
                             return (
-                                <>
-                                    <Button
-                                        variant={"contained"}
-                                        color={"primary"}
-                                        onClick={() => {
-                                            stackSwitchApi?.activatePage("page2-1", "foo");
-                                        }}
-                                    >
-                                        <Typography>Page 2-1</Typography>
-                                    </Button>
-                                    <Button
-                                        variant={"contained"}
-                                        color={"primary"}
-                                        onClick={() => {
-                                            stackSwitchApi?.activatePage("page2-2", "foo");
-                                        }}
-                                    >
-                                        <Typography>Page 2-2</Typography>
-                                    </Button>
-                                </>
+                                <Grid container spacing={4}>
+                                    <Grid item>
+                                        <Button
+                                            variant={"contained"}
+                                            color={"primary"}
+                                            onClick={() => {
+                                                stackSwitchApi?.activatePage("page2-1", "foo");
+                                            }}
+                                        >
+                                            <Typography>Page 2-1</Typography>
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button
+                                            variant={"contained"}
+                                            color={"primary"}
+                                            onClick={() => {
+                                                stackSwitchApi?.activatePage("page2-2", "foo");
+                                            }}
+                                        >
+                                            <Typography>Page 2-2</Typography>
+                                        </Button>
+                                    </Grid>
+                                </Grid>
                             );
                         }}
                     >
@@ -197,26 +207,30 @@ const Page3 = () => {
                     <Toolbar
                         actionItems={(stackSwitchApi: IStackSwitchApi | undefined) => {
                             return (
-                                <>
-                                    <Button
-                                        variant={"contained"}
-                                        color={"primary"}
-                                        onClick={() => {
-                                            stackSwitchApi?.activatePage("page3-1", "foo");
-                                        }}
-                                    >
-                                        <Typography>Page 3-1</Typography>
-                                    </Button>
-                                    <Button
-                                        variant={"contained"}
-                                        color={"primary"}
-                                        onClick={() => {
-                                            stackSwitchApi?.activatePage("page3-2", "foo");
-                                        }}
-                                    >
-                                        <Typography>Page 3-2</Typography>
-                                    </Button>
-                                </>
+                                <Grid container spacing={4}>
+                                    <Grid item>
+                                        <Button
+                                            variant={"contained"}
+                                            color={"primary"}
+                                            onClick={() => {
+                                                stackSwitchApi?.activatePage("page3-1", "foo");
+                                            }}
+                                        >
+                                            <Typography>Page 3-1</Typography>
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button
+                                            variant={"contained"}
+                                            color={"primary"}
+                                            onClick={() => {
+                                                stackSwitchApi?.activatePage("page3-2", "foo");
+                                            }}
+                                        >
+                                            <Typography>Page 3-2</Typography>
+                                        </Button>
+                                    </Grid>
+                                </Grid>
                             );
                         }}
                     >

@@ -21,6 +21,16 @@ export const ToolbarAutomaticTitle = () => {
                                         >
                                             <Typography>Details</Typography>
                                         </Button>
+
+                                        <Button
+                                            variant={"contained"}
+                                            color={"primary"}
+                                            onClick={() => {
+                                                stackSwitchApi?.activatePage("automaticTitleDetail", "details");
+                                            }}
+                                        >
+                                            <Typography>Details</Typography>
+                                        </Button>
                                     </>
                                 );
                             }}

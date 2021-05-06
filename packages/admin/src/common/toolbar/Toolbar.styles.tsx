@@ -31,10 +31,6 @@ export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminT
         actionContainer: {
             display: "flex",
             alignItems: "center",
-            /* Margin on all first level children, without last one */
-            "& > *:not(:last-child)": {
-                marginRight: 20,
-            },
         },
     }),
     { name: "CometAdminToolbar" },
