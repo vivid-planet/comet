@@ -1,3 +1,4 @@
+import { IBreadcrumbItem, IStackApi, StackApiContext } from "@comet/admin";
 import { Link, Typography } from "@material-ui/core";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
@@ -8,27 +9,24 @@ const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ h
     <RouterLink innerRef={ref} to={to ?? href} {...rest} />
 ));
 
-interface IBreadcrumbItem {
-    id: string;
-    url: string;
-    title: React.ReactNode;
-}
-
-interface ToolbarBreadcrumbProps {
-    pages: IBreadcrumbItem[];
-}
-export const ToolbarBreadcrumbs: React.FunctionComponent<ToolbarBreadcrumbProps> = ({ pages }) => {
+export const ToolbarBreadcrumbs: React.FunctionComponent = () => {
     return (
-        <>
-            {pages.map(({ id, url, title }, index) => {
+        <StackApiContext.Consumer>
+            {(stackApi: IStackApi | undefined) => {
                 return (
-                    <ToolbarItem key={id}>
-                        <Link to={url} component={BreadcrumbLink} color={"inherit"}>
-                            <Typography variant={"h4"}>{title}</Typography>
-                        </Link>
-                    </ToolbarItem>
+                    <>
+                        {stackApi?.breadCrumbs.map(({ id, url, title }: IBreadcrumbItem) => {
+                            return (
+                                <ToolbarItem key={id}>
+                                    <Link to={url} component={BreadcrumbLink} color={"inherit"}>
+                                        <Typography variant={"h4"}>{title}</Typography>
+                                    </Link>
+                                </ToolbarItem>
+                            );
+                        })}
+                    </>
                 );
-            })}
-        </>
+            }}
+        </StackApiContext.Consumer>
     );
 };
