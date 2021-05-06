@@ -18,7 +18,7 @@ export const useStyles = makeStyles<Theme, {}, CometAdminToolbarBackButtonClassK
             display: "flex",
             alignItems: "stretch",
 
-            "& [class*='ToolbarItem']": {
+            "& [class*='CometAdminToolbarItem-root']": {
                 padding: 0,
                 paddingRight: 5,
             },
