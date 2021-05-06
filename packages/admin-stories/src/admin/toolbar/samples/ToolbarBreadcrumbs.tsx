@@ -1,8 +1,6 @@
 import {
-    IStackApi,
     MainContent,
     Stack,
-    StackApiContext,
     StackPage,
     StackPageTitle,
     StackSwitch,
@@ -35,19 +33,13 @@ const BreadcrumbTree = () => {
         </TreeView>
     );
 };
-const ToolbarBreadcrumb = () => {
-    return (
-        <StackApiContext.Consumer>
-            {(stackApi: IStackApi | undefined) => <ToolbarBreadcrumbs pages={stackApi?.breadCrumbs ?? []} />}
-        </StackApiContext.Consumer>
-    );
-};
+
 const Page1 = () => {
     return (
         <>
             <Toolbar>
                 <ToolbarBackButton />
-                <ToolbarBreadcrumb />
+                <ToolbarBreadcrumbs />
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <StackSwitchApiContext.Consumer>
@@ -112,7 +104,7 @@ const Page2 = () => {
                 <>
                     <Toolbar>
                         <ToolbarBackButton />
-                        <ToolbarBreadcrumb />
+                        <ToolbarBreadcrumbs />
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <StackSwitchApiContext.Consumer>
@@ -170,7 +162,7 @@ const Page21 = () => {
         <>
             <Toolbar>
                 <ToolbarBackButton />
-                <ToolbarBreadcrumb />
+                <ToolbarBreadcrumbs />
             </Toolbar>
 
             <MainContent>
@@ -190,7 +182,7 @@ const Page22 = () => {
         <>
             <Toolbar>
                 <ToolbarBackButton />
-                <ToolbarBreadcrumb />
+                <ToolbarBreadcrumbs />
             </Toolbar>
 
             <MainContent>
@@ -212,7 +204,7 @@ const Page3 = () => {
                 <>
                     <Toolbar>
                         <ToolbarBackButton />
-                        <ToolbarBreadcrumb />
+                        <ToolbarBreadcrumbs />
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <StackSwitchApiContext.Consumer>
@@ -270,7 +262,7 @@ const Page31 = () => {
         <>
             <Toolbar>
                 <ToolbarBackButton />
-                <ToolbarBreadcrumb />
+                <ToolbarBreadcrumbs />
             </Toolbar>
 
             <MainContent>
@@ -290,7 +282,7 @@ const Page32 = () => {
         <>
             <Toolbar>
                 <ToolbarBackButton />
-                <ToolbarBreadcrumb />
+                <ToolbarBreadcrumbs />
             </Toolbar>
 
             <MainContent>
@@ -310,7 +302,7 @@ const Page4 = () => {
         <>
             <Toolbar>
                 <ToolbarBackButton />
-                <ToolbarBreadcrumb />
+                <ToolbarBreadcrumbs />
             </Toolbar>
 
             <MainContent>
