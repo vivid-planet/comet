@@ -18,9 +18,6 @@ export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminT
             justifyContent: "center",
             top: (props) => props.headerHeight,
             padding: 0,
-            "& [class*='MuiButton']": {
-                textTransform: "none",
-            },
         },
         muiToolbar: {
             display: "flex",
