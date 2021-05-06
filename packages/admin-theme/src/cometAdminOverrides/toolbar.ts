@@ -5,11 +5,6 @@ export const cometAdminToolbarOverrides = (): StyleRules<{}, CometAdminToolbarCl
     root: {
         minHeight: 80,
     },
-    muiToolbar: {
-        "& [class*='MuiButton']": {
-            minHeight: 40,
-            alignItems: "center",
-        },
-    },
+    muiToolbar: {},
     mainContentContainer: {},
 });

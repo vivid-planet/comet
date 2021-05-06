@@ -11,12 +11,12 @@ import {
     ToolbarItem,
     ToolbarTitleItem,
 } from "@comet/admin";
-import { Box, Button, Container, TextField, Typography } from "@material-ui/core";
+import { Search } from "@comet/admin-icons";
+import { Box, Button, Container, InputAdornment, TextField, Typography } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
 import { Autocomplete } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
-
 const options = [
     { name: "Jesse Schmuck" },
     { name: "Karie Berkman" },
@@ -72,7 +72,21 @@ export const ToolbarSearch = () => {
                                     options={options}
                                     getOptionLabel={(option) => option.name}
                                     style={{ width: 350 }}
-                                    renderInput={(params) => <TextField {...params} label="Search" variant="outlined" placeholder={"Search"} />}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="outlined"
+                                            placeholder={"Search"}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <Search fontSize={"small"} />
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        />
+                                    )}
                                 />
                             </ToolbarItem>
                             <ToolbarFillSpace />
