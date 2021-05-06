@@ -1,4 +1,4 @@
-import { Paper, Toolbar as MUIToolbar } from "@material-ui/core";
+import { Paper, Toolbar as MuiToolbar } from "@material-ui/core";
 import * as React from "react";
 
 import { MenuContext } from "../../mui";
@@ -12,9 +12,9 @@ const Toolbar: React.FunctionComponent<ToolbarProps> = ({ children }) => {
 
     return (
         <Paper elevation={themeProps.elevation} className={classes.root}>
-            <MUIToolbar classes={{ root: classes.muiToolbar }}>
+            <MuiToolbar classes={{ root: classes.muiToolbar }}>
                 <div className={classes.mainContentContainer}>{children}</div>
-            </MUIToolbar>
+            </MuiToolbar>
         </Paper>
     );
 };
