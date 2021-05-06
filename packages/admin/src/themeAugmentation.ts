@@ -8,7 +8,6 @@ import {
     CometAdminInputBaseClassKeys,
     FieldContainerThemeProps,
 } from "./form";
-import { CometAdminFixedLeftRightLayoutKeys } from "./layout";
 import {
     CometAdminBreadcrumbsClassKeys,
     CometAdminBreadcrumbsThemeProps,
@@ -33,7 +32,6 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminErrorBoundary: CometAdminErrorBoundaryClassKeys;
         CometAdminFormPaper: CometAdminFormPaperKeys;
         CometAdminFormSection: CometAdminFormSectionKeys;
-        CometAdminFixedLeftRightLayout: CometAdminFixedLeftRightLayoutKeys;
         CometAdminBreadcrumbs: CometAdminBreadcrumbsClassKeys;
         CometAdminFinalFormRangeInput: CometAdminFinalFormRangeInputClassKeys;
     }
