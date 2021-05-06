@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add onAfterSubmit to FinalForm
 -   add useStoredState() hook
 -   Added a new FinalFormRangeInput Component
+-   add Toolbar
 
 ### Incompatible Changes
 
@@ -65,6 +66,19 @@ All notable changes to this project will be documented in this file. This projec
 -   Changes to Stack
     -   Removed prop `components.breadcrumbsContainer` in favour of a div that can be styled using the theme (`overrides -> CometAdminStack -> breadcrumbs`)
 -   Removed component `FixedLeftRightLayout`
+-   Changes to MasterLayout
+    - the html tag <main> was removed from the `MasterTemplate` and a new Component `MainContent` is introduced
+    - Best way to handle this change is to wrap your main content with the `MainContent` Component
+    
+```
+  <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
+    <Toolbar />
+    <MainContent>
+     /* You main content goes here*/
+    </MainContent> 
+  </MasterLayout
+```
+>>>>>>> docs: Changelog entry
 
 ### Migration Guide
 
