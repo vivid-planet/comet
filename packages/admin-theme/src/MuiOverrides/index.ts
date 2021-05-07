@@ -7,6 +7,7 @@ import { getMuiDialogActionsOverrides } from "./MuiDialogActions";
 import { getMuiDialogContentOverrides } from "./MuiDialogContent";
 import { getMuiDialogTextContentOverrides } from "./MuiDialogContentText";
 import { getMuiDialogTitleOverrides } from "./MuiDialogTitle";
+import { getMuiDrawerOverrides } from "./MuiDrawer";
 import { getMuiFormControlLabelOverrides } from "./MuiFormControlLabel";
 import { getMuiPaperOverrides } from "./MuiPaper";
 import { getMuiRadioOverrides } from "./MuiRadio";
@@ -32,4 +33,5 @@ export default () => ({
     MuiSvgIcon: getMuiSvgIconOverrides(),
     MuiSwitch: getMuiSwitchOverrides(),
     MuiSelect: getMuiSelectOverrides(),
+    MuiDrawer: getMuiDrawerOverrides(),
 });
