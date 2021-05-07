@@ -33,7 +33,7 @@ export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminT
 );
 
 export function useThemeProps() {
-    const { elevation = 4, ...restProps } = useComponentThemeProps<ToolbarThemeProps>("CometAdminToolbar") ?? {};
+    const { elevation = 4, ...restProps } = useComponentThemeProps("CometAdminToolbar") ?? {};
     return { elevation, ...restProps };
 }
 
