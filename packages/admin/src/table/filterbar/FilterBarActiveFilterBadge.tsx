@@ -1,6 +1,6 @@
 import { createStyles, Theme, Typography, WithStyles, withStyles } from "@material-ui/core";
 import { FieldState } from "final-form";
-import { isEqual } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import * as React from "react";
 
 import { difference } from "./difference";
@@ -26,23 +26,23 @@ const styles = (theme: Theme) =>
         },
     });
 
-interface FilterBarActiveFilterBadgeProps {
-    fieldState?: FieldState<any>;
+interface FilterBarActiveFilterBadgeProps<T = any> {
+    fieldState?: FieldState<T>;
+    calcNumberDirtyFields?: (fieldState?: FieldState<T>) => number;
 }
 
-const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof styles, true> & FilterBarActiveFilterBadgeProps> = ({
+export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof styles, true> & FilterBarActiveFilterBadgeProps> = ({
     fieldState,
+    calcNumberDirtyFields = dirtyFieldsCount,
     classes,
 }) => {
-    if (!isEqual(fieldState?.value, fieldState?.initial)) {
+    if (!isEqual(fieldState?.value, fieldState?.initial) && !isEmpty(fieldState?.value)) {
         return (
             <div className={classes.hasValueCount}>
                 <Typography variant={"subtitle2"}>
-                    {Array.isArray(fieldState?.value)
-                        ? fieldState?.value.length
-                        : typeof fieldState?.value === "object"
-                        ? dirtyFieldsCount(fieldState)
-                        : 1}
+                    {Array.isArray(fieldState?.value[Object.keys(fieldState?.value)[0]])
+                        ? fieldState?.value[Object.keys(fieldState?.value)[0]].length
+                        : calcNumberDirtyFields(fieldState)}
                 </Typography>
             </div>
         );
