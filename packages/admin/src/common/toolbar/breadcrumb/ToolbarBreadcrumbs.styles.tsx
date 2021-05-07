@@ -7,7 +7,7 @@ export interface ToolbarBreadcrumbsThemeProps {
 }
 
 export function useThemeProps() {
-    const { typographyProps, ...restProps } = useComponentThemeProps<ToolbarBreadcrumbsThemeProps>("CometAdminToolbarBreadcrumbs") ?? {};
+    const { typographyProps, ...restProps } = useComponentThemeProps("CometAdminToolbarBreadcrumbs") ?? {};
     return { typographyProps, ...restProps };
 }
 

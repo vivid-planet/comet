@@ -28,7 +28,7 @@ export const useStyles = makeStyles<Theme, {}, CometAdminToolbarBackButtonClassK
 );
 
 export function useToolbarBackButtonThemeProps() {
-    const { backIcon = <ArrowBack />, ...restProps } = useComponentThemeProps<ToolbarBackButtonThemeProps>("CometAdminToolbarBackButton") ?? {};
+    const { backIcon = <ArrowBack />, ...restProps } = useComponentThemeProps("CometAdminToolbarBackButton") ?? {};
     return { backIcon, ...restProps };
 }
 
