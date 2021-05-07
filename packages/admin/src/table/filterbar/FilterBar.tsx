@@ -1,18 +1,9 @@
-import { Theme, Typography } from "@material-ui/core";
-import { MoreHoriz } from "@material-ui/icons";
+import { Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { FieldState } from "final-form";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 
-import { Field } from "../../form";
-import { FilterBarPopOverFormField } from "./FilterBarPopOverFormField";
-
-export type CometAdminFilterBarClassKeys = "root" | "barWrapper" | "sidebarInnerWrapper" | "fieldBarWrapper" | "moreButtonWrapper";
-
-interface StyleProps {
-    fieldBarWidth: number;
-}
+export type CometAdminFilterBarClassKeys = "root" | "barWrapper" | "fieldBarWrapper";
 
 const useStyles = makeStyles(
     (theme: Theme) => ({
@@ -25,28 +16,6 @@ const useStyles = makeStyles(
             flexWrap: "wrap",
             display: "flex",
         },
-        sidebarInnerWrapper: {},
-        fieldBarWrapper: {
-            minWidth: (props: StyleProps) => `${props.fieldBarWidth}px`,
-            border: `1px solid ${theme.palette.grey[300]}`,
-            position: "relative",
-            marginBottom: "10px",
-            marginRight: "10px",
-        },
-        showMoreWrapper: {
-            minWidth: (props: StyleProps) => `${props.fieldBarWidth}px`,
-            border: `1px solid ${theme.palette.grey[300]}`,
-            justifyContent: "center",
-            position: "relative",
-            marginBottom: "10px",
-            alignItems: "center",
-            marginRight: "10px",
-            cursor: "pointer",
-            display: "flex",
-        },
-        showMoreTextWrapper: {
-            marginLeft: "15px",
-        },
     }),
     { name: "CometAdminFilterBar" },
 );
@@ -58,42 +27,14 @@ export interface IFilterBarField {
     dirtyFieldsBadge?: (fieldState?: FieldState<any>) => React.Component;
 }
 
-interface IFilterBarProps {
-    fieldBarWidth: number;
-    fields: IFilterBarField[];
-    maxCountInitialShown?: number;
-}
+interface IFilterBarProps {}
 
-export const FilterBar: React.FunctionComponent<IFilterBarProps> = ({ fieldBarWidth, fields, maxCountInitialShown = 10 }) => {
-    const classes = useStyles({ fieldBarWidth: fieldBarWidth });
-    const [hasExtended, setHasExtended] = React.useState(false);
+export const FilterBar: React.FunctionComponent<IFilterBarProps> = ({ children }) => {
+    const classes = useStyles();
 
     return (
         <div className={classes.root}>
-            <div className={classes.barWrapper}>
-                {Array.from(
-                    {
-                        length: hasExtended ? fields.length : Math.min(maxCountInitialShown, fields.length),
-                    },
-                    (_, i) => i,
-                ).map((i) => {
-                    return (
-                        <div className={classes.fieldBarWrapper} style={{ minWidth: fieldBarWidth }} key={i}>
-                            <Field type="query" name={fields[i].name} component={FilterBarPopOverFormField} isClearable field={fields[i]} />
-                        </div>
-                    );
-                })}
-                {fields.length > maxCountInitialShown && !hasExtended && (
-                    <div className={classes.showMoreWrapper} style={{ minWidth: fieldBarWidth }} onClick={() => setHasExtended(true)}>
-                        <MoreHoriz />
-                        <div className={classes.showMoreTextWrapper}>
-                            <Typography variant="subtitle2">
-                                <FormattedMessage id="cometAdmin.generic.moreFilter" defaultMessage="More Filter" />
-                            </Typography>
-                        </div>
-                    </div>
-                )}
-            </div>
+            <div className={classes.barWrapper}>{children}</div>
         </div>
     );
 };

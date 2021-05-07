@@ -1,8 +1,9 @@
 import {
     Field,
     FilterBar,
+    FilterBarMoreFilterButton,
+    FilterBarPopOverFormField,
     FinalFormInput,
-    IFilterBarField,
     Table,
     TableFilterFinalForm,
     TableQuery,
@@ -76,27 +77,15 @@ interface IQueryData {
 }
 
 interface IFilterValues {
-    username: string;
-    name: string;
-    email: string;
-    website: string;
+    username: any;
+    name: any;
+    email: any;
+    website: any;
 }
 
 interface IVariables extends IFilterValues {
     pathFunction: any;
 }
-
-const Username: React.FC = () => {
-    return <Field name="username" type="text" component={FinalFormInput} fullWidth />;
-};
-
-const Name: React.FC = () => {
-    return <Field name="name" type="text" component={FinalFormInput} fullWidth />;
-};
-
-const HomePage: React.FC = () => {
-    return <Field name="website" type="text" component={FinalFormInput} fullWidth />;
-};
 
 const ExampleWithSelect: React.FC = () => {
     const options = [
@@ -107,30 +96,15 @@ const ExampleWithSelect: React.FC = () => {
     return <Field name="email" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
 };
 
-const fields: IFilterBarField[] = [
-    {
-        name: "username",
-        label: "Username",
-        component: Username,
-    },
-    {
-        name: "name",
-        label: "Name",
-        component: Name,
-    },
-    { name: "email", label: "Email Select", component: ExampleWithSelect },
-    {
-        name: "website",
-        label: "Homepage",
-        component: HomePage,
-    },
-];
-
 function Story() {
     const filterApi = useTableQueryFilter<Partial<IFilterValues>>({});
+
     const { tableData, api, loading, error } = useTableQuery<IQueryData, Partial<IVariables>>()(query, {
         variables: {
-            ...filterApi.current,
+            email: filterApi.current.email?.email,
+            name: filterApi.current.name?.name,
+            username: filterApi.current.username?.username,
+            website: filterApi.current.website?.url,
             pathFunction,
         },
         resolveTableData: (data) => ({
@@ -143,7 +117,23 @@ function Story() {
         <TableQuery api={api} loading={loading} error={error}>
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
-                <FilterBar fieldBarWidth={150} fields={fields} maxCountInitialShown={2} />
+                <FilterBar>
+                    <FilterBarPopOverFormField label={"Username"} name="username" fieldBarWidth={150}>
+                        <Field name="username" type="text" component={FinalFormInput} fullWidth />
+                    </FilterBarPopOverFormField>
+                    <FilterBarMoreFilterButton fieldBarWidth={150}>
+                        <FilterBarPopOverFormField label={"Email"} name="email" fieldBarWidth={150}>
+                            <ExampleWithSelect />
+                        </FilterBarPopOverFormField>
+                        <FilterBarPopOverFormField label={"Name"} name="name" fieldBarWidth={150}>
+                            <Field name="name" type="text" component={FinalFormInput} fullWidth />
+                        </FilterBarPopOverFormField>
+                        <FilterBarPopOverFormField label={"Website"} name="website" fieldBarWidth={150}>
+                            <Field name="url" type="text" component={FinalFormInput} fullWidth />
+                            <Field name="name" type="text" component={FinalFormInput} fullWidth />
+                        </FilterBarPopOverFormField>
+                    </FilterBarMoreFilterButton>
+                </FilterBar>
             </TableFilterFinalForm>
             {tableData && (
                 <Table
