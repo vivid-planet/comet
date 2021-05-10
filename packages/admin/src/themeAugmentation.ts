@@ -19,7 +19,8 @@ import {
     MenuCollapsibleItemThemeProps,
     MenuThemeProps,
 } from "./mui";
-import { CometAdminFilterBarClassKeys, CometAdminFilterBarPopOverFormFieldClassKeys, PopoverFormFieldThemeProps } from "./table";
+import { CometAdminFilterBarClassKeys } from "./table";
+import { CometAdminFilterBarPopOverFormFieldClassKeys, PopoverFormFieldThemeProps } from "./table/filterbar/FilterBarPopOverFormField";
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {

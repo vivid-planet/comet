@@ -3,6 +3,10 @@ import { makeStyles } from "@material-ui/styles";
 import { FieldState } from "final-form";
 import * as React from "react";
 
+import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
+import { FilterBarMoreFilterButton, FilterBarMoreFilterButtonProps } from "./FilterBarMoreFilterButton";
+import { FilterBarPopOverFormField, FilterBarPopOverFormFieldProps } from "./FilterBarPopOverFormField";
+
 export type CometAdminFilterBarClassKeys = "root" | "barWrapper" | "fieldBarWrapper";
 
 const useStyles = makeStyles(
@@ -27,9 +31,13 @@ export interface IFilterBarField {
     dirtyFieldsBadge?: (fieldState?: FieldState<any>) => React.Component;
 }
 
-interface IFilterBarProps {}
+interface FilterBarComposition {
+    ActiveFilterBadge: React.ComponentType<FilterBarActiveFilterBadgeProps>;
+    MoreFilterButton: React.ComponentType<FilterBarMoreFilterButtonProps>;
+    PopOverFormField: React.ComponentType<FilterBarPopOverFormFieldProps>;
+}
 
-export const FilterBar: React.FunctionComponent<IFilterBarProps> = ({ children }) => {
+export const FilterBar: React.FunctionComponent & FilterBarComposition = ({ children }) => {
     const classes = useStyles();
 
     return (
@@ -38,3 +46,9 @@ export const FilterBar: React.FunctionComponent<IFilterBarProps> = ({ children }
         </div>
     );
 };
+
+FilterBar.ActiveFilterBadge = FilterBarActiveFilterBadge;
+FilterBar.MoreFilterButton = FilterBarMoreFilterButton;
+FilterBar.PopOverFormField = FilterBarPopOverFormField;
+
+export default { FilterBar };

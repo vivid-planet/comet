@@ -1,15 +1,4 @@
-import {
-    Field,
-    FilterBar,
-    FilterBarMoreFilterButton,
-    FilterBarPopOverFormField,
-    FinalFormInput,
-    Table,
-    TableFilterFinalForm,
-    TableQuery,
-    useTableQuery,
-    useTableQueryFilter,
-} from "@comet/admin";
+import { Field, FilterBar, FinalFormInput, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
@@ -118,21 +107,21 @@ function Story() {
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBarPopOverFormField label={"Username"} name="username" fieldBarWidth={150}>
+                    <FilterBar.PopOverFormField label={"Username"} name="username" fieldBarWidth={150}>
                         <Field name="username" type="text" component={FinalFormInput} fullWidth />
-                    </FilterBarPopOverFormField>
-                    <FilterBarMoreFilterButton fieldBarWidth={150}>
-                        <FilterBarPopOverFormField label={"Email"} name="email" fieldBarWidth={150}>
+                    </FilterBar.PopOverFormField>
+                    <FilterBar.MoreFilterButton fieldBarWidth={150}>
+                        <FilterBar.PopOverFormField label={"Email"} name="email" fieldBarWidth={150}>
                             <ExampleWithSelect />
-                        </FilterBarPopOverFormField>
-                        <FilterBarPopOverFormField label={"Name"} name="name" fieldBarWidth={150}>
+                        </FilterBar.PopOverFormField>
+                        <FilterBar.PopOverFormField label={"Name"} name="name" fieldBarWidth={150}>
                             <Field name="name" type="text" component={FinalFormInput} fullWidth />
-                        </FilterBarPopOverFormField>
-                        <FilterBarPopOverFormField label={"Website"} name="website" fieldBarWidth={150}>
+                        </FilterBar.PopOverFormField>
+                        <FilterBar.PopOverFormField label={"Website"} name="website" fieldBarWidth={150}>
                             <Field name="url" type="text" component={FinalFormInput} fullWidth />
                             <Field name="name" type="text" component={FinalFormInput} fullWidth />
-                        </FilterBarPopOverFormField>
-                    </FilterBarMoreFilterButton>
+                        </FilterBar.PopOverFormField>
+                    </FilterBar.MoreFilterButton>
                 </FilterBar>
             </TableFilterFinalForm>
             {tableData && (
