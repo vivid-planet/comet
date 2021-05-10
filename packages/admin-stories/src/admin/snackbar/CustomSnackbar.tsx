@@ -34,7 +34,7 @@ const CustomSnackbar = () => {
     const snackbarApi = useSnackbarApi();
 
     const handleActionButtonClick = () => {
-        console.log("Do stuff here");
+        window.alert("Action button clicked");
         snackbarApi.hideSnackbar();
     };
 
