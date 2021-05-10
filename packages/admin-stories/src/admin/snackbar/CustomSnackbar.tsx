@@ -2,31 +2,6 @@ import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
 import { Button, List, ListItem, Snackbar } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import styled from "styled-components";
-
-const ShowSnackbarButton = styled(Button)`
-    && {
-        background-color: darkred;
-        color: white;
-    }
-
-    &&:hover {
-        opacity: 0.7;
-        background-color: darkred;
-    }
-`;
-
-const HideSnackbarButton = styled(Button)`
-    && {
-        background-color: blue;
-        color: white;
-
-        &&:hover {
-            opacity: 0.7;
-            background-color: blue;
-        }
-    }
-`;
 
 let counter = 0;
 
@@ -58,10 +33,14 @@ const CustomSnackbar = () => {
     return (
         <List>
             <ListItem>
-                <ShowSnackbarButton onClick={showCustomSnackbar}>Show Snackbar</ShowSnackbarButton>
+                <Button color={"primary"} onClick={showCustomSnackbar}>
+                    Show Snackbar
+                </Button>
             </ListItem>
             <ListItem>
-                <HideSnackbarButton onClick={snackbarApi.hideSnackbar}>Hide Snackbar</HideSnackbarButton>
+                <Button color={"secondary"} onClick={snackbarApi.hideSnackbar}>
+                    Hide Snackbar
+                </Button>
             </ListItem>
         </List>
     );
