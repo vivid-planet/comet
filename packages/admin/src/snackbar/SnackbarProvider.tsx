@@ -2,7 +2,7 @@ import { SnackbarCloseReason, SnackbarProps } from "@material-ui/core";
 import * as React from "react";
 
 export interface SnackbarApi {
-    showSnackbar: (newSnackbar: React.ReactElement) => void;
+    showSnackbar: (newSnackbar: React.ReactElement<SnackbarProps>) => void;
     hideSnackbar: () => void;
 }
 
