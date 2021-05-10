@@ -26,7 +26,7 @@ const styles = (theme: Theme) =>
         },
     });
 
-interface FilterBarActiveFilterBadgeProps<T = any> {
+export interface FilterBarActiveFilterBadgeProps<T = any> {
     fieldState?: FieldState<T>;
     calcNumberDirtyFields?: (fieldState?: FieldState<T>) => number;
 }

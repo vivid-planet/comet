@@ -27,7 +27,7 @@ const useStyles = makeStyles(
     { name: "CometAdminFilterBar" },
 );
 
-interface FilterBarMoreFilterButtonProps {
+export interface FilterBarMoreFilterButtonProps {
     fieldBarWidth: number;
 }
 

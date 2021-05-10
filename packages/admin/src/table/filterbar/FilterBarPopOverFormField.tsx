@@ -93,7 +93,7 @@ const useStyles = makeStyles(
     { name: "CometAdminFilterBarPopOverFormField" },
 );
 
-interface FilterBarPopOverFormFieldProps {
+export interface FilterBarPopOverFormFieldProps {
     label: string;
     name: string;
     dirtyFieldsBadge?: (fieldState?: FieldState<any>) => React.Component;
