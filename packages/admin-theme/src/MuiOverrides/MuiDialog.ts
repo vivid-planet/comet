@@ -1,7 +1,7 @@
 import { DialogClassKey } from "@material-ui/core/Dialog";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export default (): StyleRules<{}, DialogClassKey> => ({
+export const getMuiDialogOverrides = (): StyleRules<{}, DialogClassKey> => ({
     root: {},
     scrollPaper: {},
     scrollBody: {},

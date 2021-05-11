@@ -1,5 +1,5 @@
 import { AppBarProps } from "@material-ui/core/AppBar";
 
-export default (): AppBarProps => ({
+export const getMuiAppBarProps = (): Partial<AppBarProps> => ({
     elevation: 0,
 });
