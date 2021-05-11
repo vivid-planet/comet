@@ -1,10 +1,12 @@
 import { MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
-import { Typography } from "@material-ui/core";
-import { Dashboard, GitHub, Launch, List, Settings } from "@material-ui/icons";
+import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
+import { Box, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
+
+import CometLogo from "../../../.storybook/CometLogo";
 
 const permanentMenuMinWidth = 1024;
 
@@ -15,11 +17,11 @@ const AppMenu: React.FC = () => {
         <Menu variant={windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent"}>
             <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
             <MenuItemRouterLink primary="Settings" icon={<Settings />} to="/settings" />
-            <MenuCollapsibleItem primary="More Items" icon={<List />}>
+            <MenuCollapsibleItem primary="More Items" icon={<Sort />}>
                 <MenuItemRouterLink primary="Foo1" to="/foo1" />
                 <MenuItemRouterLink primary="Foo2" to="/foo2" />
             </MenuCollapsibleItem>
-            <MenuCollapsibleItem primary="Even More Items" icon={<List />}>
+            <MenuCollapsibleItem primary="Even More Items" icon={<Sort />}>
                 <MenuItemRouterLink primary="Foo3" to="/foo3" />
                 <MenuItemRouterLink primary="Foo4" to="/foo4" />
             </MenuCollapsibleItem>
@@ -28,22 +30,23 @@ const AppMenu: React.FC = () => {
                 secondary="View on GitHub"
                 target="_blank"
                 href="https://github.com/vivid-planet/comet-admin"
-                icon={<GitHub />}
-                secondaryAction={<Launch />}
+                icon={<CometColor />}
+                secondaryAction={<LinkExternal />}
             />
         </Menu>
     );
 };
 
 const AppHeader: React.FC = () => (
-    <Typography variant="h5" color="primary">
-        Example
-    </Typography>
+    <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} style={{ width: "100%" }}>
+        <CometLogo />
+        <Typography variant="h5">Menu Example</Typography>
+    </Box>
 );
 
 const Content = ({ children }: { children: string }) => (
     <>
-        <Typography variant={"h4"}>{children}</Typography>
+        <Typography variant={"h1"}>{children}</Typography>
         <br />
         <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>
     </>

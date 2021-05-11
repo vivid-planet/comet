@@ -9,6 +9,7 @@ const Root = styled.div`
     display: flex;
     flex-wrap: wrap;
 `;
+
 const IconContainer = styled.div`
     padding: 10px;
     margin: 10px;
@@ -22,7 +23,9 @@ const IconContainer = styled.div`
 `;
 
 const IconWrapper = styled.div`
-    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
 `;
 
 function Story() {
@@ -35,7 +38,7 @@ function Story() {
                     return (
                         <IconContainer key={key}>
                             <IconWrapper>
-                                <Icon htmlColor={color("Tint Color", "#000000")} />
+                                <Icon htmlColor={color("Tint Color", "#000000")} fontSize={"large"} />
                             </IconWrapper>
                             <Typography>{key}</Typography>
                         </IconContainer>

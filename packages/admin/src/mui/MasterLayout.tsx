@@ -1,10 +1,9 @@
-import { CssBaseline, IconButton, Toolbar } from "@material-ui/core";
+import { AppBar, CssBaseline, IconButton, Toolbar } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
-import MenuIcon from "@material-ui/icons/Menu";
+import MuiMenuIcon from "@material-ui/icons/Menu";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { Header } from "./MasterLayout.sc";
 import { MenuContext } from "./menu";
 
 export interface MasterLayoutProps {
@@ -17,9 +16,10 @@ export interface MasterLayoutThemeProps {
     hideToolbarMenuIcon?: boolean;
     openMenuByDefault?: boolean;
     headerHeight?: number;
+    menuIcon?: React.ComponentType;
 }
 
-export type CometAdminMasterLayoutClassKeys = "root" | "header" | "toolbar" | "contentWrapper" | "mainContent";
+export type CometAdminMasterLayoutClassKeys = "root" | "header" | "toolbar" | "menuButton" | "contentWrapper" | "mainContent";
 
 const styles = (theme: Theme) =>
     createStyles<CometAdminMasterLayoutClassKeys, any>({
@@ -27,12 +27,15 @@ const styles = (theme: Theme) =>
             display: "flex",
             flexWrap: "nowrap",
         },
-        header: {},
+        header: {
+            zIndex: theme.zIndex.drawer + 1,
+        },
         toolbar: {
             minHeight: 0,
             paddingLeft: theme.spacing(2),
             paddingRight: theme.spacing(2),
         },
+        menuButton: {},
         contentWrapper: {
             flexGrow: 1,
         },
@@ -50,6 +53,7 @@ const MasterLayout: React.FC<WithStyles<typeof styles> & MasterLayoutProps & Mas
         hideToolbarMenuIcon,
         openMenuByDefault = true,
         headerHeight = 60,
+        menuIcon: MenuIcon = MuiMenuIcon,
     } = props;
     const [open, setOpen] = React.useState(openMenuByDefault);
 
@@ -61,16 +65,16 @@ const MasterLayout: React.FC<WithStyles<typeof styles> & MasterLayoutProps & Mas
         <MenuContext.Provider value={{ open, toggleOpen, headerHeight }}>
             <CssBaseline />
             <div className={classes.root}>
-                <Header position="fixed" color="inherit" classes={{ root: classes.header }}>
+                <AppBar position="fixed" color="inherit" classes={{ root: classes.header }}>
                     <Toolbar style={{ height: headerHeight }} classes={{ root: classes.toolbar }}>
                         {!hideToolbarMenuIcon && (
-                            <IconButton color="primary" onClick={toggleOpen}>
+                            <IconButton onClick={toggleOpen} classes={{ root: classes.menuButton }}>
                                 <MenuIcon />
                             </IconButton>
                         )}
                         {HeaderComponent && <HeaderComponent />}
                     </Toolbar>
-                </Header>
+                </AppBar>
                 <Menu />
                 <div style={{ paddingTop: headerHeight }} className={classes.contentWrapper}>
                     <main className={classes.mainContent}>{children}</main>

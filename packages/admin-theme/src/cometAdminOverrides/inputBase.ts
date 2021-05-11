@@ -1,15 +1,28 @@
 import { CometAdminInputBaseClassKeys } from "@comet/admin";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
+import { bluePalette, neutrals } from "../colors";
+
 export default (): StyleRules<{}, CometAdminInputBaseClassKeys> => ({
     root: {
-        borderColor: "#D9D9D9",
-        borderRadius: 0,
-        height: 36,
+        borderColor: neutrals[100],
+        borderRadius: 2,
+        "&:not($multiline)": {
+            height: 40,
+        },
     },
-    focused: {},
-    adornedStart: {},
+    formControl: {},
+    focused: {
+        borderColor: bluePalette.main,
+    },
+    disabled: {},
     adornedEnd: {},
+    adornedStart: {},
+    error: {},
+    marginDense: {},
+    multiline: {},
+    fullWidth: {},
+    colorSecondary: {},
     input: {
         lineHeight: "20px",
         paddingLeft: 10,
@@ -17,4 +30,10 @@ export default (): StyleRules<{}, CometAdminInputBaseClassKeys> => ({
         paddingTop: 8,
         paddingBottom: 8,
     },
+    inputMarginDense: {},
+    inputMultiline: {},
+    inputTypeSearch: {},
+    inputAdornedStart: {},
+    inputAdornedEnd: {},
+    inputHiddenLabel: {},
 });

@@ -3,7 +3,7 @@ import { CometAdminRteControlButtonClassKeys } from "./core/Controls/ControlButt
 import { CometAdminRteFeaturesButtonGroupClassKeys } from "./core/Controls/FeaturesButtonGroup";
 import { CometAdminRteLinkControlsClassKeys } from "./core/Controls/LinkControls";
 import { CometAdminRteToolbarClassKeys } from "./core/Controls/Toolbar";
-import { CometAdminRteClassKeys } from "./core/Rte";
+import { CometAdminRteClassKeys, CometAdminRteThemeProps } from "./core/Rte";
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
@@ -13,5 +13,11 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminRteFeaturesButtonGroup: CometAdminRteFeaturesButtonGroupClassKeys;
         CometAdminRteBlockTypeControls: CometAdminRteBlockTypeControlsClassKeys;
         CometAdminRteLinkControls: CometAdminRteLinkControlsClassKeys;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminRte: CometAdminRteThemeProps;
     }
 }

@@ -1,6 +1,16 @@
 import { ClearInputButtonThemeProps, CometAdminClearInputButtonClassKeys } from "./common";
-import { CometAdminFormFieldContainerClassKeys, CometAdminInputBaseClassKeys, FieldContainerThemeProps } from "./form";
+import { CometAdminErrorBoundaryClassKeys, ErrorBoundaryThemeProps } from "./error";
 import {
+    CometAdminFinalFormRangeInputClassKeys,
+    CometAdminFormFieldContainerClassKeys,
+    CometAdminFormPaperKeys,
+    CometAdminFormSectionKeys,
+    CometAdminInputBaseClassKeys,
+    FieldContainerThemeProps,
+} from "./form";
+import {
+    CometAdminBreadcrumbsClassKeys,
+    CometAdminBreadcrumbsThemeProps,
     CometAdminMasterLayoutClassKeys,
     CometAdminMenuClassKeys,
     CometAdminMenuCollapsibleItemClassKeys,
@@ -19,6 +29,11 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminMenuCollapsibleItem: CometAdminMenuCollapsibleItemClassKeys;
         CometAdminMasterLayout: CometAdminMasterLayoutClassKeys;
         CometAdminInputBase: CometAdminInputBaseClassKeys;
+        CometAdminErrorBoundary: CometAdminErrorBoundaryClassKeys;
+        CometAdminFormPaper: CometAdminFormPaperKeys;
+        CometAdminFormSection: CometAdminFormSectionKeys;
+        CometAdminBreadcrumbs: CometAdminBreadcrumbsClassKeys;
+        CometAdminFinalFormRangeInput: CometAdminFinalFormRangeInputClassKeys;
     }
 }
 
@@ -29,5 +44,7 @@ declare module "@material-ui/core/styles/props" {
         CometAdminMenu: MenuThemeProps;
         CometAdminMenuCollapsibleItem: MenuCollapsibleItemThemeProps;
         CometAdminMasterLayout: MasterLayoutThemeProps;
+        CometAdminErrorBoundary: ErrorBoundaryThemeProps;
+        CometAdminBreadcrumbs: CometAdminBreadcrumbsThemeProps;
     }
 }

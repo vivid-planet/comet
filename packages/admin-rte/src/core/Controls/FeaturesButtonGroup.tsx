@@ -1,6 +1,6 @@
-import { createStyles, WithStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
-import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 
 import { IFeatureConfig } from "../types";
@@ -11,7 +11,8 @@ interface IProps {
     disabled?: boolean;
 }
 
-function FeaturesButtonGroup({ classes, features, disabled: globallyDisabled }: IProps & WithStyles<typeof styles>) {
+function FeaturesButtonGroup({ features, disabled: globallyDisabled }: IProps) {
+    const classes = useStyles();
     if (!features.length) {
         return null;
     }
@@ -37,18 +38,22 @@ function FeaturesButtonGroup({ classes, features, disabled: globallyDisabled }: 
 
 export type CometAdminRteFeaturesButtonGroupClassKeys = "root" | "buttonWrapper";
 
-const styles = () =>
-    createStyles<CometAdminRteFeaturesButtonGroupClassKeys, any>({
-        root: {
-            display: "inline-flex",
-            justifyContent: "flex-start",
-        },
-        buttonWrapper: {
-            marginRight: 1,
-            "&:last-child": {
-                marginRight: 0,
+const useStyles = makeStyles<Theme, {}, CometAdminRteFeaturesButtonGroupClassKeys>(
+    () => {
+        return {
+            root: {
+                display: "inline-flex",
+                justifyContent: "flex-start",
             },
-        },
-    });
+            buttonWrapper: {
+                marginRight: 1,
+                "&:last-child": {
+                    marginRight: 0,
+                },
+            },
+        };
+    },
+    { name: "CometAdminRteFeaturesButtonGroup" },
+);
 
-export default withStyles(styles, { name: "CometAdminRteFeaturesButtonGroup" })(FeaturesButtonGroup);
+export default FeaturesButtonGroup;

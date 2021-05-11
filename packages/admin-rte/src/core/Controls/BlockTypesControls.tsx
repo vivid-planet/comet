@@ -1,18 +1,19 @@
-import { createStyles, FormControl, MenuItem, Select, WithStyles } from "@material-ui/core";
+import { FormControl, makeStyles, MenuItem, Select } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { IControlProps } from "../types";
+import getRteTheme from "../utils/getRteTheme";
 import useBlockTypes, { BlockTypesApi } from "./useBlockTypes";
 
 interface Props extends IControlProps {
     blockTypes: BlockTypesApi;
 }
 
-function BlockTypesControls({ classes, options: { standardBlockType }, disabled, blockTypes }: Props & WithStyles<typeof styles>) {
+function BlockTypesControls({ options: { standardBlockType }, disabled, blockTypes }: Props) {
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
+    const classes = useStyles();
 
     return (
         <FormControl classes={{ root: classes.root }}>
@@ -41,22 +42,28 @@ function BlockTypesControls({ classes, options: { standardBlockType }, disabled,
 
 export type CometAdminRteBlockTypeControlsClassKeys = "root" | "select";
 
-const styles = (theme: Theme) =>
-    createStyles<CometAdminRteBlockTypeControlsClassKeys, any>({
-        root: {},
-        select: {
-            color: theme.rte.colors.buttonIcon,
-            minWidth: 180,
-            lineHeight: "24px",
-            fontSize: 14,
-            padding: 0,
-            "& [class*='MuiSvgIcon-root']": {
-                color: "inherit",
-            },
-        },
-    });
+const useStyles = makeStyles<Theme, {}, CometAdminRteBlockTypeControlsClassKeys>(
+    (theme: Theme) => {
+        const rteTheme = getRteTheme(theme.props?.CometAdminRte);
 
-const StyledBlockTypesControls = withStyles(styles, { name: "CometAdminRteBlockTypeControls" })(BlockTypesControls);
+        return {
+            root: {},
+            select: {
+                color: rteTheme.colors.buttonIcon,
+                minWidth: 180,
+                lineHeight: "24px",
+                fontSize: 14,
+                padding: 0,
+                "& [class*='MuiSvgIcon-root']": {
+                    color: "inherit",
+                },
+            },
+        };
+    },
+    { name: "CometAdminRteBlockTypeControls" },
+);
+
+const StyledBlockTypesControls = BlockTypesControls;
 
 // If there are no dropdown-features, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
 export default (p: IControlProps) => {

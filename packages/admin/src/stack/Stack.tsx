@@ -1,5 +1,6 @@
-import { Button, Typography } from "@material-ui/core";
+import { Button, Typography, WithStyles } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as history from "history";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -10,9 +11,6 @@ import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import { Breadcrumbs } from "../mui";
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
-import * as sc from "./Stack.sc";
-
-export const StackBreadcrumbsContainer = sc.BreadcrumbsContainer;
 
 interface ISortNode {
     id: string;
@@ -57,14 +55,12 @@ const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
     return ret;
 };
 
-interface IProps {
+interface IProps extends WithStyles<typeof styles> {
     topLevelTitle: React.ReactNode;
     showBackButton?: boolean;
     showBreadcrumbs?: boolean;
-    components?: {
-        breadcrumbsContainer?: React.ComponentType;
-    };
 }
+
 interface IBreadcrumbItem {
     id: string;
     parentId: string;
@@ -72,17 +68,20 @@ interface IBreadcrumbItem {
     title: React.ReactNode;
     invisible: boolean;
 }
+
 interface ISwitchItem {
     id: string;
     parentId: string;
     isInitialPageActive: boolean;
     activePage?: string;
 }
+
 interface IState {
     breadcrumbs: IBreadcrumbItem[];
     switches: ISwitchItem[];
 }
-export class Stack extends React.Component<IProps, IState> {
+
+class StackComponent extends React.Component<IProps, IState> {
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
     constructor(props: IProps) {
@@ -95,10 +94,7 @@ export class Stack extends React.Component<IProps, IState> {
 
     public render() {
         const breadcrumbs = this.getVisibleBreadcrumbs();
-        const BreadcrumbsContainer =
-            this.props.components && this.props.components.breadcrumbsContainer
-                ? this.props.components.breadcrumbsContainer
-                : sc.BreadcrumbsContainer;
+
         return (
             <StackApiContext.Provider
                 value={{
@@ -115,16 +111,16 @@ export class Stack extends React.Component<IProps, IState> {
             >
                 <Route>
                     {(routerProps: RouteComponentProps<any>) => {
-                        const { showBreadcrumbs = true } = this.props;
+                        const { classes, showBreadcrumbs = true, showBackButton, topLevelTitle, children } = this.props;
                         this.history = routerProps.history;
                         return (
                             <>
                                 {showBreadcrumbs && (
-                                    <BreadcrumbsContainer>
+                                    <div className={classes.breadcrumbs}>
                                         <Breadcrumbs pages={breadcrumbs} />
-                                    </BreadcrumbsContainer>
+                                    </div>
                                 )}
-                                {this.props.showBackButton && (
+                                {showBackButton && (
                                     <Button
                                         color="default"
                                         disabled={breadcrumbs.length <= 1}
@@ -136,13 +132,13 @@ export class Stack extends React.Component<IProps, IState> {
                                         </Typography>
                                     </Button>
                                 )}
-                                <StackBreadcrumb title={this.props.topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
+                                <StackBreadcrumb title={topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
                                     <DirtyHandler
                                         ref={(ref) => {
                                             this.dirtyHandlerApi = ref ? ref.dirtyHandlerApi : undefined;
                                         }}
                                     >
-                                        {this.props.children}
+                                        {children}
                                     </DirtyHandler>
                                 </StackBreadcrumb>
                             </>
@@ -252,3 +248,17 @@ export class Stack extends React.Component<IProps, IState> {
         });
     };
 }
+
+export type CometAdminStackClassKeys = "root" | "breadcrumbs";
+
+const styles = () => {
+    return createStyles<CometAdminStackClassKeys, any>({
+        root: {},
+        breadcrumbs: {
+            paddingTop: 30,
+            paddingBottom: 30,
+        },
+    });
+};
+
+export const Stack = withStyles(styles, { name: "CometAdminStack" })(StackComponent);

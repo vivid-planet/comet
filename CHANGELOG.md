@@ -23,9 +23,11 @@ All notable changes to this project will be documented in this file. This projec
 -   add new package @comet/admin-icons
 -   add onAfterSubmit to FinalForm
 -   add useStoredState() hook
+-   Added a new FinalFormRangeInput Component
 
 ### Incompatible Changes
 
+-   `createMuiTheme` has been removed from `@comet/admin` in favour of `createMuiTheme` from `@material-ui/core`
 -   Replaced form/Input (`VPAdminInputBase`) with form/InputBase (`CometAdminInputBase`)
     -   Deprecated `getDefaultVPAdminInputStyles` because the styled are included in InputBase, which should be used for all custom inputs in Comet
 -   Replaced `@comet/admin-date-picker` with `@comet/admin-date-time`
@@ -61,6 +63,24 @@ All notable changes to this project will be documented in this file. This projec
     -   Allows maximum item-nesting of two levels
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
+-   Changes to Stack
+    -   Removed prop `components.breadcrumbsContainer` in favour of a div that can be styled using the theme (`overrides -> CometAdminStack -> breadcrumbs`)
+-   Removed component `FixedLeftRightLayout`
+
+### Migration Guide
+
+Clone this repository into your project repository. If you have a monorepo, you have to clone it into the right subfolder.
+
+An example can be found [here](https://github.com/vivid-planet/comet-admin-starter/pull/36).
+
+**Migrate Theme**
+
+Automatic migrations using codeshift are available (use -d for dry-run):
+
+```
+npx jscodeshift --extensions=ts --parser=ts -t comet-admin/codemods/2.0.0/update-theme.ts src/
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/update-theme.ts src/
+```
 
 ## @comet/admin-color-picker
 
@@ -93,6 +113,11 @@ All notable changes to this project will be documented in this file. This projec
 ### Highlights
 
 -   Add ability to customize the styling using theme-overrides
+
+### Incompatible Changes
+
+-   Removed `rte` key from theme
+    -   The rte-colors should now be defined under `props` -> `CometAdminRte` -> `colors` instead of `rte` -> `colors`
 
 # @comet/admin
 
