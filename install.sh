@@ -9,3 +9,6 @@ nvm install
 nvm use
 npm i -g npm@7
 npm install
+
+# build to be able to start storybook
+npm run build

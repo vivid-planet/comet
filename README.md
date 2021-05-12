@@ -12,7 +12,6 @@ Run `install.sh` once.
 
 ```
 npm start
-npm run storybook
 ```
 
 ### Develop in an project
