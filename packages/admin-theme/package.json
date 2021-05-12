@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-theme",
-    "version": "2.0.0-alpha.4",
+    "version": "2.0.0-alpha.5",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -8,11 +8,11 @@
     ],
     "dependencies": {},
     "devDependencies": {
-        "@comet/admin": "^2.0.0-alpha.4",
-        "@comet/admin-rte": "^2.0.0-alpha.4",
-        "@comet/admin-icons": "^2.0.0-alpha.4",
-        "@comet/admin-color-picker": "^2.0.0-alpha.4",
-        "@comet/admin-react-select": "^2.0.0-alpha.4"
+        "@comet/admin": "^2.0.0-alpha.5",
+        "@comet/admin-rte": "^2.0.0-alpha.5",
+        "@comet/admin-icons": "^2.0.0-alpha.5",
+        "@comet/admin-color-picker": "^2.0.0-alpha.5",
+        "@comet/admin-react-select": "^2.0.0-alpha.5"
     },
     "peerDependencies": {
         "react": "^16.8",
