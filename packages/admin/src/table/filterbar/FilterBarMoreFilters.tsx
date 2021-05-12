@@ -3,14 +3,10 @@ import { MoreHoriz } from "@material-ui/icons";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-interface StyleProps {
-    fieldBarWidth: number;
-}
-
 const useStyles = makeStyles(
     (theme: Theme) => ({
         showMoreWrapper: {
-            minWidth: (props: StyleProps) => `${props.fieldBarWidth}px`,
+            minWidth: "150px",
             border: `1px solid ${theme.palette.grey[300]}`,
             justifyContent: "center",
             position: "relative",
@@ -27,16 +23,14 @@ const useStyles = makeStyles(
     { name: "CometAdminFilterBar" },
 );
 
-export interface FilterBarMoreFilterButtonProps {
-    fieldBarWidth: number;
-}
+export interface FilterBarMoreFiltersProps {}
 
-export function FilterBarMoreFilterButton({ fieldBarWidth, children }: React.PropsWithChildren<FilterBarMoreFilterButtonProps>) {
+export function FilterBarMoreFilters({ children }: React.PropsWithChildren<FilterBarMoreFiltersProps>) {
     const [hasExtended, setHasExtended] = React.useState(false);
-    const classes = useStyles({ fieldBarWidth: fieldBarWidth });
+    const classes = useStyles();
     if (!hasExtended) {
         return (
-            <div className={classes.showMoreWrapper} style={{ minWidth: fieldBarWidth }} onClick={() => setHasExtended(true)}>
+            <div className={classes.showMoreWrapper} onClick={() => setHasExtended(true)}>
                 <MoreHoriz />
                 <div className={classes.showMoreTextWrapper}>
                     <Typography variant="subtitle2">

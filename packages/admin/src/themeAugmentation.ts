@@ -20,7 +20,7 @@ import {
     MenuThemeProps,
 } from "./mui";
 import { CometAdminFilterBarClassKeys } from "./table";
-import { CometAdminFilterBarPopOverFormFieldClassKeys, PopoverFormFieldThemeProps } from "./table/filterbar/FilterBarPopOverFormField";
+import { CometAdminFilterBarFieldClassKeys, FieldThemeProps } from "./table/filterbar/FilterBarField";
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
@@ -37,7 +37,7 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminBreadcrumbs: CometAdminBreadcrumbsClassKeys;
         CometAdminFinalFormRangeInput: CometAdminFinalFormRangeInputClassKeys;
         CometAdminFilterBar: CometAdminFilterBarClassKeys;
-        CometAdminFilterBarPopOverFormField: CometAdminFilterBarPopOverFormFieldClassKeys;
+        CometAdminFilterBarField: CometAdminFilterBarFieldClassKeys;
     }
 }
 
@@ -50,6 +50,6 @@ declare module "@material-ui/core/styles/props" {
         CometAdminMasterLayout: MasterLayoutThemeProps;
         CometAdminErrorBoundary: ErrorBoundaryThemeProps;
         CometAdminBreadcrumbs: CometAdminBreadcrumbsThemeProps;
-        CometAdminFilterBarPopOverFormField: PopoverFormFieldThemeProps;
+        CometAdminFilterBarField: FieldThemeProps;
     }
 }

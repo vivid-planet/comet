@@ -107,21 +107,21 @@ function Story() {
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBar.PopOverFormField label={"Username"} name="username" fieldBarWidth={150}>
+                    <FilterBar.Field label={"Username"} name="username">
                         <Field name="username" type="text" component={FinalFormInput} fullWidth />
-                    </FilterBar.PopOverFormField>
-                    <FilterBar.MoreFilterButton fieldBarWidth={150}>
-                        <FilterBar.PopOverFormField label={"Email"} name="email" fieldBarWidth={150}>
+                    </FilterBar.Field>
+                    <FilterBar.MoreFilters>
+                        <FilterBar.Field label={"Email"} name="email">
                             <ExampleWithSelect />
-                        </FilterBar.PopOverFormField>
-                        <FilterBar.PopOverFormField label={"Name"} name="name" fieldBarWidth={150}>
+                        </FilterBar.Field>
+                        <FilterBar.Field label={"Name"} name="name">
                             <Field name="name" type="text" component={FinalFormInput} fullWidth />
-                        </FilterBar.PopOverFormField>
-                        <FilterBar.PopOverFormField label={"Website"} name="website" fieldBarWidth={150}>
+                        </FilterBar.Field>
+                        <FilterBar.Field label={"Website"} name="website">
                             <Field name="url" type="text" component={FinalFormInput} fullWidth />
                             <Field name="name" type="text" component={FinalFormInput} fullWidth />
-                        </FilterBar.PopOverFormField>
-                    </FilterBar.MoreFilterButton>
+                        </FilterBar.Field>
+                    </FilterBar.MoreFilters>
                 </FilterBar>
             </TableFilterFinalForm>
             {tableData && (
