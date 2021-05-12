@@ -7,18 +7,14 @@ import { Form, useForm } from "react-final-form";
 import { useIntl } from "react-intl";
 
 import { Field } from "../../form/Field";
-import { FilterBarActiveFilterBadge } from "./FilterBarActiveFilterBadge";
+import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
 
-export interface PopoverFormFieldThemeProps {
+export interface FieldThemeProps {
     submitButton?: ButtonProps;
     resetButton?: ButtonProps;
 }
 
-interface StyleProps {
-    fieldBarWidth: number;
-}
-
-export type CometAdminFilterBarPopOverFormFieldClassKeys =
+export type CometAdminFilterBarFieldClassKeys =
     | "root"
     | "styledBox"
     | "labelWrapper"
@@ -35,7 +31,7 @@ const useStyles = makeStyles(
             position: "relative",
         },
         fieldBarWrapper: {
-            minWidth: (props: StyleProps) => `${props.fieldBarWidth}px`,
+            minWidth: "150px",
             border: `1px solid ${theme.palette.grey[300]}`,
             position: "relative",
             marginBottom: "10px",
@@ -90,25 +86,17 @@ const useStyles = makeStyles(
             marginLeft: -1, //due to border of popover, but now overrideable with styling if needed
         },
     }),
-    { name: "CometAdminFilterBarPopOverFormField" },
+    { name: "CometAdminFilterBarField" },
 );
 
-export interface FilterBarPopOverFormFieldProps {
+export interface FilterBarFieldProps {
     label: string;
     name: string;
-    dirtyFieldsBadge?: (fieldState?: FieldState<any>) => React.Component;
+    dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     calcNumberDirtyFields?: (fieldState?: FieldState<any>) => number;
-    fieldBarWidth: number;
 }
 
-export function FilterBarPopOverFormField({
-    children,
-    label,
-    name,
-    dirtyFieldsBadge,
-    calcNumberDirtyFields,
-    fieldBarWidth,
-}: React.PropsWithChildren<FilterBarPopOverFormFieldProps>) {
+export function FilterBarField({ children, label, name, dirtyFieldsBadge, calcNumberDirtyFields }: React.PropsWithChildren<FilterBarFieldProps>) {
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const outerForm = useForm();
     const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
@@ -120,16 +108,14 @@ export function FilterBarPopOverFormField({
 
     const { values } = outerForm.getState();
     const { props: themeProps } = useTheme<ThemeOptions>();
-    const submitButtonProps =
-        themeProps && themeProps["CometAdminFilterBarPopOverFormField"] ? { ...themeProps["CometAdminFilterBarPopOverFormField"]?.submitButton } : {};
-    const resetButtonProps =
-        themeProps && themeProps["CometAdminFilterBarPopOverFormField"] ? { ...themeProps["CometAdminFilterBarPopOverFormField"]?.resetButton } : {};
+    const submitButtonProps = themeProps && themeProps["CometAdminFilterBarField"] ? { ...themeProps["CometAdminFilterBarField"]?.submitButton } : {};
+    const resetButtonProps = themeProps && themeProps["CometAdminFilterBarField"] ? { ...themeProps["CometAdminFilterBarField"]?.resetButton } : {};
 
-    const classes = useStyles({ fieldBarWidth: fieldBarWidth });
+    const classes = useStyles();
     const intl = useIntl();
 
     return (
-        <div className={classes.fieldBarWrapper} style={{ minWidth: fieldBarWidth }}>
+        <div className={classes.fieldBarWrapper}>
             <Field name={name} fullWidth={false}>
                 {() => (
                     <Form
