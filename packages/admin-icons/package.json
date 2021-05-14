@@ -8,7 +8,6 @@
         "generate-icons": "ts-node generate-icons.ts",
         "prebuild": "npm run clean && npm run generate-icons",
         "build": "tsc",
-        "prestart": "npm run clean && npm run generate-icons",
         "start": "tsc -w",
         "prepare": "npm run build",
         "lint": "npm run lint:eslint && npm run lint:tsc",
