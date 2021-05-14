@@ -1,13 +1,9 @@
 import { Button, ButtonProps, Popover, Typography } from "@material-ui/core";
 import { makeStyles, Theme, ThemeOptions, useTheme } from "@material-ui/core/styles";
-import { FieldState } from "final-form";
-import isEmpty from "lodash.isempty";
-import isEqual from "lodash.isequal";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { Field } from "../../form/Field";
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
 
 export interface FieldThemeProps {
@@ -85,12 +81,11 @@ const useStyles = makeStyles(
 
 export interface FilterBarFieldProps {
     label: string;
-    name: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
-    calcNumberDirtyFields?: (fieldState?: FieldState<any>) => number;
+    calcNumberDirtyFields?: (values: Record<string, any>) => number;
 }
 
-export function FilterBarField({ children, label, name, dirtyFieldsBadge, calcNumberDirtyFields }: React.PropsWithChildren<FilterBarFieldProps>) {
+export function FilterBarField({ children, label, dirtyFieldsBadge, calcNumberDirtyFields }: React.PropsWithChildren<FilterBarFieldProps>) {
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const outerForm = useForm();
     const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
@@ -100,7 +95,6 @@ export function FilterBarField({ children, label, name, dirtyFieldsBadge, calcNu
         setAnchorEl(event.currentTarget);
     };
 
-    const { values } = outerForm.getState();
     const { props: themeProps } = useTheme<ThemeOptions>();
     const submitButtonProps = themeProps && themeProps["CometAdminFilterBarField"] ? { ...themeProps["CometAdminFilterBarField"]?.submitButton } : {};
     const resetButtonProps = themeProps && themeProps["CometAdminFilterBarField"] ? { ...themeProps["CometAdminFilterBarField"]?.resetButton } : {};
@@ -110,99 +104,90 @@ export function FilterBarField({ children, label, name, dirtyFieldsBadge, calcNu
 
     return (
         <div className={classes.root}>
-            <Field name={name} fullWidth={false}>
-                {() => (
-                    <Form
-                        onSubmit={(values) => {
-                            if (!isEqual(outerForm.getState().values[name], values) && !isEmpty(values)) {
-                                outerForm.change(name, values);
-                            }
-                        }}
-                        initialValues={values[name]}
-                    >
-                        {({ form, handleSubmit }) => {
-                            return (
-                                <div className={classes.fieldBarWrapper}>
-                                    <div className={classes.fieldBarInnerWrapper} onClick={handleClick}>
-                                        <div className={classes.labelWrapper}>
-                                            <Typography variant="subtitle2">{label}</Typography>
-                                        </div>
-                                        <FilterBarActiveFilterBadgeComponent
-                                            fieldState={outerForm.getFieldState(name)}
-                                            calcNumberDirtyFields={calcNumberDirtyFields}
-                                        />
-                                    </div>
-                                    <Popover
-                                        open={open}
-                                        anchorEl={anchorEl}
-                                        onClose={() => {
-                                            setAnchorEl(null);
-                                            handleSubmit();
-                                        }}
-                                        anchorOrigin={{
-                                            vertical: "bottom",
-                                            horizontal: "left",
-                                        }}
-                                        PaperProps={{ square: true }}
-                                        classes={{
-                                            paper: classes.paper,
-                                        }}
-                                        elevation={2}
-                                    >
-                                        <div className={classes.popoverContentContainer}>
-                                            {children}
-                                            <div className={classes.buttonsContainer}>
-                                                <Button
-                                                    fullWidth
-                                                    type="reset"
-                                                    variant="text"
-                                                    onClick={() => {
-                                                        const hasInitialValue = !!outerForm.getFieldState(name)?.initial;
-
-                                                        outerForm.change(name, hasInitialValue ? outerForm.getFieldState(name)?.initial : {});
-                                                        Object.keys(form.getState().values).map((key) => {
-                                                            form.change(key, hasInitialValue ? outerForm.getFieldState(name)?.initial : {});
-                                                        });
-
-                                                        setAnchorEl(null);
-                                                    }}
-                                                    {...resetButtonProps}
-                                                >
-                                                    <Typography variant={"button"}>
-                                                        {intl.formatMessage({
-                                                            id: "cometAdmin.generic.resetButton",
-                                                            defaultMessage: "Reset",
-                                                        })}
-                                                    </Typography>
-                                                </Button>
-
-                                                <Button
-                                                    fullWidth={true}
-                                                    type="submit"
-                                                    color="primary"
-                                                    variant="contained"
-                                                    onClick={() => {
-                                                        handleSubmit();
-                                                        setAnchorEl(null);
-                                                    }}
-                                                    {...submitButtonProps}
-                                                >
-                                                    <Typography variant={"button"}>
-                                                        {intl.formatMessage({
-                                                            id: "cometAdmin.generic.applyButton",
-                                                            defaultMessage: "Apply",
-                                                        })}
-                                                    </Typography>
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </Popover>
+            <Form
+                onSubmit={(values) => {
+                    for (const name in values) {
+                        outerForm.change(name, values[name]);
+                    }
+                }}
+                initialValues={outerForm.getState().initialValues}
+            >
+                {({ form, values, handleSubmit, initialValues }) => {
+                    return (
+                        <div className={classes.fieldBarWrapper}>
+                            <div className={classes.fieldBarInnerWrapper} onClick={handleClick}>
+                                <div className={classes.labelWrapper}>
+                                    <Typography variant="subtitle2">{label}</Typography>
                                 </div>
-                            );
-                        }}
-                    </Form>
-                )}
-            </Field>
+                                <FilterBarActiveFilterBadgeComponent values={values} calcNumberDirtyFields={calcNumberDirtyFields} />
+                            </div>
+                            <Popover
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={() => {
+                                    setAnchorEl(null);
+                                    handleSubmit();
+                                }}
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                                PaperProps={{ square: true }}
+                                classes={{
+                                    paper: classes.paper,
+                                }}
+                                elevation={2}
+                            >
+                                <div className={classes.popoverContentContainer}>
+                                    {children}
+                                    <div className={classes.buttonsContainer}>
+                                        <Button
+                                            type="reset"
+                                            variant="text"
+                                            onClick={() => {
+                                                for (const name in values) {
+                                                    //required because reset removes values
+                                                    outerForm.change(name, initialValues[name]);
+                                                }
+                                                form.reset();
+
+                                                setAnchorEl(null);
+                                            }}
+                                            {...resetButtonProps}
+                                        >
+                                            <Typography variant={"button"}>
+                                                {intl.formatMessage({
+                                                    id: "cometAdmin.generic.resetButton",
+                                                    defaultMessage: "Reset",
+                                                })}
+                                            </Typography>
+                                        </Button>
+
+                                        <Button
+                                            fullWidth={true}
+                                            type="submit"
+                                            color="primary"
+                                            variant="contained"
+                                            onClick={() => {
+                                                handleSubmit();
+                                                setAnchorEl(null);
+                                            }}
+                                            {...submitButtonProps}
+                                        >
+                                            <Typography variant={"button"}>
+                                                {intl.formatMessage({
+                                                    id: "cometAdmin.generic.applyButton",
+                                                    defaultMessage: "Apply",
+                                                })}
+                                            </Typography>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </Popover>
+                        </div>
+                    );
+                }}
+            </Form>
         </div>
     );
 }

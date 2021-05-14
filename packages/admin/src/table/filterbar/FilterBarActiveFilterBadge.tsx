@@ -1,22 +1,25 @@
 import { createStyles, Theme, Typography, WithStyles, withStyles } from "@material-ui/core";
-import { FieldState } from "final-form";
-import { isEmpty } from "lodash";
 import * as React from "react";
-
-import { difference } from "./difference";
 
 export type CometAdminFilterBarActiveFilterBadgeClassKeys = "hasValueCount";
 
-export const dirtyFieldsCount = (fieldState?: FieldState<any>) => {
-    if (Array.isArray(fieldState?.value[Object.keys(fieldState?.value)[0]])) {
-        return fieldState?.value[Object.keys(fieldState?.value)[0]].length;
-    } else {
-        if (fieldState?.initial) {
-            const diff = difference<any, Record<string, any>>(fieldState?.value, fieldState?.initial);
-            return Object.keys(diff).length;
+export const dirtyFieldsCount = (values: Record<string, any>) => {
+    return Object.values(values).reduce((acc, val) => {
+        if (val) {
+            if (Array.isArray(val)) {
+                acc += val.length;
+            }
+            acc++;
         }
-        return Object.keys(fieldState?.value).length;
+        return acc;
+    }, 0);
+    /*
+    TODO: what is the use case of this?
+    if (fieldState?.initial) {
+        const diff = difference<any, Record<string, any>>(fieldState?.value, fieldState?.initial);
+        return Object.keys(diff).length;
     }
+    */
 };
 
 const styles = (theme: Theme) =>
@@ -30,17 +33,17 @@ const styles = (theme: Theme) =>
         },
     });
 
-export interface FilterBarActiveFilterBadgeProps<T = any> {
-    fieldState?: FieldState<T>;
-    calcNumberDirtyFields?: (fieldState?: FieldState<T>) => number;
+export interface FilterBarActiveFilterBadgeProps {
+    values: Record<string, any>;
+    calcNumberDirtyFields?: (values: Record<string, any>) => number;
 }
 
 export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof styles, true> & FilterBarActiveFilterBadgeProps> = ({
-    fieldState,
+    values,
     calcNumberDirtyFields = dirtyFieldsCount,
     classes,
 }) => {
-    const count = !isEmpty(fieldState?.value) ? calcNumberDirtyFields(fieldState) : 0;
+    const count = calcNumberDirtyFields(values);
     if (count > 0) {
         return (
             <div className={classes.hasValueCount}>
