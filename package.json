@@ -8,6 +8,7 @@
     "scripts": {
         "clean": "lerna run clean --stream --parallel",
         "build": "lerna run build --stream",
+        "prestart": "npm run build",
         "start": "lerna run --stream --no-sort --concurrency 999 start",
         "storybook": "npm run --prefix packages/admin-stories storybook",
         "lint": "npm run lint:eslint && npm run lint:tsc",
