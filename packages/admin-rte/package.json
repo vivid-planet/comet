@@ -24,7 +24,7 @@
     "scripts": {
         "prebuild": "rimraf lib",
         "build": "tsc --project ./tsconfig.json",
-        "start": "tsc --project ./tsconfig.json --watch",
+        "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
         "prepare": "npm run build",
         "lint:tsc": "tsc --noEmit"
     },
