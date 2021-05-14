@@ -8,7 +8,7 @@
     "scripts": {
         "clean": "lerna run clean --stream --parallel",
         "build": "lerna run build --stream",
-        "start": "lerna run --stream --no-sort --concurrency 999 start",
+        "start": "pm2 start ecosystem.config.js",
         "storybook": "npm run --prefix packages/admin-stories storybook",
         "lint": "npm run lint:eslint && npm run lint:tsc",
         "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/**/src/",
@@ -40,9 +40,11 @@
         "jss": "^9.8.7",
         "lerna": "^4.0.0",
         "lint-staged": "^10.5.4",
+        "pm2": "^4.5.6",
         "prettier": "^2.1.2",
         "rimraf": "^3.0.2",
-        "typescript": "^4.2.2"
+        "typescript": "^4.2.2",
+        "wait-on": "^5.3.0"
     },
     "engines": {
         "node": "14",
