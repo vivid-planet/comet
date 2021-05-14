@@ -90,9 +90,9 @@ function Story() {
 
     const { tableData, api, loading, error } = useTableQuery<IQueryData, Partial<IVariables>>()(query, {
         variables: {
-            email: filterApi.current.email?.email,
-            name: filterApi.current.name?.name,
-            username: filterApi.current.username?.username,
+            email: filterApi.current.email,
+            name: filterApi.current.name,
+            username: filterApi.current.username,
             website: filterApi.current.website?.url,
             pathFunction,
         },
@@ -107,23 +107,24 @@ function Story() {
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBar.Field label={"Username"} name="username">
+                    <FilterBar.Field label={"Username"}>
                         <Field name="username" type="text" component={FinalFormInput} fullWidth />
                     </FilterBar.Field>
                     <FilterBar.MoreFilters>
-                        <FilterBar.Field label={"Email"} name="email">
+                        <FilterBar.Field label={"Email"}>
                             <ExampleWithSelect />
                         </FilterBar.Field>
-                        <FilterBar.Field label={"Name"} name="name">
+                        <FilterBar.Field label={"Name"}>
                             <Field name="name" type="text" component={FinalFormInput} fullWidth />
                         </FilterBar.Field>
-                        <FilterBar.Field label={"Website"} name="website">
-                            <Field name="url" type="text" component={FinalFormInput} fullWidth />
-                            <Field name="name" type="text" component={FinalFormInput} fullWidth />
+                        <FilterBar.Field label={"Website"}>
+                            <Field name="website.url" type="text" component={FinalFormInput} fullWidth />
+                            <Field name="website.name" type="text" component={FinalFormInput} fullWidth />
                         </FilterBar.Field>
                     </FilterBar.MoreFilters>
                 </FilterBar>
             </TableFilterFinalForm>
+            Current Filters: {JSON.stringify(filterApi.current)}
             {tableData && (
                 <Table
                     {...tableData}
