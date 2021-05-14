@@ -1,5 +1,5 @@
-import { FormControl, FormHelperText, FormLabel, Theme, WithStyles } from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { FormControl, FormHelperText, FormLabel, Theme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
 
 export interface FieldContainerThemeProps {
@@ -25,8 +25,8 @@ export type CometAdminFormFieldContainerClassKeys =
     | "hasError"
     | "error";
 
-const styles = (theme: Theme) => {
-    return createStyles<CometAdminFormFieldContainerClassKeys, any>({
+export const useFieldContainerStyles = makeStyles<Theme, {}, CometAdminFormFieldContainerClassKeys>(
+    (theme) => ({
         root: {
             "&:not(:last-child)": {
                 marginBottom: theme.spacing(3),
@@ -55,11 +55,11 @@ const styles = (theme: Theme) => {
         inputContainer: {},
         hasError: {},
         error: {},
-    });
-};
+    }),
+    { name: "CometAdminFormFieldContainer" },
+);
 
-export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> & FieldContainerProps & FieldContainerThemeProps> = ({
-    classes,
+export const FieldContainer: React.FC<FieldContainerProps & FieldContainerThemeProps> = ({
     variant = "vertical",
     label,
     error,
@@ -68,6 +68,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     requiredSymbol = "*",
     children,
 }) => {
+    const classes = useFieldContainerStyles();
     const formControlClasses: string[] = [classes.root];
     if (variant === "vertical") formControlClasses.push(classes.vertical);
     if (variant === "horizontal") formControlClasses.push(classes.horizontal);
@@ -96,5 +97,3 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
         </FormControl>
     );
 };
-
-export const FieldContainer = withStyles(styles, { name: "CometAdminFormFieldContainer", withTheme: true })(FieldContainerComponent);

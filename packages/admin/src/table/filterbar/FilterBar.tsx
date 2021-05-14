@@ -2,25 +2,32 @@ import { Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
 
+import { useFieldContainerStyles } from "../../form";
 import { FilterBarField, FilterBarFieldProps } from "./FilterBarField";
 import { FilterBarMoreFilters, FilterBarMoreFiltersProps } from "./FilterBarMoreFilters";
 
-export type CometAdminFilterBarClassKeys = "root" | "barWrapper" | "fieldBarWrapper";
+export type CometAdminFilterBarClassKeys = "root" | "barWrapper";
 
-const useStyles = makeStyles(
-    (theme: Theme) => ({
-        root: {
-            "& [class*='CometAdminFormFieldContainer-root']": {
-                marginBottom: 0,
-            },
+const useStyles = () => {
+    const fieldContainerClasses = useFieldContainerStyles();
+
+    return makeStyles<Theme, {}, CometAdminFilterBarClassKeys>(
+        (theme: Theme) => {
+            return {
+                root: {
+                    [`& [class*='${fieldContainerClasses.root}']`]: {
+                        marginBottom: 0,
+                    },
+                },
+                barWrapper: {
+                    flexWrap: "wrap",
+                    display: "flex",
+                },
+            };
         },
-        barWrapper: {
-            flexWrap: "wrap",
-            display: "flex",
-        },
-    }),
-    { name: "CometAdminFilterBar" },
-);
+        { name: "CometAdminFilterBar" },
+    )();
+};
 
 interface FilterBarComposition {
     MoreFilters: React.ComponentType<FilterBarMoreFiltersProps>;

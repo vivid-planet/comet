@@ -7,6 +7,7 @@ import { Form, useForm } from "react-final-form";
 import { useIntl } from "react-intl";
 
 import { Field } from "../../form/Field";
+import { useFieldContainerStyles } from "../../form/FieldContainer";
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
 
 export interface FieldThemeProps {
@@ -16,6 +17,7 @@ export interface FieldThemeProps {
 
 export type CometAdminFilterBarFieldClassKeys =
     | "root"
+    | "fieldBarWrapper"
     | "styledBox"
     | "labelWrapper"
     | "popoverContentContainer"
@@ -23,71 +25,77 @@ export type CometAdminFilterBarFieldClassKeys =
     | "paper"
     | "buttonsContainer"
     | "submitContainer"
-    | "resetCloseContainer";
+    | "resetContainer";
 
-const useStyles = makeStyles(
-    (theme: Theme) => ({
-        root: {
-            position: "relative",
-        },
-        fieldBarWrapper: {
-            minWidth: "150px",
-            border: `1px solid ${theme.palette.grey[300]}`,
-            position: "relative",
-            marginBottom: "10px",
-            marginRight: "10px",
-        },
-        styledBox: {
-            position: "relative",
-            alignItems: "center",
-            padding: "10px 20px",
-            cursor: "pointer",
-            display: "flex",
+const useStyles = () => {
+    const fieldContainerClasses = useFieldContainerStyles();
 
-            "&:after": {
-                borderTop: `4px solid ${theme.palette.grey[300]}`,
-                borderRight: "4px solid transparent",
-                borderLeft: "4px solid transparent",
-                position: "absolute",
-                display: "block",
-                right: "10px",
-                content: "''",
-                top: "50%",
-                height: 0,
-                width: 0,
-            },
+    return makeStyles<Theme, {}, CometAdminFilterBarFieldClassKeys>(
+        (theme: Theme) => {
+            return {
+                root: {
+                    position: "relative",
+                },
+                fieldBarWrapper: {
+                    minWidth: "150px",
+                    border: `1px solid ${theme.palette.grey[300]}`,
+                    position: "relative",
+                    marginBottom: "10px",
+                    marginRight: "10px",
+                },
+                styledBox: {
+                    position: "relative",
+                    alignItems: "center",
+                    padding: "10px 20px",
+                    cursor: "pointer",
+                    display: "flex",
+
+                    "&:after": {
+                        borderTop: `4px solid ${theme.palette.grey[300]}`,
+                        borderRight: "4px solid transparent",
+                        borderLeft: "4px solid transparent",
+                        position: "absolute",
+                        display: "block",
+                        right: "10px",
+                        content: "''",
+                        top: "50%",
+                        height: 0,
+                        width: 0,
+                    },
+                },
+                labelWrapper: {
+                    marginRight: "15px",
+                    boxSizing: "border-box",
+                },
+                popoverContentContainer: {
+                    [`& [class*='${fieldContainerClasses.root}']`]: {
+                        boxSizing: "border-box",
+                        padding: "20px",
+                        marginBottom: 0,
+                    },
+                },
+                popoverInnerContentContainer: {
+                    minWidth: 300,
+                },
+                buttonsContainer: {
+                    borderTop: `1px solid ${theme.palette.grey[300]}`,
+                    justifyContent: "space-between",
+                    padding: "10px 15px",
+                    display: "flex",
+                },
+                submitContainer: {},
+                resetContainer: {
+                    marginRight: "15px",
+                },
+                paper: {
+                    border: "1px solid grey",
+                    marginLeft: -1, //due to border of popover, but now overrideable with styling if needed
+                },
+            };
         },
-        labelWrapper: {
-            marginRight: "15px",
-            boxSizing: "border-box",
-        },
-        popoverContentContainer: {
-            "& [class*='CometAdminFormFieldContainer-root']": {
-                boxSizing: "border-box",
-                padding: "20px",
-                marginBottom: 0,
-            },
-        },
-        popoverInnerContentContainer: {
-            minWidth: 300,
-        },
-        buttonsContainer: {
-            borderTop: `1px solid ${theme.palette.grey[300]}`,
-            justifyContent: "space-between",
-            padding: "10px 15px",
-            display: "flex",
-        },
-        submitContainer: {},
-        resetContainer: {
-            marginRight: "15px",
-        },
-        paper: {
-            border: "1px solid grey",
-            marginLeft: -1, //due to border of popover, but now overrideable with styling if needed
-        },
-    }),
-    { name: "CometAdminFilterBarField" },
-);
+        { name: "CometAdminFilterBarField" },
+    )();
+};
 
 export interface FilterBarFieldProps {
     label: string;
