@@ -16,7 +16,7 @@ export function ToolbarBackButton() {
             <ToolbarItem>
                 <IconButton
                     onClick={() => {
-                        stackApi?.goBack?.();
+                        stackApi?.goBack();
                     }}
                 >
                     {themeProps.backIcon}
