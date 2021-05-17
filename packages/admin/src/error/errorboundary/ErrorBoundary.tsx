@@ -24,7 +24,7 @@ export interface ErrorBoundaryThemeProps {
 }
 
 interface ErrorBoundaryProps extends ErrorBoundaryThemeProps, WithStyles<CometAdminErrorBoundaryClassKeys> {
-    userErrorMessage?: string;
+    userErrorMessage?: React.ReactNode;
 }
 
 interface IErrorBoundaryState {

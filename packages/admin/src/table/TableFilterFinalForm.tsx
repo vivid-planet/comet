@@ -9,7 +9,7 @@ import { renderComponent } from "../finalFormRenderComponent";
 import { IFilterApi } from "./useTableQueryFilter";
 
 type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" | "initialValues"> & {
-    headline?: string;
+    headline?: React.ReactNode;
     resetButton?: boolean;
     onSubmit?: FormProps<FilterValues>["onSubmit"];
     filterApi: IFilterApi<FilterValues>;

@@ -8,7 +8,7 @@ export interface FieldContainerThemeProps {
 }
 
 interface FieldContainerProps {
-    label?: string | React.ReactNode;
+    label?: React.ReactNode;
     required?: boolean;
     disabled?: boolean;
     error?: string;

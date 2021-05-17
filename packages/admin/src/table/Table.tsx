@@ -94,7 +94,7 @@ export type Visible = boolean | { [key in VisibleType]?: boolean };
 export interface ITableColumn<TRow extends IRow> {
     name: string;
     visible?: Visible;
-    header?: string | React.ReactNode;
+    header?: React.ReactNode;
     headerExcel?: string;
     render?: (row: TRow) => React.ReactNode;
     renderExcel?: (row: TRow) => string | number;

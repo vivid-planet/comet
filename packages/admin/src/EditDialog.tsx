@@ -10,8 +10,8 @@ import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
 interface ITitle {
-    edit: string;
-    add: string;
+    edit: React.ReactNode;
+    add: React.ReactNode;
 }
 
 interface IProps {

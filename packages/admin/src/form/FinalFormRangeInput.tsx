@@ -40,8 +40,8 @@ const styles = (theme: Theme) => {
 interface IFinalFormRangeInputProps extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement> {
     min: number;
     max: number;
-    startAdornment?: string | React.ReactElement;
-    endAdornment?: string | React.ReactElement;
+    startAdornment?: React.ReactNode;
+    endAdornment?: React.ReactNode;
     sliderProps?: Omit<SliderProps, "min" | "max">;
 }
 
@@ -79,8 +79,8 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                                 value: internalMinInput,
                                 type: "number",
                             }}
-                            startAdornment={startAdornment ? startAdornment : ""}
-                            endAdornment={endAdornment ? endAdornment : ""}
+                            startAdornment={startAdornment}
+                            endAdornment={endAdornment}
                             onBlur={() => {
                                 const minFieldValue = Math.min(internalMinInput, fieldValue.max);
                                 if (fieldValue.min !== minFieldValue) {
