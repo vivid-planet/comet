@@ -63,9 +63,6 @@ export default (): ThemeOptions => ({
         CometAdminToolbarBackButton: cometAdminToolbarBackButtonProps(),
         CometAdminToolbarTitleItem: cometAdminToolbarTitleItemProps(),
         CometAdminToolbarBreadcrumbs: cometAdminToolbarBreadcrumbsProps(),
-        MuiAppBar: {
-            elevation: 0,
-        },
     },
     overrides: {
         CometAdminClearInputButton: cometAdminClearInputButtonOverrides(),
