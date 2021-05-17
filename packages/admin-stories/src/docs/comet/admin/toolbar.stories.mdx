@@ -1,0 +1,33 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+
+<Meta title="docs/@comet/admin/toolbar" />
+
+import { Toolbar, ToolbarItem, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+
+# Toolbar
+
+<Canvas>
+    <Story name="Toolbar">
+        <Toolbar>
+            <ToolbarItem>
+                <div>asdf</div>
+            </ToolbarItem>
+            <ToolbarItem>
+                <div>Title</div>
+            </ToolbarItem>
+            <ToolbarBackButton />
+            <ToolbarFillSpace />
+            <ToolbarActions>
+                <Button
+                    variant={"contained"}
+                    color={"primary"}
+                    onClick={() => {
+                        alert("onClicked");
+                    }}
+                >
+                    <Typography>Details</Typography>
+                </Button>
+            </ToolbarActions>
+        </Toolbar>
+    </Story>
+</Canvas>
