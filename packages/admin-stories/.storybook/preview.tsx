@@ -68,9 +68,7 @@ const GlobalStyles = createGlobalStyle`
     }
 `;
 
-const StoryWrapper = styled.div`
-    min-height: 100vh;
-`;
+const StoryWrapper = styled.div``;
 
 addDecorator((story) => {
     const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);
