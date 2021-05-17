@@ -78,7 +78,6 @@ All notable changes to this project will be documented in this file. This projec
     </MainContent>
   </MasterLayout
 ```
->>>>>>> docs: Changelog entry
 
 ### Migration Guide
 
