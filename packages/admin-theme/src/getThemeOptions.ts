@@ -8,6 +8,7 @@ import { cometAdminColorPickerOverrides } from "./cometAdminColorPickerOverrides
 import { cometAdminBreadcrumbsOverrides } from "./cometAdminOverrides/breadcrumbs";
 import { cometAdminClearInputButtonOverrides } from "./cometAdminOverrides/clearInputButton";
 import { cometAdminErrorBoundaryOverrides } from "./cometAdminOverrides/errorBoundary";
+import { cometAdminFinalFormSearchTextFieldOverrides } from "./cometAdminOverrides/finalFormSearchTextField";
 import { cometAdminFormFieldContainerOverrides } from "./cometAdminOverrides/formFieldContainer";
 import { cometAdminInputBaseOverrides } from "./cometAdminOverrides/inputBase";
 import { cometAdminMainContentOverrides } from "./cometAdminOverrides/maincontent";
@@ -30,6 +31,7 @@ import { cometAdminToolbarProps } from "./cometAdminProps/toolbar";
 import { cometAdminToolbarAutomaticTitleItemProps } from "./cometAdminProps/toolbarAutomaticTitleItem";
 import { cometAdminToolbarBackButtonProps } from "./cometAdminProps/toolbarBackButton";
 import { cometAdminToolbarBreadcrumbsProps } from "./cometAdminProps/toolbarBreadcrumbs";
+import { cometAdminFinalFormSearchTextFieldProps } from "./cometAdminProps/toolbarFinalFormSearchTextField";
 import { cometAdminToolbarTitleItemProps } from "./cometAdminProps/toolbarTitleItem";
 import { cometAdminRteBlockTypeControlsOverrides } from "./cometAdminRteOverrides/blockTypeControls";
 import { cometAdminRteControlButtonOverrides } from "./cometAdminRteOverrides/controlButton";
@@ -65,6 +67,7 @@ export default (): ThemeOptions => ({
         CometAdminToolbarTitleItem: cometAdminToolbarTitleItemProps(),
         CometAdminToolbarAutomaticTitleItem: cometAdminToolbarAutomaticTitleItemProps(),
         CometAdminToolbarBreadcrumbs: cometAdminToolbarBreadcrumbsProps(),
+        CometAdminFinalFormSearchTextField: cometAdminFinalFormSearchTextFieldProps(),
     },
     overrides: {
         CometAdminClearInputButton: cometAdminClearInputButtonOverrides(),
@@ -80,6 +83,7 @@ export default (): ThemeOptions => ({
         CometAdminToolbarFillSpace: cometAdminToolbarFillSpaceOverrides(),
         CometAdminToolbarActions: cometAdminToolbarActionsOverrides(),
         CometAdminInputBase: cometAdminInputBaseOverrides(),
+        CometAdminFinalFormSearchTextField: cometAdminFinalFormSearchTextFieldOverrides(),
 
         /*RTE*/
         CometAdminRte: cometAdminRteRteOverrides(),

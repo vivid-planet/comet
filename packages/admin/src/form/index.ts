@@ -12,3 +12,5 @@ export * from "./TextField";
 export * from "./Select";
 export * from "./FinalFormSelect";
 export * from "./FinalFormRangeInput";
+export * from "./FinalFormSearchTextField";
+export * from "./FinalFormSearchTextField.styles";
