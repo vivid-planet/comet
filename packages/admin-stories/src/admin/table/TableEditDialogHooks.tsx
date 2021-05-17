@@ -1,5 +1,17 @@
-import { Field, FinalForm, FinalFormTextField, Selected, Table, useEditDialog } from "@comet/admin";
-import { Button, IconButton, Toolbar, Typography } from "@material-ui/core";
+import {
+    Field,
+    FinalForm,
+    FinalFormTextField,
+    MainContent,
+    Selected,
+    Table,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+    useEditDialog,
+} from "@comet/admin";
+import { Button, IconButton, Typography } from "@material-ui/core";
 import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -42,51 +54,60 @@ function Story() {
     return (
         <>
             <Toolbar>
-                <Button
-                    color="default"
-                    endIcon={<AddIcon />}
-                    onClick={(ev) => {
-                        api.openAddDialog();
-                    }}
-                >
-                    <Typography variant="button">Hinzufügen</Typography>
-                </Button>
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Edit Dialog Hooks</Typography>
+                </ToolbarItem>
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <Button
+                        color="primary"
+                        variant={"contained"}
+                        endIcon={<AddIcon />}
+                        onClick={(ev) => {
+                            api.openAddDialog();
+                        }}
+                    >
+                        <Typography variant="button">Hinzufügen</Typography>
+                    </Button>
+                </ToolbarActions>
             </Toolbar>
-            <Table
-                data={data}
-                totalCount={data.length}
-                columns={[
-                    {
-                        name: "foo",
-                        header: "Foo",
-                    },
-                    {
-                        name: "bar",
-                        header: "Bar",
-                    },
-                    {
-                        name: "edit",
-                        header: "Edit",
-                        render: (row) => (
-                            <IconButton
-                                onClick={(ev) => {
-                                    api.openEditDialog(String(row.id));
-                                }}
-                            >
-                                <EditIcon />
-                            </IconButton>
-                        ),
-                    },
-                ]}
-            />
+            <MainContent>
+                <Table
+                    data={data}
+                    totalCount={data.length}
+                    columns={[
+                        {
+                            name: "foo",
+                            header: "Foo",
+                        },
+                        {
+                            name: "bar",
+                            header: "Bar",
+                        },
+                        {
+                            name: "edit",
+                            header: "Edit",
+                            render: (row) => (
+                                <IconButton
+                                    onClick={(ev) => {
+                                        api.openEditDialog(String(row.id));
+                                    }}
+                                >
+                                    <EditIcon />
+                                </IconButton>
+                            ),
+                        },
+                    ]}
+                />
 
-            <EditDialog>
-                {selection.mode && (
-                    <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
-                        {(row, { selectionMode: sm }) => <EditForm mode={sm} row={row} />}
-                    </Selected>
-                )}
-            </EditDialog>
+                <EditDialog>
+                    {selection.mode && (
+                        <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
+                            {(row, { selectionMode: sm }) => <EditForm mode={sm} row={row} />}
+                        </Selected>
+                    )}
+                </EditDialog>
+            </MainContent>
         </>
     );
 }

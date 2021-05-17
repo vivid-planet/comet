@@ -3,6 +3,7 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
+    MainContent,
     Stack,
     StackPage,
     StackSwitch,
@@ -10,11 +11,14 @@ import {
     Table,
     TableFilterFinalForm,
     TableQuery,
+    Toolbar,
+    ToolbarBackButton,
+    ToolbarItem,
     usePersistedStateId,
     useTableQuery,
     useTableQueryFilter,
 } from "@comet/admin";
-import { CircularProgress, Grid, IconButton } from "@material-ui/core";
+import { CircularProgress, Grid, IconButton, Typography } from "@material-ui/core";
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -70,11 +74,18 @@ function ExampleTable(props: { persistedStateId: string }) {
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
-            {tableData && (
-                <>
+            <Toolbar>
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Stack Table Form Query In Table</Typography>
+                </ToolbarItem>
+                <ToolbarItem>
                     <TableFilterFinalForm filterApi={filterApi}>
-                        <Field name="query" type="text" label="Query" component={FinalFormInput} fullWidth />
+                        <Field name="query" type="text" component={FinalFormInput} fullWidth />
                     </TableFilterFinalForm>
+                </ToolbarItem>
+            </Toolbar>
+            {tableData && (
+                <MainContent>
                     <Table
                         {...tableData}
                         columns={[
@@ -94,14 +105,14 @@ function ExampleTable(props: { persistedStateId: string }) {
                                                 stackApi.activatePage("form", String(row.id));
                                             }}
                                         >
-                                            <EditIcon fontSize="small" />
+                                            <EditIcon />
                                         </IconButton>
                                     </Grid>
                                 ),
                             },
                         ]}
                     />
-                </>
+                </MainContent>
             )}
         </TableQuery>
     );
@@ -132,22 +143,32 @@ function ExampleForm(props: IExampleFormProps) {
     if (error) return <p>Error :( {error.toString()}</p>;
 
     return (
-        <FinalForm
-            mode="edit"
-            onSubmit={(values) => {
-                // submit here
-            }}
-            initialValues={data.user}
-        >
-            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
-        </FinalForm>
+        <>
+            <Toolbar>
+                <ToolbarBackButton />
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Stack Table Form Query In Table - Detail</Typography>
+                </ToolbarItem>
+            </Toolbar>
+            <MainContent>
+                <FinalForm
+                    mode="edit"
+                    onSubmit={(values) => {
+                        // submit here
+                    }}
+                    initialValues={data.user}
+                >
+                    <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
+                </FinalForm>
+            </MainContent>
+        </>
     );
 }
 
 function Story() {
     const persistedStateId = usePersistedStateId();
     return (
-        <Stack topLevelTitle="Stack">
+        <Stack topLevelTitle="Stack" showBreadcrumbs={false} showBackButton={false}>
             <StackSwitch>
                 <StackPage name="table">
                     <ExampleTable persistedStateId={persistedStateId} />
