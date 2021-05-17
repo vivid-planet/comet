@@ -13,9 +13,7 @@ import {
 } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
 import { Box, Button, Container, InputAdornment, TextField, Typography } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
 import { Autocomplete } from "@material-ui/lab";
-import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
 const options = [
     { name: "Jesse Schmuck" },
@@ -38,19 +36,6 @@ const options = [
     { name: "Tamiko Livers" },
     { name: "Tianna Sheeler" },
 ];
-
-export const useStyles = makeStyles<Theme, {}, "textField">(
-    () => ({
-        textField: {
-            backgroundColor: "red",
-            textIndent: 40,
-            "& div": {
-                textIndent: 40,
-            },
-        },
-    }),
-    { name: "CometAdminToolbar" },
-);
 
 export const ToolbarSearch = () => {
     const [searchValue, setSearchValue] = React.useState<{ name: string } | null>(null);
@@ -81,7 +66,7 @@ export const ToolbarSearch = () => {
                                                 ...params.InputProps,
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <Search fontSize={"small"} />
+                                                        <Search />
                                                     </InputAdornment>
                                                 ),
                                             }}

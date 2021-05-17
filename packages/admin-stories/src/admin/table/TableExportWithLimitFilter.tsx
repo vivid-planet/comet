@@ -4,9 +4,14 @@ import {
     ExcelExportButton,
     Field,
     FinalFormInput,
+    MainContent,
     Table,
     TableFilterFinalForm,
     TableQuery,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
     useExportDisplayedTableData,
     useExportTableQuery,
     useTableQuery,
@@ -14,6 +19,7 @@ import {
     useTableQueryPaging,
     VisibleType,
 } from "@comet/admin";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -86,41 +92,52 @@ function Story() {
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
-            {tableData && (
-                <>
-                    <TableFilterFinalForm filterApi={filterApi}>
-                        <Field name="query" type="text" label="Query" component={FinalFormInput} fullWidth />
-                    </TableFilterFinalForm>
-                    <ExcelExportButton exportApi={exportCurrentPageApi}>Aktuelle Seite exportieren</ExcelExportButton>
-                    <ExcelExportButton exportApi={exportApi}>Export All (max. 5000 Rows)</ExcelExportButton>
-
-                    <Table
-                        exportApis={[exportCurrentPageApi, exportApi]}
-                        {...tableData}
-                        columns={[
-                            {
-                                name: "thumbnailUrl",
-                                header: "Thumbnail",
-                                sortable: true,
-                                visible: { [VisibleType.Browser]: false, [VisibleType.Export]: false },
-                                render: (row: IPhoto) => {
-                                    return <img src={row.thumbnailUrl} />;
+            <>
+                <Toolbar>
+                    <ToolbarItem>
+                        <Typography variant={"h3"}>Export Visibility With LimitFilter</Typography>
+                    </ToolbarItem>
+                    <ToolbarItem>
+                        <TableFilterFinalForm filterApi={filterApi}>
+                            <Field name="query" type="text" component={FinalFormInput} fullWidth />
+                        </TableFilterFinalForm>
+                    </ToolbarItem>
+                    <ToolbarFillSpace />
+                    <ToolbarActions>
+                        <ExcelExportButton exportApi={exportCurrentPageApi}>Aktuelle Seite exportieren</ExcelExportButton>
+                        <ExcelExportButton exportApi={exportApi}>Export All (max. 5000 Rows)</ExcelExportButton>
+                    </ToolbarActions>
+                </Toolbar>
+                <MainContent>
+                    {tableData && (
+                        <Table
+                            exportApis={[exportCurrentPageApi, exportApi]}
+                            {...tableData}
+                            columns={[
+                                {
+                                    name: "thumbnailUrl",
+                                    header: "Thumbnail",
+                                    sortable: true,
+                                    visible: { [VisibleType.Browser]: false, [VisibleType.Export]: false },
+                                    render: (row: IPhoto) => {
+                                        return <img src={row.thumbnailUrl} />;
+                                    },
+                                    headerExcel: "Thumbnail Url",
+                                    renderExcel: (row: IPhoto) => {
+                                        return row.thumbnailUrl;
+                                    },
                                 },
-                                headerExcel: "Thumbnail Url",
-                                renderExcel: (row: IPhoto) => {
-                                    return row.thumbnailUrl;
+                                {
+                                    name: "title",
+                                    visible: { [VisibleType.Browser]: true },
+                                    header: "Title",
+                                    sortable: true,
                                 },
-                            },
-                            {
-                                name: "title",
-                                visible: { [VisibleType.Browser]: true },
-                                header: "Title",
-                                sortable: true,
-                            },
-                        ]}
-                    />
-                </>
-            )}
+                            ]}
+                        />
+                    )}
+                </MainContent>
+            </>
         </TableQuery>
     );
 }

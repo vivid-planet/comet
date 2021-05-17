@@ -1,4 +1,16 @@
-import { ExcelExportButton, IRow, Table, useExportDisplayedTableData, VisibleType } from "@comet/admin";
+import {
+    ExcelExportButton,
+    IRow,
+    MainContent,
+    Table,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+    useExportDisplayedTableData,
+    VisibleType,
+} from "@comet/admin";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -27,39 +39,49 @@ function Story() {
      * */
     return (
         <>
-            <ExcelExportButton exportApi={exportApi} />
-            <Table
-                exportApis={[exportApi]}
-                data={data}
-                totalCount={data.length}
-                columns={[
-                    {
-                        name: "column1",
-                        header: "Column 1", // Default visibility: is true for browser and export
-                    },
-                    {
-                        name: "column2",
-                        header: "Column 2",
-                        visible: false, // explicitly set visibility to false (for browser and export)
-                    },
-                    {
-                        name: "column3",
-                        header: "Column 3",
-                        visible: { [VisibleType.Browser]: false }, // column will not be shown in Browser, but will be exported
-                    },
+            <Toolbar>
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Export Visibility</Typography>
+                </ToolbarItem>
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <ExcelExportButton exportApi={exportApi} />
+                </ToolbarActions>
+            </Toolbar>
+            <MainContent>
+                <Table
+                    exportApis={[exportApi]}
+                    data={data}
+                    totalCount={data.length}
+                    columns={[
+                        {
+                            name: "column1",
+                            header: "Column 1", // Default visibility: is true for browser and export
+                        },
+                        {
+                            name: "column2",
+                            header: "Column 2",
+                            visible: false, // explicitly set visibility to false (for browser and export)
+                        },
+                        {
+                            name: "column3",
+                            header: "Column 3",
+                            visible: { [VisibleType.Browser]: false }, // column will not be shown in Browser, but will be exported
+                        },
 
-                    {
-                        name: "column4",
-                        header: "Column 4",
-                        visible: { [VisibleType.Browser]: false, [VisibleType.Export]: true }, // column will not be shown in Browser, but will be exported
-                    },
-                    {
-                        name: "column5",
-                        header: "Column 5",
-                        visible: { [VisibleType.Browser]: true, [VisibleType.Export]: false }, // column will be shown in Browser, but will not be exported
-                    },
-                ]}
-            />
+                        {
+                            name: "column4",
+                            header: "Column 4",
+                            visible: { [VisibleType.Browser]: false, [VisibleType.Export]: true }, // column will not be shown in Browser, but will be exported
+                        },
+                        {
+                            name: "column5",
+                            header: "Column 5",
+                            visible: { [VisibleType.Browser]: true, [VisibleType.Export]: false }, // column will be shown in Browser, but will not be exported
+                        },
+                    ]}
+                />
+            </MainContent>
         </>
     );
 }
