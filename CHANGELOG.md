@@ -24,7 +24,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add onAfterSubmit to FinalForm
 -   add useStoredState() hook
 -   Added a new FinalFormRangeInput Component
--   add Toolbar
+-   add standard Toolbar that can be used as application wide consistent element containing navigation, action buttons and filters
 
 ### Incompatible Changes
 
