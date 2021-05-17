@@ -10,7 +10,7 @@ const composeValidators = (...validators: Array<(value: any, allValues: object) 
 
 interface IVividFieldProps<FieldValue = any, T extends HTMLElement = HTMLElement> {
     name: string;
-    label?: string;
+    label?: React.ReactNode;
     component?: React.ComponentType<any> | string;
     children?: (props: FieldRenderProps<FieldValue, T>) => React.ReactNode;
     required?: boolean;

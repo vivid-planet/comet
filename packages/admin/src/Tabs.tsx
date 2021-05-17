@@ -6,7 +6,7 @@ import * as React from "react";
 import styled from "styled-components";
 
 interface ITabProps extends TabProps {
-    label: string;
+    label: React.ReactNode;
     tabLabel?: React.ReactNode;
     children: React.ReactNode;
 }

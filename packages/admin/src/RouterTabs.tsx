@@ -10,7 +10,7 @@ import { StackApiContext, StackBreadcrumb, StackSwitchApiContext } from "./stack
 
 interface ITabProps extends TabProps {
     path: string;
-    label: string;
+    label: React.ReactNode;
     forceRender?: boolean;
     tabLabel?: React.ReactNode;
     children: React.ReactNode;
