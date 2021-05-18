@@ -6,5 +6,5 @@ export interface ErrorDialogContextProps {
     showError: (options: ErrorDialogOptions) => void;
 }
 
-const ErrorDialogContext = React.createContext<ErrorDialogContextProps>(undefined!);
+const ErrorDialogContext = React.createContext<ErrorDialogContextProps | undefined>(undefined);
 export { ErrorDialogContext };

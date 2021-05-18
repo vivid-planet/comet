@@ -4,7 +4,7 @@ import { ErrorDialogContextProps } from "./ErrorDialogContext";
 import { ErrorScope, errorScopeForOperationContext } from "./ErrorScope";
 
 export interface ErrorDialogApolloLinkOptions {
-    errorDialog: ErrorDialogContextProps;
+    errorDialog?: ErrorDialogContextProps;
 }
 export const createErrorDialogApolloLink = ({ errorDialog }: ErrorDialogApolloLinkOptions) => {
     return onError(({ graphQLErrors, networkError, operation }) => {
