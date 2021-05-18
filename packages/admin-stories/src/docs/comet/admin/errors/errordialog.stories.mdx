@@ -1,0 +1,128 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+import { errorDialogStoryProviderDecorator } from "../../../../error-dialog-provider.decorator";
+import { apolloSwapiStoryDecorator } from "../../../../apollo-swapi-story.decorator";
+
+import { ErrorDialogContext } from "@comet/admin";
+import { Button, TextField } from "@material-ui/core";
+
+<Meta title="docs/@comet/admin/errors/errordialog" />
+
+# ErrorDialog
+
+## Setup
+
+Setup is easy, just add the `ErrorDialogProvider` to your Provider List.
+
+```
+import { ErrorDialogProvider } from "@comet/admin";
+
+const App: React.FunctionComponent = ({ children }) => {
+    return (
+        <OtherProvider>
+            <ErrorDialogProvider>{children}</ErrorDialogProvider>
+        </OtherProvider>
+    );
+};
+```
+
+## Integration into ApolloProvider
+
+There is also the possibility to automatically display an `ErrorDialog` when a graphql error occurs (this can also be disabled for requests, which handle errors on their own).
+
+Add the `createErrorDialogApolloLink` to your ApolloLink List when setting up the `apolloClient`
+
+```
+const ApolloProvider: React.FunctionComponent = ({ children }) => {
+    const errorDialog = useErrorDialog();
+
+    const link = ApolloLink.from([
+        createErrorDialogApolloLink({ errorDialog }),
+        createHttpLink({
+            uri: `uri`,
+        }),
+    ]);
+    const cache = new InMemoryCache();
+
+    const apolloClient = new ApolloClient({
+        link,
+        cache,
+    });
+    return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
+};
+```
+
+## Usage
+
+### Error Dialog with Consumer
+
+Error Dialog can be used to display an error in a dialog. Try it out by simple pressing the Button below. You can also use the errorDialog with the `useErrorDialog` Hook
+
+<Canvas>
+    <Story name="Manual Error Dialog" decorators={[errorDialogStoryProviderDecorator()]}>
+        <ErrorDialogContext.Consumer>
+            {(errorDialog) => {
+                return (
+                    <Button
+                        variant={"contained"}
+                        color={"primary"}
+                        onClick={() => {
+                            errorDialog.showError({
+                                title: "Error",
+                                userMessage: "You can close the error dialog by pressing ok",
+                                error: "This is an error detail information e.g. stack trace, which is only shown in development mode",
+                            });
+                        }}
+                    >
+                        Show Error Dialog
+                    </Button>
+                );
+            }}
+        </ErrorDialogContext.Consumer>
+    </Story>
+</Canvas>
+
+### Automatic Error Dialog on graphQL Error
+
+Error Dialog Provider automatically shows an Error Dialog if an GQL Error happens.
+
+import { useQuery } from "@apollo/client";
+import gql from "graphql-tag";
+
+<Canvas>
+    <Story name="Automatic Error on Graphql Error" decorators={[apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()]}>
+        {() => {
+            const Story = () => {
+                const [query, setQuery] = React.useState("{ allFilms { films { title } } }");
+                const { data, error } = useQuery(gql`
+                    ${query}
+                `);
+                return (
+                    <div>
+                        <TextField
+                            value={query}
+                            label={"Query"}
+                            onChange={(event) => {
+                                setQuery(event.target.value);
+                            }}
+                            fullWidth
+                        />
+                        {error ? (
+                            <div>
+                                Error:
+                                <br />
+                                {JSON.stringify(error)}
+                            </div>
+                        ) : (
+                            <div>
+                                Response:
+                                <br />
+                                {JSON.stringify(data)}
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+            return <Story />;
+        }}
+    </Story>
+</Canvas>
