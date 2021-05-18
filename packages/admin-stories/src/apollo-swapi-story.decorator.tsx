@@ -1,29 +1,13 @@
 import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
-import { ErrorScope, errorScopeForOperationContext, useErrorDialog } from "@comet/admin";
+import { createErrorDialogApolloLink, useErrorDialog } from "@comet/admin";
 import { StoryContext, StoryFn } from "@storybook/addons/dist/types";
 import * as React from "react";
 
 const SwapiApolloProvider: React.FunctionComponent = ({ children }) => {
     const errorDialog = useErrorDialog();
-    const link = ApolloLink.from([
-        onError(({ graphQLErrors, networkError, operation }) => {
-            if (errorDialog) {
-                const errorScope = errorScopeForOperationContext(operation.getContext());
 
-                if (graphQLErrors) {
-                    graphQLErrors.forEach(({ extensions, message }) => {
-                        if (errorScope === ErrorScope.Global) {
-                            errorDialog.showError({ error: message });
-                        }
-                    });
-                } else if (networkError) {
-                    if (errorScope === ErrorScope.Global) {
-                        errorDialog.showError({ error: networkError.message });
-                    }
-                }
-            }
-        }),
+    const link = ApolloLink.from([
+        createErrorDialogApolloLink({ errorDialog }),
         createHttpLink({
             uri: `https://swapi-graphql.netlify.app/.netlify/functions/index`, // Test API here: https://graphql.org/swapi-graphql
         }),
