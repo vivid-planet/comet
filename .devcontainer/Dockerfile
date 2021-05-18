@@ -13,4 +13,4 @@ ARG EXTRA_NODE_VERSION=14
 RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${EXTRA_NODE_VERSION}"
 
 # Install more global node packages
-RUN su node -c "npm install -g npm@7 lerna pm2"
+RUN su node -c "npm install -g npm@7.13 lerna pm2"
