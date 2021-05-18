@@ -9,12 +9,14 @@ import {
     StackSwitchApiContext,
     StackApiContext,
     ToolbarBreadcrumbs,
+    ToolbarTitleItem,
 } from "@comet/admin";
 import { Button, IconButton, Typography, Grid } from "@material-ui/core";
 import { toolbarDecorator } from "./toolbar.decorator";
 import { ChevronLeft, CometColor } from "@comet/admin-icons";
 
 import StoryRouter from "storybook-react-router";
+import { FormattedMessage } from "react-intl";
 
 <Meta title="docs/@comet/admin/toolbar" decorators={[toolbarDecorator(), StoryRouter()]} />
 
@@ -56,6 +58,30 @@ If you need a custom title, simple build your own `CustomToolbarTitleItem`. For 
     <Story name="ToolbarAutomaticTitleItem">
         <Toolbar>
             <ToolbarAutomaticTitleItem />
+        </Toolbar>
+    </Story>
+</Canvas>
+
+### ToolbarTitleItem
+
+If you only want a consistent Title over the all application, we recommend to use our ToolbarTitleItem. Simple put your Component in it, and if it is a string, it will get a consistent styling over the whole application
+
+<Canvas>
+    <Story name="ToolbarTitleItem">
+        <Toolbar>
+            <ToolbarTitleItem>Toolbar Title Item</ToolbarTitleItem>
+        </Toolbar>
+    </Story>
+</Canvas>
+
+### ToolbarTitleItem internationalization
+
+<Canvas>
+    <Story name="Localized Title">
+        <Toolbar>
+            <ToolbarTitleItem>
+                <FormattedMessage id={"storybook.toolbartitleitem.title"} defaultMessage={"Localized Title"} />
+            </ToolbarTitleItem>
         </Toolbar>
     </Story>
 </Canvas>

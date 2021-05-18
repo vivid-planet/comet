@@ -4,6 +4,8 @@ export * from "./item/ToolbarItem";
 export { CometAdminToolbarItemClassKeys } from "./item/ToolbarItem.styles";
 export * from "./automatictitleitem/ToolbarAutomaticTitleItem";
 export { ToolbarAutomaticTitleItemThemeProps } from "./automatictitleitem/ToolbarAutomaticTitleItem.styles";
+export * from "./titleitem/ToolbarTitleItem";
+export { ToolbarTitleItemThemeProps } from "./titleitem/ToolbarTitleItem.styles";
 export * from "./breadcrumb/ToolbarBreadcrumbs";
 export { ToolbarBreadcrumbsThemeProps } from "./breadcrumb/ToolbarBreadcrumbs.styles";
 export * from "./backbutton/ToolbarBackButton";
