@@ -9,7 +9,7 @@
         "prebuild": "npm run clean && npm run generate-icons",
         "build": "tsc",
         "prestart": "npm run clean && npm run generate-icons",
-        "start": "tsc -w",
+        "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
         "prepare": "npm run build",
         "lint": "npm run lint:eslint && npm run lint:tsc",
         "lint:eslint": "eslint src/",
