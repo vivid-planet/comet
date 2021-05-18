@@ -1,6 +1,4 @@
-import { Check, Error, HourglassFull, Save } from "@material-ui/icons";
 import { ClassNameMap } from "@material-ui/styles/withStyles/withStyles";
-import * as React from "react";
 import { defineMessage, MessageDescriptor } from "react-intl";
 
 import { DisplayStateSaveSplitButton } from "./SaveSplitButton";
@@ -23,17 +21,6 @@ export const resolveClassForDisplayState = (
         root: rootClass,
         disabled: styles.disabled,
     };
-};
-
-export const resolveIconForDisplayState = (displayState: DisplayStateSaveSplitButton): JSX.Element => {
-    if (displayState === "saving") {
-        return <HourglassFull />;
-    } else if (displayState === "success") {
-        return <Check />;
-    } else if (displayState === "error") {
-        return <Error />;
-    }
-    return <Save />;
 };
 
 export const resolveSaveTextForDisplayState = (displayState: DisplayStateSaveSplitButton): MessageDescriptor => {

@@ -1,9 +1,9 @@
 import { Button, ButtonGroup, ButtonGroupProps, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from "@material-ui/core";
-import { ExpandMore } from "@material-ui/icons";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
 import { useStoredState } from "../../../hooks";
+import { useThemeProps } from "./SplitButton.styles";
 
 export interface SplitButtonProps extends ButtonGroupProps<any> {
     selectedIndex?: number;
@@ -25,7 +25,7 @@ export const SplitButton = ({
     ...restProps
 }: PropsWithChildren<SplitButtonProps>) => {
     const childrenArray = React.Children.toArray(children);
-
+    const themeProps = useThemeProps();
     const [uncontrolledSelectedIndex, setUncontrolledIndex] = useStoredState<number>(localStorageKey || false, 0, storage);
     const _selectedIndex = selectedIndex ?? uncontrolledSelectedIndex;
     const _onSelectIndex = onSelectIndex
@@ -74,7 +74,7 @@ export const SplitButton = ({
                         classes={ActiveChild.props.classes}
                         onClick={handleToggle}
                     >
-                        <ExpandMore />
+                        {themeProps.selectIcon}
                     </Button>
                 )}
             </ButtonGroup>

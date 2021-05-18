@@ -6,12 +6,11 @@ import { useIntl } from "react-intl";
 import { SplitButton, SplitButtonProps } from "../split";
 import {
     resolveClassForDisplayState,
-    resolveIconForDisplayState,
     resolveSaveAndGoBackTextForDisplayState,
     resolveSaveTextForDisplayState,
     resolveShowSelectButton,
 } from "./SaveSplitButton.helper";
-import { useStyles } from "./SaveSplitButton.styles";
+import { useStyles, useThemeProps } from "./SaveSplitButton.styles";
 
 export interface SaveSplitButtonProps extends SplitButtonProps {
     saving?: boolean;
@@ -35,6 +34,7 @@ export const SaveSplitButton = ({
 
     const intl = useIntl();
     const styles = useStyles();
+    const themeProps = useThemeProps();
 
     const classes = resolveClassForDisplayState(displayState, styles);
 
@@ -72,7 +72,7 @@ export const SaveSplitButton = ({
             {onSavePressed && (
                 <Button
                     type="submit"
-                    startIcon={resolveIconForDisplayState(displayState)}
+                    startIcon={themeProps.resolveIconForDisplayState(displayState)}
                     color={"primary"}
                     variant="contained"
                     onClick={onSavePressed}
@@ -83,7 +83,7 @@ export const SaveSplitButton = ({
             )}
             {onSaveAndGoBackPressed && (
                 <Button
-                    startIcon={resolveIconForDisplayState(displayState)}
+                    startIcon={themeProps.resolveIconForDisplayState(displayState)}
                     color={"primary"}
                     variant="contained"
                     onClick={onSaveAndGoBackPressed}
