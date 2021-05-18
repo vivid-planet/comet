@@ -7,10 +7,10 @@ import {
     Table,
     Toolbar,
     ToolbarActions,
+    ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarItem,
-    ToolbarTitleItem,
     useStackSwitchApi,
 } from "@comet/admin";
 import { Add, Delete, Edit } from "@comet/admin-icons";
@@ -41,7 +41,7 @@ export const ToolbarTableForm = () => {
             <>
                 <Toolbar>
                     <ToolbarBackButton />
-                    <ToolbarTitleItem />
+                    <ToolbarAutomaticTitleItem />
                     <ToolbarFillSpace />
                     <ToolbarActions>
                         <StackSwitchApiContext.Consumer>

@@ -6,9 +6,9 @@ import {
     StackSwitchApiContext,
     Toolbar,
     ToolbarActions,
+    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
-    ToolbarTitleItem,
     useStackApi,
 } from "@comet/admin";
 import { ArrowRight, ChevronLeft } from "@comet/admin-icons";
@@ -40,7 +40,7 @@ export const ToolbarCustomBackButton = () => {
                 <StackPage name={"root"}>
                     <>
                         <Toolbar>
-                            <ToolbarTitleItem />
+                            <ToolbarAutomaticTitleItem />
                             <ToolbarFillSpace />
                             <ToolbarActions>
                                 <StackSwitchApiContext.Consumer>
@@ -73,7 +73,7 @@ export const ToolbarCustomBackButton = () => {
                     <>
                         <Toolbar>
                             <CustomToolbarBackButton />
-                            <ToolbarTitleItem />
+                            <ToolbarAutomaticTitleItem />
                         </Toolbar>
                         <MainContent>
                             <Container>

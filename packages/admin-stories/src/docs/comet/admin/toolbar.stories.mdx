@@ -5,7 +5,7 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarActions,
-    ToolbarTitleItem,
+    ToolbarAutomaticTitleItem,
     StackSwitchApiContext,
     StackApiContext,
     ToolbarBreadcrumbs,
@@ -31,7 +31,7 @@ Current supported and built in components:
 -   `Toolbar`
 -   `ToolbarBackButton`
 -   `ToolbarBreadcrumbs`
--   `ToolbarTitleItem`
+-   `ToolbarAutomaticTitleItem`
 -   `ToolbarFillSpace`
 -   `ToolbarItem`
 -   `ToolbarActions`
@@ -46,16 +46,16 @@ An empty Toolbar is nothing really fency and not even more than a Mui Paper/ Mui
     </Story>
 </Canvas>
 
-### ToolbarTitleItem
+### ToolbarAutomaticTitleItem
 
-The `ToolbarTitleItem` uses the StackApi to evaluate the title. Just drop it in the toolbar and the title will be fetched automatically.
+The `ToolbarAutomaticTitleItem` uses the StackApi to evaluate the title. Just drop it in the toolbar and the title will be fetched automatically.
 
 If you need a custom title, simple build your own `CustomToolbarTitleItem`. For custom appearance - see more on custom title stories.
 
 <Canvas>
-    <Story name="ToolbarTitleItem">
+    <Story name="ToolbarAutomaticTitleItem">
         <Toolbar>
-            <ToolbarTitleItem />
+            <ToolbarAutomaticTitleItem />
         </Toolbar>
     </Story>
 </Canvas>
@@ -116,7 +116,7 @@ The back button will only be shown, if there is a `StackApiContext` and the user
     <Story name="Toolbar - Back Button">
         <Toolbar>
             <ToolbarBackButton />
-            <ToolbarTitleItem />
+            <ToolbarAutomaticTitleItem />
             <ToolbarFillSpace />
             <ToolbarActions>
                 <StackSwitchApiContext.Consumer>
@@ -243,7 +243,7 @@ This component is meant to separate components in the toolbar, it adds a consist
     </Story>
 </Canvas>
 
-The `ToolbarItem` can be easily mixed up with other drop in compoents like `ToolbarTitleItem`
+The `ToolbarItem` can be easily mixed up with other drop in compoents like `ToolbarAutomaticTitleItem`
 
 <Canvas>
     <Story name="ToolbarItem - mixing with other Components">
@@ -251,7 +251,7 @@ The `ToolbarItem` can be easily mixed up with other drop in compoents like `Tool
             <ToolbarItem>
                 <Typography>Item 1</Typography>
             </ToolbarItem>
-            <ToolbarTitleItem />
+            <ToolbarAutomaticTitleItem />
             <ToolbarItem>
                 <Typography>Item 2</Typography>
             </ToolbarItem>
@@ -267,7 +267,7 @@ The `ToolbarItem` can be easily mixed up with other drop in compoents like `Tool
 <Canvas>
     <Story name="Toolbar Actions - one Action">
         <Toolbar>
-            <ToolbarTitleItem />
+            <ToolbarAutomaticTitleItem />
             <ToolbarFillSpace />
             <ToolbarActions>
                 <Button
@@ -287,7 +287,7 @@ The `ToolbarItem` can be easily mixed up with other drop in compoents like `Tool
 <Canvas>
     <Story name="Toolbar Actions - multiple Actions">
         <Toolbar>
-            <ToolbarTitleItem />
+            <ToolbarAutomaticTitleItem />
             <ToolbarFillSpace />
             <ToolbarActions>
                 <Grid container spacing={4}>

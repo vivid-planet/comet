@@ -6,10 +6,10 @@ import {
     StackSwitchApiContext,
     Toolbar,
     ToolbarActions,
+    ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarItem,
-    ToolbarTitleItem,
 } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
 import { Box, Button, Container, InputAdornment, TextField, Typography } from "@material-ui/core";
@@ -46,7 +46,7 @@ export const ToolbarSearch = () => {
                     <>
                         <Toolbar>
                             <ToolbarBackButton />
-                            <ToolbarTitleItem />
+                            <ToolbarAutomaticTitleItem />
                             <ToolbarItem>
                                 <Autocomplete<{ name: string }>
                                     popupIcon={null}
@@ -117,7 +117,7 @@ export const ToolbarSearch = () => {
                                     renderInput={(params) => <TextField {...params} label="Search" variant="outlined" />}
                                 />
                             </ToolbarItem>
-                            <ToolbarTitleItem />
+                            <ToolbarAutomaticTitleItem />
                         </Toolbar>
                         <MainContent>
                             <Container>

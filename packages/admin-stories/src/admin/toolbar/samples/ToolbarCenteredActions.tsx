@@ -6,9 +6,9 @@ import {
     StackSwitchApiContext,
     Toolbar,
     ToolbarActions,
+    ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarFillSpace,
-    ToolbarTitleItem,
 } from "@comet/admin";
 import { Box, Button, Container, Typography } from "@material-ui/core";
 import * as React from "react";
@@ -41,7 +41,7 @@ export const ToolbarCenteredActions = () => {
                                 </StackSwitchApiContext.Consumer>
                             </ToolbarActions>
                             <ToolbarFillSpace />
-                            <ToolbarTitleItem />
+                            <ToolbarAutomaticTitleItem />
                         </Toolbar>
 
                         <MainContent>
@@ -56,7 +56,7 @@ export const ToolbarCenteredActions = () => {
                         <Toolbar>
                             <ToolbarBackButton />
                             <ToolbarFillSpace />
-                            <ToolbarTitleItem />
+                            <ToolbarAutomaticTitleItem />
                         </Toolbar>
 
                         <MainContent>
