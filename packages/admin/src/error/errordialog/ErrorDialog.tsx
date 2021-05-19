@@ -23,9 +23,7 @@ export type ErrorMethods = {
     setError: (options: ErrorDialogOptions) => void;
 };
 
-export interface ErrorProps {}
-
-const ErrorDialog: React.ForwardRefRenderFunction<ErrorMethods, ErrorProps> = (props, ref) => {
+const ErrorDialog: React.ForwardRefRenderFunction<ErrorMethods, {}> = (props, ref) => {
     const [errorOptions, setErrorOptions] = React.useState<ErrorDialogOptions | null>(null);
     const [errorVisible, setErrorVisible] = React.useState<boolean>(false);
 

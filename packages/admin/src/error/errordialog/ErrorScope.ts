@@ -3,7 +3,7 @@ export enum ErrorScope {
     Global = "global",
 }
 
-export const ErrorScopeContextIdentifier = "errorScope";
+const ErrorScopeContextIdentifier = "errorScope";
 
 export const LocalErrorScopeApolloContext = { [ErrorScopeContextIdentifier]: ErrorScope.Local };
 
