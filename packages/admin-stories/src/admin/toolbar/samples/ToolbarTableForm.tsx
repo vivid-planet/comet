@@ -139,7 +139,7 @@ export const ToolbarTableForm = () => {
     };
 
     return (
-        <Stack topLevelTitle={"Table / Form"} showBreadcrumbs={false} showBackButton={false}>
+        <Stack topLevelTitle={"Table / Form"} showBackButton={false}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <ExampleTable />

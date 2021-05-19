@@ -40,7 +40,7 @@ const options = [
 export const ToolbarSearch = () => {
     const [searchValue, setSearchValue] = React.useState<{ name: string } | null>(null);
     return (
-        <Stack topLevelTitle={"Search"} showBreadcrumbs={false} showBackButton={false}>
+        <Stack topLevelTitle={"Search"} showBackButton={false}>
             <StackSwitch initialPage="root">
                 <StackPage name={"root"}>
                     <>

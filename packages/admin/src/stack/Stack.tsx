@@ -1,6 +1,5 @@
-import { Button, Typography, WithStyles } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { createStyles, withStyles } from "@material-ui/styles";
 import * as history from "history";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -8,7 +7,6 @@ import { Route, RouteComponentProps } from "react-router";
 
 import { DirtyHandler } from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
-import { Breadcrumbs } from "../mui";
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
 
@@ -55,10 +53,9 @@ const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
     return ret;
 };
 
-interface IProps extends WithStyles<typeof styles> {
+interface IProps {
     topLevelTitle: React.ReactNode;
     showBackButton?: boolean;
-    showBreadcrumbs?: boolean;
 }
 
 export interface IBreadcrumbItem {
@@ -81,7 +78,7 @@ interface IState {
     switches: ISwitchItem[];
 }
 
-class StackComponent extends React.Component<IProps, IState> {
+export class Stack extends React.Component<IProps, IState> {
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
     constructor(props: IProps) {
@@ -112,15 +109,10 @@ class StackComponent extends React.Component<IProps, IState> {
             >
                 <Route>
                     {(routerProps: RouteComponentProps<any>) => {
-                        const { classes, showBreadcrumbs = true, showBackButton, topLevelTitle, children } = this.props;
+                        const { showBackButton, topLevelTitle, children } = this.props;
                         this.history = routerProps.history;
                         return (
                             <>
-                                {showBreadcrumbs && (
-                                    <div className={classes.breadcrumbs}>
-                                        <Breadcrumbs pages={breadcrumbs} />
-                                    </div>
-                                )}
                                 {showBackButton && (
                                     <Button
                                         color="default"
@@ -249,17 +241,3 @@ class StackComponent extends React.Component<IProps, IState> {
         });
     };
 }
-
-export type CometAdminStackClassKeys = "root" | "breadcrumbs";
-
-const styles = () => {
-    return createStyles<CometAdminStackClassKeys, any>({
-        root: {},
-        breadcrumbs: {
-            paddingTop: 30,
-            paddingBottom: 30,
-        },
-    });
-};
-
-export const Stack = withStyles(styles, { name: "CometAdminStack" })(StackComponent);

@@ -57,7 +57,7 @@ function Story() {
 
     return (
         <>
-            <Stack topLevelTitle="Stack" showBreadcrumbs={false} showBackButton={false}>
+            <Stack topLevelTitle="Stack" showBackButton={false}>
                 <StackSwitch>
                     <StackPage name="table">
                         <Toolbar>

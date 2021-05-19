@@ -79,6 +79,34 @@ All notable changes to this project will be documented in this file. This projec
   </MasterLayout
 ```
 
+-   removed `showBreadcrumbs` Prop from Stack and added Breadcrumbs component for compatibility. It's recommended at all to use new Toolbar System
+    old:
+
+```
+   <Stack topLevelTitle="Stack Nested">
+       <StackSwitch>
+           <StackPage name="page1">
+               <Page1 />
+           </StackPage>
+           <StackPage name="page2">page2-2</StackPage>
+       </StackSwitch>
+   </Stack>
+```
+
+new:
+
+```
+   <Stack topLevelTitle="Stack Nested">
+       <Breadcrumbs />
+       <StackSwitch>
+           <StackPage name="page1">
+               <Page1 />
+           </StackPage>
+           <StackPage name="page2">page2-2</StackPage>
+       </StackSwitch>
+   </Stack>
+```
+
 ### Migration Guide
 
 Clone this repository into your project repository. If you have a monorepo, you have to clone it into the right subfolder.

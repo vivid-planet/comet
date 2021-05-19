@@ -15,7 +15,7 @@ import * as React from "react";
 
 export const ToolbarCenteredActions = () => {
     return (
-        <Stack topLevelTitle={"Automatic Title"} showBreadcrumbs={false} showBackButton={false}>
+        <Stack topLevelTitle={"Automatic Title"} showBackButton={false}>
             <StackSwitch initialPage="automaticTitle">
                 <StackPage name={"automaticTitle"}>
                     <>

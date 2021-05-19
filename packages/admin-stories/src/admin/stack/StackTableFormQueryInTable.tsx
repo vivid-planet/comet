@@ -168,7 +168,7 @@ function ExampleForm(props: IExampleFormProps) {
 function Story() {
     const persistedStateId = usePersistedStateId();
     return (
-        <Stack topLevelTitle="Stack" showBreadcrumbs={false} showBackButton={false}>
+        <Stack topLevelTitle="Stack" showBackButton={false}>
             <StackSwitch>
                 <StackPage name="table">
                     <ExampleTable persistedStateId={persistedStateId} />

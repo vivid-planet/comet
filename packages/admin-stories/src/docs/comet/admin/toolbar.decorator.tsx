@@ -5,7 +5,7 @@ import * as React from "react";
 export function toolbarDecorator<StoryFnReturnType = unknown>() {
     return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
         return (
-            <Stack topLevelTitle={"Automatic Title from Stack"} showBreadcrumbs={false} showBackButton={false}>
+            <Stack topLevelTitle={"Automatic Title from Stack"} showBackButton={false}>
                 <StackSwitch initialPage="automaticTitle">
                     <StackPage name={"automaticTitle"}>{fn()}</StackPage>
                     <StackPage name={"automaticTitleDetail"} title={"Automatic Title from Stack - Detail"}>

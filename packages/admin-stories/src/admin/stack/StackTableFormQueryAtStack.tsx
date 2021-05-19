@@ -174,7 +174,7 @@ function Story() {
     });
 
     return (
-        <Stack topLevelTitle="Stack" showBreadcrumbs={false} showBackButton={false}>
+        <Stack topLevelTitle="Stack" showBackButton={false}>
             <TableQuery api={api} loading={loading} error={error}>
                 <StackSwitch>
                     <StackPage name="table">{tableData && <ExampleTable tableData={tableData} filterApi={filterApi} />}</StackPage>

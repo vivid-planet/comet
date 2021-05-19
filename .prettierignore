@@ -7,3 +7,4 @@ lang/
 .watchmanconfig
 lib/
 lerna.json
+storybook-static
