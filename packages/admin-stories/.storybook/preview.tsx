@@ -61,14 +61,14 @@ const themeOptions = {
 const GlobalStyles = createGlobalStyle`
     body {
         margin: 0;
+      
+        &.sb-show-main.sb-main-padded {
+            padding: 0;
+        }
     }
 `;
 
-const StoryWrapper = styled.div`
-    padding: ${({ theme }) => theme.spacing(4)}px;
-    min-height: 100vh;
-    box-sizing: border-box;
-`;
+const StoryWrapper = styled.div``;
 
 addDecorator((story) => {
     const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);

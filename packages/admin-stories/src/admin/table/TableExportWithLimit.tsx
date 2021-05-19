@@ -2,13 +2,19 @@ import { gql } from "@apollo/client";
 import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
+    MainContent,
     Table,
     TableQuery,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
     useExportDisplayedTableData,
     useExportTableQuery,
     useTableQuery,
     useTableQueryPaging,
 } from "@comet/admin";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -77,32 +83,42 @@ function Story() {
         <TableQuery api={api} loading={loading} error={error}>
             {tableData && (
                 <>
-                    <ExcelExportButton exportApi={exportCurrentPageApi}>Aktuelle Seite exportieren</ExcelExportButton>
-                    <ExcelExportButton exportApi={exportApi}>Export All (max. 5000 Rows)</ExcelExportButton>
+                    <Toolbar>
+                        <ToolbarItem>
+                            <Typography variant={"h3"}>Export Visibility With Limit</Typography>
+                        </ToolbarItem>
+                        <ToolbarFillSpace />
+                        <ToolbarActions>
+                            <ExcelExportButton exportApi={exportCurrentPageApi}>Aktuelle Seite exportieren</ExcelExportButton>
+                            <ExcelExportButton exportApi={exportApi}>Export All (max. 5000 Rows)</ExcelExportButton>
+                        </ToolbarActions>
+                    </Toolbar>
 
-                    <Table
-                        exportApis={[exportCurrentPageApi, exportApi]}
-                        {...tableData}
-                        columns={[
-                            {
-                                name: "thumbnailUrl",
-                                header: "Thumbnail",
-                                sortable: true,
-                                render: (row: IPhoto) => {
-                                    return <img src={row.thumbnailUrl} />;
+                    <MainContent>
+                        <Table
+                            exportApis={[exportCurrentPageApi, exportApi]}
+                            {...tableData}
+                            columns={[
+                                {
+                                    name: "thumbnailUrl",
+                                    header: "Thumbnail",
+                                    sortable: true,
+                                    render: (row: IPhoto) => {
+                                        return <img src={row.thumbnailUrl} />;
+                                    },
+                                    headerExcel: "Thumbnail Url",
+                                    renderExcel: (row: IPhoto) => {
+                                        return row.thumbnailUrl;
+                                    },
                                 },
-                                headerExcel: "Thumbnail Url",
-                                renderExcel: (row: IPhoto) => {
-                                    return row.thumbnailUrl;
+                                {
+                                    name: "title",
+                                    header: "Title",
+                                    sortable: true,
                                 },
-                            },
-                            {
-                                name: "title",
-                                header: "Title",
-                                sortable: true,
-                            },
-                        ]}
-                    />
+                            ]}
+                        />
+                    </MainContent>
                 </>
             )}
         </TableQuery>

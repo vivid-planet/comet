@@ -61,7 +61,7 @@ interface IProps extends WithStyles<typeof styles> {
     showBreadcrumbs?: boolean;
 }
 
-interface IBreadcrumbItem {
+export interface IBreadcrumbItem {
     id: string;
     parentId: string;
     url: string;
@@ -69,7 +69,7 @@ interface IBreadcrumbItem {
     invisible: boolean;
 }
 
-interface ISwitchItem {
+export interface ISwitchItem {
     id: string;
     parentId: string;
     isInitialPageActive: boolean;
@@ -107,6 +107,7 @@ class StackComponent extends React.Component<IProps, IState> {
                     addSwitchMeta: this.addSwitchMeta,
                     removeSwitchMeta: this.removeSwitchMeta,
                     switches: sortByParentId(this.state.switches),
+                    breadCrumbs: breadcrumbs,
                 }}
             >
                 <Route>
