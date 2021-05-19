@@ -322,7 +322,7 @@ export const ToolbarBreadcrumbsSample = () => {
     const [StackSwitch] = useStackSwitch();
 
     return (
-        <Stack topLevelTitle={"Breadcrumbs"} showBackButton={false}>
+        <Stack topLevelTitle={"Breadcrumbs"}>
             <StackSwitch initialPage="page1">
                 <StackPage name={"page1"}>
                     <Page1 />

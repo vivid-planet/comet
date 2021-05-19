@@ -16,7 +16,7 @@ import * as React from "react";
 export const ToolbarShowHideTitle = () => {
     const [showTitle, setShowTitle] = React.useState(false);
     return (
-        <Stack topLevelTitle={"Show/Hide Title Example"} showBackButton={false}>
+        <Stack topLevelTitle={"Show/Hide Title Example"}>
             <StackSwitch initialPage="root">
                 <StackPage name={"root"}>
                     <>

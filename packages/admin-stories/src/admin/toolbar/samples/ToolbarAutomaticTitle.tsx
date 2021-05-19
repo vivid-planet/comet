@@ -15,7 +15,7 @@ import * as React from "react";
 
 export const ToolbarAutomaticTitle = () => {
     return (
-        <Stack topLevelTitle={"Automatic Title"} showBackButton={false}>
+        <Stack topLevelTitle={"Automatic Title"}>
             <StackSwitch initialPage="automaticTitle">
                 <StackPage name={"automaticTitle"}>
                     <>

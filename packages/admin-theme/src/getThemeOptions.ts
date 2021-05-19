@@ -25,6 +25,7 @@ import { cometAdminErrorBoundaryProps } from "./cometAdminProps/errorBoundary";
 import { cometAdminMasterLayoutProps } from "./cometAdminProps/masterLayout";
 import { cometAdminMenuProps } from "./cometAdminProps/menu";
 import { cometAdminMenuCollapsibleItemProps } from "./cometAdminProps/menuCollapsibleItem";
+import { cometAdminStackBackButtonProps } from "./cometAdminProps/stackBackButton";
 import { cometAdminStackBreadcrumbsProps } from "./cometAdminProps/stackBreadcrumbs";
 import { cometAdminToolbarProps } from "./cometAdminProps/toolbar";
 import { cometAdminToolbarAutomaticTitleItemProps } from "./cometAdminProps/toolbarAutomaticTitleItem";
@@ -58,6 +59,7 @@ export default (): ThemeOptions => ({
         CometAdminMasterLayout: cometAdminMasterLayoutProps(),
         CometAdminErrorBoundary: cometAdminErrorBoundaryProps(),
         CometAdminStackBreadcrumbs: cometAdminStackBreadcrumbsProps(),
+        CometAdminStackBackButton: cometAdminStackBackButtonProps(),
         CometAdminClearInputButton: cometAdminClearInputButtonProps(),
         ...getMuiProps(),
         CometAdminToolbar: cometAdminToolbarProps(),
