@@ -1,5 +1,6 @@
-import { Breadcrumbs, Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
+import { StackBreadcrumbs } from "@comet/admin/lib/mui/breadcrumbs/StackBreadcrumbs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
@@ -23,7 +24,7 @@ function Page1() {
 function Story() {
     return (
         <Stack topLevelTitle="Stack">
-            <Breadcrumbs separator={<CometColor />} />
+            <StackBreadcrumbs separator={<CometColor />} />
             <StackSwitch>
                 <StackPage name="page1">
                     <Page1 />

@@ -6,11 +6,11 @@ import * as React from "react";
 
 import { useComponentThemeProps } from "../../mui/useComponentThemeProps";
 
-export interface CometAdminBreadcrumbsThemeProps extends BreadcrumbsProps {}
+export interface CometAdminStackBreadcrumbsThemeProps extends BreadcrumbsProps {}
 
-export type CometAdminBreadcrumbsClassKeys = BreadcrumbsClassKey | "link" | "last";
+export type CometAdminStackBreadcrumbsClassKeys = BreadcrumbsClassKey | "link" | "last";
 
-export const useStyles = makeStyles<Theme, {}, CometAdminBreadcrumbsClassKeys>(
+export const useStyles = makeStyles<Theme, {}, CometAdminStackBreadcrumbsClassKeys>(
     (theme) => ({
         root: {
             paddingTop: 30,
@@ -24,11 +24,11 @@ export const useStyles = makeStyles<Theme, {}, CometAdminBreadcrumbsClassKeys>(
         link: {},
         last: {},
     }),
-    { name: "CometAdminBreadcrumbs" },
+    { name: "CometAdminStackBreadcrumbs" },
 );
 
-export function useThemeProps(componentProps: CometAdminBreadcrumbsThemeProps) {
-    const themeProps = useComponentThemeProps("CometAdminBreadcrumbs") ?? {};
+export function useThemeProps(componentProps: CometAdminStackBreadcrumbsThemeProps) {
+    const themeProps = useComponentThemeProps("CometAdminStackBreadcrumbs") ?? {};
     const { separator = <ArrowIcon />, ...restProps } = { ...themeProps, ...componentProps };
     return { separator, ...restProps };
 }
@@ -36,12 +36,12 @@ export function useThemeProps(componentProps: CometAdminBreadcrumbsThemeProps) {
 // Theme Augmentation
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
-        CometAdminBreadcrumbs: CometAdminBreadcrumbsClassKeys;
+        CometAdminStackBreadcrumbs: CometAdminStackBreadcrumbsClassKeys;
     }
 }
 
 declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
-        CometAdminBreadcrumbs: CometAdminBreadcrumbsThemeProps;
+        CometAdminStackBreadcrumbs: CometAdminStackBreadcrumbsThemeProps;
     }
 }

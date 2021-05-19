@@ -97,7 +97,7 @@ new:
 
 ```
    <Stack topLevelTitle="Stack Nested">
-       <Breadcrumbs />
+       <StackBreadcrumbs />
        <StackSwitch>
            <StackPage name="page1">
                <Page1 />

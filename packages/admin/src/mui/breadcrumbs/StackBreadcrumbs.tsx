@@ -3,21 +3,15 @@ import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
 import { IStackApi, StackApiContext } from "../../stack";
-import { CometAdminBreadcrumbsThemeProps, useStyles, useThemeProps } from "./Breadcrumbs.styles";
+import { CometAdminStackBreadcrumbsThemeProps, useStyles, useThemeProps } from "./StackBreadcrumbs.styles";
 
-export interface IBreadcrumbItem {
-    id: string;
-    url: string;
-    title: React.ReactNode;
-}
-
-export interface BreadcrumbProps extends CometAdminBreadcrumbsThemeProps {}
+export interface StackBreadcrumbProps extends CometAdminStackBreadcrumbsThemeProps {}
 
 const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ href, to, ...rest }, ref) => (
     <RouterLink innerRef={ref} to={to ?? href} {...rest} />
 ));
 
-export const Breadcrumbs = (props: BreadcrumbProps): React.ReactElement => {
+export const StackBreadcrumbs = (props: StackBreadcrumbProps): React.ReactElement => {
     const classes = useStyles();
 
     const { separator, ...otherBreadcrumbProps } = useThemeProps(props);
@@ -31,7 +25,7 @@ export const Breadcrumbs = (props: BreadcrumbProps): React.ReactElement => {
                         separator={separator}
                         {...otherBreadcrumbProps}
                     >
-                        {stackApi?.breadCrumbs.map(({ id, url, title }: IBreadcrumbItem, index) => {
+                        {stackApi?.breadCrumbs.map(({ id, url, title }, index) => {
                             const isLast = index + 1 >= stackApi?.breadCrumbs.length;
                             const linkClassName = classes.link + (isLast ? ` ${classes.last}` : "");
 

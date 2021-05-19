@@ -58,7 +58,7 @@ interface IProps {
     showBackButton?: boolean;
 }
 
-export interface IBreadcrumbItem {
+export interface BreadcrumbItem {
     id: string;
     parentId: string;
     url: string;
@@ -74,7 +74,7 @@ export interface ISwitchItem {
 }
 
 interface IState {
-    breadcrumbs: IBreadcrumbItem[];
+    breadcrumbs: BreadcrumbItem[];
     switches: ISwitchItem[];
 }
 
@@ -143,7 +143,7 @@ export class Stack extends React.Component<IProps, IState> {
     }
 
     private getVisibleBreadcrumbs() {
-        let prev: IBreadcrumbItem;
+        let prev: BreadcrumbItem;
         const breadcrumbs = sortByParentId(this.state.breadcrumbs)
             .map((i) => {
                 return { ...i }; // clone so we can modify in filter below

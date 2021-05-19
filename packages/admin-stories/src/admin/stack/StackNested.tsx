@@ -1,4 +1,4 @@
-import { Breadcrumbs, Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
@@ -22,7 +22,7 @@ function Page1() {
 function Page2() {
     return (
         <Stack topLevelTitle="Stack Nested">
-            <Breadcrumbs />
+            <StackBreadcrumbs />
             <StackSwitch>
                 <StackPage name="page1">
                     <Page1 />
@@ -36,7 +36,7 @@ function Page2() {
 function Story() {
     return (
         <Stack topLevelTitle="Stack">
-            <Breadcrumbs />
+            <StackBreadcrumbs />
             <StackSwitch>
                 <StackPage name="page1">
                     <Page1 />

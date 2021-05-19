@@ -1,2 +1,2 @@
-export * from "./Breadcrumbs";
-export { CometAdminBreadcrumbsClassKeys, CometAdminBreadcrumbsThemeProps } from "./Breadcrumbs.styles";
+export * from "./StackBreadcrumbs";
+export { CometAdminStackBreadcrumbsClassKeys, CometAdminStackBreadcrumbsThemeProps } from "./StackBreadcrumbs.styles";
