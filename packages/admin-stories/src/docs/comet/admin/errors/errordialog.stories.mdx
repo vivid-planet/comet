@@ -3,7 +3,7 @@ import { errorDialogStoryProviderDecorator } from "../../../../error-dialog-prov
 import { apolloSwapiStoryDecorator } from "../../../../apollo-swapi-story.decorator";
 
 import { ErrorDialogContext } from "@comet/admin";
-import { Button, TextField } from "@material-ui/core";
+import { Button, TextField, Typography } from "@material-ui/core";
 
 <Meta title="docs/@comet/admin/errors/errordialog" />
 
@@ -92,31 +92,43 @@ import gql from "graphql-tag";
     <Story name="Automatic Error on Graphql Error" decorators={[apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()]}>
         {() => {
             const Story = () => {
-                const [query, setQuery] = React.useState("{ allFilms { films { title } } }");
-                const { data, error } = useQuery(gql`
-                    ${query}
-                `);
+                const [brokenQuery, setBrokenQuery] = React.useState(false);
+                const query = brokenQuery ? "{ allFilms { films { somenotavailablefield } } }" : "{ allFilms { films { title } } }";
+                const { data, error } = useQuery(
+                    gql`
+                        ${query}
+                    `,
+                );
                 return (
                     <div>
-                        <TextField
-                            value={query}
-                            label={"Query"}
-                            onChange={(event) => {
-                                setQuery(event.target.value);
+                        <div style={{ backgroundColor: brokenQuery ? "red" : "green" }}>
+                            <Typography variant={"h4"}>Current Query: {brokenQuery ? "broken" : "working"}</Typography>
+                        </div>
+                        <Typography>Query: {query}</Typography>
+                        <Button
+                            variant={"contained"}
+                            color={"primary"}
+                            onClick={() => {
+                                setBrokenQuery(!brokenQuery);
                             }}
-                            fullWidth
-                        />
+                        >
+                            <Typography>Change Query</Typography>
+                        </Button>
                         {error ? (
                             <div>
-                                Error:
-                                <br />
-                                {JSON.stringify(error)}
+                                <Typography>
+                                    Error:
+                                    <br />
+                                    {JSON.stringify(error)}
+                                </Typography>
                             </div>
                         ) : (
                             <div>
-                                Response:
-                                <br />
-                                {JSON.stringify(data)}
+                                <Typography>
+                                    Response:
+                                    <br />
+                                    {JSON.stringify(data)}
+                                </Typography>
                             </div>
                         )}
                     </div>
