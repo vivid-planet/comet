@@ -1,4 +1,15 @@
-import { Field, FilterBar, FinalFormInput, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
+import {
+    Field,
+    FilterBar,
+    FilterBarField,
+    FilterBarMoreFilters,
+    FinalFormInput,
+    Table,
+    TableFilterFinalForm,
+    TableQuery,
+    useTableQuery,
+    useTableQueryFilter,
+} from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
@@ -107,21 +118,21 @@ function Story() {
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBar.Field label={"Username"} name="username">
+                    <FilterBarField label={"Username"} name="username">
                         <Field name="username" type="text" component={FinalFormInput} fullWidth />
-                    </FilterBar.Field>
-                    <FilterBar.MoreFilters>
-                        <FilterBar.Field label={"Email"} name="email">
+                    </FilterBarField>
+                    <FilterBarMoreFilters>
+                        <FilterBarField label={"Email"} name="email">
                             <ExampleWithSelect />
-                        </FilterBar.Field>
-                        <FilterBar.Field label={"Name"} name="name">
+                        </FilterBarField>
+                        <FilterBarField label={"Name"} name="name">
                             <Field name="name" type="text" component={FinalFormInput} fullWidth />
-                        </FilterBar.Field>
-                        <FilterBar.Field label={"Website"} name="website">
+                        </FilterBarField>
+                        <FilterBarField label={"Website"} name="website">
                             <Field name="url" type="text" component={FinalFormInput} fullWidth />
                             <Field name="name" type="text" component={FinalFormInput} fullWidth />
-                        </FilterBar.Field>
-                    </FilterBar.MoreFilters>
+                        </FilterBarField>
+                    </FilterBarMoreFilters>
                 </FilterBar>
             </TableFilterFinalForm>
             {tableData && (

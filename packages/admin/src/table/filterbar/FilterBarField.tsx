@@ -1,7 +1,8 @@
 import { Button, ButtonProps, Popover, Typography } from "@material-ui/core";
 import { makeStyles, Theme, ThemeOptions, useTheme } from "@material-ui/core/styles";
 import { FieldState } from "final-form";
-import { isEmpty, isEqual } from "lodash";
+import isEmpty from "lodash.isempty";
+import isEqual from "lodash.isequal";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { useIntl } from "react-intl";
@@ -16,28 +17,27 @@ export interface FieldThemeProps {
 
 export type CometAdminFilterBarFieldClassKeys =
     | "root"
-    | "styledBox"
+    | "fieldBarWrapper"
+    | "fieldBarInnerWrapper"
     | "labelWrapper"
     | "popoverContentContainer"
     | "popoverInnerContentContainer"
     | "paper"
-    | "buttonsContainer"
-    | "submitContainer"
-    | "resetCloseContainer";
+    | "buttonsContainer";
 
 const useStyles = makeStyles(
     (theme: Theme) => ({
         root: {
-            position: "relative",
-        },
-        fieldBarWrapper: {
             minWidth: "150px",
             border: `1px solid ${theme.palette.grey[300]}`,
             position: "relative",
             marginBottom: "10px",
             marginRight: "10px",
         },
-        styledBox: {
+        fieldBarWrapper: {
+            position: "relative",
+        },
+        fieldBarInnerWrapper: {
             position: "relative",
             alignItems: "center",
             padding: "10px 20px",
@@ -62,24 +62,18 @@ const useStyles = makeStyles(
             boxSizing: "border-box",
         },
         popoverContentContainer: {
+            minWidth: 300,
             "& [class*='CometAdminFormFieldContainer-root']": {
                 boxSizing: "border-box",
                 padding: "20px",
                 marginBottom: 0,
             },
         },
-        popoverInnerContentContainer: {
-            minWidth: 300,
-        },
         buttonsContainer: {
             borderTop: `1px solid ${theme.palette.grey[300]}`,
             justifyContent: "space-between",
             padding: "10px 15px",
             display: "flex",
-        },
-        submitContainer: {},
-        resetContainer: {
-            marginRight: "15px",
         },
         paper: {
             border: "1px solid grey",
@@ -115,7 +109,7 @@ export function FilterBarField({ children, label, name, dirtyFieldsBadge, calcNu
     const intl = useIntl();
 
     return (
-        <div className={classes.fieldBarWrapper}>
+        <div className={classes.root}>
             <Field name={name} fullWidth={false}>
                 {() => (
                     <Form
@@ -128,8 +122,8 @@ export function FilterBarField({ children, label, name, dirtyFieldsBadge, calcNu
                     >
                         {({ form, handleSubmit }) => {
                             return (
-                                <div className={classes.root}>
-                                    <div className={classes.styledBox} onClick={handleClick}>
+                                <div className={classes.fieldBarWrapper}>
+                                    <div className={classes.fieldBarInnerWrapper} onClick={handleClick}>
                                         <div className={classes.labelWrapper}>
                                             <Typography variant="subtitle2">{label}</Typography>
                                         </div>
@@ -156,54 +150,50 @@ export function FilterBarField({ children, label, name, dirtyFieldsBadge, calcNu
                                         elevation={2}
                                     >
                                         <div className={classes.popoverContentContainer}>
-                                            <div className={classes.popoverInnerContentContainer}>
-                                                {children}
-                                                <div className={classes.buttonsContainer}>
-                                                    <div className={classes.resetContainer}>
-                                                        <Button
-                                                            type="reset"
-                                                            variant="text"
-                                                            onClick={() => {
-                                                                const hasInitialValue = !!outerForm.getFieldState(name)?.initial;
+                                            {children}
+                                            <div className={classes.buttonsContainer}>
+                                                <Button
+                                                    fullWidth
+                                                    type="reset"
+                                                    variant="text"
+                                                    onClick={() => {
+                                                        const hasInitialValue = !!outerForm.getFieldState(name)?.initial;
 
-                                                                outerForm.change(name, hasInitialValue ? outerForm.getFieldState(name)?.initial : {});
-                                                                Object.keys(form.getState().values).map((key) => {
-                                                                    form.change(key, hasInitialValue ? outerForm.getFieldState(name)?.initial : {});
-                                                                });
+                                                        outerForm.change(name, hasInitialValue ? outerForm.getFieldState(name)?.initial : {});
+                                                        Object.keys(form.getState().values).map((key) => {
+                                                            form.change(key, hasInitialValue ? outerForm.getFieldState(name)?.initial : {});
+                                                        });
 
-                                                                setAnchorEl(null);
-                                                            }}
-                                                            {...resetButtonProps}
-                                                        >
-                                                            <Typography variant={"button"}>
-                                                                {intl.formatMessage({
-                                                                    id: "cometAdmin.generic.resetButton",
-                                                                    defaultMessage: "Reset",
-                                                                })}
-                                                            </Typography>
-                                                        </Button>
-                                                    </div>
-                                                    <div className={classes.submitContainer}>
-                                                        <Button
-                                                            fullWidth={true}
-                                                            type="submit"
-                                                            color="primary"
-                                                            variant="contained"
-                                                            onClick={() => {
-                                                                handleSubmit();
-                                                                setAnchorEl(null);
-                                                            }}
-                                                            {...submitButtonProps}
-                                                        >
-                                                            <Typography variant={"button"}>
-                                                                {intl.formatMessage({
-                                                                    id: "cometAdmin.generic.applyButton",
-                                                                    defaultMessage: "Apply",
-                                                                })}
-                                                            </Typography>
-                                                        </Button>
-                                                    </div>
-                                                </div>
+                                                        setAnchorEl(null);
+                                                    }}
+                                                    {...resetButtonProps}
+                                                >
+                                                    <Typography variant={"button"}>
+                                                        {intl.formatMessage({
+                                                            id: "cometAdmin.generic.resetButton",
+                                                            defaultMessage: "Reset",
+                                                        })}
+                                                    </Typography>
+                                                </Button>
+
+                                                <Button
+                                                    fullWidth={true}
+                                                    type="submit"
+                                                    color="primary"
+                                                    variant="contained"
+                                                    onClick={() => {
+                                                        handleSubmit();
+                                                        setAnchorEl(null);
+                                                    }}
+                                                    {...submitButtonProps}
+                                                >
+                                                    <Typography variant={"button"}>
+                                                        {intl.formatMessage({
+                                                            id: "cometAdmin.generic.applyButton",
+                                                            defaultMessage: "Apply",
+                                                        })}
+                                                    </Typography>
+                                                </Button>
                                             </div>
                                         </div>
                                     </Popover>
