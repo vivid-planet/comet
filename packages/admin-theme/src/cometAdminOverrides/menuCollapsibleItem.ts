@@ -3,7 +3,7 @@ import { StyleRules } from "@material-ui/styles/withStyles";
 
 import { bluePalette } from "../colors";
 
-export default (): StyleRules<{}, CometAdminMenuCollapsibleItemClassKeys> => ({
+export const cometAdminMenuCollapsibleItemOverrides = (): StyleRules<{}, CometAdminMenuCollapsibleItemClassKeys> => ({
     root: {
         "& [class*='MuiList-padding']": {
             paddingTop: 0,

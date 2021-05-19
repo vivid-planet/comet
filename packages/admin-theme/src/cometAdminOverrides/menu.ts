@@ -1,7 +1,7 @@
 import { CometAdminMenuClassKeys } from "@comet/admin";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export default (): StyleRules<{}, CometAdminMenuClassKeys> => ({
+export const cometAdminMenuOverrides = (): StyleRules<{}, CometAdminMenuClassKeys> => ({
     drawer: {
         "& [class*='MuiDrawer-paper']": {
             backgroundColor: "#fff",

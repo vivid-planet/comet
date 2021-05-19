@@ -1,7 +1,7 @@
 import { CometAdminErrorBoundaryClassKeys } from "@comet/admin";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export default (): StyleRules<{}, CometAdminErrorBoundaryClassKeys> => ({
+export const cometAdminErrorBoundaryOverrides = (): StyleRules<{}, CometAdminErrorBoundaryClassKeys> => ({
     alert: {},
     message: {},
     exceptionDetails: {},
