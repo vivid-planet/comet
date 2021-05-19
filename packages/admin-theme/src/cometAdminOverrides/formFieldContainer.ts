@@ -3,7 +3,7 @@ import { StyleRules } from "@material-ui/styles/withStyles";
 
 import { errorPalette, neutrals } from "../colors";
 
-export default (): StyleRules<{}, CometAdminFormFieldContainerClassKeys> => ({
+export const cometAdminFormFieldContainerOverrides = (): StyleRules<{}, CometAdminFormFieldContainerClassKeys> => ({
     root: {
         "&:not(:last-child)": {
             marginBottom: 20,
