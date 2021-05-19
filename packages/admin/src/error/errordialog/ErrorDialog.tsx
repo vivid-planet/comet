@@ -15,8 +15,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 export interface ErrorDialogOptions {
     error: string;
-    title?: string;
-    userMessage?: string;
+    title?: React.ReactNode;
+    userMessage?: React.ReactNode;
 }
 
 export type ErrorMethods = {
