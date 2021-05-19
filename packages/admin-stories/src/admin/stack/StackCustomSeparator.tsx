@@ -1,6 +1,5 @@
-import { Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
-import { StackBreadcrumbs } from "@comet/admin/lib/mui/breadcrumbs/StackBreadcrumbs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
