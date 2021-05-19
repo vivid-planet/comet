@@ -19,8 +19,7 @@ export const useStyles = makeStyles<Theme, {}, CometAdminFinalFormSearchTextFiel
 );
 
 export function useThemeProps() {
-    const { icon = <Search />, ...restProps } =
-        useComponentThemeProps<CometAdminFinalFormSearchTextFieldThemeProps>("CometAdminFinalFormSearchTextField") ?? {};
+    const { icon = <Search />, ...restProps } = useComponentThemeProps("CometAdminFinalFormSearchTextField") ?? {};
     return { icon, ...restProps };
 }
 
