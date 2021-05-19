@@ -7,21 +7,21 @@ import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
 
-interface ISortNode {
+interface SortNode {
     id: string;
     parentId: string;
 }
 
-interface ISortTree<TSortNode extends ISortNode> {
-    children: Array<ISortTree<TSortNode>>;
+interface SortTree<TSortNode extends SortNode> {
+    children: Array<SortTree<TSortNode>>;
     node?: TSortNode; // root is undefined
 }
 
-const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
+const sortByParentId = <TSortNode extends SortNode>(nodes: TSortNode[]) => {
     // first build a tree structure
     const addChildrenToNode = (node?: TSortNode) => {
         const currentNodeId = node ? node.id : "";
-        const sortTreeNode: ISortTree<TSortNode> = {
+        const sortTreeNode: SortTree<TSortNode> = {
             node,
             children: [],
         };
@@ -35,7 +35,7 @@ const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
     const tree = addChildrenToNode(undefined);
 
     // then traverse this tree
-    const preOrderTraverse = (sortTreeNode: ISortTree<TSortNode>, fn: (node: TSortNode) => void) => {
+    const preOrderTraverse = (sortTreeNode: SortTree<TSortNode>, fn: (node: TSortNode) => void) => {
         if (sortTreeNode.node) fn(sortTreeNode.node);
         sortTreeNode.children.forEach((e) => {
             preOrderTraverse(e, fn);
@@ -62,7 +62,7 @@ export interface BreadcrumbItem {
     invisible: boolean;
 }
 
-export interface ISwitchItem {
+export interface SwitchItem {
     id: string;
     parentId: string;
     isInitialPageActive: boolean;
@@ -71,7 +71,7 @@ export interface ISwitchItem {
 
 interface IState {
     breadcrumbs: BreadcrumbItem[];
-    switches: ISwitchItem[];
+    switches: SwitchItem[];
 }
 
 export class Stack extends React.Component<StackProps, IState> {
