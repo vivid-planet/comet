@@ -8,7 +8,7 @@ import { getMuiRadioProps } from "./MuiRadio";
 import { getMuiSelectProps } from "./MuiSelect";
 import { getMuiSwitchProps } from "./MuiSwitch";
 
-export default () => ({
+export const getMuiProps = () => ({
     MuiCheckbox: getMuiCheckboxProps(),
     MuiRadio: getMuiRadioProps(),
     MuiAppBar: getMuiAppBarProps(),

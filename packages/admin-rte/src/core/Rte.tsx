@@ -13,7 +13,7 @@ import {
 } from "draft-js";
 import * as React from "react";
 
-import Controls from "./Controls";
+import Controls from "./Controls/Controls";
 import defaultBlocktypeMap, { mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";

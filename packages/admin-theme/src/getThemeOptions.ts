@@ -42,8 +42,8 @@ import { cometAdminRteLinkControlsOverrides } from "./cometAdminRteOverrides/lin
 import { cometAdminRteRteOverrides } from "./cometAdminRteOverrides/rte";
 import { cometAdminRteToolbarOverrides } from "./cometAdminRteOverrides/toolbar";
 import { cometAdminSelectOverrides } from "./cometAdminSelectOverrides/select";
-import getMuiOverrides from "./MuiOverrides";
-import getMuiProps from "./MuiProps";
+import { getMuiOverrides } from "./MuiOverrides/getMuiOverrides";
+import { getMuiProps } from "./MuiProps/getMuiProps";
 import { paletteOptions } from "./paletteOptions";
 import { shadows } from "./shadows";
 import { typographyOptions } from "./typographyOptions";
