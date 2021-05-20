@@ -113,6 +113,14 @@ Clone this repository into your project repository. If you have a monorepo, you 
 
 An example can be found [here](https://github.com/vivid-planet/comet-admin-starter/pull/36).
 
+**Migrate Stack**
+Follow props has been removed: `showBreadcrumbs`and `showBackButton`
+
+```
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/stack-dissolve-breadcrumbs.ts src/
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/stack-dissolve-backbutton.ts  src/
+```
+
 **Migrate Theme**
 
 Automatic migrations using codeshift are available (use -d for dry-run):
