@@ -12,6 +12,7 @@ import {
     StackApiContext,
     FinalFormSearchTextField,
     ToolbarBreadcrumbs,
+    SaveSplitButton,
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Button, IconButton, Typography, Grid, TextField, InputAdornment } from "@material-ui/core";
@@ -578,5 +579,44 @@ The Toolbar expands automatically if it needs more space
                 />
             </ToolbarItem>
         </Toolbar>
+    </Story>
+</Canvas>
+
+### Save
+
+<Canvas>
+    <Story name="Save">
+        {() => {
+            const Story = () => {
+                const [saving, setSaving] = React.useState(false);
+                return (
+                    <Toolbar>
+                        <ToolbarTitleItem>Save Split Button</ToolbarTitleItem>
+                        <ToolbarFillSpace />
+                        <ToolbarActions>
+                            <SaveSplitButton
+                                localStorageKey={"Page5.SaveSplitButton"}
+                                saving={saving}
+                                onSavePressed={() => {
+                                    // simulating saving process
+                                    setSaving(true);
+                                    setTimeout(() => {
+                                        setSaving(false);
+                                    }, 1000);
+                                }}
+                                onSaveAndGoBackPressed={() => {
+                                    // simulating saving process
+                                    setSaving(true);
+                                    setTimeout(() => {
+                                        setSaving(false);
+                                    }, 1000);
+                                }}
+                            />
+                        </ToolbarActions>
+                    </Toolbar>
+                );
+            };
+            return <Story />;
+        }}
     </Story>
 </Canvas>
