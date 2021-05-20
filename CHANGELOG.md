@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add useStoredState() hook
 -   Added a new FinalFormRangeInput Component
 -   add standard Toolbar that can be used as application wide consistent element containing navigation, action buttons and filters
--   add SnackbarProvider and associated hooks useSnackbarApi() and useUndoSnackbar()
+-   add SnackbarProvider, useSnackbarApi() hook and UndoSnackbar
 
 ### Incompatible Changes
 

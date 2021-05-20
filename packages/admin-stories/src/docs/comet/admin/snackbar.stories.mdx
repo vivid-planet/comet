@@ -39,8 +39,8 @@ const snackbarApi = useSnackbarApi();
 ### showSnackbar()
 
 `showSnackbar()` displays a snackbar.
-It can be customised using the same props as the Material UI Snackbar.
-A list of available props can be found [here](https://material-ui.com/api/snackbar/#props).
+It renders a Material UI `Snackbar` that has to be passed as argument.
+More info on the `Snackbar` and a list of available props can be found [in the Material UI Docs](https://material-ui.com/api/snackbar).
 
 Only `open` is not available since the `SnackbarProvider` manages the open state.
 
@@ -69,36 +69,15 @@ snackbarApi.showSnackbar(
 );
 ```
 
-## useUndoSnackbar()
+## UndoSnackbar
 
-`useUndoSnackbar()` is a convenience component based on `useSnackbarApi()`.
-It provides a minimal Api for creating an undo snackbar.
+The `UndoSnackbar` is a convenience component since undo is a common use case for the snackbar.
+It has three distinctions compared to the vanilla `Snackbar`:
+
+-   a non-removable undo button
+-   a `payload` prop. After a change, the previous state should be passed as payload
+-   a `onUndoClick` prop. This method is called once the user clicks on the undo button. The method receives the payload as parameter and can utilize it to restore the previous state
 
 <Canvas>
     <Story id="comet-admin-snackbar--undo-snackbar" />
 </Canvas>
-
-### showUndoSnackbar()
-
-A payload can be passed to `showUndoSnackbar()` to preserve the previous application state.
-This payload is then passed into `onActionButtonClick()` in which the undo can be performed.
-
-```tsx
-const undoSnackbarApi = useUndoSnackbar();
-
-const handleChange = (event: React.MouseEvent<HTMLElement>, newState: any) => {
-    undoSnackbarApi.showUndoSnackbar({
-        key: uuid.v4(),
-        message: `Changed State`,
-        payload: previousState,
-        onUndoClick: handleUndo,
-    });
-
-    // Perform Change ...
-};
-
-// previousState === payload
-const handleUndo = (previousState: any) => {
-    // Revert Change ...
-};
-```

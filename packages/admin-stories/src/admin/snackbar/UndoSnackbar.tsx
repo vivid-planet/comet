@@ -1,30 +1,26 @@
-import { SnackbarProvider } from "@comet/admin";
-import { useUndoSnackbar } from "@comet/admin";
+import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
+import UndoSnackbar from "@comet/admin/lib/snackbar/UndoSnackbar";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 let counter = 0;
 
-const UndoSnackbar = () => {
+const UndoSnackbarExample = () => {
     const [chosenOption, setChosenOption] = React.useState("one");
-    const undoSnackbarApi = useUndoSnackbar();
+    const snackbarApi = useSnackbarApi();
 
     const handleUndo = (prevOption: string) => {
         setChosenOption(prevOption);
     };
 
     const handleChange = (event: React.MouseEvent<HTMLElement>, newOption: string) => {
-        undoSnackbarApi.showUndoSnackbar({
-            // Use uuid or object id in production
-            key: counter++,
-            message: `Changed from ${chosenOption} to ${newOption}`,
-            // Payload is passed into onActionButtonClick method
-            payload: chosenOption,
-            onUndoClick: handleUndo,
-        });
-
+        const prevOption = chosenOption;
         setChosenOption(newOption);
+
+        snackbarApi.showSnackbar(
+            <UndoSnackbar key={counter++} message={`Changed from ${chosenOption} to ${newOption}`} payload={prevOption} onUndoClick={handleUndo} />,
+        );
     };
 
     return (
@@ -44,7 +40,7 @@ const UndoSnackbar = () => {
 function Story() {
     return (
         <SnackbarProvider>
-            <UndoSnackbar />
+            <UndoSnackbarExample />
         </SnackbarProvider>
     );
 }

@@ -1,8 +1,10 @@
 import { SnackbarCloseReason, SnackbarProps } from "@material-ui/core";
 import * as React from "react";
 
+import { UndoSnackbarProps } from "./UndoSnackbar";
+
 export interface SnackbarApi {
-    showSnackbar: (newSnackbar: React.ReactElement<SnackbarProps>) => void;
+    showSnackbar: (newSnackbar: React.ReactElement<Omit<SnackbarProps | UndoSnackbarProps<unknown>, "open">>) => void;
     hideSnackbar: () => void;
 }
 
