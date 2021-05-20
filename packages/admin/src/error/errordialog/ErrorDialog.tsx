@@ -23,32 +23,20 @@ export type ErrorMethods = {
     setError: (options: ErrorDialogOptions) => void;
 };
 
-const ErrorDialog: React.ForwardRefRenderFunction<ErrorMethods, {}> = (props, ref) => {
-    const [errorOptions, setErrorOptions] = React.useState<ErrorDialogOptions | null>(null);
-    const [errorVisible, setErrorVisible] = React.useState<boolean>(false);
+export interface ErrorDialogProps {
+    show?: boolean;
+    onCloseClicked?: () => void;
+    errorOptions?: ErrorDialogOptions;
+}
 
+export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = false, onCloseClicked, errorOptions }) => {
     const intl = useIntl();
-
-    React.useImperativeHandle(ref, () => ({
-        setError(options: ErrorDialogOptions) {
-            setErrorOptions(options);
-            setErrorVisible(true);
-        },
-    }));
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
     if (!errorOptions) {
         return null;
     }
-
-    const handleClose = () => {
-        setErrorVisible(false);
-
-        setTimeout(() => {
-            setErrorOptions(null); // delay cleaning error so Dialog Content does not go away while fadeout transition
-        }, 200);
-    };
 
     // Destructuring and default values
     const {
@@ -58,7 +46,7 @@ const ErrorDialog: React.ForwardRefRenderFunction<ErrorMethods, {}> = (props, re
     } = errorOptions;
 
     return (
-        <Dialog open={errorVisible} onClose={handleClose} fullScreen={fullScreen}>
+        <Dialog open={show} onClose={onCloseClicked} fullScreen={fullScreen}>
             <DialogTitle>
                 <Box display={"flex"} flexDirection={"row"}>
                     <Error />
@@ -81,15 +69,10 @@ const ErrorDialog: React.ForwardRefRenderFunction<ErrorMethods, {}> = (props, re
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={onCloseClicked} color="primary">
                     <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
                 </Button>
             </DialogActions>
         </Dialog>
     );
 };
-
-const ForwardedErrorDialog = React.forwardRef(ErrorDialog);
-export default ForwardedErrorDialog;
-
-export type ErrorDialogComponentRefType = React.ElementRef<typeof ForwardedErrorDialog>;
