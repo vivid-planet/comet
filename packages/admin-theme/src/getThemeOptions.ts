@@ -5,7 +5,6 @@ import type {} from "@comet/admin/src/themeAugmentation";
 import { ThemeOptions } from "@material-ui/core/styles";
 
 import { cometAdminColorPickerOverrides } from "./cometAdminColorPickerOverrides/colorPicker";
-import { cometAdminBreadcrumbsOverrides } from "./cometAdminOverrides/breadcrumbs";
 import { cometAdminClearInputButtonOverrides } from "./cometAdminOverrides/clearInputButton";
 import { cometAdminErrorBoundaryOverrides } from "./cometAdminOverrides/errorBoundary";
 import { cometAdminFormFieldContainerOverrides } from "./cometAdminOverrides/formFieldContainer";
@@ -15,17 +14,19 @@ import { cometAdminMasterLayoutOverrides } from "./cometAdminOverrides/masterLay
 import { cometAdminMenuOverrides } from "./cometAdminOverrides/menu";
 import { cometAdminMenuCollapsibleItemOverrides } from "./cometAdminOverrides/menuCollapsibleItem";
 import { cometAdminMenuItemOverrides } from "./cometAdminOverrides/menuItem";
+import { cometAdminStackBreadcrumbsOverrides } from "./cometAdminOverrides/stackBreadcrumbs";
 import { cometAdminToolbarOverrides } from "./cometAdminOverrides/toolbar";
 import { cometAdminToolbarActionsOverrides } from "./cometAdminOverrides/toolbaractions";
 import { cometAdminToolbarBackButtonOverrides } from "./cometAdminOverrides/toolbarbackbutton";
 import { cometAdminToolbarFillSpaceOverrides } from "./cometAdminOverrides/toolbarfillspace";
 import { cometAdminToolbarItemOverrides } from "./cometAdminOverrides/toolbaritem";
-import { cometAdminBreadcrumbsProps } from "./cometAdminProps/breadcrumbs";
 import { cometAdminClearInputButtonProps } from "./cometAdminProps/clearInputButton";
 import { cometAdminErrorBoundaryProps } from "./cometAdminProps/errorBoundary";
 import { cometAdminMasterLayoutProps } from "./cometAdminProps/masterLayout";
 import { cometAdminMenuProps } from "./cometAdminProps/menu";
 import { cometAdminMenuCollapsibleItemProps } from "./cometAdminProps/menuCollapsibleItem";
+import { cometAdminStackBackButtonProps } from "./cometAdminProps/stackBackButton";
+import { cometAdminStackBreadcrumbsProps } from "./cometAdminProps/stackBreadcrumbs";
 import { cometAdminToolbarProps } from "./cometAdminProps/toolbar";
 import { cometAdminToolbarAutomaticTitleItemProps } from "./cometAdminProps/toolbarAutomaticTitleItem";
 import { cometAdminToolbarBackButtonProps } from "./cometAdminProps/toolbarBackButton";
@@ -57,7 +58,8 @@ export default (): ThemeOptions => ({
         CometAdminMenuCollapsibleItem: cometAdminMenuCollapsibleItemProps(),
         CometAdminMasterLayout: cometAdminMasterLayoutProps(),
         CometAdminErrorBoundary: cometAdminErrorBoundaryProps(),
-        CometAdminBreadcrumbs: cometAdminBreadcrumbsProps(),
+        CometAdminStackBreadcrumbs: cometAdminStackBreadcrumbsProps(),
+        CometAdminStackBackButton: cometAdminStackBackButtonProps(),
         CometAdminClearInputButton: cometAdminClearInputButtonProps(),
         ...getMuiProps(),
         CometAdminToolbar: cometAdminToolbarProps(),
@@ -95,7 +97,7 @@ export default (): ThemeOptions => ({
         /* Color Picker*/
         CometAdminColorPicker: cometAdminColorPickerOverrides(),
         CometAdminErrorBoundary: cometAdminErrorBoundaryOverrides(),
-        CometAdminBreadcrumbs: cometAdminBreadcrumbsOverrides(),
+        CometAdminStackBreadcrumbs: cometAdminStackBreadcrumbsOverrides(),
         ...getMuiOverrides(),
     },
 });

@@ -35,7 +35,7 @@ const CustomToolbarBackButton = () => {
 
 export const ToolbarCustomBackButton = () => {
     return (
-        <Stack topLevelTitle={"Custom Back Button"} showBreadcrumbs={false} showBackButton={false}>
+        <Stack topLevelTitle={"Custom Back Button"}>
             <StackSwitch initialPage="root">
                 <StackPage name={"root"}>
                     <>

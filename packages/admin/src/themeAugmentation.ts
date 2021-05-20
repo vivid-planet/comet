@@ -9,8 +9,6 @@ import {
     FieldContainerThemeProps,
 } from "./form";
 import {
-    CometAdminBreadcrumbsClassKeys,
-    CometAdminBreadcrumbsThemeProps,
     CometAdminMasterLayoutClassKeys,
     CometAdminMenuClassKeys,
     CometAdminMenuCollapsibleItemClassKeys,
@@ -32,7 +30,6 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminErrorBoundary: CometAdminErrorBoundaryClassKeys;
         CometAdminFormPaper: CometAdminFormPaperKeys;
         CometAdminFormSection: CometAdminFormSectionKeys;
-        CometAdminBreadcrumbs: CometAdminBreadcrumbsClassKeys;
         CometAdminFinalFormRangeInput: CometAdminFinalFormRangeInputClassKeys;
     }
 }
@@ -45,6 +42,5 @@ declare module "@material-ui/core/styles/props" {
         CometAdminMenuCollapsibleItem: MenuCollapsibleItemThemeProps;
         CometAdminMasterLayout: MasterLayoutThemeProps;
         CometAdminErrorBoundary: ErrorBoundaryThemeProps;
-        CometAdminBreadcrumbs: CometAdminBreadcrumbsThemeProps;
     }
 }

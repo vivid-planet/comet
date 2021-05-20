@@ -1,4 +1,5 @@
 import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { CometColor } from "@comet/admin-icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
@@ -19,31 +20,15 @@ function Page1() {
     );
 }
 
-function Page2() {
+function Story() {
     return (
-        <Stack topLevelTitle="Stack Nested">
-            <StackBreadcrumbs />
+        <Stack topLevelTitle="Stack">
+            <StackBreadcrumbs separator={<CometColor />} />
             <StackSwitch>
                 <StackPage name="page1">
                     <Page1 />
                 </StackPage>
                 <StackPage name="page2">page2-2</StackPage>
-            </StackSwitch>
-        </Stack>
-    );
-}
-
-function Story() {
-    return (
-        <Stack topLevelTitle="Stack">
-            <StackBreadcrumbs />
-            <StackSwitch>
-                <StackPage name="page1">
-                    <Page1 />
-                </StackPage>
-                <StackPage name="page2">
-                    <Page2 />
-                </StackPage>
             </StackSwitch>
         </Stack>
     );
@@ -64,4 +49,4 @@ function App() {
 
 storiesOf("@comet/admin/stack", module)
     .addDecorator(StoryRouter())
-    .add("Stack Nested", () => <App />);
+    .add("Stack Custom Separator", () => <App />);

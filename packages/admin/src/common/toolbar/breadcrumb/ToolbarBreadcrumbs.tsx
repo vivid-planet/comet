@@ -2,8 +2,7 @@ import { Link, Typography } from "@material-ui/core";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
-import { IBreadcrumbItem } from "../../../mui";
-import { IStackApi, StackApiContext } from "../../../stack";
+import { StackApiContext } from "../../../stack/Api";
 import { ToolbarItem } from "../item/ToolbarItem";
 import { useThemeProps } from "./ToolbarBreadcrumbs.styles";
 
@@ -16,10 +15,10 @@ export const ToolbarBreadcrumbs: React.FunctionComponent = () => {
 
     return (
         <StackApiContext.Consumer>
-            {(stackApi: IStackApi | undefined) => {
+            {(stackApi) => {
                 return (
                     <>
-                        {stackApi?.breadCrumbs.map(({ id, url, title }: IBreadcrumbItem) => {
+                        {stackApi?.breadCrumbs.map(({ id, url, title }) => {
                             return (
                                 <ToolbarItem key={id}>
                                     <Link to={url} component={BreadcrumbLink} color={"inherit"}>
