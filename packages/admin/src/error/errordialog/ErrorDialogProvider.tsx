@@ -14,7 +14,7 @@ export const ErrorDialogProvider: React.FunctionComponent = ({ children }) => {
                 setErrorDialogVisible(true);
             },
         };
-    }, [setErrorOptions]);
+    }, []);
 
     return (
         <ErrorDialogContext.Provider value={errorDialog}>
