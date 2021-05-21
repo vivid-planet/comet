@@ -7,7 +7,7 @@ export { ToolbarAutomaticTitleItemThemeProps } from "./automatictitleitem/Toolba
 export * from "./titleitem/ToolbarTitleItem";
 export { ToolbarTitleItemThemeProps } from "./titleitem/ToolbarTitleItem.styles";
 export * from "./breadcrumb/ToolbarBreadcrumbs";
-export { ToolbarBreadcrumbsThemeProps } from "./breadcrumb/ToolbarBreadcrumbs.styles";
+export { ToolbarBreadcrumbsThemeProps, CometAdminToolbarBreadcrumbsClassKeys } from "./breadcrumb/ToolbarBreadcrumbs.styles";
 export * from "./backbutton/ToolbarBackButton";
 export * from "./actions/ToolbarActions";
 export { CometAdminToolbarActionsClassKeys } from "./actions/ToolbarActions.styles";

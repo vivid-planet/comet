@@ -19,6 +19,7 @@ import { cometAdminStackBreadcrumbsOverrides } from "./cometAdminOverrides/stack
 import { cometAdminToolbarOverrides } from "./cometAdminOverrides/toolbar";
 import { cometAdminToolbarActionsOverrides } from "./cometAdminOverrides/toolbaractions";
 import { cometAdminToolbarBackButtonOverrides } from "./cometAdminOverrides/toolbarbackbutton";
+import { cometAdminToolbarBreadcrumbsOverrides } from "./cometAdminOverrides/toolbarBreadcrumbs";
 import { cometAdminToolbarFillSpaceOverrides } from "./cometAdminOverrides/toolbarfillspace";
 import { cometAdminToolbarItemOverrides } from "./cometAdminOverrides/toolbaritem";
 import { cometAdminClearInputButtonProps } from "./cometAdminProps/clearInputButton";
@@ -81,6 +82,7 @@ export default (): ThemeOptions => ({
         CometAdminMasterLayout: cometAdminMasterLayoutOverrides(),
         CometAdminToolbar: cometAdminToolbarOverrides(),
         CometAdminToolbarBackButton: cometAdminToolbarBackButtonOverrides(),
+        CometAdminToolbarBreadcrumbs: cometAdminToolbarBreadcrumbsOverrides(),
         CometAdminToolbarItem: cometAdminToolbarItemOverrides(),
         CometAdminToolbarFillSpace: cometAdminToolbarFillSpaceOverrides(),
         CometAdminToolbarActions: cometAdminToolbarActionsOverrides(),
