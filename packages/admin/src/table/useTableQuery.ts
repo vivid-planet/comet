@@ -2,6 +2,7 @@ import { QueryHookOptions, QueryResult, useQuery } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 
+import { LocalErrorScopeApolloContext } from "../error";
 import { ISelectionApi } from "../SelectionApi";
 import { IPagingInfo } from "./paging";
 import { ITableQueryApi } from "./TableQueryContext";
@@ -14,6 +15,7 @@ export interface ITableData<TRow extends { id: string | number } = { id: string 
 interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableData> extends QueryHookOptions<TData, TVariables> {
     resolveTableData: (data: TData) => TTableData;
     selectionApi?: ISelectionApi;
+    globalErrorHandling?: boolean;
 }
 
 export interface ITableQueryHookResult<TData, TVariables, TTableData extends ITableData> extends QueryResult<TData, TVariables> {
@@ -26,7 +28,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         q: DocumentNode,
         options: ITableQueryHookOptions<TInnerData, TInnerVariables, TTableData>,
     ): ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> {
-        const { selectionApi, variables, ...restOptions } = options;
+        const { selectionApi, variables, globalErrorHandling = false, ...restOptions } = options;
 
         const api: ITableQueryApi = {
             getVariables,
@@ -37,10 +39,11 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
             onRowDeleted,
         };
 
-        const innerOptions = {
+        const innerOptions: QueryHookOptions<TInnerData, TInnerVariables> = {
             notifyOnNetworkStatusChange: true, // to get loading state correctly during paging
             ...restOptions,
             variables: getVariables(),
+            context: globalErrorHandling ? undefined : LocalErrorScopeApolloContext,
         };
         const ret: ITableQueryHookResult<TInnerData, TInnerVariables, TTableData> = {
             ...useQuery<TInnerData, TInnerVariables>(q, innerOptions),
