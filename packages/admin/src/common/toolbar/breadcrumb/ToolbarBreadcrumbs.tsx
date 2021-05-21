@@ -25,14 +25,14 @@ export const ToolbarBreadcrumbs: React.FunctionComponent = () => {
                             return (
                                 <>
                                     <div className={classes.item} key={id}>
-                                        <Link to={url} component={BreadcrumbLink} color={"inherit"}>
-                                            <Typography
-                                                {...themeProps.typographyProps}
-                                                classes={{ root: isActive ? classes.typographyActiveRoot : classes.typographyRoot }}
-                                            >
+                                        <Typography
+                                            {...themeProps.typographyProps}
+                                            classes={{ root: isActive ? classes.typographyActiveRoot : classes.typographyRoot }}
+                                        >
+                                            <Link to={url} component={BreadcrumbLink} color={"inherit"}>
                                                 {title}
-                                            </Typography>
-                                        </Link>
+                                            </Link>
+                                        </Typography>
                                     </div>
                                     {showSeparator && (
                                         <div className={classes.separatorContainer}>
