@@ -27,7 +27,7 @@ export const ToolbarBreadcrumbs: React.FunctionComponent = () => {
                                     <div className={classes.item} key={id}>
                                         <Typography
                                             {...themeProps.typographyProps}
-                                            classes={{ root: isActive ? classes.typographyActiveRoot : classes.typographyRoot }}
+                                            classes={{ root: `${classes.typographyRoot} ${isActive && classes.typographyActiveRoot}` }}
                                         >
                                             <Link to={url} component={BreadcrumbLink} color={"inherit"}>
                                                 {title}
