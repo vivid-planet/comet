@@ -21,7 +21,6 @@ export const useStyles = makeStyles<Theme, {}, CometAdminToolbarBreadcrumbsClass
             fontSize: 18,
         },
         typographyActiveRoot: {
-            fontSize: 18,
             color: theme.palette.primary.main,
         },
         separatorContainer: {
