@@ -1,7 +1,7 @@
 import { IconButton } from "@material-ui/core";
 import * as React from "react";
 
-import { useStackApi } from "../../../stack";
+import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem } from "../item/ToolbarItem";
 import { useStyles, useToolbarBackButtonThemeProps } from "./ToolbarBackButton.styles";
 

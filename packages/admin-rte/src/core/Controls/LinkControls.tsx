@@ -3,8 +3,8 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
-import { ToolbarButton as LinkToolbarButton } from "../extension/Link";
-import { ToolbarButton as LinksRemoveToolbarButton } from "../extension/LinksRemove";
+import LinkToolbarButton from "../extension/Link/ToolbarButton";
+import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
 import { IControlProps } from "../types";
 
 function LinkControls(p: IControlProps) {

@@ -1,5 +1,5 @@
 export { default as getThemeOptions } from "./getThemeOptions";
-export * from "./paletteOptions";
-export * from "./typographyOptions";
-export * from "./shadows";
-export * from "./colors";
+export { paletteOptions } from "./paletteOptions";
+export { fontWeights, typographyOptions } from "./typographyOptions";
+export { shadows } from "./shadows";
+export { bluePalette, darkPalette, errorPalette, greenPalette, infoPalette, neutrals, successPalette } from "./colors";

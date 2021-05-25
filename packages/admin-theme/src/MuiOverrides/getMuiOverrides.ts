@@ -17,7 +17,7 @@ import { getMuiSvgIconOverrides } from "./MuiSvgIcon";
 import { getMuiSwitchOverrides } from "./MuiSwitch";
 import { getMuiTypographyOverrides } from "./MuiTypography";
 
-export default () => ({
+export const getMuiOverrides = () => ({
     MuiCheckbox: getMuiCheckboxOverrides(),
     MuiRadio: getMuiRadioOverrides(),
     MuiDialog: getMuiDialogOverrides(),

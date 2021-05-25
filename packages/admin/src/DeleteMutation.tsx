@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { TableQueryContext } from "./table";
+import { TableQueryContext } from "./table/TableQueryContext";
 
 interface IProps {
     mutation: any;

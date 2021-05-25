@@ -2,7 +2,7 @@ import { Button, CircularProgress, Typography } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FileIcon } from "../fileIcons";
+import { FileIcon } from "../fileIcons/FileIcon";
 import { IExportApi } from "./excelexport/IExportApi";
 
 interface IProps {

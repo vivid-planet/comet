@@ -2,8 +2,8 @@ import { ListItem, ListItemIcon, ListItemProps, ListItemText } from "@material-u
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { MenuContext } from "../menu";
 import { MenuLevel } from "./CollapsibleItem";
+import { MenuContext } from "./Context";
 
 export type CometAdminMenuItemClassKeys = "root" | "level1" | "level2" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction";
 

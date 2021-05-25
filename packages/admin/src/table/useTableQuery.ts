@@ -2,9 +2,9 @@ import { QueryHookOptions, QueryResult, useQuery } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 
-import { LocalErrorScopeApolloContext } from "../error";
+import { LocalErrorScopeApolloContext } from "../error/errordialog/ErrorScope";
 import { ISelectionApi } from "../SelectionApi";
-import { IPagingInfo } from "./paging";
+import { IPagingInfo } from "./paging/IPagingInfo";
 import { ITableQueryApi } from "./TableQueryContext";
 
 export interface ITableData<TRow extends { id: string | number } = { id: string | number }> {

@@ -11,8 +11,8 @@ import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
 import { SubmitError, SubmitResult } from "./form/SubmitResult";
-import { StackApiContext } from "./stack";
-import { TableQueryContext } from "./table";
+import { StackApiContext } from "./stack/Api";
+import { TableQueryContext } from "./table/TableQueryContext";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

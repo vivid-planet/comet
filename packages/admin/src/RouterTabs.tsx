@@ -6,7 +6,9 @@ import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
-import { StackApiContext, StackBreadcrumb, StackSwitchApiContext } from "./stack";
+import { StackApiContext } from "./stack/Api";
+import { StackBreadcrumb } from "./stack/Breadcrumb";
+import { StackSwitchApiContext } from "./stack/Switch";
 
 interface ITabProps extends TabProps {
     path: string;
