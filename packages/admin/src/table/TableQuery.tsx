@@ -1,10 +1,12 @@
 import { ApolloError } from "@apollo/client";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Paper } from "@material-ui/core";
 import * as React from "react";
+import { Simulate } from "react-dom/test-utils";
 import { FormattedMessage } from "react-intl";
 
-import * as sc from "./TableQuery.sc";
+import { useStyles } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
+import error = Simulate.error;
 
 export const parseIdFromIri = (iri: string) => {
     const m = iri.match(/\/(\d+)/);
@@ -21,20 +23,22 @@ interface IProps {
 }
 
 export function TableQuery(props: IProps) {
+    const classes = useStyles();
+
     return (
         <TableQueryContext.Provider
             value={{
                 api: props.api,
             }}
         >
-            <sc.ProgressOverlayContainer>
-                <sc.ProgressOverlayInnerContainer>
-                    {props.loading && (
-                        <sc.TableCircularProgressContainer>
+            <div className={classes.root}>
+                <div className={classes.loadingContainer}>
+                    {(props.loading || true) && (
+                        <Paper classes={{ root: classes.loadingPaper }}>
                             <CircularProgress />
-                        </sc.TableCircularProgressContainer>
+                        </Paper>
                     )}
-                </sc.ProgressOverlayInnerContainer>
+                </div>
                 {props.error && (
                     <p>
                         <FormattedMessage
@@ -48,7 +52,7 @@ export function TableQuery(props: IProps) {
                     </p>
                 )}
                 {props.children}
-            </sc.ProgressOverlayContainer>
+            </div>
         </TableQueryContext.Provider>
     );
 }
