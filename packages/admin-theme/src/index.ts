@@ -1,4 +1,4 @@
-export { default as getThemeOptions } from "./getThemeOptions";
+export { getThemeOptions } from "./getThemeOptions";
 export { paletteOptions } from "./paletteOptions";
 export { fontWeights, typographyOptions } from "./typographyOptions";
 export { shadows } from "./shadows";
