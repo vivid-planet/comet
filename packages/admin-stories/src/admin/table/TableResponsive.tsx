@@ -35,7 +35,7 @@ function ExampleTableRow({ columns, row, showSecondRow, rowProps }: ITableRowPro
                 <TableColumns columns={columns} row={row} />
             </TableBodyRow>
             {showSecondRow && (
-                <TableBodyRow index={rowProps.index}>
+                <TableBodyRow index={rowProps.index} hideTableHead={rowProps.hideTableHead}>
                     <TableCell colSpan={3}>Bar: {row.bar}</TableCell>
                 </TableBodyRow>
             )}
