@@ -71,6 +71,8 @@ export { FinalFormCheckbox } from "./form/Checkbox";
 export { FinalFormRadio } from "./form/Radio";
 export { FinalFormSwitch } from "./form/Switch";
 export { FinalFormTextField } from "./form/TextField";
+export { FinalFormSearchTextField } from "./form/FinalFormSearchTextField";
+export { CometAdminFinalFormSearchTextFieldClassKeys, CometAdminFinalFormSearchTextFieldThemeProps } from "./form/FinalFormSearchTextField.styles";
 export { Select } from "./form/Select";
 export { FinalFormSelect } from "./form/FinalFormSelect";
 export { CometAdminFinalFormRangeInputClassKeys, FinalFormRangeInput } from "./form/FinalFormRangeInput";
