@@ -3,6 +3,7 @@ import MuiTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
+import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as React from "react";
@@ -13,12 +14,9 @@ import { isVisible } from "./isVisible";
 import { TablePagination } from "./Pagination";
 import { IPagingInfo } from "./paging/IPagingInfo";
 import { safeColumnGet } from "./safeColumnGet";
-import * as sc from "./Table.sc";
+import { TableBodyRow, TableBodyRowProps } from "./TableBodyRow";
 import { ISortApi, SortDirection } from "./useTableQuerySort";
 
-export function TableBodyRow(props: sc.ITableBodyRowProps) {
-    return <sc.TableBodyRow {...props} />;
-}
 export interface ITableHeadRowProps<TRow extends IRow> extends ITableHeadColumnsProps<TRow> {}
 function DefaultHeadTableRow<TRow extends IRow>({ columns, sortApi }: ITableHeadRowProps<TRow>) {
     return (
@@ -107,7 +105,7 @@ export interface ITableColumn<TRow extends IRow> {
 export interface ITableRowProps<TRow extends IRow> extends ITableColumnsProps<TRow> {
     index: number;
     key: any;
-    rowProps: sc.ITableBodyRowProps;
+    rowProps: TableBodyRowProps;
 }
 
 export interface ITableProps<TRow extends IRow> {
@@ -163,7 +161,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
             <RootRef rootRef={this.domRef}>
                 <MuiTable>
                     {!this.props.hideTableHead && (
-                        <sc.StyledTableHead>
+                        <TableHead>
                             {this.props.pagingInfo && shouldRenderTopPagination && (
                                 <TableRow>
                                     <TablePagination
@@ -177,7 +175,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                                 columns: this.props.columns,
                                 sortApi: this.props.sortApi,
                             })}
-                        </sc.StyledTableHead>
+                        </TableHead>
                     )}
                     <TableBody>
                         {data.map((row, index) => {

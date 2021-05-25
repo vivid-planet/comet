@@ -93,6 +93,23 @@ All notable changes to this project will be documented in this file. This projec
    </Stack>
 ```
 
+-   Changes to Table (CometAdminTable)
+    -   Removed alternating background-color of body-rows in comet-theme, can be restored by adding the following styles to `CometAdminTableBodyRow`:
+
+        ```js
+        odd: {
+            backgroundColor: neutrals[50],
+        }
+        ```
+
+    -   Removed background-color from TableHead, can be restored by adding the following styles to `MuiTableHead`:
+
+        ```js
+        root: {
+            backgroundColor: neutrals[100],
+        }
+        ```
+
 new:
 
 ```

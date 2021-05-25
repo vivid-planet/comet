@@ -16,6 +16,7 @@ import { cometAdminMenuOverrides } from "./cometAdminOverrides/menu";
 import { cometAdminMenuCollapsibleItemOverrides } from "./cometAdminOverrides/menuCollapsibleItem";
 import { cometAdminMenuItemOverrides } from "./cometAdminOverrides/menuItem";
 import { cometAdminStackBreadcrumbsOverrides } from "./cometAdminOverrides/stackBreadcrumbs";
+import { cometAdminTableBodyRowOverrides } from "./cometAdminOverrides/tableBodyRow";
 import { cometAdminToolbarOverrides } from "./cometAdminOverrides/toolbar";
 import { cometAdminToolbarActionsOverrides } from "./cometAdminOverrides/toolbaractions";
 import { cometAdminToolbarBackButtonOverrides } from "./cometAdminOverrides/toolbarbackbutton";
@@ -88,6 +89,7 @@ export default (): ThemeOptions => ({
         CometAdminToolbarActions: cometAdminToolbarActionsOverrides(),
         CometAdminInputBase: cometAdminInputBaseOverrides(),
         CometAdminFinalFormSearchTextField: cometAdminFinalFormSearchTextFieldOverrides(),
+        CometAdminTableBodyRow: cometAdminTableBodyRowOverrides(),
 
         /*RTE*/
         CometAdminRte: cometAdminRteRteOverrides(),
