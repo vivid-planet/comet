@@ -4,11 +4,11 @@ import type {} from "@comet/admin-rte/src/themeAugmentation";
 import type {} from "@comet/admin/src/themeAugmentation";
 import { ThemeOptions } from "@material-ui/core/styles";
 
-import { getCometAdminColorPickerOverrides } from "./CometAdminColorPickerOverrides/getCometAdminColorPickerOverrides";
-import { getCometAdminOverrides } from "./CometAdminOverrides/getCometAdminOverrides";
-import { getCometAdminProps } from "./CometAdminProps/getCometAdminProps";
-import { getCometAdminRteOverrides } from "./CometAdminRteOverrides/getCometAdminRteOverrides";
-import { getCometAdminSelectOverrides } from "./CometAdminSelectOverrides/getCometAdminSelectOverrides";
+import { getAdminColorPickerOverrides } from "./AdminColorPickerOverrides/getAdminColorPickerOverrides";
+import { getAdminOverrides } from "./AdminOverrides/getAdminOverrides";
+import { getAdminProps } from "./AdminProps/getAdminProps";
+import { getAdminRteOverrides } from "./AdminRteOverrides/getAdminRteOverrides";
+import { getAdminSelectOverrides } from "./AdminSelectOverrides/getAdminSelectOverrides";
 import { getMuiOverrides } from "./MuiOverrides/getMuiOverrides";
 import { getMuiProps } from "./MuiProps/getMuiProps";
 import { paletteOptions } from "./paletteOptions";
@@ -25,13 +25,13 @@ export const getThemeOptions = (): ThemeOptions => ({
     shadows,
     props: {
         ...getMuiProps(),
-        ...getCometAdminProps(),
+        ...getAdminProps(),
     },
     overrides: {
         ...getMuiOverrides(),
-        ...getCometAdminOverrides(),
-        ...getCometAdminColorPickerOverrides(),
-        ...getCometAdminRteOverrides(),
-        ...getCometAdminSelectOverrides(),
+        ...getAdminOverrides(),
+        ...getAdminColorPickerOverrides(),
+        ...getAdminRteOverrides(),
+        ...getAdminSelectOverrides(),
     },
 });

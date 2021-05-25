@@ -1,0 +1,10 @@
+import { CometAdminToolbarClassKeys } from "@comet/admin";
+import { StyleRules } from "@material-ui/styles/withStyles";
+
+export const getToolbarOverrides = (): StyleRules<{}, CometAdminToolbarClassKeys> => ({
+    root: {
+        minHeight: 80,
+    },
+    muiToolbar: {},
+    mainContentContainer: {},
+});
