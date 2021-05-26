@@ -1,7 +1,7 @@
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
-import { SplitButton, SplitButtonProps } from "../split";
+import { SplitButton, SplitButtonProps } from "../split/SplitButton";
 import { SaveSplitButtonContext } from "./SaveSplitButtonContext";
 
 export const SaveSplitButton = ({ children, disabled, showSelectButton, ...restProps }: PropsWithChildren<SplitButtonProps>) => {

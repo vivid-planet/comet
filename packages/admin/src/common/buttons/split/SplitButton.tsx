@@ -2,7 +2,7 @@ import { Button, ButtonGroup, ButtonGroupProps, ClickAwayListener, Grow, MenuIte
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
-import { useStoredState } from "../../../hooks";
+import { useStoredState } from "../../../hooks/useStoredState";
 import { useThemeProps } from "./SplitButton.styles";
 
 export interface SplitButtonProps extends ButtonGroupProps<any> {
