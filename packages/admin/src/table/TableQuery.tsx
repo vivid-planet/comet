@@ -1,12 +1,10 @@
 import { ApolloError } from "@apollo/client";
 import { CircularProgress, Paper } from "@material-ui/core";
 import * as React from "react";
-import { Simulate } from "react-dom/test-utils";
 import { FormattedMessage } from "react-intl";
 
 import { useStyles } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
-import error = Simulate.error;
 
 export const parseIdFromIri = (iri: string) => {
     const m = iri.match(/\/(\d+)/);
