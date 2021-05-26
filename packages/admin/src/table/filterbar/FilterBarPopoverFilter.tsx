@@ -6,12 +6,12 @@ import { useIntl } from "react-intl";
 
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
 
-export interface FieldThemeProps {
+export interface FilterBarPopoverFilterThemeProps {
     submitButton?: ButtonProps;
     resetButton?: ButtonProps;
 }
 
-export type CometAdminFilterBarFieldClassKeys =
+export type CometAdminFilterBarPopoverFilterClassKeys =
     | "root"
     | "fieldBarWrapper"
     | "fieldBarInnerWrapper"
@@ -76,16 +76,21 @@ const useStyles = makeStyles(
             marginLeft: -1, //due to border of popover, but now overrideable with styling if needed
         },
     }),
-    { name: "CometAdminFilterBarField" },
+    { name: "CometAdminFilterBarPopoverFilter" },
 );
 
-export interface FilterBarFieldProps {
+export interface FilterBarPopoverFilterProps {
     label: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     calcNumberDirtyFields?: (values: Record<string, any>) => number;
 }
 
-export function FilterBarField({ children, label, dirtyFieldsBadge, calcNumberDirtyFields }: React.PropsWithChildren<FilterBarFieldProps>) {
+export function FilterBarPopoverFilter({
+    children,
+    label,
+    dirtyFieldsBadge,
+    calcNumberDirtyFields,
+}: React.PropsWithChildren<FilterBarPopoverFilterProps>) {
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const outerForm = useForm();
     const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
@@ -96,8 +101,10 @@ export function FilterBarField({ children, label, dirtyFieldsBadge, calcNumberDi
     };
 
     const { props: themeProps } = useTheme<ThemeOptions>();
-    const submitButtonProps = themeProps && themeProps["CometAdminFilterBarField"] ? { ...themeProps["CometAdminFilterBarField"]?.submitButton } : {};
-    const resetButtonProps = themeProps && themeProps["CometAdminFilterBarField"] ? { ...themeProps["CometAdminFilterBarField"]?.resetButton } : {};
+    const submitButtonProps =
+        themeProps && themeProps["CometAdminFilterBarPopoverFilter"] ? { ...themeProps["CometAdminFilterBarPopoverFilter"]?.submitButton } : {};
+    const resetButtonProps =
+        themeProps && themeProps["CometAdminFilterBarPopoverFilter"] ? { ...themeProps["CometAdminFilterBarPopoverFilter"]?.resetButton } : {};
 
     const classes = useStyles();
     const intl = useIntl();
@@ -164,7 +171,6 @@ export function FilterBarField({ children, label, dirtyFieldsBadge, calcNumberDi
                                         </Button>
 
                                         <Button
-                                            fullWidth={true}
                                             type="submit"
                                             color="primary"
                                             variant="contained"

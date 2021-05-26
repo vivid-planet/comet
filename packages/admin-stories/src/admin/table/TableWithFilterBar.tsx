@@ -1,8 +1,8 @@
 import {
     Field,
     FilterBar,
-    FilterBarField,
     FilterBarMoreFilters,
+    FilterBarPopoverFilter,
     FinalFormInput,
     Table,
     TableFilterFinalForm,
@@ -118,20 +118,20 @@ function Story() {
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBarField label={"Username"}>
+                    <FilterBarPopoverFilter label={"Username"}>
                         <Field name="username" type="text" component={FinalFormInput} fullWidth />
-                    </FilterBarField>
+                    </FilterBarPopoverFilter>
                     <FilterBarMoreFilters>
-                        <FilterBarField label={"Email"}>
+                        <FilterBarPopoverFilter label={"Email"}>
                             <ExampleWithSelect />
-                        </FilterBarField>
-                        <FilterBarField label={"Name"}>
+                        </FilterBarPopoverFilter>
+                        <FilterBarPopoverFilter label={"Name"}>
                             <Field name="name" type="text" component={FinalFormInput} fullWidth />
-                        </FilterBarField>
-                        <FilterBarField label={"Website"}>
+                        </FilterBarPopoverFilter>
+                        <FilterBarPopoverFilter label={"Website"}>
                             <Field name="website.url" type="text" component={FinalFormInput} fullWidth />
                             <Field name="website.name" type="text" component={FinalFormInput} fullWidth />
-                        </FilterBarField>
+                        </FilterBarPopoverFilter>
                     </FilterBarMoreFilters>
                 </FilterBar>
             </TableFilterFinalForm>

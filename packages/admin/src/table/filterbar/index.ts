@@ -1,3 +1,3 @@
 export * from "./FilterBar";
-export * from "./FilterBarField";
+export * from "./FilterBarPopoverFilter";
 export * from "./FilterBarMoreFilters";
