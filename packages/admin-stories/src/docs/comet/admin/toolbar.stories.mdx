@@ -594,24 +594,30 @@ The Toolbar expands automatically if it needs more space
                         <ToolbarTitleItem>Save Split Button</ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SaveSplitButton
-                                localStorageKey={"Page5.SaveSplitButton"}
-                                saving={saving}
-                                onSavePressed={() => {
-                                    // simulating saving process
-                                    setSaving(true);
-                                    setTimeout(() => {
-                                        setSaving(false);
-                                    }, 1000);
-                                }}
-                                onSaveAndGoBackPressed={() => {
-                                    // simulating saving process
-                                    setSaving(true);
-                                    setTimeout(() => {
-                                        setSaving(false);
-                                    }, 1000);
-                                }}
-                            />
+                            <SaveSplitButton localStorageKey={"Page5.SaveSplitButton"}>
+                                <SaveButton
+                                    saving={saving}
+                                    onClick={() => {
+                                        setSaving(true);
+                                        setTimeout(() => {
+                                            setSaving(false);
+                                        }, 1000);
+                                    }}
+                                >
+                                    <FormattedMessage id={"comet.save"} defaultMessage={"Save"} />
+                                </SaveButton>
+                                <SaveButton
+                                    saving={saving}
+                                    onClick={() => {
+                                        setSaving(true);
+                                        setTimeout(() => {
+                                            setSaving(false);
+                                        }, 1000);
+                                    }}
+                                >
+                                    <FormattedMessage id={"comet.saveAndGoBack"} defaultMessage={"Save and Go Back"} />
+                                </SaveButton>
+                            </SaveSplitButton>
                         </ToolbarActions>
                     </Toolbar>
                 );

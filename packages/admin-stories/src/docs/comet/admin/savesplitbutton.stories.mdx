@@ -15,7 +15,7 @@ import { FormattedMessage } from "react-intl";
             const Story = () => {
                 const [saving, setSaving] = React.useState(false);
                 return (
-                    <SaveSplitButton localStorageKey={"Page1.SaveSplitButton"} saving={saving} variant={"contained"} color={"primary"}>
+                    <SaveSplitButton localStorageKey={"Page1.SaveSplitButton"} variant={"contained"} color={"primary"}>
                         <SaveButton
                             saving={saving}
                             onClick={() => {
