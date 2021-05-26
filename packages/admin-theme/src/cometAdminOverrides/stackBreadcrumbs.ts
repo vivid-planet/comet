@@ -1,10 +1,10 @@
-import { CometAdminBreadcrumbsClassKeys } from "@comet/admin";
+import { CometAdminStackBreadcrumbsClassKeys } from "@comet/admin";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
 import { neutrals } from "../colors";
 import { paletteOptions } from "../paletteOptions";
 
-export const cometAdminBreadcrumbsOverrides = (): StyleRules<{}, CometAdminBreadcrumbsClassKeys> => ({
+export const cometAdminStackBreadcrumbsOverrides = (): StyleRules<{}, CometAdminStackBreadcrumbsClassKeys> => ({
     root: {},
     ol: {},
     li: {},

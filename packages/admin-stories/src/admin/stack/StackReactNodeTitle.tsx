@@ -1,4 +1,4 @@
-import { Stack, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
 import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -9,6 +9,7 @@ function Story() {
 
     return (
         <Stack topLevelTitle={<Typography color="primary">Page 1</Typography>}>
+            <StackBreadcrumbs />
             <StackSwitch initialPage="page1">
                 <StackPage name="page1">
                     <Typography variant="h1">Page 1</Typography>

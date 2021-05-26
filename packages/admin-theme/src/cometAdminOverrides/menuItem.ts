@@ -9,7 +9,7 @@ const colors = {
     textLevel2: "#17181A",
 };
 
-export default (): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
+export const cometAdminMenuItemOverrides = (): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
     root: {
         "&:after": {
             content: "''",

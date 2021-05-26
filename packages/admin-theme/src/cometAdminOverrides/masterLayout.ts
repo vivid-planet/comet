@@ -3,7 +3,7 @@ import { StyleRules } from "@material-ui/styles/withStyles";
 
 import { darkPalette } from "../colors";
 
-export default (): StyleRules<{}, CometAdminMasterLayoutClassKeys> => ({
+export const cometAdminMasterLayoutOverrides = (): StyleRules<{}, CometAdminMasterLayoutClassKeys> => ({
     root: {},
     header: {
         backgroundColor: darkPalette.main,

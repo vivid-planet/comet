@@ -3,7 +3,7 @@ import { StyleRules } from "@material-ui/styles/withStyles";
 
 import { bluePalette, neutrals } from "../colors";
 
-export default (): StyleRules<{}, CometAdminInputBaseClassKeys> => ({
+export const cometAdminInputBaseOverrides = (): StyleRules<{}, CometAdminInputBaseClassKeys> => ({
     root: {
         borderColor: neutrals[100],
         borderRadius: 2,

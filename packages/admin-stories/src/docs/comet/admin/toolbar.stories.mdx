@@ -3,20 +3,25 @@ import {
     Toolbar,
     ToolbarItem,
     ToolbarBackButton,
+    Field,
     ToolbarFillSpace,
+    FinalFormInput,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     StackSwitchApiContext,
     StackApiContext,
+    FinalFormSearchTextField,
     ToolbarBreadcrumbs,
     ToolbarTitleItem,
 } from "@comet/admin";
-import { Button, IconButton, Typography, Grid } from "@material-ui/core";
+import { Button, IconButton, Typography, Grid, TextField, InputAdornment } from "@material-ui/core";
 import { toolbarDecorator } from "./toolbar.decorator";
-import { ChevronLeft, CometColor } from "@comet/admin-icons";
+import { ChevronLeft, CometColor, Search } from "@comet/admin-icons";
 
 import StoryRouter from "storybook-react-router";
 import { FormattedMessage } from "react-intl";
+import { Autocomplete } from "@material-ui/lab";
+import { Form, FormProps, FormRenderProps } from "react-final-form";
 
 <Meta title="docs/@comet/admin/toolbar" decorators={[toolbarDecorator(), StoryRouter()]} />
 
@@ -443,5 +448,135 @@ The Toolbar expands automatically if it needs more space
                 </Toolbar>
             )}
         </StackApiContext.Consumer>
+    </Story>
+</Canvas>
+
+### Search - Final Form Search
+
+<Canvas>
+    <Story name="Toolbar - Search - Final Form Search">
+        <Form
+            onSubmit={() => {
+                alert("on submit");
+            }}
+            render={({ values }) => {
+                return (
+                    <form>
+                        <Toolbar>
+                            <ToolbarItem>
+                                <Field name="query" component={FinalFormSearchTextField} />
+                            </ToolbarItem>
+                            <ToolbarItem>Debug Final Form Values: {JSON.stringify(values)}</ToolbarItem>
+                        </Toolbar>
+                    </form>
+                );
+            }}
+        />
+    </Story>
+</Canvas>
+
+<Canvas>
+    <Story name="Toolbar - Search - Final Form - Custom Icon">
+        <Form
+            onSubmit={() => {
+                alert("on submit");
+            }}
+            render={({ values }) => {
+                return (
+                    <form>
+                        <Toolbar>
+                            <ToolbarItem>
+                                <Field
+                                    name="query"
+                                    type="text"
+                                    component={FinalFormSearchTextField}
+                                    icon={<CometColor />}
+                                    placeholder={"Comet Search"}
+                                />
+                            </ToolbarItem>
+                            <ToolbarItem>Debug Final Form Values: {JSON.stringify(values)}</ToolbarItem>
+                        </Toolbar>
+                    </form>
+                );
+            }}
+        />
+    </Story>
+</Canvas>
+
+### Search - Final Form Input
+
+<Canvas>
+    <Story name="Toolbar - Search - Final Form">
+        <Form
+            onSubmit={() => {
+                alert("on submit");
+            }}
+            render={({ values }) => {
+                return (
+                    <form>
+                        <Toolbar>
+                            <ToolbarItem>
+                                <Field name="query" type="text" component={FinalFormInput} />
+                            </ToolbarItem>
+                            <ToolbarItem>Debug Final Form Values: {JSON.stringify(values)}</ToolbarItem>
+                        </Toolbar>
+                    </form>
+                );
+            }}
+        />
+    </Story>
+</Canvas>
+
+### Search - Autocomplete
+
+<Canvas>
+    <Story name="Toolbar - Search - Autocomplete">
+        <Toolbar>
+            <ToolbarItem>
+                <Autocomplete
+                    popupIcon={null}
+                    options={[
+                        { name: "Jesse Schmuck" },
+                        { name: "Karie Berkman" },
+                        { name: "Nena Holliman" },
+                        { name: "Gustavo Snay" },
+                        { name: "Jaime Santerre" },
+                        { name: "Eilene Villanuev" },
+                        { name: "Bernetta Kam" },
+                        { name: "Amiee Galley" },
+                        { name: "Sergio Dement" },
+                        { name: "Lily Bellini" },
+                        { name: "Isidra Wolff" },
+                        { name: "Rex Mikell" },
+                        { name: "Stacey Minard" },
+                        { name: "Nikia Julien" },
+                        { name: "Delbert Worman" },
+                        { name: "Essie Delsignor" },
+                        { name: "Page Vieira" },
+                        { name: "Tamiko Livers" },
+                        { name: "Tianna Sheeler" },
+                    ]}
+                    getOptionLabel={(option) => option.name}
+                    style={{ width: 350 }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            variant="outlined"
+                            placeholder={"Search"}
+                            InputProps={{
+                                ...params.InputProps,
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <div style={{ padding: 5 }}>
+                                            <Search />
+                                        </div>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    )}
+                />
+            </ToolbarItem>
+        </Toolbar>
     </Story>
 </Canvas>

@@ -1,7 +1,7 @@
 import { Paper, Toolbar as MuiToolbar } from "@material-ui/core";
 import * as React from "react";
 
-import { MenuContext } from "../../mui";
+import { MenuContext } from "../../mui/menu/Context";
 import { useStyles, useThemeProps } from "./Toolbar.styles";
 
 interface ToolbarProps {}

@@ -1,4 +1,4 @@
-import { Stack, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
@@ -50,6 +50,7 @@ function Story() {
                 {counter}
             </button>
             <Stack topLevelTitle="Stack">
+                <StackBreadcrumbs />
                 <StackSwitch>
                     <StackPage name="page1">
                         <div>page1</div>

@@ -4,7 +4,7 @@ import MuiMenuIcon from "@material-ui/icons/Menu";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { MenuContext } from "./menu";
+import { MenuContext } from "./menu/Context";
 
 export interface MasterLayoutProps {
     children: React.ReactNode;

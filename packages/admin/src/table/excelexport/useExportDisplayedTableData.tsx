@@ -1,8 +1,8 @@
 import * as React from "react";
 
 import { Table } from "../Table";
+import { createExcelExportDownload, IExcelExportOptions } from "./createExcelExportDownload";
 import { IExportApi } from "./IExportApi";
-import { createExcelExportDownload, IExcelExportOptions } from "./index";
 
 export function useExportDisplayedTableData(options?: IExcelExportOptions): IExportApi<any> {
     let tableRef: Table<any> | undefined;
