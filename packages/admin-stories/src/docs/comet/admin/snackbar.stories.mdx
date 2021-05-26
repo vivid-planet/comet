@@ -1,4 +1,6 @@
-import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Source } from "@storybook/addon-docs/blocks";
+import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
+import dedent from "ts-dedent";
 
 # Snackbar
 
@@ -16,21 +18,30 @@ The `SnackbarProvider` provides the `SnackbarContext` to its children.
 It also takes care of rendering the `Snackbar` and should be placed at the topmost level of an app.
 This ensures that there is only one snackbar at a time as recommended by the [Material UI Docs](https://material-ui.com/components/snackbars/).
 
-```tsx
-// App.tsx
-<SnackbarProvider>
-    <MainComponent />
-</SnackbarProvider>
-```
+<Source
+    language="tsx"
+    code={dedent`
+    import { SnackbarProvider } from "@comet/admin";
+    \n
+    <SnackbarProvider>
+        <MainComponent />
+    </SnackbarProvider>
+  `}
+/>
 
 ## useSnackbarApi()
 
 The `useSnackbarApi()` hook provides an Api to interact with the snackbar.
 It is only available if a `SnackbarProvider` is present higher up in the tree.
 
-```tsx
-const snackbarApi = useSnackbarApi();
-```
+<Source
+    language="tsx"
+    code={dedent`
+    import { useSnackbarApi } from "@comet/admin";
+    \n
+    const snackbarApi = useSnackbarApi();
+  `}
+/>
 
 <Canvas>
     <Story id="comet-admin-snackbar--custom-snackbar" />
@@ -44,30 +55,41 @@ More info on the `Snackbar` and a list of available props can be found [in the M
 
 Only `open` is not available since the `SnackbarProvider` manages the open state.
 
-```tsx
-snackbarApi.showSnackbar(
-    <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} key={uuid.v4()} autoHideDuration={5000} message={"Minimal snackbar"} />,
-);
-```
+<Source
+    language="tsx"
+    code={dedent`
+     snackbarApi.showSnackbar(
+         <Snackbar
+             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+             key={uuid.v4()}
+             autoHideDuration={5000}
+             message={"Minimal snackbar"}
+         />,
+     );
+  `}
+/>
 
 ### hideSnackbar()
 
 `hideSnackbar()` hides the currently visible snackbar.
 A common use case is to hide a snackbar after performing an action.
 
-```tsx
-const handleActionButtonClick = () => {
-    // Perform action ...
-    snackbarApi.hideSnackbar();
-};
-
-snackbarApi.showSnackbar(
-    <Snackbar
-        // Other Props ...
-        action={<Button onClick={handleActionButtonClick}>Perform Action</Button>}
-    />,
-);
-```
+<Source
+    language="tsx"
+    code={dedent`
+    const handleActionButtonClick = () => {
+         // Perform action ...
+         snackbarApi.hideSnackbar();
+    };
+    \n
+    snackbarApi.showSnackbar(
+      <Snackbar
+          // Other Props ...
+          action={<Button onClick={handleActionButtonClick}>Perform Action</Button>}
+      />,
+    );
+  `}
+/>
 
 ## UndoSnackbar
 
