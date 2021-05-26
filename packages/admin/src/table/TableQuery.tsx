@@ -31,7 +31,7 @@ export function TableQuery(props: IProps) {
         >
             <div className={classes.root}>
                 <div className={classes.loadingContainer}>
-                    {(props.loading || true) && (
+                    {props.loading && (
                         <Paper classes={{ root: classes.loadingPaper }}>
                             <CircularProgress />
                         </Paper>
