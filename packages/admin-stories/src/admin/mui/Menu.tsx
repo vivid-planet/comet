@@ -1,4 +1,4 @@
-import { MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
+import { MainContent, MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
 import { Box, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
@@ -45,11 +45,11 @@ const AppHeader: React.FC = () => (
 );
 
 const Content = ({ children }: { children: string }) => (
-    <>
+    <MainContent>
         <Typography variant={"h1"}>{children}</Typography>
         <br />
         <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>
-    </>
+    </MainContent>
 );
 
 export const Story: React.FC = () => (
@@ -68,4 +68,4 @@ export const Story: React.FC = () => (
 
 storiesOf("@comet/admin/mui", module)
     .addDecorator(StoryRouter())
-    .add("Menu", () => <Story />);
+    .add("Menu", () => <Story />, { layout: "fullscreen" });
