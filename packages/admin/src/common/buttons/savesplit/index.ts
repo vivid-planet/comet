@@ -1,2 +1,3 @@
 export * from "./SaveSplitButton";
-export { CometAdminSaveSplitButtonClassKeys, CometAdminSaveSplitButtonThemeProps } from "./SaveSplitButton.styles";
+export { CometAdminSaveButtonClassKeys, CometAdminSaveButtonThemeProps } from "./save/SaveButton.styles";
+export * from "./save/SaveButton";

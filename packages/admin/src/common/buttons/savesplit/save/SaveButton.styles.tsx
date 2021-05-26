@@ -1,21 +1,22 @@
 import { Theme } from "@material-ui/core/styles";
 import { Check, Error, HourglassFull, Save } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
+import { ClassNameMap } from "@material-ui/styles/withStyles/withStyles";
 import * as React from "react";
 
-import { useComponentThemeProps } from "../../../mui/useComponentThemeProps";
-import { DisplayStateSaveSplitButton } from "./SaveSplitButton";
+import { useComponentThemeProps } from "../../../../mui/useComponentThemeProps";
+import { DisplayStateSaveButton } from "./SaveButton";
 
-export interface CometAdminSaveSplitButtonThemeProps {
+export interface CometAdminSaveButtonThemeProps {
     saveIcon?: React.ReactNode;
     savingIcon?: React.ReactNode;
     successIcon?: React.ReactNode;
     errorIcon?: React.ReactNode;
 }
 
-export type CometAdminSaveSplitButtonClassKeys = "saving" | "error" | "success" | "disabled";
+export type CometAdminSaveButtonClassKeys = "saving" | "error" | "success" | "disabled";
 
-export const useStyles = makeStyles<Theme, {}, CometAdminSaveSplitButtonClassKeys>(
+export const useStyles = makeStyles<Theme, {}, CometAdminSaveButtonClassKeys>(
     (theme) => ({
         saving: {
             backgroundColor: theme.palette.primary.main,
@@ -54,9 +55,9 @@ export const useStyles = makeStyles<Theme, {}, CometAdminSaveSplitButtonClassKey
 
 export function useThemeProps() {
     const { saveIcon = <Save />, savingIcon = <HourglassFull />, successIcon = <Check />, errorIcon = <Error />, ...restProps } =
-        useComponentThemeProps("CometAdminSaveSplitButton") ?? {};
+        useComponentThemeProps("CometAdminSaveButton") ?? {};
 
-    const resolveIconForDisplayState = (displayState: DisplayStateSaveSplitButton): React.ReactNode => {
+    const resolveIconForDisplayState = (displayState: DisplayStateSaveButton): React.ReactNode => {
         if (displayState === "saving") {
             return savingIcon;
         } else if (displayState === "success") {
@@ -69,15 +70,34 @@ export function useThemeProps() {
     return { resolveIconForDisplayState, saveIcon, savingIcon, successIcon, errorIcon, ...restProps };
 }
 
+export const resolveClassForDisplayState = (
+    displayState: DisplayStateSaveButton,
+    styles: ReturnType<typeof useStyles>,
+): Partial<ClassNameMap<string>> => {
+    let rootClass = undefined;
+
+    if (displayState === "success") {
+        rootClass = styles.success;
+    } else if (displayState === "saving") {
+        rootClass = styles.saving;
+    } else if (displayState === "error") {
+        rootClass = styles.error;
+    }
+    return {
+        root: rootClass,
+        disabled: styles.disabled,
+    };
+};
+
 // Theme Augmentation
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
-        CometAdminSaveSplitButton: CometAdminSaveSplitButtonClassKeys;
+        CometAdminSaveButton: CometAdminSaveButtonClassKeys;
     }
 }
 
 declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
-        CometAdminSaveSplitButton: CometAdminSaveSplitButtonThemeProps;
+        CometAdminSaveButton: CometAdminSaveButtonThemeProps;
     }
 }

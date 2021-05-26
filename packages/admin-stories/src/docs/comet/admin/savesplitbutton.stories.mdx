@@ -1,7 +1,7 @@
 import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
 
-import { SaveSplitButton } from "@comet/admin";
-import { Button, Typography } from "@material-ui/core";
+import { SaveSplitButton, SaveButton } from "@comet/admin";
+import { FormattedMessage } from "react-intl";
 
 # Components
 
@@ -15,155 +15,29 @@ import { Button, Typography } from "@material-ui/core";
             const Story = () => {
                 const [saving, setSaving] = React.useState(false);
                 return (
-                    <SaveSplitButton
-                        localStorageKey={"Page1.SaveSplitButton"}
-                        saving={saving}
-                        onSavePressed={() => {
-                            // simulating saving process
-                            setSaving(true);
-                            setTimeout(() => {
-                                setSaving(false);
-                            }, 1000);
-                        }}
-                        onSaveAndGoBackPressed={() => {
-                            // simulating saving process
-                            setSaving(true);
-                            setTimeout(() => {
-                                setSaving(false);
-                            }, 1000);
-                        }}
-                    />
-                );
-            };
-            return <Story />;
-        }}
-    </Story>
-</Canvas>
-
-### Save / Save and go Back - Error
-
-<Canvas>
-    <Story name="Save / Save and go back - Error">
-        {() => {
-            const Story = () => {
-                const [saving, setSaving] = React.useState(false);
-                const [error, settError] = React.useState(false);
-                return (
-                    <SaveSplitButton
-                        localStorageKey={"Page2.SaveSplitButton"}
-                        saving={saving}
-                        hasErrors={error}
-                        onSavePressed={() => {
-                            // simulating saving process
-                            setSaving(true);
-                            setTimeout(() => {
-                                setSaving(false);
-                                settError(true);
-                            }, 1000);
-                        }}
-                        onSaveAndGoBackPressed={() => {
-                            // simulating saving process
-                            setSaving(true);
-                            setTimeout(() => {
-                                setSaving(false);
-                                settError(true);
-                            }, 1000);
-                        }}
-                    />
-                );
-            };
-            return <Story />;
-        }}
-    </Story>
-</Canvas>
-
-## Save Button
-
-<Canvas>
-    <Story name="Save">
-        {() => {
-            const Story = () => {
-                const [saving, setSaving] = React.useState(false);
-                return (
-                    <SaveSplitButton
-                        localStorageKey={"Page3.SaveSplitButton"}
-                        saving={saving}
-                        onSavePressed={() => {
-                            // simulating saving process
-                            setSaving(true);
-                            setTimeout(() => {
-                                setSaving(false);
-                            }, 1000);
-                        }}
-                    />
-                );
-            };
-            return <Story />;
-        }}
-    </Story>
-</Canvas>
-
-### Save and go Back Button
-
-<Canvas>
-    <Story name="Save and go back">
-        {() => {
-            const Story = () => {
-                const [saving, setSaving] = React.useState(false);
-                return (
-                    <SaveSplitButton
-                        localStorageKey={"Page4.SaveSplitButton"}
-                        saving={saving}
-                        onSaveAndGoBackPressed={() => {
-                            // simulating saving process
-                            setSaving(true);
-                            setTimeout(() => {
-                                setSaving(false);
-                            }, 1000);
-                        }}
-                    />
-                );
-            };
-            return <Story />;
-        }}
-    </Story>
-</Canvas>
-
-## Extending Save Split Button
-
-<Canvas>
-    <Story name="Extending Save Split Button">
-        {() => {
-            const Story = () => {
-                const [saving, setSaving] = React.useState(false);
-                return (
-                    <SaveSplitButton
-                        localStorageKey={"Page5.SaveSplitButton"}
-                        saving={saving}
-                        onSavePressed={() => {
-                            // simulating saving process
-                            setSaving(true);
-                            setTimeout(() => {
-                                setSaving(false);
-                            }, 1000);
-                        }}
-                        onSaveAndGoBackPressed={() => {
-                            // simulating saving process
-                            setSaving(true);
-                            setTimeout(() => {
-                                setSaving(false);
-                            }, 1000);
-                        }}
-                    >
-                        <Button
-                            variant={"contained"}
-                            color={"primary"}
+                    <SaveSplitButton localStorageKey={"Page1.SaveSplitButton"} saving={saving} variant={"contained"} color={"primary"}>
+                        <SaveButton
+                            saving={saving}
                             onClick={() => {
-                                alert("Extended Action clicked");
+                                setSaving(true);
+                                setTimeout(() => {
+                                    setSaving(false);
+                                }, 1000);
                             }}
                         >
-                            Extended Action
-                        </Button>
+                            <FormattedMessage id={"comet.save"} defaultMessage={"Save"} />
+                        </SaveButton>
+                        <SaveButton
+                            saving={saving}
+                            onClick={() => {
+                                setSaving(true);
+                                setTimeout(() => {
+                                    setSaving(false);
+                                }, 1000);
+                            }}
+                        >
+                            <FormattedMessage id={"comet.saveAndGoBack"} defaultMessage={"Save and Go Back"} />
+                        </SaveButton>
                     </SaveSplitButton>
                 );
             };
