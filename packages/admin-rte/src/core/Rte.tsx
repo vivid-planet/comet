@@ -290,6 +290,7 @@ const useStyles = makeStyles<Theme, CometAdminRteThemeProps, CometAdminRteClassK
             root: {
                 border: `1px solid ${rteTheme.colors.border}`,
                 borderTopWidth: 0,
+                backgroundColor: "#fff",
             },
             disabled: {
                 "& $editor": {
