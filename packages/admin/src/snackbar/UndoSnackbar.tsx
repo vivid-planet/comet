@@ -12,7 +12,7 @@ export interface UndoSnackbarProps<Payload extends unknown> extends Omit<Snackba
     payload?: Payload;
 }
 
-const UndoSnackbar = <Payload extends unknown>({ onUndoClick, payload, ...props }: UndoSnackbarProps<Payload>) => {
+export const UndoSnackbar = <Payload extends unknown>({ onUndoClick, payload, ...props }: UndoSnackbarProps<Payload>) => {
     const snackbarApi = useSnackbarApi();
 
     const onClick = () => {
@@ -34,5 +34,3 @@ const UndoSnackbar = <Payload extends unknown>({ onUndoClick, payload, ...props 
         />
     );
 };
-
-export default UndoSnackbar;

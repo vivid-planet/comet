@@ -2,7 +2,7 @@ import * as React from "react";
 import { defineMessages, useIntl, WrappedComponentProps } from "react-intl";
 
 import { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
-import { RouterPrompt } from "./router";
+import { RouterPrompt } from "./router/Prompt";
 
 interface IProps {
     children?: React.ReactNode;

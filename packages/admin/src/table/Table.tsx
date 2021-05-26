@@ -11,7 +11,7 @@ import { ISelectionApi } from "../SelectionApi";
 import { IExportApi } from "./excelexport/IExportApi";
 import { isVisible } from "./isVisible";
 import { TablePagination } from "./Pagination";
-import { IPagingInfo } from "./paging";
+import { IPagingInfo } from "./paging/IPagingInfo";
 import { safeColumnGet } from "./safeColumnGet";
 import * as sc from "./Table.sc";
 import { ISortApi, SortDirection } from "./useTableQuerySort";

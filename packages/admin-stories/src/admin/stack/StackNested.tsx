@@ -1,4 +1,4 @@
-import { Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
@@ -7,19 +7,22 @@ import StoryRouter from "storybook-react-router";
 function Page1() {
     const switchApi = React.useContext(StackSwitchApiContext);
     return (
-        <button
-            onClick={(e) => {
-                switchApi.activatePage("page2", "test");
-            }}
-        >
-            activate page2
-        </button>
+        <>
+            <button
+                onClick={(e) => {
+                    switchApi.activatePage("page2", "test");
+                }}
+            >
+                activate page2
+            </button>
+        </>
     );
 }
 
 function Page2() {
     return (
         <Stack topLevelTitle="Stack Nested">
+            <StackBreadcrumbs />
             <StackSwitch>
                 <StackPage name="page1">
                     <Page1 />
@@ -33,6 +36,7 @@ function Page2() {
 function Story() {
     return (
         <Stack topLevelTitle="Stack">
+            <StackBreadcrumbs />
             <StackSwitch>
                 <StackPage name="page1">
                     <Page1 />

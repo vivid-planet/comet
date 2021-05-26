@@ -1,7 +1,7 @@
 import { CometAdminColorPickerClassKeys } from "@comet/admin-color-picker";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export default (): StyleRules<{}, CometAdminColorPickerClassKeys> => ({
+export const cometAdminColorPickerOverrides = (): StyleRules<{}, CometAdminColorPickerClassKeys> => ({
     root: {},
     fullWidth: {},
     input: {},

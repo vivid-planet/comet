@@ -90,7 +90,7 @@ function Story() {
     return (
         <>
             <Switch>
-                <Stack topLevelTitle={"Sample"} showBreadcrumbs={false}>
+                <Stack topLevelTitle={"Sample"}>
                     <StackSwitch initialPage="table">
                         <StackPage name="table">
                             <SampleTable />

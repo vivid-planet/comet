@@ -1,7 +1,7 @@
 import { CometAdminSelectClassKeys } from "@comet/admin-react-select";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export default (): StyleRules<{}, CometAdminSelectClassKeys> => ({
+export const cometAdminSelectOverrides = (): StyleRules<{}, CometAdminSelectClassKeys> => ({
     input: {},
     valueContainer: {},
     chip: {},

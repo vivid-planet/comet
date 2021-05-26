@@ -3,7 +3,7 @@ import * as React from "react";
 
 import useDebounce from "../useDebounce";
 import usePrevious from "../usePrevious";
-import { Decorator as LinkDecorator } from "./extension/Link";
+import LinkDecorator from "./extension/Link/Decorator";
 export interface IMakeRteApiProps<T = any> {
     decorators?: DraftDecorator[];
     parse?: (v: T) => ContentState;
