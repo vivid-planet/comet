@@ -4,6 +4,7 @@ import { PropsWithChildren } from "react";
 
 import { useStoredState } from "../../../hooks/useStoredState";
 import { useThemeProps } from "./SplitButton.styles";
+import { SplitButtonContext } from "./SplitButtonContext";
 
 export interface SplitButtonProps extends ButtonGroupProps<any> {
     selectedIndex?: number;
@@ -22,8 +23,11 @@ export const SplitButton = ({
     showSelectButton,
     localStorageKey,
     storage,
+
     ...restProps
 }: PropsWithChildren<SplitButtonProps>) => {
+    const [showSelectButtonState, setShowSelectButtonState] = React.useState<boolean | undefined>(undefined);
+
     const childrenArray = React.Children.toArray(children);
     const themeProps = useThemeProps();
     const [uncontrolledSelectedIndex, setUncontrolledIndex] = useStoredState<number>(localStorageKey || false, 0, storage);
@@ -62,11 +66,12 @@ export const SplitButton = ({
 
     const { variant: activeChildVariant, color: activeChildColor } = ActiveChild.props;
 
+    const showSelect = showSelectButtonState != null ? showSelectButtonState : showSelectButton;
     return (
-        <>
+        <SplitButtonContext.Provider value={{ setShowSelectButton: setShowSelectButtonState }}>
             <ButtonGroup variant={activeChildVariant} color={activeChildColor} {...restProps} ref={anchorRef}>
                 {ActiveChild}
-                {(showSelectButton ?? childrenArray.length > 1) && (
+                {(showSelect ?? childrenArray.length > 1) && (
                     <Button
                         variant={activeChildVariant}
                         color={activeChildColor}
@@ -107,6 +112,6 @@ export const SplitButton = ({
                     </Paper>
                 )}
             </Popper>
-        </>
+        </SplitButtonContext.Provider>
     );
 };

@@ -4,7 +4,7 @@ import * as React from "react";
 import { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useSaveSplitButtonContext } from "../useSaveSplitButtonContext";
+import { useSplitButton } from "../../split/useSplitButton";
 import { resolveClassForDisplayState, useStyles, useThemeProps } from "./SaveButton.styles";
 
 export interface SaveButtonProps extends ButtonProps {
@@ -28,7 +28,7 @@ export const SaveButton = ({
     ...restProps
 }: PropsWithChildren<SaveButtonProps>) => {
     const [displayState, setDisplayState] = React.useState<DisplayStateSaveButton>("idle");
-    const saveSplitButton = useSaveSplitButtonContext();
+    const saveSplitButton = useSplitButton();
     const styles = useStyles({ color });
     const classes = resolveClassForDisplayState(displayState, styles);
 
@@ -59,23 +59,26 @@ export const SaveButton = ({
     React.useEffect(() => {
         if (displayState === "idle") {
             saveSplitButton?.setShowSelectButton(undefined);
-            saveSplitButton?.setDisabled(undefined);
         } else if (displayState === "saving") {
             saveSplitButton?.setShowSelectButton(false);
-            saveSplitButton?.setDisabled(true);
         } else if (displayState === "success") {
             saveSplitButton?.setShowSelectButton(false);
-            saveSplitButton?.setDisabled(true);
         } else if (displayState === "error") {
             saveSplitButton?.setShowSelectButton(false);
-            saveSplitButton?.setDisabled(true);
         }
     }, [displayState, saveSplitButton]);
 
     const themeProps = useThemeProps();
 
     return (
-        <Button {...restProps} classes={classes} startIcon={themeProps.resolveIconForDisplayState(displayState)} variant={variant} color={color}>
+        <Button
+            {...restProps}
+            classes={classes}
+            startIcon={themeProps.resolveIconForDisplayState(displayState)}
+            variant={variant}
+            color={color}
+            disabled={displayState != "idle"}
+        >
             {displayState === "idle" && children}
             {displayState === "saving" && savingItem}
             {displayState === "success" && successItem}

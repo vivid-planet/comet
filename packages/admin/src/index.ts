@@ -130,6 +130,5 @@ export { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButto
 export { CometAdminSplitButtonThemeProps } from "./common/buttons/split/SplitButton.styles";
 export { SaveButton, SaveButtonProps, DisplayStateSaveButton } from "./common/buttons/savesplit/save/SaveButton";
 export { CometAdminSaveButtonThemeProps, CometAdminSaveButtonClassKeys } from "./common/buttons/savesplit/save/SaveButton.styles";
-export { SaveSplitButton } from "./common/buttons/savesplit/SaveSplitButton";
-export { SaveSplitButtonContext, SaveSplitButtonContextOptions } from "./common/buttons/savesplit/SaveSplitButtonContext";
-export { useSaveSplitButtonContext } from "./common/buttons/savesplit/useSaveSplitButtonContext";
+export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
+export { useSplitButton } from "./common/buttons/split/useSplitButton";

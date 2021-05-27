@@ -12,7 +12,8 @@ import {
     StackApiContext,
     FinalFormSearchTextField,
     ToolbarBreadcrumbs,
-    SaveSplitButton,
+    SplitButton,
+    SaveButton,
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Button, IconButton, Typography, Grid, TextField, InputAdornment } from "@material-ui/core";
@@ -585,7 +586,7 @@ The Toolbar expands automatically if it needs more space
 ### Save
 
 <Canvas>
-    <Story name="Save">
+    <Story name="SplitButton Save">
         {() => {
             const Story = () => {
                 const [saving, setSaving] = React.useState(false);
@@ -594,7 +595,7 @@ The Toolbar expands automatically if it needs more space
                         <ToolbarTitleItem>Save Split Button</ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SaveSplitButton localStorageKey={"Page5.SaveSplitButton"}>
+                            <SplitButton localStorageKey={"Page5.SaveSplitButton"} color={"primary"} variant={"contained"}>
                                 <SaveButton
                                     saving={saving}
                                     onClick={() => {
@@ -617,7 +618,39 @@ The Toolbar expands automatically if it needs more space
                                 >
                                     <FormattedMessage id={"comet.saveAndGoBack"} defaultMessage={"Save and Go Back"} />
                                 </SaveButton>
-                            </SaveSplitButton>
+                            </SplitButton>
+                        </ToolbarActions>
+                    </Toolbar>
+                );
+            };
+            return <Story />;
+        }}
+    </Story>
+</Canvas>
+
+<Canvas>
+    <Story name="Save">
+        {() => {
+            const Story = () => {
+                const [saving, setSaving] = React.useState(false);
+                return (
+                    <Toolbar>
+                        <ToolbarTitleItem>Save Split Button</ToolbarTitleItem>
+                        <ToolbarFillSpace />
+                        <ToolbarActions>
+                            <SaveButton
+                                color={"primary"}
+                                variant={"contained"}
+                                saving={saving}
+                                onClick={() => {
+                                    setSaving(true);
+                                    setTimeout(() => {
+                                        setSaving(false);
+                                    }, 1000);
+                                }}
+                            >
+                                <FormattedMessage id={"comet.save"} defaultMessage={"Save"} />
+                            </SaveButton>
                         </ToolbarActions>
                     </Toolbar>
                 );
