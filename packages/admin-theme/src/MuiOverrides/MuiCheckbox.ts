@@ -3,7 +3,10 @@ import { StyleRules } from "@material-ui/styles/withStyles";
 
 import { bluePalette, greenPalette, neutrals } from "../colors";
 
-export const getMuiCheckboxOverrides = (): StyleRules<{}, CheckboxClassKey> => ({
+// Key "input" is not a stylable class-key on MuiCheckbox
+type CorrectedCheckboxClassKey = Exclude<CheckboxClassKey, "input">;
+
+export const getMuiCheckboxOverrides = (): StyleRules<{}, CorrectedCheckboxClassKey> => ({
     root: {
         "& [class*='MuiSvgIcon-root']": {
             "& .border": {
@@ -37,7 +40,6 @@ export const getMuiCheckboxOverrides = (): StyleRules<{}, CheckboxClassKey> => (
     },
     checked: {},
     disabled: {},
-    input: {},
     indeterminate: {},
     colorPrimary: {
         "&$checked [class*='MuiSvgIcon-root']": {
