@@ -1,4 +1,13 @@
-import { MasterLayout, Menu, MenuCollapsibleItem, MenuContext, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
+import {
+    MainContent,
+    MasterLayout,
+    Menu,
+    MenuCollapsibleItem,
+    MenuContext,
+    MenuItemAnchorLink,
+    MenuItemRouterLink,
+    useWindowSize,
+} from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
 import { Box, Divider, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
@@ -64,7 +73,7 @@ const AppHeader: React.FC = () => (
 );
 
 const Content = ({ children }: { children: string }) => (
-    <>
+    <MainContent>
         <Typography variant={"h4"}>{children}</Typography>
         <br />
         <Typography>
@@ -97,7 +106,7 @@ const Content = ({ children }: { children: string }) => (
                 <Link to={"/foo4"}>Foo4</Link>
             </li>
         </ul>
-    </>
+    </MainContent>
 );
 
 const Story: React.FC = () => (
@@ -116,4 +125,4 @@ const Story: React.FC = () => (
 
 storiesOf("@comet/admin/mui", module)
     .addDecorator(StoryRouter())
-    .add("Menu (dynamic variants)", () => <Story />);
+    .add("Menu (dynamic variants)", () => <Story />, { layout: "fullscreen" });
