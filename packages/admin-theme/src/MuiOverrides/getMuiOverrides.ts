@@ -1,3 +1,5 @@
+import { Overrides } from "@material-ui/core/styles/overrides";
+
 import { getMuiAppBarOverrides } from "./MuiAppBar";
 import { getMuiButtonOverrides } from "./MuiButton";
 import { getMuiButtonGroupOverrides } from "./MuiButtonGroup";
@@ -17,7 +19,7 @@ import { getMuiSvgIconOverrides } from "./MuiSvgIcon";
 import { getMuiSwitchOverrides } from "./MuiSwitch";
 import { getMuiTypographyOverrides } from "./MuiTypography";
 
-export const getMuiOverrides = () => ({
+export const getMuiOverrides = (): Overrides => ({
     MuiCheckbox: getMuiCheckboxOverrides(),
     MuiRadio: getMuiRadioOverrides(),
     MuiDialog: getMuiDialogOverrides(),

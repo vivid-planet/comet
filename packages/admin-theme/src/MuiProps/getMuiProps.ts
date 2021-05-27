@@ -1,3 +1,5 @@
+import { ComponentsProps } from "@material-ui/core/styles/props";
+
 import { getMuiAppBarProps } from "./MuiAppBar";
 import { getMuiButtonProps } from "./MuiButton";
 import { getMuiButtonGroupProps } from "./MuiButtonGroup";
@@ -8,7 +10,7 @@ import { getMuiRadioProps } from "./MuiRadio";
 import { getMuiSelectProps } from "./MuiSelect";
 import { getMuiSwitchProps } from "./MuiSwitch";
 
-export const getMuiProps = () => ({
+export const getMuiProps = (): ComponentsProps => ({
     MuiCheckbox: getMuiCheckboxProps(),
     MuiRadio: getMuiRadioProps(),
     MuiAppBar: getMuiAppBarProps(),
