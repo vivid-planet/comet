@@ -29,7 +29,7 @@ export const SaveButton = ({
 }: PropsWithChildren<SaveButtonProps>) => {
     const [displayState, setDisplayState] = React.useState<DisplayStateSaveButton>("idle");
     const saveSplitButton = useSaveSplitButtonContext();
-    const styles = useStyles();
+    const styles = useStyles({ color });
     const classes = resolveClassForDisplayState(displayState, styles);
 
     React.useEffect(() => {

@@ -1,3 +1,4 @@
+import { ButtonProps } from "@material-ui/core/Button";
 import { Theme } from "@material-ui/core/styles";
 import { Check, Error, HourglassFull, Save } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
@@ -16,42 +17,34 @@ export interface CometAdminSaveButtonThemeProps {
 
 export type CometAdminSaveButtonClassKeys = "saving" | "error" | "success" | "disabled";
 
-export const useStyles = makeStyles<Theme, {}, CometAdminSaveButtonClassKeys>(
-    (theme) => ({
-        saving: {
-            backgroundColor: theme.palette.primary.main,
-            "&:hover": {
-                backgroundColor: theme.palette.primary.light,
-            },
-            "&$disabled": {
-                color: theme.palette.primary.contrastText,
-                backgroundColor: theme.palette.primary.main,
-            },
+export const useStyles = (props: { color: ButtonProps["color"] }) => {
+    return makeStyles<Theme, {}, CometAdminSaveButtonClassKeys>(
+        (theme) => {
+            return {
+                saving: {
+                    "&$disabled": {
+                        color: props.color === "primary" ? theme.palette.primary.contrastText : theme.palette.secondary.contrastText,
+                        backgroundColor: props.color === "primary" ? theme.palette.primary.main : theme.palette.secondary.main,
+                    },
+                },
+                error: {
+                    "&$disabled": {
+                        color: theme.palette.error.contrastText,
+                        backgroundColor: theme.palette.error.light,
+                    },
+                },
+                success: {
+                    "&$disabled": {
+                        color: theme.palette.success.contrastText,
+                        backgroundColor: theme.palette.success.light,
+                    },
+                },
+                disabled: {},
+            };
         },
-        error: {
-            backgroundColor: theme.palette.error.main,
-            "&:hover": {
-                backgroundColor: theme.palette.error.light,
-            },
-            "&$disabled": {
-                color: theme.palette.error.contrastText,
-                backgroundColor: theme.palette.error.light,
-            },
-        },
-        success: {
-            backgroundColor: theme.palette.success.main,
-            "&:hover": {
-                backgroundColor: theme.palette.success.light,
-            },
-            "&$disabled": {
-                color: theme.palette.success.contrastText,
-                backgroundColor: theme.palette.success.light,
-            },
-        },
-        disabled: {},
-    }),
-    { name: "CometAdminSaveSplitButton" },
-);
+        { name: "CometAdminSaveSplitButton" },
+    )();
+};
 
 export function useThemeProps() {
     const { saveIcon = <Save />, savingIcon = <HourglassFull />, successIcon = <Check />, errorIcon = <Error />, ...restProps } =
