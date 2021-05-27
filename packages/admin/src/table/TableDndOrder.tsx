@@ -6,7 +6,8 @@ import { ConnectDragPreview, ConnectDragSource, ConnectDropTarget, DragDropConte
 import HTML5Backend from "react-dnd-html5-backend";
 import { findDOMNode } from "react-dom";
 
-import { IRow, ITableProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "./Table";
+import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
+import { TableBodyRow } from "./TableBodyRow";
 
 function cardSourceBeginDrag<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
     return {

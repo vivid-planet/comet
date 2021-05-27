@@ -11,6 +11,7 @@ import { getMenuOverrides } from "./menu";
 import { getMenuCollapsibleItemOverrides } from "./menuCollapsibleItem";
 import { getMenuItemOverrides } from "./menuItem";
 import { getStackBreadcrumbsOverrides } from "./stackBreadcrumbs";
+import { getTableBodyRowOverrides } from "./tableBodyRow";
 import { getToolbarOverrides } from "./toolbar";
 import { getToolbarActionsOverrides } from "./toolbaractions";
 import { getToolbarBackButtonOverrides } from "./toolbarbackbutton";
@@ -36,4 +37,5 @@ export const getAdminOverrides = (): Overrides => ({
     CometAdminFinalFormSearchTextField: getFinalFormSearchTextFieldOverrides(),
     CometAdminErrorBoundary: getErrorBoundaryOverrides(),
     CometAdminStackBreadcrumbs: getStackBreadcrumbsOverrides(),
+    CometAdminTableBodyRow: getTableBodyRowOverrides(),
 });

@@ -1,9 +1,9 @@
 import { ApolloError } from "@apollo/client";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Paper } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import * as sc from "./TableQuery.sc";
+import { useStyles } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
 export const parseIdFromIri = (iri: string) => {
@@ -21,20 +21,22 @@ interface IProps {
 }
 
 export function TableQuery(props: IProps) {
+    const classes = useStyles();
+
     return (
         <TableQueryContext.Provider
             value={{
                 api: props.api,
             }}
         >
-            <sc.ProgressOverlayContainer>
-                <sc.ProgressOverlayInnerContainer>
+            <div className={classes.root}>
+                <div className={classes.loadingContainer}>
                     {props.loading && (
-                        <sc.TableCircularProgressContainer>
+                        <Paper classes={{ root: classes.loadingPaper }}>
                             <CircularProgress />
-                        </sc.TableCircularProgressContainer>
+                        </Paper>
                     )}
-                </sc.ProgressOverlayInnerContainer>
+                </div>
                 {props.error && (
                     <p>
                         <FormattedMessage
@@ -48,7 +50,7 @@ export function TableQuery(props: IProps) {
                     </p>
                 )}
                 {props.children}
-            </sc.ProgressOverlayContainer>
+            </div>
         </TableQueryContext.Provider>
     );
 }
