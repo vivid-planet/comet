@@ -5,6 +5,8 @@ import { getErrorBoundaryProps } from "./errorBoundary";
 import { getMasterLayoutProps } from "./masterLayout";
 import { getMenuProps } from "./menu";
 import { getMenuCollapsibleItemProps } from "./menuCollapsibleItem";
+import { getSaveButtonProps } from "./saveSplitButton";
+import { getSplitButtonProps } from "./splitButton";
 import { getStackBackButtonProps } from "./stackBackButton";
 import { getStackBreadcrumbsProps } from "./stackBreadcrumbs";
 import { getToolbarProps } from "./toolbar";
@@ -28,4 +30,6 @@ export const getAdminProps = (): ComponentsProps => ({
     CometAdminToolbarAutomaticTitleItem: getToolbarAutomaticTitleItemProps(),
     CometAdminToolbarBreadcrumbs: getToolbarBreadcrumbsProps(),
     CometAdminFinalFormSearchTextField: getFinalFormSearchTextFieldProps(),
+    CometAdminSaveButton: getSaveButtonProps(),
+    CometAdminSplitButton: getSplitButtonProps(),
 });

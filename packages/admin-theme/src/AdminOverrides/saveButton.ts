@@ -1,7 +1,7 @@
 import { CometAdminSaveButtonClassKeys } from "@comet/admin";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const cometAdminSaveButtonOverrides = (): StyleRules<{}, CometAdminSaveButtonClassKeys> => ({
+export const getSaveButtonOverrides = (): StyleRules<{}, CometAdminSaveButtonClassKeys> => ({
     saving: {},
     error: {},
     success: {},

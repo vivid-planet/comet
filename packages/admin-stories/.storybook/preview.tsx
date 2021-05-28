@@ -75,9 +75,7 @@ addDecorator((story, ctx) => {
     return (
         <>
             <GlobalStyles />
-            <MuiThemeProvider theme={theme}>
-                {ctx.parameters.layout === 'padded' ? <MainContent>{story()}</MainContent> : story()}
-            </MuiThemeProvider>
+            <MuiThemeProvider theme={theme}>{ctx.parameters.layout === "padded" ? <MainContent>{story()}</MainContent> : story()}</MuiThemeProvider>
         </>
     );
 });
