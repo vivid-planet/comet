@@ -128,7 +128,7 @@ export { ErrorScope, LocalErrorScopeApolloContext, errorScopeForOperationContext
 export { ErrorDialogApolloLinkOptions, createErrorDialogApolloLink } from "./error/errordialog/createErrorDialogApolloLink";
 export { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButton";
 export { CometAdminSplitButtonThemeProps } from "./common/buttons/split/SplitButton.styles";
-export { SaveButton, SaveButtonProps, DisplayStateSaveButton } from "./common/buttons/savesplit/save/SaveButton";
-export { CometAdminSaveButtonThemeProps, CometAdminSaveButtonClassKeys } from "./common/buttons/savesplit/save/SaveButton.styles";
+export { SaveButton, SaveButtonProps, DisplayStateSaveButton } from "./common/buttons/save/SaveButton";
+export { CometAdminSaveButtonThemeProps, CometAdminSaveButtonClassKeys } from "./common/buttons/save/SaveButton.styles";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButton } from "./common/buttons/split/useSplitButton";

@@ -4,7 +4,7 @@ import * as React from "react";
 import { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useSplitButton } from "../../split/useSplitButton";
+import { useSplitButton } from "../split/useSplitButton";
 import { resolveClassForDisplayState, useStyles, useThemeProps } from "./SaveButton.styles";
 
 export interface SaveButtonProps extends ButtonProps {

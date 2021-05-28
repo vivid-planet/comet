@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/styles";
 import { ClassNameMap } from "@material-ui/styles/withStyles/withStyles";
 import * as React from "react";
 
-import { useComponentThemeProps } from "../../../../mui/useComponentThemeProps";
+import { useComponentThemeProps } from "../../../mui/useComponentThemeProps";
 import { DisplayStateSaveButton } from "./SaveButton";
 
 export interface CometAdminSaveButtonThemeProps {
