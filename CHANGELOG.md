@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file. This projec
 -   add useStoredState() hook
 -   Added a new FinalFormRangeInput Component
 -   add standard Toolbar that can be used as application wide consistent element containing navigation, action buttons and filters
+-   add SplitButton - combine multiple buttons behind one ButtonGroup
+-   add SaveButton which handles and displays state(idle, saving, success and error)
 
 ### Incompatible Changes
 
