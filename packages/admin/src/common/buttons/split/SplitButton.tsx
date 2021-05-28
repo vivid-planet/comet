@@ -11,6 +11,7 @@ export interface SplitButtonProps extends ButtonGroupProps<any> {
     onSelectIndex?: (index: number, item: React.ReactElement) => void;
     showSelectButton?: boolean;
     localStorageKey?: string;
+    autoClickOnSelect?: boolean;
     storage?: Storage;
 }
 
@@ -23,7 +24,7 @@ export const SplitButton = ({
     showSelectButton,
     localStorageKey,
     storage,
-
+    autoClickOnSelect = true,
     ...restProps
 }: PropsWithChildren<SplitButtonProps>) => {
     const [showSelectButtonState, setShowSelectButtonState] = React.useState<boolean | undefined>(undefined);
@@ -44,6 +45,9 @@ export const SplitButton = ({
     const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number, child: React.ReactElement) => {
         _onSelectIndex(index, child);
         setOpen(false);
+        if (autoClickOnSelect) {
+            child?.props?.onClick();
+        }
     };
 
     const handleToggle = () => {
