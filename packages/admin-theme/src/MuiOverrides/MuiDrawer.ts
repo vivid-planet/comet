@@ -1,13 +1,12 @@
 import { DrawerClassKey } from "@material-ui/core";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { neutrals } from "../colors";
-
-export const getMuiDrawerOverrides = (): StyleRules<{}, DrawerClassKey> => ({
+export const getMuiDrawerOverrides = (palette: Palette): StyleRules<{}, DrawerClassKey> => ({
     root: {},
     docked: {},
     paper: {
-        backgroundColor: neutrals[50],
+        backgroundColor: palette.grey[50],
     },
     paperAnchorLeft: {},
     paperAnchorRight: {},

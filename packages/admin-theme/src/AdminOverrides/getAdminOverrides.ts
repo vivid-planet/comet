@@ -1,3 +1,4 @@
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { Overrides } from "@material-ui/core/styles/overrides";
 
 import { getClearInputButtonOverrides } from "./clearInputButton";
@@ -20,24 +21,24 @@ import { getToolbarBreadcrumbsOverrides } from "./toolbarBreadcrumbs";
 import { getToolbarFillSpaceOverrides } from "./toolbarfillspace";
 import { getToolbarItemOverrides } from "./toolbaritem";
 
-export const getAdminOverrides = (): Overrides => ({
+export const getAdminOverrides = (palette: Palette): Overrides => ({
     CometAdminClearInputButton: getClearInputButtonOverrides(),
-    CometAdminFormFieldContainer: getFormFieldContainerOverrides(),
+    CometAdminFormFieldContainer: getFormFieldContainerOverrides(palette),
     CometAdminMenu: getMenuOverrides(),
-    CometAdminMenuItem: getMenuItemOverrides(),
-    CometAdminMenuCollapsibleItem: getMenuCollapsibleItemOverrides(),
+    CometAdminMenuItem: getMenuItemOverrides(palette),
+    CometAdminMenuCollapsibleItem: getMenuCollapsibleItemOverrides(palette),
     CometAdminMainContent: getMainContentOverrides(),
     CometAdminMasterLayout: getMasterLayoutOverrides(),
     CometAdminToolbar: getToolbarOverrides(),
     CometAdminToolbarBackButton: getToolbarBackButtonOverrides(),
     CometAdminToolbarBreadcrumbs: getToolbarBreadcrumbsOverrides(),
-    CometAdminToolbarItem: getToolbarItemOverrides(),
+    CometAdminToolbarItem: getToolbarItemOverrides(palette),
     CometAdminToolbarFillSpace: getToolbarFillSpaceOverrides(),
     CometAdminToolbarActions: getToolbarActionsOverrides(),
-    CometAdminInputBase: getInputBaseOverrides(),
+    CometAdminInputBase: getInputBaseOverrides(palette),
     CometAdminFinalFormSearchTextField: getFinalFormSearchTextFieldOverrides(),
     CometAdminErrorBoundary: getErrorBoundaryOverrides(),
-    CometAdminStackBreadcrumbs: getStackBreadcrumbsOverrides(),
+    CometAdminStackBreadcrumbs: getStackBreadcrumbsOverrides(palette),
     CometAdminTableBodyRow: getTableBodyRowOverrides(),
     CometAdminSaveButton: getSaveButtonOverrides(),
 });

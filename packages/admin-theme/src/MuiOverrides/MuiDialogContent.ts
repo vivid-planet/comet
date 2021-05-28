@@ -1,11 +1,10 @@
 import { DialogContentClassKey } from "@material-ui/core";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { neutrals } from "../colors";
-
-export const getMuiDialogContentOverrides = (): StyleRules<{}, DialogContentClassKey> => ({
+export const getMuiDialogContentOverrides = (palette: Palette): StyleRules<{}, DialogContentClassKey> => ({
     root: {
-        backgroundColor: neutrals[50],
+        backgroundColor: palette.grey[50],
         padding: 40,
     },
     dividers: {},

@@ -1,3 +1,4 @@
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { Overrides } from "@material-ui/core/styles/overrides";
 
 import { getMuiAppBarOverrides } from "./MuiAppBar";
@@ -19,23 +20,23 @@ import { getMuiSvgIconOverrides } from "./MuiSvgIcon";
 import { getMuiSwitchOverrides } from "./MuiSwitch";
 import { getMuiTypographyOverrides } from "./MuiTypography";
 
-export const getMuiOverrides = (): Overrides => ({
-    MuiCheckbox: getMuiCheckboxOverrides(),
-    MuiRadio: getMuiRadioOverrides(),
+export const getMuiOverrides = (palette: Palette): Overrides => ({
+    MuiCheckbox: getMuiCheckboxOverrides(palette),
+    MuiRadio: getMuiRadioOverrides(palette),
     MuiDialog: getMuiDialogOverrides(),
     MuiDialogTitle: getMuiDialogTitleOverrides(),
-    MuiDialogContent: getMuiDialogContentOverrides(),
-    MuiDialogContentText: getMuiDialogTextContentOverrides(),
-    MuiDialogActions: getMuiDialogActionsOverrides(),
-    MuiButton: getMuiButtonOverrides(),
-    MuiButtonGroup: getMuiButtonGroupOverrides(),
+    MuiDialogContent: getMuiDialogContentOverrides(palette),
+    MuiDialogContentText: getMuiDialogTextContentOverrides(palette),
+    MuiDialogActions: getMuiDialogActionsOverrides(palette),
+    MuiButton: getMuiButtonOverrides(palette),
+    MuiButtonGroup: getMuiButtonGroupOverrides(palette),
     MuiTypography: getMuiTypographyOverrides(),
-    MuiPaper: getMuiPaperOverrides(),
+    MuiPaper: getMuiPaperOverrides(palette),
     MuiAppBar: getMuiAppBarOverrides(),
     MuiFormControlLabel: getMuiFormControlLabelOverrides(),
-    MuiSvgIcon: getMuiSvgIconOverrides(),
-    MuiSwitch: getMuiSwitchOverrides(),
-    MuiSelect: getMuiSelectOverrides(),
-    MuiDrawer: getMuiDrawerOverrides(),
+    MuiSvgIcon: getMuiSvgIconOverrides(palette),
+    MuiSwitch: getMuiSwitchOverrides(palette),
+    MuiSelect: getMuiSelectOverrides(palette),
+    MuiDrawer: getMuiDrawerOverrides(palette),
     MuiInputAdornment: getMuiInputAdornmentOverrides(),
 });
