@@ -10,6 +10,7 @@ import { getMasterLayoutOverrides } from "./masterLayout";
 import { getMenuOverrides } from "./menu";
 import { getMenuCollapsibleItemOverrides } from "./menuCollapsibleItem";
 import { getMenuItemOverrides } from "./menuItem";
+import { getSaveButtonOverrides } from "./saveButton";
 import { getStackBreadcrumbsOverrides } from "./stackBreadcrumbs";
 import { getTableBodyRowOverrides } from "./tableBodyRow";
 import { getToolbarOverrides } from "./toolbar";
@@ -38,4 +39,5 @@ export const getAdminOverrides = (): Overrides => ({
     CometAdminErrorBoundary: getErrorBoundaryOverrides(),
     CometAdminStackBreadcrumbs: getStackBreadcrumbsOverrides(),
     CometAdminTableBodyRow: getTableBodyRowOverrides(),
+    CometAdminSaveButton: getSaveButtonOverrides(),
 });
