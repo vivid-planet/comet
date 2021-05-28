@@ -6,7 +6,7 @@ import { ClassNameMap } from "@material-ui/styles/withStyles/withStyles";
 import * as React from "react";
 
 import { useComponentThemeProps } from "../../../mui/useComponentThemeProps";
-import { DisplayStateSaveButton } from "./SaveButton";
+import { SaveButtonDisplayState } from "./SaveButton";
 
 export interface CometAdminSaveButtonThemeProps {
     saveIcon?: React.ReactNode;
@@ -42,7 +42,7 @@ export const useStyles = (props: { color: ButtonProps["color"] }) => {
                 disabled: {},
             };
         },
-        { name: "CometAdminSaveSplitButton" },
+        { name: "CometAdminSaveButton" },
     )();
 };
 
@@ -50,7 +50,7 @@ export function useThemeProps() {
     const { saveIcon = <Save />, savingIcon = <HourglassFull />, successIcon = <Check />, errorIcon = <Error />, ...restProps } =
         useComponentThemeProps("CometAdminSaveButton") ?? {};
 
-    const resolveIconForDisplayState = (displayState: DisplayStateSaveButton): React.ReactNode => {
+    const resolveIconForDisplayState = (displayState: SaveButtonDisplayState): React.ReactNode => {
         if (displayState === "saving") {
             return savingIcon;
         } else if (displayState === "success") {
@@ -64,7 +64,7 @@ export function useThemeProps() {
 }
 
 export const resolveClassForDisplayState = (
-    displayState: DisplayStateSaveButton,
+    displayState: SaveButtonDisplayState,
     styles: ReturnType<typeof useStyles>,
 ): Partial<ClassNameMap<string>> => {
     let rootClass = undefined;

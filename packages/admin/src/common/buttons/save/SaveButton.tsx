@@ -4,7 +4,7 @@ import * as React from "react";
 import { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useSplitButton } from "../split/useSplitButton";
+import { useSplitButtonContext } from "../split/useSplitButtonContext";
 import { resolveClassForDisplayState, useStyles, useThemeProps } from "./SaveButton.styles";
 
 export interface SaveButtonProps extends ButtonProps {
@@ -14,7 +14,7 @@ export interface SaveButtonProps extends ButtonProps {
     successItem?: React.ReactNode;
     errorItem?: React.ReactNode;
 }
-export type DisplayStateSaveButton = "idle" | "saving" | "success" | "error";
+export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error";
 
 export const SaveButton = ({
     saving = false,
@@ -27,8 +27,8 @@ export const SaveButton = ({
     color,
     ...restProps
 }: PropsWithChildren<SaveButtonProps>) => {
-    const [displayState, setDisplayState] = React.useState<DisplayStateSaveButton>("idle");
-    const saveSplitButton = useSplitButton();
+    const [displayState, setDisplayState] = React.useState<SaveButtonDisplayState>("idle");
+    const saveSplitButton = useSplitButtonContext();
     const styles = useStyles({ color });
     const classes = resolveClassForDisplayState(displayState, styles);
 
