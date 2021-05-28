@@ -6,10 +6,13 @@ import { paletteOptions } from "../paletteOptions";
 export const getMuiPaperOverrides = (): StyleRules<{}, PaperClassKey> => ({
     root: {},
     rounded: {},
-    outlined: {},
-    elevation0: {
+    outlined: {
+        borderTop: "none",
+        borderRight: "none",
         borderBottom: `1px solid ${paletteOptions.divider}`,
+        borderLeft: "none",
     },
+    elevation0: {},
     elevation1: {},
     elevation2: {},
     elevation3: {},

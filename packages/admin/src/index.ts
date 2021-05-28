@@ -39,12 +39,12 @@ export {
     ITableProps,
     ITableRowProps,
     Table,
-    TableBodyRow,
     TableColumns,
     TableHeadColumns,
     Visible,
     VisibleType,
 } from "./table/Table";
+export { TableBodyRowProps, TableBodyRow, CometAdminTableBodyRowClassKeys } from "./table/TableBodyRow";
 export { TableDndOrder } from "./table/TableDndOrder";
 export { TableFilterFinalForm } from "./table/TableFilterFinalForm";
 export { ITableLocalChangesApi, TableLocalChanges, submitChangesWithMutation } from "./table/TableLocalChanges";

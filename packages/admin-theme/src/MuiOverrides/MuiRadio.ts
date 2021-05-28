@@ -3,7 +3,10 @@ import { StyleRules } from "@material-ui/styles/withStyles";
 
 import { bluePalette, greenPalette, neutrals } from "../colors";
 
-export const getMuiRadioOverrides = (): StyleRules<{}, RadioClassKey> => ({
+// Key "input" is not a stylable class-key on MuiRadio
+type CorrectedRadioClassKey = Exclude<RadioClassKey, "input">;
+
+export const getMuiRadioOverrides = (): StyleRules<{}, CorrectedRadioClassKey> => ({
     root: {
         "& [class*='MuiSvgIcon-root']": {
             "& .border": {
@@ -37,7 +40,6 @@ export const getMuiRadioOverrides = (): StyleRules<{}, RadioClassKey> => ({
     },
     checked: {},
     disabled: {},
-    input: {},
     colorPrimary: {
         "&$checked [class*='MuiSvgIcon-root']": {
             "& .background": {
