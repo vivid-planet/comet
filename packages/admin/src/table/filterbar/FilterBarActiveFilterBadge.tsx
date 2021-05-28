@@ -3,23 +3,24 @@ import * as React from "react";
 
 export type CometAdminFilterBarActiveFilterBadgeClassKeys = "hasValueCount";
 
-export const dirtyFieldsCount = (values: Record<string, any>) => {
-    return Object.values(values).reduce((acc, val) => {
-        if (val) {
-            if (Array.isArray(val)) {
-                acc += val.length;
+export const dirtyFieldsCount = (values: Record<string, any>, results: string[] = []) => {
+    const r = results;
+
+    Object.keys(values).forEach((key) => {
+        const value = values[key];
+        if (typeof value !== "object") {
+            if (Array.isArray(value)) {
+                r.push(...value);
+            } else {
+                console.log("singleValue");
+                r.push(value);
             }
-            acc++;
+        } else if (typeof value === "object") {
+            dirtyFieldsCount(value, r);
         }
-        return acc;
-    }, 0);
-    /*
-    TODO: what is the use case of this?
-    if (fieldState?.initial) {
-        const diff = difference<any, Record<string, any>>(fieldState?.value, fieldState?.initial);
-        return Object.keys(diff).length;
-    }
-    */
+    });
+
+    return r.length;
 };
 
 const styles = (theme: Theme) =>
@@ -35,7 +36,7 @@ const styles = (theme: Theme) =>
 
 export interface FilterBarActiveFilterBadgeProps {
     values: Record<string, any>;
-    calcNumberDirtyFields?: (values: Record<string, any>) => number;
+    calcNumberDirtyFields?: (values: Record<string, any>, results: string[]) => number;
 }
 
 export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof styles, true> & FilterBarActiveFilterBadgeProps> = ({
@@ -44,6 +45,7 @@ export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof sty
     classes,
 }) => {
     const count = calcNumberDirtyFields(values);
+
     if (count > 0) {
         return (
             <div className={classes.hasValueCount}>
