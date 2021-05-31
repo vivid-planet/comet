@@ -3,24 +3,22 @@ import * as React from "react";
 
 export type CometAdminFilterBarActiveFilterBadgeClassKeys = "hasValueCount";
 
-export const dirtyFieldsCount = (values: Record<string, any>, results: string[] = []) => {
-    const r = results;
-
-    Object.keys(values).forEach((key) => {
-        const value = values[key];
-        if (typeof value !== "object") {
+export const dirtyFieldsCount = (values: Record<string, any>, count = 0) => {
+    Object.values(values).forEach((value) => {
+        if (typeof value === "object") {
             if (Array.isArray(value)) {
-                r.push(...value);
+                count += value.length;
+            } else if ("min" in value && "max" in value) {
+                count++;
             } else {
-                console.log("singleValue");
-                r.push(value);
+                count += dirtyFieldsCount(value);
             }
-        } else if (typeof value === "object") {
-            dirtyFieldsCount(value, r);
+        } else {
+            count++;
         }
     });
 
-    return r.length;
+    return count;
 };
 
 const styles = (theme: Theme) =>
@@ -36,7 +34,7 @@ const styles = (theme: Theme) =>
 
 export interface FilterBarActiveFilterBadgeProps {
     values: Record<string, any>;
-    calcNumberDirtyFields?: (values: Record<string, any>, results: string[]) => number;
+    calcNumberDirtyFields?: (values: Record<string, any>, count?: number) => number;
 }
 
 export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof styles, true> & FilterBarActiveFilterBadgeProps> = ({
