@@ -1,6 +1,8 @@
-import { Meta, Story, Canvas, Source } from "@storybook/addon-docs/blocks";
-import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
-import dedent from "ts-dedent";
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+
+import { Button, List, ListItem, Snackbar } from "@material-ui/core";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { SnackbarProvider, useSnackbarApi, UndoSnackbar } from "@comet/admin";
 
 # Snackbar
 
@@ -18,33 +20,73 @@ The `SnackbarProvider` provides the `SnackbarContext` to its children.
 It also takes care of rendering the `Snackbar` and should be placed at the topmost level of an app.
 This ensures that there is only one snackbar at a time as recommended by the [Material UI Docs](https://material-ui.com/components/snackbars/).
 
-<Source
-    language="tsx"
-    code={dedent`
-    import { SnackbarProvider } from "@comet/admin";
-    \n
-    <SnackbarProvider>
-        <MainComponent />
-    </SnackbarProvider>
-  `}
-/>
+<Canvas>
+    <Story name="Snackbar - SnackbarProvider">
+        {() => {
+            const Story = () => {
+                return (
+                    <SnackbarProvider>
+                        <p> Use Snackbar here </p>
+                    </SnackbarProvider>
+                );
+            };
+            return <Story />;
+        }}
+    </Story>
+</Canvas>
 
 ## useSnackbarApi()
 
 The `useSnackbarApi()` hook provides an Api to interact with the snackbar.
 It is only available if a `SnackbarProvider` is present higher up in the tree.
 
-<Source
-    language="tsx"
-    code={dedent`
-    import { useSnackbarApi } from "@comet/admin";
-    \n
-    const snackbarApi = useSnackbarApi();
-  `}
-/>
-
 <Canvas>
-    <Story id="comet-admin-snackbar--custom-snackbar" />
+    <Story name="Snackbar - useSnackbarApi Hook">
+        {() => {
+            const Story = () => {
+                const snackbarApi = useSnackbarApi();
+                const handleActionButtonClick = () => {
+                    window.alert("Action button clicked");
+                    snackbarApi.hideSnackbar();
+                };
+                const showCustomSnackbar = () => {
+                    snackbarApi.showSnackbar(
+                        <Snackbar
+                            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                            // Use uuid or object id in production
+                            key={Math.random()}
+                            autoHideDuration={5000}
+                            message="This is a completely customizable snackbar"
+                            action={
+                                <Button color="secondary" size="small" onClick={handleActionButtonClick}>
+                                    Custom Button
+                                </Button>
+                            }
+                        />,
+                    );
+                };
+                return (
+                    <List>
+                        <ListItem>
+                            <Button color={"primary"} onClick={showCustomSnackbar}>
+                                Show Snackbar
+                            </Button>
+                        </ListItem>
+                        <ListItem>
+                            <Button color={"secondary"} onClick={snackbarApi.hideSnackbar}>
+                                Hide Snackbar
+                            </Button>
+                        </ListItem>
+                    </List>
+                );
+            };
+            return (
+                <SnackbarProvider>
+                    <Story />
+                </SnackbarProvider>
+            );
+        }}
+    </Story>
 </Canvas>
 
 ### showSnackbar()
@@ -55,41 +97,76 @@ More info on the `Snackbar` and a list of available props can be found [in the M
 
 Only `open` is not available since the `SnackbarProvider` manages the open state.
 
-<Source
-    language="tsx"
-    code={dedent`
-     snackbarApi.showSnackbar(
-         <Snackbar
-             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-             key={uuid.v4()}
-             autoHideDuration={5000}
-             message={"Minimal snackbar"}
-         />,
-     );
-  `}
-/>
+<Canvas>
+    <Story name="Snackbar - showSnackbar">
+        {() => {
+            const Story = () => {
+                const snackbarApi = useSnackbarApi();
+                const showCustomSnackbar = () => {
+                    snackbarApi.showSnackbar(
+                        <Snackbar
+                            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                            // Use uuid or object id in production
+                            key={Math.random()}
+                            autoHideDuration={5000}
+                            message={"Minimal snackbar"}
+                        />,
+                    );
+                };
+                return <Button onClick={showCustomSnackbar}>Show Snackbar</Button>;
+            };
+            return (
+                <SnackbarProvider>
+                    <Story />
+                </SnackbarProvider>
+            );
+        }}
+    </Story>
+</Canvas>
 
 ### hideSnackbar()
 
 `hideSnackbar()` hides the currently visible snackbar.
-A common use case is to hide a snackbar after performing an action.
 
-<Source
-    language="tsx"
-    code={dedent`
-    const handleActionButtonClick = () => {
-         // Perform action ...
-         snackbarApi.hideSnackbar();
-    };
-    \n
-    snackbarApi.showSnackbar(
-      <Snackbar
-          // Other Props ...
-          action={<Button onClick={handleActionButtonClick}>Perform Action</Button>}
-      />,
-    );
-  `}
-/>
+<Canvas>
+    <Story name="Snackbar - hideSnackbar">
+        {() => {
+            const Story = () => {
+                const snackbarApi = useSnackbarApi();
+                const showCustomSnackbar = () => {
+                    snackbarApi.showSnackbar(
+                        <Snackbar
+                            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                            // Use uuid or object id in production
+                            key={Math.random()}
+                            autoHideDuration={5000}
+                            message={"Minimal snackbar"}
+                        />,
+                    );
+                };
+                return (
+                    <List>
+                        <ListItem>
+                            <Button color={"primary"} onClick={showCustomSnackbar}>
+                                Show Snackbar
+                            </Button>
+                        </ListItem>
+                        <ListItem>
+                            <Button color={"secondary"} onClick={snackbarApi.hideSnackbar}>
+                                Hide Snackbar
+                            </Button>
+                        </ListItem>
+                    </List>
+                );
+            };
+            return (
+                <SnackbarProvider>
+                    <Story />
+                </SnackbarProvider>
+            );
+        }}
+    </Story>
+</Canvas>
 
 ## UndoSnackbar
 
@@ -101,5 +178,45 @@ It has three distinctions compared to the vanilla `Snackbar`:
 -   a `onUndoClick` prop. This method is called once the user clicks on the undo button. The method receives the payload as parameter and can utilize it to restore the previous state
 
 <Canvas>
-    <Story id="comet-admin-snackbar--undo-snackbar" />
+    <Story name="Snackbar - UndoSnackbar">
+        {() => {
+            const Story = () => {
+                const [chosenOption, setChosenOption] = React.useState("one");
+                const snackbarApi = useSnackbarApi();
+                const handleUndo = (prevOption) => {
+                    setChosenOption(prevOption);
+                };
+                const handleChange = (event, newOption) => {
+                    const prevOption = chosenOption;
+                    setChosenOption(newOption);
+                    snackbarApi.showSnackbar(
+                        <UndoSnackbar
+                            // Use uuid or object id in production
+                            key={Math.random()}
+                            message={`Changed from ${chosenOption} to ${newOption}`}
+                            payload={prevOption}
+                            onUndoClick={handleUndo}
+                        />,
+                    );
+                };
+                return (
+                    <>
+                        <strong>Choose another option:</strong>
+                        <br />
+                        <br />
+                        <ToggleButtonGroup value={chosenOption} exclusive onChange={handleChange}>
+                            <ToggleButton value="one">One</ToggleButton>
+                            <ToggleButton value="two">Two</ToggleButton>
+                            <ToggleButton value="three">Three</ToggleButton>
+                        </ToggleButtonGroup>
+                    </>
+                );
+            };
+            return (
+                <SnackbarProvider>
+                    <Story />
+                </SnackbarProvider>
+            );
+        }}
+    </Story>
 </Canvas>
