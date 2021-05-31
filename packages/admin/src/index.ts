@@ -39,12 +39,12 @@ export {
     ITableProps,
     ITableRowProps,
     Table,
-    TableBodyRow,
     TableColumns,
     TableHeadColumns,
     Visible,
     VisibleType,
 } from "./table/Table";
+export { TableBodyRowProps, TableBodyRow, CometAdminTableBodyRowClassKeys } from "./table/TableBodyRow";
 export { TableDndOrder } from "./table/TableDndOrder";
 export { TableFilterFinalForm } from "./table/TableFilterFinalForm";
 export { ITableLocalChangesApi, TableLocalChanges, submitChangesWithMutation } from "./table/TableLocalChanges";
@@ -102,7 +102,7 @@ export { CometAdminToolbarActionsClassKeys } from "./common/toolbar/actions/Tool
 export { ToolbarFillSpace } from "./common/toolbar/fillspace/ToolbarFillSpace";
 export { CometAdminToolbarFillSpaceClassKeys } from "./common/toolbar/fillspace/ToolbarFillSpace.styles";
 export { CometAdminToolbarBackButtonClassKeys, ToolbarBackButtonThemeProps } from "./common/toolbar/backbutton/ToolbarBackButton.styles";
-export { ClearInputButton, ClearInputButtonThemeProps, CometAdminClearInputButtonClassKeys } from "./common/ClearInputButton";
+export { ClearInputButton, ClearInputButtonThemeProps, CometAdminClearInputButtonClassKeys } from "./common/buttons/clearinput/ClearInputButton";
 export { buildCreateRestMutation, buildDeleteRestMutation, buildUpdateRestMutation } from "./buildRestMutation";
 export { DeleteMutation } from "./DeleteMutation";
 export { DirtyHandler } from "./DirtyHandler";
@@ -126,5 +126,11 @@ export { ErrorDialogProvider } from "./error/errordialog/ErrorDialogProvider";
 export { useErrorDialog } from "./error/errordialog/useErrorDialog";
 export { ErrorScope, LocalErrorScopeApolloContext, errorScopeForOperationContext } from "./error/errordialog/ErrorScope";
 export { ErrorDialogApolloLinkOptions, createErrorDialogApolloLink } from "./error/errordialog/createErrorDialogApolloLink";
+export { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButton";
+export { CometAdminSplitButtonThemeProps } from "./common/buttons/split/SplitButton.styles";
+export { SaveButton, SaveButtonProps } from "./common/buttons/save/SaveButton";
+export { CometAdminSaveButtonThemeProps, CometAdminSaveButtonClassKeys } from "./common/buttons/save/SaveButton.styles";
+export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
+export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { SnackbarApi, useSnackbarApi, SnackbarProvider } from "./snackbar/SnackbarProvider";
 export { UndoSnackbarProps, UndoSnackbar } from "./snackbar/UndoSnackbar";

@@ -7,7 +7,7 @@ import { select, withKnobs } from "@storybook/addon-knobs";
 import { addDecorator, addParameters } from "@storybook/react";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
-import { MuiThemeProvider } from "@comet/admin";
+import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { Theme, createMuiTheme } from "@material-ui/core";
 import { getThemeOptions } from "@comet/admin-theme";
 import styled, { createGlobalStyle } from "styled-components";
@@ -68,18 +68,14 @@ const GlobalStyles = createGlobalStyle`
     }
 `;
 
-const StoryWrapper = styled.div``;
-
-addDecorator((story) => {
+addDecorator((story, ctx) => {
     const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);
     const theme = createMuiTheme(selectedTheme === themeOptions.defaultMui ? {} : getThemeOptions());
 
     return (
         <>
             <GlobalStyles />
-            <MuiThemeProvider theme={theme}>
-                <StoryWrapper>{story()}</StoryWrapper>
-            </MuiThemeProvider>
+            <MuiThemeProvider theme={theme}>{ctx.parameters.layout === "padded" ? <MainContent>{story()}</MainContent> : story()}</MuiThemeProvider>
         </>
     );
 });

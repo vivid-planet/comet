@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file. This projec
 -   add useStoredState() hook
 -   Added a new FinalFormRangeInput Component
 -   add standard Toolbar that can be used as application wide consistent element containing navigation, action buttons and filters
+-   add SplitButton - combine multiple buttons behind one ButtonGroup
+-   add SaveButton which handles and displays state(idle, saving, success and error)
 -   add SnackbarProvider, useSnackbarApi() hook and UndoSnackbar
 
 ### Incompatible Changes
@@ -93,6 +95,24 @@ All notable changes to this project will be documented in this file. This projec
        </StackSwitch>
    </Stack>
 ```
+
+-   Changes to Table (CometAdminTable)
+
+    -   Removed alternating background-color of body-rows in comet-theme, can be restored by adding the following styles to `CometAdminTableBodyRow`:
+
+        ```js
+        odd: {
+            backgroundColor: neutrals[50],
+        }
+        ```
+
+    -   Removed background-color from TableHead, can be restored by adding the following styles to `MuiTableHead`:
+
+        ```js
+        root: {
+            backgroundColor: neutrals[100],
+        }
+        ```
 
 new:
 

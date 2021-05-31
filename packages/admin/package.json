@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "2.0.0-alpha.5",
+    "version": "2.0.0-alpha.6",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -23,7 +23,8 @@
         "@types/react-dom": "^16.9.11",
         "@types/react-router": "^5.1.12",
         "@types/react-router-dom": "^5.1.7",
-        "@types/styled-components": "^5.1.7"
+        "@types/styled-components": "^5.1.7",
+        "jss": "^10.6.0"
     },
     "peerDependencies": {
         "@apollo/client": "^3.2.5",

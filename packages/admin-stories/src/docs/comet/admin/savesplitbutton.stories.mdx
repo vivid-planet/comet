@@ -1,0 +1,47 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+
+import { SplitButton, SaveButton } from "@comet/admin";
+import { FormattedMessage } from "react-intl";
+
+# Components
+
+<Meta title="Docs/@comet/admin/savesplitbutton" />
+
+## Save / Save and go Back Split Button
+
+<Canvas>
+    <Story name="Save / Save and go back">
+        {() => {
+            const Story = () => {
+                const [saving, setSaving] = React.useState(false);
+                return (
+                    <SplitButton localStorageKey={"Page1.SaveSplitButton"} variant={"contained"} color={"primary"}>
+                        <SaveButton
+                            saving={saving}
+                            onClick={() => {
+                                setSaving(true);
+                                setTimeout(() => {
+                                    setSaving(false);
+                                }, 1000);
+                            }}
+                        >
+                            <FormattedMessage id={"comet.save"} defaultMessage={"Save"} />
+                        </SaveButton>
+                        <SaveButton
+                            saving={saving}
+                            onClick={() => {
+                                setSaving(true);
+                                setTimeout(() => {
+                                    setSaving(false);
+                                }, 1000);
+                            }}
+                        >
+                            <FormattedMessage id={"comet.saveAndGoBack"} defaultMessage={"Save and Go Back"} />
+                        </SaveButton>
+                    </SplitButton>
+                );
+            };
+            return <Story />;
+        }}
+    </Story>
+</Canvas>
