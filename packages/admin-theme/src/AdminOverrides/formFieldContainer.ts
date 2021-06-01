@@ -15,6 +15,7 @@ export const getFormFieldContainerOverrides = (): StyleRules<{}, CometAdminFormF
         },
     },
     horizontal: {},
+    fullWidth: {},
     required: {},
     disabled: {},
     label: {
