@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { CircularProgress } from "@material-ui/core";
-import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
+import { FORM_ERROR, FormApi, Mutator, SubmissionErrors } from "final-form";
+import setFieldData from "final-form-set-field-data";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 
@@ -40,7 +41,14 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
     const ref = React.useRef();
 
-    return <Form {...props} onSubmit={handleSubmit} render={RenderForm} />;
+    return (
+        <Form
+            {...props}
+            mutators={{ ...props.mutators, setFieldData: (setFieldData as unknown) as Mutator<FormValues, object> }}
+            onSubmit={handleSubmit}
+            render={RenderForm}
+        />
+    );
 
     function RenderForm(formRenderProps: FormRenderProps<FormValues>) {
         const submit = React.useCallback(

@@ -2,10 +2,11 @@ import { Field, FinalFormInput } from "@comet/admin";
 import { Box, Paper } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { FieldValidator } from "final-form";
+import setFieldData from "final-form-set-field-data";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-const validateWarning: FieldValidator<number | undefined> = (value) => {
+const validateWarning = (value: number | undefined) => {
     if (value === undefined) {
         return undefined;
     }
@@ -15,10 +16,10 @@ const validateWarning: FieldValidator<number | undefined> = (value) => {
     }
 };
 
-const validateWarningAsync: FieldValidator<number | undefined> = (...args) => {
+const validateWarningAsync = (value: number | undefined) => {
     return new Promise<string | undefined>((resolve) => {
         setTimeout(() => {
-            resolve(validateWarning(...args));
+            resolve(validateWarning(value));
         }, 5000);
     });
 };
@@ -38,6 +39,7 @@ function Story() {
         <div style={{ width: "500px" }}>
             <Form
                 onSubmit={() => {}}
+                mutators={{ setFieldData }}
                 render={({ handleSubmit }) => (
                     <Paper>
                         <Box padding={4}>
@@ -68,7 +70,7 @@ function Story() {
                                     placeholder="Must be >= 5, should be >= 10"
                                     component={FinalFormInput}
                                     required
-                                    validate={{ warning: validateWarning }}
+                                    validateWarning={validateWarning}
                                     fullWidth
                                 />
                                 <Field
@@ -78,7 +80,8 @@ function Story() {
                                     placeholder="Must be >= 5, should be >= 10"
                                     component={FinalFormInput}
                                     required
-                                    validate={{ error: validateError, warning: validateWarning }}
+                                    validate={validateError}
+                                    validateWarning={validateWarning}
                                     fullWidth
                                 />
                                 <Field
@@ -88,7 +91,7 @@ function Story() {
                                     placeholder="Must be >= 5, should be >= 10"
                                     component={FinalFormInput}
                                     required
-                                    validate={{ warning: validateWarningAsync }}
+                                    validateWarning={validateWarningAsync}
                                     fullWidth
                                 />
                             </form>

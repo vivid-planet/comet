@@ -9,6 +9,7 @@
     "dependencies": {
         "@material-ui/lab": "^4.0.0-alpha.57",
         "debounce": "^1.2.0",
+        "final-form-set-field-data": "^1.0.2",
         "lodash.isequal": "^4.5.0",
         "query-string": "^6.8.1",
         "react-dnd": "^8.0.3",
@@ -19,6 +20,7 @@
     "devDependencies": {
         "@types/debounce": "^1.2.0",
         "@types/file-saver": "^2.0.1",
+        "@types/final-form-set-field-data": "^1.0.0",
         "@types/lodash.isequal": "^4.5.5",
         "@types/react-dom": "^16.9.11",
         "@types/react-router": "^5.1.12",

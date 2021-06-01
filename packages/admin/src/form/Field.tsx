@@ -1,6 +1,6 @@
 import { FieldValidator } from "final-form";
 import * as React from "react";
-import { Field as FinalFormField, FieldRenderProps, FormSpy } from "react-final-form";
+import { Field as FinalFormField, FieldRenderProps, FormSpy, useForm } from "react-final-form";
 
 import { FieldContainer, FieldContainerThemeProps } from "./FieldContainer";
 
@@ -16,7 +16,8 @@ interface Props<FieldValue = any, T extends HTMLElement = HTMLElement> {
     children?: (props: FieldRenderProps<FieldValue, T>) => React.ReactNode;
     required?: boolean;
     disabled?: boolean;
-    validate?: FieldValidator<FieldValue> | { error?: FieldValidator<FieldValue>; warning?: FieldValidator<FieldValue> };
+    validate?: FieldValidator<FieldValue>;
+    validateWarning?: FieldValidator<FieldValue>;
     variant?: FieldContainerThemeProps["variant"];
     [otherProp: string]: any;
 }
@@ -28,26 +29,16 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     label,
     required,
     validate,
+    validateWarning,
     disabled,
     variant,
     fullWidth,
     ...otherProps
 }: Props<FieldValue, FieldElement>): React.ReactElement {
-    const [warning, setWarning] = React.useState<string | undefined>(undefined);
+    const { mutators } = useForm();
+    const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
 
-    let validateError: FieldValidator<FieldValue> | undefined;
-    let validateWarning: FieldValidator<FieldValue> | undefined;
-
-    if (validate) {
-        if (typeof validate === "function") {
-            validateError = required ? composeValidators(requiredValidator, validate) : validate;
-        } else {
-            validateError = required ? (validate.error ? composeValidators(requiredValidator, validate.error) : requiredValidator) : validate.error;
-            validateWarning = validate.warning;
-        }
-    } else if (required) {
-        validateError = requiredValidator;
-    }
+    const validateError = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
 
     function renderField({ input, meta, fieldContainerProps, ...rest }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string }) {
         function render() {
@@ -66,7 +57,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 required={required}
                 disabled={disabled}
                 error={meta.touched && (meta.error || meta.submitError)}
-                warning={meta.touched && warning}
+                warning={meta.touched && meta.data?.warning}
                 variant={variant}
                 fullWidth={fullWidth}
             >
@@ -89,8 +80,13 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                     subscription={{ values: true }}
                     onChange={async ({ values }) => {
                         if (validateWarning) {
-                            const warning = await Promise.resolve<string | undefined>(validateWarning(values[name], values));
-                            setWarning(warning);
+                            if (setFieldData) {
+                                setFieldData(name, { warning: await Promise.resolve(validateWarning(values[name], values)) });
+                            } else {
+                                console.warn(
+                                    `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
+                                );
+                            }
                         }
                     }}
                 />
