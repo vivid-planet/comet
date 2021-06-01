@@ -44,3 +44,7 @@ export const neutrals: ColorPartial = {
     A400: "#050D1A",
     A700: "#00050D",
 };
+
+export const warningPalette: SimplePaletteColorOptions = {
+    main: "#FFBF00",
+};
