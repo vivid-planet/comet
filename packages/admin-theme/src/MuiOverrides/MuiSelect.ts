@@ -7,9 +7,6 @@ export const getMuiSelectOverrides = (): StyleRules<{}, SelectClassKey> => ({
     root: {},
     select: {
         minWidth: 160,
-        "&:focus": {
-            backgroundColor: "#fff",
-        },
     },
     filled: {},
     outlined: {},
