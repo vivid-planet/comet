@@ -40,6 +40,8 @@ const styles = (theme: Theme) =>
         fullWidth: {},
         colorSecondary: {},
         input: {
+            height: "100%",
+            boxSizing: "border-box",
             paddingLeft: theme.spacing(1),
             paddingRight: theme.spacing(1),
             "&::-ms-clear": {
