@@ -36,7 +36,10 @@ const styles = (theme: Theme) =>
         },
         error: {},
         marginDense: {},
-        multiline: {},
+        multiline: {
+            paddingTop: 0,
+            paddingBottom: 0,
+        },
         fullWidth: {},
         colorSecondary: {},
         input: {
