@@ -15,6 +15,7 @@ export type CometAdminFinalFormRangeInputClassKeys =
 const styles = (theme: Theme) => {
     return createStyles<CometAdminFinalFormRangeInputClassKeys, any>({
         root: {
+            boxSizing: "border-box",
             padding: "0 20px",
             width: "100%",
         },
@@ -33,6 +34,8 @@ const styles = (theme: Theme) => {
         },
         inputFieldContainer: {
             textAlign: "center",
+            flexBasis: 0,
+            flexGrow: 1,
         },
     });
 };
@@ -54,8 +57,8 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
     endAdornment,
     input: { name, onChange, value: fieldValue },
 }) => {
-    const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || 0);
-    const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || 0);
+    const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || min);
+    const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || max);
 
     const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: number[]) => {
         onChange({ min: newValue[0], max: newValue[1] });
@@ -75,7 +78,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             name={`${name}.min`}
                             inputProps={{
                                 min: min,
-                                max: fieldValue.max,
+                                max: fieldValue ? fieldValue.max : max,
                                 value: internalMinInput,
                                 type: "number",
                             }}
@@ -99,7 +102,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                         <InputBase
                             name={`${name}.max`}
                             inputProps={{
-                                min: fieldValue.min,
+                                min: fieldValue ? fieldValue.min : min,
                                 max: max,
                                 value: internalMaxInput,
                                 type: "number",
@@ -123,7 +126,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                 <Slider
                     min={min}
                     max={max}
-                    value={[fieldValue.min, fieldValue.max]}
+                    value={fieldValue ? [fieldValue.min, fieldValue.max] : [min, max]}
                     ThumbComponent={sliderProps?.ThumbComponent ? sliderProps.ThumbComponent : "span"}
                     onChange={handleSliderChange}
                     {...sliderProps}
