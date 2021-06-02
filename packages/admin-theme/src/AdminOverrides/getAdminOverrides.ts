@@ -4,6 +4,7 @@ import { Overrides } from "@material-ui/core/styles/overrides";
 import { getClearInputButtonOverrides } from "./clearInputButton";
 import { getErrorBoundaryOverrides } from "./errorBoundary";
 import { getFinalFormSearchTextFieldOverrides } from "./finalFormSearchTextField";
+import { getFormButtonsOverrides } from "./formButtons";
 import { getFormFieldContainerOverrides } from "./formFieldContainer";
 import { getFormPaperOverrides } from "./formPaper";
 import { getInputBaseOverrides } from "./inputBase";
@@ -30,6 +31,7 @@ export const getAdminOverrides = (palette: Palette): Overrides => ({
     CometAdminMenuCollapsibleItem: getMenuCollapsibleItemOverrides(palette),
     CometAdminMainContent: getMainContentOverrides(),
     CometAdminMasterLayout: getMasterLayoutOverrides(palette),
+    CometAdminFormButtons: getFormButtonsOverrides(),
     CometAdminToolbar: getToolbarOverrides(),
     CometAdminToolbarBackButton: getToolbarBackButtonOverrides(),
     CometAdminToolbarBreadcrumbs: getToolbarBreadcrumbsOverrides(),
