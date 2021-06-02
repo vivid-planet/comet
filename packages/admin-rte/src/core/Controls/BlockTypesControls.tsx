@@ -1,9 +1,9 @@
-import { mergeClasses } from "@comet/admin";
 import { FormControl, makeStyles, MenuItem, Select } from "@material-ui/core";
 import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { mergeClasses } from "../../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import { IControlProps } from "../types";
 import getRteTheme from "../utils/getRteTheme";
 import useBlockTypes, { BlockTypesApi } from "./useBlockTypes";
