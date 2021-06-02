@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add SplitButton - combine multiple buttons behind one ButtonGroup
 -   add SaveButton which handles and displays state(idle, saving, success and error)
 -   add SnackbarProvider, useSnackbarApi() hook and UndoSnackbar
+-   add FormButtons as drop in replacement for removed Cancel and Save Button in `FinalForm`.
 
 ### Incompatible Changes
 
@@ -130,11 +131,24 @@ new:
 
 ### Migration Guide
 
+install jscodeshift in your project - otherwise you will get an lodash error
+
+    npm install jscodeshift --dev
+
 Clone this repository into your project repository. If you have a monorepo, you have to clone it into the right subfolder.
 
 An example can be found [here](https://github.com/vivid-planet/comet-admin-starter/pull/36).
 
+**Migrate FinalForm**
+
+Final Form: Follow props has been removed: `renderButtons`and `components`
+
+```
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/final-form-dissolve-form-buttons.ts src/
+```
+
 **Migrate Stack**
+
 Follow props has been removed: `showBreadcrumbs`and `showBackButton`
 
 ```
