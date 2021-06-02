@@ -80,7 +80,35 @@ addDecorator((story, ctx) => {
     );
 });
 
-const order = ["intro-", "admin-", "comet-"];
+const orderGettingStarted = [
+    "docs-getting-started-installation",
+    "docs-getting-started-structure",
+    "docs-getting-started-development",
+    "docs-getting-started-develop-in-project",
+    "docs-getting-started-how-to-write-stories",
+    "docs-getting-started",
+];
+const orderComponents = [
+    "docs-components-masterlayout",
+    "docs-components-toolbar",
+    "docs-components-table",
+    "docs-components-form",
+    "docs-components-stack",
+    "docs-components-edit-dialog",
+    "docs-components-error-handling",
+    "docs-components-router",
+    "docs-components-router-tabs",
+    "docs-components-selection",
+    "docs-components-color-picker",
+    "docs-components-date-picker",
+    "docs-components-react-select",
+    "docs-components",
+];
+const orderHooks = ["docs-hooks"];
+const orderTheming = ["docs-theming"];
+const orderBestPractices = ["docs-best-practices-theming", "docs-best-practices-code-style", "docs-best-practices"];
+
+const order = ["docs-intro-", ...orderGettingStarted, ...orderComponents, ...orderHooks, ...orderTheming, ...orderBestPractices, "admin-", "comet-"];
 
 addParameters({
     layout: "padded",
