@@ -131,7 +131,7 @@ new:
 
 ### Migration Guide
 
-install jscodeshift in your project - otherwise you will get an lodash error
+install jscodeshift in your project - otherwise you will get a lodash error
 
     npm install jscodeshift --dev
 
