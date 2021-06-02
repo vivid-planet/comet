@@ -1,11 +1,13 @@
 import { Button } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
+import { StyledComponentProps } from "@material-ui/core/styles";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { mergeClasses } from "../../../helpers/mergeClasses";
 import { useSplitButtonContext } from "../split/useSplitButtonContext";
-import { resolveClassForDisplayState, useStyles, useThemeProps } from "./SaveButton.styles";
+import { CometAdminSaveButtonClassKeys, resolveClassForDisplayState, useStyles, useThemeProps } from "./SaveButton.styles";
 
 export interface SaveButtonProps extends ButtonProps {
     saving?: boolean;
@@ -25,11 +27,12 @@ export const SaveButton = ({
     errorItem = <FormattedMessage id={"comet.saveButton.errorItem.title"} defaultMessage={"Save Error"} />,
     variant,
     color,
+    classes: passedClasses,
     ...restProps
-}: PropsWithChildren<SaveButtonProps>) => {
+}: PropsWithChildren<SaveButtonProps> & StyledComponentProps<CometAdminSaveButtonClassKeys>) => {
     const [displayState, setDisplayState] = React.useState<SaveButtonDisplayState>("idle");
     const saveSplitButton = useSplitButtonContext();
-    const styles = useStyles({ color });
+    const styles = mergeClasses<CometAdminSaveButtonClassKeys>(useStyles({ color }), passedClasses);
     const classes = resolveClassForDisplayState(displayState, styles);
 
     React.useEffect(() => {

@@ -132,3 +132,4 @@ export { SaveButton, SaveButtonProps } from "./common/buttons/save/SaveButton";
 export { CometAdminSaveButtonThemeProps, CometAdminSaveButtonClassKeys } from "./common/buttons/save/SaveButton.styles";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
+export { mergeClasses } from "./helpers/mergeClasses";

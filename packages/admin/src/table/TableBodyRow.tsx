@@ -1,16 +1,23 @@
 import { TableRow } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import { TableRowProps } from "@material-ui/core/TableRow";
 import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
+
+import { mergeClasses } from "../helpers/mergeClasses";
 
 export interface TableBodyRowProps extends TableRowProps {
     index?: number;
     hideTableHead?: boolean;
 }
 
-export const TableBodyRow = ({ index, hideTableHead, ...otherProps }: TableBodyRowProps) => {
-    const classes = useStyles();
+export const TableBodyRow = ({
+    index,
+    hideTableHead,
+    classes: passedClasses,
+    ...otherProps
+}: TableBodyRowProps & StyledComponentProps<CometAdminTableBodyRowClassKeys>) => {
+    const classes = mergeClasses<CometAdminTableBodyRowClassKeys>(useStyles(), passedClasses);
     const isOdd = ((index || 0) + (hideTableHead ? 1 : 0)) % 2 === 1;
     return <TableRow classes={{ root: isOdd ? classes.odd : classes.even }} {...otherProps} />;
 };

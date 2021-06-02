@@ -1,5 +1,6 @@
+import { mergeClasses } from "@comet/admin";
 import { makeStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
 import * as React from "react";
 
@@ -16,9 +17,17 @@ export interface IProps {
     Icon?: (props: SvgIconProps) => JSX.Element;
 }
 
-function ControlButton({ disabled = false, selected = false, onButtonClick, icon, children, Icon: deprecatedIcon }: IProps) {
+function ControlButton({
+    disabled = false,
+    selected = false,
+    onButtonClick,
+    icon,
+    children,
+    Icon: deprecatedIcon,
+    classes: passedClasses,
+}: IProps & StyledComponentProps<CometAdminRteControlButtonClassKeys>) {
     const Icon = icon || deprecatedIcon;
-    const classes = useStyles();
+    const classes = mergeClasses<CometAdminRteControlButtonClassKeys>(useStyles(), passedClasses);
 
     const rootClasses: string[] = [classes.root];
     if (selected) rootClasses.push(classes.selected);

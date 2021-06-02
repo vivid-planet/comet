@@ -1,5 +1,6 @@
+import { mergeClasses } from "@comet/admin";
 import { makeStyles, Typography, TypographyProps } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
 import { SupportedThings } from "./Rte";
@@ -17,8 +18,8 @@ interface Props extends TypographyProps {
     component?: React.ElementType;
 }
 
-export const BlockElement = ({ type, ...restProps }: Props) => {
-    const classes = useStyles();
+export const BlockElement = ({ classes: passedClasses, type, ...restProps }: Props & StyledComponentProps<CometAdminRteBlockElementClassKeys>) => {
+    const classes = mergeClasses<CometAdminRteBlockElementClassKeys>(useStyles(), passedClasses);
     return <Typography classes={{ root: `${classes.root} ${type ? classes[type] : ""}` }} {...restProps} />;
 };
 

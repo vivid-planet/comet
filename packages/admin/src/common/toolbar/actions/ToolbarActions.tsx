@@ -1,9 +1,18 @@
+import { StyledComponentProps } from "@material-ui/core/styles";
 import * as React from "react";
 
-import { useStyles } from "./ToolbarActions.styles";
+import { mergeClasses } from "../../../helpers/mergeClasses";
+import { CometAdminToolbarActionsClassKeys, useStyles } from "./ToolbarActions.styles";
 
-const ToolbarActions: React.FunctionComponent = ({ children }) => {
-    const classes = useStyles({});
+interface Props {
+    children: React.ReactNode;
+}
+
+const ToolbarActions: React.FunctionComponent = ({
+    children,
+    classes: passedClasses,
+}: Props & StyledComponentProps<CometAdminToolbarActionsClassKeys>) => {
+    const classes = mergeClasses<CometAdminToolbarActionsClassKeys>(useStyles(), passedClasses);
 
     return <div className={classes.root}>{children}</div>;
 };

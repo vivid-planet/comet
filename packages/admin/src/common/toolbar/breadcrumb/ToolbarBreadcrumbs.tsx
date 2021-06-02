@@ -1,18 +1,22 @@
 import { Link, Typography } from "@material-ui/core";
+import { StyledComponentProps } from "@material-ui/core/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
+import { mergeClasses } from "../../../helpers/mergeClasses";
 import { StackApiContext } from "../../../stack/Api";
-import { useStyles } from "./ToolbarBreadcrumbs.styles";
+import { CometAdminToolbarBreadcrumbsClassKeys, useStyles } from "./ToolbarBreadcrumbs.styles";
 import { useThemeProps } from "./ToolbarBreadcrumbs.styles";
 
 const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ href, to, ...rest }, ref) => (
     <RouterLink innerRef={ref} to={to ?? href} {...rest} />
 ));
 
-export const ToolbarBreadcrumbs: React.FunctionComponent = () => {
+export const ToolbarBreadcrumbs: React.FunctionComponent<StyledComponentProps<CometAdminToolbarBreadcrumbsClassKeys>> = ({
+    classes: passedClasses,
+}) => {
     const themeProps = useThemeProps();
-    const classes = useStyles();
+    const classes = mergeClasses<CometAdminToolbarBreadcrumbsClassKeys>(useStyles(), passedClasses);
 
     return (
         <StackApiContext.Consumer>

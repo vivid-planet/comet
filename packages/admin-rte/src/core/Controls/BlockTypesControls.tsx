@@ -1,5 +1,6 @@
+import { mergeClasses } from "@comet/admin";
 import { FormControl, makeStyles, MenuItem, Select } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -11,9 +12,14 @@ interface Props extends IControlProps {
     blockTypes: BlockTypesApi;
 }
 
-function BlockTypesControls({ options: { standardBlockType }, disabled, blockTypes }: Props) {
+function BlockTypesControls({
+    options: { standardBlockType },
+    disabled,
+    blockTypes,
+    classes: passedClasses,
+}: Props & StyledComponentProps<CometAdminRteBlockTypeControlsClassKeys>) {
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
-    const classes = useStyles();
+    const classes = mergeClasses<CometAdminRteBlockTypeControlsClassKeys>(useStyles(), passedClasses);
 
     return (
         <FormControl classes={{ root: classes.root }}>
