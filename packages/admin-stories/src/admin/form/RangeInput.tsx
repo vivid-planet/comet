@@ -48,7 +48,7 @@ function Story() {
                         component={FinalFormRangeInput}
                         name="price"
                         min={0}
-                        max={100}
+                        max={120}
                         endAdornment={<span>€</span>}
                         sliderProps={{ ThumbComponent: Thumb }}
                     />
