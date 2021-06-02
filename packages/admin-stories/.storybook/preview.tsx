@@ -104,7 +104,7 @@ const orderComponents = [
     "docs-components-react-select",
     "docs-components",
 ];
-const orderHooks = ["docs-hooks"];
+const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
 const orderTheming = ["docs-theming"];
 const orderBestPractices = ["docs-best-practices-theming", "docs-best-practices-code-style", "docs-best-practices"];
 
