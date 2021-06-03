@@ -108,7 +108,17 @@ const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
 const orderTheming = ["docs-theming"];
 const orderBestPractices = ["docs-best-practices-theming", "docs-best-practices-code-style", "docs-best-practices"];
 
-const order = ["docs-intro-", ...orderGettingStarted, ...orderComponents, ...orderHooks, ...orderTheming, ...orderBestPractices, "admin-", "comet-", "stories-"];
+const order = [
+    "docs-intro-",
+    ...orderGettingStarted,
+    ...orderComponents,
+    ...orderHooks,
+    ...orderTheming,
+    ...orderBestPractices,
+    "admin-",
+    "comet-",
+    "stories-",
+];
 
 addParameters({
     layout: "padded",
