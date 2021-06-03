@@ -105,6 +105,7 @@ const orderComponents = [
     "docs-components",
 ];
 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
+const orderIcons = ["docs-icons-list", "docs-icons-usage", "docs-icons"];
 const orderTheming = ["docs-theming"];
 const orderBestPractices = ["docs-best-practices-theming", "docs-best-practices-code-style", "docs-best-practices"];
 
@@ -113,6 +114,7 @@ const order = [
     ...orderGettingStarted,
     ...orderComponents,
     ...orderHooks,
+    ...orderIcons,
     ...orderTheming,
     ...orderBestPractices,
     "admin-",
