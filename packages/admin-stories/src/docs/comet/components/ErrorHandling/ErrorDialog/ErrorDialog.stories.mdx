@@ -1,0 +1,63 @@
+import { Meta, Canvas, Story } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Components/Error Handling/Error Dialog" />
+
+# Error Dialog
+
+## Setup
+
+Setup is easy, just add the `ErrorDialogProvider` to your Provider List.
+
+```
+import { ErrorDialogProvider } from "@comet/admin";
+
+const App: React.FunctionComponent = ({ children }) => {
+    return (
+        <OtherProvider>
+            <ErrorDialogProvider>{children}</ErrorDialogProvider>
+        </OtherProvider>
+    );
+};
+```
+
+## Integration into ApolloProvider
+
+There is also the possibility to automatically display an `ErrorDialog` when a GraphQL error occurs (this can also be disabled for requests, which handle errors on their own).
+
+Add the `createErrorDialogApolloLink` to your ApolloLink List when setting up the `apolloClient`
+
+```
+const ApolloProvider: React.FunctionComponent = ({ children }) => {
+    const errorDialog = useErrorDialog();
+
+    const link = ApolloLink.from([
+        createErrorDialogApolloLink({ errorDialog }),
+        createHttpLink({
+            uri: `uri`,
+        }),
+    ]);
+    const cache = new InMemoryCache();
+
+    const apolloClient = new ApolloClient({
+        link,
+        cache,
+    });
+    return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
+};
+```
+
+## Usage
+
+### Error Dialog with Consumer
+
+Error Dialog can be used to display an error in a dialog. Try it out by simple pressing the Button below. You can also use the errorDialog with the `useErrorDialog` Hook
+
+<Canvas>
+    <Story id="stories-components-errorhandling-errordialog--manual-error-dialog" />
+</Canvas>
+
+### Automatic Error Dialog on graphQL Error
+
+<Canvas>
+    <Story id="stories-components-errorhandling-errordialog--automatic-error-on-graphql-error" />
+</Canvas>
