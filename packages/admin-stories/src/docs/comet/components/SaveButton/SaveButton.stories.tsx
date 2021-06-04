@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-storiesOf("stories/components/savebutton", module).add("Save / Save and go Back Button", () => {
+storiesOf("stories/components/Save Button", module).add("Save / Save and go Back Button", () => {
     const [saving, setSaving] = React.useState(false);
     return (
         <SplitButton localStorageKey={"Page1.SaveSplitButton"} variant={"contained"} color={"primary"}>
