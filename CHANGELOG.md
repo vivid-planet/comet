@@ -141,7 +141,7 @@ An example can be found [here](https://github.com/vivid-planet/comet-admin-start
 
 **Migrate FinalForm**
 
-Final Form: Follow props has been removed: `renderButtons`and `components`
+Final Form: Following props have been removed: `renderButtons` and `components`
 
 ```
 npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/final-form-dissolve-form-buttons.ts src/
