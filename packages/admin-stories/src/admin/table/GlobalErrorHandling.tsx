@@ -5,7 +5,7 @@ import gql from "graphql-tag";
 import * as React from "react";
 
 import { apolloSwapiStoryDecorator } from "../../apollo-swapi-story.decorator";
-import { errorDialogStoryProviderDecorator } from "../../error-dialog-provider.decorator";
+import { errorDialogStoryProviderDecorator } from "../../docs/comet/components/ErrorHandling/ErrorDialog/error-dialog-provider.decorator";
 
 interface People {
     id: string;
