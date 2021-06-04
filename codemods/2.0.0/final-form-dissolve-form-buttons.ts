@@ -52,7 +52,7 @@ const transform: Transform = (file, api, options) => {
                     }
                 }
             });
-            console.error(`✅ \tProcessed: \t${file.path}`);
+            console.log(`✅ \tProcessed: \t${file.path}`);
         }
     });
 
