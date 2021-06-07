@@ -1,5 +1,6 @@
-import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+import { Meta, Story, Canvas, Source } from "@storybook/addon-docs/blocks";
 
+import dedent from "ts-dedent";
 import { Button, List, ListItem, Snackbar } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import { SnackbarProvider, useSnackbarApi, UndoSnackbar } from "@comet/admin";
@@ -20,20 +21,14 @@ The `SnackbarProvider` provides the `SnackbarContext` to its children.
 It also takes care of rendering the `Snackbar` and should be placed at the topmost level of an app.
 This ensures that there is only one snackbar at a time as recommended by the [Material UI Docs](https://material-ui.com/components/snackbars/).
 
-<Canvas>
-    <Story name="Snackbar - SnackbarProvider">
-        {() => {
-            const Story = () => {
-                return (
-                    <SnackbarProvider>
-                        <p> Use Snackbar here </p>
-                    </SnackbarProvider>
-                );
-            };
-            return <Story />;
-        }}
-    </Story>
-</Canvas>
+<Source
+    language="tsx"
+    code={dedent`
+    <SnackbarProvider>
+        <p> Use Snackbar here </p>
+    </SnackbarProvider>
+  `}
+/>
 
 ## useSnackbarApi()
 
