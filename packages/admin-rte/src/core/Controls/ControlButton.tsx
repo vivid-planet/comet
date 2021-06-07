@@ -68,7 +68,6 @@ const useStyles = makeStyles<Theme, {}, CometAdminRteControlButtonClassKeys>(
                 "&:not(:disabled), &:not(:disabled):hover": {
                     borderColor: rteTheme.colors.buttonBorderHover,
                     backgroundColor: "white",
-                    color: "red",
                 },
             },
             renderAsIcon: {
