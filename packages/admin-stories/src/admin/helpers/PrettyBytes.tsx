@@ -2,7 +2,7 @@ import { PrettyBytes } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-const Story = () => {
+storiesOf("@comet/admin/helpers/pretty-bytes", module).add("PrettyBytes", () => {
     return (
         <div>
             <div>
@@ -66,7 +66,7 @@ const Story = () => {
             </div>
 
             <div>
-                <h1>Custom maximumFractionDigits (5 digits)</h1>
+                <h1>Custom maximumFractionDigits (6 digits)</h1>
                 <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "10px" }}>
                     <span>6 Bytes</span>{" "}
                     <span>
@@ -96,6 +96,4 @@ const Story = () => {
             </div>
         </div>
     );
-};
-
-storiesOf("@comet/admin/helpers/pretty-bytes", module).add("PrettyBytes", () => <Story />);
+});

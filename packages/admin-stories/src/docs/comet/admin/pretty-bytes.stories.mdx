@@ -5,7 +5,7 @@ import { PrettyBytes } from "@comet/admin";
 
 <Meta title="docs/@comet/admin/helpers/prettyBytes" />
 
-The PrettyBytes component can be used to display byte values e.g. file sizes.
+The PrettyBytes component can be used to display file sizes or other byte values.
 
 Supported units are: `"byte" | "kilobyte" | "megabyte" | "gigabyte" | "terabyte" | "petabyte"`
 
@@ -15,26 +15,12 @@ Supported units are: `"byte" | "kilobyte" | "megabyte" | "gigabyte" | "terabyte"
             const Story = () => {
                 return (
                     <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "10px" }}>
-                        <span>6 Bytes</span>{" "}
+                        <span>6.000 Bytes</span>{" "}
                         <span>
-                            <PrettyBytes value={6} />{" "}
-                        </span>
-                        <span>6.000 Bytes</span> <span>
                             <PrettyBytes value={6000} />{" "}
                         </span>
-                        <span>6.000.000 Bytes</span>{" "}
-                        <span>
+                        <span>6.000.000 Bytes</span> <span>
                             <PrettyBytes value={6000000} />{" "}
-                        </span>
-                        <span>6.000.000.000 Bytes</span> <span>
-                            <PrettyBytes value={6000000000} />{" "}
-                        </span>
-                        <span>6.000.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000000} />{" "}
-                        </span>
-                        <span>6.000.000.000.000.000 Bytes</span> <span>
-                            <PrettyBytes value={6000000000000000} />{" "}
                         </span>
                     </div>
                 );
@@ -46,7 +32,7 @@ Supported units are: `"byte" | "kilobyte" | "megabyte" | "gigabyte" | "terabyte"
 
 ## Fixed Unit
 
-It is possible to manually set the unit. In the following example the unit is set to `kilobyte`.
+Per default, the unit is determined automatically. But it is also possible to manually set the unit. In the following example, the unit is manually set to `kilobyte`.
 
 <Canvas>
     <Story name="PrettyBytes - Fixed Unit">
@@ -54,27 +40,9 @@ It is possible to manually set the unit. In the following example the unit is se
             const Story = () => {
                 return (
                     <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "10px" }}>
-                        <span>6 Bytes</span>
+                        <span>6.000.000 Bytes</span>{" "}
                         <span>
-                            <PrettyBytes value={6} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000.000 Bytes</span> <span>
                             <PrettyBytes value={6000000} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000.000.000.000 Bytes</span> <span>
-                            <PrettyBytes value={6000000000000} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000.000.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000000000} unit="kilobyte" />{" "}
                         </span>
                     </div>
                 );
@@ -86,7 +54,7 @@ It is possible to manually set the unit. In the following example the unit is se
 
 ## Custom Maximum Fraction Digits
 
-It is possible to manually set the maximum fraction digits. In the following example the maximumFractionDigits are set to `6`.
+The default value for `maximumFractionDigits` is `2`. But it is possible to override this value. In the following example, the maximumFractionDigits are set to `4`.
 
 <Canvas>
     <Story name="PrettyBytes - Custom Maximum Fraction Digits">
@@ -94,26 +62,9 @@ It is possible to manually set the maximum fraction digits. In the following exa
             const Story = () => {
                 return (
                     <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "10px" }}>
-                        <span>6 Bytes</span>{" "}
+                        <span>6.000 Bytes</span>{" "}
                         <span>
-                            <PrettyBytes value={6} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000 Bytes</span> <span>
-                            <PrettyBytes value={6000} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000.000.000 Bytes</span> <span>
-                            <PrettyBytes value={6000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000.000.000.000.000 Bytes</span> <span>
-                            <PrettyBytes value={6000000000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                            <PrettyBytes value={6000} unit="megabyte" maximumFractionDigits={4} />{" "}
                         </span>
                     </div>
                 );
@@ -121,4 +72,10 @@ It is possible to manually set the maximum fraction digits. In the following exa
             return <Story />;
         }}
     </Story>
+</Canvas>
+
+## Complete Example
+
+<Canvas>
+    <Story id="comet-admin-helpers-pretty-bytes--prettybytes" />
 </Canvas>
