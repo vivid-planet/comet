@@ -8,9 +8,9 @@ import { addDecorator, addParameters } from "@storybook/react";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { MainContent, MuiThemeProvider } from "@comet/admin";
+import { createCometTheme } from "@comet/admin-theme";
 import { createMuiTheme } from "@material-ui/core";
 import { createGlobalStyle } from "styled-components";
-import { createCometTheme } from "@comet/admin-theme/lib/createCometTheme";
 
 addDecorator((story, context) => {
     const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
