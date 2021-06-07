@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add standard Toolbar that can be used as application wide consistent element containing navigation, action buttons and filters
 -   add SplitButton - combine multiple buttons behind one ButtonGroup
 -   add SaveButton which handles and displays state(idle, saving, success and error)
+-   add SnackbarProvider, useSnackbarApi() hook and UndoSnackbar
 
 ### Incompatible Changes
 
