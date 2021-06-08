@@ -14,6 +14,7 @@ export const getFormFieldContainerOverrides = (palette: Palette): StyleRules<{},
         },
     },
     horizontal: {},
+    fullWidth: {},
     required: {},
     disabled: {},
     label: {
