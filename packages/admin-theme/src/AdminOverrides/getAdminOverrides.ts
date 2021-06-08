@@ -5,6 +5,7 @@ import { getClearInputButtonOverrides } from "./clearInputButton";
 import { getErrorBoundaryOverrides } from "./errorBoundary";
 import { getFinalFormSearchTextFieldOverrides } from "./finalFormSearchTextField";
 import { getFormFieldContainerOverrides } from "./formFieldContainer";
+import { getFormPaperOverrides } from "./formPaper";
 import { getInputBaseOverrides } from "./inputBase";
 import { getMainContentOverrides } from "./maincontent";
 import { getMasterLayoutOverrides } from "./masterLayout";
@@ -28,7 +29,7 @@ export const getAdminOverrides = (palette: Palette): Overrides => ({
     CometAdminMenuItem: getMenuItemOverrides(palette),
     CometAdminMenuCollapsibleItem: getMenuCollapsibleItemOverrides(palette),
     CometAdminMainContent: getMainContentOverrides(),
-    CometAdminMasterLayout: getMasterLayoutOverrides(),
+    CometAdminMasterLayout: getMasterLayoutOverrides(palette),
     CometAdminToolbar: getToolbarOverrides(),
     CometAdminToolbarBackButton: getToolbarBackButtonOverrides(),
     CometAdminToolbarBreadcrumbs: getToolbarBreadcrumbsOverrides(),
@@ -41,4 +42,5 @@ export const getAdminOverrides = (palette: Palette): Overrides => ({
     CometAdminStackBreadcrumbs: getStackBreadcrumbsOverrides(palette),
     CometAdminTableBodyRow: getTableBodyRowOverrides(),
     CometAdminSaveButton: getSaveButtonOverrides(),
+    CometAdminFormPaper: getFormPaperOverrides(),
 });

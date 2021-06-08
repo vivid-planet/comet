@@ -1,17 +1,16 @@
 import { CometAdminMasterLayoutClassKeys } from "@comet/admin";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { darkPalette } from "../colors";
-
-export const getMasterLayoutOverrides = (): StyleRules<{}, CometAdminMasterLayoutClassKeys> => ({
+export const getMasterLayoutOverrides = (palette: Palette): StyleRules<{}, CometAdminMasterLayoutClassKeys> => ({
     root: {},
     header: {
-        backgroundColor: darkPalette.main,
+        backgroundColor: palette.grey["A400"],
         "& [class*='MuiTypography']": {
-            color: darkPalette.contrastText,
+            color: palette.grey["A100"],
         },
         "& [class*='MuiIconButton']": {
-            color: darkPalette.contrastText,
+            color: palette.grey["A100"],
         },
         "& [class*='MuiPaper']": {
             "& [class*='MuiTypography']": {
