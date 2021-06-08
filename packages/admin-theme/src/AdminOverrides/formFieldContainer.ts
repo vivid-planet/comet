@@ -1,9 +1,8 @@
 import { CometAdminFormFieldContainerClassKeys } from "@comet/admin";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { errorPalette, neutrals } from "../colors";
-
-export const getFormFieldContainerOverrides = (): StyleRules<{}, CometAdminFormFieldContainerClassKeys> => ({
+export const getFormFieldContainerOverrides = (palette: Palette): StyleRules<{}, CometAdminFormFieldContainerClassKeys> => ({
     root: {
         "&:not(:last-child)": {
             marginBottom: 20,
@@ -18,7 +17,7 @@ export const getFormFieldContainerOverrides = (): StyleRules<{}, CometAdminFormF
     required: {},
     disabled: {},
     label: {
-        color: neutrals[900],
+        color: palette.grey[900],
         fontSize: 16,
         lineHeight: "19px",
         fontWeight: 500,
@@ -26,10 +25,10 @@ export const getFormFieldContainerOverrides = (): StyleRules<{}, CometAdminFormF
     inputContainer: {},
     hasError: {
         "& $label:not([class*='Mui-focused'])": {
-            color: errorPalette.main,
+            color: palette.error.main,
         },
         "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
-            borderColor: errorPalette.main,
+            borderColor: palette.error.main,
         },
     },
     error: {

@@ -1,19 +1,18 @@
 import { CheckboxClassKey } from "@material-ui/core/Checkbox";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
-
-import { bluePalette, greenPalette, neutrals } from "../colors";
 
 // Key "input" is not a stylable class-key on MuiCheckbox
 type CorrectedCheckboxClassKey = Exclude<CheckboxClassKey, "input">;
 
-export const getMuiCheckboxOverrides = (): StyleRules<{}, CorrectedCheckboxClassKey> => ({
+export const getMuiCheckboxOverrides = (palette: Palette): StyleRules<{}, CorrectedCheckboxClassKey> => ({
     root: {
         "& [class*='MuiSvgIcon-root']": {
             "& .border": {
                 fill: "#fff",
             },
             "& .background": {
-                fill: neutrals[100],
+                fill: palette.grey[100],
             },
         },
         "&$checked [class*='MuiSvgIcon-root']": {
@@ -23,10 +22,10 @@ export const getMuiCheckboxOverrides = (): StyleRules<{}, CorrectedCheckboxClass
         },
         "&$disabled [class*='MuiSvgIcon-root']": {
             "& .border": {
-                fill: neutrals[50],
+                fill: palette.grey[50],
             },
             "& .background": {
-                fill: neutrals[100],
+                fill: palette.grey[100],
             },
         },
         "&$disabled$checked [class*='MuiSvgIcon-root']": {
@@ -34,7 +33,7 @@ export const getMuiCheckboxOverrides = (): StyleRules<{}, CorrectedCheckboxClass
                 fill: "#fff",
             },
             "& .background": {
-                fill: neutrals[200],
+                fill: palette.grey[200],
             },
         },
     },
@@ -44,14 +43,14 @@ export const getMuiCheckboxOverrides = (): StyleRules<{}, CorrectedCheckboxClass
     colorPrimary: {
         "&$checked [class*='MuiSvgIcon-root']": {
             "& .background": {
-                fill: bluePalette.main,
+                fill: palette.primary.main,
             },
         },
     },
     colorSecondary: {
         "&$checked [class*='MuiSvgIcon-root']": {
             "& .background": {
-                fill: greenPalette.main,
+                fill: palette.secondary.main,
             },
         },
     },

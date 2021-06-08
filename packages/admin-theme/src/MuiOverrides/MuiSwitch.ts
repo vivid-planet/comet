@@ -1,9 +1,8 @@
 import { SwitchClassKey } from "@material-ui/core";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { bluePalette, greenPalette, neutrals } from "../colors";
-
-export const getMuiSwitchOverrides = (): StyleRules<{}, SwitchClassKey> => ({
+export const getMuiSwitchOverrides = (palette: Palette): StyleRules<{}, SwitchClassKey> => ({
     root: {
         width: 54,
         height: 34,
@@ -16,40 +15,40 @@ export const getMuiSwitchOverrides = (): StyleRules<{}, SwitchClassKey> => ({
     switchBase: {
         margin: 9,
         padding: 3,
-        color: neutrals[200],
+        color: palette.grey[200],
         "&$checked": {
             transform: "translateX(20px)",
-            color: bluePalette.main,
+            color: palette.primary.main,
             "& + $track": {
                 opacity: 1,
-                border: `1px solid ${neutrals[100]}`,
+                border: `1px solid ${palette.grey[100]}`,
             },
         },
         "&$disabled": {
-            color: neutrals[100],
+            color: palette.grey[100],
             "& + $track": {
                 opacity: 1,
-                backgroundColor: neutrals[50],
-                border: `1px solid ${neutrals[100]}`,
+                backgroundColor: palette.grey[50],
+                border: `1px solid ${palette.grey[100]}`,
             },
         },
     },
     colorPrimary: {
         "&$switchBase$checked": {
-            color: bluePalette.main,
+            color: palette.primary.main,
         },
         "&$checked + $track": {
             backgroundColor: "#fff",
-            borderColor: bluePalette.main,
+            borderColor: palette.primary.main,
         },
     },
     colorSecondary: {
         "&$switchBase$checked": {
-            color: greenPalette.main,
+            color: palette.secondary.main,
         },
         "&$checked + $track": {
             backgroundColor: "#fff",
-            borderColor: greenPalette.main,
+            borderColor: palette.secondary.main,
         },
     },
     sizeSmall: {},
@@ -59,7 +58,7 @@ export const getMuiSwitchOverrides = (): StyleRules<{}, SwitchClassKey> => ({
         boxShadow: "none",
     },
     track: {
-        border: `1px solid ${neutrals[100]}`,
+        border: `1px solid ${palette.grey[100]}`,
         boxSizing: "border-box",
         borderRadius: 16 / 2,
         opacity: 1,

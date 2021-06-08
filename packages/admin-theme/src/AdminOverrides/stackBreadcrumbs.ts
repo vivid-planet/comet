@@ -1,21 +1,19 @@
 import { CometAdminStackBreadcrumbsClassKeys } from "@comet/admin";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { neutrals } from "../colors";
-import { paletteOptions } from "../paletteOptions";
-
-export const getStackBreadcrumbsOverrides = (): StyleRules<{}, CometAdminStackBreadcrumbsClassKeys> => ({
+export const getStackBreadcrumbsOverrides = (palette: Palette): StyleRules<{}, CometAdminStackBreadcrumbsClassKeys> => ({
     root: {},
     ol: {},
     li: {},
     separator: {
-        color: neutrals[300],
+        color: palette.grey[300],
         "& [class*='MuiSvgIcon-root']": {
             fontSize: 12,
         },
     },
     link: {
-        color: paletteOptions.text?.primary,
+        color: palette.text.primary,
         textDecoration: "underline",
         "& [class*='MuiTypography']": {
             fontSize: 13,
@@ -23,7 +21,7 @@ export const getStackBreadcrumbsOverrides = (): StyleRules<{}, CometAdminStackBr
         },
     },
     last: {
-        color: paletteOptions.text?.disabled,
+        color: palette.text.disabled,
         "&, &:hover": {
             textDecoration: "none",
         },

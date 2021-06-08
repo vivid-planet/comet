@@ -1,11 +1,10 @@
 import { CometAdminInputBaseClassKeys } from "@comet/admin";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { bluePalette, neutrals } from "../colors";
-
-export const getInputBaseOverrides = (): StyleRules<{}, CometAdminInputBaseClassKeys> => ({
+export const getInputBaseOverrides = (palette: Palette): StyleRules<{}, CometAdminInputBaseClassKeys> => ({
     root: {
-        borderColor: neutrals[100],
+        borderColor: palette.grey[100],
         borderRadius: 2,
         "&:not($multiline)": {
             height: 40,
@@ -13,7 +12,7 @@ export const getInputBaseOverrides = (): StyleRules<{}, CometAdminInputBaseClass
     },
     formControl: {},
     focused: {
-        borderColor: bluePalette.main,
+        borderColor: palette.primary.main,
     },
     disabled: {},
     adornedEnd: {

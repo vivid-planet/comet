@@ -1,19 +1,17 @@
 import { RadioClassKey } from "@material-ui/core/Radio";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { bluePalette, greenPalette, neutrals } from "../colors";
-
-// Key "input" is not a stylable class-key on MuiRadio
 type CorrectedRadioClassKey = Exclude<RadioClassKey, "input">;
 
-export const getMuiRadioOverrides = (): StyleRules<{}, CorrectedRadioClassKey> => ({
+export const getMuiRadioOverrides = (palette: Palette): StyleRules<{}, CorrectedRadioClassKey> => ({
     root: {
         "& [class*='MuiSvgIcon-root']": {
             "& .border": {
                 fill: "#fff",
             },
             "& .background": {
-                fill: neutrals[100],
+                fill: palette.grey[100],
             },
         },
         "&$checked [class*='MuiSvgIcon-root']": {
@@ -23,10 +21,10 @@ export const getMuiRadioOverrides = (): StyleRules<{}, CorrectedRadioClassKey> =
         },
         "&$disabled [class*='MuiSvgIcon-root']": {
             "& .border": {
-                fill: neutrals[50],
+                fill: palette.grey[50],
             },
             "& .background": {
-                fill: neutrals[100],
+                fill: palette.grey[100],
             },
         },
         "&$disabled$checked [class*='MuiSvgIcon-root']": {
@@ -34,7 +32,7 @@ export const getMuiRadioOverrides = (): StyleRules<{}, CorrectedRadioClassKey> =
                 fill: "#fff",
             },
             "& .background": {
-                fill: neutrals[200],
+                fill: palette.grey[200],
             },
         },
     },
@@ -43,14 +41,14 @@ export const getMuiRadioOverrides = (): StyleRules<{}, CorrectedRadioClassKey> =
     colorPrimary: {
         "&$checked [class*='MuiSvgIcon-root']": {
             "& .background": {
-                fill: bluePalette.main,
+                fill: palette.primary.main,
             },
         },
     },
     colorSecondary: {
         "&$checked [class*='MuiSvgIcon-root']": {
             "& .background": {
-                fill: greenPalette.main,
+                fill: palette.secondary.main,
             },
         },
     },

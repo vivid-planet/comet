@@ -1,16 +1,15 @@
 import { SvgIconClassKey } from "@material-ui/core";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { neutrals } from "../colors";
-
-export const getMuiSvgIconOverrides = (): StyleRules<{}, SvgIconClassKey> => ({
+export const getMuiSvgIconOverrides = (palette: Palette): StyleRules<{}, SvgIconClassKey> => ({
     root: {
         fontSize: 16,
     },
     colorSecondary: {},
     colorAction: {},
     colorDisabled: {
-        color: neutrals[200],
+        color: palette.grey[200],
     },
     colorError: {},
     colorPrimary: {},

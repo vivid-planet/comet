@@ -1,9 +1,8 @@
 import { ButtonClassKey } from "@material-ui/core";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { bluePalette, greenPalette, neutrals } from "../colors";
-
-export const getMuiButtonOverrides = (): StyleRules<{}, ButtonClassKey> => ({
+export const getMuiButtonOverrides = (palette: Palette): StyleRules<{}, ButtonClassKey> => ({
     root: {},
     label: {
         position: "relative",
@@ -32,15 +31,15 @@ export const getMuiButtonOverrides = (): StyleRules<{}, ButtonClassKey> => ({
     contained: {
         color: "#000",
         backgroundColor: "#fff",
-        border: `1px solid ${neutrals[200]}`,
+        border: `1px solid ${palette.grey[200]}`,
         paddingTop: 11,
         paddingRight: 14,
         paddingBottom: 11,
         paddingLeft: 14,
         "&$disabled": {
-            backgroundColor: neutrals[100],
-            borderColor: neutrals[100],
-            color: neutrals[300],
+            backgroundColor: palette.grey[100],
+            borderColor: palette.grey[100],
+            color: palette.grey[300],
         },
         "&$startIcon": {
             marginRight: 6,
@@ -51,18 +50,18 @@ export const getMuiButtonOverrides = (): StyleRules<{}, ButtonClassKey> => ({
     },
     containedPrimary: {
         color: "#000",
-        borderColor: bluePalette.main,
+        borderColor: palette.primary.main,
         "&:hover": {
-            backgroundColor: bluePalette.dark,
-            borderColor: bluePalette.dark,
+            backgroundColor: palette.primary.dark,
+            borderColor: palette.primary.dark,
         },
     },
     containedSecondary: {
         color: "#000",
-        borderColor: greenPalette.main,
+        borderColor: palette.secondary.main,
         "&:hover": {
-            backgroundColor: greenPalette.dark,
-            borderColor: greenPalette.dark,
+            backgroundColor: palette.secondary.dark,
+            borderColor: palette.secondary.dark,
         },
     },
     disableElevation: {},

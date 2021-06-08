@@ -1,7 +1,7 @@
 import { CometAdminMenuItemClassKeys } from "@comet/admin";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { bluePalette, neutrals } from "../colors";
 import { fontWeights } from "../typographyOptions";
 
 const colors = {
@@ -9,7 +9,7 @@ const colors = {
     textLevel2: "#17181A",
 };
 
-export const getMenuItemOverrides = (): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
+export const getMenuItemOverrides = (palette: Palette): StyleRules<{}, CometAdminMenuItemClassKeys> => ({
     root: {
         "&:after": {
             content: "''",
@@ -34,7 +34,7 @@ export const getMenuItemOverrides = (): StyleRules<{}, CometAdminMenuItemClassKe
         },
     },
     level1: {
-        borderBottom: `1px solid ${neutrals[50]}`,
+        borderBottom: `1px solid ${palette.grey[50]}`,
         boxSizing: "border-box",
         color: colors.textLevel1,
         paddingLeft: 20,
@@ -43,15 +43,15 @@ export const getMenuItemOverrides = (): StyleRules<{}, CometAdminMenuItemClassKe
         paddingBottom: 16,
 
         "&[class*='Mui-selected']": {
-            backgroundColor: neutrals[50],
-            color: bluePalette.main,
+            backgroundColor: palette.grey[50],
+            color: palette.primary.main,
 
             "&:after": {
-                backgroundColor: bluePalette.main,
+                backgroundColor: palette.primary.main,
             },
 
             "& [class*='MuiListItemIcon-root']": {
-                color: bluePalette.main,
+                color: palette.primary.main,
             },
         },
 
@@ -69,20 +69,20 @@ export const getMenuItemOverrides = (): StyleRules<{}, CometAdminMenuItemClassKe
         paddingBottom: 10,
 
         "&:last-child": {
-            borderBottom: `1px solid ${neutrals[50]}`,
+            borderBottom: `1px solid ${palette.grey[50]}`,
             boxSizing: "border-box",
         },
 
         "&[class*='Mui-selected']": {
-            backgroundColor: bluePalette.main,
+            backgroundColor: palette.primary.main,
             color: "#fff",
 
             "&:after": {
-                backgroundColor: bluePalette.dark,
+                backgroundColor: palette.primary.dark,
             },
 
             "&:hover": {
-                backgroundColor: bluePalette.dark,
+                backgroundColor: palette.primary.dark,
             },
 
             "& [class*='MuiListItemText-primary']": {
