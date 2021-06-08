@@ -1,4 +1,4 @@
-export { getThemeOptions } from "./getThemeOptions";
+export { createCometTheme } from "./createCometTheme";
 export { paletteOptions } from "./paletteOptions";
 export { fontWeights, typographyOptions } from "./typographyOptions";
 export { shadows } from "./shadows";

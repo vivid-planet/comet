@@ -133,3 +133,5 @@ export { CometAdminSaveButtonThemeProps, CometAdminSaveButtonClassKeys } from ".
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { mergeClasses } from "./helpers/mergeClasses";
+export { SnackbarApi, useSnackbarApi, SnackbarProvider } from "./snackbar/SnackbarProvider";
+export { UndoSnackbarProps, UndoSnackbar } from "./snackbar/UndoSnackbar";

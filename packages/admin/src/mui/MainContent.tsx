@@ -7,6 +7,8 @@ export type CometAdminMainContentClassKeys = "root";
 const styles = (theme: Theme) =>
     createStyles<CometAdminMainContentClassKeys, any>({
         root: {
+            position: "relative",
+            zIndex: 5,
             padding: theme.spacing(4),
         },
     });

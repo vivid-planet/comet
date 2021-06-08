@@ -8,9 +8,9 @@ import { addDecorator, addParameters } from "@storybook/react";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { MainContent, MuiThemeProvider } from "@comet/admin";
-import { Theme, createMuiTheme } from "@material-ui/core";
-import { getThemeOptions } from "@comet/admin-theme";
-import styled, { createGlobalStyle } from "styled-components";
+import { createCometTheme } from "@comet/admin-theme";
+import { createMuiTheme } from "@material-ui/core";
+import { createGlobalStyle } from "styled-components";
 
 addDecorator((story, context) => {
     const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
@@ -70,7 +70,7 @@ const GlobalStyles = createGlobalStyle`
 
 addDecorator((story, ctx) => {
     const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);
-    const theme = createMuiTheme(selectedTheme === themeOptions.defaultMui ? {} : getThemeOptions());
+    const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
 
     return (
         <>

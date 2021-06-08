@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, ButtonGroupProps, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from "@material-ui/core";
+import { Button, ButtonGroup, ButtonGroupProps, MenuItem, MenuList, Popover } from "@material-ui/core";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
@@ -87,35 +87,28 @@ export const SplitButton = ({
                     </Button>
                 )}
             </ButtonGroup>
-            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{ zIndex: 1200 }}>
-                {({ TransitionProps, placement }) => (
-                    <Paper>
-                        <Grow
-                            {...TransitionProps}
-                            style={{
-                                transformOrigin: placement === "bottom" ? "center top" : "center bottom",
-                            }}
-                        >
-                            <ClickAwayListener onClickAway={handleClose}>
-                                <MenuList>
-                                    {childrenArray.map((child: React.ReactElement, index) => {
-                                        return (
-                                            <MenuItem
-                                                key={index}
-                                                selected={index === selectedIndex}
-                                                onClick={(event) => handleMenuItemClick(event, index, child)}
-                                                disabled={child.props.disabled}
-                                            >
-                                                {child.props.children}
-                                            </MenuItem>
-                                        );
-                                    })}
-                                </MenuList>
-                            </ClickAwayListener>
-                        </Grow>
-                    </Paper>
-                )}
-            </Popper>
+            <Popover
+                open={open}
+                anchorEl={anchorRef.current}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                transformOrigin={{ vertical: "top", horizontal: "center" }}
+                onBackdropClick={handleClose}
+            >
+                <MenuList>
+                    {childrenArray.map((child: React.ReactElement, index) => {
+                        return (
+                            <MenuItem
+                                key={index}
+                                selected={index === selectedIndex}
+                                onClick={(event) => handleMenuItemClick(event, index, child)}
+                                disabled={child.props.disabled}
+                            >
+                                {child.props.children}
+                            </MenuItem>
+                        );
+                    })}
+                </MenuList>
+            </Popover>
         </SplitButtonContext.Provider>
     );
 };

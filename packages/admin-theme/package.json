@@ -6,8 +6,11 @@
     "files": [
         "lib"
     ],
-    "dependencies": {},
+    "dependencies": {
+        "lodash.merge": "^4.6.2"
+    },
     "devDependencies": {
+        "@types/lodash.merge": "^4.6.6",
         "@comet/admin": "^2.0.0-alpha.6",
         "@comet/admin-rte": "^2.0.0-alpha.6",
         "@comet/admin-icons": "^2.0.0-alpha.6",

@@ -1,9 +1,8 @@
 import { CometAdminMenuCollapsibleItemClassKeys } from "@comet/admin";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { bluePalette } from "../colors";
-
-export const getMenuCollapsibleItemOverrides = (): StyleRules<{}, CometAdminMenuCollapsibleItemClassKeys> => ({
+export const getMenuCollapsibleItemOverrides = (palette: Palette): StyleRules<{}, CometAdminMenuCollapsibleItemClassKeys> => ({
     root: {
         "& [class*='MuiList-padding']": {
             paddingTop: 0,
@@ -11,14 +10,14 @@ export const getMenuCollapsibleItemOverrides = (): StyleRules<{}, CometAdminMenu
         },
     },
     childSelected: {
-        color: bluePalette.main,
+        color: palette.primary.main,
 
         "& $listItem": {
             "& [class*='MuiListItemText-root']": {
-                color: bluePalette.main,
+                color: palette.primary.main,
             },
             "& [class*='MuiListItemIcon-root']": {
-                color: bluePalette.main,
+                color: palette.primary.main,
             },
         },
     },

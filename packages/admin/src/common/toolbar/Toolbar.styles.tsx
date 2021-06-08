@@ -13,6 +13,7 @@ export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminT
     () => ({
         root: {
             position: "sticky",
+            zIndex: 10,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",

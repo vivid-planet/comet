@@ -1,15 +1,11 @@
 import { SelectClassKey } from "@material-ui/core";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { neutrals } from "../colors";
-
-export const getMuiSelectOverrides = (): StyleRules<{}, SelectClassKey> => ({
+export const getMuiSelectOverrides = (palette: Palette): StyleRules<{}, SelectClassKey> => ({
     root: {},
     select: {
         minWidth: 160,
-        "&:focus": {
-            backgroundColor: "#fff",
-        },
     },
     filled: {},
     outlined: {},
@@ -19,7 +15,7 @@ export const getMuiSelectOverrides = (): StyleRules<{}, SelectClassKey> => ({
         top: "calc(50% - 6px)",
         right: 12,
         fontSize: 12,
-        color: neutrals[900],
+        color: palette.grey[900],
     },
     iconOpen: {},
     iconFilled: {},
