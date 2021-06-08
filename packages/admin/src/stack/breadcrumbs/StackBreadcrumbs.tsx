@@ -1,9 +1,11 @@
 import { Breadcrumbs as MuiBreadcrumbs, Link, Typography } from "@material-ui/core";
+import { StyledComponentProps } from "@material-ui/core/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
+import { mergeClasses } from "../../helpers/mergeClasses";
 import { StackApiContext } from "../Api";
-import { CometAdminStackBreadcrumbsThemeProps, useStyles, useThemeProps } from "./StackBreadcrumbs.styles";
+import { CometAdminStackBreadcrumbsClassKeys, CometAdminStackBreadcrumbsThemeProps, useStyles, useThemeProps } from "./StackBreadcrumbs.styles";
 
 export interface StackBreadcrumbProps extends CometAdminStackBreadcrumbsThemeProps {}
 
@@ -11,10 +13,13 @@ const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ h
     <RouterLink innerRef={ref} to={to ?? href} {...rest} />
 ));
 
-export const StackBreadcrumbs = (props: StackBreadcrumbProps): React.ReactElement => {
-    const classes = useStyles();
+export const StackBreadcrumbs = ({
+    classes: passedClasses,
+    ...otherProps
+}: StackBreadcrumbProps & StyledComponentProps<CometAdminStackBreadcrumbsClassKeys>): React.ReactElement => {
+    const classes = mergeClasses<CometAdminStackBreadcrumbsClassKeys>(useStyles(), passedClasses);
 
-    const { separator, ...otherBreadcrumbProps } = useThemeProps(props);
+    const { separator, ...otherBreadcrumbProps } = useThemeProps(otherProps);
 
     return (
         <StackApiContext.Consumer>

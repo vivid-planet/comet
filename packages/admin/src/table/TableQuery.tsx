@@ -1,9 +1,11 @@
 import { ApolloError } from "@apollo/client";
 import { CircularProgress, Paper } from "@material-ui/core";
+import { StyledComponentProps } from "@material-ui/core/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useStyles } from "./TableQuery.styles";
+import { mergeClasses } from "../helpers/mergeClasses";
+import { CometAdminTableQueryClassKeys, useStyles } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
 export const parseIdFromIri = (iri: string) => {
@@ -20,36 +22,36 @@ interface IProps {
     children: React.ReactNode;
 }
 
-export function TableQuery(props: IProps) {
-    const classes = useStyles();
+export function TableQuery({ classes: passedClasses, ...otherProps }: IProps & StyledComponentProps<CometAdminTableQueryClassKeys>) {
+    const classes = mergeClasses<CometAdminTableQueryClassKeys>(useStyles(), passedClasses);
 
     return (
         <TableQueryContext.Provider
             value={{
-                api: props.api,
+                api: otherProps.api,
             }}
         >
             <div className={classes.root}>
                 <div className={classes.loadingContainer}>
-                    {props.loading && (
+                    {otherProps.loading && (
                         <Paper classes={{ root: classes.loadingPaper }}>
                             <CircularProgress />
                         </Paper>
                     )}
                 </div>
-                {props.error && (
+                {otherProps.error && (
                     <p>
                         <FormattedMessage
                             id="cometAdmin.table.tableQuery.error"
                             defaultMessage="Error :( {error}"
                             description="Display apollo error message"
                             values={{
-                                error: props.error.toString(),
+                                error: otherProps.error.toString(),
                             }}
                         />
                     </p>
                 )}
-                {props.children}
+                {otherProps.children}
             </div>
         </TableQueryContext.Provider>
     );
