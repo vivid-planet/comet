@@ -36,10 +36,15 @@ const styles = (theme: Theme) =>
         },
         error: {},
         marginDense: {},
-        multiline: {},
+        multiline: {
+            paddingTop: 0,
+            paddingBottom: 0,
+        },
         fullWidth: {},
         colorSecondary: {},
         input: {
+            height: "100%",
+            boxSizing: "border-box",
             paddingLeft: theme.spacing(1),
             paddingRight: theme.spacing(1),
             "&::-ms-clear": {
