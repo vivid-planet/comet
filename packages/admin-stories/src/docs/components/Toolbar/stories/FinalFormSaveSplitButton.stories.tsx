@@ -2,7 +2,7 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
-    FormSaveSplitButton,
+    FinalFormSaveSplitButton,
     MainContent,
     Toolbar,
     ToolbarActions,
@@ -56,7 +56,7 @@ storiesOf("stories/components/Toolbar/Final Form Save Split Button", module)
                                 <ToolbarFillSpace />
                                 <ToolbarActions>
                                     {canGoBack ? (
-                                        <FormSaveSplitButton localStorageKey={"finalformsavesplitbutton"} />
+                                        <FinalFormSaveSplitButton localStorageKey={"finalformsavesplitbutton"} />
                                     ) : (
                                         <Button
                                             variant={"contained"}

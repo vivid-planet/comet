@@ -155,3 +155,4 @@ export { CometLogo } from "./common/CometLogo";
 export { PrettyBytes } from "./helpers/PrettyBytes";
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
 export { FormSaveSplitButton } from "./FormSaveSplitButton";
+export { FinalFormSaveSplitButton } from "./FinalFormSaveSplitButton";

@@ -12,7 +12,7 @@ export interface FormSaveButtonProps {
     localStorageKey?: string;
 }
 
-export const FormSaveSplitButton = ({ localStorageKey }: PropsWithChildren<FormSaveButtonProps>) => {
+export const FinalFormSaveSplitButton = ({ localStorageKey }: PropsWithChildren<FormSaveButtonProps>) => {
     const stackApi = useStackApi();
     const form = useForm();
     const { pristine, hasValidationErrors, submitting, hasSubmitErrors } = useFormState();
