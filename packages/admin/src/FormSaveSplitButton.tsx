@@ -10,22 +10,20 @@ import { useStackApi } from "./stack/Api";
 
 export interface FormSaveButtonProps {
     localStorageKey?: string;
-    saving: boolean;
-    hasErrors: boolean;
 }
 
-export const FormSaveSplitButton = ({ saving, hasErrors, localStorageKey }: PropsWithChildren<FormSaveButtonProps>) => {
+export const FormSaveSplitButton = ({ localStorageKey }: PropsWithChildren<FormSaveButtonProps>) => {
     const stackApi = useStackApi();
     const form = useForm();
-    const { pristine, hasValidationErrors, submitting } = useFormState();
+    const { pristine, hasValidationErrors, submitting, hasSubmitErrors } = useFormState();
 
     return (
         <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey={localStorageKey}>
             <SaveButton
                 color={"primary"}
                 variant={"contained"}
-                saving={saving}
-                hasErrors={hasErrors}
+                saving={submitting}
+                hasErrors={hasSubmitErrors}
                 onClick={() => {
                     form.submit();
                 }}
@@ -35,8 +33,8 @@ export const FormSaveSplitButton = ({ saving, hasErrors, localStorageKey }: Prop
             <SaveButton
                 color={"primary"}
                 variant={"contained"}
-                saving={saving}
-                hasErrors={hasErrors != null}
+                saving={submitting}
+                hasErrors={hasSubmitErrors}
                 onClick={async () => {
                     const submitResult = await form.submit();
                     const error = submitResult?.[FORM_ERROR];
