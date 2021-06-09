@@ -1,10 +1,11 @@
 import { Field } from "@comet/admin";
 import { FinalFormColorPicker } from "@comet/admin-color-picker";
+import { Favorite } from "@comet/admin-icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Color Picker/Color Palette and Color Picker", module).add("Color Palette and Color Picker", () => {
+storiesOf("stories/components/Color Picker/With Icon", module).add("with icon", () => {
     return (
         <div style={{ minHeight: 350 }}>
             <Form
@@ -22,6 +23,7 @@ storiesOf("stories/components/Color Picker/Color Palette and Color Picker", modu
                             component={FinalFormColorPicker}
                             showPicker
                             colorPalette={["crimson", "cornsilk", "lightblue", "steelblue", "midnightblue", "orange"]}
+                            endAdornment={<Favorite />}
                         />
                     );
                 }}

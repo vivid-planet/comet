@@ -4,7 +4,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Color Picker/Color Palette and Color Picker", module).add("Color Palette and Color Picker", () => {
+storiesOf("stories/components/Color Picker/Full Width", module).add("full width", () => {
     return (
         <div style={{ minHeight: 350 }}>
             <Form
@@ -22,6 +22,7 @@ storiesOf("stories/components/Color Picker/Color Palette and Color Picker", modu
                             component={FinalFormColorPicker}
                             showPicker
                             colorPalette={["crimson", "cornsilk", "lightblue", "steelblue", "midnightblue", "orange"]}
+                            fullWidth
                         />
                     );
                 }}
