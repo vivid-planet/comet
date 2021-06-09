@@ -37,24 +37,67 @@ const Thumb = styled.div`
 
 function Story() {
     return (
-        <div style={{ width: "300px" }}>
-            <Form
-                onSubmit={(values) => {
-                    // values
-                }}
-                initialValues={{ price: { min: 0, max: 100 } }}
-                render={({ handleSubmit, values }) => (
-                    <Field
-                        component={FinalFormRangeInput}
-                        name="price"
-                        min={0}
-                        max={100}
-                        endAdornment={<span>€</span>}
-                        sliderProps={{ ThumbComponent: Thumb }}
-                    />
-                )}
-            />
-        </div>
+        <>
+            <h1>Final Form Range Input</h1>
+            <h3>with initialValues</h3>
+            <div style={{ width: "400px" }}>
+                <Form
+                    onSubmit={(values) => {
+                        // values
+                    }}
+                    initialValues={{ price: { min: 0, max: 100 } }}
+                    render={({ handleSubmit, values }) => (
+                        <Field
+                            component={FinalFormRangeInput}
+                            name="price"
+                            min={0}
+                            max={100}
+                            endAdornment={<span>€</span>}
+                            sliderProps={{ ThumbComponent: Thumb }}
+                        />
+                    )}
+                />
+            </div>
+            <div style={{ width: "400px", borderBottom: "1px solid grey" }} />
+            <h3>without initialValues</h3>
+            <div style={{ width: "400px" }}>
+                <Form
+                    onSubmit={(values) => {
+                        // values
+                    }}
+                    render={({ handleSubmit, values }) => (
+                        <Field
+                            component={FinalFormRangeInput}
+                            name="price"
+                            min={0}
+                            max={150}
+                            endAdornment={<span>€</span>}
+                            sliderProps={{ ThumbComponent: Thumb }}
+                        />
+                    )}
+                />
+            </div>
+            <div style={{ width: "400px", borderBottom: "1px solid grey" }} />
+            <h3>with initialValues and different MinMax Values</h3>
+            <div style={{ width: "400px" }}>
+                <Form
+                    onSubmit={(values) => {
+                        // values
+                    }}
+                    initialValues={{ price: { min: 50, max: 80 } }}
+                    render={({ handleSubmit, values }) => (
+                        <Field
+                            component={FinalFormRangeInput}
+                            name="price"
+                            min={20}
+                            max={150}
+                            endAdornment={<span>€</span>}
+                            sliderProps={{ ThumbComponent: Thumb }}
+                        />
+                    )}
+                />
+            </div>
+        </>
     );
 }
 
