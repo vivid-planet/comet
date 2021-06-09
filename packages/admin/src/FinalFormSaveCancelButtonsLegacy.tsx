@@ -3,10 +3,10 @@ import * as React from "react";
 import { useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { useStyles, useThemeProps } from "./FormButtons.styles";
+import { useStyles, useThemeProps } from "./FinalFormSaveCancelButtonsLegacy.styles";
 import { useStackApi } from "./stack/Api";
 
-export const FormButtons = () => {
+export const FinalFormSaveCancelButtonsLegacy = () => {
     const styles = useStyles();
     const stackApi = useStackApi();
     const themeProps = useThemeProps();

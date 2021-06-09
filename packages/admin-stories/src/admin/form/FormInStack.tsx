@@ -1,4 +1,14 @@
-import { Field, FinalForm, FinalFormInput, FormButtons, FormPaper, Stack, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import {
+    Field,
+    FinalForm,
+    FinalFormInput,
+    FinalFormSaveCancelButtonsLegacy,
+    FormPaper,
+    Stack,
+    StackPage,
+    StackSwitch,
+    StackSwitchApiContext,
+} from "@comet/admin";
 import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
@@ -49,7 +59,7 @@ function Page1() {
                         <Field label="Foo" name="foo" component={FinalFormInput} />
                     </FormPaper>
                 </div>
-                <FormButtons />
+                <FinalFormSaveCancelButtonsLegacy />
             </FinalForm>
         </>
     );
@@ -63,7 +73,7 @@ function Page2() {
                     <Field label="Bar" name="bar" component={FinalFormInput} />
                 </FormPaper>
             </div>
-            <FormButtons />
+            <FinalFormSaveCancelButtonsLegacy />
         </FinalForm>
     );
 }

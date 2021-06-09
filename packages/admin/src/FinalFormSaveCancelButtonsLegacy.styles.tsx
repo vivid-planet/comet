@@ -5,14 +5,14 @@ import * as React from "react";
 
 import { useComponentThemeProps } from "./mui/useComponentThemeProps";
 
-export interface CometAdminFormButtonsThemeProps {
+export interface CometAdminCometAdminFinalFormSaveCancelButtonsLegacyThemeProps {
     cancelIcon?: React.ReactNode;
     saveIcon?: React.ReactNode;
 }
 
-export type CometAdminFormButtonsClassKeys = "root" | "cancelButton" | "saveButton";
+export type CometAdminCometAdminFinalFormSaveCancelButtonsLegacyClassKeys = "root" | "cancelButton" | "saveButton";
 
-export const useStyles = makeStyles<Theme, {}, CometAdminFormButtonsClassKeys>(
+export const useStyles = makeStyles<Theme, {}, CometAdminCometAdminFinalFormSaveCancelButtonsLegacyClassKeys>(
     (theme) => {
         return {
             root: {},
@@ -24,11 +24,11 @@ export const useStyles = makeStyles<Theme, {}, CometAdminFormButtonsClassKeys>(
             },
         };
     },
-    { name: "CometAdminFormButtons" },
+    { name: "CometAdminFinalFormSaveCancelButtonsLegacy" },
 );
 
 export function useThemeProps() {
-    const { cancelIcon = <Cancel />, saveIcon = <Save />, ...restProps } = useComponentThemeProps("CometAdminFormButtons") ?? {};
+    const { cancelIcon = <Cancel />, saveIcon = <Save />, ...restProps } = useComponentThemeProps("CometAdminFinalFormSaveCancelButtonsLegacy") ?? {};
 
     return { cancelIcon, saveIcon, ...restProps };
 }
@@ -36,12 +36,12 @@ export function useThemeProps() {
 // Theme Augmentation
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
-        CometAdminFormButtons: CometAdminFormButtonsClassKeys;
+        CometAdminFinalFormSaveCancelButtonsLegacy: CometAdminCometAdminFinalFormSaveCancelButtonsLegacyClassKeys;
     }
 }
 
 declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
-        CometAdminFormButtons: CometAdminFormButtonsThemeProps;
+        CometAdminFinalFormSaveCancelButtonsLegacy: CometAdminCometAdminFinalFormSaveCancelButtonsLegacyThemeProps;
     }
 }

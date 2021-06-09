@@ -1,4 +1,4 @@
-import { Field, FinalForm, FinalFormInput, FormButtons, FormPaper } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, FinalFormSaveCancelButtonsLegacy, FormPaper } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
@@ -42,7 +42,7 @@ function Story() {
                     <Field label="Bar" name="bar" component={FinalFormInput} />
                 </FormPaper>
             </div>
-            <FormButtons />
+            <FinalFormSaveCancelButtonsLegacy />
         </FinalForm>
     );
 }

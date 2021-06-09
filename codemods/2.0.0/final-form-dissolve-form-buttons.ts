@@ -3,7 +3,7 @@ import { Transform } from "jscodeshift";
  * What does this codeMod:
  *
  *      handle deprecation of renderButtons of FinalFormProp:
- *          - Add <FormButtons/> to all FinalForm Components that have not set a renderButtons prop
+ *          - Add <FinalFormSaveCancelButtonsLegacy/> to all FinalForm Components that have not set a renderButtons prop
  *
  * */
 
@@ -32,23 +32,23 @@ const transform: Transform = (file, api, options) => {
             }
         });
 
-        // Add FormButtons to the end
+        // Add FinalFormSaveCancelButtonsLegacy to the end
         if (addFormButtons) {
-            // Add <FormButtons /> as last child to <Stack>
-            const openingElement = j.jsxOpeningElement(j.jsxIdentifier("FormButtons"), [], true);
+            // Add <FinalFormSaveCancelButtonsLegacy /> as last child to <Stack>
+            const openingElement = j.jsxOpeningElement(j.jsxIdentifier("FinalFormSaveCancelButtonsLegacy"), [], true);
             astElement.value.children = astElement.value.children.concat(openingElement);
 
-            // Add FormButtons Component to @comet/admin import
+            // Add FinalFormSaveCancelButtonsLegacy Component to @comet/admin import
             root.find(j.Declaration).forEach((declaration) => {
                 if (declaration.value.source?.value === "@comet/admin") {
                     const found = j.importDeclaration.from(declaration.value).specifiers.find((specifier) => {
-                        return specifier?.local?.name === "FormButtons";
+                        return specifier?.local?.name === "FinalFormSaveCancelButtonsLegacy";
                     });
 
                     if (!found) {
                         declaration.value = j.importDeclaration
                             .from(declaration.value)
-                            .specifiers.push(j.importSpecifier(j.identifier("FormButtons")));
+                            .specifiers.push(j.importSpecifier(j.identifier("FinalFormSaveCancelButtonsLegacy")));
                     }
                 }
             });
