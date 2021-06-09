@@ -135,3 +135,8 @@ export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonCont
 export { mergeClasses } from "./helpers/mergeClasses";
 export { SnackbarApi, useSnackbarApi, SnackbarProvider } from "./snackbar/SnackbarProvider";
 export { UndoSnackbarProps, UndoSnackbar } from "./snackbar/UndoSnackbar";
+export { FinalFormSaveCancelButtonsLegacy } from "./FinalFormSaveCancelButtonsLegacy";
+export {
+    CometAdminCometAdminFinalFormSaveCancelButtonsLegacyClassKeys,
+    CometAdminCometAdminFinalFormSaveCancelButtonsLegacyThemeProps,
+} from "./FinalFormSaveCancelButtonsLegacy.styles";

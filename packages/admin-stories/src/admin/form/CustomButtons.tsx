@@ -3,14 +3,10 @@ import { Button } from "@material-ui/core";
 import { BeachAccess as BeachAccessIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { AnyObject } from "react-final-form";
+import { useFormState } from "react-final-form";
 import styled from "styled-components";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
-
-interface IProps {
-    formRenderProps: AnyObject;
-}
 
 const StyledButton = styled(Button)`
     && {
@@ -27,21 +23,23 @@ const StyledButton = styled(Button)`
     }
 `;
 
-const CustomButtons: React.FC<IProps> = ({ formRenderProps }) => {
+const CustomButtons: React.FC = () => {
+    const { values, pristine, hasValidationErrors, submitting } = useFormState();
+
     return (
         <StyledButton
             startIcon={<BeachAccessIcon />}
             variant="text"
             color="default"
-            disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
+            disabled={pristine || hasValidationErrors || submitting}
             onClick={handleCustomButtonClick}
         >
-            {formRenderProps.pristine ? "Please fill out the form" : "Click Me - I'm a Custom button"}
+            {pristine ? "Please fill out the form" : "Click Me - I'm a Custom button"}
         </StyledButton>
     );
 
     function handleCustomButtonClick() {
-        window.alert(`Form values: ${JSON.stringify(formRenderProps.values)}`);
+        window.alert(`Form values: ${JSON.stringify(values)}`);
     }
 };
 
@@ -52,12 +50,12 @@ function Story() {
             onSubmit={() => {
                 // add your form-submit function here
             }}
-            renderButtons={(props) => <CustomButtons formRenderProps={props} />}
         >
             <FormPaper>
                 <Field label="Foo" name="foo" component={FinalFormInput} />
                 <Field label="Bar" name="bar" component={FinalFormInput} />
             </FormPaper>
+            <CustomButtons />
         </FinalForm>
     );
 }
