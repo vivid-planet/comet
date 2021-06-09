@@ -28,7 +28,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add SplitButton - combine multiple buttons behind one ButtonGroup
 -   add SaveButton which handles and displays state(idle, saving, success and error)
 -   add SnackbarProvider, useSnackbarApi() hook and UndoSnackbar
--   add FormButtons as drop in replacement for removed Cancel and Save Button in `FinalForm`.
+-   add `FinalFormSaveCancelButtonsLegacy` as drop in replacement for removed Cancel and Save Button in `FinalForm`.
 
 ### Incompatible Changes
 
