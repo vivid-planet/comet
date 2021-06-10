@@ -1,8 +1,8 @@
+import { mergeClasses } from "@comet/admin";
 import { makeStyles } from "@material-ui/core";
 import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import { IControlProps } from "../types";
 import getRteTheme from "../utils/getRteTheme";
 

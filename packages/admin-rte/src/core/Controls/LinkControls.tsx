@@ -1,9 +1,9 @@
+import { mergeClasses } from "@comet/admin";
 import { makeStyles } from "@material-ui/core";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import LinkToolbarButton from "../extension/Link/ToolbarButton";
 import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
 import { IControlProps } from "../types";
