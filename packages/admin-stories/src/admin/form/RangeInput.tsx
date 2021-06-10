@@ -1,4 +1,5 @@
 import { Field, FinalFormRangeInput } from "@comet/admin";
+import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -40,60 +41,102 @@ function Story() {
         <>
             <h1>Final Form Range Input</h1>
             <h3>with initialValues</h3>
-            <div style={{ width: "400px" }}>
+            <div style={{ width: "400px", paddingBottom: "30px" }}>
                 <Form
                     onSubmit={(values) => {
                         // values
                     }}
                     initialValues={{ price: { min: 0, max: 100 } }}
-                    render={({ handleSubmit, values }) => (
-                        <Field
-                            component={FinalFormRangeInput}
-                            name="price"
-                            min={0}
-                            max={100}
-                            endAdornment={<span>€</span>}
-                            sliderProps={{ ThumbComponent: Thumb }}
-                        />
+                    render={({ handleSubmit, values, form, initialValues }) => (
+                        <>
+                            <Field
+                                component={FinalFormRangeInput}
+                                name="price"
+                                min={0}
+                                max={100}
+                                endAdornment={<span>€</span>}
+                                sliderProps={{ ThumbComponent: Thumb }}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    for (const name in values) {
+                                        //required because reset removes values
+                                        form.change(name, (initialValues as Record<string, any>)[name]);
+                                    }
+                                }}
+                            >
+                                Reset
+                            </Button>
+                        </>
                     )}
                 />
             </div>
             <div style={{ width: "400px", borderBottom: "1px solid grey" }} />
             <h3>without initialValues</h3>
-            <div style={{ width: "400px" }}>
+            <div style={{ width: "400px", paddingBottom: "30px" }}>
                 <Form
                     onSubmit={(values) => {
                         // values
                     }}
-                    render={({ handleSubmit, values }) => (
-                        <Field
-                            component={FinalFormRangeInput}
-                            name="price"
-                            min={0}
-                            max={150}
-                            endAdornment={<span>€</span>}
-                            sliderProps={{ ThumbComponent: Thumb }}
-                        />
+                    render={({ values, form }) => (
+                        <>
+                            <Field
+                                component={FinalFormRangeInput}
+                                name="price"
+                                min={0}
+                                max={150}
+                                endAdornment={<span>€</span>}
+                                sliderProps={{ ThumbComponent: Thumb }}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    for (const name in values) {
+                                        //required because reset removes values
+                                        form.change(name, { min: undefined, max: undefined });
+                                    }
+                                }}
+                            >
+                                Reset
+                            </Button>
+                        </>
                     )}
                 />
             </div>
             <div style={{ width: "400px", borderBottom: "1px solid grey" }} />
             <h3>with initialValues and different MinMax Values</h3>
-            <div style={{ width: "400px" }}>
+            <div style={{ width: "400px", paddingBottom: "30px" }}>
                 <Form
                     onSubmit={(values) => {
                         // values
                     }}
                     initialValues={{ price: { min: 50, max: 80 } }}
-                    render={({ handleSubmit, values }) => (
-                        <Field
-                            component={FinalFormRangeInput}
-                            name="price"
-                            min={20}
-                            max={150}
-                            endAdornment={<span>€</span>}
-                            sliderProps={{ ThumbComponent: Thumb }}
-                        />
+                    render={({ values, form, initialValues }) => (
+                        <>
+                            <Field
+                                component={FinalFormRangeInput}
+                                name="price"
+                                min={20}
+                                max={150}
+                                endAdornment={<span>€</span>}
+                                sliderProps={{ ThumbComponent: Thumb }}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    for (const name in values) {
+                                        //required because reset removes values
+                                        form.change(name, (initialValues as Record<string, any>)[name]);
+                                    }
+                                }}
+                            >
+                                Reset
+                            </Button>
+                        </>
                     )}
                 />
             </div>
