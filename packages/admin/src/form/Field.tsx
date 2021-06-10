@@ -37,6 +37,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
 }: Props<FieldValue, FieldElement>): React.ReactElement {
     const { mutators } = useForm();
     const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
+    const currentWarningValidationRound = React.useRef(0);
 
     const validateError = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
 
@@ -79,15 +80,24 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 <FormSpy
                     subscription={{ values: true }}
                     onChange={async ({ values }) => {
-                        if (validateWarning) {
-                            if (setFieldData) {
-                                setFieldData(name, { warning: await Promise.resolve(validateWarning(values[name], values)) });
-                            } else {
-                                console.warn(
-                                    `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
-                                );
-                            }
+                        if (!setFieldData) {
+                            console.warn(
+                                `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
+                            );
+                            return;
                         }
+
+                        currentWarningValidationRound.current++;
+                        const validationRound = currentWarningValidationRound.current;
+
+                        const warning = await Promise.resolve(validateWarning(values[name], values));
+
+                        if (currentWarningValidationRound.current > validationRound) {
+                            // Another validation has been started, skip this one
+                            return;
+                        }
+
+                        setFieldData(name, { warning });
                     }}
                 />
             )}

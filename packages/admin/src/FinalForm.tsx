@@ -111,23 +111,34 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             };
         }, [formRenderProps, submit]);
 
+        const currentWarningValidationRound = React.useRef(0);
+
         React.useEffect(() => {
             if (validateWarning) {
+                if (!setFieldData) {
+                    console.warn(
+                        `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
+                    );
+                    return;
+                }
+
                 const validate = async () => {
+                    currentWarningValidationRound.current++;
+                    const validationRound = currentWarningValidationRound.current;
+
                     const validationErrors = await Promise.resolve(validateWarning(formRenderProps.values));
+
+                    if (currentWarningValidationRound.current > validationRound) {
+                        // Another validation has been started, skip this one
+                        return;
+                    }
 
                     if (!validationErrors) {
                         return;
                     }
 
                     Object.entries(validationErrors).forEach(([fieldName, warning]) => {
-                        if (setFieldData) {
-                            setFieldData(fieldName, { warning });
-                        } else {
-                            console.warn(
-                                `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
-                            );
-                        }
+                        setFieldData(fieldName, { warning });
                     });
                 };
 
