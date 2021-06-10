@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { CircularProgress } from "@material-ui/core";
-import { FORM_ERROR, FormApi, Mutator, SubmissionErrors } from "final-form";
+import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
 import setFieldData from "final-form-set-field-data";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
@@ -24,6 +24,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
      * default implementation : go back if a stackApi context exists
      */
     onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
+    validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -37,6 +38,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         onAfterSubmit = () => {
             stackApi?.goBack();
         },
+        validateWarning,
     } = props;
 
     const ref = React.useRef();
@@ -51,6 +53,9 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     );
 
     function RenderForm(formRenderProps: FormRenderProps<FormValues>) {
+        const { mutators } = formRenderProps.form;
+        const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
+
         const submit = React.useCallback(
             (event: any) => {
                 if (!formRenderProps.dirty) return;
@@ -105,6 +110,30 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 }
             };
         }, [formRenderProps, submit]);
+
+        React.useEffect(() => {
+            if (validateWarning) {
+                const validate = async () => {
+                    const validationErrors = await Promise.resolve(validateWarning(formRenderProps.values));
+
+                    if (!validationErrors) {
+                        return;
+                    }
+
+                    Object.entries(validationErrors).forEach(([fieldName, warning]) => {
+                        if (setFieldData) {
+                            setFieldData(fieldName, { warning });
+                        } else {
+                            console.warn(
+                                `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
+                            );
+                        }
+                    });
+                };
+
+                validate();
+            }
+        }, [formRenderProps.values, setFieldData]);
 
         return (
             <form onSubmit={submit}>
