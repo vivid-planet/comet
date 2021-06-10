@@ -128,8 +128,14 @@ function Story() {
                         };
                     }}
                     validateWarning={async (values) => {
+                        const warning = await validateWarningAsync(values.input1);
+
+                        if (!warning) {
+                            return undefined;
+                        }
+
                         return {
-                            input1: await validateWarningAsync(values.input1),
+                            input1: warning,
                         };
                     }}
                 />
