@@ -1,9 +1,9 @@
-import { mergeClasses } from "@comet/admin";
 import { makeStyles } from "@material-ui/core";
 import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import * as React from "react";
 
+import { mergeClasses } from "../../mergeClasses";
 import { IFeatureConfig } from "../types";
 import ControlButton from "./ControlButton";
 

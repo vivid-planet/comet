@@ -1,8 +1,8 @@
-import { mergeClasses } from "@comet/admin";
 import { makeStyles, Typography, TypographyProps } from "@material-ui/core";
 import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
+import { mergeClasses } from "../mergeClasses";
 import { SupportedThings } from "./Rte";
 
 // Only block-types used in block-type-map should be styled

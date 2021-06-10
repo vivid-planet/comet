@@ -1,6 +1,5 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { mergeClasses } from "@comet/admin";
 import { makeStyles } from "@material-ui/core";
 import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import {
@@ -14,6 +13,7 @@ import {
 } from "draft-js";
 import * as React from "react";
 
+import { mergeClasses } from "../mergeClasses";
 import Controls from "./Controls/Controls";
 import defaultBlocktypeMap, { mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
