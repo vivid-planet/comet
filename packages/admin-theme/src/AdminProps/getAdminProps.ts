@@ -3,7 +3,6 @@ import { ComponentsProps } from "@material-ui/core/styles/props";
 import { getClearInputButtonProps } from "./clearInputButton";
 import { getErrorBoundaryProps } from "./errorBoundary";
 import { getFinalFormSaveCancelButtonsLegacyProps } from "./finalFormSaveCancelButtonsLegacy";
-import { getMasterLayoutProps } from "./masterLayout";
 import { getMenuProps } from "./menu";
 import { getMenuCollapsibleItemProps } from "./menuCollapsibleItem";
 import { getSaveButtonProps } from "./saveSplitButton";
@@ -20,7 +19,6 @@ import { getToolbarTitleItemProps } from "./toolbarTitleItem";
 export const getAdminProps = (): ComponentsProps => ({
     CometAdminMenu: getMenuProps(),
     CometAdminMenuCollapsibleItem: getMenuCollapsibleItemProps(),
-    CometAdminMasterLayout: getMasterLayoutProps(),
     CometAdminErrorBoundary: getErrorBoundaryProps(),
     CometAdminStackBreadcrumbs: getStackBreadcrumbsProps(),
     CometAdminFinalFormSaveCancelButtonsLegacy: getFinalFormSaveCancelButtonsLegacyProps(),

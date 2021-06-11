@@ -8,6 +8,7 @@
     ],
     "dependencies": {
         "@material-ui/lab": "^4.0.0-alpha.57",
+        "@comet/admin-icons": "2.0.0-alpha.7",
         "debounce": "^1.2.0",
         "lodash.isequal": "^4.5.0",
         "query-string": "^6.8.1",

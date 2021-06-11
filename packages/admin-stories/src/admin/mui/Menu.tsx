@@ -1,12 +1,22 @@
-import { MainContent, MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
+import {
+    AppHeader,
+    AppHeaderFillSpace,
+    AppHeaderMenuButton,
+    CometLogo,
+    MainContent,
+    MasterLayout,
+    Menu,
+    MenuCollapsibleItem,
+    MenuItemAnchorLink,
+    MenuItemRouterLink,
+    useWindowSize,
+} from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
-import { Box, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
 import StoryRouter from "storybook-react-router";
-
-import CometLogo from "../../../.storybook/CometLogo";
 
 const permanentMenuMinWidth = 1024;
 
@@ -37,11 +47,13 @@ const AppMenu: React.FC = () => {
     );
 };
 
-const AppHeader: React.FC = () => (
-    <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} style={{ width: "100%" }}>
+const Header: React.FC = () => (
+    <AppHeader>
+        <AppHeaderMenuButton />
         <CometLogo />
+        <AppHeaderFillSpace />
         <Typography variant="h5">Menu Example</Typography>
-    </Box>
+    </AppHeader>
 );
 
 const Content = ({ children }: { children: string }) => (
@@ -53,7 +65,7 @@ const Content = ({ children }: { children: string }) => (
 );
 
 export const Story: React.FC = () => (
-    <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
+    <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
         <Switch>
             <Route path="/" exact render={() => <Content>Root</Content>} />
             <Route path="/dashboard" render={() => <Content>Dashboard</Content>} />
