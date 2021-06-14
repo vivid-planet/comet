@@ -2,7 +2,7 @@ import { PrettyBytes } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("@comet/admin/helpers/pretty-bytes", module).add("PrettyBytes", () => {
+storiesOf("@comet/admin/helpers", module).add("PrettyBytes", () => {
     return (
         <div>
             <div>
