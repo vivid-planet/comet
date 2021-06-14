@@ -57,7 +57,6 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
     endAdornment,
     input: { name, onChange, value: fieldValue },
 }) => {
-    const inputRegex = new RegExp("^[0-9]+$");
     const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || undefined);
     const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || undefined);
 
@@ -79,18 +78,24 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             name={`${name}.min`}
                             inputProps={{
                                 value: internalMinInput !== undefined ? internalMinInput : "",
-                                type: "text",
+                                type: "number",
                                 placeholder: min,
                             }}
                             startAdornment={startAdornment}
                             endAdornment={endAdornment}
                             onBlur={() => {
-                                const minFieldValue = Math.min(internalMinInput ? internalMinInput : min, fieldValue.max ? fieldValue.max : max);
-
-                                onChange({ ...fieldValue, min: minFieldValue < min ? min : minFieldValue });
+                                if (internalMinInput !== undefined) {
+                                    const minFieldValue = Math.min(internalMinInput ? internalMinInput : min, fieldValue.max ? fieldValue.max : max);
+                                    onChange({ ...fieldValue, min: minFieldValue < min ? min : minFieldValue });
+                                } else {
+                                    onChange({ ...fieldValue, min: undefined });
+                                }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                if (inputRegex.test(e.target.value) || e.target.value === "") {
+                                console.log(e.target.value);
+                                if (e.target.value === "") {
+                                    setInternalMinInput(undefined);
+                                } else {
                                     setInternalMinInput(Number(e.target.value));
                                 }
                             }}
@@ -104,18 +109,23 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             name={`${name}.max`}
                             inputProps={{
                                 value: internalMaxInput !== undefined ? internalMaxInput : "",
-                                type: "text",
+                                type: "number",
                                 placeholder: max,
                             }}
                             startAdornment={startAdornment ? startAdornment : ""}
                             endAdornment={endAdornment ? endAdornment : ""}
                             onBlur={() => {
-                                const maxFieldValue = Math.max(fieldValue.min ? fieldValue.min : min, internalMaxInput ? internalMaxInput : max);
-
-                                onChange({ ...fieldValue, max: maxFieldValue > max ? max : maxFieldValue });
+                                if (internalMaxInput !== undefined) {
+                                    const maxFieldValue = Math.max(fieldValue.min ? fieldValue.min : min, internalMaxInput ? internalMaxInput : max);
+                                    onChange({ ...fieldValue, max: maxFieldValue > max ? max : maxFieldValue });
+                                } else {
+                                    onChange({ ...fieldValue, max: undefined });
+                                }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                if (inputRegex.test(e.target.value) || e.target.value === "") {
+                                if (e.target.value === "") {
+                                    setInternalMaxInput(undefined);
+                                } else {
                                     setInternalMaxInput(Number(e.target.value));
                                 }
                             }}

@@ -61,10 +61,7 @@ function Story() {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => {
-                                    for (const name in values) {
-                                        //required because reset removes values
-                                        form.change(name, (initialValues as Record<string, any>)[name]);
-                                    }
+                                    form.reset();
                                 }}
                             >
                                 Reset
@@ -94,10 +91,7 @@ function Story() {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => {
-                                    for (const name in values) {
-                                        //required because reset removes values
-                                        form.change(name, { min: undefined, max: undefined });
-                                    }
+                                    form.reset();
                                 }}
                             >
                                 Reset
@@ -128,10 +122,7 @@ function Story() {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => {
-                                    for (const name in values) {
-                                        //required because reset removes values
-                                        form.change(name, (initialValues as Record<string, any>)[name]);
-                                    }
+                                    form.reset();
                                 }}
                             >
                                 Reset
