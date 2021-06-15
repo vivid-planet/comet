@@ -92,7 +92,6 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                                 }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                console.log(e.target.value);
                                 if (e.target.value === "") {
                                     setInternalMinInput(undefined);
                                 } else {
@@ -118,8 +117,6 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                                 if (internalMaxInput !== undefined) {
                                     const maxFieldValue = Math.max(fieldValue.min ? fieldValue.min : min, internalMaxInput ? internalMaxInput : max);
                                     onChange({ ...fieldValue, max: maxFieldValue > max ? max : maxFieldValue });
-                                } else {
-                                    onChange({ ...fieldValue, max: undefined });
                                 }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
