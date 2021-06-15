@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add SaveButton which handles and displays state(idle, saving, success and error)
 -   add SnackbarProvider, useSnackbarApi() hook and UndoSnackbar
 -   add `FinalFormSaveCancelButtonsLegacy` as drop in replacement for removed Cancel and Save Button in `FinalForm`.
+-   add PrettyBytes component for formatting file sizes and other byte values
 
 ### Incompatible Changes
 
