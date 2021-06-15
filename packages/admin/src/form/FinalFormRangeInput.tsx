@@ -86,7 +86,10 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             onBlur={() => {
                                 if (internalMinInput !== undefined) {
                                     const minFieldValue = Math.min(internalMinInput ? internalMinInput : min, fieldValue.max ? fieldValue.max : max);
-                                    onChange({ ...fieldValue, min: minFieldValue < min ? min : minFieldValue });
+                                    onChange({
+                                        min: minFieldValue < min ? min : minFieldValue,
+                                        max: internalMaxInput === undefined ? max : internalMaxInput,
+                                    });
                                 } else {
                                     onChange({ ...fieldValue, min: undefined });
                                 }
@@ -116,7 +119,10 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             onBlur={() => {
                                 if (internalMaxInput !== undefined) {
                                     const maxFieldValue = Math.max(fieldValue.min ? fieldValue.min : min, internalMaxInput ? internalMaxInput : max);
-                                    onChange({ ...fieldValue, max: maxFieldValue > max ? max : maxFieldValue });
+                                    onChange({
+                                        min: internalMinInput === undefined ? min : internalMinInput,
+                                        max: maxFieldValue > max ? max : maxFieldValue,
+                                    });
                                 }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
