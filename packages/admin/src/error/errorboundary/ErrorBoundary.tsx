@@ -1,6 +1,6 @@
+import { ChevronDown, ChevronRight, Error } from "@comet/admin-icons";
 import { createStyles, Typography, WithStyles, withStyles } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
-import { KeyboardArrowDown, KeyboardArrowRight } from "@material-ui/icons";
 import { Alert, AlertProps } from "@material-ui/lab";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -45,10 +45,10 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, IErrorBoundarySt
     public render() {
         const {
             classes,
-            variant,
-            icon,
-            toggleDetailsOpenedIcon = <KeyboardArrowRight />,
-            toggleDetailsClosedIcon = <KeyboardArrowDown />,
+            variant = "filled",
+            icon = <Error />,
+            toggleDetailsOpenedIcon = <ChevronRight fontSize={"small"} />,
+            toggleDetailsClosedIcon = <ChevronDown fontSize={"small"} />,
         } = this.props;
         const { error, errorInfo } = this.state;
 
@@ -105,7 +105,7 @@ const styles = (theme: Theme) =>
             alignItems: "center",
             cursor: "pointer",
             outline: "none",
-            paddingTop: theme.spacing(1),
+            paddingTop: theme.spacing(2),
             "&:first-of-type ": {
                 listStyleType: "none",
             },

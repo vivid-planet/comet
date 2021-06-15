@@ -19,19 +19,17 @@ export const TableBodyRow = ({
 }: TableBodyRowProps & StyledComponentProps<CometAdminTableBodyRowClassKeys>) => {
     const classes = mergeClasses<CometAdminTableBodyRowClassKeys>(useStyles(), passedClasses);
     const isOdd = ((index || 0) + (hideTableHead ? 1 : 0)) % 2 === 1;
-    return <TableRow classes={{ root: isOdd ? classes.odd : classes.even }} {...otherProps} />;
+
+    return <TableRow classes={{ root: `${classes.root} ${isOdd ? classes.odd : classes.even}` }} {...otherProps} />;
 };
 
-export type CometAdminTableBodyRowClassKeys = "even" | "odd";
+export type CometAdminTableBodyRowClassKeys = "root" | "even" | "odd";
 
 export const useStyles = makeStyles<Theme, {}, CometAdminTableBodyRowClassKeys>(
-    ({ palette }) => ({
-        even: {
-            backgroundColor: "#fff",
-        },
-        odd: {
-            backgroundColor: palette.grey[50],
-        },
+    () => ({
+        root: {},
+        even: {},
+        odd: {},
     }),
     { name: "CometAdminTableBodyRow" },
 );

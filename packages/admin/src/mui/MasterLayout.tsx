@@ -1,6 +1,6 @@
+import { Hamburger } from "@comet/admin-icons";
 import { AppBar, CssBaseline, IconButton, Toolbar } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
-import MuiMenuIcon from "@material-ui/icons/Menu";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
@@ -29,13 +29,33 @@ const styles = (theme: Theme) =>
         },
         header: {
             zIndex: theme.zIndex.drawer + 1,
+            backgroundColor: theme.palette.grey["A400"],
+            "& [class*='MuiTypography']": {
+                color: theme.palette.grey["A100"],
+            },
+            "& [class*='MuiIconButton']": {
+                color: theme.palette.grey["A100"],
+            },
+            "& [class*='MuiPaper']": {
+                "& [class*='MuiTypography']": {
+                    color: "inherit",
+                },
+                "& [class*='MuiIconButton']": {
+                    color: "inherit",
+                },
+            },
         },
         toolbar: {
             minHeight: 0,
             paddingLeft: theme.spacing(2),
             paddingRight: theme.spacing(2),
         },
-        menuButton: {},
+        menuButton: {
+            marginRight: theme.spacing(2),
+            "& [class*='MuiSvgIcon-root']": {
+                fontSize: 20,
+            },
+        },
         contentWrapper: {
             flexGrow: 1,
         },
@@ -50,7 +70,7 @@ const MasterLayout: React.FC<WithStyles<typeof styles> & MasterLayoutProps & Mas
         hideToolbarMenuIcon,
         openMenuByDefault = true,
         headerHeight = 60,
-        menuIcon: MenuIcon = MuiMenuIcon,
+        menuIcon: MenuIcon = Hamburger,
     } = props;
     const [open, setOpen] = React.useState(openMenuByDefault);
 

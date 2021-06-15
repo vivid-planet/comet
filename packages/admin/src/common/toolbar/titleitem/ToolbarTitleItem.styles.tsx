@@ -7,7 +7,7 @@ export interface ToolbarTitleItemThemeProps {
 }
 
 export function useThemeProps() {
-    const { typographyProps, ...restProps } = useComponentThemeProps("CometAdminToolbarTitleItem") ?? {};
+    const { typographyProps = { variant: "h4" }, ...restProps } = useComponentThemeProps("CometAdminToolbarTitleItem") ?? {};
     return { typographyProps, ...restProps };
 }
 

@@ -1,4 +1,4 @@
-import { ExpandMore } from "@material-ui/icons";
+import { ChevronDown } from "@comet/admin-icons";
 import * as React from "react";
 
 import { useComponentThemeProps } from "../../../mui/useComponentThemeProps";
@@ -8,7 +8,7 @@ export interface CometAdminSplitButtonThemeProps {
 }
 
 export function useThemeProps() {
-    const { selectIcon = <ExpandMore />, ...restProps } = useComponentThemeProps("CometAdminSplitButton") ?? {};
+    const { selectIcon = <ChevronDown />, ...restProps } = useComponentThemeProps("CometAdminSplitButton") ?? {};
     return { selectIcon, ...restProps };
 }
 

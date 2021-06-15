@@ -1,6 +1,5 @@
-import { Collapse, List } from "@material-ui/core";
-import ArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import ArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import { ChevronDown, ChevronUp } from "@comet/admin-icons";
+import { Collapse, List, Theme } from "@material-ui/core";
 import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { matchPath, useLocation } from "react-router";
@@ -10,10 +9,20 @@ import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
 export type CometAdminMenuCollapsibleItemClassKeys = "root" | "childSelected" | "listItem" | "open";
 
-const styles = () =>
+const styles = (theme: Theme) =>
     createStyles<CometAdminMenuCollapsibleItemClassKeys, any>({
         root: {},
-        childSelected: {},
+        childSelected: {
+            color: theme.palette.primary.main,
+            "& $listItem": {
+                "& [class*='MuiListItemText-root']": {
+                    color: theme.palette.primary.main,
+                },
+                "& [class*='MuiListItemIcon-root']": {
+                    color: theme.palette.primary.main,
+                },
+            },
+        },
         listItem: {},
         open: {},
     });
@@ -42,8 +51,8 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemT
     secondary,
     icon,
     openByDefault = false,
-    openedIcon = <ArrowUpIcon />,
-    closedIcon = <ArrowDownIcon />,
+    openedIcon = <ChevronUp />,
+    closedIcon = <ChevronDown />,
     children,
     ...otherProps
 }) => {
@@ -80,7 +89,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemT
                 />
             </div>
             <Collapse in={open} timeout="auto" unmountOnExit>
-                <List>{childElements}</List>
+                <List disablePadding>{childElements}</List>
             </Collapse>
         </div>
     );

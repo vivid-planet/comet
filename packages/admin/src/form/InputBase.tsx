@@ -7,11 +7,11 @@ export type CometAdminInputBaseClassKeys = InputBaseClassKey;
 const styles = (theme: Theme) =>
     createStyles<CometAdminInputBaseClassKeys, any>({
         root: {
-            border: `1px solid ${theme.palette.grey[300]}`,
+            border: `1px solid ${theme.palette.grey[100]}`,
             borderRadius: 2,
             backgroundColor: "#fff",
             "&:not($multiline)": {
-                height: 32,
+                height: 40,
             },
             "& [class*='MuiSvgIcon-root']": {
                 pointerEvents: "none",
@@ -25,17 +25,19 @@ const styles = (theme: Theme) =>
         },
         formControl: {},
         focused: {
-            borderColor: theme.palette.grey[400],
+            borderColor: theme.palette.primary.main,
         },
         disabled: {},
         adornedEnd: {
-            paddingRight: theme.spacing(1),
+            paddingRight: theme.spacing(2),
         },
         adornedStart: {
-            paddingLeft: theme.spacing(1),
+            paddingLeft: theme.spacing(2),
         },
         error: {},
-        marginDense: {},
+        marginDense: {
+            marginBottom: theme.spacing(2),
+        },
         multiline: {
             paddingTop: 0,
             paddingBottom: 0,
@@ -45,8 +47,11 @@ const styles = (theme: Theme) =>
         input: {
             height: "100%",
             boxSizing: "border-box",
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
+            lineHeight: "20px",
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+            paddingTop: theme.spacing(2),
+            paddingBottom: theme.spacing(2),
             "&::-ms-clear": {
                 display: "none",
             },
