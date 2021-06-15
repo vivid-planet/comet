@@ -4,13 +4,14 @@ import { useForm } from "react-final-form";
 
 export type CometAdminFilterBarActiveFilterBadgeClassKeys = "hasValueCount";
 
-export const dirtyFieldsCount = (values: Record<string, any>, registeredFields: string[] = []) => {
+export const dirtyFieldsCount = (values: Record<string, any>, registeredFields: string[] = [], fieldPath?: string) => {
     let count = 0;
-    Object.entries(values).forEach(([fieldName, fieldValue]) => {
+    Object.entries(values).forEach(([fieldKey, fieldValue]) => {
         if (!fieldValue) {
             return;
         }
 
+        const fieldName = fieldPath ? `${fieldPath}.${fieldKey}` : fieldKey;
         const isRegisteredField = registeredFields.includes(fieldName);
         if (Array.isArray(fieldValue) && isRegisteredField) {
             count += fieldValue.length;
@@ -18,7 +19,7 @@ export const dirtyFieldsCount = (values: Record<string, any>, registeredFields: 
             if (Object.keys(fieldValue).length === 2 && "min" in fieldValue && "max" in fieldValue && isRegisteredField) {
                 count++;
             } else {
-                count += dirtyFieldsCount(fieldValue, registeredFields);
+                count += dirtyFieldsCount(fieldValue, registeredFields, fieldName);
             }
         } else if (isRegisteredField) {
             count++;
@@ -41,7 +42,7 @@ const styles = (theme: Theme) =>
 
 export interface FilterBarActiveFilterBadgeProps {
     values: Record<string, any>;
-    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
+    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[], fieldPath?: string) => number;
 }
 
 export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof styles, true> & FilterBarActiveFilterBadgeProps> = ({
@@ -50,7 +51,7 @@ export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof sty
     classes,
 }) => {
     const form = useForm();
-    const registeredFields = form.getRegisteredFields().map((field) => field.split(".").pop() as string);
+    const registeredFields = form.getRegisteredFields();
     const countValue = calcNumberDirtyFields(values, registeredFields);
 
     if (countValue > 0) {

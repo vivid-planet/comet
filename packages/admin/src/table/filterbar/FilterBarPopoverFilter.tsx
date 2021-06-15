@@ -82,7 +82,7 @@ const useStyles = makeStyles(
 export interface FilterBarPopoverFilterProps {
     label: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
-    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
+    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[], fieldPath?: string) => number;
 }
 
 export function FilterBarPopoverFilter({
@@ -117,9 +117,9 @@ export function FilterBarPopoverFilter({
                         outerForm.change(name, values[name]);
                     }
                 }}
-                initialValues={outerForm.getState().initialValues}
+                initialValues={outerForm.getState().values}
             >
-                {({ form, values, handleSubmit, initialValues }) => {
+                {({ form, values, handleSubmit }) => {
                     return (
                         <div className={classes.fieldBarWrapper}>
                             <div className={classes.fieldBarInnerWrapper} onClick={handleClick}>
@@ -153,10 +153,9 @@ export function FilterBarPopoverFilter({
                                             type="reset"
                                             variant="text"
                                             onClick={() => {
-                                                for (const name in values) {
-                                                    //required because reset removes values
-                                                    outerForm.change(name, initialValues[name]);
-                                                }
+                                                form.getRegisteredFields().map((name) => {
+                                                    outerForm.change(name, undefined);
+                                                });
                                                 form.reset();
 
                                                 setAnchorEl(null);
