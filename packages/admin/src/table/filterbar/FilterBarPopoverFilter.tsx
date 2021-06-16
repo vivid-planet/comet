@@ -82,7 +82,7 @@ const useStyles = makeStyles(
 export interface FilterBarPopoverFilterProps {
     label: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
-    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[], fieldPath?: string) => number;
+    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: Record<string, any>) => number;
 }
 
 export function FilterBarPopoverFilter({

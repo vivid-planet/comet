@@ -1,27 +1,31 @@
 import { createStyles, Theme, Typography, WithStyles, withStyles } from "@material-ui/core";
+import set from "lodash.set";
 import * as React from "react";
 import { useForm } from "react-final-form";
 
 export type CometAdminFilterBarActiveFilterBadgeClassKeys = "hasValueCount";
 
-export const dirtyFieldsCount = (values: Record<string, any>, registeredFields: string[] = [], fieldPath?: string) => {
+const isRangeValue = (value: Record<string, any>): boolean => {
+    return Object.keys(value).length === 2 && "min" in value && "max" in value;
+};
+
+export const dirtyFieldsCount = (values: Record<string, any>, registeredFields: Record<string, any>) => {
     let count = 0;
-    Object.entries(values).forEach(([fieldKey, fieldValue]) => {
+    Object.entries(registeredFields).forEach(([namePrefix, registeredSubFields]) => {
+        const fieldValue = values[namePrefix];
         if (!fieldValue) {
             return;
         }
 
-        const fieldName = fieldPath ? `${fieldPath}.${fieldKey}` : fieldKey;
-        const isRegisteredField = registeredFields.includes(fieldName);
-        if (Array.isArray(fieldValue) && isRegisteredField) {
+        if (Array.isArray(fieldValue)) {
             count += fieldValue.length;
         } else if (typeof fieldValue === "object") {
-            if (Object.keys(fieldValue).length === 2 && "min" in fieldValue && "max" in fieldValue && isRegisteredField) {
+            if (isRangeValue(fieldValue)) {
                 count++;
             } else {
-                count += dirtyFieldsCount(fieldValue, registeredFields, fieldName);
+                count += dirtyFieldsCount(fieldValue, registeredSubFields);
             }
-        } else if (isRegisteredField) {
+        } else {
             count++;
         }
     });
@@ -42,7 +46,7 @@ const styles = (theme: Theme) =>
 
 export interface FilterBarActiveFilterBadgeProps {
     values: Record<string, any>;
-    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[], fieldPath?: string) => number;
+    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: Record<string, any>) => number;
 }
 
 export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof styles, true> & FilterBarActiveFilterBadgeProps> = ({
@@ -51,7 +55,8 @@ export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof sty
     classes,
 }) => {
     const form = useForm();
-    const registeredFields = form.getRegisteredFields();
+    // create same structure like final form (https://final-form.org/docs/final-form/field-names)
+    const registeredFields = form.getRegisteredFields().reduce((fields, fieldName) => set(fields, fieldName, true), {});
     const countValue = calcNumberDirtyFields(values, registeredFields);
 
     if (countValue > 0) {
