@@ -13,7 +13,9 @@ export const getMuiDialogOverrides = (): StyleRules<{}, DialogClassKey> => ({
     paperScrollBody: {},
     paperWidthFalse: {},
     paperWidthXs: {},
-    paperWidthSm: {},
+    paperWidthSm: {
+        width: 600,
+    },
     paperWidthMd: {},
     paperWidthLg: {},
     paperWidthXl: {},
