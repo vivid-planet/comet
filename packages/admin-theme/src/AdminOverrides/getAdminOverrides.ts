@@ -8,7 +8,6 @@ import { getFinalFormSearchTextFieldOverrides } from "./finalFormSearchTextField
 import { getFormFieldContainerOverrides } from "./formFieldContainer";
 import { getFormPaperOverrides } from "./formPaper";
 import { getInputBaseOverrides } from "./inputBase";
-import { getMainContentOverrides } from "./maincontent";
 import { getMasterLayoutOverrides } from "./masterLayout";
 import { getMenuOverrides } from "./menu";
 import { getMenuCollapsibleItemOverrides } from "./menuCollapsibleItem";
@@ -29,7 +28,6 @@ export const getAdminOverrides = (palette: Palette): Overrides => ({
     CometAdminMenu: getMenuOverrides(),
     CometAdminMenuItem: getMenuItemOverrides(palette),
     CometAdminMenuCollapsibleItem: getMenuCollapsibleItemOverrides(palette),
-    CometAdminMainContent: getMainContentOverrides(),
     CometAdminMasterLayout: getMasterLayoutOverrides(palette),
     CometAdminFinalFormSaveCancelButtonsLegacy: getFinalFormSaveCancelButtonsLegacyOverrides(),
     CometAdminToolbar: getToolbarOverrides(),
