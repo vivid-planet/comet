@@ -1,7 +1,7 @@
 ## PR Checklist
 Please check if your PR fulfills the following requirements:
 ​
-- [ ] Changelog entry have been added / updated
+- [ ] Changelog entry have been added / updated / is not needed
 - [ ] Docs/Stories have been added / updated (for bug fixes / features)
 ​
 ​
