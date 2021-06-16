@@ -91,7 +91,9 @@ const orderGettingStarted = [
     "docs-getting-started",
 ];
 const orderComponents = [
-    "docs-components-masterlayout",
+    "docs-components-master",
+    "docs-components-menu",
+    "docs-components-appheader",
     "docs-components-toolbar",
     "docs-components-table",
     "docs-components-form",
