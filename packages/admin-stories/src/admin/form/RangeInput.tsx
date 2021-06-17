@@ -66,6 +66,7 @@ function Story() {
                             >
                                 Reset
                             </Button>
+                            <pre>{JSON.stringify(values, undefined, 2)}</pre>
                         </>
                     )}
                 />
@@ -96,6 +97,7 @@ function Story() {
                             >
                                 Reset
                             </Button>
+                            <pre>{JSON.stringify(values, undefined, 2)}</pre>
                         </>
                     )}
                 />
@@ -127,6 +129,7 @@ function Story() {
                             >
                                 Reset
                             </Button>
+                            <pre>{JSON.stringify(values, undefined, 2)}</pre>
                         </>
                     )}
                 />

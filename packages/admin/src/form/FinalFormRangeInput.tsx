@@ -91,7 +91,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                                         max: internalMaxInput === undefined ? max : internalMaxInput,
                                     });
                                 } else {
-                                    onChange({ min: undefined, max: undefined });
+                                    onChange(undefined);
                                 }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,7 +124,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                                         max: maxFieldValue > max ? max : maxFieldValue,
                                     });
                                 } else {
-                                    onChange({ min: undefined, max: undefined });
+                                    onChange(undefined);
                                 }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
