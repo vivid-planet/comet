@@ -1,5 +1,4 @@
 import { createStyles, Theme, Typography, WithStyles, withStyles } from "@material-ui/core";
-import set from "lodash.set";
 import * as React from "react";
 import { useForm } from "react-final-form";
 
@@ -9,23 +8,31 @@ const isRangeValue = (value: Record<string, any>): boolean => {
     return Object.keys(value).length === 2 && "min" in value && "max" in value;
 };
 
-export const dirtyFieldsCount = (values: Record<string, any>, registeredFields: Record<string, any>) => {
+export const dirtyFieldsCount = (values: Record<string, any>, registeredFields: string[]) => {
     let count = 0;
-    Object.entries(registeredFields).forEach(([namePrefix, registeredSubFields]) => {
-        const fieldValue = values[namePrefix];
+    Object.entries(values).forEach(([fieldName, fieldValue]) => {
         if (!fieldValue) {
             return;
         }
 
-        if (Array.isArray(fieldValue)) {
+        const isRegisteredField = registeredFields.includes(fieldName);
+
+        if (Array.isArray(fieldValue) && isRegisteredField) {
             count += fieldValue.length;
         } else if (typeof fieldValue === "object") {
-            if (isRangeValue(fieldValue)) {
+            if (isRangeValue(fieldValue) && isRegisteredField) {
                 count++;
             } else {
+                const registeredSubFields = registeredFields.reduce((res, field) => {
+                    if (field.startsWith(`${fieldName}.`)) {
+                        //remove field prefix for recursive call
+                        res.push(field.substr(fieldName.length + 1));
+                    }
+                    return res;
+                }, [] as string[]);
                 count += dirtyFieldsCount(fieldValue, registeredSubFields);
             }
-        } else {
+        } else if (isRegisteredField) {
             count++;
         }
     });
@@ -55,9 +62,7 @@ export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof sty
     classes,
 }) => {
     const form = useForm();
-    // create same structure like final form (https://final-form.org/docs/final-form/field-names)
-    const registeredFields = form.getRegisteredFields().reduce((fields, fieldName) => set(fields, fieldName, true), {});
-    const countValue = calcNumberDirtyFields(values, registeredFields);
+    const countValue = calcNumberDirtyFields(values, form.getRegisteredFields());
 
     if (countValue > 0) {
         return (
