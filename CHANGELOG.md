@@ -131,7 +131,7 @@ new:
 
 -   Changes to DndOrderRow
 
-    DndOrderRow requires new peer-dependencies and a DndProvider setup in the application.
+    DndOrderRow requires new peer dependencies and a DndProvider setup in the application.
 
     -   Install peer dependencies in your application
 
