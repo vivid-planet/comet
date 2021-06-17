@@ -30,11 +30,10 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     required,
     validate,
     validateWarning,
-    disabled,
-    variant,
-    fullWidth,
     ...otherProps
 }: Props<FieldValue, FieldElement>): React.ReactElement {
+    const { disabled, variant, fullWidth } = otherProps;
+
     const { mutators } = useForm();
     const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
     const currentWarningValidationRound = React.useRef(0);
