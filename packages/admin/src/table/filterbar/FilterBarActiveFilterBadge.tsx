@@ -53,7 +53,7 @@ const styles = (theme: Theme) =>
 
 export interface FilterBarActiveFilterBadgeProps {
     values: Record<string, any>;
-    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: Record<string, any>) => number;
+    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
 }
 
 export const FilterBarActiveFilterBadgeComponent: React.FC<WithStyles<typeof styles, true> & FilterBarActiveFilterBadgeProps> = ({
