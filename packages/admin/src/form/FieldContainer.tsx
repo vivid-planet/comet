@@ -85,7 +85,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     if (required) formControlClasses.push(classes.required);
 
     return (
-        <FormControl fullWidth classes={{ root: formControlClasses.join(" ") }}>
+        <FormControl fullWidth={fullWidth} classes={{ root: formControlClasses.join(" ") }}>
             <>
                 {label && (
                     <FormLabel classes={{ root: classes.label }}>
