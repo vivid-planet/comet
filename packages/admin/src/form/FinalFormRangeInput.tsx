@@ -15,6 +15,7 @@ export type CometAdminFinalFormRangeInputClassKeys =
 const styles = (theme: Theme) => {
     return createStyles<CometAdminFinalFormRangeInputClassKeys, any>({
         root: {
+            boxSizing: "border-box",
             padding: "0 20px",
             width: "100%",
         },
@@ -33,6 +34,8 @@ const styles = (theme: Theme) => {
         },
         inputFieldContainer: {
             textAlign: "center",
+            flexBasis: 0,
+            flexGrow: 1,
         },
     });
 };
@@ -54,8 +57,8 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
     endAdornment,
     input: { name, onChange, value: fieldValue },
 }) => {
-    const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || 0);
-    const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || 0);
+    const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || undefined);
+    const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || undefined);
 
     const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: number[]) => {
         onChange({ min: newValue[0], max: newValue[1] });
@@ -74,21 +77,29 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                         <InputBase
                             name={`${name}.min`}
                             inputProps={{
-                                min: min,
-                                max: fieldValue.max,
-                                value: internalMinInput,
+                                value: internalMinInput !== undefined ? internalMinInput : "",
                                 type: "number",
+                                placeholder: min,
                             }}
                             startAdornment={startAdornment}
                             endAdornment={endAdornment}
                             onBlur={() => {
-                                const minFieldValue = Math.min(internalMinInput, fieldValue.max);
-                                if (fieldValue.min !== minFieldValue) {
-                                    onChange({ ...fieldValue, min: minFieldValue < min ? min : minFieldValue });
+                                if (internalMinInput !== undefined) {
+                                    const minFieldValue = Math.min(internalMinInput ? internalMinInput : min, fieldValue.max ? fieldValue.max : max);
+                                    onChange({
+                                        min: minFieldValue < min ? min : minFieldValue,
+                                        max: internalMaxInput === undefined ? max : internalMaxInput,
+                                    });
+                                } else {
+                                    onChange(undefined);
                                 }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setInternalMinInput(Number(e.target.value));
+                                if (e.target.value === "") {
+                                    setInternalMinInput(undefined);
+                                } else {
+                                    setInternalMinInput(Number(e.target.value));
+                                }
                             }}
                         />
                     </FormControl>
@@ -99,21 +110,29 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                         <InputBase
                             name={`${name}.max`}
                             inputProps={{
-                                min: fieldValue.min,
-                                max: max,
-                                value: internalMaxInput,
+                                value: internalMaxInput !== undefined ? internalMaxInput : "",
                                 type: "number",
+                                placeholder: max,
                             }}
                             startAdornment={startAdornment ? startAdornment : ""}
                             endAdornment={endAdornment ? endAdornment : ""}
                             onBlur={() => {
-                                const maxFieldValue = Math.max(fieldValue.min, internalMaxInput);
-                                if (fieldValue.max !== maxFieldValue) {
-                                    onChange({ ...fieldValue, max: maxFieldValue > max ? max : maxFieldValue });
+                                if (internalMaxInput !== undefined) {
+                                    const maxFieldValue = Math.max(fieldValue.min ? fieldValue.min : min, internalMaxInput ? internalMaxInput : max);
+                                    onChange({
+                                        min: internalMinInput === undefined ? min : internalMinInput,
+                                        max: maxFieldValue > max ? max : maxFieldValue,
+                                    });
+                                } else {
+                                    onChange(undefined);
                                 }
                             }}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setInternalMaxInput(Number(e.target.value));
+                                if (e.target.value === "") {
+                                    setInternalMaxInput(undefined);
+                                } else {
+                                    setInternalMaxInput(Number(e.target.value));
+                                }
                             }}
                         />
                     </FormControl>
@@ -123,7 +142,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                 <Slider
                     min={min}
                     max={max}
-                    value={[fieldValue.min, fieldValue.max]}
+                    value={[fieldValue.min ? fieldValue.min : min, fieldValue.max ? fieldValue.max : max]}
                     ThumbComponent={sliderProps?.ThumbComponent ? sliderProps.ThumbComponent : "span"}
                     onChange={handleSliderChange}
                     {...sliderProps}
