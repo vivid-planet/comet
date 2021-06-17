@@ -163,7 +163,9 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         formRenderProps,
                     )}
                 </div>
-                {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
+                {(formRenderProps.submitError || formRenderProps.error) && (
+                    <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
+                )}
                 {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
             </form>
         );
