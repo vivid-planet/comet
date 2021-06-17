@@ -1,24 +1,52 @@
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
-export type CometAdminMainContentClassKeys = "root";
+import { mergeClasses } from "../helpers/mergeClasses";
 
-const styles = (theme: Theme) =>
-    createStyles<CometAdminMainContentClassKeys, any>({
+export interface MainContentProps {
+    children?: React.ReactNode;
+    disablePaddingTop?: boolean;
+    disablePaddingBottom?: boolean;
+}
+
+export function MainContent({
+    children,
+    disablePaddingTop,
+    disablePaddingBottom,
+    classes: passedClasses,
+}: MainContentProps & StyledComponentProps<CometAdminMainContentClassKeys>) {
+    const classes = mergeClasses<CometAdminMainContentClassKeys>(useStyles(), passedClasses);
+    const rootClasses: string[] = [classes.root];
+    if (disablePaddingTop) rootClasses.push(classes.disablePaddingTop);
+    if (disablePaddingBottom) rootClasses.push(classes.disablePaddingBottom);
+    return <main className={rootClasses.join(" ")}>{children}</main>;
+}
+
+export type CometAdminMainContentClassKeys = "root" | "disablePaddingTop" | "disablePaddingBottom";
+
+export const useStyles = makeStyles<Theme, {}, CometAdminMainContentClassKeys>(
+    ({ spacing }) => ({
         root: {
             position: "relative",
             zIndex: 5,
-            padding: theme.spacing(4),
+            padding: spacing(4),
         },
-    });
+        disablePaddingTop: {
+            paddingTop: 0,
+        },
+        disablePaddingBottom: {
+            paddingBottom: 0,
+        },
+    }),
+    { name: "CometAdminMainContent" },
+);
 
-const MainContent: React.FC<WithStyles<typeof styles> & CometAdminMainContentClassKeys> = ({ classes, children }) => {
-    return <main className={classes.root}>{children}</main>;
-};
-
-const StyledCometAdminMainContent = withStyles(styles, { name: "CometAdminMainContent", withTheme: true })(MainContent);
-export { StyledCometAdminMainContent as MainContent };
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminMainContent: MainContentProps;
+    }
+}
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
