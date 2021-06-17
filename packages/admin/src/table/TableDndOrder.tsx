@@ -44,7 +44,6 @@ function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
         hover(item: DragItem, monitor: DropTargetMonitor) {
             // SOURCE for this code: https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_ts/04-sortable/simple
 
-            console.log("item", item);
             if (!refRow.current) {
                 return;
             }

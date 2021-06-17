@@ -129,6 +129,32 @@ new:
    </Stack>
 ```
 
+-   Changes to DndOrderRow
+
+    DndOrderRow requires new peer-dependencies and a DndProvider setup in the application.
+
+    -   Install peer dependencies in your application
+
+        ```js
+        npm install react-dnd@"~14"
+        npm install react-dnd-html5-backend@"~14"
+        ```
+
+    -   Put your application code inside a DndProvider
+
+        ```
+        import { DndProvider } from "react-dnd";
+        import { HTML5Backend } from "react-dnd-html5-backend";
+
+        export function App() {
+            return (
+                <DndProvider backend={HTML5Backend}>
+                        ... your application code
+                </DndProvider>
+            )
+        }
+        ```
+
 ### Migration Guide
 
 install jscodeshift in your project - otherwise you will get a lodash error
