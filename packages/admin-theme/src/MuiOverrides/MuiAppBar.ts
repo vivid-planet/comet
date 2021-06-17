@@ -2,11 +2,7 @@ import { AppBarClassKey } from "@material-ui/core";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
 export const getMuiAppBarOverrides = (): StyleRules<{}, AppBarClassKey> => ({
-    root: {
-        "&[class*='MuiPaper-elevation0']": {
-            borderBottom: "none",
-        },
-    },
+    root: {},
     positionFixed: {},
     positionAbsolute: {},
     positionSticky: {},
