@@ -135,7 +135,7 @@ new:
 
     -   Install peer dependencies in your application
 
-        ```js
+        ```bash
         npm install react-dnd@"~14"
         npm install react-dnd-html5-backend@"~14"
         ```
