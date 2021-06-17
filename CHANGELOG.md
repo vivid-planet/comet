@@ -25,6 +25,11 @@ All notable changes to this project will be documented in this file. This projec
 -   add useStoredState() hook
 -   Added a new FinalFormRangeInput Component
 -   add standard Toolbar that can be used as application wide consistent element containing navigation, action buttons and filters
+-   add SplitButton - combine multiple buttons behind one ButtonGroup
+-   add SaveButton which handles and displays state(idle, saving, success and error)
+-   add SnackbarProvider, useSnackbarApi() hook and UndoSnackbar
+-   add `FinalFormSaveCancelButtonsLegacy` as drop in replacement for removed Cancel and Save Button in `FinalForm`.
+-   add PrettyBytes component for formatting file sizes and other byte values
 
 ### Incompatible Changes
 
@@ -94,6 +99,7 @@ All notable changes to this project will be documented in this file. This projec
 ```
 
 -   Changes to Table (CometAdminTable)
+
     -   Removed alternating background-color of body-rows in comet-theme, can be restored by adding the following styles to `CometAdminTableBodyRow`:
 
         ```js
@@ -126,11 +132,24 @@ new:
 
 ### Migration Guide
 
+install jscodeshift in your project - otherwise you will get a lodash error
+
+    npm install jscodeshift --dev
+
 Clone this repository into your project repository. If you have a monorepo, you have to clone it into the right subfolder.
 
 An example can be found [here](https://github.com/vivid-planet/comet-admin-starter/pull/36).
 
+**Migrate FinalForm**
+
+Final Form: Following props have been removed: `renderButtons` and `components`
+
+```
+npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/final-form-dissolve-final-form-save-cancel-buttons.ts src/
+```
+
 **Migrate Stack**
+
 Follow props has been removed: `showBreadcrumbs`and `showBackButton`
 
 ```

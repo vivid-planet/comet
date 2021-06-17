@@ -1,8 +1,9 @@
 import { makeStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
 import * as React from "react";
 
+import { mergeClasses } from "../../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import getRteTheme from "../utils/getRteTheme";
 
 export interface IProps {
@@ -16,9 +17,17 @@ export interface IProps {
     Icon?: (props: SvgIconProps) => JSX.Element;
 }
 
-function ControlButton({ disabled = false, selected = false, onButtonClick, icon, children, Icon: deprecatedIcon }: IProps) {
+function ControlButton({
+    disabled = false,
+    selected = false,
+    onButtonClick,
+    icon,
+    children,
+    Icon: deprecatedIcon,
+    classes: passedClasses,
+}: IProps & StyledComponentProps<CometAdminRteControlButtonClassKeys>) {
     const Icon = icon || deprecatedIcon;
-    const classes = useStyles();
+    const classes = mergeClasses<CometAdminRteControlButtonClassKeys>(useStyles(), passedClasses);
 
     const rootClasses: string[] = [classes.root];
     if (selected) rootClasses.push(classes.selected);
@@ -68,7 +77,6 @@ const useStyles = makeStyles<Theme, {}, CometAdminRteControlButtonClassKeys>(
                 "&:not(:disabled), &:not(:disabled):hover": {
                     borderColor: rteTheme.colors.buttonBorderHover,
                     backgroundColor: "white",
-                    color: "red",
                 },
             },
             renderAsIcon: {

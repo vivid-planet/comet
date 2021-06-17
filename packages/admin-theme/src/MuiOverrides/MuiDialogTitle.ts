@@ -1,18 +1,17 @@
 import { DialogTitleClassKey } from "@material-ui/core";
+import { Palette } from "@material-ui/core/styles/createPalette";
+import { Typography } from "@material-ui/core/styles/createTypography";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { darkPalette } from "../colors";
-import { fontWeights } from "../typographyOptions";
-
-export const getMuiDialogTitleOverrides = (): StyleRules<{}, DialogTitleClassKey> => ({
+export const getMuiDialogTitleOverrides = (palette: Palette, typography: Typography): StyleRules<{}, DialogTitleClassKey> => ({
     root: {
-        backgroundColor: darkPalette.light,
-        color: darkPalette.contrastText,
+        backgroundColor: palette.grey["A200"],
+        color: palette.grey["A100"],
         padding: 20,
         "& [class*='MuiTypography-root']": {
             fontSize: 14,
             lineHeight: "20px",
-            fontWeight: fontWeights.fontWeightBold,
+            fontWeight: typography.fontWeightBold,
         },
     },
 });

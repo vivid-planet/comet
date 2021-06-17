@@ -1,7 +1,8 @@
 import { makeStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
+import { mergeClasses } from "../../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import { IControlProps } from "../types";
 import getRteTheme from "../utils/getRteTheme";
 
@@ -9,8 +10,8 @@ interface IProps extends IControlProps {
     children: Array<(p: IControlProps) => JSX.Element | null>;
 }
 
-const Toolbar: React.FC<IProps> = ({ children, ...rest }) => {
-    const classes = useStyles();
+const Toolbar: React.FC<IProps & StyledComponentProps<CometAdminRteToolbarClassKeys>> = ({ children, classes: passedClasses, ...rest }) => {
+    const classes = mergeClasses<CometAdminRteToolbarClassKeys>(useStyles(), passedClasses);
 
     const childrenElements = children
         .filter((c) => {

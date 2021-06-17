@@ -32,7 +32,7 @@ export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extend
     }
 
     private renderField({ input, meta, fieldContainerProps, ...rest }: FieldRenderProps<FieldValue, T>) {
-        const { children, component, name, label, required, disabled, variant } = this.props;
+        const { children, component, name, label, required, disabled, variant, fullWidth } = this.props;
 
         function render() {
             if (component) {
@@ -51,6 +51,7 @@ export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extend
                 disabled={disabled}
                 error={(meta.error || meta.submitError) && meta.touched && (meta.error || meta.submitError)}
                 variant={variant}
+                fullWidth={fullWidth}
             >
                 {render()}
             </FieldContainer>

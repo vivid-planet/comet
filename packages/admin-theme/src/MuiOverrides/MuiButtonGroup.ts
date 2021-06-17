@@ -1,9 +1,8 @@
 import { ButtonGroupClassKey } from "@material-ui/core";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { bluePalette, greenPalette, neutrals } from "../colors";
-
-export const getMuiButtonGroupOverrides = (): StyleRules<{}, ButtonGroupClassKey> => ({
+export const getMuiButtonGroupOverrides = (palette: Palette): StyleRules<{}, ButtonGroupClassKey> => ({
     root: {},
     contained: {
         border: "none",
@@ -32,31 +31,31 @@ export const getMuiButtonGroupOverrides = (): StyleRules<{}, ButtonGroupClassKey
     },
     groupedContainedHorizontal: {
         "&:not(:last-child)": {
-            borderRightColor: neutrals[200],
+            borderRightColor: palette.grey[200],
             "&$disabled": {
-                borderColor: neutrals[100],
-                borderRightColor: neutrals[200],
+                borderColor: palette.grey[100],
+                borderRightColor: palette.grey[200],
             },
         },
     },
     groupedContainedVertical: {},
     groupedContainedPrimary: {
         "&:not(:last-child)": {
-            borderColor: bluePalette.main,
-            borderRightColor: bluePalette.dark,
+            borderColor: palette.primary.main,
+            borderRightColor: palette.primary.dark,
             "&$disabled": {
-                borderColor: neutrals[100],
-                borderRightColor: neutrals[200],
+                borderColor: palette.grey[100],
+                borderRightColor: palette.grey[200],
             },
         },
     },
     groupedContainedSecondary: {
         "&:not(:last-child)": {
-            borderColor: greenPalette.main,
-            borderRightColor: greenPalette.dark,
+            borderColor: palette.secondary.main,
+            borderRightColor: palette.secondary.dark,
             "&$disabled": {
-                borderColor: neutrals[100],
-                borderRightColor: neutrals[200],
+                borderColor: palette.grey[100],
+                borderRightColor: palette.grey[200],
             },
         },
     },

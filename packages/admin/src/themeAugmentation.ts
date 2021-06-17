@@ -1,4 +1,4 @@
-import { ClearInputButtonThemeProps, CometAdminClearInputButtonClassKeys } from "./common/ClearInputButton";
+import { ClearInputButtonThemeProps, CometAdminClearInputButtonClassKeys } from "./common/buttons/clearinput/ClearInputButton";
 import { CometAdminErrorBoundaryClassKeys, ErrorBoundaryThemeProps } from "./error/errorboundary/ErrorBoundary";
 import { CometAdminFormFieldContainerClassKeys, FieldContainerThemeProps } from "./form/FieldContainer";
 import { CometAdminFinalFormRangeInputClassKeys } from "./form/FinalFormRangeInput";

@@ -1,8 +1,9 @@
 import { makeStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import * as React from "react";
 
+import { mergeClasses } from "../../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import { IFeatureConfig } from "../types";
 import ControlButton from "./ControlButton";
 
@@ -11,8 +12,13 @@ interface IProps {
     disabled?: boolean;
 }
 
-function FeaturesButtonGroup({ features, disabled: globallyDisabled }: IProps) {
-    const classes = useStyles();
+function FeaturesButtonGroup({
+    features,
+    disabled: globallyDisabled,
+    classes: passedClasses,
+}: IProps & StyledComponentProps<CometAdminRteFeaturesButtonGroupClassKeys>) {
+    const classes = mergeClasses<CometAdminRteFeaturesButtonGroupClassKeys>(useStyles(), passedClasses);
+
     if (!features.length) {
         return null;
     }

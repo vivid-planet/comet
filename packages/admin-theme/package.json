@@ -1,18 +1,21 @@
 {
     "name": "@comet/admin-theme",
-    "version": "2.0.0-alpha.5",
+    "version": "2.0.0-alpha.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
-    "dependencies": {},
+    "dependencies": {
+        "lodash.merge": "^4.6.2"
+    },
     "devDependencies": {
-        "@comet/admin": "^2.0.0-alpha.5",
-        "@comet/admin-rte": "^2.0.0-alpha.5",
-        "@comet/admin-icons": "^2.0.0-alpha.5",
-        "@comet/admin-color-picker": "^2.0.0-alpha.5",
-        "@comet/admin-react-select": "^2.0.0-alpha.5"
+        "@types/lodash.merge": "^4.6.6",
+        "@comet/admin": "^2.0.0-alpha.7",
+        "@comet/admin-rte": "^2.0.0-alpha.7",
+        "@comet/admin-icons": "^2.0.0-alpha.7",
+        "@comet/admin-color-picker": "^2.0.0-alpha.7",
+        "@comet/admin-react-select": "^2.0.0-alpha.7"
     },
     "peerDependencies": {
         "react": "^16.8",

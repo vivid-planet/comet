@@ -1,6 +1,8 @@
 import { makeStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
+
+import { mergeClasses } from "../helpers/mergeClasses";
 
 export type CometAdminFormSectionKeys = "root";
 
@@ -19,7 +21,7 @@ interface Props {
     children: React.ReactNode;
 }
 
-export function FormSection({ children }: Props): React.ReactElement {
-    const classes = useStyles();
+export function FormSection({ children, classes: passedClasses }: Props & StyledComponentProps<CometAdminFormSectionKeys>): React.ReactElement {
+    const classes = mergeClasses<CometAdminFormSectionKeys>(useStyles(), passedClasses);
     return <div className={classes.root}>{children}</div>;
 }

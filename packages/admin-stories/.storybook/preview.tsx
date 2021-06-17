@@ -8,9 +8,9 @@ import { addDecorator, addParameters } from "@storybook/react";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { MainContent, MuiThemeProvider } from "@comet/admin";
-import { Theme, createMuiTheme } from "@material-ui/core";
-import { getThemeOptions } from "@comet/admin-theme";
-import styled, { createGlobalStyle } from "styled-components";
+import { createCometTheme } from "@comet/admin-theme";
+import { createMuiTheme } from "@material-ui/core";
+import { createGlobalStyle } from "styled-components";
 
 addDecorator((story, context) => {
     const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
@@ -70,19 +70,57 @@ const GlobalStyles = createGlobalStyle`
 
 addDecorator((story, ctx) => {
     const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);
-    const theme = createMuiTheme(selectedTheme === themeOptions.defaultMui ? {} : getThemeOptions());
+    const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
 
     return (
         <>
             <GlobalStyles />
-            <MuiThemeProvider theme={theme}>
-                {ctx.parameters.layout === 'padded' ? <MainContent>{story()}</MainContent> : story()}
-            </MuiThemeProvider>
+            <MuiThemeProvider theme={theme}>{ctx.parameters.layout === "padded" ? <MainContent>{story()}</MainContent> : story()}</MuiThemeProvider>
         </>
     );
 });
 
-const order = ["intro-", "admin-", "comet-"];
+const orderGettingStarted = [
+    "docs-getting-started-installation",
+    "docs-getting-started-structure",
+    "docs-getting-started-development",
+    "docs-getting-started-develop-in-project",
+    "docs-getting-started-how-to-write-stories",
+    "docs-getting-started",
+];
+const orderComponents = [
+    "docs-components-masterlayout",
+    "docs-components-toolbar",
+    "docs-components-table",
+    "docs-components-form",
+    "docs-components-stack",
+    "docs-components-edit-dialog",
+    "docs-components-error-handling",
+    "docs-components-router",
+    "docs-components-router-tabs",
+    "docs-components-selection",
+    "docs-components-color-picker",
+    "docs-components-date-picker",
+    "docs-components-react-select",
+    "docs-components",
+];
+const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
+const orderIcons = ["docs-icons-list", "docs-icons-usage", "docs-icons"];
+const orderTheming = ["docs-theming"];
+const orderBestPractices = ["docs-best-practices-theming", "docs-best-practices-code-style", "docs-best-practices"];
+
+const order = [
+    "docs-intro-",
+    ...orderGettingStarted,
+    ...orderComponents,
+    ...orderHooks,
+    ...orderIcons,
+    ...orderTheming,
+    ...orderBestPractices,
+    "admin-",
+    "comet-",
+    "stories-",
+];
 
 addParameters({
     layout: "padded",

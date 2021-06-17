@@ -12,7 +12,7 @@ const SampleBox = styled.div`
     border-radius: 2px;
 `;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     largeIcon: {
         fontSize: 100,
     },

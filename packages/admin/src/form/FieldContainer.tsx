@@ -4,6 +4,7 @@ import * as React from "react";
 
 export interface FieldContainerThemeProps {
     variant?: "vertical" | "horizontal";
+    fullWidth?: boolean;
     requiredSymbol?: React.ReactNode;
 }
 
@@ -18,6 +19,7 @@ export type CometAdminFormFieldContainerClassKeys =
     | "root"
     | "vertical"
     | "horizontal"
+    | "fullWidth"
     | "required"
     | "disabled"
     | "label"
@@ -46,7 +48,12 @@ const styles = (theme: Theme) => {
                 flexShrink: 0,
                 flexGrow: 0,
             },
+
+            "&$fullWidth $inputContainer": {
+                flexGrow: 1,
+            },
         },
+        fullWidth: {},
         required: {},
         disabled: {},
         label: {
@@ -61,6 +68,7 @@ const styles = (theme: Theme) => {
 export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> & FieldContainerProps & FieldContainerThemeProps> = ({
     classes,
     variant = "vertical",
+    fullWidth,
     label,
     error,
     disabled,
@@ -71,6 +79,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     const formControlClasses: string[] = [classes.root];
     if (variant === "vertical") formControlClasses.push(classes.vertical);
     if (variant === "horizontal") formControlClasses.push(classes.horizontal);
+    if (fullWidth) formControlClasses.push(classes.fullWidth);
     if (error) formControlClasses.push(classes.hasError);
     if (disabled) formControlClasses.push(classes.disabled);
     if (required) formControlClasses.push(classes.required);

@@ -1,11 +1,8 @@
 import { useApolloClient } from "@apollo/client";
-import { Button, CircularProgress, Typography } from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { Cancel as CancelIcon, Save as SaveIcon } from "@material-ui/icons";
+import { CircularProgress } from "@material-ui/core";
 import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
-import { FormattedMessage } from "react-intl";
 
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
@@ -14,21 +11,9 @@ import { SubmitError, SubmitResult } from "./form/SubmitResult";
 import { StackApiContext } from "./stack/Api";
 import { TableQueryContext } from "./table/TableQueryContext";
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        saveButton: {
-            margin: theme.spacing(1),
-        },
-    }),
-);
-
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
     resolveSubmitErrors?: (error: SubmissionErrors) => SubmissionErrors;
-    components?: {
-        buttonsContainer?: React.ComponentType;
-    };
-    renderButtons?: (formRenderProps: FormRenderProps<FormValues>) => React.ReactNode;
 
     // override final-form onSubmit and remove callback as we don't support that (return promise instead)
     onSubmit: (values: FormValues, form: FormApi<FormValues>) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
@@ -41,7 +26,6 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
-    const classes = useStyles();
     const client = useApolloClient();
     const dirtyHandler = React.useContext(DirtyHandlerApiContext);
     const stackApi = React.useContext(StackApiContext);
@@ -114,8 +98,6 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             };
         }, [formRenderProps, submit]);
 
-        const ButtonsContainer = props.components && props.components.buttonsContainer ? props.components.buttonsContainer : "div";
-
         return (
             <form onSubmit={submit}>
                 <div>
@@ -129,52 +111,9 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     )}
                 </div>
                 {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
-                {!editDialog && (
-                    <>
-                        {formRenderProps.submitting && <CircularProgress />}
-                        {!formRenderProps.submitting && (
-                            <>
-                                {props.renderButtons ? (
-                                    props.renderButtons(formRenderProps)
-                                ) : (
-                                    <ButtonsContainer>
-                                        {stackApi && (
-                                            <Button
-                                                className={classes.saveButton}
-                                                startIcon={<CancelIcon />}
-                                                variant="text"
-                                                color="default"
-                                                onClick={handleCancelClick}
-                                            >
-                                                <Typography variant="button">
-                                                    <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
-                                                </Typography>
-                                            </Button>
-                                        )}
-                                        <Button
-                                            className={classes.saveButton}
-                                            startIcon={<SaveIcon />}
-                                            variant="contained"
-                                            color="primary"
-                                            type="submit"
-                                            disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
-                                        >
-                                            <Typography variant="button">
-                                                <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
-                                            </Typography>
-                                        </Button>
-                                    </ButtonsContainer>
-                                )}
-                            </>
-                        )}
-                    </>
-                )}
+                {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
             </form>
         );
-    }
-
-    function handleCancelClick() {
-        if (stackApi) stackApi.goBack();
     }
 
     function handleSubmit(values: FormValues, form: FormApi<FormValues>) {

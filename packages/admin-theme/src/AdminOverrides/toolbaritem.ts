@@ -1,11 +1,11 @@
 import { CometAdminToolbarItemClassKeys } from "@comet/admin";
+import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-import { neutrals } from "../colors";
-export const getToolbarItemOverrides = (): StyleRules<{}, CometAdminToolbarItemClassKeys> => ({
+export const getToolbarItemOverrides = (palette: Palette): StyleRules<{}, CometAdminToolbarItemClassKeys> => ({
     root: {
         borderRight: 1,
-        borderRightColor: neutrals["50"],
+        borderRightColor: palette.grey[50],
         borderRightStyle: "solid",
     },
 });

@@ -1,7 +1,7 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
 import { makeStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import {
     DraftBlockType,
     DraftEditorCommand,
@@ -13,6 +13,7 @@ import {
 } from "draft-js";
 import * as React from "react";
 
+import { mergeClasses } from "../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import Controls from "./Controls/Controls";
 import defaultBlocktypeMap, { mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
@@ -135,7 +136,7 @@ export const styleMap = {
     },
 };
 
-const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
+const Rte: React.RefForwardingComponent<any, IProps & StyledComponentProps<CometAdminRteClassKeys>> = (props, ref) => {
     const { value: editorState, onChange, options: passedOptions, disabled } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
@@ -254,7 +255,7 @@ const Rte: React.RefForwardingComponent<any, IProps> = (props, ref) => {
         }
     }
 
-    const classes = useStyles({ colors: props.colors });
+    const classes = mergeClasses<CometAdminRteClassKeys>(useStyles({ colors: props.colors }), props.classes);
 
     const rootClasses: string[] = [classes.root];
     if (disabled) rootClasses.push(classes.disabled);

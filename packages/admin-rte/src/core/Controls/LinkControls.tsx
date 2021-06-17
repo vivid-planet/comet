@@ -1,17 +1,19 @@
 import { makeStyles } from "@material-ui/core";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import { Theme } from "@material-ui/core/styles";
+import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
+import { mergeClasses } from "../../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import LinkToolbarButton from "../extension/Link/ToolbarButton";
 import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
 import { IControlProps } from "../types";
 
-function LinkControls(p: IControlProps) {
+function LinkControls(p: IControlProps & StyledComponentProps<CometAdminRteLinkControlsClassKeys>) {
     const {
         options: { supports: supportedThings, overwriteLinkButton, overwriteLinksRemoveButton },
+        classes: passedClasses,
     } = p;
-    const classes = useStyles();
+    const classes = mergeClasses<CometAdminRteLinkControlsClassKeys>(useStyles(), passedClasses);
 
     const LinkButtonComponent = overwriteLinkButton ? overwriteLinkButton : LinkToolbarButton;
     const LinksRemoveButtonComponent = overwriteLinksRemoveButton ? overwriteLinksRemoveButton : LinksRemoveToolbarButton;

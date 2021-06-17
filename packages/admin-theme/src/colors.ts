@@ -14,13 +14,6 @@ export const greenPalette: PaletteColor = {
     contrastText: "#ffffff",
 };
 
-export const darkPalette: PaletteColor = {
-    light: "#2E3440",
-    main: "#050D1A",
-    dark: "#00050D",
-    contrastText: "#ffffff",
-};
-
 export const errorPalette: SimplePaletteColorOptions = {
     main: "#E63917",
     dark: "#A02710",
@@ -46,4 +39,8 @@ export const neutrals: ColorPartial = {
     700: "#2E2E2E",
     800: "#1A1A1A",
     900: "#0F0F0F",
+    A100: "#FFFFFF",
+    A200: "#2E3440",
+    A400: "#050D1A",
+    A700: "#00050D",
 };
