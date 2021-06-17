@@ -1,4 +1,4 @@
-import { Box, Dialog, Typography } from "@material-ui/core";
+import { Dialog, Typography } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -9,7 +9,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useTheme from "@material-ui/core/styles/useTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Error, KeyboardArrowDown } from "@material-ui/icons";
+import { KeyboardArrowDown } from "@material-ui/icons";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -47,12 +47,7 @@ export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = 
 
     return (
         <Dialog open={show} onClose={onCloseClicked} fullScreen={fullScreen}>
-            <DialogTitle>
-                <Box display={"flex"} flexDirection={"row"}>
-                    <Error />
-                    <Typography>{title}</Typography>
-                </Box>
-            </DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <DialogContent style={{ minWidth: 300 }}>
                 <DialogContentText>
                     {userMessage}
@@ -69,7 +64,7 @@ export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = 
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCloseClicked} color="primary">
+                <Button onClick={onCloseClicked} color="primary" variant="contained">
                     <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
                 </Button>
             </DialogActions>
