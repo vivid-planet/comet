@@ -15,4 +15,7 @@ export const getSelectOverrides = (): StyleRules<{}, CometAdminSelectClassKeys> 
     clearIndicator: {},
     indicator: {},
     dropdownIndicator: {},
+    option: {},
+    optionSelected: {},
+    optionFocused: {},
 });
