@@ -10,7 +10,7 @@ storiesOf("stories/components/AppHeader/Dropdown", module).add("AppHeader Dropdo
             <Typography style={{ padding: 20 }}>Header dropdown</Typography>
             <AppHeaderFillSpace />
 
-            <AppHeaderDropdown actionContent={<Snips />} dropdownArrow={null}>
+            <AppHeaderDropdown buttonChildren={<Snips />} dropdownArrow={null}>
                 <Box padding={4} width={200}>
                     <Typography>
                         <strong>Dropdown Text</strong>
@@ -22,7 +22,7 @@ storiesOf("stories/components/AppHeader/Dropdown", module).add("AppHeader Dropdo
                 </Box>
             </AppHeaderDropdown>
 
-            <AppHeaderDropdown actionContent="Dropdown Menu">
+            <AppHeaderDropdown buttonChildren="Dropdown Menu">
                 {() => {
                     return (
                         <MenuList>

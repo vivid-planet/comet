@@ -20,13 +20,12 @@ The AppHeader system consists of multiple basic components that can be combined 
 -   `AppHeader`
 -   `AppHeaderMenuButton`
 -   `AppHeaderFillSpace`
--   `AppHeaderAction`
+-   `AppHeaderButton`
 -   `AppHeaderDropdown`
-
 
 ### AppHeader
 
-`AppHeader` gives you a blank header, to which you can add things like a menu-button, a application-specific logo and actions to the `children`.
+`AppHeader` gives you a blank header, to which you can add things like a menu-button, a application-specific logo and buttons to the `children`.
 
 <Canvas>
     <Story id="stories-components-appheader-empty--appheader-empty" />
@@ -34,9 +33,9 @@ The AppHeader system consists of multiple basic components that can be combined 
 
 #### Props
 
-| Name          | Type          | Default value                    | Description                                                                                          |
-|:------------- |:------------- |:-------------------------------- |:---------------------------------------------------------------------------------------------------- |
-| headerHeight  | number        |                                  | Sets the height of the `AppHeader`, should only be used if `AppHeader` is not inside `MasterLayout`. |
+| Name         | Type   | Default value | Description                                                                                          |
+| :----------- | :----- | :------------ | :--------------------------------------------------------------------------------------------------- |
+| headerHeight | number |               | Sets the height of the `AppHeader`, should only be used if `AppHeader` is not inside `MasterLayout`. |
 
 Props from [AppBar](https://material-ui.com/api/app-bar) are also used.
 
@@ -51,9 +50,9 @@ Optionally you can add a custom icon as `children` or add a custom `onClick` if 
 
 #### Props
 
-| Name          | Type          | Default value                    | Description                                    |
-|:------------- |:------------- |:-------------------------------- |:---------------------------------------------- |
-| children      | node          | `<Hamburger fontSize="large" />` | The icon that will be shown in the IconButton. |
+| Name     | Type | Default value                    | Description                                    |
+| :------- | :--- | :------------------------------- | :--------------------------------------------- |
+| children | node | `<Hamburger fontSize="large" />` | The icon that will be shown in the IconButton. |
 
 Props from [IconButton](https://material-ui.com/api/icon-button) are also used.
 
@@ -66,33 +65,33 @@ Basically everything after `AppHeaderFillSpace` is pushed to the right of the `A
     <Story id="stories-components-appheader-fillspace--appheader-fillspace" />
 </Canvas>
 
-### AppHeaderAction
+### AppHeaderButton
 
-`AppHeaderAction` should generally be used for actions on the right side of the `AppHeader`.
+`AppHeaderButton` should generally be used for buttons on the right side of the `AppHeader`.
 
 <Canvas>
-    <Story id="stories-components-appheader-action-text--appheader-action-text" />
+    <Story id="stories-components-appheader-button-text--appheader-button-text" />
 </Canvas>
 
 <Canvas>
-    <Story id="stories-components-appheader-action-text-and-icon--appheader-action-text-and-icon" />
+    <Story id="stories-components-appheader-button-text-and-icon--appheader-button-text-and-icon" />
 </Canvas>
 
 <Canvas>
-    <Story id="stories-components-appheader-action-icon--appheader-action-icon" />
+    <Story id="stories-components-appheader-button-icon--appheader-button-icon" />
 </Canvas>
 
 <Canvas>
-    <Story id="stories-components-appheader-action-custom--appheader-action-custom" />
+    <Story id="stories-components-appheader-button-custom--appheader-button-custom" />
 </Canvas>
 
 #### Props
 
-| Name              | Type          | Default value  | Description                                              |
-|:----------------- |:------------- |:-------------- |:-------------------------------------------------------- |
-| startIcon         | node          |                | Icon shown at the start of the action.                   |
-| endIcon           | node          |                | Icon shown at the end of the action.                     |
-| disableTypography | boolean       |                | Prevents children from being wrapped with `Typography`.  |
+| Name              | Type    | Default value | Description                                             |
+| :---------------- | :------ | :------------ | :------------------------------------------------------ |
+| startIcon         | node    |               | Icon shown at the start of the button.                  |
+| endIcon           | node    |               | Icon shown at the end of the button.                    |
+| disableTypography | boolean |               | Prevents children from being wrapped with `Typography`. |
 
 Props from [ButtonBase](https://material-ui.com/api/button-base) are also used.
 
@@ -106,11 +105,11 @@ Props from [ButtonBase](https://material-ui.com/api/button-base) are also used.
 
 #### Props
 
-| Name           | Type                                                        | Default value | Description                                                                                                                                                                        |
-|:-------------- |:----------------------------------------------------------- |:------------- |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| children       | node \| (closeDropdown: () => void) => node                 |               | Content or a function that returns the Content shown in `Popover`. The function should be used if the Dropdown should be closed e.g. when a button inside the Dropdown is clicked. |
-| actionContent  | node                                                        |               | Content passed into the `AppHeaderAction`.                                                                                                                                         |
-| dropdownArrow  | null \| (isOpen: boolean) => node                           |               | Prevents children from being wrapped with `Typography`.                                                                                                                            |
-| popoverProps   | [PopoverProps](https://material-ui.com/api/popover)         |               | Props passed into `Popover`.                                                                                                                                                       |
+| Name           | Type                                                | Default value | Description                                                                                                                                                                        |
+| :------------- | :-------------------------------------------------- | :------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| children       | node \| (closeDropdown: () => void) => node         |               | Content or a function that returns the Content shown in `Popover`. The function should be used if the Dropdown should be closed e.g. when a button inside the Dropdown is clicked. |
+| buttonChildren | node                                                |               | Children passed into the `AppHeaderButton`.                                                                                                                                        |
+| dropdownArrow  | null \| (isOpen: boolean) => node                   |               | Prevents children from being wrapped with `Typography`.                                                                                                                            |
+| popoverProps   | [PopoverProps](https://material-ui.com/api/popover) |               | Props passed into `Popover`.                                                                                                                                                       |
 
-Props from [AppHeaderAction](#appheaderaction) are also used.
+Props from [AppHeaderButton](#appheaderbutton) are also used.

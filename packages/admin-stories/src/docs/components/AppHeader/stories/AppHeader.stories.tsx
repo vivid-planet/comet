@@ -1,4 +1,4 @@
-import { AppHeader, AppHeaderAction, AppHeaderDropdown, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
+import { AppHeader, AppHeaderButton, AppHeaderDropdown, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
 import { Account, Language, Logout, Preview } from "@comet/admin-icons";
 import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
@@ -23,9 +23,9 @@ storiesOf("stories/components/AppHeader/AppHeader", module).add("AppHeader", () 
 
             <AppHeaderFillSpace />
 
-            <AppHeaderAction startIcon={<Preview />}>Preview</AppHeaderAction>
+            <AppHeaderButton startIcon={<Preview />}>Preview</AppHeaderButton>
 
-            <AppHeaderDropdown actionContent="Language" startIcon={<Language />}>
+            <AppHeaderDropdown buttonChildren="Language" startIcon={<Language />}>
                 {(closeDropdown) => {
                     const onItemClicked = () => {
                         closeDropdown();
@@ -51,7 +51,7 @@ storiesOf("stories/components/AppHeader/AppHeader", module).add("AppHeader", () 
                 }}
             </AppHeaderDropdown>
 
-            <AppHeaderDropdown actionContent={<AccountHeaderItem />}>
+            <AppHeaderDropdown buttonChildren={<AccountHeaderItem />}>
                 <MenuList>
                     <MenuItem button>Edit Profile</MenuItem>
                     <MenuItem button>Change Password</MenuItem>

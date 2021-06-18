@@ -3,15 +3,15 @@ import { StyledComponentProps } from "@material-ui/core/styles";
 import * as React from "react";
 
 import { mergeClasses } from "../../helpers/mergeClasses";
-import { CometAdminAppHeaderActionClassKeys, useStyles } from "./AppHeaderAction.styles";
+import { CometAdminAppHeaderButtonClassKeys, useStyles } from "./AppHeaderButton.styles";
 
-export interface AppHeaderActionProps extends ButtonBaseProps {
+export interface AppHeaderButtonProps extends ButtonBaseProps {
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
     disableTypography?: boolean;
 }
 
-export function AppHeaderAction({
+export function AppHeaderButton({
     classes: passedClasses,
     children,
     startIcon,
@@ -19,14 +19,14 @@ export function AppHeaderAction({
     disableTypography,
     onClick,
     ...restProps
-}: AppHeaderActionProps & StyledComponentProps<CometAdminAppHeaderActionClassKeys>): React.ReactElement {
+}: AppHeaderButtonProps & StyledComponentProps<CometAdminAppHeaderButtonClassKeys>): React.ReactElement {
     const {
         startIcon: startIconClassName,
         endIcon: endIconClassName,
         typography: typographyClassName,
         inner: innerClassName,
         ...buttonBaseClasses
-    } = mergeClasses<CometAdminAppHeaderActionClassKeys>(useStyles(), passedClasses);
+    } = mergeClasses<CometAdminAppHeaderButtonClassKeys>(useStyles(), passedClasses);
 
     return (
         <ButtonBase classes={buttonBaseClasses} {...restProps} onClick={onClick}>

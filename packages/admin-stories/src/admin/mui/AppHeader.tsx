@@ -1,6 +1,6 @@
 import {
     AppHeader,
-    AppHeaderAction,
+    AppHeaderButton,
     AppHeaderDropdown,
     AppHeaderFillSpace,
     AppHeaderMenuButton,
@@ -40,8 +40,8 @@ function MasterHeader() {
             <AppHeaderMenuButton />
             <CometLogo />
             <AppHeaderFillSpace />
-            <AppHeaderAction startIcon={<Preview />}>Preview</AppHeaderAction>
-            <AppHeaderDropdown actionContent="Language" startIcon={<Language />}>
+            <AppHeaderButton startIcon={<Preview />}>Preview</AppHeaderButton>
+            <AppHeaderDropdown buttonChildren="Language" startIcon={<Language />}>
                 {(closeDropdown) => {
                     const onItemClicked = () => {
                         closeDropdown();
@@ -66,7 +66,7 @@ function MasterHeader() {
                     );
                 }}
             </AppHeaderDropdown>
-            <AppHeaderDropdown actionContent={<AccountHeaderItem />}>
+            <AppHeaderDropdown buttonChildren={<AccountHeaderItem />}>
                 <MenuList>
                     <MenuItem button>Edit Profile</MenuItem>
                     <MenuItem button>Change Password</MenuItem>

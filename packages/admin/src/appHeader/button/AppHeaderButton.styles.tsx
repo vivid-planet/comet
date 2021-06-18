@@ -2,9 +2,9 @@ import { ButtonBaseClassKey } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/styles";
 
-export type CometAdminAppHeaderActionClassKeys = ButtonBaseClassKey | "inner" | "startIcon" | "endIcon" | "typography";
+export type CometAdminAppHeaderButtonClassKeys = ButtonBaseClassKey | "inner" | "startIcon" | "endIcon" | "typography";
 
-export const useStyles = makeStyles<Theme, {}, CometAdminAppHeaderActionClassKeys>(
+export const useStyles = makeStyles<Theme, {}, CometAdminAppHeaderButtonClassKeys>(
     ({ spacing }) => ({
         root: {
             height: "100%",
@@ -38,11 +38,11 @@ export const useStyles = makeStyles<Theme, {}, CometAdminAppHeaderActionClassKey
         },
         typography: {},
     }),
-    { name: "CometAdminAppHeaderAction" },
+    { name: "CometAdminAppHeaderButton" },
 );
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
-        CometAdminAppHeaderAction: CometAdminAppHeaderActionClassKeys;
+        CometAdminAppHeaderButton: CometAdminAppHeaderButtonClassKeys;
     }
 }

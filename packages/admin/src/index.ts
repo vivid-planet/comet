@@ -141,7 +141,7 @@ export { AppHeader } from "./appHeader/AppHeader";
 export { AppHeaderMenuButton } from "./appHeader/menuButton/AppHeaderMenuButton";
 export { AppHeaderFillSpace } from "./appHeader/fillSpace/AppHeaderFillSpace";
 export { AppHeaderDropdown } from "./appHeader/dropdown/AppHeaderDropdown";
-export { AppHeaderAction } from "./appHeader/action/AppHeaderAction";
+export { AppHeaderButton } from "./appHeader/button/AppHeaderButton";
 export { CometLogo } from "./common/CometLogo";
 export {
     CometAdminCometAdminFinalFormSaveCancelButtonsLegacyClassKeys,

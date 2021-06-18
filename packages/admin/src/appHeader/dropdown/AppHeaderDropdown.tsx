@@ -5,12 +5,12 @@ import { StyledComponentProps } from "@material-ui/core/styles";
 import * as React from "react";
 
 import { mergeClasses } from "../../helpers/mergeClasses";
-import { AppHeaderAction, AppHeaderActionProps } from "../action/AppHeaderAction";
+import { AppHeaderButton, AppHeaderButtonProps } from "../button/AppHeaderButton";
 import { CometAdminAppHeaderDropdownClassKeys, useStyles } from "./AppHeaderDropdown.styles";
 
-interface Props extends AppHeaderActionProps {
+interface Props extends AppHeaderButtonProps {
     children?: ((closeDropdown: () => void) => React.ReactNode) | React.ReactNode;
-    actionContent?: React.ReactNode;
+    buttonChildren?: React.ReactNode;
     dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
     popoverProps?: Partial<PopoverProps>;
 }
@@ -27,7 +27,7 @@ function DefaultArrowDown(): React.ReactElement {
 
 export function AppHeaderDropdown({
     children,
-    actionContent,
+    buttonChildren,
     dropdownArrow = (isOpen) => (isOpen ? <DefaultArrowUp /> : <DefaultArrowDown />),
     popoverProps,
     classes: passedClasses,
@@ -46,13 +46,13 @@ export function AppHeaderDropdown({
 
     return (
         <div className={classes.root} ref={rootRef}>
-            <AppHeaderAction
+            <AppHeaderButton
                 endIcon={dropdownArrow !== null ? dropdownArrow(showContent) : undefined}
                 {...restProps}
                 onClick={() => setShowContent(true)}
             >
-                {actionContent}
-            </AppHeaderAction>
+                {buttonChildren}
+            </AppHeaderButton>
             <Popover
                 classes={{ root: classes.popoverRoot, paper: classes.popoverPaper }}
                 open={showContent}
