@@ -5,6 +5,7 @@ import type {} from "@comet/admin/src/themeAugmentation";
 import { createMuiTheme, Theme } from "@material-ui/core";
 import { ThemeOptions } from "@material-ui/core/styles";
 import createPalette, { Palette, PaletteOptions } from "@material-ui/core/styles/createPalette";
+import createSpacing, { Spacing, SpacingOptions } from "@material-ui/core/styles/createSpacing";
 import createTypography, { Typography, TypographyOptions } from "@material-ui/core/styles/createTypography";
 import merge from "lodash.merge";
 
@@ -32,8 +33,11 @@ export const createCometTheme = (customThemeOptions: ThemeOptions | undefined = 
     const typographyOptions: TypographyOptions = merge(cometTypographyOptions, customTypographyOptionsObject);
     const typography: Typography = createTypography(palette, typographyOptions);
 
+    const spacingOptions: SpacingOptions = customThemeOptions?.spacing === undefined ? 5 : customThemeOptions.spacing;
+    const spacing: Spacing = createSpacing(spacingOptions);
+
     const cometThemeOptions = {
-        spacing: 5,
+        spacing: spacingOptions,
         palette: paletteOptions,
         typography: typographyOptions,
         shape: {
@@ -45,7 +49,7 @@ export const createCometTheme = (customThemeOptions: ThemeOptions | undefined = 
             ...getAdminProps(),
         },
         overrides: {
-            ...getMuiOverrides(palette, typography),
+            ...getMuiOverrides(palette, typography, spacing),
             ...getAdminOverrides(palette),
             ...getAdminColorPickerOverrides(),
             ...getAdminRteOverrides(),
