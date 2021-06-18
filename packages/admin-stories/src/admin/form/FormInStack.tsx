@@ -8,8 +8,11 @@ import {
     StackPage,
     StackSwitch,
     StackSwitchApiContext,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
 } from "@comet/admin";
-import { Button } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
@@ -44,22 +47,29 @@ function Page1() {
 
     return (
         <>
-            <Button
-                color={"primary"}
-                variant={"contained"}
-                onClick={() => {
-                    switchApi?.activatePage("page2", "test");
-                }}
-            >
-                activate page2
-            </Button>
+            <Box marginBottom={4}>
+                <Toolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarActions>
+                        <Button
+                            color={"primary"}
+                            variant={"contained"}
+                            onClick={() => {
+                                switchApi?.activatePage("page2", "test");
+                            }}
+                        >
+                            activate page2
+                        </Button>
+                    </ToolbarActions>
+                </Toolbar>
+            </Box>
             <FinalForm mode="edit" onSubmit={onSubmit} initialValues={{}} resolveSubmitErrors={resolveSubmitErrors}>
-                <div>
-                    <FormPaper>
+                <FormPaper variant="outlined">
+                    <Box marginBottom={4}>
                         <Field label="Foo" name="foo" component={FinalFormInput} />
-                    </FormPaper>
-                </div>
-                <FinalFormSaveCancelButtonsLegacy />
+                    </Box>
+                    <FinalFormSaveCancelButtonsLegacy />
+                </FormPaper>
             </FinalForm>
         </>
     );
@@ -68,12 +78,12 @@ function Page1() {
 function Page2() {
     return (
         <FinalForm mode="edit" onSubmit={onSubmit} initialValues={{}} resolveSubmitErrors={resolveSubmitErrors}>
-            <div>
-                <FormPaper>
+            <FormPaper variant="outlined">
+                <Box marginBottom={4}>
                     <Field label="Bar" name="bar" component={FinalFormInput} />
-                </FormPaper>
-            </div>
-            <FinalFormSaveCancelButtonsLegacy />
+                </Box>
+                <FinalFormSaveCancelButtonsLegacy />
+            </FormPaper>
         </FinalForm>
     );
 }

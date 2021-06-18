@@ -1,4 +1,4 @@
-import { Field, FinalFormInput } from "@comet/admin";
+import { Field, FinalFormInput, FormPaper } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -12,7 +12,9 @@ function Story() {
                 }}
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
-                        <Field name="name" label="Foo" component={FinalFormInput} />
+                        <FormPaper variant="outlined">
+                            <Field name="name" label="Foo" component={FinalFormInput} />
+                        </FormPaper>
                     </form>
                 )}
             />
