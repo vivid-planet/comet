@@ -36,6 +36,9 @@ const styles = (theme: Theme) => {
             "&:not(:last-child)": {
                 marginBottom: theme.spacing(4),
             },
+            "& [class*='MuiInputBase-root']": {
+                width: "100%",
+            },
         },
         vertical: {
             "& $label": {
@@ -69,7 +72,7 @@ const styles = (theme: Theme) => {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.error.main,
             },
-            "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
+            "& [class*='MuiInputBase-root']:not([class*='MuiInputBase-focused'])": {
                 borderColor: theme.palette.error.main,
             },
         },
@@ -80,7 +83,7 @@ const styles = (theme: Theme) => {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.warning.main,
             },
-            "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
+            "& [class*='MuiInputBase-root']:not([class*='MuiInputBase-focused'])": {
                 borderColor: theme.palette.warning.main,
             },
         },

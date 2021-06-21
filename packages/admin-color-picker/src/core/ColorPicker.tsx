@@ -1,6 +1,5 @@
-import { ClearInputButton, InputBase } from "@comet/admin";
-import { ClickAwayListener, Paper, Popper, WithStyles, withStyles } from "@material-ui/core";
-import { InputBaseProps } from "@material-ui/core/InputBase";
+import { ClearInputButton } from "@comet/admin";
+import { ClickAwayListener, InputBase, InputBaseProps, Paper, Popper, WithStyles, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { CustomPicker } from "react-color";
 import { FieldRenderProps } from "react-final-form";

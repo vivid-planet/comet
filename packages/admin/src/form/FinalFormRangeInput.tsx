@@ -1,9 +1,7 @@
-import { FormControl, Slider, SliderProps, Theme, WithStyles } from "@material-ui/core";
+import { FormControl, InputBase, Slider, SliderProps, Theme, WithStyles } from "@material-ui/core";
 import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
-
-import { InputBase } from "./InputBase";
 
 export type CometAdminFinalFormRangeInputClassKeys =
     | "root"
