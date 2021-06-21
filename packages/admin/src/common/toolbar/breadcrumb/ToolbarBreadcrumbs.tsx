@@ -27,8 +27,8 @@ export const ToolbarBreadcrumbs: React.FunctionComponent<StyledComponentProps<Co
                             const showSeparator = index < stackApi?.breadCrumbs.length - 1;
                             const isActive = index === stackApi?.breadCrumbs.length - 1;
                             return (
-                                <>
-                                    <div className={classes.item} key={id}>
+                                <React.Fragment key={id}>
+                                    <div className={classes.item}>
                                         <Typography
                                             {...themeProps.typographyProps}
                                             classes={{ root: `${classes.typographyRoot} ${isActive ? classes.typographyActiveRoot : ""}` }}
@@ -43,7 +43,7 @@ export const ToolbarBreadcrumbs: React.FunctionComponent<StyledComponentProps<Co
                                             <div className={classes.separator} />
                                         </div>
                                     )}
-                                </>
+                                </React.Fragment>
                             );
                         })}
                     </>
