@@ -1,38 +1,35 @@
-import { InputAdornment, TextField } from "@material-ui/core";
-import { StyledComponentProps } from "@material-ui/core/styles";
-import { TextFieldProps } from "@material-ui/core/TextField";
+import { Search } from "@comet/admin-icons";
+import { InputAdornment } from "@material-ui/core";
 import * as React from "react";
-import { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { mergeClasses } from "../helpers/mergeClasses";
-import { CometAdminFinalFormSearchTextFieldClassKeys, useStyles, useThemeProps } from "./FinalFormSearchTextField.styles";
+import { useComponentThemeProps } from "../mui/useComponentThemeProps";
+import { FinalFormInput, FinalFormInputProps } from "./FinalFormInput";
 
-export const FinalFormSearchTextField: React.FunctionComponent<
-    TextFieldProps &
-        FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> &
-        StyledComponentProps<CometAdminFinalFormSearchTextFieldClassKeys>
-> = ({ icon, input: { name, onChange, value, ...restInput }, placeholder, variant = "outlined", classes: passedClasses, ...restProps }) => {
+export interface CometAdminFinalFormSearchTextFieldThemeProps {
+    icon?: React.ReactNode;
+}
+
+export function FinalFormSearchTextField({ icon, placeholder, ...restProps }: FinalFormInputProps): React.ReactElement {
     const intl = useIntl();
     const themeProps = useThemeProps();
-    const classes = mergeClasses<CometAdminFinalFormSearchTextFieldClassKeys>(useStyles(), passedClasses);
 
     return (
-        <TextField
+        <FinalFormInput
             {...restProps}
-            name={name}
-            variant={variant}
-            onChange={onChange}
-            value={value}
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.finalformsearchtextfield.default.placeholder", defaultMessage: "Search" })}
-            InputProps={{
-                ...restInput,
-                startAdornment: (
-                    <InputAdornment position="start">
-                        <div className={classes.iconContainer}>{icon ?? themeProps.icon}</div>
-                    </InputAdornment>
-                ),
-            }}
+            startAdornment={<InputAdornment position="start">{icon ?? themeProps.icon}</InputAdornment>}
         />
     );
-};
+}
+
+export function useThemeProps() {
+    const { icon = <Search />, ...restProps } = useComponentThemeProps("CometAdminFinalFormSearchTextField") ?? {};
+    return { icon, ...restProps };
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminFinalFormSearchTextField: CometAdminFinalFormSearchTextFieldThemeProps;
+    }
+}

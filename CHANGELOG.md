@@ -8,7 +8,6 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Highlights
 
--   Added a new InputBase (`CometAdminInputBase`) for use in all custom input-components in Comet
 -   Added `ClearInputButton`, this component can be used as `endAdornment`, to clear inputs
     -   Can be themed with `CometAdminClearInputButton` (props and overrides)
 -   New methods of customization and default layout for `Field`
@@ -35,8 +34,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Incompatible Changes
 
 -   `createMuiTheme` has been removed from `@comet/admin` in favour of `createMuiTheme` from `@material-ui/core`
--   Replaced form/Input (`VPAdminInputBase`) with form/InputBase (`CometAdminInputBase`)
-    -   Deprecated `getDefaultVPAdminInputStyles` because the styled are included in InputBase, which should be used for all custom inputs in Comet
+-   Removed `VPAdminInputBase` and `getDefaultVPAdminInputStyles`, in favour of InputBase from Material-UI
 -   Usage and default layout of `Field` has changed
     -   The `fieldContainer` prop has been removed, in favour of the `variant` prop and theme-augmentation of `CometAdminFormFieldContainer`
     -   Removed `FieldContainerLabelAbove` component (the new default looks like this)
@@ -214,10 +212,6 @@ npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/upda
     -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
 
 ## @comet/admin-react-select
-
-### Highlights
-
--   Added theming-ability for input with `CometAdminInputBase`
 
 ### Incompatible Changes
 
