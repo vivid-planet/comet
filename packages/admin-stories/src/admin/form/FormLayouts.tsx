@@ -9,7 +9,7 @@ function Story() {
     return (
         <FinalForm mode={"edit"} onSubmit={() => {}}>
             <Box mb={8} maxWidth={1024}>
-                <FormPaper>
+                <FormPaper variant="outlined">
                     <Typography variant={"h5"}>Vertical Fields</Typography>
                     <br />
                     <Field label="Foo" placeholder="Foo" name="foo1" component={FinalFormInput} />
@@ -19,7 +19,7 @@ function Story() {
                 </FormPaper>
             </Box>
             <Box mb={8} maxWidth={1024}>
-                <FormPaper>
+                <FormPaper variant="outlined">
                     <Typography variant={"h5"}>Horizontal Fields</Typography>
                     <br />
                     <Field label="Foo" placeholder="Foo" name="foo2" component={FinalFormInput} variant={"horizontal"} />
@@ -29,7 +29,7 @@ function Story() {
                 </FormPaper>
             </Box>
             <Box mb={8} maxWidth={1024}>
-                <FormPaper>
+                <FormPaper variant="outlined">
                     <Typography variant={"h5"}>Fields in Grid</Typography>
                     <br />
                     <Grid container spacing={4}>

@@ -1,4 +1,5 @@
 import { Field, FinalForm, FinalFormInput, FinalFormSaveCancelButtonsLegacy, FormPaper } from "@comet/admin";
+import { Box } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
@@ -34,14 +35,16 @@ function Story() {
 
     return (
         <FinalForm mode="edit" onSubmit={onSubmit} initialValues={initialValues} resolveSubmitErrors={resolveSubmitErrors}>
-            <div>
-                <FormPaper>
+            <Box marginBottom={4}>
+                <FormPaper variant="outlined">
                     <Field label="Foo" name="foo" component={FinalFormInput} />
                 </FormPaper>
-                <FormPaper>
+            </Box>
+            <Box marginBottom={4}>
+                <FormPaper variant="outlined">
                     <Field label="Bar" name="bar" component={FinalFormInput} />
                 </FormPaper>
-            </div>
+            </Box>
             <FinalFormSaveCancelButtonsLegacy />
         </FinalForm>
     );

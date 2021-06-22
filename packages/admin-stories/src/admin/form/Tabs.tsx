@@ -18,12 +18,12 @@ function Story() {
         >
             <Tabs>
                 <Tab label="Example 1">
-                    <FormPaper>
+                    <FormPaper variant="outlined">
                         <Field label="Foo" name="foo" component={FinalFormInput} />
                     </FormPaper>
                 </Tab>
                 <Tab label="Example 2">
-                    <FormPaper>
+                    <FormPaper variant="outlined">
                         <Field label="Bar" name="bar" component={FinalFormInput} />
                     </FormPaper>
                 </Tab>

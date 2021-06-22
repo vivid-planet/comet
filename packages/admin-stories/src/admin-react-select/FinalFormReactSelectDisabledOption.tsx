@@ -1,4 +1,4 @@
-import { Field } from "@comet/admin";
+import { Field, FormPaper } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -19,15 +19,17 @@ function Story() {
                 }}
                 render={({ handleSubmit, pristine, invalid }) => (
                     <form onSubmit={handleSubmit}>
-                        <Field
-                            name="flavor"
-                            label="Flavor"
-                            component={FinalFormReactSelectStaticOptions}
-                            placeholder=""
-                            isClearable
-                            defaultOptions
-                            options={options}
-                        />
+                        <FormPaper variant="outlined">
+                            <Field
+                                name="flavor"
+                                label="Flavor"
+                                component={FinalFormReactSelectStaticOptions}
+                                placeholder=""
+                                isClearable
+                                defaultOptions
+                                options={options}
+                            />
+                        </FormPaper>
                     </form>
                 )}
             />

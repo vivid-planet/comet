@@ -1,3 +1,4 @@
+import { FormPaper } from "@comet/admin";
 import {
     FilterEditorStateBeforeUpdateFn,
     filterEditorStateDefault,
@@ -6,11 +7,12 @@ import {
     makeRteApi,
     Rte,
 } from "@comet/admin-rte";
+import { Box } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { EditorState, EntityInstance } from "draft-js";
 import * as React from "react";
 
-import { PrintEditorState, RteLayout, useAutoFocus } from "./helper";
+import { PrintEditorState, useAutoFocus } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
@@ -41,12 +43,15 @@ function Story() {
 
     return (
         <>
-            <div style={{ padding: "10px" }}>
-                <a href="https://google.com">Copy and paste this link into the editor</a>, and see in the editorstate that the link-data has changed
-            </div>
-            <RteLayout>
-                <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={{ filterEditorStateBeforeUpdate }} />
-            </RteLayout>
+            <Box marginBottom={4}>
+                <FormPaper variant="outlined">
+                    <Box marginBottom={4}>
+                        <a href="https://google.com">Copy and paste this link into the editor</a>, and see in the editorstate that the link-data has
+                        changed
+                    </Box>
+                    <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={{ filterEditorStateBeforeUpdate }} />
+                </FormPaper>
+            </Box>
             <PrintEditorState editorState={editorState} />
         </>
     );

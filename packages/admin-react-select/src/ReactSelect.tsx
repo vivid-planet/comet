@@ -52,15 +52,16 @@ function Control<OptionType, IsMulti extends boolean>(props: ControlProps<Option
 }
 
 function Option<OptionType, IsMulti extends boolean>(props: OptionProps<OptionType, IsMulti>) {
+    const rootClasses: string[] = [props.selectProps.classes.option];
+    if (props.isFocused) rootClasses.push(props.selectProps.classes.optionFocused);
+    if (props.isSelected) rootClasses.push(props.selectProps.classes.optionSelected);
     return (
         <MenuItem
+            classes={{ root: rootClasses.join(" ") }}
             buttonRef={props.innerRef}
-            selected={props.isFocused}
+            selected={props.isSelected}
             disabled={props.isDisabled}
             component="div"
-            style={{
-                fontWeight: props.isSelected ? 500 : 400,
-            }}
             {...props.innerProps}
         >
             {props.children}
