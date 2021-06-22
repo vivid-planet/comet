@@ -15,4 +15,7 @@ export const paletteOptions: PaletteOptions = {
         secondary: "#757575",
         disabled: neutrals[300],
     },
+    background: {
+        default: neutrals[50],
+    },
 };

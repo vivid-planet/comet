@@ -13,7 +13,7 @@ import {
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
-import { Divider, Typography } from "@material-ui/core";
+import { Box, Divider, Paper, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
@@ -78,38 +78,42 @@ const Header: React.FC = () => (
 
 const Content = ({ children }: { children: string }) => (
     <MainContent>
-        <Typography variant={"h4"}>{children}</Typography>
-        <br />
-        <Typography>
-            The menu is permanent by default and is temporary below {permanentMenuMinWidth}px and for the routes:{" "}
-            {pathsToAlwaysUseTemporaryMenu.join(", ")}.
-            <br />
-            This is useful, when specific pages need some extra width.
-        </Typography>
-        <br />
-        <Divider />
-        <br />
-        <Typography variant={"body2"}>Links for testing menu-behaviour when location changes without menu-interaction:</Typography>
-        <ul>
-            <li>
-                <Link to={"/dashboard"}>Dashboard</Link>
-            </li>
-            <li>
-                <Link to={"/settings"}>Settings</Link>
-            </li>
-            <li>
-                <Link to={"/foo1"}>Foo1</Link>
-            </li>
-            <li>
-                <Link to={"/foo2"}>Foo2</Link>
-            </li>
-            <li>
-                <Link to={"/foo3"}>Foo3</Link>
-            </li>
-            <li>
-                <Link to={"/foo4"}>Foo4</Link>
-            </li>
-        </ul>
+        <Paper variant="outlined">
+            <Box padding={4}>
+                <Typography variant={"h4"} gutterBottom>
+                    {children}
+                </Typography>
+                <Typography gutterBottom>
+                    The menu is permanent by default and is temporary below {permanentMenuMinWidth}px and for the routes:{" "}
+                    {pathsToAlwaysUseTemporaryMenu.join(", ")}.
+                    <br />
+                    This is useful, when specific pages need some extra width.
+                </Typography>
+                <Divider />
+                <br />
+                <Typography variant={"body2"}>Links for testing menu-behaviour when location changes without menu-interaction:</Typography>
+                <ul>
+                    <li>
+                        <Link to={"/dashboard"}>Dashboard</Link>
+                    </li>
+                    <li>
+                        <Link to={"/settings"}>Settings</Link>
+                    </li>
+                    <li>
+                        <Link to={"/foo1"}>Foo1</Link>
+                    </li>
+                    <li>
+                        <Link to={"/foo2"}>Foo2</Link>
+                    </li>
+                    <li>
+                        <Link to={"/foo3"}>Foo3</Link>
+                    </li>
+                    <li>
+                        <Link to={"/foo4"}>Foo4</Link>
+                    </li>
+                </ul>
+            </Box>
+        </Paper>
     </MainContent>
 );
 

@@ -29,6 +29,8 @@ All notable changes to this project will be documented in this file. This projec
 -   add SaveButton which handles and displays state(idle, saving, success and error)
 -   add SnackbarProvider, useSnackbarApi() hook and UndoSnackbar
 -   add `FinalFormSaveCancelButtonsLegacy` as drop in replacement for removed Cancel and Save Button in `FinalForm`.
+-   add PrettyBytes component for formatting file sizes and other byte values
+-   Add `validateWarning` validator to `Field` and `FinalForm`.
 
 ### Incompatible Changes
 
@@ -129,6 +131,32 @@ new:
        </StackSwitch>
    </Stack>
 ```
+
+-   Changes to DndOrderRow
+
+    DndOrderRow requires new peer dependencies and a DndProvider setup in the application.
+
+    -   Install peer dependencies in your application
+
+        ```bash
+        npm install react-dnd@"~14"
+        npm install react-dnd-html5-backend@"~14"
+        ```
+
+    -   Put your application code inside a DndProvider
+
+        ```
+        import { DndProvider } from "react-dnd";
+        import { HTML5Backend } from "react-dnd-html5-backend";
+
+        export function App() {
+            return (
+                <DndProvider backend={HTML5Backend}>
+                        ... your application code
+                </DndProvider>
+            )
+        }
+        ```
 
 ### Migration Guide
 

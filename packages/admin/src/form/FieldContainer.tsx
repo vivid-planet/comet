@@ -13,6 +13,7 @@ interface FieldContainerProps {
     required?: boolean;
     disabled?: boolean;
     error?: string;
+    warning?: string;
 }
 
 export type CometAdminFormFieldContainerClassKeys =
@@ -25,7 +26,9 @@ export type CometAdminFormFieldContainerClassKeys =
     | "label"
     | "inputContainer"
     | "hasError"
-    | "error";
+    | "error"
+    | "hasWarning"
+    | "warning";
 
 const styles = (theme: Theme) => {
     return createStyles<CometAdminFormFieldContainerClassKeys, any>({
@@ -62,6 +65,8 @@ const styles = (theme: Theme) => {
         inputContainer: {},
         hasError: {},
         error: {},
+        hasWarning: {},
+        warning: {},
     });
 };
 
@@ -75,17 +80,22 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     required,
     requiredSymbol = "*",
     children,
+    warning,
 }) => {
+    const hasError = error !== undefined && error.length > 0;
+    const hasWarning = warning !== undefined && warning.length > 0;
+
     const formControlClasses: string[] = [classes.root];
     if (variant === "vertical") formControlClasses.push(classes.vertical);
     if (variant === "horizontal") formControlClasses.push(classes.horizontal);
     if (fullWidth) formControlClasses.push(classes.fullWidth);
-    if (error) formControlClasses.push(classes.hasError);
+    if (hasError) formControlClasses.push(classes.hasError);
+    if (hasWarning && !hasError) formControlClasses.push(classes.hasWarning);
     if (disabled) formControlClasses.push(classes.disabled);
     if (required) formControlClasses.push(classes.required);
 
     return (
-        <FormControl fullWidth classes={{ root: formControlClasses.join(" ") }}>
+        <FormControl fullWidth={fullWidth} classes={{ root: formControlClasses.join(" ") }}>
             <>
                 {label && (
                     <FormLabel classes={{ root: classes.label }}>
@@ -95,11 +105,12 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
                 )}
                 <div className={classes.inputContainer}>
                     {children}
-                    {!!error && (
+                    {hasError && (
                         <FormHelperText error classes={{ root: classes.error }}>
                             {error}
                         </FormHelperText>
                     )}
+                    {hasWarning && !hasError && <FormHelperText classes={{ root: classes.warning }}>{warning}</FormHelperText>}
                 </div>
             </>
         </FormControl>

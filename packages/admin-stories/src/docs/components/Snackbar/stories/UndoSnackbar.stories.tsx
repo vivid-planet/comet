@@ -19,13 +19,7 @@ storiesOf("stories/components/Snackbar/Undo Snackbar", module)
                 const prevOption = chosenOption;
                 setChosenOption(newOption);
                 snackbarApi.showSnackbar(
-                    <UndoSnackbar<string>
-                        // Use uuid or object id in production
-                        key={Math.random()}
-                        message={`Changed from ${chosenOption} to ${newOption}`}
-                        payload={prevOption}
-                        onUndoClick={handleUndo}
-                    />,
+                    <UndoSnackbar<string> message={`Changed from ${chosenOption} to ${newOption}`} payload={prevOption} onUndoClick={handleUndo} />,
                 );
             };
             return (

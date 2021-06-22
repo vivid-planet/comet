@@ -1,3 +1,4 @@
+import { FormPaper } from "@comet/admin";
 import { IRteRef } from "@comet/admin-rte";
 import { Typography } from "@material-ui/core";
 import { convertToRaw, EditorState, RawDraftContentState } from "draft-js";
@@ -13,28 +14,24 @@ export function useAutoFocus(editorRef: React.MutableRefObject<IRteRef | undefin
 
 export function PrintEditorState({ editorState }: { editorState: EditorState }) {
     return (
-        <div style={{ padding: "10px", background: "#ccc" }}>
+        <FormPaper variant="outlined">
             <Typography variant="h5" color="primary">
                 EditorState:
             </Typography>
             <pre>{editorState && editorState.getCurrentContent() && JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
-        </div>
+        </FormPaper>
     );
 }
 
 export function PrintAnything({ children, label }: { children: any; label: string }) {
     return (
-        <div style={{ padding: "10px", background: "#ccc" }}>
+        <FormPaper variant="outlined">
             <Typography variant="h5" color="primary">
                 {label}:
             </Typography>
             <pre>{JSON.stringify(children, null, 2)}</pre>
-        </div>
+        </FormPaper>
     );
-}
-
-export function RteLayout({ children }: { children: React.ReactNode }) {
-    return <div style={{ border: "1px solid black", padding: "10px" }}>{children}</div>;
 }
 
 export const exampleContent = {

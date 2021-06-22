@@ -35,4 +35,15 @@ export const getFormFieldContainerOverrides = (palette: Palette): StyleRules<{},
     error: {
         fontSize: 14,
     },
+    hasWarning: {
+        "& $label:not([class*='Mui-focused'])": {
+            color: palette.warning.main,
+        },
+        "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
+            borderColor: palette.warning.main,
+        },
+    },
+    warning: {
+        fontSize: 14,
+    },
 });

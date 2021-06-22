@@ -1,10 +1,12 @@
+import { FormPaper } from "@comet/admin";
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
+import { Box } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import * as React from "react";
 
-import { PrintAnything, RteLayout } from "./helper";
+import { PrintAnything } from "./helper";
 
 type Html = string;
 
@@ -32,9 +34,11 @@ function Story() {
 
     return (
         <>
-            <RteLayout>
-                <Rte value={editorState} onChange={setEditorState} />
-            </RteLayout>
+            <Box marginBottom={4}>
+                <FormPaper variant="outlined">
+                    <Rte value={editorState} onChange={setEditorState} />
+                </FormPaper>
+            </Box>
             <PrintAnything label="Save Value: Html">{saveableContent}</PrintAnything>
         </>
     );

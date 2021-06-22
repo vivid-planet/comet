@@ -20,7 +20,7 @@ function Story() {
                 initialValues={{ checkbox: false, radio: "foo", switch: false }}
                 render={({ handleSubmit, values }) => (
                     <>
-                        <Paper>
+                        <Paper variant="outlined">
                             <Box padding={4}>
                                 <form onSubmit={handleSubmit}>
                                     <Field name="input" label="FinalFormInput" fullWidth component={FinalFormInput} />

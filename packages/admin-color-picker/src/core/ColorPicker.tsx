@@ -4,7 +4,7 @@ import { InputBaseProps } from "@material-ui/core/InputBase";
 import * as React from "react";
 import { CustomPicker } from "react-color";
 import { FieldRenderProps } from "react-final-form";
-import * as tinycolor from "tinycolor2";
+import tinycolor from "tinycolor2";
 
 import { colorToHex } from "../utils/colorSpaces";
 import styles from "./ColorPicker.styles";

@@ -4,8 +4,6 @@ import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-let counter = 0;
-
 const UndoSnackbarExample = () => {
     const [chosenOption, setChosenOption] = React.useState("one");
     const snackbarApi = useSnackbarApi();
@@ -19,7 +17,7 @@ const UndoSnackbarExample = () => {
         setChosenOption(newOption);
 
         snackbarApi.showSnackbar(
-            <UndoSnackbar key={counter++} message={`Changed from ${chosenOption} to ${newOption}`} payload={prevOption} onUndoClick={handleUndo} />,
+            <UndoSnackbar message={`Changed from ${chosenOption} to ${newOption}`} payload={prevOption} onUndoClick={handleUndo} />,
         );
     };
 
