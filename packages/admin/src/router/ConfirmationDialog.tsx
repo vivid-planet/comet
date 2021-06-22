@@ -1,10 +1,8 @@
-import { Dialog, DialogActions, DialogClassKey, DialogTitle, makeStyles } from "@material-ui/core";
-import { StyledComponentProps, Theme } from "@material-ui/core/styles";
+import { Dialog, DialogActions, DialogTitle } from "@material-ui/core";
 import * as React from "react";
 
 import { CancelButton } from "../common/buttons/cancel/CancelButton";
 import { OkayButton } from "../common/buttons/okay/OkayButton";
-import { mergeClasses } from "../helpers/mergeClasses";
 
 interface Props {
     isOpen: boolean;
@@ -12,15 +10,9 @@ interface Props {
     handleClose: (ok: boolean) => void;
 }
 
-export function RouterConfirmationDialog({
-    message,
-    handleClose,
-    isOpen,
-    classes: passedClasses,
-}: Props & StyledComponentProps<CometAdminFormSectionKeys>) {
-    const classes = mergeClasses<CometAdminFormSectionKeys>(useStyles(), passedClasses);
+export function RouterConfirmationDialog({ message, handleClose, isOpen }: Props) {
     return (
-        <Dialog open={isOpen} onClose={handleClose.bind(this, false)} classes={classes}>
+        <Dialog open={isOpen} onClose={handleClose.bind(this, false)} maxWidth={"xs"}>
             <DialogTitle>{message}</DialogTitle>
             <DialogActions>
                 <CancelButton onClick={handleClose.bind(this, false)} />
@@ -28,35 +20,4 @@ export function RouterConfirmationDialog({
             </DialogActions>
         </Dialog>
     );
-}
-
-export type CometAdminFormSectionKeys = DialogClassKey;
-
-const useStyles = makeStyles<Theme, {}, CometAdminFormSectionKeys>(
-    () => ({
-        root: {},
-        scrollPaper: {},
-        scrollBody: {},
-        container: {},
-        paper: {},
-        paperScrollPaper: {},
-        paperScrollBody: {},
-        paperWidthFalse: {},
-        paperWidthXs: {},
-        paperWidthSm: {
-            width: 350,
-        },
-        paperWidthMd: {},
-        paperWidthLg: {},
-        paperWidthXl: {},
-        paperFullWidth: {},
-        paperFullScreen: {},
-    }),
-    { name: "CometAdminRouterConfirmationDialog" },
-);
-
-declare module "@material-ui/core/styles/overrides" {
-    interface ComponentNameToClassKey {
-        CometAdminRouterConfirmationDialog: CometAdminFormSectionKeys;
-    }
 }

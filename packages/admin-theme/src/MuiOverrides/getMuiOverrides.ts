@@ -1,4 +1,5 @@
 import { Palette } from "@material-ui/core/styles/createPalette";
+import { Spacing } from "@material-ui/core/styles/createSpacing";
 import { Typography } from "@material-ui/core/styles/createTypography";
 import { Overrides } from "@material-ui/core/styles/overrides";
 
@@ -24,10 +25,10 @@ import { getMuiTableCellOverrides } from "./MuiTableCell";
 import { getMuiTableRowOverrides } from "./MuiTableRow";
 import { getMuiTypographyOverrides } from "./MuiTypography";
 
-export const getMuiOverrides = (palette: Palette, typography: Typography): Overrides => ({
+export const getMuiOverrides = (palette: Palette, typography: Typography, spacing: Spacing): Overrides => ({
     MuiCheckbox: getMuiCheckboxOverrides(palette),
     MuiRadio: getMuiRadioOverrides(palette),
-    MuiDialog: getMuiDialogOverrides(),
+    MuiDialog: getMuiDialogOverrides(spacing),
     MuiDialogTitle: getMuiDialogTitleOverrides(palette, typography),
     MuiDialogContent: getMuiDialogContentOverrides(palette),
     MuiDialogContentText: getMuiDialogTextContentOverrides(palette),
