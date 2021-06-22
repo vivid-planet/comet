@@ -21,7 +21,7 @@ const resetInputStyles = {
         margin: "inherit",
         cursor: "inherit",
         width: "100%",
-        "&::-ms-clear": {
+        "&::MsClear": {
             display: "none",
         },
     },
