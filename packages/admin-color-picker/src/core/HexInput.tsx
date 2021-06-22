@@ -31,13 +31,7 @@ const HexInput: React.FC<IComponentProps & ColorPickerProps> = ({ value, classes
     <div className={classes.inputInner}>
         <div className={classes.inputInnerLeftContent}>
             {!palette || (palette && picker) ? (
-                <EditableInput
-                    style={resetInputStyles}
-                    value={value}
-                    onChange={(colorState) => {
-                        onChange(colorState.hex);
-                    }}
-                />
+                <EditableInput style={resetInputStyles} value={value} onChange={onChange} />
             ) : (
                 <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
             )}
