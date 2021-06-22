@@ -2,7 +2,7 @@ import {
     EditDialog,
     Field,
     FinalForm,
-    FinalFormTextField,
+    FinalFormInput,
     IEditDialogApi,
     MainContent,
     Selected,
@@ -39,7 +39,7 @@ function EditForm(props: IEditFormProps) {
                 alert(JSON.stringify(values));
             }}
         >
-            <Field name="foo" component={FinalFormTextField} type="text" label="Name" />
+            <Field name="foo" component={FinalFormInput} type="text" label="Name" fullWidth />
         </FinalForm>
     );
 }
