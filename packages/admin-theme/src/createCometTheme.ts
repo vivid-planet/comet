@@ -6,8 +6,7 @@ import { createMuiTheme, Theme } from "@material-ui/core";
 import { ThemeOptions } from "@material-ui/core/styles";
 import createPalette, { Palette, PaletteOptions } from "@material-ui/core/styles/createPalette";
 import createTypography, { Typography, TypographyOptions } from "@material-ui/core/styles/createTypography";
-// @ts-ignore - requires esModuleInterop
-import * as merge from "lodash.merge";
+import merge from "lodash.merge";
 
 import { getMuiOverrides } from "./MuiOverrides/getMuiOverrides";
 import { getMuiProps } from "./MuiProps/getMuiProps";

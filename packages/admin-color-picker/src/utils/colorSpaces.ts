@@ -1,5 +1,5 @@
 import { HSLColor, HSVColor } from "react-color";
-import * as tinycolor from "tinycolor2";
+import tinycolor from "tinycolor2";
 
 export function colorToHex(colorValue: string | tinycolor.ColorInputWithoutInstance | undefined): string {
     if (typeof colorValue === "string" && colorValue.length === 0) return "";

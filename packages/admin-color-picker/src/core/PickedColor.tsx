@@ -1,6 +1,6 @@
 import { WithStyles } from "@material-ui/core";
 import * as React from "react";
-import * as tinycolor from "tinycolor2";
+import tinycolor from "tinycolor2";
 
 import styles from "./ColorPicker.styles";
 

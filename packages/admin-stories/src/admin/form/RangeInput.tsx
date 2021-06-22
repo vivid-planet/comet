@@ -1,4 +1,5 @@
 import { Field, FinalFormRangeInput } from "@comet/admin";
+import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -37,24 +38,103 @@ const Thumb = styled.div`
 
 function Story() {
     return (
-        <div style={{ width: "300px" }}>
-            <Form
-                onSubmit={(values) => {
-                    // values
-                }}
-                initialValues={{ price: { min: 0, max: 100 } }}
-                render={({ handleSubmit, values }) => (
-                    <Field
-                        component={FinalFormRangeInput}
-                        name="price"
-                        min={0}
-                        max={100}
-                        endAdornment={<span>€</span>}
-                        sliderProps={{ ThumbComponent: Thumb }}
-                    />
-                )}
-            />
-        </div>
+        <>
+            <h1>Final Form Range Input</h1>
+            <h3>with initialValues</h3>
+            <div style={{ width: "400px", paddingBottom: "30px" }}>
+                <Form
+                    onSubmit={(values) => {
+                        // values
+                    }}
+                    initialValues={{ price: { min: 0, max: 100 } }}
+                    render={({ handleSubmit, values, form, initialValues }) => (
+                        <>
+                            <Field
+                                component={FinalFormRangeInput}
+                                name="price"
+                                min={0}
+                                max={100}
+                                endAdornment={<span>€</span>}
+                                sliderProps={{ ThumbComponent: Thumb }}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    form.reset();
+                                }}
+                            >
+                                Reset
+                            </Button>
+                            <pre>{JSON.stringify(values, undefined, 2)}</pre>
+                        </>
+                    )}
+                />
+            </div>
+            <div style={{ width: "400px", borderBottom: "1px solid grey" }} />
+            <h3>without initialValues</h3>
+            <div style={{ width: "400px", paddingBottom: "30px" }}>
+                <Form
+                    onSubmit={(values) => {
+                        // values
+                    }}
+                    render={({ values, form }) => (
+                        <>
+                            <Field
+                                component={FinalFormRangeInput}
+                                name="price"
+                                min={0}
+                                max={150}
+                                endAdornment={<span>€</span>}
+                                sliderProps={{ ThumbComponent: Thumb }}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    form.reset();
+                                }}
+                            >
+                                Reset
+                            </Button>
+                            <pre>{JSON.stringify(values, undefined, 2)}</pre>
+                        </>
+                    )}
+                />
+            </div>
+            <div style={{ width: "400px", borderBottom: "1px solid grey" }} />
+            <h3>with initialValues and different MinMax Values</h3>
+            <div style={{ width: "400px", paddingBottom: "30px" }}>
+                <Form
+                    onSubmit={(values) => {
+                        // values
+                    }}
+                    initialValues={{ price: { min: 50, max: 80 } }}
+                    render={({ values, form, initialValues }) => (
+                        <>
+                            <Field
+                                component={FinalFormRangeInput}
+                                name="price"
+                                min={20}
+                                max={150}
+                                endAdornment={<span>€</span>}
+                                sliderProps={{ ThumbComponent: Thumb }}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    form.reset();
+                                }}
+                            >
+                                Reset
+                            </Button>
+                            <pre>{JSON.stringify(values, undefined, 2)}</pre>
+                        </>
+                    )}
+                />
+            </div>
+        </>
     );
 }
 
