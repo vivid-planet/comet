@@ -8,7 +8,7 @@ import tinycolor from "tinycolor2";
 
 import { colorToHex } from "../utils/colorSpaces";
 import styles from "./ColorPicker.styles";
-import HexInput from "./HexInput";
+import { HexInput } from "./HexInput";
 import Palette from "./Palette";
 import PickedColor from "./PickedColor";
 import Picker from "./Picker";
@@ -78,7 +78,10 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                         picker: !!showPicker,
                         palette: !!colorPalette?.length,
                     }}
-                    onChange={(newColor: string) => onChange(colorToHex(newColor as tinycolor.ColorInputWithoutInstance))}
+                    onChange={(newColor) => {
+                        // The HexInput component's onChange can only return a string, not a ChangeEvent
+                        onChange(colorToHex(newColor as unknown as tinycolor.ColorInputWithoutInstance));
+                    }}
                     className={classes.input}
                     onClick={handleFieldClick}
                 />
