@@ -9,7 +9,8 @@ export interface CometAdminStackBackButtonThemeProps {
 }
 
 export function useThemeProps() {
-    const { buttonProps = { endIcon: <ArrowBack /> }, ...restProps } = useComponentThemeProps("CometAdminStackBackButton") ?? {};
+    const { buttonProps = { endIcon: <ArrowBack />, startIcon: <ArrowBack /> }, ...restProps } =
+        useComponentThemeProps("CometAdminStackBackButton") ?? {};
 
     return { buttonProps, ...restProps };
 }
