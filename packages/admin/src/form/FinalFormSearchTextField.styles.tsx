@@ -1,5 +1,5 @@
+import { Search } from "@comet/admin-icons";
 import { Theme } from "@material-ui/core/styles";
-import { Search } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
 
@@ -12,8 +12,10 @@ export interface CometAdminFinalFormSearchTextFieldThemeProps {
 export type CometAdminFinalFormSearchTextFieldClassKeys = "iconContainer";
 
 export const useStyles = makeStyles<Theme, {}, CometAdminFinalFormSearchTextFieldClassKeys>(
-    () => ({
-        iconContainer: {},
+    ({ spacing }) => ({
+        iconContainer: {
+            paddingRight: spacing(2),
+        },
     }),
     { name: "CometAdminFinalFormSearchTextField" },
 );

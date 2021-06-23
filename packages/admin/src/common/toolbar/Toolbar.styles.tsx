@@ -19,6 +19,7 @@ export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminT
             justifyContent: "center",
             top: (props) => props.headerHeight,
             padding: 0,
+            minHeight: 80,
         },
         muiToolbar: {
             display: "flex",
@@ -34,7 +35,7 @@ export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminT
 );
 
 export function useThemeProps() {
-    const { elevation = 4, ...restProps } = useComponentThemeProps("CometAdminToolbar") ?? {};
+    const { elevation = 1, ...restProps } = useComponentThemeProps("CometAdminToolbar") ?? {};
     return { elevation, ...restProps };
 }
 

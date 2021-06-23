@@ -1,5 +1,5 @@
 import { CssBaseline } from "@material-ui/core";
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { StyledComponentProps } from "@material-ui/styles";
 import * as React from "react";
 
 import { AppHeader } from "../appHeader/AppHeader";

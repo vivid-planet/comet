@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/styles";
 export type CometAdminToolbarItemClassKeys = "root";
 
 export const useStyles = makeStyles<Theme, {}, CometAdminToolbarItemClassKeys>(
-    () => ({
+    ({ palette }) => ({
         root: {
             padding: 15,
             display: "flex",
@@ -12,6 +12,7 @@ export const useStyles = makeStyles<Theme, {}, CometAdminToolbarItemClassKeys>(
             alignItems: "center",
             borderRight: 1,
             borderRightStyle: "solid",
+            borderRightColor: palette.grey[50],
         },
     }),
     { name: "CometAdminToolbarItem" },
