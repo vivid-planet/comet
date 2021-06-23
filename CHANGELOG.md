@@ -75,6 +75,10 @@ All notable changes to this project will be documented in this file. This projec
 -   Changes to MasterLayout
     -   the html tag <main> was removed from the `MasterTemplate` and a new Component `MainContent` is introduced
     -   Best way to handle this change is to wrap your main content with the `MainContent` Component
+-   Changes to Tabs & RouterTabs
+    -   Removed `AppBar` from Tabs, you can style `CometAdminTabs-root` to bring back the previous appearance, if necessary
+    -   Removed `tabLabel` prop, use `label` instead
+    -   In `RouterTabs`, the props `variant` and `indicatorColor` now need to be set in the `tabsProps` prop
 
 ```
   <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
