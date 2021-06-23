@@ -76,6 +76,10 @@ All notable changes to this project will be documented in this file. This projec
     -   Removed prop `hideToolbarMenuIcon`, it is no longer necessary when building a custom header using the `AppHeader` system.
     -   The html tag `<main>` was removed from the `MasterTemplate` and a new component `MainContent` is introduced
         -   The best way to handle this change is to wrap your main content with the `MainContent` component
+-   Changes to Tabs & RouterTabs
+    -   Removed `AppBar` from Tabs, you can style `CometAdminTabs-root` to bring back the previous appearance, if necessary
+    -   Removed `tabLabel` prop, use `label` instead
+    -   In `RouterTabs`, the props `variant` and `indicatorColor` now need to be set in the `tabsProps` prop
 
 ```
   <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
