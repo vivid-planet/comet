@@ -6,9 +6,9 @@ import { Edit } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const SampleTable: React.FunctionComponent = () => {
     const stackApi = React.useContext(StackSwitchApiContext);
@@ -105,6 +105,6 @@ function Story() {
 }
 
 storiesOf("@comet/admin/form", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .addDecorator(apolloStoryDecorator())
     .add("Disable Auto Navigation", () => <Story />);

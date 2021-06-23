@@ -4,7 +4,8 @@ import { Alert } from "@material-ui/lab";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const ViewWithNoError: React.FunctionComponent = () => {
     return (
@@ -55,5 +56,5 @@ function App() {
 }
 
 storiesOf("@comet/admin/error-handling/error-boundaries", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("RouteWithErrorBoundary", () => <App />);

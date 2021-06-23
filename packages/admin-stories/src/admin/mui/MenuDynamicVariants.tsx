@@ -18,7 +18,8 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const permanentMenuMinWidth = 1024;
 const pathsToAlwaysUseTemporaryMenu = ["/foo3", "/foo4"];
@@ -131,5 +132,5 @@ const Story: React.FC = () => (
 );
 
 storiesOf("@comet/admin/mui", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Menu (dynamic variants)", () => <Story />, { layout: "fullscreen" });

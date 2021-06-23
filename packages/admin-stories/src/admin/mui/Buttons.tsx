@@ -17,7 +17,8 @@ import {
 } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const ButtonsRow = ({ children }: { children: React.ReactNode[] }) => {
     return (
@@ -282,5 +283,5 @@ export const Story: React.FC = () => {
 };
 
 storiesOf("@comet/admin/mui", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Buttons", () => <Story />);

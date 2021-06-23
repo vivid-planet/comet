@@ -3,13 +3,13 @@ import { ChevronLeft } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
+import { storyRouterDecorator } from "../../../../story-router.decorator";
 import { toolbarDecorator } from "../toolbar.decorator";
 
 storiesOf("stories/components/Toolbar/Custom Back Button", module)
     .addDecorator(toolbarDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Custom Back Button", () => {
         return (
             <StackApiContext.Consumer>
