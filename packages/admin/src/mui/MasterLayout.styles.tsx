@@ -1,10 +1,10 @@
 import { Theme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/styles";
 
-export type CometAdminMasterLayoutClassKeys = "root" | "header" | "toolbar" | "menuButton" | "contentWrapper";
+export type CometAdminMasterLayoutClassKeys = "root" | "header" | "contentWrapper";
 
 export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminMasterLayoutClassKeys>(
-    ({ spacing, zIndex }) => ({
+    ({ zIndex }) => ({
         root: {
             display: "flex",
             flexWrap: "nowrap",
@@ -12,12 +12,6 @@ export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminM
         header: {
             zIndex: zIndex.drawer + 1,
         },
-        toolbar: {
-            minHeight: 0,
-            paddingLeft: spacing(2),
-            paddingRight: spacing(2),
-        },
-        menuButton: {},
         contentWrapper: {
             flexGrow: 1,
             paddingTop: ({ headerHeight }) => headerHeight,
