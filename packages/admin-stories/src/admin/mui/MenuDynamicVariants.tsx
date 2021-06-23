@@ -72,7 +72,6 @@ const Header: React.FC = () => (
         <AppHeaderMenuButton />
         <CometLogo />
         <AppHeaderFillSpace />
-        <Typography variant="h5">Menu Example</Typography>
     </AppHeader>
 );
 
