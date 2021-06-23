@@ -79,7 +79,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             inputProps={{
                                 value: internalMinInput !== undefined ? internalMinInput : "",
                                 type: "number",
-                                placeholder: min,
+                                placeholder: min.toString(),
                             }}
                             startAdornment={startAdornment}
                             endAdornment={endAdornment}
@@ -112,7 +112,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             inputProps={{
                                 value: internalMaxInput !== undefined ? internalMaxInput : "",
                                 type: "number",
-                                placeholder: max,
+                                placeholder: max.toString(),
                             }}
                             startAdornment={startAdornment ? startAdornment : ""}
                             endAdornment={endAdornment ? endAdornment : ""}
