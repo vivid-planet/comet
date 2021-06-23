@@ -15,7 +15,10 @@ export type CometAdminSelectClassKeys =
     | "indicatorSeparator"
     | "clearIndicator"
     | "indicator"
-    | "dropdownIndicator";
+    | "dropdownIndicator"
+    | "option"
+    | "optionSelected"
+    | "optionFocused";
 
 const styles = (theme: Theme) =>
     createStyles<CometAdminSelectClassKeys, any>({
@@ -70,6 +73,13 @@ const styles = (theme: Theme) =>
         },
         dropdownIndicator: {
             fontSize: 20,
+        },
+        option: {},
+        optionSelected: {
+            fontWeight: theme.typography.fontWeightMedium,
+        },
+        optionFocused: {
+            backgroundColor: theme.palette.grey[50],
         },
     });
 

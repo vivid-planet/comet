@@ -78,6 +78,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
                 open={permanentOpen}
                 style={{ width: permanentOpen ? drawerWidth : 0 }}
                 PaperProps={{
+                    elevation: 2,
                     style: {
                         top: headerHeight,
                         height: `calc(100% - ${headerHeight}px)`,

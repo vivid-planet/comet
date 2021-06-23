@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add SnackbarProvider, useSnackbarApi() hook and UndoSnackbar
 -   add `FinalFormSaveCancelButtonsLegacy` as drop in replacement for removed Cancel and Save Button in `FinalForm`.
 -   add PrettyBytes component for formatting file sizes and other byte values
+-   Add `validateWarning` validator to `Field` and `FinalForm`.
 
 ### Incompatible Changes
 
@@ -74,6 +75,10 @@ All notable changes to this project will be documented in this file. This projec
 -   Changes to MasterLayout
     -   the html tag <main> was removed from the `MasterTemplate` and a new Component `MainContent` is introduced
     -   Best way to handle this change is to wrap your main content with the `MainContent` Component
+-   Changes to Tabs & RouterTabs
+    -   Removed `AppBar` from Tabs, you can style `CometAdminTabs-root` to bring back the previous appearance, if necessary
+    -   Removed `tabLabel` prop, use `label` instead
+    -   In `RouterTabs`, the props `variant` and `indicatorColor` now need to be set in the `tabsProps` prop
 
 ```
   <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
@@ -129,6 +134,32 @@ new:
        </StackSwitch>
    </Stack>
 ```
+
+-   Changes to DndOrderRow
+
+    DndOrderRow requires new peer dependencies and a DndProvider setup in the application.
+
+    -   Install peer dependencies in your application
+
+        ```bash
+        npm install react-dnd@"~14"
+        npm install react-dnd-html5-backend@"~14"
+        ```
+
+    -   Put your application code inside a DndProvider
+
+        ```
+        import { DndProvider } from "react-dnd";
+        import { HTML5Backend } from "react-dnd-html5-backend";
+
+        export function App() {
+            return (
+                <DndProvider backend={HTML5Backend}>
+                        ... your application code
+                </DndProvider>
+            )
+        }
+        ```
 
 ### Migration Guide
 

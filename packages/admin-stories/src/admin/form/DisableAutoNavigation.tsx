@@ -1,7 +1,7 @@
 import { MainContent, Stack, StackPage, StackSwitch, StackSwitchApiContext, Toolbar, ToolbarBackButton, ToolbarItem } from "@comet/admin";
 import { Table } from "@comet/admin";
 import { Field, FinalForm, FinalFormInput, FormPaper } from "@comet/admin";
-import { IconButton, Typography } from "@material-ui/core";
+import { Box, IconButton, Paper, Typography } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -15,14 +15,15 @@ const SampleTable: React.FunctionComponent = () => {
 
     return (
         <>
-            <Toolbar>
-                <ToolbarBackButton />
-                <ToolbarItem>
-                    <Typography variant={"h3"}>Sample Table</Typography>
-                </ToolbarItem>
-            </Toolbar>
-
-            <MainContent>
+            <Box marginBottom={4}>
+                <Toolbar>
+                    <ToolbarBackButton />
+                    <ToolbarItem>
+                        <Typography variant={"h3"}>Sample Table</Typography>
+                    </ToolbarItem>
+                </Toolbar>
+            </Box>
+            <Paper elevation={0}>
                 <Table
                     data={[
                         { id: "1", name: "Lorem" },
@@ -41,16 +42,14 @@ const SampleTable: React.FunctionComponent = () => {
                         {
                             name: "actions",
                             render: (recipe) => (
-                                <>
-                                    <IconButton onClick={() => stackApi.activatePage("edit", recipe.id)}>
-                                        <Edit color={"primary"} />
-                                    </IconButton>
-                                </>
+                                <IconButton onClick={() => stackApi.activatePage("edit", recipe.id)}>
+                                    <Edit color={"primary"} />
+                                </IconButton>
                             ),
                         },
                     ]}
                 />
-            </MainContent>
+            </Paper>
         </>
     );
 };

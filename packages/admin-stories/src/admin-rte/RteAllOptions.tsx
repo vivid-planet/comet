@@ -1,10 +1,11 @@
+import { FormPaper } from "@comet/admin";
 import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@comet/admin-rte";
-import { Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { convertFromRaw, convertToRaw } from "draft-js";
 import * as React from "react";
 
-import { exampleContent, PrintEditorState, RteLayout, useAutoFocus } from "./helper";
+import { exampleContent, PrintEditorState, useAutoFocus } from "./helper";
 
 type StringifiedRawDraftContentState = string;
 
@@ -106,10 +107,14 @@ function Story() {
 
     return (
         <>
-            <RteLayout>
-                <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
-            </RteLayout>
-            <PrintEditorState editorState={editorState} />
+            <Box marginBottom={4}>
+                <FormPaper variant="outlined">
+                    <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
+                </FormPaper>
+            </Box>
+            <FormPaper variant="outlined">
+                <PrintEditorState editorState={editorState} />
+            </FormPaper>
         </>
     );
 }

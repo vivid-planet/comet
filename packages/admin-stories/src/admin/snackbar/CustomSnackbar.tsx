@@ -17,6 +17,8 @@ const CustomSnackbar = () => {
         snackbarApi.showSnackbar(
             <Snackbar
                 anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                // If no distinct key is set, the Snackbar may update in-place
+                // meaning that the autoHideDuration is not reset (https://material-ui.com/api/snackbar/)
                 // Use uuid or object id in production
                 key={counter++}
                 autoHideDuration={5000}

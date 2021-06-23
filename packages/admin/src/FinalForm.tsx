@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { CircularProgress } from "@material-ui/core";
-import { FORM_ERROR, FormApi, SubmissionErrors } from "final-form";
+import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
+import setFieldData from "final-form-set-field-data";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 
@@ -23,6 +24,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
      * default implementation : go back if a stackApi context exists
      */
     onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
+    validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -36,13 +38,24 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         onAfterSubmit = () => {
             stackApi?.goBack();
         },
+        validateWarning,
     } = props;
 
     const ref = React.useRef();
 
-    return <Form {...props} onSubmit={handleSubmit} render={RenderForm} />;
+    return (
+        <Form
+            {...props}
+            mutators={{ ...props.mutators, setFieldData: (setFieldData as unknown) as Mutator<FormValues, object> }}
+            onSubmit={handleSubmit}
+            render={RenderForm}
+        />
+    );
 
     function RenderForm(formRenderProps: FormRenderProps<FormValues>) {
+        const { mutators } = formRenderProps.form;
+        const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
+
         const submit = React.useCallback(
             (event: any) => {
                 if (!formRenderProps.dirty) return;
@@ -98,6 +111,46 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             };
         }, [formRenderProps, submit]);
 
+        const currentWarningValidationRound = React.useRef(0);
+
+        const registeredFields = formRenderProps.form.getRegisteredFields();
+
+        React.useEffect(() => {
+            if (validateWarning) {
+                if (!setFieldData) {
+                    console.warn(
+                        `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
+                    );
+                    return;
+                }
+
+                const validate = async () => {
+                    currentWarningValidationRound.current++;
+                    const validationRound = currentWarningValidationRound.current;
+
+                    const validationErrors = await Promise.resolve(validateWarning(formRenderProps.values));
+
+                    if (currentWarningValidationRound.current > validationRound) {
+                        // Another validation has been started, skip this one
+                        return;
+                    }
+
+                    if (!validationErrors) {
+                        registeredFields.forEach((fieldName) => {
+                            setFieldData(fieldName, { warning: undefined });
+                        });
+                        return;
+                    }
+
+                    Object.entries(validationErrors).forEach(([fieldName, warning]) => {
+                        setFieldData(fieldName, { warning });
+                    });
+                };
+
+                validate();
+            }
+        }, [formRenderProps.values, setFieldData, registeredFields]);
+
         return (
             <form onSubmit={submit}>
                 <div>
@@ -110,7 +163,9 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         formRenderProps,
                     )}
                 </div>
-                {formRenderProps.submitError && <div className="error">{formRenderProps.submitError}</div>}
+                {(formRenderProps.submitError || formRenderProps.error) && (
+                    <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
+                )}
                 {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
             </form>
         );

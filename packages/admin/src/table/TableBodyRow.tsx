@@ -11,27 +11,21 @@ export interface TableBodyRowProps extends TableRowProps {
     hideTableHead?: boolean;
 }
 
-export const TableBodyRow = ({
-    index,
-    hideTableHead,
-    classes: passedClasses,
-    ...otherProps
-}: TableBodyRowProps & StyledComponentProps<CometAdminTableBodyRowClassKeys>) => {
-    const classes = mergeClasses<CometAdminTableBodyRowClassKeys>(useStyles(), passedClasses);
-    const isOdd = ((index || 0) + (hideTableHead ? 1 : 0)) % 2 === 1;
-    return <TableRow classes={{ root: isOdd ? classes.odd : classes.even }} {...otherProps} />;
-};
+export const TableBodyRow = React.forwardRef<HTMLTableRowElement, TableBodyRowProps & StyledComponentProps<CometAdminTableBodyRowClassKeys>>(
+    ({ index, hideTableHead, classes: passedClasses, ...otherProps }, ref) => {
+        const classes = mergeClasses<CometAdminTableBodyRowClassKeys>(useStyles(), passedClasses);
+        const isOdd = ((index || 0) + (hideTableHead ? 1 : 0)) % 2 === 1;
+        return <TableRow ref={ref} classes={{ root: `${classes.root} ${isOdd ? classes.odd : classes.even}` }} {...otherProps} />;
+    },
+);
 
-export type CometAdminTableBodyRowClassKeys = "even" | "odd";
+export type CometAdminTableBodyRowClassKeys = "root" | "even" | "odd";
 
 export const useStyles = makeStyles<Theme, {}, CometAdminTableBodyRowClassKeys>(
-    ({ palette }) => ({
-        even: {
-            backgroundColor: "#fff",
-        },
-        odd: {
-            backgroundColor: palette.grey[50],
-        },
+    () => ({
+        root: {},
+        even: {},
+        odd: {},
     }),
     { name: "CometAdminTableBodyRow" },
 );

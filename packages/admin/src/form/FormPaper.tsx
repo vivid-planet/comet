@@ -8,9 +8,9 @@ import { mergeClasses } from "../helpers/mergeClasses";
 export type CometAdminFormPaperKeys = "root";
 
 const useStyles = makeStyles<Theme, {}, CometAdminFormPaperKeys>(
-    () => ({
+    ({ spacing }) => ({
         root: {
-            padding: 16,
+            padding: spacing(4),
         },
     }),
     { name: "CometAdminFormPaper" },

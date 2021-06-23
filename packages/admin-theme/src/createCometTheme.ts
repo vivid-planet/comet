@@ -7,14 +7,8 @@ import { ThemeOptions } from "@material-ui/core/styles";
 import createPalette, { Palette, PaletteOptions } from "@material-ui/core/styles/createPalette";
 import createSpacing, { Spacing, SpacingOptions } from "@material-ui/core/styles/createSpacing";
 import createTypography, { Typography, TypographyOptions } from "@material-ui/core/styles/createTypography";
-// @ts-ignore - requires esModuleInterop
-import * as merge from "lodash.merge";
+import merge from "lodash.merge";
 
-import { getAdminColorPickerOverrides } from "./AdminColorPickerOverrides/getAdminColorPickerOverrides";
-import { getAdminOverrides } from "./AdminOverrides/getAdminOverrides";
-import { getAdminProps } from "./AdminProps/getAdminProps";
-import { getAdminRteOverrides } from "./AdminRteOverrides/getAdminRteOverrides";
-import { getAdminSelectOverrides } from "./AdminSelectOverrides/getAdminSelectOverrides";
 import { getMuiOverrides } from "./MuiOverrides/getMuiOverrides";
 import { getMuiProps } from "./MuiProps/getMuiProps";
 import { paletteOptions as cometPaletteOptions } from "./paletteOptions";
@@ -47,14 +41,9 @@ export const createCometTheme = (customThemeOptions: ThemeOptions | undefined = 
         shadows,
         props: {
             ...getMuiProps(),
-            ...getAdminProps(),
         },
         overrides: {
             ...getMuiOverrides(palette, typography, spacing),
-            ...getAdminOverrides(palette),
-            ...getAdminColorPickerOverrides(),
-            ...getAdminRteOverrides(),
-            ...getAdminSelectOverrides(),
         },
     };
 

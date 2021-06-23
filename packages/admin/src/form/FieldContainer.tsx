@@ -13,6 +13,7 @@ interface FieldContainerProps {
     required?: boolean;
     disabled?: boolean;
     error?: string;
+    warning?: string;
 }
 
 export type CometAdminFormFieldContainerClassKeys =
@@ -25,30 +26,30 @@ export type CometAdminFormFieldContainerClassKeys =
     | "label"
     | "inputContainer"
     | "hasError"
-    | "error";
+    | "error"
+    | "hasWarning"
+    | "warning";
 
 const styles = (theme: Theme) => {
     return createStyles<CometAdminFormFieldContainerClassKeys, any>({
         root: {
             "&:not(:last-child)": {
-                marginBottom: theme.spacing(3),
+                marginBottom: theme.spacing(4),
             },
         },
         vertical: {
             "& $label": {
-                marginBottom: theme.spacing(1),
+                marginBottom: theme.spacing(2),
             },
         },
         horizontal: {
             flexDirection: "row",
             alignItems: "center",
-
             "& $label": {
                 width: 220,
                 flexShrink: 0,
                 flexGrow: 0,
             },
-
             "&$fullWidth $inputContainer": {
                 flexGrow: 1,
             },
@@ -58,10 +59,34 @@ const styles = (theme: Theme) => {
         disabled: {},
         label: {
             display: "block",
+            color: theme.palette.grey[900],
+            fontSize: 16,
+            lineHeight: "19px",
+            fontWeight: theme.typography.fontWeightMedium,
         },
         inputContainer: {},
-        hasError: {},
-        error: {},
+        hasError: {
+            "& $label:not([class*='Mui-focused'])": {
+                color: theme.palette.error.main,
+            },
+            "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
+                borderColor: theme.palette.error.main,
+            },
+        },
+        error: {
+            fontSize: 14,
+        },
+        hasWarning: {
+            "& $label:not([class*='Mui-focused'])": {
+                color: theme.palette.warning.main,
+            },
+            "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
+                borderColor: theme.palette.warning.main,
+            },
+        },
+        warning: {
+            fontSize: 14,
+        },
     });
 };
 
@@ -75,17 +100,22 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     required,
     requiredSymbol = "*",
     children,
+    warning,
 }) => {
+    const hasError = error !== undefined && error.length > 0;
+    const hasWarning = warning !== undefined && warning.length > 0;
+
     const formControlClasses: string[] = [classes.root];
     if (variant === "vertical") formControlClasses.push(classes.vertical);
     if (variant === "horizontal") formControlClasses.push(classes.horizontal);
     if (fullWidth) formControlClasses.push(classes.fullWidth);
-    if (error) formControlClasses.push(classes.hasError);
+    if (hasError) formControlClasses.push(classes.hasError);
+    if (hasWarning && !hasError) formControlClasses.push(classes.hasWarning);
     if (disabled) formControlClasses.push(classes.disabled);
     if (required) formControlClasses.push(classes.required);
 
     return (
-        <FormControl fullWidth classes={{ root: formControlClasses.join(" ") }}>
+        <FormControl fullWidth={fullWidth} classes={{ root: formControlClasses.join(" ") }}>
             <>
                 {label && (
                     <FormLabel classes={{ root: classes.label }}>
@@ -95,11 +125,12 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
                 )}
                 <div className={classes.inputContainer}>
                     {children}
-                    {!!error && (
+                    {hasError && (
                         <FormHelperText error classes={{ root: classes.error }}>
                             {error}
                         </FormHelperText>
                     )}
+                    {hasWarning && !hasError && <FormHelperText classes={{ root: classes.warning }}>{warning}</FormHelperText>}
                 </div>
             </>
         </FormControl>

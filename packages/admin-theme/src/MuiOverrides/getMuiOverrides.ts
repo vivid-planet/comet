@@ -21,8 +21,10 @@ import { getMuiRadioOverrides } from "./MuiRadio";
 import { getMuiSelectOverrides } from "./MuiSelect";
 import { getMuiSvgIconOverrides } from "./MuiSvgIcon";
 import { getMuiSwitchOverrides } from "./MuiSwitch";
+import { getMuiTabOverrides } from "./MuiTab";
 import { getMuiTableCellOverrides } from "./MuiTableCell";
 import { getMuiTableRowOverrides } from "./MuiTableRow";
+import { getMuiTabsOverrides } from "./MuiTabs";
 import { getMuiTypographyOverrides } from "./MuiTypography";
 
 export const getMuiOverrides = (palette: Palette, typography: Typography, spacing: Spacing): Overrides => ({
@@ -47,4 +49,6 @@ export const getMuiOverrides = (palette: Palette, typography: Typography, spacin
     MuiInputAdornment: getMuiInputAdornmentOverrides(),
     MuiTableCell: getMuiTableCellOverrides(palette, typography),
     MuiTableRow: getMuiTableRowOverrides(),
+    MuiTabs: getMuiTabsOverrides(palette, spacing),
+    MuiTab: getMuiTabOverrides(palette),
 });
