@@ -3,7 +3,6 @@ import * as React from "react";
 export interface IMenuContext {
     open: boolean;
     toggleOpen: () => void;
-    headerHeight: number;
 }
 
 export interface IWithMenu {
@@ -15,7 +14,6 @@ export const MenuContext = React.createContext<IMenuContext>({
     toggleOpen: () => {
         // nothing
     },
-    headerHeight: 0, //TODO: should we move the headerHeight to another context? Makes this sense in Menu? -> Maybe MasterLayoutContext?
 });
 
 export const withMenu = <P extends object>(WrappedComponent: React.ComponentType<P & IWithMenu>): React.FunctionComponent<P> => {
