@@ -11,7 +11,7 @@ Run `install.sh` once.
 ### Run build and storybook
 
 ```
-npm start
+yarn start
 ```
 
 ### Develop in an project

@@ -6,12 +6,12 @@
     "scripts": {
         "clean": "rimraf lib && rimraf src/generated",
         "generate-icons": "ts-node generate-icons.ts",
-        "prebuild": "npm run clean && npm run generate-icons",
+        "prebuild": "yarn clean && yarn generate-icons",
         "build": "tsc",
-        "prestart": "npm run clean && npm run generate-icons",
+        "prestart": "yarn clean && yarn generate-icons",
         "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
-        "prepare": "npm run build",
-        "lint": "npm run lint:eslint && npm run lint:tsc",
+        "prepare": "yarn build",
+        "lint": "yarn lint:eslint && yarn lint:tsc",
         "lint:eslint": "eslint src/",
         "lint:tsc": "tsc --noEmit"
     },

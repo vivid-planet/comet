@@ -3,11 +3,11 @@ stages:
     - i18n
 
 before_script:
-    - npm ci --cache .npm --prefer-offline
+    - yarn install --cache-folder .yarn --prefer-offline
 
 cache:
     paths:
-        - ./.npm/
+        - ./.yarn/
 
 .lint:
     image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:master
@@ -23,12 +23,12 @@ cache:
 project-lint:
     extends: .lint
     script:
-        - npx prettier -c .
+        - yarn prettier -c .
 
 packages-lint:
     extends: .lint
     script:
-        - npm run lint
+        - yarn lint
 
 i18n:
     stage: i18n
@@ -38,7 +38,7 @@ i18n:
     tags:
         - docker
     script:
-        - npm run intl:extract
+        - yarn intl:extract
         - git clone https://github.com/vivid-planet/comet-admin-lang.git
         - cp -r lang/* comet-admin-lang/
         - cd comet-admin-lang

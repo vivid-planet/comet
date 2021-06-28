@@ -165,6 +165,10 @@ new:
         }
         ```
 
+### Internal changes
+
+-   switched back from npm 7 to yarn, for better workspace support (updated all dependencies)
+
 ### Migration Guide
 
 install jscodeshift in your project - otherwise you will get a lodash error
