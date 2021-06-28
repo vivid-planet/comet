@@ -19,9 +19,9 @@ import { Button, IconButton, Typography } from "@material-ui/core";
 import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 interface IExampleRow {
     id: number;
@@ -132,6 +132,6 @@ function Story() {
 }
 
 storiesOf("@comet/admin/table", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .addDecorator(apolloStoryDecorator())
     .add("Stack+EditDialog", () => <Story />);

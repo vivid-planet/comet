@@ -15,9 +15,9 @@ import { Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const gqlRest = gql;
 
@@ -133,5 +133,5 @@ function App() {
 
 storiesOf("@comet/admin/table", module)
     .addDecorator(apolloStoryDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Besides Form Selection Hooks", () => <App />);

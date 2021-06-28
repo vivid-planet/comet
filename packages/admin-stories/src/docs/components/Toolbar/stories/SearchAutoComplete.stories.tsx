@@ -4,13 +4,13 @@ import { InputAdornment, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
+import { storyRouterDecorator } from "../../../../story-router.decorator";
 import { toolbarDecorator } from "../toolbar.decorator";
 
 storiesOf("stories/components/Toolbar/Search Autocomplete", module)
     .addDecorator(toolbarDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Search Autocomplete", () => {
         return (
             <Toolbar>

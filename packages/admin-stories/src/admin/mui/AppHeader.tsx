@@ -13,7 +13,8 @@ import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icon
 import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 function AccountHeaderItem() {
     return (
@@ -93,5 +94,5 @@ export function Story() {
 }
 
 storiesOf("@comet/admin/mui", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("App Header", () => <Story />, { layout: "fullscreen" });

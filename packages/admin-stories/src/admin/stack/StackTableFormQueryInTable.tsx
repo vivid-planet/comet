@@ -22,9 +22,9 @@ import { CircularProgress, Grid, IconButton, Typography } from "@material-ui/cor
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const gqlRest = gql;
 
@@ -183,5 +183,5 @@ function Story() {
 
 storiesOf("@comet/admin/stack", module)
     .addDecorator(apolloStoryDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Stack Table Form Query in Table", () => <Story />);

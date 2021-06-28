@@ -16,7 +16,8 @@ import { Box, Paper, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const permanentMenuMinWidth = 1024;
 
@@ -83,5 +84,5 @@ export const Story: React.FC = () => (
 );
 
 storiesOf("@comet/admin/mui", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Menu", () => <Story />, { layout: "fullscreen" });
