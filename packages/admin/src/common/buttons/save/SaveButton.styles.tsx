@@ -47,8 +47,13 @@ export const useStyles = (props: { color: ButtonProps["color"] }) => {
 };
 
 export function useThemeProps() {
-    const { saveIcon = <Save />, savingIcon = <ThreeDotSaving />, successIcon = <Check />, errorIcon = <Error />, ...restProps } =
-        useComponentThemeProps("CometAdminSaveButton") ?? {};
+    const {
+        saveIcon = <Save />,
+        savingIcon = <ThreeDotSaving />,
+        successIcon = <Check />,
+        errorIcon = <Error />,
+        ...restProps
+    } = useComponentThemeProps("CometAdminSaveButton") ?? {};
 
     const resolveIconForDisplayState = (displayState: SaveButtonDisplayState): React.ReactNode => {
         if (displayState === "saving") {

@@ -83,11 +83,10 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
     }, [editorState]);
 
     const canIndentLeft = React.useMemo(() => active && getCurrentBlock(editorState)!.getDepth() > 0, [active, editorState]);
-    const canIndentRight = React.useMemo(() => active && getCurrentBlock(editorState)!.getDepth() < listLevelMax - 1, [
-        active,
-        editorState,
-        listLevelMax,
-    ]);
+    const canIndentRight = React.useMemo(
+        () => active && getCurrentBlock(editorState)!.getDepth() < listLevelMax - 1,
+        [active, editorState, listLevelMax],
+    );
 
     const handleListIndentLeftClick = React.useCallback(
         (e: React.MouseEvent) => {

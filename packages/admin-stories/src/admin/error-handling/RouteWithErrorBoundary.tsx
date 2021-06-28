@@ -43,7 +43,7 @@ function MasterMenu() {
 
 function App() {
     return (
-        <MasterLayout menuComponent={MasterMenu} hideToolbarMenuIcon>
+        <MasterLayout menuComponent={MasterMenu}>
             <Switch>
                 <RouteWithErrorBoundary path={`/no-error-route`} component={ViewWithNoError} />
                 <RouteWithErrorBoundary path={`/error-route`} component={ViewWithError} />
