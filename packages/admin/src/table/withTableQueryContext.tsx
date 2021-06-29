@@ -19,8 +19,7 @@ type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 type Subtract<T, K> = Omit<T, keyof K>;
 
 // TODO implement ref forwarding with typescript
-export const withTableQueryContext = <P extends IWithTableQueryProps>(
-    WrappedComponent: React.ComponentType<P>,
-): React.SFC<Subtract<P, IWithTableQueryProps>> => (props: any) => (
-    <TableQueryContext.Consumer>{(tableQuery) => <WrappedComponent {...props} tableQuery={tableQuery} />}</TableQueryContext.Consumer>
-);
+export const withTableQueryContext =
+    <P extends IWithTableQueryProps>(WrappedComponent: React.ComponentType<P>): React.SFC<Subtract<P, IWithTableQueryProps>> =>
+    (props: any) =>
+        <TableQueryContext.Consumer>{(tableQuery) => <WrappedComponent {...props} tableQuery={tableQuery} />}</TableQueryContext.Consumer>;

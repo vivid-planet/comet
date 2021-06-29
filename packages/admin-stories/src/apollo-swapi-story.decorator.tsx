@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { createErrorDialogApolloLink, useErrorDialog } from "@comet/admin";
-import { StoryContext, StoryFn } from "@storybook/addons/dist/types";
+import type { StoryContext, StoryFn } from "@storybook/addons";
 import * as React from "react";
 
 const SwapiApolloProvider: React.FunctionComponent = ({ children }) => {
