@@ -1,0 +1,73 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Components/FinalFormRangeInput" />
+
+# Final Form Range Input
+
+The Final Form Range Input Component lets you set a Range Value (min/max) either by dragging a slider or setting the value in the associated input fields.
+**This Component can only operate inside a Final Form Component.**
+
+<br />
+
+<Canvas>
+    <Story id="stories-components-final-form-range-input-default--default" />
+</Canvas>
+
+# Props
+
+| Name            | Type                              | Default | Description                                                                                                                                            |
+| :-------------  | :-------------------------------- | :------ | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name*           | string                            |         | The Fieldkey for the Final Form                                                                                                                        |
+| min*            | number                            |         | The minimum value for the Range Slider                                                                                                                 |
+| max*            | number                            |         | The maximum value for the Range Slider                                                                                                                 |
+| startAdornment  | React.ReactNode \| undefined      |         | Start InputAdornment                                                                                                                                   |
+| endAdornment    | React.ReactNode \| undefined      |         | End InputAdornment                                                                                                                                     |
+| sliderProps     | Omit<SliderProps, "min" \| "max"> |         | Material UI Slider Component Props without the min / max props due to own defined props. [Material UI Slider API](https://material-ui.com/api/slider/) |
+
+<br />
+
+# CSS
+
+| Classkey                        | Description                                                           |
+| :------------------------------ | :-------------------------------------------------------------------- |
+| "root"                          | Styles applied to the root element.                                   |
+| "inputsWrapper"                 | Styles applied to the inputs wrapper element.                         |
+| "inputFieldsSeperatorContainer" | Styles applied to the input fields seperator ("-") container element. |
+| "sliderWrapper"                 | Styles applied to the slider wrapper element.                         |
+| "inputFieldContainer"           | Styles applied to the inputField container element                    |
+
+<br />
+
+# Examples
+
+<br />
+
+### With Initial Values
+
+<Canvas>
+    <Story id="stories-components-final-form-range-input-with-initial-values--with-initial-values" />
+</Canvas>
+
+### With StartAdornment Prop
+
+<Canvas>
+    <Story id="stories-components-final-form-range-input-with-start-and-end-adornment-prop--start-adornment" />
+</Canvas>
+
+### With EndAdornment Prop
+
+<Canvas>
+    <Story id="stories-components-final-form-range-input-with-start-and-end-adornment-prop--end-adornment" />
+</Canvas>
+
+### Different Initial Values and Range Values
+
+<Canvas>
+    <Story id="stories-components-final-form-range-input-with-different-initial-and-range-values--with-different-initial-and-range-values" />
+</Canvas>
+
+### Different Slider Thumb
+
+<Canvas>
+    <Story id="stories-components-final-form-range-input-different-slider-thumb--different-slider-thumb" />
+</Canvas>
