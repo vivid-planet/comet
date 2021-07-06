@@ -8,3 +8,4 @@ lang/
 lib/
 lerna.json
 storybook-static
+.yarn/

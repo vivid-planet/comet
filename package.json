@@ -12,7 +12,7 @@
         "start": "pm2 start ecosystem.config.js",
         "storybook": "yarn workspace @comet/admin-stories storybook",
         "lint": "yarn lint:eslint && yarn lint:tsc",
-        "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/**/src/",
+        "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/*/src",
         "prelint:tsc": "yarn build",
         "lint:tsc": "lerna run lint:tsc --stream",
         "prebuild:storybook": "yarn build",
@@ -22,8 +22,8 @@
     },
     "devDependencies": {
         "@formatjs/cli": "^2.13.12",
-        "@types/uuid": "^8.3.0",
         "@storybook/addon-docs": "^6.2.7",
+        "@types/uuid": "^8.3.0",
         "@typescript-eslint/eslint-plugin": "^4.7.0",
         "@typescript-eslint/parser": "^4.7.0",
         "eslint": "^7.13.0",

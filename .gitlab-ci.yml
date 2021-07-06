@@ -3,7 +3,7 @@ stages:
     - i18n
 
 before_script:
-    - yarn install --cache-folder .yarn --prefer-offline --network-timeout 1000000
+    - yarn install
 
 cache:
     paths:

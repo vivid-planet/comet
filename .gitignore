@@ -5,4 +5,13 @@
 storybook-static/
 comet-admin-lang/
 lang/
-/.npm 
+/.npm
+
+### yarn ###
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

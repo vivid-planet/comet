@@ -7,8 +7,8 @@
         "lib"
     ],
     "dependencies": {
-        "@material-ui/lab": "^4.0.0-alpha.57",
         "@comet/admin-icons": "^2.0.0-alpha.8",
+        "@material-ui/lab": "^4.0.0-alpha.57",
         "debounce": "^1.2.0",
         "final-form-set-field-data": "^1.0.2",
         "lodash.isequal": "^4.5.0",
@@ -38,9 +38,9 @@
         "graphql": "^14.0.0 || ^15.0.0",
         "history": "^4.10.1",
         "react": "^16.8",
+        "react-dnd": "^14.0.2",
         "react-dom": "^16.8",
         "react-final-form": "^6.3.1",
-        "react-dnd": "^14.0.2",
         "react-intl": "^5.10.0",
         "react-router": "^5.1.2",
         "react-router-dom": "^5.1.2",
