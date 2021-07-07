@@ -16,6 +16,9 @@ export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
     activatePage: () => {
         return;
     },
+    getTargetUrl: () => {
+        return "";
+    },
     updatePageBreadcrumbTitle: () => {
         return;
     },
@@ -26,6 +29,7 @@ export function useStackSwitchApi() {
 
 export interface IStackSwitchApi {
     activatePage: (pageName: string, payload: string, subUrl?: string) => void;
+    getTargetUrl: (pageName: string, payload: string, subUrl?: string) => string;
     updatePageBreadcrumbTitle: (title?: React.ReactNode) => void;
     id?: string;
 }
@@ -48,6 +52,9 @@ export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi]
         id,
         activatePage: (pageName: string, payload: string, subUrl?: string) => {
             apiRef.current?.activatePage(pageName, payload, subUrl);
+        },
+        getTargetUrl: (pageName: string, payload: string, subUrl?: string) => {
+            return apiRef.current?.getTargetUrl(pageName, payload, subUrl) || "";
         },
         updatePageBreadcrumbTitle: (title?: React.ReactNode) => {
             apiRef.current?.updatePageBreadcrumbTitle(title);
@@ -86,17 +93,28 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
         [props],
     );
 
+    const getTargetUrl = React.useCallback(
+        (pageName: string, payload: string, subUrl?: string): string => {
+            if (isInitialPage(pageName)) {
+                return match.url;
+            } else {
+                return `${match.url}/${payload}/${pageName}${subUrl ? `/${subUrl}` : ""}`;
+            }
+        },
+        [isInitialPage, match.url],
+    );
+
     const activatePage = React.useCallback(
         (pageName: string, payload: string, subUrl?: string) => {
             if (isInitialPage(pageName)) {
-                history.push(match.url);
                 if (payload) throw new Error("activating the initialPage must not have a payload");
                 if (subUrl) throw new Error("activating the initialPage must not have a subUrl");
-            } else {
-                history.push(`${match.url}/${payload}/${pageName}${subUrl ? `/${subUrl}` : ""}`);
             }
+
+            const targetUrl = getTargetUrl(pageName, payload, subUrl);
+            history.push(targetUrl);
         },
-        [history, isInitialPage, match],
+        [getTargetUrl, history, isInitialPage],
     );
 
     const api: IStackSwitchApi = React.useMemo(() => {
@@ -109,10 +127,11 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
         };
         return {
             activatePage,
+            getTargetUrl,
             id,
             updatePageBreadcrumbTitle,
         };
-    }, [activatePage, activePage, id, pageBreadcrumbTitle]);
+    }, [activatePage, activePage, getTargetUrl, id, pageBreadcrumbTitle]);
     React.useImperativeHandle(ref, () => api);
 
     function renderRoute(page: React.ReactElement<IStackPageProps>, routeProps: RouteComponentProps<IRouteParams>) {
