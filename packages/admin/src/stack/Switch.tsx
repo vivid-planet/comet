@@ -106,13 +106,13 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
 
     const activatePage = React.useCallback(
         (pageName: string, payload: string, subUrl?: string) => {
+            const targetUrl = getTargetUrl(pageName, payload, subUrl);
+            history.push(targetUrl);
+
             if (isInitialPage(pageName)) {
                 if (payload) throw new Error("activating the initialPage must not have a payload");
                 if (subUrl) throw new Error("activating the initialPage must not have a subUrl");
             }
-
-            const targetUrl = getTargetUrl(pageName, payload, subUrl);
-            history.push(targetUrl);
         },
         [getTargetUrl, history, isInitialPage],
     );
