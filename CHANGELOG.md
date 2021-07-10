@@ -31,6 +31,8 @@ All notable changes to this project will be documented in this file. This projec
 -   add `FinalFormSaveCancelButtonsLegacy` as drop in replacement for removed Cancel and Save Button in `FinalForm`.
 -   add PrettyBytes component for formatting file sizes and other byte values
 -   Add `validateWarning` validator to `Field` and `FinalForm`.
+-   add `getTargetUrl()` to `StackSwitchApi`
+-   add `StackLink` component for navigating within a `Stack` via hyperlinks
 
 ### Incompatible Changes
 
