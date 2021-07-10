@@ -54,7 +54,12 @@ export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi]
             apiRef.current?.activatePage(pageName, payload, subUrl);
         },
         getTargetUrl: (pageName: string, payload: string, subUrl?: string) => {
-            return apiRef.current?.getTargetUrl(pageName, payload, subUrl) || "";
+            if (apiRef.current) {
+                return apiRef.current.getTargetUrl(pageName, payload, subUrl);
+            } else {
+                console.error("apiRef is not attached to a StackSwitch component");
+                return "";
+            }
         },
         updatePageBreadcrumbTitle: (title?: React.ReactNode) => {
             apiRef.current?.updatePageBreadcrumbTitle(title);
