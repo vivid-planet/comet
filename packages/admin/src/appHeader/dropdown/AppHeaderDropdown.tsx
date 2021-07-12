@@ -13,6 +13,7 @@ interface Props extends AppHeaderButtonProps {
     buttonChildren?: React.ReactNode;
     dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
     popoverProps?: Partial<PopoverProps>;
+    onOpenChange?: (isOpen: boolean) => void;
 }
 
 function DefaultArrowUp(): React.ReactElement {
@@ -30,6 +31,7 @@ export function AppHeaderDropdown({
     buttonChildren,
     dropdownArrow = (isOpen) => (isOpen ? <DefaultArrowUp /> : <DefaultArrowDown />),
     popoverProps,
+    onOpenChange,
     classes: passedClasses,
     ...restProps
 }: Props & StyledComponentProps<CometAdminAppHeaderDropdownClassKeys>): React.ReactElement {
@@ -43,6 +45,10 @@ export function AppHeaderDropdown({
             setItemWidth(rootRef.current.clientWidth);
         }
     }, []);
+
+    React.useEffect(() => {
+        onOpenChange?.(showContent);
+    }, [onOpenChange, showContent]);
 
     return (
         <div className={classes.root} ref={rootRef}>
