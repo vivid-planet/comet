@@ -257,12 +257,12 @@ storiesOf("stories/components/Stack", module)
         }
     })
     .add("useStackSwitch", () => {
-        const [StackSwitch, api] = useStackSwitch();
+        const [StackSwitch, switchApi] = useStackSwitch();
         return (
             <div>
                 <button
                     onClick={() => {
-                        api.activatePage("page2", "foo");
+                        switchApi.activatePage("page2", "foo");
                     }}
                 >
                     page2
