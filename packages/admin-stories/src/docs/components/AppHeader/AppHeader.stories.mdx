@@ -110,6 +110,7 @@ Props from [ButtonBase](https://material-ui.com/api/button-base) are also used.
 | children       | node \| (closeDropdown: () => void) => node         |               | Content or a function that returns the Content shown in `Popover`. The function should be used if the Dropdown should be closed e.g. when a button inside the Dropdown is clicked. |
 | buttonChildren | node                                                |               | Children passed into the `AppHeaderButton`.                                                                                                                                        |
 | dropdownArrow  | null \| (isOpen: boolean) => node                   |               | Prevents children from being wrapped with `Typography`.                                                                                                                            |
+| onOpenChange   | (isOpen: boolean) => void                           |               | Allows observing if the `AppHeaderDropdown` is open or closed.                                                                                                                     |
 | popoverProps   | [PopoverProps](https://material-ui.com/api/popover) |               | Props passed into `Popover`.                                                                                                                                                       |
 
 Props from [AppHeaderButton](#appheaderbutton) are also used.
