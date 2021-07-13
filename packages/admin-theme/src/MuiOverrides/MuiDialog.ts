@@ -9,7 +9,7 @@ export const getMuiDialogOverrides = (spacing: Spacing): StyleRules<{}, DialogCl
     container: {},
     paper: {
         borderRadius: 4,
-        flexGrow: 1,
+        width: "100%",
         margin: spacing(8),
     },
     paperScrollPaper: {
