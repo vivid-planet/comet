@@ -5,27 +5,17 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 storiesOf("stories/components/AppHeader/Dropdown", module).add("AppHeader Dropdown", () => {
-    const [openDropdown1, setOpenDropdown1] = React.useState<boolean>(false);
-    const [openDropdown2, setOpenDropdown2] = React.useState<boolean>(false);
+    const customStateDropdownMenu = React.useState<boolean>(false);
+    const showContentDropdownMenu = customStateDropdownMenu[0];
 
     return (
         <>
-            <div style={{ marginBottom: "30px" }}>
-                Dropdown 1: {openDropdown1 ? "open" : "closed"}
-                <br />
-                Dropdown 2: {openDropdown2 ? "open" : "closed"}
-            </div>
+            <div style={{ marginBottom: "30px" }}>Dropdown Menu state: {showContentDropdownMenu ? "open" : "closed"}</div>
             <AppHeader position="relative" headerHeight={60}>
                 <Typography style={{ padding: 20 }}>Header dropdown</Typography>
                 <AppHeaderFillSpace />
 
-                <AppHeaderDropdown
-                    buttonChildren={<Snips />}
-                    dropdownArrow={null}
-                    onOpenChange={(isOpen) => {
-                        setOpenDropdown1(isOpen);
-                    }}
-                >
+                <AppHeaderDropdown buttonChildren={<Snips />} dropdownArrow={null}>
                     <Box padding={4} width={200}>
                         <Typography>
                             <strong>Dropdown Text</strong>
@@ -37,12 +27,7 @@ storiesOf("stories/components/AppHeader/Dropdown", module).add("AppHeader Dropdo
                     </Box>
                 </AppHeaderDropdown>
 
-                <AppHeaderDropdown
-                    buttonChildren="Dropdown Menu"
-                    onOpenChange={(isOpen) => {
-                        setOpenDropdown2(isOpen);
-                    }}
-                >
+                <AppHeaderDropdown buttonChildren="Dropdown Menu" customShowContentState={customStateDropdownMenu}>
                     {() => {
                         return (
                             <MenuList>
