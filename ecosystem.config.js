@@ -38,15 +38,13 @@ module.exports = {
         },
         {
             name: "comet-admin-theme",
-            script:
-                "wait-on packages/admin/lib packages/admin-color-picker/lib packages/admin-icons/lib packages/admin-react-select/lib packages/admin-rte/lib && npm run --prefix packages/admin-theme start",
+            script: "wait-on packages/admin/lib packages/admin-color-picker/lib packages/admin-icons/lib packages/admin-react-select/lib packages/admin-rte/lib && npm run --prefix packages/admin-theme start",
             namespace: "comet-admin",
             autorestart: true,
         },
         {
             name: "comet-admin-storybook",
-            script:
-                "wait-on packages/admin/lib packages/admin-color-picker/lib packages/admin-date-picker/lib packages/admin-icons/lib packages/admin-react-select/lib packages/admin-rte/lib packages/admin-theme/lib && npm run --prefix packages/admin-stories storybook",
+            script: "wait-on packages/admin/lib packages/admin-color-picker/lib packages/admin-date-picker/lib packages/admin-icons/lib packages/admin-react-select/lib packages/admin-rte/lib packages/admin-theme/lib && npm run --prefix packages/admin-stories storybook",
             namespace: "comet-admin",
             autorestart: true,
         },

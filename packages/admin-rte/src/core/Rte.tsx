@@ -239,20 +239,17 @@ const Rte: React.RefForwardingComponent<any, IProps & StyledComponentProps<Comet
         return "not-handled";
     }
 
-    function keyBindingFn(e: React.KeyboardEvent) {
-        if (e.keyCode === 13 /* ENTER */) {
-            //
+    function keyBindingFn(event: React.KeyboardEvent) {
+        if (event.key === "Tab") {
+            // nested lists for ol and ul
+            event.preventDefault();
+            const newEditorState = RichUtils.onTab(event, editorState, options.listLevelMax);
+            if (newEditorState !== editorState) {
+                onChange(newEditorState);
+            }
         }
-        return getDefaultKeyBinding(e);
-    }
 
-    function handleOnTab(e: React.KeyboardEvent) {
-        // nested lists for ol and ul
-        e.preventDefault();
-        const newEditorState = RichUtils.onTab(e, editorState, options.listLevelMax /* maxDepth */);
-        if (newEditorState !== editorState) {
-            onChange(newEditorState);
-        }
+        return getDefaultKeyBinding(event);
     }
 
     const classes = mergeClasses<CometAdminRteClassKeys>(useStyles({ colors: props.colors }), props.classes);
@@ -272,7 +269,6 @@ const Rte: React.RefForwardingComponent<any, IProps & StyledComponentProps<Comet
                     handleReturn={handleReturn}
                     keyBindingFn={keyBindingFn}
                     customStyleMap={styleMap}
-                    onTab={handleOnTab}
                     blockRenderMap={blockRenderMap}
                     {...options.draftJsProps}
                 />

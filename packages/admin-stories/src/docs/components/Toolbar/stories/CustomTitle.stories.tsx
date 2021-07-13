@@ -3,13 +3,13 @@ import { CometColor } from "@comet/admin-icons";
 import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
+import { storyRouterDecorator } from "../../../../story-router.decorator";
 import { toolbarDecorator } from "../toolbar.decorator";
 
 storiesOf("stories/components/Toolbar/Custom Title", module)
     .addDecorator(toolbarDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Custom Title H1", () => {
         return (
             <Toolbar>

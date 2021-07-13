@@ -2,13 +2,13 @@ import { SaveButton, SplitButton, Toolbar, ToolbarActions, ToolbarFillSpace, Too
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import StoryRouter from "storybook-react-router";
 
+import { storyRouterDecorator } from "../../../../story-router.decorator";
 import { toolbarDecorator } from "../toolbar.decorator";
 
 storiesOf("stories/components/Toolbar/Save Split Button", module)
     .addDecorator(toolbarDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Save Split Button", () => {
         const [saving, setSaving] = React.useState(false);
         return (

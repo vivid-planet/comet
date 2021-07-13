@@ -2,13 +2,13 @@ import { Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem } from "@comet/a
 import { Button, Grid, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
+import { storyRouterDecorator } from "../../../../story-router.decorator";
 import { toolbarDecorator } from "../toolbar.decorator";
 
 storiesOf("stories/components/Toolbar/Fill Space", module)
     .addDecorator(toolbarDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Fill Space left", () => {
         return (
             <Toolbar>

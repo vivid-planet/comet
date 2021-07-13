@@ -2,13 +2,13 @@ import { Toolbar, ToolbarActions, ToolbarAutomaticTitleItem, ToolbarFillSpace } 
 import { Button, Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
+import { storyRouterDecorator } from "../../../../story-router.decorator";
 import { toolbarDecorator } from "../toolbar.decorator";
 
 storiesOf("stories/components/Toolbar/Toolbar Actions", module)
     .addDecorator(toolbarDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Toolbar Actions one action", () => {
         return (
             <Toolbar>

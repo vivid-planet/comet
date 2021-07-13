@@ -84,7 +84,8 @@ export { MenuItemAnchorLink } from "./mui/menu/ItemAnchorLink";
 export { CometAdminMenuClassKeys, styles } from "./mui/menu/Menu.styles";
 export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Context";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
-export { CometAdminMasterLayoutClassKeys, MasterLayout, MasterLayoutProps, MasterLayoutThemeProps } from "./mui/MasterLayout";
+export { MasterLayout, MasterLayoutProps } from "./mui/MasterLayout";
+export { CometAdminMasterLayoutClassKeys } from "./mui/MasterLayout.styles";
 export { CometAdminMainContentClassKeys, MainContent } from "./mui/MainContent";
 export { Toolbar } from "./common/toolbar/Toolbar";
 export { CometAdminToolbarClassKeys, ToolbarThemeProps } from "./common/toolbar/Toolbar.styles";
@@ -143,6 +144,12 @@ export { mergeClasses } from "./helpers/mergeClasses";
 export { SnackbarApi, useSnackbarApi, SnackbarProvider } from "./snackbar/SnackbarProvider";
 export { UndoSnackbarProps, UndoSnackbar } from "./snackbar/UndoSnackbar";
 export { FinalFormSaveCancelButtonsLegacy } from "./FinalFormSaveCancelButtonsLegacy";
+export { AppHeader } from "./appHeader/AppHeader";
+export { AppHeaderMenuButton } from "./appHeader/menuButton/AppHeaderMenuButton";
+export { AppHeaderFillSpace } from "./appHeader/fillSpace/AppHeaderFillSpace";
+export { AppHeaderDropdown } from "./appHeader/dropdown/AppHeaderDropdown";
+export { AppHeaderButton } from "./appHeader/button/AppHeaderButton";
+export { CometLogo } from "./common/CometLogo";
 export {
     CometAdminCometAdminFinalFormSaveCancelButtonsLegacyClassKeys,
     CometAdminCometAdminFinalFormSaveCancelButtonsLegacyThemeProps,

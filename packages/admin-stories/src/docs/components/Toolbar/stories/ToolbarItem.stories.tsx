@@ -2,13 +2,13 @@ import { Toolbar, ToolbarAutomaticTitleItem, ToolbarItem } from "@comet/admin";
 import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
+import { storyRouterDecorator } from "../../../../story-router.decorator";
 import { toolbarDecorator } from "../toolbar.decorator";
 
 storiesOf("stories/components/Toolbar/Toolbar Item", module)
     .addDecorator(toolbarDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Toolbar Item", () => {
         return (
             <Toolbar>

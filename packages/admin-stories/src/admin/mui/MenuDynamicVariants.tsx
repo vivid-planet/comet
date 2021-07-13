@@ -1,4 +1,8 @@
 import {
+    AppHeader,
+    AppHeaderFillSpace,
+    AppHeaderMenuButton,
+    CometLogo,
     MainContent,
     MasterLayout,
     Menu,
@@ -14,9 +18,8 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import StoryRouter from "storybook-react-router";
 
-import CometLogo from "../../../.storybook/CometLogo";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const permanentMenuMinWidth = 1024;
 const pathsToAlwaysUseTemporaryMenu = ["/foo3", "/foo4"];
@@ -65,11 +68,12 @@ const AppMenu: React.FC = () => {
     );
 };
 
-const AppHeader: React.FC = () => (
-    <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} style={{ width: "100%" }}>
+const Header: React.FC = () => (
+    <AppHeader>
+        <AppHeaderMenuButton />
         <CometLogo />
-        <Typography variant="h5">Menu Example</Typography>
-    </Box>
+        <AppHeaderFillSpace />
+    </AppHeader>
 );
 
 const Content = ({ children }: { children: string }) => (
@@ -114,7 +118,7 @@ const Content = ({ children }: { children: string }) => (
 );
 
 const Story: React.FC = () => (
-    <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
+    <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
         <Switch>
             <Route path="/" exact render={() => <Content>Root</Content>} />
             <Route path="/dashboard" render={() => <Content>Dashboard</Content>} />
@@ -128,5 +132,5 @@ const Story: React.FC = () => (
 );
 
 storiesOf("@comet/admin/mui", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Menu (dynamic variants)", () => <Story />, { layout: "fullscreen" });

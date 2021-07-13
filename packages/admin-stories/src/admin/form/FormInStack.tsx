@@ -16,9 +16,9 @@ import { Box, Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
-import storyRouterDecorator from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
     const errors = [];

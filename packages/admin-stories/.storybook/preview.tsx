@@ -61,7 +61,7 @@ const themeOptions = {
 const GlobalStyles = createGlobalStyle`
     body {
         margin: 0;
-        background-color: ${({theme}) => theme.palette.background.default};
+        background-color: ${({ theme }) => theme.palette.background.default};
       
         &.sb-show-main.sb-main-padded {
             padding: 0;
