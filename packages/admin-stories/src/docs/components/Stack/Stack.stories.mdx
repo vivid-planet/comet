@@ -1,0 +1,128 @@
+import { Meta, Canvas, Story, Source } from "@storybook/addon-docs/blocks";
+
+import dedent from "ts-dedent";
+
+<Meta title="Docs/Components/Stack" />
+
+# Stack
+
+Comet Admin Stack is a component for creating an application with stacked pages allowing the user to navigate between them.
+A single page will be displayed at a time.
+
+## Stack Components
+
+<Canvas>
+    <Story id="stories-components-stack--basic" />
+</Canvas>
+
+A stack consists of 3 components
+
+-   `Stack`: root component of the stack
+-   `StackSwitch`: Container for pages where one will render at a time. Similar to a react-router Switch. Provides a context with an API allowing to switch between pages in this `StackSwitch`.
+-   `StackPage`: The pages a `StackSwitch` will switch. First one is the default page.
+
+Comet Admin Stack uses react-router behind the scene and creates a `Route` for every page.
+
+## Switch page programmatically
+
+### activatePage
+
+To switch between pages use the API provided by `StackSwitch`:
+
+<Source
+    language="tsx"
+    code={dedent`
+        const switchApi = useStackSwitchApi();
+        <button
+            onClick={(e) => {
+                switchApi.activatePage("page2", "test");
+            }}
+        >
+            activate page2
+        </button>
+  `}
+/>
+
+`activatePage(pageName: string, payload: string, subUrl?: string)`
+
+This method will activate (navigate to) the given page.
+
+#### Arguments
+
+1. `pageName` (string): name of the page that will be activated
+2. `payload` (string): additional payload containing eg. an id that will get passed into the StackPage
+3. `subUrl` (string [optional]): subUrl to append, for nested stacks or other nested routes
+
+### StackLink
+
+A StackLink component is planned that will work similarly to react-router Link.
+
+## payload
+
+When activating a page (not the default/initial one) you can pass a payload, that can contain eg. an id.
+The activated StackPage can access the payload by rendering a function child like so:
+
+<Source
+    language="tsx"
+    code={dedent`
+        <StackPage name="example" title="Example">
+            {(id) => <div>{id}</div>}
+        </Stackpage
+`}
+/>
+
+The playload needs to be a string as it is used in the url.
+
+### Example
+
+<Canvas>
+    <Story id="stories-components-stack--payload" />
+</Canvas>
+
+## Nested Stacks
+
+It is possible to nest `StackSwitch`, just render another `StackSwitch` (plus `StackPage`s) in a `StackPage`. You will get automatic Breadcrumbs showing this nesting.
+
+<Canvas>
+    <Story id="stories-components-stack--nested" />
+</Canvas>
+
+A nested `Stack` component is usually not desired, as it will have it's own breadcrumbs.
+
+## useStackSwitch
+
+`useStackSwitchApi` accesses the Context created by StackSwitch. For that reason you cannot use it outside of StackSwitch, which also means not in the component where StackSwitch is created.
+
+Comet Admin Stack provides a unique way to create a StackSwitch associated with its api using `useStackSwitch` hook:
+
+<Canvas>
+    <Story id="stories-components-stack--usestackswitch" />
+</Canvas>
+
+## Breadcrumbs
+
+The Stack can create automatic Breadcrumbs, which is especially useful for nested stacks.
+
+You have two options:
+
+### `StackBreadcrumbs`, `StackBackButton`
+
+Simple components showing breadcrumbs of the current stack, see Nested Stacks example.
+
+### `ToolbarBreadcrumbs`, `ToolbarBackButton`
+
+Toolbar components that integrate stack nicely into the Comet Toolbar System.
+
+<Canvas>
+    <Story id="stories-components-stack--breadrumbstoolbar" />
+</Canvas>
+
+### Custom/Dynamic Breadcrumb Title
+
+Breadcrumbs by default show the title of the `StackPage`. If you want to show something dynamic based on the payload (like the name of the selected item) you can use `StackPageTitle` component:
+
+<Canvas>
+    <Story id="stories-components-stack--dynamictitle" />
+</Canvas>
+
+You can also do a graphql query to fetch data needed for creating the title.
