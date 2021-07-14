@@ -1,10 +1,12 @@
+import { FormPaper } from "@comet/admin";
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
+import { Box } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
 import * as React from "react";
 
-import { PrintAnything, RteLayout } from "./helper";
+import { PrintAnything } from "./helper";
 
 type Markdown = string;
 
@@ -35,9 +37,11 @@ function Story() {
 
     return (
         <>
-            <RteLayout>
-                <Rte value={editorState} onChange={setEditorState} />
-            </RteLayout>
+            <Box marginBottom={4}>
+                <FormPaper variant="outlined">
+                    <Rte value={editorState} onChange={setEditorState} />
+                </FormPaper>
+            </Box>
             <PrintAnything label="Save Value: Markdown">{saveableContent}</PrintAnything>
         </>
     );

@@ -1,4 +1,8 @@
 import {
+    AppHeader,
+    AppHeaderFillSpace,
+    AppHeaderMenuButton,
+    CometLogo,
     MainContent,
     MasterLayout,
     Menu,
@@ -9,14 +13,13 @@ import {
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
-import { Box, Divider, Typography } from "@material-ui/core";
+import { Box, Divider, Paper, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import StoryRouter from "storybook-react-router";
 
-import CometLogo from "../../../.storybook/CometLogo";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const permanentMenuMinWidth = 1024;
 const pathsToAlwaysUseTemporaryMenu = ["/foo3", "/foo4"];
@@ -65,52 +68,57 @@ const AppMenu: React.FC = () => {
     );
 };
 
-const AppHeader: React.FC = () => (
-    <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} style={{ width: "100%" }}>
+const Header: React.FC = () => (
+    <AppHeader>
+        <AppHeaderMenuButton />
         <CometLogo />
-        <Typography variant="h5">Menu Example</Typography>
-    </Box>
+        <AppHeaderFillSpace />
+    </AppHeader>
 );
 
 const Content = ({ children }: { children: string }) => (
     <MainContent>
-        <Typography variant={"h4"}>{children}</Typography>
-        <br />
-        <Typography>
-            The menu is permanent by default and is temporary below {permanentMenuMinWidth}px and for the routes:{" "}
-            {pathsToAlwaysUseTemporaryMenu.join(", ")}.
-            <br />
-            This is useful, when specific pages need some extra width.
-        </Typography>
-        <br />
-        <Divider />
-        <br />
-        <Typography variant={"body2"}>Links for testing menu-behaviour when location changes without menu-interaction:</Typography>
-        <ul>
-            <li>
-                <Link to={"/dashboard"}>Dashboard</Link>
-            </li>
-            <li>
-                <Link to={"/settings"}>Settings</Link>
-            </li>
-            <li>
-                <Link to={"/foo1"}>Foo1</Link>
-            </li>
-            <li>
-                <Link to={"/foo2"}>Foo2</Link>
-            </li>
-            <li>
-                <Link to={"/foo3"}>Foo3</Link>
-            </li>
-            <li>
-                <Link to={"/foo4"}>Foo4</Link>
-            </li>
-        </ul>
+        <Paper variant="outlined">
+            <Box padding={4}>
+                <Typography variant={"h4"} gutterBottom>
+                    {children}
+                </Typography>
+                <Typography gutterBottom>
+                    The menu is permanent by default and is temporary below {permanentMenuMinWidth}px and for the routes:{" "}
+                    {pathsToAlwaysUseTemporaryMenu.join(", ")}.
+                    <br />
+                    This is useful, when specific pages need some extra width.
+                </Typography>
+                <Divider />
+                <br />
+                <Typography variant={"body2"}>Links for testing menu-behaviour when location changes without menu-interaction:</Typography>
+                <ul>
+                    <li>
+                        <Link to={"/dashboard"}>Dashboard</Link>
+                    </li>
+                    <li>
+                        <Link to={"/settings"}>Settings</Link>
+                    </li>
+                    <li>
+                        <Link to={"/foo1"}>Foo1</Link>
+                    </li>
+                    <li>
+                        <Link to={"/foo2"}>Foo2</Link>
+                    </li>
+                    <li>
+                        <Link to={"/foo3"}>Foo3</Link>
+                    </li>
+                    <li>
+                        <Link to={"/foo4"}>Foo4</Link>
+                    </li>
+                </ul>
+            </Box>
+        </Paper>
     </MainContent>
 );
 
 const Story: React.FC = () => (
-    <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
+    <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
         <Switch>
             <Route path="/" exact render={() => <Content>Root</Content>} />
             <Route path="/dashboard" render={() => <Content>Dashboard</Content>} />
@@ -124,5 +132,5 @@ const Story: React.FC = () => (
 );
 
 storiesOf("@comet/admin/mui", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Menu (dynamic variants)", () => <Story />, { layout: "fullscreen" });

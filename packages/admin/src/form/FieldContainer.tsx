@@ -34,24 +34,22 @@ const styles = (theme: Theme) => {
     return createStyles<CometAdminFormFieldContainerClassKeys, any>({
         root: {
             "&:not(:last-child)": {
-                marginBottom: theme.spacing(3),
+                marginBottom: theme.spacing(4),
             },
         },
         vertical: {
             "& $label": {
-                marginBottom: theme.spacing(1),
+                marginBottom: theme.spacing(2),
             },
         },
         horizontal: {
             flexDirection: "row",
             alignItems: "center",
-
             "& $label": {
                 width: 220,
                 flexShrink: 0,
                 flexGrow: 0,
             },
-
             "&$fullWidth $inputContainer": {
                 flexGrow: 1,
             },
@@ -61,12 +59,34 @@ const styles = (theme: Theme) => {
         disabled: {},
         label: {
             display: "block",
+            color: theme.palette.grey[900],
+            fontSize: 16,
+            lineHeight: "19px",
+            fontWeight: theme.typography.fontWeightMedium,
         },
         inputContainer: {},
-        hasError: {},
-        error: {},
-        hasWarning: {},
-        warning: {},
+        hasError: {
+            "& $label:not([class*='Mui-focused'])": {
+                color: theme.palette.error.main,
+            },
+            "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
+                borderColor: theme.palette.error.main,
+            },
+        },
+        error: {
+            fontSize: 14,
+        },
+        hasWarning: {
+            "& $label:not([class*='Mui-focused'])": {
+                color: theme.palette.warning.main,
+            },
+            "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
+                borderColor: theme.palette.warning.main,
+            },
+        },
+        warning: {
+            fontSize: 14,
+        },
     });
 };
 

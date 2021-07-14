@@ -2,7 +2,6 @@ import { ApolloError, useQuery } from "@apollo/client";
 import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
 import { DocumentNode } from "graphql";
 import * as React from "react";
-import styled from "styled-components";
 
 interface IProps {
     selectionMode?: "edit" | "add";
@@ -15,11 +14,6 @@ interface IProps {
         error?: React.ComponentType<{ error: ApolloError }>;
     };
 }
-const ProgressContainer = styled.div`
-    padding-top: 30px;
-    display: flex;
-    justify-content: center;
-`;
 
 const SelectEdit = (props: IProps) => {
     const queryResult = useQuery(props.query!, { variables: { id: props.selectedId } });
@@ -37,9 +31,9 @@ const SelectEdit = (props: IProps) => {
     }
     if (queryResult.loading || !queryResult.data) {
         return (
-            <ProgressContainer>
+            <Box display="flex" justifyContent="center">
                 <CircularProgress />
-            </ProgressContainer>
+            </Box>
         );
     }
     if (!props.dataAccessor) {

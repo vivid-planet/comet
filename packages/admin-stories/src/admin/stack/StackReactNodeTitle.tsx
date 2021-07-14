@@ -2,7 +2,8 @@ import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } fr
 import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
     const [StackSwitch, api] = useStackSwitch();
@@ -26,5 +27,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/stack", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Stack with React.ReactNode title", () => <Story />);

@@ -1,5 +1,6 @@
+import { FormPaper } from "@comet/admin";
 import { ReactSelect } from "@comet/admin-react-select";
-import { Button, ListItem, Typography } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -10,15 +11,15 @@ function Story() {
         { value: "vanilla", label: "Vanilla" },
     ];
     return (
-        <div style={{ width: "300px" }}>
-            <ListItem>
+        <FormPaper variant="outlined" style={{ width: 300 }}>
+            <Box marginBottom={4}>
                 <Button component={"button"} disableTouchRipple>
-                    <Typography variant="button">blah</Typography>
+                    blah
                 </Button>
-            </ListItem>
+            </Box>
 
             <ReactSelect options={options} />
-        </div>
+        </FormPaper>
     );
 }
 

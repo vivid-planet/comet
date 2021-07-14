@@ -2,7 +2,8 @@ import { RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch,
 import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
     return (
@@ -41,5 +42,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/stack", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("RouterTabs with nested Stack", () => <Story />);

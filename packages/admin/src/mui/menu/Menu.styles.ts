@@ -6,9 +6,15 @@ export type CometAdminMenuClassKeys = "drawer" | "permanent" | "temporary" | "op
 export const styles = (theme: Theme) =>
     createStyles<CometAdminMenuClassKeys, any>({
         drawer: {
+            "& [class*='MuiDrawer-paper']": {
+                backgroundColor: "#fff",
+            },
             "& [class*='MuiPaper-root']": {
                 flexGrow: 1,
                 overflowX: "hidden",
+            },
+            "& [class*='MuiDrawer-paperAnchorLeft']": {
+                borderRight: "none",
             },
             "&$permanent": {
                 "&$open": {
@@ -40,5 +46,11 @@ export const styles = (theme: Theme) =>
         permanent: {},
         temporary: {},
         open: {},
-        closed: {},
+        closed: {
+            "&$permanent": {
+                "& [class*='MuiPaper']": {
+                    boxShadow: "none",
+                },
+            },
+        },
     });

@@ -17,7 +17,7 @@ const Picker: React.FC<WithStyles<typeof styles> & IPickerProps> = ({ color, onC
                 hsl={stringToHSL(color)}
                 hsv={stringToHSV(color)}
                 pointer={() => <div className={classes.saturationPointer} />}
-                onChange={(value) => onChange(colorToHex((value as unknown) as tinycolor.ColorInputWithoutInstance))}
+                onChange={(value) => onChange(colorToHex(value as unknown as tinycolor.ColorInputWithoutInstance))}
             />
         </div>
         <div className={classes.hueWrapper}>
@@ -25,7 +25,7 @@ const Picker: React.FC<WithStyles<typeof styles> & IPickerProps> = ({ color, onC
                 hsl={stringToHSL(color)}
                 pointer={() => <div className={classes.hueSliderMarker} />}
                 direction={"horizontal"}
-                onChange={(value) => onChange(colorToHex((value as unknown) as tinycolor.ColorInputWithoutInstance))}
+                onChange={(value) => onChange(colorToHex(value as unknown as tinycolor.ColorInputWithoutInstance))}
             />
         </div>
     </>

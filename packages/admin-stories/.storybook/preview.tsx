@@ -9,7 +9,7 @@ import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme, Theme } from "@material-ui/core";
 import { createGlobalStyle } from "styled-components";
 
 addDecorator((story, context) => {
@@ -61,6 +61,7 @@ const themeOptions = {
 const GlobalStyles = createGlobalStyle`
     body {
         margin: 0;
+        background-color: ${({ theme }) => theme.palette.background.default};
       
         &.sb-show-main.sb-main-padded {
             padding: 0;
@@ -73,10 +74,10 @@ addDecorator((story, ctx) => {
     const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
 
     return (
-        <>
+        <MuiThemeProvider theme={theme}>
             <GlobalStyles />
-            <MuiThemeProvider theme={theme}>{ctx.parameters.layout === "padded" ? <MainContent>{story()}</MainContent> : story()}</MuiThemeProvider>
-        </>
+            <>{ctx.parameters.layout === "padded" ? <MainContent>{story()}</MainContent> : story()}</>
+        </MuiThemeProvider>
     );
 });
 
@@ -137,3 +138,7 @@ addParameters({
         },
     },
 });
+
+declare module "styled-components" {
+    export interface DefaultTheme extends Theme {}
+}

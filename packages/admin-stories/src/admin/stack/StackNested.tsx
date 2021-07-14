@@ -2,7 +2,8 @@ import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext 
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Page1() {
     const switchApi = React.useContext(StackSwitchApiContext);
@@ -63,5 +64,5 @@ function App() {
 }
 
 storiesOf("@comet/admin/stack", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Stack Nested", () => <App />);

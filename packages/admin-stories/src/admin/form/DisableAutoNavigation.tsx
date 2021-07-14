@@ -1,28 +1,29 @@
 import { MainContent, Stack, StackPage, StackSwitch, StackSwitchApiContext, Toolbar, ToolbarBackButton, ToolbarItem } from "@comet/admin";
 import { Table } from "@comet/admin";
 import { Field, FinalForm, FinalFormInput, FormPaper } from "@comet/admin";
-import { IconButton, Typography } from "@material-ui/core";
+import { Box, IconButton, Paper, Typography } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const SampleTable: React.FunctionComponent = () => {
     const stackApi = React.useContext(StackSwitchApiContext);
 
     return (
         <>
-            <Toolbar>
-                <ToolbarBackButton />
-                <ToolbarItem>
-                    <Typography variant={"h3"}>Sample Table</Typography>
-                </ToolbarItem>
-            </Toolbar>
-
-            <MainContent>
+            <Box marginBottom={4}>
+                <Toolbar>
+                    <ToolbarBackButton />
+                    <ToolbarItem>
+                        <Typography variant={"h3"}>Sample Table</Typography>
+                    </ToolbarItem>
+                </Toolbar>
+            </Box>
+            <Paper elevation={0}>
                 <Table
                     data={[
                         { id: "1", name: "Lorem" },
@@ -41,16 +42,14 @@ const SampleTable: React.FunctionComponent = () => {
                         {
                             name: "actions",
                             render: (recipe) => (
-                                <>
-                                    <IconButton onClick={() => stackApi.activatePage("edit", recipe.id)}>
-                                        <Edit color={"primary"} />
-                                    </IconButton>
-                                </>
+                                <IconButton onClick={() => stackApi.activatePage("edit", recipe.id)}>
+                                    <Edit color={"primary"} />
+                                </IconButton>
                             ),
                         },
                     ]}
                 />
-            </MainContent>
+            </Paper>
         </>
     );
 };
@@ -106,6 +105,6 @@ function Story() {
 }
 
 storiesOf("@comet/admin/form", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .addDecorator(apolloStoryDecorator())
     .add("Disable Auto Navigation", () => <Story />);

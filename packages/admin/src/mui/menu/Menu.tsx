@@ -3,6 +3,7 @@ import { WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { useHistory } from "react-router";
 
+import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
 import { styles } from "./Menu.styles";
 
@@ -30,7 +31,8 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     permanentDrawerPaperProps = {},
 }) => {
     const history = useHistory();
-    const { open, toggleOpen, headerHeight } = React.useContext(MenuContext);
+    const { open, toggleOpen } = React.useContext(MenuContext);
+    const { headerHeight } = React.useContext(MasterLayoutContext);
 
     // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
     React.useEffect(() => {
@@ -78,6 +80,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
                 open={permanentOpen}
                 style={{ width: permanentOpen ? drawerWidth : 0 }}
                 PaperProps={{
+                    elevation: 2,
                     style: {
                         top: headerHeight,
                         height: `calc(100% - ${headerHeight}px)`,

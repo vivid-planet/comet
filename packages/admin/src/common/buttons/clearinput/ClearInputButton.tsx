@@ -1,5 +1,5 @@
-import { ButtonBase, ButtonBaseProps, Theme, WithStyles } from "@material-ui/core";
-import { Clear as ClearIcon } from "@material-ui/icons";
+import { Clear } from "@comet/admin-icons";
+import { ButtonBase, ButtonBaseProps, WithStyles } from "@material-ui/core";
 import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
@@ -9,7 +9,7 @@ export interface ClearInputButtonThemeProps {
 
 export type CometAdminClearInputButtonClassKeys = "root" | "disabled" | "defaultIcon";
 
-const styles = (theme: Theme) => {
+const styles = () => {
     return createStyles<CometAdminClearInputButtonClassKeys, any>({
         root: {
             height: "100%",
@@ -30,7 +30,7 @@ const ClearButton: React.FC<WithStyles<typeof styles, true> & ClearInputButtonTh
 }) => {
     return (
         <ButtonBase classes={{ root: classes.root, disabled: classes.disabled }} disabled={disabled} tabIndex={-1} {...otherButtonBaseProps}>
-            {icon ? icon(disabled) : <ClearIcon className={classes.defaultIcon} fontSize={"small"} color={disabled ? "disabled" : "action"} />}
+            {icon ? icon(disabled) : <Clear color={disabled ? "disabled" : "action"} />}
         </ButtonBase>
     );
 };

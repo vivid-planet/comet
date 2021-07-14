@@ -1,5 +1,5 @@
+import { ArrowLeft } from "@comet/admin-icons";
 import { Theme } from "@material-ui/core/styles";
-import { ArrowBack } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
 
@@ -28,7 +28,7 @@ export const useStyles = makeStyles<Theme, {}, CometAdminToolbarBackButtonClassK
 );
 
 export function useToolbarBackButtonThemeProps() {
-    const { backIcon = <ArrowBack />, ...restProps } = useComponentThemeProps("CometAdminToolbarBackButton") ?? {};
+    const { backIcon = <ArrowLeft />, ...restProps } = useComponentThemeProps("CometAdminToolbarBackButton") ?? {};
     return { backIcon, ...restProps };
 }
 

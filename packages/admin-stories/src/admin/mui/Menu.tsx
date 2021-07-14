@@ -1,12 +1,23 @@
-import { MainContent, MasterLayout, Menu, MenuCollapsibleItem, MenuItemAnchorLink, MenuItemRouterLink, useWindowSize } from "@comet/admin";
+import {
+    AppHeader,
+    AppHeaderFillSpace,
+    AppHeaderMenuButton,
+    CometLogo,
+    MainContent,
+    MasterLayout,
+    Menu,
+    MenuCollapsibleItem,
+    MenuItemAnchorLink,
+    MenuItemRouterLink,
+    useWindowSize,
+} from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Paper, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
 
-import CometLogo from "../../../.storybook/CometLogo";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const permanentMenuMinWidth = 1024;
 
@@ -37,23 +48,29 @@ const AppMenu: React.FC = () => {
     );
 };
 
-const AppHeader: React.FC = () => (
-    <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} style={{ width: "100%" }}>
+const Header: React.FC = () => (
+    <AppHeader>
+        <AppHeaderMenuButton />
         <CometLogo />
-        <Typography variant="h5">Menu Example</Typography>
-    </Box>
+        <AppHeaderFillSpace />
+    </AppHeader>
 );
 
 const Content = ({ children }: { children: string }) => (
     <MainContent>
-        <Typography variant={"h1"}>{children}</Typography>
-        <br />
-        <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>
+        <Paper variant="outlined">
+            <Box padding={4}>
+                <Typography variant={"h1"} gutterBottom>
+                    {children}
+                </Typography>
+                <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>
+            </Box>
+        </Paper>
     </MainContent>
 );
 
 export const Story: React.FC = () => (
-    <MasterLayout headerComponent={AppHeader} menuComponent={AppMenu}>
+    <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
         <Switch>
             <Route path="/" exact render={() => <Content>Root</Content>} />
             <Route path="/dashboard" render={() => <Content>Dashboard</Content>} />
@@ -67,5 +84,5 @@ export const Story: React.FC = () => (
 );
 
 storiesOf("@comet/admin/mui", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Menu", () => <Story />, { layout: "fullscreen" });

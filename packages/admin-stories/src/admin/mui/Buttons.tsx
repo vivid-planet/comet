@@ -17,7 +17,8 @@ import {
 } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const ButtonsRow = ({ children }: { children: React.ReactNode[] }) => {
     return (
@@ -39,7 +40,7 @@ export const Story: React.FC = () => {
     return (
         <Grid container spacing={4}>
             <Grid item xs={12}>
-                <Paper>
+                <Paper variant="outlined">
                     <Box padding={4}>
                         <Typography variant={"h2"}>Contained buttons</Typography>
                     </Box>
@@ -88,7 +89,7 @@ export const Story: React.FC = () => {
                 </Paper>
             </Grid>
             <Grid item xs={12}>
-                <Paper>
+                <Paper variant="outlined">
                     <Box padding={4}>
                         <Typography variant={"h2"}>Button groups</Typography>
                     </Box>
@@ -131,7 +132,7 @@ export const Story: React.FC = () => {
                 </Paper>
             </Grid>
             <Grid item xs={12}>
-                <Paper>
+                <Paper variant="outlined">
                     <Box padding={4}>
                         <Typography variant={"h2"}>Text buttons</Typography>
                     </Box>
@@ -180,7 +181,7 @@ export const Story: React.FC = () => {
                 </Paper>
             </Grid>
             <Grid item xs={6}>
-                <Paper>
+                <Paper variant="outlined">
                     <Box padding={4}>
                         <Typography variant={"h2"}>Special button usage</Typography>
                     </Box>
@@ -241,7 +242,7 @@ export const Story: React.FC = () => {
                 </Paper>
             </Grid>
             <Grid item xs={6}>
-                <Paper>
+                <Paper variant="outlined">
                     <Box padding={4}>
                         <Typography variant={"h2"}>Icon buttons</Typography>
                         <Table>
@@ -282,5 +283,5 @@ export const Story: React.FC = () => {
 };
 
 storiesOf("@comet/admin/mui", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Buttons", () => <Story />);

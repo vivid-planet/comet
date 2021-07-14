@@ -1,6 +1,6 @@
+import { Check, Error, Save, ThreeDotSaving } from "@comet/admin-icons";
 import { ButtonProps } from "@material-ui/core/Button";
 import { Theme } from "@material-ui/core/styles";
-import { Check, Error, HourglassFull, Save } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import { ClassNameMap } from "@material-ui/styles/withStyles/withStyles";
 import * as React from "react";
@@ -47,8 +47,13 @@ export const useStyles = (props: { color: ButtonProps["color"] }) => {
 };
 
 export function useThemeProps() {
-    const { saveIcon = <Save />, savingIcon = <HourglassFull />, successIcon = <Check />, errorIcon = <Error />, ...restProps } =
-        useComponentThemeProps("CometAdminSaveButton") ?? {};
+    const {
+        saveIcon = <Save />,
+        savingIcon = <ThreeDotSaving />,
+        successIcon = <Check />,
+        errorIcon = <Error />,
+        ...restProps
+    } = useComponentThemeProps("CometAdminSaveButton") ?? {};
 
     const resolveIconForDisplayState = (displayState: SaveButtonDisplayState): React.ReactNode => {
         if (displayState === "saving") {

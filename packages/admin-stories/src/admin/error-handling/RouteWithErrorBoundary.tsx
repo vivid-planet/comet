@@ -1,21 +1,25 @@
 import { MasterLayout, Menu, MenuItemRouterLink, RouteWithErrorBoundary } from "@comet/admin";
-import { Typography } from "@material-ui/core";
+import { Box, Paper, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const ViewWithNoError: React.FunctionComponent = () => {
     return (
-        <div>
-            <Typography variant={"h5"}>View with No Error</Typography>
-
-            <Alert severity={"info"}>
-                <Typography>Use the RouteWithErrorBoundary component to create a boundary for app routes.</Typography>
-                <Typography>Try to click on the second route (Error Route) to display a route which throws an error.</Typography>
-            </Alert>
-        </div>
+        <Paper variant="outlined">
+            <Box padding={4}>
+                <Typography variant={"h5"} gutterBottom>
+                    View with No Error
+                </Typography>
+                <Alert severity={"info"}>
+                    <Typography>Use the RouteWithErrorBoundary component to create a boundary for app routes.</Typography>
+                    <Typography>Try to click on the second route (Error Route) to display a route which throws an error.</Typography>
+                </Alert>
+            </Box>
+        </Paper>
     );
 };
 
@@ -39,7 +43,7 @@ function MasterMenu() {
 
 function App() {
     return (
-        <MasterLayout menuComponent={MasterMenu} hideToolbarMenuIcon>
+        <MasterLayout menuComponent={MasterMenu}>
             <Switch>
                 <RouteWithErrorBoundary path={`/no-error-route`} component={ViewWithNoError} />
                 <RouteWithErrorBoundary path={`/error-route`} component={ViewWithError} />
@@ -52,5 +56,5 @@ function App() {
 }
 
 storiesOf("@comet/admin/error-handling/error-boundaries", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("RouteWithErrorBoundary", () => <App />);
