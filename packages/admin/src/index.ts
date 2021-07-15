@@ -137,6 +137,7 @@ export { CometAdminSplitButtonThemeProps } from "./common/buttons/split/SplitBut
 export { SaveButton, SaveButtonProps } from "./common/buttons/save/SaveButton";
 export { CometAdminSaveButtonThemeProps, CometAdminSaveButtonClassKeys } from "./common/buttons/save/SaveButton.styles";
 export { CancelButton, CometAdminCancelButtonClassKeys } from "./common/buttons/cancel/CancelButton";
+export { DeleteButton, CometAdminDeleteButtonClassKeys } from "./common/buttons/delete/DeleteButton";
 export { OkayButton, CometAdminOkayButtonClassKeys } from "./common/buttons/okay/OkayButton";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
