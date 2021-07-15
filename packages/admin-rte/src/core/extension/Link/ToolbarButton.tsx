@@ -1,4 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@material-ui/core";
+import { CancelButton, DeleteButton, SaveButton } from "@comet/admin";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@material-ui/core";
 import LinkIcon from "@material-ui/icons/Link";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
@@ -97,7 +98,9 @@ function LinkDialog(props: {
 
     return (
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-            <DialogTitle>Link</DialogTitle>
+            <DialogTitle>
+                <FormattedMessage id={"cometAdmin.rte.extensions.link.editDialogTitle"} defaultMessage={"Link"} />
+            </DialogTitle>
             <DialogContent>
                 <TextField
                     // autoFocus
@@ -110,26 +113,19 @@ function LinkDialog(props: {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="default">
-                    <Typography variant="button">
-                        <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
-                    </Typography>
-                </Button>
-                {linkData && (
-                    <Button onClick={handleRemove} color="primary">
-                        <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />
-                        </Typography>
-                    </Button>
-                )}
-
-                {newUrl && (
-                    <Button onClick={handleUpdate} color="primary">
-                        <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.ok" defaultMessage="OK" />
-                        </Typography>
-                    </Button>
-                )}
+                <CancelButton onClick={handleClose} />
+                <div>
+                    <Grid container spacing={4}>
+                        {linkData && (
+                            <Grid item>
+                                <DeleteButton onClick={handleRemove} />
+                            </Grid>
+                        )}
+                        <Grid item>
+                            <SaveButton onClick={handleUpdate} disabled={!newUrl} />
+                        </Grid>
+                    </Grid>
+                </div>
             </DialogActions>
         </Dialog>
     );
