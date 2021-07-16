@@ -48,7 +48,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     return (
         <Form
             {...props}
-            mutators={{ ...props.mutators, setFieldData: (setFieldData as unknown) as Mutator<FormValues, object> }}
+            mutators={{ ...props.mutators, setFieldData: setFieldData as unknown as Mutator<FormValues, object> }}
             onSubmit={handleSubmit}
             render={RenderForm}
         />

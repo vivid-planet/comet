@@ -7,8 +7,10 @@ import { useFinalFormContext } from "./FinalFormContextProvider";
 
 const requiredValidator = (value: any) => (value ? undefined : "Pflichtfeld");
 
-const composeValidators = (...validators: Array<(value: any, allValues: object) => any>) => (value: any, allValues: object) =>
-    validators.reduce((error, validator) => error || validator(value, allValues), undefined);
+const composeValidators =
+    (...validators: Array<(value: any, allValues: object) => any>) =>
+    (value: any, allValues: object) =>
+        validators.reduce((error, validator) => error || validator(value, allValues), undefined);
 
 interface Props<FieldValue = any, T extends HTMLElement = HTMLElement> {
     name: string;
