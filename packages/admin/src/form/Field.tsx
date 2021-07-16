@@ -1,15 +1,14 @@
 import { FieldValidator } from "final-form";
 import * as React from "react";
-import { Field as FinalFormField, FieldRenderProps, FormSpy, useForm } from "react-final-form";
+import { Field as FinalFormField, FieldMetaState, FieldRenderProps, FormSpy, useForm } from "react-final-form";
 
 import { FieldContainer, FieldContainerThemeProps } from "./FieldContainer";
+import { useFinalFormContext } from "./FinalFormContextProvider";
 
 const requiredValidator = (value: any) => (value ? undefined : "Pflichtfeld");
 
-const composeValidators =
-    (...validators: Array<(value: any, allValues: object) => any>) =>
-    (value: any, allValues: object) =>
-        validators.reduce((error, validator) => error || validator(value, allValues), undefined);
+const composeValidators = (...validators: Array<(value: any, allValues: object) => any>) => (value: any, allValues: object) =>
+    validators.reduce((error, validator) => error || validator(value, allValues), undefined);
 
 interface Props<FieldValue = any, T extends HTMLElement = HTMLElement> {
     name: string;
@@ -21,6 +20,9 @@ interface Props<FieldValue = any, T extends HTMLElement = HTMLElement> {
     validate?: FieldValidator<FieldValue>;
     validateWarning?: FieldValidator<FieldValue>;
     variant?: FieldContainerThemeProps["variant"];
+    shouldScrollTo?: (meta: FieldMetaState<FieldValue>) => boolean;
+    shouldShowError?: (meta: FieldMetaState<FieldValue>) => boolean;
+    shouldShowWarning?: (meta: FieldMetaState<FieldValue>) => boolean;
     [otherProp: string]: any;
 }
 
@@ -32,6 +34,9 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     required,
     validate,
     validateWarning,
+    shouldShowError: passedShouldShowError,
+    shouldShowWarning: passedShouldShowWarning,
+    shouldScrollTo: passedShouldScrollTo,
     ...otherProps
 }: Props<FieldValue, FieldElement>): React.ReactElement {
     const { disabled, variant, fullWidth } = otherProps;
@@ -41,6 +46,11 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     const currentWarningValidationRound = React.useRef(0);
 
     const validateError = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
+
+    const finalFormContext = useFinalFormContext();
+    const shouldShowError = passedShouldShowError || finalFormContext.shouldShowFieldError;
+    const shouldShowWarning = passedShouldShowWarning || finalFormContext.shouldShowFieldWarning;
+    const shouldScrollToField = passedShouldScrollTo || finalFormContext.shouldScrollToField;
 
     function renderField({ input, meta, fieldContainerProps, ...rest }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string }) {
         function render() {
@@ -58,10 +68,11 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 label={label}
                 required={required}
                 disabled={disabled}
-                error={meta.touched && (meta.error || meta.submitError)}
-                warning={meta.touched && meta.data?.warning}
+                error={shouldShowError({ fieldMeta: meta }) && (meta.error || meta.submitError)}
+                warning={shouldShowWarning({ fieldMeta: meta }) && meta.data?.warning}
                 variant={variant}
                 fullWidth={fullWidth}
+                scrollTo={shouldScrollToField({ fieldMeta: meta })}
             >
                 {render()}
             </FieldContainer>
