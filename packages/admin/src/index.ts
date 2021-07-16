@@ -153,3 +153,4 @@ export {
     CometAdminCometAdminFinalFormSaveCancelButtonsLegacyThemeProps,
 } from "./FinalFormSaveCancelButtonsLegacy.styles";
 export { PrettyBytes } from "./helpers/PrettyBytes";
+export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
