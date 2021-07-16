@@ -104,8 +104,8 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     warning,
     scrollTo = false,
 }) => {
-    const hasError = error !== undefined && error.length > 0;
-    const hasWarning = warning !== undefined && warning.length > 0;
+    const hasError = !!error;
+    const hasWarning = !!warning;
 
     const formControlClasses: string[] = [classes.root];
     if (variant === "vertical") formControlClasses.push(classes.vertical);
