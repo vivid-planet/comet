@@ -8,6 +8,7 @@ import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
+import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
 import { SubmitError, SubmitResult } from "./form/SubmitResult";
 import { StackApiContext } from "./stack/Api";
 import { TableQueryContext } from "./table/TableQueryContext";
@@ -25,6 +26,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
      */
     onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
+    formContext?: Partial<FinalFormContext>;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -46,13 +48,13 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     return (
         <Form
             {...props}
-            mutators={{ ...props.mutators, setFieldData: setFieldData as unknown as Mutator<FormValues, object> }}
+            mutators={{ ...props.mutators, setFieldData: (setFieldData as unknown) as Mutator<FormValues, object> }}
             onSubmit={handleSubmit}
             render={RenderForm}
         />
     );
 
-    function RenderForm(formRenderProps: FormRenderProps<FormValues>) {
+    function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
 
@@ -152,22 +154,24 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         }, [formRenderProps.values, setFieldData, registeredFields]);
 
         return (
-            <form onSubmit={submit}>
-                <div>
-                    {renderComponent<FormValues>(
-                        {
-                            children: props.children,
-                            component: props.component,
-                            render: props.render,
-                        },
-                        formRenderProps,
+            <FinalFormContextProvider {...formContext}>
+                <form onSubmit={submit}>
+                    <div>
+                        {renderComponent<FormValues>(
+                            {
+                                children: props.children,
+                                component: props.component,
+                                render: props.render,
+                            },
+                            formRenderProps,
+                        )}
+                    </div>
+                    {(formRenderProps.submitError || formRenderProps.error) && (
+                        <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
                     )}
-                </div>
-                {(formRenderProps.submitError || formRenderProps.error) && (
-                    <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
-                )}
-                {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
-            </form>
+                    {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
+                </form>
+            </FinalFormContextProvider>
         );
     }
 
