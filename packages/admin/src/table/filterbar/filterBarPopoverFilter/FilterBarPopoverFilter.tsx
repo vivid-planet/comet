@@ -1,83 +1,13 @@
-import { Button, ButtonProps, Popover, Typography } from "@material-ui/core";
-import { makeStyles, Theme, ThemeOptions, useTheme } from "@material-ui/core/styles";
+import { Check, ChevronDown, Reset } from "@comet/admin-icons";
+import { Button, Popover, Typography } from "@material-ui/core";
+import { ThemeOptions, useTheme } from "@material-ui/core/styles";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
-
-export interface FilterBarPopoverFilterThemeProps {
-    submitButton?: ButtonProps;
-    resetButton?: ButtonProps;
-}
-
-export type CometAdminFilterBarPopoverFilterClassKeys =
-    | "root"
-    | "fieldBarWrapper"
-    | "fieldBarInnerWrapper"
-    | "labelWrapper"
-    | "popoverContentContainer"
-    | "popoverInnerContentContainer"
-    | "paper"
-    | "buttonsContainer";
-
-const useStyles = makeStyles(
-    (theme: Theme) => ({
-        root: {
-            minWidth: "150px",
-            border: `1px solid ${theme.palette.grey[300]}`,
-            position: "relative",
-            marginBottom: "10px",
-            marginRight: "10px",
-        },
-        fieldBarWrapper: {
-            position: "relative",
-        },
-        fieldBarInnerWrapper: {
-            position: "relative",
-            alignItems: "center",
-            padding: "10px 20px",
-            cursor: "pointer",
-            display: "flex",
-
-            "&:after": {
-                borderTop: `4px solid ${theme.palette.grey[300]}`,
-                borderRight: "4px solid transparent",
-                borderLeft: "4px solid transparent",
-                position: "absolute",
-                display: "block",
-                right: "10px",
-                content: "''",
-                top: "50%",
-                height: 0,
-                width: 0,
-            },
-        },
-        labelWrapper: {
-            marginRight: "15px",
-            boxSizing: "border-box",
-        },
-        popoverContentContainer: {
-            minWidth: 300,
-            "& [class*='CometAdminFormFieldContainer-root']": {
-                boxSizing: "border-box",
-                padding: "20px",
-                marginBottom: 0,
-            },
-        },
-        buttonsContainer: {
-            borderTop: `1px solid ${theme.palette.grey[300]}`,
-            justifyContent: "space-between",
-            padding: "10px 15px",
-            display: "flex",
-        },
-        paper: {
-            border: "1px solid grey",
-            marginLeft: -1, //due to border of popover, but now overrideable with styling if needed
-        },
-    }),
-    { name: "CometAdminFilterBarPopoverFilter" },
-);
+import { dirtyFieldsCount } from "../dirtyFieldsCount";
+import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
+import { useStyles } from "./FilterBarPopoverFilter.styles";
 
 export interface FilterBarPopoverFilterProps {
     label: string;
@@ -89,8 +19,9 @@ export function FilterBarPopoverFilter({
     children,
     label,
     dirtyFieldsBadge,
-    calcNumberDirtyFields,
+    calcNumberDirtyFields = dirtyFieldsCount,
 }: React.PropsWithChildren<FilterBarPopoverFilterProps>) {
+    const [hasFormValues, setHasFormValues] = React.useState<boolean>(false);
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const outerForm = useForm();
     const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
@@ -106,7 +37,7 @@ export function FilterBarPopoverFilter({
     const resetButtonProps =
         themeProps && themeProps["CometAdminFilterBarPopoverFilter"] ? { ...themeProps["CometAdminFilterBarPopoverFilter"]?.resetButton } : {};
 
-    const classes = useStyles();
+    const classes = useStyles({ hasFormValues: hasFormValues });
     const intl = useIntl();
 
     return (
@@ -119,14 +50,17 @@ export function FilterBarPopoverFilter({
                 }}
                 initialValues={outerForm.getState().values}
             >
-                {({ form, values, handleSubmit }) => {
+                {({ form, values, handleSubmit, dirtyFields }) => {
+                    const countValue = calcNumberDirtyFields(values, form.getRegisteredFields());
+                    setHasFormValues(countValue > 0);
                     return (
                         <div className={classes.fieldBarWrapper}>
                             <div className={classes.fieldBarInnerWrapper} onClick={handleClick}>
                                 <div className={classes.labelWrapper}>
-                                    <Typography variant="subtitle2">{label}</Typography>
+                                    <Typography variant="body1">{label}</Typography>
                                 </div>
-                                <FilterBarActiveFilterBadgeComponent values={values} calcNumberDirtyFields={calcNumberDirtyFields} />
+                                <FilterBarActiveFilterBadgeComponent countValue={countValue} />
+                                <ChevronDown />
                             </div>
                             <Popover
                                 open={open}
@@ -160,6 +94,7 @@ export function FilterBarPopoverFilter({
 
                                                 setAnchorEl(null);
                                             }}
+                                            startIcon={<Reset />}
                                             {...resetButtonProps}
                                         >
                                             <Typography variant={"button"}>
@@ -178,6 +113,8 @@ export function FilterBarPopoverFilter({
                                                 handleSubmit();
                                                 setAnchorEl(null);
                                             }}
+                                            startIcon={<Check />}
+                                            disabled={Object.values(dirtyFields).length === 0}
                                             {...submitButtonProps}
                                         >
                                             <Typography variant={"button"}>
