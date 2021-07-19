@@ -8,6 +8,7 @@ const UUID = require("uuid");
 
 interface IProps {
     initialPage?: string;
+    title?: React.ReactNode;
     children: Array<React.ReactElement<IStackPageProps>>;
 }
 
