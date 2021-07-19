@@ -115,7 +115,7 @@ function RouterTabs({
                                 if (match) {
                                     return (
                                         <StackBreadcrumb url={`${match.url}${child.props.path}`} title={child.props.label} invisible={true}>
-                                            <div className={classes.content}>{child.props.children}</div>;
+                                            <div className={classes.content}>{child.props.children}</div>
                                         </StackBreadcrumb>
                                     );
                                 } else {
