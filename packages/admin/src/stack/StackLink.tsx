@@ -2,20 +2,28 @@ import { Link } from "@material-ui/core";
 import React, { PropsWithChildren } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
-import { useStackSwitchApi } from "./Switch";
+import { IStackSwitchApi, useStackSwitchApi } from "./Switch";
 
 interface StackLinkProps {
     pageName: string;
     payload: string;
     subUrl?: string;
+    switchApi?: IStackSwitchApi;
 }
 
-export const StackLink = ({ pageName, payload, subUrl, children }: PropsWithChildren<StackLinkProps>): React.ReactElement => {
-    const stackApi = useStackSwitchApi();
-    const url = React.useMemo(() => stackApi.getTargetUrl(pageName, payload, subUrl), [pageName, payload, stackApi, subUrl]);
+export const StackLink = ({
+    pageName,
+    payload,
+    subUrl,
+    switchApi: externalSwitchApi,
+    children,
+}: PropsWithChildren<StackLinkProps>): React.ReactElement => {
+    const internalSwitchApi = useStackSwitchApi();
+    // external switchApi allows the creation of StackLinks outside of the stack with the useStackSwitch() hook
+    const _switchApi = externalSwitchApi !== undefined ? externalSwitchApi : internalSwitchApi;
 
     return (
-        <Link to={url} component={RouterLink}>
+        <Link to={() => _switchApi.getTargetUrl(pageName, payload, subUrl)} component={RouterLink}>
             {children}
         </Link>
     );
