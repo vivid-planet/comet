@@ -5,12 +5,11 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 storiesOf("stories/components/AppHeader/Dropdown", module).add("AppHeader Dropdown", () => {
-    const customStateDropdownMenu = React.useState<boolean>(false);
-    const showContentDropdownMenu = customStateDropdownMenu[0];
+    const [open, setOpen] = React.useState<boolean>(false);
 
     return (
         <>
-            <div style={{ marginBottom: "30px" }}>Dropdown Menu state: {showContentDropdownMenu ? "open" : "closed"}</div>
+            <div style={{ marginBottom: "30px" }}>Dropdown Menu state: {open ? "open" : "closed"}</div>
             <AppHeader position="relative" headerHeight={60}>
                 <Typography style={{ padding: 20 }}>Header dropdown</Typography>
                 <AppHeaderFillSpace />
@@ -27,7 +26,7 @@ storiesOf("stories/components/AppHeader/Dropdown", module).add("AppHeader Dropdo
                     </Box>
                 </AppHeaderDropdown>
 
-                <AppHeaderDropdown buttonChildren="Dropdown Menu" customShowContentState={customStateDropdownMenu}>
+                <AppHeaderDropdown buttonChildren="Dropdown Menu" open={open} onOpenChange={setOpen}>
                     {() => {
                         return (
                             <MenuList>
