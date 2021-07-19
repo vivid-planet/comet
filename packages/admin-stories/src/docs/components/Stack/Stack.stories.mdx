@@ -15,13 +15,43 @@ A single page will be displayed at a time.
     <Story id="stories-components-stack--basic" />
 </Canvas>
 
-A stack consists of 3 components
+A stack consists of 3 components: `Stack`, `StackSwitch` and `StackPage`:
 
--   `Stack`: root component of the stack
--   `StackSwitch`: Container for pages where one will render at a time. Similar to a react-router Switch. Provides a context with an API allowing to switch between pages in this `StackSwitch`.
--   `StackPage`: The pages a `StackSwitch` will switch. First one is the default page.
+### Stack
+
+Root component of the stack.
+
+#### Props
+
+| Name            | Type            | Default value | Description         |
+| :-------------- | :-------------- | :------------ | :------------------ |
+| topLevelTitle\* | React.ReactNode |               | Title of the stack. |
+
+### StackSwitch
+
+Container for pages where one will render at a time. Similar to a react-router Switch. Provides a context with an API allowing to switch between pages in this `StackSwitch`.
+
+#### Props
+
+| Name        | Type                                         | Default value               | Description                                                  |
+| :---------- | :------------------------------------------- | :-------------------------- | :----------------------------------------------------------- |
+| children\*  | Array<React.ReactElement<IStackPageProps\>\> |                             | The `StackPages` that are switched inside the `StackSwitch`. |
+| initialPage | string                                       | First StackPage in children | The `StackPage` that is shown initially.                     |
+| title       | React.ReactNode                              |                             | Title of the `StackSwitch`.                                  |
+
+### StackPage
+
+The pages a `StackSwitch` will switch. First one is the default page.
 
 Comet Admin Stack uses react-router behind the scene and creates a `Route` for every page.
+
+#### Props
+
+| Name       | Type                                                 | Default value | Description                                                                                                                     |
+| :--------- | :--------------------------------------------------- | :------------ | :------------------------------------------------------------------------------------------------------------------------------ |
+| name\*     | string                                               |               | The name of a `StackPage`. Is used for navigating between pages and as page title in the breadcrumbs if no `title` is provided. |
+| children\* | ((id: string) => React.ReactNode) \| React.ReactNode |               | The content of the page.                                                                                                        |
+| title      | React.ReactNode                                      |               | Title of the page. Is used in the breadcrumbs.                                                                                  |
 
 ## Switch page programmatically
 
@@ -49,18 +79,29 @@ This method will activate (navigate to) the given page.
 
 #### Arguments
 
-1. `pageName` (string): name of the page that will be activated
-2. `payload` (string): additional payload containing eg. an id that will get passed into the StackPage
-3. `subUrl` (string [optional]): subUrl to append, for nested stacks or other nested routes
+| Name       | Type            | Default value | Description                                                                                    |
+| :--------- | :-------------- | :------------ | :--------------------------------------------------------------------------------------------- |
+| pageName\* | string          |               | Name of the page that will be activated.                                                       |
+| payload\*  | string          |               | Additional payload containing eg. an id that will get passed into the StackPage.               |
+| subUrl     | string          |               | SubUrl to append, for nested stacks or other nested routes.                                    |
+| switchApi  | IStackSwitchApi |               | Custom switchApi, has to be passed if the StackLink is used outside of a StackSwitch component |
 
 ### StackLink
 
-Alternatively, it's also possible to use the `StackLink` component for creating a link between pages.
-It takes the arguments of `activatePage()` as props.
+It's also possible to use the `StackLink` component for creating a link between pages:
 
 <Canvas>
     <Story id="stories-components-stack--stacklink" />
 </Canvas>
+
+#### Props
+
+| Name       | Type            | Default value | Description                                                                                    |
+| :--------- | :-------------- | :------------ | :--------------------------------------------------------------------------------------------- |
+| pageName\* | string          |               | Name of the page that will be linked to.                                                       |
+| payload\*  | string          |               | Additional payload containing eg. an id that will get passed into the StackPage.               |
+| subUrl     | string          |               | SubUrl to append, for nested stacks or other nested routes.                                    |
+| switchApi  | IStackSwitchApi |               | Custom switchApi, has to be passed if the StackLink is used outside of a StackSwitch component |
 
 ## payload
 
@@ -72,11 +113,11 @@ The activated StackPage can access the payload by rendering a function child lik
     code={dedent`
         <StackPage name="example" title="Example">
             {(id) => <div>{id}</div>}
-        </Stackpage
+        </Stackpage>
 `}
 />
 
-The playload needs to be a string as it is used in the url.
+The payload needs to be a string as it is used in the url.
 
 ### Example
 
