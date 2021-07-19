@@ -77,6 +77,9 @@ To switch between pages use the API provided by `StackSwitch`:
 
 This method will activate (navigate to) the given page.
 
+In case you need the url of a page, it can be obtained by calling `switchApi.getTargetUrl(pageName: string, payload: string, subUrl?: string)`.
+This method should only be used if you cannot achieve your goal with a `StackLink` or `activatePage()`.
+
 #### Arguments
 
 | Name       | Type   | Default value | Description                                                                      |
@@ -87,7 +90,7 @@ This method will activate (navigate to) the given page.
 
 ### StackLink
 
-It's also possible to use the `StackLink` component for creating a link between pages:
+It's also possible to use the `StackLink` component for creating a link to a page:
 
 <Canvas>
     <Story id="stories-components-stack--stacklink" />
@@ -101,26 +104,6 @@ It's also possible to use the `StackLink` component for creating a link between 
 | payload\*  | string          |               | Additional payload containing eg. an id that will get passed into the StackPage.               |
 | subUrl     | string          |               | SubUrl to append, for nested stacks or other nested routes.                                    |
 | switchApi  | IStackSwitchApi |               | Custom switchApi, has to be passed if the StackLink is used outside of a StackSwitch component |
-
-### getTargetUrl
-
-The `getTargetUrl()` method returns the url of a page in the stack:
-
-<Source
-    language="tsx"
-    code={dedent`
-        const switchApi = useStackSwitchApi();
-        const url = switchApi.getTargetUrl("page2", "test payload");
-  `}
-/>
-
-#### Arguments
-
-| Name       | Type   | Default value | Description                                                                      |
-| :--------- | :----- | :------------ | :------------------------------------------------------------------------------- |
-| pageName\* | string |               | Name of the page that will be activated.                                         |
-| payload\*  | string |               | Additional payload containing eg. an id that will get passed into the StackPage. |
-| subUrl     | string |               | SubUrl to append, for nested stacks or other nested routes.                      |
 
 ## payload
 
