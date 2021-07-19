@@ -79,12 +79,11 @@ This method will activate (navigate to) the given page.
 
 #### Arguments
 
-| Name       | Type            | Default value | Description                                                                                    |
-| :--------- | :-------------- | :------------ | :--------------------------------------------------------------------------------------------- |
-| pageName\* | string          |               | Name of the page that will be activated.                                                       |
-| payload\*  | string          |               | Additional payload containing eg. an id that will get passed into the StackPage.               |
-| subUrl     | string          |               | SubUrl to append, for nested stacks or other nested routes.                                    |
-| switchApi  | IStackSwitchApi |               | Custom switchApi, has to be passed if the StackLink is used outside of a StackSwitch component |
+| Name       | Type   | Default value | Description                                                                      |
+| :--------- | :----- | :------------ | :------------------------------------------------------------------------------- |
+| pageName\* | string |               | Name of the page that will be activated.                                         |
+| payload\*  | string |               | Additional payload containing eg. an id that will get passed into the StackPage. |
+| subUrl     | string |               | SubUrl to append, for nested stacks or other nested routes.                      |
 
 ### StackLink
 
@@ -102,6 +101,26 @@ It's also possible to use the `StackLink` component for creating a link between 
 | payload\*  | string          |               | Additional payload containing eg. an id that will get passed into the StackPage.               |
 | subUrl     | string          |               | SubUrl to append, for nested stacks or other nested routes.                                    |
 | switchApi  | IStackSwitchApi |               | Custom switchApi, has to be passed if the StackLink is used outside of a StackSwitch component |
+
+### getTargetUrl
+
+The `getTargetUrl()` method returns the url of a page in the stack:
+
+<Source
+    language="tsx"
+    code={dedent`
+        const switchApi = useStackSwitchApi();
+        const url = switchApi.getTargetUrl("page2", "test payload");
+  `}
+/>
+
+#### Arguments
+
+| Name       | Type   | Default value | Description                                                                      |
+| :--------- | :----- | :------------ | :------------------------------------------------------------------------------- |
+| pageName\* | string |               | Name of the page that will be activated.                                         |
+| payload\*  | string |               | Additional payload containing eg. an id that will get passed into the StackPage. |
+| subUrl     | string |               | SubUrl to append, for nested stacks or other nested routes.                      |
 
 ## payload
 
