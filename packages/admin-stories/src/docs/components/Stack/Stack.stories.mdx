@@ -23,9 +23,9 @@ Root component of the stack.
 
 #### Props
 
-| Name            | Type            | Default value | Description         |
-| :-------------- | :-------------- | :------------ | :------------------ |
-| topLevelTitle\* | React.ReactNode |               | Title of the stack. |
+| Name            | Type            | Description         |
+| :-------------- | :-------------- | :------------------ |
+| topLevelTitle\* | React.ReactNode | Title of the stack. |
 
 ### StackSwitch
 
@@ -47,11 +47,11 @@ Comet Admin Stack uses react-router behind the scene and creates a `Route` for e
 
 #### Props
 
-| Name       | Type                                                 | Default value | Description                                                                                                                     |
-| :--------- | :--------------------------------------------------- | :------------ | :------------------------------------------------------------------------------------------------------------------------------ |
-| name\*     | string                                               |               | The name of a `StackPage`. Is used for navigating between pages and as page title in the breadcrumbs if no `title` is provided. |
-| children\* | ((id: string) => React.ReactNode) \| React.ReactNode |               | The content of the page.                                                                                                        |
-| title      | React.ReactNode                                      |               | Title of the page. Is used in the breadcrumbs.                                                                                  |
+| Name       | Type                                                 | Description                                                                                                                     |
+| :--------- | :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
+| name\*     | string                                               | The name of a `StackPage`. Is used for navigating between pages and as page title in the breadcrumbs if no `title` is provided. |
+| children\* | ((id: string) => React.ReactNode) \| React.ReactNode | The content of the page.                                                                                                        |
+| title      | React.ReactNode                                      | Title of the page. Is used in the breadcrumbs.                                                                                  |
 
 ## Switch page programmatically
 
@@ -82,11 +82,11 @@ This method should only be used if you cannot achieve your goal with a `StackLin
 
 #### Arguments
 
-| Name       | Type   | Default value | Description                                                                      |
-| :--------- | :----- | :------------ | :------------------------------------------------------------------------------- |
-| pageName\* | string |               | Name of the page that will be activated.                                         |
-| payload\*  | string |               | Additional payload containing eg. an id that will get passed into the StackPage. |
-| subUrl     | string |               | SubUrl to append, for nested stacks or other nested routes.                      |
+| Name       | Type   | Description                                                                      |
+| :--------- | :----- | :------------------------------------------------------------------------------- |
+| pageName\* | string | Name of the page that will be activated.                                         |
+| payload\*  | string | Additional payload containing eg. an id that will get passed into the StackPage. |
+| subUrl     | string | SubUrl to append, for nested stacks or other nested routes.                      |
 
 ### StackLink
 
@@ -98,12 +98,12 @@ It's also possible to use the `StackLink` component for creating a link to a pag
 
 #### Props
 
-| Name       | Type            | Default value | Description                                                                                    |
-| :--------- | :-------------- | :------------ | :--------------------------------------------------------------------------------------------- |
-| pageName\* | string          |               | Name of the page that will be linked to.                                                       |
-| payload\*  | string          |               | Additional payload containing eg. an id that will get passed into the StackPage.               |
-| subUrl     | string          |               | SubUrl to append, for nested stacks or other nested routes.                                    |
-| switchApi  | IStackSwitchApi |               | Custom switchApi, has to be passed if the StackLink is used outside of a StackSwitch component |
+| Name       | Type            | Description                                                                                    |
+| :--------- | :-------------- | :--------------------------------------------------------------------------------------------- |
+| pageName\* | string          | Name of the page that will be linked to.                                                       |
+| payload\*  | string          | Additional payload containing eg. an id that will get passed into the StackPage.               |
+| subUrl     | string          | SubUrl to append, for nested stacks or other nested routes.                                    |
+| switchApi  | IStackSwitchApi | Custom switchApi, has to be passed if the StackLink is used outside of a StackSwitch component |
 
 ## payload
 
