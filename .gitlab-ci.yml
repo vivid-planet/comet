@@ -10,7 +10,7 @@ cache:
         - ./.npm/
 
 .lint:
-    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:master
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:limit7-19
     stage: lint
     interruptible: true
     only:
