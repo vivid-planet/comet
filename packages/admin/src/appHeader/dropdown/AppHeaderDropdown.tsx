@@ -37,8 +37,7 @@ export function AppHeaderDropdown({
     classes: passedClasses,
     ...restProps
 }: Props & StyledComponentProps<CometAdminAppHeaderDropdownClassKeys>): React.ReactElement {
-    const defaultShowContentState = React.useState<boolean>(false);
-    const [uncontrolledOpen, setUncontrolledOpen] = defaultShowContentState;
+    const [uncontrolledOpen, setUncontrolledOpen] = React.useState<boolean>(false);
 
     const _open = open !== undefined ? open : uncontrolledOpen;
     const _onOpenChange =
