@@ -32,6 +32,8 @@ All notable changes to this project will be documented in this file. This projec
 -   add PrettyBytes component for formatting file sizes and other byte values
 -   Add `validateWarning` validator to `Field` and `FinalForm`.
 -   Add `open` and `onOpenChange` props to `AppHeaderDropdown` that allow replacing the internal open state with an external state
+-   add `getTargetUrl()` to `StackSwitchApi`
+-   add `StackLink` component for navigating within a `Stack` via hyperlinks
 
 ### Incompatible Changes
 

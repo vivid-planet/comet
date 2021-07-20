@@ -11,6 +11,7 @@ import {
     useStackSwitch,
     useStackSwitchApi,
 } from "@comet/admin";
+import { StackLink } from "@comet/admin/lib/stack/StackLink";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -260,13 +261,20 @@ storiesOf("stories/components/Stack", module)
         const [StackSwitch, switchApi] = useStackSwitch();
         return (
             <div>
-                <button
-                    onClick={() => {
-                        switchApi.activatePage("page2", "foo");
-                    }}
-                >
-                    page2
-                </button>
+                <p>
+                    <button
+                        onClick={() => {
+                            switchApi.activatePage("page2", "foo");
+                        }}
+                    >
+                        page2
+                    </button>
+                </p>
+                <p>
+                    <StackLink pageName="page2" payload="foo" switchApi={switchApi}>
+                        link to page2
+                    </StackLink>
+                </p>
                 <Stack topLevelTitle="Stack">
                     <StackBreadcrumbs />
                     <StackSwitch>
@@ -279,5 +287,25 @@ storiesOf("stories/components/Stack", module)
                     </StackSwitch>
                 </Stack>
             </div>
+        );
+    })
+    .add("StackLink", () => {
+        return (
+            <Stack topLevelTitle="Example Stack with StackLinks">
+                <StackSwitch>
+                    <StackPage name="page1">
+                        <h3>Page 1</h3>
+                        <StackLink pageName="page2" payload="test">
+                            link to page2
+                        </StackLink>
+                    </StackPage>
+                    <StackPage name="page2">
+                        <h3>Page 2</h3>
+                        <StackLink pageName="page1" payload="test">
+                            link to page1
+                        </StackLink>
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
         );
     });
