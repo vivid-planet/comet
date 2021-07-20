@@ -1,6 +1,7 @@
 import { Check, ChevronDown, Reset } from "@comet/admin-icons";
 import { Button, Popover, Typography } from "@material-ui/core";
 import { ThemeOptions, useTheme } from "@material-ui/core/styles";
+import clsx from "clsx";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { useIntl } from "react-intl";
@@ -21,7 +22,6 @@ export function FilterBarPopoverFilter({
     dirtyFieldsBadge,
     calcNumberDirtyFields = dirtyFieldsCount,
 }: React.PropsWithChildren<FilterBarPopoverFilterProps>) {
-    const [hasFormValues, setHasFormValues] = React.useState<boolean>(false);
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const outerForm = useForm();
     const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
@@ -37,7 +37,7 @@ export function FilterBarPopoverFilter({
     const resetButtonProps =
         themeProps && themeProps["CometAdminFilterBarPopoverFilter"] ? { ...themeProps["CometAdminFilterBarPopoverFilter"]?.resetButton } : {};
 
-    const classes = useStyles({ hasFormValues: hasFormValues });
+    const classes = useStyles();
     const intl = useIntl();
 
     return (
@@ -52,11 +52,10 @@ export function FilterBarPopoverFilter({
             >
                 {({ form, values, handleSubmit, dirtyFields }) => {
                     const countValue = calcNumberDirtyFields(values, form.getRegisteredFields());
-                    setHasFormValues(countValue > 0);
                     return (
-                        <div className={classes.fieldBarWrapper}>
+                        <div className={clsx(classes.fieldBarWrapper, countValue > 0 && classes["fieldBarWrapper--hasValues"])}>
                             <div className={classes.fieldBarInnerWrapper} onClick={handleClick}>
-                                <div className={classes.labelWrapper}>
+                                <div className={clsx(classes.labelWrapper, countValue > 0 && classes["labelWrapper--hasValues"])}>
                                     <Typography variant="body1">{label}</Typography>
                                 </div>
                                 <FilterBarActiveFilterBadgeComponent countValue={countValue} />

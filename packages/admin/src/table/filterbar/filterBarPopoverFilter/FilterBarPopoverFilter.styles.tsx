@@ -5,8 +5,10 @@ import { makeStyles } from "@material-ui/styles";
 export type CometAdminFilterBarPopoverFilterClassKeys =
     | "root"
     | "fieldBarWrapper"
+    | "fieldBarWrapper--hasValues"
     | "fieldBarInnerWrapper"
     | "labelWrapper"
+    | "labelWrapper--hasValues"
     | "popoverContentContainer"
     | "popoverInnerContentContainer"
     | "paper"
@@ -17,15 +19,10 @@ export interface FilterBarPopoverFilterThemeProps {
     resetButton?: ButtonProps;
 }
 
-export interface StyleProps {
-    hasFormValues: boolean;
-}
-
-export const useStyles = makeStyles<Theme, StyleProps>(
+export const useStyles = makeStyles(
     (theme: Theme) => ({
         root: {
             backgroundColor: `${theme.palette.common.white}`,
-            border: ({ hasFormValues }) => `1px solid ${hasFormValues ? theme.palette.grey[300] : theme.palette.grey[100]}`,
             position: "relative",
             marginBottom: "10px",
             borderRadius: "2px",
@@ -33,6 +30,10 @@ export const useStyles = makeStyles<Theme, StyleProps>(
         },
         fieldBarWrapper: {
             position: "relative",
+            border: `1px solid ${theme.palette.grey[100]}`,
+        },
+        "fieldBarWrapper--hasValues": {
+            border: `1px solid ${theme.palette.grey[300]}`,
         },
         fieldBarInnerWrapper: {
             position: "relative",
@@ -49,7 +50,13 @@ export const useStyles = makeStyles<Theme, StyleProps>(
             boxSizing: "border-box",
             marginRight: "6px",
             "& [class*='MuiTypography-body1']": {
-                fontWeight: ({ hasFormValues }) => (hasFormValues ? 500 : 300),
+                fontWeight: 300,
+            },
+        },
+
+        "labelWrapper--hasValues": {
+            "& [class*='MuiTypography-body1']": {
+                fontWeight: 500,
             },
         },
         popoverContentContainer: {
