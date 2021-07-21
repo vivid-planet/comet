@@ -1,4 +1,4 @@
-import { ApolloError, useQuery } from "@apollo/client";
+import { ApolloError, QueryResult, useQuery } from "@apollo/client";
 import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
 import { DocumentNode } from "graphql";
 import * as React from "react";
@@ -9,7 +9,7 @@ interface IProps {
     rows?: Array<{ id: string | number }>;
     query?: DocumentNode;
     dataAccessor?: string;
-    children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
+    children: (data: any, options: { selectionMode: "edit" | "add" }, queryResult?: QueryResult<any, any>) => React.ReactNode;
     components?: {
         error?: React.ComponentType<{ error: ApolloError }>;
     };
@@ -39,7 +39,7 @@ const SelectEdit = (props: IProps) => {
     if (!props.dataAccessor) {
         throw new Error("dataChild prop is required");
     }
-    return <>{props.children(queryResult.data[props.dataAccessor], { selectionMode: "edit" })}</>;
+    return <>{props.children((queryResult.data as any)[props.dataAccessor], { selectionMode: "edit" }, queryResult)}</>;
 };
 
 export function Selected(props: IProps) {
