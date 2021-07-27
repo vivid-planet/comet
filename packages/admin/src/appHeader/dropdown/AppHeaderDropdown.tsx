@@ -13,6 +13,8 @@ interface Props extends AppHeaderButtonProps {
     buttonChildren?: React.ReactNode;
     dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
     popoverProps?: Partial<PopoverProps>;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
 function DefaultArrowUp(): React.ReactElement {
@@ -30,10 +32,21 @@ export function AppHeaderDropdown({
     buttonChildren,
     dropdownArrow = (isOpen) => (isOpen ? <DefaultArrowUp /> : <DefaultArrowDown />),
     popoverProps,
+    open,
+    onOpenChange,
     classes: passedClasses,
     ...restProps
 }: Props & StyledComponentProps<CometAdminAppHeaderDropdownClassKeys>): React.ReactElement {
-    const [showContent, setShowContent] = React.useState<boolean>(false);
+    const [uncontrolledOpen, setUncontrolledOpen] = React.useState<boolean>(false);
+
+    const _open = open !== undefined ? open : uncontrolledOpen;
+    const _onOpenChange =
+        onOpenChange !== undefined
+            ? onOpenChange
+            : (open: boolean) => {
+                  setUncontrolledOpen(open);
+              };
+
     const [itemWidth, setItemWidth] = React.useState<number>(0);
     const rootRef = React.useRef<HTMLDivElement>(null);
     const classes = mergeClasses<CometAdminAppHeaderDropdownClassKeys>(useStyles({ itemWidth }), passedClasses);
@@ -46,24 +59,20 @@ export function AppHeaderDropdown({
 
     return (
         <div className={classes.root} ref={rootRef}>
-            <AppHeaderButton
-                endIcon={dropdownArrow !== null ? dropdownArrow(showContent) : undefined}
-                {...restProps}
-                onClick={() => setShowContent(true)}
-            >
+            <AppHeaderButton endIcon={dropdownArrow !== null ? dropdownArrow(_open) : undefined} {...restProps} onClick={() => _onOpenChange(true)}>
                 {buttonChildren}
             </AppHeaderButton>
             <Popover
                 classes={{ root: classes.popoverRoot, paper: classes.popoverPaper }}
-                open={showContent}
+                open={_open}
                 anchorEl={rootRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
-                onBackdropClick={() => setShowContent(false)}
+                onBackdropClick={() => _onOpenChange(false)}
                 marginThreshold={0}
                 {...popoverProps}
             >
-                {typeof children === "function" ? children(() => setShowContent(false)) : children}
+                {typeof children === "function" ? children(() => _onOpenChange(false)) : children}
             </Popover>
         </div>
     );

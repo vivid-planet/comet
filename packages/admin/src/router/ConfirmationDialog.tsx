@@ -1,29 +1,23 @@
-import { Button, Dialog, DialogActions, DialogTitle, Typography } from "@material-ui/core";
+import { Dialog, DialogActions, DialogTitle } from "@material-ui/core";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 
-interface IProps {
+import { CancelButton } from "../common/buttons/cancel/CancelButton";
+import { OkayButton } from "../common/buttons/okay/OkayButton";
+
+interface Props {
     isOpen: boolean;
     message: React.ReactNode; // typically a string or a FormattedMessage (intl) is passed
     handleClose: (ok: boolean) => void;
 }
 
-export const RouterConfirmationDialog: React.FunctionComponent<IProps> = ({ message, handleClose, isOpen }) => {
+export function RouterConfirmationDialog({ message, handleClose, isOpen }: Props) {
     return (
-        <Dialog open={isOpen} onClose={handleClose.bind(this, false)}>
+        <Dialog open={isOpen} onClose={handleClose.bind(this, false)} maxWidth={"xs"}>
             <DialogTitle>{message}</DialogTitle>
             <DialogActions>
-                <Button onClick={handleClose.bind(this, true)} color="primary" autoFocus={true}>
-                    <Typography variant="button">
-                        <FormattedMessage id="cometAdmin.generic.ok" defaultMessage="OK" />
-                    </Typography>
-                </Button>
-                <Button onClick={handleClose.bind(this, false)} color="primary">
-                    <Typography variant="button">
-                        <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
-                    </Typography>
-                </Button>
+                <CancelButton onClick={handleClose.bind(this, false)} />
+                <OkayButton onClick={handleClose.bind(this, true)} autoFocus />
             </DialogActions>
         </Dialog>
     );
-};
+}
