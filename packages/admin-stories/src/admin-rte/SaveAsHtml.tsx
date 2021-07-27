@@ -1,6 +1,5 @@
-import { FormPaper } from "@comet/admin";
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
-import { Box } from "@material-ui/core";
+import { Box, Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
@@ -25,21 +24,23 @@ const makeRteApiProps: IMakeRteApiProps<Html> = {
 const [useRteApi] = makeRteApi<Html>(makeRteApiProps);
 
 function Story() {
-    const [saveableContent, setSaveableContent] = React.useState<Html>(defaultValue);
+    const [savableContent, setSavableContent] = React.useState<Html>(defaultValue);
 
     const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
-        setSaveableContent(convertStateToRawContent(innerEditorState));
+        setSavableContent(convertStateToRawContent(innerEditorState));
     };
     const { editorState, setEditorState } = useRteApi({ defaultValue, onDebouncedContentChange: handleDebouncedContentChange });
 
     return (
         <>
             <Box marginBottom={4}>
-                <FormPaper variant="outlined">
-                    <Rte value={editorState} onChange={setEditorState} />
-                </FormPaper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Rte value={editorState} onChange={setEditorState} />
+                    </CardContent>
+                </Card>
             </Box>
-            <PrintAnything label="Save Value: Html">{saveableContent}</PrintAnything>
+            <PrintAnything label="Save Value: Html">{savableContent}</PrintAnything>
         </>
     );
 }

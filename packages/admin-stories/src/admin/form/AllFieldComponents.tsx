@@ -1,5 +1,5 @@
 import { Field, FieldContainer, FinalFormCheckbox, FinalFormInput, FinalFormRadio, FinalFormSelect, FinalFormSwitch } from "@comet/admin";
-import { Box, Button, FormControlLabel, MenuItem, Paper } from "@material-ui/core";
+import { Button, Card, CardContent, FormControlLabel, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -20,8 +20,8 @@ function Story() {
                 initialValues={{ checkbox: false, radio: "foo", switch: false }}
                 render={({ handleSubmit, values }) => (
                     <>
-                        <Paper variant="outlined">
-                            <Box padding={4}>
+                        <Card variant="outlined">
+                            <CardContent>
                                 <form onSubmit={handleSubmit}>
                                     <Field name="input" label="FinalFormInput" fullWidth component={FinalFormInput} />
                                     <Field
@@ -33,10 +33,10 @@ function Story() {
                                         fullWidth
                                         component={FinalFormInput}
                                     />
-                                    <Field name="checkbox" type="checkbox">
+                                    <Field name="checkbox" type="checkbox" fullWidth>
                                         {(props) => <FormControlLabel label="FinalFormCheckbox" control={<FinalFormCheckbox {...props} />} />}
                                     </Field>
-                                    <FieldContainer label="FinalFormRadio">
+                                    <FieldContainer label="FinalFormRadio" fullWidth>
                                         <Field name="radio" type="radio" value="foo">
                                             {(props) => <FormControlLabel label="Foo" control={<FinalFormRadio {...props} />} />}
                                         </Field>
@@ -44,7 +44,7 @@ function Story() {
                                             {(props) => <FormControlLabel label="Bar" control={<FinalFormRadio {...props} />} />}
                                         </Field>
                                     </FieldContainer>
-                                    <Field name="select" label="FinalFormSelect">
+                                    <Field name="select" label="FinalFormSelect" fullWidth>
                                         {(props) => (
                                             <FinalFormSelect {...props}>
                                                 {options.map((option) => (
@@ -55,7 +55,7 @@ function Story() {
                                             </FinalFormSelect>
                                         )}
                                     </Field>
-                                    <Field name="switch" label="FinalFormSwitch">
+                                    <Field name="switch" label="FinalFormSwitch" fullWidth>
                                         {(props) => (
                                             <FormControlLabel label={values.switch ? "On" : "Off"} control={<FinalFormSwitch {...props} />} />
                                         )}
@@ -64,8 +64,8 @@ function Story() {
                                         Submit
                                     </Button>
                                 </form>
-                            </Box>
-                        </Paper>
+                            </CardContent>
+                        </Card>
                         <div>
                             <pre>{JSON.stringify(values, undefined, 2)}</pre>
                         </div>

@@ -1,5 +1,5 @@
-import { Field, FinalFormSwitch, FormPaper } from "@comet/admin";
-import { Box, Divider, FormControlLabel } from "@material-ui/core";
+import { Field, FinalFormSwitch } from "@comet/admin";
+import { Box, Card, CardContent, Divider, FormControlLabel } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -14,19 +14,21 @@ function Story() {
                 render={({ handleSubmit, values }) => (
                     <>
                         <form onSubmit={handleSubmit}>
-                            <FormPaper variant="outlined">
-                                <Field name="foo" label="Switch with yes, no">
-                                    {(props) => <FormControlLabel label={values.foo ? "Yes" : "No"} control={<FinalFormSwitch {...props} />} />}
-                                </Field>
-                                <Box marginBottom={4}>
-                                    <Divider />
-                                </Box>
-                                <Field name="bar">
-                                    {(props) => (
-                                        <FormControlLabel label={"Switch with label on the right"} control={<FinalFormSwitch {...props} />} />
-                                    )}
-                                </Field>
-                            </FormPaper>
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <Field name="foo" label="Switch with yes, no">
+                                        {(props) => <FormControlLabel label={values.foo ? "Yes" : "No"} control={<FinalFormSwitch {...props} />} />}
+                                    </Field>
+                                    <Box marginBottom={4}>
+                                        <Divider />
+                                    </Box>
+                                    <Field name="bar">
+                                        {(props) => (
+                                            <FormControlLabel label={"Switch with label on the right"} control={<FinalFormSwitch {...props} />} />
+                                        )}
+                                    </Field>
+                                </CardContent>
+                            </Card>
                         </form>
                     </>
                 )}

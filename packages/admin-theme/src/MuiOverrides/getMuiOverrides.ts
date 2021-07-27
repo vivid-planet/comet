@@ -6,6 +6,7 @@ import { Overrides } from "@material-ui/core/styles/overrides";
 import { getMuiAppBarOverrides } from "./MuiAppBar";
 import { getMuiButtonOverrides } from "./MuiButton";
 import { getMuiButtonGroupOverrides } from "./MuiButtonGroup";
+import { getMuiCardContentOverrides } from "./MuiCardContent";
 import { getMuiCheckboxOverrides } from "./MuiCheckbox";
 import { getMuiDialogOverrides } from "./MuiDialog";
 import { getMuiDialogActionsOverrides } from "./MuiDialogActions";
@@ -51,4 +52,5 @@ export const getMuiOverrides = (palette: Palette, typography: Typography, spacin
     MuiTableRow: getMuiTableRowOverrides(),
     MuiTabs: getMuiTabsOverrides(palette, spacing),
     MuiTab: getMuiTabOverrides(palette),
+    MuiCardContent: getMuiCardContentOverrides(spacing),
 });

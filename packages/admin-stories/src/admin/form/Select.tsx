@@ -1,5 +1,5 @@
-import { Field, FinalFormSelect, FormPaper } from "@comet/admin";
-import { MenuItem } from "@material-ui/core";
+import { Field, FinalFormSelect } from "@comet/admin";
+import { Card, CardContent, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -18,55 +18,57 @@ function Story() {
                 }}
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
-                        <FormPaper variant="outlined">
-                            <Field name="flavor" label="Flavor">
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        {options.map((option) => (
-                                            <MenuItem value={option.value} key={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Field name="flavor" label="Flavor" fullWidth>
+                                    {(props) => (
+                                        <FinalFormSelect {...props} fullWidth>
+                                            {options.map((option) => (
+                                                <MenuItem value={option.value} key={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </FinalFormSelect>
+                                    )}
+                                </Field>
 
-                            <Field name="flavorFullWidth" label="Flavor">
-                                {(props) => (
-                                    <FinalFormSelect {...props} fullWidth>
-                                        {options.map((option) => (
-                                            <MenuItem value={option.value} key={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                                <Field name="flavorFullWidth" label="Flavor" fullWidth>
+                                    {(props) => (
+                                        <FinalFormSelect {...props} fullWidth>
+                                            {options.map((option) => (
+                                                <MenuItem value={option.value} key={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </FinalFormSelect>
+                                    )}
+                                </Field>
 
-                            <Field name="flavorRequired" label="Flavor">
-                                {(props) => (
-                                    <FinalFormSelect {...props} fullWidth required>
-                                        {options.map((option) => (
-                                            <MenuItem value={option.value} key={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                                <Field name="flavorRequired" label="Flavor" fullWidth>
+                                    {(props) => (
+                                        <FinalFormSelect {...props} fullWidth required>
+                                            {options.map((option) => (
+                                                <MenuItem value={option.value} key={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </FinalFormSelect>
+                                    )}
+                                </Field>
 
-                            <Field name="flavorDisabled" label="Flavor">
-                                {(props) => (
-                                    <FinalFormSelect {...props} fullWidth disabled>
-                                        {options.map((option) => (
-                                            <MenuItem value={option.value} key={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
-                        </FormPaper>
+                                <Field name="flavorDisabled" label="Flavor" fullWidth>
+                                    {(props) => (
+                                        <FinalFormSelect {...props} fullWidth disabled>
+                                            {options.map((option) => (
+                                                <MenuItem value={option.value} key={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </FinalFormSelect>
+                                    )}
+                                </Field>
+                            </CardContent>
+                        </Card>
                     </form>
                 )}
             />

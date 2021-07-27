@@ -1,7 +1,7 @@
 import { MainContent, Stack, StackPage, StackSwitch, StackSwitchApiContext, Toolbar, ToolbarBackButton, ToolbarItem } from "@comet/admin";
 import { Table } from "@comet/admin";
-import { Field, FinalForm, FinalFormInput, FormPaper } from "@comet/admin";
-import { Box, IconButton, Paper, Typography } from "@material-ui/core";
+import { Field, FinalForm, FinalFormInput } from "@comet/admin";
+import { Box, Card, CardContent, IconButton, Paper, Typography } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -76,9 +76,11 @@ const SampleForm: React.FunctionComponent = () => {
                         form.reset(values); //Reset values to new values so dirty state is correct after submitting
                     }}
                 >
-                    <FormPaper>
-                        <Field label="Foo" name="foo" component={FinalFormInput} />
-                    </FormPaper>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Field label="Foo" name="foo" component={FinalFormInput} />
+                        </CardContent>
+                    </Card>
                 </FinalForm>
             </MainContent>
         </>

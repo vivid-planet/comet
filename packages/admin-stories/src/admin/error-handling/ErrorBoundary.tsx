@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@comet/admin";
-import { Box, Link, Paper, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Link, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { boolean } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
@@ -26,33 +26,35 @@ function Story() {
     return (
         <>
             <Box marginBottom={4}>
-                <Paper variant="outlined">
-                    <Box padding={4}>
+                <Card variant="outlined">
+                    <CardContent>
                         <Typography variant={"h3"} gutterBottom>
                             Error Boundaries
                         </Typography>
                         <Alert severity={"info"}>
-                            <Typography paragraph={true}>
+                            <Typography paragraph>
                                 Error boundaries catch errors anywhere in their child component tree, stops the whole application from crashing and
                                 show a UI to the User to the affected area. The rest of the application should still be accessible
                             </Typography>
-                            <Typography paragraph={true}>
+                            <Typography paragraph>
                                 More infos to Error Boundaries can be found here:{" "}
                                 <Link href={"https://reactjs.org/docs/error-boundaries.html"}>https://reactjs.org/docs/error-boundaries.html</Link>
                             </Typography>
-                            <Typography paragraph={true}>Go to knobs and try to render a view with an error</Typography>
+                            <Typography paragraph>Go to knobs and try to render a view with an error</Typography>
                         </Alert>
-                    </Box>
-                </Paper>
+                    </CardContent>
+                </Card>
             </Box>
-            <Paper variant="outlined">
-                <Box padding={4}>
-                    <Typography variant={"h5"}>Error Boundaries</Typography>
+            <Card variant="outlined">
+                <CardContent>
+                    <Typography variant={"h5"} gutterBottom>
+                        Error Boundaries
+                    </Typography>
                     <ErrorBoundary key={`errorBoundary_${renderViewWithErrors}`}>
                         {renderViewWithErrors ? <ViewWithError /> : <ViewWithNoError />}
                     </ErrorBoundary>
-                </Box>
-            </Paper>
+                </CardContent>
+            </Card>
         </>
     );
 }

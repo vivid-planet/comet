@@ -1,6 +1,5 @@
-import { FormPaper } from "@comet/admin";
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
-import { Box } from "@material-ui/core";
+import { Box, Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { convertFromRaw, convertToRaw, RawDraftContentState } from "draft-js";
 import * as React from "react";
@@ -45,21 +44,23 @@ const makeRteApiProps: IMakeRteApiProps<RawDraftContentState> = {
 const [useRteApi] = makeRteApi<RawDraftContentState>(makeRteApiProps);
 
 function Story() {
-    const [saveableContent, setSaveableContent] = React.useState<RawDraftContentState>(defaultValue);
+    const [savableContent, setSavableContent] = React.useState<RawDraftContentState>(defaultValue);
 
     const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
-        setSaveableContent(convertStateToRawContent(innerEditorState));
+        setSavableContent(convertStateToRawContent(innerEditorState));
     };
     const { editorState, setEditorState } = useRteApi({ defaultValue, onDebouncedContentChange: handleDebouncedContentChange });
 
     return (
         <>
             <Box marginBottom={4}>
-                <FormPaper variant="outlined">
-                    <Rte value={editorState} onChange={setEditorState} />
-                </FormPaper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Rte value={editorState} onChange={setEditorState} />
+                    </CardContent>
+                </Card>
             </Box>
-            <PrintAnything label="Save Value: RawDraftJs (not stringified)">{saveableContent}</PrintAnything>
+            <PrintAnything label="Save Value: RawDraftJs (not stringified)">{savableContent}</PrintAnything>
         </>
     );
 }

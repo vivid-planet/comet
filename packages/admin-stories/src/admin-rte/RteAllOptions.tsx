@@ -1,6 +1,5 @@
-import { FormPaper } from "@comet/admin";
 import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@comet/admin-rte";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { convertFromRaw, convertToRaw } from "draft-js";
 import * as React from "react";
@@ -108,13 +107,13 @@ function Story() {
     return (
         <>
             <Box marginBottom={4}>
-                <FormPaper variant="outlined">
-                    <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
-                </FormPaper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
+                    </CardContent>
+                </Card>
             </Box>
-            <FormPaper variant="outlined">
-                <PrintEditorState editorState={editorState} />
-            </FormPaper>
+            <PrintEditorState editorState={editorState} />
         </>
     );
 }

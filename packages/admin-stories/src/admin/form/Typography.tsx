@@ -1,5 +1,5 @@
-import { Field, FieldContainer, FormPaper } from "@comet/admin";
-import { Typography } from "@material-ui/core";
+import { Field, FieldContainer } from "@comet/admin";
+import { Card, CardContent, Divider, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -19,26 +19,36 @@ function Story() {
                 initialValues={initialValues}
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
-                        <FormPaper variant="outlined">
-                            <Typography>Render field value as static text (using MUI Typography)</Typography>
-                            <Field name="foo" label="Foo">
-                                {(fieldRenderProps) => <Typography>{fieldRenderProps.input.value}</Typography>}
-                            </Field>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Typography>Render field value as static text (using MUI Typography)</Typography>
+                                <Field name="foo" label="Foo">
+                                    {(fieldRenderProps) => <Typography>{fieldRenderProps.input.value}</Typography>}
+                                </Field>
+                            </CardContent>
 
-                            <Typography>
-                                Or, simpler, if the value isn&apos;t part of the form (doesn&apos;t change), render it without final-form:
-                            </Typography>
-                            <FieldContainer label="Bar">
-                                <Typography>{initialValues.bar}</Typography>
-                            </FieldContainer>
+                            <Divider />
 
-                            <Typography>Of course you can use any formatting:</Typography>
-                            <FieldContainer label="Today">
+                            <CardContent>
                                 <Typography>
-                                    <FormattedDate value={new Date()} />
+                                    Or, simpler, if the value isn&apos;t part of the form (doesn&apos;t change), render it without final-form:
                                 </Typography>
-                            </FieldContainer>
-                        </FormPaper>
+                                <FieldContainer label="Bar">
+                                    <Typography>{initialValues.bar}</Typography>
+                                </FieldContainer>
+                            </CardContent>
+
+                            <Divider />
+
+                            <CardContent>
+                                <Typography>Of course you can use any formatting:</Typography>
+                                <FieldContainer label="Today">
+                                    <Typography>
+                                        <FormattedDate value={new Date()} />
+                                    </Typography>
+                                </FieldContainer>
+                            </CardContent>
+                        </Card>
                     </form>
                 )}
             />

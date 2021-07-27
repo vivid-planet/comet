@@ -1,6 +1,6 @@
-import { FormPaper, Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
+import { Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
-import { Box, Button } from "@material-ui/core";
+import { Box, Button, Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -29,9 +29,11 @@ function Story() {
                 </Toolbar>
             </Box>
             <Box marginBottom={4}>
-                <FormPaper variant="outlined">
-                    <Rte value={editorState} onChange={setEditorState} ref={editorRef} disabled={disabled} />
-                </FormPaper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} disabled={disabled} />
+                    </CardContent>
+                </Card>
             </Box>
             <PrintEditorState editorState={editorState} />
         </>

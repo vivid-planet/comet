@@ -73,6 +73,7 @@ All notable changes to this project will be documented in this file. This projec
 -   Changes to Stack
     -   Removed prop `components.breadcrumbsContainer` in favour of a div that can be styled using the theme (`overrides -> CometAdminStack -> breadcrumbs`)
 -   Removed component `FixedLeftRightLayout`
+-   Removed FormPaper, the same effect can be accomplished with a CardContent within a Card.
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
     -   When adding a custom `headerComponent`, the component should now be built using the `AppHeader` system (see docs).

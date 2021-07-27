@@ -1,6 +1,5 @@
-import { FormPaper } from "@comet/admin";
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
-import { Box } from "@material-ui/core";
+import { Box, Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -18,9 +17,11 @@ function Story() {
     return (
         <>
             <Box marginBottom={4}>
-                <FormPaper variant="outlined">
-                    <Rte value={editorState} onChange={setEditorState} ref={editorRef} />
-                </FormPaper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} />
+                    </CardContent>
+                </Card>
             </Box>
             <PrintEditorState editorState={editorState} />
         </>
