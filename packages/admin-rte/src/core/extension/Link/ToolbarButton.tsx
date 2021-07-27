@@ -1,4 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@material-ui/core";
+import { FieldContainer } from "@comet/admin";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, InputBase, Typography } from "@material-ui/core";
 import LinkIcon from "@material-ui/icons/Link";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
@@ -99,15 +100,15 @@ function LinkDialog(props: {
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
             <DialogTitle>Link</DialogTitle>
             <DialogContent>
-                <TextField
-                    // autoFocus
-                    label={intl.formatMessage({ id: "cometAdmin.rte.extensions.link.url", defaultMessage: "Url" })}
-                    variant="outlined"
-                    value={newUrl}
-                    onChange={(e) => {
-                        setNewUrl(e.target.value);
-                    }}
-                />
+                <FieldContainer label={intl.formatMessage({ id: "cometAdmin.rte.extensions.link.url", defaultMessage: "Url" })} fullWidth>
+                    <InputBase
+                        // autoFocus
+                        value={newUrl}
+                        onChange={(e) => {
+                            setNewUrl(e.target.value);
+                        }}
+                    />
+                </FieldContainer>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="default">
