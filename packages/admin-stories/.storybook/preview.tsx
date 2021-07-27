@@ -46,8 +46,9 @@ addDecorator((story, context) => {
             "cometAdmin.core.table.tableQuery.error": "Fehler :( {error}",
         },
     };
+    const selectedLocale = select("Locale", ["en", "de"], "en");
     return (
-        <IntlProvider locale={select("Locale", ["de", "en"], "de")} messages={messages[select("Locale", ["de", "en"], "de")] ?? {}}>
+        <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
             {storyWithKnobs}
         </IntlProvider>
     );
