@@ -30,7 +30,7 @@ import { getMuiTypographyOverrides } from "./MuiTypography";
 export const getMuiOverrides = (palette: Palette, typography: Typography, spacing: Spacing): Overrides => ({
     MuiCheckbox: getMuiCheckboxOverrides(palette),
     MuiRadio: getMuiRadioOverrides(palette),
-    MuiDialog: getMuiDialogOverrides(),
+    MuiDialog: getMuiDialogOverrides(spacing),
     MuiDialogTitle: getMuiDialogTitleOverrides(palette, typography),
     MuiDialogContent: getMuiDialogContentOverrides(palette),
     MuiDialogContentText: getMuiDialogTextContentOverrides(palette),
