@@ -6,17 +6,8 @@ import * as React from "react";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
-    const [state, setState] = React.useState<boolean>(true);
-
     return (
         <Stack topLevelTitle="Root Stack">
-            <Button
-                onClick={() => {
-                    setState((prevState) => !prevState);
-                }}
-            >
-                Toggle
-            </Button>
             <StackBreadcrumbs />
             <RouterTabs>
                 <RouterTab label="Page 1" path="">
@@ -42,11 +33,6 @@ function Story() {
                         </StackSwitch>
                     </Stack>
                 </RouterTab>
-                {state && (
-                    <RouterTab label="Mid Page" path="/mid-page">
-                        Mid Page
-                    </RouterTab>
-                )}
                 <RouterTab label="Page 2" path="/page2">
                     Page 2
                 </RouterTab>
