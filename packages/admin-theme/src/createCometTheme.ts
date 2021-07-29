@@ -9,7 +9,6 @@ import createSpacing, { Spacing, SpacingOptions } from "@material-ui/core/styles
 import createTypography, { Typography, TypographyOptions } from "@material-ui/core/styles/createTypography";
 import merge from "lodash.merge";
 
-import { getRteProps } from "./getRteProps";
 import { getMuiOverrides } from "./MuiOverrides/getMuiOverrides";
 import { getMuiProps } from "./MuiProps/getMuiProps";
 import { paletteOptions as cometPaletteOptions } from "./paletteOptions";
@@ -42,7 +41,6 @@ export const createCometTheme = (customThemeOptions: ThemeOptions | undefined = 
         shadows,
         props: {
             ...getMuiProps(),
-            ...getRteProps(),
         },
         overrides: {
             ...getMuiOverrides(palette, typography, spacing),
