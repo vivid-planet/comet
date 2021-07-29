@@ -1,6 +1,5 @@
-import { CancelButton, DeleteButton, SaveButton } from "@comet/admin";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@material-ui/core";
-import LinkIcon from "@material-ui/icons/Link";
+import { Button, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@material-ui/core";
+import { Check, Clear, Delete, Link as LinkIcon } from "@material-ui/icons";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -10,6 +9,7 @@ import { IControlProps } from "../../types";
 import findEntityDataInCurrentSelection from "../../utils/findEntityDataInCurrentSelection";
 import findEntityInCurrentSelection from "../../utils/findEntityInCurrentSelection";
 import selectionIsInOneBlock from "../../utils/selectionIsInOneBlock";
+import { useComponentThemeProps } from "../../utils/useComponentThemeProps";
 import { ENTITY_TYPE } from "./Decorator";
 import { ILinkProps } from "./EditorComponent";
 
@@ -49,14 +49,57 @@ export default function ToolbarButton(props: IControlProps) {
     );
 }
 
-function LinkDialog(props: {
+export interface RteLinkDialogThemeProps {
+    cancelButton?: (props: ButtonProps) => React.ReactElement;
+    deleteButton?: (props: ButtonProps) => React.ReactElement;
+    saveButton?: (props: ButtonProps) => React.ReactElement;
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminRteLinkDialog: RteLinkDialogThemeProps;
+    }
+}
+
+interface LinkDialogProps extends RteLinkDialogThemeProps {
     open: boolean;
     onClose: () => void;
     linkData: ILinkProps | null;
     editorState: EditorState;
     onChange: (editorState: EditorState) => void;
-}) {
+}
+
+function DefaultCancelButton(props: ButtonProps) {
+    return (
+        <Button startIcon={<Clear />} {...props}>
+            <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
+        </Button>
+    );
+}
+
+function DefaultDeleteButton(props: ButtonProps) {
+    return (
+        <Button variant="contained" startIcon={<Delete />} {...props}>
+            <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />
+        </Button>
+    );
+}
+
+function DefaultSaveButton(props: ButtonProps) {
+    return (
+        <Button variant="contained" color="primary" startIcon={<Check />} {...props}>
+            <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+        </Button>
+    );
+}
+
+function LinkDialog(props: LinkDialogProps) {
     const { onClose, open, linkData, editorState, onChange } = props;
+    const {
+        cancelButton: CancelButton = DefaultCancelButton,
+        deleteButton: DeleteButton = DefaultDeleteButton,
+        saveButton: SaveButton = DefaultSaveButton,
+    } = useComponentThemeProps("CometAdminRteLinkDialog") ?? {};
 
     const intl = useIntl();
 
