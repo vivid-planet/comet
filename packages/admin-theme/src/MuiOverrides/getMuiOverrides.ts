@@ -4,6 +4,7 @@ import { Typography } from "@material-ui/core/styles/createTypography";
 import { Overrides } from "@material-ui/core/styles/overrides";
 
 import { getMuiAppBarOverrides } from "./MuiAppBar";
+import { getMuiAutocompleteOverrides } from "./MuiAutocomplete";
 import { getMuiButtonOverrides } from "./MuiButton";
 import { getMuiButtonGroupOverrides } from "./MuiButtonGroup";
 import { getMuiCardContentOverrides } from "./MuiCardContent";
@@ -17,6 +18,7 @@ import { getMuiDrawerOverrides } from "./MuiDrawer";
 import { getMuiFormControlLabelOverrides } from "./MuiFormControlLabel";
 import { getMuiIconButtonOverrides } from "./MuiIconButton";
 import { getMuiInputAdornmentOverrides } from "./MuiInputAdornment";
+import { getMuiInputBaseOverrides } from "./MuiInputBase";
 import { getMuiPaperOverrides } from "./MuiPaper";
 import { getMuiRadioOverrides } from "./MuiRadio";
 import { getMuiSelectOverrides } from "./MuiSelect";
@@ -53,4 +55,6 @@ export const getMuiOverrides = (palette: Palette, typography: Typography, spacin
     MuiTabs: getMuiTabsOverrides(palette, spacing),
     MuiTab: getMuiTabOverrides(palette),
     MuiCardContent: getMuiCardContentOverrides(spacing),
+    MuiAutocomplete: getMuiAutocompleteOverrides(spacing),
+    MuiInputBase: getMuiInputBaseOverrides(palette, spacing),
 });

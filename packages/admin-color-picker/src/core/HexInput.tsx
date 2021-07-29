@@ -1,14 +1,7 @@
 import * as React from "react";
-import { EditableInput } from "react-color/lib/components/common";
+import EditableInput, { EditableInputProps } from "react-color/lib/components/common/EditableInput";
 
 import { ColorPickerProps } from "./ColorPicker";
-
-interface IComponentProps {
-    value: string;
-    onChange: (value?: string) => void;
-    picker: boolean;
-    palette: boolean;
-}
 
 const resetInputStyles = {
     input: {
@@ -27,16 +20,23 @@ const resetInputStyles = {
     },
 };
 
-const HexInput: React.FC<IComponentProps & ColorPickerProps> = ({ value, classes, onChange, picker, palette }) => (
-    <div className={classes.inputInner}>
-        <div className={classes.inputInnerLeftContent}>
-            {!palette || (palette && picker) ? (
-                <EditableInput style={resetInputStyles} value={value} onChange={onChange} />
-            ) : (
-                <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
-            )}
-        </div>
-    </div>
-);
+interface Props extends ColorPickerProps {
+    value: string;
+    picker: boolean;
+    palette: boolean;
+    onChange: EditableInputProps["onChange"];
+}
 
-export default HexInput;
+export function HexInput({ value, classes, onChange, picker, palette }: Props) {
+    return (
+        <div className={classes.inputInner}>
+            <div className={classes.inputInnerLeftContent}>
+                {!palette || (palette && picker) ? (
+                    <EditableInput style={resetInputStyles} value={value} onChange={onChange} />
+                ) : (
+                    <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
+                )}
+            </div>
+        </div>
+    );
+}

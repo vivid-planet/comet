@@ -1,6 +1,7 @@
 import { ComponentsProps } from "@material-ui/core/styles/props";
 
 import { getMuiAppBarProps } from "./MuiAppBar";
+import { getMuiAutocompleteProps } from "./MuiAutocomplete";
 import { getMuiButtonProps } from "./MuiButton";
 import { getMuiButtonGroupProps } from "./MuiButtonGroup";
 import { getMuiCheckboxProps } from "./MuiCheckbox";
@@ -20,4 +21,5 @@ export const getMuiProps = (): ComponentsProps => ({
     MuiButton: getMuiButtonProps(),
     MuiButtonGroup: getMuiButtonGroupProps(),
     MuiSelect: getMuiSelectProps(),
+    MuiAutocomplete: getMuiAutocompleteProps(),
 });

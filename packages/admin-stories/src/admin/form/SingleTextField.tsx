@@ -1,6 +1,6 @@
-import { InputBase } from "@comet/admin";
+import { FieldContainer } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
-import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, Typography } from "@material-ui/core";
+import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -18,18 +18,19 @@ function Story() {
                             <Typography variant={"h4"} gutterBottom>
                                 Single TextField outside of form
                             </Typography>
-                            <InputBase
-                                fullWidth
-                                autoFocus
-                                placeholder={"Search..."}
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <Search />
-                                    </InputAdornment>
-                                }
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString1(e.target.value)}
-                                value={searchString1}
-                            />
+                            <FieldContainer fullWidth>
+                                <InputBase
+                                    autoFocus
+                                    placeholder={"Search..."}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <Search />
+                                        </InputAdornment>
+                                    }
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString1(e.target.value)}
+                                    value={searchString1}
+                                />
+                            </FieldContainer>
                         </CardContent>
                     </Card>
                 </Grid>
@@ -39,19 +40,18 @@ function Story() {
                             <Typography variant={"h4"} gutterBottom>
                                 With Checkbox
                             </Typography>
-                            <InputBase
-                                margin={"dense"}
-                                fullWidth
-                                autoFocus
-                                placeholder={"Search..."}
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <Search />
-                                    </InputAdornment>
-                                }
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString2(e.target.value)}
-                                value={searchString2}
-                            />
+                            <FieldContainer fullWidth>
+                                <InputBase
+                                    placeholder={"Search..."}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <Search />
+                                        </InputAdornment>
+                                    }
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString2(e.target.value)}
+                                    value={searchString2}
+                                />
+                            </FieldContainer>
                             <FormControlLabel
                                 control={
                                     <Checkbox
