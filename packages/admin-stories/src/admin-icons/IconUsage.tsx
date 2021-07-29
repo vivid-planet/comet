@@ -1,5 +1,5 @@
 import { Cookie, Error, ThreeDotSaving } from "@comet/admin-icons";
-import { Box, Paper, Typography } from "@material-ui/core";
+import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -14,21 +14,20 @@ function Story() {
     const classes = useStyles();
 
     return (
-        <div>
-            <Box marginBottom={4}>
-                <Paper variant="outlined">
-                    <Box padding={4}>
+        <Grid container spacing={4}>
+            <Grid item xs={12}>
+                <Card variant="outlined">
+                    <CardContent>
                         <Typography variant={"h3"}>Simple Icon rendering</Typography>
                         <Typography>
                             This is and Error <Error /> icon.
                         </Typography>
-                    </Box>
-                </Paper>
-            </Box>
-
-            <Box marginBottom={4}>
-                <Paper variant="outlined">
-                    <Box padding={4}>
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid item xs={12}>
+                <Card variant="outlined">
+                    <CardContent>
                         <Typography variant={"h3"}>Icon Sizes</Typography>
                         <Typography>
                             Small: <Cookie fontSize={"small"} />
@@ -43,13 +42,12 @@ function Story() {
                         <Typography>
                             Custom Size (100) <Cookie className={classes.largeIcon} /> icon.
                         </Typography>
-                    </Box>
-                </Paper>
-            </Box>
-
-            <Box marginBottom={4}>
-                <Paper variant="outlined">
-                    <Box padding={4}>
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid item xs={12}>
+                <Card variant="outlined">
+                    <CardContent>
                         <Typography variant={"h3"}>Colors</Typography>
                         <Typography>
                             No Color: <ThreeDotSaving />
@@ -76,10 +74,10 @@ function Story() {
                         <Typography>
                             Custom (#ff00ff): <ThreeDotSaving htmlColor={"#ff00ff"} />
                         </Typography>
-                    </Box>
-                </Paper>
-            </Box>
-        </div>
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Grid>
     );
 }
 

@@ -18,7 +18,7 @@ import {
     useTableQuery,
     useTableQueryFilter,
 } from "@comet/admin";
-import { CircularProgress, Grid, IconButton, Typography } from "@material-ui/core";
+import { Card, CardContent, CircularProgress, Grid, IconButton, Typography } from "@material-ui/core";
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -151,15 +151,19 @@ function ExampleForm(props: IExampleFormProps) {
                 </ToolbarItem>
             </Toolbar>
             <MainContent>
-                <FinalForm
-                    mode="edit"
-                    onSubmit={(values) => {
-                        // submit here
-                    }}
-                    initialValues={data.user}
-                >
-                    <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
-                </FinalForm>
+                <Card variant="outlined">
+                    <CardContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={(values) => {
+                                // submit here
+                            }}
+                            initialValues={data.user}
+                        >
+                            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
+                        </FinalForm>
+                    </CardContent>
+                </Card>
             </MainContent>
         </>
     );

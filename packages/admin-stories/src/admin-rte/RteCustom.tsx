@@ -1,6 +1,5 @@
-import { FormPaper } from "@comet/admin";
 import { IRteOptions, IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
-import { Box } from "@material-ui/core";
+import { Box, Card, CardContent, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -23,24 +22,24 @@ function Story() {
     return (
         <>
             <Box marginBottom={4}>
-                <FormPaper variant="outlined">
-                    <Box marginBottom={4}>
-                        Copy and paste content from{" "}
-                        <a
-                            target="_blank"
-                            rel="noreferrer"
-                            href="https://docs.google.com/document/d/1YjqkIMC3q4jAzy__-S4fb6mC_w9EssmA6aZbGYWFv80/edit#"
-                        >
-                            https://docs.google.com/document/d/1YjqkIMC3q4jAzy__-S4fb6mC_w9EssmA6aZbGYWFv80/edit#
-                        </a>{" "}
-                        to test filtering
-                    </Box>
-                    <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
-                </FormPaper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Typography gutterBottom>
+                            Copy and paste content from{" "}
+                            <a
+                                target="_blank"
+                                rel="noreferrer"
+                                href="https://docs.google.com/document/d/1YjqkIMC3q4jAzy__-S4fb6mC_w9EssmA6aZbGYWFv80/edit#"
+                            >
+                                https://docs.google.com/document/d/1YjqkIMC3q4jAzy__-S4fb6mC_w9EssmA6aZbGYWFv80/edit#
+                            </a>{" "}
+                            to test filtering.
+                        </Typography>
+                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
+                    </CardContent>
+                </Card>
             </Box>
-            <FormPaper variant="outlined">
-                <PrintEditorState editorState={editorState} />
-            </FormPaper>
+            <PrintEditorState editorState={editorState} />
         </>
     );
 }

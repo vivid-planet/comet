@@ -4,10 +4,11 @@ import {
     Box,
     Button,
     ButtonGroup,
+    Card,
+    CardContent,
     Divider,
     Grid,
     IconButton,
-    Paper,
     Table,
     TableBody,
     TableCell,
@@ -40,60 +41,62 @@ export const Story: React.FC = () => {
     return (
         <Grid container spacing={4}>
             <Grid item xs={12}>
-                <Paper variant="outlined">
-                    <Box padding={4}>
-                        <Typography variant={"h2"}>Contained buttons</Typography>
-                    </Box>
-                    <ButtonsRow>
-                        <Button variant={"contained"} color={"primary"} startIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"contained"} color={"secondary"} startIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"contained"} color={"default"} startIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"contained"} disabled startIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                    </ButtonsRow>
-                    <ButtonsRow>
-                        <Button variant={"contained"} color={"primary"} endIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"contained"} color={"secondary"} endIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"contained"} color={"default"} endIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"contained"} disabled endIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                    </ButtonsRow>
-                    <ButtonsRow>
-                        <Button variant={"contained"} color={"primary"}>
-                            Text
-                        </Button>
-                        <Button variant={"contained"} color={"secondary"}>
-                            Text
-                        </Button>
-                        <Button variant={"contained"} color={"default"}>
-                            Text
-                        </Button>
-                        <Button variant={"contained"} disabled>
-                            Text
-                        </Button>
-                    </ButtonsRow>
-                </Paper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Typography variant={"h2"} gutterBottom>
+                            Contained buttons
+                        </Typography>
+                        <ButtonsRow>
+                            <Button variant={"contained"} color={"primary"} startIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"contained"} color={"secondary"} startIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"contained"} color={"default"} startIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"contained"} disabled startIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                        </ButtonsRow>
+                        <ButtonsRow>
+                            <Button variant={"contained"} color={"primary"} endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"contained"} color={"secondary"} endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"contained"} color={"default"} endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"contained"} disabled endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                        </ButtonsRow>
+                        <ButtonsRow>
+                            <Button variant={"contained"} color={"primary"}>
+                                Text
+                            </Button>
+                            <Button variant={"contained"} color={"secondary"}>
+                                Text
+                            </Button>
+                            <Button variant={"contained"} color={"default"}>
+                                Text
+                            </Button>
+                            <Button variant={"contained"} disabled>
+                                Text
+                            </Button>
+                        </ButtonsRow>
+                    </CardContent>
+                </Card>
             </Grid>
             <Grid item xs={12}>
-                <Paper variant="outlined">
-                    <Box padding={4}>
-                        <Typography variant={"h2"}>Button groups</Typography>
-                    </Box>
-                    <Box padding={4}>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Typography variant={"h2"} gutterBottom>
+                            Button groups
+                        </Typography>
                         <Grid container spacing={4}>
                             <Grid item>
                                 <ButtonGroup variant="contained" color="primary">
@@ -128,155 +131,163 @@ export const Story: React.FC = () => {
                                 </ButtonGroup>
                             </Grid>
                         </Grid>
-                    </Box>
-                </Paper>
+                    </CardContent>
+                </Card>
             </Grid>
             <Grid item xs={12}>
-                <Paper variant="outlined">
-                    <Box padding={4}>
-                        <Typography variant={"h2"}>Text buttons</Typography>
-                    </Box>
-                    <ButtonsRow>
-                        <Button variant={"text"} color={"primary"} startIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"text"} color={"secondary"} startIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"text"} color={"default"} startIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"text"} disabled startIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                    </ButtonsRow>
-                    <ButtonsRow>
-                        <Button variant={"text"} color={"primary"} endIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"text"} color={"secondary"} endIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"text"} color={"default"} endIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                        <Button variant={"text"} disabled endIcon={<ArrowRight />}>
-                            Text
-                        </Button>
-                    </ButtonsRow>
-                    <ButtonsRow>
-                        <Button variant={"text"} color={"primary"}>
-                            Text
-                        </Button>
-                        <Button variant={"text"} color={"secondary"}>
-                            Text
-                        </Button>
-                        <Button variant={"text"} color={"default"}>
-                            Text
-                        </Button>
-                        <Button variant={"text"} disabled>
-                            Text
-                        </Button>
-                    </ButtonsRow>
-                </Paper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Typography variant={"h2"} gutterBottom>
+                            Text buttons
+                        </Typography>
+                        <ButtonsRow>
+                            <Button variant={"text"} color={"primary"} startIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"text"} color={"secondary"} startIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"text"} color={"default"} startIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"text"} disabled startIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                        </ButtonsRow>
+                        <ButtonsRow>
+                            <Button variant={"text"} color={"primary"} endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"text"} color={"secondary"} endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"text"} color={"default"} endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                            <Button variant={"text"} disabled endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                        </ButtonsRow>
+                        <ButtonsRow>
+                            <Button variant={"text"} color={"primary"}>
+                                Text
+                            </Button>
+                            <Button variant={"text"} color={"secondary"}>
+                                Text
+                            </Button>
+                            <Button variant={"text"} color={"default"}>
+                                Text
+                            </Button>
+                            <Button variant={"text"} disabled>
+                                Text
+                            </Button>
+                        </ButtonsRow>
+                    </CardContent>
+                </Card>
             </Grid>
             <Grid item xs={6}>
-                <Paper variant="outlined">
-                    <Box padding={4}>
-                        <Typography variant={"h2"}>Special button usage</Typography>
-                    </Box>
-                    <AppBar position={"relative"} style={{ padding: 20, backgroundColor: "black", color: "white", textAlign: "center" }}>
-                        <Grid container spacing={4}>
-                            <Grid item xs={4}>
-                                <Button variant={"text"} color={"inherit"} startIcon={<ArrowRight />}>
-                                    Text
-                                </Button>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Typography variant={"h2"} gutterBottom>
+                            Special button usage
+                        </Typography>
+                        <AppBar position={"relative"} style={{ padding: 20, backgroundColor: "black", color: "white", textAlign: "center" }}>
+                            <Grid container spacing={4}>
+                                <Grid item xs={4}>
+                                    <Button variant={"text"} color={"inherit"} startIcon={<ArrowRight />}>
+                                        Text
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Button variant={"text"} color={"inherit"} startIcon={<ArrowRight />}>
+                                        Text
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Button variant={"text"} color={"inherit"} disabled startIcon={<ArrowRight />}>
+                                        Text
+                                    </Button>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={4}>
-                                <Button variant={"text"} color={"inherit"} startIcon={<ArrowRight />}>
-                                    Text
-                                </Button>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Button variant={"text"} color={"inherit"} disabled startIcon={<ArrowRight />}>
-                                    Text
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </AppBar>
-                    <Box padding={4}>
-                        <Button variant={"text"} startIcon={<Favorite />}>
-                            Aligned left
-                        </Button>
-                    </Box>
-                    <Divider />
-                    <Box padding={4} style={{ textAlign: "center" }}>
-                        <Button variant={"text"} startIcon={<Favorite />}>
-                            Centered
-                        </Button>
-                    </Box>
-                    <Divider />
-                    <Box padding={4} style={{ textAlign: "center" }}>
-                        <Button variant={"text"} color={"primary"} startIcon={<Favorite />}>
-                            Centered Blue
-                        </Button>
-                    </Box>
-                    <Divider />
-                    <Box padding={4} display={"flex"} justifyContent={"space-between"}>
-                        <Button variant={"text"} startIcon={<Clear />}>
-                            Cancel
-                        </Button>
-                        <Button variant={"contained"} color={"primary"} startIcon={<Save />}>
-                            Save
-                        </Button>
-                    </Box>
-                    <Divider />
-                    <Box padding={4} display={"flex"} justifyContent={"space-between"}>
-                        <Button variant={"text"} disabled startIcon={<Clear />}>
-                            Cancel
-                        </Button>
-                        <Button variant={"contained"} disabled color={"primary"} startIcon={<Save />}>
-                            Save
-                        </Button>
-                    </Box>
-                </Paper>
+                        </AppBar>
+                        <Box padding={4}>
+                            <Button variant={"text"} startIcon={<Favorite />}>
+                                Aligned left
+                            </Button>
+                        </Box>
+                        <Divider />
+                        <Box padding={4} style={{ textAlign: "center" }}>
+                            <Button variant={"text"} startIcon={<Favorite />}>
+                                Centered
+                            </Button>
+                        </Box>
+                        <Divider />
+                        <Box padding={4} style={{ textAlign: "center" }}>
+                            <Button variant={"text"} color={"primary"} startIcon={<Favorite />}>
+                                Centered Blue
+                            </Button>
+                        </Box>
+                        <Divider />
+                        <Box padding={4} display={"flex"} justifyContent={"space-between"}>
+                            <Button variant={"text"} startIcon={<Clear />}>
+                                Cancel
+                            </Button>
+                            <Button variant={"contained"} color={"primary"} startIcon={<Save />}>
+                                Save
+                            </Button>
+                        </Box>
+                        <Divider />
+                        <Box padding={4} display={"flex"} justifyContent={"space-between"}>
+                            <Button variant={"text"} disabled startIcon={<Clear />}>
+                                Cancel
+                            </Button>
+                            <Button variant={"contained"} disabled color={"primary"} startIcon={<Save />}>
+                                Save
+                            </Button>
+                        </Box>
+                    </CardContent>
+                </Card>
             </Grid>
             <Grid item xs={6}>
-                <Paper variant="outlined">
-                    <Box padding={4}>
-                        <Typography variant={"h2"}>Icon buttons</Typography>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Foo</TableCell>
-                                    <TableCell>Bar</TableCell>
-                                    <TableCell align="right">Icon Buttons</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {[...Array(3)].map((n, i) => (
-                                    <TableRow key={i}>
-                                        <TableCell component="th" scope="row">
-                                            Lorem ipsum {i}
-                                        </TableCell>
-                                        <TableCell>Foo bar</TableCell>
-                                        <TableCell align="right">
-                                            <IconButton>
-                                                <Edit color={"primary"} />
-                                            </IconButton>
-                                            <IconButton>
-                                                <Favorite />
-                                            </IconButton>
-                                            <IconButton>
-                                                <MoreVertical />
-                                            </IconButton>
-                                        </TableCell>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Box padding={4}>
+                            <Typography variant={"h2"} gutterBottom>
+                                Icon buttons
+                            </Typography>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Foo</TableCell>
+                                        <TableCell>Bar</TableCell>
+                                        <TableCell align="right">Icon Buttons</TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </Box>
-                </Paper>
+                                </TableHead>
+                                <TableBody>
+                                    {[...Array(3)].map((n, i) => (
+                                        <TableRow key={i}>
+                                            <TableCell component="th" scope="row">
+                                                Lorem ipsum {i}
+                                            </TableCell>
+                                            <TableCell>Foo bar</TableCell>
+                                            <TableCell align="right">
+                                                <IconButton>
+                                                    <Edit color={"primary"} />
+                                                </IconButton>
+                                                <IconButton>
+                                                    <Favorite />
+                                                </IconButton>
+                                                <IconButton>
+                                                    <MoreVertical />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Box>
+                    </CardContent>
+                </Card>
             </Grid>
         </Grid>
     );

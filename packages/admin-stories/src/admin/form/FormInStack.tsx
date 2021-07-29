@@ -3,7 +3,6 @@ import {
     FinalForm,
     FinalFormInput,
     FinalFormSaveCancelButtonsLegacy,
-    FormPaper,
     Stack,
     StackPage,
     StackSwitch,
@@ -12,7 +11,7 @@ import {
     ToolbarActions,
     ToolbarFillSpace,
 } from "@comet/admin";
-import { Box, Button } from "@material-ui/core";
+import { Box, Button, Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
@@ -64,12 +63,14 @@ function Page1() {
                 </Toolbar>
             </Box>
             <FinalForm mode="edit" onSubmit={onSubmit} initialValues={{}} resolveSubmitErrors={resolveSubmitErrors}>
-                <FormPaper variant="outlined">
-                    <Box marginBottom={4}>
-                        <Field label="Foo" name="foo" component={FinalFormInput} />
-                    </Box>
-                    <FinalFormSaveCancelButtonsLegacy />
-                </FormPaper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Box marginBottom={4}>
+                            <Field label="Foo" name="foo" component={FinalFormInput} />
+                        </Box>
+                        <FinalFormSaveCancelButtonsLegacy />
+                    </CardContent>
+                </Card>
             </FinalForm>
         </>
     );
@@ -78,12 +79,14 @@ function Page1() {
 function Page2() {
     return (
         <FinalForm mode="edit" onSubmit={onSubmit} initialValues={{}} resolveSubmitErrors={resolveSubmitErrors}>
-            <FormPaper variant="outlined">
-                <Box marginBottom={4}>
-                    <Field label="Bar" name="bar" component={FinalFormInput} />
-                </Box>
-                <FinalFormSaveCancelButtonsLegacy />
-            </FormPaper>
+            <Card variant="outlined">
+                <CardContent>
+                    <Box marginBottom={4}>
+                        <Field label="Bar" name="bar" component={FinalFormInput} />
+                    </Box>
+                    <FinalFormSaveCancelButtonsLegacy />
+                </CardContent>
+            </Card>
         </FinalForm>
     );
 }

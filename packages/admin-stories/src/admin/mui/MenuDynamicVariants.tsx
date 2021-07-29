@@ -13,7 +13,7 @@ import {
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
-import { Box, Divider, Paper, Typography } from "@material-ui/core";
+import { Card, CardContent, Divider, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
@@ -78,8 +78,8 @@ const Header: React.FC = () => (
 
 const Content = ({ children }: { children: string }) => (
     <MainContent>
-        <Paper variant="outlined">
-            <Box padding={4}>
+        <Card variant="outlined">
+            <CardContent>
                 <Typography variant={"h4"} gutterBottom>
                     {children}
                 </Typography>
@@ -112,8 +112,8 @@ const Content = ({ children }: { children: string }) => (
                         <Link to={"/foo4"}>Foo4</Link>
                     </li>
                 </ul>
-            </Box>
-        </Paper>
+            </CardContent>
+        </Card>
     </MainContent>
 );
 

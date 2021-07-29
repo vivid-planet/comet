@@ -1,112 +1,141 @@
-import { FormPaper, PrettyBytes } from "@comet/admin";
-import { Box, Typography } from "@material-ui/core";
+import { PrettyBytes } from "@comet/admin";
+import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
+import styled from "styled-components";
+
+const Content = styled.div`
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+`;
+
+function Normal() {
+    return (
+        <Card variant="outlined">
+            <CardContent>
+                <Typography variant="h3" gutterBottom>
+                    Normal Behavior
+                </Typography>
+                <Content>
+                    <span>6 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6} />{" "}
+                    </span>
+                    <span>6.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000} />{" "}
+                    </span>
+                    <span>6.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000} />{" "}
+                    </span>
+                    <span>6.000.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000000} />{" "}
+                    </span>
+                    <span>6.000.000.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000000000} />{" "}
+                    </span>
+                    <span>6.000.000.000.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000000000000} />{" "}
+                    </span>
+                </Content>
+            </CardContent>
+        </Card>
+    );
+}
+
+function FixedUnit() {
+    return (
+        <Card variant="outlined">
+            <CardContent>
+                <Typography variant="h3" gutterBottom>
+                    Fixed Unit (kilobyte)
+                </Typography>
+                <Content>
+                    <span>6 Bytes</span>
+                    <span>
+                        <PrettyBytes value={6} unit="kilobyte" />{" "}
+                    </span>
+                    <span>6.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000} unit="kilobyte" />{" "}
+                    </span>
+                    <span>6.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000} unit="kilobyte" />{" "}
+                    </span>
+                    <span>6.000.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000000} unit="kilobyte" />{" "}
+                    </span>
+                    <span>6.000.000.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000000000} unit="kilobyte" />{" "}
+                    </span>
+                    <span>6.000.000.000.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000000000000} unit="kilobyte" />{" "}
+                    </span>
+                </Content>
+            </CardContent>
+        </Card>
+    );
+}
+
+function CustomMaximumFractionDigits() {
+    return (
+        <Card variant="outlined">
+            <CardContent>
+                <Typography variant="h3" gutterBottom>
+                    Custom maximumFractionDigits (6 digits)
+                </Typography>
+                <Content>
+                    <span>6 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6} unit="megabyte" maximumFractionDigits={6} />{" "}
+                    </span>
+                    <span>6.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                    </span>
+                    <span>6.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                    </span>
+                    <span>6.000.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                    </span>
+                    <span>6.000.000.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                    </span>
+                    <span>6.000.000.000.000.000 Bytes</span>{" "}
+                    <span>
+                        <PrettyBytes value={6000000000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                    </span>
+                </Content>
+            </CardContent>
+        </Card>
+    );
+}
 
 storiesOf("@comet/admin/helpers", module).add("PrettyBytes", () => {
     return (
-        <div>
-            <Box marginBottom={4}>
-                <FormPaper variant="outlined">
-                    <Typography variant="h3" gutterBottom>
-                        Normal Behavior
-                    </Typography>
-                    <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "10px" }}>
-                        <span>6 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6} />{" "}
-                        </span>
-                        <span>6.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000} />{" "}
-                        </span>
-                        <span>6.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000} />{" "}
-                        </span>
-                        <span>6.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000} />{" "}
-                        </span>
-                        <span>6.000.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000000} />{" "}
-                        </span>
-                        <span>6.000.000.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000000000} />{" "}
-                        </span>
-                    </div>
-                </FormPaper>
-            </Box>
-
-            <Box marginBottom={4}>
-                <FormPaper variant="outlined">
-                    <Typography variant="h3" gutterBottom>
-                        Fixed Unit (kilobyte)
-                    </Typography>
-                    <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "10px" }}>
-                        <span>6 Bytes</span>
-                        <span>
-                            <PrettyBytes value={6} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000000} unit="kilobyte" />{" "}
-                        </span>
-                        <span>6.000.000.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000000000} unit="kilobyte" />{" "}
-                        </span>
-                    </div>
-                </FormPaper>
-            </Box>
-
-            <Box marginBottom={4}>
-                <FormPaper variant="outlined">
-                    <Typography variant="h3" gutterBottom>
-                        Custom maximumFractionDigits (6 digits)
-                    </Typography>
-                    <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "10px" }}>
-                        <span>6 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                        <span>6.000.000.000.000.000 Bytes</span>{" "}
-                        <span>
-                            <PrettyBytes value={6000000000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
-                        </span>
-                    </div>
-                </FormPaper>
-            </Box>
-        </div>
+        <Grid container spacing={4}>
+            <Grid item xs={12}>
+                <Normal />
+            </Grid>
+            <Grid item xs={12}>
+                <FixedUnit />
+            </Grid>
+            <Grid item xs={12}>
+                <CustomMaximumFractionDigits />
+            </Grid>
+        </Grid>
     );
 });

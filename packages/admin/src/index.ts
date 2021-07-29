@@ -62,7 +62,6 @@ export { useFetch, createFetch, FetchProvider, FetchContext } from "./fetchProvi
 export { FileIcon } from "./fileIcons/FileIcon";
 export { Field } from "./form/Field";
 export { CometAdminFormFieldContainerClassKeys, FieldContainer, FieldContainerComponent, FieldContainerThemeProps } from "./form/FieldContainer";
-export { CometAdminFormPaperKeys, FormPaper } from "./form/FormPaper";
 export { CometAdminFormSectionKeys, FormSection } from "./form/FormSection";
 export { FinalFormInput } from "./form/FinalFormInput";
 export { FinalFormCheckbox } from "./form/Checkbox";

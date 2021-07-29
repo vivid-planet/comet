@@ -1,5 +1,5 @@
 import { MasterLayout, Menu, MenuItemRouterLink, RouteWithErrorBoundary } from "@comet/admin";
-import { Box, Paper, Typography } from "@material-ui/core";
+import { Card, CardContent, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -9,8 +9,8 @@ import { storyRouterDecorator } from "../../story-router.decorator";
 
 const ViewWithNoError: React.FunctionComponent = () => {
     return (
-        <Paper variant="outlined">
-            <Box padding={4}>
+        <Card variant="outlined">
+            <CardContent>
                 <Typography variant={"h5"} gutterBottom>
                     View with No Error
                 </Typography>
@@ -18,8 +18,8 @@ const ViewWithNoError: React.FunctionComponent = () => {
                     <Typography>Use the RouteWithErrorBoundary component to create a boundary for app routes.</Typography>
                     <Typography>Try to click on the second route (Error Route) to display a route which throws an error.</Typography>
                 </Alert>
-            </Box>
-        </Paper>
+            </CardContent>
+        </Card>
     );
 };
 

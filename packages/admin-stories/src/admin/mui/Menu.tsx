@@ -12,7 +12,7 @@ import {
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
-import { Box, Paper, Typography } from "@material-ui/core";
+import { Card, CardContent, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
@@ -58,14 +58,14 @@ const Header: React.FC = () => (
 
 const Content = ({ children }: { children: string }) => (
     <MainContent>
-        <Paper variant="outlined">
-            <Box padding={4}>
+        <Card variant="outlined">
+            <CardContent>
                 <Typography variant={"h1"} gutterBottom>
                     {children}
                 </Typography>
                 <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>
-            </Box>
-        </Paper>
+            </CardContent>
+        </Card>
     </MainContent>
 );
 

@@ -1,6 +1,6 @@
-import { FormPaper } from "@comet/admin";
+import { FormSection } from "@comet/admin";
 import { IRteRef } from "@comet/admin-rte";
-import { Typography } from "@material-ui/core";
+import { Card, CardContent } from "@material-ui/core";
 import { convertToRaw, EditorState, RawDraftContentState } from "draft-js";
 import * as React from "react";
 
@@ -14,23 +14,27 @@ export function useAutoFocus(editorRef: React.MutableRefObject<IRteRef | undefin
 
 export function PrintEditorState({ editorState }: { editorState: EditorState }) {
     return (
-        <FormPaper variant="outlined">
-            <Typography variant="h5" color="primary">
-                EditorState:
-            </Typography>
-            <pre>{editorState && editorState.getCurrentContent() && JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
-        </FormPaper>
+        <Card variant="outlined">
+            <CardContent>
+                <FormSection title="EditorState" disableMarginBottom>
+                    <pre>
+                        {editorState && editorState.getCurrentContent() && JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}
+                    </pre>
+                </FormSection>
+            </CardContent>
+        </Card>
     );
 }
 
 export function PrintAnything({ children, label }: { children: any; label: string }) {
     return (
-        <FormPaper variant="outlined">
-            <Typography variant="h5" color="primary">
-                {label}:
-            </Typography>
-            <pre>{JSON.stringify(children, null, 2)}</pre>
-        </FormPaper>
+        <Card variant="outlined">
+            <CardContent>
+                <FormSection title={label} disableMarginBottom>
+                    <pre>{JSON.stringify(children, null, 2)}</pre>
+                </FormSection>
+            </CardContent>
+        </Card>
     );
 }
 
