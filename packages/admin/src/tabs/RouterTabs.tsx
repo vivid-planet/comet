@@ -19,7 +19,7 @@ interface TabProps extends MuiTabProps {
 export const RouterTab: React.SFC<TabProps> = () => null;
 
 interface Props extends RouteComponentProps {
-    children: Array<React.ReactElement<TabProps>> | React.ReactElement<TabProps>;
+    children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
     tabComponent?: React.ComponentType<MuiTabProps>;
     tabsProps?: Partial<TabsProps>;
 }
@@ -34,14 +34,16 @@ function RouterTabs({
 }: Props & StyledComponentProps<CometAdminRouterTabsClassKeys>) {
     const classes = mergeClasses<CometAdminRouterTabsClassKeys>(useStyles(), passedClasses);
 
+    const childrenArr = React.Children.toArray(children);
+
     const handleChange = (event: {}, value: number) => {
-        const paths = React.Children.map(children, (child) => {
+        const paths = childrenArr.map((child) => {
             return React.isValidElement<TabProps>(child) ? child.props.path : null;
         });
         history.push(match.url + paths[value]);
     };
 
-    const paths = React.Children.map(children, (child) => {
+    const paths = childrenArr.map((child) => {
         // as seen in https://github.com/mui-org/material-ui/blob/v4.11.0/packages/material-ui/src/Tabs/Tabs.js#L390
         if (!React.isValidElement<TabProps>(child)) {
             return null;
