@@ -7,7 +7,6 @@
         "lib"
     ],
     "devDependencies": {
-        "@comet/admin": "^2.0.0-alpha.8",
         "@types/draft-js": "^0.10.38",
         "@types/immutable": "^3.8.7"
     },
