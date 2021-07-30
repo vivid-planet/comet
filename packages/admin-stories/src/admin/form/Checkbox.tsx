@@ -1,5 +1,5 @@
-import { Field, FieldContainer, FinalFormCheckbox, FormPaper } from "@comet/admin";
-import { FormControlLabel, Grid } from "@material-ui/core";
+import { Field, FieldContainer, FinalFormCheckbox } from "@comet/admin";
+import { Card, CardContent, FormControlLabel, Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -25,58 +25,69 @@ function Story() {
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={4}>
                             <Grid item xs={6}>
-                                <FormPaper variant="outlined">
-                                    <FieldContainer label="Checkboxes">
-                                        <Field name="unchecked" type="checkbox">
-                                            {(props) => <FormControlLabel label="Unchecked" control={<FinalFormCheckbox {...props} />} />}
-                                        </Field>
-                                        <Field name="checked" type="checkbox">
-                                            {(props) => <FormControlLabel label="Checked" control={<FinalFormCheckbox {...props} />} />}
-                                        </Field>
-                                        <Field name="disabledUnchecked" type="checkbox">
-                                            {(props) => <FormControlLabel label="Disabled" disabled control={<FinalFormCheckbox {...props} />} />}
-                                        </Field>
-                                        <Field name="disabledChecked" type="checkbox">
-                                            {(props) => (
-                                                <FormControlLabel label="Disabled & Checked" disabled control={<FinalFormCheckbox {...props} />} />
-                                            )}
-                                        </Field>
-                                    </FieldContainer>
-                                </FormPaper>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <FieldContainer label="Checkboxes">
+                                            <Field name="unchecked" type="checkbox" fullWidth>
+                                                {(props) => <FormControlLabel label="Unchecked" control={<FinalFormCheckbox {...props} />} />}
+                                            </Field>
+                                            <Field name="checked" type="checkbox" fullWidth>
+                                                {(props) => <FormControlLabel label="Checked" control={<FinalFormCheckbox {...props} />} />}
+                                            </Field>
+                                            <Field name="disabledUnchecked" type="checkbox" fullWidth>
+                                                {(props) => <FormControlLabel label="Disabled" disabled control={<FinalFormCheckbox {...props} />} />}
+                                            </Field>
+                                            <Field name="disabledChecked" type="checkbox" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel
+                                                        label="Disabled & Checked"
+                                                        disabled
+                                                        control={<FinalFormCheckbox {...props} />}
+                                                    />
+                                                )}
+                                            </Field>
+                                        </FieldContainer>
+                                    </CardContent>
+                                </Card>
                             </Grid>
                             <Grid item xs={6}>
-                                <FormPaper variant="outlined">
-                                    <FieldContainer label="Checkboxes with secondary color">
-                                        <Field name="uncheckedSecondary" type="checkbox">
-                                            {(props) => (
-                                                <FormControlLabel label="Unchecked" control={<FinalFormCheckbox {...props} color="secondary" />} />
-                                            )}
-                                        </Field>
-                                        <Field name="checkedSecondary" type="checkbox">
-                                            {(props) => (
-                                                <FormControlLabel label="Checked" control={<FinalFormCheckbox {...props} color="secondary" />} />
-                                            )}
-                                        </Field>
-                                        <Field name="disabledUncheckedSecondary" type="checkbox">
-                                            {(props) => (
-                                                <FormControlLabel
-                                                    label="Disabled"
-                                                    control={<FinalFormCheckbox {...props} color="secondary" />}
-                                                    disabled
-                                                />
-                                            )}
-                                        </Field>
-                                        <Field name="disabledCheckedSecondary" type="checkbox">
-                                            {(props) => (
-                                                <FormControlLabel
-                                                    label="Disabled & Checked"
-                                                    control={<FinalFormCheckbox {...props} color="secondary" />}
-                                                    disabled
-                                                />
-                                            )}
-                                        </Field>
-                                    </FieldContainer>
-                                </FormPaper>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <FieldContainer label="Checkboxes with secondary color">
+                                            <Field name="uncheckedSecondary" type="checkbox" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel
+                                                        label="Unchecked"
+                                                        control={<FinalFormCheckbox {...props} color="secondary" />}
+                                                    />
+                                                )}
+                                            </Field>
+                                            <Field name="checkedSecondary" type="checkbox" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel label="Checked" control={<FinalFormCheckbox {...props} color="secondary" />} />
+                                                )}
+                                            </Field>
+                                            <Field name="disabledUncheckedSecondary" type="checkbox" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel
+                                                        label="Disabled"
+                                                        control={<FinalFormCheckbox {...props} color="secondary" />}
+                                                        disabled
+                                                    />
+                                                )}
+                                            </Field>
+                                            <Field name="disabledCheckedSecondary" type="checkbox" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel
+                                                        label="Disabled & Checked"
+                                                        control={<FinalFormCheckbox {...props} color="secondary" />}
+                                                        disabled
+                                                    />
+                                                )}
+                                            </Field>
+                                        </FieldContainer>
+                                    </CardContent>
+                                </Card>
                             </Grid>
                         </Grid>
                     </form>

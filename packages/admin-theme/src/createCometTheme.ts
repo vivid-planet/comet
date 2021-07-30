@@ -7,6 +7,7 @@ import { ThemeOptions } from "@material-ui/core/styles";
 import createPalette, { Palette, PaletteOptions } from "@material-ui/core/styles/createPalette";
 import createSpacing, { Spacing, SpacingOptions } from "@material-ui/core/styles/createSpacing";
 import createTypography, { Typography, TypographyOptions } from "@material-ui/core/styles/createTypography";
+import type {} from "@material-ui/lab/themeAugmentation";
 import merge from "lodash.merge";
 
 import { getMuiOverrides } from "./MuiOverrides/getMuiOverrides";

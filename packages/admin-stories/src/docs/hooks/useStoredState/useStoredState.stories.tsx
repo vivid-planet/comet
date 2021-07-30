@@ -1,5 +1,5 @@
-import { useStoredState } from "@comet/admin";
-import { Button, TextField, Typography } from "@material-ui/core";
+import { FormSection, useStoredState } from "@comet/admin";
+import { Button, InputBase } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -7,8 +7,7 @@ storiesOf("stories/hooks/useStoredState", module)
     .add("LocalStorage", () => {
         const [storedState, setStoredState] = useStoredState<number>("stored_state_stories_key", 0);
         return (
-            <div>
-                <Typography variant={"h4"}> Stored State: {storedState}</Typography>
+            <FormSection title={`Stored State: ${storedState}`} disableMarginBottom>
                 <Button
                     variant={"contained"}
                     color={"primary"}
@@ -26,20 +25,19 @@ storiesOf("stories/hooks/useStoredState", module)
                 >
                     Reset
                 </Button>
-            </div>
+            </FormSection>
         );
     })
     .add("SessionStorage", () => {
         const [storedState, setStoredState] = useStoredState<string>("stored_state_stories_session_storage_key", "☄️ Comet", window.sessionStorage);
         return (
-            <div>
-                <Typography variant={"h4"}> Stored State: {storedState}</Typography>
-                <TextField
+            <FormSection title={`Stored State: ${storedState}`} disableMarginBottom>
+                <InputBase
                     value={storedState}
                     onChange={(event) => {
                         setStoredState(event.target.value);
                     }}
                 />
-            </div>
+            </FormSection>
         );
     });

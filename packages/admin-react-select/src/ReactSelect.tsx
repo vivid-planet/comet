@@ -1,5 +1,4 @@
-import { InputBase } from "@comet/admin";
-import { Chip, InputBaseProps, MenuItem, Paper, Theme, Typography, WithStyles } from "@material-ui/core";
+import { Chip, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography, WithStyles } from "@material-ui/core";
 import zIndex from "@material-ui/core/styles/zIndex";
 import { SvgIconComponent } from "@material-ui/icons";
 import CancelIcon from "@material-ui/icons/Cancel";

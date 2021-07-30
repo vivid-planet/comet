@@ -14,6 +14,7 @@ interface FieldContainerProps {
     disabled?: boolean;
     error?: string;
     warning?: string;
+    scrollTo?: boolean;
 }
 
 export type CometAdminFormFieldContainerClassKeys =
@@ -35,6 +36,9 @@ const styles = (theme: Theme) => {
         root: {
             "&:not(:last-child)": {
                 marginBottom: theme.spacing(4),
+            },
+            "& [class*='MuiInputBase-root']": {
+                width: "100%",
             },
         },
         vertical: {
@@ -69,7 +73,7 @@ const styles = (theme: Theme) => {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.error.main,
             },
-            "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
+            "& [class*='MuiInputBase-root']:not([class*='MuiInputBase-focused'])": {
                 borderColor: theme.palette.error.main,
             },
         },
@@ -80,7 +84,7 @@ const styles = (theme: Theme) => {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.warning.main,
             },
-            "& [class*='CometAdminInputBase-root']:not([class*='CometAdminInputBase-focused'])": {
+            "& [class*='MuiInputBase-root']:not([class*='MuiInputBase-focused'])": {
                 borderColor: theme.palette.warning.main,
             },
         },
@@ -101,9 +105,10 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     requiredSymbol = "*",
     children,
     warning,
+    scrollTo = false,
 }) => {
-    const hasError = error !== undefined && error.length > 0;
-    const hasWarning = warning !== undefined && warning.length > 0;
+    const hasError = !!error;
+    const hasWarning = !!warning;
 
     const formControlClasses: string[] = [classes.root];
     if (variant === "vertical") formControlClasses.push(classes.vertical);
@@ -114,8 +119,16 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     if (disabled) formControlClasses.push(classes.disabled);
     if (required) formControlClasses.push(classes.required);
 
+    const ref = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        if (scrollTo) {
+            ref.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [scrollTo]);
+
     return (
-        <FormControl fullWidth={fullWidth} classes={{ root: formControlClasses.join(" ") }}>
+        <FormControl fullWidth={fullWidth} classes={{ root: formControlClasses.join(" ") }} ref={ref}>
             <>
                 {label && (
                     <FormLabel classes={{ root: classes.label }}>

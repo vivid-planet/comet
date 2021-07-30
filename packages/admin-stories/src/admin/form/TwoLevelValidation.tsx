@@ -1,5 +1,5 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
-import { Box, Paper } from "@material-ui/core";
+import { Card, CardContent, Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { FieldValidator } from "final-form";
 import * as React from "react";
@@ -37,109 +37,111 @@ const validateError: FieldValidator<number | undefined> = (value) => {
 function Story() {
     return (
         <>
-            <Box display="inline-block" width="400px">
-                <FinalForm
-                    mode="add"
-                    onSubmit={() => {}}
-                    render={({ handleSubmit }) => (
-                        <Paper>
-                            <Box padding={4}>
-                                <form onSubmit={handleSubmit}>
-                                    <Field
-                                        name="input1"
-                                        type="number"
-                                        label="Required only validation"
-                                        placeholder="Must be >= 5, should be >= 10"
-                                        component={FinalFormInput}
-                                        required
-                                        fullWidth
-                                    />
-                                    <Field
-                                        name="input2"
-                                        type="number"
-                                        label="Error only validation"
-                                        placeholder="Must be >= 5, should be >= 10"
-                                        component={FinalFormInput}
-                                        required
-                                        validate={validateError}
-                                        fullWidth
-                                    />
-                                    <Field
-                                        name="input3"
-                                        type="number"
-                                        label="Warning only validation"
-                                        placeholder="Must be >= 5, should be >= 10"
-                                        component={FinalFormInput}
-                                        required
-                                        validateWarning={validateWarning}
-                                        fullWidth
-                                    />
-                                    <Field
-                                        name="input4"
-                                        type="number"
-                                        label="Error and warning validation"
-                                        placeholder="Must be >= 5, should be >= 10"
-                                        component={FinalFormInput}
-                                        required
-                                        validate={validateError}
-                                        validateWarning={validateWarning}
-                                        fullWidth
-                                    />
-                                    <Field
-                                        name="input5"
-                                        type="number"
-                                        label="Async warning validation"
-                                        placeholder="Must be >= 5, should be >= 10"
-                                        component={FinalFormInput}
-                                        required
-                                        validateWarning={validateWarningAsync}
-                                        fullWidth
-                                    />
-                                </form>
-                            </Box>
-                        </Paper>
-                    )}
-                />
-            </Box>
-            <Box display="inline-block" width="400px" marginLeft={4}>
-                <FinalForm<{ input1: number }>
-                    mode="add"
-                    onSubmit={() => {}}
-                    render={({ handleSubmit }) => (
-                        <Paper>
-                            <Box padding={4}>
-                                <form onSubmit={handleSubmit}>
-                                    <Field
-                                        name="input1"
-                                        type="number"
-                                        label="Record level validation"
-                                        placeholder="Must be >= 5, should be >= 10"
-                                        component={FinalFormInput}
-                                        required
-                                        fullWidth
-                                    />
-                                </form>
-                            </Box>
-                        </Paper>
-                    )}
-                    validate={(values) => {
-                        return {
-                            input1: validateError(values.input1, values),
-                        };
-                    }}
-                    validateWarning={async (values) => {
-                        const warning = await validateWarningAsync(values.input1);
+            <Grid container spacing={4} style={{ maxWidth: 800 }}>
+                <Grid item xs={6}>
+                    <FinalForm
+                        mode="add"
+                        onSubmit={() => {}}
+                        render={({ handleSubmit }) => (
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <form onSubmit={handleSubmit}>
+                                        <Field
+                                            name="input1"
+                                            type="number"
+                                            label="Required only validation"
+                                            placeholder="Must be >= 5, should be >= 10"
+                                            component={FinalFormInput}
+                                            required
+                                            fullWidth
+                                        />
+                                        <Field
+                                            name="input2"
+                                            type="number"
+                                            label="Error only validation"
+                                            placeholder="Must be >= 5, should be >= 10"
+                                            component={FinalFormInput}
+                                            required
+                                            validate={validateError}
+                                            fullWidth
+                                        />
+                                        <Field
+                                            name="input3"
+                                            type="number"
+                                            label="Warning only validation"
+                                            placeholder="Must be >= 5, should be >= 10"
+                                            component={FinalFormInput}
+                                            required
+                                            validateWarning={validateWarning}
+                                            fullWidth
+                                        />
+                                        <Field
+                                            name="input4"
+                                            type="number"
+                                            label="Error and warning validation"
+                                            placeholder="Must be >= 5, should be >= 10"
+                                            component={FinalFormInput}
+                                            required
+                                            validate={validateError}
+                                            validateWarning={validateWarning}
+                                            fullWidth
+                                        />
+                                        <Field
+                                            name="input5"
+                                            type="number"
+                                            label="Async warning validation"
+                                            placeholder="Must be >= 5, should be >= 10"
+                                            component={FinalFormInput}
+                                            required
+                                            validateWarning={validateWarningAsync}
+                                            fullWidth
+                                        />
+                                    </form>
+                                </CardContent>
+                            </Card>
+                        )}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <FinalForm<{ input1: number }>
+                        mode="add"
+                        onSubmit={() => {}}
+                        render={({ handleSubmit }) => (
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <form onSubmit={handleSubmit}>
+                                        <Field
+                                            name="input1"
+                                            type="number"
+                                            label="Record level validation"
+                                            placeholder="Must be >= 5, should be >= 10"
+                                            component={FinalFormInput}
+                                            required
+                                            fullWidth
+                                        />
+                                    </form>
+                                </CardContent>
+                            </Card>
+                        )}
+                        validate={(values) => {
+                            return {
+                                input1: validateError(values.input1, values),
+                            };
+                        }}
+                        validateWarning={async (values) => {
+                            const warning = await validateWarningAsync(values.input1);
 
-                        if (!warning) {
-                            return undefined;
-                        }
+                            if (!warning) {
+                                return undefined;
+                            }
 
-                        return {
-                            input1: warning,
-                        };
-                    }}
-                />
-            </Box>
+                            return {
+                                input1: warning,
+                            };
+                        }}
+                    />
+                </Grid>
+            </Grid>
         </>
     );
 }

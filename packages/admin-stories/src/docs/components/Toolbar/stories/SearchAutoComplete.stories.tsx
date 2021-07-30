@@ -1,6 +1,6 @@
 import { Toolbar, ToolbarItem } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
-import { InputAdornment, TextField } from "@material-ui/core";
+import { InputAdornment, InputBase } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -40,21 +40,16 @@ storiesOf("stories/components/Toolbar/Search Autocomplete", module)
                         ]}
                         getOptionLabel={(option) => option.name}
                         style={{ width: 350 }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                variant="outlined"
+                        renderInput={({ InputProps, ...restParams }) => (
+                            <InputBase
+                                {...restParams}
+                                {...InputProps}
                                 placeholder={"Search"}
-                                InputProps={{
-                                    ...params.InputProps,
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <div style={{ padding: 5 }}>
-                                                <Search />
-                                            </div>
-                                        </InputAdornment>
-                                    ),
-                                }}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <Search />
+                                    </InputAdornment>
+                                }
                             />
                         )}
                     />

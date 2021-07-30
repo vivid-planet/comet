@@ -8,3 +8,4 @@ export { default as RadioChecked } from "./RadioChecked";
 export { default as RadioUnchecked } from "./RadioUnchecked";
 export { default as Html } from "./Html";
 export { default as MovePage } from "./MovePage";
+export { default as BallTriangle } from "./BallTriangle";

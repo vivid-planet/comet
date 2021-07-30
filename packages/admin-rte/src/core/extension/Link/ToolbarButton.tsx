@@ -1,8 +1,8 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@material-ui/core";
 import { Check, Clear, Delete, Link as LinkIcon } from "@material-ui/icons";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import ControlButton from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
@@ -48,19 +48,14 @@ export default function ToolbarButton(props: IControlProps) {
     );
 }
 
-interface LinkDialogProps {
+function LinkDialog(props: {
     open: boolean;
     onClose: () => void;
     linkData: ILinkProps | null;
     editorState: EditorState;
     onChange: (editorState: EditorState) => void;
-}
-
-function LinkDialog(props: LinkDialogProps) {
+}) {
     const { onClose, open, linkData, editorState, onChange } = props;
-
-    const intl = useIntl();
-
     const linkDataUrl = linkData ? linkData.url : "";
     const [newUrl, setNewUrl] = React.useState(linkDataUrl);
 
@@ -103,15 +98,18 @@ function LinkDialog(props: LinkDialogProps) {
                 <FormattedMessage id={"cometAdmin.rte.extensions.link.editDialogTitle"} defaultMessage={"Link"} />
             </DialogTitle>
             <DialogContent>
-                <TextField
-                    // autoFocus
-                    label={intl.formatMessage({ id: "cometAdmin.rte.extensions.link.url", defaultMessage: "Url" })}
-                    variant="outlined"
-                    value={newUrl}
-                    onChange={(e) => {
-                        setNewUrl(e.target.value);
-                    }}
-                />
+                <FormControl fullWidth>
+                    <FormLabel>
+                        <FormattedMessage id="cometAdmin.rte.extensions.link.url" defaultMessage="Url" />
+                    </FormLabel>
+                    <InputBase
+                        // autoFocus
+                        value={newUrl}
+                        onChange={(e) => {
+                            setNewUrl(e.target.value);
+                        }}
+                    />
+                </FormControl>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} startIcon={<Clear />}>

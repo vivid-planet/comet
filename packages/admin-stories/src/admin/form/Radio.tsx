@@ -1,5 +1,5 @@
-import { Field, FieldContainer, FinalFormRadio, FormPaper } from "@comet/admin";
-import { FormControlLabel, Grid } from "@material-ui/core";
+import { Field, FieldContainer, FinalFormRadio } from "@comet/admin";
+import { Card, CardContent, FormControlLabel, Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -21,58 +21,62 @@ function Story() {
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={4}>
                             <Grid item xs={6}>
-                                <FormPaper variant="outlined">
-                                    <FieldContainer label="Radios">
-                                        <Field name="foo1" type="radio" value="bar1">
-                                            {(props) => <FormControlLabel label="Unchecked" control={<FinalFormRadio {...props} />} />}
-                                        </Field>
-                                        <Field name="foo1" type="radio" value="bar2">
-                                            {(props) => <FormControlLabel label="Checked" control={<FinalFormRadio {...props} />} />}
-                                        </Field>
-                                        <Field name="foo2" type="radio" value="bar1">
-                                            {(props) => <FormControlLabel label="Disabled" disabled control={<FinalFormRadio {...props} />} />}
-                                        </Field>
-                                        <Field name="foo2" type="radio" value="bar2">
-                                            {(props) => (
-                                                <FormControlLabel label="Disabled & Checked" disabled control={<FinalFormRadio {...props} />} />
-                                            )}
-                                        </Field>
-                                    </FieldContainer>
-                                </FormPaper>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <FieldContainer label="Radios">
+                                            <Field name="foo1" type="radio" value="bar1" fullWidth>
+                                                {(props) => <FormControlLabel label="Unchecked" control={<FinalFormRadio {...props} />} />}
+                                            </Field>
+                                            <Field name="foo1" type="radio" value="bar2" fullWidth>
+                                                {(props) => <FormControlLabel label="Checked" control={<FinalFormRadio {...props} />} />}
+                                            </Field>
+                                            <Field name="foo2" type="radio" value="bar1" fullWidth>
+                                                {(props) => <FormControlLabel label="Disabled" disabled control={<FinalFormRadio {...props} />} />}
+                                            </Field>
+                                            <Field name="foo2" type="radio" value="bar2" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel label="Disabled & Checked" disabled control={<FinalFormRadio {...props} />} />
+                                                )}
+                                            </Field>
+                                        </FieldContainer>
+                                    </CardContent>
+                                </Card>
                             </Grid>
                             <Grid item xs={6}>
-                                <FormPaper variant="outlined">
-                                    <FieldContainer label="Radios with secondary color">
-                                        <Field name="foo3" type="radio" value="bar1">
-                                            {(props) => (
-                                                <FormControlLabel label="Unchecked" control={<FinalFormRadio {...props} color="secondary" />} />
-                                            )}
-                                        </Field>
-                                        <Field name="foo3" type="radio" value="bar2">
-                                            {(props) => (
-                                                <FormControlLabel label="Checked" control={<FinalFormRadio {...props} color="secondary" />} />
-                                            )}
-                                        </Field>
-                                        <Field name="foo4" type="radio" value="bar1">
-                                            {(props) => (
-                                                <FormControlLabel
-                                                    label="Disabled"
-                                                    disabled
-                                                    control={<FinalFormRadio {...props} color="secondary" />}
-                                                />
-                                            )}
-                                        </Field>
-                                        <Field name="foo4" type="radio" value="bar2">
-                                            {(props) => (
-                                                <FormControlLabel
-                                                    label="Disabled & Checked"
-                                                    disabled
-                                                    control={<FinalFormRadio {...props} color="secondary" />}
-                                                />
-                                            )}
-                                        </Field>
-                                    </FieldContainer>
-                                </FormPaper>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <FieldContainer label="Radios with secondary color">
+                                            <Field name="foo3" type="radio" value="bar1" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel label="Unchecked" control={<FinalFormRadio {...props} color="secondary" />} />
+                                                )}
+                                            </Field>
+                                            <Field name="foo3" type="radio" value="bar2" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel label="Checked" control={<FinalFormRadio {...props} color="secondary" />} />
+                                                )}
+                                            </Field>
+                                            <Field name="foo4" type="radio" value="bar1" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel
+                                                        label="Disabled"
+                                                        disabled
+                                                        control={<FinalFormRadio {...props} color="secondary" />}
+                                                    />
+                                                )}
+                                            </Field>
+                                            <Field name="foo4" type="radio" value="bar2" fullWidth>
+                                                {(props) => (
+                                                    <FormControlLabel
+                                                        label="Disabled & Checked"
+                                                        disabled
+                                                        control={<FinalFormRadio {...props} color="secondary" />}
+                                                    />
+                                                )}
+                                            </Field>
+                                        </FieldContainer>
+                                    </CardContent>
+                                </Card>
                             </Grid>
                         </Grid>
                     </form>
