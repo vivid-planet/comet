@@ -41,11 +41,7 @@ const styles = (theme: Theme) => {
                 width: "100%",
             },
         },
-        vertical: {
-            "& $label": {
-                marginBottom: theme.spacing(2),
-            },
-        },
+        vertical: {},
         horizontal: {
             flexDirection: "row",
             alignItems: "center",
@@ -53,6 +49,7 @@ const styles = (theme: Theme) => {
                 width: 220,
                 flexShrink: 0,
                 flexGrow: 0,
+                marginBottom: 0,
             },
             "&$fullWidth $inputContainer": {
                 flexGrow: 1,
@@ -61,13 +58,7 @@ const styles = (theme: Theme) => {
         fullWidth: {},
         required: {},
         disabled: {},
-        label: {
-            display: "block",
-            color: theme.palette.grey[900],
-            fontSize: 16,
-            lineHeight: "19px",
-            fontWeight: theme.typography.fontWeightMedium,
-        },
+        label: {},
         inputContainer: {},
         hasError: {
             "& $label:not([class*='Mui-focused'])": {

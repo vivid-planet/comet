@@ -16,6 +16,7 @@ import { getMuiDialogTextContentOverrides } from "./MuiDialogContentText";
 import { getMuiDialogTitleOverrides } from "./MuiDialogTitle";
 import { getMuiDrawerOverrides } from "./MuiDrawer";
 import { getMuiFormControlLabelOverrides } from "./MuiFormControlLabel";
+import { getMuiFormLabelOverrides } from "./MuiFormLabel";
 import { getMuiIconButtonOverrides } from "./MuiIconButton";
 import { getMuiInputAdornmentOverrides } from "./MuiInputAdornment";
 import { getMuiInputBaseOverrides } from "./MuiInputBase";
@@ -44,6 +45,7 @@ export const getMuiOverrides = (palette: Palette, typography: Typography, spacin
     MuiTypography: getMuiTypographyOverrides(),
     MuiPaper: getMuiPaperOverrides(palette),
     MuiAppBar: getMuiAppBarOverrides(),
+    MuiFormLabel: getMuiFormLabelOverrides(palette, typography, spacing),
     MuiFormControlLabel: getMuiFormControlLabelOverrides(),
     MuiSvgIcon: getMuiSvgIconOverrides(palette),
     MuiSwitch: getMuiSwitchOverrides(palette),
