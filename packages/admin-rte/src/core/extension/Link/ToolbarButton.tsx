@@ -1,8 +1,8 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, InputBase, Typography } from "@material-ui/core";
 import LinkIcon from "@material-ui/icons/Link";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import ControlButton from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
@@ -56,9 +56,6 @@ function LinkDialog(props: {
     onChange: (editorState: EditorState) => void;
 }) {
     const { onClose, open, linkData, editorState, onChange } = props;
-
-    const intl = useIntl();
-
     const linkDataUrl = linkData ? linkData.url : "";
     const [newUrl, setNewUrl] = React.useState(linkDataUrl);
 
@@ -99,15 +96,18 @@ function LinkDialog(props: {
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
             <DialogTitle>Link</DialogTitle>
             <DialogContent>
-                <TextField
-                    // autoFocus
-                    label={intl.formatMessage({ id: "cometAdmin.rte.extensions.link.url", defaultMessage: "Url" })}
-                    variant="outlined"
-                    value={newUrl}
-                    onChange={(e) => {
-                        setNewUrl(e.target.value);
-                    }}
-                />
+                <FormControl fullWidth>
+                    <FormLabel>
+                        <FormattedMessage id="cometAdmin.rte.extensions.link.url" defaultMessage="Url" />
+                    </FormLabel>
+                    <InputBase
+                        // autoFocus
+                        value={newUrl}
+                        onChange={(e) => {
+                            setNewUrl(e.target.value);
+                        }}
+                    />
+                </FormControl>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="default">

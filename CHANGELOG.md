@@ -38,6 +38,8 @@ All notable changes to this project will be documented in this file. This projec
 
 -   `createMuiTheme` has been removed from `@comet/admin` in favour of `createMuiTheme` from `@material-ui/core`
 -   Removed `VPAdminInputBase` and `getDefaultVPAdminInputStyles`, in favour of InputBase from Material-UI
+-   Removed FinalFormTextField in favour of FinalFormInput
+    -   MuiTextField should not be used inside comet-admin projects, it's design is not compatible with the comet-ci.
 -   Usage and default layout of `Field` has changed
     -   The `fieldContainer` prop has been removed, in favour of the `variant` prop and theme-augmentation of `CometAdminFormFieldContainer`
     -   Removed `FieldContainerLabelAbove` component (the new default looks like this)
