@@ -36,6 +36,9 @@ const styles = (theme: Theme) => {
         root: {
             "&:not(:last-child)": {
                 marginBottom: theme.spacing(4),
+                "&:not($fullWidth)": {
+                    marginRight: theme.spacing(4),
+                },
             },
             "& [class*='MuiInputBase-root']": {
                 width: "100%",
@@ -43,6 +46,7 @@ const styles = (theme: Theme) => {
         },
         vertical: {},
         horizontal: {
+            display: "flex",
             flexDirection: "row",
             alignItems: "center",
             "& $label": {
@@ -55,16 +59,22 @@ const styles = (theme: Theme) => {
                 flexGrow: 1,
             },
         },
-        fullWidth: {},
+        fullWidth: {
+            "& $inputContainer": {
+                minWidth: 0,
+            },
+        },
         required: {},
         disabled: {},
         label: {},
-        inputContainer: {},
+        inputContainer: {
+            minWidth: 120,
+        },
         hasError: {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.error.main,
             },
-            "& [class*='MuiInputBase-root']:not([class*='MuiInputBase-focused'])": {
+            "& [class*='MuiInputBase-root']:not([class*='Mui-focused'])": {
                 borderColor: theme.palette.error.main,
             },
         },
@@ -75,12 +85,13 @@ const styles = (theme: Theme) => {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.warning.main,
             },
-            "& [class*='MuiInputBase-root']:not([class*='MuiInputBase-focused'])": {
+            "& [class*='MuiInputBase-root']:not([class*='Mui-focused'])": {
                 borderColor: theme.palette.warning.main,
             },
         },
         warning: {
             fontSize: 14,
+            color: theme.palette.warning.main,
         },
     });
 };
