@@ -1,5 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, InputBase, Typography } from "@material-ui/core";
-import LinkIcon from "@material-ui/icons/Link";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@material-ui/core";
+import { Check, Clear, Delete, Link as LinkIcon } from "@material-ui/icons";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -94,7 +94,9 @@ function LinkDialog(props: {
 
     return (
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-            <DialogTitle>Link</DialogTitle>
+            <DialogTitle>
+                <FormattedMessage id={"cometAdmin.rte.extensions.link.editDialogTitle"} defaultMessage={"Link"} />
+            </DialogTitle>
             <DialogContent>
                 <FormControl fullWidth>
                     <FormLabel>
@@ -110,26 +112,25 @@ function LinkDialog(props: {
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="default">
-                    <Typography variant="button">
-                        <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
-                    </Typography>
+                <Button onClick={handleClose} startIcon={<Clear />}>
+                    <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
                 </Button>
-                {linkData && (
-                    <Button onClick={handleRemove} color="primary">
-                        <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />
-                        </Typography>
-                    </Button>
-                )}
-
-                {newUrl && (
-                    <Button onClick={handleUpdate} color="primary">
-                        <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.ok" defaultMessage="OK" />
-                        </Typography>
-                    </Button>
-                )}
+                <div>
+                    <Grid container spacing={4}>
+                        {linkData && (
+                            <Grid item>
+                                <Button variant="contained" startIcon={<Delete />} onClick={handleRemove}>
+                                    <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />
+                                </Button>
+                            </Grid>
+                        )}
+                        <Grid item>
+                            <Button variant="contained" color="primary" startIcon={<Check />} onClick={handleUpdate} disabled={!newUrl}>
+                                <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </div>
             </DialogActions>
         </Dialog>
     );
