@@ -55,11 +55,17 @@ const styles = (theme: Theme) => {
                 flexGrow: 1,
             },
         },
-        fullWidth: {},
+        fullWidth: {
+            "& $inputContainer": {
+                minWidth: 0,
+            },
+        },
         required: {},
         disabled: {},
         label: {},
-        inputContainer: {},
+        inputContainer: {
+            minWidth: 120,
+        },
         hasError: {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.error.main,

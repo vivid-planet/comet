@@ -5,7 +5,6 @@ import { StyleRules } from "@material-ui/styles/withStyles";
 export const getMuiSelectOverrides = (palette: Palette): StyleRules<{}, SelectClassKey> => ({
     root: {},
     select: {
-        minWidth: 160,
         "&$select": {
             paddingRight: 32,
         },
