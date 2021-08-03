@@ -1,18 +1,8 @@
 import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
 
-<Meta title="Docs/Components/Form/Overview" />
+<Meta title="Docs/Form/Validation" />
 
-# Form Overview
-
-tba.
-
--   FinalForm
--   Field
--   present custom fields
--   Styling
--   submit mutation best practice
-
-## Validation
+# Form Validation
 
 Form validation can be done in two ways, either for the whole form (record-level), or for a single filed (field-level).
 
@@ -21,7 +11,7 @@ Form validation can be done in two ways, either for the whole form (record-level
 ### Record-level validation
 
 <Canvas>
-    <Story id="stories-components-form-overview--record-level-validation" />
+    <Story id="stories-form-validation--record-level-validation" />
 </Canvas>
 
 > Use the special key `FORM_ERROR` to display a validation error concerning the whole form.
@@ -29,7 +19,7 @@ Form validation can be done in two ways, either for the whole form (record-level
 ### Field-level validation
 
 <Canvas>
-    <Story id="stories-components-form-overview--field-level-validation" />
+    <Story id="stories-form-validation--field-level-validation" />
 </Canvas>
 
 ### Warnings
@@ -39,5 +29,5 @@ In addition to error validation, @comet/admin also supports warnings for the `Fi
 > Please note that a warning _does not_ mark the form as `invalid`, and therefore _does not_ prevent the form from being submitted. If you wish to achieve this, use error validation instead.
 
 <Canvas>
-    <Story id="stories-components-form-overview--warnings" />
+    <Story id="stories-form-validation--warnings" />
 </Canvas>

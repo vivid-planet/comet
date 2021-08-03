@@ -1,0 +1,29 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Form/components/Field" />
+
+# Field
+
+`Field` is used to create input-fields within a form, build using final-form.
+
+_Note: If your form is not built with final-form, use [FieldContainer](/docs/docs-form-components-fieldcontainer--page) instead._
+
+<Canvas>
+    <Story id="stories-form-components--field" />
+</Canvas>
+
+## Props
+
+| Name              | Type                              | Default value | Description                                                           |
+| :---------------- | :-------------------------------- | :------------ | :-------------------------------------------------------------------- |
+| name\*            | `string`                          |               | The field-name used in the form.                                      |
+| component         | `React.ComponentType` \| `string` |               | The input-component of the field.                                     |
+| children          | `(props) => node`                 |               | A function, that returns the input-component of the field.            |
+| validate          | `FieldValidator`                  |               | Function to determine if the fields should show an error.             |
+| validateWarning   | `FieldValidator`                  |               | Function to determine if the fields should show a warning.            |
+| shouldScrollTo    | `(meta) => boolean`               |               | Function to cause the field to scroll into view, when returning true. |
+| shouldShowError   | `(meta) => boolean`               |               | Function to determine if the error-message should be shown.           |
+| shouldShowWarning | `(meta) => boolean`               |               | Function to determine if the warning-message should be shown.         |
+| `[otherProp]`     | `any`                             |               | All additional props will be passed to the form component.            |
+
+Props from [FieldContainer](/docs/docs-form-components-fieldcontainer--page) are also used.
