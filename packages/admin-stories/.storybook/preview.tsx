@@ -98,7 +98,6 @@ const orderComponents = [
     "docs-components-masterlayout",
     "docs-components-toolbar",
     "docs-components-table",
-    "docs-components-form",
     "docs-components-stack",
     "docs-components-edit-dialog",
     "docs-components-error-handling",
@@ -110,6 +109,15 @@ const orderComponents = [
     "docs-components-react-select",
     "docs-components",
 ];
+const orderForm = [
+    "docs-form-overview",
+    "docs-form-validation",
+    "docs-form-layout",
+    "docs-form-components-fieldcontainer",
+    "docs-form-components-field",
+    "docs-form-components-formsection",
+    "docs-form-components",
+];
 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
 const orderIcons = ["docs-icons-list", "docs-icons-usage", "docs-icons"];
 const orderTheming = ["docs-theming"];
@@ -119,6 +127,7 @@ const order = [
     "docs-intro-",
     ...orderGettingStarted,
     ...orderComponents,
+    ...orderForm,
     ...orderHooks,
     ...orderIcons,
     ...orderTheming,
