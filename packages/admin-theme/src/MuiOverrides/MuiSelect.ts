@@ -6,6 +6,9 @@ export const getMuiSelectOverrides = (palette: Palette): StyleRules<{}, SelectCl
     root: {},
     select: {
         minWidth: 160,
+        "&$select": {
+            paddingRight: 32,
+        },
     },
     filled: {},
     outlined: {},
