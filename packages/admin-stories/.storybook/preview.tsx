@@ -67,6 +67,10 @@ const GlobalStyles = createGlobalStyle`
         &.sb-show-main.sb-main-padded {
             padding: 0;
         }
+
+        .sbdocs-preview {
+            background-color: ${({ theme }) => theme.palette.background.default};
+        }
     }
 `;
 
