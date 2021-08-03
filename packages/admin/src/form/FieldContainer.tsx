@@ -46,6 +46,7 @@ const styles = (theme: Theme) => {
         },
         vertical: {},
         horizontal: {
+            display: "flex",
             flexDirection: "row",
             alignItems: "center",
             "& $label": {
