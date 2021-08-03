@@ -122,6 +122,13 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
         }
     }, [scrollTo]);
 
+    const childrenWithDisabledProp = React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+            return React.cloneElement(child, { disabled });
+        }
+        return child;
+    });
+
     return (
         <FormControl fullWidth={fullWidth} classes={{ root: formControlClasses.join(" ") }} ref={ref}>
             <>
@@ -132,7 +139,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
                     </FormLabel>
                 )}
                 <div className={classes.inputContainer}>
-                    {children}
+                    {childrenWithDisabledProp}
                     {hasError && (
                         <FormHelperText error classes={{ root: classes.error }}>
                             {error}
