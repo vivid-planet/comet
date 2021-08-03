@@ -36,6 +36,9 @@ const styles = (theme: Theme) => {
         root: {
             "&:not(:last-child)": {
                 marginBottom: theme.spacing(4),
+                "&:not($fullWidth)": {
+                    marginRight: theme.spacing(4),
+                },
             },
             "& [class*='MuiInputBase-root']": {
                 width: "100%",
