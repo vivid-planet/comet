@@ -64,7 +64,7 @@ const styles = (theme: Theme) => {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.error.main,
             },
-            "& [class*='MuiInputBase-root']:not([class*='MuiInputBase-focused'])": {
+            "& [class*='MuiInputBase-root']:not([class*='Mui-focused'])": {
                 borderColor: theme.palette.error.main,
             },
         },
@@ -75,12 +75,13 @@ const styles = (theme: Theme) => {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.warning.main,
             },
-            "& [class*='MuiInputBase-root']:not([class*='MuiInputBase-focused'])": {
+            "& [class*='MuiInputBase-root']:not([class*='Mui-focused'])": {
                 borderColor: theme.palette.warning.main,
             },
         },
         warning: {
             fontSize: 14,
+            color: theme.palette.warning.main,
         },
     });
 };
