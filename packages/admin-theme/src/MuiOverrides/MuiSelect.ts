@@ -9,6 +9,9 @@ export const getMuiSelectOverrides = (palette: Palette): StyleRules<{}, SelectCl
         "&$select": {
             paddingRight: 32,
         },
+        "&:focus": {
+            backgroundColor: "transparent",
+        },
     },
     filled: {},
     outlined: {},
