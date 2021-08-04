@@ -9,7 +9,7 @@ import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
-import { createMuiTheme, Theme } from "@material-ui/core";
+import { createTheme, Theme } from "@material-ui/core";
 import { createGlobalStyle } from "styled-components";
 
 addDecorator((story, context) => {
@@ -72,7 +72,7 @@ const GlobalStyles = createGlobalStyle`
 
 addDecorator((story, ctx) => {
     const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);
-    const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
+    const theme = selectedTheme === themeOptions.defaultMui ? createTheme() : createCometTheme();
 
     return (
         <MuiThemeProvider theme={theme}>

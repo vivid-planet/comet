@@ -36,7 +36,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
--   `createMuiTheme` has been removed from `@comet/admin` in favour of `createMuiTheme` from `@material-ui/core`
+-   `createMuiTheme` has been removed from `@comet/admin` in favour of `createTheme` from `@material-ui/core`
 -   Removed `VPAdminInputBase` and `getDefaultVPAdminInputStyles`, in favour of InputBase from Material-UI
 -   Removed FinalFormTextField in favour of FinalFormInput
     -   MuiTextField should not be used inside comet-admin projects, it's design is not compatible with the comet-ci.
