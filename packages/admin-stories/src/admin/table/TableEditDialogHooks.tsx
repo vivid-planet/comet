@@ -11,8 +11,8 @@ import {
     ToolbarItem,
     useEditDialog,
 } from "@comet/admin";
+import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@material-ui/core";
-import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -62,12 +62,12 @@ function Story() {
                     <Button
                         color="primary"
                         variant={"contained"}
-                        endIcon={<AddIcon />}
+                        startIcon={<AddIcon />}
                         onClick={(ev) => {
                             api.openAddDialog();
                         }}
                     >
-                        <Typography variant="button">Hinzufügen</Typography>
+                        Add
                     </Button>
                 </ToolbarActions>
             </Toolbar>

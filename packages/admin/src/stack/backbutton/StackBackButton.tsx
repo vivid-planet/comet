@@ -1,4 +1,4 @@
-import { Button, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -17,9 +17,7 @@ export const StackBackButton = (): React.ReactElement => {
                         onClick={stackApi?.goBack}
                         {...themeProps.buttonProps}
                     >
-                        <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.back" defaultMessage="Back" />
-                        </Typography>
+                        <FormattedMessage id="cometAdmin.generic.back" defaultMessage="Back" />
                     </Button>
                 );
             }}

@@ -1,12 +1,12 @@
 import { PureQueryOptions, useApolloClient } from "@apollo/client";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { CancelButton } from "./common/buttons/cancel/CancelButton";
+import { DeleteButton } from "./common/buttons/delete/DeleteButton";
 import { TableQueryContext } from "./table/TableQueryContext";
 
 interface IProps {
@@ -35,7 +35,7 @@ export function DeleteMutation(props: IProps) {
                 },
             )}
 
-            <Dialog open={dialogOpen} onClose={handleNoClick}>
+            <Dialog open={dialogOpen} onClose={handleNoClick} maxWidth="xs">
                 <DialogTitle>
                     <FormattedMessage
                         id="cometAdmin.deleteMutation.promptDelete"
@@ -44,16 +44,8 @@ export function DeleteMutation(props: IProps) {
                     />
                 </DialogTitle>
                 <DialogActions>
-                    <Button onClick={handleYesClick} color="primary" autoFocus={true} variant="contained">
-                        <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.yes" defaultMessage="Yes" />
-                        </Typography>
-                    </Button>
-                    <Button onClick={handleNoClick} color="primary">
-                        <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.no" defaultMessage="No" />
-                        </Typography>
-                    </Button>
+                    <CancelButton onClick={handleNoClick} />
+                    <DeleteButton onClick={handleYesClick} autoFocus />
                 </DialogActions>
             </Dialog>
         </React.Fragment>

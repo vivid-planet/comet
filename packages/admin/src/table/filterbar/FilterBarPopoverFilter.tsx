@@ -2,7 +2,7 @@ import { Button, ButtonProps, Popover, Typography } from "@material-ui/core";
 import { makeStyles, Theme, ThemeOptions, useTheme } from "@material-ui/core/styles";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
-import { useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
 
@@ -107,7 +107,6 @@ export function FilterBarPopoverFilter({
         themeProps && themeProps["CometAdminFilterBarPopoverFilter"] ? { ...themeProps["CometAdminFilterBarPopoverFilter"]?.resetButton } : {};
 
     const classes = useStyles();
-    const intl = useIntl();
 
     return (
         <div className={classes.root}>
@@ -162,12 +161,7 @@ export function FilterBarPopoverFilter({
                                             }}
                                             {...resetButtonProps}
                                         >
-                                            <Typography variant={"button"}>
-                                                {intl.formatMessage({
-                                                    id: "cometAdmin.generic.resetButton",
-                                                    defaultMessage: "Reset",
-                                                })}
-                                            </Typography>
+                                            <FormattedMessage id="cometAdmin.generic.resetButton" defaultMessage="Reset" />
                                         </Button>
 
                                         <Button
@@ -180,12 +174,7 @@ export function FilterBarPopoverFilter({
                                             }}
                                             {...submitButtonProps}
                                         >
-                                            <Typography variant={"button"}>
-                                                {intl.formatMessage({
-                                                    id: "cometAdmin.generic.applyButton",
-                                                    defaultMessage: "Apply",
-                                                })}
-                                            </Typography>
+                                            <FormattedMessage id="cometAdmin.generic.applyButton" defaultMessage="Apply" />
                                         </Button>
                                     </div>
                                 </div>

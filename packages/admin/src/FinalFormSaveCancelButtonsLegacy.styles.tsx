@@ -1,4 +1,3 @@
-import { Close, Save } from "@comet/admin-icons";
 import { Theme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
@@ -28,9 +27,8 @@ export const useStyles = makeStyles<Theme, {}, CometAdminCometAdminFinalFormSave
 );
 
 export function useThemeProps() {
-    const { cancelIcon = <Close />, saveIcon = <Save />, ...restProps } = useComponentThemeProps("CometAdminFinalFormSaveCancelButtonsLegacy") ?? {};
-
-    return { cancelIcon, saveIcon, ...restProps };
+    const { ...restProps } = useComponentThemeProps("CometAdminFinalFormSaveCancelButtonsLegacy") ?? {};
+    return { ...restProps };
 }
 
 // Theme Augmentation

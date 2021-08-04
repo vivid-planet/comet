@@ -1,8 +1,8 @@
-import { Button, CircularProgress, Toolbar, Typography } from "@material-ui/core";
-import SaveIcon from "@material-ui/icons/Save";
+import { CircularProgress, Toolbar } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { SaveButton } from "../common/buttons/save/SaveButton";
 import { ITableLocalChangesApi } from "./TableLocalChanges";
 
 interface IProps {
@@ -19,11 +19,7 @@ export class TableLocalChangesToolbar extends React.Component<IProps> {
                 {this.props.loading && <CircularProgress />}
                 {!this.props.loading && (
                     <Toolbar>
-                        <Button color="default" onClick={this.handleSaveClick} startIcon={<SaveIcon />}>
-                            <Typography variant="button">
-                                <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
-                            </Typography>
-                        </Button>
+                        <SaveButton onClick={this.handleSaveClick} />
                         <FormattedMessage
                             values={{ count: this.props.localChangesCount }}
                             id="cometAdmin.table.localChangesToolbar.unsavedItems"
