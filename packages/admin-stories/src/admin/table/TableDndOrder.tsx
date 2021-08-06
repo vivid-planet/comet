@@ -1,5 +1,5 @@
 import { TableDndOrder, TableLocalChanges } from "@comet/admin";
-import { Button, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -50,7 +50,7 @@ function Story() {
                             tableLocalChangesApi.submitLocalDataChanges();
                         }}
                     >
-                        <Typography variant="button">Submit</Typography>
+                        Submit
                     </Button>
                 </>
             )}

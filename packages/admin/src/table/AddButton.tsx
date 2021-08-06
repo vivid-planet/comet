@@ -1,4 +1,4 @@
-import { Button, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -13,9 +13,7 @@ export class TableAddButton extends React.Component<IProps> {
     public render() {
         return (
             <Button color="default" onClick={this.handleAddClick} startIcon={<AddIcon />}>
-                <Typography variant="button">
-                    <FormattedMessage id="cometAdmin.generic.add" defaultMessage="Add" />
-                </Typography>
+                <FormattedMessage id="cometAdmin.generic.add" defaultMessage="Add" />
             </Button>
         );
     }
