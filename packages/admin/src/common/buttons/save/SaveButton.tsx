@@ -21,12 +21,12 @@ export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error";
 export const SaveButton = ({
     saving = false,
     hasErrors = false,
-    children,
+    children = <FormattedMessage id={"cometAdmin.generic.save"} defaultMessage={"Save"} />,
     savingItem = <FormattedMessage id={"comet.saveButton.savingItem.title"} defaultMessage={"Saving"} />,
     successItem = <FormattedMessage id={"comet.saveButton.successItem.title"} defaultMessage={"Success Saved"} />,
     errorItem = <FormattedMessage id={"comet.saveButton.errorItem.title"} defaultMessage={"Save Error"} />,
-    variant,
-    color,
+    variant = "contained",
+    color = "primary",
     classes: passedClasses,
     ...restProps
 }: PropsWithChildren<SaveButtonProps> & StyledComponentProps<CometAdminSaveButtonClassKeys>) => {

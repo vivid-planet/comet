@@ -5,7 +5,7 @@ import * as React from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 
-storiesOf("stories/components/Form", module)
+storiesOf("stories/components/Form/Overview", module)
     .addDecorator(apolloStoryDecorator())
     .add("Record-level validation", () => {
         interface FormValues {

@@ -1,5 +1,5 @@
-import { Field, FinalForm, FinalFormInput, FormPaper } from "@comet/admin";
-import { Box, Button, withStyles } from "@material-ui/core";
+import { Field, FinalForm, FinalFormInput } from "@comet/admin";
+import { Box, Button, Card, CardContent, withStyles } from "@material-ui/core";
 import { BeachAccess as BeachAccessIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -51,10 +51,12 @@ function Story() {
                     // add your form-submit function here
                 }}
             >
-                <FormPaper variant="outlined">
-                    <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
-                    <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
-                </FormPaper>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
+                        <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
+                    </CardContent>
+                </Card>
                 <Box paddingTop={4}>
                     <CustomButtons />
                 </Box>

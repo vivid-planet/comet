@@ -1,9 +1,7 @@
-import { FormControl, Slider, SliderProps, Theme, WithStyles } from "@material-ui/core";
+import { FormControl, InputBase, Slider, SliderProps, Theme, WithStyles } from "@material-ui/core";
 import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
-
-import { InputBase } from "./InputBase";
 
 export type CometAdminFinalFormRangeInputClassKeys =
     | "root"
@@ -79,7 +77,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             inputProps={{
                                 value: internalMinInput !== undefined ? internalMinInput : "",
                                 type: "number",
-                                placeholder: min,
+                                placeholder: min.toString(),
                             }}
                             startAdornment={startAdornment}
                             endAdornment={endAdornment}
@@ -112,7 +110,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             inputProps={{
                                 value: internalMaxInput !== undefined ? internalMaxInput : "",
                                 type: "number",
-                                placeholder: max,
+                                placeholder: max.toString(),
                             }}
                             startAdornment={startAdornment ? startAdornment : ""}
                             endAdornment={endAdornment ? endAdornment : ""}

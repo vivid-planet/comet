@@ -1,37 +1,45 @@
-import { Field, FinalForm, FinalFormInput, FormPaper } from "@comet/admin";
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Field, FinalForm, FinalFormInput, FormSection } from "@comet/admin";
+import { Card, CardContent, Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
-function Story() {
+function VerticalFields() {
     return (
-        <FinalForm mode={"edit"} onSubmit={() => {}}>
-            <Box mb={8} maxWidth={1024}>
-                <FormPaper variant="outlined">
-                    <Typography variant={"h5"}>Vertical Fields</Typography>
-                    <br />
+        <Card variant="outlined">
+            <CardContent>
+                <FormSection title="Vertical Fields" disableMarginBottom>
                     <Field label="Foo" placeholder="Foo" name="foo1" component={FinalFormInput} />
                     <Field label="Bar" placeholder="Bar" name="bar1" component={FinalFormInput} />
                     <Field label="Disabled" placeholder="Disabled" name="disabled1" disabled component={FinalFormInput} />
                     <Field label="Required" placeholder="Required" name="required1" required component={FinalFormInput} />
-                </FormPaper>
-            </Box>
-            <Box mb={8} maxWidth={1024}>
-                <FormPaper variant="outlined">
-                    <Typography variant={"h5"}>Horizontal Fields</Typography>
-                    <br />
-                    <Field label="Foo" placeholder="Foo" name="foo2" component={FinalFormInput} variant={"horizontal"} />
-                    <Field label="Bar" placeholder="Bar" name="bar2" component={FinalFormInput} variant={"horizontal"} />
-                    <Field label="Disabled" placeholder="Disabled" name="disabled2" disabled component={FinalFormInput} variant={"horizontal"} />
-                    <Field label="Required" placeholder="Required" name="required2" required component={FinalFormInput} variant={"horizontal"} />
-                </FormPaper>
-            </Box>
-            <Box mb={8} maxWidth={1024}>
-                <FormPaper variant="outlined">
-                    <Typography variant={"h5"}>Fields in Grid</Typography>
-                    <br />
+                </FormSection>
+            </CardContent>
+        </Card>
+    );
+}
+
+function HorizontalFields() {
+    return (
+        <Card variant="outlined">
+            <CardContent>
+                <FormSection title="Horizontal Fields" disableMarginBottom>
+                    <Field label="Foo" placeholder="Foo" name="foo2" component={FinalFormInput} variant="horizontal" />
+                    <Field label="Bar" placeholder="Bar" name="bar2" component={FinalFormInput} variant="horizontal" />
+                    <Field label="Disabled" placeholder="Disabled" name="disabled2" disabled component={FinalFormInput} variant="horizontal" />
+                    <Field label="Required" placeholder="Required" name="required2" required component={FinalFormInput} variant="horizontal" />
+                </FormSection>
+            </CardContent>
+        </Card>
+    );
+}
+
+function FieldsInGrid() {
+    return (
+        <Card variant="outlined">
+            <CardContent>
+                <FormSection title="Fields in Grid" disableMarginBottom>
                     <Grid container spacing={4}>
                         <Grid item xs={12} sm={6} md={3}>
                             <Field label="Foo" placeholder="Foo" name="foo3" fullWidth component={FinalFormInput} />
@@ -46,8 +54,26 @@ function Story() {
                             <Field label="Required" placeholder="Required" name="required3" required fullWidth component={FinalFormInput} />
                         </Grid>
                     </Grid>
-                </FormPaper>
-            </Box>
+                </FormSection>
+            </CardContent>
+        </Card>
+    );
+}
+
+function Story() {
+    return (
+        <FinalForm mode={"edit"} onSubmit={() => {}}>
+            <Grid container spacing={8} style={{ maxWidth: 1024 }}>
+                <Grid item xs={12}>
+                    <VerticalFields />
+                </Grid>
+                <Grid item xs={12}>
+                    <HorizontalFields />
+                </Grid>
+                <Grid item xs={12}>
+                    <FieldsInGrid />
+                </Grid>
+            </Grid>
         </FinalForm>
     );
 }

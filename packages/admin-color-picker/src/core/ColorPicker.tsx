@@ -1,6 +1,5 @@
-import { ClearInputButton, InputBase } from "@comet/admin";
-import { ClickAwayListener, Paper, Popper, WithStyles, withStyles } from "@material-ui/core";
-import { InputBaseProps } from "@material-ui/core/InputBase";
+import { ClearInputButton } from "@comet/admin";
+import { ClickAwayListener, InputBase, InputBaseProps, Paper, Popper, WithStyles, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { CustomPicker } from "react-color";
 import { FieldRenderProps } from "react-final-form";
@@ -8,7 +7,7 @@ import tinycolor from "tinycolor2";
 
 import { colorToHex } from "../utils/colorSpaces";
 import styles from "./ColorPicker.styles";
-import HexInput from "./HexInput";
+import { HexInput } from "./HexInput";
 import Palette from "./Palette";
 import PickedColor from "./PickedColor";
 import Picker from "./Picker";
@@ -78,7 +77,10 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                         picker: !!showPicker,
                         palette: !!colorPalette?.length,
                     }}
-                    onChange={(newColor: string) => onChange(colorToHex(newColor as tinycolor.ColorInputWithoutInstance))}
+                    onChange={(newColor) => {
+                        // The HexInput component's onChange can only return a string, not a ChangeEvent
+                        onChange(colorToHex(newColor as unknown as tinycolor.ColorInputWithoutInstance));
+                    }}
                     className={classes.input}
                     onClick={handleFieldClick}
                 />

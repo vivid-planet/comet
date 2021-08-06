@@ -1,6 +1,6 @@
-import { FormPaper, InputBase } from "@comet/admin";
+import { FieldContainer } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
-import { Checkbox, FormControlLabel, Grid, InputAdornment, Typography } from "@material-ui/core";
+import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -13,52 +13,56 @@ function Story() {
         <div style={{ width: 400 }}>
             <Grid container spacing={4}>
                 <Grid item xs={12}>
-                    <FormPaper variant="outlined">
-                        <Typography variant={"h4"} gutterBottom>
-                            Single TextField outside of form
-                        </Typography>
-                        <InputBase
-                            fullWidth
-                            autoFocus
-                            placeholder={"Search..."}
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <Search />
-                                </InputAdornment>
-                            }
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString1(e.target.value)}
-                            value={searchString1}
-                        />
-                    </FormPaper>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Typography variant={"h4"} gutterBottom>
+                                Single TextField outside of form
+                            </Typography>
+                            <FieldContainer fullWidth>
+                                <InputBase
+                                    autoFocus
+                                    placeholder={"Search..."}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <Search />
+                                        </InputAdornment>
+                                    }
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString1(e.target.value)}
+                                    value={searchString1}
+                                />
+                            </FieldContainer>
+                        </CardContent>
+                    </Card>
                 </Grid>
                 <Grid item xs={12}>
-                    <FormPaper variant="outlined">
-                        <Typography variant={"h4"} gutterBottom>
-                            With Checkbox
-                        </Typography>
-                        <InputBase
-                            margin={"dense"}
-                            fullWidth
-                            autoFocus
-                            placeholder={"Search..."}
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <Search />
-                                </InputAdornment>
-                            }
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString2(e.target.value)}
-                            value={searchString2}
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={checkboxValue}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckboxValue(e.target.checked)}
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Typography variant={"h4"} gutterBottom>
+                                With Checkbox
+                            </Typography>
+                            <FieldContainer fullWidth>
+                                <InputBase
+                                    placeholder={"Search..."}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <Search />
+                                        </InputAdornment>
+                                    }
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchString2(e.target.value)}
+                                    value={searchString2}
                                 />
-                            }
-                            label={"Additional Setting"}
-                        />
-                    </FormPaper>
+                            </FieldContainer>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={checkboxValue}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckboxValue(e.target.checked)}
+                                    />
+                                }
+                                label={"Additional Setting"}
+                            />
+                        </CardContent>
+                    </Card>
                 </Grid>
             </Grid>
             <div>

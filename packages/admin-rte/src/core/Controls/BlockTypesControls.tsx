@@ -53,16 +53,23 @@ const useStyles = makeStyles<Theme, {}, CometAdminRteBlockTypeControlsClassKeys>
         const rteTheme = getRteTheme(theme.props?.CometAdminRte);
 
         return {
-            root: {},
+            root: {
+                "& [class*='MuiInputBase-root']": {
+                    backgroundColor: "transparent",
+                    height: "auto",
+                    border: "none",
+                },
+                "& [class*='MuiSelect-icon']": {
+                    top: "auto",
+                    color: "inherit",
+                },
+            },
             select: {
                 color: rteTheme.colors.buttonIcon,
                 minWidth: 180,
                 lineHeight: "24px",
                 fontSize: 14,
                 padding: 0,
-                "& [class*='MuiSvgIcon-root']": {
-                    color: "inherit",
-                },
             },
         };
     },

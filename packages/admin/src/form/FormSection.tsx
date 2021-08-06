@@ -1,27 +1,50 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import { StyledComponentProps, Theme } from "@material-ui/core/styles";
 import * as React from "react";
 
 import { mergeClasses } from "../helpers/mergeClasses";
 
-export type CometAdminFormSectionKeys = "root";
+export type CometAdminFormSectionKeys = "root" | "disableMarginBottom" | "title" | "children";
 
 const useStyles = makeStyles<Theme, {}, CometAdminFormSectionKeys>(
-    (theme: Theme) => ({
+    ({ spacing }) => ({
         root: {
-            backgroundColor: theme.palette.grey[100],
-            padding: "16px 16px 0 16px",
-            margin: "0 -16px 16px -16px",
+            "&:not($disableMarginBottom)": {
+                marginBottom: spacing(8),
+            },
         },
+        disableMarginBottom: {},
+        title: {
+            marginBottom: spacing(4),
+        },
+        children: {},
     }),
     { name: "CometAdminFormSection" },
 );
 
-interface Props {
+export interface FormSectionProps {
     children: React.ReactNode;
+    title?: React.ReactNode;
+    disableMarginBottom?: boolean;
 }
 
-export function FormSection({ children, classes: passedClasses }: Props & StyledComponentProps<CometAdminFormSectionKeys>): React.ReactElement {
+export function FormSection({
+    children,
+    title,
+    disableMarginBottom,
+    classes: passedClasses,
+}: FormSectionProps & StyledComponentProps<CometAdminFormSectionKeys>): React.ReactElement {
     const classes = mergeClasses<CometAdminFormSectionKeys>(useStyles(), passedClasses);
-    return <div className={classes.root}>{children}</div>;
+    const rootClasses: string[] = [classes.root];
+
+    if (disableMarginBottom) {
+        rootClasses.push(classes.disableMarginBottom);
+    }
+
+    return (
+        <div className={rootClasses.join(" ")}>
+            {title && <div className={classes.title}>{typeof title === "string" ? <Typography variant="h4">{title}</Typography> : title}</div>}
+            <div className={classes.children}>{children}</div>
+        </div>
+    );
 }

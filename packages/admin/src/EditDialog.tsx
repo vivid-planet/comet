@@ -1,7 +1,9 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import * as React from "react";
 import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 
+import { CancelButton } from "./common/buttons/cancel/CancelButton";
+import { SaveButton } from "./common/buttons/save/SaveButton";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
@@ -111,20 +113,14 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                         <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
                         <DialogContent>{children}</DialogContent>
                         <DialogActions>
-                            <Button onClick={handleCancelClick} color="primary">
-                                <Typography variant="button">
-                                    <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
-                                </Typography>
-                            </Button>
+                            <CancelButton onClick={handleCancelClick} />
                             <DirtyHandlerApiContext.Consumer>
                                 {(injectedDirtyHandlerApi) => {
                                     dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
                                     return (
-                                        <Button onClick={handleSaveClick} color="primary">
-                                            <Typography variant="button">
-                                                <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
-                                            </Typography>
-                                        </Button>
+                                        <SaveButton onClick={handleSaveClick}>
+                                            <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+                                        </SaveButton>
                                     );
                                 }}
                             </DirtyHandlerApiContext.Consumer>

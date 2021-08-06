@@ -17,6 +17,7 @@ export const greenPalette: PaletteColor = {
 export const errorPalette: SimplePaletteColorOptions = {
     main: "#E63917",
     dark: "#A02710",
+    contrastText: "#ffffff",
 };
 
 export const successPalette: SimplePaletteColorOptions = {

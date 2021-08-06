@@ -1,7 +1,7 @@
 import {
     Field,
     FinalForm,
-    FinalFormTextField,
+    FinalFormInput,
     MainContent,
     Selected,
     Table,
@@ -11,8 +11,8 @@ import {
     ToolbarItem,
     useEditDialog,
 } from "@comet/admin";
+import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@material-ui/core";
-import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -38,7 +38,7 @@ function EditForm(props: IEditFormProps) {
                 alert(JSON.stringify(values));
             }}
         >
-            <Field name="foo" component={FinalFormTextField} type="text" label="Name" />
+            <Field name="foo" component={FinalFormInput} type="text" label="Name" fullWidth />
         </FinalForm>
     );
 }
@@ -62,12 +62,12 @@ function Story() {
                     <Button
                         color="primary"
                         variant={"contained"}
-                        endIcon={<AddIcon />}
+                        startIcon={<AddIcon />}
                         onClick={(ev) => {
                             api.openAddDialog();
                         }}
                     >
-                        <Typography variant="button">Hinzufügen</Typography>
+                        Add
                     </Button>
                 </ToolbarActions>
             </Toolbar>

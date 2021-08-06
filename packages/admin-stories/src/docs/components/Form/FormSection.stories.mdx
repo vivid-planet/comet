@@ -1,0 +1,20 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Components/Form/FormSection" />
+
+# FormSection
+
+The FormSection is used to separate larger forms into smaller groups of inputs/fields that can be described with a title.<br/>
+This should result in a less cluttered and easier to understand form.
+
+<Canvas>
+    <Story id="stories-components-form-formsection--example" />
+</Canvas>
+
+## Props
+
+| Name                | Type           | Default value | Description                                                                                                                                                                                                                                                                                                  |
+| :------------------ | :------------- | :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| children\*          | node           |               | The form fields of the section.                                                                                                                                                                                                                                                                              |
+| title               | string \| node |               | The title of the section. When passing a string, the title will be rendered as a Typography with `variant="h5"`. Otherwise the node will be rendered without Typography, this is helpful, e.g. if you want to render a different Typography-variant (like `<Typography variant="h2">My title</Typography>`). |
+| disableMarginBottom | boolean        | false         | Removes the `marginBottom` of the section. This is helpful, e.g. for the last FormSection inside a container where the spacing at the end of the form would be too much.                                                                                                                                     |

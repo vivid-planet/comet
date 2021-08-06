@@ -2,9 +2,8 @@ import { ClearInputButtonThemeProps, CometAdminClearInputButtonClassKeys } from 
 import { CometAdminErrorBoundaryClassKeys, ErrorBoundaryThemeProps } from "./error/errorboundary/ErrorBoundary";
 import { CometAdminFormFieldContainerClassKeys, FieldContainerThemeProps } from "./form/FieldContainer";
 import { CometAdminFinalFormRangeInputClassKeys } from "./form/FinalFormRangeInput";
-import { CometAdminFormPaperKeys } from "./form/FormPaper";
 import { CometAdminFormSectionKeys } from "./form/FormSection";
-import { CometAdminInputBaseClassKeys } from "./form/InputBase";
+import { CometAdminMasterLayoutClassKeys } from "./mui/MasterLayout.styles";
 import { CometAdminMenuCollapsibleItemClassKeys, MenuCollapsibleItemThemeProps } from "./mui/menu/CollapsibleItem";
 import { CometAdminMenuItemClassKeys } from "./mui/menu/Item";
 import { MenuThemeProps } from "./mui/menu/Menu";
@@ -17,9 +16,8 @@ declare module "@material-ui/core/styles/overrides" {
         CometAdminMenu: CometAdminMenuClassKeys;
         CometAdminMenuItem: CometAdminMenuItemClassKeys;
         CometAdminMenuCollapsibleItem: CometAdminMenuCollapsibleItemClassKeys;
-        CometAdminInputBase: CometAdminInputBaseClassKeys;
+        CometAdminMasterLayout: CometAdminMasterLayoutClassKeys;
         CometAdminErrorBoundary: CometAdminErrorBoundaryClassKeys;
-        CometAdminFormPaper: CometAdminFormPaperKeys;
         CometAdminFormSection: CometAdminFormSectionKeys;
         CometAdminFinalFormRangeInput: CometAdminFinalFormRangeInputClassKeys;
     }

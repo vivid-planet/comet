@@ -8,7 +8,6 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Highlights
 
--   Added a new InputBase (`CometAdminInputBase`) for use in all custom input-components in Comet
 -   Added `ClearInputButton`, this component can be used as `endAdornment`, to clear inputs
     -   Can be themed with `CometAdminClearInputButton` (props and overrides)
 -   New methods of customization and default layout for `Field`
@@ -37,9 +36,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
--   `createMuiTheme` has been removed from `@comet/admin` in favour of `createMuiTheme` from `@material-ui/core`
--   Replaced form/Input (`VPAdminInputBase`) with form/InputBase (`CometAdminInputBase`)
-    -   Deprecated `getDefaultVPAdminInputStyles` because the styled are included in InputBase, which should be used for all custom inputs in Comet
+-   `createMuiTheme` has been removed from `@comet/admin` in favour of `createTheme` from `@material-ui/core`
+-   Removed `VPAdminInputBase` and `getDefaultVPAdminInputStyles`, in favour of InputBase from Material-UI
+-   Removed FinalFormTextField in favour of FinalFormInput
+    -   MuiTextField should not be used inside comet-admin projects, it's design is not compatible with the comet-ci.
 -   Usage and default layout of `Field` has changed
     -   The `fieldContainer` prop has been removed, in favour of the `variant` prop and theme-augmentation of `CometAdminFormFieldContainer`
     -   Removed `FieldContainerLabelAbove` component (the new default looks like this)
@@ -73,6 +73,7 @@ All notable changes to this project will be documented in this file. This projec
 -   Changes to Stack
     -   Removed prop `components.breadcrumbsContainer` in favour of a div that can be styled using the theme (`overrides -> CometAdminStack -> breadcrumbs`)
 -   Removed component `FixedLeftRightLayout`
+-   Removed FormPaper, the same effect can be accomplished with a CardContent within a Card.
 -   Changes to MasterLayout
     -   The default values for content-spacing and header-height have changed slightly
     -   When adding a custom `headerComponent`, the component should now be built using the `AppHeader` system (see docs).
@@ -218,10 +219,6 @@ npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/upda
     -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
 
 ## @comet/admin-react-select
-
-### Highlights
-
--   Added theming-ability for input with `CometAdminInputBase`
 
 ### Incompatible Changes
 

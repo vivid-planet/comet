@@ -1,8 +1,8 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@material-ui/core";
-import LinkIcon from "@material-ui/icons/Link";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@material-ui/core";
+import { Check, Clear, Delete, Link as LinkIcon } from "@material-ui/icons";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import ControlButton from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
@@ -56,9 +56,6 @@ function LinkDialog(props: {
     onChange: (editorState: EditorState) => void;
 }) {
     const { onClose, open, linkData, editorState, onChange } = props;
-
-    const intl = useIntl();
-
     const linkDataUrl = linkData ? linkData.url : "";
     const [newUrl, setNewUrl] = React.useState(linkDataUrl);
 
@@ -97,39 +94,43 @@ function LinkDialog(props: {
 
     return (
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-            <DialogTitle>Link</DialogTitle>
+            <DialogTitle>
+                <FormattedMessage id={"cometAdmin.rte.extensions.link.editDialogTitle"} defaultMessage={"Link"} />
+            </DialogTitle>
             <DialogContent>
-                <TextField
-                    // autoFocus
-                    label={intl.formatMessage({ id: "cometAdmin.rte.extensions.link.url", defaultMessage: "Url" })}
-                    variant="outlined"
-                    value={newUrl}
-                    onChange={(e) => {
-                        setNewUrl(e.target.value);
-                    }}
-                />
+                <FormControl fullWidth>
+                    <FormLabel>
+                        <FormattedMessage id="cometAdmin.rte.extensions.link.url" defaultMessage="Url" />
+                    </FormLabel>
+                    <InputBase
+                        // autoFocus
+                        value={newUrl}
+                        onChange={(e) => {
+                            setNewUrl(e.target.value);
+                        }}
+                    />
+                </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="default">
-                    <Typography variant="button">
-                        <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
-                    </Typography>
+                <Button onClick={handleClose} startIcon={<Clear />}>
+                    <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
                 </Button>
-                {linkData && (
-                    <Button onClick={handleRemove} color="primary">
-                        <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />
-                        </Typography>
-                    </Button>
-                )}
-
-                {newUrl && (
-                    <Button onClick={handleUpdate} color="primary">
-                        <Typography variant="button">
-                            <FormattedMessage id="cometAdmin.generic.ok" defaultMessage="OK" />
-                        </Typography>
-                    </Button>
-                )}
+                <div>
+                    <Grid container spacing={4}>
+                        {linkData && (
+                            <Grid item>
+                                <Button variant="contained" startIcon={<Delete />} onClick={handleRemove}>
+                                    <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />
+                                </Button>
+                            </Grid>
+                        )}
+                        <Grid item>
+                            <Button variant="contained" color="primary" startIcon={<Check />} onClick={handleUpdate} disabled={!newUrl}>
+                                <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </div>
             </DialogActions>
         </Dialog>
     );
