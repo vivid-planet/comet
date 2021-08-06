@@ -86,13 +86,21 @@ export interface CometAdminRteThemeProps {
         buttonBorderHover?: React.CSSProperties["color"];
         buttonBorderDisabled?: React.CSSProperties["color"];
     };
+    editor?: {
+        minHeight?: number;
+    };
 }
 
-export interface IProps extends CometAdminRteThemeProps {
+export interface IProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
     disabled?: boolean;
+    theme?: CometAdminRteThemeProps;
+    /**
+     * @deprecated Use theme.colors instead.
+     */
+    colors?: any;
 }
 
 const defaultOptions: IRteOptions = {
@@ -252,7 +260,7 @@ const Rte: React.RefForwardingComponent<any, IProps & StyledComponentProps<Comet
         return getDefaultKeyBinding(event);
     }
 
-    const classes = mergeClasses<CometAdminRteClassKeys>(useStyles({ colors: props.colors }), props.classes);
+    const classes = mergeClasses<CometAdminRteClassKeys>(useStyles(props.theme || {}), props.classes);
 
     const rootClasses: string[] = [classes.root];
     if (disabled) rootClasses.push(classes.disabled);
@@ -296,7 +304,7 @@ const useStyles = makeStyles<Theme, CometAdminRteThemeProps, CometAdminRteClassK
             },
             editor: {
                 "& .public-DraftEditor-content": {
-                    minHeight: 240,
+                    minHeight: (p: CometAdminRteThemeProps) => p.editor?.minHeight ?? rteTheme.editor.minHeight,
                     padding: 20,
                     boxSizing: "border-box",
                 },
