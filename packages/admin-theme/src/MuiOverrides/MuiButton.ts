@@ -68,7 +68,12 @@ export const getMuiButtonOverrides = (palette: Palette): StyleRules<{}, ButtonCl
     focusVisible: {},
     disabled: {},
     colorInherit: {},
-    textSizeSmall: {},
+    textSizeSmall: {
+        "& $label": {
+            fontSize: 14,
+            lineHeight: "20px",
+        },
+    },
     textSizeLarge: {},
     outlinedSizeSmall: {},
     outlinedSizeLarge: {},
