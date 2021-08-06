@@ -97,10 +97,6 @@ export interface IProps {
     options?: IOptions;
     disabled?: boolean;
     theme?: CometAdminRteThemeProps;
-    /**
-     * @deprecated Use theme.colors instead.
-     */
-    colors?: any;
 }
 
 const defaultOptions: IRteOptions = {
