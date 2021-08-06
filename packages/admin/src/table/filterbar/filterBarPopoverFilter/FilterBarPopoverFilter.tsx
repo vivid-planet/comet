@@ -53,9 +53,9 @@ export function FilterBarPopoverFilter({
                 {({ form, values, handleSubmit, dirtyFields }) => {
                     const countValue = calcNumberDirtyFields(values, form.getRegisteredFields());
                     return (
-                        <div className={clsx(classes.fieldBarWrapper, countValue > 0 && classes["fieldBarWrapper--hasValues"])}>
+                        <div className={clsx(classes.fieldBarWrapper, countValue > 0 && classes.fieldBarWrapperWithValues)}>
                             <div className={classes.fieldBarInnerWrapper} onClick={handleClick}>
-                                <div className={clsx(classes.labelWrapper, countValue > 0 && classes["labelWrapper--hasValues"])}>
+                                <div className={clsx(classes.labelWrapper, countValue > 0 && classes.labelWrapperWithValues)}>
                                     <Typography variant="body1">{label}</Typography>
                                 </div>
                                 <FilterBarActiveFilterBadgeComponent countValue={countValue} />

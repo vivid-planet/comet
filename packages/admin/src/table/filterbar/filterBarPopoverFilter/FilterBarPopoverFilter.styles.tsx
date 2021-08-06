@@ -5,10 +5,10 @@ import { makeStyles } from "@material-ui/styles";
 export type CometAdminFilterBarPopoverFilterClassKeys =
     | "root"
     | "fieldBarWrapper"
-    | "fieldBarWrapper--hasValues"
+    | "fieldBarWrapperWithValues"
     | "fieldBarInnerWrapper"
     | "labelWrapper"
-    | "labelWrapper--hasValues"
+    | "labelWrapperWithValues"
     | "popoverContentContainer"
     | "popoverInnerContentContainer"
     | "paper"
@@ -32,7 +32,7 @@ export const useStyles = makeStyles(
             position: "relative",
             border: `1px solid ${theme.palette.grey[100]}`,
         },
-        "fieldBarWrapper--hasValues": {
+        fieldBarWrapperWithValues: {
             border: `1px solid ${theme.palette.grey[300]}`,
         },
         fieldBarInnerWrapper: {
@@ -54,7 +54,7 @@ export const useStyles = makeStyles(
             },
         },
 
-        "labelWrapper--hasValues": {
+        labelWrapperWithValues: {
             "& [class*='MuiTypography-body1']": {
                 fontWeight: 500,
             },
