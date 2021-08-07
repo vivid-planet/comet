@@ -13,9 +13,6 @@ export interface RteTheme {
         buttonBorderHover: React.CSSProperties["color"];
         buttonBorderDisabled: React.CSSProperties["color"];
     };
-    editor: {
-        minHeight: number;
-    };
 }
 
 export default (themeProps: CometAdminRteThemeProps | undefined): RteTheme => {
@@ -28,9 +25,6 @@ export default (themeProps: CometAdminRteThemeProps | undefined): RteTheme => {
             buttonBackgroundHover: themeProps?.colors?.buttonBackgroundHover ? themeProps.colors.buttonBackgroundHover : greyPalette[200],
             buttonBorderHover: themeProps?.colors?.buttonBorderHover ? themeProps.colors.buttonBorderHover : greyPalette[400],
             buttonBorderDisabled: themeProps?.colors?.buttonBorderDisabled ? themeProps.colors.buttonBorderDisabled : greyPalette[100],
-        },
-        editor: {
-            minHeight: 240,
         },
     };
 };

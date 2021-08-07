@@ -14,11 +14,7 @@ function Story() {
             <Box marginBottom={4}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Rte
-                            value={editorState}
-                            onChange={setEditorState}
-                            theme={{ editor: { minHeight: select("minHeight", [0, 100, 200, 300, 1000], 0) } }}
-                        />
+                        <Rte value={editorState} onChange={setEditorState} minHeight={select("minHeight", [0, 100, 200, 300, 1000], 0)} />
                     </CardContent>
                 </Card>
             </Box>

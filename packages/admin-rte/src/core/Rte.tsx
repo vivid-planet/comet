@@ -86,17 +86,14 @@ export interface CometAdminRteThemeProps {
         buttonBorderHover?: React.CSSProperties["color"];
         buttonBorderDisabled?: React.CSSProperties["color"];
     };
-    editor?: {
-        minHeight?: number;
-    };
 }
 
-export interface IProps {
+export interface IProps extends CometAdminRteThemeProps {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
     disabled?: boolean;
-    theme?: CometAdminRteThemeProps;
+    minHeight?: number;
 }
 
 const defaultOptions: IRteOptions = {
@@ -256,7 +253,7 @@ const Rte: React.RefForwardingComponent<any, IProps & StyledComponentProps<Comet
         return getDefaultKeyBinding(event);
     }
 
-    const classes = mergeClasses<CometAdminRteClassKeys>(useStyles(props.theme || {}), props.classes);
+    const classes = mergeClasses<CometAdminRteClassKeys>(useStyles({ colors: props.colors, minHeight: props.minHeight }), props.classes);
 
     const rootClasses: string[] = [classes.root];
     if (disabled) rootClasses.push(classes.disabled);
@@ -283,7 +280,7 @@ const Rte: React.RefForwardingComponent<any, IProps & StyledComponentProps<Comet
 
 export type CometAdminRteClassKeys = "root" | "disabled" | "editor";
 
-const useStyles = makeStyles<Theme, CometAdminRteThemeProps, CometAdminRteClassKeys>(
+const useStyles = makeStyles<Theme, CometAdminRteThemeProps & { minHeight?: number }, CometAdminRteClassKeys>(
     (theme: Theme) => {
         const rteTheme = getRteTheme(theme.props?.CometAdminRte);
 
@@ -300,7 +297,7 @@ const useStyles = makeStyles<Theme, CometAdminRteThemeProps, CometAdminRteClassK
             },
             editor: {
                 "& .public-DraftEditor-content": {
-                    minHeight: (p: CometAdminRteThemeProps) => p.editor?.minHeight ?? rteTheme.editor.minHeight,
+                    minHeight: (p) => p?.minHeight ?? 240,
                     padding: 20,
                     boxSizing: "border-box",
                 },
