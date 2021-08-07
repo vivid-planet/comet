@@ -22,4 +22,4 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Rte, theming", () => <Story />);
+storiesOf("@comet/admin-rte", module).add("Rte, minHeight", () => <Story />);
