@@ -11,6 +11,7 @@ import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
 import { createMuiTheme, Theme } from "@material-ui/core";
 import { createGlobalStyle } from "styled-components";
+import { previewGlobalStyles } from "./preview.styles";
 
 addDecorator((story, context) => {
     const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
@@ -60,18 +61,7 @@ const themeOptions = {
 };
 
 const GlobalStyles = createGlobalStyle`
-    body {
-        margin: 0;
-        background-color: ${({ theme }) => theme.palette.background.default};
-      
-        &.sb-show-main.sb-main-padded {
-            padding: 0;
-        }
-
-        .sbdocs-preview {
-            background-color: ${({ theme }) => theme.palette.background.default};
-        }
-    }
+    ${previewGlobalStyles}
 `;
 
 addDecorator((story, ctx) => {
