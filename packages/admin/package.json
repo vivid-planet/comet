@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "2.0.0-alpha.8",
+    "version": "2.0.0-alpha.9",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -8,7 +8,7 @@
     ],
     "dependencies": {
         "@material-ui/lab": "^4.0.0-alpha.57",
-        "@comet/admin-icons": "^2.0.0-alpha.8",
+        "@comet/admin-icons": "^2.0.0-alpha.9",
         "debounce": "^1.2.0",
         "final-form-set-field-data": "^1.0.2",
         "lodash.isequal": "^4.5.0",
