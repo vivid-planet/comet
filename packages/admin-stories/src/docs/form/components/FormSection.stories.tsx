@@ -4,12 +4,12 @@ import * as React from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 
-storiesOf("stories/components/Form/FormSection", module)
+storiesOf("stories/Form/Components", module)
     .addDecorator(apolloStoryDecorator())
-    .add("Example", () => {
+    .add("FormSection", () => {
         return (
             <FinalForm mode="add" onSubmit={() => {}}>
-                <FormSection title="Contact information">
+                <FormSection title="Personal information">
                     <Field type="text" name="name" label="Name" placeholder="Full name" component={FinalFormInput} fullWidth />
                     <Field type="email" name="email" label="Email" placeholder="you@example.com" component={FinalFormInput} fullWidth />
                 </FormSection>

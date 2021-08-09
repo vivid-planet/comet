@@ -11,6 +11,7 @@ import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
 import { createTheme, Theme } from "@material-ui/core";
 import { createGlobalStyle } from "styled-components";
+import { previewGlobalStyles } from "./preview.styles";
 
 addDecorator((story, context) => {
     const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
@@ -60,14 +61,7 @@ const themeOptions = {
 };
 
 const GlobalStyles = createGlobalStyle`
-    body {
-        margin: 0;
-        background-color: ${({ theme }) => theme.palette.background.default};
-      
-        &.sb-show-main.sb-main-padded {
-            padding: 0;
-        }
-    }
+    ${previewGlobalStyles}
 `;
 
 addDecorator((story, ctx) => {
@@ -96,7 +90,6 @@ const orderComponents = [
     "docs-components-appheader",
     "docs-components-toolbar",
     "docs-components-table",
-    "docs-components-form",
     "docs-components-stack",
     "docs-components-edit-dialog",
     "docs-components-error-handling",
@@ -108,6 +101,15 @@ const orderComponents = [
     "docs-components-react-select",
     "docs-components",
 ];
+const orderForm = [
+    "docs-form-overview",
+    "docs-form-validation",
+    "docs-form-layout",
+    "docs-form-components-fieldcontainer",
+    "docs-form-components-field",
+    "docs-form-components-formsection",
+    "docs-form-components",
+];
 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
 const orderIcons = ["docs-icons-list", "docs-icons-usage", "docs-icons"];
 const orderTheming = ["docs-theming"];
@@ -117,6 +119,7 @@ const order = [
     "docs-intro-",
     ...orderGettingStarted,
     ...orderComponents,
+    ...orderForm,
     ...orderHooks,
     ...orderIcons,
     ...orderTheming,

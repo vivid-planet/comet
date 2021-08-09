@@ -3,9 +3,9 @@ import { storiesOf } from "@storybook/react";
 import { FORM_ERROR } from "final-form";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../../apollo-story.decorator";
+import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
-storiesOf("stories/components/Form/Overview", module)
+storiesOf("stories/Form/Validation", module)
     .addDecorator(apolloStoryDecorator())
     .add("Record-level validation", () => {
         interface FormValues {
