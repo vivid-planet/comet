@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file. This projec
 -   Add `open` and `onOpenChange` props to `AppHeaderDropdown` that allow replacing the internal open state with an external state
 -   add `getTargetUrl()` to `StackSwitchApi`
 -   add `StackLink` component for navigating within a `Stack` via hyperlinks
+-   allow `boolean | undefined | null` as children of `RouterTabs`
 
 ### Incompatible Changes
 
