@@ -2,6 +2,7 @@ import {
     Stack,
     StackBackButton,
     StackBreadcrumbs,
+    StackLink,
     StackPage,
     StackPageTitle,
     StackSwitch,
@@ -11,7 +12,6 @@ import {
     useStackSwitch,
     useStackSwitchApi,
 } from "@comet/admin";
-import { StackLink } from "@comet/admin/lib/stack/StackLink";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

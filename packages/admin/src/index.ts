@@ -12,6 +12,7 @@ export { StackPageTitle } from "./stack/StackPageTitle";
 export { IStackSwitchApi, StackSwitch, StackSwitchApiContext, useStackSwitch, useStackSwitchApi } from "./stack/Switch";
 export { StackSwitchMeta } from "./stack/SwitchMeta";
 export { StackBackButton } from "./stack/backbutton/StackBackButton";
+export { StackLink } from "./stack/StackLink";
 export { CometAdminStackBackButtonThemeProps } from "./stack/backbutton/StackBackButton.styles";
 export { StackBreadcrumbProps, StackBreadcrumbs } from "./stack/breadcrumbs/StackBreadcrumbs";
 export { CometAdminStackBreadcrumbsClassKeys, CometAdminStackBreadcrumbsThemeProps } from "./stack/breadcrumbs/StackBreadcrumbs.styles";
