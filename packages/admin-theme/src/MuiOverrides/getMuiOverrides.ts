@@ -20,6 +20,7 @@ import { getMuiFormLabelOverrides } from "./MuiFormLabel";
 import { getMuiIconButtonOverrides } from "./MuiIconButton";
 import { getMuiInputAdornmentOverrides } from "./MuiInputAdornment";
 import { getMuiInputBaseOverrides } from "./MuiInputBase";
+import { getMuiLinkOverrides } from "./MuiLink";
 import { getMuiPaperOverrides } from "./MuiPaper";
 import { getMuiRadioOverrides } from "./MuiRadio";
 import { getMuiSelectOverrides } from "./MuiSelect";
@@ -59,4 +60,5 @@ export const getMuiOverrides = (palette: Palette, typography: Typography, spacin
     MuiCardContent: getMuiCardContentOverrides(spacing),
     MuiAutocomplete: getMuiAutocompleteOverrides(spacing),
     MuiInputBase: getMuiInputBaseOverrides(palette, spacing),
+    MuiLink: getMuiLinkOverrides(palette),
 });
