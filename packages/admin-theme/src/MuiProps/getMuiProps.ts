@@ -5,6 +5,7 @@ import { getMuiAutocompleteProps } from "./MuiAutocomplete";
 import { getMuiButtonProps } from "./MuiButton";
 import { getMuiButtonGroupProps } from "./MuiButtonGroup";
 import { getMuiCheckboxProps } from "./MuiCheckbox";
+import { getMuiLinkProps } from "./MuiLink";
 import { getMuiPaperProps } from "./MuiPaper";
 import { getMuiPopoverProps } from "./MuiPopover";
 import { getMuiRadioProps } from "./MuiRadio";
@@ -22,4 +23,5 @@ export const getMuiProps = (): ComponentsProps => ({
     MuiButtonGroup: getMuiButtonGroupProps(),
     MuiSelect: getMuiSelectProps(),
     MuiAutocomplete: getMuiAutocompleteProps(),
+    MuiLink: getMuiLinkProps(),
 });
