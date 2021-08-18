@@ -1,10 +1,9 @@
-import { Link } from "@material-ui/core";
 import React, { PropsWithChildren } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
 import { IStackSwitchApi, useStackSwitchApi } from "./Switch";
 
-interface StackLinkProps {
+interface StackLinkProps extends Omit<RouterLinkProps, "to"> {
     pageName: string;
     payload: string;
     subUrl?: string;
@@ -17,14 +16,15 @@ export const StackLink = ({
     subUrl,
     switchApi: externalSwitchApi,
     children,
+    ...props
 }: PropsWithChildren<StackLinkProps>): React.ReactElement => {
     const internalSwitchApi = useStackSwitchApi();
     // external switchApi allows the creation of StackLinks outside of the stack with the useStackSwitch() hook
     const _switchApi = externalSwitchApi !== undefined ? externalSwitchApi : internalSwitchApi;
 
     return (
-        <Link to={() => _switchApi.getTargetUrl(pageName, payload, subUrl)} component={RouterLink}>
+        <RouterLink to={() => _switchApi.getTargetUrl(pageName, payload, subUrl)} {...props}>
             {children}
-        </Link>
+        </RouterLink>
     );
 };
