@@ -12,6 +12,7 @@ import {
     useStackSwitch,
     useStackSwitchApi,
 } from "@comet/admin";
+import { Button, Link } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -289,21 +290,41 @@ storiesOf("stories/components/Stack", module)
             </div>
         );
     })
-    .add("StackLink", () => {
+    .add("StackLink MuiLink", () => {
         return (
             <Stack topLevelTitle="Example Stack with StackLinks">
                 <StackSwitch>
                     <StackPage name="page1">
                         <h3>Page 1</h3>
-                        <StackLink pageName="page2" payload="test">
-                            link to page2
-                        </StackLink>
+                        <Link component={StackLink} pageName="page2" payload="test">
+                            StackLink-based MuiLink to page2
+                        </Link>
                     </StackPage>
                     <StackPage name="page2">
                         <h3>Page 2</h3>
-                        <StackLink pageName="page1" payload="test">
-                            link to page1
-                        </StackLink>
+                        <Link component={StackLink} pageName="page1" payload="test">
+                            StackLink-based MuiLink to page1
+                        </Link>
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
+        );
+    })
+    .add("StackLink Button", () => {
+        return (
+            <Stack topLevelTitle="Example Stack with StackLinks">
+                <StackSwitch>
+                    <StackPage name="page1">
+                        <h3>Page 1</h3>
+                        <Button component={StackLink} pageName="page2" payload="test">
+                            StackLink-based Button to page2
+                        </Button>
+                    </StackPage>
+                    <StackPage name="page2">
+                        <h3>Page 2</h3>
+                        <Button component={StackLink} pageName="page1" payload="test">
+                            StackLink-based Button to page1
+                        </Button>
                     </StackPage>
                 </StackSwitch>
             </Stack>
