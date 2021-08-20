@@ -71,7 +71,7 @@ export function FilterBarPopoverFilter({
                                     vertical: "bottom",
                                     horizontal: "left",
                                 }}
-                                PaperProps={{ square: true }}
+                                PaperProps={{ square: true, elevation: 1 }}
                                 classes={{
                                     paper: classes.paper,
                                 }}

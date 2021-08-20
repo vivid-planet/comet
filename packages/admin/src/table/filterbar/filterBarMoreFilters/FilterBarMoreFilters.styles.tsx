@@ -34,7 +34,7 @@ export const useStyles = makeStyles(
             marginLeft: "15px",
 
             "& [class*='MuiTypography-body1']": {
-                fontWeight: 500,
+                fontWeight: theme.typography.fontWeightBold,
             },
         },
     }),

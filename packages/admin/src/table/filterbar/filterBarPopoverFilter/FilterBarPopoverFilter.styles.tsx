@@ -50,13 +50,13 @@ export const useStyles = makeStyles(
             boxSizing: "border-box",
             marginRight: "6px",
             "& [class*='MuiTypography-body1']": {
-                fontWeight: 300,
+                fontWeight: theme.typography.fontWeightRegular,
             },
         },
 
         labelWrapperWithValues: {
             "& [class*='MuiTypography-body1']": {
-                fontWeight: 500,
+                fontWeight: theme.typography.fontWeightBold,
             },
         },
         popoverContentContainer: {
@@ -76,7 +76,6 @@ export const useStyles = makeStyles(
             height: 60,
         },
         paper: {
-            boxShadow: "0 0 8px 0 rgba(0,0,0,0.1)",
             marginLeft: -1, //due to border of popover, but now overrideable with styling if needed
             marginTop: 2, //due to boxShadow of popover to not overlap border of clickable fieldBar
         },
