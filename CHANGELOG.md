@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file. This projec
 -   add `getTargetUrl()` to `StackSwitchApi`
 -   add `StackLink` component for navigating within a `Stack` via hyperlinks
 -   allow `boolean | undefined | null` as children of `RouterTabs`
+-   expose `selectionApi` through `useEditDialog`
 
 ### Incompatible Changes
 

@@ -32,7 +32,7 @@ const messages = defineMessages({
     },
 });
 
-export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi] {
+export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
 
     const openAddDialog = React.useCallback(
@@ -66,7 +66,7 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
         };
     }, [Selection, api, selection, selectionApi]);
 
-    return [EditDialogWithHookProps, selection, api];
+    return [EditDialogWithHookProps, selection, api, selectionApi];
 }
 
 interface IHookProps {
