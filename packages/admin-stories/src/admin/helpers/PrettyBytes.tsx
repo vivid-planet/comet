@@ -18,29 +18,33 @@ function Normal() {
                     Normal Behavior
                 </Typography>
                 <Content>
-                    <span>6 Bytes</span>{" "}
+                    <span>0 Bytes</span>
                     <span>
-                        <PrettyBytes value={6} />{" "}
+                        <PrettyBytes value={0} />
                     </span>
-                    <span>6.000 Bytes</span>{" "}
+                    <span>6 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000} />{" "}
+                        <PrettyBytes value={6} />
                     </span>
-                    <span>6.000.000 Bytes</span>{" "}
+                    <span>6.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000} />{" "}
+                        <PrettyBytes value={6000} />
                     </span>
-                    <span>6.000.000.000 Bytes</span>{" "}
+                    <span>6.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000000} />{" "}
+                        <PrettyBytes value={6000000} />
                     </span>
-                    <span>6.000.000.000.000 Bytes</span>{" "}
+                    <span>6.000.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000000000} />{" "}
+                        <PrettyBytes value={6000000000} />
                     </span>
-                    <span>6.000.000.000.000.000 Bytes</span>{" "}
+                    <span>6.000.000.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000000000000} />{" "}
+                        <PrettyBytes value={6000000000000} />
+                    </span>
+                    <span>6.000.000.000.000.000 Bytes</span>
+                    <span>
+                        <PrettyBytes value={6000000000000000} />
                     </span>
                 </Content>
             </CardContent>
@@ -56,29 +60,33 @@ function FixedUnit() {
                     Fixed Unit (kilobyte)
                 </Typography>
                 <Content>
+                    <span>0 Bytes</span>
+                    <span>
+                        <PrettyBytes value={0} unit="kilobyte" />
+                    </span>
                     <span>6 Bytes</span>
                     <span>
-                        <PrettyBytes value={6} unit="kilobyte" />{" "}
+                        <PrettyBytes value={6} unit="kilobyte" />
                     </span>
-                    <span>6.000 Bytes</span>{" "}
+                    <span>6.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000} unit="kilobyte" />{" "}
+                        <PrettyBytes value={6000} unit="kilobyte" />
                     </span>
-                    <span>6.000.000 Bytes</span>{" "}
+                    <span>6.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000} unit="kilobyte" />{" "}
+                        <PrettyBytes value={6000000} unit="kilobyte" />
                     </span>
-                    <span>6.000.000.000 Bytes</span>{" "}
+                    <span>6.000.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000000} unit="kilobyte" />{" "}
+                        <PrettyBytes value={6000000000} unit="kilobyte" />
                     </span>
-                    <span>6.000.000.000.000 Bytes</span>{" "}
+                    <span>6.000.000.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000000000} unit="kilobyte" />{" "}
+                        <PrettyBytes value={6000000000000} unit="kilobyte" />
                     </span>
-                    <span>6.000.000.000.000.000 Bytes</span>{" "}
+                    <span>6.000.000.000.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000000000000} unit="kilobyte" />{" "}
+                        <PrettyBytes value={6000000000000000} unit="kilobyte" />
                     </span>
                 </Content>
             </CardContent>
@@ -94,29 +102,33 @@ function CustomMaximumFractionDigits() {
                     Custom maximumFractionDigits (6 digits)
                 </Typography>
                 <Content>
-                    <span>6 Bytes</span>{" "}
+                    <span>0 Bytes</span>
                     <span>
-                        <PrettyBytes value={6} unit="megabyte" maximumFractionDigits={6} />{" "}
+                        <PrettyBytes value={0} unit="megabyte" maximumFractionDigits={6} />
                     </span>
-                    <span>6.000 Bytes</span>{" "}
+                    <span>6 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                        <PrettyBytes value={6} unit="megabyte" maximumFractionDigits={6} />
                     </span>
-                    <span>6.000.000 Bytes</span>{" "}
+                    <span>6.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                        <PrettyBytes value={6000} unit="megabyte" maximumFractionDigits={6} />
                     </span>
-                    <span>6.000.000.000 Bytes</span>{" "}
+                    <span>6.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                        <PrettyBytes value={6000000} unit="megabyte" maximumFractionDigits={6} />
                     </span>
-                    <span>6.000.000.000.000 Bytes</span>{" "}
+                    <span>6.000.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                        <PrettyBytes value={6000000000} unit="megabyte" maximumFractionDigits={6} />
                     </span>
-                    <span>6.000.000.000.000.000 Bytes</span>{" "}
+                    <span>6.000.000.000.000 Bytes</span>
                     <span>
-                        <PrettyBytes value={6000000000000000} unit="megabyte" maximumFractionDigits={6} />{" "}
+                        <PrettyBytes value={6000000000000} unit="megabyte" maximumFractionDigits={6} />
+                    </span>
+                    <span>6.000.000.000.000.000 Bytes</span>
+                    <span>
+                        <PrettyBytes value={6000000000000000} unit="megabyte" maximumFractionDigits={6} />
                     </span>
                 </Content>
             </CardContent>
