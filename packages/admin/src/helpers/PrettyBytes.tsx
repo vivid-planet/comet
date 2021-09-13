@@ -23,7 +23,10 @@ export const PrettyBytes = ({
         // log to base 1024
         // => receive exponent of equation `1024 ** exponent = bytes`
         // => exponent determines unit
-        exponent = Math.min(Math.floor(Math.log(Math.abs(bytes)) / Math.log(1024)), availableUnits.length - 1);
+        exponent = Math.floor(Math.log(Math.abs(bytes)) / Math.log(1024));
+        // upper and lower bounds => exponent cannot be outside range of availableUnits
+        exponent = Math.min(exponent, availableUnits.length - 1);
+        exponent = Math.max(exponent, 0);
     }
     const unit = availableUnits[exponent];
     const size = bytes / 1024 ** exponent;
