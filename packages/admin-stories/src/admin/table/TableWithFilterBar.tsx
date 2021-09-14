@@ -14,92 +14,134 @@ import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
+import { generateRandomColors, generateRandomIntNumbers, generateRandomString } from "../helpers/DataGenerators";
+
+interface ExampleWithSelectProps {
+    colors: string[];
+}
+
+const ExampleWithSelect: React.FC<ExampleWithSelectProps> = ({ colors }) => {
+    const options = colors
+        .filter((color, index, colorsArray) => colorsArray.indexOf(color) == index)
+        .map((color) => {
+            return { value: color, label: color };
+        });
+
+    return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} label={"Farbe:"} />;
+};
+
 interface IFilterValues {
-    username: any;
-    name: any;
-    email: any;
-    website: any;
+    brand: string;
+    model: string;
+    color: string;
     range: {
         min: number;
         max: number;
     };
+    owner: {
+        firstname: string;
+        lastname: string;
+    };
 }
-
-const ExampleWithSelect: React.FC = () => {
-    const options = [
-        { value: "Sincere@april.biz", label: "Sincere@april.biz" },
-        { value: "Shanna@melissa.tv", label: "Shanna@melissa.tv" },
-        { value: "Nathan@yesenia.net", label: "Nathan@yesenia.net" },
-    ];
-    return <Field name="email" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
-};
 
 interface IExampleRow {
     id: number;
-    username: string;
-    email: string;
-    name: string;
+    model: string;
+    brand: string;
+    color: string;
+    horsepower: number;
+    owner: {
+        firstname: string;
+        lastname: string;
+    };
 }
 
-function Story() {
-    const data = Array.from(Array(30).keys()).map(
-        (i): IExampleRow => ({
-            id: i,
-            username: `blub1 ${i}`,
-            email: `blub1 ${i}`,
-            name: `blub2 ${i}`,
-        }),
-    );
+interface StoryProps {
+    tableData: IExampleRow[];
+}
 
+function Story({ tableData }: StoryProps) {
     const filterApi = useTableQueryFilter<Partial<IFilterValues>>({
         range: {
-            min: 0,
-            max: 100,
+            min: 50,
+            max: 200,
         },
     });
+
+    const filteredData = tableData
+        .filter((item) => filterApi.current.color === undefined || item.color === filterApi.current.color)
+        .filter((item) => filterApi.current.model === undefined || item.model.includes(filterApi.current.model))
+        .filter((item) => filterApi.current.brand === undefined || item.brand.includes(filterApi.current.brand))
+        .filter(
+            (item) =>
+                filterApi.current.range === undefined ||
+                (item.horsepower > filterApi.current.range?.min && item.horsepower < filterApi.current.range?.max),
+        )
+        .filter(
+            (item) =>
+                filterApi.current.owner === undefined ||
+                filterApi.current.owner.firstname === undefined ||
+                item.owner.firstname.includes(filterApi.current.owner.firstname),
+        )
+        .filter(
+            (item) =>
+                filterApi.current.owner === undefined ||
+                filterApi.current.owner.lastname === undefined ||
+                item.owner.lastname.includes(filterApi.current.owner.lastname),
+        );
 
     return (
         <>
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBarPopoverFilter label={"Username"}>
-                        <Field name="username" type="text" component={FinalFormInput} fullWidth />
+                    <FilterBarPopoverFilter label={"Marke"}>
+                        <Field label={"Marke:"} name="brand" type="text" component={FinalFormInput} fullWidth />
+                    </FilterBarPopoverFilter>
+                    <FilterBarPopoverFilter label={"Modell"}>
+                        <Field label={"Modell:"} name="model" type="text" component={FinalFormInput} fullWidth />
+                    </FilterBarPopoverFilter>
+                    <FilterBarPopoverFilter label={"Besitzer"}>
+                        <Field label={"Vorname:"} name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
+                        <Field label={"Nachname:"} name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
                     <FilterBarMoreFilters>
-                        <FilterBarPopoverFilter label={"Email"}>
-                            <ExampleWithSelect />
-                        </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Name"}>
-                            <Field name="name" type="text" component={FinalFormInput} fullWidth />
+                        <FilterBarPopoverFilter label={"Farbe"}>
+                            <ExampleWithSelect colors={tableData.map((item) => item.color)} />
                         </FilterBarPopoverFilter>
                         <FilterBarPopoverFilter label={"Range"}>
-                            <Field name="range" component={FinalFormRangeInput} fullWidth min={0} max={100} />
-                        </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Website"}>
-                            <Field name="website.url" type="text" component={FinalFormInput} fullWidth />
-                            <Field name="website.name" type="text" component={FinalFormInput} fullWidth />
-                            <Field name="maxi" type="text" component={FinalFormInput} fullWidth />
+                            <Field label={"PS:"} name="range" component={FinalFormRangeInput} fullWidth min={50} max={200} />
                         </FilterBarPopoverFilter>
                     </FilterBarMoreFilters>
                 </FilterBar>
             </TableFilterFinalForm>
             Filters: {JSON.stringify(filterApi.current)}
             <Table
-                data={data}
-                totalCount={data.length}
+                data={filteredData}
+                totalCount={filteredData.length}
                 columns={[
                     {
-                        name: "name",
-                        header: "Name",
+                        name: "brand",
+                        header: "Marke",
                     },
                     {
-                        name: "username",
-                        header: "Username",
+                        name: "model",
+                        header: "Modell",
                     },
                     {
-                        name: "email",
-                        header: "E-Mail",
+                        name: "color",
+                        header: "Farbe",
+                    },
+                    {
+                        name: "horsepower",
+                        header: "PS",
+                    },
+                    {
+                        name: "owner",
+                        header: "Besitzer (Vorname Nachname)",
+                        render: ({ owner }) => {
+                            return `${owner.firstname} ${owner.lastname}`;
+                        },
                     },
                 ]}
             />
@@ -107,4 +149,26 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module).add("Table with Filterbar", () => <Story />);
+storiesOf("@comet/admin/table", module).add("Table with Filterbar", () => {
+    const randomBrands = generateRandomString(30, 10);
+    const randomFirstNames = generateRandomString(30, 7);
+    const randomLastNames = generateRandomString(30, 12);
+    const randomModels = generateRandomString(30, 15);
+    const randomColors = generateRandomColors(30);
+    const randomNumbers = generateRandomIntNumbers(30, 50, 200);
+
+    const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
+        return {
+            id: i,
+            model: `${randomModels[i]}`,
+            brand: `${randomBrands[i]}`,
+            color: `${randomColors[i]}`,
+            horsepower: randomNumbers[i],
+            owner: {
+                firstname: `${randomFirstNames[i]}`,
+                lastname: `${randomLastNames[i]}`,
+            },
+        };
+    });
+    return <Story tableData={randomTableData} />;
+});
