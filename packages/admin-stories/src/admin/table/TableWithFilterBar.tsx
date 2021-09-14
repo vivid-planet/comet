@@ -12,29 +12,28 @@ import {
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
+import faker from "faker";
 import * as React from "react";
 
-import { generateRandomColors, generateRandomIntNumbers, generateRandomString } from "../helpers/DataGenerators";
-
-interface ExampleWithSelectProps {
+interface ColorFilterFieldProps {
     colors: string[];
 }
 
-const ExampleWithSelect: React.FC<ExampleWithSelectProps> = ({ colors }) => {
+const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
     const options = colors
         .filter((color, index, colorsArray) => colorsArray.indexOf(color) == index)
         .map((color) => {
             return { value: color, label: color };
         });
 
-    return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} label={"Farbe:"} />;
+    return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} label={"Color:"} />;
 };
 
 interface IFilterValues {
     brand: string;
     model: string;
     color: string;
-    range: {
+    horsepower: {
         min: number;
         max: number;
     };
@@ -62,7 +61,7 @@ interface StoryProps {
 
 function Story({ tableData }: StoryProps) {
     const filterApi = useTableQueryFilter<Partial<IFilterValues>>({
-        range: {
+        horsepower: {
             min: 50,
             max: 200,
         },
@@ -74,8 +73,8 @@ function Story({ tableData }: StoryProps) {
         .filter((item) => filterApi.current.brand === undefined || item.brand.includes(filterApi.current.brand))
         .filter(
             (item) =>
-                filterApi.current.range === undefined ||
-                (item.horsepower > filterApi.current.range?.min && item.horsepower < filterApi.current.range?.max),
+                filterApi.current.horsepower === undefined ||
+                (item.horsepower > filterApi.current.horsepower?.min && item.horsepower < filterApi.current.horsepower?.max),
         )
         .filter(
             (item) =>
@@ -95,22 +94,22 @@ function Story({ tableData }: StoryProps) {
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBarPopoverFilter label={"Marke"}>
-                        <Field label={"Marke:"} name="brand" type="text" component={FinalFormInput} fullWidth />
+                    <FilterBarPopoverFilter label={"Brand"}>
+                        <Field label={"Brand:"} name="brand" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
-                    <FilterBarPopoverFilter label={"Modell"}>
-                        <Field label={"Modell:"} name="model" type="text" component={FinalFormInput} fullWidth />
+                    <FilterBarPopoverFilter label={"Model"}>
+                        <Field label={"Model:"} name="model" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
-                    <FilterBarPopoverFilter label={"Besitzer"}>
-                        <Field label={"Vorname:"} name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
-                        <Field label={"Nachname:"} name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
+                    <FilterBarPopoverFilter label={"Owner"}>
+                        <Field label={"Firstname:"} name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
+                        <Field label={"Lastname:"} name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
                     <FilterBarMoreFilters>
-                        <FilterBarPopoverFilter label={"Farbe"}>
-                            <ExampleWithSelect colors={tableData.map((item) => item.color)} />
+                        <FilterBarPopoverFilter label={"Color"}>
+                            <ColorFilterField colors={tableData.map((item) => item.color)} />
                         </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Range"}>
-                            <Field label={"PS:"} name="range" component={FinalFormRangeInput} fullWidth min={50} max={200} />
+                        <FilterBarPopoverFilter label={"Horsepower"}>
+                            <Field label={"Horsepower:"} name="horsepower" component={FinalFormRangeInput} fullWidth min={50} max={200} />
                         </FilterBarPopoverFilter>
                     </FilterBarMoreFilters>
                 </FilterBar>
@@ -122,7 +121,7 @@ function Story({ tableData }: StoryProps) {
                 columns={[
                     {
                         name: "brand",
-                        header: "Marke",
+                        header: "Brand",
                     },
                     {
                         name: "model",
@@ -130,15 +129,15 @@ function Story({ tableData }: StoryProps) {
                     },
                     {
                         name: "color",
-                        header: "Farbe",
+                        header: "Color",
                     },
                     {
                         name: "horsepower",
-                        header: "PS",
+                        header: "Horsepower",
                     },
                     {
                         name: "owner",
-                        header: "Besitzer (Vorname Nachname)",
+                        header: "Owner (Firstname Lastname)",
                         render: ({ owner }) => {
                             return `${owner.firstname} ${owner.lastname}`;
                         },
@@ -150,23 +149,16 @@ function Story({ tableData }: StoryProps) {
 }
 
 storiesOf("@comet/admin/table", module).add("Table with Filterbar", () => {
-    const randomBrands = generateRandomString(30, 10);
-    const randomFirstNames = generateRandomString(30, 7);
-    const randomLastNames = generateRandomString(30, 12);
-    const randomModels = generateRandomString(30, 15);
-    const randomColors = generateRandomColors(30);
-    const randomNumbers = generateRandomIntNumbers(30, 50, 200);
-
     const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
         return {
             id: i,
-            model: `${randomModels[i]}`,
-            brand: `${randomBrands[i]}`,
-            color: `${randomColors[i]}`,
-            horsepower: randomNumbers[i],
+            model: faker.vehicle.model(),
+            brand: faker.vehicle.manufacturer(),
+            color: faker.commerce.color(),
+            horsepower: Math.floor(Math.random() * (200 - 50 + 1)) + 50, //min = 50, max = 200, amout: 30
             owner: {
-                firstname: `${randomFirstNames[i]}`,
-                lastname: `${randomLastNames[i]}`,
+                firstname: faker.name.firstName(),
+                lastname: faker.name.lastName(),
             },
         };
     });
