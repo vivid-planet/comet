@@ -1,27 +1,9 @@
-import { makeStyles, Theme, Typography } from "@material-ui/core";
-import { MoreHoriz } from "@material-ui/icons";
+import { Filter } from "@comet/admin-icons";
+import { Typography } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-const useStyles = makeStyles(
-    (theme: Theme) => ({
-        showMoreWrapper: {
-            minWidth: "150px",
-            border: `1px solid ${theme.palette.grey[300]}`,
-            justifyContent: "center",
-            position: "relative",
-            marginBottom: "10px",
-            alignItems: "center",
-            marginRight: "10px",
-            cursor: "pointer",
-            display: "flex",
-        },
-        showMoreTextWrapper: {
-            marginLeft: "15px",
-        },
-    }),
-    { name: "CometAdminFilterBar" },
-);
+import { useStyles } from "./FilterBarMoreFilters.styles";
 
 export interface FilterBarMoreFiltersProps {}
 
@@ -31,9 +13,9 @@ export function FilterBarMoreFilters({ children }: React.PropsWithChildren<Filte
     if (!hasExtended) {
         return (
             <div className={classes.showMoreWrapper} onClick={() => setHasExtended(true)}>
-                <MoreHoriz />
+                <Filter />
                 <div className={classes.showMoreTextWrapper}>
-                    <Typography variant="subtitle2">
+                    <Typography variant="body1">
                         <FormattedMessage id="cometAdmin.generic.moreFilter" defaultMessage="More Filter" />
                     </Typography>
                 </div>

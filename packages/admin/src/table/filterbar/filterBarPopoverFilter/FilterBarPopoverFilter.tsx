@@ -1,83 +1,14 @@
-import { Button, ButtonProps, Popover, Typography } from "@material-ui/core";
-import { makeStyles, Theme, ThemeOptions, useTheme } from "@material-ui/core/styles";
+import { Check, ChevronDown, Reset } from "@comet/admin-icons";
+import { Button, Popover, Typography } from "@material-ui/core";
+import { ThemeOptions, useTheme } from "@material-ui/core/styles";
+import clsx from "clsx";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
-
-export interface FilterBarPopoverFilterThemeProps {
-    submitButton?: ButtonProps;
-    resetButton?: ButtonProps;
-}
-
-export type CometAdminFilterBarPopoverFilterClassKeys =
-    | "root"
-    | "fieldBarWrapper"
-    | "fieldBarInnerWrapper"
-    | "labelWrapper"
-    | "popoverContentContainer"
-    | "popoverInnerContentContainer"
-    | "paper"
-    | "buttonsContainer";
-
-const useStyles = makeStyles(
-    (theme: Theme) => ({
-        root: {
-            minWidth: "150px",
-            border: `1px solid ${theme.palette.grey[300]}`,
-            position: "relative",
-            marginBottom: "10px",
-            marginRight: "10px",
-        },
-        fieldBarWrapper: {
-            position: "relative",
-        },
-        fieldBarInnerWrapper: {
-            position: "relative",
-            alignItems: "center",
-            padding: "10px 20px",
-            cursor: "pointer",
-            display: "flex",
-
-            "&:after": {
-                borderTop: `4px solid ${theme.palette.grey[300]}`,
-                borderRight: "4px solid transparent",
-                borderLeft: "4px solid transparent",
-                position: "absolute",
-                display: "block",
-                right: "10px",
-                content: "''",
-                top: "50%",
-                height: 0,
-                width: 0,
-            },
-        },
-        labelWrapper: {
-            marginRight: "15px",
-            boxSizing: "border-box",
-        },
-        popoverContentContainer: {
-            minWidth: 300,
-            "& [class*='CometAdminFormFieldContainer-root']": {
-                boxSizing: "border-box",
-                padding: "20px",
-                marginBottom: 0,
-            },
-        },
-        buttonsContainer: {
-            borderTop: `1px solid ${theme.palette.grey[300]}`,
-            justifyContent: "space-between",
-            padding: "10px 15px",
-            display: "flex",
-        },
-        paper: {
-            border: "1px solid grey",
-            marginLeft: -1, //due to border of popover, but now overrideable with styling if needed
-        },
-    }),
-    { name: "CometAdminFilterBarPopoverFilter" },
-);
+import { dirtyFieldsCount } from "../dirtyFieldsCount";
+import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
+import { useStyles } from "./FilterBarPopoverFilter.styles";
 
 export interface FilterBarPopoverFilterProps {
     label: string;
@@ -89,7 +20,7 @@ export function FilterBarPopoverFilter({
     children,
     label,
     dirtyFieldsBadge,
-    calcNumberDirtyFields,
+    calcNumberDirtyFields = dirtyFieldsCount,
 }: React.PropsWithChildren<FilterBarPopoverFilterProps>) {
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const outerForm = useForm();
@@ -118,14 +49,16 @@ export function FilterBarPopoverFilter({
                 }}
                 initialValues={outerForm.getState().values}
             >
-                {({ form, values, handleSubmit }) => {
+                {({ form, values, handleSubmit, dirtyFields }) => {
+                    const countValue = calcNumberDirtyFields(values, form.getRegisteredFields());
                     return (
-                        <div className={classes.fieldBarWrapper}>
+                        <div className={clsx(classes.fieldBarWrapper, countValue > 0 && classes.fieldBarWrapperWithValues)}>
                             <div className={classes.fieldBarInnerWrapper} onClick={handleClick}>
-                                <div className={classes.labelWrapper}>
-                                    <Typography variant="subtitle2">{label}</Typography>
+                                <div className={clsx(classes.labelWrapper, countValue > 0 && classes.labelWrapperWithValues)}>
+                                    <Typography variant="body1">{label}</Typography>
                                 </div>
-                                <FilterBarActiveFilterBadgeComponent values={values} calcNumberDirtyFields={calcNumberDirtyFields} />
+                                <FilterBarActiveFilterBadgeComponent countValue={countValue} />
+                                <ChevronDown />
                             </div>
                             <Popover
                                 open={open}
@@ -138,7 +71,7 @@ export function FilterBarPopoverFilter({
                                     vertical: "bottom",
                                     horizontal: "left",
                                 }}
-                                PaperProps={{ square: true }}
+                                PaperProps={{ square: true, elevation: 1 }}
                                 classes={{
                                     paper: classes.paper,
                                 }}
@@ -159,6 +92,7 @@ export function FilterBarPopoverFilter({
 
                                                 setAnchorEl(null);
                                             }}
+                                            startIcon={<Reset />}
                                             {...resetButtonProps}
                                         >
                                             <FormattedMessage id="cometAdmin.generic.resetButton" defaultMessage="Reset" />
@@ -172,6 +106,8 @@ export function FilterBarPopoverFilter({
                                                 handleSubmit();
                                                 setAnchorEl(null);
                                             }}
+                                            startIcon={<Check />}
+                                            disabled={Object.values(dirtyFields).length === 0}
                                             {...submitButtonProps}
                                         >
                                             <FormattedMessage id="cometAdmin.generic.applyButton" defaultMessage="Apply" />
