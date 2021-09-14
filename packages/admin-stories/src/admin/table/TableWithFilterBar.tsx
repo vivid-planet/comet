@@ -21,7 +21,7 @@ interface ColorFilterFieldProps {
 
 const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
     const options = colors
-        .filter((color, index, colorsArray) => colorsArray.indexOf(color) == index)
+        .filter((color, index, colorsArray) => colorsArray.indexOf(color) == index) //filter colorsArray to only have unique values as select options
         .map((color) => {
             return { value: color, label: color };
         });
