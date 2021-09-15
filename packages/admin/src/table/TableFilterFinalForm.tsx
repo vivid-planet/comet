@@ -37,10 +37,10 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
     private renderForm = (formRenderProps: FormRenderProps<FilterValues>) => {
         return (
             <form>
-                <Grid container justify="space-between" alignItems="center" spacing={2}>
+                <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                     {(this.props.headline || this.props.resetButton) && (
                         <Grid item xs={12}>
-                            <Grid container justify="space-between" alignItems="center" spacing={2}>
+                            <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                                 {this.props.headline && (
                                     <Grid item>
                                         <Typography variant="h4">{this.props.headline}</Typography>

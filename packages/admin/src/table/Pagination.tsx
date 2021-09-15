@@ -20,7 +20,7 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
     return (
         <TableCell colSpan={1000}>
             <Toolbar>
-                <Grid container justify="space-between" alignItems="center">
+                <Grid container justifyContent="space-between" alignItems="center">
                     <Grid item>
                         <Typography color="textPrimary" variant="body2">
                             <FormattedNumber value={totalCount} /> {rowName}
