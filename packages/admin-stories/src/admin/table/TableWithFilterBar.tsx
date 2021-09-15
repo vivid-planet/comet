@@ -12,94 +12,135 @@ import {
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
+import faker from "faker";
 import * as React from "react";
 
+interface ColorFilterFieldProps {
+    colors: string[];
+}
+
+const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
+    const options = colors
+        .filter((color, index, colorsArray) => colorsArray.indexOf(color) == index) //filter colorsArray to only have unique values as select options
+        .map((color) => {
+            return { value: color, label: color };
+        });
+
+    return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} label={"Color:"} />;
+};
+
 interface IFilterValues {
-    username: any;
-    name: any;
-    email: any;
-    website: any;
-    range: {
+    brand: string;
+    model: string;
+    color: string;
+    horsepower: {
         min: number;
         max: number;
     };
+    owner: {
+        firstname: string;
+        lastname: string;
+    };
 }
-
-const ExampleWithSelect: React.FC = () => {
-    const options = [
-        { value: "Sincere@april.biz", label: "Sincere@april.biz" },
-        { value: "Shanna@melissa.tv", label: "Shanna@melissa.tv" },
-        { value: "Nathan@yesenia.net", label: "Nathan@yesenia.net" },
-    ];
-    return <Field name="email" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
-};
 
 interface IExampleRow {
     id: number;
-    username: string;
-    email: string;
-    name: string;
+    model: string;
+    brand: string;
+    color: string;
+    horsepower: number;
+    owner: {
+        firstname: string;
+        lastname: string;
+    };
 }
 
-function Story() {
-    const data = Array.from(Array(30).keys()).map(
-        (i): IExampleRow => ({
-            id: i,
-            username: `blub1 ${i}`,
-            email: `blub1 ${i}`,
-            name: `blub2 ${i}`,
-        }),
-    );
+interface StoryProps {
+    tableData: IExampleRow[];
+}
 
+function Story({ tableData }: StoryProps) {
     const filterApi = useTableQueryFilter<Partial<IFilterValues>>({
-        range: {
-            min: 0,
-            max: 100,
+        horsepower: {
+            min: 50,
+            max: 200,
         },
     });
+
+    const filteredData = tableData
+        .filter((item) => filterApi.current.color === undefined || item.color === filterApi.current.color)
+        .filter((item) => filterApi.current.model === undefined || item.model.includes(filterApi.current.model))
+        .filter((item) => filterApi.current.brand === undefined || item.brand.includes(filterApi.current.brand))
+        .filter(
+            (item) =>
+                filterApi.current.horsepower === undefined ||
+                (item.horsepower > filterApi.current.horsepower?.min && item.horsepower < filterApi.current.horsepower?.max),
+        )
+        .filter(
+            (item) =>
+                filterApi.current.owner === undefined ||
+                filterApi.current.owner.firstname === undefined ||
+                item.owner.firstname.includes(filterApi.current.owner.firstname),
+        )
+        .filter(
+            (item) =>
+                filterApi.current.owner === undefined ||
+                filterApi.current.owner.lastname === undefined ||
+                item.owner.lastname.includes(filterApi.current.owner.lastname),
+        );
 
     return (
         <>
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBarPopoverFilter label={"Username"}>
-                        <Field name="username" type="text" component={FinalFormInput} fullWidth />
+                    <FilterBarPopoverFilter label={"Brand"}>
+                        <Field label={"Brand:"} name="brand" type="text" component={FinalFormInput} fullWidth />
+                    </FilterBarPopoverFilter>
+                    <FilterBarPopoverFilter label={"Model"}>
+                        <Field label={"Model:"} name="model" type="text" component={FinalFormInput} fullWidth />
+                    </FilterBarPopoverFilter>
+                    <FilterBarPopoverFilter label={"Owner"}>
+                        <Field label={"Firstname:"} name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
+                        <Field label={"Lastname:"} name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
                     <FilterBarMoreFilters>
-                        <FilterBarPopoverFilter label={"Email"}>
-                            <ExampleWithSelect />
+                        <FilterBarPopoverFilter label={"Color"}>
+                            <ColorFilterField colors={tableData.map((item) => item.color)} />
                         </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Name"}>
-                            <Field name="name" type="text" component={FinalFormInput} fullWidth />
-                        </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Range"}>
-                            <Field name="range" component={FinalFormRangeInput} fullWidth min={0} max={100} />
-                        </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Website"}>
-                            <Field name="website.url" type="text" component={FinalFormInput} fullWidth />
-                            <Field name="website.name" type="text" component={FinalFormInput} fullWidth />
-                            <Field name="maxi" type="text" component={FinalFormInput} fullWidth />
+                        <FilterBarPopoverFilter label={"Horsepower"}>
+                            <Field label={"Horsepower:"} name="horsepower" component={FinalFormRangeInput} fullWidth min={50} max={200} />
                         </FilterBarPopoverFilter>
                     </FilterBarMoreFilters>
                 </FilterBar>
             </TableFilterFinalForm>
             Filters: {JSON.stringify(filterApi.current)}
             <Table
-                data={data}
-                totalCount={data.length}
+                data={filteredData}
+                totalCount={filteredData.length}
                 columns={[
                     {
-                        name: "name",
-                        header: "Name",
+                        name: "brand",
+                        header: "Brand",
                     },
                     {
-                        name: "username",
-                        header: "Username",
+                        name: "model",
+                        header: "Model",
                     },
                     {
-                        name: "email",
-                        header: "E-Mail",
+                        name: "color",
+                        header: "Color",
+                    },
+                    {
+                        name: "horsepower",
+                        header: "Horsepower",
+                    },
+                    {
+                        name: "owner",
+                        header: "Owner (Firstname Lastname)",
+                        render: ({ owner }) => {
+                            return `${owner.firstname} ${owner.lastname}`;
+                        },
                     },
                 ]}
             />
@@ -107,4 +148,19 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module).add("Table with Filterbar", () => <Story />);
+storiesOf("@comet/admin/table", module).add("Table with Filterbar", () => {
+    const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
+        return {
+            id: i,
+            model: faker.vehicle.model(),
+            brand: faker.vehicle.manufacturer(),
+            color: faker.commerce.color(),
+            horsepower: faker.datatype.number({ min: 50, max: 200 }),
+            owner: {
+                firstname: faker.name.firstName(),
+                lastname: faker.name.lastName(),
+            },
+        };
+    });
+    return <Story tableData={randomTableData} />;
+});
