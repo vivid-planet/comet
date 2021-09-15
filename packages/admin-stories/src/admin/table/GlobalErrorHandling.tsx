@@ -68,7 +68,7 @@ const Story: React.FunctionComponent = () => {
     );
 };
 
-storiesOf("@comet/admin/table", module)
+storiesOf("@comet/admin/table/globalErrorHandling", module)
     .addDecorator(apolloSwapiStoryDecorator())
     .addDecorator(errorDialogStoryProviderDecorator())
     .add("Global Error Handling", () => <Story />);
