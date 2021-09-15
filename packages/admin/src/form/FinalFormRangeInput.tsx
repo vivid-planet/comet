@@ -27,9 +27,7 @@ const styles = (theme: Theme) => {
             textAlign: "center",
             minWidth: "20%",
         },
-        sliderWrapper: {
-            paddingBottom: "20px",
-        },
+        sliderWrapper: {},
         inputFieldContainer: {
             textAlign: "center",
             flexBasis: 0,
