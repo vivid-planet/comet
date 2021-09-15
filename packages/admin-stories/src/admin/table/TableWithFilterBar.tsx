@@ -125,7 +125,7 @@ function Story({ tableData }: StoryProps) {
                     },
                     {
                         name: "model",
-                        header: "Modell",
+                        header: "Model",
                     },
                     {
                         name: "color",
@@ -155,7 +155,7 @@ storiesOf("@comet/admin/table", module).add("Table with Filterbar", () => {
             model: faker.vehicle.model(),
             brand: faker.vehicle.manufacturer(),
             color: faker.commerce.color(),
-            horsepower: Math.floor(Math.random() * (200 - 50 + 1)) + 50, //min = 50, max = 200, amout: 30
+            horsepower: faker.datatype.number({ min: 50, max: 200 }),
             owner: {
                 firstname: faker.name.firstName(),
                 lastname: faker.name.lastName(),
