@@ -1,0 +1,40 @@
+{
+    "name": "@comet/sdk",
+    "version": "2.0.0-alpha.10",
+    "files": [],
+    "dependencies": {
+        "@apollo/client": "^3.2.5",
+        "@comet/admin": "2.0.0-alpha.10",
+        "@comet/admin-color-picker": "2.0.0-alpha.10",
+        "@comet/admin-date-picker": "2.0.0-alpha.10",
+        "@comet/admin-icons": "2.0.0-alpha.10",
+        "@comet/admin-react-select": "2.0.0-alpha.10",
+        "@comet/admin-rte": "2.0.0-alpha.10",
+        "@comet/admin-theme": "2.0.0-alpha.10",
+        "@material-ui/core": "^4.1.3",
+        "@material-ui/icons": "^4.2.1",
+        "@material-ui/styles": "^4.1.3",
+        "@material-ui/lab": "^4.0.0-alpha.57",
+        "draft-js": "^0.11.4",
+        "exceljs": "^3.4.0",
+        "file-saver": "^2.0.2",
+        "final-form": "^4.16.1",
+        "graphql": "^15.0.0",
+        "history": "^4.10.1",
+        "immutable": "~3.7.4",
+        "react": "^16.8",
+        "react-dom": "^16.8",
+        "react-final-form": "^6.3.1",
+        "react-dnd": "^14.0.2",
+        "react-intl": "^5.10.0",
+        "react-router": "^5.1.2",
+        "react-router-dom": "^5.1.2",
+        "react-select": "^3.0.4",
+        "styled-components": "^5.0.0"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "license": "BSD-2-Clause"
+}
