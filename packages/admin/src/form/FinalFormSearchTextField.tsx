@@ -20,24 +20,26 @@ export interface CometAdminFinalFormSearchTextFieldThemeProps {
     icon?: React.ReactNode;
 }
 
-export function FinalFormSearchTextField({ icon, placeholder, ...restProps }: FinalFormInputProps): React.ReactElement {
+export function FinalFormSearchTextField({ icon, placeholder, endAdornment, ...restProps }: FinalFormInputProps): React.ReactElement {
     const intl = useIntl();
     const themeProps = useThemeProps();
 
     return (
         <FinalFormInput
+            {...restProps}
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.finalformsearchtextfield.default.placeholder", defaultMessage: "Search" })}
             startAdornment={<InputAdornment position="start">{icon ?? themeProps.icon}</InputAdornment>}
             endAdornment={
-                <ClearInputWrapper $hidden={restProps.input.value.length === 0}>
-                    <ClearInputButton
-                        onClick={() => {
-                            restProps.input.onChange("");
-                        }}
-                    />
-                </ClearInputWrapper>
+                endAdornment ?? (
+                    <ClearInputWrapper $hidden={restProps.input.value.length === 0}>
+                        <ClearInputButton
+                            onClick={() => {
+                                restProps.input.onChange("");
+                            }}
+                        />
+                    </ClearInputWrapper>
+                )
             }
-            {...restProps}
         />
     );
 }
