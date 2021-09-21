@@ -36,7 +36,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
     }
     private renderForm = (formRenderProps: FormRenderProps<FilterValues>) => {
         return (
-            <form>
+            <form onSubmit={formRenderProps.handleSubmit}>
                 <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                     {(this.props.headline || this.props.resetButton) && (
                         <Grid item xs={12}>
