@@ -125,4 +125,18 @@ export function mergeBlocktypeMaps(...args: IBlocktypeMap[]) {
     }); // merge 2 levels nested
 }
 
+export function checkBlocktypeMap(map: IBlocktypeMap): void {
+    const unsupportedKeysForUnstyled: Array<keyof IBlocktypeConfig> = ["group", "icon", "supportedBy"];
+
+    if (map?.unstyled) {
+        unsupportedKeysForUnstyled.forEach((c) => {
+            if (map.unstyled[c]) {
+                console.warn(
+                    `'unstyled' in BlocktypeMap does not support the key '${c}' with the given value '${map.unstyled[c]}'. The value is ignored.`,
+                );
+            }
+        });
+    }
+}
+
 export default defaultBlocktypeMap;

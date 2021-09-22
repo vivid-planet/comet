@@ -3,7 +3,7 @@ import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 import { Editor as DraftJsEditor, EditorState } from "draft-js";
 import * as React from "react";
 
-import defaultBlocktypeMap, { mergeBlocktypeMaps } from "./defaultBlocktypeMap";
+import defaultBlocktypeMap, { checkBlocktypeMap, mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import { styleMap } from "./Rte";
 import { IBlocktypeMap as IBlocktypeMap, ICustomBlockTypeMap_Deprecated } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
@@ -38,6 +38,8 @@ const RteReadOnly: React.FC<IProps> = ({ value: editorState, options: passedOpti
         deprecatedCustomBlockMap = options.customBlockMap;
         delete options.customBlockMap;
     }
+
+    checkBlocktypeMap(options.blocktypeMap); // print warning when configuratoin is wrong
 
     // blocktypes need an extra merge as they have their own merge strategy
     options = {
