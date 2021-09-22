@@ -4,12 +4,12 @@ import * as React from "react";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import { BlockElement } from "./BlockElement";
-import { IBlocktypeMap } from "./types";
+import { IBlocktypeConfig, IBlocktypeMap } from "./types";
 
 const headerMessage = defineMessage({ id: "cometAdmin.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
 
 const defaultBlocktypeMap: IBlocktypeMap = {
-    // "unstyled" is special: only the value for renderConfig is considered,
+    // "unstyled" is special: only the value for renderConfig and label is considered,
     // other values are ignored
     unstyled: {
         //info:  https://draftjs.org/docs/advanced-topics-custom-block-render-map/#configuring-block-render-map

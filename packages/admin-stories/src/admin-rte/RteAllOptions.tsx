@@ -57,6 +57,9 @@ export const rteOptions: IRteOptions = {
     listLevelMax: 2,
     blocktypeMap: {
         // overwrite built-in blocktypes
+        unstyled: {
+            label: "DEFAULT",
+        },
         "header-one": {
             label: "HEADING 1",
             // more on this setting here:
