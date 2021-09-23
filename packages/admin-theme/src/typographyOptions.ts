@@ -14,37 +14,37 @@ export const typographyOptions: TypographyOptions = {
     h1: {
         fontFamily,
         fontSize: 55,
-        lineHeight: 1.42,
+        lineHeight: "64px",
         fontWeight: fontWeights.fontWeightLight,
     },
     h2: {
         fontFamily,
         fontSize: 44,
-        lineHeight: 1.42,
+        lineHeight: "52px",
         fontWeight: fontWeights.fontWeightLight,
     },
     h3: {
         fontFamily,
         fontSize: 33,
-        lineHeight: 1.42,
+        lineHeight: "39px",
         fontWeight: fontWeights.fontWeightLight,
     },
     h4: {
         fontFamily,
         fontSize: 24,
-        lineHeight: 1.42,
+        lineHeight: "28px",
         fontWeight: fontWeights.fontWeightLight,
     },
     h5: {
         fontFamily,
         fontSize: 18,
-        lineHeight: 1.42,
+        lineHeight: "21px",
         fontWeight: fontWeights.fontWeightRegular,
     },
     h6: {
         fontFamily,
         fontSize: 16,
-        lineHeight: 1.42,
+        lineHeight: "20px",
         fontWeight: fontWeights.fontWeightBold,
     },
     body1: {
