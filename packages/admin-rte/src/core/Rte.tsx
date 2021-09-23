@@ -15,7 +15,7 @@ import * as React from "react";
 
 import { mergeClasses } from "../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import Controls from "./Controls/Controls";
-import defaultBlocktypeMap, { mergeBlocktypeMaps } from "./defaultBlocktypeMap";
+import defaultBlocktypeMap, { checkBlocktypeMap, mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
@@ -151,6 +151,8 @@ const Rte: React.RefForwardingComponent<any, IProps & StyledComponentProps<Comet
         deprecatedCustomBlockMap = options.customBlockMap;
         delete options.customBlockMap;
     }
+
+    checkBlocktypeMap(options.blocktypeMap); // print warning when configuration is wrong
 
     // blocktypes need an extra merge as they have their own merge strategy
     options = {

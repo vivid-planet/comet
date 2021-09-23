@@ -13,7 +13,7 @@ interface Props extends IControlProps {
 }
 
 function BlockTypesControls({
-    options: { standardBlockType },
+    options: { standardBlockType, blocktypeMap },
     disabled,
     blockTypes,
     classes: passedClasses,
@@ -21,6 +21,9 @@ function BlockTypesControls({
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
     const classes = mergeClasses<CometAdminRteBlockTypeControlsClassKeys>(useStyles(), passedClasses);
 
+    const labelForUnstyled = blocktypeMap?.unstyled?.label || (
+        <FormattedMessage id="cometAdmin.rte.controls.blockType.default" defaultMessage="Default" />
+    );
     return (
         <FormControl classes={{ root: classes.root }}>
             <Select
@@ -33,7 +36,7 @@ function BlockTypesControls({
             >
                 {standardBlockType === "unstyled" && (
                     <MenuItem value="unstyled" dense>
-                        <FormattedMessage id="cometAdmin.rte.controls.blockType.default" defaultMessage="Default" />
+                        {labelForUnstyled}
                     </MenuItem>
                 )}
                 {dropdownFeatures.map((c) => (

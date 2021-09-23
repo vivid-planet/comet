@@ -4,12 +4,12 @@ import * as React from "react";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import { BlockElement } from "./BlockElement";
-import { IBlocktypeMap } from "./types";
+import { IBlocktypeConfig, IBlocktypeMap } from "./types";
 
 const headerMessage = defineMessage({ id: "cometAdmin.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
 
 const defaultBlocktypeMap: IBlocktypeMap = {
-    // "unstyled" is special: only the value for renderConfig is considered,
+    // "unstyled" is special: only the value for renderConfig and label is considered,
     // other values are ignored
     unstyled: {
         //info:  https://draftjs.org/docs/advanced-topics-custom-block-render-map/#configuring-block-render-map
@@ -123,6 +123,20 @@ export function mergeBlocktypeMaps(...args: IBlocktypeMap[]) {
         });
         return newEl;
     }); // merge 2 levels nested
+}
+
+export function checkBlocktypeMap(map: IBlocktypeMap): void {
+    const unsupportedKeysForUnstyled: Array<keyof IBlocktypeConfig> = ["group", "icon", "supportedBy"];
+
+    if (map?.unstyled) {
+        unsupportedKeysForUnstyled.forEach((c) => {
+            if (map.unstyled[c]) {
+                console.warn(
+                    `'unstyled' in BlocktypeMap does not support the key '${c}' with the given value '${map.unstyled[c]}'. The value is ignored.`,
+                );
+            }
+        });
+    }
 }
 
 export default defaultBlocktypeMap;
