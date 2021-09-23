@@ -39,7 +39,7 @@ const RteReadOnly: React.FC<IProps> = ({ value: editorState, options: passedOpti
         delete options.customBlockMap;
     }
 
-    checkBlocktypeMap(options.blocktypeMap); // print warning when configuratoin is wrong
+    checkBlocktypeMap(options.blocktypeMap); // print warning when configuration is wrong
 
     // blocktypes need an extra merge as they have their own merge strategy
     options = {
