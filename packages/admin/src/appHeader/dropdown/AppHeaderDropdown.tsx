@@ -68,7 +68,7 @@ export function AppHeaderDropdown({
                 anchorEl={rootRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
-                onBackdropClick={() => _onOpenChange(false)}
+                onClose={() => _onOpenChange(false)}
                 marginThreshold={0}
                 {...popoverProps}
             >

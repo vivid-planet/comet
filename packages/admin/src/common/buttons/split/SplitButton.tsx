@@ -92,7 +92,7 @@ export const SplitButton = ({
                 anchorEl={anchorRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
-                onBackdropClick={handleClose}
+                onClose={handleClose}
             >
                 <MenuList>
                     {childrenArray.map((child: React.ReactElement, index) => {

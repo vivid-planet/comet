@@ -69,7 +69,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
                 className={temporaryDrawerClasses.join(" ")}
                 open={temporaryOpen}
                 PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
-                onBackdropClick={toggleOpen}
+                onClose={toggleOpen}
                 {...temporaryDrawerProps}
             >
                 {children}
