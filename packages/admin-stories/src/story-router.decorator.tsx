@@ -1,14 +1,15 @@
+import { RouterMemoryRouter } from "@comet/admin";
 import { action } from "@storybook/addon-actions";
 import { StoryContext, StoryFn } from "@storybook/addons";
 import { Action, History, UnregisterCallback } from "history";
 import * as React from "react";
-import { MemoryRouter, MemoryRouterProps, Route, RouteComponentProps } from "react-router";
+import { MemoryRouterProps, Route, RouteComponentProps } from "react-router";
 
 const StoryRouter = ({ children, routerProps }: { children: React.ReactNode; routerProps?: MemoryRouterProps }) => {
     return (
-        <MemoryRouter {...routerProps}>
+        <RouterMemoryRouter {...routerProps}>
             <Route render={(props) => <HistoryWatcher {...props}>{children}</HistoryWatcher>} />
-        </MemoryRouter>
+        </RouterMemoryRouter>
     );
 };
 
