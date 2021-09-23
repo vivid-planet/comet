@@ -59,7 +59,7 @@
     },
     "scripts": {
         "build-storybook": "build-storybook",
-        "storybook": "start-storybook",
+        "storybook": "start-storybook -p 26638",
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
