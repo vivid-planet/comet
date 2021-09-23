@@ -152,7 +152,7 @@ const Rte: React.RefForwardingComponent<any, IProps & StyledComponentProps<Comet
         delete options.customBlockMap;
     }
 
-    checkBlocktypeMap(options.blocktypeMap); // print warning when configuratoin is wrong
+    checkBlocktypeMap(options.blocktypeMap); // print warning when configuration is wrong
 
     // blocktypes need an extra merge as they have their own merge strategy
     options = {
