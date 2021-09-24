@@ -23,7 +23,7 @@ export const SaveButton = ({
     hasErrors = false,
     children = <FormattedMessage id={"cometAdmin.generic.save"} defaultMessage={"Save"} />,
     savingItem = <FormattedMessage id={"comet.saveButton.savingItem.title"} defaultMessage={"Saving"} />,
-    successItem = <FormattedMessage id={"comet.saveButton.successItem.title"} defaultMessage={"Success Saved"} />,
+    successItem = <FormattedMessage id={"comet.saveButton.successItem.title"} defaultMessage={"Successfully Saved"} />,
     errorItem = <FormattedMessage id={"comet.saveButton.errorItem.title"} defaultMessage={"Save Error"} />,
     variant = "contained",
     color = "primary",
