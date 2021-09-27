@@ -26,12 +26,14 @@ export interface FormSectionProps {
     children: React.ReactNode;
     title?: React.ReactNode;
     disableMarginBottom?: boolean;
+    disableTypography?: boolean;
 }
 
 export function FormSection({
     children,
     title,
     disableMarginBottom,
+    disableTypography,
     classes: passedClasses,
 }: FormSectionProps & StyledComponentProps<CometAdminFormSectionKeys>): React.ReactElement {
     const classes = mergeClasses<CometAdminFormSectionKeys>(useStyles(), passedClasses);
@@ -43,7 +45,7 @@ export function FormSection({
 
     return (
         <div className={rootClasses.join(" ")}>
-            {title && <div className={classes.title}>{typeof title === "string" ? <Typography variant="h4">{title}</Typography> : title}</div>}
+            {title && <div className={classes.title}>{disableTypography ? title : <Typography variant="h4">{title}</Typography>}</div>}
             <div className={classes.children}>{children}</div>
         </div>
     );
