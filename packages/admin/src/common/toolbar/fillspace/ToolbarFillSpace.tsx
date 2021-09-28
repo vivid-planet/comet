@@ -1,20 +1,35 @@
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { WithStyles } from "@material-ui/core";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../../helpers/mergeClasses";
-import { CometAdminToolbarFillSpaceClassKeys, useStyles } from "./ToolbarFillSpace.styles";
+export type ToolbarFillSpaceClassKey = "root";
 
-interface Props {
+export interface ToolbarFillSpaceProps {
     children: React.ReactNode;
 }
 
-const ToolbarFillSpace: React.FunctionComponent = ({
-    children,
-    classes: passedClasses,
-}: Props & StyledComponentProps<CometAdminToolbarFillSpaceClassKeys>) => {
-    const classes = mergeClasses<CometAdminToolbarFillSpaceClassKeys>(useStyles(), passedClasses);
-
-    return <div className={classes.root}>{children}</div>;
+const styles = () => {
+    return createStyles<ToolbarFillSpaceClassKey, any>({
+        root: {
+            flexGrow: 1,
+        },
+    });
 };
 
-export { ToolbarFillSpace };
+function FillSpace({ children, classes }: ToolbarFillSpaceProps & WithStyles<typeof styles>): React.ReactElement {
+    return <div className={classes.root}>{children}</div>;
+}
+
+export const ToolbarFillSpace = withStyles(styles, { name: "CometAdminToolbarFillSpace" })(FillSpace);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminToolbarFillSpace: ToolbarFillSpaceClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminToolbarFillSpace: ToolbarFillSpaceProps;
+    }
+}

@@ -1,7 +1,3 @@
-import type {} from "@comet/admin-color-picker/src/themeAugmentation";
-import type {} from "@comet/admin-react-select/src/themeAugmentation";
-import type {} from "@comet/admin-rte/src/themeAugmentation";
-import type {} from "@comet/admin/src/themeAugmentation";
 import { createTheme, Theme } from "@material-ui/core";
 import { ThemeOptions } from "@material-ui/core/styles";
 import createPalette, { Palette, PaletteOptions } from "@material-ui/core/styles/createPalette";

@@ -1,11 +1,10 @@
-import { makeStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
 import zIndex from "@material-ui/core/styles/zIndex";
+import { createStyles } from "@material-ui/styles";
 
-export type CometAdminTableQueryClassKeys = "root" | "loadingContainer" | "loadingPaper";
+export type TableQueryClassKey = "root" | "loadingContainer" | "loadingPaper";
 
-export const useStyles = makeStyles<Theme, {}, CometAdminTableQueryClassKeys>(
-    () => ({
+export const styles = () => {
+    return createStyles<TableQueryClassKey, any>({
         root: {
             position: "relative",
         },
@@ -27,12 +26,5 @@ export const useStyles = makeStyles<Theme, {}, CometAdminTableQueryClassKeys>(
             height: 100,
             width: 100,
         },
-    }),
-    { name: "CometAdminTableQuery" },
-);
-
-declare module "@material-ui/core/styles/overrides" {
-    interface ComponentNameToClassKey {
-        CometAdminTableQuery: CometAdminTableQueryClassKeys;
-    }
-}
+    });
+};

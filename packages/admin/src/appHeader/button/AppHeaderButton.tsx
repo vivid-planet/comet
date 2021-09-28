@@ -1,9 +1,8 @@
-import { ButtonBase, ButtonBaseProps, Typography } from "@material-ui/core";
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { ButtonBase, ButtonBaseProps, Typography, WithStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../helpers/mergeClasses";
-import { CometAdminAppHeaderButtonClassKeys, useStyles } from "./AppHeaderButton.styles";
+import { AppHeaderButtonClassKey, styles } from "./AppHeaderButton.styles";
 
 export interface AppHeaderButtonProps extends ButtonBaseProps {
     startIcon?: React.ReactNode;
@@ -11,22 +10,22 @@ export interface AppHeaderButtonProps extends ButtonBaseProps {
     disableTypography?: boolean;
 }
 
-export function AppHeaderButton({
-    classes: passedClasses,
+function Button({
+    classes,
     children,
     startIcon,
     endIcon,
     disableTypography,
     onClick,
     ...restProps
-}: AppHeaderButtonProps & StyledComponentProps<CometAdminAppHeaderButtonClassKeys>): React.ReactElement {
+}: AppHeaderButtonProps & WithStyles<typeof styles>): React.ReactElement {
     const {
         startIcon: startIconClassName,
         endIcon: endIconClassName,
         typography: typographyClassName,
         inner: innerClassName,
         ...buttonBaseClasses
-    } = mergeClasses<CometAdminAppHeaderButtonClassKeys>(useStyles(), passedClasses);
+    } = classes;
 
     return (
         <ButtonBase classes={buttonBaseClasses} {...restProps} onClick={onClick}>
@@ -36,7 +35,7 @@ export function AppHeaderButton({
                     (disableTypography ? (
                         children
                     ) : (
-                        <Typography component={"div"} classes={{ root: typographyClassName }}>
+                        <Typography component="div" classes={{ root: typographyClassName }}>
                             {children}
                         </Typography>
                     ))}
@@ -44,4 +43,18 @@ export function AppHeaderButton({
             </div>
         </ButtonBase>
     );
+}
+
+export const AppHeaderButton = withStyles(styles, { name: "CometAdminAppHeaderButton" })(Button);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminAppHeaderButton: AppHeaderButtonClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminAppHeaderButton: AppHeaderButtonProps;
+    }
 }

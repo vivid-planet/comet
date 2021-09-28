@@ -1,22 +1,31 @@
 import { Typography } from "@material-ui/core";
+import { TypographyTypeMap } from "@material-ui/core/Typography/Typography";
+import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem } from "../item/ToolbarItem";
-import { useThemeProps } from "./ToolbarAutomaticTitleItem.styles";
 
-const ToolbarAutomaticTitleItem: React.FunctionComponent = () => {
+export interface ToolbarAutomaticTitleItemProps {
+    typographyProps?: TypographyTypeMap["props"];
+}
+
+function AutomaticTitleItem({ typographyProps }: ToolbarAutomaticTitleItemProps): React.ReactElement {
     const stackApi = useStackApi();
-
-    const themeProps = useThemeProps();
 
     return (
         <ToolbarItem>
-            <Typography {...themeProps.typographyProps}>
+            <Typography variant={"h4"} {...typographyProps}>
                 {stackApi?.breadCrumbs != null && stackApi.breadCrumbs.length > 0 && stackApi.breadCrumbs[stackApi?.breadCrumbs.length - 1].title}
             </Typography>
         </ToolbarItem>
     );
-};
+}
 
-export { ToolbarAutomaticTitleItem };
+export const ToolbarAutomaticTitleItem = withStyles({}, { name: "CometAdminToolbarAutomaticTitleItem" })(AutomaticTitleItem);
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminToolbarAutomaticTitleItem: ToolbarAutomaticTitleItemProps;
+    }
+}

@@ -2,7 +2,7 @@ import { Theme } from "@material-ui/core";
 import { emphasize } from "@material-ui/core/styles/colorManipulator";
 import { createStyles } from "@material-ui/styles";
 
-export type CometAdminSelectClassKeys =
+export type SelectClassKey =
     | "input"
     | "valueContainer"
     | "chip"
@@ -21,7 +21,7 @@ export type CometAdminSelectClassKeys =
     | "optionFocused";
 
 const styles = (theme: Theme) =>
-    createStyles<CometAdminSelectClassKeys, any>({
+    createStyles<SelectClassKey, any>({
         input: {
             display: "flex",
             paddingRight: 0,

@@ -1,11 +1,10 @@
-import { CssBaseline } from "@material-ui/core";
-import { StyledComponentProps } from "@material-ui/styles";
+import { CssBaseline, WithStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 
 import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
-import { mergeClasses } from "../helpers/mergeClasses";
-import { CometAdminMasterLayoutClassKeys, useStyles } from "./MasterLayout.styles";
+import { MasterLayoutClassKey, styles } from "./MasterLayout.styles";
 import { MasterLayoutContext } from "./MasterLayoutContext";
 import { MenuContext } from "./menu/Context";
 
@@ -17,15 +16,14 @@ export interface MasterLayoutProps {
     headerHeight?: number;
 }
 
-export function MasterLayout({
-    classes: passedClasses,
+function MasterLayoutComponent({
+    classes,
     children,
     menuComponent: Menu,
     headerComponent: HeaderComponent,
     openMenuByDefault = true,
     headerHeight = 60,
-}: MasterLayoutProps & StyledComponentProps<CometAdminMasterLayoutClassKeys>) {
-    const classes = mergeClasses<CometAdminMasterLayoutClassKeys>(useStyles({ headerHeight }), passedClasses);
+}: MasterLayoutProps & WithStyles<typeof styles>) {
     const [open, setOpen] = React.useState(openMenuByDefault);
 
     const toggleOpen = () => {
@@ -47,11 +45,24 @@ export function MasterLayout({
                         )}
                     </div>
                     <Menu />
-                    <div className={classes.contentWrapper}>{children}</div>
+                    <div
+                        className={classes.contentWrapper}
+                        style={{ "--comet-admin-master-layout-content-top-spacing": `${headerHeight}px` } as React.CSSProperties}
+                    >
+                        {children}
+                    </div>
                 </div>
             </MasterLayoutContext.Provider>
         </MenuContext.Provider>
     );
+}
+
+export const MasterLayout = withStyles(styles, { name: "CometAdminMasterLayout" })(MasterLayoutComponent);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminMasterLayout: MasterLayoutClassKey;
+    }
 }
 
 declare module "@material-ui/core/styles/props" {

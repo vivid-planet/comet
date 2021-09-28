@@ -5,19 +5,16 @@ import { useHistory } from "react-router";
 
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
-import { styles } from "./Menu.styles";
+import { MenuClassKey, styles } from "./Menu.styles";
 
-export interface MenuThemeProps {
+export interface MenuProps {
+    children: React.ReactNode;
     variant?: "permanent" | "temporary";
     drawerWidth?: number;
     temporaryDrawerProps?: DrawerProps;
     permanentDrawerProps?: DrawerProps;
     temporaryDrawerPaperProps?: PaperProps;
     permanentDrawerPaperProps?: PaperProps;
-}
-
-export interface MenuProps extends MenuThemeProps {
-    children: React.ReactNode;
 }
 
 const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
@@ -97,4 +94,16 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     );
 };
 
-export const Menu = withStyles(styles, { name: "CometAdminMenu", withTheme: true })(MenuDrawer);
+export const Menu = withStyles(styles, { name: "CometAdminMenu" })(MenuDrawer);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminMenu: MenuClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminMenu: MenuProps;
+    }
+}

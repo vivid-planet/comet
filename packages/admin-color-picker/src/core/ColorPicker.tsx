@@ -6,13 +6,13 @@ import { FieldRenderProps } from "react-final-form";
 import tinycolor from "tinycolor2";
 
 import { colorToHex } from "../utils/colorSpaces";
-import styles from "./ColorPicker.styles";
+import { ColorPickerClassKey, styles } from "./ColorPicker.styles";
 import { HexInput } from "./HexInput";
 import Palette from "./Palette";
 import PickedColor from "./PickedColor";
 import Picker from "./Picker";
 
-export interface ColorPickerThemeProps {
+export interface ColorPickerProps extends FieldRenderProps<string, HTMLInputElement> {
     colorPalette?: string[];
     showPicker?: boolean;
     showClearButton?: boolean;
@@ -21,9 +21,7 @@ export interface ColorPickerThemeProps {
     endAdornment?: InputBaseProps["endAdornment"];
 }
 
-export type ColorPickerProps = WithStyles<typeof styles> & ColorPickerThemeProps & FieldRenderProps<string, HTMLInputElement>;
-
-const ColorPicker: React.FC<ColorPickerProps> = ({
+function ColorPicker({
     colorPalette,
     showPicker,
     fullWidth,
@@ -32,7 +30,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
     endAdornment,
     classes,
     input: { value, onChange },
-}) => {
+}: ColorPickerProps & WithStyles<typeof styles>): React.ReactElement {
     const [anchorEl, setAnchorEl] = React.useState<HTMLInputElement | null>(null);
     const inputRef = React.useRef<HTMLInputElement>();
 
@@ -93,6 +91,18 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
             </div>
         </ClickAwayListener>
     );
-};
+}
 
-export default withStyles(styles, { name: "CometAdminColorPicker", withTheme: true })(CustomPicker(ColorPicker));
+export default withStyles(styles, { name: "CometAdminColorPicker" })(CustomPicker(ColorPicker));
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminColorPicker: ColorPickerClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminColorPicker: ColorPickerProps;
+    }
+}

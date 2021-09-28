@@ -1,9 +1,8 @@
-import { makeStyles } from "@material-ui/core";
-import { StyledComponentProps, Theme } from "@material-ui/core/styles";
+import { WithStyles } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import { IFeatureConfig } from "../types";
 import ControlButton from "./ControlButton";
 
@@ -12,13 +11,7 @@ interface IProps {
     disabled?: boolean;
 }
 
-function FeaturesButtonGroup({
-    features,
-    disabled: globallyDisabled,
-    classes: passedClasses,
-}: IProps & StyledComponentProps<CometAdminRteFeaturesButtonGroupClassKeys>) {
-    const classes = mergeClasses<CometAdminRteFeaturesButtonGroupClassKeys>(useStyles(), passedClasses);
-
+function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes }: IProps & WithStyles<typeof styles>) {
     if (!features.length) {
         return null;
     }
@@ -42,24 +35,27 @@ function FeaturesButtonGroup({
     );
 }
 
-export type CometAdminRteFeaturesButtonGroupClassKeys = "root" | "buttonWrapper";
+export type RteFeaturesButtonGroupClassKey = "root" | "buttonWrapper";
 
-const useStyles = makeStyles<Theme, {}, CometAdminRteFeaturesButtonGroupClassKeys>(
-    () => {
-        return {
-            root: {
-                display: "inline-flex",
-                justifyContent: "flex-start",
+const styles = () => {
+    return createStyles<RteFeaturesButtonGroupClassKey, any>({
+        root: {
+            display: "inline-flex",
+            justifyContent: "flex-start",
+        },
+        buttonWrapper: {
+            marginRight: 1,
+            "&:last-child": {
+                marginRight: 0,
             },
-            buttonWrapper: {
-                marginRight: 1,
-                "&:last-child": {
-                    marginRight: 0,
-                },
-            },
-        };
-    },
-    { name: "CometAdminRteFeaturesButtonGroup" },
-);
+        },
+    });
+};
 
-export default FeaturesButtonGroup;
+export default withStyles(styles, { name: "CometAdminRteFeaturesButtonGroup" })(FeaturesButtonGroup);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminRteFeaturesButtonGroup: RteFeaturesButtonGroupClassKey;
+    }
+}

@@ -1,6 +1,6 @@
 import { Check, ChevronDown, Reset } from "@comet/admin-icons";
-import { Button, Popover, Typography } from "@material-ui/core";
-import { ThemeOptions, useTheme } from "@material-ui/core/styles";
+import { Button, ButtonProps, Popover, Typography, WithStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
 import clsx from "clsx";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
@@ -8,20 +8,25 @@ import { FormattedMessage } from "react-intl";
 
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
-import { useStyles } from "./FilterBarPopoverFilter.styles";
+import { FilterBarPopoverFilterClassKey, styles } from "./FilterBarPopoverFilter.styles";
 
 export interface FilterBarPopoverFilterProps {
     label: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
+    submitButtonProps?: ButtonProps;
+    resetButtonProps?: ButtonProps;
 }
 
-export function FilterBarPopoverFilter({
+function PopoverFilter({
     children,
     label,
     dirtyFieldsBadge,
     calcNumberDirtyFields = dirtyFieldsCount,
-}: React.PropsWithChildren<FilterBarPopoverFilterProps>) {
+    submitButtonProps,
+    resetButtonProps,
+    classes,
+}: React.PropsWithChildren<FilterBarPopoverFilterProps> & WithStyles<typeof styles>) {
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const outerForm = useForm();
     const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
@@ -30,14 +35,6 @@ export function FilterBarPopoverFilter({
     const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         setAnchorEl(event.currentTarget);
     };
-
-    const { props: themeProps } = useTheme<ThemeOptions>();
-    const submitButtonProps =
-        themeProps && themeProps["CometAdminFilterBarPopoverFilter"] ? { ...themeProps["CometAdminFilterBarPopoverFilter"]?.submitButton } : {};
-    const resetButtonProps =
-        themeProps && themeProps["CometAdminFilterBarPopoverFilter"] ? { ...themeProps["CometAdminFilterBarPopoverFilter"]?.resetButton } : {};
-
-    const classes = useStyles();
 
     return (
         <div className={classes.root}>
@@ -121,4 +118,18 @@ export function FilterBarPopoverFilter({
             </Form>
         </div>
     );
+}
+
+export const FilterBarPopoverFilter = withStyles(styles, { name: "CometAdminFilterBarPopoverFilter" })(PopoverFilter);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminFilterBarPopoverFilter: FilterBarPopoverFilterClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminFilterBarPopoverFilter: FilterBarPopoverFilterProps;
+    }
 }

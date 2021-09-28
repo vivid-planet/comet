@@ -1,12 +1,12 @@
 import { Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/styles";
+import { createStyles } from "@material-ui/styles";
 
-export type CometAdminFilterBarActiveFilterBadgeClassKeys = "hasValueCount";
+export type FilterBarActiveFilterBadgeClassKey = "hasValueCount";
 
-export const useStyles = makeStyles(
-    (theme: Theme) => ({
+export const styles = ({ palette }: Theme) => {
+    return createStyles<FilterBarActiveFilterBadgeClassKey, any>({
         hasValueCount: {
-            backgroundColor: `${theme.palette.grey[100]}`,
+            backgroundColor: palette.grey[100],
             boxSizing: "border-box",
             textAlign: "center",
             borderRadius: "4px",
@@ -15,12 +15,5 @@ export const useStyles = makeStyles(
             fontSize: "12px",
             height: "20px",
         },
-    }),
-    { name: "CometAdminFilterBarActiveFilterBadge" },
-);
-
-declare module "@material-ui/core/styles/overrides" {
-    interface ComponentNameToClassKey {
-        CometAdminFilterBarActiveFilterBadge: CometAdminFilterBarActiveFilterBadgeClassKeys;
-    }
-}
+    });
+};

@@ -1,23 +1,21 @@
-import { Link, Typography } from "@material-ui/core";
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { Link, Typography, WithStyles } from "@material-ui/core";
+import { TypographyTypeMap } from "@material-ui/core/Typography/Typography";
+import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
-import { mergeClasses } from "../../../helpers/mergeClasses";
 import { StackApiContext } from "../../../stack/Api";
-import { CometAdminToolbarBreadcrumbsClassKeys, useStyles } from "./ToolbarBreadcrumbs.styles";
-import { useThemeProps } from "./ToolbarBreadcrumbs.styles";
+import { styles, ToolbarBreadcrumbsClassKey } from "./ToolbarBreadcrumbs.styles";
 
 const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ href, to, ...rest }, ref) => (
     <RouterLink innerRef={ref} to={to ?? href} {...rest} />
 ));
 
-export const ToolbarBreadcrumbs: React.FunctionComponent<StyledComponentProps<CometAdminToolbarBreadcrumbsClassKeys>> = ({
-    classes: passedClasses,
-}) => {
-    const themeProps = useThemeProps();
-    const classes = mergeClasses<CometAdminToolbarBreadcrumbsClassKeys>(useStyles(), passedClasses);
+export interface ToolbarBreadcrumbsProps {
+    typographyProps?: TypographyTypeMap["props"];
+}
 
+function Breadcrumbs({ typographyProps, classes }: ToolbarBreadcrumbsProps & WithStyles<typeof styles>): React.ReactElement {
     return (
         <StackApiContext.Consumer>
             {(stackApi) => {
@@ -30,7 +28,7 @@ export const ToolbarBreadcrumbs: React.FunctionComponent<StyledComponentProps<Co
                                 <React.Fragment key={id}>
                                     <div className={classes.item}>
                                         <Typography
-                                            {...themeProps.typographyProps}
+                                            {...typographyProps}
                                             classes={{ root: `${classes.typographyRoot} ${isActive ? classes.typographyActiveRoot : ""}` }}
                                         >
                                             <Link to={url} component={BreadcrumbLink} color={"inherit"}>
@@ -51,4 +49,17 @@ export const ToolbarBreadcrumbs: React.FunctionComponent<StyledComponentProps<Co
             }}
         </StackApiContext.Consumer>
     );
-};
+}
+export const ToolbarBreadcrumbs = withStyles(styles, { name: "CometAdminToolbarBreadcrumbs" })(Breadcrumbs);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsProps;
+    }
+}

@@ -2,13 +2,10 @@ import { FormControl, FormHelperText, FormLabel, Theme, WithStyles } from "@mate
 import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-export interface FieldContainerThemeProps {
+export interface FieldContainerProps {
     variant?: "vertical" | "horizontal";
     fullWidth?: boolean;
     requiredSymbol?: React.ReactNode;
-}
-
-interface FieldContainerProps {
     label?: React.ReactNode;
     required?: boolean;
     disabled?: boolean;
@@ -17,7 +14,7 @@ interface FieldContainerProps {
     scrollTo?: boolean;
 }
 
-export type CometAdminFormFieldContainerClassKeys =
+export type FieldContainerClassKey =
     | "root"
     | "vertical"
     | "horizontal"
@@ -32,7 +29,7 @@ export type CometAdminFormFieldContainerClassKeys =
     | "warning";
 
 const styles = (theme: Theme) => {
-    return createStyles<CometAdminFormFieldContainerClassKeys, any>({
+    return createStyles<FieldContainerClassKey, any>({
         root: {
             "&:not(:last-child)": {
                 marginBottom: theme.spacing(4),
@@ -96,7 +93,7 @@ const styles = (theme: Theme) => {
     });
 };
 
-export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> & FieldContainerProps & FieldContainerThemeProps> = ({
+export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & FieldContainerProps> = ({
     classes,
     variant = "vertical",
     fullWidth,
@@ -152,4 +149,16 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     );
 };
 
-export const FieldContainer = withStyles(styles, { name: "CometAdminFormFieldContainer", withTheme: true })(FieldContainerComponent);
+export const FieldContainer = withStyles(styles, { name: "CometAdminFormFieldContainer" })(FieldContainerComponent);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminFormFieldContainer: FieldContainerClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminFormFieldContainer: FieldContainerProps;
+    }
+}

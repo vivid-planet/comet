@@ -1,13 +1,14 @@
-import { Button } from "@material-ui/core";
+import { Check, Error, Save, ThreeDotSaving } from "@comet/admin-icons";
+import { Button, ButtonClassKey, WithStyles } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/styles";
+import { ClassKeyOfStyles } from "@material-ui/styles/withStyles";
+import { ClassNameMap } from "@material-ui/styles/withStyles/withStyles";
 import * as React from "react";
-import { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { mergeClasses } from "../../../helpers/mergeClasses";
 import { useSplitButtonContext } from "../split/useSplitButtonContext";
-import { CometAdminSaveButtonClassKeys, resolveClassForDisplayState, useStyles, useThemeProps } from "./SaveButton.styles";
+import { SaveButtonClassKey, styles } from "./SaveButton.styles";
 
 export interface SaveButtonProps extends ButtonProps {
     saving?: boolean;
@@ -15,25 +16,43 @@ export interface SaveButtonProps extends ButtonProps {
     savingItem?: React.ReactNode;
     successItem?: React.ReactNode;
     errorItem?: React.ReactNode;
+    saveIcon?: React.ReactNode;
+    savingIcon?: React.ReactNode;
+    successIcon?: React.ReactNode;
+    errorIcon?: React.ReactNode;
 }
+
 export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error";
 
-export const SaveButton = ({
+const SaveBtn = ({
     saving = false,
     hasErrors = false,
     children = <FormattedMessage id={"cometAdmin.generic.save"} defaultMessage={"Save"} />,
     savingItem = <FormattedMessage id={"comet.saveButton.savingItem.title"} defaultMessage={"Saving"} />,
     successItem = <FormattedMessage id={"comet.saveButton.successItem.title"} defaultMessage={"Successfully Saved"} />,
     errorItem = <FormattedMessage id={"comet.saveButton.errorItem.title"} defaultMessage={"Save Error"} />,
+    saveIcon = <Save />,
+    savingIcon = <ThreeDotSaving />,
+    successIcon = <Check />,
+    errorIcon = <Error />,
     variant = "contained",
     color = "primary",
-    classes: passedClasses,
+    classes,
     ...restProps
-}: PropsWithChildren<SaveButtonProps> & StyledComponentProps<CometAdminSaveButtonClassKeys>) => {
+}: SaveButtonProps & WithStyles<typeof styles>) => {
     const [displayState, setDisplayState] = React.useState<SaveButtonDisplayState>("idle");
     const saveSplitButton = useSplitButtonContext();
-    const styles = mergeClasses<CometAdminSaveButtonClassKeys>(useStyles({ color }), passedClasses);
-    const classes = resolveClassForDisplayState(displayState, styles);
+
+    const resolveIconForDisplayState = (displayState: SaveButtonDisplayState): React.ReactNode => {
+        if (displayState === "saving") {
+            return savingIcon;
+        } else if (displayState === "success") {
+            return successIcon;
+        } else if (displayState === "error") {
+            return errorIcon;
+        }
+        return saveIcon;
+    };
 
     React.useEffect(() => {
         if (displayState === "idle" && saving) {
@@ -71,13 +90,11 @@ export const SaveButton = ({
         }
     }, [displayState, saveSplitButton]);
 
-    const themeProps = useThemeProps();
-
     return (
         <Button
             {...restProps}
-            classes={classes}
-            startIcon={themeProps.resolveIconForDisplayState(displayState)}
+            classes={resolveClassForDisplayState(displayState, classes)}
+            startIcon={resolveIconForDisplayState(displayState)}
             variant={variant}
             color={color}
             disabled={displayState != "idle"}
@@ -89,3 +106,34 @@ export const SaveButton = ({
         </Button>
     );
 };
+
+const resolveClassForDisplayState = (
+    displayState: SaveButtonDisplayState,
+    classes: ClassNameMap<ClassKeyOfStyles<SaveButtonClassKey>>,
+): ClassNameMap<ClassKeyOfStyles<ButtonClassKey>> => {
+    const { success, saving, error, ...buttonClasses } = classes;
+
+    if (displayState === "success") {
+        buttonClasses.root += ` ${classes.success}`;
+    } else if (displayState === "saving") {
+        buttonClasses.root += ` ${classes.saving}`;
+    } else if (displayState === "error") {
+        buttonClasses.root += ` ${classes.error}`;
+    }
+
+    return buttonClasses;
+};
+
+export const SaveButton = withStyles(styles, { name: "CometAdminSaveButton" })(SaveBtn);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminSaveButton: SaveButtonClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminSaveButton: SaveButtonProps;
+    }
+}

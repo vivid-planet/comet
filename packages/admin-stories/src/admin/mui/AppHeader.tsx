@@ -43,7 +43,7 @@ function MasterHeader() {
             <AppHeaderFillSpace />
             <AppHeaderButton startIcon={<Preview />}>Preview</AppHeaderButton>
             <AppHeaderDropdown buttonChildren="Language" startIcon={<Language />}>
-                {(closeDropdown) => {
+                {(closeDropdown: () => void) => {
                     const onItemClicked = () => {
                         closeDropdown();
                         // Change language
