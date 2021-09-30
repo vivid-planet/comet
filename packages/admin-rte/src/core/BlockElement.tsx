@@ -20,7 +20,7 @@ interface Props extends TypographyProps {
 
 export const BlockElement = ({ classes: passedClasses, type, ...restProps }: Props & StyledComponentProps<CometAdminRteBlockElementClassKeys>) => {
     const classes = mergeClasses<CometAdminRteBlockElementClassKeys>(useStyles(), passedClasses);
-    return <Typography classes={{ root: `${classes.root} ${type ? classes[type] : ""}` }} {...restProps} />;
+    return <Typography component="div" classes={{ root: `${classes.root} ${type ? classes[type] : ""}` }} {...restProps} />;
 };
 
 const useStyles = makeStyles<Theme, {}, CometAdminRteBlockElementClassKeys>(
