@@ -82,6 +82,7 @@ export { CometAdminMenuClassKeys, styles } from "./mui/menu/Menu.styles";
 export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Context";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
 export { MasterLayout, MasterLayoutProps } from "./mui/MasterLayout";
+export { MasterLayoutContext } from "./mui/MasterLayoutContext";
 export { CometAdminMasterLayoutClassKeys } from "./mui/MasterLayout.styles";
 export { CometAdminMainContentClassKeys, MainContent } from "./mui/MainContent";
 export { Toolbar } from "./common/toolbar/Toolbar";
