@@ -15,6 +15,7 @@ interface FieldContainerProps {
     error?: string;
     warning?: string;
     scrollTo?: boolean;
+    fieldMargin?: "always" | "never" | "onlyIfNotLast";
 }
 
 export type CometAdminFormFieldContainerClassKeys =
@@ -24,6 +25,9 @@ export type CometAdminFormFieldContainerClassKeys =
     | "fullWidth"
     | "required"
     | "disabled"
+    | "fieldMarginAlways"
+    | "fieldMarginNever"
+    | "fieldMarginOnlyIfNotLast"
     | "label"
     | "inputContainer"
     | "hasError"
@@ -34,7 +38,7 @@ export type CometAdminFormFieldContainerClassKeys =
 const styles = (theme: Theme) => {
     return createStyles<CometAdminFormFieldContainerClassKeys, any>({
         root: {
-            "&:not(:last-child)": {
+            "&:not($fieldMarginNever)": {
                 marginBottom: theme.spacing(4),
                 "&:not($fullWidth)": {
                     marginRight: theme.spacing(4),
@@ -66,6 +70,16 @@ const styles = (theme: Theme) => {
         },
         required: {},
         disabled: {},
+        fieldMarginAlways: {},
+        fieldMarginNever: {},
+        fieldMarginOnlyIfNotLast: {
+            "&:last-child": {
+                marginBottom: 0,
+                "&:not($fullWidth)": {
+                    marginRight: 0,
+                },
+            },
+        },
         label: {},
         inputContainer: {
             minWidth: 120,
@@ -108,6 +122,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     children,
     warning,
     scrollTo = false,
+    fieldMargin = "onlyIfNotLast",
 }) => {
     const hasError = !!error;
     const hasWarning = !!warning;
@@ -120,6 +135,9 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles, true> &
     if (hasWarning && !hasError) formControlClasses.push(classes.hasWarning);
     if (disabled) formControlClasses.push(classes.disabled);
     if (required) formControlClasses.push(classes.required);
+    if (fieldMargin === "always") formControlClasses.push(classes.fieldMarginAlways);
+    if (fieldMargin === "never") formControlClasses.push(classes.fieldMarginNever);
+    if (fieldMargin === "onlyIfNotLast") formControlClasses.push(classes.fieldMarginOnlyIfNotLast);
 
     const ref = React.useRef<HTMLDivElement>(null);
 
