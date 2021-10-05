@@ -1,11 +1,10 @@
 import { ApolloError } from "@apollo/client";
-import { CircularProgress, Paper } from "@material-ui/core";
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { CircularProgress, Paper, WithStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { mergeClasses } from "../helpers/mergeClasses";
-import { CometAdminTableQueryClassKeys, useStyles } from "./TableQuery.styles";
+import { styles, TableQueryClassKey } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
 export const parseIdFromIri = (iri: string) => {
@@ -15,6 +14,7 @@ export const parseIdFromIri = (iri: string) => {
 };
 
 export interface IDefaultVariables {}
+
 interface IProps {
     api: ITableQueryApi;
     loading: boolean;
@@ -22,9 +22,7 @@ interface IProps {
     children: React.ReactNode;
 }
 
-export function TableQuery({ classes: passedClasses, ...otherProps }: IProps & StyledComponentProps<CometAdminTableQueryClassKeys>) {
-    const classes = mergeClasses<CometAdminTableQueryClassKeys>(useStyles(), passedClasses);
-
+export function Query({ classes, ...otherProps }: IProps & WithStyles<typeof styles>) {
     return (
         <TableQueryContext.Provider
             value={{
@@ -55,4 +53,12 @@ export function TableQuery({ classes: passedClasses, ...otherProps }: IProps & S
             </div>
         </TableQueryContext.Provider>
     );
+}
+
+export const TableQuery = withStyles(styles, { name: "CometAdminTableQuery" })(Query);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminTableQuery: TableQueryClassKey;
+    }
 }

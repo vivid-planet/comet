@@ -10,7 +10,6 @@ import {
     OkayButton,
 } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
-import type {} from "@comet/admin/src/themeAugmentation";
 import {
     Button,
     Dialog,

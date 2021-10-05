@@ -5,7 +5,7 @@ import { Alert, AlertProps } from "@material-ui/lab";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-export type CometAdminErrorBoundaryClassKeys =
+export type ErrorBoundaryClassKey =
     | "alert"
     | "message"
     | "exceptionDetails"
@@ -16,15 +16,12 @@ export type CometAdminErrorBoundaryClassKeys =
     | "exceptionSummaryTitle"
     | "exceptionStackTrace";
 
-export interface ErrorBoundaryThemeProps {
+export interface ErrorBoundaryProps {
+    userErrorMessage?: React.ReactNode;
     variant?: AlertProps["variant"];
     icon?: AlertProps["icon"];
     toggleDetailsOpenedIcon?: React.ReactNode;
     toggleDetailsClosedIcon?: React.ReactNode;
-}
-
-interface ErrorBoundaryProps extends ErrorBoundaryThemeProps, WithStyles<CometAdminErrorBoundaryClassKeys> {
-    userErrorMessage?: React.ReactNode;
 }
 
 interface IErrorBoundaryState {
@@ -32,8 +29,8 @@ interface IErrorBoundaryState {
     errorInfo?: React.ErrorInfo;
 }
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, IErrorBoundaryState> {
-    constructor(props: ErrorBoundaryProps) {
+class ErrorBoundary extends React.Component<ErrorBoundaryProps & WithStyles<ErrorBoundaryClassKey>, IErrorBoundaryState> {
+    constructor(props: ErrorBoundaryProps & WithStyles<ErrorBoundaryClassKey>) {
         super(props);
         this.state = {};
     }
@@ -86,7 +83,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, IErrorBoundarySt
 }
 
 const styles = (theme: Theme) =>
-    createStyles<CometAdminErrorBoundaryClassKeys, any>({
+    createStyles<ErrorBoundaryClassKey, any>({
         alert: {},
         message: {},
         exceptionDetails: {
@@ -129,3 +126,15 @@ const styles = (theme: Theme) =>
 const StyledErrorBoundary = withStyles(styles, { name: "CometAdminErrorBoundary" })(ErrorBoundary);
 
 export { StyledErrorBoundary as ErrorBoundary };
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminErrorBoundary: ErrorBoundaryClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminErrorBoundary: ErrorBoundaryProps;
+    }
+}

@@ -1,3 +1,2 @@
-export { default as FinalFormColorPicker } from "./core/ColorPicker";
-export * from "./themeAugmentation";
-export { CometAdminColorPickerClassKeys } from "./core/ColorPicker.styles";
+export { default as FinalFormColorPicker, ColorPickerProps } from "./core/ColorPicker";
+export { ColorPickerClassKey } from "./core/ColorPicker.styles";

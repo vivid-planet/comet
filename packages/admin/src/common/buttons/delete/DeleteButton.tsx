@@ -1,30 +1,16 @@
 import { Delete } from "@comet/admin-icons";
-import { Button, ButtonClassKey, makeStyles } from "@material-ui/core";
+import { Button, ButtonClassKey, WithStyles } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
-import { StyledComponentProps, Theme } from "@material-ui/core/styles";
+import { Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { mergeClasses } from "../../../helpers/mergeClasses";
+export type DeleteButtonClassKey = ButtonClassKey;
+export type DeleteButtonProps = ButtonProps;
 
-export type CometAdminDeleteButtonClassKeys = ButtonClassKey;
-
-export function DeleteButton({
-    children = <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />,
-    startIcon = <Delete />,
-    classes: passedClasses,
-    ...restProps
-}: ButtonProps & StyledComponentProps<CometAdminDeleteButtonClassKeys>) {
-    const classes = mergeClasses<CometAdminDeleteButtonClassKeys>(useStyles(), passedClasses);
-    return (
-        <Button classes={classes} startIcon={startIcon} {...restProps}>
-            {children}
-        </Button>
-    );
-}
-
-export const useStyles = makeStyles<Theme, {}, CometAdminDeleteButtonClassKeys>(
-    ({ palette }) => ({
+const styles = ({ palette }: Theme) => {
+    return createStyles<DeleteButtonClassKey, any>({
         root: {
             backgroundColor: palette.error.main,
             "&:hover": {
@@ -61,18 +47,31 @@ export const useStyles = makeStyles<Theme, {}, CometAdminDeleteButtonClassKeys>(
         iconSizeSmall: {},
         iconSizeMedium: {},
         iconSizeLarge: {},
-    }),
-    { name: "CometAdminDeleteButton" },
-);
+    });
+};
+
+function DeleteBtn({
+    children = <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />,
+    startIcon = <Delete />,
+    ...restProps
+}: ButtonProps & WithStyles<typeof styles>) {
+    return (
+        <Button startIcon={startIcon} {...restProps}>
+            {children}
+        </Button>
+    );
+}
+
+export const DeleteButton = withStyles(styles, { name: "CometAdminDeleteButton" })(DeleteBtn);
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
-        CometAdminDeleteButton: CometAdminDeleteButtonClassKeys;
+        CometAdminDeleteButton: DeleteButtonClassKey;
     }
 }
 
 declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
-        CometAdminDeleteButton: CometAdminDeleteButtonClassKeys;
+        CometAdminDeleteButton: DeleteButtonProps;
     }
 }

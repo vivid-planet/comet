@@ -1,8 +1,8 @@
-import { makeStyles, Typography, TypographyProps } from "@material-ui/core";
-import { StyledComponentProps, Theme } from "@material-ui/core/styles";
+import { Typography, TypographyProps, WithStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import { SupportedThings } from "./Rte";
 
 // Only block-types used in block-type-map should be styled
@@ -11,20 +11,19 @@ type StylableBlockTypes = Extract<
     "header-one" | "header-two" | "header-three" | "header-four" | "header-five" | "header-six" | "blockquote" | "unordered-list" | "ordered-list"
 >;
 
-export type CometAdminRteBlockElementClassKeys = StylableBlockTypes | "root";
+export type RteBlockElementClassKey = StylableBlockTypes | "root";
 
-interface Props extends TypographyProps {
+export interface RteBlockElementProps extends TypographyProps {
     type?: StylableBlockTypes;
     component?: React.ElementType;
 }
 
-export const BlockElement = ({ classes: passedClasses, type, ...restProps }: Props & StyledComponentProps<CometAdminRteBlockElementClassKeys>) => {
-    const classes = mergeClasses<CometAdminRteBlockElementClassKeys>(useStyles(), passedClasses);
+const RteBlockElement = ({ classes, type, ...restProps }: RteBlockElementProps & WithStyles<typeof styles>) => {
     return <Typography component="div" classes={{ root: `${classes.root} ${type ? classes[type] : ""}` }} {...restProps} />;
 };
 
-const useStyles = makeStyles<Theme, {}, CometAdminRteBlockElementClassKeys>(
-    ({ palette }) => ({
+const styles = ({ palette }: Theme) => {
+    return createStyles<RteBlockElementClassKey, any>({
         root: {
             fontSize: 16,
             lineHeight: "20px",
@@ -85,12 +84,19 @@ const useStyles = makeStyles<Theme, {}, CometAdminRteBlockElementClassKeys>(
                 borderRadius: 2,
             },
         },
-    }),
-    { name: "CometAdminRteBlockElement" },
-);
+    });
+};
+
+export const BlockElement = withStyles(styles, { name: "CometAdminRteBlockElement" })(RteBlockElement);
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
-        CometAdminRteBlockElement: CometAdminRteBlockElementClassKeys;
+        CometAdminRteBlockElement: RteBlockElementClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminRteBlockElement: RteBlockElementProps;
     }
 }

@@ -7,10 +7,10 @@ import { matchPath, useLocation } from "react-router";
 import { MenuItem, MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
-export type CometAdminMenuCollapsibleItemClassKeys = "root" | "childSelected" | "listItem" | "open";
+export type MenuCollapsibleItemClassKey = "root" | "childSelected" | "listItem" | "open";
 
 const styles = (theme: Theme) =>
-    createStyles<CometAdminMenuCollapsibleItemClassKeys, any>({
+    createStyles<MenuCollapsibleItemClassKey, any>({
         root: {},
         childSelected: {
             color: theme.palette.primary.main,
@@ -33,17 +33,14 @@ export interface MenuLevel {
 
 type MenuChild = React.ReactElement<MenuItemRouterLinkProps>;
 
-interface MenuCollapsibleItemProps extends MenuItemProps {
+export interface MenuCollapsibleItemProps extends MenuItemProps {
     children: MenuChild[];
-}
-
-export interface MenuCollapsibleItemThemeProps {
     openByDefault?: boolean;
     openedIcon?: React.ReactNode;
     closedIcon?: React.ReactNode;
 }
 
-const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemThemeProps & MenuCollapsibleItemProps> = ({
+const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemProps> = ({
     classes,
     theme,
     level,
@@ -95,4 +92,16 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemT
     );
 };
 
-export const MenuCollapsibleItem = withStyles(styles, { name: "CometAdminMenuCollapsibleItem", withTheme: true })(CollapsibleItem);
+export const MenuCollapsibleItem = withStyles(styles, { name: "CometAdminMenuCollapsibleItem" })(CollapsibleItem);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminMenuCollapsibleItem: MenuCollapsibleItemClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminMenuCollapsibleItem: MenuCollapsibleItemProps;
+    }
+}

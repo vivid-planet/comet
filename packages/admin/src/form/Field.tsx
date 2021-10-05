@@ -2,7 +2,7 @@ import { FieldValidator } from "final-form";
 import * as React from "react";
 import { Field as FinalFormField, FieldMetaState, FieldRenderProps, FormSpy, useForm } from "react-final-form";
 
-import { FieldContainer, FieldContainerThemeProps } from "./FieldContainer";
+import { FieldContainer, FieldContainerProps } from "./FieldContainer";
 import { useFinalFormContext } from "./FinalFormContextProvider";
 
 const requiredValidator = (value: any) => (value ? undefined : "Pflichtfeld");
@@ -21,7 +21,7 @@ interface Props<FieldValue = any, T extends HTMLElement = HTMLElement> {
     disabled?: boolean;
     validate?: FieldValidator<FieldValue>;
     validateWarning?: FieldValidator<FieldValue>;
-    variant?: FieldContainerThemeProps["variant"];
+    variant?: FieldContainerProps["variant"];
     shouldScrollTo?: (meta: FieldMetaState<FieldValue>) => boolean;
     shouldShowError?: (meta: FieldMetaState<FieldValue>) => boolean;
     shouldShowWarning?: (meta: FieldMetaState<FieldValue>) => boolean;

@@ -1,17 +1,42 @@
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { WithStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../../helpers/mergeClasses";
-import { CometAdminToolbarItemClassKeys, useStyles } from "./ToolbarItem.styles";
+export type ToolbarItemClassKey = "root";
 
-interface Props {
+export interface ToolbarItemProps {
     children: React.ReactNode;
 }
 
-const ToolbarItem: React.FunctionComponent = ({ children, classes: passedClasses }: Props & StyledComponentProps<CometAdminToolbarItemClassKeys>) => {
-    const classes = mergeClasses<CometAdminToolbarItemClassKeys>(useStyles(), passedClasses);
-
-    return <div className={classes.root}>{children}</div>;
+const styles = ({ palette }: Theme) => {
+    return createStyles<ToolbarItemClassKey, any>({
+        root: {
+            padding: 15,
+            display: "flex",
+            justifyItems: "center",
+            alignItems: "center",
+            borderRight: 1,
+            borderRightStyle: "solid",
+            borderRightColor: palette.grey[50],
+        },
+    });
 };
 
-export { ToolbarItem };
+function Item({ children, classes }: ToolbarItemProps & WithStyles<typeof styles>): React.ReactElement {
+    return <div className={classes.root}>{children}</div>;
+}
+
+export const ToolbarItem = withStyles(styles, { name: "CometAdminToolbarItem" })(Item);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminToolbarItem: ToolbarItemClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminToolbarItem: ToolbarItemProps;
+    }
+}

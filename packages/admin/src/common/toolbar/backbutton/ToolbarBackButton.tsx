@@ -1,17 +1,33 @@
-import { IconButton } from "@material-ui/core";
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { ArrowLeft } from "@comet/admin-icons";
+import { IconButton, WithStyles } from "@material-ui/core";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../../helpers/mergeClasses";
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem } from "../item/ToolbarItem";
-import { CometAdminToolbarBackButtonClassKeys, useStyles, useToolbarBackButtonThemeProps } from "./ToolbarBackButton.styles";
 
-export function ToolbarBackButton({ classes: passedClasses }: StyledComponentProps<CometAdminToolbarBackButtonClassKeys>) {
+export type ToolbarBackButtonClassKey = "root";
+export interface ToolbarBackButtonProps {
+    backIcon?: React.ReactNode;
+}
+
+const styles = () => {
+    return createStyles<ToolbarBackButtonClassKey, any>({
+        root: {
+            flex: 0,
+            display: "flex",
+            alignItems: "stretch",
+
+            "& [class*='CometAdminToolbarItem-root']": {
+                padding: 0,
+                paddingRight: 5,
+            },
+        },
+    });
+};
+
+function BackButton({ backIcon = <ArrowLeft />, classes }: ToolbarBackButtonProps & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
-    const classes = mergeClasses<CometAdminToolbarBackButtonClassKeys>(useStyles(), passedClasses);
-
-    const themeProps = useToolbarBackButtonThemeProps();
 
     return stackApi && stackApi.breadCrumbs.length > 1 ? (
         <div className={classes.root}>
@@ -21,9 +37,23 @@ export function ToolbarBackButton({ classes: passedClasses }: StyledComponentPro
                         stackApi?.goBack();
                     }}
                 >
-                    {themeProps.backIcon}
+                    {backIcon}
                 </IconButton>
             </ToolbarItem>
         </div>
     ) : null;
+}
+
+export const ToolbarBackButton = withStyles(styles, { name: "CometAdminToolbarBackButton" })(BackButton);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminToolbarBackButton: ToolbarBackButtonClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminToolbarBackButton: ToolbarBackButtonProps;
+    }
 }

@@ -1,14 +1,14 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { Popover, useTheme } from "@material-ui/core";
+import { Popover, useTheme, WithStyles } from "@material-ui/core";
 import { PopoverProps } from "@material-ui/core/Popover/Popover";
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../helpers/mergeClasses";
 import { AppHeaderButton, AppHeaderButtonProps } from "../button/AppHeaderButton";
-import { CometAdminAppHeaderDropdownClassKeys, useStyles } from "./AppHeaderDropdown.styles";
 
-interface Props extends AppHeaderButtonProps {
+export type AppHeaderDropdownClassKey = "root" | "popoverRoot" | "popoverPaper";
+
+export interface AppHeaderDropdownProps extends AppHeaderButtonProps {
     children?: ((closeDropdown: () => void) => React.ReactNode) | React.ReactNode;
     buttonChildren?: React.ReactNode;
     dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
@@ -16,6 +16,18 @@ interface Props extends AppHeaderButtonProps {
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
 }
+
+const styles = () => {
+    return createStyles<AppHeaderDropdownClassKey, any>({
+        root: {
+            height: "100%",
+        },
+        popoverRoot: {},
+        popoverPaper: {
+            minWidth: "var(--comet-admin-app-header-dropdown-item-width)",
+        },
+    });
+};
 
 function DefaultArrowUp(): React.ReactElement {
     const { palette } = useTheme();
@@ -27,16 +39,16 @@ function DefaultArrowDown(): React.ReactElement {
     return <ChevronDown htmlColor={palette.primary.contrastText} />;
 }
 
-export function AppHeaderDropdown({
+function Dropdown({
     children,
     buttonChildren,
     dropdownArrow = (isOpen) => (isOpen ? <DefaultArrowUp /> : <DefaultArrowDown />),
     popoverProps,
     open,
     onOpenChange,
-    classes: passedClasses,
+    classes,
     ...restProps
-}: Props & StyledComponentProps<CometAdminAppHeaderDropdownClassKeys>): React.ReactElement {
+}: AppHeaderDropdownProps & WithStyles<typeof styles>): React.ReactElement {
     const [uncontrolledOpen, setUncontrolledOpen] = React.useState<boolean>(false);
 
     const _open = open !== undefined ? open : uncontrolledOpen;
@@ -49,7 +61,6 @@ export function AppHeaderDropdown({
 
     const [itemWidth, setItemWidth] = React.useState<number>(0);
     const rootRef = React.useRef<HTMLDivElement>(null);
-    const classes = mergeClasses<CometAdminAppHeaderDropdownClassKeys>(useStyles({ itemWidth }), passedClasses);
 
     React.useEffect(() => {
         if (rootRef.current) {
@@ -64,6 +75,7 @@ export function AppHeaderDropdown({
             </AppHeaderButton>
             <Popover
                 classes={{ root: classes.popoverRoot, paper: classes.popoverPaper }}
+                style={{ "--comet-admin-app-header-dropdown-item-width": `${itemWidth}px` } as React.CSSProperties}
                 open={_open}
                 anchorEl={rootRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -76,4 +88,18 @@ export function AppHeaderDropdown({
             </Popover>
         </div>
     );
+}
+
+export const AppHeaderDropdown = withStyles(styles, { name: "CometAdminAppHeaderDropdown" })(Dropdown);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminAppHeaderDropdown: AppHeaderDropdownClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminAppHeaderDropdown: AppHeaderDropdownProps;
+    }
 }

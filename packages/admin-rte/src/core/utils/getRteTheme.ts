@@ -1,7 +1,7 @@
 import { grey as greyPalette } from "@material-ui/core/colors";
 import * as React from "react";
 
-import { CometAdminRteThemeProps } from "../Rte";
+import { RteProps } from "../Rte";
 
 export interface RteTheme {
     colors: {
@@ -15,7 +15,7 @@ export interface RteTheme {
     };
 }
 
-export default (themeProps: CometAdminRteThemeProps | undefined): RteTheme => {
+export default (themeProps: Partial<RteProps> | undefined): RteTheme => {
     return {
         colors: {
             border: themeProps?.colors?.border ? themeProps.colors.border : greyPalette[400],

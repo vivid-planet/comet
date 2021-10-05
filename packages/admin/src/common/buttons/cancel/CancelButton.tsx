@@ -1,30 +1,15 @@
 import { Clear } from "@comet/admin-icons";
-import { Button, ButtonClassKey, makeStyles } from "@material-ui/core";
+import { Button, ButtonClassKey, WithStyles } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
-import { StyledComponentProps, Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { mergeClasses } from "../../../helpers/mergeClasses";
+export type CancelButtonProps = ButtonProps;
+export type CancelButtonClassKey = ButtonClassKey;
 
-export type CometAdminCancelButtonClassKeys = ButtonClassKey;
-
-export function CancelButton({
-    children = <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />,
-    startIcon = <Clear />,
-    classes: passedClasses,
-    ...restProps
-}: ButtonProps & StyledComponentProps<CometAdminCancelButtonClassKeys>) {
-    const classes = mergeClasses<CometAdminCancelButtonClassKeys>(useStyles(), passedClasses);
-    return (
-        <Button classes={classes} startIcon={startIcon} {...restProps}>
-            {children}
-        </Button>
-    );
-}
-
-export const useStyles = makeStyles<Theme, {}, CometAdminCancelButtonClassKeys>(
-    () => ({
+const styles = () => {
+    return createStyles<CancelButtonClassKey, any>({
         root: {},
         label: {},
         text: {},
@@ -54,18 +39,31 @@ export const useStyles = makeStyles<Theme, {}, CometAdminCancelButtonClassKeys>(
         iconSizeSmall: {},
         iconSizeMedium: {},
         iconSizeLarge: {},
-    }),
-    { name: "CometAdminCancelButton" },
-);
+    });
+};
+
+function CancelBtn({
+    children = <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />,
+    startIcon = <Clear />,
+    ...restProps
+}: CancelButtonProps & WithStyles<typeof styles>) {
+    return (
+        <Button startIcon={startIcon} {...restProps}>
+            {children}
+        </Button>
+    );
+}
+
+export const CancelButton = withStyles(styles, { name: "CometAdminCancelButton" })(CancelBtn);
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
-        CometAdminCancelButton: CometAdminCancelButtonClassKeys;
+        CometAdminCancelButton: CancelButtonClassKey;
     }
 }
 
 declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
-        CometAdminCancelButton: CometAdminCancelButtonClassKeys;
+        CometAdminCancelButton: CancelButtonProps;
     }
 }

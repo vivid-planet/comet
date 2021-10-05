@@ -1,10 +1,25 @@
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { WithStyles } from "@material-ui/core";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../helpers/mergeClasses";
-import { CometAdminAppHeaderFillSpaceClassKeys, useStyles } from "./AppHeaderFillSpace.styles";
+export type AppHeaderFillSpaceClassKey = "root";
 
-export function AppHeaderFillSpace({ classes: passedClasses }: StyledComponentProps<CometAdminAppHeaderFillSpaceClassKeys>) {
-    const classes = mergeClasses<CometAdminAppHeaderFillSpaceClassKeys>(useStyles(), passedClasses);
+const styles = () => {
+    return createStyles<AppHeaderFillSpaceClassKey, any>({
+        root: {
+            flexGrow: 1,
+        },
+    });
+};
+
+function FillSpace({ classes }: WithStyles<typeof styles>) {
     return <div className={classes.root} />;
+}
+
+export const AppHeaderFillSpace = withStyles(styles, { name: "CometAdminAppHeaderFillSpace" })(FillSpace);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminAppHeaderFillSpace: AppHeaderFillSpaceClassKey;
+    }
 }

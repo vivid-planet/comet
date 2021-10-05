@@ -3,7 +3,7 @@ import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
 import makeRteApi, { IMakeRteApiProps, OnDebouncedContentChangeFn } from "../core/makeRteApi";
-import Rte, { IOptions as RteOptions, IProps as RteProps } from "../core/Rte";
+import Rte, { IOptions as RteOptions, RteProps } from "../core/Rte";
 import RteReadOnlyBase from "../core/RteReadOnly";
 
 interface IConfig<T = any> {

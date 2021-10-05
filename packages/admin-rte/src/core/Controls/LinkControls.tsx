@@ -1,19 +1,17 @@
-import { makeStyles } from "@material-ui/core";
+import { WithStyles } from "@material-ui/core";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import { StyledComponentProps, Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../../mergeClasses"; // TODO: Import form "@comet/admin" after next release
 import LinkToolbarButton from "../extension/Link/ToolbarButton";
 import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
 import { IControlProps } from "../types";
 
-function LinkControls(p: IControlProps & StyledComponentProps<CometAdminRteLinkControlsClassKeys>) {
+function LinkControls(p: IControlProps & WithStyles<typeof styles>) {
     const {
         options: { supports: supportedThings, overwriteLinkButton, overwriteLinksRemoveButton },
-        classes: passedClasses,
+        classes,
     } = p;
-    const classes = mergeClasses<CometAdminRteLinkControlsClassKeys>(useStyles(), passedClasses);
 
     const LinkButtonComponent = overwriteLinkButton ? overwriteLinkButton : LinkToolbarButton;
     const LinksRemoveButtonComponent = overwriteLinksRemoveButton ? overwriteLinksRemoveButton : LinksRemoveToolbarButton;
@@ -26,25 +24,22 @@ function LinkControls(p: IControlProps & StyledComponentProps<CometAdminRteLinkC
     );
 }
 
-export type CometAdminRteLinkControlsClassKeys = "root" | "item";
+export type RteLinkControlsClassKey = "root" | "item";
 
-const useStyles = makeStyles<Theme, {}, CometAdminRteLinkControlsClassKeys>(
-    () => {
-        return {
-            root: {},
-            item: {
-                marginRight: 1,
-                minWidth: 0,
-                "&:last-child": {
-                    marginRight: 0,
-                },
+const styles = () => {
+    return createStyles<RteLinkControlsClassKey, any>({
+        root: {},
+        item: {
+            marginRight: 1,
+            minWidth: 0,
+            "&:last-child": {
+                marginRight: 0,
             },
-        };
-    },
-    { name: "CometAdminRteLinkControls" },
-);
+        },
+    });
+};
 
-const StyledLinkControls = LinkControls;
+const StyledLinkControls = withStyles(styles, { name: "CometAdminRteLinkControls" })(LinkControls);
 
 // If there are no link-actions, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
 export default (p: IControlProps) => {
@@ -56,3 +51,9 @@ export default (p: IControlProps) => {
 
     return <StyledLinkControls {...p} />;
 };
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminRteLinkControls: RteLinkControlsClassKey;
+    }
+}

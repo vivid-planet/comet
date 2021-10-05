@@ -21,7 +21,7 @@ import { OptionProps } from "react-select/src/components/Option";
 import { PlaceholderProps } from "react-select/src/components/Placeholder";
 import { SingleValueProps } from "react-select/src/components/SingleValue";
 
-import styles from "./ReactSelect.styles";
+import styles, { SelectClassKey } from "./ReactSelect.styles";
 
 function NoOptionsMessage<OptionType, IsMulti extends boolean>(props: NoticeProps<OptionType, IsMulti>) {
     return (
@@ -154,7 +154,7 @@ const components = {
     DropdownIndicator,
 };
 
-export interface CometAdminSelectProps<OptionType> {
+export interface SelectProps<OptionType> {
     theme: Theme;
     selectComponent: React.ComponentType<ReactSelectProps<OptionType>>;
     clearIcon?: SvgIconComponent;
@@ -162,9 +162,7 @@ export interface CometAdminSelectProps<OptionType> {
     dropdownIconOpen?: SvgIconComponent;
 }
 
-class SelectWrapper<OptionType> extends React.Component<
-    WithStyles<typeof styles> & CometAdminSelectProps<OptionType> & ReactSelectProps<OptionType>
-> {
+class SelectWrapper<OptionType> extends React.Component<WithStyles<typeof styles> & SelectProps<OptionType> & ReactSelectProps<OptionType>> {
     public render() {
         const { classes, theme, components: origComponents, selectComponent, ...rest } = this.props;
         const SelectComponent = this.props.selectComponent;
@@ -179,7 +177,7 @@ class SelectWrapper<OptionType> extends React.Component<
         );
     }
 }
-const ExtendedSelectWrapper = withStyles(styles, { name: "CometAdminSelect", withTheme: true })(SelectWrapper);
+const ExtendedSelectWrapper = withStyles(styles, { name: "CometAdminSelect" })(SelectWrapper);
 
 const reactSelectStyles = {
     menuPortal: (styles: any) => ({ ...styles, zIndex: zIndex.modal }),
@@ -205,5 +203,17 @@ export class ReactSelectAsyncCreatable<OptionType, IsMulti extends boolean> exte
 > {
     public render() {
         return <ExtendedSelectWrapper selectComponent={AsyncCreatableSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
+    }
+}
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminSelect: SelectClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminSelect: SelectProps<any>;
     }
 }
