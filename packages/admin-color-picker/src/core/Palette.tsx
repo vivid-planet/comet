@@ -2,7 +2,7 @@ import { Paper, WithStyles } from "@material-ui/core";
 import * as React from "react";
 import tinycolor from "tinycolor2";
 
-import styles from "./ColorPicker.styles";
+import { styles } from "./ColorPicker.styles";
 
 interface IProps {
     colors: string[];

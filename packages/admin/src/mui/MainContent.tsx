@@ -1,8 +1,9 @@
-import { makeStyles } from "@material-ui/core";
-import { StyledComponentProps, Theme } from "@material-ui/core/styles";
+import { WithStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../helpers/mergeClasses";
+export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom";
 
 export interface MainContentProps {
     children?: React.ReactNode;
@@ -10,23 +11,8 @@ export interface MainContentProps {
     disablePaddingBottom?: boolean;
 }
 
-export function MainContent({
-    children,
-    disablePaddingTop,
-    disablePaddingBottom,
-    classes: passedClasses,
-}: MainContentProps & StyledComponentProps<CometAdminMainContentClassKeys>) {
-    const classes = mergeClasses<CometAdminMainContentClassKeys>(useStyles(), passedClasses);
-    const rootClasses: string[] = [classes.root];
-    if (disablePaddingTop) rootClasses.push(classes.disablePaddingTop);
-    if (disablePaddingBottom) rootClasses.push(classes.disablePaddingBottom);
-    return <main className={rootClasses.join(" ")}>{children}</main>;
-}
-
-export type CometAdminMainContentClassKeys = "root" | "disablePaddingTop" | "disablePaddingBottom";
-
-export const useStyles = makeStyles<Theme, {}, CometAdminMainContentClassKeys>(
-    ({ spacing }) => ({
+const styles = ({ spacing }: Theme) => {
+    return createStyles<MainContentClassKey, any>({
         root: {
             position: "relative",
             zIndex: 5,
@@ -38,18 +24,26 @@ export const useStyles = makeStyles<Theme, {}, CometAdminMainContentClassKeys>(
         disablePaddingBottom: {
             paddingBottom: 0,
         },
-    }),
-    { name: "CometAdminMainContent" },
-);
+    });
+};
+
+function Main({ children, disablePaddingTop, disablePaddingBottom, classes }: MainContentProps & WithStyles<typeof styles>) {
+    const rootClasses: string[] = [classes.root];
+    if (disablePaddingTop) rootClasses.push(classes.disablePaddingTop);
+    if (disablePaddingBottom) rootClasses.push(classes.disablePaddingBottom);
+    return <main className={rootClasses.join(" ")}>{children}</main>;
+}
+
+export const MainContent = withStyles(styles, { name: "CometAdminMainContent" })(Main);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminMainContent: MainContentClassKey;
+    }
+}
 
 declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminMainContent: MainContentProps;
-    }
-}
-
-declare module "@material-ui/core/styles/overrides" {
-    interface ComponentNameToClassKey {
-        CometAdminMainContent: CometAdminMainContentClassKeys;
     }
 }

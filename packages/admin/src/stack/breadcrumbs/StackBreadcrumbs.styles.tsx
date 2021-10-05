@@ -1,17 +1,11 @@
-import { ChevronRight } from "@comet/admin-icons";
-import { BreadcrumbsClassKey, BreadcrumbsProps } from "@material-ui/core";
+import { BreadcrumbsClassKey } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/styles";
-import * as React from "react";
+import { createStyles } from "@material-ui/styles";
 
-import { useComponentThemeProps } from "../../mui/useComponentThemeProps";
+export type StackBreadcrumbsClassKey = BreadcrumbsClassKey | "link" | "last";
 
-export interface CometAdminStackBreadcrumbsThemeProps extends BreadcrumbsProps {}
-
-export type CometAdminStackBreadcrumbsClassKeys = BreadcrumbsClassKey | "link" | "last";
-
-export const useStyles = makeStyles<Theme, {}, CometAdminStackBreadcrumbsClassKeys>(
-    ({ palette }) => ({
+export const styles = ({ palette }: Theme) => {
+    return createStyles<StackBreadcrumbsClassKey, any>({
         root: {
             paddingTop: 30,
             paddingBottom: 30,
@@ -39,25 +33,5 @@ export const useStyles = makeStyles<Theme, {}, CometAdminStackBreadcrumbsClassKe
                 textDecoration: "none",
             },
         },
-    }),
-    { name: "CometAdminStackBreadcrumbs" },
-);
-
-export function useThemeProps(componentProps: CometAdminStackBreadcrumbsThemeProps) {
-    const themeProps = useComponentThemeProps("CometAdminStackBreadcrumbs") ?? {};
-    const { separator = <ChevronRight />, ...restProps } = { ...themeProps, ...componentProps };
-    return { separator, ...restProps };
-}
-
-// Theme Augmentation
-declare module "@material-ui/core/styles/overrides" {
-    interface ComponentNameToClassKey {
-        CometAdminStackBreadcrumbs: CometAdminStackBreadcrumbsClassKeys;
-    }
-}
-
-declare module "@material-ui/core/styles/props" {
-    interface ComponentsPropsList {
-        CometAdminStackBreadcrumbs: CometAdminStackBreadcrumbsThemeProps;
-    }
-}
+    });
+};

@@ -1,8 +1,7 @@
-import { ButtonProps } from "@material-ui/core";
 import { Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { createStyles } from "@material-ui/styles";
 
-export type CometAdminFilterBarPopoverFilterClassKeys =
+export type FilterBarPopoverFilterClassKey =
     | "root"
     | "fieldBarWrapper"
     | "fieldBarWrapperWithValues"
@@ -10,19 +9,13 @@ export type CometAdminFilterBarPopoverFilterClassKeys =
     | "labelWrapper"
     | "labelWrapperWithValues"
     | "popoverContentContainer"
-    | "popoverInnerContentContainer"
     | "paper"
     | "buttonsContainer";
 
-export interface FilterBarPopoverFilterThemeProps {
-    submitButton?: ButtonProps;
-    resetButton?: ButtonProps;
-}
-
-export const useStyles = makeStyles(
-    (theme: Theme) => ({
+export const styles = ({ palette, typography }: Theme) => {
+    return createStyles<FilterBarPopoverFilterClassKey, any>({
         root: {
-            backgroundColor: `${theme.palette.common.white}`,
+            backgroundColor: palette.common.white,
             position: "relative",
             marginBottom: "10px",
             borderRadius: "2px",
@@ -30,10 +23,10 @@ export const useStyles = makeStyles(
         },
         fieldBarWrapper: {
             position: "relative",
-            border: `1px solid ${theme.palette.grey[100]}`,
+            border: `1px solid ${palette.grey[100]}`,
         },
         fieldBarWrapperWithValues: {
-            border: `1px solid ${theme.palette.grey[300]}`,
+            border: `1px solid ${palette.grey[300]}`,
         },
         fieldBarInnerWrapper: {
             position: "relative",
@@ -50,13 +43,13 @@ export const useStyles = makeStyles(
             boxSizing: "border-box",
             marginRight: "6px",
             "& [class*='MuiTypography-body1']": {
-                fontWeight: theme.typography.fontWeightRegular,
+                fontWeight: typography.fontWeightRegular,
             },
         },
 
         labelWrapperWithValues: {
             "& [class*='MuiTypography-body1']": {
-                fontWeight: theme.typography.fontWeightBold,
+                fontWeight: typography.fontWeightBold,
             },
         },
         popoverContentContainer: {
@@ -68,7 +61,7 @@ export const useStyles = makeStyles(
             },
         },
         buttonsContainer: {
-            borderTop: `1px solid ${theme.palette.grey[100]}`,
+            borderTop: `1px solid ${palette.grey[100]}`,
             justifyContent: "space-between",
             boxSizing: "border-box",
             padding: "10px 15px",
@@ -79,18 +72,5 @@ export const useStyles = makeStyles(
             marginLeft: -1, //due to border of popover, but now overrideable with styling if needed
             marginTop: 2, //due to boxShadow of popover to not overlap border of clickable fieldBar
         },
-    }),
-    { name: "CometAdminFilterBarPopoverFilter" },
-);
-
-declare module "@material-ui/core/styles/overrides" {
-    interface ComponentNameToClassKey {
-        CometAdminFilterBarPopoverFilter: CometAdminFilterBarPopoverFilterClassKeys;
-    }
-}
-
-declare module "@material-ui/core/styles/props" {
-    interface ComponentsPropsList {
-        CometAdminFilterBarPopoverFilter: FilterBarPopoverFilterThemeProps;
-    }
-}
+    });
+};

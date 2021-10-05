@@ -1,10 +1,10 @@
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { WithStyles } from "@material-ui/core";
 import MuiTab, { TabProps as MuiTabProps } from "@material-ui/core/Tab";
 import MuiTabs, { TabsProps as MuiTabsProps } from "@material-ui/core/Tabs";
+import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import { mergeClasses } from "../helpers/mergeClasses";
-import { CometAdminTabsClassKeys, useStyles } from "./Tabs.styles";
+import { styles, TabsClassKey } from "./Tabs.styles";
 import { TabScrollButton } from "./TabScrollButton";
 
 interface TabProps extends MuiTabProps {
@@ -19,24 +19,22 @@ interface ITabsState {
     setValue: (value: number) => void;
 }
 
-interface Props extends MuiTabsProps {
+export interface TabsProps extends MuiTabsProps {
     children: Array<React.ReactElement<TabProps>> | React.ReactElement<TabProps>;
     tabComponent?: React.ComponentType<MuiTabProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;
 }
 
-export function Tabs({
+function TabsComponent({
     children,
     tabComponent: TabComponent = MuiTab,
     defaultIndex,
     tabsState,
     ScrollButtonComponent = TabScrollButton,
-    classes: passedClasses,
+    classes,
     ...restProps
-}: Props & StyledComponentProps<CometAdminTabsClassKeys>) {
-    const classes = mergeClasses<CometAdminTabsClassKeys>(useStyles(), passedClasses);
-
+}: TabsProps & WithStyles<typeof styles>) {
     let value: ITabsState["value"];
     let setValue: ITabsState["setValue"];
 
@@ -80,4 +78,18 @@ export function Tabs({
             })}
         </div>
     );
+}
+
+export const Tabs = withStyles(styles, { name: "CometAdminTabs" })(TabsComponent);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminTabs: TabsClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminTabs: TabsProps;
+    }
 }

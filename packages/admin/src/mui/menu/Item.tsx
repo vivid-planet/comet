@@ -5,7 +5,7 @@ import * as React from "react";
 import { MenuLevel } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
 
-export type CometAdminMenuItemClassKeys = "root" | "level1" | "level2" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction";
+export type MenuItemClassKey = "root" | "level1" | "level2" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction";
 
 const colors = {
     textLevel1: "#242424",
@@ -13,7 +13,7 @@ const colors = {
 };
 
 const styles = (theme: Theme) =>
-    createStyles<CometAdminMenuItemClassKeys, any>({
+    createStyles<MenuItemClassKey, any>({
         root: {
             flexShrink: 0,
             "&:after": {
@@ -107,7 +107,7 @@ export interface MenuItemProps extends MenuLevel {
 
 type MuiListItemProps = Pick<ListItemProps, Exclude<keyof ListItemProps, "innerRef" | "button">> & { component?: React.ElementType };
 
-const Item: React.FC<WithStyles<typeof styles, false> & MenuItemProps & MuiListItemProps> = ({
+const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProps> = ({
     classes,
     theme,
     primary,
@@ -137,4 +137,10 @@ const Item: React.FC<WithStyles<typeof styles, false> & MenuItemProps & MuiListI
     );
 };
 
-export const MenuItem = withStyles(styles, { name: "CometAdminMenuItem", withTheme: true })(Item);
+export const MenuItem = withStyles(styles, { name: "CometAdminMenuItem" })(Item);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminMenuItem: MenuItemClassKey;
+    }
+}

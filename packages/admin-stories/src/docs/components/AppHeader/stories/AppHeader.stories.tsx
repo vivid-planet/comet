@@ -26,7 +26,7 @@ storiesOf("stories/components/AppHeader/AppHeader", module).add("AppHeader", () 
             <AppHeaderButton startIcon={<Preview />}>Preview</AppHeaderButton>
 
             <AppHeaderDropdown buttonChildren="Language" startIcon={<Language />}>
-                {(closeDropdown) => {
+                {(closeDropdown: () => void) => {
                     const onItemClicked = () => {
                         closeDropdown();
                         // Change language

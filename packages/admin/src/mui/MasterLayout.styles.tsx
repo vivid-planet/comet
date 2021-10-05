@@ -1,10 +1,10 @@
 import { Theme } from "@material-ui/core/styles";
-import { makeStyles } from "@material-ui/styles";
+import { createStyles } from "@material-ui/styles";
 
-export type CometAdminMasterLayoutClassKeys = "root" | "header" | "contentWrapper";
+export type MasterLayoutClassKey = "root" | "header" | "contentWrapper";
 
-export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminMasterLayoutClassKeys>(
-    ({ zIndex }) => ({
+export const styles = ({ zIndex }: Theme) => {
+    return createStyles<MasterLayoutClassKey, any>({
         root: {
             display: "flex",
             flexWrap: "nowrap",
@@ -14,14 +14,7 @@ export const useStyles = makeStyles<Theme, { headerHeight: number }, CometAdminM
         },
         contentWrapper: {
             flexGrow: 1,
-            paddingTop: ({ headerHeight }) => headerHeight,
+            paddingTop: "var(--comet-admin-master-layout-content-top-spacing)",
         },
-    }),
-    { name: "CometAdminMasterLayout" },
-);
-
-declare module "@material-ui/core/styles/overrides" {
-    interface ComponentNameToClassKey {
-        CometAdminMasterLayout: CometAdminMasterLayoutClassKeys;
-    }
-}
+    });
+};

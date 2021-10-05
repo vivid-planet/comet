@@ -3,7 +3,7 @@ import * as React from "react";
 import { Hue, Saturation } from "react-color/lib/components/common";
 
 import { colorToHex, stringToHSL, stringToHSV } from "../utils/colorSpaces";
-import styles from "./ColorPicker.styles";
+import { styles } from "./ColorPicker.styles";
 
 interface IPickerProps {
     color: string;

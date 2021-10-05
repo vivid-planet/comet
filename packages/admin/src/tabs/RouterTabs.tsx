@@ -1,14 +1,14 @@
-import { StyledComponentProps } from "@material-ui/core/styles";
+import { WithStyles } from "@material-ui/core";
 import MuiTab, { TabProps as MuiTabProps } from "@material-ui/core/Tab";
 import Tabs, { TabsProps } from "@material-ui/core/Tabs";
+import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
-import { mergeClasses } from "../helpers/mergeClasses";
 import { StackApiContext } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { StackSwitchApiContext } from "../stack/Switch";
-import { CometAdminRouterTabsClassKeys, useStyles } from "./RouterTabs.styles";
+import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
 
 interface TabProps extends MuiTabProps {
     path: string;
@@ -24,16 +24,14 @@ interface Props extends RouteComponentProps {
     tabsProps?: Partial<TabsProps>;
 }
 
-function RouterTabs({
+function RouterTabsComponent({
     children,
     tabComponent: TabComponent = MuiTab,
     tabsProps,
     history,
     match,
-    classes: passedClasses,
-}: Props & StyledComponentProps<CometAdminRouterTabsClassKeys>) {
-    const classes = mergeClasses<CometAdminRouterTabsClassKeys>(useStyles(), passedClasses);
-
+    classes,
+}: Props & WithStyles<typeof styles>) {
     const childrenArr = React.Children.toArray(children);
 
     const handleChange = (event: {}, value: number) => {
@@ -132,5 +130,10 @@ function RouterTabs({
     );
 }
 
-const ExtendedRouterTabs = withRouter(RouterTabs);
-export { ExtendedRouterTabs as RouterTabs };
+export const RouterTabs = withRouter(withStyles(styles, { name: "CometAdminRouterTabs" })(RouterTabsComponent));
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminRouterTabs: RouterTabsClassKey;
+    }
+}
