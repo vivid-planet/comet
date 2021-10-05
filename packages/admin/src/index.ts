@@ -84,6 +84,7 @@ export { MenuClassKey, styles } from "./mui/menu/Menu.styles";
 export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Context";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
 export { MasterLayout, MasterLayoutProps } from "./mui/MasterLayout";
+export { MasterLayoutContext } from "./mui/MasterLayoutContext";
 export { MasterLayoutClassKey } from "./mui/MasterLayout.styles";
 export { MainContentClassKey, MainContent, MainContentProps } from "./mui/MainContent";
 export { Toolbar, ToolbarProps, ToolbarClassKey } from "./common/toolbar/Toolbar";
