@@ -8,9 +8,6 @@ export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): St
         border: `1px solid ${palette.grey[100]}`,
         borderRadius: 2,
         backgroundColor: "#fff",
-        "&:not($multiline)": {
-            height: 40,
-        },
         "& [class*='MuiSvgIcon-root']": {
             pointerEvents: "none",
         },
@@ -42,9 +39,9 @@ export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): St
     fullWidth: {},
     colorSecondary: {},
     input: {
-        height: "100%",
+        height: "auto",
         boxSizing: "border-box",
-        padding: spacing(2),
+        padding: spacing(2) - 1, // 1px less for border, set in root
         lineHeight: "20px",
         "&::-ms-clear": {
             display: "none",
@@ -52,7 +49,7 @@ export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): St
     },
     inputMarginDense: {},
     inputMultiline: {
-        padding: spacing(2),
+        padding: spacing(2) - 1, // 1px less for border, set in root
     },
     inputTypeSearch: {},
     inputAdornedStart: {},
