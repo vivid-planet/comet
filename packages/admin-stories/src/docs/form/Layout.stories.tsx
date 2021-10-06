@@ -276,11 +276,13 @@ storiesOf("stories/form/Layout", module)
             <ThemeProvider theme={theme}>
                 <Form
                     onSubmit={() => {}}
+                    initialValues={{ select: "none" }}
                     render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
                             <Field name="select" label="Select">
                                 {(props) => (
                                     <FinalFormSelect {...props}>
+                                        <MenuItem value="none">No value</MenuItem>
                                         {flavourOptions.map((option) => (
                                             <MenuItem value={option.value} key={option.value}>
                                                 {option.label}
