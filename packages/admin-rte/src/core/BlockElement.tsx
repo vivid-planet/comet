@@ -23,7 +23,7 @@ const RteBlockElement = ({ classes, type, ...restProps }: RteBlockElementProps &
 };
 
 const styles = ({ palette }: Theme) => {
-    return createStyles<RteBlockElementClassKey, any>({
+    return createStyles<RteBlockElementClassKey, RteBlockElementProps>({
         root: {
             fontSize: 16,
             lineHeight: "20px",

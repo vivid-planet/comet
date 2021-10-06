@@ -8,7 +8,7 @@ import { AppHeaderButton, AppHeaderButtonProps } from "../button/AppHeaderButton
 
 export type AppHeaderDropdownClassKey = "root" | "popoverRoot" | "popoverPaper";
 
-export interface AppHeaderDropdownProps extends AppHeaderButtonProps {
+export interface AppHeaderDropdownProps extends Omit<AppHeaderButtonProps, "children"> {
     children?: ((closeDropdown: () => void) => React.ReactNode) | React.ReactNode;
     buttonChildren?: React.ReactNode;
     dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
@@ -18,7 +18,7 @@ export interface AppHeaderDropdownProps extends AppHeaderButtonProps {
 }
 
 const styles = () => {
-    return createStyles<AppHeaderDropdownClassKey, any>({
+    return createStyles<AppHeaderDropdownClassKey, AppHeaderDropdownProps>({
         root: {
             height: "100%",
         },

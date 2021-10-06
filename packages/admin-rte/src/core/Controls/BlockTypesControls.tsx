@@ -48,7 +48,7 @@ export type RteBlockTypeControlsClassKey = "root" | "select";
 const styles = (theme: Theme) => {
     const rteTheme = getRteTheme(theme.props?.CometAdminRte);
 
-    return createStyles<RteBlockTypeControlsClassKey, any>({
+    return createStyles<RteBlockTypeControlsClassKey, Props>({
         root: {
             "& [class*='MuiInputBase-root']": {
                 backgroundColor: "transparent",

@@ -12,7 +12,7 @@ export interface MainContentProps {
 }
 
 const styles = ({ spacing }: Theme) => {
-    return createStyles<MainContentClassKey, any>({
+    return createStyles<MainContentClassKey, MainContentProps>({
         root: {
             position: "relative",
             zIndex: 5,

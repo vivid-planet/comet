@@ -10,7 +10,7 @@ import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 export type MenuCollapsibleItemClassKey = "root" | "childSelected" | "listItem" | "open";
 
 const styles = (theme: Theme) =>
-    createStyles<MenuCollapsibleItemClassKey, any>({
+    createStyles<MenuCollapsibleItemClassKey, MenuCollapsibleItemProps>({
         root: {},
         childSelected: {
             color: theme.palette.primary.main,
@@ -42,7 +42,6 @@ export interface MenuCollapsibleItemProps extends MenuItemProps {
 
 const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemProps> = ({
     classes,
-    theme,
     level,
     primary,
     secondary,
@@ -53,7 +52,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     children,
     ...otherProps
 }) => {
-    if (!level) level = 1;
+    const itemLevel: 1 | 2 = level ? level : 1;
     let hasSelectedChild: boolean = false;
     const location = useLocation();
 
@@ -62,8 +61,10 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
             hasSelectedChild = true;
         }
 
+        const newItemLevel = itemLevel + 1;
+
         return React.cloneElement<MenuLevel>(child, {
-            level: level + 1,
+            level: newItemLevel === 1 || newItemLevel === 2 ? newItemLevel : undefined,
         });
     });
 

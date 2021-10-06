@@ -7,7 +7,7 @@ import {
     CometLogo,
     MasterLayout,
     Menu as CometMenu,
-    MenuItem as CometMenuItem,
+    MenuItemRouterLink,
 } from "@comet/admin";
 import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icons";
 import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@material-ui/core";
@@ -30,7 +30,7 @@ function AccountHeaderItem() {
 function Menu() {
     return (
         <CometMenu>
-            <CometMenuItem primary="Dashboard" icon={<Dashboard />} to="/dashboard" selected />
+            <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" selected />
         </CometMenu>
     );
 }
@@ -43,7 +43,7 @@ function MasterHeader() {
             <AppHeaderFillSpace />
             <AppHeaderButton startIcon={<Preview />}>Preview</AppHeaderButton>
             <AppHeaderDropdown buttonChildren="Language" startIcon={<Language />}>
-                {(closeDropdown: () => void) => {
+                {(closeDropdown) => {
                     const onItemClicked = () => {
                         closeDropdown();
                         // Change language

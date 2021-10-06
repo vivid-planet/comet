@@ -9,7 +9,7 @@ export interface ClearInputButtonProps extends ButtonBaseProps {
 }
 
 const styles = () => {
-    return createStyles<ClearInputButtonClassKey, any>({
+    return createStyles<ClearInputButtonClassKey, ClearInputButtonProps>({
         root: {
             height: "100%",
             width: 32,

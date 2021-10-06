@@ -11,7 +11,7 @@ export interface TableBodyRowProps extends TableRowProps {
 }
 
 const styles = () => {
-    return createStyles<TableBodyRowClassKey, any>({
+    return createStyles<TableBodyRowClassKey, TableBodyRowProps>({
         root: {},
         even: {},
         odd: {},

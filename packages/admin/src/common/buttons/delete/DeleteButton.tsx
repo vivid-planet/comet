@@ -10,7 +10,7 @@ export type DeleteButtonClassKey = ButtonClassKey;
 export type DeleteButtonProps = ButtonProps;
 
 const styles = ({ palette }: Theme) => {
-    return createStyles<DeleteButtonClassKey, any>({
+    return createStyles<DeleteButtonClassKey, DeleteButtonProps>({
         root: {
             backgroundColor: palette.error.main,
             "&:hover": {

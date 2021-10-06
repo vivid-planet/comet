@@ -12,7 +12,7 @@ export interface ToolbarBackButtonProps {
 }
 
 const styles = () => {
-    return createStyles<ToolbarBackButtonClassKey, any>({
+    return createStyles<ToolbarBackButtonClassKey, ToolbarBackButtonProps>({
         root: {
             flex: 0,
             display: "flex",

@@ -11,7 +11,7 @@ export interface ToolbarProps {
 }
 
 const styles = () => {
-    return createStyles<ToolbarClassKey, any>({
+    return createStyles<ToolbarClassKey, ToolbarProps>({
         root: {
             position: "sticky",
             zIndex: 10,

@@ -13,7 +13,7 @@ const colors = {
 };
 
 const styles = (theme: Theme) =>
-    createStyles<MenuItemClassKey, any>({
+    createStyles<MenuItemClassKey, MenuItemProps & MuiListItemProps>({
         root: {
             flexShrink: 0,
             "&:after": {
@@ -109,7 +109,6 @@ type MuiListItemProps = Pick<ListItemProps, Exclude<keyof ListItemProps, "innerR
 
 const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProps> = ({
     classes,
-    theme,
     primary,
     secondary,
     icon,
@@ -123,14 +122,16 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
 
     const hasIcon = !!icon;
 
-    const listItemClasses = [classes.root, classes[`level${level}`]];
+    const listItemClasses = [classes.root];
+    if (level === 1) listItemClasses.push(classes.level1);
+    if (level === 2) listItemClasses.push(classes.level2);
     if (hasIcon) listItemClasses.push(classes.hasIcon);
     if (secondary) listItemClasses.push(classes.hasSecondaryText);
     if (secondaryAction) listItemClasses.push(classes.hasSecondaryAction);
 
     return (
-        <ListItem button {...otherProps} className={listItemClasses.join(" ")}>
-            {hasIcon && <ListItemIcon className={classes.listItemIcon}>{icon}</ListItemIcon>}
+        <ListItem component="div" button classes={{ root: listItemClasses.join(" ") }} {...otherProps}>
+            {hasIcon && <ListItemIcon>{icon}</ListItemIcon>}
             <ListItemText primary={primary} secondary={secondary} inset={!icon} />
             {!!secondaryAction && secondaryAction}
         </ListItem>

@@ -39,7 +39,7 @@ export type RteToolbarClassKey = "root" | "slot";
 const styles = (theme: Theme) => {
     const rteTheme = getRteTheme(theme.props?.CometAdminRte);
 
-    return createStyles<RteToolbarClassKey, any>({
+    return createStyles<RteToolbarClassKey, IProps>({
         root: {
             position: "sticky",
             top: 0,

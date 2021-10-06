@@ -10,7 +10,7 @@ export type AppHeaderMenuButtonProps = IconButtonProps;
 export type AppHeaderMenuButtonClassKey = IconButtonClassKey;
 
 const styles = ({ spacing }: Theme) => {
-    return createStyles<AppHeaderMenuButtonClassKey, any>({
+    return createStyles<AppHeaderMenuButtonClassKey, AppHeaderMenuButtonProps>({
         root: {
             color: "#fff",
             marginLeft: spacing(2),

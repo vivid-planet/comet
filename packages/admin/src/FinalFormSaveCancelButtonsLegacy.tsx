@@ -16,7 +16,7 @@ export interface FinalFormSaveCancelButtonsLegacyProps {
 export type FinalFormSaveCancelButtonsLegacyClassKey = "root" | "cancelButton" | "saveButton";
 
 const styles = (theme: Theme) => {
-    return createStyles<FinalFormSaveCancelButtonsLegacyClassKey, any>({
+    return createStyles<FinalFormSaveCancelButtonsLegacyClassKey, FinalFormSaveCancelButtonsLegacyProps>({
         root: {},
         cancelButton: {
             margin: theme.spacing(1),
