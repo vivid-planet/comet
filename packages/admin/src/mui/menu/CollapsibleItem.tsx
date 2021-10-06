@@ -34,7 +34,7 @@ export interface MenuLevel {
 type MenuChild = React.ReactElement<MenuItemRouterLinkProps>;
 
 export interface MenuCollapsibleItemProps extends MenuItemProps {
-    children: MenuChild[];
+    children: MenuChild | MenuChild[];
     openByDefault?: boolean;
     openedIcon?: React.ReactNode;
     closedIcon?: React.ReactNode;
