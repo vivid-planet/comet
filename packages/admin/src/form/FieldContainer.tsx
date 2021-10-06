@@ -62,7 +62,11 @@ const styles = (theme: Theme) => {
         },
         fullWidth: {},
         required: {},
-        disabled: {},
+        disabled: {
+            "& $label": {
+                color: theme.palette.text.disabled,
+            },
+        },
         fieldMarginAlways: {},
         fieldMarginNever: {},
         fieldMarginOnlyIfNotLast: {
