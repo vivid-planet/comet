@@ -45,7 +45,7 @@ export type RteControlButtonClassKey = "root" | "selected" | "renderAsIcon";
 const styles = (theme: Theme) => {
     const rteTheme = getRteTheme(theme.props?.CometAdminRte);
 
-    return createStyles<RteControlButtonClassKey, any>({
+    return createStyles<RteControlButtonClassKey, IProps>({
         root: {
             display: "flex",
             justifyContent: "center",

@@ -33,7 +33,7 @@ export type FieldContainerClassKey =
     | "warning";
 
 const styles = (theme: Theme) => {
-    return createStyles<FieldContainerClassKey, any>({
+    return createStyles<FieldContainerClassKey, FieldContainerProps>({
         root: {
             "&:not($fieldMarginNever)": {
                 marginBottom: theme.spacing(4),

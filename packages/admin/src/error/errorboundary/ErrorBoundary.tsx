@@ -83,7 +83,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps & WithStyles<Erro
 }
 
 const styles = (theme: Theme) =>
-    createStyles<ErrorBoundaryClassKey, any>({
+    createStyles<ErrorBoundaryClassKey, ErrorBoundaryProps>({
         alert: {},
         message: {},
         exceptionDetails: {

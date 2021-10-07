@@ -15,7 +15,7 @@ export interface TabScrollButtonProps extends MuiTabScrollButtonProps {
 }
 
 const styles = () => {
-    return createStyles<TabScrollButtonClassKey, any>({
+    return createStyles<TabScrollButtonClassKey, TabScrollButtonProps>({
         root: {
             width: 40,
             flexShrink: 0,

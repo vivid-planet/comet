@@ -5,7 +5,7 @@ import * as React from "react";
 export type AppHeaderFillSpaceClassKey = "root";
 
 const styles = () => {
-    return createStyles<AppHeaderFillSpaceClassKey, any>({
+    return createStyles<AppHeaderFillSpaceClassKey, {}>({
         root: {
             flexGrow: 1,
         },

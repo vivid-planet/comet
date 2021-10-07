@@ -283,7 +283,7 @@ export type RteClassKey = "root" | "disabled" | "editor";
 const styles = (theme: Theme) => {
     const rteTheme = getRteTheme(theme.props?.CometAdminRte);
 
-    return createStyles<RteClassKey, any>({
+    return createStyles<RteClassKey, RteProps>({
         root: {
             border: `1px solid ${rteTheme.colors.border}`,
             borderTopWidth: 0,

@@ -13,7 +13,7 @@ interface AppHeaderProps extends AppBarProps {
 export type AppHeaderClassKey = AppBarClassKey;
 
 const styles = ({ palette }: Theme) => {
-    return createStyles<AppHeaderClassKey, any>({
+    return createStyles<AppHeaderClassKey, AppHeaderProps>({
         root: {
             backgroundColor: palette.grey["A400"],
             height: "var(--header-height)",

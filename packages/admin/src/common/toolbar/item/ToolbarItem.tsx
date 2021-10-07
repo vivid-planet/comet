@@ -10,7 +10,7 @@ export interface ToolbarItemProps {
 }
 
 const styles = ({ palette }: Theme) => {
-    return createStyles<ToolbarItemClassKey, any>({
+    return createStyles<ToolbarItemClassKey, ToolbarItemProps>({
         root: {
             padding: 15,
             display: "flex",

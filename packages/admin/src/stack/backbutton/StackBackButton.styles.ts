@@ -1,10 +1,12 @@
 import { ButtonClassKey } from "@material-ui/core";
 import { createStyles } from "@material-ui/styles";
 
+import { StackBackButtonProps } from "./StackBackButton";
+
 export type StackBackButtonClassKey = ButtonClassKey;
 
 export const styles = () => {
-    return createStyles<StackBackButtonClassKey, any>({
+    return createStyles<StackBackButtonClassKey, StackBackButtonProps>({
         root: {},
         label: {},
         text: {},

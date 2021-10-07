@@ -27,7 +27,7 @@ function LinkControls(p: IControlProps & WithStyles<typeof styles>) {
 export type RteLinkControlsClassKey = "root" | "item";
 
 const styles = () => {
-    return createStyles<RteLinkControlsClassKey, any>({
+    return createStyles<RteLinkControlsClassKey, IControlProps>({
         root: {},
         item: {
             marginRight: 1,

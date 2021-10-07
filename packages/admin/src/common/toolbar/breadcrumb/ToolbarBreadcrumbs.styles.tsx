@@ -1,10 +1,12 @@
 import { Theme } from "@material-ui/core/styles";
 import { createStyles } from "@material-ui/styles";
 
+import { ToolbarBreadcrumbsProps } from "./ToolbarBreadcrumbs";
+
 export type ToolbarBreadcrumbsClassKey = "item" | "typographyRoot" | "typographyActiveRoot" | "separatorContainer" | "separator";
 
 export const styles = ({ palette }: Theme) => {
-    return createStyles<ToolbarBreadcrumbsClassKey, any>({
+    return createStyles<ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps>({
         item: {
             display: "flex",
             alignItems: "center",

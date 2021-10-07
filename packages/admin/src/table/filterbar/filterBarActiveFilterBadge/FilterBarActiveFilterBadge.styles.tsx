@@ -1,10 +1,12 @@
 import { Theme } from "@material-ui/core/styles";
 import { createStyles } from "@material-ui/styles";
 
+import { FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
+
 export type FilterBarActiveFilterBadgeClassKey = "hasValueCount";
 
 export const styles = ({ palette }: Theme) => {
-    return createStyles<FilterBarActiveFilterBadgeClassKey, any>({
+    return createStyles<FilterBarActiveFilterBadgeClassKey, FilterBarActiveFilterBadgeProps>({
         hasValueCount: {
             backgroundColor: palette.grey[100],
             boxSizing: "border-box",

@@ -5,11 +5,11 @@ import * as React from "react";
 export type ToolbarFillSpaceClassKey = "root";
 
 export interface ToolbarFillSpaceProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 const styles = () => {
-    return createStyles<ToolbarFillSpaceClassKey, any>({
+    return createStyles<ToolbarFillSpaceClassKey, ToolbarFillSpaceProps>({
         root: {
             flexGrow: 1,
         },

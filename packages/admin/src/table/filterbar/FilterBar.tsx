@@ -9,7 +9,7 @@ export interface FilterBarProps {
 }
 
 const styles = () => {
-    return createStyles<FilterBarClassKey, any>({
+    return createStyles<FilterBarClassKey, FilterBarProps>({
         root: {
             "& [class*='CometAdminFormFieldContainer-root']": {
                 marginBottom: 0,

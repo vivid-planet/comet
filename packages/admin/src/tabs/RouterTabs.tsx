@@ -18,7 +18,7 @@ interface TabProps extends MuiTabProps {
 }
 export const RouterTab: React.SFC<TabProps> = () => null;
 
-interface Props extends RouteComponentProps {
+export interface Props extends RouteComponentProps {
     children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
     tabComponent?: React.ComponentType<MuiTabProps>;
     tabsProps?: Partial<TabsProps>;

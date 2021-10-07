@@ -15,7 +15,7 @@ export const parseIdFromIri = (iri: string) => {
 
 export interface IDefaultVariables {}
 
-interface IProps {
+export interface IProps {
     api: ITableQueryApi;
     loading: boolean;
     error?: ApolloError;

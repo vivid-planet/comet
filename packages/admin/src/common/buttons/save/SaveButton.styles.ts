@@ -2,10 +2,12 @@ import { ButtonClassKey } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
 import { createStyles } from "@material-ui/styles";
 
+import { SaveButtonProps } from "./SaveButton";
+
 export type SaveButtonClassKey = "saving" | "error" | "success" | ButtonClassKey;
 
 export const styles = (theme: Theme) => {
-    return createStyles<SaveButtonClassKey, any>({
+    return createStyles<SaveButtonClassKey, SaveButtonProps>({
         root: {},
         label: {},
         text: {},

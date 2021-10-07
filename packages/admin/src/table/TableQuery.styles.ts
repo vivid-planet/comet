@@ -1,10 +1,12 @@
 import zIndex from "@material-ui/core/styles/zIndex";
 import { createStyles } from "@material-ui/styles";
 
+import { IProps } from "./TableQuery";
+
 export type TableQueryClassKey = "root" | "loadingContainer" | "loadingPaper";
 
 export const styles = () => {
-    return createStyles<TableQueryClassKey, any>({
+    return createStyles<TableQueryClassKey, IProps>({
         root: {
             position: "relative",
         },

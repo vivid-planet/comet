@@ -9,7 +9,7 @@ export type CancelButtonProps = ButtonProps;
 export type CancelButtonClassKey = ButtonClassKey;
 
 const styles = () => {
-    return createStyles<CancelButtonClassKey, any>({
+    return createStyles<CancelButtonClassKey, CancelButtonProps>({
         root: {},
         label: {},
         text: {},

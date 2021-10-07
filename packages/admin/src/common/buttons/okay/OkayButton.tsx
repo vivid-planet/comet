@@ -8,7 +8,7 @@ export type OkayButtonClassKey = ButtonClassKey;
 export type OkayButtonProps = ButtonProps;
 
 const styles = () => {
-    return createStyles<OkayButtonClassKey, any>({
+    return createStyles<OkayButtonClassKey, OkayButtonProps>({
         root: {},
         label: {},
         text: {},

@@ -8,11 +8,11 @@ import { ToolbarItem } from "../item/ToolbarItem";
 export type ToolbarTitleItemClassKey = "root" | "typography";
 
 export interface ToolbarTitleItemProps {
-    typographyProps: TypographyTypeMap["props"];
+    typographyProps?: TypographyTypeMap["props"];
 }
 
 const styles = () => {
-    return createStyles<ToolbarTitleItemClassKey, any>({
+    return createStyles<ToolbarTitleItemClassKey, React.PropsWithChildren<ToolbarTitleItemProps>>({
         root: {},
         typography: {},
     });
@@ -20,7 +20,7 @@ const styles = () => {
 
 function TitleItem({
     children,
-    typographyProps,
+    typographyProps = {},
     classes,
 }: React.PropsWithChildren<ToolbarTitleItemProps> & WithStyles<typeof styles>): React.ReactElement {
     return (

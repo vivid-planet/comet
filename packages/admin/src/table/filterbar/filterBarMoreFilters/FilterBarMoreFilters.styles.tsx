@@ -1,10 +1,12 @@
 import { Theme } from "@material-ui/core/styles";
 import { createStyles } from "@material-ui/styles";
 
+import { FilterBarMoreFiltersProps } from "./FilterBarMoreFilters";
+
 export type FilterBarMoveFilersClassKey = "root" | "textWrapper";
 
 export const styles = ({ palette, typography }: Theme) => {
-    return createStyles<FilterBarMoveFilersClassKey, any>({
+    return createStyles<FilterBarMoveFilersClassKey, FilterBarMoreFiltersProps>({
         root: {
             backgroundColor: palette.common.white,
             border: `1px solid ${palette.grey[300]}`,

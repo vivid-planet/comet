@@ -8,7 +8,7 @@ interface Props {
 }
 
 const styles = () => {
-    return createStyles<ToolbarActionsClassKey, any>({
+    return createStyles<ToolbarActionsClassKey, Props>({
         root: {
             display: "flex",
             alignItems: "center",

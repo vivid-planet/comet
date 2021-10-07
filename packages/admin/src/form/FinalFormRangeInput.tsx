@@ -6,7 +6,7 @@ import { FieldRenderProps } from "react-final-form";
 export type FinalFormRangeInputClassKey = "root" | "inputsWrapper" | "inputFieldsSeparatorContainer" | "sliderWrapper" | "inputFieldContainer";
 
 const styles = () => {
-    return createStyles<FinalFormRangeInputClassKey, any>({
+    return createStyles<FinalFormRangeInputClassKey, IFinalFormRangeInputProps>({
         root: {
             boxSizing: "border-box",
             padding: "0 20px",

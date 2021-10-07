@@ -38,7 +38,7 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes }: 
 export type RteFeaturesButtonGroupClassKey = "root" | "buttonWrapper";
 
 const styles = () => {
-    return createStyles<RteFeaturesButtonGroupClassKey, any>({
+    return createStyles<RteFeaturesButtonGroupClassKey, IProps>({
         root: {
             display: "inline-flex",
             justifyContent: "flex-start",
