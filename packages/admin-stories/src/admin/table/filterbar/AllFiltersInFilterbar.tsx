@@ -184,7 +184,7 @@ function Story({ tableData }: StoryProps) {
     );
 }
 
-storiesOf("@comet/admin/table", module).add("Table with Filterbar", () => {
+storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with all kinds of Filters", () => {
     const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
         return {
             id: i,
