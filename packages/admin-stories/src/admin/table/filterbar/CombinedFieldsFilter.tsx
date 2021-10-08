@@ -32,12 +32,7 @@ interface StoryProps {
 }
 
 function Story({ tableData }: StoryProps) {
-    const filterApi = useTableQueryFilter<Partial<IFilterValues>>({
-        price: {
-            min: 100,
-            max: 1000,
-        },
-    });
+    const filterApi = useTableQueryFilter<Partial<IFilterValues>>({});
 
     const filteredData = tableData
         .filter(
