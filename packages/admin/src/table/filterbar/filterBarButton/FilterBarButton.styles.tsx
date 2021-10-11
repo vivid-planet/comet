@@ -25,11 +25,26 @@ export const useStyles = makeStyles(
                 backgroundColor: "initial",
             },
         },
+        selected: {
+            border: `1px solid ${theme.palette.grey[400]}`,
+            "&:disabled": {
+                border: `1px solid ${theme.palette.grey[100]}`,
+            },
+        },
+        filterBadge: {
+            marginLeft: "6px",
+        },
+        open: {
+            border: `1px solid ${theme.palette.grey[400]}`,
+        },
         startIcon: {
             marginRight: "6px",
         },
         endIcon: {
             marginLeft: "10px",
+        },
+        endIconWithFilterBadge: {
+            marginLeft: "6px",
         },
         labelWrapper: {
             boxSizing: "border-box",

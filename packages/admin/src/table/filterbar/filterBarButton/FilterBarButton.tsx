@@ -9,27 +9,34 @@ import { useStyles } from "./FilterBarButton.styles";
 interface FilterBarButtonProps extends ButtonProps {
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     countValue?: number;
+    openPopover?: boolean;
 }
 
 export const FilterBarButton = ({
     children,
     dirtyFieldsBadge,
     countValue,
+    openPopover = false,
     startIcon,
     endIcon,
     ...buttonProps
 }: FilterBarButtonProps): React.ReactElement => {
+    const selected = countValue && countValue > 0;
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const classes = useStyles();
 
     return (
-        <Button className={classes.button} disableRipple {...buttonProps}>
+        <Button className={clsx(classes.button, selected && classes.selected, openPopover && classes.open)} disableRipple {...buttonProps}>
             {startIcon && <span className={classes.startIcon}>{startIcon}</span>}
-            <div className={clsx(classes.labelWrapper, countValue && countValue > 0 && classes.labelWrapperWithValues)}>
+            <div className={clsx(classes.labelWrapper, selected && classes.labelWrapperWithValues)}>
                 <Typography variant="body1">{children}</Typography>
             </div>
-            {countValue && <FilterBarActiveFilterBadgeComponent countValue={countValue} />}
-            {endIcon && <span className={classes.endIcon}>{endIcon}</span>}
+            {selected && (
+                <span className={classes.filterBadge}>
+                    <FilterBarActiveFilterBadgeComponent countValue={countValue as number} />
+                </span>
+            )}
+            {endIcon && <span className={selected ? classes.endIconWithFilterBadge : classes.endIcon}>{endIcon}</span>}
         </Button>
     );
 };
