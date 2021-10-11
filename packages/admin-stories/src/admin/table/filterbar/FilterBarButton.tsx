@@ -10,14 +10,16 @@ function Story() {
             <ListItem>
                 <div>
                     <strong>Resting</strong> <br />
-                    <FilterBarButton endIcon={<ChevronDown />}> Filter Button </FilterBarButton>
+                    <FilterBarButton openPopover={false} endIcon={<ChevronDown />}>
+                        Filter Button
+                    </FilterBarButton>
                 </div>
             </ListItem>
             <ListItem>
                 <div>
                     <strong>Disabled</strong> <br />
-                    <FilterBarButton endIcon={<ChevronDown />} disabled>
-                        Disabled Filter Button
+                    <FilterBarButton openPopover={false} endIcon={<ChevronDown />} disabled>
+                        Filter Button
                     </FilterBarButton>
                 </div>
             </ListItem>
@@ -32,7 +34,7 @@ function Story() {
             <ListItem>
                 <div>
                     <strong>Selected</strong> <br />
-                    <FilterBarButton countValue={3} endIcon={<ChevronDown />}>
+                    <FilterBarButton openPopover={false} countValue={3} endIcon={<ChevronDown />}>
                         Filter Button
                     </FilterBarButton>
                 </div>
@@ -40,7 +42,7 @@ function Story() {
             <ListItem>
                 <div>
                     <strong>Selected Disabled</strong> <br />
-                    <FilterBarButton countValue={3} endIcon={<ChevronDown />} disabled>
+                    <FilterBarButton openPopover={false} countValue={3} endIcon={<ChevronDown />} disabled>
                         Filter Button
                     </FilterBarButton>
                 </div>

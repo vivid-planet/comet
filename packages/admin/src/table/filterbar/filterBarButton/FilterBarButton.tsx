@@ -9,19 +9,19 @@ import { useStyles } from "./FilterBarButton.styles";
 interface FilterBarButtonProps extends ButtonProps {
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     countValue?: number;
-    openPopover?: boolean;
+    openPopover: boolean;
 }
 
 export const FilterBarButton = ({
     children,
     dirtyFieldsBadge,
     countValue,
-    openPopover = false,
+    openPopover,
     startIcon,
     endIcon,
     ...buttonProps
 }: FilterBarButtonProps): React.ReactElement => {
-    const selected = countValue && countValue > 0;
+    const selected = !!(countValue && countValue > 0);
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const classes = useStyles();
 
