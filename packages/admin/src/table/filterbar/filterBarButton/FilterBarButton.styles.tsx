@@ -20,7 +20,7 @@ export const useStyles = makeStyles(
                 backgroundColor: "initial",
             },
 
-            "&:hover": {
+            "&:hover, &:focus": {
                 border: `1px solid ${theme.palette.primary.main}`,
                 backgroundColor: "initial",
             },
@@ -31,11 +31,11 @@ export const useStyles = makeStyles(
                 border: `1px solid ${theme.palette.grey[100]}`,
             },
         },
-        filterBadge: {
-            marginLeft: "6px",
-        },
         open: {
             border: `1px solid ${theme.palette.grey[400]}`,
+        },
+        filterBadge: {
+            marginLeft: "6px",
         },
         startIcon: {
             marginRight: "6px",
