@@ -1,9 +1,21 @@
-import { Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { createStyles, Theme } from "@material-ui/core";
 
-export const useStyles = makeStyles(
-    (theme: Theme) => ({
-        button: {
+import { FilterBarButtonProps } from "./FilterBarButton";
+
+export type FilterBarButtonClassKey =
+    | "root"
+    | "selected"
+    | "open"
+    | "filterBadge"
+    | "startIcon"
+    | "endIcon"
+    | "endIconWithFilterBadge"
+    | "labelWrapper"
+    | "labelWrapperWithValues";
+
+export const styles = (theme: Theme) => {
+    return createStyles<FilterBarButtonClassKey, FilterBarButtonProps>({
+        root: {
             position: "relative",
             alignItems: "center",
             padding: "10px 15px",
@@ -57,6 +69,5 @@ export const useStyles = makeStyles(
                 fontWeight: theme.typography.fontWeightBold,
             },
         },
-    }),
-    { name: "CometAdminFilterBarButton" },
-);
+    });
+};
