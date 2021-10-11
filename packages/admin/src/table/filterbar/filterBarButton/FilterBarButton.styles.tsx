@@ -2,16 +2,7 @@ import { createStyles, Theme } from "@material-ui/core";
 
 import { FilterBarButtonProps } from "./FilterBarButton";
 
-export type FilterBarButtonClassKey =
-    | "root"
-    | "selected"
-    | "open"
-    | "filterBadge"
-    | "startIcon"
-    | "endIcon"
-    | "endIconWithFilterBadge"
-    | "labelWrapper"
-    | "labelWrapperWithValues";
+export type FilterBarButtonClassKey = "root" | "selected" | "open" | "withFilterBadge" | "filterBadge" | "labelWrapper" | "labelWrapperWithValues";
 
 export const styles = (theme: Theme) => {
     return createStyles<FilterBarButtonClassKey, FilterBarButtonProps>({
@@ -36,6 +27,14 @@ export const styles = (theme: Theme) => {
                 border: `1px solid ${theme.palette.primary.main}`,
                 backgroundColor: "initial",
             },
+
+            "& [class*='MuiButton-startIcon']": {
+                marginRight: "6px",
+            },
+
+            "& [class*='MuiButton-endIcon']": {
+                marginLeft: "10px",
+            },
         },
         selected: {
             border: `1px solid ${theme.palette.grey[400]}`,
@@ -46,16 +45,12 @@ export const styles = (theme: Theme) => {
         open: {
             border: `1px solid ${theme.palette.grey[400]}`,
         },
+        withFilterBadge: {
+            "& [class*='MuiButton-endIcon']": {
+                marginLeft: "6px",
+            },
+        },
         filterBadge: {
-            marginLeft: "6px",
-        },
-        startIcon: {
-            marginRight: "6px",
-        },
-        endIcon: {
-            marginLeft: "10px",
-        },
-        endIconWithFilterBadge: {
             marginLeft: "6px",
         },
         labelWrapper: {

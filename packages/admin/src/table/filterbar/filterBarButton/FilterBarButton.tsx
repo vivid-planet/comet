@@ -17,26 +17,26 @@ const FilterBarButton = ({
     dirtyFieldsBadge,
     countValue,
     openPopover,
-    startIcon,
-    endIcon,
     classes,
     ...buttonProps
 }: FilterBarButtonProps & WithStyles<typeof styles>): React.ReactElement => {
-    const selected = !!(countValue && countValue > 0);
+    const showFilterBadge = !!(countValue && countValue > 0);
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
 
     return (
-        <Button className={clsx(classes.root, selected && classes.selected, openPopover && classes.open)} disableRipple {...buttonProps}>
-            {startIcon && <span className={classes.startIcon}>{startIcon}</span>}
-            <div className={clsx(classes.labelWrapper, selected && classes.labelWrapperWithValues)}>
+        <Button
+            className={clsx(classes.root, showFilterBadge && classes.selected && classes.withFilterBadge, openPopover && classes.open)}
+            disableRipple
+            {...buttonProps}
+        >
+            <div className={clsx(classes.labelWrapper, showFilterBadge && classes.labelWrapperWithValues)}>
                 <Typography variant="body1">{children}</Typography>
             </div>
-            {selected && (
+            {showFilterBadge && (
                 <span className={classes.filterBadge}>
                     <FilterBarActiveFilterBadgeComponent countValue={countValue as number} />
                 </span>
             )}
-            {endIcon && <span className={selected ? classes.endIconWithFilterBadge : classes.endIcon}>{endIcon}</span>}
         </Button>
     );
 };
