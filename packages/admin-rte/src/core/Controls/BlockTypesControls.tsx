@@ -39,12 +39,12 @@ function BlockTypesControls({
                   return 0;
               }
 
-              if (indexA !== -1) {
-                  return -1;
+              if (indexA === -1) {
+                  return 1;
               }
 
-              if (indexB !== -1) {
-                  return 1;
+              if (indexB === -1) {
+                  return -1;
               }
 
               return indexA - indexB;
