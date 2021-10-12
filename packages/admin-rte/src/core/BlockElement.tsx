@@ -19,7 +19,7 @@ export interface RteBlockElementProps extends TypographyProps {
 }
 
 const RteBlockElement = ({ classes, type, ...restProps }: RteBlockElementProps & WithStyles<typeof styles>) => {
-    return <Typography classes={{ root: `${classes.root} ${type ? classes[type] : ""}` }} {...restProps} />;
+    return <Typography component="div" classes={{ root: `${classes.root} ${type ? classes[type] : ""}` }} {...restProps} />;
 };
 
 const styles = ({ palette }: Theme) => {
