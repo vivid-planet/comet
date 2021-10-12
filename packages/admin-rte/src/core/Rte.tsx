@@ -62,7 +62,7 @@ export interface IRteOptions {
     filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
     maxBlocks?: number;
     standardBlockType: DraftBlockType;
-
+    sortBlockTypes?: (blockTypes: string[]) => string[];
     // @deprecated
     customBlockMap?: ICustomBlockTypeMap_Deprecated;
 }

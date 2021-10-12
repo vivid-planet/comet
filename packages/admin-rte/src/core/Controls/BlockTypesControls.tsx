@@ -12,12 +12,45 @@ interface Props extends IControlProps {
     blockTypes: BlockTypesApi;
 }
 
-function BlockTypesControls({ options: { standardBlockType, blocktypeMap }, disabled, blockTypes, classes }: Props & WithStyles<typeof styles>) {
+function BlockTypesControls({
+    options: { standardBlockType, blocktypeMap, sortBlockTypes },
+    disabled,
+    blockTypes,
+    classes,
+}: Props & WithStyles<typeof styles>) {
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
 
     const labelForUnstyled = blocktypeMap?.unstyled?.label || (
         <FormattedMessage id="cometAdmin.rte.controls.blockType.default" defaultMessage="Default" />
     );
+    const blockTypesListItems: Array<{ name: string; label: React.ReactNode }> = [
+        ...(standardBlockType === "unstyled" ? [{ name: "unstyled", label: labelForUnstyled }] : []),
+        ...dropdownFeatures.map((c) => ({ name: c.name, label: c.label })),
+    ];
+
+    const sortedBlockTypes = sortBlockTypes ? sortBlockTypes(blockTypesListItems.map((c) => c.name)) : [];
+    const sortedBlockTypesListItems = sortedBlockTypes.length
+        ? [...blockTypesListItems].sort((a, b) => {
+              const indexA = sortedBlockTypes.indexOf(a.name);
+              const indexB = sortedBlockTypes.indexOf(b.name);
+
+              // lowest index is first, except -1 (no match) is last
+              if (indexA === indexB) {
+                  return 0;
+              }
+
+              if (indexA !== -1) {
+                  return -1;
+              }
+
+              if (indexB !== -1) {
+                  return 1;
+              }
+
+              return indexA - indexB;
+          })
+        : blockTypesListItems;
+
     return (
         <FormControl classes={{ root: classes.root }}>
             <Select
@@ -28,12 +61,7 @@ function BlockTypesControls({ options: { standardBlockType, blocktypeMap }, disa
                 disableUnderline
                 onChange={handleBlockTypeChange}
             >
-                {standardBlockType === "unstyled" && (
-                    <MenuItem value="unstyled" dense>
-                        {labelForUnstyled}
-                    </MenuItem>
-                )}
-                {dropdownFeatures.map((c) => (
+                {sortedBlockTypesListItems.map((c) => (
                     <MenuItem key={c.name} value={c.name} dense>
                         {c.label}
                     </MenuItem>
