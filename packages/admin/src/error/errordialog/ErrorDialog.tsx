@@ -49,7 +49,7 @@ export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = 
         <Dialog open={show} onClose={onCloseClicked} fullScreen={fullScreen}>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
-                <DialogContentText>
+                <DialogContentText component="div">
                     {userMessage}
                     {process.env.NODE_ENV === "development" && (
                         <Accordion>
