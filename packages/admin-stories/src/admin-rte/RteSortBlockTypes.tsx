@@ -4,7 +4,11 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 const rteOptions: IRteOptions = {
-    sortBlockTypes: () => ["header-two", "unstyled", "header-three"],
+    blocktypeMap: {
+        "header-two": {}, // change the order of block-types
+        unstyled: {},
+        "header-three": {},
+    },
 };
 
 const [useRteApi] = makeRteApi();
