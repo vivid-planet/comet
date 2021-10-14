@@ -1,4 +1,3 @@
-import { FORM_ERROR } from "final-form";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 import { useForm, useFormState } from "react-final-form";
@@ -37,7 +36,7 @@ export const FinalFormSaveSplitButton = ({ localStorageKey }: PropsWithChildren<
                 hasErrors={hasSubmitErrors}
                 onClick={async () => {
                     const submitResult = await form.submit();
-                    const error = submitResult?.[FORM_ERROR];
+                    const error = submitResult !== undefined;
                     if (!error) {
                         stackApi?.goBack();
                     }
