@@ -12,8 +12,7 @@ const styles = () => {
     return createStyles<ClearInputButtonClassKey, ClearInputButtonProps>({
         root: {
             height: "100%",
-            width: 32,
-            flexShrink: 0,
+            width: 40,
         },
         disabled: {},
         focusVisible: {},

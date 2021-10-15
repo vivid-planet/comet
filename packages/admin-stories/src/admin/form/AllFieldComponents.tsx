@@ -1,4 +1,13 @@
-import { Field, FieldContainer, FinalFormCheckbox, FinalFormInput, FinalFormRadio, FinalFormSelect, FinalFormSwitch } from "@comet/admin";
+import {
+    Field,
+    FieldContainer,
+    FinalFormCheckbox,
+    FinalFormInput,
+    FinalFormRadio,
+    FinalFormSearchTextField,
+    FinalFormSelect,
+    FinalFormSwitch,
+} from "@comet/admin";
 import { Button, Card, CardContent, FormControlLabel, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -24,6 +33,7 @@ function Story() {
                             <CardContent>
                                 <form onSubmit={handleSubmit}>
                                     <Field name="input" label="FinalFormInput" fullWidth component={FinalFormInput} />
+                                    <Field name="search" label="FinalFormSearchTextField" component={FinalFormSearchTextField} />
                                     <Field
                                         name="text"
                                         label="FinalFormInput (multiline)"

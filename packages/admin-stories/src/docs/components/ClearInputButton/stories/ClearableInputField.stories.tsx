@@ -1,5 +1,5 @@
 import { ClearInputButton } from "@comet/admin";
-import { Box, InputBase, Typography } from "@material-ui/core";
+import { Box, InputAdornment, InputBase, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -14,7 +14,11 @@ storiesOf("stories/components/Clear Input Button/Clearable Input Field", module)
             <InputBase
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                endAdornment={<ClearInputButton onClick={() => setInputText("")} />}
+                endAdornment={
+                    <InputAdornment position="end">
+                        <ClearInputButton onClick={() => setInputText("")} />
+                    </InputAdornment>
+                }
             />
         </Box>
     );
