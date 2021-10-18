@@ -1,3 +1,4 @@
+import { ChevronDown } from "@comet/admin-icons";
 import { Button, Typography, WithStyles, withStyles } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import clsx from "clsx";
@@ -18,13 +19,19 @@ const FilterBarButton = ({
     numberDirtyFields,
     openPopover,
     classes,
+    endIcon,
     ...buttonProps
 }: FilterBarButtonProps & WithStyles<typeof styles>): React.ReactElement => {
     const hasDirtyFields = !!(numberDirtyFields && numberDirtyFields > 0);
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
 
     return (
-        <Button className={clsx(classes.root, hasDirtyFields && classes.hasDirtyFields, openPopover && classes.open)} disableRipple {...buttonProps}>
+        <Button
+            className={clsx(classes.root, hasDirtyFields && classes.hasDirtyFields, openPopover && classes.open)}
+            disableRipple
+            endIcon={endIcon ?? <ChevronDown />}
+            {...buttonProps}
+        >
             <div className={clsx(classes.labelWrapper, hasDirtyFields && classes.labelWrapperWithDirtyFields)}>
                 <Typography variant="body1">{children}</Typography>
             </div>

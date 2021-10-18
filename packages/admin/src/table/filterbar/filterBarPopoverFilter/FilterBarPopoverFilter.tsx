@@ -1,4 +1,4 @@
-import { Check, ChevronDown, Reset } from "@comet/admin-icons";
+import { Check, Reset } from "@comet/admin-icons";
 import { Button, ButtonProps, Popover, WithStyles } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import * as React from "react";
@@ -7,7 +7,7 @@ import { FormattedMessage } from "react-intl";
 
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
 import { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
-import { FilterBarButton } from "../filterBarButton/FilterBarButton";
+import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
 import { FilterBarPopoverFilterClassKey, styles } from "./FilterBarPopoverFilter.styles";
 
 export interface FilterBarPopoverFilterProps {
@@ -16,6 +16,7 @@ export interface FilterBarPopoverFilterProps {
     calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
     submitButtonProps?: ButtonProps;
     resetButtonProps?: ButtonProps;
+    openPopoverButtonProps?: FilterBarButtonProps;
 }
 
 function PopoverFilter({
@@ -25,6 +26,7 @@ function PopoverFilter({
     calcNumberDirtyFields = dirtyFieldsCount,
     submitButtonProps,
     resetButtonProps,
+    openPopoverButtonProps,
     classes,
 }: React.PropsWithChildren<FilterBarPopoverFilterProps> & WithStyles<typeof styles>) {
     const outerForm = useForm();
@@ -54,7 +56,7 @@ function PopoverFilter({
                                 numberDirtyFields={countValue}
                                 onClick={handleClick}
                                 dirtyFieldsBadge={dirtyFieldsBadge}
-                                endIcon={<ChevronDown />}
+                                {...openPopoverButtonProps}
                             >
                                 {label}
                             </FilterBarButton>
