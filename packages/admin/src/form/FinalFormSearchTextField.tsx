@@ -1,5 +1,5 @@
 import { Search } from "@comet/admin-icons";
-import { InputAdornment } from "@material-ui/core";
+import { InputAdornment, InputAdornmentProps } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -8,11 +8,11 @@ import styled from "styled-components";
 import { ClearInputButton } from "..";
 import { FinalFormInput, FinalFormInputProps } from "./FinalFormInput";
 
-interface ClearInputWrapperProps {
+interface ClearInputAdornmentProps extends InputAdornmentProps {
     $hidden: boolean;
 }
 
-const ClearInputWrapper = styled.div<ClearInputWrapperProps>`
+const ClearInputAdornment = styled(InputAdornment)<ClearInputAdornmentProps>`
     visibility: ${({ $hidden }) => ($hidden ? "hidden" : "initial")};
 `;
 
@@ -30,13 +30,13 @@ function SearchTextField({ icon = <Search />, placeholder, endAdornment, ...rest
             startAdornment={<InputAdornment position="start">{icon}</InputAdornment>}
             endAdornment={
                 endAdornment ?? (
-                    <ClearInputWrapper $hidden={restProps.input.value.length === 0}>
+                    <ClearInputAdornment position="end" $hidden={restProps.input.value.length === 0}>
                         <ClearInputButton
                             onClick={() => {
                                 restProps.input.onChange("");
                             }}
                         />
-                    </ClearInputWrapper>
+                    </ClearInputAdornment>
                 )
             }
         />
