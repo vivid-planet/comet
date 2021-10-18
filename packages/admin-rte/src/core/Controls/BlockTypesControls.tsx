@@ -2,7 +2,6 @@ import { FormControl, MenuItem, Select, WithStyles } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
 import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 
 import { IControlProps } from "../types";
 import getRteTheme from "../utils/getRteTheme";
@@ -12,12 +11,11 @@ interface Props extends IControlProps {
     blockTypes: BlockTypesApi;
 }
 
-function BlockTypesControls({ options: { standardBlockType, blocktypeMap }, disabled, blockTypes, classes }: Props & WithStyles<typeof styles>) {
+function BlockTypesControls({ disabled, blockTypes, classes }: Props & WithStyles<typeof styles>) {
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
 
-    const labelForUnstyled = blocktypeMap?.unstyled?.label || (
-        <FormattedMessage id="cometAdmin.rte.controls.blockType.default" defaultMessage="Default" />
-    );
+    const blockTypesListItems: Array<{ name: string; label: React.ReactNode }> = dropdownFeatures.map((c) => ({ name: c.name, label: c.label }));
+
     return (
         <FormControl classes={{ root: classes.root }}>
             <Select
@@ -28,12 +26,7 @@ function BlockTypesControls({ options: { standardBlockType, blocktypeMap }, disa
                 disableUnderline
                 onChange={handleBlockTypeChange}
             >
-                {standardBlockType === "unstyled" && (
-                    <MenuItem value="unstyled" dense>
-                        {labelForUnstyled}
-                    </MenuItem>
-                )}
-                {dropdownFeatures.map((c) => (
+                {blockTypesListItems.map((c) => (
                     <MenuItem key={c.name} value={c.name} dense>
                         {c.label}
                     </MenuItem>
@@ -75,8 +68,8 @@ const StyledBlockTypesControls = withStyles(styles, { name: "CometAdminRteBlockT
 // If there are no dropdown-features, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
 export default (p: IControlProps) => {
     const { editorState, setEditorState, editorRef, options } = p;
-    const { supports: supportedThings, blocktypeMap } = options;
-    const blockTypes = useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef });
+    const { supports: supportedThings, blocktypeMap, standardBlockType } = options;
+    const blockTypes = useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef, standardBlockType });
 
     if (!blockTypes.dropdownFeatures.length) {
         return null;
