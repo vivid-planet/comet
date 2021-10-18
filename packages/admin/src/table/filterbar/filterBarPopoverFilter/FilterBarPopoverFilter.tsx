@@ -51,7 +51,7 @@ function PopoverFilter({
                         <div className={classes.fieldBarWrapper}>
                             <FilterBarButton
                                 openPopover={open}
-                                countValue={countValue}
+                                numberDirtyFields={countValue}
                                 onClick={handleClick}
                                 dirtyFieldsBadge={dirtyFieldsBadge}
                                 endIcon={<ChevronDown />}

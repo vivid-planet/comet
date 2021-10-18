@@ -2,7 +2,7 @@ import { createStyles, Theme } from "@material-ui/core";
 
 import { FilterBarButtonProps } from "./FilterBarButton";
 
-export type FilterBarButtonClassKey = "root" | "selected" | "open" | "withFilterBadge" | "filterBadge" | "labelWrapper" | "labelWrapperWithValues";
+export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filterBadge" | "labelWrapper" | "labelWrapperWithDirtyFields";
 
 export const styles = (theme: Theme) => {
     return createStyles<FilterBarButtonClassKey, FilterBarButtonProps>({
@@ -36,16 +36,14 @@ export const styles = (theme: Theme) => {
                 marginLeft: "10px",
             },
         },
-        selected: {
+        open: {
+            border: `1px solid ${theme.palette.grey[400]}`,
+        },
+        hasDirtyFields: {
             border: `1px solid ${theme.palette.grey[400]}`,
             "&:disabled": {
                 border: `1px solid ${theme.palette.grey[100]}`,
             },
-        },
-        open: {
-            border: `1px solid ${theme.palette.grey[400]}`,
-        },
-        withFilterBadge: {
             "& [class*='MuiButton-endIcon']": {
                 marginLeft: "6px",
             },
@@ -59,7 +57,7 @@ export const styles = (theme: Theme) => {
                 fontWeight: theme.typography.fontWeightRegular,
             },
         },
-        labelWrapperWithValues: {
+        labelWrapperWithDirtyFields: {
             "& [class*='MuiTypography-body1']": {
                 fontWeight: theme.typography.fontWeightBold,
             },
