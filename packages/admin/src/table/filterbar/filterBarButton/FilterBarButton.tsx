@@ -43,12 +43,12 @@ export { FilterBarButtonWithStyles as FilterBarButton };
 
 declare module "@material-ui/core/styles/overrides" {
     interface ComponentNameToClassKey {
-        CometAdminMyComponent: FilterBarButtonClassKey;
+        CometAdminFilterBarButton: FilterBarButtonClassKey;
     }
 }
 
 declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
-        CometAdminMyComponent: FilterBarButtonProps;
+        CometAdminFilterBarButton: FilterBarButtonProps;
     }
 }
