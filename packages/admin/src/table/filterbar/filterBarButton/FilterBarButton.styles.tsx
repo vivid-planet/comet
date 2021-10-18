@@ -2,7 +2,7 @@ import { createStyles, Theme } from "@material-ui/core";
 
 import { FilterBarButtonProps } from "./FilterBarButton";
 
-export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filterBadge" | "labelWrapper" | "labelWrapperWithDirtyFields";
+export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filterBadge";
 
 export const styles = (theme: Theme) => {
     return createStyles<FilterBarButtonClassKey, FilterBarButtonProps>({
@@ -13,6 +13,8 @@ export const styles = (theme: Theme) => {
             cursor: "pointer",
             display: "flex",
             border: `1px solid ${theme.palette.grey[100]}`,
+            textTransform: "initial",
+            fontWeight: theme.typography.fontWeightRegular,
 
             "& [class*='MuiSvgIcon-root']": {
                 fontSize: 12,
@@ -41,26 +43,18 @@ export const styles = (theme: Theme) => {
         },
         hasDirtyFields: {
             border: `1px solid ${theme.palette.grey[400]}`,
+            fontWeight: theme.typography.fontWeightBold,
+
             "&:disabled": {
                 border: `1px solid ${theme.palette.grey[100]}`,
             },
+
             "& [class*='MuiButton-endIcon']": {
                 marginLeft: "6px",
             },
         },
         filterBadge: {
             marginLeft: "6px",
-        },
-        labelWrapper: {
-            boxSizing: "border-box",
-            "& [class*='MuiTypography-body1']": {
-                fontWeight: theme.typography.fontWeightRegular,
-            },
-        },
-        labelWrapperWithDirtyFields: {
-            "& [class*='MuiTypography-body1']": {
-                fontWeight: theme.typography.fontWeightBold,
-            },
         },
     });
 };

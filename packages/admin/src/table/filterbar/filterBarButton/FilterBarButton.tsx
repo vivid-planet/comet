@@ -1,5 +1,5 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, Typography, WithStyles, withStyles } from "@material-ui/core";
+import { Button, WithStyles, withStyles } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 import clsx from "clsx";
 import * as React from "react";
@@ -30,11 +30,10 @@ const FilterBarButton = ({
             className={clsx(classes.root, hasDirtyFields && classes.hasDirtyFields, openPopover && classes.open)}
             disableRipple
             endIcon={endIcon ?? <ChevronDown />}
+            variant="outlined"
             {...buttonProps}
         >
-            <div className={clsx(classes.labelWrapper, hasDirtyFields && classes.labelWrapperWithDirtyFields)}>
-                <Typography variant="body1">{children}</Typography>
-            </div>
+            {children}
             {hasDirtyFields && (
                 <span className={classes.filterBadge}>
                     <FilterBarActiveFilterBadgeComponent countValue={numberDirtyFields as number} />
