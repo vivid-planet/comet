@@ -13,7 +13,7 @@ storiesOf("stories/components/Clear Input Button/Custom Clear Icon", module).add
             <InputBase
                 endAdornment={
                     <InputAdornment position="end">
-                        <ClearInputButton icon={() => <Cut />} />
+                        <ClearInputButton icon={<Cut />} />
                     </InputAdornment>
                 }
             />
