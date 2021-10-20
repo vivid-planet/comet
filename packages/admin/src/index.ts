@@ -154,3 +154,4 @@ export { AppHeaderButtonClassKey } from "./appHeader/button/AppHeaderButton.styl
 export { CometLogo } from "./common/CometLogo";
 export { PrettyBytes } from "./helpers/PrettyBytes";
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
+export { FinalFormSaveSplitButton } from "./FinalFormSaveSplitButton";
