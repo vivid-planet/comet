@@ -1,6 +1,7 @@
 import { Check, ChevronDown, Reset } from "@comet/admin-icons";
 import { Button, ButtonProps, Popover, WithStyles } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
+import clsx from "clsx";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -17,6 +18,7 @@ export interface FilterBarPopoverFilterProps {
     submitButtonProps?: ButtonProps;
     resetButtonProps?: ButtonProps;
     filterBarButtonProps?: FilterBarButtonProps;
+    disablePopoverContentPadding?: boolean;
 }
 
 function PopoverFilter({
@@ -27,6 +29,7 @@ function PopoverFilter({
     submitButtonProps,
     resetButtonProps,
     filterBarButtonProps,
+    disablePopoverContentPadding,
     classes,
 }: React.PropsWithChildren<FilterBarPopoverFilterProps> & WithStyles<typeof styles>) {
     const outerForm = useForm();
@@ -79,41 +82,46 @@ function PopoverFilter({
                                 elevation={2}
                                 keepMounted
                             >
-                                <div className={classes.popoverContentContainer}>
+                                <div
+                                    className={clsx(
+                                        classes.popoverContentContainer,
+                                        disablePopoverContentPadding && classes.popoverContentContainerWithoutPadding,
+                                    )}
+                                >
                                     {children}
-                                    <div className={classes.buttonsContainer}>
-                                        <Button
-                                            type="reset"
-                                            variant="text"
-                                            onClick={() => {
-                                                form.getRegisteredFields().map((name) => {
-                                                    outerForm.change(name, undefined);
-                                                });
-                                                form.reset();
+                                </div>
+                                <div className={classes.buttonsContainer}>
+                                    <Button
+                                        type="reset"
+                                        variant="text"
+                                        onClick={() => {
+                                            form.getRegisteredFields().map((name) => {
+                                                outerForm.change(name, undefined);
+                                            });
+                                            form.reset();
 
-                                                setAnchorEl(null);
-                                            }}
-                                            startIcon={<Reset />}
-                                            {...resetButtonProps}
-                                        >
-                                            <FormattedMessage id="cometAdmin.generic.resetButton" defaultMessage="Reset" />
-                                        </Button>
+                                            setAnchorEl(null);
+                                        }}
+                                        startIcon={<Reset />}
+                                        {...resetButtonProps}
+                                    >
+                                        <FormattedMessage id="cometAdmin.generic.resetButton" defaultMessage="Reset" />
+                                    </Button>
 
-                                        <Button
-                                            type="submit"
-                                            color="primary"
-                                            variant="contained"
-                                            onClick={() => {
-                                                handleSubmit();
-                                                setAnchorEl(null);
-                                            }}
-                                            startIcon={<Check />}
-                                            disabled={Object.values(dirtyFields).length === 0}
-                                            {...submitButtonProps}
-                                        >
-                                            <FormattedMessage id="cometAdmin.generic.applyButton" defaultMessage="Apply" />
-                                        </Button>
-                                    </div>
+                                    <Button
+                                        type="submit"
+                                        color="primary"
+                                        variant="contained"
+                                        onClick={() => {
+                                            handleSubmit();
+                                            setAnchorEl(null);
+                                        }}
+                                        startIcon={<Check />}
+                                        disabled={Object.values(dirtyFields).length === 0}
+                                        {...submitButtonProps}
+                                    >
+                                        <FormattedMessage id="cometAdmin.generic.applyButton" defaultMessage="Apply" />
+                                    </Button>
                                 </div>
                             </Popover>
                         </div>

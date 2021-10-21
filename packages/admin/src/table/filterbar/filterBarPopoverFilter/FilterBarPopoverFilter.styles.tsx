@@ -3,7 +3,13 @@ import { createStyles } from "@material-ui/styles";
 
 import { FilterBarPopoverFilterProps } from "./FilterBarPopoverFilter";
 
-export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "paper" | "buttonsContainer";
+export type FilterBarPopoverFilterClassKey =
+    | "root"
+    | "fieldBarWrapper"
+    | "popoverContentContainer"
+    | "popoverContentContainerWithoutPadding"
+    | "paper"
+    | "buttonsContainer";
 
 export const styles = ({ palette, typography }: Theme) => {
     return createStyles<FilterBarPopoverFilterClassKey, FilterBarPopoverFilterProps>({
@@ -19,11 +25,12 @@ export const styles = ({ palette, typography }: Theme) => {
         },
         popoverContentContainer: {
             minWidth: 300,
-            "& [class*='CometAdminFormFieldContainer-root']": {
-                boxSizing: "border-box",
-                padding: "20px",
-                marginBottom: 0,
-            },
+            maxHeight: 300,
+            overflow: "auto",
+            padding: 20,
+        },
+        popoverContentContainerWithoutPadding: {
+            padding: 0,
         },
         buttonsContainer: {
             borderTop: `1px solid ${palette.grey[100]}`,
