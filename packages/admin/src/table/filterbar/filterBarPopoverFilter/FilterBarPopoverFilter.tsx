@@ -43,9 +43,10 @@ function PopoverFilter({
     return (
         <div className={classes.root}>
             <Form
-                onSubmit={(values) => {
-                    for (const name in values) {
-                        outerForm.change(name, values[name]);
+                onSubmit={(values, form) => {
+                    for (const name of form.getRegisteredFields()) {
+                        const outerFieldName = name.split(".")[0];
+                        outerForm.change(outerFieldName, values[outerFieldName]);
                     }
                 }}
                 initialValues={outerForm.getState().values}
