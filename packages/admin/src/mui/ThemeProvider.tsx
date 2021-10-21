@@ -11,7 +11,7 @@ interface IProps {
     children: React.ReactNode;
 }
 
-// Docs: https://material-ui.com/styles/api/#creategenerateclassname-options-class-name-generator
+// Docs: https://v4.mui.com/styles/api/#creategenerateclassname-options-class-name-generator
 // Code example: https://github.com/mui-org/material-ui/blob/v4.11.4/packages/material-ui-styles/src/createGenerateClassName/createGenerateClassName.js
 function createGenerateCometClassName(options: GenerateClassNameOptions = {}): GenerateId {
     const { disableGlobal = false, seed = "" } = options;
