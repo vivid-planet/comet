@@ -7,6 +7,9 @@ import * as React from "react";
 import { MasterLayoutContext } from "../mui/MasterLayoutContext";
 
 interface AppHeaderProps extends AppBarProps {
+    /**
+     * A custom height should only be set, if used outside of MasterLayout.
+     */
     headerHeight?: number;
 }
 
