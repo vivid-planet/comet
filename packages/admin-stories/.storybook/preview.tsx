@@ -79,7 +79,6 @@ addDecorator((story, ctx) => {
 const orderGettingStarted = [
     "docs-getting-started-installation",
     "docs-getting-started-structure",
-    "docs-getting-started-development",
     "docs-getting-started-develop-in-project",
     "docs-getting-started-how-to-write-stories",
     "docs-getting-started",
@@ -112,8 +111,8 @@ const orderForm = [
 ];
 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
 const orderIcons = ["docs-icons-list", "docs-icons-usage", "docs-icons"];
-const orderTheming = ["docs-theming"];
-const orderBestPractices = ["docs-best-practices-theming", "docs-best-practices-code-style", "docs-best-practices"];
+const orderBestPractices = ["docs-best-practices-overview", "docs-best-theme-and-styling", "docs-best-practices"];
+const orderDevelopment = ["docs-development-overview", "docs-development-create-a-component-with-theme-support", "docs-development"];
 
 const order = [
     "docs-intro-",
@@ -122,8 +121,8 @@ const order = [
     ...orderForm,
     ...orderHooks,
     ...orderIcons,
-    ...orderTheming,
     ...orderBestPractices,
+    ...orderDevelopment,
     "admin-",
     "comet-",
     "stories-",
