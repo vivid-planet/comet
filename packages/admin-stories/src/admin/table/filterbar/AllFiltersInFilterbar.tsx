@@ -4,13 +4,13 @@ import {
     FilterBarMoreFilters,
     FilterBarPopoverFilter,
     FinalFormInput,
+    FinalFormMultiSelect,
     FinalFormRangeInput,
     FinalFormSwitch,
     Table,
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
-import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Box, Divider, FormControlLabel, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import faker from "faker";
@@ -24,10 +24,10 @@ const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
     const options = colors
         .filter((color, index, colorsArray) => colorsArray.indexOf(color) == index) //filter colorsArray to only have unique values as select options
         .map((color) => {
-            return { value: color, label: color };
+            return { value: color, label: color, icon: <div style={{ width: 20, height: 20, backgroundColor: color }} /> };
         });
 
-    return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
+    return <Field fullWidth name="color" component={FinalFormMultiSelect} options={options} />;
 };
 
 interface IFilterValues {
@@ -78,7 +78,7 @@ function Story({ tableData }: StoryProps) {
     });
 
     const filteredData = tableData
-        .filter((item) => filterApi.current.color === undefined || item.color === filterApi.current.color)
+        .filter((item) => filterApi.current.color === undefined || filterApi.current.color.includes(item.color))
         .filter((item) => filterApi.current.model === undefined || item.model.includes(filterApi.current.model))
         .filter((item) => filterApi.current.brand === undefined || item.brand.includes(filterApi.current.brand))
         .filter(
@@ -120,7 +120,7 @@ function Story({ tableData }: StoryProps) {
                         <Field label={"Lastname:"} name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
                     <FilterBarMoreFilters>
-                        <FilterBarPopoverFilter label={"Color"}>
+                        <FilterBarPopoverFilter disablePopoverContentPadding label={"Color"}>
                             <ColorFilterField colors={tableData.map((item) => item.color)} />
                         </FilterBarPopoverFilter>
                         <FilterBarPopoverFilter label={"Horsepower"}>
