@@ -17,7 +17,7 @@ export interface SplitButtonProps extends ButtonGroupProps<any> {
     storage?: Storage;
 }
 
-// Based on https://material-ui.com/components/button-group/#split-button
+// Based on https://v4.mui.com/components/button-group/#split-button
 const SplitBtn = ({
     selectIcon = <ChevronDown />,
     selectedIndex,
