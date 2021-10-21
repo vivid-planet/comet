@@ -7,6 +7,10 @@ const UUID = require("uuid");
 
 // react-router Prompt doesn't support multiple Prompts, this one does
 interface IProps {
+    /**
+     * Will be called with the next location and action the user is attempting to navigate to.
+     * Return a string to show a prompt to the user or true to allow the transition.
+     */
     message: (location: History.Location, action: History.Action) => boolean | string;
 }
 export const RouterPrompt: React.FunctionComponent<IProps> = ({ message }) => {

@@ -13,6 +13,9 @@ export interface MasterLayoutProps {
     menuComponent: React.ComponentType;
     headerComponent?: React.ComponentType;
     openMenuByDefault?: boolean;
+    /**
+     * Defines the global header-height. The value defined here will also be used by AppHeader and Toolbar.
+     */
     headerHeight?: number;
 }
 

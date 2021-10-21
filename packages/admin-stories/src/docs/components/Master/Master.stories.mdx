@@ -23,25 +23,7 @@ It's children will be the content of the application.
 
 _Note: `MasterLayout` can only be used inside `RouterBrowserRouter`._
 
-### Props
-
-| Name              | Type          | Default value                          | Description                                                                                                                                             |
-| :---------------- | :------------ | :------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| children\*        | node          |                                        | The content of the application.                                                                                                                         |
-| menuComponent\*   | ComponentType |                                        | The global menu component, usually built using [`Menu`](/story/docs-components-menu--page).                                                             |
-| headerComponent   | ComponentType | `AppHeader` with `AppHeaderMenuButton` | The global header component, usually built using [`AppHeader`](/story/docs-components-appheader--page).                                                 |
-| openMenuByDefault | boolean       | true                                   | Set, if the menu should be opened or closed by default.                                                                                                 |
-| headerHeight      | number        | 60                                     | Sets the height of the header. The height is passed into `AppHeader` and `Toolbar` for additional styling and the content is moved down by that amount. |
-
 ## MainContent
 
 Content within the `MasterLayout`, should generally be wrapped by `MainContent` to add spacing between the content and the header and menu.  
 A toolbar would be an exception, because it should be shown right below the header, without any spacing.
-
-### Props
-
-| Name                 | Type    | Default value | Description                                |
-| :------------------- | :------ | :------------ | :----------------------------------------- |
-| children             | node    |               | The content of the application.            |
-| disablePaddingTop    | boolean | false         | Removes the top padding of MainContent.    |
-| disablePaddingBottom | boolean | false         | Removes the bottom padding of MainContent. |
