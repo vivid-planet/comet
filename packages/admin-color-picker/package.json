@@ -6,6 +6,11 @@
     "files": [
         "lib"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-color-picker"
+    },
     "dependencies": {
         "react-color": "^2.19.3",
         "tinycolor2": "^1.4.1"

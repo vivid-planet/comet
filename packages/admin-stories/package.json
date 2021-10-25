@@ -4,6 +4,11 @@
     "files": [
         "src"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-stories"
+    },
     "dependencies": {
         "@apollo/client": "^3.2.5",
         "@comet/admin": "^2.0.0-alpha.11",
