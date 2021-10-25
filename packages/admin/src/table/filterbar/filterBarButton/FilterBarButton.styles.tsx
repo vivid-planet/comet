@@ -12,8 +12,8 @@ export const styles = (theme: Theme) => {
             padding: "10px 15px",
             cursor: "pointer",
             display: "flex",
-            border: `1px solid ${theme.palette.grey[100]}`,
-            textTransform: "initial",
+            borderColor: theme.palette.grey[100],
+            textTransform: "none",
             fontWeight: theme.typography.fontWeightRegular,
 
             "& [class*='MuiSvgIcon-root']": {
@@ -21,13 +21,13 @@ export const styles = (theme: Theme) => {
             },
 
             "&:active": {
-                border: `1px solid ${theme.palette.grey[400]}`,
-                backgroundColor: "initial",
+                borderColor: theme.palette.grey[400],
+                backgroundColor: "transparent",
             },
 
             "&:hover, &:focus": {
-                border: `1px solid ${theme.palette.primary.main}`,
-                backgroundColor: "initial",
+                borderColor: theme.palette.primary.main,
+                backgroundColor: "transparent",
             },
 
             "& [class*='MuiButton-startIcon']": {
@@ -39,14 +39,14 @@ export const styles = (theme: Theme) => {
             },
         },
         open: {
-            border: `1px solid ${theme.palette.grey[400]}`,
+            borderColor: theme.palette.grey[400],
         },
         hasDirtyFields: {
-            border: `1px solid ${theme.palette.grey[400]}`,
+            borderColor: theme.palette.grey[400],
             fontWeight: theme.typography.fontWeightBold,
 
             "&:disabled": {
-                border: `1px solid ${theme.palette.grey[100]}`,
+                borderColor: theme.palette.grey[100],
             },
 
             "& [class*='MuiButton-endIcon']": {
