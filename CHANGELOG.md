@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Added package @comet/admin-icons
 -   Added a standard toolbar that can be used as an application wide element with consistent styling containing navigation, action buttons and filters
--   Added ability to customize component styling via theme
+-   Added the ability to customize components, similar to material-ui components (either globally through [theme-overrides](https://v4.mui.com/customization/globals/#css) and [theme-props](https://v4.mui.com/customization/globals/#default-props) or individually with [classes](https://v4.mui.com/customization/components/#overriding-styles-with-class-names))
 -   Started docs of components and general information about development of Comet Admin
 -   Implemented [ErrorBoundaries](https://reactjs.org/docs/error-boundaries.html) that catch errors in the component tree without crashing the application
 
