@@ -59,7 +59,4 @@ canary:
         variables:
             - $CI_COMMIT_MESSAGE =~ /^chore\(release\)/
     script:
-        - |
-            npm config set @comet:registry https://registry.npmjs.org/
-            npm config set -- '//registry.npmjs.org/:_authToken' $NPM_TOKEN
         - npx lerna publish --yes --canary --preid canary --no-git-tag-version --no-push
