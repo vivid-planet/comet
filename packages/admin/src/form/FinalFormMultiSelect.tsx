@@ -5,56 +5,19 @@ import { FieldRenderProps } from "react-final-form";
 
 /*---------------- FinalFormMultiSelectListItemComponent ----------------*/
 
-type FinalFormMultiSelectListDefaultItemClassKey = "listItemIcon" | "listItemText";
-
-const listItemStyles = () => {
-    return createStyles<FinalFormMultiSelectListDefaultItemClassKey, FinalFormMultiSelectListDefaultItemProps>({
-        listItemIcon: {},
-        listItemText: {},
-    });
-};
-
 interface FinalFormMultiSelectListDefaultItemProps {
     option: Option;
     isSelected: boolean;
 }
 
-function FinalFormMultiSelectListDefaultItemComponent({
-    option,
-    isSelected,
-    classes,
-}: WithStyles<typeof listItemStyles> & FinalFormMultiSelectListDefaultItemProps) {
+function FinalFormMultiSelectListDefaultItem({ option, isSelected }: FinalFormMultiSelectListDefaultItemProps) {
     return (
         <>
-            {option.icon && (
-                <ListItemIcon
-                    classes={{
-                        root: classes.listItemIcon,
-                    }}
-                >
-                    {option.icon}
-                </ListItemIcon>
-            )}
-            <ListItemText
-                classes={{
-                    root: classes.listItemText,
-                }}
-            >
-                {option.label}
-            </ListItemText>
+            {option.icon && <ListItemIcon>{option.icon}</ListItemIcon>}
+            <ListItemText>{option.label}</ListItemText>
             {isSelected && <Check />}
         </>
     );
-}
-
-const FinalFormMultiSelectListDefaultItem = withStyles(listItemStyles, { name: "CometAdminFinalFormMultiSelectListDefaultItem" })(
-    FinalFormMultiSelectListDefaultItemComponent,
-);
-
-declare module "@material-ui/core/styles/overrides" {
-    interface ComponentNameToClassKey {
-        CometAdminFinalFormMultiSelectListDefaultItem: FinalFormMultiSelectListDefaultItemClassKey;
-    }
 }
 
 /*---------------- FinalFormMultiSelectComponent ----------------*/
@@ -70,12 +33,12 @@ interface FinalFormMultiSelectProps extends FieldRenderProps<string, HTMLDivElem
     renderItem?: (option: Option) => React.ReactNode;
 }
 
-export type FinalFormMultiSelectClassKey = "listRoot" | "listItemRoot" | "listItemRootSelected";
+export type FinalFormMultiSelectClassKey = "root" | "listItem" | "listItemSelected";
 const styles = () => {
     return createStyles<FinalFormMultiSelectClassKey, FinalFormMultiSelectProps>({
-        listRoot: {},
-        listItemRoot: {},
-        listItemRootSelected: {},
+        root: {},
+        listItem: {},
+        listItemSelected: {},
     });
 };
 
@@ -99,7 +62,7 @@ function FinalFormMultiSelectComponent({ options, renderItem, input, classes }: 
     return (
         <List
             classes={{
-                root: classes.listRoot,
+                root: classes.root,
             }}
         >
             {options.map((option, index) => {
@@ -108,8 +71,8 @@ function FinalFormMultiSelectComponent({ options, renderItem, input, classes }: 
                     <ListItem
                         key={index}
                         classes={{
-                            root: classes.listItemRoot,
-                            selected: classes.listItemRootSelected,
+                            root: classes.listItem,
+                            selected: classes.listItemSelected,
                         }}
                         onClick={() => handleListItemClick(option.value)}
                         selected={isSelected}
