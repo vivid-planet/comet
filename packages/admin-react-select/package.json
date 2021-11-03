@@ -6,6 +6,11 @@
     "files": [
         "lib"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-react-select"
+    },
     "dependencies": {
         "classnames": "^2.2.6"
     },
