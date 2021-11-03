@@ -33,7 +33,7 @@ packages-lint:
 
 i18n:
     stage: i18n
-    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:master
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:limit7-19
     only:
         - master
     tags:
@@ -48,7 +48,7 @@ i18n:
         - if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for $CI_COMMIT_SHA" && git remote rm origin && git remote add origin https://vivid-planet-bot:${GH_TOKEN}@github.com/vivid-planet/comet-admin-lang.git && git push --set-upstream origin master; fi
 
 canary:
-    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:master
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:limit7-19
     stage: release
     tags:
         - docker
