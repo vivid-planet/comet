@@ -1,14 +1,9 @@
-import { InputBaseProps } from "@material-ui/core/InputBase";
+import { InputBase, InputBaseProps } from "@material-ui/core";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
-import { Input } from "./Input";
+export type FinalFormInputProps = InputBaseProps & FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
 
-export const FinalFormInput: React.FunctionComponent<InputBaseProps & FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>> = ({
-    meta,
-    input,
-    innerRef,
-    ...props
-}) => {
-    return <Input {...input} {...props} />;
-};
+export function FinalFormInput({ meta, input, innerRef, ...props }: FinalFormInputProps): React.ReactElement {
+    return <InputBase {...input} {...props} />;
+}

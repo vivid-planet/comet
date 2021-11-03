@@ -1,11 +1,18 @@
 {
     "npmClient": "npm",
-    "packages": ["packages/*"],
+    "packages": [
+        "packages/*"
+    ],
     "useWorkspaces": true,
-    "version": "independent",
+    "version": "2.0.0-alpha.11",
     "command": {
+        "version": {
+            "message": "chore(release): publish %s"
+        },
         "publish": {
-            "ignoreChanges": ["CHANGELOG.md"]
+            "ignoreChanges": [
+                "CHANGELOG.md"
+            ]
         }
     }
 }

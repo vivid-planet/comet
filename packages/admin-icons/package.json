@@ -1,0 +1,49 @@
+{
+    "name": "@comet/admin-icons",
+    "version": "2.0.0-alpha.11",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-icons"
+    },
+    "scripts": {
+        "clean": "rimraf lib && rimraf src/generated",
+        "generate-icons": "ts-node generate-icons.ts",
+        "prebuild": "npm run clean && npm run generate-icons",
+        "build": "tsc",
+        "prestart": "npm run clean && npm run generate-icons",
+        "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
+        "prepare": "npm run build",
+        "lint": "npm run lint:eslint && npm run lint:tsc",
+        "lint:eslint": "eslint src/",
+        "lint:tsc": "tsc --noEmit"
+    },
+    "peerDependencies": {
+        "@material-ui/core": "^4.0.0",
+        "react": "^16.8.0",
+        "react-dom": "^16.8.0"
+    },
+    "devDependencies": {
+        "@types/cli-progress": "^3.8.0",
+        "cli-progress": "^3.8.2",
+        "eslint": "^7.13.0",
+        "eslint-config-prettier": "^6.15.0",
+        "eslint-plugin-prettier": "^3.1.4",
+        "eslint-plugin-react": "^7.21.5",
+        "eslint-plugin-react-hooks": "^4.2.0",
+        "eslint-plugin-simple-import-sort": "^5.0.3",
+        "eslint-plugin-unused-imports": "^1.0.0",
+        "fast-xml-parser": "^3.18.0",
+        "pascal-case": "^3.1.2",
+        "prettier": "^2.1.2",
+        "rimraf": "^3.0.2",
+        "ts-node": "^8.8.1",
+        "typescript": "^4.2.2"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    }
+}

@@ -1,9 +1,9 @@
+import { gql } from "@apollo/client";
 import {
     DirtyHandler,
     Field,
     FinalForm,
     FinalFormInput,
-    FixedLeftRightLayout,
     ISelectionApi,
     Selected,
     SelectionRoute,
@@ -11,13 +11,13 @@ import {
     TableQuery,
     useTableQuery,
 } from "@comet/admin";
+import { Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const gqlRest = gql;
 
@@ -102,16 +102,16 @@ function Story() {
             <SelectionRoute>
                 {({ selectedId, selectionMode, selectionApi }) => (
                     <TableQuery api={api} loading={loading} error={error}>
-                        <FixedLeftRightLayout>
-                            <FixedLeftRightLayout.Left>
+                        <Grid container spacing={4}>
+                            <Grid item xs={2}>
                                 <ExampleTable tableData={tableData} selectedId={selectedId} selectionApi={selectionApi} />
-                            </FixedLeftRightLayout.Left>
-                            <FixedLeftRightLayout.Right>
+                            </Grid>
+                            <Grid item xs={2}>
                                 <Selected selectionMode={selectionMode} selectedId={selectedId} rows={tableData.data}>
                                     {(user, { selectionMode: selectedSelectionMode }) => <ExampleForm mode={selectedSelectionMode} user={user} />}
                                 </Selected>
-                            </FixedLeftRightLayout.Right>
-                        </FixedLeftRightLayout>
+                            </Grid>
+                        </Grid>
                     </TableQuery>
                 )}
             </SelectionRoute>
@@ -134,5 +134,5 @@ function App() {
 
 storiesOf("@comet/admin/table", module)
     .addDecorator(apolloStoryDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Besides Form", () => <App />);

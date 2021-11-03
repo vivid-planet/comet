@@ -1,44 +1,50 @@
 {
     "name": "@comet/admin-stories",
-    "version": "1.3.2",
+    "version": "2.0.0-alpha.11",
     "files": [
         "src"
     ],
-    "peerDependencies": {
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-stories"
+    },
+    "dependencies": {
         "@apollo/client": "^3.2.5",
-        "@comet/admin": "*",
-        "@comet/admin-color-picker": "*",
-        "@comet/admin-react-select": "*",
-        "@comet/admin-rte": "*",
+        "@comet/admin": "^2.0.0-alpha.11",
+        "@comet/admin-color-picker": "^2.0.0-alpha.11",
+        "@comet/admin-icons": "^2.0.0-alpha.11",
+        "@comet/admin-react-select": "^2.0.0-alpha.11",
+        "@comet/admin-rte": "^2.0.0-alpha.11",
+        "@comet/admin-theme": "^2.0.0-alpha.11",
+        "@fontsource/roboto": "^4.2.3",
         "@material-ui/core": "^4.1.3",
         "@material-ui/icons": "^4.2.1",
+        "@material-ui/lab": "^4.0.0-alpha.57",
         "@material-ui/styles": "^4.1.2",
+        "@storybook/addon-actions": "^6.2.7",
+        "@storybook/addon-knobs": "^6.2.7",
+        "@storybook/addon-storysource": "^6.2.7",
+        "@storybook/addons": "^6.2.7",
+        "@storybook/react": "^6.2.7",
+        "apollo-link-rest": "^0.8.0-beta.0",
         "final-form": "^4.16.1",
+        "graphql-anywhere": "^4.2.7",
+        "qs": "^6.9.1",
         "react": "^16.8",
         "react-dom": "^16.8",
         "react-final-form": "^6.3.1",
         "react-intl": "^5.10.0",
-        "styled-components": "^4.0.0 || ^5.0.0"
-    },
-    "dependencies": {
-        "apollo-link-rest": "^0.8.0-beta.0",
-        "graphql-anywhere": "^4.2.7",
-        "qs": "^6.9.1"
+        "styled-components": "^5.0.0",
+        "faker": "^5.5.3"
     },
     "devDependencies": {
         "@babel/core": "^7.8.3",
-        "@storybook/addon-actions": "^5.3.9",
-        "@storybook/addon-knobs": "^5.3.19",
-        "@storybook/addon-storysource": "^5.3.9",
-        "@storybook/addons": "^5.3.9",
-        "@storybook/react": "^5.3.9",
         "@types/draft-js": "^0.10.38",
         "@types/file-saver": "^2.0.1",
         "@types/qs": "^6.9.0",
         "@types/react-router": "^5.0.3",
         "@types/react-router-dom": "^4.3.4",
-        "@types/storybook-react-router": "^1.0.1",
-        "@types/storybook__react": "^5.2.1",
         "@types/webpack": "^4.4.34",
         "babel-loader": "^8.0.6",
         "draft-js": "^0.11.5",
@@ -46,20 +52,23 @@
         "draft-js-export-markdown": "^1.4.0",
         "draft-js-import-markdown": "^1.4.0",
         "immutable": "~3.7.4",
+        "react-dnd": "^14.0.2",
+        "react-dnd-html5-backend": "^14.0.0",
         "react-docgen-typescript-loader": "^3.1.0",
         "react-router": "^5.0.1",
         "react-router-dom": "^5.0.1",
-        "storybook-react-router": "^1.0.8",
         "ts-loader": "^6.0.4",
         "ts-node": "^8.3.0",
-        "webpack": "^4.35.3"
+        "webpack": "^4.35.3",
+        "@types/faker": "^5.5.8"
     },
     "scripts": {
         "build-storybook": "build-storybook",
-        "storybook": "start-storybook",
+        "storybook": "start-storybook -p 26638",
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
+        "registry": "https://registry.npmjs.org",
         "access": "public"
     },
     "license": "BSD-2-Clause"

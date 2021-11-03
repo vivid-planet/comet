@@ -1,58 +1,38 @@
-import { ClickAwayListener, InputBase, Paper, Popper, withStyles } from "@material-ui/core";
+import { ClearInputButton } from "@comet/admin";
+import { ClickAwayListener, InputAdornment, InputBase, InputBaseProps, Paper, Popper, WithStyles, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { CustomPicker } from "react-color";
 import { FieldRenderProps } from "react-final-form";
-import * as tinycolor from "tinycolor2";
+import tinycolor from "tinycolor2";
 
 import { colorToHex } from "../utils/colorSpaces";
-import styles from "./ColorPicker.styles";
-import HexInput from "./HexInput";
+import { ColorPickerClassKey, styles } from "./ColorPicker.styles";
+import { HexInput } from "./HexInput";
 import Palette from "./Palette";
+import PickedColor from "./PickedColor";
 import Picker from "./Picker";
 
-export interface IVPAdminColorPickerProps {
-    classes: {
-        input: string;
-        inputInner: string;
-        inputInnerLeftContent: string;
-        clearButton: string;
-        clearIcon: string;
-        popper: string;
-        pickedColorWrapper: string;
-        noColorStroke: string;
-        pickedColorIndicator: string;
-        saturationWrapper: string;
-        saturationPointer: string;
-        hueWrapper: string;
-        hueSliderMarker: string;
-        paletteWrapper: string;
-        paletteItem: string;
-        readOnlyInput: string;
-    };
-}
-
-interface IComponentProps extends FieldRenderProps<string, HTMLInputElement> {
+export interface ColorPickerProps extends FieldRenderProps<string, HTMLInputElement> {
     colorPalette?: string[];
     showPicker?: boolean;
-    pickerWidth?: number;
+    showClearButton?: boolean;
+    fullWidth?: boolean;
+    startAdornment?: InputBaseProps["startAdornment"];
+    endAdornment?: InputBaseProps["endAdornment"];
 }
 
-const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
+function ColorPicker({
     colorPalette,
     showPicker,
-    pickerWidth,
+    fullWidth,
+    showClearButton,
+    startAdornment,
+    endAdornment,
     classes,
     input: { value, onChange },
-}) => {
+}: ColorPickerProps & WithStyles<typeof styles>): React.ReactElement {
     const [anchorEl, setAnchorEl] = React.useState<HTMLInputElement | null>(null);
-    const [inputWidth, setInputWidth] = React.useState<number>(pickerWidth ? pickerWidth : 300);
     const inputRef = React.useRef<HTMLInputElement>();
-
-    const setPopperWidth = () => {
-        if (!pickerWidth && inputRef.current && inputRef.current.offsetWidth) {
-            setInputWidth(inputRef.current.offsetWidth);
-        }
-    };
 
     const handleAwayClick = () => {
         setAnchorEl(null);
@@ -61,7 +41,6 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
     const handleFieldClick = (event: React.MouseEvent) => {
         const clickedElement = event.target as HTMLElement;
         if (clickedElement.tagName === "INPUT" || clickedElement.tagName === "DIV") {
-            setPopperWidth();
             setAnchorEl(event.currentTarget as HTMLInputElement);
         }
     };
@@ -72,10 +51,31 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
 
     const isOpen = Boolean(anchorEl);
 
+    const rootClasses: string[] = [classes.root];
+    if (fullWidth) rootClasses.push(classes.fullWidth);
+
     return (
         <ClickAwayListener onClickAway={handleAwayClick}>
-            <div>
+            <div className={rootClasses.join(" ")}>
                 <InputBase
+                    startAdornment={
+                        startAdornment ? (
+                            startAdornment
+                        ) : (
+                            <InputAdornment position="start">
+                                <PickedColor value={value} classes={classes} />
+                            </InputAdornment>
+                        )
+                    }
+                    endAdornment={
+                        endAdornment ? (
+                            endAdornment
+                        ) : showClearButton ? (
+                            <InputAdornment position="end">
+                                <ClearInputButton onClick={() => onChange("")} disabled={!value} />
+                            </InputAdornment>
+                        ) : undefined
+                    }
                     ref={inputRef}
                     inputComponent={HexInput as React.ComponentType}
                     value={value ? tinycolor(value).toHexString() : ""}
@@ -84,14 +84,16 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
                         classes,
                         picker: !!showPicker,
                         palette: !!colorPalette?.length,
-                        pickerWidth,
                     }}
-                    onChange={(newColor) => onChange(colorToHex((newColor as unknown) as tinycolor.ColorInputWithoutInstance))}
+                    onChange={(newColor) => {
+                        // The HexInput component's onChange can only return a string, not a ChangeEvent
+                        onChange(colorToHex(newColor as unknown as tinycolor.ColorInputWithoutInstance));
+                    }}
                     className={classes.input}
                     onClick={handleFieldClick}
                 />
-                <Popper open={isOpen} anchorEl={anchorEl} placement={"bottom"} style={{ width: `${inputWidth}px` }} className={classes.popper}>
-                    <Paper>
+                <Popper open={isOpen} anchorEl={anchorEl} placement={"bottom-start"} className={classes.popper} disablePortal>
+                    <Paper classes={{ root: classes.popperPaper }}>
                         {showPicker && <Picker classes={classes} color={value} onChange={onChange} />}
                         {colorPalette?.length && <Palette classes={classes} colors={colorPalette} onChange={onChange} />}
                     </Paper>
@@ -99,6 +101,18 @@ const ColorPicker: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({
             </div>
         </ClickAwayListener>
     );
-};
+}
 
-export default withStyles(styles, { name: "VPAdminColorPicker", withTheme: true })(CustomPicker(ColorPicker));
+export default withStyles(styles, { name: "CometAdminColorPicker" })(CustomPicker(ColorPicker));
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminColorPicker: ColorPickerClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminColorPicker: ColorPickerProps;
+    }
+}

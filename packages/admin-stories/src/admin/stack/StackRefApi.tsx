@@ -1,8 +1,9 @@
-import { Stack, StackPage, useStackSwitch } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, useStackSwitch } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
     const [StackSwitch, api] = useStackSwitch();
@@ -17,6 +18,7 @@ function Story() {
                 page2
             </button>
             <Stack topLevelTitle="Stack">
+                <StackBreadcrumbs />
                 <StackSwitch>
                     <StackPage name="page1">
                         <div>page1</div>
@@ -44,5 +46,5 @@ function App() {
 }
 
 storiesOf("@comet/admin/stack", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Stack Ref Api", () => <App />);

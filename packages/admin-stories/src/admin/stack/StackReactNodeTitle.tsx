@@ -1,19 +1,16 @@
-import { Stack, StackBreadcrumbsContainer, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
 import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
-import styled from "styled-components";
 
-const BreadcrumbsContainer = styled(StackBreadcrumbsContainer)`
-    border: 1px solid red;
-`;
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
     const [StackSwitch, api] = useStackSwitch();
 
     return (
-        <Stack topLevelTitle={<Typography color="primary">Page 1</Typography>} components={{ breadcrumbsContainer: BreadcrumbsContainer }}>
+        <Stack topLevelTitle={<Typography color="primary">Page 1</Typography>}>
+            <StackBreadcrumbs />
             <StackSwitch initialPage="page1">
                 <StackPage name="page1">
                     <Typography variant="h1">Page 1</Typography>
@@ -30,5 +27,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/stack", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Stack with React.ReactNode title", () => <Story />);

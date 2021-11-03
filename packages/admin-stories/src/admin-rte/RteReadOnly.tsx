@@ -1,8 +1,9 @@
 import { IRteReadOnlyOptions, makeRteApi, RteReadOnly } from "@comet/admin-rte";
+import { Box, Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { exampleContent, PrintEditorState, RteLayout } from "./helper";
+import { exampleContent, PrintEditorState } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
@@ -25,9 +26,13 @@ function Story() {
 
     return (
         <>
-            <RteLayout>
-                <RteReadOnly value={editorState} options={rteOptions} />
-            </RteLayout>
+            <Box marginBottom={4}>
+                <Card variant="outlined">
+                    <CardContent>
+                        <RteReadOnly value={editorState} options={rteOptions} />
+                    </CardContent>
+                </Card>
+            </Box>
             <PrintEditorState editorState={editorState} />
         </>
     );

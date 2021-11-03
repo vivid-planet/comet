@@ -1,23 +1,25 @@
-import { Field, FieldContainerLabelAbove } from "@comet/admin";
+import { Field } from "@comet/admin";
+import { CancelButton, OkayButton } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
+const options = [
+    { value: "chocolate", label: "Chocolate" },
+    { value: "strawberry", label: "Strawberry" },
+    { value: "vanilla", label: "Vanilla" },
+];
+
 function Story() {
-    const options = [
-        { value: "chocolate", label: "Chocolate" },
-        { value: "strawberry", label: "Strawberry" },
-        { value: "vanilla", label: "Vanilla" },
-    ];
     return (
         <div>
             <Dialog open={true}>
                 <DialogTitle>Subscribe</DialogTitle>
                 <DialogContent>
                     <Form
-                        onSubmit={(values) => {
+                        onSubmit={() => {
                             //
                         }}
                         render={({ handleSubmit }) => (
@@ -25,19 +27,19 @@ function Story() {
                                 <Field
                                     name="flavor"
                                     label="Flavor"
-                                    fieldContainerComponent={FieldContainerLabelAbove}
                                     component={FinalFormReactSelectStaticOptions}
                                     isClearable
                                     defaultOptions
                                     options={options}
+                                    fullWidth
                                 />
                             </form>
                         )}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button color="primary">Cancel</Button>
-                    <Button color="primary">Save</Button>
+                    <CancelButton />
+                    <OkayButton />
                 </DialogActions>
             </Dialog>
         </div>

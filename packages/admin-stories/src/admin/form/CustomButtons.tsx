@@ -1,64 +1,67 @@
-import { Field, FinalForm, FinalFormInput, FormPaper } from "@comet/admin";
-import { Button } from "@material-ui/core";
+import { Field, FinalForm, FinalFormInput } from "@comet/admin";
+import { Box, Button, Card, CardContent, withStyles } from "@material-ui/core";
 import { BeachAccess as BeachAccessIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { AnyObject } from "react-final-form";
-import styled from "styled-components";
+import { useFormState } from "react-final-form";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
-interface IProps {
-    formRenderProps: AnyObject;
-}
+const StyledButton = withStyles({
+    root: {
+        textTransform: "capitalize",
+        backgroundColor: "#006699",
+        color: "white",
+        "&:disabled": {
+            color: "lightgrey",
+            backgroundColor: "slategrey",
+        },
+        "&:hover": {
+            backgroundColor: "#006699",
+        },
+    },
+})(Button);
 
-const StyledButton = styled(Button)`
-    && {
-        text-transform: capitalize;
-        background-color: #006699;
-        color: white;
-        &:disabled {
-            color: lightgrey;
-            background-color: slategrey;
-        }
-        &:hover {
-            background-color: #006699;
-        }
-    }
-`;
+const CustomButtons: React.FC = () => {
+    const { values, pristine, hasValidationErrors, submitting } = useFormState();
 
-const CustomButtons: React.FC<IProps> = ({ formRenderProps }) => {
     return (
         <StyledButton
             startIcon={<BeachAccessIcon />}
             variant="text"
             color="default"
-            disabled={formRenderProps.pristine || formRenderProps.hasValidationErrors || formRenderProps.submitting}
+            disabled={pristine || hasValidationErrors || submitting}
             onClick={handleCustomButtonClick}
         >
-            {formRenderProps.pristine ? "Please fill out the form" : "Click Me - I'm a Custom button"}
+            {pristine ? "Please fill out the form" : "Click Me - I'm a Custom button"}
         </StyledButton>
     );
 
     function handleCustomButtonClick() {
-        window.alert(`Form values: ${JSON.stringify(formRenderProps.values)}`);
+        window.alert(`Form values: ${JSON.stringify(values)}`);
     }
 };
 
 function Story() {
     return (
-        <FinalForm
-            mode={"edit"}
-            onSubmit={() => {
-                // add your form-submit function here
-            }}
-            renderButtons={(props) => <CustomButtons formRenderProps={props} />}
-        >
-            <FormPaper>
-                <Field label="Foo" name="foo" component={FinalFormInput} />
-                <Field label="Bar" name="bar" component={FinalFormInput} />
-            </FormPaper>
-        </FinalForm>
+        <div style={{ width: 300 }}>
+            <FinalForm
+                mode={"edit"}
+                onSubmit={() => {
+                    // add your form-submit function here
+                }}
+            >
+                <Card variant="outlined">
+                    <CardContent>
+                        <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
+                        <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
+                    </CardContent>
+                </Card>
+                <Box paddingTop={4}>
+                    <CustomButtons />
+                </Box>
+            </FinalForm>
+        </div>
     );
 }
 

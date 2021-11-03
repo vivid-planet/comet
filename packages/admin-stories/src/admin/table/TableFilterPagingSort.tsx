@@ -1,19 +1,22 @@
+import { gql } from "@apollo/client";
 import {
     createRestPagingActions,
     Field,
-    FieldContainerLabelAbove,
     FinalFormInput,
+    MainContent,
     SortDirection,
     Table,
     TableFilterFinalForm,
     TableQuery,
+    Toolbar,
+    ToolbarItem,
     useTableQuery,
     useTableQueryFilter,
     useTableQueryPaging,
     useTableQuerySort,
 } from "@comet/admin";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
 
@@ -129,41 +132,43 @@ function Story() {
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
-            {tableData && (
-                <>
-                    <TableFilterFinalForm<IFilterValues> filterApi={filterApi}>
-                        <Field
-                            name="query"
-                            type="text"
-                            label="Query"
-                            component={FinalFormInput}
-                            fullWidth
-                            fieldContainerComponent={FieldContainerLabelAbove}
+            <>
+                <Toolbar>
+                    <ToolbarItem>
+                        <Typography variant={"h3"}>Filter Paging Sort</Typography>
+                    </ToolbarItem>
+                    <ToolbarItem>
+                        <TableFilterFinalForm<IFilterValues> filterApi={filterApi}>
+                            <Field name="query" type="text" component={FinalFormInput} fullWidth />
+                        </TableFilterFinalForm>
+                    </ToolbarItem>
+                </Toolbar>
+                {tableData && (
+                    <MainContent>
+                        <Table
+                            sortApi={sortApi}
+                            {...tableData}
+                            columns={[
+                                {
+                                    name: "name",
+                                    header: "Name",
+                                    sortable: true,
+                                },
+                                {
+                                    name: "username",
+                                    header: "Username",
+                                    sortable: true,
+                                },
+                                {
+                                    name: "email",
+                                    header: "E-Mail",
+                                    sortable: true,
+                                },
+                            ]}
                         />
-                    </TableFilterFinalForm>
-                    <Table
-                        sortApi={sortApi}
-                        {...tableData}
-                        columns={[
-                            {
-                                name: "name",
-                                header: "Name",
-                                sortable: true,
-                            },
-                            {
-                                name: "username",
-                                header: "Username",
-                                sortable: true,
-                            },
-                            {
-                                name: "email",
-                                header: "E-Mail",
-                                sortable: true,
-                            },
-                        ]}
-                    />
-                </>
-            )}
+                    </MainContent>
+                )}
+            </>
         </TableQuery>
     );
 }

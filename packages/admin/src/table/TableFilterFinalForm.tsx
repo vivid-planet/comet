@@ -9,7 +9,7 @@ import { renderComponent } from "../finalFormRenderComponent";
 import { IFilterApi } from "./useTableQueryFilter";
 
 type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" | "initialValues"> & {
-    headline?: string;
+    headline?: React.ReactNode;
     resetButton?: boolean;
     onSubmit?: FormProps<FilterValues>["onSubmit"];
     filterApi: IFilterApi<FilterValues>;
@@ -36,11 +36,11 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
     }
     private renderForm = (formRenderProps: FormRenderProps<FilterValues>) => {
         return (
-            <form>
-                <Grid container justify="space-between" alignItems="center" spacing={2}>
+            <form onSubmit={formRenderProps.handleSubmit}>
+                <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                     {(this.props.headline || this.props.resetButton) && (
                         <Grid item xs={12}>
-                            <Grid container justify="space-between" alignItems="center" spacing={2}>
+                            <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                                 {this.props.headline && (
                                     <Grid item>
                                         <Typography variant="h4">{this.props.headline}</Typography>
@@ -56,12 +56,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                                                 formRenderProps.form.reset();
                                             }}
                                         >
-                                            <Typography variant="button">
-                                                <FormattedMessage
-                                                    id="cometAdmin.table.tableFilterFinalForm.resetButton"
-                                                    defaultMessage="Reset filter"
-                                                />
-                                            </Typography>
+                                            <FormattedMessage id="cometAdmin.table.tableFilterFinalForm.resetButton" defaultMessage="Reset filter" />
                                         </Button>
                                     </Grid>
                                 )}

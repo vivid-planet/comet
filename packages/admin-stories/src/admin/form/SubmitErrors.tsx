@@ -1,4 +1,5 @@
-import { Field, FinalForm, FinalFormInput, FormPaper } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, FinalFormSaveCancelButtonsLegacy } from "@comet/admin";
+import { Box, Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
@@ -20,7 +21,7 @@ const resolveSubmitErrors = (error: SubmissionErrors) => {
     // error = { errors: [{fieldName: errorMessage},...] }
 
     const result = {};
-    for (const submitError of error.errors) {
+    for (const submitError of error?.errors) {
         Object.assign(result, submitError);
     }
     // result = {fieldName: errorMessage, ...}
@@ -34,14 +35,21 @@ function Story() {
 
     return (
         <FinalForm mode="edit" onSubmit={onSubmit} initialValues={initialValues} resolveSubmitErrors={resolveSubmitErrors}>
-            <div>
-                <FormPaper>
-                    <Field label="Foo" name="foo" component={FinalFormInput} />
-                </FormPaper>
-                <FormPaper>
-                    <Field label="Bar" name="bar" component={FinalFormInput} />
-                </FormPaper>
-            </div>
+            <Box marginBottom={4}>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Field label="Foo" name="foo" component={FinalFormInput} />
+                    </CardContent>
+                </Card>
+            </Box>
+            <Box marginBottom={4}>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Field label="Bar" name="bar" component={FinalFormInput} />
+                    </CardContent>
+                </Card>
+            </Box>
+            <FinalFormSaveCancelButtonsLegacy />
         </FinalForm>
     );
 }

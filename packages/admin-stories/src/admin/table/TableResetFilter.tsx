@@ -1,8 +1,8 @@
-import { Field, FieldContainerLabelAbove, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
+import { gql } from "@apollo/client";
+import { Field, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as qs from "qs";
 import * as React from "react";
 
@@ -82,7 +82,6 @@ function Story() {
                                     name="selectQuery"
                                     label="Name"
                                     component={FinalFormReactSelectStaticOptions}
-                                    fieldContainerComponent={FieldContainerLabelAbove}
                                     options={[
                                         { label: "Leanne Graham", value: "Leanne Graham" },
                                         { label: "Ervin Howell", value: "Ervin Howell" },

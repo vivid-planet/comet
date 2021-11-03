@@ -1,28 +1,37 @@
-import { Drawer, Theme } from "@material-ui/core";
-import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
+import { Drawer, DrawerProps, PaperProps } from "@material-ui/core";
+import { WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { useHistory } from "react-router";
-import { ThemeContext } from "styled-components";
 
+import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
-import * as sc from "./Menu.sc";
-// TODO after next publish: Replace with hook from `@comet/admin`
-import useWindowSize from "./useWindowSize";
+import { MenuClassKey, styles } from "./Menu.styles";
 
-interface IProps {
+export interface MenuProps {
     children: React.ReactNode;
-    permanentMenuMinWidth?: number;
+    variant?: "permanent" | "temporary";
+    drawerWidth?: number;
+    temporaryDrawerProps?: DrawerProps;
+    permanentDrawerProps?: DrawerProps;
+    temporaryDrawerPaperProps?: PaperProps;
+    permanentDrawerPaperProps?: PaperProps;
 }
 
-const Menu = ({ classes, children, permanentMenuMinWidth: passedPermanentMenuMinWidth, theme }: WithStyles<typeof styles, true> & IProps) => {
-    const { open, toggleOpen } = React.useContext(MenuContext);
-    const themeContext = React.useContext(ThemeContext);
+const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
+    classes,
+    children,
+    drawerWidth = 300,
+    variant = "permanent",
+    temporaryDrawerProps = {},
+    permanentDrawerProps = {},
+    temporaryDrawerPaperProps = {},
+    permanentDrawerPaperProps = {},
+}) => {
     const history = useHistory();
-    const windowSize = useWindowSize();
-    const themeStyles = styles(theme);
-    const permanentMenuMinWidth = passedPermanentMenuMinWidth ? passedPermanentMenuMinWidth : themeContext.breakpoints.values.lg;
-    const variant = windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent";
+    const { open, toggleOpen } = React.useContext(MenuContext);
+    const { headerHeight } = React.useContext(MasterLayoutContext);
 
+    // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
     React.useEffect(() => {
         if (variant === "temporary" && open) {
             toggleOpen();
@@ -31,6 +40,7 @@ const Menu = ({ classes, children, permanentMenuMinWidth: passedPermanentMenuMin
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // Close temporary menu after changing location (e.g. when clicking menu item).
     React.useEffect(() => {
         return history.listen(() => {
             if (variant === "temporary" && open) {
@@ -39,52 +49,61 @@ const Menu = ({ classes, children, permanentMenuMinWidth: passedPermanentMenuMin
         });
     }, [history, variant, open, toggleOpen]);
 
-    const getVariantDependantDrawerProps = () => {
-        if (variant === "temporary") {
-            return {
-                onBackdropClick: toggleOpen,
-            };
-        }
-        return {};
-    };
+    const temporaryDrawerClasses: string[] = [classes.drawer, classes.temporary];
+    temporaryDrawerClasses.push(open ? classes.open : classes.closed);
 
-    let menuClasses: string = classes.drawer;
-    if (variant === "permanent") {
-        menuClasses += ` ${open ? classes.permanentDrawerOpen : classes.permanentDrawerClose}`;
-    }
+    const permanentDrawerClasses: string[] = [classes.drawer, classes.permanent];
+    permanentDrawerClasses.push(open ? classes.open : classes.closed);
 
+    const temporaryOpen = variant === "temporary" && open;
+    const permanentOpen = variant === "permanent" && open;
+
+    // Always render both temporary and permanent drawers to make sure, the opening and closing animations run fully when switching between variants.
     return (
-        <Drawer variant={variant} className={menuClasses} classes={{ paper: menuClasses }} open={open} {...getVariantDependantDrawerProps()}>
-            <sc.MenuItemsWrapper width={`${(themeStyles.drawer as { width: number }).width}px`}>
-                {variant === "permanent" && <div className={classes.toolbar} />}
+        <>
+            <Drawer
+                variant={"temporary"}
+                className={temporaryDrawerClasses.join(" ")}
+                open={temporaryOpen}
+                PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
+                onClose={toggleOpen}
+                {...temporaryDrawerProps}
+            >
                 {children}
-            </sc.MenuItemsWrapper>
-        </Drawer>
+            </Drawer>
+            <Drawer
+                variant={"permanent"}
+                className={permanentDrawerClasses.join(" ")}
+                open={permanentOpen}
+                style={{ width: permanentOpen ? drawerWidth : 0 }}
+                PaperProps={{
+                    elevation: 2,
+                    style: {
+                        top: headerHeight,
+                        height: `calc(100% - ${headerHeight}px)`,
+                        width: drawerWidth,
+                        marginLeft: permanentOpen ? 0 : -drawerWidth,
+                    },
+                    ...permanentDrawerPaperProps,
+                }}
+                {...permanentDrawerProps}
+            >
+                {children}
+            </Drawer>
+        </>
     );
 };
 
-const styles = (theme: Theme) => {
-    return createStyles({
-        drawer: {
-            width: 300, //  theme.appDrawer.width,
-        },
-        permanentDrawerOpen: {
-            transition: theme.transitions.create("width", {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        },
-        permanentDrawerClose: {
-            transition: theme.transitions.create("width", {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-            }),
-            overflowX: "hidden",
-            width: 0,
-        },
-        toolbar: theme.mixins.toolbar,
-    });
-};
-const ExtendedMenu = withStyles(styles, { withTheme: true })(Menu);
+export const Menu = withStyles(styles, { name: "CometAdminMenu" })(MenuDrawer);
 
-export { ExtendedMenu as Menu };
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminMenu: MenuClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminMenu: MenuProps;
+    }
+}

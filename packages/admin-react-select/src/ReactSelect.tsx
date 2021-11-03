@@ -1,5 +1,5 @@
-import { Chip, MenuItem, Paper, Theme, Typography } from "@material-ui/core";
-import MuiInputBase, { InputBaseProps } from "@material-ui/core/InputBase";
+import { Chip, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography, WithStyles } from "@material-ui/core";
+import zIndex from "@material-ui/core/styles/zIndex";
 import { SvgIconComponent } from "@material-ui/icons";
 import CancelIcon from "@material-ui/icons/Cancel";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -21,9 +21,9 @@ import { OptionProps } from "react-select/src/components/Option";
 import { PlaceholderProps } from "react-select/src/components/Placeholder";
 import { SingleValueProps } from "react-select/src/components/SingleValue";
 
-import styles from "./ReactSelect.styles";
+import styles, { SelectClassKey } from "./ReactSelect.styles";
 
-function NoOptionsMessage<OptionType>(props: NoticeProps<OptionType>) {
+function NoOptionsMessage<OptionType, IsMulti extends boolean>(props: NoticeProps<OptionType, IsMulti>) {
     return (
         <Typography className={props.selectProps.classes.noOptionsMessage} {...props.innerProps}>
             {props.children}
@@ -35,9 +35,9 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-export const ControlInput = ({ ...props }: InputBaseProps) => <MuiInputBase classes={{ root: "root", focused: "focused" }} {...props} />;
+export const ControlInput = ({ ...props }: InputBaseProps) => <InputBase classes={{ root: "root", focused: "focused" }} {...props} />;
 
-function Control<OptionType>(props: ControlProps<OptionType>) {
+function Control<OptionType, IsMulti extends boolean>(props: ControlProps<OptionType, IsMulti>) {
     const InputProps = {
         inputComponent,
         inputProps: {
@@ -50,16 +50,17 @@ function Control<OptionType>(props: ControlProps<OptionType>) {
     return <ControlInput type="text" fullWidth {...InputProps} {...props.selectProps.textFieldProps} />;
 }
 
-function Option<OptionType>(props: OptionProps<OptionType>) {
+function Option<OptionType, IsMulti extends boolean>(props: OptionProps<OptionType, IsMulti>) {
+    const rootClasses: string[] = [props.selectProps.classes.option];
+    if (props.isFocused) rootClasses.push(props.selectProps.classes.optionFocused);
+    if (props.isSelected) rootClasses.push(props.selectProps.classes.optionSelected);
     return (
         <MenuItem
+            classes={{ root: rootClasses.join(" ") }}
             buttonRef={props.innerRef}
-            selected={props.isFocused}
+            selected={props.isSelected}
             disabled={props.isDisabled}
             component="div"
-            style={{
-                fontWeight: props.isSelected ? 500 : 400,
-            }}
             {...props.innerProps}
         >
             {props.children}
@@ -67,7 +68,7 @@ function Option<OptionType>(props: OptionProps<OptionType>) {
     );
 }
 
-function Placeholder<OptionType>(props: PlaceholderProps<OptionType>) {
+function Placeholder<OptionType, IsMulti extends boolean>(props: PlaceholderProps<OptionType, IsMulti>) {
     return (
         <div className={props.selectProps.classes.placeholder} {...props.innerProps}>
             {props.children}
@@ -83,7 +84,7 @@ function SingleValue<OptionType>(props: SingleValueProps<OptionType>) {
     );
 }
 
-function ValueContainer<OptionType>(props: ValueContainerProps<OptionType>) {
+function ValueContainer<OptionType, IsMulti extends boolean>(props: ValueContainerProps<OptionType, IsMulti>) {
     return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
 }
 
@@ -101,7 +102,7 @@ function MultiValue<OptionType>(props: MultiValueProps<OptionType>) {
     );
 }
 
-function Menu<OptionType>(props: MenuProps<OptionType>) {
+function Menu<OptionType, IsMulti extends boolean>(props: MenuProps<OptionType, IsMulti>) {
     return (
         <Paper className={props.selectProps.classes.paper} {...props.innerProps}>
             {props.children}
@@ -109,15 +110,15 @@ function Menu<OptionType>(props: MenuProps<OptionType>) {
     );
 }
 
-function IndicatorsContainer<OptionType>(props: IndicatorContainerProps<OptionType>) {
+function IndicatorsContainer<OptionType, IsMulti extends boolean>(props: IndicatorContainerProps<OptionType, IsMulti>) {
     return <div className={props.selectProps.classes.indicatorsContainer}>{props.children}</div>;
 }
 
-function IndicatorSeparator<OptionType>(props: IndicatorContainerProps<OptionType>) {
+function IndicatorSeparator<OptionType, IsMulti extends boolean>(props: IndicatorContainerProps<OptionType, IsMulti>) {
     return <span className={props.selectProps.classes.indicatorSeparator} />;
 }
 
-function ClearIndicator<OptionType>({ selectProps, clearValue }: IndicatorProps<OptionType>) {
+function ClearIndicator<OptionType, IsMulti extends boolean>({ selectProps, clearValue }: IndicatorProps<OptionType, IsMulti>) {
     const Icon = selectProps.clearIcon ? selectProps.clearIcon : ClearIcon;
     return (
         <div className={`${selectProps.classes.indicator} ${selectProps.classes.clearIndicator}`} onClick={clearValue}>
@@ -126,7 +127,7 @@ function ClearIndicator<OptionType>({ selectProps, clearValue }: IndicatorProps<
     );
 }
 
-function DropdownIndicator<OptionType>({ selectProps }: IndicatorProps<OptionType>) {
+function DropdownIndicator<OptionType, IsMulti extends boolean>({ selectProps }: IndicatorProps<OptionType, IsMulti>) {
     const DefaultIcon = selectProps.dropdownIcon ? selectProps.dropdownIcon : DropdownIcon;
     const OpenIcon = selectProps.dropdownIconOpen ? selectProps.dropdownIconOpen : DropdownIcon;
     const Icon = selectProps.menuIsOpen ? OpenIcon : DefaultIcon;
@@ -153,19 +154,7 @@ const components = {
     DropdownIndicator,
 };
 
-export interface IVPAdminSelectProps<OptionType> {
-    classes: {
-        input: string;
-        valueContainer: string;
-        chip: string;
-        chipFocused: string;
-        noOptionsMessage: string;
-        singleValue: string;
-        placeholder: string;
-        paper: string;
-        indicatorSeparator: string;
-        indicatorsContainer: string;
-    };
+export interface SelectProps<OptionType> {
     theme: Theme;
     selectComponent: React.ComponentType<ReactSelectProps<OptionType>>;
     clearIcon?: SvgIconComponent;
@@ -173,25 +162,14 @@ export interface IVPAdminSelectProps<OptionType> {
     dropdownIconOpen?: SvgIconComponent;
 }
 
-class SelectWrapper<OptionType> extends React.Component<IVPAdminSelectProps<OptionType> & ReactSelectProps<OptionType>> {
+class SelectWrapper<OptionType> extends React.Component<WithStyles<typeof styles> & SelectProps<OptionType> & ReactSelectProps<OptionType>> {
     public render() {
         const { classes, theme, components: origComponents, selectComponent, ...rest } = this.props;
-        const selectStyles = {
-            input: (base: any) => ({
-                ...base,
-                color: theme.palette.text.primary,
-                "& input": {
-                    font: "inherit",
-                },
-            }),
-        };
-
         const SelectComponent = this.props.selectComponent;
         return (
             <SelectComponent
                 classes={classes}
                 menuPortalTarget={document.body}
-                styles={selectStyles}
                 components={{ ...components, ...origComponents }}
                 placeholder=""
                 {...rest}
@@ -199,33 +177,43 @@ class SelectWrapper<OptionType> extends React.Component<IVPAdminSelectProps<Opti
         );
     }
 }
-const ExtendedSelectWrapper = withStyles(styles, { name: "VPAdminSelect", withTheme: true })(SelectWrapper);
+const ExtendedSelectWrapper = withStyles(styles, { name: "CometAdminSelect" })(SelectWrapper);
 
-const vividStyles = {
-    dropdownIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
-    clearIndicator: (styles: any) => ({ ...styles, cursor: "pointer", padding: "6px" }),
-    menuPortal: (styles: any) => ({ ...styles, zIndex: 1500 }),
+const reactSelectStyles = {
+    menuPortal: (styles: any) => ({ ...styles, zIndex: zIndex.modal }),
 };
 
 export class ReactSelect<OptionType> extends React.Component<ReactSelectProps<OptionType>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={Select} {...this.props} styles={{ ...vividStyles }} />;
+        return <ExtendedSelectWrapper selectComponent={Select} {...this.props} styles={{ ...reactSelectStyles }} />;
     }
 }
-export class ReactSelectAsync<OptionType> extends React.Component<ReactSelectAsyncProps<OptionType>> {
+export class ReactSelectAsync<OptionType, IsMulti extends boolean> extends React.Component<ReactSelectAsyncProps<OptionType, IsMulti>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={AsyncSelect} {...this.props} styles={{ ...vividStyles }} />;
+        return <ExtendedSelectWrapper selectComponent={AsyncSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
     }
 }
-export class ReactSelectCreatable<OptionType> extends React.Component<ReactSelectCreatableProps<OptionType>> {
+export class ReactSelectCreatable<OptionType, IsMulti extends boolean> extends React.Component<ReactSelectCreatableProps<OptionType, IsMulti>> {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={CreatableSelect} {...this.props} styles={{ ...vividStyles }} />;
+        return <ExtendedSelectWrapper selectComponent={CreatableSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
     }
 }
-export class ReactSelectAsyncCreatable<OptionType> extends React.Component<
-    ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
+export class ReactSelectAsyncCreatable<OptionType, IsMulti extends boolean> extends React.Component<
+    ReactSelectCreatableProps<OptionType, IsMulti> & ReactSelectAsyncProps<OptionType, IsMulti>
 > {
     public render() {
-        return <ExtendedSelectWrapper selectComponent={AsyncCreatableSelect} {...this.props} styles={{ ...vividStyles }} />;
+        return <ExtendedSelectWrapper selectComponent={AsyncCreatableSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
+    }
+}
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminSelect: SelectClassKey;
+    }
+}
+
+declare module "@material-ui/core/styles/props" {
+    interface ComponentsPropsList {
+        CometAdminSelect: SelectProps<any>;
     }
 }

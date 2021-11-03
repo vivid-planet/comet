@@ -1,9 +1,9 @@
-import { useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import {
     Field,
-    FieldContainerLabelAbove,
     FinalForm,
     FinalFormInput,
+    MainContent,
     Stack,
     StackPage,
     StackSwitch,
@@ -11,18 +11,20 @@ import {
     Table,
     TableFilterFinalForm,
     TableQuery,
+    Toolbar,
+    ToolbarBackButton,
+    ToolbarItem,
     usePersistedStateId,
     useTableQuery,
     useTableQueryFilter,
 } from "@comet/admin";
-import { CircularProgress, Grid, IconButton } from "@material-ui/core";
+import { Card, CardContent, CircularProgress, Grid, IconButton, Typography } from "@material-ui/core";
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const gqlRest = gql;
 
@@ -72,18 +74,18 @@ function ExampleTable(props: { persistedStateId: string }) {
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
-            {tableData && (
-                <>
+            <Toolbar>
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Stack Table Form Query In Table</Typography>
+                </ToolbarItem>
+                <ToolbarItem>
                     <TableFilterFinalForm filterApi={filterApi}>
-                        <Field
-                            name="query"
-                            type="text"
-                            label="Query"
-                            component={FinalFormInput}
-                            fullWidth
-                            fieldContainerComponent={FieldContainerLabelAbove}
-                        />
+                        <Field name="query" type="text" component={FinalFormInput} fullWidth />
                     </TableFilterFinalForm>
+                </ToolbarItem>
+            </Toolbar>
+            {tableData && (
+                <MainContent>
                     <Table
                         {...tableData}
                         columns={[
@@ -103,14 +105,14 @@ function ExampleTable(props: { persistedStateId: string }) {
                                                 stackApi.activatePage("form", String(row.id));
                                             }}
                                         >
-                                            <EditIcon fontSize="small" />
+                                            <EditIcon />
                                         </IconButton>
                                     </Grid>
                                 ),
                             },
                         ]}
                     />
-                </>
+                </MainContent>
             )}
         </TableQuery>
     );
@@ -141,15 +143,29 @@ function ExampleForm(props: IExampleFormProps) {
     if (error) return <p>Error :( {error.toString()}</p>;
 
     return (
-        <FinalForm
-            mode="edit"
-            onSubmit={(values) => {
-                // submit here
-            }}
-            initialValues={data.user}
-        >
-            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
-        </FinalForm>
+        <>
+            <Toolbar>
+                <ToolbarBackButton />
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Stack Table Form Query In Table - Detail</Typography>
+                </ToolbarItem>
+            </Toolbar>
+            <MainContent>
+                <Card variant="outlined">
+                    <CardContent>
+                        <FinalForm
+                            mode="edit"
+                            onSubmit={(values) => {
+                                // submit here
+                            }}
+                            initialValues={data.user}
+                        >
+                            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
+                        </FinalForm>
+                    </CardContent>
+                </Card>
+            </MainContent>
+        </>
     );
 }
 
@@ -171,5 +187,5 @@ function Story() {
 
 storiesOf("@comet/admin/stack", module)
     .addDecorator(apolloStoryDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Stack Table Form Query in Table", () => <Story />);

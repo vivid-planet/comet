@@ -1,4 +1,5 @@
-import { Field, FinalForm, FinalFormInput, FormPaper, Tab, Tabs } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, Tab, Tabs } from "@comet/admin";
+import { Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -18,14 +19,18 @@ function Story() {
         >
             <Tabs>
                 <Tab label="Example 1">
-                    <FormPaper>
-                        <Field label="Foo" name="foo" component={FinalFormInput} />
-                    </FormPaper>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Field label="Foo" name="foo" component={FinalFormInput} />
+                        </CardContent>
+                    </Card>
                 </Tab>
                 <Tab label="Example 2">
-                    <FormPaper>
-                        <Field label="Bar" name="bar" component={FinalFormInput} />
-                    </FormPaper>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Field label="Bar" name="bar" component={FinalFormInput} />
+                        </CardContent>
+                    </Card>
                 </Tab>
             </Tabs>
         </FinalForm>

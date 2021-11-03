@@ -1,7 +1,10 @@
+import { WithStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
 import { SvgIconProps } from "@material-ui/core/SvgIcon";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
-import * as sc from "./ControlButton.sc";
+import getRteTheme from "../utils/getRteTheme";
 
 export interface IProps {
     disabled?: boolean;
@@ -14,12 +17,76 @@ export interface IProps {
     Icon?: (props: SvgIconProps) => JSX.Element;
 }
 
-export default function ControlButton({ disabled = false, selected = false, onButtonClick, icon, children, Icon: deprecatedIcon }: IProps) {
+function ControlButton({
+    disabled = false,
+    selected = false,
+    onButtonClick,
+    icon,
+    children,
+    Icon: deprecatedIcon,
+    classes,
+}: IProps & WithStyles<typeof styles>) {
     const Icon = icon || deprecatedIcon;
+
+    const rootClasses: string[] = [classes.root];
+    if (selected) rootClasses.push(classes.selected);
+    if (Icon) rootClasses.push(classes.renderAsIcon);
+
     return (
-        <sc.Root selected={selected} disabled={disabled} onMouseDown={onButtonClick} renderAsIcon={!!Icon}>
+        <button className={rootClasses.join(" ")} disabled={disabled} onMouseDown={onButtonClick}>
             {!!Icon && <Icon fontSize="inherit" color="inherit" />}
             {children}
-        </sc.Root>
+        </button>
     );
+}
+
+export type RteControlButtonClassKey = "root" | "selected" | "renderAsIcon";
+
+const styles = (theme: Theme) => {
+    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+
+    return createStyles<RteControlButtonClassKey, IProps>({
+        root: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            height: 24,
+            backgroundColor: "transparent",
+            border: "1px solid transparent",
+            boxSizing: "border-box",
+            transition: "background-color 200ms, border-color 200ms, color 200ms",
+            fontSize: 20,
+            color: rteTheme.colors.buttonIcon,
+            "&:hover": {
+                backgroundColor: rteTheme.colors.buttonBackgroundHover,
+                borderColor: rteTheme.colors.buttonBorderHover,
+            },
+            "&:disabled": {
+                cursor: "not-allowed",
+                "&, &:hover": {
+                    backgroundColor: "transparent",
+                    borderColor: "transparent",
+                    color: rteTheme.colors.buttonIconDisabled,
+                },
+            },
+        },
+        selected: {
+            "&:not(:disabled), &:not(:disabled):hover": {
+                borderColor: rteTheme.colors.buttonBorderHover,
+                backgroundColor: "white",
+            },
+        },
+        renderAsIcon: {
+            width: 24,
+        },
+    });
+};
+
+export default withStyles(styles, { name: "CometAdminRteControlButton" })(ControlButton);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminRteControlButton: RteControlButtonClassKey;
+    }
 }

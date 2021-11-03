@@ -15,6 +15,8 @@ function Story() {
     const data: IExampleRow[] = [
         { id: 1, foo1: "blub", foo2: "blub", nestedFoo: { foo: "bar" } },
         { id: 2, foo1: "blub", foo2: "blub", nestedFoo: { foo: "bar" } },
+        { id: 3, foo1: "blub", foo2: "blub", nestedFoo: { foo: "bar" } },
+        { id: 4, foo1: "blub", foo2: "blub", nestedFoo: { foo: "bar" } },
     ];
 
     return (

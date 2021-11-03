@@ -1,9 +1,10 @@
+import { Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
-import { Box, Button } from "@material-ui/core";
+import { Box, Button, Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { exampleContent, PrintEditorState, RteLayout, useAutoFocus } from "./helper";
+import { exampleContent, PrintEditorState, useAutoFocus } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
@@ -17,15 +18,23 @@ function Story() {
 
     return (
         <>
-            <Box p={2}>
-                <Button variant="contained" color="primary" onClick={toggleDisabled}>
-                    {disabled ? "Enable" : "Disable"}
-                </Button>
+            <Box marginBottom={4}>
+                <Toolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarActions>
+                        <Button variant="contained" color="primary" onClick={toggleDisabled}>
+                            {disabled ? "Enable" : "Disable"}
+                        </Button>
+                    </ToolbarActions>
+                </Toolbar>
             </Box>
-
-            <RteLayout>
-                <Rte value={editorState} onChange={setEditorState} ref={editorRef} disabled={disabled} />
-            </RteLayout>
+            <Box marginBottom={4}>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} disabled={disabled} />
+                    </CardContent>
+                </Card>
+            </Box>
             <PrintEditorState editorState={editorState} />
         </>
     );

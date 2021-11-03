@@ -1,8 +1,8 @@
-import { Button, CircularProgress, Typography } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FileIcon } from "../fileIcons";
+import { FileIcon } from "../fileIcons/FileIcon";
 import { IExportApi } from "./excelexport/IExportApi";
 
 interface IProps {
@@ -40,13 +40,11 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
                 )
             }
         >
-            <Typography variant="button">
-                {children != null ? (
-                    children
-                ) : (
-                    <FormattedMessage id="cometAdmin.table.excelExportButton" defaultMessage="Export" description="Export Button" />
-                )}
-            </Typography>
+            {children != null ? (
+                children
+            ) : (
+                <FormattedMessage id="cometAdmin.table.excelExportButton" defaultMessage="Export" description="Export Button" />
+            )}
         </Button>
     );
 };

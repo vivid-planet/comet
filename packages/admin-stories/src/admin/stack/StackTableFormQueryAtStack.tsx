@@ -1,10 +1,10 @@
-import { useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import {
     Field,
-    FieldContainerLabelAbove,
     FinalForm,
     FinalFormInput,
     IFilterApi,
+    MainContent,
     Stack,
     StackPage,
     StackSwitch,
@@ -12,17 +12,19 @@ import {
     Table,
     TableFilterFinalForm,
     TableQuery,
+    Toolbar,
+    ToolbarBackButton,
+    ToolbarItem,
     useTableQuery,
     useTableQueryFilter,
 } from "@comet/admin";
-import { CircularProgress, Grid, IconButton } from "@material-ui/core";
+import { CircularProgress, Grid, IconButton, Typography } from "@material-ui/core";
 import { Edit as EditIcon } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 const gqlRest = gql;
 
@@ -67,42 +69,46 @@ function ExampleTable(props: IExampleTableProps) {
 
     return (
         <>
-            <TableFilterFinalForm filterApi={props.filterApi}>
-                <Field
-                    name="query"
-                    type="text"
-                    label="Query"
-                    component={FinalFormInput}
-                    fullWidth
-                    fieldContainerComponent={FieldContainerLabelAbove}
-                />
-            </TableFilterFinalForm>
-            <Table
-                {...props.tableData}
-                columns={[
-                    {
-                        name: "name",
-                        header: "Name",
-                    },
-                    {
-                        name: "edit",
-                        header: "",
-                        cellProps: { padding: "none" },
+            <Toolbar>
+                <ToolbarBackButton />
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Stack Table Form Query At Stack</Typography>
+                </ToolbarItem>
+                <ToolbarItem>
+                    <TableFilterFinalForm filterApi={props.filterApi}>
+                        <Field name="query" type="text" component={FinalFormInput} fullWidth />
+                    </TableFilterFinalForm>
+                </ToolbarItem>
+            </Toolbar>
 
-                        render: (row) => (
-                            <Grid item>
-                                <IconButton
-                                    onClick={() => {
-                                        stackApi.activatePage("form", String(row.id));
-                                    }}
-                                >
-                                    <EditIcon fontSize="small" />
-                                </IconButton>
-                            </Grid>
-                        ),
-                    },
-                ]}
-            />
+            <MainContent>
+                <Table
+                    {...props.tableData}
+                    columns={[
+                        {
+                            name: "name",
+                            header: "Name",
+                        },
+                        {
+                            name: "edit",
+                            header: "",
+                            cellProps: { padding: "none" },
+
+                            render: (row) => (
+                                <Grid item>
+                                    <IconButton
+                                        onClick={() => {
+                                            stackApi.activatePage("form", String(row.id));
+                                        }}
+                                    >
+                                        <EditIcon />
+                                    </IconButton>
+                                </Grid>
+                            ),
+                        },
+                    ]}
+                />
+            </MainContent>
         </>
     );
 }
@@ -132,15 +138,25 @@ function ExampleForm(props: IExampleFormProps) {
     if (error) return <p>Error :( {error.toString()}</p>;
 
     return (
-        <FinalForm
-            mode="edit"
-            onSubmit={(values) => {
-                // submit here
-            }}
-            initialValues={data.user}
-        >
-            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
-        </FinalForm>
+        <>
+            <Toolbar>
+                <ToolbarBackButton />
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Stack Table Form Query At Stack - Detail</Typography>
+                </ToolbarItem>
+            </Toolbar>
+            <MainContent>
+                <FinalForm
+                    mode="edit"
+                    onSubmit={(values) => {
+                        // submit here
+                    }}
+                    initialValues={data.user}
+                >
+                    <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
+                </FinalForm>
+            </MainContent>
+        </>
     );
 }
 
@@ -173,5 +189,5 @@ function Story() {
 
 storiesOf("@comet/admin/stack", module)
     .addDecorator(apolloStoryDecorator())
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Stack Table Form Query at stack", () => <Story />);

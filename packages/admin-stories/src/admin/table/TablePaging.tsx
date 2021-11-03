@@ -1,6 +1,6 @@
-import { createRestPagingActions, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
+import { gql } from "@apollo/client";
+import { createRestPagingActions, MainContent, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
@@ -61,17 +61,19 @@ function Story() {
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
-            {tableData && (
-                <Table
-                    {...tableData}
-                    columns={[
-                        {
-                            name: "name",
-                            header: "Name",
-                        },
-                    ]}
-                />
-            )}
+            <MainContent>
+                {tableData && (
+                    <Table
+                        {...tableData}
+                        columns={[
+                            {
+                                name: "name",
+                                header: "Name",
+                            },
+                        ]}
+                    />
+                )}
+            </MainContent>
         </TableQuery>
     );
 }

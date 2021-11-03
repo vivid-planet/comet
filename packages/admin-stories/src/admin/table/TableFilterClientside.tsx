@@ -1,4 +1,5 @@
-import { Field, FieldContainerLabelAbove, FinalFormInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
+import { Field, FinalFormInput, MainContent, Table, TableFilterFinalForm, Toolbar, ToolbarItem, useTableQueryFilter } from "@comet/admin";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -22,37 +23,39 @@ function Story() {
     const filteredData = data.filter((i) => filterApi.current.query === undefined || i.foo1.includes(filterApi.current.query));
     return (
         <>
-            <TableFilterFinalForm filterApi={filterApi}>
-                <Field
-                    name="query"
-                    type="text"
-                    label="Query"
-                    component={FinalFormInput}
-                    fullWidth
-                    fieldContainerComponent={FieldContainerLabelAbove}
+            <Toolbar>
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Filter Clientside</Typography>
+                </ToolbarItem>
+                <ToolbarItem>
+                    <TableFilterFinalForm filterApi={filterApi}>
+                        <Field name="query" type="text" component={FinalFormInput} fullWidth />
+                    </TableFilterFinalForm>
+                </ToolbarItem>
+            </Toolbar>
+            <MainContent>
+                <Table
+                    data={filteredData}
+                    totalCount={data.length}
+                    columns={[
+                        {
+                            name: "foo1",
+                            header: "Foo1",
+                            sortable: true,
+                        },
+                        {
+                            name: "foo2",
+                            header: "Foo2",
+                            render: (row) => <strong>{row.id}</strong>,
+                            sortable: true,
+                        },
+                        {
+                            name: "bar",
+                            visible: false,
+                        },
+                    ]}
                 />
-            </TableFilterFinalForm>
-            <Table
-                data={filteredData}
-                totalCount={data.length}
-                columns={[
-                    {
-                        name: "foo1",
-                        header: "Foo1",
-                        sortable: true,
-                    },
-                    {
-                        name: "foo2",
-                        header: "Foo2",
-                        render: (row) => <strong>{row.id}</strong>,
-                        sortable: true,
-                    },
-                    {
-                        name: "bar",
-                        visible: false,
-                    },
-                ]}
-            />
+            </MainContent>
         </>
     );
 }

@@ -20,27 +20,29 @@ export class FinalFormReactSelect<OptionType> extends React.Component<
         return <Select<OptionType> {...input} {...rest} />;
     }
 }
-export class FinalFormReactSelectAsync<OptionType> extends React.Component<
-    FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectAsyncProps<OptionType>
+export class FinalFormReactSelectAsync<OptionType, IsMulti extends boolean> extends React.Component<
+    FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectAsyncProps<OptionType, IsMulti>
 > {
     public render() {
         const { input, meta, ...rest } = this.props;
-        return <Async<OptionType> {...input} {...rest} />;
+
+        return <Async<OptionType, any> {...input} {...rest} />;
     }
 }
-export class FinalFormReactSelectCreatable<OptionType> extends React.Component<
-    FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectCreatableProps<OptionType>
+export class FinalFormReactSelectCreatable<OptionType, IsMulti extends boolean> extends React.Component<
+    FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectCreatableProps<OptionType, IsMulti>
 > {
     public render() {
         const { input, meta, ...rest } = this.props;
-        return <Creatable<OptionType> {...input} {...rest} />;
+
+        return <Creatable<OptionType, any> {...input} {...rest} />;
     }
 }
-export class FinalFormReactSelectAsyncCreatable<OptionType> extends React.Component<
-    FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectCreatableProps<OptionType> & ReactSelectAsyncProps<OptionType>
+export class FinalFormReactSelectAsyncCreatable<OptionType, IsMulti extends boolean> extends React.Component<
+    FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectCreatableProps<OptionType, false> & ReactSelectAsyncProps<OptionType, IsMulti>
 > {
     public render() {
         const { input, meta, ...rest } = this.props;
-        return <AsyncCreatable<OptionType> {...input} {...rest} />;
+        return <AsyncCreatable<OptionType, any> {...input} {...rest} />;
     }
 }

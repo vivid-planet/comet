@@ -1,40 +1,61 @@
-import { FormHelperText } from "@material-ui/core";
+import { FieldValidator } from "final-form";
 import * as React from "react";
-import { Field as FinalFormField, FieldRenderProps } from "react-final-form";
+import { Field as FinalFormField, FieldMetaState, FieldRenderProps, FormSpy, useForm } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 
-import { FieldContainer } from "./FieldContainer";
+import { FieldContainer, FieldContainerProps } from "./FieldContainer";
+import { useFinalFormContext } from "./FinalFormContextProvider";
 
-const requiredValidator = (value: any) => (value ? undefined : "Pflichtfeld");
+const requiredValidator = (value: any) => (value ? undefined : <FormattedMessage id="cometAdmin.form.required" defaultMessage="Required" />);
 
-const composeValidators = (...validators: Array<(value: any, allValues: object) => any>) => (value: any, allValues: object) =>
-    validators.reduce((error, validator) => error || validator(value, allValues), undefined);
+const composeValidators =
+    (...validators: Array<(value: any, allValues: object) => any>) =>
+    (value: any, allValues: object) =>
+        validators.reduce((error, validator) => error || validator(value, allValues), undefined);
 
-interface IVividFieldProps<FieldValue = any, T extends HTMLElement = HTMLElement> {
+interface Props<FieldValue = any, T extends HTMLElement = HTMLElement> {
     name: string;
-    label?: string;
+    label?: React.ReactNode;
     component?: React.ComponentType<any> | string;
     children?: (props: FieldRenderProps<FieldValue, T>) => React.ReactNode;
     required?: boolean;
-    validate?: (value: any, allValues: object) => any;
-    fieldContainerComponent?: React.ComponentType<any>;
+    disabled?: boolean;
+    validate?: FieldValidator<FieldValue>;
+    validateWarning?: FieldValidator<FieldValue>;
+    variant?: FieldContainerProps["variant"];
+    shouldScrollTo?: (meta: FieldMetaState<FieldValue>) => boolean;
+    shouldShowError?: (meta: FieldMetaState<FieldValue>) => boolean;
+    shouldShowWarning?: (meta: FieldMetaState<FieldValue>) => boolean;
     [otherProp: string]: any;
 }
 
-export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extends React.Component<IVividFieldProps<FieldValue, T>> {
-    public render() {
-        const { children, component, name, label, required, validate, fieldContainerComponent, ...rest } = this.props;
-        const composedValidate = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
-        return (
-            <FinalFormField<FieldValue, FieldRenderProps<FieldValue, T>, T> name={name} validate={composedValidate} {...rest}>
-                {this.renderField.bind(this)}
-            </FinalFormField>
-        );
-    }
+export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLElement>({
+    children,
+    component,
+    name,
+    label,
+    required,
+    validate,
+    validateWarning,
+    shouldShowError: passedShouldShowError,
+    shouldShowWarning: passedShouldShowWarning,
+    shouldScrollTo: passedShouldScrollTo,
+    ...otherProps
+}: Props<FieldValue, FieldElement>): React.ReactElement {
+    const { disabled, variant, fullWidth } = otherProps;
 
-    private renderField({ input, meta, ...rest }: FieldRenderProps<FieldValue, T>) {
-        const { children, component, name, label, required } = this.props;
-        const UsedFieldContainer = this.props.fieldContainerComponent || FieldContainer;
+    const { mutators } = useForm();
+    const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
+    const currentWarningValidationRound = React.useRef(0);
 
+    const validateError = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
+
+    const finalFormContext = useFinalFormContext();
+    const shouldShowError = passedShouldShowError || finalFormContext.shouldShowFieldError;
+    const shouldShowWarning = passedShouldShowWarning || finalFormContext.shouldShowFieldWarning;
+    const shouldScrollToField = passedShouldScrollTo || finalFormContext.shouldScrollToField;
+
+    function renderField({ input, meta, fieldContainerProps, ...rest }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string }) {
         function render() {
             if (component) {
                 return React.createElement(component, { ...rest, input, meta });
@@ -46,10 +67,55 @@ export class Field<FieldValue = any, T extends HTMLElement = HTMLElement> extend
             }
         }
         return (
-            <UsedFieldContainer label={label} required={required}>
+            <FieldContainer
+                label={label}
+                required={required}
+                disabled={disabled}
+                error={shouldShowError({ fieldMeta: meta }) && (meta.error || meta.submitError)}
+                warning={shouldShowWarning({ fieldMeta: meta }) && meta.data?.warning}
+                variant={variant}
+                fullWidth={fullWidth}
+                scrollTo={shouldScrollToField({ fieldMeta: meta })}
+            >
                 {render()}
-                {(meta.error || meta.submitError) && meta.touched && <FormHelperText error>{meta.error || meta.submitError}</FormHelperText>}
-            </UsedFieldContainer>
+            </FieldContainer>
         );
     }
+
+    return (
+        <>
+            <FinalFormField<FieldValue, FieldRenderProps<FieldValue, FieldElement>, FieldElement>
+                name={name}
+                validate={validateError}
+                {...otherProps}
+            >
+                {renderField}
+            </FinalFormField>
+            {validateWarning && (
+                <FormSpy
+                    subscription={{ values: true }}
+                    onChange={async ({ values }) => {
+                        if (!setFieldData) {
+                            console.warn(
+                                `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
+                            );
+                            return;
+                        }
+
+                        currentWarningValidationRound.current++;
+                        const validationRound = currentWarningValidationRound.current;
+
+                        const warning = await Promise.resolve(validateWarning(values[name], values));
+
+                        if (currentWarningValidationRound.current > validationRound) {
+                            // Another validation has been started, skip this one
+                            return;
+                        }
+
+                        setFieldData(name, { warning });
+                    }}
+                />
+            )}
+        </>
+    );
 }

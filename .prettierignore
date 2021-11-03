@@ -6,3 +6,5 @@ package-lock.json
 lang/
 .watchmanconfig
 lib/
+lerna.json
+storybook-static

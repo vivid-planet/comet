@@ -1,2 +1,2 @@
-export * from "./DateRangePicker";
-export * from "./DatePicker";
+export { FinalFormDateRangePicker } from "./DateRangePicker";
+export { FinalFormDatePicker } from "./DatePicker";

@@ -1,7 +1,9 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import * as React from "react";
 import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 
+import { CancelButton } from "./common/buttons/cancel/CancelButton";
+import { SaveButton } from "./common/buttons/save/SaveButton";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
@@ -10,8 +12,8 @@ import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
 interface ITitle {
-    edit: string;
-    add: string;
+    edit: React.ReactNode;
+    add: React.ReactNode;
 }
 
 interface IProps {
@@ -30,7 +32,7 @@ const messages = defineMessages({
     },
 });
 
-export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi] {
+export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
 
     const openAddDialog = React.useCallback(
@@ -64,7 +66,7 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
         };
     }, [Selection, api, selection, selectionApi]);
 
-    return [EditDialogWithHookProps, selection, api];
+    return [EditDialogWithHookProps, selection, api, selectionApi];
 }
 
 interface IHookProps {
@@ -111,20 +113,14 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                         <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
                         <DialogContent>{children}</DialogContent>
                         <DialogActions>
-                            <Button onClick={handleCancelClick} color="primary">
-                                <Typography variant="button">
-                                    <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
-                                </Typography>
-                            </Button>
+                            <CancelButton onClick={handleCancelClick} />
                             <DirtyHandlerApiContext.Consumer>
                                 {(injectedDirtyHandlerApi) => {
                                     dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
                                     return (
-                                        <Button onClick={handleSaveClick} color="primary">
-                                            <Typography variant="button">
-                                                <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
-                                            </Typography>
-                                        </Button>
+                                        <SaveButton onClick={handleSaveClick}>
+                                            <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+                                        </SaveButton>
                                     );
                                 }}
                             </DirtyHandlerApiContext.Consumer>

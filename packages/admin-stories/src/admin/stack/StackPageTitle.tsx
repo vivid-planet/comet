@@ -1,8 +1,9 @@
-import { Stack, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import StoryRouter from "storybook-react-router";
+
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Page2() {
     const [counter, setCounter] = React.useState(0);
@@ -50,6 +51,7 @@ function Story() {
                 {counter}
             </button>
             <Stack topLevelTitle="Stack">
+                <StackBreadcrumbs />
                 <StackSwitch>
                     <StackPage name="page1">
                         <div>page1</div>
@@ -101,5 +103,5 @@ function App() {
 }
 
 storiesOf("@comet/admin/stack", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .add("Stack Page Title", () => <App />);

@@ -1,23 +1,9 @@
-import { ButtonBase } from "@material-ui/core";
-import { Clear as ClearIcon } from "@material-ui/icons";
 import * as React from "react";
-import { EditableInput } from "react-color/lib/components/common";
-import * as tinycolor from "tinycolor2";
+import EditableInput, { EditableInputProps } from "react-color/lib/components/common/EditableInput";
 
-import { IVPAdminColorPickerProps } from "./ColorPicker";
+import { ColorPickerProps } from "./ColorPicker";
 
-interface IComponentProps {
-    value: string;
-    onChange: (value?: string) => void;
-    picker: boolean;
-    palette: boolean;
-}
-
-interface IPickedColorProps {
-    value: string;
-}
-
-const resetedInputStyles = {
+const resetInputStyles = {
     input: {
         border: "inherit",
         outline: "inherit",
@@ -28,32 +14,29 @@ const resetedInputStyles = {
         margin: "inherit",
         cursor: "inherit",
         width: "100%",
+        "&::MsClear": {
+            display: "none",
+        },
     },
 };
 
-const PickedColor: React.FC<IPickedColorProps & IVPAdminColorPickerProps> = ({ value, classes }) => (
-    <div className={classes.pickedColorWrapper}>
-        {!value && <div className={classes.noColorStroke} />}
-        <div className={classes.pickedColorIndicator} style={{ background: value ? tinycolor(value).toHexString() : undefined }} />
-    </div>
-);
+interface Props extends ColorPickerProps {
+    value: string;
+    picker: boolean;
+    palette: boolean;
+    onChange: EditableInputProps["onChange"];
+}
 
-const HexInput: React.FC<IComponentProps & IVPAdminColorPickerProps> = ({ value, classes, onChange, picker, palette }) => (
-    <>
+export function HexInput({ value, classes, onChange, picker, palette }: Props) {
+    return (
         <div className={classes.inputInner}>
             <div className={classes.inputInnerLeftContent}>
-                <PickedColor value={value} classes={classes} />
                 {!palette || (palette && picker) ? (
-                    <EditableInput style={resetedInputStyles} value={value} onChange={onChange} />
+                    <EditableInput style={resetInputStyles} value={value} onChange={onChange} />
                 ) : (
                     <div className={classes.readOnlyInput}>{value.toUpperCase()}</div>
                 )}
             </div>
         </div>
-        <ButtonBase classes={{ root: classes.clearButton }} onClick={() => onChange("")}>
-            <ClearIcon className={classes.clearIcon} fontSize="small" />
-        </ButtonBase>
-    </>
-);
-
-export default HexInput;
+    );
+}

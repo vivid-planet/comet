@@ -1,0 +1,65 @@
+stages:
+    - lint
+    - i18n
+    - release
+
+before_script:
+    - npm ci --cache .npm --prefer-offline
+
+cache:
+    paths:
+        - ./.npm/
+
+.lint:
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:limit7-19
+    stage: lint
+    interruptible: true
+    only:
+        - master
+        - next
+        - external_pull_requests
+    tags:
+        - docker
+
+project-lint:
+    extends: .lint
+    script:
+        - npx prettier -c .
+
+packages-lint:
+    extends: .lint
+    script:
+        - npm run lint
+
+i18n:
+    stage: i18n
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:limit7-19
+    only:
+        - master
+    tags:
+        - docker
+    script:
+        - npm run intl:extract
+        - git clone https://github.com/vivid-planet/comet-admin-lang.git
+        - cp -r lang/* comet-admin-lang/
+        - cd comet-admin-lang
+        - git config user.email "vivid-planet-bot@vivid-planet.com"
+        - git add .
+        - if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for $CI_COMMIT_SHA" && git remote rm origin && git remote add origin https://vivid-planet-bot:${GH_TOKEN}@github.com/vivid-planet/comet-admin-lang.git && git push --set-upstream origin master; fi
+
+canary:
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:limit7-19
+    stage: release
+    tags:
+        - docker
+    only:
+        - main
+        - next
+    except:
+        variables:
+            - $CI_COMMIT_MESSAGE =~ /^chore\(release\)/
+    script:
+        - |
+            npm config set @comet:registry https://registry.npmjs.org/
+            npm config set -- '//registry.npmjs.org/:_authToken' $NPM_TOKEN
+        - npx lerna publish --yes --canary --preid canary --no-git-tag-version --no-push

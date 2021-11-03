@@ -1,45 +1,85 @@
-import { MenuItem } from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
+import { FormControl, MenuItem, Select, WithStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 
 import { IControlProps } from "../types";
-import * as sc from "./BlockTypesControls.sc";
-import useBlockTypes from "./useBlockTypes";
+import getRteTheme from "../utils/getRteTheme";
+import useBlockTypes, { BlockTypesApi } from "./useBlockTypes";
 
-export default function BlockTypesControls({
-    editorState,
-    setEditorState,
-    editorRef,
-    options: { supports: supportedThings, blocktypeMap, standardBlockType },
-    disabled,
-}: IControlProps) {
-    const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = useBlockTypes({
-        editorState,
-        setEditorState,
-        supportedThings,
-        blocktypeMap,
-        editorRef,
-    });
+interface Props extends IControlProps {
+    blockTypes: BlockTypesApi;
+}
 
-    if (!dropdownFeatures.length) {
-        return null;
-    }
+function BlockTypesControls({ disabled, blockTypes, classes }: Props & WithStyles<typeof styles>) {
+    const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
+
+    const blockTypesListItems: Array<{ name: string; label: React.ReactNode }> = dropdownFeatures.map((c) => ({ name: c.name, label: c.label }));
 
     return (
-        <FormControl>
-            <sc.Select disabled={disabled} value={activeDropdownBlockType} displayEmpty disableUnderline onChange={handleBlockTypeChange}>
-                {standardBlockType === "unstyled" && (
-                    <MenuItem value="unstyled" dense>
-                        <FormattedMessage id="cometAdmin.rte.controls.blockType.default" defaultMessage="Default" />
-                    </MenuItem>
-                )}
-                {dropdownFeatures.map((c) => (
+        <FormControl classes={{ root: classes.root }}>
+            <Select
+                classes={{ root: classes.select }}
+                disabled={disabled}
+                value={activeDropdownBlockType}
+                displayEmpty
+                disableUnderline
+                onChange={handleBlockTypeChange}
+            >
+                {blockTypesListItems.map((c) => (
                     <MenuItem key={c.name} value={c.name} dense>
                         {c.label}
                     </MenuItem>
                 ))}
-            </sc.Select>
+            </Select>
         </FormControl>
     );
+}
+
+export type RteBlockTypeControlsClassKey = "root" | "select";
+
+const styles = (theme: Theme) => {
+    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+
+    return createStyles<RteBlockTypeControlsClassKey, Props>({
+        root: {
+            "& [class*='MuiInputBase-root']": {
+                backgroundColor: "transparent",
+                height: "auto",
+                border: "none",
+            },
+            "& [class*='MuiSelect-icon']": {
+                top: "auto",
+                color: "inherit",
+            },
+        },
+        select: {
+            color: rteTheme.colors.buttonIcon,
+            minWidth: 180,
+            lineHeight: "24px",
+            fontSize: 14,
+            padding: 0,
+        },
+    });
+};
+
+const StyledBlockTypesControls = withStyles(styles, { name: "CometAdminRteBlockTypeControls" })(BlockTypesControls);
+
+// If there are no dropdown-features, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
+export default (p: IControlProps) => {
+    const { editorState, setEditorState, editorRef, options } = p;
+    const { supports: supportedThings, blocktypeMap, standardBlockType } = options;
+    const blockTypes = useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef, standardBlockType });
+
+    if (!blockTypes.dropdownFeatures.length) {
+        return null;
+    }
+
+    return <StyledBlockTypesControls {...p} blockTypes={blockTypes} />;
+};
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminRteBlockTypeControls: RteBlockTypeControlsClassKey;
+    }
 }

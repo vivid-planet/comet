@@ -1,14 +1,20 @@
+import { gql } from "@apollo/client";
 import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
+    MainContent,
     Table,
     TableQuery,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
     useExportPagedTableQuery,
     useTableQuery,
     useTableQueryPaging,
 } from "@comet/admin";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import gql from "graphql-tag";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
@@ -84,31 +90,40 @@ function Story() {
         <TableQuery api={api} loading={loading} error={error}>
             {tableData && (
                 <>
-                    <ExcelExportButton exportApi={exportApi} />
-
-                    <Table
-                        exportApis={[exportApi]}
-                        {...tableData}
-                        columns={[
-                            {
-                                name: "thumbnailUrl",
-                                header: "Thumbnail",
-                                sortable: true,
-                                render: (row: IPhoto) => {
-                                    return <img src={row.thumbnailUrl} />;
+                    <Toolbar>
+                        <ToolbarItem>
+                            <Typography variant={"h3"}>Export All Pages</Typography>
+                        </ToolbarItem>
+                        <ToolbarFillSpace />
+                        <ToolbarActions>
+                            <ExcelExportButton exportApi={exportApi} />
+                        </ToolbarActions>
+                    </Toolbar>
+                    <MainContent>
+                        <Table
+                            exportApis={[exportApi]}
+                            {...tableData}
+                            columns={[
+                                {
+                                    name: "thumbnailUrl",
+                                    header: "Thumbnail",
+                                    sortable: true,
+                                    render: (row: IPhoto) => {
+                                        return <img src={row.thumbnailUrl} />;
+                                    },
+                                    headerExcel: "Thumbnail Url",
+                                    renderExcel: (row: IPhoto) => {
+                                        return row.thumbnailUrl;
+                                    },
                                 },
-                                headerExcel: "Thumbnail Url",
-                                renderExcel: (row: IPhoto) => {
-                                    return row.thumbnailUrl;
+                                {
+                                    name: "title",
+                                    header: "Title",
+                                    sortable: true,
                                 },
-                            },
-                            {
-                                name: "title",
-                                header: "Title",
-                                sortable: true,
-                            },
-                        ]}
-                    />
+                            ]}
+                        />
+                    </MainContent>
                 </>
             )}
         </TableQuery>

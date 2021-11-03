@@ -1,19 +1,37 @@
 {
     "name": "@comet/admin",
-    "version": "1.3.0",
+    "version": "2.0.0-alpha.11",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin"
+    },
     "dependencies": {
+        "@material-ui/lab": "^4.0.0-alpha.57",
+        "@comet/admin-icons": "^2.0.0-alpha.11",
         "debounce": "^1.2.0",
+        "final-form-set-field-data": "^1.0.2",
         "lodash.isequal": "^4.5.0",
         "query-string": "^6.8.1",
-        "react-dnd": "^8.0.3",
-        "react-dnd-html5-backend": "^8.0.3",
         "use-constant": "^1.0.0",
-        "uuid": "^3.3.2"
+        "uuid": "^3.3.2",
+        "clsx": "^1.1.1"
+    },
+    "devDependencies": {
+        "@types/debounce": "^1.2.0",
+        "@types/file-saver": "^2.0.1",
+        "@types/final-form-set-field-data": "^1.0.0",
+        "@types/lodash.isequal": "^4.5.5",
+        "@types/react-dom": "^16.9.11",
+        "@types/react-router": "^5.1.12",
+        "@types/react-router-dom": "^5.1.7",
+        "@types/styled-components": "^5.1.7",
+        "jss": "^10.6.0"
     },
     "peerDependencies": {
         "@apollo/client": "^3.2.5",
@@ -28,19 +46,27 @@
         "react": "^16.8",
         "react-dom": "^16.8",
         "react-final-form": "^6.3.1",
+        "react-dnd": "^14.0.2",
         "react-intl": "^5.10.0",
         "react-router": "^5.1.2",
         "react-router-dom": "^5.1.2",
         "styled-components": "^4.0.0 || ^5.0.0"
     },
+    "peerDependenciesMeta": {
+        "react-dnd": {
+            "optional": true
+        }
+    },
     "scripts": {
         "prebuild": "rimraf lib",
         "build": "tsc --project ./tsconfig.json",
-        "start": "tsc --project ./tsconfig.json --watch",
+        "prestart": "rimraf lib",
+        "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
         "prepare": "npm run build",
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
+        "registry": "https://registry.npmjs.org",
         "access": "public"
     },
     "license": "BSD-2-Clause"

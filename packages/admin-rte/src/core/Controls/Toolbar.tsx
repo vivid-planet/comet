@@ -1,13 +1,16 @@
+import { WithStyles } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
 import { IControlProps } from "../types";
-import * as sc from "./Toolbar.sc";
+import getRteTheme from "../utils/getRteTheme";
 
 interface IProps extends IControlProps {
     children: Array<(p: IControlProps) => JSX.Element | null>;
 }
 
-export default function Toolbar({ children, ...rest }: IProps) {
+const Toolbar: React.FC<IProps & WithStyles<typeof styles>> = ({ children, classes, ...rest }) => {
     const childrenElements = children
         .filter((c) => {
             const Comp = c;
@@ -19,10 +22,77 @@ export default function Toolbar({ children, ...rest }: IProps) {
         });
 
     return (
-        <sc.Root>
+        <div className={classes.root}>
             {childrenElements.map((c, idx) => {
-                return <sc.ToolbarSlot key={idx}>{c}</sc.ToolbarSlot>;
+                return (
+                    <div key={idx} className={classes.slot}>
+                        {c}
+                    </div>
+                );
             })}
-        </sc.Root>
+        </div>
     );
+};
+
+export type RteToolbarClassKey = "root" | "slot";
+
+const styles = (theme: Theme) => {
+    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+
+    return createStyles<RteToolbarClassKey, IProps>({
+        root: {
+            position: "sticky",
+            top: 0,
+            zIndex: 2,
+            display: "flex",
+            flexWrap: "wrap",
+            borderTop: `1px solid ${rteTheme.colors.border}`,
+            backgroundColor: rteTheme.colors.toolbarBackground,
+            paddingLeft: 6,
+            paddingRight: 6,
+            overflow: "hidden",
+        },
+        slot: {
+            position: "relative",
+            flexShrink: 0,
+            flexGrow: 0,
+            height: 34,
+            boxSizing: "border-box",
+            paddingTop: 5,
+            paddingBottom: 5,
+            paddingRight: 6,
+            marginRight: 5,
+            "&::before, &::after": {
+                content: "''",
+                position: "absolute",
+                backgroundColor: rteTheme.colors.border,
+            },
+            "&::before": {
+                bottom: 0,
+                height: 1,
+                left: "-100vw",
+                right: "-100vw",
+            },
+            "&::after": {
+                top: 8,
+                right: 0,
+                bottom: 8,
+                width: 1,
+            },
+            "&:last-child": {
+                marginRight: 0,
+            },
+            "&:last-child::after": {
+                display: "none",
+            },
+        },
+    });
+};
+
+export default withStyles(styles, { name: "CometAdminRteToolbar" })(Toolbar);
+
+declare module "@material-ui/core/styles/overrides" {
+    interface ComponentNameToClassKey {
+        CometAdminRteToolbar: RteToolbarClassKey;
+    }
 }

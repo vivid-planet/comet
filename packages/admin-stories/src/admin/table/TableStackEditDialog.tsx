@@ -1,11 +1,27 @@
-import { EditDialog, Field, FinalForm, FinalFormTextField, IEditDialogApi, Selected, Stack, StackPage, StackSwitch, Table } from "@comet/admin";
-import { Button, IconButton, Toolbar, Typography } from "@material-ui/core";
-import { Add as AddIcon, Edit as EditIcon } from "@material-ui/icons";
+import {
+    EditDialog,
+    Field,
+    FinalForm,
+    FinalFormInput,
+    IEditDialogApi,
+    MainContent,
+    Selected,
+    Stack,
+    StackPage,
+    StackSwitch,
+    Table,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+} from "@comet/admin";
+import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
+import { Button, IconButton, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import StoryRouter from "storybook-react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 interface IExampleRow {
     id: number;
@@ -26,7 +42,7 @@ function EditForm(props: IEditFormProps) {
                 alert(JSON.stringify(values));
             }}
         >
-            <Field name="foo" component={FinalFormTextField} type="text" label="Name" />
+            <Field name="foo" component={FinalFormInput} type="text" label="Name" fullWidth />
         </FinalForm>
     );
 }
@@ -41,49 +57,57 @@ function Story() {
 
     return (
         <>
-            <p>This story uses a Stack plus an EditDialog</p>
             <Stack topLevelTitle="Stack">
                 <StackSwitch>
                     <StackPage name="table">
                         <Toolbar>
-                            <Button
-                                color="default"
-                                endIcon={<AddIcon />}
-                                onClick={(ev) => {
-                                    editDialog.current?.openAddDialog();
-                                }}
-                            >
-                                <Typography variant="button">Hinzufügen</Typography>
-                            </Button>
+                            <ToolbarItem>
+                                <Typography variant={"h3"}>Table Stack Edit Dialog</Typography>
+                            </ToolbarItem>
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <Button
+                                    color="primary"
+                                    variant={"contained"}
+                                    startIcon={<AddIcon />}
+                                    onClick={(ev) => {
+                                        editDialog.current?.openAddDialog();
+                                    }}
+                                >
+                                    Add
+                                </Button>
+                            </ToolbarActions>
                         </Toolbar>
 
-                        <Table
-                            data={data}
-                            totalCount={data.length}
-                            columns={[
-                                {
-                                    name: "foo",
-                                    header: "Foo",
-                                },
-                                {
-                                    name: "bar",
-                                    header: "Bar",
-                                },
-                                {
-                                    name: "edit",
-                                    header: "Edit",
-                                    render: (row) => (
-                                        <IconButton
-                                            onClick={(ev) => {
-                                                editDialog.current?.openEditDialog(String(row.id));
-                                            }}
-                                        >
-                                            <EditIcon />
-                                        </IconButton>
-                                    ),
-                                },
-                            ]}
-                        />
+                        <MainContent>
+                            <Table
+                                data={data}
+                                totalCount={data.length}
+                                columns={[
+                                    {
+                                        name: "foo",
+                                        header: "Foo",
+                                    },
+                                    {
+                                        name: "bar",
+                                        header: "Bar",
+                                    },
+                                    {
+                                        name: "edit",
+                                        header: "Edit",
+                                        render: (row) => (
+                                            <IconButton
+                                                onClick={(ev) => {
+                                                    editDialog.current?.openEditDialog(String(row.id));
+                                                }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        ),
+                                    },
+                                ]}
+                            />
+                        </MainContent>
                     </StackPage>
                     <StackPage name="form" title="bearbeiten">
                         edit....
@@ -102,11 +126,12 @@ function Story() {
                     </>
                 )}
             </EditDialog>
+            <p>This story uses a Stack plus an EditDialog</p>
         </>
     );
 }
 
 storiesOf("@comet/admin/table", module)
-    .addDecorator(StoryRouter())
+    .addDecorator(storyRouterDecorator())
     .addDecorator(apolloStoryDecorator())
     .add("Stack+EditDialog", () => <Story />);

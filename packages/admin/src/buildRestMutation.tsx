@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 export function buildUpdateRestMutation(options: { type: string; path: string; responseFragment: any }) {
     const { type, path, responseFragment } = options;

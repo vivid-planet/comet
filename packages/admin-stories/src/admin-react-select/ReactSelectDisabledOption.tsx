@@ -1,24 +1,24 @@
+import { FormSection } from "@comet/admin";
 import { ReactSelect } from "@comet/admin-react-select";
-import { Button, ListItem, Typography } from "@material-ui/core";
+import { Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-function Story() {
-    const options = [
-        { value: "chocolate", label: "Chocolate" },
-        { value: "strawberry", label: "Strawberry", isDisabled: true },
-        { value: "vanilla", label: "Vanilla" },
-    ];
-    return (
-        <div style={{ width: "300px" }}>
-            <ListItem>
-                <Button component={"button"} disableTouchRipple>
-                    <Typography variant="button">blah</Typography>
-                </Button>
-            </ListItem>
+const options = [
+    { value: "chocolate", label: "Chocolate" },
+    { value: "strawberry", label: "Strawberry", isDisabled: true },
+    { value: "vanilla", label: "Vanilla" },
+];
 
-            <ReactSelect options={options} />
-        </div>
+function Story() {
+    return (
+        <Card variant="outlined" style={{ width: 400 }}>
+            <CardContent>
+                <FormSection title="React Select Disabled Option" disableMarginBottom>
+                    <ReactSelect options={options} />
+                </FormSection>
+            </CardContent>
+        </Card>
     );
 }
 

@@ -1,34 +1,27 @@
-import { Button, Typography } from "@material-ui/core";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import * as history from "history";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 import { Route, RouteComponentProps } from "react-router";
 
 import { DirtyHandler } from "../DirtyHandler";
 import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
-import { Breadcrumbs } from "../mui";
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
-import * as sc from "./Stack.sc";
 
-export const StackBreadcrumbsContainer = sc.BreadcrumbsContainer;
-
-interface ISortNode {
+interface SortNode {
     id: string;
     parentId: string;
 }
 
-interface ISortTree<TSortNode extends ISortNode> {
-    children: Array<ISortTree<TSortNode>>;
+interface SortTree<TSortNode extends SortNode> {
+    children: Array<SortTree<TSortNode>>;
     node?: TSortNode; // root is undefined
 }
 
-const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
+const sortByParentId = <TSortNode extends SortNode>(nodes: TSortNode[]) => {
     // first build a tree structure
     const addChildrenToNode = (node?: TSortNode) => {
         const currentNodeId = node ? node.id : "";
-        const sortTreeNode: ISortTree<TSortNode> = {
+        const sortTreeNode: SortTree<TSortNode> = {
             node,
             children: [],
         };
@@ -42,7 +35,7 @@ const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
     const tree = addChildrenToNode(undefined);
 
     // then traverse this tree
-    const preOrderTraverse = (sortTreeNode: ISortTree<TSortNode>, fn: (node: TSortNode) => void) => {
+    const preOrderTraverse = (sortTreeNode: SortTree<TSortNode>, fn: (node: TSortNode) => void) => {
         if (sortTreeNode.node) fn(sortTreeNode.node);
         sortTreeNode.children.forEach((e) => {
             preOrderTraverse(e, fn);
@@ -57,35 +50,34 @@ const sortByParentId = <TSortNode extends ISortNode>(nodes: TSortNode[]) => {
     return ret;
 };
 
-interface IProps {
+interface StackProps {
     topLevelTitle: React.ReactNode;
-    showBackButton?: boolean;
-    showBreadcrumbs?: boolean;
-    components?: {
-        breadcrumbsContainer?: React.ComponentType;
-    };
 }
-interface IBreadcrumbItem {
+
+export interface BreadcrumbItem {
     id: string;
     parentId: string;
     url: string;
     title: React.ReactNode;
     invisible: boolean;
 }
-interface ISwitchItem {
+
+export interface SwitchItem {
     id: string;
     parentId: string;
     isInitialPageActive: boolean;
     activePage?: string;
 }
+
 interface IState {
-    breadcrumbs: IBreadcrumbItem[];
-    switches: ISwitchItem[];
+    breadcrumbs: BreadcrumbItem[];
+    switches: SwitchItem[];
 }
-export class Stack extends React.Component<IProps, IState> {
+
+export class Stack extends React.Component<StackProps, IState> {
     private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
-    constructor(props: IProps) {
+    constructor(props: StackProps) {
         super(props);
         this.state = {
             breadcrumbs: [],
@@ -95,10 +87,7 @@ export class Stack extends React.Component<IProps, IState> {
 
     public render() {
         const breadcrumbs = this.getVisibleBreadcrumbs();
-        const BreadcrumbsContainer =
-            this.props.components && this.props.components.breadcrumbsContainer
-                ? this.props.components.breadcrumbsContainer
-                : sc.BreadcrumbsContainer;
+
         return (
             <StackApiContext.Provider
                 value={{
@@ -111,38 +100,22 @@ export class Stack extends React.Component<IProps, IState> {
                     addSwitchMeta: this.addSwitchMeta,
                     removeSwitchMeta: this.removeSwitchMeta,
                     switches: sortByParentId(this.state.switches),
+                    breadCrumbs: breadcrumbs,
                 }}
             >
                 <Route>
                     {(routerProps: RouteComponentProps<any>) => {
-                        const { showBreadcrumbs = true } = this.props;
+                        const { topLevelTitle, children } = this.props;
                         this.history = routerProps.history;
                         return (
                             <>
-                                {showBreadcrumbs && (
-                                    <BreadcrumbsContainer>
-                                        <Breadcrumbs pages={breadcrumbs} />
-                                    </BreadcrumbsContainer>
-                                )}
-                                {this.props.showBackButton && (
-                                    <Button
-                                        color="default"
-                                        disabled={breadcrumbs.length <= 1}
-                                        onClick={this.handleGoBackClick}
-                                        endIcon={<ArrowBackIcon />}
-                                    >
-                                        <Typography variant="button">
-                                            <FormattedMessage id="cometAdmin.generic.back" defaultMessage="Back" />
-                                        </Typography>
-                                    </Button>
-                                )}
-                                <StackBreadcrumb title={this.props.topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
+                                <StackBreadcrumb title={topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
                                     <DirtyHandler
                                         ref={(ref) => {
                                             this.dirtyHandlerApi = ref ? ref.dirtyHandlerApi : undefined;
                                         }}
                                     >
-                                        {this.props.children}
+                                        {children}
                                     </DirtyHandler>
                                 </StackBreadcrumb>
                             </>
@@ -154,7 +127,7 @@ export class Stack extends React.Component<IProps, IState> {
     }
 
     private getVisibleBreadcrumbs() {
-        let prev: IBreadcrumbItem;
+        let prev: BreadcrumbItem;
         const breadcrumbs = sortByParentId(this.state.breadcrumbs)
             .map((i) => {
                 return { ...i }; // clone so we can modify in filter below
@@ -169,10 +142,6 @@ export class Stack extends React.Component<IProps, IState> {
             });
         return breadcrumbs;
     }
-
-    private handleGoBackClick = () => {
-        this.goBack();
-    };
 
     private goBack() {
         const breadcrumbs = this.getVisibleBreadcrumbs();

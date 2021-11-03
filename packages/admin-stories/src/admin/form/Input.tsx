@@ -1,18 +1,23 @@
 import { Field, FinalFormInput } from "@comet/admin";
+import { Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
 function Story() {
     return (
-        <div style={{ width: "300px" }}>
+        <div style={{ width: 300 }}>
             <Form
                 onSubmit={(values) => {
                     //
                 }}
                 render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
-                        <Field name="name" label="Foo" component={FinalFormInput} />
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Field name="name" label="Foo" component={FinalFormInput} fullWidth />
+                            </CardContent>
+                        </Card>
                     </form>
                 )}
             />

@@ -1,4 +1,15 @@
-import { ExcelExportButton, IRow, Table, useExportDisplayedTableData } from "@comet/admin";
+import {
+    ExcelExportButton,
+    IRow,
+    MainContent,
+    Table,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+    useExportDisplayedTableData,
+} from "@comet/admin";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -28,43 +39,54 @@ function Story() {
 
     return (
         <>
-            <ExcelExportButton exportApi={exportApi} />
-            <Table
-                exportApis={[exportApi]}
-                data={data}
-                totalCount={data.length}
-                columns={[
-                    {
-                        name: "foo1",
-                        header: "Foo1", // if header is a string -> excel export can export header
-                    },
-                    {
-                        name: "foo2",
-                        header: "Expo",
-                        render: (row) => <strong>{row.id}</strong>,
-                        renderExcel: (row) => row.id.toString(), // HTML Nodes / React Nodes (from above render) can not be exported to excel -> use renderExcel to generate an exportable string
-                    },
-                    {
-                        name: "bar",
-                        visible: false, // hidden columns will be exported hidden
-                    },
-                    {
-                        name: "currency",
-                        header: "Currency",
-                        formatForExcel: `#,##0.00 "€";[Red]"-"#,##0.00" €"`,
-                    },
-                    {
-                        name: "nestedFoo.foo",
-                        header: "Nested foo",
-                    },
-                    {
-                        name: "customheader",
-                        header: <CustomHeader>Custom Header</CustomHeader>,
-                        headerExcel: "Overrided Excel Export Header", // HTML Nodes / React Nodes (from above header) can not be exported to excel -> use headerExcel to set an exportable column header
-                        render: (row) => "Custom Row Content", // if render returns a string -> excel export can export this string
-                    },
-                ]}
-            />
+            <Toolbar>
+                <ToolbarItem>
+                    <Typography variant={"h3"}>Export Displayed Table Data</Typography>
+                </ToolbarItem>
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <ExcelExportButton exportApi={exportApi} />
+                </ToolbarActions>
+            </Toolbar>
+
+            <MainContent>
+                <Table
+                    exportApis={[exportApi]}
+                    data={data}
+                    totalCount={data.length}
+                    columns={[
+                        {
+                            name: "foo1",
+                            header: "Foo1", // if header is a string -> excel export can export header
+                        },
+                        {
+                            name: "foo2",
+                            header: "Expo",
+                            render: (row) => <strong>{row.id}</strong>,
+                            renderExcel: (row) => row.id.toString(), // HTML Nodes / React Nodes (from above render) can not be exported to excel -> use renderExcel to generate an exportable string
+                        },
+                        {
+                            name: "bar",
+                            visible: false, // hidden columns will be exported hidden
+                        },
+                        {
+                            name: "currency",
+                            header: "Currency",
+                            formatForExcel: `#,##0.00 "€";[Red]"-"#,##0.00" €"`,
+                        },
+                        {
+                            name: "nestedFoo.foo",
+                            header: "Nested foo",
+                        },
+                        {
+                            name: "customheader",
+                            header: <CustomHeader>Custom Header</CustomHeader>,
+                            headerExcel: "Overrided Excel Export Header", // HTML Nodes / React Nodes (from above header) can not be exported to excel -> use headerExcel to set an exportable column header
+                            render: (row) => "Custom Row Content", // if render returns a string -> excel export can export this string
+                        },
+                    ]}
+                />
+            </MainContent>
         </>
     );
 }

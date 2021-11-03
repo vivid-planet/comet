@@ -1,7 +1,9 @@
 import { TableDndOrder, TableLocalChanges } from "@comet/admin";
-import { Button, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
+
+import { dndProviderDecorator } from "../../dnd.decorator";
 
 interface IRow {
     id: string; // TODO add support for number in TableLocalChanges
@@ -48,7 +50,7 @@ function Story() {
                             tableLocalChangesApi.submitLocalDataChanges();
                         }}
                     >
-                        <Typography variant="button">Submit</Typography>
+                        Submit
                     </Button>
                 </>
             )}
@@ -56,4 +58,6 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module).add("DnD Order", () => <Story />);
+storiesOf("@comet/admin/table", module)
+    .addDecorator(dndProviderDecorator())
+    .add("DnD Order", () => <Story />);
