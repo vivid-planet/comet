@@ -3,12 +3,14 @@ import {
     FieldContainer,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormMultiSelect,
     FinalFormRadio,
     FinalFormSearchTextField,
     FinalFormSelect,
     FinalFormSwitch,
 } from "@comet/admin";
-import { Button, Card, CardContent, FormControlLabel, MenuItem } from "@material-ui/core";
+import { ChevronDown } from "@comet/admin-icons";
+import { Box, Button, Card, CardContent, Collapse, FormControlLabel, FormLabel, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -19,6 +21,8 @@ function Story() {
         { value: "strawberry", label: "Strawberry" },
         { value: "vanilla", label: "Vanilla" },
     ];
+
+    const [open, setOpen] = React.useState<boolean>(false);
 
     return (
         <div style={{ width: "500px" }}>
@@ -65,6 +69,45 @@ function Story() {
                                             </FinalFormSelect>
                                         )}
                                     </Field>
+                                    <Box style={{ marginBottom: "10px" }}>
+                                        <FormLabel>MultiSelect</FormLabel>
+                                        <Box
+                                            onClick={() => setOpen(!open)}
+                                            style={{
+                                                minWidth: "100px",
+                                                minHeight: "38px",
+                                                border: "1px solid #D9D9D9",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                                display: "flex",
+                                                padding: "9px 32px 9px 9px",
+                                                boxSizing: "border-box",
+                                                position: "relative",
+                                                borderRadius: "2px",
+                                                marginBottom: "2px",
+                                            }}
+                                        >
+                                            <Box style={{ lineHeight: "20px" }}>
+                                                {values.multiSelect && values.multiSelect.map((value: string) => `${value}, `)}
+                                            </Box>
+                                            <Box
+                                                style={{
+                                                    position: "absolute",
+                                                    right: "13px",
+                                                    top: "13px",
+                                                    width: "12px",
+                                                    height: "12px",
+                                                    fontSize: "12px",
+                                                }}
+                                            >
+                                                <ChevronDown fontSize={"inherit"} />
+                                            </Box>
+                                        </Box>
+                                        <Collapse in={open} style={{ border: "1px solid #D9D9D9", borderRadius: "2px" }}>
+                                            <Field name="multiSelect" fullWidth component={FinalFormMultiSelect} options={options} />
+                                        </Collapse>
+                                    </Box>
+
                                     <Field name="switch" label="FinalFormSwitch" fullWidth>
                                         {(props) => (
                                             <FormControlLabel label={values.switch ? "On" : "Off"} control={<FinalFormSwitch {...props} />} />
