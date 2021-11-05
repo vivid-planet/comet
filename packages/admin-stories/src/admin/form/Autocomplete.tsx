@@ -1,62 +1,65 @@
+import { Field, FinalFormAutocomplete, FinalFormSelect, useAsyncOptionsProps } from "@comet/admin";
 import { Button, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
-import { Autocomplete, Field, useAutocompleteAsyncProps } from "@comet/admin";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-interface IOption {
-    id: string;
+interface Option {
+    value: string;
     label: string;
 }
 
-const options: IOption[] = [
-    { id: "chocolate", label: "Chocolate" },
-    { id: "strawberry", label: "Strawberry" },
-    { id: "vanilla", label: "Vanilla" },
+const options: Option[] = [
+    { value: "chocolate", label: "Chocolate" },
+    { value: "strawberry", label: "Strawberry" },
+    { value: "vanilla", label: "Vanilla" },
 ];
 
-const AutocompleteField = () => {
-    return <Field name="flavor" label="Flavor" optionValue="id" optionLabel="label" component={Autocomplete} options={options} />;
-};
-
-const AutocompleteAsyncField = () => {
-    const autocompleteAsyncProps = useAutocompleteAsyncProps<IOption>(async () => {
-        return new Promise((resolve) => setTimeout(() => resolve(options), 500));
-    });
-    return (
-        <Field
-            name="flavorAsync"
-            label="Flavor (async)"
-            getOptionSelected={(option: IOption, value: IOption) => option.id === value.id}
-            getOptionLabel={(option: IOption) => option.label}
-            component={Autocomplete}
-            {...autocompleteAsyncProps}
-        />
-    );
+const initialValues = {
+    autocomplete: options[1],
+    autocompleteAsync: options[1],
+    select: options[1],
+    selectAsync: options[1],
 };
 
 function Story() {
+    const acAsyncProps = useAsyncOptionsProps<Option>(async () => {
+        return new Promise((resolve) => setTimeout(() => resolve(options), 500));
+    });
+    const selectAsyncProps = useAsyncOptionsProps<Option>(async () => {
+        return new Promise((resolve) => setTimeout(() => resolve(options), 500));
+    });
     return (
-        <div style={{ width: "300px" }}>
-            <Form
-                mode="edit"
-                onSubmit={(values) => {
-                    alert(JSON.stringify(values));
-                }}
-                initialValues={{
-                    flavor: options[0],
-                    flavorAsync: options[1],
-                }}
-                render={({ handleSubmit }) => (
-                    <form onSubmit={handleSubmit}>
-                        <AutocompleteField />
-                        <AutocompleteAsyncField />
-                        <Button color="primary" variant="contained" type="submit" component="button" disableTouchRipple>
-                            <Typography variant="button">Submit</Typography>
-                        </Button>
-                    </form>
-                )}
-            />
+        <div style={{ maxWidth: "800px" }}>
+            <p>
+                FinalFormAutocomplete provides a select with a search field. It can also be used asynchronously with the useAsyncOptionsProps-Hook. It
+                expects the value to be an object to be able to display the current value without having to load the async options.
+            </p>
+            <p>
+                Furthermore FinalFormSelect can also be used like FinalFormAutocomplete (e.g. when no search field is needed). If an options-prop or
+                the props from the useAsyncOptionsProps-Hook are passed FinalFormSelect automatically renders the options by itself and uses objects
+                as values - just like Autocomplete.
+            </p>
+            <div style={{ width: "300px" }}>
+                <Form
+                    mode="edit"
+                    onSubmit={(values) => {
+                        alert(JSON.stringify(values, null, 4));
+                    }}
+                    initialValues={initialValues}
+                    render={({ handleSubmit }) => (
+                        <form onSubmit={handleSubmit}>
+                            <Field component={FinalFormAutocomplete} options={options} name="autocomplete" label="Autocomplete" fullWidth />
+                            <Field component={FinalFormAutocomplete} {...acAsyncProps} name="autocompleteAsync" label="AutocompleteAsync" fullWidth />
+                            <Field component={FinalFormSelect} options={options} name="select" label="Select" fullWidth />
+                            <Field component={FinalFormSelect} {...selectAsyncProps} name="selectAsync" label="SelectAsync" fullWidth />
+                            <Button color="primary" variant="contained" type="submit" component="button" disableTouchRipple>
+                                <Typography variant="button">Submit</Typography>
+                            </Button>
+                        </form>
+                    )}
+                />
+            </div>
         </div>
     );
 }
