@@ -64,4 +64,4 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module).add("Autocomplete", () => <Story />);
+storiesOf("@comet/admin/form", module).add("Autocomplete / Async Select", () => <Story />);
