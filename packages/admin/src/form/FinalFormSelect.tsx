@@ -28,13 +28,13 @@ export const FinalFormSelect = <T extends Record<string, any>>({
 
     return (
         <Select {...rest} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
-            {options.length === 0 && value /* @ts-ignore - necessary to load object into value */ && (
-                <MenuItem value={value} key={JSON.stringify(value)}>
+            {!loading && options.length === 0 && value && (
+                <MenuItem value={value as any} key={JSON.stringify(value)}>
                     {getOptionLabel(value)}
                 </MenuItem>
             )}
-            {options.map((option: T) /* @ts-ignore - necessary to load object into value */ => (
-                <MenuItem value={option} key={JSON.stringify(option)}>
+            {options.map((option: T) => (
+                <MenuItem value={option as any} key={JSON.stringify(option)}>
                     {getOptionLabel(option)}
                 </MenuItem>
             ))}
