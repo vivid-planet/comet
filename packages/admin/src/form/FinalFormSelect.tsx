@@ -14,7 +14,6 @@ export const FinalFormSelect = <T extends Record<string, any>>({
     meta,
     optionLabelKey = "label",
     options = null,
-    isAsync = false,
     loading = false,
     ...rest
 }: FinalFormSelectProps<T> & Omit<SelectProps, "input">) => {

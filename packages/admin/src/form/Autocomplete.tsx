@@ -16,7 +16,6 @@ export const FinalFormAutocomplete = <
     input: { onChange, value, ...restInput },
     optionLabelKey = "label",
     loading = false,
-    isAsync = false,
     ...rest
 }: Props<T> & Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput">) => {
     return (
