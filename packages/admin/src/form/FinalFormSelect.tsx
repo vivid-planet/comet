@@ -6,27 +6,25 @@ import { FieldRenderProps } from "react-final-form";
 import { Select } from "./Select";
 
 interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
-    optionLabelKey?: keyof T;
+    getOptionLabel?: (option: T) => string;
 }
 
 export const FinalFormSelect = <T extends Record<string, any>>({
     input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
     meta,
-    optionLabelKey = "label",
     options = null,
     loading = false,
+    getOptionLabel = (option: T) => {
+        if (typeof option === "object") {
+            console.error(`The \`getOptionLabel\` method of FinalFormSelect returned an object instead of a string for${JSON.stringify(option)}.`);
+        }
+        return "";
+    },
     ...rest
 }: FinalFormSelectProps<T> & Omit<SelectProps, "input">) => {
     if (options === null) {
         return <Select {...rest} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur} />;
     }
-
-    const getOptionLabel = (option: T) => {
-        if (!optionLabelKey || option[optionLabelKey] === undefined) {
-            throw new Error(`"${optionLabelKey}" is not a key in the options-prop, please set the prop "optionLabelKey" accordingly.`);
-        }
-        return option[optionLabelKey].toString();
-    };
 
     return (
         <Select {...rest} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>

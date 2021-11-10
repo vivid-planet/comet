@@ -49,10 +49,38 @@ function Story() {
                     initialValues={initialValues}
                     render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
-                            <Field component={FinalFormAutocomplete} options={options} name="autocomplete" label="Autocomplete" fullWidth />
-                            <Field component={FinalFormAutocomplete} {...acAsyncProps} name="autocompleteAsync" label="AutocompleteAsync" fullWidth />
-                            <Field component={FinalFormSelect} options={options} name="select" label="Select" fullWidth />
-                            <Field component={FinalFormSelect} {...selectAsyncProps} name="selectAsync" label="SelectAsync" fullWidth />
+                            <Field
+                                component={FinalFormAutocomplete}
+                                getOptionLabel={(option: Option) => option.label}
+                                options={options}
+                                name="autocomplete"
+                                label="Autocomplete"
+                                fullWidth
+                            />
+                            <Field
+                                component={FinalFormAutocomplete}
+                                {...acAsyncProps}
+                                getOptionLabel={(option: Option) => option.label}
+                                name="autocompleteAsync"
+                                label="AutocompleteAsync"
+                                fullWidth
+                            />
+                            <Field
+                                component={FinalFormSelect}
+                                getOptionLabel={(option: Option) => option.label}
+                                options={options}
+                                name="select"
+                                label="Select"
+                                fullWidth
+                            />
+                            <Field
+                                component={FinalFormSelect}
+                                getOptionLabel={(option: Option) => option.label}
+                                {...selectAsyncProps}
+                                name="selectAsync"
+                                label="SelectAsync"
+                                fullWidth
+                            />
                             <Button color="primary" variant="contained" type="submit" component="button" disableTouchRipple>
                                 <Typography variant="button">Submit</Typography>
                             </Button>
