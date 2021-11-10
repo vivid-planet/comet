@@ -4,8 +4,7 @@ import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
 interface Props<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
-    optionValue?: keyof T;
-    optionLabel?: keyof T;
+    optionLabelKey?: keyof T;
 }
 
 export const FinalFormAutocomplete = <
@@ -15,8 +14,7 @@ export const FinalFormAutocomplete = <
     FreeSolo extends boolean | undefined,
 >({
     input: { onChange, value, ...restInput },
-    optionLabel = "label",
-    optionValue = "value",
+    optionLabelKey = "label",
     loading = false,
     isAsync = false,
     ...rest
@@ -25,10 +23,13 @@ export const FinalFormAutocomplete = <
         <Autocomplete
             getOptionSelected={(option: T, value: T) => {
                 if (!value) return false;
-                return optionValue ? option[optionValue] === value[optionValue] : option === value;
+                return option === value;
             }}
             getOptionLabel={(option: T) => {
-                return optionLabel && option[optionLabel] !== undefined ? option[optionLabel].toString() : "--unknown--";
+                if (!optionLabelKey || option[optionLabelKey] === undefined) {
+                    throw new Error(`"${optionLabelKey}" is not a key in the options-prop, please set the prop "optionLabelKey" accordingly.`);
+                }
+                return option[optionLabelKey].toString();
             }}
             onChange={(_e, option) => {
                 onChange(option);
