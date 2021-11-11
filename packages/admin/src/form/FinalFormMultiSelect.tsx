@@ -1,7 +1,10 @@
-import { createStyles, MenuItemProps, MenuList, WithStyles, withStyles } from "@material-ui/core";
+import { createStyles, MenuItemProps as MuiMenuItemProps, MenuList, WithStyles, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
+interface MenuItemProps extends MuiMenuItemProps {
+    children?: React.ReactNode | ((selected: boolean) => React.ReactNode);
+}
 interface FinalFormMultiSelectProps extends FieldRenderProps<string, HTMLDivElement> {
     children: React.ReactElement<MenuItemProps>[];
 }
@@ -33,9 +36,13 @@ function FinalFormMultiSelectComponent({ input, classes, children }: WithStyles<
     const items = React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
             if (child.props.value && typeof child.props.value === "string") {
+                const selected = input.value?.includes(child.props.value);
+                const children = typeof child.props.children === "function" ? child.props.children(selected) : child.props.children;
+
                 return React.cloneElement(child, {
                     onClick: handleListItemClick(child.props.value),
-                    selected: input.value?.includes(child.props.value),
+                    selected,
+                    children,
                 });
             }
         } else {

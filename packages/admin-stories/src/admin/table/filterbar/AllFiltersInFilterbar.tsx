@@ -34,9 +34,13 @@ const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
                 <FinalFormMultiSelect {...props}>
                     {options.map((colorOption, index) => (
                         <MenuItem value={colorOption.value} key={index}>
-                            <ListItemIcon>{colorOption.icon}</ListItemIcon>
-                            <ListItemText>{colorOption.label}</ListItemText>
-                            {props.input.value.includes(colorOption.value) && <Check />}
+                            {(selected: boolean) => (
+                                <>
+                                    <ListItemIcon>{colorOption.icon}</ListItemIcon>
+                                    <ListItemText>{colorOption.label}</ListItemText>
+                                    {selected && <Check />}
+                                </>
+                            )}
                         </MenuItem>
                     ))}
                 </FinalFormMultiSelect>
