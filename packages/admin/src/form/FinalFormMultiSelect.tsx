@@ -1,49 +1,20 @@
-import { Check } from "@comet/admin-icons";
-import { createStyles, List, ListItem, ListItemIcon, ListItemText, WithStyles, withStyles } from "@material-ui/core";
+import { createStyles, MenuItemProps, MenuList, WithStyles, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
-/*---------------- FinalFormMultiSelectListItemComponent ----------------*/
-
-interface FinalFormMultiSelectListDefaultItemProps {
-    option: Option;
-    isSelected: boolean;
-}
-
-function FinalFormMultiSelectListDefaultItem({ option, isSelected }: FinalFormMultiSelectListDefaultItemProps) {
-    return (
-        <>
-            {option.icon && <ListItemIcon>{option.icon}</ListItemIcon>}
-            <ListItemText>{option.label}</ListItemText>
-            {isSelected && <Check />}
-        </>
-    );
-}
-
-/*---------------- FinalFormMultiSelectComponent ----------------*/
-
-export interface Option {
-    label: string | React.ReactNode;
-    value: string;
-    icon?: React.ReactNode;
-}
-
 interface FinalFormMultiSelectProps extends FieldRenderProps<string, HTMLDivElement> {
-    options: Option[];
-    renderItem?: (option: Option) => React.ReactNode;
+    children: React.ReactElement<MenuItemProps>[];
 }
 
-export type FinalFormMultiSelectClassKey = "root" | "listItem" | "listItemSelected";
+export type FinalFormMultiSelectClassKey = "root";
 const styles = () => {
     return createStyles<FinalFormMultiSelectClassKey, FinalFormMultiSelectProps>({
         root: {},
-        listItem: {},
-        listItemSelected: {},
     });
 };
 
-function FinalFormMultiSelectComponent({ options, renderItem, input, classes }: WithStyles<typeof styles> & FinalFormMultiSelectProps) {
-    const handleListItemClick = (value: string) => {
+function FinalFormMultiSelectComponent({ input, classes, children }: WithStyles<typeof styles> & FinalFormMultiSelectProps) {
+    const handleListItemClick = (value: string) => (event: React.SyntheticEvent) => {
         if (Array.isArray(input.value)) {
             if (input.value.includes(value)) {
                 if ([...input.value.filter((item) => item !== value)].length === 0) {
@@ -59,30 +30,27 @@ function FinalFormMultiSelectComponent({ options, renderItem, input, classes }: 
         }
     };
 
+    const items = React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+            if (child.props.value && typeof child.props.value === "string") {
+                return React.cloneElement(child, {
+                    onClick: handleListItemClick(child.props.value),
+                    selected: input.value?.includes(child.props.value),
+                });
+            }
+        } else {
+            console.error("children have to be valid ReactElements");
+        }
+    });
+
     return (
-        <List
+        <MenuList
             classes={{
                 root: classes.root,
             }}
         >
-            {options.map((option, index) => {
-                const isSelected = input.value?.includes(option.value);
-                return (
-                    <ListItem
-                        key={index}
-                        classes={{
-                            root: classes.listItem,
-                            selected: classes.listItemSelected,
-                        }}
-                        onClick={() => handleListItemClick(option.value)}
-                        selected={isSelected}
-                        button
-                    >
-                        {renderItem ? renderItem(option) : <FinalFormMultiSelectListDefaultItem option={option} isSelected={isSelected} />}
-                    </ListItem>
-                );
-            })}
-        </List>
+            {items}
+        </MenuList>
     );
 }
 

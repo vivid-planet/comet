@@ -11,7 +11,8 @@ import {
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
-import { Box, Divider, FormControlLabel, Typography } from "@material-ui/core";
+import { Check } from "@comet/admin-icons";
+import { Box, Divider, FormControlLabel, ListItemIcon, ListItemText, MenuItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
@@ -27,7 +28,21 @@ const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
             return { value: color, label: color, icon: <div style={{ width: 20, height: 20, backgroundColor: color }} /> };
         });
 
-    return <Field fullWidth name="color" component={FinalFormMultiSelect} options={options} />;
+    return (
+        <Field name="color" fullWidth>
+            {(props) => (
+                <FinalFormMultiSelect {...props}>
+                    {options.map((colorOption, index) => (
+                        <MenuItem value={colorOption.value} key={index}>
+                            <ListItemIcon>{colorOption.icon}</ListItemIcon>
+                            <ListItemText>{colorOption.label}</ListItemText>
+                            {props.input.value.includes(colorOption.value) && <Check />}
+                        </MenuItem>
+                    ))}
+                </FinalFormMultiSelect>
+            )}
+        </Field>
+    );
 };
 
 interface IFilterValues {

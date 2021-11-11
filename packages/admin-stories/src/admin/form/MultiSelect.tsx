@@ -1,5 +1,6 @@
 import { Field, FinalFormMultiSelect } from "@comet/admin";
-import { Box, Card, CardContent, FormLabel } from "@material-ui/core";
+import { Check } from "@comet/admin-icons";
+import { Box, Card, CardContent, FormLabel, ListItemIcon, ListItemText, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -14,7 +15,7 @@ function Story() {
     return (
         <div>
             <Form
-                onSubmit={(values) => {
+                onSubmit={() => {
                     //
                 }}
                 render={({ handleSubmit }) => (
@@ -24,7 +25,19 @@ function Story() {
                                 <CardContent>
                                     <FormLabel>MultiSelect with ColorIcon</FormLabel>
                                     <Box width={200}>
-                                        <Field name="multiSelectWithColorIcon" fullWidth component={FinalFormMultiSelect} options={colorOptions} />
+                                        <Field name="multiSelectWithColorIcon" fullWidth>
+                                            {(props) => (
+                                                <FinalFormMultiSelect {...props}>
+                                                    {colorOptions.map((colorOption, index) => (
+                                                        <MenuItem value={colorOption.value} key={index}>
+                                                            <ListItemIcon>{colorOption.icon}</ListItemIcon>
+                                                            <ListItemText>{colorOption.label}</ListItemText>
+                                                            {props.input.value.includes(colorOption.value) && <Check />}
+                                                        </MenuItem>
+                                                    ))}
+                                                </FinalFormMultiSelect>
+                                            )}
+                                        </Field>
                                     </Box>
                                 </CardContent>
                             </Card>
