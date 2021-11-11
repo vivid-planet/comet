@@ -3,6 +3,8 @@ import Autocomplete, { AutocompleteProps, AutocompleteRenderInputParams } from "
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
+import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+
 export const FinalFormAutocomplete = <
     T extends Record<string, any>,
     Multiple extends boolean | undefined,
@@ -12,7 +14,9 @@ export const FinalFormAutocomplete = <
     input: { onChange, value, ...restInput },
     loading = false,
     ...rest
-}: FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> & Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput">) => {
+}: FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> &
+    Partial<AsyncOptionsProps<T>> &
+    Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput">) => {
     return (
         <Autocomplete
             getOptionSelected={(option: T, value: T) => {

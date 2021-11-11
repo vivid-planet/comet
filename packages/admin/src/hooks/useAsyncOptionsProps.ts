@@ -1,6 +1,7 @@
 import * as React from "react";
 
 export interface AsyncOptionsProps<T> {
+    isAsync: boolean;
     open: boolean;
     options: T[];
     loading?: boolean;
@@ -27,6 +28,7 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
         };
     }, [loadOptions, loading]);
     return {
+        isAsync: true,
         open,
         options,
         loading,
