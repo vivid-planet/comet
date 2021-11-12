@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This projec
 -   Add FinalFormAutocomplete (see Story "Autocomplete / Async Select")
 -   Add useAsyncOptionsProps-Hook to allow async loading of options in FinalFormAutocomplete and FinalFormSelect
 -   Add support to pass options directly via props in FinalFormSelect (they are rendered automatically)
+-   Add FinalFormMultiSelect (see Story "MultiSelect / Filterbar with all kinds of Filters")
 
 ## Changes
 
