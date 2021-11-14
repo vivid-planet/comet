@@ -59,4 +59,5 @@ canary:
         variables:
             - $CI_COMMIT_MESSAGE =~ /^chore\(release\)/
     script:
-        - npx lerna publish --yes --canary --preid canary --no-git-tag-version --no-push
+        - npm run build
+        - npm run publish:release -- --canary --preid=canary.$CI_PIPELINE_IID --dist-tag=canary --yes
