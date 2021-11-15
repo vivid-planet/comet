@@ -1,17 +1,22 @@
 {
     "name": "@comet/admin-stories",
-    "version": "2.0.0-alpha.11",
+    "version": "2.0.0",
     "files": [
         "src"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-stories"
+    },
     "dependencies": {
         "@apollo/client": "^3.2.5",
-        "@comet/admin": "^2.0.0-alpha.11",
-        "@comet/admin-color-picker": "^2.0.0-alpha.11",
-        "@comet/admin-icons": "^2.0.0-alpha.11",
-        "@comet/admin-react-select": "^2.0.0-alpha.11",
-        "@comet/admin-rte": "^2.0.0-alpha.11",
-        "@comet/admin-theme": "^2.0.0-alpha.11",
+        "@comet/admin": "^2.0.0",
+        "@comet/admin-color-picker": "^2.0.0",
+        "@comet/admin-icons": "^2.0.0",
+        "@comet/admin-react-select": "^2.0.0",
+        "@comet/admin-rte": "^2.0.0",
+        "@comet/admin-theme": "^2.0.0",
         "@fontsource/roboto": "^4.2.3",
         "@material-ui/core": "^4.1.3",
         "@material-ui/icons": "^4.2.1",

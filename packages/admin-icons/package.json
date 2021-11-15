@@ -1,8 +1,13 @@
 {
     "name": "@comet/admin-icons",
-    "version": "2.0.0-alpha.11",
+    "version": "2.0.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-icons"
+    },
     "scripts": {
         "clean": "rimraf lib && rimraf src/generated",
         "generate-icons": "ts-node generate-icons.ts",

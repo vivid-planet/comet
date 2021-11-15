@@ -1,21 +1,25 @@
 {
     "name": "@comet/admin-react-select",
-    "version": "2.0.0-alpha.11",
+    "version": "2.0.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-react-select"
+    },
     "dependencies": {
         "classnames": "^2.2.6"
     },
     "devDependencies": {
-        "@comet/admin": "^2.0.0-alpha.11",
-        "@types/classnames": "^2.2.11",
+        "@comet/admin": "^2.0.0",
         "@types/react-select": "^3.1.2"
     },
     "peerDependencies": {
-        "@comet/admin": "^2.0.0-alpha.11",
+        "@comet/admin": "^2.0.0",
         "@material-ui/core": "^4.1.3",
         "@material-ui/icons": "^4.2.1",
         "final-form": "^4.16.1",

@@ -1,11 +1,16 @@
 {
     "name": "@comet/admin-rte",
-    "version": "2.0.0-alpha.11",
+    "version": "2.0.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-rte"
+    },
     "devDependencies": {
         "@types/draft-js": "^0.10.38",
         "@types/immutable": "^3.8.7"

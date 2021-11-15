@@ -1,21 +1,26 @@
 {
     "name": "@comet/admin-theme",
-    "version": "2.0.0-alpha.11",
+    "version": "2.0.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
         "lib"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-theme"
+    },
     "dependencies": {
         "lodash.merge": "^4.6.2"
     },
     "devDependencies": {
         "@types/lodash.merge": "^4.6.6",
-        "@comet/admin": "^2.0.0-alpha.11",
-        "@comet/admin-rte": "^2.0.0-alpha.11",
-        "@comet/admin-icons": "^2.0.0-alpha.11",
-        "@comet/admin-color-picker": "^2.0.0-alpha.11",
-        "@comet/admin-react-select": "^2.0.0-alpha.11",
+        "@comet/admin": "^2.0.0",
+        "@comet/admin-rte": "^2.0.0",
+        "@comet/admin-icons": "^2.0.0",
+        "@comet/admin-color-picker": "^2.0.0",
+        "@comet/admin-react-select": "^2.0.0",
         "@material-ui/lab": "^4.0.0-alpha.57"
     },
     "peerDependencies": {

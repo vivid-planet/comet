@@ -31,14 +31,6 @@ The AppHeader system consists of multiple basic components that can be combined 
     <Story id="stories-components-appheader-empty--appheader-empty" />
 </Canvas>
 
-#### Props
-
-| Name         | Type   | Default value | Description                                                                                          |
-| :----------- | :----- | :------------ | :--------------------------------------------------------------------------------------------------- |
-| headerHeight | number |               | Sets the height of the `AppHeader`, should only be used if `AppHeader` is not inside `MasterLayout`. |
-
-Props from [AppBar](https://material-ui.com/api/app-bar) are also used.
-
 ### AppHeaderMenuButton
 
 `AppHeaderMenuButton` will give you the default menu-button.
@@ -47,14 +39,6 @@ Optionally you can add a custom icon as `children` or add a custom `onClick` if 
 <Canvas>
     <Story id="stories-components-appheader-menubutton--appheader-menubutton" />
 </Canvas>
-
-#### Props
-
-| Name     | Type | Default value                    | Description                                    |
-| :------- | :--- | :------------------------------- | :--------------------------------------------- |
-| children | node | `<Hamburger fontSize="large" />` | The icon that will be shown in the IconButton. |
-
-Props from [IconButton](https://material-ui.com/api/icon-button) are also used.
 
 ### AppHeaderFillSpace
 
@@ -85,16 +69,6 @@ Basically everything after `AppHeaderFillSpace` is pushed to the right of the `A
     <Story id="stories-components-appheader-button-custom--appheader-button-custom" />
 </Canvas>
 
-#### Props
-
-| Name              | Type    | Default value | Description                                             |
-| :---------------- | :------ | :------------ | :------------------------------------------------------ |
-| startIcon         | node    |               | Icon shown at the start of the button.                  |
-| endIcon           | node    |               | Icon shown at the end of the button.                    |
-| disableTypography | boolean |               | Prevents children from being wrapped with `Typography`. |
-
-Props from [ButtonBase](https://material-ui.com/api/button-base) are also used.
-
 ### AppHeaderDropdown
 
 `AppHeaderDropdown` can be used for dropdown menus or other dropdown content.
@@ -102,16 +76,3 @@ Props from [ButtonBase](https://material-ui.com/api/button-base) are also used.
 <Canvas>
     <Story id="stories-components-appheader-dropdown--appheader-dropdown" />
 </Canvas>
-
-#### Props
-
-| Name           | Type                                                | Default value | Description                                                                                                                                                                        |
-| :------------- | :-------------------------------------------------- | :------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| children       | node \| (closeDropdown: () => void) => node         |               | Content or a function that returns the Content shown in `Popover`. The function should be used if the Dropdown should be closed e.g. when a button inside the Dropdown is clicked. |
-| buttonChildren | node                                                |               | Children passed into the `AppHeaderButton`.                                                                                                                                        |
-| dropdownArrow  | null \| (isOpen: boolean) => node                   |               | Prevents children from being wrapped with `Typography`.                                                                                                                            |
-| open           | boolean                                             |               | Allows replacing the component's internal open state with a custom state. Must be used together with `onOpenChange`.                                                               |
-| onOpenChange   | (open: boolean) => void                             |               | Allows replacing the component's internal setOpen with a custom method. Must be used together with `open`.                                                                         |
-| popoverProps   | [PopoverProps](https://material-ui.com/api/popover) |               | Props passed into `Popover`.                                                                                                                                                       |
-
-Props from [AppHeaderButton](#appheaderbutton) are also used.

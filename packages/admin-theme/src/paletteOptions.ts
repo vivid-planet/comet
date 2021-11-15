@@ -18,4 +18,8 @@ export const paletteOptions: PaletteOptions = {
     background: {
         default: neutrals[50],
     },
+    action: {
+        active: neutrals[400],
+        disabled: neutrals[200],
+    },
 };

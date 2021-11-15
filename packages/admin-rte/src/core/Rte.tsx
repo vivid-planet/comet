@@ -15,7 +15,7 @@ import {
 import * as React from "react";
 
 import Controls from "./Controls/Controls";
-import defaultBlocktypeMap, { checkBlocktypeMap, mergeBlocktypeMaps } from "./defaultBlocktypeMap";
+import defaultBlocktypeMap, { cleanBlockTypeMap, mergeBlocktypeMaps } from "./defaultBlocktypeMap";
 import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
@@ -62,7 +62,6 @@ export interface IRteOptions {
     filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
     maxBlocks?: number;
     standardBlockType: DraftBlockType;
-
     // @deprecated
     customBlockMap?: ICustomBlockTypeMap_Deprecated;
 }
@@ -149,7 +148,7 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
         delete options.customBlockMap;
     }
 
-    checkBlocktypeMap(options.blocktypeMap); // print warning when configuration is wrong
+    cleanBlockTypeMap(options.blocktypeMap); // mutate object and print warning when configuration is wrong
 
     // blocktypes need an extra merge as they have their own merge strategy
     options = {

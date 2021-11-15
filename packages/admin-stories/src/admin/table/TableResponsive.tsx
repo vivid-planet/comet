@@ -1,32 +1,7 @@
-import { ITableRowProps, Table, TableBodyRow, TableColumns } from "@comet/admin";
+import { ITableRowProps, Table, TableBodyRow, TableColumns, useWindowSize } from "@comet/admin";
 import { TableCell } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-
-// TODO this might be useful in it's own package
-function useWindowSize() {
-    function getSize() {
-        return {
-            width: window.innerWidth,
-            height: window.innerHeight,
-        };
-    }
-
-    const [windowSize, setWindowSize] = React.useState(getSize);
-
-    React.useEffect(() => {
-        function handleResize() {
-            setWindowSize(getSize());
-        }
-
-        window.addEventListener("resize", handleResize);
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
-
-    return windowSize;
-}
 
 function ExampleTableRow({ columns, row, showSecondRow, rowProps }: ITableRowProps<IExampleRow> & { showSecondRow: boolean }) {
     return (

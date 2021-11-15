@@ -40,13 +40,13 @@ export const styles = (theme: Theme) => {
             alignItems: "center",
             justifyContent: "space-between",
             width: "100%",
+            lineHeight: "20px",
+            padding: 9,
         },
         inputInnerLeftContent: {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
             width: "100%",
         },
         popper: {

@@ -21,37 +21,15 @@ A stack consists of 3 components: `Stack`, `StackSwitch` and `StackPage`:
 
 Root component of the stack.
 
-#### Props
-
-| Name            | Type            | Description         |
-| :-------------- | :-------------- | :------------------ |
-| topLevelTitle\* | React.ReactNode | Title of the stack. |
-
 ### StackSwitch
 
 Container for pages where one will render at a time. Similar to a react-router Switch. Provides a context with an API allowing to switch between pages in this `StackSwitch`.
-
-#### Props
-
-| Name        | Type                                         | Default value               | Description                                                  |
-| :---------- | :------------------------------------------- | :-------------------------- | :----------------------------------------------------------- |
-| children\*  | Array<React.ReactElement<IStackPageProps\>\> |                             | The `StackPages` that are switched inside the `StackSwitch`. |
-| initialPage | string                                       | First StackPage in children | The `StackPage` that is shown initially.                     |
-| title       | React.ReactNode                              |                             | Title of the `StackSwitch`.                                  |
 
 ### StackPage
 
 The pages a `StackSwitch` will switch. First one is the default page.
 
 Comet Admin Stack uses react-router behind the scene and creates a `Route` for every page.
-
-#### Props
-
-| Name       | Type                                                 | Description                                                                                                                     |
-| :--------- | :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
-| name\*     | string                                               | The name of a `StackPage`. Is used for navigating between pages and as page title in the breadcrumbs if no `title` is provided. |
-| children\* | ((id: string) => React.ReactNode) \| React.ReactNode | The content of the page.                                                                                                        |
-| title      | React.ReactNode                                      | Title of the page. Is used in the breadcrumbs.                                                                                  |
 
 ## Switch page programmatically
 
@@ -93,8 +71,8 @@ This method should only be used if you cannot achieve your goal with a `StackLin
 It's also possible to use the `StackLink` component for creating a link to a page.
 
 The StackLink is based on [react-router Link](https://reactrouter.com/web/api/Link).
-It can be combined with the Material UI components [`Link`](https://material-ui.com/api/link/) and [`Button`](https://material-ui.com/api/button/) using their `component` prop.
-More infos on this functionality can be found in the [Routing Libraries section of the Material UI Docs](https://material-ui.com/guides/composition/#routing-libraries).
+It can be combined with the Material UI components [`Link`](https://v4.mui.com/api/link/) and [`Button`](https://v4.mui.com/api/button/) using their `component` prop.
+More infos on this functionality can be found in the [Routing Libraries section of the Material UI Docs](https://v4.mui.com/guides/composition/#routing-libraries).
 
 #### Material UI Link with underlying StackLink
 
@@ -107,16 +85,6 @@ More infos on this functionality can be found in the [Routing Libraries section 
 <Canvas>
     <Story id="stories-components-stack--stacklink-button" />
 </Canvas>
-
-#### Props
-
-| Name       | Type                              | Description                                                                                                          |
-| :--------- | :-------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
-| pageName\* | string                            | Name of the page that will be linked to.                                                                             |
-| payload\*  | string                            | Additional payload containing eg. an id that will get passed into the StackPage.                                     |
-| subUrl     | string                            | SubUrl to append, for nested stacks or other nested routes.                                                          |
-| switchApi  | IStackSwitchApi                   | Custom switchApi, has to be passed if the StackLink is used outside of a StackSwitch component                       |
-| ...props   | Omit<ReactRouter.LinkProps, "to"> | Props of [ReactRouter.Link](https://reactrouter.com/web/api/Link) (except the `to` prop which is set by `StackLink`) |
 
 ## payload
 

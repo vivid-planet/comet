@@ -1,5 +1,5 @@
 import { ClearInputButton } from "@comet/admin";
-import { ClickAwayListener, InputBase, InputBaseProps, Paper, Popper, WithStyles, withStyles } from "@material-ui/core";
+import { ClickAwayListener, InputAdornment, InputBase, InputBaseProps, Paper, Popper, WithStyles, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { CustomPicker } from "react-color";
 import { FieldRenderProps } from "react-final-form";
@@ -58,12 +58,22 @@ function ColorPicker({
         <ClickAwayListener onClickAway={handleAwayClick}>
             <div className={rootClasses.join(" ")}>
                 <InputBase
-                    startAdornment={startAdornment ? startAdornment : <PickedColor value={value} classes={classes} />}
+                    startAdornment={
+                        startAdornment ? (
+                            startAdornment
+                        ) : (
+                            <InputAdornment position="start">
+                                <PickedColor value={value} classes={classes} />
+                            </InputAdornment>
+                        )
+                    }
                     endAdornment={
                         endAdornment ? (
                             endAdornment
                         ) : showClearButton ? (
-                            <ClearInputButton onClick={() => onChange("")} disabled={!value} />
+                            <InputAdornment position="end">
+                                <ClearInputButton onClick={() => onChange("")} disabled={!value} />
+                            </InputAdornment>
                         ) : undefined
                     }
                     ref={inputRef}
