@@ -1,13 +1,13 @@
-import { Check, ChevronDown, Reset } from "@comet/admin-icons";
-import { Button, ButtonProps, Popover, Typography, WithStyles } from "@material-ui/core";
+import { Check, Reset } from "@comet/admin-icons";
+import { Button, ButtonProps, Popover, WithStyles } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import clsx from "clsx";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
-import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
+import { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
+import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
 import { FilterBarPopoverFilterClassKey, styles } from "./FilterBarPopoverFilter.styles";
 
 export interface FilterBarPopoverFilterProps {
@@ -16,6 +16,7 @@ export interface FilterBarPopoverFilterProps {
     calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
     submitButtonProps?: ButtonProps;
     resetButtonProps?: ButtonProps;
+    filterBarButtonProps?: FilterBarButtonProps;
 }
 
 function PopoverFilter({
@@ -25,14 +26,14 @@ function PopoverFilter({
     calcNumberDirtyFields = dirtyFieldsCount,
     submitButtonProps,
     resetButtonProps,
+    filterBarButtonProps,
     classes,
 }: React.PropsWithChildren<FilterBarPopoverFilterProps> & WithStyles<typeof styles>) {
-    const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
     const outerForm = useForm();
-    const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
 
-    const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
@@ -49,14 +50,16 @@ function PopoverFilter({
                 {({ form, values, handleSubmit, dirtyFields }) => {
                     const countValue = calcNumberDirtyFields(values, form.getRegisteredFields());
                     return (
-                        <div className={clsx(classes.fieldBarWrapper, countValue > 0 && classes.fieldBarWrapperWithValues)}>
-                            <div className={classes.fieldBarInnerWrapper} onClick={handleClick}>
-                                <div className={clsx(classes.labelWrapper, countValue > 0 && classes.labelWrapperWithValues)}>
-                                    <Typography variant="body1">{label}</Typography>
-                                </div>
-                                <FilterBarActiveFilterBadgeComponent countValue={countValue} />
-                                <ChevronDown />
-                            </div>
+                        <div className={classes.fieldBarWrapper}>
+                            <FilterBarButton
+                                openPopover={open}
+                                numberDirtyFields={countValue}
+                                onClick={handleClick}
+                                dirtyFieldsBadge={dirtyFieldsBadge}
+                                {...filterBarButtonProps}
+                            >
+                                {label}
+                            </FilterBarButton>
                             <Popover
                                 open={open}
                                 anchorEl={anchorEl}
