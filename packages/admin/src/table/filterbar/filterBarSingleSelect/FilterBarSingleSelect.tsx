@@ -1,21 +1,24 @@
-import { ChevronDown } from "@comet/admin-icons";
-import { Popover } from "@material-ui/core";
+import { Check, ChevronDown } from "@comet/admin-icons";
+import { List, ListItem, Popover } from "@material-ui/core";
+import isEqual from "lodash.isequal";
 import React from "react";
-import { Form, useForm } from "react-final-form";
 
+import { FinalFormInputProps } from "../../../form/FinalFormInput";
 import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
 
-interface FilterBarChildrenProps {
-    onClose: () => void;
-}
-export interface FilterBarSingleSelectProps {
-    children: React.ReactNode | ((props: FilterBarChildrenProps) => React.ReactNode);
+export interface FilterBarSingleSelectItem<Item> {
+    key: string;
     label: React.ReactNode;
+    payload: Item;
+}
+
+export interface FilterBarSingleSelectProps<Item> extends FinalFormInputProps {
+    items: FilterBarSingleSelectItem<Item>[];
+    buttonLabel: React.ReactNode;
     filterBarButtonProps?: FilterBarButtonProps;
 }
 
-const SingleSelect = ({ label, filterBarButtonProps, children }: FilterBarSingleSelectProps) => {
-    const outerForm = useForm();
+const SingleSelect = <Item,>({ buttonLabel, filterBarButtonProps, input, items }: FilterBarSingleSelectProps<Item>) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
 
@@ -23,45 +26,48 @@ const SingleSelect = ({ label, filterBarButtonProps, children }: FilterBarSingle
         setAnchorEl(event.currentTarget);
     };
 
+    const onClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <div>
-            <Form
-                onSubmit={(values) => {
-                    for (const name in values) {
-                        outerForm.change(name, values[name]);
-                    }
+            <FilterBarButton openPopover={open} onClick={openPopover} endIcon={<ChevronDown />} {...filterBarButtonProps}>
+                {buttonLabel}
+            </FilterBarButton>
+            <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={onClose}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
                 }}
-                initialValues={outerForm.getState().values}
+                PaperProps={{ square: true, elevation: 1 }}
+                elevation={2}
+                keepMounted
             >
-                {({ form, values, handleSubmit, dirtyFields }) => {
-                    const onClose = () => {
-                        setAnchorEl(null);
-                        handleSubmit();
-                    };
-
-                    return (
-                        <div>
-                            <FilterBarButton openPopover={open} onClick={openPopover} endIcon={<ChevronDown />} {...filterBarButtonProps}>
-                                {label}
-                            </FilterBarButton>
-                            <Popover
-                                open={open}
-                                anchorEl={anchorEl}
-                                onClose={onClose}
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                }}
-                                PaperProps={{ square: true, elevation: 1 }}
-                                elevation={2}
-                                keepMounted
-                            >
-                                <div>{typeof children === "function" ? children({ onClose }) : children}</div>
-                            </Popover>
-                        </div>
-                    );
-                }}
-            </Form>
+                <div>
+                    <List>
+                        {items.map((item) => {
+                            const selected = isEqual(item.payload, input.value);
+                            return (
+                                <ListItem
+                                    key={item.key}
+                                    onClick={() => {
+                                        input.onChange(item.payload);
+                                        onClose();
+                                    }}
+                                    selected={selected}
+                                >
+                                    {item.label}
+                                    {selected && <Check />}
+                                </ListItem>
+                            );
+                        })}
+                    </List>
+                </div>
+            </Popover>
         </div>
     );
 };
