@@ -1,0 +1,44 @@
+{
+    "name": "@comet/admin-date-time",
+    "version": "2.0.0",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin-date-time"
+    },
+    "dependencies": {
+        "date-fns": "^2.28.0",
+        "react-date-range": "^1.4.0"
+    },
+    "devDependencies": {
+        "@comet/admin": "^2.0.0",
+        "@types/react": "^17.0",
+        "@types/react-date-range": "^1.4.3"
+    },
+    "peerDependencies": {
+        "@comet/admin": "^2.0.0",
+        "@comet/admin-icons": "^2.0.0",
+        "@mui/material": "^5.5.0",
+        "react": "^17.0",
+        "react-final-form": "^6.5.7",
+        "react-intl": "^5.24.6"
+    },
+    "scripts": {
+        "prebuild": "rimraf lib",
+        "build": "tsc --project ./tsconfig.json",
+        "prestart": "rimraf lib",
+        "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
+        "prepare": "npm run build",
+        "lint:tsc": "tsc --noEmit"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "license": "BSD-2-Clause"
+}

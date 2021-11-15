@@ -12,6 +12,7 @@
         "@comet/admin-icons": "^2.0.0",
         "@comet/admin-react-select": "^2.0.0",
         "@comet/admin-rte": "^2.0.0",
+        "@comet/admin-date-time": "^2.0.0",
         "@comet/admin-theme": "^2.0.0",
         "@fontsource/roboto": "^4.2.3",
         "@mui/material": "^5.4.1",
