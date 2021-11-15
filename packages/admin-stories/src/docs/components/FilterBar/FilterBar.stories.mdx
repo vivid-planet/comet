@@ -1,0 +1,49 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs";
+
+<Meta title="Docs/Components/Filterbar" />
+
+# Filterbar
+
+The Filterbar Component helps you create a horizontal orientated list of PopoverFields which can include all kind of sorts of Final Form Fields.
+**The Filterbar only works inside of a Final Form.**
+
+The Filterbar consists of four different components:
+
+-   FilterBar
+-   FilterBarPopoverFilter
+-   FilterBarMoreFilters
+-   FilterBarActiveFilterBadge
+
+Every FilterBarPopoverFilter Component contains its own FinalForm which takes via initialValues the values from the wrapping form.
+Due to the power of FinalForm, every FilterBarPopoverFilter form knows which values is theirs. On Submit of the FilterBarPopoverFilter form every value will be changed in the wrapping Form.
+The wrapping form will rerender due to the change of values and the FilterBarPopoverFilter form will get new initialValues and knows which values needs to be mapped to their fields.
+
+#### OnSubmit method of FilterBarPopoverFilter form
+
+```
+onSubmit={(values) => {
+    for (const name in values) {
+        outerForm.change(name, values[name]);
+    }
+}}
+```
+
+The FilterBarActiveFilterBadge shows the current count of set values of every FilterBarPopoverFilter form. This component so as the calculation can be overriden.
+
+<Canvas>
+    <Story id="stories-components-filterbar-default--default" />
+</Canvas>
+
+## Examples
+
+### With FilterBarMoreFilters
+
+<Canvas>
+    <Story id="stories-components-filterbar-with-filterbar-more-filters--with-filterbar-more-filters" />
+</Canvas>
+
+### Multiple different Fields in one FilterBarPopoverFilter
+
+<Canvas>
+    <Story id="stories-components-filterbar-multiple-fields-in-popover-filter--multiple-fields-in-popover-filter" />
+</Canvas>
