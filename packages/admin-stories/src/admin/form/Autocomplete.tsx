@@ -16,10 +16,10 @@ const options: Option[] = [
 ];
 
 const initialValues = {
-    autocomplete: options[1],
-    autocompleteAsync: options[1],
-    select: options[1],
-    selectAsync: options[1],
+    autocomplete: { value: "strawberry", label: "Strawberry" },
+    autocompleteAsync: { value: "strawberry", label: "Strawberry" },
+    select: { value: "strawberry", label: "Strawberry" },
+    selectAsync: { value: "strawberry", label: "Strawberry" },
 };
 
 function Story() {
@@ -35,11 +35,7 @@ function Story() {
                 FinalFormAutocomplete provides a select with a search field. It can also be used asynchronously with the useAsyncOptionsProps-Hook. It
                 expects the value to be an object to be able to display the current value without having to load the async options.
             </p>
-            <p>
-                Furthermore FinalFormSelect can also be used like FinalFormAutocomplete (e.g. when no search field is needed). If an options-prop or
-                the props from the useAsyncOptionsProps-Hook are passed FinalFormSelect automatically renders the options by itself and uses objects
-                as values - just like Autocomplete.
-            </p>
+            <p>Furthermore FinalFormSelect can also be used like FinalFormAutocomplete (e.g. when no search field is needed).</p>
             <div style={{ width: "300px" }}>
                 <Form
                     mode="edit"
@@ -52,6 +48,9 @@ function Story() {
                             <Field
                                 component={FinalFormAutocomplete}
                                 getOptionLabel={(option: Option) => option.label}
+                                getOptionSelected={(option: Option, value: Option) => {
+                                    return option.value === value.value;
+                                }}
                                 options={options}
                                 name="autocomplete"
                                 label="Autocomplete"
@@ -61,6 +60,9 @@ function Story() {
                                 component={FinalFormAutocomplete}
                                 {...acAsyncProps}
                                 getOptionLabel={(option: Option) => option.label}
+                                getOptionSelected={(option: Option, value: Option) => {
+                                    return option.value === value.value;
+                                }}
                                 name="autocompleteAsync"
                                 label="AutocompleteAsync"
                                 fullWidth
@@ -68,6 +70,9 @@ function Story() {
                             <Field
                                 component={FinalFormSelect}
                                 getOptionLabel={(option: Option) => option.label}
+                                getOptionSelected={(option: Option, value: Option) => {
+                                    return option.value === value.value;
+                                }}
                                 options={options}
                                 name="select"
                                 label="Select"
@@ -76,6 +81,9 @@ function Story() {
                             <Field
                                 component={FinalFormSelect}
                                 getOptionLabel={(option: Option) => option.label}
+                                getOptionSelected={(option: Option, value: Option) => {
+                                    return option.value === value.value;
+                                }}
                                 {...selectAsyncProps}
                                 name="selectAsync"
                                 label="SelectAsync"

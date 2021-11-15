@@ -7,7 +7,9 @@ import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { Select } from "./Select";
 
 interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
+    getOptionSelected?: (option: T, value: T) => boolean;
     getOptionLabel?: (option: T) => string;
+    children?: React.ReactNode;
 }
 
 export const FinalFormSelect = <T extends Record<string, any>>({
@@ -22,18 +24,30 @@ export const FinalFormSelect = <T extends Record<string, any>>({
         }
         return "";
     },
+    getOptionSelected = (option: T, value: T) => {
+        if (!value) return false;
+        return option === value;
+    },
+    children,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
-    if (!isAsync && !options) {
-        return <Select {...rest} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur} />;
+    if (children) {
+        return (
+            <Select {...rest} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
+                {children}
+            </Select>
+        );
+    }
+
+    if (value && options) {
+        value = options.reduce((previousOption, option) => (getOptionSelected(option, value) ? option : previousOption), value);
     }
 
     return (
         <Select {...rest} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
-            {loading && <CircularProgress size="20px" style={{ marginLeft: "16px" }} />}
-            {!loading && options.length === 0 && value && (
+            {options.length === 0 && (loading || value) && (
                 <MenuItem value={value as any} key={JSON.stringify(value)}>
-                    {getOptionLabel(value)}
+                    {loading ? <CircularProgress size="20px" style={{ marginLeft: "16px" }} /> : getOptionLabel(value)}
                 </MenuItem>
             )}
             {options.map((option: T) => (

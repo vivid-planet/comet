@@ -13,6 +13,7 @@ export const FinalFormAutocomplete = <
 >({
     input: { onChange, value, ...restInput },
     loading = false,
+    isAsync = false,
     ...rest
 }: FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> &
     Partial<AsyncOptionsProps<T>> &
