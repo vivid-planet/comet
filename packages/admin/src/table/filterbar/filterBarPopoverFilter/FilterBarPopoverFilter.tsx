@@ -16,7 +16,7 @@ export interface FilterBarPopoverFilterProps {
     calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
     submitButtonProps?: ButtonProps;
     resetButtonProps?: ButtonProps;
-    openPopoverButtonProps?: FilterBarButtonProps;
+    filterBarButtonProps?: FilterBarButtonProps;
 }
 
 function PopoverFilter({
@@ -26,7 +26,7 @@ function PopoverFilter({
     calcNumberDirtyFields = dirtyFieldsCount,
     submitButtonProps,
     resetButtonProps,
-    openPopoverButtonProps,
+    filterBarButtonProps,
     classes,
 }: React.PropsWithChildren<FilterBarPopoverFilterProps> & WithStyles<typeof styles>) {
     const outerForm = useForm();
@@ -56,7 +56,7 @@ function PopoverFilter({
                                 numberDirtyFields={countValue}
                                 onClick={handleClick}
                                 dirtyFieldsBadge={dirtyFieldsBadge}
-                                {...openPopoverButtonProps}
+                                {...filterBarButtonProps}
                             >
                                 {label}
                             </FilterBarButton>
