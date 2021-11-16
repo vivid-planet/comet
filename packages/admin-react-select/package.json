@@ -33,7 +33,6 @@
         "build": "tsc --project ./tsconfig.json",
         "prestart": "rimraf lib",
         "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
-        "prepare": "npm run build",
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {

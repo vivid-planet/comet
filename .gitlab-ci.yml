@@ -55,8 +55,17 @@ canary:
     only:
         - main
         - next
-    except:
-        variables:
-            - $CI_COMMIT_MESSAGE =~ /^chore\(release\)/
     script:
-        - npx lerna publish --yes --canary --preid canary --no-git-tag-version --no-push
+        - npm run build
+        - npm run publish:release -- --canary --preid=canary.$CI_PIPELINE_IID --dist-tag=canary --yes
+
+publish:
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:limit7-19
+    stage: release
+    tags:
+        - docker
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+$/'
+    script:
+        - npm run build
+        - npm run publish:release -- $CI_COMMIT_TAG --yes
