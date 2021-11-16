@@ -64,6 +64,7 @@ export { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirt
 export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
 export { useFetch, createFetch, FetchProvider, FetchContext } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
+export { FinalFormAutocomplete } from "./form/Autocomplete";
 export { Field } from "./form/Field";
 export { FieldContainerClassKey, FieldContainer, FieldContainerComponent, FieldContainerProps } from "./form/FieldContainer";
 export { FormSectionKey, FormSection, FormSectionProps } from "./form/FormSection";
@@ -117,6 +118,7 @@ export { TabsClassKey } from "./tabs/Tabs.styles";
 export { ErrorBoundaryClassKey, ErrorBoundary, ErrorBoundaryProps } from "./error/errorboundary/ErrorBoundary";
 export { RouteWithErrorBoundary } from "./error/errorboundary/RouteWithErrorBoundary";
 export { useStoredState } from "./hooks/useStoredState";
+export { useAsyncOptionsProps, AsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
 export { ErrorDialogContext, ErrorDialogContextProps } from "./error/errordialog/ErrorDialogContext";
 export { ErrorDialog, ErrorDialogOptions, ErrorDialogProps } from "./error/errordialog/ErrorDialog";
 export { ErrorDialogProvider } from "./error/errordialog/ErrorDialogProvider";
