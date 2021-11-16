@@ -94,6 +94,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
 
                 if (!failed) {
                     setTimeout(() => {
+                        if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
                         selectionApi.handleDeselect();
                     });
                 }

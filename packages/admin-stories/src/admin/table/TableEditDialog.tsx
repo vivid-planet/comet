@@ -20,38 +20,38 @@ import * as React from "react";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-interface IExampleRow {
-    id: number;
-    foo: string;
-    bar: string;
-}
-
-interface IEditFormProps {
-    row: IExampleRow;
-    mode: "edit" | "add";
-}
-function EditForm(props: IEditFormProps) {
-    return (
-        <FinalForm
-            mode={props.mode}
-            initialValues={props.row}
-            onSubmit={(values) => {
-                alert(JSON.stringify(values));
-            }}
-        >
-            <Field name="foo" component={FinalFormInput} type="text" label="Name" fullWidth />
-        </FinalForm>
-    );
-}
-
 function Story() {
-    const data: IExampleRow[] = [
+    interface IEditFormProps {
+        row: IExampleRow;
+        mode: "edit" | "add";
+    }
+    function EditForm(props: IEditFormProps) {
+        return (
+            <FinalForm
+                mode={props.mode}
+                initialValues={props.row}
+                onSubmit={async (values: IExampleRow) => {
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+                    const index = data.findIndex((d) => d.id === values.id);
+                    data[index] = values;
+                    setData([...data]);
+                }}
+            >
+                <Field name="foo" component={FinalFormInput} type="text" label="Name" fullWidth />
+            </FinalForm>
+        );
+    }
+
+    interface IExampleRow {
+        id: number;
+        foo: string;
+        bar: string;
+    }
+    const [data, setData] = React.useState<IExampleRow[]>([
         { id: 1, foo: "blub", bar: "blub" },
         { id: 2, foo: "blub", bar: "blub" },
-    ];
-
+    ]);
     const editDialog = React.useRef<IEditDialogApi>(null);
-
     return (
         <>
             <Toolbar>
