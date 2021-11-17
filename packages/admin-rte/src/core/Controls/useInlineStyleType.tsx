@@ -2,6 +2,7 @@ import FormatBoldIcon from "@material-ui/icons/FormatBold";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import StrikethroughSIcon from "@material-ui/icons/StrikethroughS";
+import * as detectBrowser from "detect-browser";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -10,6 +11,8 @@ import TextFormatSub from "../../icons/TextFormatSub";
 import TextFormatSup from "../../icons/TextFormatSup";
 import { SupportedThings } from "../Rte";
 import { IFeatureConfig, InlineStyleType } from "../types";
+
+const browser = detectBrowser.detect();
 
 interface IProps {
     editorState: EditorState;
@@ -22,19 +25,34 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
         name: "BOLD",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.label" defaultMessage="bold" />,
         icon: FormatBoldIcon,
-        tooltipText: <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.tooltip" defaultMessage="Ctrl+B" />,
+        tooltipText:
+            browser?.os === "Mac OS" ? (
+                <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.tooltipMac" defaultMessage="Cmd+B" />
+            ) : (
+                <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.tooltip" defaultMessage="Ctrl+B" />
+            ),
     },
     {
         name: "ITALIC",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.label" defaultMessage="italic" />,
         icon: FormatItalicIcon,
-        tooltipText: <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.tooltip" defaultMessage="Ctrl+I" />,
+        tooltipText:
+            browser?.os === "Mac OS" ? (
+                <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.tooltipMac" defaultMessage="Cmd+I" />
+            ) : (
+                <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.tooltip" defaultMessage="Ctrl+I" />
+            ),
     },
     {
         name: "UNDERLINE",
         label: <FormattedMessage id="cometAdmin.rte.controls.blockType.underlined.label" defaultMessage="underlined" />,
         icon: FormatUnderlinedIcon,
-        tooltipText: <FormattedMessage id="cometAdmin.rte.controls.blockType.underlined.tooltip" defaultMessage="Ctrl+U" />,
+        tooltipText:
+            browser?.os === "Mac OS" ? (
+                <FormattedMessage id="cometAdmin.rte.controls.blockType.underlined.tooltipMac" defaultMessage="Cmd+U" />
+            ) : (
+                <FormattedMessage id="cometAdmin.rte.controls.blockType.underlined.tooltip" defaultMessage="Ctrl+U" />
+            ),
     },
     {
         name: "STRIKETHROUGH",
