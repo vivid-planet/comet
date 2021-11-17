@@ -28,10 +28,18 @@ function FinalFormMultiSelectComponent({
                     input.onChange([...input.value.filter((item) => item !== value)]);
                 }
             } else {
-                input.onChange([value, ...input.value]);
+                if (value) {
+                    input.onChange([value, ...input.value]);
+                } else {
+                    return;
+                }
             }
         } else {
-            input.onChange([value]);
+            if (value) {
+                input.onChange([value]);
+            } else {
+                return;
+            }
         }
     };
 
