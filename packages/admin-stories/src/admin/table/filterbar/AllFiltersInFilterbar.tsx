@@ -31,7 +31,7 @@ const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
     return (
         <Field name="color" fullWidth>
             {(props) => (
-                <FinalFormMultiSelect {...props}>
+                <FinalFormMultiSelect {...props} withSearch>
                     {options.map((colorOption, index) => (
                         <MenuItem value={colorOption.value} key={index}>
                             {(selected: boolean) => (
