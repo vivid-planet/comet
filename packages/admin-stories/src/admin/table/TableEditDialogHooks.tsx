@@ -24,22 +24,25 @@ function Story() {
         row: IExampleRow;
         mode: "edit" | "add";
     }
-    function EditForm(props: IEditFormProps) {
-        return (
+    // Defined in story to be able to call setData, hence using useMemo to avoid multiple rendering
+    const EditForm = React.useMemo(() => {
+        return (props: IEditFormProps) => (
             <FinalForm
                 mode={props.mode}
                 initialValues={props.row}
                 onSubmit={async (values: IExampleRow) => {
                     await new Promise((resolve) => setTimeout(resolve, 500));
-                    const index = data.findIndex((d) => d.id === values.id);
-                    data[index] = values;
-                    setData([...data]);
+                    setData((data) => {
+                        const index = data.findIndex((d) => d.id === values.id);
+                        data[index] = values;
+                        return [...data];
+                    });
                 }}
             >
                 <Field name="foo" component={FinalFormInput} type="text" label="Name" fullWidth />
             </FinalForm>
         );
-    }
+    }, []);
 
     interface IExampleRow {
         id: number;
@@ -101,7 +104,6 @@ function Story() {
                         },
                     ]}
                 />
-
                 <EditDialog>
                     {selection.mode && (
                         <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>

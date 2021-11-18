@@ -12,22 +12,24 @@ export function useSelectionRoute(): [React.ComponentType<IProps>, { id?: string
     const parentMatch = useRouteMatch();
     const match = useRouteMatch<IRouteParams>(`${parentMatch.path}/:id`);
 
+    const parentUrl = parentMatch.url;
+
     const handleSelectId = React.useCallback(
         async (id: string) => {
-            history.push(`${parentMatch.url}/${id}`);
+            history.push(`${parentUrl}/${id}`);
         },
-        [history, parentMatch],
+        [history, parentUrl],
     );
 
     const handleDeselect = React.useCallback(async () => {
-        history.push(`${parentMatch.url}`);
-    }, [history, parentMatch]);
+        history.push(`${parentUrl}`);
+    }, [history, parentUrl]);
 
     const handleAdd = React.useCallback(
         (id?: string) => {
-            history.push(`${parentMatch.url}/add${id ? `-${id}` : ""}`);
+            history.push(`${parentUrl}/add${id ? `-${id}` : ""}`);
         },
-        [history, parentMatch],
+        [history, parentUrl],
     );
 
     const api: ISelectionApi = React.useMemo(
@@ -39,24 +41,25 @@ export function useSelectionRoute(): [React.ComponentType<IProps>, { id?: string
         [handleSelectId, handleDeselect, handleAdd],
     );
 
-    let selectedId: string | undefined;
-    let selectionMode: "edit" | "add" | undefined;
-    if (match && (match.params.id === "add" || match.params.id?.startsWith("add-"))) {
-        selectedId = match.params.id?.startsWith("add-") ? match.params.id.substr(4) : undefined;
-        selectionMode = "add";
-    } else if (match) {
-        selectedId = match.params.id;
-        selectionMode = "edit";
-    }
+    const routeId: string | null = match && match.params.id ? match.params.id : null;
+    const selection = React.useMemo(() => {
+        let selectedId: string | undefined;
+        let selectionMode: "edit" | "add" | undefined;
+        if (routeId && (routeId === "add" || routeId.startsWith("add-"))) {
+            selectedId = routeId.startsWith("add-") ? routeId.substr(4) : undefined;
+            selectionMode = "add";
+        } else if (routeId) {
+            selectedId = routeId;
+            selectionMode = "edit";
+        }
 
-    return [
-        SelectionRouteInner,
-        {
+        return {
             id: selectedId,
             mode: selectionMode,
-        },
-        api,
-    ];
+        };
+    }, [routeId]);
+
+    return [SelectionRouteInner, selection, api];
 }
 
 export interface ISelectionRouterRenderPropArgs {
