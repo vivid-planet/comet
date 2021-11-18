@@ -103,6 +103,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     };
 
     const handleCancelClick = () => {
+        if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
         selectionApi.handleDeselect();
     };
 
