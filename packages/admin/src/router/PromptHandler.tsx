@@ -47,7 +47,7 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
     };
 
     const handleClose = async (action: PromptAction) => {
-        const results: Array<AllowTransition> = await Promise.all(promptActions.map(async (promptAction) => await promptAction(action)));
+        const results: Array<AllowTransition> = await Promise.all(promptActions.map((promptAction) => promptAction(action)));
         handleDialogClose(results.every((result) => result));
     };
 
