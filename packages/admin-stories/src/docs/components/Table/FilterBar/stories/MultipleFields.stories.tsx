@@ -4,7 +4,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Filterbar/Multiple Fields In Popover Filter", module).add("Multiple Fields In Popover Filter", () => {
+storiesOf("stories/components/Table/Filterbar/Filterbar/Multiple Fields", module).add("Multiple Fields", () => {
     return (
         <Form
             onSubmit={(values) => {
