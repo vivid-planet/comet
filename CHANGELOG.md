@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file. This projec
 -   Add useAsyncOptionsProps-Hook to allow async loading of options in FinalFormAutocomplete and FinalFormSelect
 -   Add support to pass options directly via props in FinalFormSelect (they are rendered automatically)
 
+## Changes
+
+-   [RTE] add MacOS specific shortcut tooltips
+
 # [2.0.0]
 
 ## Highlights:

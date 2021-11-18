@@ -11,6 +11,9 @@
         "url": "https://github.com/vivid-planet/comet-admin",
         "directory": "packages/admin-rte"
     },
+    "dependencies": {
+        "detect-browser": "^5.2.1"
+    },
     "devDependencies": {
         "@types/draft-js": "^0.10.38",
         "@types/immutable": "^3.8.7"
