@@ -2,8 +2,8 @@ import { Button, Slide, Snackbar, SnackbarProps } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import { v4 as uuidv4 } from "uuid";
 
+import { usePersistedStateId } from "..";
 import { useSnackbarApi } from "./SnackbarProvider";
 
 export interface UndoSnackbarProps<Payload extends unknown> extends Omit<SnackbarProps, "action"> {
@@ -14,7 +14,7 @@ export interface UndoSnackbarProps<Payload extends unknown> extends Omit<Snackba
 
 export const UndoSnackbar = <Payload extends unknown>({ onUndoClick, payload, ...props }: UndoSnackbarProps<Payload>) => {
     const snackbarApi = useSnackbarApi();
-    const uuid = React.useRef(uuidv4());
+    const id = usePersistedStateId();
 
     const onClick = () => {
         snackbarApi.hideSnackbar();
@@ -23,7 +23,7 @@ export const UndoSnackbar = <Payload extends unknown>({ onUndoClick, payload, ..
 
     return (
         <Snackbar
-            key={uuid.current}
+            key={id}
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             autoHideDuration={5000}
             action={

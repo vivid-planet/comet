@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router";
-import { v4 as uuidv4 } from "uuid";
 
+import { usePersistedStateId } from "..";
 import { StackBreadcrumb } from "./Breadcrumb";
 import { IStackPageProps } from "./Page";
 import { StackSwitchMeta } from "./SwitchMeta";
@@ -37,17 +37,9 @@ interface IRouteParams {
     id?: string;
 }
 
-function useUuid() {
-    const ref = React.useRef<string | undefined>(undefined);
-    if (ref.current === undefined) {
-        ref.current = uuidv4() as string;
-    }
-    return ref.current;
-}
-
 export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi] {
     const apiRef = React.useRef<IStackSwitchApi>(null);
-    const id = useUuid();
+    const id = usePersistedStateId();
     const api: IStackSwitchApi = {
         id,
         activatePage: (pageName: string, payload: string, subUrl?: string) => {

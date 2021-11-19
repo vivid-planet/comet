@@ -4,9 +4,8 @@ import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from
 import setFieldData from "final-form-set-field-data";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
-import useConstant from "use-constant";
-import { v4 as uuidv4 } from "uuid";
 
+import { usePersistedStateId } from ".";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
@@ -32,7 +31,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
-    const formId = useConstant<string>(() => uuidv4());
+    const formId = usePersistedStateId();
     const client = useApolloClient();
     const dirtyHandler = React.useContext(DirtyHandlerApiContext);
     const stackApi = React.useContext(StackApiContext);
