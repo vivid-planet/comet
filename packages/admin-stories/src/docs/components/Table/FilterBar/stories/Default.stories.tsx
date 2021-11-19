@@ -4,15 +4,12 @@ import {
     FilterBarMoreFilters,
     FilterBarPopoverFilter,
     FinalFormInput,
-    FinalFormRangeInput,
-    FinalFormSearchTextField,
-    FinalFormSwitch,
+    FinalFormSelect,
     Table,
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
-import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
-import { Box, Divider, FormControlLabel, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
@@ -28,13 +25,25 @@ const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
             return { value: color, label: color };
         });
 
-    return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
+    return (
+        <Field
+            name="color"
+            type="text"
+            component={FinalFormSelect}
+            getOptionLabel={(option: { value: string; label: string }) => option.label}
+            getOptionSelected={(option: { value: string; label: string }, value: { value: string; label: string }) => {
+                return option.value === value.value;
+            }}
+            fullWidth
+            options={options}
+        />
+    );
 };
 
 interface IFilterValues {
     brand: string;
     model: string;
-    color: string;
+    color: { value: string; label: string };
     horsepower: {
         min: number;
         max: number;
@@ -47,7 +56,6 @@ interface IFilterValues {
         firstname: string;
         lastname: string;
     };
-    query: string;
 }
 
 interface IExampleRow {
@@ -78,7 +86,7 @@ export const randomTableData = Array.from(Array(15).keys()).map((i): IExampleRow
     };
 });
 
-storiesOf("stories/components/Table/Filterbar/Filterbar/Default", module).add("Default", () => {
+storiesOf("stories/components/Table/FilterBar/FilterBar/Default", module).add("Default", () => {
     const filterApi = useTableQueryFilter<Partial<IFilterValues>>({
         horsepower: {
             min: 50,
@@ -91,28 +99,9 @@ storiesOf("stories/components/Table/Filterbar/Filterbar/Default", module).add("D
     });
 
     const filteredData = randomTableData
-        .filter(
-            (item) =>
-                filterApi.current.query === undefined ||
-                item.brand.includes(filterApi.current.query) ||
-                item.model.includes(filterApi.current.query) ||
-                item.color.includes(filterApi.current.query) ||
-                item.owner.firstname.includes(filterApi.current.query) ||
-                item.owner.lastname.includes(filterApi.current.query),
-        )
-        .filter((item) => filterApi.current.color === undefined || item.color === filterApi.current.color)
+        .filter((item) => filterApi.current.color === undefined || item.color === filterApi.current.color.value)
         .filter((item) => filterApi.current.model === undefined || item.model.includes(filterApi.current.model))
         .filter((item) => filterApi.current.brand === undefined || item.brand.includes(filterApi.current.brand))
-        .filter(
-            (item) =>
-                filterApi.current.horsepower === undefined ||
-                (item.horsepower > filterApi.current.horsepower?.min && item.horsepower < filterApi.current.horsepower?.max),
-        )
-        .filter(
-            (item) =>
-                filterApi.current.price === undefined ||
-                (Number(item.price) > filterApi.current.price?.min && Number(item.price) < filterApi.current.price?.max),
-        )
         .filter(
             (item) =>
                 filterApi.current.owner === undefined ||
@@ -130,7 +119,6 @@ storiesOf("stories/components/Table/Filterbar/Filterbar/Default", module).add("D
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <Field name="query" component={FinalFormSearchTextField} />
                     <FilterBarPopoverFilter label={"Brand"}>
                         <Field name="brand" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
@@ -144,23 +132,6 @@ storiesOf("stories/components/Table/Filterbar/Filterbar/Default", module).add("D
                     <FilterBarMoreFilters>
                         <FilterBarPopoverFilter label={"Color"}>
                             <ColorFilterField colors={randomTableData.map((item) => item.color)} />
-                        </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Horsepower"}>
-                            <Field name="horsepower" component={FinalFormRangeInput} fullWidth min={50} max={200} />
-                        </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Price"}>
-                            <Box maxWidth={350}>
-                                <Field name="price" component={FinalFormRangeInput} startAdornment={"€"} fullWidth min={50} max={1000} />
-                                <Divider />
-                                <Field name="expressDelivery" type="checkbox" fullWidth>
-                                    {(props) => <FormControlLabel label={"Express delivery"} control={<FinalFormSwitch {...props} />} />}
-                                </Field>
-                                <Box paddingBottom={4} paddingLeft={4} paddingRight={4}>
-                                    <Typography variant={"body2"}>
-                                        Show all articles that can be shipped with express delivery (usually shipped within 2-3 work days)
-                                    </Typography>
-                                </Box>
-                            </Box>
                         </FilterBarPopoverFilter>
                     </FilterBarMoreFilters>
                 </FilterBar>
@@ -181,17 +152,6 @@ storiesOf("stories/components/Table/Filterbar/Filterbar/Default", module).add("D
                     {
                         name: "color",
                         header: "Color",
-                    },
-                    {
-                        name: "horsepower",
-                        header: "Horsepower",
-                    },
-                    {
-                        name: "price",
-                        header: "Price",
-                        render: ({ price }) => {
-                            return `${price} €`;
-                        },
                     },
                     {
                         name: "owner",

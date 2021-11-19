@@ -1,11 +1,11 @@
 import { Meta, Story, Canvas } from "@storybook/addon-docs";
 
-<Meta title="Docs/Components/Table/Filterbar/FilterBar" />
+<Meta title="Docs/Components/Table/FilterBar/FilterBar" />
 
 # Filterbar
 
-The Filterbar Component helps you create a horizontal orientated list of PopoverFields which can include all kind of sorts of Final Form Fields.
-The Intention of the Filterbar was to act as a Filter of a Table, which is also the main usecase for this Component.
+The Filterbar Component helps you create a horizontal orientated list of PopoverFields which can include Final Form Fields.
+The intended use case for the FilterBar is to act as a filter on top of a table.
 **The Filterbar only works inside of a Final Form.**
 
 The Filterbar consists of four different components:
@@ -15,29 +15,13 @@ The Filterbar consists of four different components:
 -   FilterBarMoreFilters
 -   FilterBarActiveFilterBadge
 
-## Table Example
+The FilterBarActiveFilterBadge shows the current count of set values of every FilterBarPopoverFilter form. This component as well as the calculation can be overridden.
+
+## Examples
 
 <Canvas>
     <Story id="stories-components-table-filterbar-filterbar-default--default" />
 </Canvas>
-
-## Advanced Informations
-
-Every FilterBarPopoverFilter Component contains its own FinalForm. So the Filterbar is kinda like a collection of final forms, which pass their values into a wrapping form.
-
-#### OnSubmit method of FilterBarPopoverFilter form
-
-```
-onSubmit={(values) => {
-    for (const name in values) {
-        outerForm.change(name, values[name]);
-    }
-}}
-```
-
-The FilterBarActiveFilterBadge shows the current count of set values of every FilterBarPopoverFilter form. This componentas well as the calculation can be overritten.
-
-## Examples
 
 ### With FilterBarMoreFilters
 
