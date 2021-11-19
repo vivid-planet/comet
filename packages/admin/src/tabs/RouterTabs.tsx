@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
+import { useFinalFormContext } from "../form/FinalFormContextProvider";
 import { StackApiContext } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { StackSwitchApiContext } from "../stack/Switch";
@@ -33,12 +34,15 @@ function RouterTabsComponent({
     classes,
 }: Props & WithStyles<typeof styles>) {
     const childrenArr = React.Children.toArray(children);
+    const finalFormContext = useFinalFormContext();
 
     const handleChange = (event: {}, value: number) => {
         const paths = childrenArr.map((child) => {
             return React.isValidElement<TabProps>(child) ? child.props.path : null;
         });
-        history.push(match.url + paths[value]);
+        history.push(match.url + paths[value], {
+            parentFormId: finalFormContext.formId,
+        });
     };
 
     const paths = childrenArr.map((child) => {

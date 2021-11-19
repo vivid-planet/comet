@@ -1,9 +1,10 @@
+import { Location } from "history";
 import * as React from "react";
 
 import { SubmitResult } from "./form/SubmitResult";
 
 export interface IDirtyHandlerApiBinding {
-    isDirty: () => boolean;
+    isDirty: (location?: Location) => boolean;
     submit: () => Promise<SubmitResult | void>;
     reset: () => void;
 }

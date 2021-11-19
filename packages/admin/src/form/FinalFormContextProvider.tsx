@@ -5,6 +5,7 @@ export interface FinalFormContext {
     shouldScrollToField: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
     shouldShowFieldError: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
     shouldShowFieldWarning: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
+    formId?: string;
 }
 
 const defaultFinalFormContext: FinalFormContext = {

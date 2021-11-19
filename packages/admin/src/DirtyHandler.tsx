@@ -1,3 +1,4 @@
+import { Location } from "history";
 import * as React from "react";
 import { defineMessages, useIntl, WrappedComponentProps } from "react-intl";
 
@@ -86,18 +87,18 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
         return false;
     };
 
-    private promptMessage = (): string | boolean => {
-        if (!this.isBindingDirty()) {
+    private promptMessage = (location?: Location): string | boolean => {
+        if (!this.isBindingDirty(location)) {
             return true;
         } else {
             return this.props.intl.formatMessage(messages.saveChanges);
         }
     };
 
-    private isBindingDirty() {
+    private isBindingDirty(location?: Location) {
         return this.bindings
             .map((binding) => {
-                return binding.binding.isDirty();
+                return binding.binding.isDirty(location);
             })
             .reduce((accumulator, currentValue) => accumulator || currentValue, false);
     }

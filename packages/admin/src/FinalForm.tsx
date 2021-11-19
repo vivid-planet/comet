@@ -2,8 +2,10 @@ import { useApolloClient } from "@apollo/client";
 import { CircularProgress } from "@material-ui/core";
 import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
 import setFieldData from "final-form-set-field-data";
+import { Location } from "history";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
+import useConstant from "use-constant";
 
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
@@ -12,6 +14,7 @@ import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormCont
 import { SubmitError, SubmitResult } from "./form/SubmitResult";
 import { StackApiContext } from "./stack/Api";
 import { TableQueryContext } from "./table/TableQueryContext";
+const UUID = require("uuid");
 
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
@@ -30,6 +33,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
+    const formId = useConstant<string>(() => UUID.v4());
     const client = useApolloClient();
     const dirtyHandler = React.useContext(DirtyHandlerApiContext);
     const stackApi = React.useContext(StackApiContext);
@@ -54,7 +58,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         />
     );
 
-    function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
+    function RenderForm({ formContext = { formId }, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
 
@@ -83,7 +87,11 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         React.useEffect(() => {
             if (dirtyHandler) {
                 dirtyHandler.registerBinding(ref, {
-                    isDirty: () => {
+                    isDirty: (location?: Location) => {
+                        const state = location?.state as { parentFormId: string };
+                        if (state.parentFormId === formId) {
+                            return false;
+                        }
                         return formRenderProps.form.getState().dirty;
                     },
                     submit: async (): Promise<SubmitResult> => {
