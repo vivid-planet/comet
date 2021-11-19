@@ -5,6 +5,7 @@ import setFieldData from "final-form-set-field-data";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import useConstant from "use-constant";
+import { v4 as uuidv4 } from "uuid";
 
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
@@ -13,7 +14,6 @@ import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormCont
 import { SubmitError, SubmitResult } from "./form/SubmitResult";
 import { StackApiContext } from "./stack/Api";
 import { TableQueryContext } from "./table/TableQueryContext";
-const UUID = require("uuid");
 
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
@@ -32,7 +32,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
-    const formId = useConstant<string>(() => UUID.v4());
+    const formId = useConstant<string>(() => uuidv4());
     const client = useApolloClient();
     const dirtyHandler = React.useContext(DirtyHandlerApiContext);
     const stackApi = React.useContext(StackApiContext);

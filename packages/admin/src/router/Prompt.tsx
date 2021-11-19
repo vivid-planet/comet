@@ -1,10 +1,9 @@
 import * as History from "history";
 import * as React from "react";
 import useConstant from "use-constant";
+import { v4 as uuidv4 } from "uuid";
 
 import { RouterContext } from "./Context";
-import { PromptActionCallback } from "./PromptHandler";
-const UUID = require("uuid");
 
 // react-router Prompt doesn't support multiple Prompts, this one does
 interface IProps {
@@ -15,8 +14,8 @@ interface IProps {
     message: (location: History.Location, action: History.Action) => boolean | string;
     handlePromptAction: PromptActionCallback;
 }
-export const RouterPrompt: React.FunctionComponent<IProps> = ({ message, handlePromptAction }) => {
-    const id = useConstant<string>(() => UUID.v4());
+export const RouterPrompt: React.FunctionComponent<IProps> = ({ message }) => {
+    const id = useConstant<string>(() => uuidv4());
     const context = React.useContext(RouterContext);
     React.useEffect(() => {
         if (context) {
