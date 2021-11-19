@@ -2,7 +2,6 @@ import { useApolloClient } from "@apollo/client";
 import { CircularProgress } from "@material-ui/core";
 import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
 import setFieldData from "final-form-set-field-data";
-import { Location } from "history";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 import useConstant from "use-constant";
@@ -87,9 +86,9 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         React.useEffect(() => {
             if (dirtyHandler) {
                 dirtyHandler.registerBinding(ref, {
-                    isDirty: (location?: Location) => {
-                        const state = location?.state as { parentFormId: string };
-                        if (state.parentFormId === formId) {
+                    isDirty: (state?: unknown) => {
+                        const data = state as { parentFormId: string };
+                        if (data.parentFormId === formId) {
                             return false;
                         }
                         return formRenderProps.form.getState().dirty;

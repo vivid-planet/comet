@@ -88,17 +88,17 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
     };
 
     private promptMessage = (location?: Location): string | boolean => {
-        if (!this.isBindingDirty(location)) {
+        if (!this.isBindingDirty(location?.state)) {
             return true;
         } else {
             return this.props.intl.formatMessage(messages.saveChanges);
         }
     };
 
-    private isBindingDirty(location?: Location) {
+    private isBindingDirty(state?: unknown) {
         return this.bindings
             .map((binding) => {
-                return binding.binding.isDirty(location);
+                return binding.binding.isDirty(state);
             })
             .reduce((accumulator, currentValue) => accumulator || currentValue, false);
     }
