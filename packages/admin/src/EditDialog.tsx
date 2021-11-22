@@ -107,10 +107,14 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
         selectionApi.handleDeselect();
     };
 
+    const handleCloseClick = () => {
+        selectionApi.handleDeselect();
+    };
+
     return (
         <EditDialogApiContext.Provider value={api}>
             <DirtyHandler>
-                <Dialog open={!!selection.mode} onClose={handleCancelClick}>
+                <Dialog open={!!selection.mode} onClose={handleCloseClick}>
                     <div>
                         <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
                         <DialogContent>{children}</DialogContent>

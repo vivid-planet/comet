@@ -1,22 +1,39 @@
-import { Dialog, DialogActions, DialogTitle } from "@material-ui/core";
+import { Delete, Save } from "@comet/admin-icons";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
+import { ToolbarFillSpace } from "..";
 import { CancelButton } from "../common/buttons/cancel/CancelButton";
-import { OkayButton } from "../common/buttons/okay/OkayButton";
+
+export enum PromptAction {
+    Cancel,
+    Discard,
+    Save,
+}
 
 interface Props {
     isOpen: boolean;
     message: React.ReactNode; // typically a string or a FormattedMessage (intl) is passed
-    handleClose: (ok: boolean) => void;
+    handleClose: (action: PromptAction) => void;
 }
 
 export function RouterConfirmationDialog({ message, handleClose, isOpen }: Props) {
     return (
-        <Dialog open={isOpen} onClose={handleClose.bind(this, false)} maxWidth={"xs"}>
-            <DialogTitle>{message}</DialogTitle>
+        <Dialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} maxWidth="sm">
+            <DialogTitle>
+                <FormattedMessage id="cometAdmin.generic.unsavedChanges" defaultMessage="Unsaved Changes" />
+            </DialogTitle>
+            <DialogContent>{message}</DialogContent>
             <DialogActions>
-                <CancelButton onClick={handleClose.bind(this, false)} />
-                <OkayButton onClick={handleClose.bind(this, true)} autoFocus />
+                <CancelButton onClick={() => handleClose(PromptAction.Cancel)} />
+                <ToolbarFillSpace />
+                <Button startIcon={<Delete />} color="default" variant="contained" onClick={() => handleClose(PromptAction.Discard)}>
+                    <FormattedMessage id="cometAdmin.generic.discard" defaultMessage="Discard" />
+                </Button>
+                <Button startIcon={<Save />} color="primary" variant="contained" onClick={() => handleClose(PromptAction.Save)}>
+                    <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+                </Button>
             </DialogActions>
         </Dialog>
     );

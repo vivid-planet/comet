@@ -1,8 +1,7 @@
 import * as React from "react";
 import { BrowserRouter as ReactBrowserRouter, BrowserRouterProps } from "react-router-dom";
 
-import { RouterConfirmationDialog } from "./ConfirmationDialog";
-import { RouterPromptHandler } from "./PromptHandler";
+import { AllowTransition, RouterPromptHandler } from "./PromptHandler";
 
 // BrowserRouter that sets up a material-ui confirmation dialog
 // plus a PromptHandler that works with our Prompt (supporting multiple Prompts)
@@ -26,7 +25,7 @@ export const RouterBrowserRouter: React.FunctionComponent<BrowserRouterProps> = 
             callback,
         });
     };
-    const handleClose = (allowTransition: boolean) => {
+    const handleClose = (allowTransition: AllowTransition) => {
         if (state.callback) {
             state.callback(allowTransition);
         }
@@ -39,9 +38,8 @@ export const RouterBrowserRouter: React.FunctionComponent<BrowserRouterProps> = 
 
     return (
         <ReactBrowserRouter getUserConfirmation={getConfirmation} {...props}>
-            <RouterPromptHandler>
+            <RouterPromptHandler showDialog={state.showConfirmationDialog} dialogMessage={state.message} handleDialogClose={handleClose}>
                 {children}
-                <RouterConfirmationDialog isOpen={state.showConfirmationDialog} message={state.message} handleClose={handleClose} />
             </RouterPromptHandler>
         </ReactBrowserRouter>
     );
