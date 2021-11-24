@@ -6,6 +6,7 @@ import { FilterBarPopoverFilterProps } from "./FilterBarPopoverFilter";
 export type FilterBarPopoverFilterClassKey =
     | "root"
     | "fieldBarWrapper"
+    | "fieldBarWrapperWithValues"
     | "fieldBarInnerWrapper"
     | "labelWrapper"
     | "labelWrapperWithValues"
@@ -25,6 +26,9 @@ export const styles = ({ palette, typography }: Theme) => {
         fieldBarWrapper: {
             position: "relative",
             border: `1px solid ${palette.grey[100]}`,
+        },
+        fieldBarWrapperWithValues: {
+            border: `1px solid ${palette.grey[300]}`,
         },
         fieldBarInnerWrapper: {
             position: "relative",
