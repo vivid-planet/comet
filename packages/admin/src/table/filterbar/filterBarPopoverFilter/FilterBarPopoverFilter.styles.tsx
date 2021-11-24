@@ -24,7 +24,6 @@ export const styles = ({ palette, typography }: Theme) => {
         },
         fieldBarWrapper: {
             position: "relative",
-            border: `1px solid ${palette.grey[100]}`,
         },
         fieldBarInnerWrapper: {
             position: "relative",
