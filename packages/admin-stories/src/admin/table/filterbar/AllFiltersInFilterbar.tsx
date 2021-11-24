@@ -5,16 +5,19 @@ import {
     FilterBarPopoverFilter,
     FinalFormInput,
     FinalFormRangeInput,
+    FinalFormSingleSelect,
     FinalFormSwitch,
     Table,
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
+import { Check } from "@comet/admin-icons";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
-import { Box, Divider, FormControlLabel, Typography } from "@material-ui/core";
+import { Box, Divider, FormControlLabel, ListItemText, MenuItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 interface ColorFilterFieldProps {
     colors: string[];
@@ -29,6 +32,55 @@ const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
 
     return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
 };
+
+enum SortDirection {
+    ASC = "ASC",
+    DESC = "DESC",
+}
+interface SortInformation {
+    columnName: "price" | "horsepower";
+    direction: SortDirection;
+}
+type Sorting = {
+    id: string;
+    sortInfo: SortInformation;
+    label: React.ReactNode;
+};
+
+const sortings: Sorting[] = [
+    {
+        id: "priceASC",
+        sortInfo: {
+            columnName: "price",
+            direction: SortDirection.ASC,
+        },
+        label: <FormattedMessage id="comet.pages.dam.filename" defaultMessage="Price ASC" />,
+    },
+    {
+        id: "priceDESC",
+        sortInfo: {
+            columnName: "price",
+            direction: SortDirection.DESC,
+        },
+        label: <FormattedMessage id="comet.pages.dam.filename" defaultMessage="Price DESC" />,
+    },
+    {
+        id: "horsepowerASC",
+        sortInfo: {
+            columnName: "horsepower",
+            direction: SortDirection.ASC,
+        },
+        label: <FormattedMessage id="comet.pages.dam.changeDate" defaultMessage="Horsepower ASC" />,
+    },
+    {
+        id: "horsepowerDESC",
+        sortInfo: {
+            columnName: "horsepower",
+            direction: SortDirection.DESC,
+        },
+        label: <FormattedMessage id="comet.pages.dam.changeDate" defaultMessage="Horsepower DESC" />,
+    },
+];
 
 interface IFilterValues {
     brand: string;
@@ -46,6 +98,7 @@ interface IFilterValues {
         firstname: string;
         lastname: string;
     };
+    sortedBy: string;
 }
 
 interface IExampleRow {
@@ -54,7 +107,7 @@ interface IExampleRow {
     brand: string;
     color: string;
     horsepower: number;
-    price: string;
+    price: number;
     owner: {
         firstname: string;
         lastname: string;
@@ -75,6 +128,13 @@ function Story({ tableData }: StoryProps) {
             min: 50,
             max: 1000,
         },
+    });
+
+    console.log("filterApi.current ", filterApi.current);
+    const sortedBy = sortings.find((sorting) => {
+        console.log(filterApi.current.sortedBy);
+        console.log(sorting.id);
+        return filterApi.current.sortedBy === sorting.id;
     });
 
     const filteredData = tableData
@@ -102,7 +162,21 @@ function Story({ tableData }: StoryProps) {
                 filterApi.current.owner === undefined ||
                 filterApi.current.owner.lastname === undefined ||
                 item.owner.lastname.includes(filterApi.current.owner.lastname),
-        );
+        )
+        .sort((item1, item2) => {
+            const column = sortedBy?.sortInfo.columnName;
+            const direction = sortedBy?.sortInfo.direction;
+
+            if (column && direction) {
+                if (direction === SortDirection.ASC) {
+                    return item1[column] - item2[column];
+                } else {
+                    return item2[column] - item1[column];
+                }
+            }
+
+            return 0;
+        });
 
     return (
         <>
@@ -139,6 +213,24 @@ function Story({ tableData }: StoryProps) {
                                     </Typography>
                                 </Box>
                             </Box>
+                        </FilterBarPopoverFilter>
+                        <FilterBarPopoverFilter label={"Sorted by"}>
+                            <Field name="sortedBy">
+                                {(props) => (
+                                    <FinalFormSingleSelect {...props}>
+                                        {sortings.map((sorting) => (
+                                            <MenuItem value={sorting.id} key={sorting.id}>
+                                                {(selected: boolean) => (
+                                                    <>
+                                                        <ListItemText>{sorting.label}</ListItemText>
+                                                        {selected && <Check />}
+                                                    </>
+                                                )}
+                                            </MenuItem>
+                                        ))}
+                                    </FinalFormSingleSelect>
+                                )}
+                            </Field>
                         </FilterBarPopoverFilter>
                     </FilterBarMoreFilters>
                 </FilterBar>
@@ -192,7 +284,7 @@ storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with all kinds 
             brand: faker.vehicle.manufacturer(),
             color: faker.commerce.color(),
             horsepower: faker.datatype.number({ min: 50, max: 200 }),
-            price: faker.commerce.price(100, 1000, 2),
+            price: Number(faker.commerce.price(100, 1000, 2)),
             owner: {
                 firstname: faker.name.firstName(),
                 lastname: faker.name.lastName(),

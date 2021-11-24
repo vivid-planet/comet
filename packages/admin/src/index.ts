@@ -128,7 +128,7 @@ export { ErrorDialogApolloLinkOptions, createErrorDialogApolloLink } from "./err
 export { FilterBar, FilterBarProps, FilterBarClassKey } from "./table/filterbar/FilterBar";
 export { FilterBarPopoverFilter, FilterBarPopoverFilterProps } from "./table/filterbar/filterBarPopoverFilter/FilterBarPopoverFilter";
 export { FilterBarPopoverFilterClassKey } from "./table/filterbar/filterBarPopoverFilter/FilterBarPopoverFilter.styles";
-export { FilterBarSingleSelect, FilterBarSingleSelectProps } from "./table/filterbar/filterBarSingleSelect/FilterBarSingleSelect";
+export { FinalFormSingleSelect, FinalFormSingleSelectProps } from "./form/FinalFormSingleSelect";
 export { FilterBarMoreFilters, FilterBarMoreFiltersProps } from "./table/filterbar/filterBarMoreFilters/FilterBarMoreFilters";
 export { FilterBarMoveFilersClassKey } from "./table/filterbar/filterBarMoreFilters/FilterBarMoreFilters.styles";
 export { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./table/filterbar/filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
