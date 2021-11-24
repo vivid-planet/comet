@@ -1,5 +1,5 @@
 import { MenuItemProps as MuiMenuItemProps, MenuList } from "@material-ui/core";
-import React, { PropsWithChildren } from "react";
+import React, { MouseEventHandler, PropsWithChildren } from "react";
 import { FieldRenderProps } from "react-final-form";
 
 interface MenuItemProps extends MuiMenuItemProps {
@@ -10,8 +10,9 @@ export interface FinalFormSingleSelectProps extends FieldRenderProps<string, HTM
 }
 
 const SingleSelect = ({ input, children }: PropsWithChildren<FinalFormSingleSelectProps>) => {
-    const handleListItemClick = (value: string) => () => {
+    const handleListItemClick = (value: string, onClick?: MouseEventHandler<HTMLLIElement>) => (event: React.MouseEvent<HTMLLIElement>) => {
         input.onChange(value);
+        onClick?.(event);
     };
 
     const items = React.Children.map(children, (child, index) => {
@@ -21,7 +22,7 @@ const SingleSelect = ({ input, children }: PropsWithChildren<FinalFormSingleSele
                 const children = typeof child.props.children === "function" ? child.props.children(selected) : child.props.children;
 
                 return React.cloneElement(child, {
-                    onClick: handleListItemClick(child.props.value),
+                    onClick: handleListItemClick(child.props.value, child.props.onClick),
                     selected,
                     children,
                 });

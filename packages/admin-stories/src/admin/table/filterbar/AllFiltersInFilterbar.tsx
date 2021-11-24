@@ -3,9 +3,9 @@ import {
     FilterBar,
     FilterBarMoreFilters,
     FilterBarPopoverFilter,
+    FilterBarSingleSelect,
     FinalFormInput,
     FinalFormRangeInput,
-    FinalFormSingleSelect,
     FinalFormSwitch,
     Table,
     TableFilterFinalForm,
@@ -128,12 +128,10 @@ function Story({ tableData }: StoryProps) {
             min: 50,
             max: 1000,
         },
+        sortedBy: sortings[0].id,
     });
 
-    console.log("filterApi.current ", filterApi.current);
     const sortedBy = sortings.find((sorting) => {
-        console.log(filterApi.current.sortedBy);
-        console.log(sorting.id);
         return filterApi.current.sortedBy === sorting.id;
     });
 
@@ -214,24 +212,25 @@ function Story({ tableData }: StoryProps) {
                                 </Box>
                             </Box>
                         </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Sorted by"}>
-                            <Field name="sortedBy">
-                                {(props) => (
-                                    <FinalFormSingleSelect {...props}>
-                                        {sortings.map((sorting) => (
-                                            <MenuItem value={sorting.id} key={sorting.id}>
-                                                {(selected: boolean) => (
-                                                    <>
-                                                        <ListItemText>{sorting.label}</ListItemText>
-                                                        {selected && <Check />}
-                                                    </>
-                                                )}
-                                            </MenuItem>
-                                        ))}
-                                    </FinalFormSingleSelect>
-                                )}
-                            </Field>
-                        </FilterBarPopoverFilter>
+                        <Field name="sortedBy">
+                            {(props) => (
+                                <FilterBarSingleSelect
+                                    label={<>Sorted By {sortings.find((sorting) => filterApi.current.sortedBy === sorting.id)?.label}</>}
+                                    {...props}
+                                >
+                                    {sortings.map((sorting) => (
+                                        <MenuItem value={sorting.id} key={sorting.id}>
+                                            {(selected: boolean) => (
+                                                <>
+                                                    <ListItemText>{sorting.label}</ListItemText>
+                                                    {selected && <Check />}
+                                                </>
+                                            )}
+                                        </MenuItem>
+                                    ))}
+                                </FilterBarSingleSelect>
+                            )}
+                        </Field>
                     </FilterBarMoreFilters>
                 </FilterBar>
             </TableFilterFinalForm>

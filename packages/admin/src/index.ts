@@ -126,6 +126,7 @@ export { useErrorDialog } from "./error/errordialog/useErrorDialog";
 export { ErrorScope, LocalErrorScopeApolloContext, errorScopeForOperationContext } from "./error/errordialog/ErrorScope";
 export { ErrorDialogApolloLinkOptions, createErrorDialogApolloLink } from "./error/errordialog/createErrorDialogApolloLink";
 export { FilterBar, FilterBarProps, FilterBarClassKey } from "./table/filterbar/FilterBar";
+export { FilterBarSingleSelect, FilterBarSingleSelectProps } from "./table/filterbar/filterBarSingleSelect/FilterBarSingleSelect";
 export { FilterBarPopoverFilter, FilterBarPopoverFilterProps } from "./table/filterbar/filterBarPopoverFilter/FilterBarPopoverFilter";
 export { FilterBarPopoverFilterClassKey } from "./table/filterbar/filterBarPopoverFilter/FilterBarPopoverFilter.styles";
 export { FinalFormSingleSelect, FinalFormSingleSelectProps } from "./form/FinalFormSingleSelect";
