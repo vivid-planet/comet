@@ -21,8 +21,8 @@
     },
     "peerDependencies": {
         "@material-ui/core": "^4.0.0",
-        "react": "^16.8.0",
-        "react-dom": "^16.8.0"
+        "react": "^16.8.0 || ^17.0",
+        "react-dom": "^16.8.0 || ^17.0"
     },
     "devDependencies": {
         "@types/cli-progress": "^3.8.0",

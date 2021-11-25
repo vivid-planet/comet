@@ -24,8 +24,8 @@
         "draft-js": "^0.11.4",
         "final-form": "^4.16.1",
         "immutable": "~3.7.4",
-        "react": "^16.8",
-        "react-dom": "^16.8",
+        "react": "^16.8 || ^17.0",
+        "react-dom": "^16.8 || ^17.0",
         "react-final-form": "^6.3.1",
         "react-intl": "^5.10.0"
     },
