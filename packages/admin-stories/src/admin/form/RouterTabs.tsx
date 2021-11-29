@@ -33,11 +33,13 @@ function Story() {
                             bar: "bar",
                         }}
                     >
-                        {({ pristine, hasValidationErrors, submitting, hasSubmitErrors, handleSubmit, ...formVars }) => {
+                        {({ pristine, dirty, hasValidationErrors, submitting, hasSubmitErrors, handleSubmit, ...formVars }) => {
                             console.log({ pristine, hasValidationErrors, submitting, hasSubmitErrors, ...formVars });
 
                             return (
                                 <>
+                                    Pristine: {String(pristine)} <br />
+                                    Dirty: {String(dirty)}
                                     <Toolbar>
                                         <ToolbarBackButton />
                                         <ToolbarFillSpace />
