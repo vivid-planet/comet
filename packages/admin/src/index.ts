@@ -1,10 +1,10 @@
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterMemoryRouter } from "./router/MemoryRouter";
-export { RouterConfirmationDialog } from "./router/ConfirmationDialog";
+export { RouterConfirmationDialog, PromptAction } from "./router/ConfirmationDialog";
 export { RouterContext } from "./router/Context";
 export { RouterPrompt } from "./router/Prompt";
-export { RouterPromptHandler } from "./router/PromptHandler";
+export { RouterPromptHandler, PromptActionCallback } from "./router/PromptHandler";
 export { IStackApi, IWithApiProps, StackApiContext, useStackApi, withStackApi } from "./stack/Api";
 export { StackBreadcrumb } from "./stack/Breadcrumb";
 export { IStackPageProps, StackPage } from "./stack/Page";
