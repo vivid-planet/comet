@@ -1,6 +1,6 @@
-import { debounce } from "debounce";
 import { AnyObject, createForm, FormApi } from "final-form";
-import isEqual = require("lodash.isequal");
+import debounce from "lodash.debounce";
+import isEqual from "lodash.isequal";
 import * as React from "react";
 
 import { usePersistedState } from "./usePersistedState";
@@ -33,15 +33,19 @@ export function useTableQueryFilter<FilterValues>(
     React.useEffect(() => {
         if (!ref.current) return;
         const unsubscribe = ref.current.subscribe(
-            debounce((formState) => {
-                const newValues = formState.values;
-                if (!isEqual(filters, newValues)) {
-                    setFilters(newValues);
-                    if (options.pagingApi) {
-                        options.pagingApi.changePage(options.pagingApi.init, 1, { noScrollToTop: true });
+            debounce(
+                (formState) => {
+                    const newValues = formState.values;
+                    if (!isEqual(filters, newValues)) {
+                        setFilters(newValues);
+                        if (options.pagingApi) {
+                            options.pagingApi.changePage(options.pagingApi.init, 1, { noScrollToTop: true });
+                        }
                     }
-                }
-            }, 500),
+                },
+                500,
+                { leading: true, trailing: true },
+            ),
             { values: true },
         );
         return unsubscribe;
