@@ -13,7 +13,7 @@ interface IProps {
      * Return a string to show a prompt to the user or true to allow the transition.
      */
     message: (location: History.Location, action: History.Action) => boolean | string;
-    handlePromptAction: PromptActionCallback;
+    handlePromptAction?: PromptActionCallback;
 }
 export const RouterPrompt: React.FunctionComponent<IProps> = ({ message, handlePromptAction }) => {
     const id = useConstant<string>(() => UUID.v4());

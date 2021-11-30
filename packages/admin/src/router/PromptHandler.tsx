@@ -15,11 +15,14 @@ interface Props {
 }
 
 export type AllowTransition = boolean;
-export type PromptActionCallback = (action: PromptAction) => Promise<AllowTransition>;
+export type PromptActionCallback = (action: PromptAction) => Promise<AllowTransition> | AllowTransition;
+interface PromptActionsCallbacks {
+    [id: string]: PromptActionCallback;
+}
 
 export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, showDialog, dialogMessage, handleDialogClose }) => {
     const registeredMessages = React.useRef<IMessages>({});
-    const promptActions: PromptActionCallback[] = [];
+    const promptActions = React.useRef<PromptActionsCallbacks>({});
 
     const register = (
         id: string,
@@ -27,11 +30,22 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
         handlePromptAction: PromptActionCallback,
     ) => {
         registeredMessages.current[id] = message;
-        promptActions.push(handlePromptAction);
+        if (handlePromptAction) {
+            promptActions.current[id] = handlePromptAction;
+        }
+        // If handlePromptAction is passed it has to be passed for all registered components
+        const countPromptActions = Object.keys(promptActions.current).length;
+        const countRegisteredMessages = Object.keys(registeredMessages.current).length;
+        if (countPromptActions > 0 && countPromptActions !== countRegisteredMessages) {
+            console.error(
+                "A component (e.g. RouterPrompt) is missing a handlePromptAction-prop. If you fail to do so, the Save-Button in the Dirty-Dialog won't save the changes",
+            );
+        }
     };
 
     const unregister = (id: string) => {
         delete registeredMessages.current[id];
+        if (promptActions.current[id] !== undefined) delete promptActions.current[id];
     };
 
     const promptMessage = (location: History.Location, action: History.Action): boolean | string => {
@@ -47,8 +61,14 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
     };
 
     const handleClose = async (action: PromptAction) => {
-        const results: Array<AllowTransition> = await Promise.all(promptActions.map((promptAction) => promptAction(action)));
-        handleDialogClose(results.every((result) => result));
+        if (Object.keys(promptActions.current).length > 0) {
+            const results: Array<AllowTransition> = await Promise.all(
+                Object.keys(promptActions.current).map((id) => promptActions.current[id](action)),
+            );
+            handleDialogClose(results.every((result) => result));
+        } else {
+            handleDialogClose(action === PromptAction.Discard);
+        }
     };
 
     return (
@@ -58,7 +78,12 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
                 unregister,
             }}
         >
-            <RouterConfirmationDialog isOpen={showDialog} message={dialogMessage} handleClose={handleClose} />
+            <RouterConfirmationDialog
+                isOpen={showDialog}
+                message={dialogMessage}
+                handleClose={handleClose}
+                showSaveButton={Object.keys(promptActions.current).length > 0}
+            />
             <Prompt when={true} message={promptMessage} />
             {children}
         </RouterContext.Provider>

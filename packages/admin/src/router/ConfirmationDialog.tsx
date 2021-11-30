@@ -16,9 +16,10 @@ interface Props {
     isOpen: boolean;
     message: React.ReactNode; // typically a string or a FormattedMessage (intl) is passed
     handleClose: (action: PromptAction) => void;
+    showSaveButton: boolean;
 }
 
-export function RouterConfirmationDialog({ message, handleClose, isOpen }: Props) {
+export function RouterConfirmationDialog({ message, handleClose, isOpen, showSaveButton = false }: Props) {
     return (
         <Dialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} maxWidth="sm">
             <DialogTitle>
@@ -31,9 +32,11 @@ export function RouterConfirmationDialog({ message, handleClose, isOpen }: Props
                 <Button startIcon={<Delete />} color="default" variant="contained" onClick={() => handleClose(PromptAction.Discard)}>
                     <FormattedMessage id="cometAdmin.generic.discard" defaultMessage="Discard" />
                 </Button>
-                <Button startIcon={<Save />} color="primary" variant="contained" onClick={() => handleClose(PromptAction.Save)}>
-                    <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
-                </Button>
+                {showSaveButton && (
+                    <Button startIcon={<Save />} color="primary" variant="contained" onClick={() => handleClose(PromptAction.Save)}>
+                        <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+                    </Button>
+                )}
             </DialogActions>
         </Dialog>
     );

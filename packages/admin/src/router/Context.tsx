@@ -7,7 +7,7 @@ interface IContext {
     register: (
         id: string,
         message: (location: History.Location, action: History.Action) => string | boolean,
-        handlePromptAction: PromptActionCallback,
+        handlePromptAction?: PromptActionCallback,
     ) => void;
     unregister: (id: string) => void;
 }
