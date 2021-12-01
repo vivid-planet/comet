@@ -5,7 +5,7 @@ import { FieldRenderProps } from "react-final-form";
 interface MenuItemProps extends MuiMenuItemProps {
     children?: React.ReactNode | ((selected: boolean) => React.ReactNode);
 }
-interface FinalFormMultiSelectProps extends FieldRenderProps<string, HTMLDivElement> {
+export interface FinalFormMultiSelectProps extends FieldRenderProps<string[], HTMLDivElement> {
     children: React.ReactElement<MenuItemProps>[];
     withSearch?: boolean;
     inputProps?: InputBaseProps;
@@ -22,10 +22,10 @@ function FinalFormMultiSelectComponent({
     const handleListItemClick = (value: string) => (event: React.SyntheticEvent) => {
         if (Array.isArray(input.value)) {
             if (input.value.includes(value)) {
-                if ([...input.value.filter((item) => item !== value)].length === 0) {
+                if (input.value.filter((item) => item !== value).length === 0) {
                     input.onChange(undefined);
                 } else {
-                    input.onChange([...input.value.filter((item) => item !== value)]);
+                    input.onChange(input.value.filter((item) => item !== value));
                 }
             } else {
                 if (value) {

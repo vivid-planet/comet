@@ -75,7 +75,7 @@ export { FinalFormSwitch } from "./form/Switch";
 export { FinalFormSearchTextField, FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
 export { Select } from "./form/Select";
 export { FinalFormSelect } from "./form/FinalFormSelect";
-export { FinalFormMultiSelect, FinalFormMultiSelectClassKey } from "./form/FinalFormMultiSelect";
+export { FinalFormMultiSelect, FinalFormMultiSelectClassKey, FinalFormMultiSelectProps } from "./form/FinalFormMultiSelect";
 export { FinalFormRangeInputClassKey, FinalFormRangeInput } from "./form/FinalFormRangeInput";
 export { MenuItemRouterLink, MenuItemRouterLinkProps } from "./mui/menu/ItemRouterLink";
 export { MenuCollapsibleItemClassKey, MenuCollapsibleItem, MenuLevel, MenuCollapsibleItemProps } from "./mui/menu/CollapsibleItem";
