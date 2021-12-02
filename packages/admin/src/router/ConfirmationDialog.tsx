@@ -16,7 +16,7 @@ interface Props {
     isOpen: boolean;
     message: React.ReactNode; // typically a string or a FormattedMessage (intl) is passed
     handleClose: (action: PromptAction) => void;
-    showSaveButton: boolean;
+    showSaveButton?: boolean;
 }
 
 export function RouterConfirmationDialog({ message, handleClose, isOpen, showSaveButton = false }: Props) {
