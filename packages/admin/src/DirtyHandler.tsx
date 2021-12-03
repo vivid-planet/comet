@@ -3,9 +3,7 @@ import { defineMessages, useIntl, WrappedComponentProps } from "react-intl";
 
 import { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
 import { SubmitResult } from "./form/SubmitResult";
-import { PromptAction } from "./router/ConfirmationDialog";
 import { RouterPrompt } from "./router/Prompt";
-import { AllowTransition } from "./router/PromptHandler";
 
 interface IProps {
     children?: React.ReactNode;
@@ -70,20 +68,15 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
     public render() {
         return (
             <DirtyHandlerApiContext.Provider value={this.dirtyHandlerApi}>
-                <RouterPrompt message={this.promptMessage} handlePromptAction={this.handlePromptAction} />
+                <RouterPrompt message={this.promptMessage} saveAction={this.saveAction} />
                 {this.props.children}
             </DirtyHandlerApiContext.Provider>
         );
     }
 
-    private handlePromptAction = async (action: PromptAction): Promise<AllowTransition> => {
-        if (action === PromptAction.Discard) {
-            return true;
-        } else if (action === PromptAction.Save) {
-            const submitResults: Array<SubmitResult> = await this.submitBindings();
-            return submitResults.every((submitResult) => !submitResult.error);
-        }
-        return false;
+    private saveAction = async (): Promise<boolean> => {
+        const submitResults: Array<SubmitResult> = await this.submitBindings();
+        return submitResults.every((submitResult) => !submitResult.error);
     };
 
     private promptMessage = (): string | boolean => {
