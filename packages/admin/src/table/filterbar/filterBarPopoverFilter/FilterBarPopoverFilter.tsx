@@ -1,4 +1,4 @@
-import { Check, Reset } from "@comet/admin-icons";
+import { Check, ChevronDown, Reset } from "@comet/admin-icons";
 import { Button, ButtonProps, Popover, WithStyles } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import * as React from "react";
@@ -56,6 +56,7 @@ function PopoverFilter({
                                 numberDirtyFields={countValue}
                                 onClick={handleClick}
                                 dirtyFieldsBadge={dirtyFieldsBadge}
+                                endIcon={<ChevronDown />}
                                 {...filterBarButtonProps}
                             >
                                 {label}
