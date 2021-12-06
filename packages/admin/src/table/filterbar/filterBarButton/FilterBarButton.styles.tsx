@@ -19,6 +19,10 @@ export const styles = (theme: Theme) => {
             textTransform: "none",
             fontWeight: theme.typography.fontWeightRegular,
 
+            "& .MuiButton-endIcon.MuiButton-iconSizeMedium > *:first-child": {
+                fontSize: 12,
+            },
+
             "& [class*='MuiSvgIcon-root']": {
                 fontSize: 12,
             },
@@ -39,6 +43,7 @@ export const styles = (theme: Theme) => {
 
             "& [class*='MuiButton-endIcon']": {
                 marginLeft: "10px",
+                fontSize: 12,
             },
         },
         open: {

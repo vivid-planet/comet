@@ -1,9 +1,11 @@
-import { Field, FilterBar, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
+import { Field, FilterBar, FilterBarPopoverFilter, FinalFormInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
+import { ChevronDown } from "@comet/admin-icons";
 import { MenuItem, Select, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+import styled from "styled-components";
 
 enum SortDirection {
     ASC = "ASC",
@@ -75,6 +77,23 @@ interface StoryProps {
     tableData: ExampleRow[];
 }
 
+// TODO:
+//  Icon: no spin
+//  Border: Color if open
+//  MenuItem: Checkmark at the endgp
+const StyledSelect = styled(Select)`
+    height: 42px;
+
+    & .MuiInputBase-root.Mui-focused {
+        border-color: ${({ theme }) => theme.palette.grey[400]};
+    }
+
+    &:hover,
+    &:focus {
+        border-color: ${({ theme }) => theme.palette.primary.main};
+    }
+`;
+
 function Story({ tableData }: StoryProps) {
     const filterApi = useTableQueryFilter<Partial<FilterValues>>({
         sortedBy: sortings[0].id,
@@ -101,15 +120,20 @@ function Story({ tableData }: StoryProps) {
 
     return (
         <>
-            <TableFilterFinalForm filterApi={filterApi}>
+            <TableFilterFinalForm<Partial<FilterValues>> filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
+                    <FilterBarPopoverFilter label={"Owner"}>
+                        <Field label={"Firstname:"} name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
+                        <Field label={"Lastname:"} name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
+                    </FilterBarPopoverFilter>
                     <Field name="sortedBy">
                         {({ input: { value, onChange } }) => (
-                            <Select
-                                displayEmpty
+                            <StyledSelect
+                                IconComponent={ChevronDown}
                                 renderValue={() => <>Sorted by {sortedBy?.label}</>}
                                 MenuProps={{
+                                    PaperProps: { style: { marginTop: 2, marginLeft: -1 } },
                                     anchorOrigin: {
                                         vertical: "bottom",
                                         horizontal: "left",
@@ -120,6 +144,8 @@ function Story({ tableData }: StoryProps) {
                                     },
                                     getContentAnchorEl: null,
                                 }}
+                                disableUnderline
+                                displayEmpty
                                 value={value}
                                 onChange={onChange}
                             >
@@ -130,7 +156,7 @@ function Story({ tableData }: StoryProps) {
                                         </MenuItem>
                                     );
                                 })}
-                            </Select>
+                            </StyledSelect>
                         )}
                     </Field>
                 </FilterBar>
