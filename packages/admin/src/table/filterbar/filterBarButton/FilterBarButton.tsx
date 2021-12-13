@@ -9,7 +9,6 @@ import { FilterBarButtonClassKey, styles } from "./FilterBarButton.styles";
 export interface FilterBarButtonProps extends ButtonProps {
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     numberDirtyFields?: number;
-    hideDirtyFieldsBadge?: boolean;
     openPopover: boolean;
 }
 
@@ -19,7 +18,6 @@ const FilterBarButton = ({
     numberDirtyFields,
     openPopover,
     classes,
-    hideDirtyFieldsBadge = false,
     ...buttonProps
 }: FilterBarButtonProps & WithStyles<typeof styles>): React.ReactElement => {
     const hasDirtyFields = !!(numberDirtyFields && numberDirtyFields > 0);
@@ -33,7 +31,7 @@ const FilterBarButton = ({
             {...buttonProps}
         >
             {children}
-            {hasDirtyFields && !hideDirtyFieldsBadge && (
+            {hasDirtyFields && (
                 <span className={classes.filterBadge}>
                     <FilterBarActiveFilterBadgeComponent countValue={numberDirtyFields as number} />
                 </span>
