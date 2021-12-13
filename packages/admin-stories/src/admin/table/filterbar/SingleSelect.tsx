@@ -1,11 +1,18 @@
-import { Field, FilterBar, FilterBarPopoverFilter, FinalFormInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
-import { ChevronDown } from "@comet/admin-icons";
-import { MenuItem, Select, Typography } from "@material-ui/core";
+import {
+    Field,
+    FilterBar,
+    FilterBarPopoverFilter,
+    FilterBarSingleSelect,
+    FinalFormInput,
+    Table,
+    TableFilterFinalForm,
+    useTableQueryFilter,
+} from "@comet/admin";
+import { MenuItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import styled from "styled-components";
 
 enum SortDirection {
     ASC = "ASC",
@@ -77,28 +84,6 @@ interface StoryProps {
     tableData: ExampleRow[];
 }
 
-// TODO:
-//  Icon: no spin
-//  MenuItem: Checkmark at the endgp
-const StyledSelect = styled(Select)`
-    height: 42px;
-
-    & .MuiInputBase-root.Mui-focused {
-        border-color: ${({ theme }) => theme.palette.grey[400]};
-    }
-
-    &:hover,
-    &:focus {
-        border-color: ${({ theme }) => theme.palette.primary.main};
-    }
-`;
-
-const SelectWrapper = styled.div`
-    .MuiInputBase-root.Mui-focused {
-        border-color: ${({ theme }) => theme.palette.grey[400]};
-    }
-`;
-
 function Story({ tableData }: StoryProps) {
     const filterApi = useTableQueryFilter<Partial<FilterValues>>({
         sortedBy: sortings[0].id,
@@ -134,36 +119,15 @@ function Story({ tableData }: StoryProps) {
                     </FilterBarPopoverFilter>
                     <Field name="sortedBy">
                         {({ input: { value, onChange } }) => (
-                            <SelectWrapper>
-                                <StyledSelect
-                                    IconComponent={ChevronDown}
-                                    renderValue={() => <>Sorted by {sortedBy?.label}</>}
-                                    MenuProps={{
-                                        PaperProps: { style: { marginTop: 2, marginLeft: -1 } },
-                                        anchorOrigin: {
-                                            vertical: "bottom",
-                                            horizontal: "left",
-                                        },
-                                        transformOrigin: {
-                                            vertical: "top",
-                                            horizontal: "left",
-                                        },
-                                        getContentAnchorEl: null,
-                                    }}
-                                    disableUnderline
-                                    displayEmpty
-                                    value={value}
-                                    onChange={onChange}
-                                >
-                                    {sortings.map((sorting) => {
-                                        return (
-                                            <MenuItem key={sorting.id} value={sorting.id}>
-                                                {sorting.label}
-                                            </MenuItem>
-                                        );
-                                    })}
-                                </StyledSelect>
-                            </SelectWrapper>
+                            <FilterBarSingleSelect value={value} onChange={onChange} renderValue={() => <>Sorted by {sortedBy?.label}</>}>
+                                {sortings.map((sorting) => {
+                                    return (
+                                        <MenuItem key={sorting.id} value={sorting.id}>
+                                            {sorting.label}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </FilterBarSingleSelect>
                         )}
                     </Field>
                 </FilterBar>

@@ -11,9 +11,8 @@ import {
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
-import { Check } from "@comet/admin-icons";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
-import { Box, Divider, FormControlLabel, ListItemText, MenuItem, Typography } from "@material-ui/core";
+import { Box, Divider, FormControlLabel, MenuItem, Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
@@ -213,21 +212,15 @@ function Story({ tableData }: StoryProps) {
                             </Box>
                         </FilterBarPopoverFilter>
                         <Field name="sortedBy">
-                            {(props) => (
-                                <FilterBarSingleSelect
-                                    label={<>Sorted By {sortings.find((sorting) => filterApi.current.sortedBy === sorting.id)?.label}</>}
-                                    {...props}
-                                >
-                                    {sortings.map((sorting) => (
-                                        <MenuItem value={sorting.id} key={sorting.id}>
-                                            {(selected: boolean) => (
-                                                <>
-                                                    <ListItemText>{sorting.label}</ListItemText>
-                                                    {selected && <Check />}
-                                                </>
-                                            )}
-                                        </MenuItem>
-                                    ))}
+                            {({ input: { value, onChange } }) => (
+                                <FilterBarSingleSelect value={value} onChange={onChange} renderValue={() => <>Sorted by {sortedBy?.label}</>}>
+                                    {sortings.map((sorting) => {
+                                        return (
+                                            <MenuItem key={sorting.id} value={sorting.id}>
+                                                {sorting.label}
+                                            </MenuItem>
+                                        );
+                                    })}
                                 </FilterBarSingleSelect>
                             )}
                         </Field>
