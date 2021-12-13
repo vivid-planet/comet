@@ -79,7 +79,6 @@ interface StoryProps {
 
 // TODO:
 //  Icon: no spin
-//  Border: Color if open
 //  MenuItem: Checkmark at the endgp
 const StyledSelect = styled(Select)`
     height: 42px;
@@ -91,6 +90,12 @@ const StyledSelect = styled(Select)`
     &:hover,
     &:focus {
         border-color: ${({ theme }) => theme.palette.primary.main};
+    }
+`;
+
+const SelectWrapper = styled.div`
+    .MuiInputBase-root.Mui-focused {
+        border-color: ${({ theme }) => theme.palette.grey[400]};
     }
 `;
 
@@ -129,34 +134,36 @@ function Story({ tableData }: StoryProps) {
                     </FilterBarPopoverFilter>
                     <Field name="sortedBy">
                         {({ input: { value, onChange } }) => (
-                            <StyledSelect
-                                IconComponent={ChevronDown}
-                                renderValue={() => <>Sorted by {sortedBy?.label}</>}
-                                MenuProps={{
-                                    PaperProps: { style: { marginTop: 2, marginLeft: -1 } },
-                                    anchorOrigin: {
-                                        vertical: "bottom",
-                                        horizontal: "left",
-                                    },
-                                    transformOrigin: {
-                                        vertical: "top",
-                                        horizontal: "left",
-                                    },
-                                    getContentAnchorEl: null,
-                                }}
-                                disableUnderline
-                                displayEmpty
-                                value={value}
-                                onChange={onChange}
-                            >
-                                {sortings.map((sorting) => {
-                                    return (
-                                        <MenuItem key={sorting.id} value={sorting.id}>
-                                            {sorting.label}
-                                        </MenuItem>
-                                    );
-                                })}
-                            </StyledSelect>
+                            <SelectWrapper>
+                                <StyledSelect
+                                    IconComponent={ChevronDown}
+                                    renderValue={() => <>Sorted by {sortedBy?.label}</>}
+                                    MenuProps={{
+                                        PaperProps: { style: { marginTop: 2, marginLeft: -1 } },
+                                        anchorOrigin: {
+                                            vertical: "bottom",
+                                            horizontal: "left",
+                                        },
+                                        transformOrigin: {
+                                            vertical: "top",
+                                            horizontal: "left",
+                                        },
+                                        getContentAnchorEl: null,
+                                    }}
+                                    disableUnderline
+                                    displayEmpty
+                                    value={value}
+                                    onChange={onChange}
+                                >
+                                    {sortings.map((sorting) => {
+                                        return (
+                                            <MenuItem key={sorting.id} value={sorting.id}>
+                                                {sorting.label}
+                                            </MenuItem>
+                                        );
+                                    })}
+                                </StyledSelect>
+                            </SelectWrapper>
                         )}
                     </Field>
                 </FilterBar>

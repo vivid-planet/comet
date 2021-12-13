@@ -27,12 +27,12 @@ export const styles = (theme: Theme) => {
                 fontSize: 12,
             },
 
-            "&:active": {
+            "&:active, &:focus": {
                 borderColor: theme.palette.grey[400],
                 backgroundColor: "transparent",
             },
 
-            "&:hover, &:focus": {
+            "&:hover": {
                 borderColor: theme.palette.primary.main,
                 backgroundColor: "transparent",
             },
