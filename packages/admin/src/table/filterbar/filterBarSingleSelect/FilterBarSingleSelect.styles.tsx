@@ -1,12 +1,12 @@
 import { Theme } from "@material-ui/core";
 import { createStyles } from "@material-ui/styles";
 
-import { FilterBarSingleSelectProps } from "./FilterBarSingleSelect";
+import { FilterBarSingleSelectProps, MenuItemValues } from "./FilterBarSingleSelect";
 
 export type FilterBarSingleSelectClassKey = "root" | "wrapper" | "menu";
 
 export const styles = ({ palette }: Theme) => {
-    return createStyles<FilterBarSingleSelectClassKey, FilterBarSingleSelectProps>({
+    return createStyles<FilterBarSingleSelectClassKey, FilterBarSingleSelectProps<MenuItemValues>>({
         root: {
             height: "42px",
             "&:hover, &:focus": {

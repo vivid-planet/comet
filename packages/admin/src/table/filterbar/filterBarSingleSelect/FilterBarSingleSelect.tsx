@@ -6,21 +6,23 @@ import * as React from "react";
 import { FilterBarSingleSelectClassKey } from "./FilterBarSingleSelect.styles";
 import { styles } from "./FilterBarSingleSelect.styles";
 
-export interface FilterBarSingleSelectProps extends SelectProps {
-    value: unknown;
-    onChange: (event: React.ChangeEvent<unknown> | unknown) => void;
+export type MenuItemValues = string | ReadonlyArray<string> | number | undefined;
+
+export interface FilterBarSingleSelectProps<FieldValue extends MenuItemValues> extends SelectProps {
+    value: FieldValue;
+    onChange: (event: React.ChangeEvent<FieldValue> | FieldValue | unknown) => void;
     children: Array<React.ReactElement<MenuItemProps>>;
     hideCheck?: boolean;
 }
 
-const SingleSelect = ({
+const SingleSelect = <FieldValue extends MenuItemValues>({
     value,
     onChange,
     hideCheck = false,
     children,
     classes,
     ...props
-}: FilterBarSingleSelectProps & WithStyles<typeof styles>): React.ReactElement => {
+}: FilterBarSingleSelectProps<FieldValue> & WithStyles<typeof styles>): React.ReactElement => {
     let items = children;
 
     if (!hideCheck) {
@@ -77,6 +79,6 @@ declare module "@material-ui/core/styles/overrides" {
 
 declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
-        CometAdminFilterBarSingleSelect: FilterBarSingleSelectProps;
+        CometAdminFilterBarSingleSelect: FilterBarSingleSelectProps<MenuItemValues>;
     }
 }
