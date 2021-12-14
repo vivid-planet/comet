@@ -45,6 +45,9 @@ const SingleSelect = <FieldValue extends MenuItemValues>({
                 className={classes.root}
                 IconComponent={ChevronDown}
                 MenuProps={{
+                    MenuListProps: {
+                        className: classes.menuList,
+                    },
                     className: classes.menu,
                     PaperProps: { style: { marginTop: 2, marginLeft: -1 } },
                     anchorOrigin: {

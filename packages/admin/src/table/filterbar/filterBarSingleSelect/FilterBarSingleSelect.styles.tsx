@@ -3,7 +3,7 @@ import { createStyles } from "@material-ui/styles";
 
 import { FilterBarSingleSelectProps, MenuItemValues } from "./FilterBarSingleSelect";
 
-export type FilterBarSingleSelectClassKey = "root" | "wrapper" | "menu";
+export type FilterBarSingleSelectClassKey = "root" | "wrapper" | "menu" | "menuList";
 
 export const styles = ({ palette }: Theme) => {
     return createStyles<FilterBarSingleSelectClassKey, FilterBarSingleSelectProps<MenuItemValues>>({
@@ -15,9 +15,6 @@ export const styles = ({ palette }: Theme) => {
             "& .MuiSelect-iconOpen": {
                 transform: "rotate(0deg)",
             },
-            "& .MuiListItem-root.Mui-selected": {
-                backgroundColor: palette.grey[50],
-            },
         },
         wrapper: {
             "& .MuiInputBase-root.Mui-focused": {
@@ -28,6 +25,21 @@ export const styles = ({ palette }: Theme) => {
             "& .MuiMenuItem-root": {
                 display: "flex",
                 justifyContent: "space-between",
+            },
+        },
+        menuList: {
+            "& .MuiListItem-button": {
+                minHeight: "39px",
+                marginBottom: "1px",
+                "&:last-child": {
+                    marginBottom: 0,
+                },
+            },
+            "& .MuiListItem-button.Mui-selected": {
+                backgroundColor: palette.grey[50],
+            },
+            "& .MuiListItem-button:hover": {
+                backgroundColor: palette.grey[50],
             },
         },
     });
