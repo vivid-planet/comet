@@ -2,6 +2,7 @@ import { Check, ChevronDown, Reset } from "@comet/admin-icons";
 import { Button, ButtonProps, Popover, WithStyles } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import clsx from "clsx";
+import { getIn } from "final-form";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -45,8 +46,8 @@ function PopoverFilter({
             <Form
                 onSubmit={(values, form) => {
                     for (const name of form.getRegisteredFields()) {
-                        const outerFieldName = name.split(".")[0];
-                        outerForm.change(outerFieldName, values[outerFieldName]);
+                        const value = getIn(values, name);
+                        outerForm.change(name, value);
                     }
                 }}
                 initialValues={outerForm.getState().values}

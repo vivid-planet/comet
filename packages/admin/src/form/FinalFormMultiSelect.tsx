@@ -7,7 +7,7 @@ interface MenuItemProps extends MuiMenuItemProps {
 }
 export interface FinalFormMultiSelectProps extends FieldRenderProps<string[], HTMLDivElement> {
     children: React.ReactElement<MenuItemProps>[];
-    withSearch?: boolean;
+    searchable?: boolean;
     inputProps?: InputBaseProps;
 }
 
@@ -15,12 +15,12 @@ function FinalFormMultiSelectComponent({
     input,
     classes,
     children,
-    withSearch = false,
+    searchable = false,
     inputProps,
 }: WithStyles<typeof styles> & FinalFormMultiSelectProps) {
     const [searchValue, setSearchValue] = React.useState<string>("");
     const handleListItemClick = (value: string) => (event: React.SyntheticEvent) => {
-        if (Array.isArray(input.value)) {
+        if (input.value !== undefined) {
             if (input.value.includes(value)) {
                 if (input.value.filter((item) => item !== value).length === 0) {
                     input.onChange(undefined);
@@ -62,7 +62,7 @@ function FinalFormMultiSelectComponent({
         }
     });
 
-    if (withSearch) {
+    if (searchable) {
         items = items.filter((item) => {
             if (React.isValidElement(item)) {
                 if (inputProps?.value && inputProps?.value !== "") {
@@ -78,7 +78,7 @@ function FinalFormMultiSelectComponent({
 
     return (
         <>
-            {withSearch && (
+            {searchable && (
                 <InputBase
                     value={inputProps?.value ? inputProps?.value : searchValue}
                     onChange={

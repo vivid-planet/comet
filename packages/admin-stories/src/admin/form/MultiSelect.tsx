@@ -30,7 +30,7 @@ function Story() {
                                         <Field name="multiSelectWithColorIcon" fullWidth>
                                             {(props) => (
                                                 <FinalFormMultiSelect
-                                                    withSearch={true}
+                                                    searchable={true}
                                                     inputProps={{
                                                         autoFocus: true,
                                                         placeholder: "Search...",
