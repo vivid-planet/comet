@@ -17,7 +17,7 @@ export const getMuiSelectOverrides = (palette: Palette): StyleRules<{}, SelectCl
     selectMenu: {},
     disabled: {},
     icon: {
-        top: "calc(50% - 6px)",
+        top: "calc(50% - 8px)",
         right: 12,
         fontSize: 12,
         color: palette.grey[900],

@@ -6,11 +6,13 @@ import { getMuiButtonProps } from "./MuiButton";
 import { getMuiButtonGroupProps } from "./MuiButtonGroup";
 import { getMuiCheckboxProps } from "./MuiCheckbox";
 import { getMuiLinkProps } from "./MuiLink";
+import { getMuiListItemProps } from "./MuiListItem";
 import { getMuiPaperProps } from "./MuiPaper";
 import { getMuiPopoverProps } from "./MuiPopover";
 import { getMuiRadioProps } from "./MuiRadio";
 import { getMuiSelectProps } from "./MuiSelect";
 import { getMuiSwitchProps } from "./MuiSwitch";
+import { getMuiTabsProps } from "./MuiTabs";
 
 export const getMuiProps = (): ComponentsProps => ({
     MuiCheckbox: getMuiCheckboxProps(),
@@ -24,4 +26,6 @@ export const getMuiProps = (): ComponentsProps => ({
     MuiSelect: getMuiSelectProps(),
     MuiAutocomplete: getMuiAutocompleteProps(),
     MuiLink: getMuiLinkProps(),
+    MuiListItem: getMuiListItemProps(),
+    MuiTabs: getMuiTabsProps(),
 });
