@@ -6,9 +6,6 @@ import * as React from "react";
 import { FilterBarSingleSelectClassKey } from "./FilterBarSingleSelect.styles";
 import { styles } from "./FilterBarSingleSelect.styles";
 
-// TODO:
-//  Icon: no spin
-
 export interface FilterBarSingleSelectProps extends SelectProps {
     value: unknown;
     onChange: (event: React.ChangeEvent<unknown> | unknown) => void;

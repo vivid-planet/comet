@@ -12,6 +12,12 @@ export const styles = ({ palette }: Theme) => {
             "&:hover, &:focus": {
                 borderColor: palette.primary.main,
             },
+            "& .MuiSelect-iconOpen": {
+                transform: "rotate(0deg)",
+            },
+            "& .MuiListItem-root.Mui-selected": {
+                backgroundColor: palette.grey[50],
+            },
         },
         wrapper: {
             "& .MuiInputBase-root.Mui-focused": {
