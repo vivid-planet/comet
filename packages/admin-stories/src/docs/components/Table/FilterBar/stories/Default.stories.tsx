@@ -1,7 +1,6 @@
 import {
     Field,
     FilterBar,
-    FilterBarMoreFilters,
     FilterBarPopoverFilter,
     FinalFormInput,
     FinalFormSelect,
@@ -41,21 +40,8 @@ const ColorFilterField: React.FC<ColorFilterFieldProps> = ({ colors }) => {
 };
 
 interface IFilterValues {
-    brand: string;
     model: string;
     color: { value: string; label: string };
-    horsepower: {
-        min: number;
-        max: number;
-    };
-    price: {
-        min: number;
-        max: number;
-    };
-    owner: {
-        firstname: string;
-        lastname: string;
-    };
 }
 
 interface IExampleRow {
@@ -63,77 +49,33 @@ interface IExampleRow {
     model: string;
     brand: string;
     color: string;
-    horsepower: number;
-    price: string;
-    owner: {
-        firstname: string;
-        lastname: string;
-    };
 }
 
-export const randomTableData = Array.from(Array(15).keys()).map((i): IExampleRow => {
+export const randomTableData = Array.from(Array(5).keys()).map((i): IExampleRow => {
     return {
         id: i,
         model: faker.vehicle.model(),
         brand: faker.vehicle.manufacturer(),
         color: faker.commerce.color(),
-        horsepower: faker.datatype.number({ min: 50, max: 200 }),
-        price: faker.commerce.price(100, 1000, 2),
-        owner: {
-            firstname: faker.name.firstName(),
-            lastname: faker.name.lastName(),
-        },
     };
 });
 
 storiesOf("stories/components/Table/FilterBar/FilterBar/Default", module).add("Default", () => {
-    const filterApi = useTableQueryFilter<Partial<IFilterValues>>({
-        horsepower: {
-            min: 50,
-            max: 200,
-        },
-        price: {
-            min: 50,
-            max: 1000,
-        },
-    });
-
+    const filterApi = useTableQueryFilter<Partial<IFilterValues>>({});
     const filteredData = randomTableData
         .filter((item) => filterApi.current.color === undefined || item.color === filterApi.current.color.value)
-        .filter((item) => filterApi.current.model === undefined || item.model.includes(filterApi.current.model))
-        .filter((item) => filterApi.current.brand === undefined || item.brand.includes(filterApi.current.brand))
-        .filter(
-            (item) =>
-                filterApi.current.owner === undefined ||
-                filterApi.current.owner.firstname === undefined ||
-                item.owner.firstname.includes(filterApi.current.owner.firstname),
-        )
-        .filter(
-            (item) =>
-                filterApi.current.owner === undefined ||
-                filterApi.current.owner.lastname === undefined ||
-                item.owner.lastname.includes(filterApi.current.owner.lastname),
-        );
+        .filter((item) => filterApi.current.model === undefined || item.model.includes(filterApi.current.model));
     return (
         <>
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBarPopoverFilter label={"Brand"}>
-                        <Field name="brand" type="text" component={FinalFormInput} fullWidth />
-                    </FilterBarPopoverFilter>
                     <FilterBarPopoverFilter label={"Model"}>
                         <Field name="model" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
-                    <FilterBarPopoverFilter label={"Owner"}>
-                        <Field label={"Firstname:"} name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
-                        <Field label={"Lastname:"} name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
+                    <FilterBarPopoverFilter label={"Color"}>
+                        <ColorFilterField colors={randomTableData.map((item) => item.color)} />
                     </FilterBarPopoverFilter>
-                    <FilterBarMoreFilters>
-                        <FilterBarPopoverFilter label={"Color"}>
-                            <ColorFilterField colors={randomTableData.map((item) => item.color)} />
-                        </FilterBarPopoverFilter>
-                    </FilterBarMoreFilters>
                 </FilterBar>
             </TableFilterFinalForm>
             Filters: {JSON.stringify(filterApi.current)}
@@ -152,13 +94,6 @@ storiesOf("stories/components/Table/FilterBar/FilterBar/Default", module).add("D
                     {
                         name: "color",
                         header: "Color",
-                    },
-                    {
-                        name: "owner",
-                        header: "Owner (Firstname Lastname)",
-                        render: ({ owner }) => {
-                            return `${owner.firstname} ${owner.lastname}`;
-                        },
                     },
                 ]}
             />
