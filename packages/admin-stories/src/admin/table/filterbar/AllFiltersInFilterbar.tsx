@@ -97,7 +97,7 @@ interface IFilterValues {
         firstname: string;
         lastname: string;
     };
-    sortedBy: string;
+    sortingId: string;
 }
 
 interface IExampleRow {
@@ -127,11 +127,11 @@ function Story({ tableData }: StoryProps) {
             min: 50,
             max: 1000,
         },
-        sortedBy: sortings[0].id,
+        sortingId: sortings[0].id,
     });
 
     const sortedBy = sortings.find((sorting) => {
-        return filterApi.current.sortedBy === sorting.id;
+        return filterApi.current.sortingId === sorting.id;
     });
 
     const filteredData = tableData
@@ -165,11 +165,7 @@ function Story({ tableData }: StoryProps) {
             const direction = sortedBy?.sortInfo.direction;
 
             if (column && direction) {
-                if (direction === SortDirection.ASC) {
-                    return item1[column] - item2[column];
-                } else {
-                    return item2[column] - item1[column];
-                }
+                return direction === SortDirection.ASC ? item1[column] - item2[column] : item2[column] - item1[column];
             }
 
             return 0;
@@ -211,7 +207,7 @@ function Story({ tableData }: StoryProps) {
                                 </Box>
                             </Box>
                         </FilterBarPopoverFilter>
-                        <Field name="sortedBy">
+                        <Field name="sortingId">
                             {({ input: { value, onChange } }) => (
                                 <FilterBarSingleSelect value={value} onChange={onChange} renderValue={() => <>Sorted by {sortedBy?.label}</>}>
                                     {sortings.map((sorting) => {
