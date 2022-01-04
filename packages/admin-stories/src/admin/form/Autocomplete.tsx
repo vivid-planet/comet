@@ -1,5 +1,5 @@
 import { Field, FinalFormAutocomplete, FinalFormSelect, useAsyncOptionsProps } from "@comet/admin";
-import { Button, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -89,8 +89,8 @@ function Story() {
                                 label="SelectAsync"
                                 fullWidth
                             />
-                            <Button color="primary" variant="contained" type="submit" component="button" disableTouchRipple>
-                                <Typography variant="button">Submit</Typography>
+                            <Button color="primary" variant="contained" type="submit">
+                                Submit
                             </Button>
                         </form>
                     )}
