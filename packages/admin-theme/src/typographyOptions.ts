@@ -59,11 +59,4 @@ export const typographyOptions: TypographyOptions = {
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightRegular,
     },
-    button: {
-        textTransform: "inherit",
-        fontSize: "inherit",
-        lineHeight: "inherit",
-        fontWeight: "inherit",
-        color: "inherit",
-    },
 };
