@@ -8,7 +8,6 @@ export const getMuiTabOverrides = (palette: Palette, typography: Typography): St
         fontSize: 16,
         lineHeight: 1,
         fontWeight: typography.fontWeightBold,
-        textTransform: "uppercase",
         paddingTop: 17,
         paddingRight: 10,
         paddingBottom: 18,
