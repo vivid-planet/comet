@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [next]
+
+## @comet/admin-theme
+
+### Incompatible Changes
+
+-   Updated theme to reflect the latest adapations made in our applications. The old behavior can be restored by adding the following to the theme:
+    ```js
+    {
+        props: {
+            MuiListItem: {
+                dense: false,
+            },
+        },
+        overrides: {
+            MuiSelect: {
+                icon: {
+                    top: "calc(50% - 6px)",
+                },
+            },
+        },
+    }
+    ```
+
 # [2.0.0]
 
 ## Highlights:
