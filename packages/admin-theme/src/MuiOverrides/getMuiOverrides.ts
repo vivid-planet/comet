@@ -30,6 +30,8 @@ import { getMuiTabOverrides } from "./MuiTab";
 import { getMuiTableCellOverrides } from "./MuiTableCell";
 import { getMuiTableRowOverrides } from "./MuiTableRow";
 import { getMuiTabsOverrides } from "./MuiTabs";
+import { getMuiToggleButtonOverrides } from "./MuiToggleButton";
+import { getMuiToggleButtonGroupOverrides } from "./MuiToggleButtonGroup";
 import { getMuiTypographyOverrides } from "./MuiTypography";
 
 export const getMuiOverrides = (palette: Palette, typography: Typography, spacing: Spacing): Overrides => ({
@@ -56,9 +58,11 @@ export const getMuiOverrides = (palette: Palette, typography: Typography, spacin
     MuiTableCell: getMuiTableCellOverrides(palette, typography),
     MuiTableRow: getMuiTableRowOverrides(),
     MuiTabs: getMuiTabsOverrides(palette, spacing),
-    MuiTab: getMuiTabOverrides(palette),
+    MuiTab: getMuiTabOverrides(palette, typography),
     MuiCardContent: getMuiCardContentOverrides(spacing),
     MuiAutocomplete: getMuiAutocompleteOverrides(spacing),
     MuiInputBase: getMuiInputBaseOverrides(palette, spacing),
     MuiLink: getMuiLinkOverrides(palette),
+    MuiToggleButton: getMuiToggleButtonOverrides(palette),
+    MuiToggleButtonGroup: getMuiToggleButtonGroupOverrides(palette),
 });
