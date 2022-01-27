@@ -56,7 +56,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
     function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
         const { mutators } = formRenderProps.form;
-        const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
+        const setFieldData = mutators.setFieldData as (...args: any[]) => any;
 
         const submit = React.useCallback(
             (event: any) => {
@@ -120,32 +120,25 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
         React.useEffect(() => {
             if (validateWarning) {
-                if (!setFieldData) {
-                    console.warn(
-                        `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
-                    );
-                    return;
-                }
-
                 const validate = async () => {
                     currentWarningValidationRound.current++;
                     const validationRound = currentWarningValidationRound.current;
 
-                    const validationErrors = await Promise.resolve(validateWarning(formRenderProps.values));
+                    const validationWarnings = await Promise.resolve(validateWarning(formRenderProps.values));
 
                     if (currentWarningValidationRound.current > validationRound) {
                         // Another validation has been started, skip this one
                         return;
                     }
 
-                    if (!validationErrors) {
+                    if (!validationWarnings) {
                         registeredFields.forEach((fieldName) => {
                             setFieldData(fieldName, { warning: undefined });
                         });
                         return;
                     }
 
-                    Object.entries(validationErrors).forEach(([fieldName, warning]) => {
+                    Object.entries(validationWarnings).forEach(([fieldName, warning]) => {
                         setFieldData(fieldName, { warning });
                     });
                 };
