@@ -1,4 +1,4 @@
-import { CircularProgress, TextField } from "@material-ui/core";
+import { CircularProgress, InputBase } from "@material-ui/core";
 import Autocomplete, { AutocompleteProps, AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
@@ -30,18 +30,16 @@ export const FinalFormAutocomplete = <
             value={value ? (value as T) : (null as any)}
             {...rest}
             renderInput={(params: AutocompleteRenderInputParams) => (
-                <TextField
+                <InputBase
                     {...restInput}
                     {...params}
-                    InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                            <React.Fragment>
-                                {loading ? <CircularProgress color="inherit" size={16} /> : null}
-                                {params.InputProps.endAdornment}
-                            </React.Fragment>
-                        ),
-                    }}
+                    {...params.InputProps}
+                    endAdornment={
+                        <React.Fragment>
+                            {loading ? <CircularProgress color="inherit" size={16} /> : null}
+                            {params.InputProps.endAdornment}
+                        </React.Fragment>
+                    }
                 />
             )}
         />
