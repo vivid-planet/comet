@@ -9,11 +9,15 @@ function Story() {
         value: string;
         label: string;
     }
+
     const options: Option[] = [
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
+        { value: "raspberry", label: "Raspberry" },
         { value: "vanilla", label: "Vanilla" },
+        { value: "mango", label: "Mango" },
     ];
+
     return (
         <div style={{ maxWidth: "800px" }}>
             <p>
@@ -22,7 +26,10 @@ function Story() {
             </p>
             <div style={{ width: 350 }}>
                 <Form
-                    onSubmit={(values) => {
+                    initialValues={{
+                        multipleFlavours: [],
+                    }}
+                    onSubmit={() => {
                         //
                     }}
                     render={({ handleSubmit }) => (
@@ -53,19 +60,7 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="flavorFullWidth" label="Flavor" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect {...props} fullWidth>
-                                                {options.map((option) => (
-                                                    <MenuItem value={option.value} key={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
-
-                                    <Field name="flavorRequired" label="Flavor" fullWidth>
+                                    <Field name="flavorRequired" label="Required Flavor" fullWidth>
                                         {(props) => (
                                             <FinalFormSelect {...props} fullWidth required>
                                                 {options.map((option) => (
@@ -77,9 +72,21 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="flavorDisabled" label="Flavor" fullWidth>
+                                    <Field name="flavorDisabled" label="Disabled Flavor" fullWidth>
                                         {(props) => (
                                             <FinalFormSelect {...props} fullWidth disabled>
+                                                {options.map((option) => (
+                                                    <MenuItem value={option.value} key={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </FinalFormSelect>
+                                        )}
+                                    </Field>
+
+                                    <Field name="multipleFlavours" label="Multiple Flavours" fullWidth>
+                                        {(props) => (
+                                            <FinalFormSelect {...props} fullWidth multiple>
                                                 {options.map((option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}
