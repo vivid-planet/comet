@@ -20,20 +20,20 @@
         "lint:tsc": "tsc --noEmit"
     },
     "peerDependencies": {
-        "@material-ui/core": "^4.0.0",
-        "react": "^16.8.0 || ^17.0",
-        "react-dom": "^16.8.0 || ^17.0"
+        "@mui/material": "^5.4.1",
+        "react": "^17.0",
+        "react-dom": "^17.0"
     },
     "devDependencies": {
         "@types/cli-progress": "^3.8.0",
         "cli-progress": "^3.8.2",
-        "eslint": "^7.13.0",
-        "eslint-config-prettier": "^6.15.0",
-        "eslint-plugin-prettier": "^3.1.4",
-        "eslint-plugin-react": "^7.21.5",
-        "eslint-plugin-react-hooks": "^4.2.0",
-        "eslint-plugin-simple-import-sort": "^5.0.3",
-        "eslint-plugin-unused-imports": "^1.0.0",
+        "eslint": "^8.9.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-react": "^7.28.0",
+        "eslint-plugin-react-hooks": "^4.3.0",
+        "eslint-plugin-simple-import-sort": "^7.0.0",
+        "eslint-plugin-unused-imports": "^2.0.0",
         "fast-xml-parser": "^3.18.0",
         "pascal-case": "^3.1.2",
         "prettier": "^2.1.2",
