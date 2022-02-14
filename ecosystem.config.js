@@ -13,12 +13,6 @@ module.exports = {
             autorestart: true,
         },
         {
-            name: "comet-admin-date-picker",
-            script: "wait-on packages/admin/lib && npm run --prefix packages/admin-date-picker start",
-            namespace: "comet-admin",
-            autorestart: true,
-        },
-        {
             name: "comet-admin-icons",
             script: "npm run --prefix packages/admin-icons start",
             namespace: "comet-admin",
@@ -44,7 +38,7 @@ module.exports = {
         },
         {
             name: "comet-admin-storybook",
-            script: "wait-on packages/admin/lib packages/admin-color-picker/lib packages/admin-date-picker/lib packages/admin-icons/lib packages/admin-react-select/lib packages/admin-rte/lib packages/admin-theme/lib && npm run --prefix packages/admin-stories storybook",
+            script: "wait-on packages/admin/lib packages/admin-color-picker/lib packages/admin-icons/lib packages/admin-react-select/lib packages/admin-rte/lib packages/admin-theme/lib && npm run --prefix packages/admin-stories storybook",
             namespace: "comet-admin",
             autorestart: true,
         },
