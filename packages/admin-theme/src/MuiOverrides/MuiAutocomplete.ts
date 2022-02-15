@@ -1,12 +1,16 @@
-import { Spacing } from "@material-ui/core/styles/createSpacing";
-import { AutocompleteClassKey } from "@material-ui/lab";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { AutocompleteClassKey } from "@mui/material";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
+import { Spacing } from "@mui/system";
 
-export const getMuiAutocompleteOverrides = (spacing: Spacing): StyleRules<{}, AutocompleteClassKey> => ({
+export const getMuiAutocompleteOverrides = (spacing: Spacing): OverridesStyleRules<AutocompleteClassKey> => ({
     root: {},
+    fullWidth: {},
     focused: {},
     tag: {},
     tagSizeSmall: {},
+    tagSizeMedium: {},
+    hasPopupIcon: {},
+    hasClearIcon: {},
     inputRoot: {},
     input: {},
     inputFocused: {},
@@ -15,7 +19,6 @@ export const getMuiAutocompleteOverrides = (spacing: Spacing): StyleRules<{}, Au
         right: spacing(2),
     },
     clearIndicator: {},
-    clearIndicatorDirty: {},
     popupIndicator: {},
     popupIndicatorOpen: {},
     popper: {},

@@ -1,8 +1,8 @@
-import { PaperClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { PaperClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiPaperOverrides = (palette: Palette): StyleRules<{}, PaperClassKey> => ({
+export const getMuiPaperOverrides = (palette: Palette): OverridesStyleRules<PaperClassKey> => ({
     root: {},
     rounded: {},
     outlined: {
@@ -11,6 +11,7 @@ export const getMuiPaperOverrides = (palette: Palette): StyleRules<{}, PaperClas
         borderBottom: `1px solid ${palette.divider}`,
         borderLeft: "none",
     },
+    elevation: {},
     elevation0: {},
     elevation1: {},
     elevation2: {},

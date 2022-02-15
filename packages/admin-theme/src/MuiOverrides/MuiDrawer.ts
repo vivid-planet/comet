@@ -1,8 +1,8 @@
-import { DrawerClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { DrawerClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiDrawerOverrides = (palette: Palette): StyleRules<{}, DrawerClassKey> => ({
+export const getMuiDrawerOverrides = (palette: Palette): OverridesStyleRules<DrawerClassKey> => ({
     root: {},
     docked: {},
     paper: {

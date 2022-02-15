@@ -1,4 +1,4 @@
-import { ComponentsProps } from "@material-ui/core/styles/props";
+import { ComponentsProps } from "@mui/material/styles";
 
 import { getMuiAppBarProps } from "./MuiAppBar";
 import { getMuiAutocompleteProps } from "./MuiAutocomplete";

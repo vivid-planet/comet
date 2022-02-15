@@ -1,7 +1,7 @@
-import { TableRowClassKey } from "@material-ui/core";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { TableRowClassKey } from "@mui/material";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiTableRowOverrides = (): StyleRules<{}, TableRowClassKey> => ({
+export const getMuiTableRowOverrides = (): OverridesStyleRules<TableRowClassKey> => ({
     root: {
         backgroundColor: "#fff",
     },

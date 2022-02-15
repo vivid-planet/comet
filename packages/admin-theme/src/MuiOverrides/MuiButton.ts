@@ -1,15 +1,15 @@
-import { ButtonClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { ButtonClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiButtonOverrides = (palette: Palette): StyleRules<{}, ButtonClassKey> => ({
+export const getMuiButtonOverrides = (palette: Palette): OverridesStyleRules<ButtonClassKey> => ({
     root: {},
-    label: {
-        position: "relative",
-        top: 1,
-        fontSize: 16,
-        lineHeight: 1,
-    },
+    // label: { // TODO: Find out where to move these styles
+    //     position: "relative",
+    //     top: 1,
+    //     fontSize: 16,
+    //     lineHeight: 1,
+    // },
     text: {
         textTransform: "none",
         paddingTop: 12,
@@ -23,9 +23,11 @@ export const getMuiButtonOverrides = (palette: Palette): StyleRules<{}, ButtonCl
             marginLeft: 5,
         },
     },
+    textInherit: {},
     textPrimary: {},
     textSecondary: {},
     outlined: {},
+    outlinedInherit: {},
     outlinedPrimary: {},
     outlinedSecondary: {},
     contained: {
@@ -48,6 +50,7 @@ export const getMuiButtonOverrides = (palette: Palette): StyleRules<{}, ButtonCl
             marginLeft: 6,
         },
     },
+    containedInherit: {},
     containedPrimary: {
         color: "#000",
         borderColor: palette.primary.main,
@@ -74,12 +77,16 @@ export const getMuiButtonOverrides = (palette: Palette): StyleRules<{}, ButtonCl
             lineHeight: "20px",
         },
     },
+    textSizeMedium: {},
     textSizeLarge: {},
     outlinedSizeSmall: {},
+    outlinedSizeMedium: {},
     outlinedSizeLarge: {},
     containedSizeSmall: {},
+    containedSizeMedium: {},
     containedSizeLarge: {},
     sizeSmall: {},
+    sizeMedium: {},
     sizeLarge: {},
     fullWidth: {},
     startIcon: {

@@ -1,7 +1,7 @@
-import { AppBarClassKey } from "@material-ui/core";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { AppBarClassKey } from "@mui/material";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiAppBarOverrides = (): StyleRules<{}, AppBarClassKey> => ({
+export const getMuiAppBarOverrides = (): OverridesStyleRules<AppBarClassKey> => ({
     root: {},
     positionFixed: {},
     positionAbsolute: {},
@@ -11,4 +11,6 @@ export const getMuiAppBarOverrides = (): StyleRules<{}, AppBarClassKey> => ({
     colorDefault: {},
     colorPrimary: {},
     colorSecondary: {},
+    colorInherit: {},
+    colorTransparent: {},
 });

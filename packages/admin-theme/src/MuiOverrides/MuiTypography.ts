@@ -1,8 +1,12 @@
-import { TypographyClassKey } from "@material-ui/core";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { TypographyClassKey } from "@mui/material";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiTypographyOverrides = (): StyleRules<{}, TypographyClassKey> => ({
+export const getMuiTypographyOverrides = (): OverridesStyleRules<TypographyClassKey> => ({
     root: {},
+    body2: {},
+    body1: {},
+    caption: {},
+    button: {},
     h1: {},
     h2: {},
     h3: {},
@@ -11,12 +15,8 @@ export const getMuiTypographyOverrides = (): StyleRules<{}, TypographyClassKey> 
     h6: {},
     subtitle1: {},
     subtitle2: {},
-    body1: {},
-    body2: {},
-    caption: {},
-    button: {},
     overline: {},
-    srOnly: {},
+    inherit: {},
     alignLeft: {},
     alignCenter: {},
     alignRight: {},
@@ -26,12 +26,4 @@ export const getMuiTypographyOverrides = (): StyleRules<{}, TypographyClassKey> 
         marginBottom: 20,
     },
     paragraph: {},
-    colorInherit: {},
-    colorPrimary: {},
-    colorSecondary: {},
-    colorTextPrimary: {},
-    colorTextSecondary: {},
-    colorError: {},
-    displayInline: {},
-    displayBlock: {},
 });

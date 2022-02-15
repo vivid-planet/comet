@@ -1,9 +1,8 @@
-import { SelectClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { SelectClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiSelectOverrides = (palette: Palette): StyleRules<{}, SelectClassKey> => ({
-    root: {},
+export const getMuiSelectOverrides = (palette: Palette): OverridesStyleRules<SelectClassKey> => ({
     select: {
         "&$select": {
             paddingRight: 32,
@@ -12,9 +11,10 @@ export const getMuiSelectOverrides = (palette: Palette): StyleRules<{}, SelectCl
             backgroundColor: "transparent",
         },
     },
+    multiple: {},
     filled: {},
     outlined: {},
-    selectMenu: {},
+    standard: {},
     disabled: {},
     icon: {
         top: "calc(50% - 8px)",
@@ -25,4 +25,6 @@ export const getMuiSelectOverrides = (palette: Palette): StyleRules<{}, SelectCl
     iconOpen: {},
     iconFilled: {},
     iconOutlined: {},
+    iconStandard: {},
+    nativeInput: {},
 });

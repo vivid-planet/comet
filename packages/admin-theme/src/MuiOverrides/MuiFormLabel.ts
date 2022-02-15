@@ -1,10 +1,10 @@
-import { FormLabelClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { Spacing } from "@material-ui/core/styles/createSpacing";
-import { Typography } from "@material-ui/core/styles/createTypography";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { FormLabelClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { Typography } from "@mui/material/styles/createTypography";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
+import { Spacing } from "@mui/system";
 
-export const getMuiFormLabelOverrides = (palette: Palette, typography: Typography, spacing: Spacing): StyleRules<{}, FormLabelClassKey> => ({
+export const getMuiFormLabelOverrides = (palette: Palette, typography: Typography, spacing: Spacing): OverridesStyleRules<FormLabelClassKey> => ({
     root: {
         display: "block",
         color: palette.grey[900],

@@ -1,7 +1,7 @@
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { Spacing } from "@material-ui/core/styles/createSpacing";
-import { Typography } from "@material-ui/core/styles/createTypography";
-import { Overrides } from "@material-ui/core/styles/overrides";
+import { ComponentsOverrides } from "@mui/material";
+import { Palette } from "@mui/material/styles/createPalette";
+import { Typography } from "@mui/material/styles/createTypography";
+import { Spacing } from "@mui/system";
 
 import { getMuiAppBarOverrides } from "./MuiAppBar";
 import { getMuiAutocompleteOverrides } from "./MuiAutocomplete";
@@ -34,7 +34,7 @@ import { getMuiToggleButtonOverrides } from "./MuiToggleButton";
 import { getMuiToggleButtonGroupOverrides } from "./MuiToggleButtonGroup";
 import { getMuiTypographyOverrides } from "./MuiTypography";
 
-export const getMuiOverrides = (palette: Palette, typography: Typography, spacing: Spacing): Overrides => ({
+export const getMuiOverrides = (palette: Palette, typography: Typography, spacing: Spacing): ComponentsOverrides => ({
     MuiCheckbox: getMuiCheckboxOverrides(palette),
     MuiRadio: getMuiRadioOverrides(palette),
     MuiDialog: getMuiDialogOverrides(spacing),

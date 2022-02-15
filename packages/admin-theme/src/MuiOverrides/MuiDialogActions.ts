@@ -1,8 +1,8 @@
-import { DialogActionsClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { DialogActionsClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiDialogActionsOverrides = (palette: Palette): StyleRules<{}, DialogActionsClassKey> => ({
+export const getMuiDialogActionsOverrides = (palette: Palette): OverridesStyleRules<DialogActionsClassKey> => ({
     root: {
         borderTop: `1px solid ${palette.grey[100]}`,
         padding: 20,

@@ -1,9 +1,9 @@
-import { TabsClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { Spacing } from "@material-ui/core/styles/createSpacing";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { TabsClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
+import { Spacing } from "@mui/system";
 
-export const getMuiTabsOverrides = (palette: Palette, spacing: Spacing): StyleRules<{}, TabsClassKey> => ({
+export const getMuiTabsOverrides = (palette: Palette, spacing: Spacing): OverridesStyleRules<TabsClassKey> => ({
     root: {
         position: "relative",
         marginBottom: spacing(4),
@@ -17,15 +17,19 @@ export const getMuiTabsOverrides = (palette: Palette, spacing: Spacing): StyleRu
             backgroundColor: palette.grey[100],
         },
     },
+    vertical: {},
     flexContainer: {},
+    flexContainerVertical: {},
+    centered: {},
     scroller: {
         zIndex: 1,
     },
     fixed: {},
-    scrollable: {},
-    centered: {},
+    scrollableX: {},
+    scrollableY: {},
+    hideScrollbar: {},
     scrollButtons: {},
-    scrollButtonsDesktop: {},
+    scrollButtonsHideMobile: {},
     indicator: {
         backgroundColor: palette.primary.main,
         height: 2,

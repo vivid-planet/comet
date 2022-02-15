@@ -1,9 +1,8 @@
-import { createTheme, Theme } from "@material-ui/core";
-import { ThemeOptions } from "@material-ui/core/styles";
-import createPalette, { Palette, PaletteOptions } from "@material-ui/core/styles/createPalette";
-import createSpacing, { Spacing, SpacingOptions } from "@material-ui/core/styles/createSpacing";
-import createTypography, { Typography, TypographyOptions } from "@material-ui/core/styles/createTypography";
-import type {} from "@material-ui/lab/themeAugmentation";
+import { adaptV4Theme, createTheme, Theme } from "@mui/material";
+import { DeprecatedThemeOptions, Palette, PaletteOptions } from "@mui/material/styles";
+import createPalette from "@mui/material/styles/createPalette";
+import createTypography, { Typography, TypographyOptions } from "@mui/material/styles/createTypography";
+import { createSpacing, Spacing, SpacingOptions } from "@mui/system";
 import merge from "lodash.merge";
 
 import { getMuiOverrides } from "./MuiOverrides/getMuiOverrides";
@@ -12,7 +11,7 @@ import { paletteOptions as cometPaletteOptions } from "./paletteOptions";
 import { shadows } from "./shadows";
 import { typographyOptions as cometTypographyOptions } from "./typographyOptions";
 
-export const createCometTheme = (customThemeOptions: ThemeOptions | undefined = {}): Theme => {
+export const createCometTheme = (customThemeOptions: DeprecatedThemeOptions | undefined = {}): Theme => {
     const customPaletteOptions: PaletteOptions = customThemeOptions?.palette ? customThemeOptions.palette : {};
     const paletteOptions: PaletteOptions = merge(cometPaletteOptions, customPaletteOptions);
     const palette: Palette = createPalette(paletteOptions);
@@ -44,6 +43,6 @@ export const createCometTheme = (customThemeOptions: ThemeOptions | undefined = 
         },
     };
 
-    const themeOptions: ThemeOptions = merge(cometThemeOptions, customThemeOptions);
-    return createTheme(themeOptions);
+    const themeOptions: DeprecatedThemeOptions = merge(cometThemeOptions, customThemeOptions);
+    return createTheme(adaptV4Theme(themeOptions));
 };

@@ -1,11 +1,11 @@
-import { CheckboxClassKey } from "@material-ui/core/Checkbox";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { CheckboxClassKey } from "@mui/material/Checkbox";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
 // Key "input" is not a stylable class-key on MuiCheckbox
 type CorrectedCheckboxClassKey = Exclude<CheckboxClassKey, "input">;
 
-export const getMuiCheckboxOverrides = (palette: Palette): StyleRules<{}, CorrectedCheckboxClassKey> => ({
+export const getMuiCheckboxOverrides = (palette: Palette): OverridesStyleRules<CorrectedCheckboxClassKey> => ({
     root: {
         "& [class*='MuiSvgIcon-root']": {
             "& .border": {

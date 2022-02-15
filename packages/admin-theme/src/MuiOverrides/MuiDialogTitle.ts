@@ -1,9 +1,9 @@
-import { DialogTitleClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { Typography } from "@material-ui/core/styles/createTypography";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { DialogTitleClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { Typography } from "@mui/material/styles/createTypography";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiDialogTitleOverrides = (palette: Palette, typography: Typography): StyleRules<{}, DialogTitleClassKey> => ({
+export const getMuiDialogTitleOverrides = (palette: Palette, typography: Typography): OverridesStyleRules<DialogTitleClassKey> => ({
     root: {
         backgroundColor: palette.grey["A200"],
         color: palette.grey["A100"],

@@ -1,4 +1,4 @@
-import { PaperProps } from "@material-ui/core";
+import { PaperProps } from "@mui/material";
 
 export const getMuiPaperProps = (): Partial<PaperProps> => ({
     square: true,

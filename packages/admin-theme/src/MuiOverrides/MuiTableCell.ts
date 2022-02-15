@@ -1,9 +1,9 @@
-import { TableCellClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { Typography } from "@material-ui/core/styles/createTypography";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { TableCellClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { Typography } from "@mui/material/styles/createTypography";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiTableCellOverrides = (palette: Palette, typography: Typography): StyleRules<{}, TableCellClassKey> => ({
+export const getMuiTableCellOverrides = (palette: Palette, typography: Typography): OverridesStyleRules<TableCellClassKey> => ({
     root: {
         borderBottomColor: palette.grey[100],
         paddingTop: 15,
@@ -31,17 +31,19 @@ export const getMuiTableCellOverrides = (palette: Palette, typography: Typograph
             width: 2,
         },
     },
+
     body: {
         fontSize: 16,
         lineHeight: "20px",
     },
     footer: {},
+    sizeSmall: {},
+    sizeMedium: {},
+    paddingCheckbox: {},
+    paddingNone: {},
     alignLeft: {},
     alignCenter: {},
     alignRight: {},
     alignJustify: {},
-    sizeSmall: {},
-    paddingCheckbox: {},
-    paddingNone: {},
     stickyHeader: {},
 });

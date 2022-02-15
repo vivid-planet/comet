@@ -20,8 +20,7 @@
         "@comet/admin-rte": "^2.0.0",
         "@comet/admin-icons": "^2.0.0",
         "@comet/admin-color-picker": "^2.0.0",
-        "@comet/admin-react-select": "^2.0.0",
-        "@mui/lab": "^5.0.0-alpha.68"
+        "@comet/admin-react-select": "^2.0.0"
     },
     "peerDependencies": {
         "react": "^17.0",

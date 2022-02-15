@@ -1,17 +1,16 @@
-import { SwitchClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { SwitchClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiSwitchOverrides = (palette: Palette): StyleRules<{}, SwitchClassKey> => ({
+export const getMuiSwitchOverrides = (palette: Palette): OverridesStyleRules<SwitchClassKey> => ({
     root: {
         width: 54,
         height: 34,
         padding: 9,
         display: "flex",
     },
-    checked: {},
-    disabled: {},
-    input: {},
+    edgeStart: {},
+    edgeEnd: {},
     switchBase: {
         margin: 9,
         padding: 3,
@@ -52,6 +51,10 @@ export const getMuiSwitchOverrides = (palette: Palette): StyleRules<{}, SwitchCl
         },
     },
     sizeSmall: {},
+    sizeMedium: {},
+    checked: {},
+    disabled: {},
+    input: {},
     thumb: {
         width: 10,
         height: 10,

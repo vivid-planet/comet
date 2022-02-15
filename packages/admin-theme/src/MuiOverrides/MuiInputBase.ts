@@ -1,9 +1,9 @@
-import { InputBaseClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { Spacing } from "@material-ui/core/styles/createSpacing";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { InputBaseClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
+import { Spacing } from "@mui/system";
 
-export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): StyleRules<{}, InputBaseClassKey> => ({
+export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): OverridesStyleRules<InputBaseClassKey> => ({
     root: {
         border: `1px solid ${palette.grey[100]}`,
         borderRadius: 2,
@@ -25,32 +25,36 @@ export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): St
     formControl: {},
     focused: {},
     disabled: {},
-    adornedEnd: {
-        paddingRight: spacing(2),
-    },
     adornedStart: {
         paddingLeft: spacing(2),
     },
+    adornedEnd: {
+        paddingRight: spacing(2),
+    },
+
     error: {},
-    marginDense: {},
+    sizeSmall: {},
     multiline: {
         paddingTop: 0,
         paddingBottom: 0,
     },
-    fullWidth: {},
     colorSecondary: {},
+    fullWidth: {},
+    hiddenLabel: {},
     input: {
         height: "auto",
         boxSizing: "border-box",
-        padding: spacing(2) - 1, // 1px less for border, set in root
+        // TODO: fix spacing
+        // padding: spacing(2) - 1, // 1px less for border, set in root
         lineHeight: "20px",
         "&::-ms-clear": {
             display: "none",
         },
     },
-    inputMarginDense: {},
+    inputSizeSmall: {},
     inputMultiline: {
-        padding: spacing(2) - 1, // 1px less for border, set in root
+        // TODO: fix spacing
+        // padding: spacing(2) - 1, // 1px less for border, set in root
     },
     inputTypeSearch: {},
     inputAdornedStart: {

@@ -1,8 +1,8 @@
-import { LinkClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { LinkClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiLinkOverrides = (palette: Palette): StyleRules<{}, LinkClassKey> => ({
+export const getMuiLinkOverrides = (palette: Palette): OverridesStyleRules<LinkClassKey> => ({
     root: {
         color: palette.grey[600],
     },

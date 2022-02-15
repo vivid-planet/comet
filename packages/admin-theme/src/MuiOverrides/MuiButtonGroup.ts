@@ -1,14 +1,16 @@
-import { ButtonGroupClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { ButtonGroupClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiButtonGroupOverrides = (palette: Palette): StyleRules<{}, ButtonGroupClassKey> => ({
+export const getMuiButtonGroupOverrides = (palette: Palette): OverridesStyleRules<ButtonGroupClassKey> => ({
     root: {},
     contained: {
         border: "none",
     },
-    disabled: {},
+    outlined: {},
+    text: {},
     disableElevation: {},
+    disabled: {},
     fullWidth: {},
     vertical: {},
     grouped: {},

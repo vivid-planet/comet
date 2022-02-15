@@ -1,8 +1,8 @@
-import { DialogClassKey } from "@material-ui/core/Dialog";
-import { Spacing } from "@material-ui/core/styles/createSpacing";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { DialogClassKey } from "@mui/material/Dialog";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
+import { Spacing } from "@mui/system";
 
-export const getMuiDialogOverrides = (spacing: Spacing): StyleRules<{}, DialogClassKey> => ({
+export const getMuiDialogOverrides = (spacing: Spacing): OverridesStyleRules<DialogClassKey> => ({
     root: {},
     scrollPaper: {},
     scrollBody: {},
@@ -13,7 +13,7 @@ export const getMuiDialogOverrides = (spacing: Spacing): StyleRules<{}, DialogCl
         margin: spacing(8),
     },
     paperScrollPaper: {
-        maxHeight: `calc(100% - ${spacing(16)}px)`,
+        maxHeight: `calc(100% - ${spacing(16)})`,
     },
     paperScrollBody: {},
     paperWidthFalse: {},
@@ -33,7 +33,7 @@ export const getMuiDialogOverrides = (spacing: Spacing): StyleRules<{}, DialogCl
         maxWidth: 1920,
     },
     paperFullWidth: {
-        width: `calc(100% - ${spacing(16)}px)`,
+        width: `calc(100% - ${spacing(16)})`,
     },
     paperFullScreen: {},
 });

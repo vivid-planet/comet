@@ -1,8 +1,8 @@
-import { SvgIconClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { SvgIconClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiSvgIconOverrides = (palette: Palette): StyleRules<{}, SvgIconClassKey> => ({
+export const getMuiSvgIconOverrides = (palette: Palette): OverridesStyleRules<SvgIconClassKey> => ({
     root: {
         fontSize: 16,
     },

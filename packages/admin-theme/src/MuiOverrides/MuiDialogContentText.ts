@@ -1,8 +1,8 @@
-import { DialogContentTextClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { DialogContentTextClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiDialogTextContentOverrides = (palette: Palette): StyleRules<{}, DialogContentTextClassKey> => ({
+export const getMuiDialogTextContentOverrides = (palette: Palette): OverridesStyleRules<DialogContentTextClassKey> => ({
     root: {
         color: palette.text.primary,
         marginBottom: 20,

@@ -1,4 +1,4 @@
-import { ButtonGroupProps } from "@material-ui/core";
+import { ButtonGroupProps } from "@mui/material";
 
 export const getMuiButtonGroupProps = (): Partial<ButtonGroupProps> => ({
     disableElevation: true,

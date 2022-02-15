@@ -1,8 +1,8 @@
-import { IconButtonClassKey } from "@material-ui/core";
-import { Palette } from "@material-ui/core/styles/createPalette";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { IconButtonClassKey } from "@mui/material";
+import { Palette } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiIconButtonOverrides = (palette: Palette): StyleRules<{}, IconButtonClassKey> => ({
+export const getMuiIconButtonOverrides = (palette: Palette): OverridesStyleRules<IconButtonClassKey> => ({
     root: {
         color: palette.grey[900],
     },
@@ -13,5 +13,6 @@ export const getMuiIconButtonOverrides = (palette: Palette): StyleRules<{}, Icon
     colorSecondary: {},
     disabled: {},
     sizeSmall: {},
-    label: {},
+    sizeMedium: {},
+    sizeLarge: {},
 });

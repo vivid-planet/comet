@@ -1,8 +1,8 @@
-import { CardContentClassKey } from "@material-ui/core";
-import { Spacing } from "@material-ui/core/styles/createSpacing";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { CardContentClassKey } from "@mui/material";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
+import { Spacing } from "@mui/system";
 
-export const getMuiCardContentOverrides = (spacing: Spacing): StyleRules<{}, CardContentClassKey> => ({
+export const getMuiCardContentOverrides = (spacing: Spacing): OverridesStyleRules<CardContentClassKey> => ({
     root: {
         padding: spacing(4),
         "&:last-child": {

@@ -1,13 +1,15 @@
-import { InputAdornmentClassKey } from "@material-ui/core";
-import { StyleRules } from "@material-ui/styles/withStyles";
+import { InputAdornmentClassKey } from "@mui/material";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiInputAdornmentOverrides = (): StyleRules<{}, InputAdornmentClassKey> => ({
+export const getMuiInputAdornmentOverrides = (): OverridesStyleRules<InputAdornmentClassKey> => ({
     root: {
         height: "auto",
         alignSelf: "stretch",
         maxHeight: "none",
     },
     filled: {},
+    outlined: {},
+    standard: {},
     positionStart: {
         marginRight: 0,
     },
@@ -16,5 +18,5 @@ export const getMuiInputAdornmentOverrides = (): StyleRules<{}, InputAdornmentCl
     },
     disablePointerEvents: {},
     hiddenLabel: {},
-    marginDense: {},
+    sizeSmall: {},
 });

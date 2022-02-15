@@ -1,4 +1,4 @@
-import { ButtonProps } from "@material-ui/core/Button";
+import { ButtonProps } from "@mui/material/Button";
 
 export const getMuiButtonProps = (): Partial<ButtonProps> => ({
     disableElevation: true,

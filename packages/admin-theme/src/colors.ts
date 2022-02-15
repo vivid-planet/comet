@@ -1,4 +1,5 @@
-import { ColorPartial, PaletteColor, SimplePaletteColorOptions } from "@material-ui/core/styles/createPalette";
+import { PaletteColor, SimplePaletteColorOptions } from "@mui/material/styles";
+import { ColorPartial } from "@mui/material/styles/createPalette";
 
 export const bluePalette: PaletteColor = {
     light: "#73E8FF",
