@@ -1,5 +1,5 @@
-import { ListItem, ListItemIcon, ListItemProps, ListItemText, Theme } from "@material-ui/core";
-import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
+import { ListItem, ListItemIcon, ListItemProps, ListItemText, Theme } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { MenuLevel } from "./CollapsibleItem";
@@ -140,7 +140,7 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
 
 export const MenuItem = withStyles(styles, { name: "CometAdminMenuItem" })(Item);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminMenuItem: MenuItemClassKey;
     }

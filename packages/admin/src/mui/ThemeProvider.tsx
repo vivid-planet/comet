@@ -1,10 +1,15 @@
-import { Theme } from "@material-ui/core";
-import { createGenerateClassName, GenerateClassNameOptions, StylesProvider, ThemeProvider } from "@material-ui/styles";
-// @ts-ignore nested is used only internally from Material UI, there are no types defined
-import nested from "@material-ui/styles/ThemeProvider/nested";
+import { Theme } from "@mui/material";
+import { StyledEngineProvider } from "@mui/material/styles";
+// @ts-ignore nested is used only internally from MUI, there are no types defined
+import nested from "@mui/private-theming/ThemeProvider/nested";
+import { createGenerateClassName, GenerateClassNameOptions, StylesProvider, ThemeProvider } from "@mui/styles";
 import type { GenerateId } from "jss";
 import * as React from "react";
-import { ThemeProvider as StyledThemeProvider } from "styled-components";
+
+declare module "@mui/styles/defaultTheme" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface DefaultTheme extends Theme {}
+}
 
 interface IProps {
     theme: Theme;
@@ -49,10 +54,10 @@ function createGenerateCometClassName(options: GenerateClassNameOptions = {}): G
 
 export const MuiThemeProvider: React.FunctionComponent<IProps> = ({ theme, children }) => (
     <StylesProvider generateClassName={createGenerateCometClassName()}>
-        <ThemeProvider theme={theme}>
-            <StyledThemeProvider theme={theme}>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
                 <>{children}</>
-            </StyledThemeProvider>
-        </ThemeProvider>
+            </ThemeProvider>
+        </StyledEngineProvider>
     </StylesProvider>
 );

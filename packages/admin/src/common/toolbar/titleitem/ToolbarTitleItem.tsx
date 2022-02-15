@@ -1,6 +1,5 @@
-import { Typography, WithStyles } from "@material-ui/core";
-import { TypographyTypeMap } from "@material-ui/core/Typography/Typography";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { Typography, TypographyTypeMap } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { ToolbarItem } from "../item/ToolbarItem";
@@ -34,13 +33,13 @@ function TitleItem({
 
 export const ToolbarTitleItem = withStyles(styles, { name: "CometAdminToolbarTitleItem" })(TitleItem);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminToolbarTitleItem: ToolbarTitleItemClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminToolbarTitleItem: ToolbarTitleItemProps;
     }

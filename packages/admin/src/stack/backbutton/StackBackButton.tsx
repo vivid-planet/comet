@@ -1,6 +1,6 @@
-import { Button, ButtonProps, WithStyles } from "@material-ui/core";
-import { ArrowBack } from "@material-ui/icons";
-import { withStyles } from "@material-ui/styles";
+import { ArrowBack } from "@mui/icons-material";
+import { Button, ButtonProps } from "@mui/material";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -15,7 +15,6 @@ const StackBackBtn = ({ startIcon = <ArrowBack />, ...restProps }: StackBackButt
             {(stackApi) => {
                 return (
                     <Button
-                        color="default"
                         disabled={stackApi?.breadCrumbs == null || stackApi?.breadCrumbs.length <= 1}
                         onClick={stackApi?.goBack}
                         startIcon={startIcon}
@@ -31,13 +30,13 @@ const StackBackBtn = ({ startIcon = <ArrowBack />, ...restProps }: StackBackButt
 
 export const StackBackButton = withStyles(styles, { name: "CometAdminStackBackButton" })(StackBackBtn);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminStackBackButton: StackBackButtonClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminStackBackButton: StackBackButtonProps;
     }

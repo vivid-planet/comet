@@ -5,9 +5,13 @@ import { ErrorBoundary } from "./ErrorBoundary";
 
 const RouteWithErrorBoundary: React.FunctionComponent<RouteProps> = (props) => {
     return (
-        <ErrorBoundary key={JSON.stringify(props.path)}>
-            <Route {...props} />
-        </ErrorBoundary>
+        <>
+            {/* TODO: Fix this */}
+            {/* @ts-ignore */}
+            <ErrorBoundary key={JSON.stringify(props.path)}>
+                <Route {...props} />
+            </ErrorBoundary>
+        </>
     );
 };
 export { RouteWithErrorBoundary };

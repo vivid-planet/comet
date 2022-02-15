@@ -13,7 +13,7 @@ import {
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
-import { Card, CardContent, Divider, Typography } from "@material-ui/core";
+import { Card, CardContent, Divider, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";

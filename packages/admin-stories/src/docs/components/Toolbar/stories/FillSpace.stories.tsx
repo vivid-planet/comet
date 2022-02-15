@@ -1,5 +1,5 @@
 import { Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

@@ -1,6 +1,5 @@
-import { Link, Typography, WithStyles } from "@material-ui/core";
-import { TypographyTypeMap } from "@material-ui/core/Typography/Typography";
-import { withStyles } from "@material-ui/styles";
+import { Link, Typography, TypographyTypeMap } from "@mui/material";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
@@ -52,13 +51,13 @@ function Breadcrumbs({ typographyProps, classes }: ToolbarBreadcrumbsProps & Wit
 }
 export const ToolbarBreadcrumbs = withStyles(styles, { name: "CometAdminToolbarBreadcrumbs" })(Breadcrumbs);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsProps;
     }

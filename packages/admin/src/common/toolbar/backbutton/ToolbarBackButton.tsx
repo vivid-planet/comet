@@ -1,6 +1,6 @@
 import { ArrowLeft } from "@comet/admin-icons";
-import { IconButton, WithStyles } from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { IconButton } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { useStackApi } from "../../../stack/Api";
@@ -36,6 +36,7 @@ function BackButton({ backIcon = <ArrowLeft />, classes }: ToolbarBackButtonProp
                     onClick={() => {
                         stackApi?.goBack();
                     }}
+                    size="large"
                 >
                     {backIcon}
                 </IconButton>
@@ -46,13 +47,13 @@ function BackButton({ backIcon = <ArrowLeft />, classes }: ToolbarBackButtonProp
 
 export const ToolbarBackButton = withStyles(styles, { name: "CometAdminToolbarBackButton" })(BackButton);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminToolbarBackButton: ToolbarBackButtonClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminToolbarBackButton: ToolbarBackButtonProps;
     }

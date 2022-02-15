@@ -1,6 +1,6 @@
 import { Field, FinalFormInput, FormSection } from "@comet/admin";
 import { createFinalFormRte } from "@comet/admin-rte";
-import { Button, Card, CardContent, Grid } from "@material-ui/core";
+import { Button, Card, CardContent, Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";

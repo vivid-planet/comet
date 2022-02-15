@@ -1,7 +1,6 @@
-import { WithStyles } from "@material-ui/core";
-import MuiTab, { TabProps as MuiTabProps } from "@material-ui/core/Tab";
-import Tabs, { TabsProps } from "@material-ui/core/Tabs";
-import { withStyles } from "@material-ui/styles";
+import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
+import Tabs, { TabsProps } from "@mui/material/Tabs";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
@@ -10,6 +9,8 @@ import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { StackSwitchApiContext } from "../stack/Switch";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
 
+// TODO: Fix this
+// @ts-ignore
 interface TabProps extends MuiTabProps {
     path: string;
     label: React.ReactNode;
@@ -132,7 +133,7 @@ function RouterTabsComponent({
 
 export const RouterTabs = withRouter(withStyles(styles, { name: "CometAdminRouterTabs" })(RouterTabsComponent));
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminRouterTabs: RouterTabsClassKey;
     }

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { Field, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTableQueryFilter } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as qs from "qs";
 import * as React from "react";

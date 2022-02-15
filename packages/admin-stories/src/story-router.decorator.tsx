@@ -31,6 +31,8 @@ function HistoryWatcher({ history, children }: React.PropsWithChildren<RouteComp
 
 export function storyRouterDecorator<StoryFnReturnType = unknown>() {
     return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
+        // TODO: Fix this
+        // @ts-ignore
         return <StoryRouter>{fn()}</StoryRouter>;
     };
 }

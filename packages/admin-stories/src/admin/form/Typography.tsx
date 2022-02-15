@@ -1,5 +1,5 @@
 import { Field, FieldContainer } from "@comet/admin";
-import { Card, CardContent, Divider, Typography } from "@material-ui/core";
+import { Card, CardContent, Divider, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";

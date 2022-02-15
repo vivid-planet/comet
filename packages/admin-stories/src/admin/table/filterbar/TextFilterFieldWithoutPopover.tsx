@@ -8,7 +8,7 @@ import {
     TableFilterFinalForm,
     useTableQueryFilter,
 } from "@comet/admin";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";

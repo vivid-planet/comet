@@ -1,6 +1,6 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { Breadcrumbs as MuiBreadcrumbs, BreadcrumbsProps, Link, Typography, WithStyles } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
+import { Breadcrumbs as MuiBreadcrumbs, BreadcrumbsProps, Link, Typography } from "@mui/material";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
@@ -46,13 +46,13 @@ const StackBreadcrumbsComponent = ({
 
 export const StackBreadcrumbs = withStyles(styles, { name: "CometAdminStackBreadcrumbs" })(StackBreadcrumbsComponent);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminStackBreadcrumbs: StackBreadcrumbsClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminStackBreadcrumbs: StackBreadcrumbProps;
     }

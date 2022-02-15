@@ -1,11 +1,6 @@
 import { ChevronLeft, ChevronRight } from "@comet/admin-icons";
-import {
-    ButtonBase,
-    TabScrollButtonClassKey as MuiTabScrollButtonClassKey,
-    TabScrollButtonProps as MuiTabScrollButtonProps,
-    WithStyles,
-} from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { ButtonBase, TabScrollButtonClassKey as MuiTabScrollButtonClassKey, TabScrollButtonProps as MuiTabScrollButtonProps } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 export type TabScrollButtonClassKey = MuiTabScrollButtonClassKey;
@@ -42,13 +37,13 @@ function ScrollButton({ orientation, direction, disabled, onClick, classes }: Ta
 
 export const TabScrollButton = withStyles(styles, { name: "TabScrollButton" })(ScrollButton);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         TabScrollButton: TabScrollButtonClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminTabScrollButton: TabScrollButtonProps;
     }

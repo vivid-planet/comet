@@ -1,11 +1,10 @@
 import { Field, FinalFormRangeInput, Toolbar, ToolbarTitleItem } from "@comet/admin";
-import { Box, Button, Card, CardContent, Typography } from "@material-ui/core";
+import { Box, Button, Card, CardContent, styled, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
-import styled from "styled-components";
 
-const Thumb = styled.div`
+const Thumb = styled("div")`
     && {
         margin-top: -9px;
         height: 20px;

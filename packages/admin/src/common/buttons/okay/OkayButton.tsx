@@ -1,6 +1,6 @@
 import { Check } from "@comet/admin-icons";
-import { Button, ButtonClassKey, ButtonProps, WithStyles } from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { Button, ButtonClassKey, ButtonProps } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -10,14 +10,16 @@ export type OkayButtonProps = ButtonProps;
 const styles = () => {
     return createStyles<OkayButtonClassKey, OkayButtonProps>({
         root: {},
-        label: {},
         text: {},
+        textInherit: {},
         textPrimary: {},
         textSecondary: {},
         outlined: {},
+        outlinedInherit: {},
         outlinedPrimary: {},
         outlinedSecondary: {},
         contained: {},
+        containedInherit: {},
         containedPrimary: {},
         containedSecondary: {},
         disableElevation: {},
@@ -25,12 +27,16 @@ const styles = () => {
         disabled: {},
         colorInherit: {},
         textSizeSmall: {},
+        textSizeMedium: {},
         textSizeLarge: {},
         outlinedSizeSmall: {},
+        outlinedSizeMedium: {},
         outlinedSizeLarge: {},
         containedSizeSmall: {},
+        containedSizeMedium: {},
         containedSizeLarge: {},
         sizeSmall: {},
+        sizeMedium: {},
         sizeLarge: {},
         fullWidth: {},
         startIcon: {},
@@ -57,13 +63,13 @@ function OkayBtn({
 
 export const OkayButton = withStyles(styles, { name: "CometAdminOkayButton" })(OkayBtn);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminOkayButton: OkayButtonClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminOkayButton: OkayButtonProps;
     }

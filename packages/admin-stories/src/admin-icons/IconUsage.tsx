@@ -1,6 +1,6 @@
 import { Cookie, Error, ThreeDotSaving } from "@comet/admin-icons";
-import { Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -33,7 +33,7 @@ function Story() {
                             Small: <Cookie fontSize={"small"} />
                         </Typography>
                         <Typography>
-                            Default Size: <Cookie fontSize={"default"} />
+                            Default Size: <Cookie fontSize={"medium"} />
                         </Typography>
 
                         <Typography>

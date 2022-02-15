@@ -1,6 +1,6 @@
-import { css } from "styled-components";
+import { css } from "@mui/material";
 
-export const previewGlobalStyles = css`
+export const previewGlobalStyles = css(`
     body {
         margin: 0;
         background-color: ${({ theme }) => theme.palette.background.default};
@@ -23,4 +23,4 @@ export const previewGlobalStyles = css`
             margin-top: 25px;
         }
     }
-`;
+`);

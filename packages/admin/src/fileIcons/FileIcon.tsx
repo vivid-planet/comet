@@ -1,4 +1,4 @@
-import { SvgIconProps } from "@material-ui/core/SvgIcon";
+import { SvgIconProps } from "@mui/material/SvgIcon";
 import * as React from "react";
 
 import { Excel } from "./Excel";

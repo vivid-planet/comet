@@ -1,5 +1,4 @@
-import { WithStyles } from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 export type ToolbarFillSpaceClassKey = "root";
@@ -22,13 +21,13 @@ function FillSpace({ children, classes }: ToolbarFillSpaceProps & WithStyles<typ
 
 export const ToolbarFillSpace = withStyles(styles, { name: "CometAdminToolbarFillSpace" })(FillSpace);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminToolbarFillSpace: ToolbarFillSpaceClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminToolbarFillSpace: ToolbarFillSpaceProps;
     }

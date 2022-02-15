@@ -12,7 +12,7 @@ import {
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Dashboard, Wrench } from "@comet/admin-icons";
-import { Card, CardContent, Typography } from "@material-ui/core";
+import { Card, CardContent, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

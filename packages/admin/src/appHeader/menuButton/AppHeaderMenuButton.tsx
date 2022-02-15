@@ -1,6 +1,6 @@
 import { Hamburger } from "@comet/admin-icons";
-import { IconButton, IconButtonClassKey, IconButtonProps, Theme, WithStyles } from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { IconButton, IconButtonClassKey, IconButtonProps, Theme } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { MenuContext } from "../../mui/menu/Context";
@@ -23,7 +23,8 @@ const styles = ({ spacing }: Theme) => {
         colorSecondary: {},
         disabled: {},
         sizeSmall: {},
-        label: {},
+        sizeMedium: {},
+        sizeLarge: {},
     });
 };
 
@@ -35,7 +36,7 @@ function MenuButton({
     const { toggleOpen } = React.useContext(MenuContext);
 
     return (
-        <IconButton classes={classes} onClick={() => toggleOpen()} {...restProps}>
+        <IconButton classes={classes} onClick={() => toggleOpen()} {...restProps} size="large">
             {children}
         </IconButton>
     );
@@ -43,13 +44,13 @@ function MenuButton({
 
 export const AppHeaderMenuButton = withStyles(styles, { name: "CometAdminAppHeaderMenuButton" })(MenuButton);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminAppHeaderMenuButton: AppHeaderMenuButtonClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminAppHeaderMenuButton: AppHeaderMenuButtonProps;
     }

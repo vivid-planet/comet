@@ -1,8 +1,8 @@
 import { PureQueryOptions } from "@apollo/client";
-import { Button, IconButton } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Button, IconButton } from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -33,7 +33,7 @@ export class TableDeleteButton extends React.Component<IProps> {
 
                     if (!text && icon) {
                         return (
-                            <IconButton onClick={onClick} disabled={disabled} color={color}>
+                            <IconButton onClick={onClick} disabled={disabled} color={color} size="large">
                                 {icon}
                             </IconButton>
                         );

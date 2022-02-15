@@ -1,4 +1,4 @@
-import { SnackbarCloseReason, SnackbarProps } from "@material-ui/core";
+import { SnackbarCloseReason, SnackbarProps } from "@mui/material";
 import * as React from "react";
 
 import { UndoSnackbarProps } from "./UndoSnackbar";
@@ -62,6 +62,8 @@ export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
             {snackbar !== undefined &&
                 React.cloneElement<SnackbarProps>(snackbar, {
                     open: open,
+                    // TODO: Fix this
+                    // @ts-ignore
                     onClose: (event, reason) => handleClose(event, reason, snackbar?.props.onClose),
                 })}
         </SnackbarContext.Provider>

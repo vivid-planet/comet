@@ -15,7 +15,7 @@ import {
     TableHead,
     TableRow,
     Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -53,7 +53,7 @@ export const Story: React.FC = () => {
                             <Button variant={"contained"} color={"secondary"} startIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"contained"} color={"default"} startIcon={<ArrowRight />}>
+                            <Button variant={"contained"} startIcon={<ArrowRight />}>
                                 Text
                             </Button>
                             <Button variant={"contained"} disabled startIcon={<ArrowRight />}>
@@ -67,7 +67,7 @@ export const Story: React.FC = () => {
                             <Button variant={"contained"} color={"secondary"} endIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"contained"} color={"default"} endIcon={<ArrowRight />}>
+                            <Button variant={"contained"} endIcon={<ArrowRight />}>
                                 Text
                             </Button>
                             <Button variant={"contained"} disabled endIcon={<ArrowRight />}>
@@ -81,9 +81,7 @@ export const Story: React.FC = () => {
                             <Button variant={"contained"} color={"secondary"}>
                                 Text
                             </Button>
-                            <Button variant={"contained"} color={"default"}>
-                                Text
-                            </Button>
+                            <Button variant={"contained"}>Text</Button>
                             <Button variant={"contained"} disabled>
                                 Text
                             </Button>
@@ -147,7 +145,7 @@ export const Story: React.FC = () => {
                             <Button variant={"text"} color={"secondary"} startIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"text"} color={"default"} startIcon={<ArrowRight />}>
+                            <Button variant={"text"} startIcon={<ArrowRight />}>
                                 Text
                             </Button>
                             <Button variant={"text"} disabled startIcon={<ArrowRight />}>
@@ -161,7 +159,7 @@ export const Story: React.FC = () => {
                             <Button variant={"text"} color={"secondary"} endIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"text"} color={"default"} endIcon={<ArrowRight />}>
+                            <Button variant={"text"} endIcon={<ArrowRight />}>
                                 Text
                             </Button>
                             <Button variant={"text"} disabled endIcon={<ArrowRight />}>
@@ -175,9 +173,7 @@ export const Story: React.FC = () => {
                             <Button variant={"text"} color={"secondary"}>
                                 Text
                             </Button>
-                            <Button variant={"text"} color={"default"}>
-                                Text
-                            </Button>
+                            <Button variant={"text"}>Text</Button>
                             <Button variant={"text"} disabled>
                                 Text
                             </Button>
@@ -271,13 +267,13 @@ export const Story: React.FC = () => {
                                             </TableCell>
                                             <TableCell>Foo bar</TableCell>
                                             <TableCell align="right">
-                                                <IconButton>
+                                                <IconButton size="large">
                                                     <Edit color={"primary"} />
                                                 </IconButton>
-                                                <IconButton>
+                                                <IconButton size="large">
                                                     <Favorite />
                                                 </IconButton>
-                                                <IconButton>
+                                                <IconButton size="large">
                                                     <MoreVertical />
                                                 </IconButton>
                                             </TableCell>

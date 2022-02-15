@@ -1,5 +1,4 @@
-import { WithStyles } from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 export type ToolbarActionsClassKey = "root";
@@ -22,7 +21,7 @@ function Actions({ children, classes }: Props & WithStyles<typeof styles>): Reac
 
 export const ToolbarActions = withStyles(styles, { name: "CometAdminToolbarActions" })(Actions);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminToolbarActions: ToolbarActionsClassKey;
     }

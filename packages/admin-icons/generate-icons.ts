@@ -50,7 +50,7 @@ const getFormattedText = async (text: string) => {
 
 const writeComponent = async (componentName: string, pathData: string) => {
     const component = await getFormattedText(`
-        import { SvgIcon, SvgIconProps } from "@material-ui/core";
+        import { SvgIcon, SvgIconProps } from "@mui/material";
         import * as React from "react";
         
         export default function ${componentName}(props: SvgIconProps): JSX.Element {

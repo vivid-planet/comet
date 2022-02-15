@@ -1,5 +1,5 @@
 import { Field, FinalForm, FinalFormContext, FinalFormInput } from "@comet/admin";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Typography } from "@mui/material";
 import { select } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";

@@ -12,7 +12,7 @@ import {
     useStackSwitch,
     useStackSwitchApi,
 } from "@comet/admin";
-import { Button, Link } from "@material-ui/core";
+import { Button, Link } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

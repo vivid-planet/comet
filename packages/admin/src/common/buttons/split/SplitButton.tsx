@@ -1,6 +1,6 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, ButtonGroup, ButtonGroupProps, MenuItem, MenuList, Popover } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
+import { Button, ButtonGroup, ButtonGroupProps, MenuItem, MenuList, Popover } from "@mui/material";
+import { withStyles } from "@mui/styles";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
@@ -116,7 +116,7 @@ const SplitBtn = ({
 
 export const SplitButton = withStyles({}, { name: "CometAdminSplitButton" })(SplitBtn);
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminSplitButton: SplitButtonProps;
     }

@@ -12,4 +12,5 @@ export const getMuiFormControlLabelOverrides = (): OverridesStyleRules<FormContr
     labelPlacementBottom: {},
     disabled: {},
     label: {},
+    error: {},
 });

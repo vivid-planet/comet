@@ -23,6 +23,8 @@ const SwapiApolloProvider: React.FunctionComponent = ({ children }) => {
 
 export function apolloSwapiStoryDecorator<StoryFnReturnType = unknown>() {
     return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
+        // TODO: Fix this
+        // @ts-ignore
         return <SwapiApolloProvider>{fn()}</SwapiApolloProvider>;
     };
 }

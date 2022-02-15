@@ -1,5 +1,5 @@
-import { CssBaseline, WithStyles } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
+import { CssBaseline } from "@mui/material";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { AppHeader } from "../appHeader/AppHeader";
@@ -62,13 +62,13 @@ function MasterLayoutComponent({
 
 export const MasterLayout = withStyles(styles, { name: "CometAdminMasterLayout" })(MasterLayoutComponent);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminMasterLayout: MasterLayoutClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminMasterLayout: MasterLayoutProps;
     }

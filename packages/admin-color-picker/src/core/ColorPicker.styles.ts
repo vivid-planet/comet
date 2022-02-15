@@ -1,6 +1,5 @@
-import { Theme } from "@material-ui/core";
-import zIndex from "@material-ui/core/styles/zIndex";
-import { createStyles } from "@material-ui/styles";
+import { Theme } from "@mui/material";
+import { createStyles } from "@mui/styles";
 
 import { ColorPickerProps } from "./ColorPicker";
 
@@ -50,7 +49,7 @@ export const styles = (theme: Theme) => {
             width: "100%",
         },
         popper: {
-            zIndex: zIndex.modal,
+            zIndex: theme.zIndex.modal,
         },
         popperPaper: {
             width: 300,

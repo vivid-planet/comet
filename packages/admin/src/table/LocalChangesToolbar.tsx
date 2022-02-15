@@ -1,4 +1,4 @@
-import { CircularProgress, Toolbar } from "@material-ui/core";
+import { CircularProgress, Toolbar } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 

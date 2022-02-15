@@ -1,5 +1,5 @@
 import { FieldContainer } from "@comet/admin";
-import { InputBase } from "@material-ui/core";
+import { InputBase } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

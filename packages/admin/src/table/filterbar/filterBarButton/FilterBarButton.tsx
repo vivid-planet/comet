@@ -1,6 +1,8 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, WithStyles, withStyles } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
+import { Button } from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
+import { WithStyles } from "@mui/styles";
+import withStyles from "@mui/styles/withStyles";
 import clsx from "clsx";
 import * as React from "react";
 
@@ -47,13 +49,13 @@ const FilterBarButtonWithStyles = withStyles(styles, { name: "CometAdminFilterBa
 
 export { FilterBarButtonWithStyles as FilterBarButton };
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminFilterBarButton: FilterBarButtonClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminFilterBarButton: FilterBarButtonProps;
     }

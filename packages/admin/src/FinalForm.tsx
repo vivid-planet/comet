@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@mui/material";
 import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
 import setFieldData from "final-form-set-field-data";
 import * as React from "react";

@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from "@material-ui/core";
+import { Button, CircularProgress } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -24,7 +24,6 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
 
     return (
         <Button
-            color="default"
             onClick={onClickButtonPressed}
             startIcon={
                 loading ? (

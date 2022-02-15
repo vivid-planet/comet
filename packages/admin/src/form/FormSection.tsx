@@ -1,6 +1,6 @@
-import { Typography, WithStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { Typography } from "@mui/material";
+import { Theme } from "@mui/material/styles";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 export type FormSectionKey = "root" | "disableMarginBottom" | "title" | "children";
@@ -50,13 +50,13 @@ function Section({
 
 export const FormSection = withStyles(styles, { name: "CometAdminFormSection" })(Section);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminFormSection: FormSectionKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminFormSection: FormSectionProps;
     }

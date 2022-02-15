@@ -1,10 +1,9 @@
-import { Chip, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography, WithStyles } from "@material-ui/core";
-import zIndex from "@material-ui/core/styles/zIndex";
-import { SvgIconComponent } from "@material-ui/icons";
-import CancelIcon from "@material-ui/icons/Cancel";
-import ClearIcon from "@material-ui/icons/Clear";
-import DropdownIcon from "@material-ui/icons/KeyboardArrowDown";
-import { withStyles } from "@material-ui/styles";
+import { SvgIconComponent } from "@mui/icons-material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import ClearIcon from "@mui/icons-material/Clear";
+import DropdownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { Chip, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography } from "@mui/material";
+import { WithStyles, withStyles } from "@mui/styles";
 import classNames from "classnames";
 import * as React from "react";
 import Select from "react-select";
@@ -57,7 +56,7 @@ function Option<OptionType, IsMulti extends boolean>(props: OptionProps<OptionTy
     return (
         <MenuItem
             classes={{ root: rootClasses.join(" ") }}
-            buttonRef={props.innerRef}
+            ref={props.innerRef} // TODO: Check if changing `buttonRef` to `ref` is correct
             selected={props.isSelected}
             disabled={props.isDisabled}
             component="div"
@@ -180,7 +179,7 @@ class SelectWrapper<OptionType> extends React.Component<WithStyles<typeof styles
 const ExtendedSelectWrapper = withStyles(styles, { name: "CometAdminSelect" })(SelectWrapper);
 
 const reactSelectStyles = {
-    menuPortal: (styles: any) => ({ ...styles, zIndex: zIndex.modal }),
+    menuPortal: (styles: any) => ({ ...styles, zIndex: 1300 }), // TODO: Use: theme.zIndex.modal
 };
 
 export class ReactSelect<OptionType> extends React.Component<ReactSelectProps<OptionType>> {
@@ -206,13 +205,13 @@ export class ReactSelectAsyncCreatable<OptionType, IsMulti extends boolean> exte
     }
 }
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminSelect: SelectClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminSelect: SelectProps<any>;
     }

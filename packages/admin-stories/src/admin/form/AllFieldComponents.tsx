@@ -8,7 +8,7 @@ import {
     FinalFormSelect,
     FinalFormSwitch,
 } from "@comet/admin";
-import { Button, Card, CardContent, FormControlLabel, MenuItem } from "@material-ui/core";
+import { Button, Card, CardContent, FormControlLabel, MenuItem } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";

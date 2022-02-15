@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import gql from "graphql-tag";
 import * as React from "react";

@@ -20,14 +20,21 @@ import {
     Grid,
     MenuItem,
     Paper,
+    styled,
+    Theme,
+    ThemeProvider,
     Typography,
-    withStyles,
-} from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/styles";
+} from "@mui/material";
+import { StyledEngineProvider } from "@mui/material/styles";
+import withStyles from "@mui/styles/withStyles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
-import styled from "styled-components";
+
+declare module "@mui/styles/defaultTheme" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface DefaultTheme extends Theme {}
+}
 
 const fooBarOptions = [
     { value: "foo", label: "Foo" },
@@ -42,7 +49,7 @@ const flavourOptions = [
 
 storiesOf("stories/form/Layout", module)
     .add("Fields in sidebar", () => {
-        const Root = styled.div`
+        const Root = styled("div")`
             display: flex;
             align-items: stretch;
             justify-content: stretch;
@@ -65,7 +72,7 @@ storiesOf("stories/form/Layout", module)
             },
         })(Typography);
 
-        const Sidebar = styled.div`
+        const Sidebar = styled("div")`
             max-width: 350px;
             flex-grow: 1;
         `;
@@ -273,41 +280,43 @@ storiesOf("stories/form/Layout", module)
         });
 
         return (
-            <ThemeProvider theme={theme}>
-                <Form
-                    onSubmit={() => {}}
-                    initialValues={{ select: "none" }}
-                    render={({ handleSubmit }) => (
-                        <form onSubmit={handleSubmit}>
-                            <Field name="select" label="Select">
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="none">No value</MenuItem>
-                                        {flavourOptions.map((option) => (
-                                            <MenuItem value={option.value} key={option.value}>
-                                                {option.label}
-                                            </MenuItem>
+            <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={theme}>
+                    <Form
+                        onSubmit={() => {}}
+                        initialValues={{ select: "none" }}
+                        render={({ handleSubmit }) => (
+                            <form onSubmit={handleSubmit}>
+                                <Field name="select" label="Select">
+                                    {(props) => (
+                                        <FinalFormSelect {...props}>
+                                            <MenuItem value="none">No value</MenuItem>
+                                            {flavourOptions.map((option) => (
+                                                <MenuItem value={option.value} key={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </FinalFormSelect>
+                                    )}
+                                </Field>
+                                <Field name="text" label="Text" component={FinalFormInput} fullWidth />
+                                <Field name="Multiline" label="Multiline" multiline minRows={3} maxRows={5} component={FinalFormInput} fullWidth />
+                                <FieldContainer label="Radio" fullWidth>
+                                    <>
+                                        {flavourOptions.map(({ value, label }) => (
+                                            <Field key={value} name="radio" type="radio" value={value} variant="vertical">
+                                                {(props) => <FormControlLabel label={label} control={<FinalFormRadio {...props} />} />}
+                                            </Field>
                                         ))}
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
-                            <Field name="text" label="Text" component={FinalFormInput} fullWidth />
-                            <Field name="Multiline" label="Multiline" multiline minRows={3} maxRows={5} component={FinalFormInput} fullWidth />
-                            <FieldContainer label="Radio" fullWidth>
-                                <>
-                                    {flavourOptions.map(({ value, label }) => (
-                                        <Field key={value} name="radio" type="radio" value={value} variant="vertical">
-                                            {(props) => <FormControlLabel label={label} control={<FinalFormRadio {...props} />} />}
-                                        </Field>
-                                    ))}
-                                </>
-                            </FieldContainer>
-                            <Field name="checkbox" type="checkbox" label="Checkbox">
-                                {(props) => <FormControlLabel label="" control={<FinalFormCheckbox {...props} />} />}
-                            </Field>
-                        </form>
-                    )}
-                />
-            </ThemeProvider>
+                                    </>
+                                </FieldContainer>
+                                <Field name="checkbox" type="checkbox" label="Checkbox">
+                                    {(props) => <FormControlLabel label="" control={<FinalFormCheckbox {...props} />} />}
+                                </Field>
+                            </form>
+                        )}
+                    />
+                </ThemeProvider>
+            </StyledEngineProvider>
         );
     });

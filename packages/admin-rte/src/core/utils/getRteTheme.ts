@@ -1,4 +1,4 @@
-import { grey as greyPalette } from "@material-ui/core/colors";
+import { grey as greyPalette } from "@mui/material/colors";
 import * as React from "react";
 
 import { RteProps } from "../Rte";

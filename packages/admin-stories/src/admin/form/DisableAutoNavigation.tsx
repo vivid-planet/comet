@@ -1,8 +1,8 @@
 import { MainContent, Stack, StackPage, StackSwitch, StackSwitchApiContext, Toolbar, ToolbarBackButton, ToolbarItem } from "@comet/admin";
 import { Table } from "@comet/admin";
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
-import { Box, Card, CardContent, IconButton, Paper, Typography } from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
+import { Edit } from "@mui/icons-material";
+import { Box, Card, CardContent, IconButton, Paper, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Switch } from "react-router";
@@ -42,7 +42,7 @@ const SampleTable: React.FunctionComponent = () => {
                         {
                             name: "actions",
                             render: (recipe) => (
-                                <IconButton onClick={() => stackApi.activatePage("edit", recipe.id)}>
+                                <IconButton onClick={() => stackApi.activatePage("edit", recipe.id)} size="large">
                                     <Edit color={"primary"} />
                                 </IconButton>
                             ),

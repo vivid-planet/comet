@@ -1,9 +1,9 @@
 import { Check, Error, Save, ThreeDotSaving } from "@comet/admin-icons";
-import { Button, ButtonClassKey, WithStyles } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
-import { withStyles } from "@material-ui/styles";
-import { ClassKeyOfStyles } from "@material-ui/styles/withStyles";
-import { ClassNameMap } from "@material-ui/styles/withStyles/withStyles";
+import { Button, ButtonClassKey } from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
+import { WithStyles, withStyles } from "@mui/styles";
+import { ClassKeyOfStyles } from "@mui/styles/withStyles";
+import { ClassNameMap } from "@mui/styles/withStyles/withStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -127,13 +127,13 @@ const resolveClassForDisplayState = (
 
 export const SaveButton = withStyles(styles, { name: "CometAdminSaveButton" })(SaveBtn);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminSaveButton: SaveButtonClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminSaveButton: SaveButtonProps;
     }

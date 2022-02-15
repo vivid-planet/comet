@@ -1,5 +1,5 @@
 import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
-import { Button, List, ListItem, Snackbar } from "@material-ui/core";
+import { Button, List, ListItem, Snackbar } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

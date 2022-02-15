@@ -1,5 +1,5 @@
 import { Delete, Save } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -29,11 +29,11 @@ export function RouterConfirmationDialog({ message, handleClose, isOpen, showSav
             <DialogActions>
                 <CancelButton onClick={() => handleClose(PromptAction.Cancel)} />
                 <ToolbarFillSpace />
-                <Button startIcon={<Delete />} color="default" variant="contained" onClick={() => handleClose(PromptAction.Discard)}>
+                <Button startIcon={<Delete />} color="info" variant="contained" onClick={() => handleClose(PromptAction.Discard)}>
                     <FormattedMessage id="cometAdmin.generic.discard" defaultMessage="Discard" />
                 </Button>
                 {showSaveButton && (
-                    <Button startIcon={<Save />} color="primary" variant="contained" onClick={() => handleClose(PromptAction.Save)}>
+                    <Button startIcon={<Save />} variant="contained" onClick={() => handleClose(PromptAction.Save)}>
                         <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
                     </Button>
                 )}

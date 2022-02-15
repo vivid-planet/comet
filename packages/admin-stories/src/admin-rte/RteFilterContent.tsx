@@ -6,7 +6,7 @@ import {
     makeRteApi,
     Rte,
 } from "@comet/admin-rte";
-import { Box, Card, CardContent, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import { EditorState, EntityInstance } from "draft-js";
 import * as React from "react";

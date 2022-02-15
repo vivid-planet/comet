@@ -1,5 +1,5 @@
 import { IRteReadOnlyOptions, makeRteApi, RteReadOnly } from "@comet/admin-rte";
-import { Box, Card, CardContent } from "@material-ui/core";
+import { Box, Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

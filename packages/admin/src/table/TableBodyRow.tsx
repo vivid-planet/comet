@@ -1,6 +1,6 @@
-import { TableRow, WithStyles } from "@material-ui/core";
-import { TableRowProps } from "@material-ui/core/TableRow";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { TableRow } from "@mui/material";
+import { TableRowProps } from "@mui/material/TableRow";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 export type TableBodyRowClassKey = "root" | "even" | "odd";
@@ -27,13 +27,13 @@ const Row = React.forwardRef<HTMLTableRowElement, TableBodyRowProps & WithStyles
 
 export const TableBodyRow = withStyles(styles, { name: "CometAdminTableBodyRow" })(Row);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminTableBodyRow: TableBodyRowClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminTableBodyRow: TableBodyRowProps;
     }

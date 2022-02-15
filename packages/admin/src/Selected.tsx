@@ -1,5 +1,5 @@
 import { ApolloError, useQuery } from "@apollo/client";
-import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
+import { Box, Card, CircularProgress, Typography } from "@mui/material";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 

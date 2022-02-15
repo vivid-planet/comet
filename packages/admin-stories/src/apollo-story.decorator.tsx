@@ -18,7 +18,8 @@ export function apolloStoryDecorator<StoryFnReturnType = unknown>(options?: { ur
             link,
             cache,
         });
-
+        // TODO: Fix this
+        // @ts-ignore
         return <ApolloProvider client={client}>{fn()}</ApolloProvider>;
     };
 }

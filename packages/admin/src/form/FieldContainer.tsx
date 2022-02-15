@@ -1,5 +1,5 @@
-import { FormControl, FormHelperText, FormLabel, Theme, WithStyles } from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { FormControl, FormHelperText, FormLabel, Theme } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 export interface FieldContainerProps {
@@ -167,13 +167,13 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & Field
 
 export const FieldContainer = withStyles(styles, { name: "CometAdminFormFieldContainer" })(FieldContainerComponent);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminFormFieldContainer: FieldContainerClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminFormFieldContainer: FieldContainerProps;
     }

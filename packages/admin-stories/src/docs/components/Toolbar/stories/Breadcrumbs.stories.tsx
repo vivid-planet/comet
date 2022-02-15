@@ -1,5 +1,5 @@
 import { StackSwitchApiContext, Toolbar, ToolbarActions, ToolbarBackButton, ToolbarBreadcrumbs, ToolbarFillSpace } from "@comet/admin";
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

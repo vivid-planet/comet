@@ -11,7 +11,7 @@ import {
     TableQuery,
     useTableQuery,
 } from "@comet/admin";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";

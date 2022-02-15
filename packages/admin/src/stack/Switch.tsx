@@ -180,7 +180,11 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
                     // now render initial page (as last route so it's a fallback)
                     let initialPage: React.ReactElement<IStackPageProps> | null = null;
                     React.Children.forEach(props.children, (page) => {
+                        // TODO: Fix this
+                        // @ts-ignore
                         if (isInitialPage(page.props.name)) {
+                            // TODO: Fix this
+                            // @ts-ignore
                             initialPage = page;
                         }
                     });

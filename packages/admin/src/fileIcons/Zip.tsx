@@ -1,4 +1,4 @@
-import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
+import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 import * as React from "react";
 
 export const Zip: React.FunctionComponent<SvgIconProps> = (props) => (

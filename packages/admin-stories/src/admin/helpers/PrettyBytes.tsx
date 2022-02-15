@@ -1,10 +1,9 @@
 import { PrettyBytes } from "@comet/admin";
-import { Card, CardContent, Grid, Typography } from "@material-ui/core";
+import { Card, CardContent, Grid, styled, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import styled from "styled-components";
 
-const Content = styled.div`
+const Content = styled("div")`
     display: grid;
     grid-template-columns: auto auto;
     gap: 10px;

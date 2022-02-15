@@ -1,6 +1,6 @@
 import { AppHeader, AppHeaderDropdown, AppHeaderFillSpace } from "@comet/admin";
 import { Snips } from "@comet/admin-icons";
-import { Box, MenuItem, MenuList, Typography } from "@material-ui/core";
+import { Box, MenuItem, MenuList, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -30,9 +30,9 @@ storiesOf("stories/components/AppHeader/Dropdown", module).add("AppHeader Dropdo
                     {() => {
                         return (
                             <MenuList>
-                                <MenuItem button>Item 1</MenuItem>
-                                <MenuItem button>Item 2</MenuItem>
-                                <MenuItem button>Item 3</MenuItem>
+                                <MenuItem>Item 1</MenuItem>
+                                <MenuItem>Item 2</MenuItem>
+                                <MenuItem>Item 3</MenuItem>
                             </MenuList>
                         );
                     }}

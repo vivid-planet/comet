@@ -1,6 +1,6 @@
 import { StackApiContext, StackSwitchApiContext, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
 import { ChevronLeft } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@material-ui/core";
+import { Button, IconButton, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -22,6 +22,7 @@ storiesOf("stories/components/Toolbar/Custom Back Button", module)
                                     onClick={() => {
                                         stackApi.goBack?.();
                                     }}
+                                    size="large"
                                 >
                                     <ChevronLeft fontSize={"large"} />
                                     <Typography>Back</Typography>

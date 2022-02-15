@@ -1,5 +1,4 @@
-import { WithStyles } from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 export type FilterBarClassKey = "root" | "barWrapper";
@@ -32,12 +31,12 @@ function Bar({ children, classes }: FilterBarProps & WithStyles<typeof styles>):
 
 export const FilterBar = withStyles(styles, { name: "CometAdminFilterBar" })(Bar);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminFilterBar: FilterBarClassKey;
     }
 }
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminFilterBar: FilterBarProps;
     }

@@ -1,8 +1,8 @@
 import { Delete } from "@comet/admin-icons";
-import { Button, ButtonClassKey, WithStyles } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { Button, ButtonClassKey } from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
+import { Theme } from "@mui/material/styles";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -17,16 +17,18 @@ const styles = ({ palette }: Theme) => {
                 backgroundColor: palette.error.dark,
             },
         },
-        label: {},
         text: {
             color: palette.error.contrastText,
         },
+        textInherit: {},
         textPrimary: {},
         textSecondary: {},
         outlined: {},
+        outlinedInherit: {},
         outlinedPrimary: {},
         outlinedSecondary: {},
         contained: {},
+        containedInherit: {},
         containedPrimary: {},
         containedSecondary: {},
         disableElevation: {},
@@ -34,12 +36,16 @@ const styles = ({ palette }: Theme) => {
         disabled: {},
         colorInherit: {},
         textSizeSmall: {},
+        textSizeMedium: {},
         textSizeLarge: {},
         outlinedSizeSmall: {},
+        outlinedSizeMedium: {},
         outlinedSizeLarge: {},
         containedSizeSmall: {},
+        containedSizeMedium: {},
         containedSizeLarge: {},
         sizeSmall: {},
+        sizeMedium: {},
         sizeLarge: {},
         fullWidth: {},
         startIcon: {},
@@ -64,13 +70,13 @@ function DeleteBtn({
 
 export const DeleteButton = withStyles(styles, { name: "CometAdminDeleteButton" })(DeleteBtn);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminDeleteButton: DeleteButtonClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminDeleteButton: DeleteButtonProps;
     }

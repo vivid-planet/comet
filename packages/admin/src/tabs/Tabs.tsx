@@ -1,12 +1,13 @@
-import { WithStyles } from "@material-ui/core";
-import MuiTab, { TabProps as MuiTabProps } from "@material-ui/core/Tab";
-import MuiTabs, { TabsProps as MuiTabsProps } from "@material-ui/core/Tabs";
-import { withStyles } from "@material-ui/styles";
+import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
+import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { styles, TabsClassKey } from "./Tabs.styles";
 import { TabScrollButton } from "./TabScrollButton";
 
+// TODO: Fix this
+// @ts-ignore
 interface TabProps extends MuiTabProps {
     label: React.ReactNode;
     children: React.ReactNode;
@@ -82,13 +83,13 @@ function TabsComponent({
 
 export const Tabs = withStyles(styles, { name: "CometAdminTabs" })(TabsComponent);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminTabs: TabsClassKey;
     }
 }
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminTabs: TabsProps;
     }

@@ -1,5 +1,5 @@
 import { Field, FieldContainer, FinalFormRadio } from "@comet/admin";
-import { Card, CardContent, FormControlLabel, Grid } from "@material-ui/core";
+import { Card, CardContent, FormControlLabel, Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";

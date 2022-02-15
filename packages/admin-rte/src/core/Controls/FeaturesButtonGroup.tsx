@@ -1,6 +1,5 @@
-import { WithStyles } from "@material-ui/core";
-import Tooltip from "@material-ui/core/Tooltip";
-import { createStyles, withStyles } from "@material-ui/styles";
+import Tooltip from "@mui/material/Tooltip";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { IFeatureConfig } from "../types";
@@ -54,7 +53,7 @@ const styles = () => {
 
 export default withStyles(styles, { name: "CometAdminRteFeaturesButtonGroup" })(FeaturesButtonGroup);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles/overrides" {
     interface ComponentNameToClassKey {
         CometAdminRteFeaturesButtonGroup: RteFeaturesButtonGroupClassKey;
     }

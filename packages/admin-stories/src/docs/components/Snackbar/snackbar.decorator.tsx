@@ -4,6 +4,8 @@ import * as React from "react";
 
 export function snackbarDecorator<StoryFnReturnType = unknown>() {
     return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
+        // TODO: Fix this
+        // @ts-ignore
         return <SnackbarProvider>{fn()}</SnackbarProvider>;
     };
 }

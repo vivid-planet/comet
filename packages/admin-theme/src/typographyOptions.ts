@@ -1,4 +1,4 @@
-import { TypographyOptions } from "@mui/material/styles";
+import { TypographyOptions } from "@mui/material/styles/createTypography";
 
 const fontFamily = "Roboto, Helvetica, Arial, sans-serif";
 

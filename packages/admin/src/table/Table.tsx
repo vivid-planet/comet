@@ -1,11 +1,10 @@
-import { RootRef } from "@material-ui/core";
-import MuiTable from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
+import MuiTable from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { TableCellProps } from "@mui/material/TableCell";
+import TableFooter from "@mui/material/TableFooter";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import * as React from "react";
 
 import { ISelectionApi } from "../SelectionApi";
@@ -158,7 +157,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
         const shouldRenderBottomPagination = paginationPosition === "bottom" || paginationPosition === "both";
 
         return (
-            <RootRef rootRef={this.domRef}>
+            <>
                 <MuiTable>
                     {!this.props.hideTableHead && (
                         <TableHead>
@@ -207,7 +206,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
                         </TableFooter>
                     )}
                 </MuiTable>
-            </RootRef>
+            </>
         );
     }
 

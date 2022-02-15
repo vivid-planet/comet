@@ -1,6 +1,6 @@
-import { BreadcrumbsClassKey } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles } from "@material-ui/styles";
+import { BreadcrumbsClassKey } from "@mui/material";
+import { Theme } from "@mui/material/styles";
+import { createStyles } from "@mui/styles";
 
 import { StackBreadcrumbProps } from "./StackBreadcrumbs";
 

@@ -1,4 +1,4 @@
-import { WithStyles } from "@material-ui/core";
+import { WithStyles } from "@mui/styles";
 import * as React from "react";
 import { Hue, Saturation } from "react-color/lib/components/common";
 
