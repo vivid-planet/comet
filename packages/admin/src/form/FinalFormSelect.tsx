@@ -6,7 +6,7 @@ import { FieldRenderProps } from "react-final-form";
 import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { Select } from "./Select";
 
-interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
+export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     getOptionSelected?: (option: T, value: T) => boolean;
     getOptionLabel?: (option: T) => string;
     children?: React.ReactNode;
