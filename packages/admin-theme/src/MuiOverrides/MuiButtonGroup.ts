@@ -1,31 +1,11 @@
-import { ButtonGroupClassKey } from "@mui/material";
+import { buttonGroupClasses } from "@mui/material";
 import { Palette } from "@mui/material/styles";
 import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-export const getMuiButtonGroupOverrides = (palette: Palette): OverridesStyleRules<ButtonGroupClassKey> => ({
-    root: {},
+export const getMuiButtonGroupOverrides = (palette: Palette): OverridesStyleRules => ({
     contained: {
         border: "none",
     },
-    outlined: {},
-    text: {},
-    disableElevation: {},
-    disabled: {},
-    fullWidth: {},
-    vertical: {},
-    grouped: {},
-    groupedHorizontal: {},
-    groupedVertical: {},
-    groupedText: {},
-    groupedTextHorizontal: {},
-    groupedTextVertical: {},
-    groupedTextPrimary: {},
-    groupedTextSecondary: {},
-    groupedOutlined: {},
-    groupedOutlinedHorizontal: {},
-    groupedOutlinedVertical: {},
-    groupedOutlinedPrimary: {},
-    groupedOutlinedSecondary: {},
     groupedContained: {
         "&:not(:first-child)": {
             borderLeftWidth: 0,
@@ -34,18 +14,19 @@ export const getMuiButtonGroupOverrides = (palette: Palette): OverridesStyleRule
     groupedContainedHorizontal: {
         "&:not(:last-child)": {
             borderRightColor: palette.grey[200],
-            "&$disabled": {
+
+            [`&.${buttonGroupClasses.disabled}`]: {
                 borderColor: palette.grey[100],
                 borderRightColor: palette.grey[200],
             },
         },
     },
-    groupedContainedVertical: {},
     groupedContainedPrimary: {
         "&:not(:last-child)": {
             borderColor: palette.primary.main,
             borderRightColor: palette.primary.dark,
-            "&$disabled": {
+
+            [`&.${buttonGroupClasses.disabled}`]: {
                 borderColor: palette.grey[100],
                 borderRightColor: palette.grey[200],
             },
@@ -55,7 +36,18 @@ export const getMuiButtonGroupOverrides = (palette: Palette): OverridesStyleRule
         "&:not(:last-child)": {
             borderColor: palette.secondary.main,
             borderRightColor: palette.secondary.dark,
-            "&$disabled": {
+
+            [`&.${buttonGroupClasses.disabled}`]: {
+                borderColor: palette.grey[100],
+                borderRightColor: palette.grey[200],
+            },
+        },
+    },
+    groupedContainedInfo: {
+        "&:not(:last-child)": {
+            borderColor: palette.grey[200],
+
+            [`&.${buttonGroupClasses.disabled}`]: {
                 borderColor: palette.grey[100],
                 borderRightColor: palette.grey[200],
             },

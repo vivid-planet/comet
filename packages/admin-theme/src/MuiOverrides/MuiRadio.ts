@@ -1,3 +1,4 @@
+import { radioClasses, svgIconClasses } from "@mui/material";
 import { RadioClassKey } from "@mui/material/Radio";
 import { Palette } from "@mui/material/styles";
 import { OverridesStyleRules } from "@mui/material/styles/overrides";
@@ -6,7 +7,7 @@ type CorrectedRadioClassKey = Exclude<RadioClassKey, "input">;
 
 export const getMuiRadioOverrides = (palette: Palette): OverridesStyleRules<CorrectedRadioClassKey> => ({
     root: {
-        "& [class*='MuiSvgIcon-root']": {
+        [`& .${svgIconClasses.root}`]: {
             "& .border": {
                 fill: "#fff",
             },
@@ -14,12 +15,12 @@ export const getMuiRadioOverrides = (palette: Palette): OverridesStyleRules<Corr
                 fill: palette.grey[100],
             },
         },
-        "&$checked [class*='MuiSvgIcon-root']": {
+        [`&.${radioClasses.checked} .${svgIconClasses.root}`]: {
             "& .circle": {
                 fill: "#fff",
             },
         },
-        "&$disabled [class*='MuiSvgIcon-root']": {
+        [`&.${radioClasses.disabled} .${svgIconClasses.root}`]: {
             "& .border": {
                 fill: palette.grey[50],
             },
@@ -27,7 +28,7 @@ export const getMuiRadioOverrides = (palette: Palette): OverridesStyleRules<Corr
                 fill: palette.grey[100],
             },
         },
-        "&$disabled$checked [class*='MuiSvgIcon-root']": {
+        [`&.${radioClasses.disabled}.${radioClasses.checked} .${svgIconClasses.root}`]: {
             "& .circle": {
                 fill: "#fff",
             },
@@ -39,14 +40,14 @@ export const getMuiRadioOverrides = (palette: Palette): OverridesStyleRules<Corr
     checked: {},
     disabled: {},
     colorPrimary: {
-        "&$checked [class*='MuiSvgIcon-root']": {
+        [`&.${radioClasses.checked} .${svgIconClasses.root}`]: {
             "& .background": {
                 fill: palette.primary.main,
             },
         },
     },
     colorSecondary: {
-        "&$checked [class*='MuiSvgIcon-root']": {
+        [`&.${radioClasses.checked} .${svgIconClasses.root}`]: {
             "& .background": {
                 fill: palette.secondary.main,
             },

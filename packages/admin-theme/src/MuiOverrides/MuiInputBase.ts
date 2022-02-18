@@ -1,4 +1,4 @@
-import { InputBaseClassKey } from "@mui/material";
+import { inputBaseClasses, InputBaseClassKey, svgIconClasses } from "@mui/material";
 import { Palette } from "@mui/material/styles";
 import { OverridesStyleRules } from "@mui/material/styles/overrides";
 import { Spacing } from "@mui/system";
@@ -8,17 +8,17 @@ export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): Ov
         border: `1px solid ${palette.grey[100]}`,
         borderRadius: 2,
         backgroundColor: "#fff",
-        "& [class*='MuiSvgIcon-root']": {
+        [`& .${svgIconClasses.root}`]: {
             pointerEvents: "none",
         },
         "& [class*='CometAdminClearInputButton-root']": {
             marginRight: -spacing(2),
             marginLeft: -spacing(2),
-            "& [class*='MuiSvgIcon-root']": {
+            [`& .${svgIconClasses.root}`]: {
                 pointerEvents: "auto",
             },
         },
-        "&$focused": {
+        [`&.${inputBaseClasses.focused}`]: {
             borderColor: palette.primary.main,
         },
     },
@@ -44,8 +44,7 @@ export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): Ov
     input: {
         height: "auto",
         boxSizing: "border-box",
-        // TODO: fix spacing
-        // padding: spacing(2) - 1, // 1px less for border, set in root
+        padding: `calc(${spacing(2)} - 1px)`,
         lineHeight: "20px",
         "&::-ms-clear": {
             display: "none",
@@ -53,8 +52,7 @@ export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): Ov
     },
     inputSizeSmall: {},
     inputMultiline: {
-        // TODO: fix spacing
-        // padding: spacing(2) - 1, // 1px less for border, set in root
+        padding: `calc(${spacing(2)} - 1px)`,
     },
     inputTypeSearch: {},
     inputAdornedStart: {

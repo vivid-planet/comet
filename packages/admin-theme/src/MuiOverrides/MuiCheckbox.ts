@@ -1,13 +1,10 @@
-import { CheckboxClassKey } from "@mui/material/Checkbox";
+import { checkboxClasses, CheckboxClassKey, svgIconClasses } from "@mui/material";
 import { Palette } from "@mui/material/styles";
 import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
-// Key "input" is not a stylable class-key on MuiCheckbox
-type CorrectedCheckboxClassKey = Exclude<CheckboxClassKey, "input">;
-
-export const getMuiCheckboxOverrides = (palette: Palette): OverridesStyleRules<CorrectedCheckboxClassKey> => ({
+export const getMuiCheckboxOverrides = (palette: Palette): OverridesStyleRules<CheckboxClassKey> => ({
     root: {
-        "& [class*='MuiSvgIcon-root']": {
+        [`& .${svgIconClasses.root}`]: {
             "& .border": {
                 fill: "#fff",
             },
@@ -15,12 +12,12 @@ export const getMuiCheckboxOverrides = (palette: Palette): OverridesStyleRules<C
                 fill: palette.grey[100],
             },
         },
-        "&$checked [class*='MuiSvgIcon-root']": {
+        [`&.${checkboxClasses.checked} .${svgIconClasses.root}`]: {
             "& .checkIcon": {
                 fill: "#fff",
             },
         },
-        "&$disabled [class*='MuiSvgIcon-root']": {
+        [`&.${checkboxClasses.disabled} .${svgIconClasses.root}`]: {
             "& .border": {
                 fill: palette.grey[50],
             },
@@ -28,7 +25,7 @@ export const getMuiCheckboxOverrides = (palette: Palette): OverridesStyleRules<C
                 fill: palette.grey[100],
             },
         },
-        "&$disabled$checked [class*='MuiSvgIcon-root']": {
+        [`&.${checkboxClasses.disabled}.${checkboxClasses.checked} .${svgIconClasses.root}`]: {
             "& .checkIcon": {
                 fill: "#fff",
             },
@@ -41,14 +38,14 @@ export const getMuiCheckboxOverrides = (palette: Palette): OverridesStyleRules<C
     disabled: {},
     indeterminate: {},
     colorPrimary: {
-        "&$checked [class*='MuiSvgIcon-root']": {
+        [`&.${checkboxClasses.checked} .${svgIconClasses.root}`]: {
             "& .background": {
                 fill: palette.primary.main,
             },
         },
     },
     colorSecondary: {
-        "&$checked [class*='MuiSvgIcon-root']": {
+        [`&.${checkboxClasses.checked} .${svgIconClasses.root}`]: {
             "& .background": {
                 fill: palette.secondary.main,
             },

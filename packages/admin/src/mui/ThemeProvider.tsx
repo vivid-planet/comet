@@ -1,8 +1,8 @@
 import { Theme } from "@mui/material";
-import { StyledEngineProvider } from "@mui/material/styles";
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 // @ts-ignore nested is used only internally from MUI, there are no types defined
 import nested from "@mui/private-theming/ThemeProvider/nested";
-import { createGenerateClassName, GenerateClassNameOptions, StylesProvider, ThemeProvider } from "@mui/styles";
+import { createGenerateClassName, GenerateClassNameOptions, StylesProvider } from "@mui/styles";
 import type { GenerateId } from "jss";
 import * as React from "react";
 

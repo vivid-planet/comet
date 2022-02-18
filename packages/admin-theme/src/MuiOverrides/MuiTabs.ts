@@ -7,6 +7,7 @@ export const getMuiTabsOverrides = (palette: Palette, spacing: Spacing): Overrid
     root: {
         position: "relative",
         marginBottom: spacing(4),
+
         "&:after": {
             content: '""',
             position: "absolute",

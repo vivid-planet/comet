@@ -1,4 +1,4 @@
-import { TableCellClassKey } from "@mui/material";
+import { buttonClasses, iconButtonClasses, TableCellClassKey } from "@mui/material";
 import { Palette } from "@mui/material/styles";
 import { Typography } from "@mui/material/styles/createTypography";
 import { OverridesStyleRules } from "@mui/material/styles/overrides";
@@ -10,7 +10,8 @@ export const getMuiTableCellOverrides = (palette: Palette, typography: Typograph
         paddingBottom: 15,
         paddingLeft: 20,
         paddingRight: 20,
-        "& > [class*='MuiButton-root'], & > [class*='MuiIconButton-root']": {
+
+        [`& > .${buttonClasses.root}, & > ${iconButtonClasses.root}`]: {
             marginTop: -12,
             marginBottom: -10,
         },
@@ -21,6 +22,7 @@ export const getMuiTableCellOverrides = (palette: Palette, typography: Typograph
         fontSize: 14,
         lineHeight: "20px",
         fontWeight: typography.fontWeightMedium,
+
         "&:not(:first-child):not(:empty):before": {
             content: "''",
             position: "absolute",

@@ -4,9 +4,7 @@ import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
 export const getMuiSelectOverrides = (palette: Palette): OverridesStyleRules<SelectClassKey> => ({
     select: {
-        "&$select": {
-            paddingRight: 32,
-        },
+        paddingRight: 32,
         "&:focus": {
             backgroundColor: "transparent",
         },

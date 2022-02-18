@@ -1,4 +1,4 @@
-import { SwitchClassKey } from "@mui/material";
+import { switchClasses, SwitchClassKey } from "@mui/material";
 import { Palette } from "@mui/material/styles";
 import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
@@ -15,17 +15,20 @@ export const getMuiSwitchOverrides = (palette: Palette): OverridesStyleRules<Swi
         margin: 9,
         padding: 3,
         color: palette.grey[200],
-        "&$checked": {
+
+        [`&.${switchClasses.checked}`]: {
             transform: "translateX(20px)",
             color: palette.primary.main,
-            "& + $track": {
+
+            [`& + .${switchClasses.track}`]: {
                 opacity: 1,
                 border: `1px solid ${palette.grey[100]}`,
             },
         },
-        "&$disabled": {
+        [`&.${switchClasses.disabled}`]: {
             color: palette.grey[100],
-            "& + $track": {
+
+            [`& + .${switchClasses.track}`]: {
                 opacity: 1,
                 backgroundColor: palette.grey[50],
                 border: `1px solid ${palette.grey[100]}`,
@@ -33,19 +36,19 @@ export const getMuiSwitchOverrides = (palette: Palette): OverridesStyleRules<Swi
         },
     },
     colorPrimary: {
-        "&$switchBase$checked": {
+        [`&.${switchClasses.switchBase}.${switchClasses.checked}`]: {
             color: palette.primary.main,
         },
-        "&$checked + $track": {
+        [`&.${switchClasses.checked} + .${switchClasses.track}`]: {
             backgroundColor: "#fff",
             borderColor: palette.primary.main,
         },
     },
     colorSecondary: {
-        "&$switchBase$checked": {
+        [`&.${switchClasses.switchBase}.${switchClasses.checked}`]: {
             color: palette.secondary.main,
         },
-        "&$checked + $track": {
+        [`&.${switchClasses.checked} + .${switchClasses.track}`]: {
             backgroundColor: "#fff",
             borderColor: palette.secondary.main,
         },

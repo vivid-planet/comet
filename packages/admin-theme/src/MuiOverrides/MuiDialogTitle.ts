@@ -8,10 +8,8 @@ export const getMuiDialogTitleOverrides = (palette: Palette, typography: Typogra
         backgroundColor: palette.grey["A200"],
         color: palette.grey["A100"],
         padding: 20,
-        "& [class*='MuiTypography-root']": {
-            fontSize: 14,
-            lineHeight: "20px",
-            fontWeight: typography.fontWeightBold,
-        },
+        fontSize: 14,
+        lineHeight: "20px",
+        fontWeight: typography.fontWeightBold,
     },
 });

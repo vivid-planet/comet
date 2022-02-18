@@ -1,4 +1,4 @@
-import { DialogContentClassKey } from "@mui/material";
+import { DialogContentClassKey, dialogTitleClasses } from "@mui/material";
 import { Palette } from "@mui/material/styles";
 import { OverridesStyleRules } from "@mui/material/styles/overrides";
 
@@ -6,6 +6,10 @@ export const getMuiDialogContentOverrides = (palette: Palette): OverridesStyleRu
     root: {
         backgroundColor: palette.grey[50],
         padding: 40,
+
+        [`.${dialogTitleClasses.root} + &`]: {
+            paddingTop: 40,
+        },
     },
     dividers: {},
 });
