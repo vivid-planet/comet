@@ -85,9 +85,11 @@ To use the horizontal layout throughout your application, set it as the default 
 
 ```ts
 const theme = createCometTheme({
-    props: {
+    components: {
         CometAdminFormFieldContainer: {
-            variant: "horizontal",
+            defaultProps: {
+                variant: "horizontal",
+            },
         },
     },
 });
