@@ -1,4 +1,4 @@
-import { FormControl, InputBase, Slider, SliderProps } from "@mui/material";
+import { ComponentsOverrides, FormControl, InputBase, Slider, SliderProps, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
@@ -149,8 +149,14 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
 
 export const FinalFormRangeInput = withStyles(styles, { name: "CometAdminFinalFormRangeInput" })(FinalFormRangeInputComponent);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminFinalFormRangeInput: FinalFormRangeInputClassKey;
+    }
+
+    interface Components {
+        CometAdminFinalFormRangeInput?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormRangeInput"];
+        };
     }
 }

@@ -1,6 +1,5 @@
 import { Check, Error, Save, ThreeDotSaving } from "@comet/admin-icons";
-import { Button, ButtonClassKey } from "@mui/material";
-import { ButtonProps } from "@mui/material/Button";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import { ClassKeyOfStyles } from "@mui/styles/withStyles";
 import { ClassNameMap } from "@mui/styles/withStyles/withStyles";
@@ -127,14 +126,19 @@ const resolveClassForDisplayState = (
 
 export const SaveButton = withStyles(styles, { name: "CometAdminSaveButton" })(SaveBtn);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminSaveButton: SaveButtonClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminSaveButton: SaveButtonProps;
+    }
+
+    interface Components {
+        CometAdminSaveButton?: {
+            defaultProps?: ComponentsPropsList["CometAdminSaveButton"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminSaveButton"];
+        };
     }
 }

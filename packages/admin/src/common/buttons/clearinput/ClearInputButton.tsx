@@ -1,6 +1,5 @@
 import { Clear } from "@comet/admin-icons";
-import { ButtonBase, ButtonBaseClassKey, ButtonBaseProps } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { ButtonBase, ButtonBaseClassKey, ButtonBaseProps, ComponentsOverrides, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -33,14 +32,19 @@ const ClearInputBtn: React.FC<WithStyles<typeof styles> & ClearInputButtonProps>
 
 export const ClearInputButton = withStyles(styles, { name: "CometAdminClearInputButton" })(ClearInputBtn);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminClearInputButton: ClearInputButtonClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminClearInputButton: ClearInputButtonProps;
+    }
+
+    interface Components {
+        CometAdminClearInputButton?: {
+            defaultProps?: ComponentsPropsList["CometAdminClearInputButton"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminClearInputButton"];
+        };
     }
 }

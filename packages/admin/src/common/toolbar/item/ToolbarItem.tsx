@@ -1,4 +1,4 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentsOverrides, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -28,14 +28,19 @@ function Item({ children, classes }: ToolbarItemProps & WithStyles<typeof styles
 
 export const ToolbarItem = withStyles(styles, { name: "CometAdminToolbarItem" })(Item);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminToolbarItem: ToolbarItemClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminToolbarItem: ToolbarItemProps;
+    }
+
+    interface Components {
+        CometAdminToolbarItem?: {
+            defaultProps?: ComponentsPropsList["CometAdminToolbarItem"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarItem"];
+        };
     }
 }

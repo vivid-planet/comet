@@ -1,4 +1,4 @@
-import { TableRow } from "@mui/material";
+import { ComponentsOverrides, TableRow, Theme } from "@mui/material";
 import { TableRowProps } from "@mui/material/TableRow";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
@@ -27,14 +27,19 @@ const Row = React.forwardRef<HTMLTableRowElement, TableBodyRowProps & WithStyles
 
 export const TableBodyRow = withStyles(styles, { name: "CometAdminTableBodyRow" })(Row);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminTableBodyRow: TableBodyRowClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminTableBodyRow: TableBodyRowProps;
+    }
+
+    interface Components {
+        CometAdminTableBodyRow?: {
+            defaultProps?: ComponentsPropsList["CometAdminTableBodyRow"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTableBodyRow"];
+        };
     }
 }

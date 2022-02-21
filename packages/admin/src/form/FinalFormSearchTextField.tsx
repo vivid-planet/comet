@@ -44,8 +44,14 @@ function SearchTextField({ icon = <Search />, placeholder, endAdornment, ...rest
 
 export const FinalFormSearchTextField = withStyles({}, { name: "CometAdminFinalFormSearchTextField" })(SearchTextField);
 
-declare module "@mui/material/styles/props" {
+declare module "@mui/material/styles" {
     interface ComponentsPropsList {
         CometAdminFinalFormSearchTextField: FinalFormSearchTextFieldProps;
+    }
+
+    interface Components {
+        CometAdminFinalFormSearchTextField?: {
+            defaultProps?: ComponentsPropsList["CometAdminFinalFormSearchTextField"];
+        };
     }
 }

@@ -1,4 +1,4 @@
-import ButtonGroup from "@mui/material/ButtonGroup";
+import { ButtonGroup, ComponentsOverrides, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -51,8 +51,14 @@ export default (p: IControlProps) => {
     return <StyledLinkControls {...p} />;
 };
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRteLinkControls: RteLinkControlsClassKey;
+    }
+
+    interface Components {
+        CometAdminRteLinkControls?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteLinkControls"];
+        };
     }
 }

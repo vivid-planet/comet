@@ -1,5 +1,5 @@
 import { ApolloError } from "@apollo/client";
-import { CircularProgress, Paper } from "@mui/material";
+import { CircularProgress, ComponentsOverrides, Paper, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -57,8 +57,14 @@ export function Query({ classes, ...otherProps }: IProps & WithStyles<typeof sty
 
 export const TableQuery = withStyles(styles, { name: "CometAdminTableQuery" })(Query);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminTableQuery: TableQueryClassKey;
+    }
+
+    interface Components {
+        CometAdminTableQuery?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTableQuery"];
+        };
     }
 }

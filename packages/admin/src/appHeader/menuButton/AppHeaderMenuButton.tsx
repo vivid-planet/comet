@@ -1,5 +1,5 @@
 import { Hamburger } from "@comet/admin-icons";
-import { IconButton, IconButtonClassKey, IconButtonProps, Theme } from "@mui/material";
+import { ComponentsOverrides, IconButton, IconButtonClassKey, IconButtonProps, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -44,14 +44,19 @@ function MenuButton({
 
 export const AppHeaderMenuButton = withStyles(styles, { name: "CometAdminAppHeaderMenuButton" })(MenuButton);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminAppHeaderMenuButton: AppHeaderMenuButtonClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminAppHeaderMenuButton: AppHeaderMenuButtonProps;
+    }
+
+    interface Components {
+        CometAdminAppHeaderMenuButton?: {
+            defaultProps?: ComponentsPropsList["CometAdminAppHeaderMenuButton"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeaderMenuButton"];
+        };
     }
 }

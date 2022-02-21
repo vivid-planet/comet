@@ -1,4 +1,4 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentsOverrides, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -92,8 +92,14 @@ const styles = (theme: Theme) => {
 
 export default withStyles(styles, { name: "CometAdminRteToolbar" })(Toolbar);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRteToolbar: RteToolbarClassKey;
+    }
+
+    interface Components {
+        CometAdminRteToolbar?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteToolbar"];
+        };
     }
 }

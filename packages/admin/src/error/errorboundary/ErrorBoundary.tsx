@@ -1,7 +1,6 @@
 import { ChevronDown, ChevronRight, Error } from "@comet/admin-icons";
 import { AlertProps, Typography } from "@mui/material";
-import { Alert } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Alert, ComponentsOverrides, Theme } from "@mui/material";
 import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
@@ -130,14 +129,19 @@ const StyledErrorBoundary = withStyles(styles, { name: "CometAdminErrorBoundary"
 
 export { StyledErrorBoundary as ErrorBoundary };
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminErrorBoundary: ErrorBoundaryClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminErrorBoundary: ErrorBoundaryProps;
+    }
+
+    interface Components {
+        CometAdminErrorBoundary?: {
+            defaultProps?: ComponentsPropsList["CometAdminErrorBoundary"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminErrorBoundary"];
+        };
     }
 }

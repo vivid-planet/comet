@@ -23,8 +23,14 @@ function AutomaticTitleItem({ typographyProps }: ToolbarAutomaticTitleItemProps)
 
 export const ToolbarAutomaticTitleItem = withStyles({}, { name: "CometAdminToolbarAutomaticTitleItem" })(AutomaticTitleItem);
 
-declare module "@mui/material/styles/props" {
+declare module "@mui/material/styles" {
     interface ComponentsPropsList {
         CometAdminToolbarAutomaticTitleItem: ToolbarAutomaticTitleItemProps;
+    }
+
+    interface Components {
+        CometAdminToolbarAutomaticTitleItem?: {
+            defaultProps?: ComponentsPropsList["CometAdminToolbarAutomaticTitleItem"];
+        };
     }
 }

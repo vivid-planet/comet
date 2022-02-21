@@ -1,5 +1,4 @@
-import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
-import Tabs, { TabsProps } from "@mui/material/Tabs";
+import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
@@ -133,8 +132,14 @@ function RouterTabsComponent({
 
 export const RouterTabs = withRouter(withStyles(styles, { name: "CometAdminRouterTabs" })(RouterTabsComponent));
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRouterTabs: RouterTabsClassKey;
+    }
+
+    interface Components {
+        CometAdminRouterTabs?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRouterTabs"];
+        };
     }
 }

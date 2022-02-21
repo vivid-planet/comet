@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { Popover, PopoverProps, useTheme } from "@mui/material";
+import { ComponentsOverrides, Popover, PopoverProps, Theme, useTheme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -91,14 +91,19 @@ function Dropdown({
 
 export const AppHeaderDropdown = withStyles(styles, { name: "CometAdminAppHeaderDropdown" })(Dropdown);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminAppHeaderDropdown: AppHeaderDropdownClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminAppHeaderDropdown: AppHeaderDropdownProps;
+    }
+
+    interface Components {
+        CometAdminAppHeaderDropdown?: {
+            defaultProps?: ComponentsPropsList["CometAdminAppHeaderDropdown"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeaderDropdown"];
+        };
     }
 }

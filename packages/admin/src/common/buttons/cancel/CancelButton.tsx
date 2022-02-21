@@ -1,6 +1,7 @@
 import { Clear } from "@comet/admin-icons";
-import { Button, ButtonClassKey } from "@mui/material";
+import { Button, ButtonClassKey, Theme } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
+import { ComponentsOverrides } from "@mui/material/styles/overrides";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -62,14 +63,19 @@ function CancelBtn({
 
 export const CancelButton = withStyles(styles, { name: "CometAdminCancelButton" })(CancelBtn);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminCancelButton: CancelButtonClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminCancelButton: CancelButtonProps;
+    }
+
+    interface Components {
+        CometAdminCancelButton?: {
+            defaultProps?: ComponentsPropsList["CometAdminCancelButton"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminCancelButton"];
+        };
     }
 }

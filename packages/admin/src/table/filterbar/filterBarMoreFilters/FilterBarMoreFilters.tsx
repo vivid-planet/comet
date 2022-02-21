@@ -1,5 +1,5 @@
 import { Filter } from "@comet/admin-icons";
-import { Typography } from "@mui/material";
+import { ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -34,14 +34,19 @@ export function MoreFilters({
 
 export const FilterBarMoreFilters = withStyles(styles, { name: "CometAdminFilterBarMoreFilters" })(MoreFilters);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminFilterBarMoreFilters: FilterBarMoveFilersClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminFilterBarMoreFilters: FilterBarMoreFiltersProps;
+    }
+
+    interface Components {
+        CometAdminFilterBarMoreFilters?: {
+            defaultProps?: ComponentsPropsList["CometAdminFilterBarMoreFilters"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarMoreFilters"];
+        };
     }
 }

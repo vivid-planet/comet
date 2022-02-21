@@ -1,4 +1,4 @@
-import { ListItem, ListItemIcon, ListItemProps, ListItemText, Theme } from "@mui/material";
+import { ComponentsOverrides, ListItem, ListItemIcon, ListItemProps, ListItemText, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -140,8 +140,14 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
 
 export const MenuItem = withStyles(styles, { name: "CometAdminMenuItem" })(Item);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminMenuItem: MenuItemClassKey;
+    }
+
+    interface Components {
+        CometAdminMenuItem?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuItem"];
+        };
     }
 }

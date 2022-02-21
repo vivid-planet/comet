@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { Collapse, List, Theme } from "@mui/material";
+import { Collapse, ComponentsOverrides, List, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { matchPath, useLocation } from "react-router";
@@ -95,14 +95,19 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
 
 export const MenuCollapsibleItem = withStyles(styles, { name: "CometAdminMenuCollapsibleItem" })(CollapsibleItem);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminMenuCollapsibleItem: MenuCollapsibleItemClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminMenuCollapsibleItem: MenuCollapsibleItemProps;
+    }
+
+    interface Components {
+        CometAdminMenuCollapsibleItem?: {
+            defaultProps?: ComponentsPropsList["CometAdminMenuCollapsibleItem"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuCollapsibleItem"];
+        };
     }
 }

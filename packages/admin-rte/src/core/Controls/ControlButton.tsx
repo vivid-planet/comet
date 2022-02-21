@@ -1,4 +1,4 @@
-import { Theme } from "@mui/material/styles";
+import { ComponentsOverrides, Theme } from "@mui/material";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
@@ -86,8 +86,14 @@ const styles = (theme: Theme) => {
 
 export default withStyles(styles, { name: "CometAdminRteControlButton" })(ControlButton);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRteControlButton: RteControlButtonClassKey;
+    }
+
+    interface Components {
+        CometAdminRteControlButton?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteControlButton"];
+        };
     }
 }

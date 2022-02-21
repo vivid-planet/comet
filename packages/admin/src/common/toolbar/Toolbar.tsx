@@ -1,4 +1,4 @@
-import { Paper, Toolbar as MuiToolbar } from "@mui/material";
+import { ComponentsOverrides, Paper, Theme, Toolbar as MuiToolbar } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -52,14 +52,19 @@ const ToolbarComponent: React.FunctionComponent<ToolbarProps & WithStyles<typeof
 
 export const Toolbar = withStyles(styles, { name: "CometAdminToolbar" })(ToolbarComponent);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminToolbar: ToolbarClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminToolbar: ToolbarProps;
+    }
+
+    interface Components {
+        CometAdminToolbar?: {
+            defaultProps?: ComponentsPropsList["CometAdminToolbar"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbar"];
+        };
     }
 }

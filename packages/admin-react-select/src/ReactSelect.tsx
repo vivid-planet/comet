@@ -2,7 +2,7 @@ import { SvgIconComponent } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";
 import DropdownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Chip, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography } from "@mui/material";
+import { Chip, ComponentsOverrides, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import classNames from "classnames";
 import * as React from "react";
@@ -205,14 +205,19 @@ export class ReactSelectAsyncCreatable<OptionType, IsMulti extends boolean> exte
     }
 }
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminSelect: SelectClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminSelect: SelectProps<any>;
+    }
+
+    interface Components {
+        CometAdminSelect?: {
+            defaultProps?: ComponentsPropsList["CometAdminSelect"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminSelect"];
+        };
     }
 }

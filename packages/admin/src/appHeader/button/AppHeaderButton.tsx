@@ -1,4 +1,4 @@
-import { ButtonBase, ButtonBaseProps, Typography } from "@mui/material";
+import { ButtonBase, ButtonBaseProps, ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -47,14 +47,19 @@ function Button({
 
 export const AppHeaderButton = withStyles(styles, { name: "CometAdminAppHeaderButton" })(Button);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminAppHeaderButton: AppHeaderButtonClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminAppHeaderButton: AppHeaderButtonProps;
+    }
+
+    interface Components {
+        CometAdminAppHeaderButton?: {
+            defaultProps?: ComponentsPropsList["CometAdminAppHeaderButton"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeaderButton"];
+        };
     }
 }

@@ -1,3 +1,4 @@
+import { ComponentsOverrides, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -31,13 +32,19 @@ function Bar({ children, classes }: FilterBarProps & WithStyles<typeof styles>):
 
 export const FilterBar = withStyles(styles, { name: "CometAdminFilterBar" })(Bar);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminFilterBar: FilterBarClassKey;
     }
-}
-declare module "@mui/material/styles/props" {
+
     interface ComponentsPropsList {
         CometAdminFilterBar: FilterBarProps;
+    }
+
+    interface Components {
+        CometAdminFilterBar?: {
+            defaultProps?: ComponentsPropsList["CometAdminFilterBar"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBar"];
+        };
     }
 }

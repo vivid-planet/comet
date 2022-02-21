@@ -1,6 +1,6 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { Theme } from "@mui/material/styles";
+import { ComponentsOverrides, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import {
     DraftBlockType,
@@ -306,14 +306,19 @@ const styles = (theme: Theme) => {
 
 export default withStyles(styles, { name: "CometAdminRte" })(React.forwardRef(Rte));
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRte: RteClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminRte: RteProps;
+    }
+
+    interface Components {
+        CometAdminRte?: {
+            defaultProps?: ComponentsPropsList["CometAdminRte"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRte"];
+        };
     }
 }

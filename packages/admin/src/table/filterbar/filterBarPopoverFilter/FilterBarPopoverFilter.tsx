@@ -1,5 +1,5 @@
 import { Check, Reset } from "@comet/admin-icons";
-import { Button, ButtonProps, Popover } from "@mui/material";
+import { Button, ButtonProps, ComponentsOverrides, Popover, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
@@ -125,14 +125,19 @@ function PopoverFilter({
 
 export const FilterBarPopoverFilter = withStyles(styles, { name: "CometAdminFilterBarPopoverFilter" })(PopoverFilter);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminFilterBarPopoverFilter: FilterBarPopoverFilterClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminFilterBarPopoverFilter: FilterBarPopoverFilterProps;
+    }
+
+    interface Components {
+        CometAdminFilterBarPopoverFilter?: {
+            defaultProps?: ComponentsPropsList["CometAdminFilterBarPopoverFilter"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarPopoverFilter"];
+        };
     }
 }

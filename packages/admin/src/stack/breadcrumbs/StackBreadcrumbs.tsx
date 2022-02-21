@@ -1,5 +1,5 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { Breadcrumbs as MuiBreadcrumbs, BreadcrumbsProps, Link, Typography } from "@mui/material";
+import { Breadcrumbs as MuiBreadcrumbs, BreadcrumbsProps, ComponentsOverrides, Link, Theme, Typography } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
@@ -7,7 +7,7 @@ import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-d
 import { StackApiContext } from "../Api";
 import { StackBreadcrumbsClassKey, styles } from "./StackBreadcrumbs.styles";
 
-export type StackBreadcrumbProps = BreadcrumbsProps;
+export type StackBreadcrumbsProps = BreadcrumbsProps;
 
 const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ href, to, ...rest }, ref) => (
     <RouterLink innerRef={ref} to={to ?? href} {...rest} />
@@ -17,7 +17,7 @@ const StackBreadcrumbsComponent = ({
     separator = <ChevronRight />,
     classes,
     ...otherProps
-}: StackBreadcrumbProps & WithStyles<typeof styles>): React.ReactElement => {
+}: StackBreadcrumbsProps & WithStyles<typeof styles>): React.ReactElement => {
     return (
         <StackApiContext.Consumer>
             {(stackApi) => {
@@ -46,14 +46,19 @@ const StackBreadcrumbsComponent = ({
 
 export const StackBreadcrumbs = withStyles(styles, { name: "CometAdminStackBreadcrumbs" })(StackBreadcrumbsComponent);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminStackBreadcrumbs: StackBreadcrumbsClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
-        CometAdminStackBreadcrumbs: StackBreadcrumbProps;
+        CometAdminStackBreadcrumbs: StackBreadcrumbsProps;
+    }
+
+    interface Components {
+        CometAdminStackBreadcrumbs?: {
+            defaultProps?: ComponentsPropsList["CometAdminStackBreadcrumbs"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminStackBreadcrumbs"];
+        };
     }
 }

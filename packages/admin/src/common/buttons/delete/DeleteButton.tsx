@@ -1,7 +1,5 @@
 import { Delete } from "@comet/admin-icons";
-import { Button, ButtonClassKey } from "@mui/material";
-import { ButtonProps } from "@mui/material/Button";
-import { Theme } from "@mui/material/styles";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -70,14 +68,19 @@ function DeleteBtn({
 
 export const DeleteButton = withStyles(styles, { name: "CometAdminDeleteButton" })(DeleteBtn);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminDeleteButton: DeleteButtonClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminDeleteButton: DeleteButtonProps;
+    }
+
+    interface Components {
+        CometAdminDeleteButton?: {
+            defaultProps?: ComponentsPropsList["CometAdminDeleteButton"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminDeleteButton"];
+        };
     }
 }

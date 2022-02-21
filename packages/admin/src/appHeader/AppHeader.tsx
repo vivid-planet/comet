@@ -1,6 +1,5 @@
-import { AppBar, AppBarClassKey } from "@mui/material";
+import { AppBar, AppBarClassKey, ComponentsOverrides, Theme } from "@mui/material";
 import { AppBarProps } from "@mui/material/AppBar";
-import { Theme } from "@mui/material/styles";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -54,8 +53,14 @@ function Header({
 
 export const AppHeader = withStyles(styles, { name: "CometAdminAppHeader" })(Header);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminAppHeader: AppHeaderClassKey;
+    }
+
+    interface Components {
+        CometAdminAppHeader?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeader"];
+        };
     }
 }

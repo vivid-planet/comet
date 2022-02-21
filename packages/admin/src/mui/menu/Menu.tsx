@@ -1,4 +1,4 @@
-import { Drawer, DrawerProps, PaperProps } from "@mui/material";
+import { ComponentsOverrides, Drawer, DrawerProps, PaperProps, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { useHistory } from "react-router";
@@ -96,14 +96,19 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
 
 export const Menu = withStyles(styles, { name: "CometAdminMenu" })(MenuDrawer);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminMenu: MenuClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminMenu: MenuProps;
+    }
+
+    interface Components {
+        CometAdminenu?: {
+            defaultProps?: ComponentsPropsList["CometAdminMenu"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenu"];
+        };
     }
 }

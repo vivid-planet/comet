@@ -1,3 +1,4 @@
+import { ComponentsOverrides, Theme } from "@mui/material";
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
 import { WithStyles, withStyles } from "@mui/styles";
@@ -83,14 +84,19 @@ function TabsComponent({
 
 export const Tabs = withStyles(styles, { name: "CometAdminTabs" })(TabsComponent);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminTabs: TabsClassKey;
     }
-}
 
-declare module "@mui/material/styles/props" {
     interface ComponentsPropsList {
         CometAdminTabs: TabsProps;
+    }
+
+    interface Components {
+        CometAdminTabs?: {
+            defaultProps?: ComponentsPropsList["CometAdminTabs"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTabs"];
+        };
     }
 }

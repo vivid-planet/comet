@@ -1,5 +1,4 @@
-import { FormControl, MenuItem, Select } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { ComponentsOverrides, FormControl, MenuItem, Select, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -84,8 +83,14 @@ export default (p: IControlProps) => {
     return <StyledBlockTypesControls {...p} blockTypes={blockTypes} />;
 };
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRteBlockTypeControls: RteBlockTypeControlsClassKey;
+    }
+
+    interface Components {
+        CometAdminRteBlockTypeControls?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteBlockTypeControls"];
+        };
     }
 }

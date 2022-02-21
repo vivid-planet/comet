@@ -1,3 +1,4 @@
+import { ComponentsOverrides, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -17,8 +18,14 @@ function FillSpace({ classes }: WithStyles<typeof styles>) {
 
 export const AppHeaderFillSpace = withStyles(styles, { name: "CometAdminAppHeaderFillSpace" })(FillSpace);
 
-declare module "@mui/material/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminAppHeaderFillSpace: AppHeaderFillSpaceClassKey;
+    }
+
+    interface Components {
+        CometAdminAppHeaderFillSpace?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeaderFillSpace"];
+        };
     }
 }
