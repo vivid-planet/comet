@@ -65,8 +65,6 @@ function ColorPicker({
                             startAdornment
                         ) : (
                             <InputAdornment position="start">
-                                {/* TODO: Fix this */}
-                                {/* @ts-ignore */}
                                 <PickedColor value={value} classes={classes} />
                             </InputAdornment>
                         )
@@ -98,11 +96,7 @@ function ColorPicker({
                 />
                 <Popper open={isOpen} anchorEl={anchorEl} placement={"bottom-start"} className={classes.popper} disablePortal>
                     <Paper classes={{ root: classes.popperPaper }}>
-                        {/* TODO: Fix this */}
-                        {/* @ts-ignore */}
                         {showPicker && <Picker classes={classes} color={value} onChange={onChange} />}
-                        {/* TODO: Fix this */}
-                        {/* @ts-ignore */}
                         {colorPalette?.length && <Palette classes={classes} colors={colorPalette} onChange={onChange} />}
                     </Paper>
                 </Popper>
