@@ -32,8 +32,6 @@ All notable changes to this project will be documented in this file. This projec
 
 The date-picker package has been removed.
 
-### Incompatible Changes
-
 # [2.0.0]
 
 ## Highlights:
