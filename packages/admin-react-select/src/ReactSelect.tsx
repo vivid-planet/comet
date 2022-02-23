@@ -56,7 +56,7 @@ function Option<OptionType, IsMulti extends boolean>(props: OptionProps<OptionTy
     return (
         <MenuItem
             classes={{ root: rootClasses.join(" ") }}
-            ref={props.innerRef} // TODO: Check if changing `buttonRef` to `ref` is correct
+            ref={props.innerRef}
             selected={props.isSelected}
             disabled={props.isDisabled}
             component="div"
