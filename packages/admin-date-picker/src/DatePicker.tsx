@@ -13,6 +13,9 @@ interface IProps extends FieldRenderProps<string | Date, HTMLInputElement> {
     placeholder?: string;
 }
 
+/**
+ * @deprecated Will be removed in the next major release, due to incompatibility of react-dates with react 17.
+ */
 export const FinalFormDatePicker: React.FC<IProps> = ({
     input: { value, onChange, name },
     fullWidth = false,
