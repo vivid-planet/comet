@@ -7,9 +7,7 @@ import * as React from "react";
 import { styles, TabsClassKey } from "./Tabs.styles";
 import { TabScrollButton } from "./TabScrollButton";
 
-// TODO: Fix this
-// @ts-ignore
-interface TabProps extends MuiTabProps {
+interface TabProps extends Omit<MuiTabProps, "children"> {
     label: React.ReactNode;
     children: React.ReactNode;
 }
