@@ -10,11 +10,22 @@ export const getMuiButtonGroup = (palette: Palette): Components["MuiButtonGroup"
         contained: {
             border: "none",
         },
-        groupedContained: {
+        groupedContained: ({ ownerState }) => ({
             "&:not(:first-child)": {
                 borderLeftWidth: 0,
             },
-        },
+
+            ...(ownerState.color === "info" && {
+                "&:not(:last-child)": {
+                    borderColor: palette.grey[200],
+
+                    [`&.${buttonGroupClasses.disabled}`]: {
+                        borderColor: palette.grey[100],
+                        borderRightColor: palette.grey[200],
+                    },
+                },
+            }),
+        }),
         groupedContainedHorizontal: {
             "&:not(:last-child)": {
                 borderRightColor: palette.grey[200],
@@ -40,17 +51,6 @@ export const getMuiButtonGroup = (palette: Palette): Components["MuiButtonGroup"
             "&:not(:last-child)": {
                 borderColor: palette.secondary.main,
                 borderRightColor: palette.secondary.dark,
-
-                [`&.${buttonGroupClasses.disabled}`]: {
-                    borderColor: palette.grey[100],
-                    borderRightColor: palette.grey[200],
-                },
-            },
-        },
-        // @ts-ignore - TODO: fix this
-        groupedContainedInfo: {
-            "&:not(:last-child)": {
-                borderColor: palette.grey[200],
 
                 [`&.${buttonGroupClasses.disabled}`]: {
                     borderColor: palette.grey[100],

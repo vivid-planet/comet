@@ -18,7 +18,7 @@ export const getMuiButton = (palette: Palette): Components["MuiButton"] => ({
                 lineHeight: "20px",
             },
         },
-        text: {
+        text: ({ ownerState }) => ({
             textTransform: "none",
             paddingTop: 12,
             paddingRight: 15,
@@ -32,12 +32,12 @@ export const getMuiButton = (palette: Palette): Components["MuiButton"] => ({
             [`& .${buttonClasses.endIcon}`]: {
                 marginLeft: 5,
             },
-        },
-        // @ts-ignore - TODO: fix this
-        textInfo: {
-            color: palette.grey[900],
-        },
-        contained: {
+
+            ...(ownerState.color === "info" && {
+                color: palette.grey[900],
+            }),
+        }),
+        contained: ({ ownerState }) => ({
             color: "#000",
             borderWidth: 1,
             borderStyle: "solid",
@@ -59,7 +59,16 @@ export const getMuiButton = (palette: Palette): Components["MuiButton"] => ({
             [`&.${buttonClasses.endIcon}`]: {
                 marginLeft: 6,
             },
-        },
+
+            ...(ownerState.color === "info" && {
+                backgroundColor: "#fff",
+                borderColor: palette.grey[200],
+
+                "&:hover": {
+                    backgroundColor: palette.grey[50],
+                },
+            }),
+        }),
         containedPrimary: {
             color: "#000",
             borderColor: palette.primary.main,
@@ -76,14 +85,6 @@ export const getMuiButton = (palette: Palette): Components["MuiButton"] => ({
             "&:hover": {
                 backgroundColor: palette.secondary.dark,
                 borderColor: palette.secondary.dark,
-            },
-        },
-        containedInfo: {
-            backgroundColor: "#fff",
-            borderColor: palette.grey[200],
-
-            "&:hover": {
-                backgroundColor: palette.grey[50],
             },
         },
         startIcon: {
