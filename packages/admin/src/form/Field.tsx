@@ -84,9 +84,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
 
     return (
         <>
-            {/* TODO: Fix this */}
-            {/* @ts-ignore */}
-            <FinalFormField<FieldValue, FieldRenderProps<FieldValue, FieldElement>, FieldElement>
+            <FinalFormField<FieldValue, FieldElement, FieldValue, FieldRenderProps<FieldValue, FieldElement>>
                 name={name}
                 validate={validateError}
                 {...otherProps}
