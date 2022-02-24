@@ -8,14 +8,13 @@ import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { StackSwitchApiContext } from "../stack/Switch";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
 
-// TODO: Fix this
-// @ts-ignore
-interface TabProps extends MuiTabProps {
+interface TabProps extends Omit<MuiTabProps, "children"> {
     path: string;
     label: React.ReactNode;
     forceRender?: boolean;
     children: React.ReactNode;
 }
+
 export const RouterTab: React.SFC<TabProps> = () => null;
 
 export interface Props extends RouteComponentProps {
