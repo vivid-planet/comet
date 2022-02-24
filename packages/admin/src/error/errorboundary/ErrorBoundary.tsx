@@ -18,13 +18,14 @@ export type ErrorBoundaryClassKey =
     | "exceptionSummaryTitle"
     | "exceptionStackTrace";
 
-export interface ErrorBoundaryProps {
+export type ErrorBoundaryProps = React.PropsWithChildren<{
     userErrorMessage?: React.ReactNode;
     variant?: AlertProps["variant"];
     icon?: AlertProps["icon"];
     toggleDetailsOpenedIcon?: React.ReactNode;
     toggleDetailsClosedIcon?: React.ReactNode;
-}
+    key?: string | number;
+}>;
 
 interface IErrorBoundaryState {
     error?: Error;
