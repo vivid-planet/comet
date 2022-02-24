@@ -51,7 +51,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
     const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || undefined);
     const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || undefined);
 
-    const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: number[]) => {
+    const handleSliderChange = (event: Event, newValue: number[]) => {
         onChange({ min: newValue[0], max: newValue[1] });
     };
 
@@ -134,11 +134,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                     min={min}
                     max={max}
                     value={[fieldValue.min ? fieldValue.min : min, fieldValue.max ? fieldValue.max : max]}
-                    // TODO: Fix this
-                    // @ts-ignore
-                    ThumbComponent={sliderProps?.ThumbComponent ? sliderProps.ThumbComponent : "span"}
-                    // TODO: Fix this
-                    // @ts-ignore
+                    components={{ Thumb: sliderProps?.components?.Thumb ? sliderProps.components.Thumb : "span" }}
                     onChange={handleSliderChange}
                     {...sliderProps}
                 />
