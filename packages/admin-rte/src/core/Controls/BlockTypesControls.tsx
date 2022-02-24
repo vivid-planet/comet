@@ -42,9 +42,7 @@ function BlockTypesControls({ disabled, blockTypes, classes }: Props & WithStyle
 export type RteBlockTypeControlsClassKey = "root" | "select";
 
 const styles = (theme: Theme) => {
-    // TODO: Fix this
-    // @ts-ignore
-    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
 
     return createStyles<RteBlockTypeControlsClassKey, Props>({
         root: {

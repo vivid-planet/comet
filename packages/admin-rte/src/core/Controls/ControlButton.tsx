@@ -42,9 +42,7 @@ function ControlButton({
 export type RteControlButtonClassKey = "root" | "selected" | "renderAsIcon";
 
 const styles = (theme: Theme) => {
-    // TODO: Fix this
-    // @ts-ignore
-    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
 
     return createStyles<RteControlButtonClassKey, IProps>({
         root: {

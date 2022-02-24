@@ -279,9 +279,7 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
 export type RteClassKey = "root" | "disabled" | "editor";
 
 const styles = (theme: Theme) => {
-    // TODO: Fix this
-    // @ts-ignore
-    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
 
     return createStyles<RteClassKey, RteProps>({
         root: {

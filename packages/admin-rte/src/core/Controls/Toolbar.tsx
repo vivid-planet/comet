@@ -36,9 +36,7 @@ const Toolbar: React.FC<IProps & WithStyles<typeof styles>> = ({ children, class
 export type RteToolbarClassKey = "root" | "slot";
 
 const styles = (theme: Theme) => {
-    // TODO: Fix this
-    // @ts-ignore
-    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
 
     return createStyles<RteToolbarClassKey, IProps>({
         root: {
