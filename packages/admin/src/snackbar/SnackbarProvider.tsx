@@ -20,6 +20,9 @@ export const useSnackbarApi = () => {
     return context;
 };
 
+type SnackbarCloseEvent = React.SyntheticEvent<any> | Event;
+type HandleClose = (event: SnackbarCloseEvent, reason: SnackbarCloseReason, onClose?: SnackbarProps["onClose"]) => void;
+
 export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
     const [open, setOpen] = React.useState<boolean>(false);
     const [snackbar, setSnackbar] = React.useState<React.ReactElement>();
@@ -39,11 +42,7 @@ export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
         }, 0);
     };
 
-    const handleClose = (
-        event: React.SyntheticEvent,
-        reason: SnackbarCloseReason,
-        onClose?: (event: React.SyntheticEvent, reason: SnackbarCloseReason) => void,
-    ) => {
+    const handleClose: HandleClose = (event, reason, onClose) => {
         if (reason === "timeout") {
             hideSnackbar();
         }
@@ -62,8 +61,6 @@ export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
             {snackbar !== undefined &&
                 React.cloneElement<SnackbarProps>(snackbar, {
                     open: open,
-                    // TODO: Fix this
-                    // @ts-ignore
                     onClose: (event, reason) => handleClose(event, reason, snackbar?.props.onClose),
                 })}
         </SnackbarContext.Provider>
