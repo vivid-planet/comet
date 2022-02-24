@@ -1,5 +1,5 @@
 import { Button, Slide, Snackbar, SnackbarProps } from "@mui/material";
-import { TransitionProps } from "@mui/material/transitions";
+import { SlideProps } from "@mui/material/Slide/Slide";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import * as UUID from "uuid";
@@ -31,9 +31,7 @@ export const UndoSnackbar = <Payload extends unknown>({ onUndoClick, payload, ..
                     <FormattedMessage id="cometAdmin.generic.undo" defaultMessage="Undo" />
                 </Button>
             }
-            // TODO: Fix this
-            // @ts-ignore
-            TransitionComponent={(props: TransitionProps) => <Slide {...props} direction="right" />}
+            TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
             {...props}
         />
     );
