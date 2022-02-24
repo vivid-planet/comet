@@ -1,4 +1,4 @@
-import { ComponentsOverrides, FormControl, MenuItem, Select, Theme } from "@mui/material";
+import { ComponentsOverrides, FormControl, inputBaseClasses, MenuItem, Select, selectClasses, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -18,15 +18,12 @@ function BlockTypesControls({ disabled, blockTypes, classes }: Props & WithStyle
     return (
         <FormControl classes={{ root: classes.root }}>
             <Select
-                // TODO: Fix this
-                // @ts-ignore
-                classes={{ root: classes.select }}
+                classes={{ select: classes.select }}
                 disabled={disabled}
                 value={activeDropdownBlockType}
                 displayEmpty
-                disableUnderline
-                // TODO: Fix this
-                // @ts-ignore
+                variant="filled"
+                MenuProps={{ elevation: 1 }}
                 onChange={handleBlockTypeChange}
             >
                 {blockTypesListItems.map((c) => (
@@ -46,12 +43,17 @@ const styles = (theme: Theme) => {
 
     return createStyles<RteBlockTypeControlsClassKey, Props>({
         root: {
-            "& [class*='MuiInputBase-root']": {
+            [`& .${inputBaseClasses.root}`]: {
                 backgroundColor: "transparent",
                 height: "auto",
                 border: "none",
+                "&, &:hover": {
+                    "&:before, &:after": {
+                        borderBottomWidth: 0,
+                    },
+                },
             },
-            "& [class*='MuiSelect-icon']": {
+            [`& .${selectClasses.icon}`]: {
                 top: "auto",
                 color: "inherit",
             },

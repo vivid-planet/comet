@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from "@mui/material";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 
@@ -44,10 +45,12 @@ const createFeaturesFromBlocktypeMap =
                 })),
         ];
 
+type BlockChangeEvent = SelectChangeEvent<DraftBlockType>;
+
 export interface BlockTypesApi {
     dropdownFeatures: IFeatureConfig[];
     activeDropdownBlockType: string;
-    handleBlockTypeChange: (e: React.ChangeEvent<{ value: DraftBlockType }>) => void;
+    handleBlockTypeChange: (e: BlockChangeEvent) => void;
     listsFeatures: IFeatureConfig[];
 }
 
@@ -85,7 +88,7 @@ export default function useBlockTypes({
     );
 
     const handleBlockTypeChange = React.useCallback(
-        (e: React.ChangeEvent<{ value: DraftBlockType }>) => {
+        (e: BlockChangeEvent) => {
             e.preventDefault();
 
             if (!e.target.value) {
@@ -108,13 +111,11 @@ export default function useBlockTypes({
 
     const dropdownFeatures: IFeatureConfig[] = React.useMemo(
         () => createFeaturesFromBlocktypeMap("dropdown")({ supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType }),
-        // TODO: Check if adding `standardBlockType` causes an issue
         [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType],
     );
 
     const listsFeatures: IFeatureConfig[] = React.useMemo(
         () => createFeaturesFromBlocktypeMap("button")({ supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType }),
-        // TODO: Check if adding `standardBlockType` causes an issue
         [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType],
     );
 
