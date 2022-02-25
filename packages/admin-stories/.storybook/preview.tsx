@@ -3,14 +3,15 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 
+import { MainContent, MuiThemeProvider } from "@comet/admin";
+import { createCometTheme } from "@comet/admin-theme";
+import { createTheme, Theme } from "@material-ui/core";
 import { select, withKnobs } from "@storybook/addon-knobs";
 import { addDecorator, addParameters } from "@storybook/react";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
-import { MainContent, MuiThemeProvider } from "@comet/admin";
-import { createCometTheme } from "@comet/admin-theme";
-import { createTheme, Theme } from "@material-ui/core";
 import { createGlobalStyle } from "styled-components";
+
 import { previewGlobalStyles } from "./preview.styles";
 
 addDecorator((story, context) => {
