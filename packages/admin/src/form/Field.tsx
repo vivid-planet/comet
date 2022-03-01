@@ -13,7 +13,7 @@ const composeValidators =
     (value: any, allValues: object) =>
         validators.reduce((error, validator) => error || validator(value, allValues), undefined);
 
-interface Props<FieldValue = any, T extends HTMLElement = HTMLElement> {
+export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElement> {
     name: string;
     label?: React.ReactNode;
     component?: React.ComponentType<any> | string;
@@ -41,7 +41,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     shouldShowWarning: passedShouldShowWarning,
     shouldScrollTo: passedShouldScrollTo,
     ...otherProps
-}: Props<FieldValue, FieldElement>): React.ReactElement {
+}: FieldProps<FieldValue, FieldElement>): React.ReactElement {
     const { disabled, variant, fullWidth } = otherProps;
 
     const { mutators } = useForm();

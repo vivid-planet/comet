@@ -65,7 +65,7 @@ export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQu
 export { useFetch, createFetch, FetchProvider, FetchContext } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalFormAutocomplete } from "./form/Autocomplete";
-export { Field } from "./form/Field";
+export { Field, FieldProps } from "./form/Field";
 export { FieldContainerClassKey, FieldContainer, FieldContainerComponent, FieldContainerProps } from "./form/FieldContainer";
 export { FormSectionKey, FormSection, FormSectionProps } from "./form/FormSection";
 export { FinalFormInput, FinalFormInputProps } from "./form/FinalFormInput";
