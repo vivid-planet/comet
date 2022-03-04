@@ -1,9 +1,10 @@
 import { css } from "@mui/material";
 
-export const previewGlobalStyles = css(`
+export const previewGlobalStyles = (theme) =>
+    css(`
     body {
         margin: 0;
-        background-color: ${({ theme }) => theme.palette.background.default};
+        background-color: ${theme.palette.background.default};
 
         &.sb-show-main.sb-main-padded {
             padding: 0;
@@ -12,7 +13,7 @@ export const previewGlobalStyles = css(`
 
     .sbdocs {
         &.sbdocs-preview {
-            background-color: ${({ theme }) => theme.palette.background.default};
+            background-color: ${theme.palette.background.default};
         }
 
         &.sbdocs-h2 {
