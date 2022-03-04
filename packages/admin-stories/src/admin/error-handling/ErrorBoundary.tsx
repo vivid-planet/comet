@@ -50,8 +50,6 @@ function Story() {
                     <Typography variant={"h5"} gutterBottom>
                         Error Boundaries
                     </Typography>
-                    {/* TODO: Fix this */}
-                    {/* @ts-ignore */}
                     <ErrorBoundary key={`errorBoundary_${renderViewWithErrors}`}>
                         {renderViewWithErrors ? <ViewWithError /> : <ViewWithNoError />}
                     </ErrorBoundary>
