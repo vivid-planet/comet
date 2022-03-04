@@ -1,7 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as ReactBrowserRouter, BrowserRouterProps } from "react-router-dom";
 
-import { RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterPromptHandler } from "./PromptHandler";
 
 // BrowserRouter that sets up a material-ui confirmation dialog
@@ -39,9 +38,8 @@ export const RouterBrowserRouter: React.FunctionComponent<BrowserRouterProps> = 
 
     return (
         <ReactBrowserRouter getUserConfirmation={getConfirmation} {...props}>
-            <RouterPromptHandler>
+            <RouterPromptHandler showDialog={state.showConfirmationDialog} dialogMessage={state.message} handleDialogClose={handleClose}>
                 {children}
-                <RouterConfirmationDialog isOpen={state.showConfirmationDialog} message={state.message} handleClose={handleClose} />
             </RouterPromptHandler>
         </ReactBrowserRouter>
     );

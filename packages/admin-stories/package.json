@@ -1,14 +1,10 @@
 {
-    "name": "@comet/admin-stories",
-    "version": "2.0.0",
+    "name": "comet-admin-stories",
+    "version": "0.0.0",
+    "private": true,
     "files": [
         "src"
     ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/vivid-planet/comet-admin",
-        "directory": "packages/admin-stories"
-    },
     "dependencies": {
         "@apollo/client": "^3.2.5",
         "@comet/admin": "^2.0.0",
@@ -66,10 +62,6 @@
         "build-storybook": "build-storybook",
         "storybook": "start-storybook -p 26638",
         "lint:tsc": "tsc --noEmit"
-    },
-    "publishConfig": {
-        "registry": "https://registry.npmjs.org",
-        "access": "public"
     },
     "license": "BSD-2-Clause"
 }
