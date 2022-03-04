@@ -1,7 +1,9 @@
 import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
 import { createErrorDialogApolloLink, useErrorDialog } from "@comet/admin";
-import type { StoryContext, StoryFn } from "@storybook/addons";
+import { LegacyStoryFn } from "@storybook/addons";
 import * as React from "react";
+
+import { DecoratorContext } from "./storyHelpers";
 
 const SwapiApolloProvider: React.FunctionComponent = ({ children }) => {
     const errorDialog = useErrorDialog();
@@ -22,9 +24,7 @@ const SwapiApolloProvider: React.FunctionComponent = ({ children }) => {
 };
 
 export function apolloSwapiStoryDecorator<StoryFnReturnType = unknown>() {
-    return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
-        // TODO: Fix this
-        // @ts-ignore
-        return <SwapiApolloProvider>{fn()}</SwapiApolloProvider>;
+    return (fn: LegacyStoryFn<StoryFnReturnType>, c: DecoratorContext<StoryFnReturnType>) => {
+        return <SwapiApolloProvider>{fn(c)}</SwapiApolloProvider>;
     };
 }

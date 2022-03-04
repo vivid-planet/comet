@@ -1,11 +1,11 @@
 import { ErrorDialogProvider } from "@comet/admin";
-import type { StoryContext, StoryFn } from "@storybook/addons";
+import { LegacyStoryFn } from "@storybook/addons";
 import * as React from "react";
 
+import { DecoratorContext } from "../../../../storyHelpers";
+
 export function errorDialogStoryProviderDecorator<StoryFnReturnType = unknown>() {
-    return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
-        // TODO: Fix this
-        // @ts-ignore
-        return <ErrorDialogProvider>{fn()}</ErrorDialogProvider>;
+    return (fn: LegacyStoryFn<StoryFnReturnType>, c: DecoratorContext<StoryFnReturnType>) => {
+        return <ErrorDialogProvider>{fn(c)}</ErrorDialogProvider>;
     };
 }
