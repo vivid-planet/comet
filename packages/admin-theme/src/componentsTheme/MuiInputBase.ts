@@ -14,8 +14,8 @@ export const getMuiInputBase = (palette: Palette, spacing: Spacing): Components[
                 pointerEvents: "none",
             },
             "& [class*='CometAdminClearInputButton-root']": {
-                marginRight: -spacing(2),
-                marginLeft: -spacing(2),
+                marginRight: spacing(-2),
+                marginLeft: spacing(-2),
 
                 [`& .${svgIconClasses.root}`]: {
                     pointerEvents: "auto",
