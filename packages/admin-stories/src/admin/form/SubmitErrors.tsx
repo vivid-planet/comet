@@ -19,13 +19,14 @@ const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
 
 const resolveSubmitErrors = (error: SubmissionErrors) => {
     // error = { errors: [{fieldName: errorMessage},...] }
-
     const result = {};
-    // TODO: Fix this
-    // eslint-disable-next-line no-unsafe-optional-chaining
-    for (const submitError of error?.errors) {
-        Object.assign(result, submitError);
+
+    if (error) {
+        for (const submitError of error.errors) {
+            Object.assign(result, submitError);
+        }
     }
+
     // result = {fieldName: errorMessage, ...}
     return result;
 };
