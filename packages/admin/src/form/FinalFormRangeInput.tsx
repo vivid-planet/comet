@@ -6,7 +6,7 @@ import { FieldRenderProps } from "react-final-form";
 export type FinalFormRangeInputClassKey = "root" | "inputsWrapper" | "inputFieldsSeparatorContainer" | "sliderWrapper" | "inputFieldContainer";
 
 const styles = () => {
-    return createStyles<FinalFormRangeInputClassKey, IFinalFormRangeInputProps>({
+    return createStyles<FinalFormRangeInputClassKey, FinalFormRangeInputProps>({
         root: {
             boxSizing: "border-box",
             padding: "0 20px",
@@ -31,7 +31,7 @@ const styles = () => {
     });
 };
 
-interface IFinalFormRangeInputProps extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement> {
+export interface FinalFormRangeInputProps extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement> {
     min: number;
     max: number;
     startAdornment?: React.ReactNode;
@@ -39,7 +39,7 @@ interface IFinalFormRangeInputProps extends FieldRenderProps<{ min: number; max:
     sliderProps?: Omit<SliderProps, "min" | "max">;
 }
 
-const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof styles> & IFinalFormRangeInputProps> = ({
+const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormRangeInputProps> = ({
     classes,
     min,
     max,

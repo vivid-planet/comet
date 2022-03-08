@@ -1,7 +1,6 @@
 import * as React from "react";
 import { MemoryRouter as ReactMemoryRouter, MemoryRouterProps } from "react-router-dom";
 
-import { RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterPromptHandler } from "./PromptHandler";
 
 // MemoryRouter that sets up a material-ui confirmation dialog
@@ -39,9 +38,8 @@ export const RouterMemoryRouter: React.FunctionComponent<MemoryRouterProps> = ({
 
     return (
         <ReactMemoryRouter getUserConfirmation={getConfirmation} {...props}>
-            <RouterPromptHandler>
+            <RouterPromptHandler showDialog={state.showConfirmationDialog} dialogMessage={state.message} handleDialogClose={handleClose}>
                 {children}
-                <RouterConfirmationDialog isOpen={state.showConfirmationDialog} message={state.message} handleClose={handleClose} />
             </RouterPromptHandler>
         </ReactMemoryRouter>
     );

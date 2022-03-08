@@ -1,4 +1,5 @@
 import * as path from "path";
+
 export default {
     stories: ["../src/**/*.@(mdx|tsx)"],
     addons: [
