@@ -9,7 +9,7 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet-admin",
-        "directory": "packages/admin-date-picker"
+        "directory": "packages/admin/admin-date-picker"
     },
     "dependencies": {
         "moment": "^2.24.0",

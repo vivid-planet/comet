@@ -1,7 +1,7 @@
 {
     "npmClient": "npm",
     "packages": [
-        "packages/*"
+        "packages/admin/*"
     ],
     "useWorkspaces": true,
     "version": "2.0.0",

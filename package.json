@@ -2,7 +2,7 @@
     "name": "root",
     "license": "BSD-2-Clause",
     "workspaces": [
-        "packages/*"
+        "packages/admin/*"
     ],
     "private": true,
     "repository": {
@@ -16,14 +16,14 @@
         "start": "pm2 start ecosystem.config.js",
         "build": "lerna run build --concurrency=1 --stream",
         "publish:release": "lerna publish --force-publish --no-push --no-git-tag-version --no-private",
-        "storybook": "npm run --prefix packages/admin-stories storybook",
+        "storybook": "npm run --prefix packages/admin/admin-stories storybook",
         "lint": "npm run lint:eslint && npm run lint:tsc",
-        "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/**/src/",
+        "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/admin/**/src/",
         "prelint:tsc": "npm run build",
         "lint:tsc": "lerna run lint:tsc --stream",
         "prebuild:storybook": "npm run build",
-        "build:storybook": "npm --prefix packages/admin-stories run build-storybook",
-        "intl:extract": "formatjs extract ./packages/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin-stories/**/* --format simple",
+        "build:storybook": "npm --prefix packages/admin/admin-stories run build-storybook",
+        "intl:extract": "formatjs extract ./packages/admin/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin/admin-stories/**/* --format simple",
         "prepare": "husky install"
     },
     "devDependencies": {

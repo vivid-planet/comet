@@ -9,7 +9,7 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet-admin",
-        "directory": "packages/admin"
+        "directory": "packages/admin/admin"
     },
     "dependencies": {
         "@comet/admin-icons": "^2.0.0",

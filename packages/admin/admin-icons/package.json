@@ -6,7 +6,7 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet-admin",
-        "directory": "packages/admin-icons"
+        "directory": "packages/admin/admin-icons"
     },
     "scripts": {
         "clean": "rimraf lib && rimraf src/generated",

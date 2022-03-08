@@ -27,7 +27,7 @@ echo $target
 echo $source
 packages=( admin admin-color-picker admin-date-picker admin-icons admin-react-select admin-rte admin-theme )
 for package in "${packages[@]}"; do
-    cmd="wml add $source/packages/$package $target/$package"
+    cmd="wml add $source/packages/admin/$package $target/$package"
     echo $cmd
     $cmd
 done
