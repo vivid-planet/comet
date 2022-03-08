@@ -55,7 +55,7 @@ function CancelBtn({
     ...restProps
 }: CancelButtonProps & WithStyles<typeof styles>) {
     return (
-        <Button startIcon={startIcon} {...restProps}>
+        <Button color="info" startIcon={startIcon} {...restProps}>
             {children}
         </Button>
     );

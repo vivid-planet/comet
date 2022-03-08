@@ -35,6 +35,10 @@ export const getMuiButton = (palette: Palette): Components["MuiButton"] => ({
 
             ...(ownerState.color === "info" && {
                 color: palette.grey[900],
+
+                ":hover": {
+                    backgroundColor: palette.grey[50],
+                },
             }),
         }),
         contained: ({ ownerState }) => ({
