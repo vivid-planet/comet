@@ -3,17 +3,9 @@ import { createStyles } from "@material-ui/styles";
 
 import { FilterBarPopoverFilterProps } from "./FilterBarPopoverFilter";
 
-export type FilterBarPopoverFilterClassKey =
-    | "root"
-    | "fieldBarWrapper"
-    | "fieldBarInnerWrapper"
-    | "labelWrapper"
-    | "labelWrapperWithValues"
-    | "popoverContentContainer"
-    | "paper"
-    | "buttonsContainer";
+export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "paper" | "buttonsContainer";
 
-export const styles = ({ palette, typography }: Theme) => {
+export const styles = ({ palette }: Theme) => {
     return createStyles<FilterBarPopoverFilterClassKey, FilterBarPopoverFilterProps>({
         root: {
             backgroundColor: palette.common.white,
@@ -24,31 +16,6 @@ export const styles = ({ palette, typography }: Theme) => {
         },
         fieldBarWrapper: {
             position: "relative",
-            border: `1px solid ${palette.grey[100]}`,
-        },
-        fieldBarInnerWrapper: {
-            position: "relative",
-            alignItems: "center",
-            padding: "10px 15px",
-            cursor: "pointer",
-            display: "flex",
-
-            "& [class*='MuiSvgIcon-root']": {
-                fontSize: 12,
-            },
-        },
-        labelWrapper: {
-            boxSizing: "border-box",
-            marginRight: "6px",
-            "& [class*='MuiTypography-body1']": {
-                fontWeight: typography.fontWeightRegular,
-            },
-        },
-
-        labelWrapperWithValues: {
-            "& [class*='MuiTypography-body1']": {
-                fontWeight: typography.fontWeightBold,
-            },
         },
         popoverContentContainer: {
             minWidth: 300,

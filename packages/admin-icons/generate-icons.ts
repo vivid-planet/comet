@@ -2,7 +2,7 @@ import { Presets, SingleBar } from "cli-progress";
 import { ESLint } from "eslint";
 import { parse } from "fast-xml-parser";
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
-import { pascalCase } from "pascal-case";
+import { pascalCase, pascalCaseTransformMerge } from "pascal-case";
 const eslint = new ESLint({ fix: true });
 
 const main = async () => {
@@ -33,7 +33,7 @@ const main = async () => {
     await writeIndexFile(files);
 };
 
-const getComponentName = (fileName: string) => pascalCase(fileName.split(".")[0]);
+const getComponentName = (fileName: string) => pascalCase(fileName.split(".")[0], { transform: pascalCaseTransformMerge });
 
 const getPathData = (fileName: string) => {
     const fileContents = readFileSync(`icons/${fileName}`);

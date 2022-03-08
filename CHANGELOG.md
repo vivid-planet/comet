@@ -32,6 +32,18 @@ All notable changes to this project will be documented in this file. This projec
 
 The date-picker package has been removed.
 
+# [2.1.0]
+
+## Highlights:
+
+-   Add FinalFormAutocomplete (see Story "Autocomplete / Async Select")
+-   Add useAsyncOptionsProps-Hook to allow async loading of options in FinalFormAutocomplete and FinalFormSelect
+-   Add support to pass options directly via props in FinalFormSelect (they are rendered automatically)
+
+## Changes
+
+-   [RTE] add MacOS specific shortcut tooltips
+
 # [2.0.0]
 
 ## Highlights:
@@ -51,7 +63,7 @@ The date-picker package has been removed.
 -   Removed FinalFormTextField in favour of FinalFormInput
     -   MuiTextField should not be used inside comet-admin projects, it's design is not compatible with the comet-ci.
 -   Usage and default layout of `Field` has changed
-    -   The `fieldContainer` prop has been removed, in favour of the `variant` prop and theme-augmentation of `CometAdminFormFieldContainer`
+    -   The `fieldContainer` prop has been removed, in favour of a `variant` prop
     -   Removed `FieldContainerLabelAbove` component (the new default looks like this)
     -   The old default layout of `Field` can be restored by adding the following to the theme:
         ```js
@@ -81,7 +93,7 @@ The date-picker package has been removed.
         -   This allows for more control, like giving certain pages more width by always using the temporary variant on those pages
     -   Allows maximum item-nesting of two levels
 -   Changes to Stack
-    -   Removed prop `components.breadcrumbsContainer` in favour of a div that can be styled using the theme (`overrides -> CometAdminStack -> breadcrumbs`)
+    -   Removed prop `components.breadcrumbsContainer` in favour of a div that can be customized through the theme and classes
 -   Removed component `FixedLeftRightLayout`
 -   Removed FormPaper, the same effect can be accomplished with a CardContent within a Card.
 -   Changes to MasterLayout
@@ -215,16 +227,10 @@ npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/upda
 ### Other Notable Changes
 
 -   Added `ClearInputButton`, this component can be used as `endAdornment`, to clear inputs
-    -   Can be themed with `CometAdminClearInputButton` (props and overrides)
 -   New methods of customization and default layout for `Field`
-    -   Added theme-augmentation for `FieldContainer`
     -   New `variant` prop to select between vertical and horizontal positioning of label and input
     -   Label is now positioned above input by default (`variant={"vertical"}`)
--   The Menu component and it's items can be customized using the material-ui theme
-    -   Allows custom styling of the Menu, MenuItem and MenuCollapsibleItem _(theme -> overrides -> CometAdminMenu/CometAdminMenuItem/CometAdminMenuCollapsibleItem)_
-    -   Allows using custom open/close icons for CollapsibleItem _(theme -> props -> CometAdminMenuCollapsibleItem -> openedIcon/closedIcon)_
--   The MasterLayout component can be customized using the material-ui theme
-    -   Using the new `headerHeight` prop, the top-spacing of the content and the menu, will now be adjusted automatically
+-   Added a new `headerHeight` prop to MasterLayout, that child components (e.g. AppHeader & Menu) can use to position themselves without overlapping
 -   add onAfterSubmit to FinalForm
 -   add useStoredState() hook
 -   Added a new FinalFormRangeInput Component
@@ -245,11 +251,8 @@ npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/upda
 ### Incompatible Changes
 
 -   Renamed `VPAdminColorPicker` to `CometAdminColorPicker`
--   Removed `clearButton` and `clearIcon` classes from color-picker
-    -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
+-   Removed `clearButton` and `clearIcon` classes from color-picker and use the ClearInputButton component instead
 -   The clear-button is no longer shown by default
--   Removed `clearButton` and `clearIcon` classes from color-picker
-    -   Using theme-augmentation the new common clear-button can now be styled with `CometAdminClearInputButton` instead of `VPAdminColorPicker`
 
 ### Other Notable Changes
 
@@ -268,10 +271,6 @@ npx jscodeshift --extensions=tsx --parser=tsx -t comet-admin/codemods/2.0.0/upda
 
 -   Removed `rte` key from theme
     -   The rte-colors should now be defined under `props` -> `CometAdminRte` -> `colors` instead of `rte` -> `colors`
-
-### Other Notable Changes
-
--   Add ability to customize the styling using theme-overrides
 
 ------------------------------------ LEGACY DOCS WITH INDEPENDENT RELEASES ------------------------------------
 

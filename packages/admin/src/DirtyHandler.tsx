@@ -2,6 +2,7 @@ import * as React from "react";
 import { defineMessages, useIntl, WrappedComponentProps } from "react-intl";
 
 import { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
+import { SubmitResult } from "./form/SubmitResult";
 import { RouterPrompt } from "./router/Prompt";
 
 interface IProps {
@@ -15,10 +16,10 @@ interface IBinding {
 type Bindings = IBinding[];
 
 const messages = defineMessages({
-    discardChanges: {
-        id: "cometAdmin.dirtyHandler.discardChanges",
-        defaultMessage: "Discard unsaved changes?",
-        description: "Prompt to discard unsaved changes",
+    saveChanges: {
+        id: "cometAdmin.dirtyHandler.saveChanges",
+        defaultMessage: "Do you want to save the changes?",
+        description: "Prompt to save unsaved changes",
     },
 });
 class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentProps> {
@@ -67,17 +68,22 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
     public render() {
         return (
             <DirtyHandlerApiContext.Provider value={this.dirtyHandlerApi}>
-                <RouterPrompt message={this.promptMessage} />
+                <RouterPrompt message={this.promptMessage} saveAction={this.saveAction} />
                 {this.props.children}
             </DirtyHandlerApiContext.Provider>
         );
     }
 
+    private saveAction = async (): Promise<boolean> => {
+        const submitResults: Array<SubmitResult> = await this.submitBindings();
+        return submitResults.every((submitResult) => !submitResult.error);
+    };
+
     private promptMessage = (): string | boolean => {
         if (!this.isBindingDirty()) {
             return true;
         } else {
-            return this.props.intl.formatMessage(messages.discardChanges);
+            return this.props.intl.formatMessage(messages.saveChanges);
         }
     };
 

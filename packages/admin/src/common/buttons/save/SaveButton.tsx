@@ -38,6 +38,7 @@ const SaveBtn = ({
     variant = "contained",
     color = "primary",
     classes,
+    disabled,
     ...restProps
 }: SaveButtonProps & WithStyles<typeof styles>) => {
     const [displayState, setDisplayState] = React.useState<SaveButtonDisplayState>("idle");
@@ -97,7 +98,7 @@ const SaveBtn = ({
             startIcon={resolveIconForDisplayState(displayState)}
             variant={variant}
             color={color}
-            disabled={displayState != "idle"}
+            disabled={disabled || displayState != "idle"}
         >
             {displayState === "idle" && children}
             {displayState === "saving" && savingItem}

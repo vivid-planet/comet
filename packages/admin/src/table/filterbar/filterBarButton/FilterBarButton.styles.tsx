@@ -7,9 +7,12 @@ export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filt
 export const styles = (theme: Theme) => {
     return createStyles<FilterBarButtonClassKey, FilterBarButtonProps>({
         root: {
+            boxSizing: "border-box",
+            height: 42,
             position: "relative",
             alignItems: "center",
-            padding: "10px 15px",
+            paddingLeft: 15,
+            paddingRight: 15,
             cursor: "pointer",
             display: "flex",
             borderColor: theme.palette.grey[100],

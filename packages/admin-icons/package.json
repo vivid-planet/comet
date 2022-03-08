@@ -15,15 +15,14 @@
         "build": "tsc",
         "prestart": "npm run clean && npm run generate-icons",
         "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
-        "prepare": "npm run build",
         "lint": "npm run lint:eslint && npm run lint:tsc",
         "lint:eslint": "eslint src/",
         "lint:tsc": "tsc --noEmit"
     },
     "peerDependencies": {
         "@material-ui/core": "^4.0.0",
-        "react": "^16.8.0",
-        "react-dom": "^16.8.0"
+        "react": "^16.8.0 || ^17.0",
+        "react-dom": "^16.8.0 || ^17.0"
     },
     "devDependencies": {
         "@types/cli-progress": "^3.8.0",
