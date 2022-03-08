@@ -1,0 +1,4 @@
+{
+    "extends": "@comet/eslint-config/react",
+    "ignorePatterns": ["src/*.generated.ts"]
+}

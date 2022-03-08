@@ -1,0 +1,16 @@
+{
+    "name": "server",
+    "version": "1.0.0",
+    "dependencies": {
+        "compression": "^1.7.4",
+        "express": "^4.17.1"
+    },
+    "scripts": {
+        "preserve": "envsubst < \"../build/index.html\" > \"/tmp/index.html\" && mv /tmp/index.html ../build/index.html && envsubst < \"../build/access-token-service-worker.js\" > \"/tmp/access-token-service-worker.js\" && mv /tmp/access-token-service-worker.js ../build/access-token-service-worker.js",
+        "serve": "node server.js"
+    },
+    "engines": {
+        "node": "14",
+        "npm": "7"
+    }
+}

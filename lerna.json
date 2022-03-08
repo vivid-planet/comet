@@ -1,7 +1,10 @@
 {
     "npmClient": "npm",
     "packages": [
-        "packages/admin/*"
+        "packages/admin/*",
+        "packages/api/*",
+        "packages/site/*",
+        "packages/eslint-config/"
     ],
     "useWorkspaces": true,
     "version": "2.0.0",

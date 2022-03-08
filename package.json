@@ -2,7 +2,11 @@
     "name": "root",
     "license": "BSD-2-Clause",
     "workspaces": [
-        "packages/admin/*"
+        "packages/admin/*",
+        "packages/api/*",
+        "packages/site/*",
+        "packages/eslint-config/",
+        "demo/*"
     ],
     "private": true,
     "repository": {

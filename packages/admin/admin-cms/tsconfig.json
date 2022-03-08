@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "ES2015",
+        "module": "CommonJS",
+        "lib": ["ES2019", "DOM"],
+        "noImplicitAny": true,
+        "outDir": "lib/",
+        "skipLibCheck": true,
+        "declaration": true,
+        "jsx": "react",
+        "noEmitOnError": true,
+        "esModuleInterop": true,
+        "strict": true
+    },
+    "include": ["src/**/*"]
+}
