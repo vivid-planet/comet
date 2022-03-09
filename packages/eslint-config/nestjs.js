@@ -1,5 +1,5 @@
 module.exports = {
-    extends: "./core.js",
+    extends: require.resolve("./core.js"),
     env: {
         node: true,
         jest: true,

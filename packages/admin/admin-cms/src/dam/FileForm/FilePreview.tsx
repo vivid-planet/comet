@@ -1,6 +1,7 @@
 import { useStackApi } from "@comet/admin";
 import { Delete, Download, File } from "@comet/admin-icons";
 import { Button, Paper } from "@material-ui/core";
+import { saveAs } from "file-saver";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import styled from "styled-components";

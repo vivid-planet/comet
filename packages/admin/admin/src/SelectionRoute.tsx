@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Route, useHistory, useRouteMatch } from "react-router";
+import { Route } from "react-router";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 import { ISelectionApi } from "./SelectionApi";
 

@@ -1,16 +1,15 @@
 import { makeStyles, TableCell, Theme } from "@material-ui/core";
 import styled from "styled-components";
 
-export const useStyles = makeStyles<
-    Theme,
-    {
-        isDragHovered: boolean;
-        isMouseHovered: boolean;
-        isArchived: boolean;
-        isEditable?: boolean;
-        isSelected?: boolean;
-    }
->((theme) => ({
+interface Styles {
+    isDragHovered: boolean;
+    isMouseHovered: boolean;
+    isArchived: boolean;
+    isEditable?: boolean;
+    isSelected?: boolean;
+}
+
+export const useStyles = makeStyles<Theme, Styles>((theme) => ({
     root: {
         scrollMarginTop: 160,
         scrollSnapMarginTop: 160, // Safari
@@ -62,7 +61,7 @@ export const useStyles = makeStyles<
             content: '""',
             display: "flex",
             width: "100%",
-            height: (props) => (props.isSelected ? "2px" : 0),
+            height: (props: Styles) => (props.isSelected ? "2px" : 0),
             backgroundColor: theme.palette.primary.main,
             position: "absolute",
             bottom: "-1px",

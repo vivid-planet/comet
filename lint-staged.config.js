@@ -1,4 +1,4 @@
 module.exports = {
-    "packages/admin/**/*.{ts,tsx,js,jsx}": () => "npm run lint",
+    "packages/admin/**/*.{ts,tsx,js,jsx}": () => "npx yarn lint",
     "*": () => "npx prettier -c .",
 };

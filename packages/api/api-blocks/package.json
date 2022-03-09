@@ -35,7 +35,7 @@
         "rimraf": "^3.0.0"
     },
     "devDependencies": {
-        "@comet/eslint-config": "^0.0.0",
+        "@comet/eslint-config": "^2.0.0",
         "@types/draft-js": "^0.10.0",
         "@types/jest": "^27.0.0",
         "chokidar-cli": "^2.0.0",

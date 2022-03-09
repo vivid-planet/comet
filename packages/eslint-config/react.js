@@ -1,7 +1,7 @@
 const core = require("./core");
 
 module.exports = {
-    extends: ["./core.js", "plugin:react/recommended", "plugin:react-hooks/recommended"],
+    extends: [require.resolve("./core.js"), "plugin:react/recommended", "plugin:react-hooks/recommended"],
     env: {
         browser: true,
         es6: true,

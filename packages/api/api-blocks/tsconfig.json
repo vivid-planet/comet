@@ -2,6 +2,7 @@
     "compilerOptions": {
         "target": "ES2015",
         "module": "CommonJS",
+        "lib": ["ES2019"],
         "removeComments": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,

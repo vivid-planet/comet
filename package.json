@@ -14,17 +14,15 @@
         "url": "https://github.com/vivid-planet/comet-admin"
     },
     "scripts": {
-        "postinstall": "npm run bootstrap",
-        "bootstrap": "lerna bootstrap --no-ci --hoist",
+        "postinstall": "node node_modules/@vivid/certificates/bin/download-certificates.js",
         "clean": "lerna run clean --stream --parallel",
         "start": "pm2 start ecosystem.config.js",
         "build": "lerna run build --concurrency=1 --stream",
+        "build:lib": "yarn build --no-private",
         "publish:release": "lerna publish --force-publish --no-push --no-git-tag-version --no-private",
         "storybook": "npm run --prefix packages/admin/admin-stories storybook",
-        "lint": "npm run lint:eslint && npm run lint:tsc",
-        "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.json,.md packages/admin/**/src/",
-        "prelint:tsc": "npm run build",
-        "lint:tsc": "lerna run lint:tsc --stream",
+        "lint": "lerna run lint --concurrency=1 --stream",
+        "lint:lib": "yarn lint --no-private",
         "prebuild:storybook": "npm run build",
         "build:storybook": "npm --prefix packages/admin/admin-stories run build-storybook",
         "intl:extract": "formatjs extract ./packages/admin/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin/admin-stories/**/* --format simple",
@@ -32,25 +30,16 @@
     },
     "devDependencies": {
         "@formatjs/cli": "^2.13.12",
-        "@types/uuid": "^8.3.0",
         "@storybook/addon-docs": "^6.2.7",
-        "@typescript-eslint/eslint-plugin": "^4.7.0",
-        "@typescript-eslint/parser": "^4.7.0",
-        "eslint": "^7.13.0",
-        "eslint-config-prettier": "^6.15.0",
-        "eslint-plugin-formatjs": "^2.9.3",
-        "eslint-plugin-prettier": "^3.1.4",
-        "eslint-plugin-react": "^7.21.5",
-        "eslint-plugin-react-hooks": "^4.2.0",
-        "eslint-plugin-simple-import-sort": "^5.0.3",
-        "eslint-plugin-unused-imports": "^1.0.0",
+        "@types/node": "^14.0.0",
+        "@types/uuid": "^8.3.0",
+        "@vivid/certificates": "^1.0.2",
         "exceljs": "^3.4.0",
         "file-saver": "^2.0.2",
         "final-form": "^4.16.1",
         "graphql": "^15.4.0",
         "history": "^4.10.1",
         "husky": "^6.0.0",
-        "jss": "^9.8.7",
         "lerna": "^4.0.0",
         "lint-staged": "^10.5.4",
         "pm2": "^4.5.6",
@@ -58,11 +47,18 @@
         "react": "^17.0",
         "react-dom": "^17.0",
         "rimraf": "^3.0.2",
-        "typescript": "^4.2.2",
         "wait-on": "^5.3.0"
     },
     "engines": {
         "node": "14",
         "npm": "7"
-    }
+    },
+    "resolutions": {
+        "csstype": "^3",
+        "styled-components": "^5",
+        "react-router": "^5",
+        "react-router-dom": "^5",
+        "typescript": "4.4.4"
+    },
+    "packageManager": "yarn@3.2.0"
 }

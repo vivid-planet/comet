@@ -84,11 +84,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
 
     return (
         <>
-            <FinalFormField<FieldValue, FieldRenderProps<FieldValue, FieldElement>, FieldElement>
-                name={name}
-                validate={validateError}
-                {...otherProps}
-            >
+            <FinalFormField<FieldValue, FieldElement> name={name} validate={validateError} {...otherProps}>
                 {renderField}
             </FinalFormField>
             {validateWarning && (

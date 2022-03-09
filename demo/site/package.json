@@ -59,7 +59,6 @@
         "@graphql-codegen/typescript-operations": "^1.0.0",
         "@types/fs-extra": "^9.0.0",
         "@types/google.maps": "^3.0.0",
-        "@types/node": "^14.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-is": "^17.0.0",

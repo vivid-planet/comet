@@ -18,8 +18,13 @@
     },
     "devDependencies": {
         "@comet/admin": "^2.0.0",
+        "@comet/eslint-config": "^2.0.0",
         "@types/react": "^16.8.25",
-        "@types/react-dates": "^17.1.5"
+        "@types/react-dates": "^17.1.5",
+        "eslint": "^7.0.0",
+        "prettier": "^2.0.0",
+        "typescript": "^4.0.0",
+        "yarn-run-all": "^3.0.0"
     },
     "peerDependencies": {
         "@comet/admin": "*",
@@ -33,7 +38,9 @@
         "build": "tsc --project ./tsconfig.json",
         "prestart": "rimraf lib",
         "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
-        "lint:tsc": "tsc --noEmit"
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/",
+        "lint:tsc": "tsc"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org",

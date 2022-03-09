@@ -194,7 +194,8 @@ export class FilesController {
                 res.writeHead(416, {
                     "content-range": `bytes */${file.size}`,
                 });
-                return res.end();
+                res.end();
+                return;
             }
 
             try {
