@@ -1,6 +1,6 @@
 import { DeleteButton } from "@comet/admin";
-import { ArrowRight, Delete } from "@comet/admin-icons";
 import { AdminComponentPaper } from "@comet/admin-blocks";
+import { ArrowRight, Delete } from "@comet/admin-icons";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@material-ui/core";
 import { Cancel } from "@material-ui/icons";
 import * as React from "react";

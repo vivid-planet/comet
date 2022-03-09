@@ -85,7 +85,7 @@ function MasterHeader() {
     );
 }
 
-export function Story() {
+export function Story(): React.ReactElement {
     return (
         <MasterLayout menuComponent={Menu} headerComponent={MasterHeader}>
             <React.Fragment />

@@ -11,7 +11,7 @@ interface IProps {
     disabled?: boolean;
 }
 
-function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes }: IProps & WithStyles<typeof styles>) {
+function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes }: IProps & WithStyles<typeof styles>): React.ReactElement | null {
     if (!features.length) {
         return null;
     }

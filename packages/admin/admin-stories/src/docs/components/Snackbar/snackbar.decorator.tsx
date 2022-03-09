@@ -1,9 +1,9 @@
 import { SnackbarProvider } from "@comet/admin";
-import { StoryContext, StoryFn } from "@storybook/addons";
+import { PartialStoryFn, StoryContext } from "@storybook/addons";
 import * as React from "react";
 
 export function snackbarDecorator<StoryFnReturnType = unknown>() {
-    return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
+    return (fn: PartialStoryFn<StoryFnReturnType>, c: StoryContext): React.ReactElement => {
         return <SnackbarProvider>{fn()}</SnackbarProvider>;
     };
 }

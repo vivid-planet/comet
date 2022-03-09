@@ -105,7 +105,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
     },
 };
 
-export function mergeBlocktypeMaps(...args: IBlocktypeMap[]) {
+export function mergeBlocktypeMaps(...args: IBlocktypeMap[]): IBlocktypeMap {
     return args.reduce((a, b) => {
         const remainingA = { ...a }; // copy or bad things happen
         const newEl: IBlocktypeMap = {};
@@ -126,7 +126,7 @@ export function mergeBlocktypeMaps(...args: IBlocktypeMap[]) {
     }); // merge 2 levels nested
 }
 
-export function cleanBlockTypeMap(map: IBlocktypeMap) {
+export function cleanBlockTypeMap(map: IBlocktypeMap): IBlocktypeMap {
     // these unsupportedKeysForUnstyled canot be changed
     const unsupportedKeysForUnstyled: Array<keyof IBlocktypeConfig> = ["group", "icon", "supportedBy"];
 
@@ -134,6 +134,7 @@ export function cleanBlockTypeMap(map: IBlocktypeMap) {
         unsupportedKeysForUnstyled.forEach((c) => {
             if (map.unstyled[c]) {
                 map.unstyled[c] = undefined;
+                // eslint-disable-next-line no-console
                 console.warn(
                     `'unstyled' in BlocktypeMap does not support the key '${c}' with the given value '${map.unstyled[c]}'. The value is ignored.`,
                 );

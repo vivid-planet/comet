@@ -10,7 +10,7 @@ export default function ListsControls({
     editorRef,
     options: { supports: supportedThings, blocktypeMap, standardBlockType },
     disabled,
-}: IControlProps) {
+}: IControlProps): React.ReactElement | null {
     const { listsFeatures } = useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef, standardBlockType });
     if (listsFeatures.length < 1) {
         return null;

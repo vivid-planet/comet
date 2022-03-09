@@ -2,7 +2,7 @@ import { TabClassKey } from "@material-ui/core";
 import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiTabOverrides = (palette: Palette): StyleRules<{}, TabClassKey> => ({
+export const getMuiTabOverrides = (palette: Palette): StyleRules<Record<string, unknown>, TabClassKey> => ({
     root: {
         fontSize: 16,
         lineHeight: 1,

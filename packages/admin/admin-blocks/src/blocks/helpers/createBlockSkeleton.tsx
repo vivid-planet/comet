@@ -35,7 +35,7 @@ function common<InputApi, State, OutputApi>(): Omit<
         state2Output: ({ __typename, ...rest }: any) => {
             return rest; // omit __typename for now @TODO: use __typename instead of BlockType
         },
-        output2State: async (output) => (output as unknown) as State,
+        output2State: async (output) => output as unknown as State,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         createPreviewState: (v: any, previewContext) => {
             return { ...v, adminMeta: { route: previewContext.parentUrl } };

@@ -4,7 +4,7 @@ import { Card, CardContent } from "@material-ui/core";
 import { convertToRaw, EditorState, RawDraftContentState } from "draft-js";
 import * as React from "react";
 
-export function useAutoFocus(editorRef: React.MutableRefObject<IRteRef | undefined>) {
+export function useAutoFocus(editorRef: React.MutableRefObject<IRteRef | undefined>): void {
     React.useEffect(() => {
         if (editorRef && editorRef.current) {
             editorRef.current.focus();
@@ -12,7 +12,7 @@ export function useAutoFocus(editorRef: React.MutableRefObject<IRteRef | undefin
     }, [editorRef]);
 }
 
-export function PrintEditorState({ editorState }: { editorState: EditorState }) {
+export function PrintEditorState({ editorState }: { editorState: EditorState }): React.ReactElement {
     return (
         <Card variant="outlined">
             <CardContent>
@@ -26,7 +26,7 @@ export function PrintEditorState({ editorState }: { editorState: EditorState }) 
     );
 }
 
-export function PrintAnything({ children, label }: { children: any; label: string }) {
+export function PrintAnything({ children, label }: { children: any; label: string }): React.ReactElement {
     return (
         <Card variant="outlined">
             <CardContent>

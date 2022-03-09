@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { IControlProps } from "../types";
 
-export default function BlockTypesControls(p: IControlProps) {
+export default function BlockTypesControls(p: IControlProps): React.ReactElement | null {
     const {
         options: { customToolbarButtons },
     } = p;

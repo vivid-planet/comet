@@ -16,7 +16,7 @@ type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" 
 };
 
 export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Component<Props<FilterValues>> {
-    public render() {
+    public render(): React.ReactElement {
         // remove render, children and component from forwardProps as we define render and those would interfere
         const { headline, resetButton, render, children, component, onSubmit, ...forwardProps } = this.props;
         return (

@@ -108,12 +108,12 @@ export default function useBlockTypes({
 
     const dropdownFeatures: IFeatureConfig[] = React.useMemo(
         () => createFeaturesFromBlocktypeMap("dropdown")({ supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType }),
-        [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap],
+        [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType],
     );
 
     const listsFeatures: IFeatureConfig[] = React.useMemo(
         () => createFeaturesFromBlocktypeMap("button")({ supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType }),
-        [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap],
+        [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType],
     );
 
     const activeDropdownBlockType: string = React.useMemo(() => {

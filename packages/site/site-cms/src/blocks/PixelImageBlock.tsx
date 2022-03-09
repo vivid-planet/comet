@@ -24,9 +24,10 @@ export const PixelImageBlock = withPreview(
         ...nextImageProps
     }: PixelImageBlockProps) => {
         const generatedAspectRatio = generateAspectRatio(aspectRatio);
-        const loader = React.useCallback((loaderProps: ImageLoaderProps) => generateImageUrl(loaderProps, generatedAspectRatio), [
-            generatedAspectRatio,
-        ]);
+        const loader = React.useCallback(
+            (loaderProps: ImageLoaderProps) => generateImageUrl(loaderProps, generatedAspectRatio),
+            [generatedAspectRatio],
+        );
         if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} />;
 
         if (layout === "fill") {

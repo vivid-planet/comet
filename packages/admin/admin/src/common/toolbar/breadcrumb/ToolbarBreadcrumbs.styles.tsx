@@ -1,3 +1,4 @@
+import { StyleRules } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
 import { createStyles } from "@material-ui/styles";
 
@@ -5,7 +6,7 @@ import { ToolbarBreadcrumbsProps } from "./ToolbarBreadcrumbs";
 
 export type ToolbarBreadcrumbsClassKey = "item" | "typographyRoot" | "typographyActiveRoot" | "separatorContainer" | "separator";
 
-export const styles = ({ palette }: Theme) => {
+export const styles = ({ palette }: Theme): StyleRules<ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps> => {
     return createStyles<ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps>({
         item: {
             display: "flex",

@@ -7,7 +7,7 @@ interface ICreateFetchOptions {
 
 const isUrlAbsolute = (url: string) => url.indexOf("://") > 0 || url.indexOf("//") === 0;
 
-export function createFetch(options: ICreateFetchOptions) {
+export function createFetch(options: ICreateFetchOptions): (input: RequestInfo, init?: RequestInit) => Promise<Response> {
     async function appFetch(input: RequestInfo, init?: RequestInit) {
         init = init || {};
         init.headers = init.headers ? new Headers(init.headers) : new Headers();
@@ -27,6 +27,6 @@ type fetchType = typeof window.fetch;
 export const FetchContext = React.createContext<fetchType>(window.fetch);
 export const FetchProvider = FetchContext.Provider;
 
-export function useFetch() {
+export function useFetch(): fetchType {
     return React.useContext(FetchContext);
 }

@@ -31,7 +31,7 @@ export class MenusResolver {
         const items = await Promise.all(
             rootNodes.map<Promise<MainMenuItem>>(async (node) => {
                 const item = await this.mainMenuItemRepository.findOne({
-                    node: (node as unknown) as PageTreeNode,
+                    node: node as unknown as PageTreeNode,
                 });
                 return (
                     item ??

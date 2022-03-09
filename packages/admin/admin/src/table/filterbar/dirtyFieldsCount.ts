@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const isRangeValue = (value: Record<string, any>): boolean => {
     return Object.keys(value).length === 2 && "min" in value && "max" in value;
 };
 
-export const dirtyFieldsCount = (values: Record<string, any>, registeredFields: string[]) => {
+export const dirtyFieldsCount = (values: Record<string, any>, registeredFields: string[]): number => {
     let count = 0;
     Object.entries(values).forEach(([fieldName, fieldValue]) => {
         if (!fieldValue) {

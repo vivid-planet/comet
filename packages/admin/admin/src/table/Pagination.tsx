@@ -41,10 +41,10 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                                 </Grid>
                             )}
                             <Grid item>
-                                <IconButton disabled={!pagingInfo.fetchPreviousPage} onClick={() => pagingInfo.fetchPreviousPage!()}>
+                                <IconButton disabled={!pagingInfo.fetchPreviousPage} onClick={() => pagingInfo.fetchPreviousPage?.()}>
                                     <KeyboardArrowLeft />
                                 </IconButton>
-                                <IconButton disabled={!pagingInfo.fetchNextPage} onClick={() => pagingInfo.fetchNextPage!()}>
+                                <IconButton disabled={!pagingInfo.fetchNextPage} onClick={() => pagingInfo.fetchNextPage?.()}>
                                     <KeyboardArrowRight />
                                 </IconButton>
                             </Grid>

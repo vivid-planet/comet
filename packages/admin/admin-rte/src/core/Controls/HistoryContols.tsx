@@ -4,7 +4,7 @@ import { IControlProps } from "../types";
 import FeaturesButtonGroup from "./FeaturesButtonGroup";
 import useHistory from "./useHistory";
 
-export default function HistoryControls({ editorState, setEditorState, options, disabled }: IControlProps) {
+export default function HistoryControls({ editorState, setEditorState, options, disabled }: IControlProps): React.ReactElement | null {
     const { features } = useHistory({ editorState, setEditorState, supportedThings: options.supports });
     if (features.length < 1) {
         return null;

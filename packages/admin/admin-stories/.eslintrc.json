@@ -1,4 +1,10 @@
 {
     "extends": "@comet/eslint-config/react",
-    "ignorePatterns": ["src/*.generated.ts"]
+    "ignorePatterns": ["src/*.generated.ts"],
+    "rules": {
+        "@calm/react-intl/missing-formatted-message": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "no-console": "off"
+    }
 }

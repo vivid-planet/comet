@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useApolloClient } from "@apollo/client";
 import * as React from "react";
 

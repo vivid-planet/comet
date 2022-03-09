@@ -109,7 +109,11 @@ const FolderTable = ({
     const [footerFolderName, setFooterFolderName] = React.useState<string>();
 
     const fileCategoryMimetypes = props.fileCategory ? acceptedMimeTypesByCategory[props.fileCategory] : undefined;
-    const { uploadFiles, dialogs: fileUploadDialogs, dropzoneConfig } = useFileUpload({
+    const {
+        uploadFiles,
+        dialogs: fileUploadDialogs,
+        dropzoneConfig,
+    } = useFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? fileCategoryMimetypes ?? acceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
@@ -154,10 +158,12 @@ const FolderTable = ({
         skip: id === undefined,
     });
 
-    const { tableData: filesTableData, api: filesApi, loading: filesLoading, error: filesError } = useTableQuery<
-        GQLDamFilesListQuery,
-        GQLDamFilesListQueryVariables
-    >()(damFilesListQuery, {
+    const {
+        tableData: filesTableData,
+        api: filesApi,
+        loading: filesLoading,
+        error: filesError,
+    } = useTableQuery<GQLDamFilesListQuery, GQLDamFilesListQueryVariables>()(damFilesListQuery, {
         variables: {
             folderId: id,
             fileFilter: {
@@ -178,10 +184,12 @@ const FolderTable = ({
         notifyOnNetworkStatusChange: true,
     });
 
-    const { tableData: foldersTableData, api: foldersApi, loading: foldersLoading, error: foldersError } = useTableQuery<
-        GQLDamFoldersListQuery,
-        GQLDamFoldersListQueryVariables
-    >()(damFoldersListQuery, {
+    const {
+        tableData: foldersTableData,
+        api: foldersApi,
+        loading: foldersLoading,
+        error: foldersError,
+    } = useTableQuery<GQLDamFoldersListQuery, GQLDamFoldersListQueryVariables>()(damFoldersListQuery, {
         variables: {
             parentId: id,
             folderFilter: {

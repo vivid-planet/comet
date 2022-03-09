@@ -16,8 +16,8 @@ export const MenuContext = React.createContext<IMenuContext>({
     },
 });
 
-export const withMenu = <P extends object>(WrappedComponent: React.ComponentType<P & IWithMenu>): React.FunctionComponent<P> => {
-    return (props: P) => {
-        return <MenuContext.Consumer>{(value) => <WrappedComponent {...props} menu={value!} />}</MenuContext.Consumer>;
+export const withMenu = <P extends Record<string, unknown>>(WrappedComponent: React.ComponentType<P & IWithMenu>): React.FunctionComponent<P> => {
+    return (props: Exclude<P, IWithMenu>) => {
+        return <MenuContext.Consumer>{(value) => <WrappedComponent {...props} menu={value} />}</MenuContext.Consumer>;
     };
 };

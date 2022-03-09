@@ -35,7 +35,12 @@ export function useEditState<TData = any, TVariables = OperationVariables, TStat
     );
     const [state, setState] = React.useState<TState | undefined>(options.mode === "add" ? options.defaultState : undefined);
 
-    const { data: queryData, refetch, error, loading } = useQuery<TData, TVariables>(options.query, {
+    const {
+        data: queryData,
+        refetch,
+        error,
+        loading,
+    } = useQuery<TData, TVariables>(options.query, {
         variables: options.variables,
         skip: options.mode === "add",
     });

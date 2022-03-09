@@ -1,7 +1,7 @@
 import { InputAdornmentClassKey } from "@material-ui/core";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiInputAdornmentOverrides = (): StyleRules<{}, InputAdornmentClassKey> => ({
+export const getMuiInputAdornmentOverrides = (): StyleRules<Record<string, unknown>, InputAdornmentClassKey> => ({
     root: {
         height: "auto",
         alignSelf: "stretch",

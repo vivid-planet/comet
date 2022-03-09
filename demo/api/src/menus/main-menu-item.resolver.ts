@@ -30,7 +30,7 @@ export class MainMenuItemResolver {
         return (
             item ??
             this.mainMenuItemRepository.create({
-                node: (node as unknown) as PageTreeNode,
+                node: node as unknown as PageTreeNode,
                 content: null,
             })
         ); // @TODO: implement PageTreeService<PageTreeNode> to avoid "as"
@@ -56,7 +56,7 @@ export class MainMenuItemResolver {
         } else {
             await this.mainMenuItemRepository.persistAndFlush(
                 this.mainMenuItemRepository.create({
-                    node: (node as unknown) as PageTreeNode,
+                    node: node as unknown as PageTreeNode,
                     content: input.content ? input.content.transformToBlockData() : null,
                 }),
             );

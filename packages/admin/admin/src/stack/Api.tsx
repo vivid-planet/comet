@@ -15,7 +15,7 @@ export interface IStackApi {
     breadCrumbs: BreadcrumbItem[];
 }
 export const StackApiContext = React.createContext<IStackApi | undefined>(undefined);
-export function useStackApi() {
+export function useStackApi(): IStackApi | undefined {
     return React.useContext(StackApiContext);
 }
 
@@ -40,5 +40,5 @@ type Subtract<T, K> = Omit<T, keyof K>;
 // TODO implement ref forwarding with typescript
 export const withStackApi =
     <P extends IWithApiProps>(WrappedComponent: React.ComponentType<P>): React.SFC<Subtract<P, IWithApiProps>> =>
-    (props: any) =>
+    (props: Exclude<P, IWithApiProps>) =>
         <StackApiContext.Consumer>{(stackApi) => <WrappedComponent {...props} stackApi={stackApi} />}</StackApiContext.Consumer>;

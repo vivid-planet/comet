@@ -10,9 +10,9 @@ import {
     ToolbarItem,
     useTableQuery,
 } from "@comet/admin";
-import { Add as AddIcon, Delete as DeleteIcon, Domain, Edit } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/admin-cms";
 import { EditPageLayout } from "@comet/admin-cms/lib";
+import { Add as AddIcon, Delete as DeleteIcon, Domain, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@material-ui/core";
 import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import { useContentScope } from "@src/common/ContentScopeProvider";

@@ -19,13 +19,11 @@ export const getRequestContextHeadersFromRequest = (request: Request): RequestCo
     };
 };
 
-export const RequestContext = createParamDecorator(
-    (data: unknown, ctx: ExecutionContext): RequestContextInterface => {
-        const request = getRequestFromExecutionContext(ctx);
+export const RequestContext = createParamDecorator((data: unknown, ctx: ExecutionContext): RequestContextInterface => {
+    const request = getRequestFromExecutionContext(ctx);
 
-        return getRequestContextHeadersFromRequest(request);
-    },
-);
+    return getRequestContextHeadersFromRequest(request);
+});
 
 function parseIncludeInvisibleHeader(
     rawHeader: undefined | string | string[],

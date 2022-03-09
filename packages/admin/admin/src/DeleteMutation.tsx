@@ -10,14 +10,15 @@ import { DeleteButton } from "./common/buttons/delete/DeleteButton";
 import { TableQueryContext } from "./table/TableQueryContext";
 
 interface IProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutation: any;
-    children: (action: (options: { variables: object }) => void, data: { loading: boolean; error: any }) => React.ReactNode;
+    children: (action: (options: { variables: Record<string, unknown> }) => void, data: { loading: boolean; error: unknown }) => React.ReactNode;
     refetchQueries?: Array<string | PureQueryOptions>;
 }
-export function DeleteMutation(props: IProps) {
+export function DeleteMutation(props: IProps): React.ReactElement {
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
-    const [pendingVariables, setPendingVariables] = React.useState<object | undefined>(undefined);
+    const [pendingVariables, setPendingVariables] = React.useState<Record<string, unknown> | undefined>(undefined);
     const client = useApolloClient();
     const tableQuery = React.useContext(TableQueryContext);
     const { refetchQueries = [] } = props;

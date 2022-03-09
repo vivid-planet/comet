@@ -72,41 +72,39 @@ export function normalizedBlockConfig(input: BlockInterface | BlockInterfaceWith
 // takes the unpacked data (with flattened attributes) as argument
 // takes an array of flattend attribute
 // picks values for those attribute
-export const createPickFlattedData = <C extends CompositeBlocksConfig>() => <
-    UnpackedData extends DataMapInputApi<C> | DataMapState<C> | DataMapOutputApi<C>,
-    FlattenedAttributes extends Array<keyof UnpackedData>
->(
-    keys: FlattenedAttributes,
-    data: UnpackedData,
-): Partial<UnpackedData> => {
-    return Object.entries(data).reduce((acc, [key, value]) => {
-        if (keys.includes(key as keyof UnpackedData)) {
-            return {
-                ...acc,
-                [key]: value,
-            };
-        }
-        return acc;
-    }, {} as Partial<UnpackedData>);
-};
+export const createPickFlattedData =
+    <C extends CompositeBlocksConfig>() =>
+    <UnpackedData extends DataMapInputApi<C> | DataMapState<C> | DataMapOutputApi<C>, FlattenedAttributes extends Array<keyof UnpackedData>>(
+        keys: FlattenedAttributes,
+        data: UnpackedData,
+    ): Partial<UnpackedData> => {
+        return Object.entries(data).reduce((acc, [key, value]) => {
+            if (keys.includes(key as keyof UnpackedData)) {
+                return {
+                    ...acc,
+                    [key]: value,
+                };
+            }
+            return acc;
+        }, {} as Partial<UnpackedData>);
+    };
 
 // takes the unpacked data (with flattened attributes) as argument
 // takes a blockKey,
 // returns data for this block
-export const createPackData = <C extends CompositeBlocksConfig>() => <
-    UnpackedData extends DataMapInputApi<C> | DataMapState<C> | DataMapOutputApi<C>,
-    BlockKey extends keyof C
->(
-    [block, options]: BlockInterfaceWithOptions,
-    attr: BlockKey,
-    data: UnpackedData,
-): InputApiMap<C>[BlockKey] | StateMap<C>[BlockKey] | OutputApiMap<C>[BlockKey] | undefined => {
-    const pickFlattedData = createPickFlattedData<C>();
-    if (options.flatten) {
-        const keys = Object.keys(block.defaultValues() || {}) as Array<keyof UnpackedData>;
-        const c = pickFlattedData(keys, data) as any;
-        return c;
-    } else {
-        return data[attr as keyof UnpackedData]; // undefined is a valid value to be returned here
-    }
-};
+export const createPackData =
+    <C extends CompositeBlocksConfig>() =>
+    <UnpackedData extends DataMapInputApi<C> | DataMapState<C> | DataMapOutputApi<C>, BlockKey extends keyof C>(
+        [block, options]: BlockInterfaceWithOptions,
+        attr: BlockKey,
+        data: UnpackedData,
+    ): InputApiMap<C>[BlockKey] | StateMap<C>[BlockKey] | OutputApiMap<C>[BlockKey] | undefined => {
+        const pickFlattedData = createPickFlattedData<C>();
+        if (options.flatten) {
+            const keys = Object.keys(block.defaultValues() || {}) as Array<keyof UnpackedData>;
+            const c = pickFlattedData(keys, data) as any;
+            return c;
+        } else {
+            return data[attr as keyof UnpackedData]; // undefined is a valid value to be returned here
+        }
+    };

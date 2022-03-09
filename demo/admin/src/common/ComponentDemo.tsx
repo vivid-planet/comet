@@ -10,7 +10,6 @@ import {
     MainContent,
     Stack,
 } from "@comet/admin";
-import { Add, FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest, Snips } from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentNestedButton,
@@ -29,6 +28,7 @@ import {
     resolveNewState,
 } from "@comet/admin-blocks";
 import { FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/admin-cms";
+import { Add, FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest, Snips } from "@comet/admin-icons";
 import { Box, FormControlLabel, Grid, MenuItem, Typography } from "@material-ui/core";
 import { FormatAlignCenter, VerticalAlignBottom, VerticalAlignCenter } from "@material-ui/icons";
 import * as React from "react";

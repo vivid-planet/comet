@@ -1,6 +1,6 @@
 import { Theme } from "@material-ui/core";
 import zIndex from "@material-ui/core/styles/zIndex";
-import { createStyles } from "@material-ui/styles";
+import { createStyles, StyleRules } from "@material-ui/styles";
 
 import { ColorPickerProps } from "./ColorPicker";
 
@@ -23,7 +23,7 @@ export type ColorPickerClassKey =
     | "paletteItem"
     | "readOnlyInput";
 
-export const styles = (theme: Theme) => {
+export const styles = (theme: Theme): StyleRules<ColorPickerProps, ColorPickerClassKey> => {
     return createStyles<ColorPickerClassKey, ColorPickerProps>({
         root: {
             width: 160,

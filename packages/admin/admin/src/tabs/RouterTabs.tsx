@@ -34,7 +34,7 @@ function RouterTabsComponent({
 }: Props & WithStyles<typeof styles>) {
     const childrenArr = React.Children.toArray(children);
 
-    const handleChange = (event: {}, value: number) => {
+    const handleChange = (event: React.ChangeEvent<Record<string, unknown>>, value: number) => {
         const paths = childrenArr.map((child) => {
             return React.isValidElement<TabProps>(child) ? child.props.path : null;
         });

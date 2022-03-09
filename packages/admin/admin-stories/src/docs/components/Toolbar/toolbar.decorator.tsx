@@ -1,9 +1,9 @@
 import { Stack, StackPage, StackPageTitle, StackSwitch } from "@comet/admin";
-import { StoryContext, StoryFn } from "@storybook/addons";
+import { PartialStoryFn, StoryContext } from "@storybook/addons";
 import * as React from "react";
 
 export function toolbarDecorator<StoryFnReturnType = unknown>() {
-    return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
+    return (fn: PartialStoryFn<StoryFnReturnType>, c: StoryContext): React.ReactElement => {
         return (
             <Stack topLevelTitle={"Automatic Title from Stack"}>
                 <StackSwitch initialPage="automaticTitle">

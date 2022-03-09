@@ -1,3 +1,4 @@
+import { StyleRules } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
 import { createStyles } from "@material-ui/styles";
 
@@ -5,7 +6,7 @@ import { FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
 
 export type FilterBarActiveFilterBadgeClassKey = "hasValueCount";
 
-export const styles = ({ palette }: Theme) => {
+export const styles = ({ palette }: Theme): StyleRules<FilterBarActiveFilterBadgeClassKey, FilterBarActiveFilterBadgeProps> => {
     return createStyles<FilterBarActiveFilterBadgeClassKey, FilterBarActiveFilterBadgeProps>({
         hasValueCount: {
             display: "flex",

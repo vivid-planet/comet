@@ -1,6 +1,6 @@
 import { useStoredState } from "@comet/admin";
-import { CometColor } from "@comet/admin-icons";
 import { IFrameBridgeProvider, IFrameLocationMessage, IFrameMessageType } from "@comet/admin-blocks";
+import { CometColor } from "@comet/admin-icons";
 import { Grid, Tooltip, Typography } from "@material-ui/core";
 import { Public, VpnLock } from "@material-ui/icons";
 import * as React from "react";

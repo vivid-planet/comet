@@ -1,6 +1,17 @@
-import { MainContent, Stack, StackPage, StackSwitch, StackSwitchApiContext, Toolbar, ToolbarBackButton, ToolbarItem } from "@comet/admin";
-import { Table } from "@comet/admin";
-import { Field, FinalForm, FinalFormInput } from "@comet/admin";
+import {
+    Field,
+    FinalForm,
+    FinalFormInput,
+    MainContent,
+    Stack,
+    StackPage,
+    StackSwitch,
+    StackSwitchApiContext,
+    Table,
+    Toolbar,
+    ToolbarBackButton,
+    ToolbarItem,
+} from "@comet/admin";
 import { Box, Card, CardContent, IconButton, Paper, Typography } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import { storiesOf } from "@storybook/react";

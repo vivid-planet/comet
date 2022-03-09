@@ -1,5 +1,5 @@
-import { FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest } from "@comet/admin-icons";
 import { AdminComponentSection } from "@comet/admin-blocks";
+import { FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest } from "@comet/admin-icons";
 import { Typography } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import * as React from "react";

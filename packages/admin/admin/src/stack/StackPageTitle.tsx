@@ -9,15 +9,15 @@ interface IProps {
 
 export class StackPageTitle extends React.Component<IProps> {
     public static contextType = StackSwitchApiContext;
-    public render() {
+    public render(): React.ReactNode {
         return this.props.children;
     }
 
-    public componentDidMount() {
+    public componentDidMount(): void {
         this.context.updatePageBreadcrumbTitle(this.props.title);
     }
 
-    public componentDidUpdate(prevProps: IProps) {
+    public componentDidUpdate(prevProps: IProps): void {
         if (this.props.title !== prevProps.title) {
             this.context.updatePageBreadcrumbTitle(this.props.title);
         }

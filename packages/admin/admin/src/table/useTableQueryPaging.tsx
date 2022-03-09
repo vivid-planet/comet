@@ -28,7 +28,7 @@ export function useTableQueryPaging<T>(
     });
 
     let tableRef: React.RefObject<HTMLDivElement | undefined> | undefined;
-    function attachTableRef(ref: any) {
+    function attachTableRef(ref: React.RefObject<HTMLDivElement>) {
         tableRef = ref;
     }
 

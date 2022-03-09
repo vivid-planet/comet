@@ -4,7 +4,11 @@ import { Spacing } from "@material-ui/core/styles/createSpacing";
 import { Typography } from "@material-ui/core/styles/createTypography";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiFormLabelOverrides = (palette: Palette, typography: Typography, spacing: Spacing): StyleRules<{}, FormLabelClassKey> => ({
+export const getMuiFormLabelOverrides = (
+    palette: Palette,
+    typography: Typography,
+    spacing: Spacing,
+): StyleRules<Record<string, unknown>, FormLabelClassKey> => ({
     root: {
         display: "block",
         color: palette.grey[900],

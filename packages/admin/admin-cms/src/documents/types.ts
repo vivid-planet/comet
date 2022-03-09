@@ -31,7 +31,7 @@ export interface GQLDocument extends GQLDocumentInterface {
 
 export interface DocumentInterface<
     DocumentInput extends Record<string, unknown> = Record<string, unknown>,
-    DocumentOutput extends Record<string, unknown> = Record<string, unknown>
+    DocumentOutput extends Record<string, unknown> = Record<string, unknown>,
 > {
     displayName: React.ReactNode;
     getQuery?: TypedDocumentNode<GQLPageQuery, GQLPageQueryVariables>; // TODO better typing (see createUsePage.tsx)

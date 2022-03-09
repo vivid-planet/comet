@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { IEditDialogApi, StackSwitchApiContext } from "@comet/admin";
-import { Add, Copy, Delete, Domain, Edit, MoreVertical, Paste, Settings, ThreeDotSaving } from "@comet/admin-icons";
 import { writeClipboard } from "@comet/admin-blocks";
+import { Add, Copy, Delete, Domain, Edit, MoreVertical, Paste, Settings, ThreeDotSaving } from "@comet/admin-icons";
 import { IconButton, ListItemIcon, ListItemText, Menu as MUIMenu, MenuItem, withStyles } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";

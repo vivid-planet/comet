@@ -2,9 +2,9 @@ import * as React from "react";
 import { FieldMetaState } from "react-final-form";
 
 export interface FinalFormContext {
-    shouldScrollToField: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
-    shouldShowFieldError: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
-    shouldShowFieldWarning: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
+    shouldScrollToField: ({ fieldMeta }: { fieldMeta: FieldMetaState<unknown> }) => boolean;
+    shouldShowFieldError: ({ fieldMeta }: { fieldMeta: FieldMetaState<unknown> }) => boolean;
+    shouldShowFieldWarning: ({ fieldMeta }: { fieldMeta: FieldMetaState<unknown> }) => boolean;
 }
 
 const defaultFinalFormContext: FinalFormContext = {

@@ -3356,13 +3356,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/admin-date-picker@workspace:packages/admin/admin-date-picker":
+"@comet/admin-date-picker@^2.0.0, @comet/admin-date-picker@workspace:packages/admin/admin-date-picker":
   version: 0.0.0-use.local
   resolution: "@comet/admin-date-picker@workspace:packages/admin/admin-date-picker"
   dependencies:
     "@comet/admin": ^2.0.0
     "@comet/eslint-config": ^2.0.0
-    "@types/react": ^16.8.25
+    "@types/react": ^17.0.0
     "@types/react-dates": ^17.1.5
     eslint: ^7.0.0
     moment: ^2.24.0
@@ -3377,6 +3377,7 @@ __metadata:
     react: ^16.8 || ^17.0
     react-final-form: ^6.3.0
     react-intl: ^5.10.0
+    styled-components: ^5.0.0
   languageName: unknown
   linkType: soft
 
@@ -3418,6 +3419,7 @@ __metadata:
     "@comet/admin": "*"
     "@material-ui/core": ^4.1.3
     "@material-ui/icons": ^4.2.1
+    "@material-ui/styles": ^4.0.0
     final-form: ^4.16.1
     react: ^16.8 || ^17.0
     react-dom: ^16.8 || ^17.0
@@ -3441,6 +3443,7 @@ __metadata:
   peerDependencies:
     "@material-ui/core": ^4.1.3
     "@material-ui/icons": ^4.2.1
+    "@material-ui/styles": ^4.0.0
     draft-js: ^0.11.4
     final-form: ^4.16.1
     immutable: ~3.7.4
@@ -3481,13 +3484,14 @@ __metadata:
   dependencies:
     "@comet/admin-icons": ^2.0.0
     "@comet/eslint-config": ^2.0.0
+    "@graphql-typed-document-node/core": ^3.1.1
     "@material-ui/lab": ^4.0.0-alpha.57
     "@types/debounce": ^1.2.0
     "@types/file-saver": ^2.0.1
     "@types/final-form-set-field-data": ^1.0.0
     "@types/lodash.debounce": ^4.0.6
     "@types/lodash.isequal": ^4.5.5
-    "@types/react-dom": ^16.9.11
+    "@types/react": ^17.0.0
     "@types/react-router": ^5.0.0
     "@types/react-router-dom": ^5.0.0
     "@types/styled-components": ^5.1.7
@@ -3505,6 +3509,7 @@ __metadata:
     yarn-run-all: ^3.0.0
   peerDependencies:
     "@apollo/client": ^3.2.5
+    "@formatjs/ecma402-abstract": ^1.11.3
     "@material-ui/core": ^4.1.3
     "@material-ui/icons": ^4.2.1
     "@material-ui/styles": ^4.1.3
@@ -9553,15 +9558,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^16.9.11":
-  version: 16.9.14
-  resolution: "@types/react-dom@npm:16.9.14"
-  dependencies:
-    "@types/react": ^16
-  checksum: 68a4ee88f7a56cdbfbca24b1936b9aa5dad8b40ffbf1f047ddf990454aec6e0c9da2a01c9ae87045e95236602061646c90d02f01281533e14f1970687873030f
-  languageName: node
-  linkType: hard
-
 "@types/react-final-form-listeners@npm:^1.0.0":
   version: 1.0.0
   resolution: "@types/react-final-form-listeners@npm:1.0.0"
@@ -9677,17 +9673,6 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: bf04d3c2894559012710d595553e12b422d3b91cd8f4f7e122d8cb044ba9c2ba17f6e8a4e09581359cc5509ddc59cd8c8fabd6774f3505a40a45393f074d6e6e
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^16, @types/react@npm:^16.8.25":
-  version: 16.14.23
-  resolution: "@types/react@npm:16.14.23"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 2c765e87c25421c23c6a813ec2b27a909bb051a2d84c07a0d5368ef22dca0e1dbb02489a79274316ad900bcbb1bec9a7153908c7012db4e8bb4a1c3f704330f5
   languageName: node
   linkType: hard
 
@@ -13774,6 +13759,7 @@ __metadata:
     "@babel/core": ^7.8.3
     "@comet/admin": ^2.0.0
     "@comet/admin-color-picker": ^2.0.0
+    "@comet/admin-date-picker": ^2.0.0
     "@comet/admin-icons": ^2.0.0
     "@comet/admin-react-select": ^2.0.0
     "@comet/admin-rte": ^2.0.0
@@ -13806,6 +13792,8 @@ __metadata:
     faker: ^5.5.3
     final-form: ^4.16.1
     graphql-anywhere: ^4.2.7
+    graphql-tag: ^2.12.6
+    history: ^4.10.1
     immutable: ~3.7.4
     prettier: ^2.0.0
     qs: ^6.9.1
@@ -19062,7 +19050,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-tag@npm:^2.0.0, graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.12.3":
+"graphql-tag@npm:^2.0.0, graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.12.3, graphql-tag@npm:^2.12.6":
   version: 2.12.6
   resolution: "graphql-tag@npm:2.12.6"
   dependencies:

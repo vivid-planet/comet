@@ -13,8 +13,8 @@ import {
     ToolbarTitleItem,
     useStackApi,
 } from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/admin-cms";
+import { ArrowLeft } from "@comet/admin-icons";
 import { IconButton } from "@material-ui/core";
 import { GQLMutationcreateNewsArgs, GQLMutationupdateNewsArgs, GQLNewsInput, GQLNewsQuery, GQLNewsQueryVariables } from "@src/graphql.generated";
 import { FORM_ERROR } from "final-form";

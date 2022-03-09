@@ -9,7 +9,7 @@ const removeBlocksExceedingBlockLimit: FilterEditorStateBeforeUpdateFn = (newSta
         const content = newState.getCurrentContent();
         const blockMap = content.getBlockMap();
         if (blockMap.count() > maxBlocks) {
-            const limitedBlocks: any = blockMap.take(maxBlocks);
+            const limitedBlocks = blockMap.take(maxBlocks);
 
             const lastKey = limitedBlocks.last().getKey();
 

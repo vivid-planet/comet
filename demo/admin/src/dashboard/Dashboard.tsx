@@ -1,6 +1,6 @@
 import { MainContent, Stack } from "@comet/admin";
-import { Domain } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/admin-cms";
+import { Domain } from "@comet/admin-icons";
 import { Grid, Typography } from "@material-ui/core";
 import { ScopeIndicatorContent, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import DateTime from "@src/dashboard/DateTime";

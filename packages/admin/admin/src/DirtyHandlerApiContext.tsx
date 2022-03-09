@@ -8,8 +8,8 @@ export interface IDirtyHandlerApiBinding {
     reset: () => void;
 }
 export interface IDirtyHandlerApi {
-    registerBinding: (cmp: object, binding: IDirtyHandlerApiBinding) => void;
-    unregisterBinding: (cmp: object) => void;
+    registerBinding: (cmp: React.MutableRefObject<IDirtyHandlerApiBinding | undefined>, binding: IDirtyHandlerApiBinding) => void;
+    unregisterBinding: (cmp: React.MutableRefObject<IDirtyHandlerApiBinding | undefined>) => void;
     isBindingDirty: () => Promise<boolean>;
     resetBindings: () => Promise<void>;
     submitBindings: () => Promise<Array<SubmitResult>>;
@@ -17,6 +17,6 @@ export interface IDirtyHandlerApi {
 }
 
 export const DirtyHandlerApiContext = React.createContext<IDirtyHandlerApi | undefined>(undefined);
-export function useDirtyHandlerApi() {
+export function useDirtyHandlerApi(): IDirtyHandlerApi | undefined {
     return React.useContext(DirtyHandlerApiContext);
 }

@@ -1,6 +1,6 @@
 import { Theme } from "@material-ui/core";
 import { emphasize } from "@material-ui/core/styles/colorManipulator";
-import { createStyles } from "@material-ui/styles";
+import { createStyles, StyleRules } from "@material-ui/styles";
 
 export type SelectClassKey =
     | "input"
@@ -20,8 +20,8 @@ export type SelectClassKey =
     | "optionSelected"
     | "optionFocused";
 
-const styles = (theme: Theme) =>
-    createStyles<SelectClassKey, any>({
+const styles = (theme: Theme): StyleRules<Record<string, unknown>, SelectClassKey> =>
+    createStyles<SelectClassKey, Record<string, unknown>>({
         input: {
             display: "flex",
             paddingRight: 0,

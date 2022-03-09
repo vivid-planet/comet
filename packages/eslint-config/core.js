@@ -4,7 +4,7 @@ module.exports = {
     plugins: ["@typescript-eslint", "simple-import-sort", "unused-imports", "import"],
     rules: {
         "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
         "prefer-template": "error",
         "simple-import-sort/exports": "error",
         "simple-import-sort/imports": "error",
@@ -17,7 +17,7 @@ module.exports = {
         {
             files: ["*.ts", "*.tsx"],
             rules: {
-                "@typescript-eslint/no-unused-vars": ["error", { args: "none" }],
+                "@typescript-eslint/no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
             },
         },
     ],

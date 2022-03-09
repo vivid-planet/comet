@@ -2,7 +2,7 @@ import { ButtonGroupClassKey } from "@material-ui/core";
 import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiButtonGroupOverrides = (palette: Palette): StyleRules<{}, ButtonGroupClassKey> => ({
+export const getMuiButtonGroupOverrides = (palette: Palette): StyleRules<Record<string, unknown>, ButtonGroupClassKey> => ({
     root: {},
     contained: {
         border: "none",

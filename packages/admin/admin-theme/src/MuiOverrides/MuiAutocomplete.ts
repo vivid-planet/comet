@@ -2,7 +2,7 @@ import { Spacing } from "@material-ui/core/styles/createSpacing";
 import { AutocompleteClassKey } from "@material-ui/lab";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiAutocompleteOverrides = (spacing: Spacing): StyleRules<{}, AutocompleteClassKey> => ({
+export const getMuiAutocompleteOverrides = (spacing: Spacing): StyleRules<Record<string, unknown>, AutocompleteClassKey> => ({
     root: {},
     focused: {},
     tag: {},

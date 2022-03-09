@@ -10,7 +10,7 @@ import ListsControls from "./ListsControls";
 import ListsIndentControls from "./ListsIndentControls";
 import Toolbar from "./Toolbar";
 
-export default function Controls(p: IControlProps) {
+export default function Controls(p: IControlProps): React.ReactElement {
     const {
         options: { customToolbarButtons },
     } = p;

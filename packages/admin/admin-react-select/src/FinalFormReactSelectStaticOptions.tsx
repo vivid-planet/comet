@@ -14,7 +14,7 @@ interface IProps extends FieldRenderProps<string, HTMLElement>, ReactSelectProps
     options: OptionsType<IOptionType>;
 }
 export class FinalFormReactSelectStaticOptions extends React.Component<IProps> {
-    public render() {
+    public render(): React.ReactElement {
         const { input, meta, ...rest } = this.props;
 
         const optionValue = this.props.options.find(({ value }) => value === this.props.input.value) || null;

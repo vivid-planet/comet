@@ -2,7 +2,7 @@ import { SwitchClassKey } from "@material-ui/core";
 import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiSwitchOverrides = (palette: Palette): StyleRules<{}, SwitchClassKey> => ({
+export const getMuiSwitchOverrides = (palette: Palette): StyleRules<Record<string, unknown>, SwitchClassKey> => ({
     root: {
         width: 54,
         height: 34,

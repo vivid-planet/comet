@@ -85,7 +85,7 @@ export class Stack extends React.Component<StackProps, IState> {
         };
     }
 
-    public render() {
+    public render(): React.ReactElement {
         const breadcrumbs = this.getVisibleBreadcrumbs();
 
         return (
@@ -104,7 +104,7 @@ export class Stack extends React.Component<StackProps, IState> {
                 }}
             >
                 <Route>
-                    {(routerProps: RouteComponentProps<any>) => {
+                    {(routerProps: RouteComponentProps) => {
                         const { topLevelTitle, children } = this.props;
                         this.history = routerProps.history;
                         return (

@@ -1,4 +1,4 @@
-import { ButtonClassKey } from "@material-ui/core";
+import { ButtonClassKey, StyleRules } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
 import { createStyles } from "@material-ui/styles";
 
@@ -6,7 +6,7 @@ import { SaveButtonProps } from "./SaveButton";
 
 export type SaveButtonClassKey = "saving" | "error" | "success" | ButtonClassKey;
 
-export const styles = (theme: Theme) => {
+export const styles = (theme: Theme): StyleRules<SaveButtonClassKey, SaveButtonProps> => {
     return createStyles<SaveButtonClassKey, SaveButtonProps>({
         root: {},
         label: {},

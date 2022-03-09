@@ -1,6 +1,6 @@
 import { Worksheet } from "exceljs";
 
-export function applyDefaultStyling(worksheet: Worksheet) {
+export function applyDefaultStyling(worksheet: Worksheet): void {
     worksheet.eachRow((row, rowNumber) => {
         row.height = 30;
         for (let i = 1; i <= row.cellCount; ++i) {

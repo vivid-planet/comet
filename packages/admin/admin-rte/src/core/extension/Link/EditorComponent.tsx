@@ -11,7 +11,7 @@ export interface ILinkProps {
     url: string;
 }
 
-function EditorComponent(props: IProps) {
+function EditorComponent(props: IProps): React.ReactElement {
     const { url } = props.contentState.getEntity(props.entityKey).getData() as ILinkProps; // not typed
     return (
         <a

@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { Delete } from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentPaper,
@@ -11,6 +10,7 @@ import {
     IPreviewContext,
     SelectPreviewComponent,
 } from "@comet/admin-blocks";
+import { Delete } from "@comet/admin-icons";
 import { Divider, Grid, Typography } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -86,7 +86,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
         // TODO consider throwing an error
         // TODO fix typing: generated GraphQL files use null, we use undefined, e.g. title: string | null vs title?: string
-        const damFile = (data.damFile as unknown) as SvgImageBlockData["damFile"];
+        const damFile = data.damFile as unknown as SvgImageBlockData["damFile"];
 
         return { damFile };
     },

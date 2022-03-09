@@ -6,6 +6,7 @@ import makeRteApi, { IMakeRteApiProps, OnDebouncedContentChangeFn } from "../cor
 import Rte, { IOptions as RteOptions, RteProps } from "../core/Rte";
 import RteReadOnlyBase from "../core/RteReadOnly";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface IConfig<T = any> {
     rteApiOptions?: IMakeRteApiProps<T>;
     rteOptions?: RteOptions;
@@ -13,7 +14,12 @@ interface IConfig<T = any> {
 
 const defaultConfig: IConfig = {};
 
-function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
+function createFinalFormRte<T = unknown>(
+    config: IConfig<T> = defaultConfig,
+): {
+    RteField: React.FunctionComponent<FieldRenderProps<T, HTMLInputElement> & Pick<RteProps, "options">>;
+    RteReadOnly: React.FunctionComponent<{ content?: T; plainTextOnly?: boolean }>;
+} {
     const { rteApiOptions, rteOptions } = config;
     const [useRteApi, { createStateFromRawContent }] = makeRteApi(rteApiOptions);
 
@@ -23,7 +29,7 @@ function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
         value: remove,
         ...rest
     }) => {
-        const ref = React.useRef<any>();
+        const ref = React.useRef<typeof Rte>();
 
         const onDebouncedContentChange: OnDebouncedContentChangeFn<T> = (debouncedEditorState: EditorState, convertStateToRawContent) => {
             onChange(convertStateToRawContent(debouncedEditorState));

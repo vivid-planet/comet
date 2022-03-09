@@ -1,5 +1,4 @@
-/* eslint-disable */
-
+/* eslint-disable @typescript-eslint/no-var-requires,no-console,@typescript-eslint/no-unused-vars */
 module.exports = {
     distDir: "build/current",
     headers: async () => [
@@ -15,7 +14,7 @@ module.exports = {
     ],
     redirects: async () => {
         var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
-        console.log("Redirects", redirects)
+        console.log("Redirects", redirects);
         return redirects;
     },
     images: {
@@ -45,7 +44,7 @@ module.exports = {
     i18n: {
         locales: process.env.SITE_LANGUAGES.split(","),
         defaultLocale: process.env.SITE_DEFAULT_LANGUAGE,
-        localeDetection: process.env.NODE_ENV !== "development"
+        localeDetection: process.env.NODE_ENV !== "development",
     },
     typescript: {
         // !! WARN !!

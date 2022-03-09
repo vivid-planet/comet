@@ -3,7 +3,7 @@ import { Palette } from "@material-ui/core/styles/createPalette";
 import { Typography } from "@material-ui/core/styles/createTypography";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiDialogTitleOverrides = (palette: Palette, typography: Typography): StyleRules<{}, DialogTitleClassKey> => ({
+export const getMuiDialogTitleOverrides = (palette: Palette, typography: Typography): StyleRules<Record<string, unknown>, DialogTitleClassKey> => ({
     root: {
         backgroundColor: palette.grey["A200"],
         color: palette.grey["A100"],

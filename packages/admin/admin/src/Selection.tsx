@@ -55,7 +55,7 @@ interface IProps {
     children: (injectedProps: ISelectionRenderPropArgs) => React.ReactNode;
 }
 
-export function Selection({ children }: IProps) {
+export function Selection({ children }: IProps): React.ReactElement {
     const [selection, api] = useSelection();
     return (
         <>

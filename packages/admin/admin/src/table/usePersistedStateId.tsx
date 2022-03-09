@@ -1,8 +1,7 @@
 import useConstant from "use-constant";
-
-const UUID = require("uuid");
+import { v4 } from "uuid";
 
 export function usePersistedStateId(): string {
-    const id = useConstant<string>(() => UUID.v4());
+    const id = useConstant<string>(() => v4());
     return id;
 }

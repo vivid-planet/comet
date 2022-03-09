@@ -1,6 +1,4 @@
-// TODO: Normal import: import * as Excel from "exceljs"; is currently not working due to https://github.com/exceljs/exceljs/pull/1038 as soon pull request is merged into exceljs change import and update package version
-// @ts-ignore
-import * as Excel from "exceljs/dist/exceljs.js";
+import { Buffer, Column, Workbook, Worksheet } from "exceljs";
 import { saveAs } from "file-saver";
 import * as React from "react";
 
@@ -12,20 +10,20 @@ import { applyDefaultStyling } from "./applyDefaultStyling";
 export interface IExcelExportOptions {
     fileName?: string;
     worksheetName?: string;
-    styling?: (worksheet: Excel.Worksheet) => void;
+    styling?: (worksheet: Worksheet) => void;
 }
 export async function createExcelExportDownload<TRow extends IRow>(
     columns: Array<ITableColumn<TRow>>,
     data: TRow[],
     options: IExcelExportOptions = {},
-) {
+): Promise<void> {
     const { fileName = "ExcelExport", worksheetName = "Tabelle 1", styling } = options;
-    const workbook = new Excel.Workbook();
+    const workbook = new Workbook();
 
     const worksheet = workbook.addWorksheet(worksheetName);
 
     // create columns
-    const excelColumns: Excel.Column[] = [];
+    const excelColumns: Column[] = [];
     columns.forEach((column, columnIndex) => {
         const header = column.headerExcel != null ? column.headerExcel : safeStringFromReactNode(column.header);
         if (isVisible(VisibleType.Export, column.visible)) {
@@ -37,7 +35,7 @@ export async function createExcelExportDownload<TRow extends IRow>(
                 style: {},
                 letter: columnIndex.toString(),
                 values: [],
-            });
+            } as unknown as Column);
         }
     });
     worksheet.columns = excelColumns;
@@ -78,12 +76,9 @@ export async function createExcelExportDownload<TRow extends IRow>(
         applyDefaultStyling(worksheet);
     }
 
-    workbook.xlsx.writeBuffer().then(
-        // @ts-ignore
-        (buffer) => {
-            saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
-        },
-    );
+    workbook.xlsx.writeBuffer().then((buffer: Buffer) => {
+        saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
+    });
 }
 
 function safeFileNameWithExtension(fileName: string): string {

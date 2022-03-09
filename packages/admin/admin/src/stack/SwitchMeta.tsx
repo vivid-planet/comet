@@ -14,7 +14,7 @@ export class StackSwitchMeta extends React.Component<IProps> {
     public static contextType = StackApiContext;
     private parentId?: string;
 
-    public render() {
+    public render(): React.ReactElement {
         return (
             <SwitchMetaContext.Consumer>
                 {(parentId) => {
@@ -25,7 +25,7 @@ export class StackSwitchMeta extends React.Component<IProps> {
         );
     }
 
-    public componentDidMount() {
+    public componentDidMount(): void {
         if (!this.context) throw new Error("Switch must be wrapped by a Stack");
         this.context.addSwitchMeta(this.props.id, {
             parentId: this.parentId,
@@ -34,7 +34,7 @@ export class StackSwitchMeta extends React.Component<IProps> {
         });
     }
 
-    public componentDidUpdate(prevProps: IProps) {
+    public componentDidUpdate(prevProps: IProps): void {
         if (!this.context) throw new Error("Switch must be wrapped by a Stack");
         if (this.props.activePage !== prevProps.activePage || this.props.isInitialPageActive !== prevProps.isInitialPageActive) {
             this.context.addSwitchMeta(this.props.id, {
@@ -45,7 +45,7 @@ export class StackSwitchMeta extends React.Component<IProps> {
         }
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         if (!this.context) throw new Error("Switch must be wrapped by a Stack");
         this.context.removeSwitchMeta(this.props.id);
     }

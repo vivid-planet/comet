@@ -92,9 +92,10 @@ export default function PageTreeSelectDialog({ allCategories, value, onChange, o
     });
 
     // Exclude all archived pages from selectables, except if the selected page itself is archived
-    const ignorePages = React.useCallback((page: GQLPageTreePageFragment) => page.id === selectedPageId || page.visibility !== "Archived", [
-        selectedPageId,
-    ]);
+    const ignorePages = React.useCallback(
+        (page: GQLPageTreePageFragment) => page.id === selectedPageId || page.visibility !== "Archived",
+        [selectedPageId],
+    );
 
     const { tree, pagesToRender, setExpandedIds, toggleExpand, expandPage } = usePageTree({
         pages: data?.pages || [],

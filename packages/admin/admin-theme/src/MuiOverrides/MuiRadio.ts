@@ -4,7 +4,7 @@ import { StyleRules } from "@material-ui/styles/withStyles";
 
 type CorrectedRadioClassKey = Exclude<RadioClassKey, "input">;
 
-export const getMuiRadioOverrides = (palette: Palette): StyleRules<{}, CorrectedRadioClassKey> => ({
+export const getMuiRadioOverrides = (palette: Palette): StyleRules<Record<string, unknown>, CorrectedRadioClassKey> => ({
     root: {
         "& [class*='MuiSvgIcon-root']": {
             "& .border": {

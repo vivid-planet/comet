@@ -68,7 +68,11 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     const [isHovered, setIsHovered] = React.useState<HoverStyle>();
 
     const fileCategoryMimetypes = fileCategory ? acceptedMimeTypesByCategory[fileCategory] : undefined;
-    const { uploadFiles, dialogs: fileUploadDialogs, dropzoneConfig } = useFileUpload({
+    const {
+        uploadFiles,
+        dialogs: fileUploadDialogs,
+        dropzoneConfig,
+    } = useFileUpload({
         acceptedMimetypes: allowedMimetypes ?? fileCategoryMimetypes ?? acceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();

@@ -7,6 +7,7 @@ import { PropsWithChildren } from "react";
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface SplitButtonProps extends ButtonGroupProps<any> {
     selectIcon?: React.ReactNode;
     selectedIndex?: number;

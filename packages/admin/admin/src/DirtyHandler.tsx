@@ -10,7 +10,7 @@ interface IProps {
 }
 
 interface IBinding {
-    obj: object;
+    obj: Record<string, unknown>;
     binding: IDirtyHandlerApiBinding;
 }
 type Bindings = IBinding[];
@@ -117,10 +117,10 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
         );
     }
 
-    private registerBinding(obj: object, binding: IDirtyHandlerApiBinding) {
+    private registerBinding(obj: Record<string, unknown>, binding: IDirtyHandlerApiBinding) {
         this.bindings.push({ obj, binding });
     }
-    private unregisterBinding(obj: object) {
+    private unregisterBinding(obj: Record<string, unknown>) {
         this.bindings = this.bindings.filter((item) => item.obj !== obj);
     }
 

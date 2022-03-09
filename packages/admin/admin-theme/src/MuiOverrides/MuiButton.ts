@@ -2,7 +2,7 @@ import { ButtonClassKey } from "@material-ui/core";
 import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiButtonOverrides = (palette: Palette): StyleRules<{}, ButtonClassKey> => ({
+export const getMuiButtonOverrides = (palette: Palette): StyleRules<Record<string, unknown>, ButtonClassKey> => ({
     root: {},
     label: {
         position: "relative",

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { Field, FieldContainer, FinalFormSwitch } from "@comet/admin";
-import { Delete, Video } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentPaper, BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/admin-blocks";
+import { Delete, Video } from "@comet/admin-icons";
 import { Box, Divider, Grid, Typography } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -57,7 +57,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
         // TODO consider throwing an error
         // TODO fix typing: generated GraphQL files use null, we use undefined, e.g. title: string | null vs title?: string
-        const damFile = (data.damFile as unknown) as DamVideoBlockData["damFile"];
+        const damFile = data.damFile as unknown as DamVideoBlockData["damFile"];
 
         return { damFile, autoplay: output.autoplay, showControls: output.showControls };
     },

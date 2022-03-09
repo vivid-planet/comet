@@ -27,7 +27,7 @@ type KeysWithoutFlattenedState<C extends CompositeBlocksConfig> = Exclude<keyof 
 // It maps the data nodes depending on the setting (flatten or not) of the block
 type AbstractDataMap<
     C extends CompositeBlocksConfig,
-    DataMap extends InputApiMap<ExtractCompositeBlocks<C>> | StateMap<ExtractCompositeBlocks<C>> | OutputApiMap<ExtractCompositeBlocks<C>>
+    DataMap extends InputApiMap<ExtractCompositeBlocks<C>> | StateMap<ExtractCompositeBlocks<C>> | OutputApiMap<ExtractCompositeBlocks<C>>,
 > = Pick<DataMap, KeysWithoutFlattenedState<C>> & Flatten<Pick<DataMap, KeysWithFlattenedState<C>>>;
 
 // concrete DataMaps for all 3 representations of the block-data (input, state, output)

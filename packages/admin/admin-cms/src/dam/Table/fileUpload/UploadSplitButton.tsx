@@ -25,7 +25,11 @@ export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps):
     const folderInputRef = React.useRef<HTMLInputElement>(null);
 
     const fileCategoryMimetypes = filter?.fileCategory ? acceptedMimeTypesByCategory[filter.fileCategory] : undefined;
-    const { uploadFiles, dialogs: fileUploadDialogs, dropzoneConfig } = useFileUpload({
+    const {
+        uploadFiles,
+        dialogs: fileUploadDialogs,
+        dropzoneConfig,
+    } = useFileUpload({
         acceptedMimetypes: filter?.allowedMimetypes ?? fileCategoryMimetypes ?? acceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();

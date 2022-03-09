@@ -3,8 +3,14 @@ package-lock.json
 *.lock
 *.gql
 *.dist
-lang/
 .watchmanconfig
 lib/
+build/
 lerna.json
 storybook-static
+block-meta.json
+graphql.generated.ts
+schema.gql
+schema.graphql
+.yarn/
+**/*-lang/*.json

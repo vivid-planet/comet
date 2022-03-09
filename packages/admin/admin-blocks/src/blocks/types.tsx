@@ -64,7 +64,7 @@ export interface BlockMethods<
     State = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OutputApi = any,
-    PreviewState = InputApi & PreviewStateInterface
+    PreviewState = InputApi & PreviewStateInterface,
 > {
     defaultValues: () => State;
     input2State: (v: InputApi) => State;
@@ -83,7 +83,7 @@ export interface AnonymousBlockInterface<
     State = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OutputApi = any,
-    PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface
+    PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface,
 > extends BlockMethods<InputApi, State, OutputApi, PreviewState> {
     AdminComponent: BlockAdminComponent<State>;
     definesOwnPadding?: boolean;
@@ -97,7 +97,7 @@ export interface BlockInterface<
     State = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OutputApi = any,
-    PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface
+    PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface,
 > extends AnonymousBlockInterface<InputApi, State, OutputApi, PreviewState> {
     name: string;
     displayName: React.ReactNode;
@@ -111,7 +111,7 @@ export interface RootBlockInterface<
     State = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OutputApi = any,
-    PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface
+    PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface,
 > extends Omit<BlockInterface<InputApi, State, OutputApi, PreviewState>, "AdminComponent" | "Preview"> {
     adminComponentParts: (p: BlockAdminComponentProps<State>) => AdminComponentPart[];
 }

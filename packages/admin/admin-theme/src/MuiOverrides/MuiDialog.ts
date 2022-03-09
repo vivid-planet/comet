@@ -2,7 +2,7 @@ import { DialogClassKey } from "@material-ui/core/Dialog";
 import { Spacing } from "@material-ui/core/styles/createSpacing";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiDialogOverrides = (spacing: Spacing): StyleRules<{}, DialogClassKey> => ({
+export const getMuiDialogOverrides = (spacing: Spacing): StyleRules<Record<string, unknown>, DialogClassKey> => ({
     root: {},
     scrollPaper: {},
     scrollBody: {},

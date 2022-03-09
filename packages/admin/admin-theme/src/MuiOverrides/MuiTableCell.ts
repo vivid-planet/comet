@@ -3,7 +3,7 @@ import { Palette } from "@material-ui/core/styles/createPalette";
 import { Typography } from "@material-ui/core/styles/createTypography";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiTableCellOverrides = (palette: Palette, typography: Typography): StyleRules<{}, TableCellClassKey> => ({
+export const getMuiTableCellOverrides = (palette: Palette, typography: Typography): StyleRules<Record<string, unknown>, TableCellClassKey> => ({
     root: {
         borderBottomColor: palette.grey[100],
         paddingTop: 15,

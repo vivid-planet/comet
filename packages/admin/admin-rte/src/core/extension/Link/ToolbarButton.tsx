@@ -12,7 +12,7 @@ import selectionIsInOneBlock from "../../utils/selectionIsInOneBlock";
 import { ENTITY_TYPE } from "./Decorator";
 import { ILinkProps } from "./EditorComponent";
 
-export default function ToolbarButton(props: IControlProps) {
+export default function ToolbarButton(props: IControlProps): React.ReactElement {
     const [open, setOpen] = React.useState(false);
     const linkData = findEntityDataInCurrentSelection<ILinkProps>(props.editorState, ENTITY_TYPE);
     const { entity: previousLinkEntity, entitySelection: linkEntitySelection } = findEntityInCurrentSelection(props.editorState, ENTITY_TYPE);

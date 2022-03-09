@@ -1,11 +1,11 @@
-import { Theme } from "@material-ui/core";
+import { StyleRules, Theme } from "@material-ui/core";
 import { createStyles } from "@material-ui/styles";
 
 import { FilterBarPopoverFilterProps } from "./FilterBarPopoverFilter";
 
 export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "paper" | "buttonsContainer";
 
-export const styles = ({ palette, typography }: Theme) => {
+export const styles = ({ palette, typography }: Theme): StyleRules<FilterBarPopoverFilterClassKey, FilterBarPopoverFilterProps> => {
     return createStyles<FilterBarPopoverFilterClassKey, FilterBarPopoverFilterProps>({
         root: {
             backgroundColor: palette.common.white,

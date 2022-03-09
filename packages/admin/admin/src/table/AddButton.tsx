@@ -10,7 +10,7 @@ interface IProps {
 }
 
 export class TableAddButton extends React.Component<IProps> {
-    public render() {
+    public render(): React.ReactElement {
         return (
             <Button color="default" onClick={this.handleAddClick} startIcon={<AddIcon />}>
                 <FormattedMessage id="cometAdmin.generic.add" defaultMessage="Add" />

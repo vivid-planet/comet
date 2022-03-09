@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
-import { Assets } from "@comet/admin-icons";
 import { AdminComponentButton } from "@comet/admin-blocks";
+import { Assets } from "@comet/admin-icons";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";

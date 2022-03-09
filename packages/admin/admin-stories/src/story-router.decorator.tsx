@@ -1,6 +1,6 @@
 import { RouterMemoryRouter } from "@comet/admin";
 import { action } from "@storybook/addon-actions";
-import { StoryContext, StoryFn } from "@storybook/addons";
+import { PartialStoryFn, StoryContext } from "@storybook/addons";
 import { Action, History, UnregisterCallback } from "history";
 import * as React from "react";
 import { MemoryRouterProps, Route, RouteComponentProps } from "react-router";
@@ -30,7 +30,7 @@ function HistoryWatcher({ history, children }: React.PropsWithChildren<RouteComp
 }
 
 export function storyRouterDecorator<StoryFnReturnType = unknown>() {
-    return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
+    return (fn: PartialStoryFn<StoryFnReturnType>, c: StoryContext): React.ReactElement => {
         return <StoryRouter>{fn()}</StoryRouter>;
     };
 }

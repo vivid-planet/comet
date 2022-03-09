@@ -13,7 +13,7 @@ export interface FormSectionProps {
 }
 
 const styles = ({ spacing }: Theme) => {
-    return createStyles<FormSectionKey, any>({
+    return createStyles<FormSectionKey, FormSectionProps>({
         root: {
             "&:not($disableMarginBottom)": {
                 marginBottom: spacing(8),

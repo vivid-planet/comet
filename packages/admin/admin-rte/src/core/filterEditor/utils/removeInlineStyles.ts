@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { CharacterMetadata, EditorState } from "draft-js";
 
 import { FilterEditorStateFn, InlineStyleType } from "../../types";
@@ -9,7 +10,7 @@ const removeInlineStyles: (blockBlacklist: StyleBlacklist) => FilterEditorStateF
     const content = nextState.getCurrentContent();
     const blockMap = content.getBlockMap();
 
-    const changedBlocks: any = blockMap.map((block) => {
+    const changedBlocks = blockMap.map((block) => {
         let altered = false;
 
         const chars = block!.getCharacterList().map((char) => {
@@ -31,7 +32,7 @@ const removeInlineStyles: (blockBlacklist: StyleBlacklist) => FilterEditorStateF
 
     return EditorState.set(nextState, {
         currentContent: content.merge({
-            blockMap: blockMap.merge(changedBlocks),
+            blockMap: blockMap.merge(changedBlocks as typeof blockMap),
         }),
     });
 };

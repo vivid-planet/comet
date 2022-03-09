@@ -42,7 +42,7 @@ const styles = () => {
 const StyledLinkControls = withStyles(styles, { name: "CometAdminRteLinkControls" })(LinkControls);
 
 // If there are no link-actions, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
-export default (p: IControlProps) => {
+export default (p: IControlProps): React.ReactElement | null => {
     const supportedThings = p.options.supports;
 
     if (!supportedThings.includes("link") && !supportedThings.includes("links-remove")) {

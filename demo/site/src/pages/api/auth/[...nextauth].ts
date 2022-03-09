@@ -75,7 +75,7 @@ const options: NextAuthOptions = {
             if (account && user) {
                 return {
                     accessToken: account.accessToken,
-                    accessTokenExpires: Date.now() + parseInt((account.expires_in as unknown) as string) * 1000,
+                    accessTokenExpires: Date.now() + parseInt(account.expires_in as unknown as string) * 1000,
                     refreshToken: account.refreshToken,
                     user,
                 };

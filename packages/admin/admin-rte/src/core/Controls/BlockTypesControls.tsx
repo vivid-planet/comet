@@ -66,7 +66,7 @@ const styles = (theme: Theme) => {
 const StyledBlockTypesControls = withStyles(styles, { name: "CometAdminRteBlockTypeControls" })(BlockTypesControls);
 
 // If there are no dropdown-features, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
-export default (p: IControlProps) => {
+export default (p: IControlProps): React.ReactElement | null => {
     const { editorState, setEditorState, editorRef, options } = p;
     const { supports: supportedThings, blocktypeMap, standardBlockType } = options;
     const blockTypes = useBlockTypes({ editorState, setEditorState, supportedThings, blocktypeMap, editorRef, standardBlockType });

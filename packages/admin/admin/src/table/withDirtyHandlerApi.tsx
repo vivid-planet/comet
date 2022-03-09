@@ -12,7 +12,7 @@ type Subtract<T, K> = Omit<T, keyof K>;
 // TODO implement ref forwarding with typescript
 export const withDirtyHandlerApi =
     <P extends IWithDirtyHandlerApiProps>(WrappedComponent: React.ComponentType<P>): React.SFC<Subtract<P, IWithDirtyHandlerApiProps>> =>
-    (props: any) =>
+    (props: Exclude<P, IWithDirtyHandlerApiProps>) =>
         (
             <DirtyHandlerApiContext.Consumer>
                 {(dirtyHandlerApi) => <WrappedComponent {...props} dirtyHandlerApi={dirtyHandlerApi} />}

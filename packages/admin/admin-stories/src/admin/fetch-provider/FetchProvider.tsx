@@ -4,7 +4,7 @@ import * as React from "react";
 
 function ExampleFetch() {
     const fetch = useFetch();
-    const [data, setData] = React.useState<object | null>(null);
+    const [data, setData] = React.useState<Record<string, unknown> | null>(null);
     React.useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(`/people`);

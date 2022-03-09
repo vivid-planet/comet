@@ -1,7 +1,7 @@
 import { AppBarClassKey } from "@material-ui/core";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiAppBarOverrides = (): StyleRules<{}, AppBarClassKey> => ({
+export const getMuiAppBarOverrides = (): StyleRules<Record<string, unknown>, AppBarClassKey> => ({
     root: {},
     positionFixed: {},
     positionAbsolute: {},

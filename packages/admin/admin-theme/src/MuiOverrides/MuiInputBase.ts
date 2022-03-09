@@ -3,7 +3,7 @@ import { Palette } from "@material-ui/core/styles/createPalette";
 import { Spacing } from "@material-ui/core/styles/createSpacing";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): StyleRules<{}, InputBaseClassKey> => ({
+export const getMuiInputBaseOverrides = (palette: Palette, spacing: Spacing): StyleRules<Record<string, unknown>, InputBaseClassKey> => ({
     root: {
         border: `1px solid ${palette.grey[100]}`,
         borderRadius: 2,

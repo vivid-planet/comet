@@ -8,12 +8,12 @@ import { ITableLocalChangesApi } from "./TableLocalChanges";
 interface IProps {
     tableLocalChangesApi: ITableLocalChangesApi;
     localChangesCount: number;
-    updateMutation: any;
+    updateMutation: unknown;
     loading: boolean;
 }
 
 export class TableLocalChangesToolbar extends React.Component<IProps> {
-    public render() {
+    public render(): React.ReactElement {
         return (
             <>
                 {this.props.loading && <CircularProgress />}

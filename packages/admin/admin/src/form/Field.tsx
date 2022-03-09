@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FieldValidator } from "final-form";
 import * as React from "react";
 import { Field as FinalFormField, FieldMetaState, FieldRenderProps, FormSpy, useForm } from "react-final-form";
@@ -9,8 +10,8 @@ import { useFinalFormContext } from "./FinalFormContextProvider";
 const requiredValidator = (value: any) => (value ? undefined : <FormattedMessage id="cometAdmin.form.required" defaultMessage="Required" />);
 
 const composeValidators =
-    (...validators: Array<(value: any, allValues: object) => any>) =>
-    (value: any, allValues: object) =>
+    (...validators: Array<(value: any, allValues: Record<string, unknown>) => any>) =>
+    (value: any, allValues: Record<string, unknown>) =>
         validators.reduce((error, validator) => error || validator(value, allValues), undefined);
 
 export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElement> {
@@ -92,6 +93,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                     subscription={{ values: true }}
                     onChange={async ({ values }) => {
                         if (!setFieldData) {
+                            // eslint-disable-next-line no-console
                             console.warn(
                                 `Can't perform validateWarning, as the setFieldData mutator is missing. Did you forget to add the mutator to the form?`,
                             );

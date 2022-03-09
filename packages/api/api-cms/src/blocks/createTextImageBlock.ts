@@ -63,7 +63,8 @@ export function createTextImageBlock<TextBlock extends Block, ImageBlock extends
 
     class TextImageBlockInput
         extends BlockInput
-        implements TextImageBlockInputInterface<ExtractBlockInput<TextBlock>, ExtractBlockInput<ImageBlock>> {
+        implements TextImageBlockInputInterface<ExtractBlockInput<TextBlock>, ExtractBlockInput<ImageBlock>>
+    {
         @ChildBlockInput(text)
         text: ExtractBlockInput<TextBlock>;
 

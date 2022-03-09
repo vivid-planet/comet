@@ -1,6 +1,6 @@
+import { BlockInterface, BlockState } from "@comet/admin-blocks";
 import { Link } from "@comet/admin-icons";
 import { ControlButton, findEntityInCurrentSelection, findTextInCurrentSelection, selectionIsInOneBlock } from "@comet/admin-rte";
-import { BlockInterface, BlockState } from "@comet/admin-blocks";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";

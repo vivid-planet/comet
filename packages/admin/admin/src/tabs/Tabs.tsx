@@ -47,7 +47,7 @@ function TabsComponent({
         setValue = tabsState.setValue;
     }
 
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleChange = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number) => {
         setValue(newValue);
     };
 

@@ -71,7 +71,7 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     },
 ];
 
-export default function useInlineStyleType({ editorState, setEditorState, supportedThings }: IProps) {
+export default function useInlineStyleType({ editorState, setEditorState, supportedThings }: IProps): { features: IFeatureConfig[] } {
     // can check if inlineStyleType is supported by the editor
     const supports = React.useCallback(
         (inlineStyle: InlineStyleType) => {

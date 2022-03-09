@@ -12,7 +12,7 @@ export interface UndoSnackbarProps<Payload extends unknown> extends Omit<Snackba
     payload?: Payload;
 }
 
-export const UndoSnackbar = <Payload extends unknown>({ onUndoClick, payload, ...props }: UndoSnackbarProps<Payload>) => {
+export const UndoSnackbar = <Payload extends unknown>({ onUndoClick, payload, ...props }: UndoSnackbarProps<Payload>): React.ReactElement => {
     const snackbarApi = useSnackbarApi();
     const uuid = React.useRef(UUID.v4());
 

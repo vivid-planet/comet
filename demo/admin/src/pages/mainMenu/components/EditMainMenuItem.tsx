@@ -11,9 +11,9 @@ import {
     ToolbarTitleItem,
     useStackApi,
 } from "@comet/admin";
-import { Add, Delete, Preview, Save } from "@comet/admin-icons";
 import { AdminComponentRoot, BlockOutputApi, BlockState, HiddenInSubroute, IFrameBridgeProvider, resolveNewState } from "@comet/admin-blocks";
 import { EditPageLayout, openPreviewWindow, SplitPreview, useBlockPreview, useCmsBlockContext, useSiteConfig } from "@comet/admin-cms";
+import { Add, Delete, Preview, Save } from "@comet/admin-icons";
 import { Button } from "@material-ui/core";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";

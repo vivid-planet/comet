@@ -29,7 +29,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     formContext?: Partial<FinalFormContext>;
 }
 
-export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
+export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>): React.ReactElement {
     const client = useApolloClient();
     const dirtyHandler = React.useContext(DirtyHandlerApiContext);
     const stackApi = React.useContext(StackApiContext);
@@ -48,7 +48,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     return (
         <Form
             {...props}
-            mutators={{ ...props.mutators, setFieldData: setFieldData as unknown as Mutator<FormValues, object> }}
+            mutators={{ ...props.mutators, setFieldData: setFieldData as unknown as Mutator<FormValues, unknown> }}
             onSubmit={handleSubmit}
             render={RenderForm}
         />
@@ -56,10 +56,11 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
     function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
         const { mutators } = formRenderProps.form;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
 
         const submit = React.useCallback(
-            (event: any) => {
+            (event) => {
                 event.preventDefault(); //  Prevents from reloading the page with GET-params on submit
                 if (!formRenderProps.dirty) return;
                 return new Promise<SubmissionErrors | void>((resolve) => {

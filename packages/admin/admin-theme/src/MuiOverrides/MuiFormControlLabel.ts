@@ -1,7 +1,7 @@
 import { FormControlLabelClassKey } from "@material-ui/core";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiFormControlLabelOverrides = (): StyleRules<{}, FormControlLabelClassKey> => ({
+export const getMuiFormControlLabelOverrides = (): StyleRules<Record<string, unknown>, FormControlLabelClassKey> => ({
     root: {
         marginLeft: -9,
         marginTop: -7,

@@ -1,5 +1,6 @@
 import { Theme } from "@material-ui/core";
 import { createGenerateClassName, GenerateClassNameOptions, StylesProvider, ThemeProvider } from "@material-ui/styles";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore nested is used only internally from Material UI, there are no types defined
 import nested from "@material-ui/styles/ThemeProvider/nested";
 import type { GenerateId } from "jss";
@@ -22,6 +23,7 @@ function createGenerateCometClassName(options: GenerateClassNameOptions = {}): G
         ruleCounter += 1;
         if (process.env.NODE_ENV !== "production") {
             if (ruleCounter >= 1e10) {
+                // eslint-disable-next-line no-console
                 console.warn(["Comet Admin: You might have a memory leak.", "The ruleCounter is not supposed to grow that much."].join(""));
             }
         }
@@ -31,11 +33,13 @@ function createGenerateCometClassName(options: GenerateClassNameOptions = {}): G
     const muiGenerateClassName = createGenerateClassName(options);
 
     return (rule, styleSheet) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const name = (styleSheet?.options as any).name;
 
         if (name && name.indexOf("Comet") === 0 && !styleSheet?.options.link && !disableGlobal) {
             const prefix = `${seedPrefix}${name}-${rule.key}`;
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (!(styleSheet?.options as any).theme[nested] || seed !== "") {
                 return prefix;
             }

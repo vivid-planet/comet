@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DraftBlockType, EditorState } from "draft-js";
 
 import { FilterEditorStateFn } from "../../types";
@@ -13,7 +14,7 @@ const changeBlockType: (blockTypeList: BlockTypeList, blockType: DraftBlockType,
     (nextState) => {
         const content = nextState.getCurrentContent();
         const blockMap = content.getBlockMap();
-        const changedBlocks: any = blockMap
+        const changedBlocks = blockMap
             .filter((block) => {
                 if (!block) {
                     return false;
@@ -39,7 +40,7 @@ const changeBlockType: (blockTypeList: BlockTypeList, blockType: DraftBlockType,
 
         return EditorState.set(nextState, {
             currentContent: content.merge({
-                blockMap: blockMap.merge(changedBlocks),
+                blockMap: blockMap.merge(changedBlocks as typeof blockMap),
             }),
         });
     };

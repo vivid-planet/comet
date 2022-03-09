@@ -1,5 +1,5 @@
-import { IRteOptions, makeRteApi, Rte } from "@comet/admin-rte";
 import { BlockCategory, BlockInterface, createBlockSkeleton, SelectPreviewComponent } from "@comet/admin-blocks";
+import { IRteOptions, makeRteApi, Rte } from "@comet/admin-rte";
 import { convertFromRaw, convertToRaw, EditorState, RawDraftContentState } from "draft-js";
 import isEqual from "lodash.isequal";
 import * as React from "react";

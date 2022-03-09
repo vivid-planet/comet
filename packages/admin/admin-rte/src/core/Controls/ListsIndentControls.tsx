@@ -9,7 +9,7 @@ export default function ListsIndentControls({
     setEditorState,
     options: { supports: supportedThings, listLevelMax },
     disabled,
-}: IControlProps) {
+}: IControlProps): React.ReactElement | null {
     const { features } = useListIndent({ editorState, setEditorState, supportedThings, listLevelMax });
     if (features.length < 1) {
         return null;

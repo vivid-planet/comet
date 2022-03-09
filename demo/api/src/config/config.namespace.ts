@@ -118,10 +118,10 @@ export class EnvironmentVariables {
 }
 
 export function env<K extends keyof EnvironmentVariables>(name: K): EnvironmentVariables[K] {
-    return ((process.env as unknown) as EnvironmentVariables)[name];
+    return (process.env as unknown as EnvironmentVariables)[name];
 }
 
 export const configNS = registerAs("config", () => ({
-    ...((process.env as unknown) as EnvironmentVariables),
+    ...(process.env as unknown as EnvironmentVariables),
     debug: process.env.NODE_ENV !== "production",
 }));

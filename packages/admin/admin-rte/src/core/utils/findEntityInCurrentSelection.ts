@@ -22,7 +22,7 @@ export default function findEntityInCurrentSelection(
     const blockAtBeginning = contentState.getBlockForKey(startKey);
 
     // we try to find one link entity in the selection
-    let entityText: string = "";
+    let entityText = "";
     let entityKey: string | null = null;
     let entitySelection: SelectionState | null = null;
     let firstFoundLinkEntity: EntityInstance | null = null;

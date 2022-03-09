@@ -13,7 +13,7 @@ interface IProps {
     supportedThings: SupportedThings[];
 }
 
-export default function useHistory({ editorState, setEditorState, supportedThings }: IProps) {
+export default function useHistory({ editorState, setEditorState, supportedThings }: IProps): { features: IFeatureConfig[] } {
     const intl = useIntl();
 
     // can check if history is supported

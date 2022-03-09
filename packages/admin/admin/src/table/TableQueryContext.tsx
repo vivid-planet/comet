@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { DocumentNode } from "graphql";
 import * as React from "react";
 
@@ -7,7 +8,7 @@ export interface ITableQueryApi {
     getVariables: () => object;
     getInnerOptions: () => object;
     getQuery: () => DocumentNode;
-    resolveTableData: (data: object) => ITableData<any>;
+    resolveTableData: (data: object) => ITableData;
     onRowCreated: (id: string) => void;
     onRowDeleted: () => void;
 }

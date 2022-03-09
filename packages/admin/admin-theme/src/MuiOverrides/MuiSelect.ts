@@ -2,7 +2,7 @@ import { SelectClassKey } from "@material-ui/core";
 import { Palette } from "@material-ui/core/styles/createPalette";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiSelectOverrides = (palette: Palette): StyleRules<{}, SelectClassKey> => ({
+export const getMuiSelectOverrides = (palette: Palette): StyleRules<Record<string, unknown>, SelectClassKey> => ({
     root: {},
     select: {
         "&$select": {

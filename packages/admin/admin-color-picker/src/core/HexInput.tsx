@@ -27,7 +27,7 @@ interface Props extends ColorPickerProps {
     onChange: EditableInputProps["onChange"];
 }
 
-export function HexInput({ value, classes, onChange, picker, palette }: Props) {
+export function HexInput({ value, classes, onChange, picker, palette }: Props): React.ReactElement {
     return (
         <div className={classes.inputInner}>
             <div className={classes.inputInnerLeftContent}>

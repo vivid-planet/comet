@@ -13,7 +13,7 @@ export interface IFilterApi<FilterValues extends AnyObject> {
 export function useTableQueryFilter<FilterValues>(
     defaultValues: FilterValues,
     options: {
-        pagingApi?: IPagingApi<any>;
+        pagingApi?: IPagingApi<FilterValues>;
         persistedStateId?: string;
     } = {},
 ): IFilterApi<FilterValues> {

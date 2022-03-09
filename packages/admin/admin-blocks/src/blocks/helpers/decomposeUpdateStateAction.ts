@@ -15,7 +15,7 @@ export default function decomposeUpdateStateAction<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     D extends DispatchSetStateAction<any>,
     S extends InferedState<D>,
-    Whitelisted extends keyof S
+    Whitelisted extends keyof S,
 >(action: D, whiteKeys: Array<Whitelisted>): DispatchSetStateAction<Pick<S, Whitelisted>> {
     return function decomposedUpdateStateAction(setStateAction: SetStateAction<Pick<S, Whitelisted>>): void {
         action((prevState: S) => {

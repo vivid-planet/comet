@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-explicit-any */
 import { gql } from "@apollo/client";
 
 export function buildUpdateRestMutation(options: { type: string; path: string; responseFragment: any }) {

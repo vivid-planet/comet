@@ -6,7 +6,7 @@ import { FieldRenderProps } from "react-final-form";
 import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 
 export const FinalFormAutocomplete = <
-    T extends Record<string, any>,
+    T extends Record<string, unknown>,
     Multiple extends boolean | undefined,
     DisableClearable extends boolean | undefined,
     FreeSolo extends boolean | undefined,
@@ -17,7 +17,7 @@ export const FinalFormAutocomplete = <
     ...rest
 }: FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> &
     Partial<AsyncOptionsProps<T>> &
-    Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput">) => {
+    Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput">): React.ReactElement => {
     return (
         <Autocomplete
             getOptionSelected={(option: T, value: T) => {
@@ -27,6 +27,7 @@ export const FinalFormAutocomplete = <
             onChange={(_e, option) => {
                 onChange(option);
             }}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             value={value ? (value as T) : (null as any)}
             {...rest}
             renderInput={(params: AutocompleteRenderInputParams) => (

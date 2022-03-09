@@ -1,4 +1,3 @@
-import { Domain as DomainIcon } from "@comet/admin-icons";
 import {
     ContentScopeConfigProps,
     ContentScopeControls as ContentScopeControlsLibrary,
@@ -11,6 +10,7 @@ import {
     useContentScopeConfig as useContentScopeConfigLibrary,
     useSitesConfig,
 } from "@comet/admin-cms";
+import { Domain as DomainIcon } from "@comet/admin-icons";
 import React from "react";
 
 type Domain = "main" | "secondary" | string;

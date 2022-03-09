@@ -1,7 +1,8 @@
 import { ApolloError, useQuery } from "@apollo/client";
-import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
+import { Box, Card, CircularProgress } from "@material-ui/core";
 import { DocumentNode } from "graphql";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 interface IProps {
     selectionMode?: "edit" | "add";
@@ -9,6 +10,7 @@ interface IProps {
     rows?: Array<{ id: string | number }>;
     query?: DocumentNode;
     dataAccessor?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
     components?: {
         error?: React.ComponentType<{ error: ApolloError }>;
@@ -16,7 +18,7 @@ interface IProps {
 }
 
 const SelectEdit = (props: IProps) => {
-    const queryResult = useQuery(props.query!, { variables: { id: props.selectedId } });
+    const queryResult = useQuery(props.query as DocumentNode, { variables: { id: props.selectedId } });
     if (queryResult.error) {
         const ErrorComponent = props.components?.error;
         return ErrorComponent !== undefined ? (
@@ -24,7 +26,14 @@ const SelectEdit = (props: IProps) => {
         ) : (
             <Card>
                 <Box padding={4}>
-                    <Typography>Error :( {queryResult.error.toString()}</Typography>
+                    <FormattedMessage
+                        id="cometAdmin.table.tableQuery.error"
+                        defaultMessage="Error :( {error}"
+                        description="Display apollo error message"
+                        values={{
+                            error: queryResult.error.toString(),
+                        }}
+                    />
                 </Box>
             </Card>
         );
@@ -42,7 +51,7 @@ const SelectEdit = (props: IProps) => {
     return <>{props.children(queryResult.data[props.dataAccessor], { selectionMode: "edit" })}</>;
 };
 
-export function Selected(props: IProps) {
+export function Selected(props: IProps): React.ReactElement | null {
     let row;
     if (props.rows) {
         row = props.rows.find((i) => String(i.id) === String(props.selectedId)); // compare as strings as selectedId might come from url

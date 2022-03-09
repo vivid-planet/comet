@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { CharacterMetadata, EditorState, EntityInstance } from "draft-js";
 
 import { FilterEditorStateFn } from "../../types";
@@ -9,7 +10,7 @@ const removeEntities: (filterFn: FilterFn) => FilterEditorStateFn = (filterFn) =
     const content = nextState.getCurrentContent();
     const blockMap = content.getBlockMap();
 
-    const blocks: any = blockMap.map((block) => {
+    const blocks = blockMap.map((block) => {
         let altered = false;
         const chars = block!.getCharacterList().map((char) => {
             if (!char) {
@@ -30,7 +31,7 @@ const removeEntities: (filterFn: FilterFn) => FilterEditorStateFn = (filterFn) =
 
     return EditorState.set(nextState, {
         currentContent: content.merge({
-            blockMap: blockMap.merge(blocks),
+            blockMap: blockMap.merge(blocks as typeof blockMap),
         }),
     });
 };

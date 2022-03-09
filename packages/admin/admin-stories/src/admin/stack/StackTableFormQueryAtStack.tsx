@@ -55,7 +55,7 @@ interface IQueryData {
 interface IFilterValues {
     query: string;
 }
-interface IVariables extends IFilterValues {}
+type IVariables = IFilterValues;
 
 interface IExampleTableProps {
     tableData: {

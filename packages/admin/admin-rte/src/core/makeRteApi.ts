@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CompositeDecorator, ContentState, convertFromRaw, convertToRaw, DraftDecorator, EditorState, RawDraftContentState } from "draft-js";
 import * as React from "react";
 
@@ -33,6 +34,7 @@ function defaultFormatContent(v: ContentState): any {
     return JSON.stringify(convertToRaw(v));
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function makeRteApi<T = any>(o?: IMakeRteApiProps<T>) {
     const { decorators = [LinkDecorator], parse = defaultParseContent, format = defaultFormatContent }: IMakeRteApiProps<T> = o || {};
     const decorator = new CompositeDecorator(decorators);

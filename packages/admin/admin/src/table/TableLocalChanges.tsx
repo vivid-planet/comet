@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApolloClient } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
@@ -5,11 +6,11 @@ import * as React from "react";
 import { DirtyHandlerApiContext } from "../DirtyHandlerApiContext";
 
 export async function submitChangesWithMutation(options: {
-    changes: { [id: string]: object };
-    variables?: object;
+    changes: { [id: string]: Record<string, unknown> };
+    variables?: Record<string, unknown>;
     updateMutation: DocumentNode;
     client: ApolloClient<any>;
-}) {
+}): Promise<void> {
     for (const id of Object.keys(options.changes)) {
         await options.client.mutate({
             mutation: options.updateMutation,
@@ -66,7 +67,7 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
         };
     }
 
-    public componentDidMount() {
+    public componentDidMount(): void {
         // register with the parent DirtyHandler
         // probably this needs to be configurable?
         const dirtyApi = this.context ? this.context.getParent() : undefined;
@@ -90,14 +91,14 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
         }
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         const dirtyApi = this.context ? this.context.getParent() : undefined;
         if (dirtyApi) {
             dirtyApi.unregisterBinding(this);
         }
     }
 
-    public render() {
+    public render(): React.ReactElement {
         let patchedData = this.patchedData();
         if (this.state.changedOrder) {
             patchedData = this.state.changedOrder.map((id) => {

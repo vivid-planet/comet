@@ -23,7 +23,7 @@ const filterEditorStateBeforeUpdate: FilterEditorStateBeforeUpdateFn = (nextStat
         const data = entity.getData();
         const isLink = "LINK" === entity.getType();
         if (isLink && !data.linkType && data.url) {
-            return { linkType: "external", targetUrl: data.url };
+            return { linkType: "external", targetUrl: data.url } as unknown as EditorState;
         }
         return undefined;
     });

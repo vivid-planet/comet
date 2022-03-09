@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { Crop, Delete, MoreVertical } from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentPaper,
@@ -11,6 +10,7 @@ import {
     IPreviewContext,
     SelectPreviewComponent,
 } from "@comet/admin-blocks";
+import { Crop, Delete, MoreVertical } from "@comet/admin-icons";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, makeStyles, Menu, MenuItem, Typography } from "@material-ui/core";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -114,7 +114,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
         // TODO consider throwing an error
         // TODO fix typing: generated GraphQL files use null, we use undefined, e.g. title: string | null vs title?: string
-        const damFile = (data.damFile as unknown) as PixelImageBlockData["damFile"];
+        const damFile = data.damFile as unknown as PixelImageBlockData["damFile"];
 
         return { damFile, cropArea: output.cropArea };
     },

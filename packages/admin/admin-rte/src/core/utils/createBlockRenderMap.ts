@@ -3,7 +3,11 @@ import * as Immutable from "immutable";
 
 import { IBlocktypeConfig, IBlocktypeMap } from "../types";
 
-export default function createBlockRenderMap({ blocktypeMap }: { blocktypeMap: IBlocktypeMap }) {
+export default function createBlockRenderMap({
+    blocktypeMap,
+}: {
+    blocktypeMap: IBlocktypeMap;
+}): Immutable.Map<DraftBlockType, DraftBlockRenderConfig> {
     const customBlockRenderMapObject = Object.entries<IBlocktypeConfig>(blocktypeMap).reduce<{
         [key: string]: DraftBlockRenderConfig;
     }>((a, [key, config]) => {

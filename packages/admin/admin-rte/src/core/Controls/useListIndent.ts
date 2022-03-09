@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import FormatIndentDecreaseIcon from "@material-ui/icons/FormatIndentDecrease";
 import FormatIndentIncreaseIcon from "@material-ui/icons/FormatIndentIncrease";
 import { BlockMap, ContentState, EditorState } from "draft-js";
@@ -68,7 +69,7 @@ interface IProps {
     listLevelMax?: number;
 }
 
-export default function useListIndent({ editorState, setEditorState, supportedThings, listLevelMax = 4 }: IProps) {
+export default function useListIndent({ editorState, setEditorState, supportedThings, listLevelMax = 4 }: IProps): { features: IFeatureConfig[] } {
     const intl = useIntl();
 
     // can check if indenting lists is supported

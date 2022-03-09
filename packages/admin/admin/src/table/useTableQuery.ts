@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { QueryHookOptions, QueryResult, useQuery } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
@@ -23,6 +24,7 @@ export interface ITableQueryHookResult<TData, TVariables, TTableData extends ITa
     api: ITableQueryApi;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useTableQuery<TInnerData, TInnerVariables>() {
     function useTableQueryInner<TTableData extends ITableData>(
         q: DocumentNode,

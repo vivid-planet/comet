@@ -48,6 +48,7 @@ function Story() {
             page: pagingApi.current,
         },
         resolveTableData: (data) => ({
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             data: data.people.results.map((i) => ({ ...i, id: i.url.match(/.*\/(\d+)\//)![1] })),
             totalCount: data.people.count,
             pagingInfo: createRestPagingActions(pagingApi, {

@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { Link } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentNestedButton } from "@comet/admin-blocks";
+import { Link } from "@comet/admin-icons";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 

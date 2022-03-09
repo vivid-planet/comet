@@ -1,2 +1,2 @@
-export { default as FinalFormColorPicker, ColorPickerProps } from "./core/ColorPicker";
+export { ColorPickerProps, default as FinalFormColorPicker } from "./core/ColorPicker";
 export { ColorPickerClassKey } from "./core/ColorPicker.styles";

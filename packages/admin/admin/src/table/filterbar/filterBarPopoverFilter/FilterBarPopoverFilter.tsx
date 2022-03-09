@@ -13,7 +13,7 @@ import { FilterBarPopoverFilterClassKey, styles } from "./FilterBarPopoverFilter
 export interface FilterBarPopoverFilterProps {
     label: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
-    calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
+    calcNumberDirtyFields?: (values: Record<string, unknown>, registeredFields: string[]) => number;
     submitButtonProps?: ButtonProps;
     resetButtonProps?: ButtonProps;
     filterBarButtonProps?: FilterBarButtonProps;

@@ -1,5 +1,5 @@
-import { Minimize } from "@comet/admin-icons";
 import { useIFrameBridge } from "@comet/admin-blocks";
+import { Minimize } from "@comet/admin-icons";
 import { Grid, IconButton } from "@material-ui/core";
 import * as React from "react";
 import styled from "styled-components";

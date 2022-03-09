@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 export const safeColumnGet = (row: any, path: string): string | number | null => {
     const splitPath = path.split(".");
     const nextRow = row[splitPath[0]];

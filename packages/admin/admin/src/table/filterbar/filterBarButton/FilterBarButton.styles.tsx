@@ -1,10 +1,10 @@
-import { createStyles, Theme } from "@material-ui/core";
+import { createStyles, StyleRules, Theme } from "@material-ui/core";
 
 import { FilterBarButtonProps } from "./FilterBarButton";
 
 export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filterBadge";
 
-export const styles = (theme: Theme) => {
+export const styles = (theme: Theme): StyleRules<FilterBarButtonClassKey, FilterBarButtonProps> => {
     return createStyles<FilterBarButtonClassKey, FilterBarButtonProps>({
         root: {
             boxSizing: "border-box",

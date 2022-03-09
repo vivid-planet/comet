@@ -7,7 +7,7 @@ const ErrorScopeContextIdentifier = "errorScope";
 
 export const LocalErrorScopeApolloContext = { [ErrorScopeContextIdentifier]: ErrorScope.Local };
 
-export const errorScopeForOperationContext = (context: any): ErrorScope => {
+export const errorScopeForOperationContext = (context: typeof LocalErrorScopeApolloContext): ErrorScope => {
     const errorContext = context[ErrorScopeContextIdentifier];
     if (errorContext == ErrorScope.Local) {
         return ErrorScope.Local;

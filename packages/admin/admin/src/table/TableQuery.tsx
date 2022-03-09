@@ -7,12 +7,13 @@ import { FormattedMessage } from "react-intl";
 import { styles, TableQueryClassKey } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
-export const parseIdFromIri = (iri: string) => {
+export const parseIdFromIri = (iri: string): string | null => {
     const m = iri.match(/\/(\d+)/);
     if (!m) return null;
     return m[1];
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDefaultVariables {}
 
 export interface IProps {
@@ -22,7 +23,7 @@ export interface IProps {
     children: React.ReactNode;
 }
 
-export function Query({ classes, ...otherProps }: IProps & WithStyles<typeof styles>) {
+export function Query({ classes, ...otherProps }: IProps & WithStyles<typeof styles>): React.ReactElement {
     return (
         <TableQueryContext.Provider
             value={{

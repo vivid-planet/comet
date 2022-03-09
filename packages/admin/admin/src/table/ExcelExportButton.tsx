@@ -6,7 +6,7 @@ import { FileIcon } from "../fileIcons/FileIcon";
 import { IExportApi } from "./excelexport/IExportApi";
 
 interface IProps {
-    exportApi: IExportApi<any>;
+    exportApi: IExportApi<never>;
     onClick?: () => void;
     loadingComponent?: React.ReactNode;
 }

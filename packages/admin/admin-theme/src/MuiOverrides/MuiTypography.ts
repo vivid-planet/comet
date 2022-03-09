@@ -1,7 +1,7 @@
 import { TypographyClassKey } from "@material-ui/core";
 import { StyleRules } from "@material-ui/styles/withStyles";
 
-export const getMuiTypographyOverrides = (): StyleRules<{}, TypographyClassKey> => ({
+export const getMuiTypographyOverrides = (): StyleRules<Record<string, unknown>, TypographyClassKey> => ({
     root: {},
     h1: {},
     h2: {},

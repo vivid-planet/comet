@@ -10,7 +10,7 @@ import { DeleteMutation } from "../DeleteMutation";
 
 interface IProps {
     selectedId?: string;
-    mutation: any;
+    mutation: unknown;
     icon?: React.ReactNode | null;
     text?: React.ReactNode; // typically a string or a FormattedMessage (intl) is passed
     color?: ButtonProps["color"];
@@ -20,9 +20,9 @@ interface IProps {
 const DeleteMessage = () => <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />;
 
 export class TableDeleteButton extends React.Component<IProps> {
-    public render() {
+    public render(): React.ReactElement {
         const { selectedId, mutation, refetchQueries, icon = <DeleteIcon />, text = <DeleteMessage />, color } = this.props;
-        const disabled: boolean = !selectedId;
+        const disabled = !selectedId;
 
         return (
             <DeleteMutation mutation={mutation} refetchQueries={refetchQueries}>
@@ -56,6 +56,7 @@ export class TableDeleteButton extends React.Component<IProps> {
             };
         }) => void,
     ) => {
-        deleteBrand({ variables: { id: this.props.selectedId! } });
+        if (!this.props.selectedId) return;
+        deleteBrand({ variables: { id: this.props.selectedId } });
     };
 }

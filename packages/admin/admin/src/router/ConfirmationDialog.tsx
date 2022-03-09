@@ -19,7 +19,7 @@ interface Props {
     showSaveButton?: boolean;
 }
 
-export function RouterConfirmationDialog({ message, handleClose, isOpen, showSaveButton = false }: Props) {
+export function RouterConfirmationDialog({ message, handleClose, isOpen, showSaveButton = false }: Props): React.ReactElement {
     return (
         <Dialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} maxWidth="sm">
             <DialogTitle>

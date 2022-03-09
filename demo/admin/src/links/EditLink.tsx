@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 import { MainContent, RouterPrompt, RouterTab, RouterTabs, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
 import { AdminComponentRoot } from "@comet/admin-blocks";
 import { createUsePage, EditPageLayout, PageName } from "@comet/admin-cms";
+import { ArrowLeft } from "@comet/admin-icons";
 import { CircularProgress, IconButton } from "@material-ui/core";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { GQLEditLinkQuery, GQLEditLinkQueryVariables, GQLUpdateLinkMutation, GQLUpdateLinkMutationVariables } from "@src/graphql.generated";
@@ -54,7 +54,15 @@ export const EditLink: React.FC<Props> = ({ id }) => {
     const intl = useIntl();
     const stackApi = useStackApi();
 
-    const { pageState: linkState, rootBlocksApi, hasChanges, loading, dialogs, pageSaveButton, handleSavePage } = usePage({
+    const {
+        pageState: linkState,
+        rootBlocksApi,
+        hasChanges,
+        loading,
+        dialogs,
+        pageSaveButton,
+        handleSavePage,
+    } = usePage({
         pageId: id,
     });
 

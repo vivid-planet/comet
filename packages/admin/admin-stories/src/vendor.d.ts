@@ -1,3 +1,4 @@
+/* eslint-disable no-duplicate-imports */
 declare module "draft-js-export-markdown" {
     import { ContentState } from "draft-js";
 

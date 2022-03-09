@@ -1,7 +1,7 @@
 import * as React from "react";
+import { v4 } from "uuid";
 
 import { StackApiContext } from "./Api";
-const UUID = require("uuid");
 
 interface IProps {
     url: string;
@@ -18,9 +18,9 @@ export class StackBreadcrumb extends React.Component<IProps> {
     private parentId?: string;
     constructor(props: IProps) {
         super(props);
-        this.id = UUID.v4();
+        this.id = v4();
     }
-    public render() {
+    public render(): React.ReactElement {
         return (
             <BreadcrumbContext.Consumer>
                 {(parentId) => {
@@ -31,17 +31,17 @@ export class StackBreadcrumb extends React.Component<IProps> {
         );
     }
 
-    public componentDidMount() {
+    public componentDidMount(): void {
         this.context.addBreadcrumb(this.id, this.parentId, this.props.url, this.props.title, !!this.props.invisible);
     }
 
-    public componentDidUpdate(prevProps: IProps) {
+    public componentDidUpdate(prevProps: IProps): void {
         if (this.props.url !== prevProps.url || this.props.title !== prevProps.title) {
             this.context.updateBreadcrumb(this.id, this.parentId, this.props.url, this.props.title, !!this.props.invisible);
         }
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         this.context.removeBreadcrumb(this.id);
     }
 }

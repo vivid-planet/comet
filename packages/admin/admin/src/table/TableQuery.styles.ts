@@ -1,3 +1,4 @@
+import { StyleRules } from "@material-ui/core";
 import zIndex from "@material-ui/core/styles/zIndex";
 import { createStyles } from "@material-ui/styles";
 
@@ -5,7 +6,7 @@ import { IProps } from "./TableQuery";
 
 export type TableQueryClassKey = "root" | "loadingContainer" | "loadingPaper";
 
-export const styles = () => {
+export const styles = (): StyleRules<TableQueryClassKey, IProps> => {
     return createStyles<TableQueryClassKey, IProps>({
         root: {
             position: "relative",

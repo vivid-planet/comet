@@ -1,7 +1,7 @@
 export class SubmitError extends Error {
-    submitError?: any;
+    submitError?: unknown;
 
-    constructor(message?: string, submitError?: any) {
+    constructor(message?: string, submitError?: unknown) {
         super(message);
         this.submitError = submitError;
     }

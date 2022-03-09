@@ -10,7 +10,7 @@ export interface SnackbarApi {
 
 const SnackbarContext = React.createContext<SnackbarApi | null>(null);
 
-export const useSnackbarApi = () => {
+export const useSnackbarApi = (): SnackbarApi => {
     const context = React.useContext(SnackbarContext);
 
     if (context === null) {

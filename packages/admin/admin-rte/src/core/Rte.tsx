@@ -133,7 +133,7 @@ export const styleMap = {
     },
 };
 
-const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles>> = (props, ref) => {
+const Rte: React.RefForwardingComponent<unknown, RteProps & WithStyles<typeof styles>> = (props, ref) => {
     const { value: editorState, onChange, options: passedOptions, disabled, classes } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);

@@ -17,7 +17,7 @@ import { safeColumnGet } from "./safeColumnGet";
 import { TableBodyRow, TableBodyRowProps } from "./TableBodyRow";
 import { ISortApi, SortDirection } from "./useTableQuerySort";
 
-export interface ITableHeadRowProps<TRow extends IRow> extends ITableHeadColumnsProps<TRow> {}
+export type ITableHeadRowProps<TRow extends IRow> = ITableHeadColumnsProps<TRow>;
 function DefaultHeadTableRow<TRow extends IRow>({ columns, sortApi }: ITableHeadRowProps<TRow>) {
     return (
         <TableRow>
@@ -31,14 +31,14 @@ export interface ITableHeadColumnsProps<TRow extends IRow> {
     sortApi?: ISortApi;
 }
 // render default TableCell fragments for given columns
-export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITableHeadColumnsProps<TRow>) {
+export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITableHeadColumnsProps<TRow>): React.ReactElement {
     const handleSortClick = (name: string, ev: React.MouseEvent) => {
         if (sortApi) sortApi.changeSort(name);
     };
 
     return (
         <>
-            {columns.map((column: any, colIndex: number) => {
+            {columns.map((column, colIndex) => {
                 if (!isVisible(VisibleType.Browser, column.visible)) return null;
                 const { name, header, sortable, headerProps } = column;
                 return (
@@ -66,10 +66,10 @@ export interface ITableColumnsProps<TRow extends IRow> {
     columns: Array<ITableColumn<TRow>>;
 }
 // render default TableCell fragments for given columns
-export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsProps<TRow>) {
+export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsProps<TRow>): React.ReactElement {
     return (
         <>
-            {columns.map((column: any, colIndex: number) => {
+            {columns.map((column, colIndex) => {
                 if (!isVisible(VisibleType.Browser, column.visible)) return null;
                 return (
                     <TableCell key={colIndex} {...column.cellProps}>
@@ -104,7 +104,7 @@ export interface ITableColumn<TRow extends IRow> {
 
 export interface ITableRowProps<TRow extends IRow> extends ITableColumnsProps<TRow> {
     index: number;
-    key: any;
+    key: string | number;
     rowProps: TableBodyRowProps;
 }
 
@@ -141,7 +141,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
         this.domRef = React.createRef<HTMLDivElement>();
     }
 
-    public render() {
+    public render(): React.ReactElement {
         const { data, exportApis = [] } = this.props;
 
         const renderHeadTableRow = this.props.renderHeadTableRow || ((props) => <DefaultHeadTableRow {...props} />);

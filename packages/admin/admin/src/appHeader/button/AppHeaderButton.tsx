@@ -1,5 +1,5 @@
-import { ButtonBase, ButtonBaseProps, Typography, WithStyles } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
+import { ButtonBase, ButtonBaseProps, Typography } from "@material-ui/core";
+import { WithStyles, withStyles } from "@material-ui/styles";
 import * as React from "react";
 
 import { AppHeaderButtonClassKey, styles } from "./AppHeaderButton.styles";

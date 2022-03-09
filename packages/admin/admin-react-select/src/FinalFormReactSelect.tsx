@@ -15,7 +15,7 @@ import {
 export class FinalFormReactSelect<OptionType> extends React.Component<
     FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectProps<OptionType>
 > {
-    public render() {
+    public render(): React.ReactElement {
         const { input, meta, ...rest } = this.props;
         return <Select<OptionType> {...input} {...rest} />;
     }
@@ -23,26 +23,26 @@ export class FinalFormReactSelect<OptionType> extends React.Component<
 export class FinalFormReactSelectAsync<OptionType, IsMulti extends boolean> extends React.Component<
     FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectAsyncProps<OptionType, IsMulti>
 > {
-    public render() {
+    public render(): React.ReactElement {
         const { input, meta, ...rest } = this.props;
 
-        return <Async<OptionType, any> {...input} {...rest} />;
+        return <Async<OptionType, boolean> {...input} {...rest} />;
     }
 }
 export class FinalFormReactSelectCreatable<OptionType, IsMulti extends boolean> extends React.Component<
     FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectCreatableProps<OptionType, IsMulti>
 > {
-    public render() {
+    public render(): React.ReactElement {
         const { input, meta, ...rest } = this.props;
 
-        return <Creatable<OptionType, any> {...input} {...rest} />;
+        return <Creatable<OptionType, boolean> {...input} {...rest} />;
     }
 }
 export class FinalFormReactSelectAsyncCreatable<OptionType, IsMulti extends boolean> extends React.Component<
     FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectCreatableProps<OptionType, false> & ReactSelectAsyncProps<OptionType, IsMulti>
 > {
-    public render() {
+    public render(): React.ReactElement {
         const { input, meta, ...rest } = this.props;
-        return <AsyncCreatable<OptionType, any> {...input} {...rest} />;
+        return <AsyncCreatable<OptionType, boolean> {...input} {...rest} />;
     }
 }
