@@ -26,6 +26,12 @@ All notable changes to this project will be documented in this file. This projec
     }
     ```
 
+## @comet/admin-date-picker
+
+### Incompatible Changes
+
+The date-picker package has been removed.
+
 # [2.1.0]
 
 ## Highlights:
