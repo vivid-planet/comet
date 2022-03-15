@@ -1,0 +1,46 @@
+.test:
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:master
+    stage: test
+    interruptible: true
+    before_script:
+        - cp packages/api/api-blocks/block-meta.json packages/admin/admin-blocks/block-meta.json
+        - cp packages/api/api-cms/block-meta.json packages/admin/admin-cms/block-meta.json
+    script:
+        - yarn install --immutable
+        - yarn workspace @comet/admin-blocks generate-block-types
+        - yarn workspace @comet/admin-cms generate-block-types
+        - yarn workspace @comet/admin build
+        - yarn test
+    cache:
+        policy: pull
+        key: !reference [install, cache, key]
+        paths: !reference [install, cache, paths]
+    needs:
+        - job: install
+          optional: true
+    artifacts:
+        when: always
+        reports:
+            junit:
+                - packages/admin/admin-blocks/junit.xml
+                - packages/admin/admin-cms/junit.xml
+                - packages/api/api-blocks/junit.xml
+    tags:
+        - docker
+
+test-pull-requests:
+    extends: .test
+    only:
+        refs:
+            - external_pull_requests
+        changes:
+            - packages/admin/admin-blocks/**/*
+            - packages/admin/admin-cms/**/*
+            - packages/api/api-blocks/**/*
+
+test-branches:
+    extends: .test
+    only:
+        refs:
+            - main
+            - next

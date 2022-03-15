@@ -1,0 +1,37 @@
+.lint:
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:master
+    interruptible: true
+    stage: lint
+    tags:
+        - docker
+    before_script:
+        - cp packages/api/api-blocks/block-meta.json packages/admin/admin-blocks/block-meta.json
+        - cp packages/api/api-cms/block-meta.json packages/admin/admin-cms/block-meta.json
+        - cp packages/api/api-cms/block-meta.json packages/site/site-cms/block-meta.json
+        - cp packages/api/api-cms/schema.gql packages/admin/admin-cms/schema.gql
+        - cp demo/api/block-meta.json demo/admin/block-meta.json
+        - cp demo/api/block-meta.json demo/site/block-meta.json
+        - cp demo/api/schema.gql demo/admin/schema.gql
+        - cp demo/api/schema.gql demo/site/schema.gql
+        - yarn install --immutable
+    only:
+        - main
+        - next
+        - external_pull_requests
+    cache:
+        key: !reference [install, cache, key]
+        paths: !reference [install, cache, paths]
+        policy: pull
+    needs:
+        - job: install
+          optional: true
+
+project-lint:
+    extends: .lint
+    script:
+        - yarn exec prettier -c .
+
+packages-lint:
+    extends: .lint
+    script:
+        - yarn lint

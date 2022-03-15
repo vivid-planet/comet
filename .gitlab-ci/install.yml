@@ -1,0 +1,22 @@
+install:
+    image: eu.gcr.io/vivid-planet/ubi/s2i-ubi8-nodejs14:master
+    stage: install
+    tags:
+        - docker
+    script:
+        - yarn install --immutable
+    only:
+        refs:
+            - main
+            - next
+            - external_pull_requests
+        changes:
+            - yarn.lock
+    cache:
+        key:
+            files:
+                - yarn.lock
+        paths:
+            - .yarn/cache/
+            - .yarn/unplugged/
+        policy: push

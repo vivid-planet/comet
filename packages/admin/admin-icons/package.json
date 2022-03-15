@@ -9,6 +9,7 @@
         "directory": "packages/admin/admin-icons"
     },
     "scripts": {
+        "postinstall": "yarn build",
         "clean": "rimraf lib && rimraf src/generated",
         "generate-icons": "ts-node generate-icons.ts",
         "build": "yarn clean && yarn generate-icons && tsc",
