@@ -8,23 +8,41 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
--   Updated theme to reflect the latest adapations made in our applications. The old behavior can be restored by adding the following to the theme:
+-   Removed deprecated package `@comet/admin-date-picker`
+-   The minimum version of `react` and `react-dom` has been changed to 17.0
+-   Migrated from "Material-UI" v4 to "MUI" v5
+    -   The default color of `MuiButton` and `MuiIconButton` was [changed](https://mui.com/guides/migration-v4/#button) from "default" to "primary", to restore the previous "default" style, set the color to "info"
+    -   See the official [MUI Migration Guide](https://mui.com/guides/migration-v4/) for more details
+-   Changed the styles-engine from styled-components to emotion
+-   Renamed some types for uniform naming
+    -   `StackBreadcrumbProps` -> `StackBreadcrumbsProps`
+    -   `FormSectionKey` -> `FormSectionClassKey`
+-   Updated theme to reflect the latest adaptations made in our applications. The old behavior can be restored by adding the following to the theme:
     ```js
     {
-        props: {
+        components: {
             MuiListItem: {
-                dense: false,
+                defaultProps: {
+                    dense: false,
+                },
             },
-        },
-        overrides: {
             MuiSelect: {
-                icon: {
-                    top: "calc(50% - 6px)",
+                styleOverrides: {
+                    icon: {
+                        top: "calc(50% - 6px)",
+                    },
                 },
             },
         },
     }
     ```
+
+### Migration Guide
+
+Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/guides/migration-v47)
+
+-   Run the [MUI Codemods](https://mui.com/guides/migration-v4/#run-codemods)
+-   Migrate the [Theme Structure](https://mui.com/guides/migration-v4/#theme-structure)
 
 ## @comet/admin-date-picker
 
