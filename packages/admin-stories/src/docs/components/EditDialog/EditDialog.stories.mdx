@@ -1,0 +1,30 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs";
+
+<Meta title="Docs/Components/Edit Dialog" />
+
+# Edit Dialog
+
+An EditDialog typically includes a form that allows users to edit a resource.
+It's often used to edit a single row of a table.
+
+## EditDialog
+
+There are two ways to integrate an EditDialog.
+
+### 1) Recommended: useEditDialog hook
+
+The recommended way is to use the `useEditDialog` hook.
+It returns an instance of `EditDialog` and the corresponding `editDialogApi`.
+
+<Canvas>
+    <Story id="stories-components-editdialog-useeditdialog--useeditdialog" />
+</Canvas>
+
+### 2) Legacy: EditDialog component
+
+Alternatively, you can import the `EditDialog` component from `@comet/admin` and use it directly.
+To gain access to the `editDialogApi`, you need to attach a ref to the component.
+
+<Canvas>
+    <Story id="stories-components-editdialog-edit-dialog--edit-dialog" />
+</Canvas>
