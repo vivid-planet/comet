@@ -11,7 +11,7 @@ It's often used to edit a single row of a table.
 
 There are two ways to integrate an EditDialog.
 
-### 1) Recommended: useEditDialog hook
+### 1) useEditDialog Hook (Recommended)
 
 The recommended way is to use the `useEditDialog` hook.
 It returns an instance of `EditDialog` and the corresponding `editDialogApi`.
@@ -20,11 +20,21 @@ It returns an instance of `EditDialog` and the corresponding `editDialogApi`.
     <Story id="stories-components-editdialog-useeditdialog--useeditdialog" />
 </Canvas>
 
-### 2) Legacy: EditDialog component
+### 2) EditDialog Component
 
 Alternatively, you can import the `EditDialog` component from `@comet/admin` and use it directly.
 To gain access to the `editDialogApi`, you need to attach a ref to the component.
 
 <Canvas>
     <Story id="stories-components-editdialog-edit-dialog--edit-dialog" />
+</Canvas>
+
+## useEditDialogApi and EditDialogApiContext
+
+You can access the `editDialogApi` using the `useEditDialogApi` hook.
+As a prerequisite you need to pass the `editDialogApi` to the `EditDialogApiContext.Provider` somewhere higher up
+in the component tree.
+
+<Canvas>
+    <Story id="stories-components-editdialog-useeditdialogapi--useeditdialogapi" />
 </Canvas>

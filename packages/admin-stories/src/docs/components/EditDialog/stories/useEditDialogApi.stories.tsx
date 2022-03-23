@@ -1,21 +1,28 @@
-import { Field, FinalForm, FinalFormInput, useEditDialog } from "@comet/admin";
+import { EditDialogApiContext, Field, FinalForm, FinalFormInput, useEditDialog, useEditDialogApi } from "@comet/admin";
 import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { editDialogDecorator } from "../editDialog.decorator";
 
-storiesOf("stories/components/EditDialog/useEditDialog", module)
+const ChildComponentWithOpenButton: React.VoidFunctionComponent = () => {
+    const editDialogApi = useEditDialogApi();
+
+    return (
+        <Button onClick={() => editDialogApi?.openAddDialog()} variant="contained" color="primary">
+            Open Edit Dialog with useEditDialogApi()
+        </Button>
+    );
+};
+
+storiesOf("stories/components/EditDialog/useEditDialogApi", module)
     .addDecorator(editDialogDecorator())
-    .add("useEditDialog", () => {
+    .add("useEditDialogApi", () => {
         const [EditDialog, , editDialogApi] = useEditDialog();
 
         return (
-            <>
-                <p>useEditDialog Variant:</p>
-                <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
-                    Open Edit Dialog
-                </Button>
+            <EditDialogApiContext.Provider value={editDialogApi}>
+                <ChildComponentWithOpenButton />
                 <EditDialog>
                     <FinalForm
                         mode={"add"}
@@ -26,6 +33,6 @@ storiesOf("stories/components/EditDialog/useEditDialog", module)
                         <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
                     </FinalForm>
                 </EditDialog>
-            </>
+            </EditDialogApiContext.Provider>
         );
     });

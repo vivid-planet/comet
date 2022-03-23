@@ -12,7 +12,10 @@ storiesOf("stories/components/EditDialog/Edit Dialog", module)
 
         return (
             <>
-                <Button onClick={() => editDialogApi.current?.openAddDialog()}>Open EditDialog</Button>
+                <p>EditDialog Component Variant:</p>
+                <Button onClick={() => editDialogApi.current?.openAddDialog()} variant="contained" color="primary">
+                    Open Edit Dialog
+                </Button>
                 <EditDialog ref={editDialogApi}>
                     {() => {
                         return (
