@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file. This projec
 -   Migrated from "Material-UI" v4 to "MUI" v5
     -   The default color of `MuiButton` and `MuiIconButton` was [changed](https://mui.com/guides/migration-v4/#button) from "default" to "primary", to restore the previous "default" style, set the color to "info"
     -   See the official [MUI Migration Guide](https://mui.com/guides/migration-v4/) for more details
--   Changed the styles-engine from styled-components to emotion
+-   Changed the styled engine from styled-components to emotion
 -   Renamed some types for uniform naming
     -   `StackBreadcrumbProps` -> `StackBreadcrumbsProps`
     -   `FormSectionKey` -> `FormSectionClassKey`
