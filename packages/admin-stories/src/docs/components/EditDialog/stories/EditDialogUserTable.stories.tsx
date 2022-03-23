@@ -79,7 +79,7 @@ const UserForm: React.VoidFunctionComponent<UserFormProps> = ({ selectionApi, id
     );
 };
 
-storiesOf("stories/components/EditDialog/editDialogUserTable", module)
+storiesOf("stories/components/EditDialog/Edit Dialog User Table", module)
     .addDecorator(editDialogDecorator())
     .add("Edit Dialog User Table", () => {
         const [EditDialog, { id: selectedId, mode: selectionMode }, editDialogApi, selectionApi] = useEditDialog();

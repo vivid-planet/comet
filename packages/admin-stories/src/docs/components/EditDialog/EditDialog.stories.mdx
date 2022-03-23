@@ -6,8 +6,8 @@ import dedent from "ts-dedent";
 
 # Edit Dialog
 
-An EditDialog typically includes a form that allows users to edit a resource.
-It's often used to edit a single row of a table.
+An EditDialog typically includes a form that allows users to add or edit a resource.
+It's commonly used in combination with a table to add new rows or edit existing rows.
 
 ## EditDialog
 
@@ -34,19 +34,46 @@ To gain access to the `editDialogApi`, you need to attach a ref to the component
 ## useEditDialogApi and EditDialogApiContext
 
 You can access the `editDialogApi` using the `useEditDialogApi` hook.
-As a prerequisite you need to pass the `editDialogApi` to the `EditDialogApiContext.Provider` somewhere higher up
+As a prerequisite, you need to pass the `editDialogApi` to the `EditDialogApiContext.Provider` somewhere higher up
 in the component tree.
 
 <Canvas>
     <Story id="stories-components-editdialog-useeditdialogapi--useeditdialogapi" />
 </Canvas>
 
-## EditDialog in a Table
+## EditDialog and Table
 
 The most common use case for an EditDialog is for editing single rows in a table.
 
 <Canvas>
-    <Story id="stories-components-editdialog-editdialogusertable--edit-dialog-user-table" />
+    <Story id="stories-components-editdialog-edit-dialog-user-table--edit-dialog-user-table" />
+</Canvas>
+
+## EditDialog and Selection API
+
+Internally, the EditDialog uses the selection API to handle its current state.
+The selection has two properties: `id` and `mode`.
+
+### Modes
+
+The EditDialog supports two modes: `add` and `edit`.
+
+If a new resource is added, `mode` is set to `add` and `id` is set to `undefined`.
+The mode is also appended to the URL (`/add`).
+
+If an existing resource is changed, `mode` is set to `edit`.
+The `id` then specifies which resource is edited and is appended to the URL (e.g. `/8a31ea9d-d00a-4e37-807b-a69624964ba0`).
+
+### Example with useEditDialog (Recommended)
+
+<Canvas>
+    <Story id="stories-components-editdialog-edit-dialog-and-selection-useeditdialog--edit-dialog-and-selection-useeditdialog" />
+</Canvas>
+
+### Example with EditDialog Component
+
+<Canvas>
+    <Story id="stories-components-editdialog-edit-dialog-and-selection-editdialog-component--edit-dialog-and-selection-editdialog-component" />
 </Canvas>
 
 ## Caveats
@@ -59,7 +86,7 @@ This may lead to the unwanted behavior that the `EditDialog` doesn't close after
 
 To avoid this behavior, `selectionApi.handleDeselect()` must be called in the form's `onAfterSubmit` method.
 The selectionApi is among the return values of `useEditDialog()`.
-You can find a working example [here](#editdialog-in-a-table).
+You can find a working example in the [EditDialog and Table section](#editdialog-and-table).
 
 <Source
     language="tsx"
