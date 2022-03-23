@@ -39,7 +39,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Migration Guide
 
-Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/guides/migration-v47)
+Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/guides/migration-v4/)
 
 -   Run the [MUI Codemods](https://mui.com/guides/migration-v4/#run-codemods)
 -   Migrate the [Theme Structure](https://mui.com/guides/migration-v4/#theme-structure)
