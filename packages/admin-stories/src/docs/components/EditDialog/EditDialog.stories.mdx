@@ -1,4 +1,6 @@
-import { Meta, Story, Canvas } from "@storybook/addon-docs";
+import { Meta, Story, Canvas, Source } from "@storybook/addon-docs";
+
+import dedent from "ts-dedent";
 
 <Meta title="Docs/Components/Edit Dialog" />
 
@@ -46,3 +48,29 @@ The most common use case for an EditDialog is for editing single rows in a table
 <Canvas>
     <Story id="stories-components-editdialog-editdialogusertable--edit-dialog-user-table" />
 </Canvas>
+
+## Caveats
+
+### EditDialog and Enter
+
+If the user uses the enter key (instead of the Save button) to submit the form inside `EditDialog`,
+the `handleSaveClick` method is not called.
+This may lead to the unwanted behavior that the `EditDialog` doesn't close after a successful submit.
+
+To avoid this behavior, `selectionApi.handleDeselect()` must be called in the form's `onAfterSubmit` method.
+The selectionApi is among the return values of `useEditDialog()`.
+You can find a working example [here](#editdialog-in-a-table).
+
+<Source
+    language="tsx"
+    code={dedent`
+    <FinalForm
+        // ...
+        onAfterSubmit={() => {
+            selectionApi.handleDeselect();
+        }}
+    >
+        {/* ... */}
+    </FinalForm>
+`}
+/>

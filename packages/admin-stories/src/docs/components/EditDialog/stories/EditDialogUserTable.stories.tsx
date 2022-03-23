@@ -68,7 +68,8 @@ const UserForm: React.VoidFunctionComponent<UserFormProps> = ({ selectionApi, id
                 } else {
                     addUser(name);
                 }
-
+            }}
+            onAfterSubmit={() => {
                 selectionApi.handleDeselect();
             }}
             initialValues={user}
@@ -118,7 +119,6 @@ storiesOf("stories/components/EditDialog/editDialogUserTable", module)
                         },
                     ]}
                 />
-
                 <EditDialog>
                     <UserForm mode={selectionMode} id={selectedId} selectionApi={selectionApi} />
                 </EditDialog>
