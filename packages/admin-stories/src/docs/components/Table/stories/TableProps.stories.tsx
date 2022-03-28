@@ -7,8 +7,6 @@ storiesOf("stories/components/Table/Table Props", module)
         const data = [
             { id: 1, firstname: "Kady" },
             { id: 2, firstname: "Lewis" },
-            { id: 3, firstname: "Tom" },
-            { id: 4, firstname: "Mia" },
         ];
 
         return (
@@ -28,8 +26,6 @@ storiesOf("stories/components/Table/Table Props", module)
         const data = [
             { id: 1, job: { name: "Project Manager" } },
             { id: 2, job: { name: "UI/UX Designer" } },
-            { id: 3, job: { name: "Frontend Developer" } },
-            { id: 4, job: { name: "Backend Developer" } },
         ];
 
         return (
@@ -49,8 +45,6 @@ storiesOf("stories/components/Table/Table Props", module)
         const data = [
             { id: 1, firstname: "Kady", lastname: "Wood" },
             { id: 2, firstname: "Lewis", lastname: "Chan" },
-            { id: 3, firstname: "Tom", lastname: "Weaver" },
-            { id: 4, firstname: "Mia", lastname: "Carroll" },
         ];
 
         return (

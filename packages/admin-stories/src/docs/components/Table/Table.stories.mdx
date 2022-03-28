@@ -24,18 +24,35 @@ Table has three required parameters: `data`, `totalCount` and `columns`.
 It's only relevant if pagination is used. Then, the totalCount should be provided by the API.
 If **no pagination** is used, `totalCount` can simply be set to `data.length`.
 
-`columns` is an array that defines the structure of the table. It specifies which columns exist and how to render them.
+`columns` is an array that defines the structure of the table.
+It specifies which columns exist and how to render them.
+More information can be found in the [section about columns](#columns).
 
-### Columns
+## Columns
+
+### Name
 
 The only required property of a column is its `name`.
-Per default, the `name` is matched to a property of `data` which is then rendered (Column "ID" in the example above).
-This also works for nested properties if the `name` is separated by dots (Column "Job" in the example above).
+Per default, the `name` is matched to a property of `data` which is then rendered:
 
-The default behavior can be overwritten by passing a function to the `render` prop (Column "Name" in the example above).
-This can be used for altering the styling of a column or for rendering columns that don't have a corresponding prop in `data`.
+<Canvas>
+    <Story id="stories-components-table-table-props--table-name-prop" />
+</Canvas>
 
-Examples
+This also works for nested properties if the `name` is separated by dots:
+
+<Canvas>
+    <Story id="stories-components-table-table-props--table-nested-name-prop" />
+</Canvas>
+
+### Render
+
+The default rendering behavior can be overwritten by passing a function to the `render` prop.
+The render function can be used for altering the styling of a column or for rendering columns that don't have a corresponding prop in `data`:
+
+<Canvas>
+    <Story id="stories-components-table-table-props--table-render-prop" />
+</Canvas>
 
 tba.
 
