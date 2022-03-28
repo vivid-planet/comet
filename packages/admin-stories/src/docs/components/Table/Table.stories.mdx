@@ -26,9 +26,9 @@ If **no pagination** is used, `totalCount` can simply be set to `data.length`.
 
 `columns` is an array that defines the structure of the table.
 It specifies which columns exist and how to render them.
-More information can be found in the [section about columns](#columns).
+More information can be found in the [column section](#table-column).
 
-## Columns
+## Table Column
 
 ### Name
 
@@ -36,13 +36,13 @@ The only required property of a column is its `name`.
 Per default, the `name` is matched to a property of `data` which is then rendered:
 
 <Canvas>
-    <Story id="stories-components-table-table-props--table-name-prop" />
+    <Story id="stories-components-table-table-column-props--table-column-name-prop" />
 </Canvas>
 
 This also works for nested properties if the `name` is separated by dots:
 
 <Canvas>
-    <Story id="stories-components-table-table-props--table-nested-name-prop" />
+    <Story id="stories-components-table-table-column-props--table-column-nested-name-prop" />
 </Canvas>
 
 ### Render
@@ -51,8 +51,53 @@ The default rendering behavior can be overwritten by passing a function to the `
 The render function can be used for altering the styling of a column or for rendering columns that don't have a corresponding prop in `data`:
 
 <Canvas>
-    <Story id="stories-components-table-table-props--table-render-prop" />
+    <Story id="stories-components-table-table-column-props--table-column-render-prop" />
 </Canvas>
+
+### Header
+
+The `header` property defines the heading of a column.
+It can be a string or a JSX element.
+
+If no header is set, the heading of a column is empty.
+
+<Canvas>
+    <Story id="stories-components-table-table-column-props--table-column-header-prop" />
+</Canvas>
+
+### Visible
+
+`visible` can be used to hide a column.
+
+<Canvas>
+    <Story id="stories-components-table-table-column-props--table-column-visible-prop" />
+</Canvas>
+
+### cellProps & headerProps
+
+Internally, the `Table` uses Material UI's `TableCell` for rendering table headers and table cells.
+`cellProps` and `headerProps` can be used to pass props to these internal elements.
+More information can be found in the [Material UI Docs](https://v4.mui.com/api/table-cell/).
+
+### sortable
+
+See [Sorting section](#sorting)
+
+### headerExcel & renderExcel & formatForExcel
+
+See [Excel Export section](#excel-export)
+
+## Pagination
+
+## Sorting
+
+## Filterbar
+
+## Excel Export
+
+## TableDndOrder
+
+## usePersistedState
 
 tba.
 
