@@ -30,7 +30,7 @@ More information can be found in the [column section](#table-column).
 
 ## Table Column
 
-### Name
+### name
 
 The only required property of a column is its `name`.
 Per default, the `name` is matched to a property of `data` which is then rendered:
@@ -45,7 +45,7 @@ This also works for nested properties if the `name` is separated by dots:
     <Story id="stories-components-table-table-column-props--table-column-nested-name-prop" />
 </Canvas>
 
-### Render
+### render
 
 The default rendering behavior can be overwritten by passing a function to the `render` prop.
 The render function can be used for altering the styling of a column or for rendering columns that don't have a corresponding prop in `data`:
@@ -54,7 +54,7 @@ The render function can be used for altering the styling of a column or for rend
     <Story id="stories-components-table-table-column-props--table-column-render-prop" />
 </Canvas>
 
-### Header
+### header
 
 The `header` property defines the heading of a column.
 It can be a string or a JSX element.
@@ -65,7 +65,7 @@ If no header is set, the heading of a column is empty.
     <Story id="stories-components-table-table-column-props--table-column-header-prop" />
 </Canvas>
 
-### Visible
+### visible
 
 `visible` can be used to hide a column.
 
