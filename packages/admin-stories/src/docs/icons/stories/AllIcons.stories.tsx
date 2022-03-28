@@ -41,7 +41,7 @@ const IconWrapper = styled.div`
 
 const SearchIcon = icons.Search;
 
-const IconsGird = ({ searchQuery }: { searchQuery: string }): React.ReactElement => {
+const IconsGrid = ({ searchQuery }: { searchQuery: string }): React.ReactElement => {
     return (
         <Grid container spacing={4}>
             {Object.keys(icons).map((key) => {
@@ -91,7 +91,7 @@ storiesOf("stories/Icons", module).add("All Icons", () => {
                     placeholder="Search icons by name"
                 />
             </SearchBarRoot>
-            <IconsGird searchQuery={debouncedSearchQuery} />
+            <IconsGrid searchQuery={debouncedSearchQuery} />
         </>
     );
 });
