@@ -5,19 +5,19 @@ import * as React from "react";
 
 import { editDialogDecorator } from "../editDialog.decorator";
 
-const ChildComponentWithOpenButton: React.VoidFunctionComponent = () => {
-    const editDialogApi = useEditDialogApi();
-
-    return (
-        <Button onClick={() => editDialogApi?.openAddDialog()} variant="contained" color="primary">
-            Open Edit Dialog with useEditDialogApi()
-        </Button>
-    );
-};
-
 storiesOf("stories/components/EditDialog/useEditDialogApi", module)
     .addDecorator(editDialogDecorator())
     .add("useEditDialogApi", () => {
+        const ChildComponentWithOpenButton: React.VoidFunctionComponent = () => {
+            const editDialogApi = useEditDialogApi();
+
+            return (
+                <Button onClick={() => editDialogApi?.openAddDialog()} variant="contained" color="primary">
+                    Open Edit Dialog with useEditDialogApi()
+                </Button>
+            );
+        };
+
         const [EditDialog, , editDialogApi] = useEditDialog();
 
         return (

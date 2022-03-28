@@ -55,33 +55,33 @@ interface UserFormProps {
     selectionApi: ISelectionApi;
 }
 
-const UserForm: React.VoidFunctionComponent<UserFormProps> = ({ selectionApi, id, mode = "add" }) => {
-    const selection = { id, mode };
-    const user = isEditMode(selection) ? getUser(selection.id) : undefined;
-
-    return (
-        <FinalForm<{ name: string }>
-            mode={selection.mode}
-            onSubmit={async ({ name }) => {
-                if (isEditMode(selection)) {
-                    updateUser(selection.id, name);
-                } else {
-                    addUser(name);
-                }
-            }}
-            onAfterSubmit={() => {
-                selectionApi.handleDeselect();
-            }}
-            initialValues={user}
-        >
-            <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
-        </FinalForm>
-    );
-};
-
 storiesOf("stories/components/EditDialog/Edit Dialog User Table", module)
     .addDecorator(editDialogDecorator())
     .add("Edit Dialog User Table", () => {
+        const UserForm: React.VoidFunctionComponent<UserFormProps> = ({ selectionApi, id, mode = "add" }) => {
+            const selection = { id, mode };
+            const user = isEditMode(selection) ? getUser(selection.id) : undefined;
+
+            return (
+                <FinalForm<{ name: string }>
+                    mode={selection.mode}
+                    onSubmit={async ({ name }) => {
+                        if (isEditMode(selection)) {
+                            updateUser(selection.id, name);
+                        } else {
+                            addUser(name);
+                        }
+                    }}
+                    onAfterSubmit={() => {
+                        selectionApi.handleDeselect();
+                    }}
+                    initialValues={user}
+                >
+                    <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
+                </FinalForm>
+            );
+        };
+
         const [EditDialog, { id: selectedId, mode: selectionMode }, editDialogApi, selectionApi] = useEditDialog();
         const users = getUsers();
 
