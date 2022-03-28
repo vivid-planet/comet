@@ -59,8 +59,8 @@
         "@types/faker": "^5.5.8"
     },
     "scripts": {
-        "build-storybook": "build-storybook",
-        "storybook": "start-storybook -p 26638",
+        "build-storybook": "build-storybook -s public",
+        "storybook": "start-storybook -p 26638 -s public",
         "lint:tsc": "tsc --noEmit"
     },
     "license": "BSD-2-Clause"
