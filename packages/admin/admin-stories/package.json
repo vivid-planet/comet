@@ -28,6 +28,8 @@
         "faker": "^5.5.3",
         "final-form": "^4.16.1",
         "graphql-anywhere": "^4.2.7",
+        "graphql-tag": "^2.12.6",
+        "history": "^4.10.1",
         "qs": "^6.9.1",
         "react": "^17.0",
         "react-dom": "^17.0.2",
@@ -36,6 +38,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.8.3",
+        "@comet/eslint-config": "^2.0.0",
         "@types/draft-js": "^0.10.38",
         "@types/faker": "^5.5.8",
         "@types/file-saver": "^2.0.1",
@@ -48,7 +51,9 @@
         "draft-js-export-html": "^1.4.1",
         "draft-js-export-markdown": "^1.4.0",
         "draft-js-import-markdown": "^1.4.0",
+        "eslint": "^8.0.0",
         "immutable": "~3.7.4",
+        "prettier": "^2.0.0",
         "react-dnd": "^14.0.2",
         "react-dnd-html5-backend": "^14.0.0",
         "react-docgen-typescript-loader": "^3.1.0",
@@ -56,11 +61,15 @@
         "react-router-dom": "^5.0.1",
         "ts-loader": "^6.0.4",
         "ts-node": "^8.3.0",
-        "webpack": "^4.35.3"
+        "typescript": "^4.0.0",
+        "webpack": "^4.35.3",
+        "yarn-run-all": "^3.0.0"
     },
     "scripts": {
         "build-storybook": "build-storybook -s public",
         "storybook": "start-storybook -p 26638 -s public",
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/",
         "lint:tsc": "tsc --noEmit"
     },
     "license": "BSD-2-Clause"

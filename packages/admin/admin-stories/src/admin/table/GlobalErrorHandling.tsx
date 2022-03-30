@@ -27,7 +27,7 @@ const Story: React.FunctionComponent = () => {
         ${text("GQL Query", "query StarWarsPeople {allPeople { people { id name birthYear gender homeworld{ name } } }}")}
     `;
 
-    const { tableData, api, loading, error } = useTableQuery<QueryData, {}>()(query, {
+    const { tableData, api, loading, error } = useTableQuery<QueryData, Record<string, any>>()(query, {
         resolveTableData: (data) => ({
             data: data.allPeople.people,
             totalCount: data.allPeople.people.length,

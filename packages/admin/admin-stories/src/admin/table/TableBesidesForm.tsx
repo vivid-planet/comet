@@ -88,7 +88,7 @@ function ExampleForm(props: IExampleFormProps) {
 }
 
 function Story() {
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, {}>()(query, {
+    const { tableData, api, loading, error } = useTableQuery<IQueryData, Record<string, any>>()(query, {
         resolveTableData: (data) => ({
             data: data.users,
             totalCount: data.users.length,

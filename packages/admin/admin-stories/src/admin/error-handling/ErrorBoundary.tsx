@@ -1,6 +1,5 @@
 import { ErrorBoundary } from "@comet/admin";
-import { Box, Card, CardContent, Link, Typography } from "@mui/material";
-import { Alert } from "@mui/material";
+import { Alert, Box, Card, CardContent, Link, Typography } from "@mui/material";
 import { boolean } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";

@@ -1,7 +1,6 @@
 import { Toolbar, ToolbarItem } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
-import { InputAdornment, InputBase } from "@mui/material";
-import { Autocomplete } from "@mui/material";
+import { Autocomplete, InputAdornment, InputBase } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
