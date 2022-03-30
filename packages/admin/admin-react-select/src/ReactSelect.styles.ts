@@ -21,7 +21,7 @@ export type SelectClassKey =
     | "optionFocused";
 
 const styles = (theme: Theme) =>
-    createStyles<SelectClassKey, any>({
+    createStyles<SelectClassKey, Record<string, unknown>>({
         input: {
             display: "flex",
             paddingRight: 0,

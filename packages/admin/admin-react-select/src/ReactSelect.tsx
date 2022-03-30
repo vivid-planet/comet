@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SvgIconComponent } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";

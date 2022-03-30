@@ -1,4 +1,3 @@
-export { SelectProps, ControlInput, ReactSelect, ReactSelectAsync, ReactSelectAsyncCreatable, ReactSelectCreatable } from "./ReactSelect";
 export {
     FinalFormReactSelect,
     FinalFormReactSelectAsync,
@@ -6,4 +5,5 @@ export {
     FinalFormReactSelectCreatable,
 } from "./FinalFormReactSelect";
 export { FinalFormReactSelectStaticOptions } from "./FinalFormReactSelectStaticOptions";
+export { ControlInput, ReactSelect, ReactSelectAsync, ReactSelectAsyncCreatable, ReactSelectCreatable, SelectProps } from "./ReactSelect";
 export { SelectClassKey } from "./ReactSelect.styles";

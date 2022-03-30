@@ -26,7 +26,7 @@ export class FinalFormReactSelectAsync<OptionType, IsMulti extends boolean> exte
     public render() {
         const { input, meta, ...rest } = this.props;
 
-        return <Async<OptionType, any> {...input} {...rest} />;
+        return <Async<OptionType, boolean> {...input} {...rest} />;
     }
 }
 export class FinalFormReactSelectCreatable<OptionType, IsMulti extends boolean> extends React.Component<
@@ -35,7 +35,7 @@ export class FinalFormReactSelectCreatable<OptionType, IsMulti extends boolean> 
     public render() {
         const { input, meta, ...rest } = this.props;
 
-        return <Creatable<OptionType, any> {...input} {...rest} />;
+        return <Creatable<OptionType, boolean> {...input} {...rest} />;
     }
 }
 export class FinalFormReactSelectAsyncCreatable<OptionType, IsMulti extends boolean> extends React.Component<
@@ -43,6 +43,6 @@ export class FinalFormReactSelectAsyncCreatable<OptionType, IsMulti extends bool
 > {
     public render() {
         const { input, meta, ...rest } = this.props;
-        return <AsyncCreatable<OptionType, any> {...input} {...rest} />;
+        return <AsyncCreatable<OptionType, boolean> {...input} {...rest} />;
     }
 }

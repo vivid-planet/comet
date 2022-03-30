@@ -1664,12 +1664,18 @@ __metadata:
   resolution: "@comet/admin-react-select@workspace:packages/admin/admin-react-select"
   dependencies:
     "@comet/admin": ^2.0.0
+    "@comet/eslint-config": ^2.0.0
     "@types/react-select": ^3.1.2
     classnames: ^2.2.6
+    eslint: ^8.0.0
+    prettier: ^2.0.0
+    typescript: ^4.0.0
+    yarn-run-all: ^3.0.0
   peerDependencies:
     "@comet/admin": ^2.0.0
     "@mui/icons-material": ^5.4.1
     "@mui/material": ^5.4.1
+    "@mui/styles": ^5.4.1
     final-form: ^4.16.1
     react: ^17.0
     react-dom: ^17.0
