@@ -17,8 +17,13 @@
     },
     "devDependencies": {
         "@comet/admin": "^2.0.0",
+        "@comet/eslint-config": "^2.0.0",
         "@types/react-color": "^2.17.5",
-        "@types/tinycolor2": "^1.4.2"
+        "@types/tinycolor2": "^1.4.2",
+        "eslint": "^8.0.0",
+        "prettier": "^2.0.0",
+        "typescript": "^4.0.0",
+        "yarn-run-all": "^3.0.0"
     },
     "peerDependencies": {
         "@comet/admin": "*",
@@ -32,6 +37,8 @@
     "scripts": {
         "build": "rimraf lib && tsc --project ./tsconfig.json",
         "start": "rimraf lib && tsc --project ./tsconfig.json --watch --preserveWatchOutput",
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/",
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
