@@ -20,16 +20,24 @@
         "@comet/admin-icons": "^2.0.0",
         "@comet/admin-react-select": "^2.0.0",
         "@comet/admin-rte": "^2.0.0",
-        "@types/lodash.merge": "^4.6.6"
+        "@comet/eslint-config": "^2.0.0",
+        "@types/lodash.merge": "^4.6.6",
+        "eslint": "^8.0.0",
+        "prettier": "^2.0.0",
+        "typescript": "^4.0.0",
+        "yarn-run-all": "^3.0.0"
     },
     "peerDependencies": {
         "@mui/material": "^5.4.1",
         "@mui/styles": "^5.4.1",
+        "@mui/system": "^5.4.1",
         "react": "^17.0"
     },
     "scripts": {
         "build": "rimraf lib && tsc --project ./tsconfig.json",
         "start": "rimraf lib && tsc --project ./tsconfig.json --watch --preserveWatchOutput",
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/",
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
