@@ -1688,12 +1688,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@comet/admin-rte@workspace:packages/admin/admin-rte"
   dependencies:
+    "@comet/eslint-config": ^2.0.0
     "@types/draft-js": ^0.10.38
     "@types/immutable": ^3.8.7
     detect-browser: ^5.2.1
+    eslint: ^8.0.0
+    prettier: ^2.0.0
+    typescript: ^4.0.0
+    yarn-run-all: ^3.0.0
   peerDependencies:
     "@mui/icons-material": ^5.4.1
     "@mui/material": ^5.4.1
+    "@mui/styles": ^5.4.1
     draft-js: ^0.11.4
     final-form: ^4.16.1
     immutable: ~3.7.4

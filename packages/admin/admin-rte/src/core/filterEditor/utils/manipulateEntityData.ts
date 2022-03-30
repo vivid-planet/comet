@@ -2,7 +2,7 @@ import { EditorState, EntityInstance } from "draft-js";
 
 import { FilterEditorStateFn } from "../../types";
 
-type UpdateEntityDataFn = (entity: EntityInstance) => {} | undefined; // if object is returned the entity data is updated with this object
+type UpdateEntityDataFn = (entity: EntityInstance) => Record<string, any> | undefined; // if object is returned the entity data is updated with this object
 
 // inspired by https://github.com/thibaudcolas/draftjs-filters/blob/31d89177090b815b968ac2d8ec95c89d975f1e44/src/lib/filters/entities.js#L179
 const manipulateEntityData: (updateEntityDataFn: UpdateEntityDataFn) => FilterEditorStateFn = (updateEntityDataFn) => (nextState) => {
