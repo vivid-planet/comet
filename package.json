@@ -2,7 +2,8 @@
     "name": "root",
     "license": "BSD-2-Clause",
     "workspaces": [
-        "packages/admin/*"
+        "packages/admin/*",
+        "packages/eslint-config"
     ],
     "private": true,
     "repository": {
@@ -26,16 +27,6 @@
         "@formatjs/cli": "^2.13.12",
         "@storybook/addon-docs": "^6.2.7",
         "@types/uuid": "^8.3.0",
-        "@typescript-eslint/eslint-plugin": "^5.11.0",
-        "@typescript-eslint/parser": "^5.11.0",
-        "eslint": "^8.9.0",
-        "eslint-config-prettier": "^8.3.0",
-        "eslint-plugin-formatjs": "^3.0.0",
-        "eslint-plugin-prettier": "^4.0.0",
-        "eslint-plugin-react": "^7.28.0",
-        "eslint-plugin-react-hooks": "^4.3.0",
-        "eslint-plugin-simple-import-sort": "^7.0.0",
-        "eslint-plugin-unused-imports": "^2.0.0",
         "exceljs": "^3.4.0",
         "file-saver": "^2.0.2",
         "final-form": "^4.16.1",
@@ -46,7 +37,7 @@
         "lerna": "^4.0.0",
         "lint-staged": "^12.3.7",
         "pm2": "^4.5.6",
-        "prettier": "^2.1.2",
+        "prettier": "^2.0.0",
         "react": "^17.0",
         "react-dom": "^17.0",
         "rimraf": "^3.0.2",
