@@ -1,7 +1,7 @@
 import * as React from "react";
+import { v4 } from "uuid";
 
 import { StackApiContext } from "./Api";
-const UUID = require("uuid");
 
 interface IProps {
     url: string;
@@ -18,7 +18,7 @@ export class StackBreadcrumb extends React.Component<IProps> {
     private parentId?: string;
     constructor(props: IProps) {
         super(props);
-        this.id = UUID.v4();
+        this.id = v4();
     }
     public render() {
         return (

@@ -19,6 +19,7 @@ export const FinalFormSelect = <T extends Record<string, any>>({
     loading = false,
     getOptionLabel = (option: T) => {
         if (typeof option === "object") {
+            // eslint-disable-next-line no-console
             console.error(`The \`getOptionLabel\` method of FinalFormSelect returned an object instead of a string for${JSON.stringify(option)}.`);
         }
         return "";

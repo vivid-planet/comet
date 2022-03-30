@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router";
+import { v4 } from "uuid";
 
 import { StackBreadcrumb } from "./Breadcrumb";
 import { IStackPageProps } from "./Page";
 import { StackSwitchMeta } from "./SwitchMeta";
-const UUID = require("uuid");
 
 interface IProps {
     initialPage?: string;
@@ -40,7 +40,7 @@ interface IRouteParams {
 function useUuid() {
     const ref = React.useRef<string | undefined>(undefined);
     if (ref.current === undefined) {
-        ref.current = UUID.v4() as string;
+        ref.current = v4() as string;
     }
     return ref.current;
 }
@@ -57,6 +57,7 @@ export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi]
             if (apiRef.current) {
                 return apiRef.current.getTargetUrl(pageName, payload, subUrl);
             } else {
+                // eslint-disable-next-line no-console
                 console.error("apiRef is not attached to a StackSwitch component");
                 return "";
             }

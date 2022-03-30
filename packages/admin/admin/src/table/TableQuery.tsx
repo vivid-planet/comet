@@ -13,6 +13,7 @@ export const parseIdFromIri = (iri: string) => {
     return m[1];
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDefaultVariables {}
 
 export interface IProps {

@@ -16,7 +16,7 @@ import { safeColumnGet } from "./safeColumnGet";
 import { TableBodyRow, TableBodyRowProps } from "./TableBodyRow";
 import { ISortApi, SortDirection } from "./useTableQuerySort";
 
-export interface ITableHeadRowProps<TRow extends IRow> extends ITableHeadColumnsProps<TRow> {}
+export type ITableHeadRowProps<TRow extends IRow> = ITableHeadColumnsProps<TRow>;
 function DefaultHeadTableRow<TRow extends IRow>({ columns, sortApi }: ITableHeadRowProps<TRow>) {
     return (
         <TableRow>

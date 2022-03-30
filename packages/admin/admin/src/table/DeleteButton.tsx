@@ -22,7 +22,7 @@ const DeleteMessage = () => <FormattedMessage id="cometAdmin.generic.delete" def
 export class TableDeleteButton extends React.Component<IProps> {
     public render() {
         const { selectedId, mutation, refetchQueries, icon = <DeleteIcon />, text = <DeleteMessage />, color } = this.props;
-        const disabled: boolean = !selectedId;
+        const disabled = !selectedId;
 
         return (
             <DeleteMutation mutation={mutation} refetchQueries={refetchQueries}>

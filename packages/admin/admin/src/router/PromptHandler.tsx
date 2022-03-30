@@ -34,6 +34,7 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
         const countSaveActions = Object.keys(saveActions.current).length;
         const countRegisteredMessages = Object.keys(registeredMessages.current).length;
         if (countSaveActions > 0 && countSaveActions !== countRegisteredMessages) {
+            // eslint-disable-next-line no-console
             console.error(
                 "A component (e.g. RouterPrompt) is missing a saveAction-prop. If you fail to do so, the Save-Button in the Dirty-Dialog won't save the changes",
             );

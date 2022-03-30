@@ -1,5 +1,6 @@
 import { Theme } from "@mui/material";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore nested is used only internally from MUI, there are no types defined
 import nested from "@mui/private-theming/ThemeProvider/nested";
 import { createGenerateClassName, GenerateClassNameOptions, StylesProvider } from "@mui/styles";
@@ -27,6 +28,7 @@ function createGenerateCometClassName(options: GenerateClassNameOptions = {}): G
         ruleCounter += 1;
         if (process.env.NODE_ENV !== "production") {
             if (ruleCounter >= 1e10) {
+                // eslint-disable-next-line no-console
                 console.warn(["Comet Admin: You might have a memory leak.", "The ruleCounter is not supposed to grow that much."].join(""));
             }
         }

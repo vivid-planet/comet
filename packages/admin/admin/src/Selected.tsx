@@ -2,6 +2,7 @@ import { ApolloError, useQuery } from "@apollo/client";
 import { Box, Card, CircularProgress, Typography } from "@mui/material";
 import { DocumentNode } from "graphql";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 interface IProps {
     selectionMode?: "edit" | "add";
@@ -24,7 +25,16 @@ const SelectEdit = (props: IProps) => {
         ) : (
             <Card>
                 <Box padding={4}>
-                    <Typography>Error :( {queryResult.error.toString()}</Typography>
+                    <Typography>
+                        <FormattedMessage
+                            id="cometAdmin.table.tableQuery.error"
+                            defaultMessage="Error :( {error}"
+                            description="Display apollo error message"
+                            values={{
+                                error: queryResult.error.toString(),
+                            }}
+                        />
+                    </Typography>
                 </Box>
             </Card>
         );

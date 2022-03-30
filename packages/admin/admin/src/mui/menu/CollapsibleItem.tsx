@@ -53,7 +53,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     ...otherProps
 }) => {
     const itemLevel: 1 | 2 = level ? level : 1;
-    let hasSelectedChild: boolean = false;
+    let hasSelectedChild = false;
     const location = useLocation();
 
     const childElements = React.Children.map(children, (child: MenuChild) => {

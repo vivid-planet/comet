@@ -5,8 +5,8 @@ export interface AsyncOptionsProps<T> {
     open: boolean;
     options: T[];
     loading?: boolean;
-    onOpen: (event: React.ChangeEvent<{}>) => void;
-    onClose: (event: React.ChangeEvent<{}>) => void;
+    onOpen: (event: React.ChangeEvent) => void;
+    onClose: (event: React.ChangeEvent) => void;
 }
 export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncOptionsProps<T> {
     const [open, setOpen] = React.useState(false);

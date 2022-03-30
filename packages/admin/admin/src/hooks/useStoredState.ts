@@ -23,6 +23,7 @@ function useStoredState<S extends NoFunctionValue = undefined>(
             return item ? (JSON.parse(item) as S) : initialValue instanceof Function ? initialValue() : initialValue;
         } catch (error) {
             // If error also return initialValue
+            // eslint-disable-next-line no-console
             console.log(error);
             return initialValue instanceof Function ? initialValue() : initialValue;
         }
@@ -39,6 +40,7 @@ function useStoredState<S extends NoFunctionValue = undefined>(
             storage.setItem(key, serializedState);
         } catch (error) {
             // A more advanced implementation would handle the error case
+            // eslint-disable-next-line no-console
             console.log(error);
         }
     }, [serializedState, key, storage]);

@@ -1,6 +1,5 @@
 import { ChevronDown, ChevronRight, Error } from "@comet/admin-icons";
-import { AlertProps, Typography } from "@mui/material";
-import { Alert, ComponentsOverrides, Theme } from "@mui/material";
+import { Alert, AlertProps, ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";

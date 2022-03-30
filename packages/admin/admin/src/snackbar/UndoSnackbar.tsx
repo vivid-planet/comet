@@ -6,13 +6,13 @@ import * as UUID from "uuid";
 
 import { useSnackbarApi } from "./SnackbarProvider";
 
-export interface UndoSnackbarProps<Payload extends unknown> extends Omit<SnackbarProps, "action"> {
+export interface UndoSnackbarProps<Payload> extends Omit<SnackbarProps, "action"> {
     message: React.ReactNode;
     onUndoClick: (payload?: Payload) => void;
     payload?: Payload;
 }
 
-export const UndoSnackbar = <Payload extends unknown>({ onUndoClick, payload, ...props }: UndoSnackbarProps<Payload>) => {
+export const UndoSnackbar = <Payload,>({ onUndoClick, payload, ...props }: UndoSnackbarProps<Payload>) => {
     const snackbarApi = useSnackbarApi();
     const uuid = React.useRef(UUID.v4());
 
