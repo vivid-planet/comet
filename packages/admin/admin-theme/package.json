@@ -9,29 +9,27 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet-admin",
-        "directory": "packages/admin-theme"
+        "directory": "packages/admin/admin-theme"
     },
     "dependencies": {
         "lodash.merge": "^4.6.2"
     },
     "devDependencies": {
-        "@types/lodash.merge": "^4.6.6",
         "@comet/admin": "^2.0.0",
-        "@comet/admin-rte": "^2.0.0",
-        "@comet/admin-icons": "^2.0.0",
         "@comet/admin-color-picker": "^2.0.0",
-        "@comet/admin-react-select": "^2.0.0"
+        "@comet/admin-icons": "^2.0.0",
+        "@comet/admin-react-select": "^2.0.0",
+        "@comet/admin-rte": "^2.0.0",
+        "@types/lodash.merge": "^4.6.6"
     },
     "peerDependencies": {
-        "react": "^17.0",
         "@mui/material": "^5.4.1",
-        "@mui/styles": "^5.4.1"
+        "@mui/styles": "^5.4.1",
+        "react": "^17.0"
     },
     "scripts": {
-        "prebuild": "rimraf lib",
-        "build": "tsc --project ./tsconfig.json",
-        "prestart": "rimraf lib",
-        "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
+        "build": "rimraf lib && tsc --project ./tsconfig.json",
+        "start": "rimraf lib && tsc --project ./tsconfig.json --watch --preserveWatchOutput",
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {

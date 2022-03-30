@@ -6,16 +6,14 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet-admin",
-        "directory": "packages/admin-icons"
+        "directory": "packages/admin/admin-icons"
     },
     "scripts": {
         "clean": "rimraf lib && rimraf src/generated",
         "generate-icons": "ts-node generate-icons.ts",
-        "prebuild": "npm run clean && npm run generate-icons",
-        "build": "tsc",
-        "prestart": "npm run clean && npm run generate-icons",
-        "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
-        "lint": "npm run lint:eslint && npm run lint:tsc",
+        "build": "yarn clean && yarn generate-icons && tsc",
+        "start": "yarn clean && yarn generate-icons && tsc --project ./tsconfig.json --watch --preserveWatchOutput",
+        "lint": "yarn lint:eslint && yarn lint:tsc",
         "lint:eslint": "eslint src/",
         "lint:tsc": "tsc --noEmit"
     },

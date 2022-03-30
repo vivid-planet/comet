@@ -24,7 +24,7 @@ cache:
 project-lint:
     extends: .lint
     script:
-        - npx prettier -c .
+        - yarn exec prettier -c .
 
 packages-lint:
     extends: .lint

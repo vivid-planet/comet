@@ -1,5 +1,5 @@
 {
-    "name": "@comet/admin-react-select",
+    "name": "@comet/admin-rte",
     "version": "2.0.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -9,30 +9,29 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet-admin",
-        "directory": "packages/admin-react-select"
+        "directory": "packages/admin/admin-rte"
     },
     "dependencies": {
-        "classnames": "^2.2.6"
+        "detect-browser": "^5.2.1"
     },
     "devDependencies": {
-        "@comet/admin": "^2.0.0",
-        "@types/react-select": "^3.1.2"
+        "@types/draft-js": "^0.10.38",
+        "@types/immutable": "^3.8.7"
     },
     "peerDependencies": {
-        "@comet/admin": "^2.0.0",
-        "@mui/material": "^5.4.1",
         "@mui/icons-material": "^5.4.1",
+        "@mui/material": "^5.4.1",
+        "draft-js": "^0.11.4",
         "final-form": "^4.16.1",
+        "immutable": "~3.7.4",
         "react": "^17.0",
         "react-dom": "^17.0",
         "react-final-form": "^6.3.1",
-        "react-select": "^3.0.4"
+        "react-intl": "^5.10.0"
     },
     "scripts": {
-        "prebuild": "rimraf lib",
-        "build": "tsc --project ./tsconfig.json",
-        "prestart": "rimraf lib",
-        "start": "tsc --project ./tsconfig.json --watch --preserveWatchOutput",
+        "build": "rimraf lib && tsc --project ./tsconfig.json",
+        "start": "rimraf lib && tsc --project ./tsconfig.json --watch --preserveWatchOutput",
         "lint:tsc": "tsc --noEmit"
     },
     "publishConfig": {
