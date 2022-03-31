@@ -21,11 +21,11 @@
         "lint:tsc": "lerna run lint:tsc --concurrency=1 --stream",
         "lint:lib": "yarn lint --no-private",
         "build:storybook": "yarn build && yarn workspace comet-admin-stories build-storybook",
-        "intl:extract": "formatjs extract ./packages/admin/**/*.ts* --out-file lang/en.json --ignore ./**.d.ts --ignore ./packages/admin/admin-stories/**/* --format simple",
+        "intl:extract": "formatjs extract './packages/admin/**/*.ts*' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './packages/admin/admin-stories/**/*' --format simple",
         "postinstall": "husky install"
     },
     "devDependencies": {
-        "@formatjs/cli": "^2.13.12",
+        "@formatjs/cli": "^4.8.3",
         "@storybook/addon-docs": "^6.2.7",
         "@types/uuid": "^8.3.0",
         "exceljs": "^3.4.0",
