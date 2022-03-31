@@ -87,9 +87,27 @@ See [Sorting section](#sorting)
 
 See [Excel Export section](#excel-export)
 
+## TableQuery
+
 ## Pagination
 
+TODO after https://github.com/vivid-planet/comet-admin/pull/579 is merged
+
 ## Sorting
+
+The `Table` component has built-in support for sorting by column.
+To use this functionality, you have to follow the following steps:
+
+1.  get an instance of `sortApi` from the `useTableQuerySort()` hook
+2.  pass the `sortApi` to the `Table` component
+3.  set the property `sortable` to `true` for all columns that you want to sort by
+4.  use the values of `sortApi` in your API call
+
+You can then sort the table ascending or descending by column by clicking on the column header.
+
+<Canvas>
+    <Story id="stories-components-table-sortable-table--sortable-table" />
+</Canvas>
 
 ## Filterbar
 
