@@ -5,12 +5,11 @@ import "@fontsource/roboto/500.css";
 
 import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
-import { createTheme, Theme } from "@material-ui/core";
+import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
 import { select, withKnobs } from "@storybook/addon-knobs";
 import { addDecorator, addParameters } from "@storybook/react";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
-import { createGlobalStyle } from "styled-components";
 
 import { previewGlobalStyles } from "./preview.styles";
 
@@ -61,17 +60,13 @@ const themeOptions = {
     defaultMui: "Default MUI",
 };
 
-const GlobalStyles = createGlobalStyle`
-    ${previewGlobalStyles}
-`;
-
 addDecorator((story, ctx) => {
     const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);
-    const theme = selectedTheme === themeOptions.defaultMui ? createTheme() : createCometTheme();
+    const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
 
     return (
         <MuiThemeProvider theme={theme}>
-            <GlobalStyles />
+            <GlobalStyles styles={previewGlobalStyles} />
             <>{ctx.parameters.layout === "padded" ? <MainContent>{story()}</MainContent> : story()}</>
         </MuiThemeProvider>
     );
@@ -144,7 +139,3 @@ addParameters({
         },
     },
 });
-
-declare module "styled-components" {
-    export interface DefaultTheme extends Theme {}
-}

@@ -1,4 +1,4 @@
-import { SvgIconProps } from "@material-ui/core/SvgIcon";
+import { SvgIconProps } from "@mui/material/SvgIcon";
 import { DraftInlineStyleType, Editor, EditorState } from "draft-js";
 import * as React from "react";
 

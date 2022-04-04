@@ -1,4 +1,4 @@
-import { InputBase, InputBaseProps } from "@material-ui/core";
+import { InputBase, InputBaseProps } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 

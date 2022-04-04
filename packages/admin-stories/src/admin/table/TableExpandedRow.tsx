@@ -1,7 +1,7 @@
 import { ITableHeadRowProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "@comet/admin";
-import { IconButton, TableCell } from "@material-ui/core";
-import TableRow from "@material-ui/core/TableRow";
-import { Add as AddIcon } from "@material-ui/icons";
+import { Add as AddIcon } from "@mui/icons-material";
+import { IconButton, TableCell } from "@mui/material";
+import TableRow from "@mui/material/TableRow";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -22,6 +22,7 @@ function ExpandableTableRow({ rowProps, ...rest }: ITableRowProps<IRow>) {
                         onClick={() => {
                             setIsExpanded(!isExpanded);
                         }}
+                        size="large"
                     >
                         <AddIcon />
                     </IconButton>

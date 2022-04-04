@@ -1,4 +1,4 @@
-import { SnackbarCloseReason, SnackbarProps } from "@material-ui/core";
+import { SnackbarCloseReason, SnackbarProps } from "@mui/material";
 import * as React from "react";
 
 import { UndoSnackbarProps } from "./UndoSnackbar";
@@ -20,6 +20,9 @@ export const useSnackbarApi = () => {
     return context;
 };
 
+type SnackbarCloseEvent = React.SyntheticEvent<any> | Event;
+type HandleClose = (event: SnackbarCloseEvent, reason: SnackbarCloseReason, onClose?: SnackbarProps["onClose"]) => void;
+
 export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
     const [open, setOpen] = React.useState<boolean>(false);
     const [snackbar, setSnackbar] = React.useState<React.ReactElement>();
@@ -39,11 +42,7 @@ export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
         }, 0);
     };
 
-    const handleClose = (
-        event: React.SyntheticEvent,
-        reason: SnackbarCloseReason,
-        onClose?: (event: React.SyntheticEvent, reason: SnackbarCloseReason) => void,
-    ) => {
+    const handleClose: HandleClose = (event, reason, onClose) => {
         if (reason === "timeout") {
             hideSnackbar();
         }

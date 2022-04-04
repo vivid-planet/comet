@@ -1,5 +1,5 @@
 import { Field, FinalFormSwitch } from "@comet/admin";
-import { Box, Card, CardContent, Divider, FormControlLabel } from "@material-ui/core";
+import { Box, Card, CardContent, Divider, FormControlLabel } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";

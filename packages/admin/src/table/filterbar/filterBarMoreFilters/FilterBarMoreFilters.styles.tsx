@@ -1,5 +1,5 @@
-import { Theme } from "@material-ui/core/styles";
-import { createStyles } from "@material-ui/styles";
+import { Theme } from "@mui/material/styles";
+import { createStyles } from "@mui/styles";
 
 import { FilterBarMoreFiltersProps } from "./FilterBarMoreFilters";
 

@@ -1,5 +1,5 @@
 import { Field, FinalFormRangeInput } from "@comet/admin";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";

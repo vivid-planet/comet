@@ -12,7 +12,7 @@ import {
     useEditDialog,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@material-ui/core";
+import { Button, IconButton, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -97,6 +97,7 @@ function Story() {
                                     onClick={(ev) => {
                                         api.openEditDialog(String(row.id));
                                     }}
+                                    size="large"
                                 >
                                     <EditIcon />
                                 </IconButton>

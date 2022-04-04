@@ -1,10 +1,9 @@
-import { Chip, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography, WithStyles } from "@material-ui/core";
-import zIndex from "@material-ui/core/styles/zIndex";
-import { SvgIconComponent } from "@material-ui/icons";
-import CancelIcon from "@material-ui/icons/Cancel";
-import ClearIcon from "@material-ui/icons/Clear";
-import DropdownIcon from "@material-ui/icons/KeyboardArrowDown";
-import { withStyles } from "@material-ui/styles";
+import { SvgIconComponent } from "@mui/icons-material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import ClearIcon from "@mui/icons-material/Clear";
+import DropdownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { Chip, ComponentsOverrides, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
+import { WithStyles, withStyles } from "@mui/styles";
 import classNames from "classnames";
 import * as React from "react";
 import Select from "react-select";
@@ -57,7 +56,7 @@ function Option<OptionType, IsMulti extends boolean>(props: OptionProps<OptionTy
     return (
         <MenuItem
             classes={{ root: rootClasses.join(" ") }}
-            buttonRef={props.innerRef}
+            ref={props.innerRef}
             selected={props.isSelected}
             disabled={props.isDisabled}
             component="div"
@@ -162,58 +161,68 @@ export interface SelectProps<OptionType> {
     dropdownIconOpen?: SvgIconComponent;
 }
 
-class SelectWrapper<OptionType> extends React.Component<WithStyles<typeof styles> & SelectProps<OptionType> & ReactSelectProps<OptionType>> {
-    public render() {
-        const { classes, theme, components: origComponents, selectComponent, ...rest } = this.props;
-        const SelectComponent = this.props.selectComponent;
-        return (
-            <SelectComponent
-                classes={classes}
-                menuPortalTarget={document.body}
-                components={{ ...components, ...origComponents }}
-                placeholder=""
-                {...rest}
-            />
-        );
-    }
+function SelectWrapper<OptionType>({
+    classes,
+    theme,
+    components: origComponents,
+    selectComponent: SelectComponent,
+    ...rest
+}: WithStyles<typeof styles> & SelectProps<OptionType> & ReactSelectProps<OptionType>) {
+    return (
+        <SelectComponent
+            classes={classes}
+            menuPortalTarget={document.body}
+            components={{ ...components, ...origComponents }}
+            placeholder=""
+            {...rest}
+        />
+    );
 }
+
 const ExtendedSelectWrapper = withStyles(styles, { name: "CometAdminSelect" })(SelectWrapper);
 
-const reactSelectStyles = {
-    menuPortal: (styles: any) => ({ ...styles, zIndex: zIndex.modal }),
+const useReactSelectStyles = () => {
+    const { zIndex } = useTheme();
+    return {
+        menuPortal: (styles: any) => ({ ...styles, zIndex: zIndex.modal }),
+    };
 };
 
-export class ReactSelect<OptionType> extends React.Component<ReactSelectProps<OptionType>> {
-    public render() {
-        return <ExtendedSelectWrapper selectComponent={Select} {...this.props} styles={{ ...reactSelectStyles }} />;
-    }
-}
-export class ReactSelectAsync<OptionType, IsMulti extends boolean> extends React.Component<ReactSelectAsyncProps<OptionType, IsMulti>> {
-    public render() {
-        return <ExtendedSelectWrapper selectComponent={AsyncSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
-    }
-}
-export class ReactSelectCreatable<OptionType, IsMulti extends boolean> extends React.Component<ReactSelectCreatableProps<OptionType, IsMulti>> {
-    public render() {
-        return <ExtendedSelectWrapper selectComponent={CreatableSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
-    }
-}
-export class ReactSelectAsyncCreatable<OptionType, IsMulti extends boolean> extends React.Component<
-    ReactSelectCreatableProps<OptionType, IsMulti> & ReactSelectAsyncProps<OptionType, IsMulti>
-> {
-    public render() {
-        return <ExtendedSelectWrapper selectComponent={AsyncCreatableSelect} {...this.props} styles={{ ...reactSelectStyles }} />;
-    }
+export function ReactSelect<OptionType>(props: ReactSelectProps<OptionType>) {
+    const reactSelectStyles = useReactSelectStyles();
+    return <ExtendedSelectWrapper selectComponent={Select} {...props} styles={{ ...reactSelectStyles }} />;
 }
 
-declare module "@material-ui/core/styles/overrides" {
+export function ReactSelectAsync<OptionType, IsMulti extends boolean>(props: ReactSelectAsyncProps<OptionType, IsMulti>) {
+    const reactSelectStyles = useReactSelectStyles();
+    return <ExtendedSelectWrapper selectComponent={AsyncSelect} {...props} styles={{ ...reactSelectStyles }} />;
+}
+
+export function ReactSelectCreatable<OptionType, IsMulti extends boolean>(props: ReactSelectCreatableProps<OptionType, IsMulti>) {
+    const reactSelectStyles = useReactSelectStyles();
+    return <ExtendedSelectWrapper selectComponent={CreatableSelect} {...props} styles={{ ...reactSelectStyles }} />;
+}
+
+export function ReactSelectAsyncCreatable<OptionType, IsMulti extends boolean>(
+    props: ReactSelectCreatableProps<OptionType, IsMulti> & ReactSelectAsyncProps<OptionType, IsMulti>,
+) {
+    const reactSelectStyles = useReactSelectStyles();
+    return <ExtendedSelectWrapper selectComponent={AsyncCreatableSelect} {...props} styles={{ ...reactSelectStyles }} />;
+}
+
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminSelect: SelectClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminSelect: SelectProps<any>;
+    }
+
+    interface Components {
+        CometAdminSelect?: {
+            defaultProps?: ComponentsPropsList["CometAdminSelect"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminSelect"];
+        };
     }
 }

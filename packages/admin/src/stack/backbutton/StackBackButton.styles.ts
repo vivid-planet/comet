@@ -1,5 +1,5 @@
-import { ButtonClassKey } from "@material-ui/core";
-import { createStyles } from "@material-ui/styles";
+import { ButtonClassKey } from "@mui/material";
+import { createStyles } from "@mui/styles";
 
 import { StackBackButtonProps } from "./StackBackButton";
 
@@ -8,14 +8,16 @@ export type StackBackButtonClassKey = ButtonClassKey;
 export const styles = () => {
     return createStyles<StackBackButtonClassKey, StackBackButtonProps>({
         root: {},
-        label: {},
         text: {},
+        textInherit: {},
         textPrimary: {},
         textSecondary: {},
         outlined: {},
+        outlinedInherit: {},
         outlinedPrimary: {},
         outlinedSecondary: {},
         contained: {},
+        containedInherit: {},
         containedPrimary: {},
         containedSecondary: {},
         disableElevation: {},
@@ -23,12 +25,16 @@ export const styles = () => {
         disabled: {},
         colorInherit: {},
         textSizeSmall: {},
+        textSizeMedium: {},
         textSizeLarge: {},
         outlinedSizeSmall: {},
+        outlinedSizeMedium: {},
         outlinedSizeLarge: {},
         containedSizeSmall: {},
+        containedSizeMedium: {},
         containedSizeLarge: {},
         sizeSmall: {},
+        sizeMedium: {},
         sizeLarge: {},
         fullWidth: {},
         startIcon: {},

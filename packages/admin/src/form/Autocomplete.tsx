@@ -1,5 +1,4 @@
-import { CircularProgress, InputBase } from "@material-ui/core";
-import Autocomplete, { AutocompleteProps, AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
+import { Autocomplete, AutocompleteProps, AutocompleteRenderInputParams, CircularProgress, InputBase } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
@@ -20,7 +19,7 @@ export const FinalFormAutocomplete = <
     Omit<AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>, "renderInput">) => {
     return (
         <Autocomplete
-            getOptionSelected={(option: T, value: T) => {
+            isOptionEqualToValue={(option: T, value: T) => {
                 if (!value) return false;
                 return option === value;
             }}

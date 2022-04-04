@@ -1,4 +1,4 @@
-import MuiSwitch, { SwitchProps } from "@material-ui/core/Switch";
+import MuiSwitch, { SwitchProps } from "@mui/material/Switch";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 

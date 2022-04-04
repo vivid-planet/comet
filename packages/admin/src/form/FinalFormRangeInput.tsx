@@ -1,5 +1,5 @@
-import { FormControl, InputBase, Slider, SliderProps, WithStyles } from "@material-ui/core";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, FormControl, InputBase, Slider, SliderProps, Theme } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
@@ -51,7 +51,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
     const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || undefined);
     const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || undefined);
 
-    const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: number[]) => {
+    const handleSliderChange = (event: Event, newValue: number[]) => {
         onChange({ min: newValue[0], max: newValue[1] });
     };
 
@@ -134,7 +134,7 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                     min={min}
                     max={max}
                     value={[fieldValue.min ? fieldValue.min : min, fieldValue.max ? fieldValue.max : max]}
-                    ThumbComponent={sliderProps?.ThumbComponent ? sliderProps.ThumbComponent : "span"}
+                    components={{ Thumb: sliderProps?.components?.Thumb ? sliderProps.components.Thumb : "span" }}
                     onChange={handleSliderChange}
                     {...sliderProps}
                 />
@@ -145,8 +145,14 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
 
 export const FinalFormRangeInput = withStyles(styles, { name: "CometAdminFinalFormRangeInput" })(FinalFormRangeInputComponent);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminFinalFormRangeInput: FinalFormRangeInputClassKey;
+    }
+
+    interface Components {
+        CometAdminFinalFormRangeInput?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormRangeInput"];
+        };
     }
 }

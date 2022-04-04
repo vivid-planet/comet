@@ -1,6 +1,6 @@
 import { Toolbar, ToolbarItem } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

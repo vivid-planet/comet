@@ -1,5 +1,5 @@
 import { ITableRowProps, Table, TableBodyRow, TableColumns, useWindowSize } from "@comet/admin";
-import { TableCell } from "@material-ui/core";
+import { TableCell } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

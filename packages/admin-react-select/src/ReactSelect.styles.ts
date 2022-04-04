@@ -1,6 +1,6 @@
-import { Theme } from "@material-ui/core";
-import { emphasize } from "@material-ui/core/styles/colorManipulator";
-import { createStyles } from "@material-ui/styles";
+import { Theme } from "@mui/material";
+import { emphasize } from "@mui/material/styles";
+import { createStyles } from "@mui/styles";
 
 export type SelectClassKey =
     | "input"
@@ -34,13 +34,13 @@ const styles = (theme: Theme) =>
             overflow: "hidden",
         },
         chip: {
-            margin: `${theme.spacing(0.5)}px ${theme.spacing(0.25)}px`,
+            margin: `${theme.spacing(0.5)} ${theme.spacing(0.25)}`,
         },
         chipFocused: {
-            backgroundColor: emphasize(theme.palette.type === "light" ? theme.palette.grey[300] : theme.palette.grey[700], 0.08),
+            backgroundColor: emphasize(theme.palette.mode === "light" ? theme.palette.grey[300] : theme.palette.grey[700], 0.08),
         },
         noOptionsMessage: {
-            padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+            padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
             color: theme.palette.text.secondary,
         },
         singleValue: {

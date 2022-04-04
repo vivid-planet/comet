@@ -1,5 +1,5 @@
-import { Typography, WithStyles } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, Theme, Typography } from "@mui/material";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { FilterBarActiveFilterBadgeClassKey, styles } from "./FilterBarActiveFilterBadge.styles";
@@ -24,14 +24,19 @@ function FilterBadge({ countValue, classes }: React.PropsWithChildren<FilterBarA
 
 export const FilterBarActiveFilterBadge = withStyles(styles, { name: "CometAdminFilterBarActiveFilterBadge" })(FilterBadge);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminFilterBarActiveFilterBadge: FilterBarActiveFilterBadgeClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminFilterBarActiveFilterBadge: FilterBarActiveFilterBadgeProps;
+    }
+
+    interface Components {
+        CometAdminFilterBarActiveFilterBadge?: {
+            defaultProps?: ComponentsPropsList["CometAdminFilterBarActiveFilterBadge"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarActiveFilterBadge"];
+        };
     }
 }

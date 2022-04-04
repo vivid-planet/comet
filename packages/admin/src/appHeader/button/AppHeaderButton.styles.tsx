@@ -1,6 +1,6 @@
-import { ButtonBaseClassKey } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles } from "@material-ui/styles";
+import { ButtonBaseClassKey } from "@mui/material";
+import { Theme } from "@mui/material/styles";
+import { createStyles } from "@mui/styles";
 
 import { AppHeaderButtonProps } from "./AppHeaderButton";
 

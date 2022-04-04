@@ -1,5 +1,5 @@
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
-import { Box, Card, CardContent } from "@material-ui/core";
+import { Box, Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import { convertFromRaw, convertToRaw, RawDraftContentState } from "draft-js";
 import * as React from "react";

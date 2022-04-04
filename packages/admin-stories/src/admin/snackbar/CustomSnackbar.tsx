@@ -1,5 +1,5 @@
 import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
-import { Button, List, ListItem, Snackbar } from "@material-ui/core";
+import { Button, List, ListItem, Snackbar } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -18,7 +18,7 @@ const CustomSnackbar = () => {
             <Snackbar
                 anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
                 // If no distinct key is set, the Snackbar may update in-place
-                // meaning that the autoHideDuration is not reset (https://v4.mui.com/api/snackbar/)
+                // meaning that the autoHideDuration is not reset (https://mui.com/api/snackbar/)
                 // Use uuid or object id in production
                 key={counter++}
                 autoHideDuration={5000}

@@ -18,8 +18,8 @@ import {
     useTableQuery,
     useTableQueryFilter,
 } from "@comet/admin";
-import { Card, CardContent, CircularProgress, Grid, IconButton, Typography } from "@material-ui/core";
-import { Edit as EditIcon } from "@material-ui/icons";
+import { Edit as EditIcon } from "@mui/icons-material";
+import { Card, CardContent, CircularProgress, Grid, IconButton, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -104,6 +104,7 @@ function ExampleTable(props: { persistedStateId: string }) {
                                             onClick={() => {
                                                 stackApi.activatePage("form", String(row.id));
                                             }}
+                                            size="large"
                                         >
                                             <EditIcon />
                                         </IconButton>

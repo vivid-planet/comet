@@ -1,6 +1,6 @@
-import { ButtonClassKey } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles } from "@material-ui/styles";
+import { ButtonClassKey } from "@mui/material";
+import { Theme } from "@mui/material/styles";
+import { createStyles } from "@mui/styles";
 
 import { SaveButtonProps } from "./SaveButton";
 
@@ -9,14 +9,16 @@ export type SaveButtonClassKey = "saving" | "error" | "success" | ButtonClassKey
 export const styles = (theme: Theme) => {
     return createStyles<SaveButtonClassKey, SaveButtonProps>({
         root: {},
-        label: {},
         text: {},
+        textInherit: {},
         textPrimary: {},
         textSecondary: {},
         outlined: {},
+        outlinedInherit: {},
         outlinedPrimary: {},
         outlinedSecondary: {},
         contained: {},
+        containedInherit: {},
         containedPrimary: {},
         containedSecondary: {},
         disableElevation: {},
@@ -24,12 +26,16 @@ export const styles = (theme: Theme) => {
         disabled: {},
         colorInherit: {},
         textSizeSmall: {},
+        textSizeMedium: {},
         textSizeLarge: {},
         outlinedSizeSmall: {},
+        outlinedSizeMedium: {},
         outlinedSizeLarge: {},
         containedSizeSmall: {},
+        containedSizeMedium: {},
         containedSizeLarge: {},
         sizeSmall: {},
+        sizeMedium: {},
         sizeLarge: {},
         fullWidth: {},
         startIcon: {},

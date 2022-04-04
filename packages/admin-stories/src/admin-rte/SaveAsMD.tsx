@@ -1,5 +1,5 @@
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
-import { Box, Card, CardContent } from "@material-ui/core";
+import { Box, Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";

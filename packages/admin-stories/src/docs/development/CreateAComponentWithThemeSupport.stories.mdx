@@ -4,7 +4,7 @@ import { Meta } from "@storybook/addon-docs";
 
 # Create a component with theme support
 
-Material-UI supports overriding of styles and default props of components using the theme.  
+MUI supports overriding of styles and default props of components using the theme.
 Using the same method it should also be possible to override all Comet Admin components.
 
 ## Example component
@@ -13,8 +13,8 @@ _MyComponent: `packages/admin/src/MyComponent.tsx`_
 
 ```tsx
 import { CometColor } from "@comet/admin-icons";
-import { Theme, Typography } from "@material-ui/core";
-import { createStyles, WithStyles, withStyles } from "@material-ui/styles";
+import { Theme, Typography } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
 
@@ -94,17 +94,22 @@ const MyComponentWithStyles = withStyles(styles, { name: "CometAdminMyComponent"
 export { MyComponentWithStyles as MyComponent };
 
 /*
- * Add your components Props and ClassKey types to the Material-UI type-definitions.
+ * Add your components Props and ClassKey types to the MUI type-definitions.
  */
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminMyComponent: MyComponentProps;
+    }
+
     interface ComponentNameToClassKey {
         CometAdminMyComponent: MyComponentClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
-    interface ComponentsPropsList {
-        CometAdminMyComponent: MyComponentProps;
+    interface Components {
+        CometAdminMyComponent?: {
+            defaultProps?: ComponentsPropsList["CometAdminMyComponent"];
+            styleOverrides?: ComponentNameToClassKey["CometAdminMyComponent"];
+        };
     }
 }
 ```

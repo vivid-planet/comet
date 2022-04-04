@@ -1,7 +1,9 @@
 import { ChevronDown, ChevronRight, Error } from "@comet/admin-icons";
-import { createStyles, Typography, WithStyles, withStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { Alert, AlertProps } from "@material-ui/lab";
+import { AlertProps, Typography } from "@mui/material";
+import { Alert, ComponentsOverrides, Theme } from "@mui/material";
+import { WithStyles } from "@mui/styles";
+import createStyles from "@mui/styles/createStyles";
+import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -16,13 +18,14 @@ export type ErrorBoundaryClassKey =
     | "exceptionSummaryTitle"
     | "exceptionStackTrace";
 
-export interface ErrorBoundaryProps {
+export type ErrorBoundaryProps = React.PropsWithChildren<{
     userErrorMessage?: React.ReactNode;
     variant?: AlertProps["variant"];
     icon?: AlertProps["icon"];
     toggleDetailsOpenedIcon?: React.ReactNode;
     toggleDetailsClosedIcon?: React.ReactNode;
-}
+    key?: string | number;
+}>;
 
 interface IErrorBoundaryState {
     error?: Error;
@@ -127,14 +130,19 @@ const StyledErrorBoundary = withStyles(styles, { name: "CometAdminErrorBoundary"
 
 export { StyledErrorBoundary as ErrorBoundary };
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminErrorBoundary: ErrorBoundaryClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminErrorBoundary: ErrorBoundaryProps;
+    }
+
+    interface Components {
+        CometAdminErrorBoundary?: {
+            defaultProps?: ComponentsPropsList["CometAdminErrorBoundary"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminErrorBoundary"];
+        };
     }
 }

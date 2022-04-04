@@ -1,7 +1,7 @@
 import { PureQueryOptions, useApolloClient } from "@apollo/client";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 

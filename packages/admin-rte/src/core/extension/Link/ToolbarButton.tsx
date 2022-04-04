@@ -1,5 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@material-ui/core";
-import { Check, Clear, Delete, Link as LinkIcon } from "@material-ui/icons";
+import { Check, Clear, Delete, Link as LinkIcon } from "@mui/icons-material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@mui/material";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";

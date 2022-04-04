@@ -1,8 +1,7 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { WithStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, Theme } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import {
     DraftBlockType,
     DraftEditorCommand,
@@ -280,7 +279,7 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
 export type RteClassKey = "root" | "disabled" | "editor";
 
 const styles = (theme: Theme) => {
-    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
 
     return createStyles<RteClassKey, RteProps>({
         root: {
@@ -305,14 +304,19 @@ const styles = (theme: Theme) => {
 
 export default withStyles(styles, { name: "CometAdminRte" })(React.forwardRef(Rte));
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRte: RteClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminRte: RteProps;
+    }
+
+    interface Components {
+        CometAdminRte?: {
+            defaultProps?: ComponentsPropsList["CometAdminRte"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRte"];
+        };
     }
 }

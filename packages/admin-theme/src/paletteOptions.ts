@@ -1,4 +1,4 @@
-import { PaletteOptions } from "@material-ui/core/styles/createPalette";
+import { PaletteOptions } from "@mui/material/styles";
 
 import { bluePalette, errorPalette, greenPalette, infoPalette, neutrals, successPalette } from "./colors";
 

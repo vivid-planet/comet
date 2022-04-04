@@ -1,7 +1,8 @@
 import { Clear } from "@comet/admin-icons";
-import { Button, ButtonClassKey, WithStyles } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { Button, ButtonClassKey, Theme } from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
+import { ComponentsOverrides } from "@mui/material/styles/overrides";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -11,14 +12,16 @@ export type CancelButtonClassKey = ButtonClassKey;
 const styles = () => {
     return createStyles<CancelButtonClassKey, CancelButtonProps>({
         root: {},
-        label: {},
         text: {},
+        textInherit: {},
         textPrimary: {},
         textSecondary: {},
         outlined: {},
+        outlinedInherit: {},
         outlinedPrimary: {},
         outlinedSecondary: {},
         contained: {},
+        containedInherit: {},
         containedPrimary: {},
         containedSecondary: {},
         disableElevation: {},
@@ -26,12 +29,16 @@ const styles = () => {
         disabled: {},
         colorInherit: {},
         textSizeSmall: {},
+        textSizeMedium: {},
         textSizeLarge: {},
         outlinedSizeSmall: {},
+        outlinedSizeMedium: {},
         outlinedSizeLarge: {},
         containedSizeSmall: {},
+        containedSizeMedium: {},
         containedSizeLarge: {},
         sizeSmall: {},
+        sizeMedium: {},
         sizeLarge: {},
         fullWidth: {},
         startIcon: {},
@@ -48,7 +55,7 @@ function CancelBtn({
     ...restProps
 }: CancelButtonProps & WithStyles<typeof styles>) {
     return (
-        <Button startIcon={startIcon} {...restProps}>
+        <Button color="info" startIcon={startIcon} {...restProps}>
             {children}
         </Button>
     );
@@ -56,14 +63,19 @@ function CancelBtn({
 
 export const CancelButton = withStyles(styles, { name: "CometAdminCancelButton" })(CancelBtn);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminCancelButton: CancelButtonClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminCancelButton: CancelButtonProps;
+    }
+
+    interface Components {
+        CometAdminCancelButton?: {
+            defaultProps?: ComponentsPropsList["CometAdminCancelButton"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminCancelButton"];
+        };
     }
 }

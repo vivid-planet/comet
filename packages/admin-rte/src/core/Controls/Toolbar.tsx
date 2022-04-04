@@ -1,6 +1,5 @@
-import { WithStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, Theme } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { IControlProps } from "../types";
@@ -37,7 +36,7 @@ const Toolbar: React.FC<IProps & WithStyles<typeof styles>> = ({ children, class
 export type RteToolbarClassKey = "root" | "slot";
 
 const styles = (theme: Theme) => {
-    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
 
     return createStyles<RteToolbarClassKey, IProps>({
         root: {
@@ -91,8 +90,14 @@ const styles = (theme: Theme) => {
 
 export default withStyles(styles, { name: "CometAdminRteToolbar" })(Toolbar);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRteToolbar: RteToolbarClassKey;
+    }
+
+    interface Components {
+        CometAdminRteToolbar?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteToolbar"];
+        };
     }
 }

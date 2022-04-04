@@ -1,6 +1,6 @@
 import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
 import { UndoSnackbar } from "@comet/admin";
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

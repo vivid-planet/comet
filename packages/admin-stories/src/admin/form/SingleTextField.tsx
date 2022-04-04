@@ -1,6 +1,6 @@
 import { FieldContainer } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
-import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@material-ui/core";
+import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

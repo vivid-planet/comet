@@ -1,4 +1,4 @@
-import LinkOffIcon from "@material-ui/icons/LinkOff";
+import LinkOffIcon from "@mui/icons-material/LinkOff";
 import { RichUtils } from "draft-js";
 import * as React from "react";
 

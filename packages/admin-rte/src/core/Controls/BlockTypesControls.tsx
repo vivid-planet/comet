@@ -1,6 +1,5 @@
-import { FormControl, MenuItem, Select, WithStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, FormControl, inputBaseClasses, MenuItem, Select, selectClasses, Theme } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { IControlProps } from "../types";
@@ -19,11 +18,12 @@ function BlockTypesControls({ disabled, blockTypes, classes }: Props & WithStyle
     return (
         <FormControl classes={{ root: classes.root }}>
             <Select
-                classes={{ root: classes.select }}
+                classes={{ select: classes.select }}
                 disabled={disabled}
                 value={activeDropdownBlockType}
                 displayEmpty
-                disableUnderline
+                variant="filled"
+                MenuProps={{ elevation: 1 }}
                 onChange={handleBlockTypeChange}
             >
                 {blockTypesListItems.map((c) => (
@@ -39,16 +39,21 @@ function BlockTypesControls({ disabled, blockTypes, classes }: Props & WithStyle
 export type RteBlockTypeControlsClassKey = "root" | "select";
 
 const styles = (theme: Theme) => {
-    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
 
     return createStyles<RteBlockTypeControlsClassKey, Props>({
         root: {
-            "& [class*='MuiInputBase-root']": {
+            [`& .${inputBaseClasses.root}`]: {
                 backgroundColor: "transparent",
                 height: "auto",
                 border: "none",
+                "&, &:hover": {
+                    "&:before, &:after": {
+                        borderBottomWidth: 0,
+                    },
+                },
             },
-            "& [class*='MuiSelect-icon']": {
+            [`& .${selectClasses.icon}`]: {
                 top: "auto",
                 color: "inherit",
             },
@@ -78,8 +83,14 @@ export default (p: IControlProps) => {
     return <StyledBlockTypesControls {...p} blockTypes={blockTypes} />;
 };
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRteBlockTypeControls: RteBlockTypeControlsClassKey;
+    }
+
+    interface Components {
+        CometAdminRteBlockTypeControls?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteBlockTypeControls"];
+        };
     }
 }

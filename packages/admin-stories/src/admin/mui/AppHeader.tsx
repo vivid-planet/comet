@@ -10,7 +10,7 @@ import {
     MenuItemRouterLink,
 } from "@comet/admin";
 import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icons";
-import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@material-ui/core";
+import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -51,26 +51,18 @@ function MasterHeader() {
 
                     return (
                         <MenuList>
-                            <MenuItem button onClick={onItemClicked}>
-                                DE
-                            </MenuItem>
-                            <MenuItem button onClick={onItemClicked}>
-                                EN
-                            </MenuItem>
-                            <MenuItem button onClick={onItemClicked}>
-                                FR
-                            </MenuItem>
-                            <MenuItem button onClick={onItemClicked}>
-                                ES
-                            </MenuItem>
+                            <MenuItem onClick={onItemClicked}>DE</MenuItem>
+                            <MenuItem onClick={onItemClicked}>EN</MenuItem>
+                            <MenuItem onClick={onItemClicked}>FR</MenuItem>
+                            <MenuItem onClick={onItemClicked}>ES</MenuItem>
                         </MenuList>
                     );
                 }}
             </AppHeaderDropdown>
             <AppHeaderDropdown buttonChildren={<AccountHeaderItem />}>
                 <MenuList>
-                    <MenuItem button>Edit Profile</MenuItem>
-                    <MenuItem button>Change Password</MenuItem>
+                    <MenuItem>Edit Profile</MenuItem>
+                    <MenuItem>Change Password</MenuItem>
                 </MenuList>
 
                 <Divider />

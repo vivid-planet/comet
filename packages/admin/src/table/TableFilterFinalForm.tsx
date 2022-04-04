@@ -1,5 +1,5 @@
-import { Button, Grid, Typography } from "@material-ui/core";
-import CancelIcon from "@material-ui/icons/Cancel";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { Button, Grid, Typography } from "@mui/material";
 import { AnyObject } from "final-form";
 import * as React from "react";
 import { Form, FormProps, FormRenderProps } from "react-final-form";
@@ -50,7 +50,6 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                                     <Grid item>
                                         <Button
                                             variant="text"
-                                            color="default"
                                             startIcon={<CancelIcon />}
                                             onClick={() => {
                                                 formRenderProps.form.reset();

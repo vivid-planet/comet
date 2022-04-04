@@ -1,6 +1,5 @@
-import { WithStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, Theme } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { useFormState } from "react-final-form";
 
@@ -60,14 +59,19 @@ export const FinalFormSaveCancelButtonsLegacy = withStyles(styles, { name: "Come
     FinalFormSaveCancelButtonsLegacyComponent,
 );
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminFinalFormSaveCancelButtonsLegacy: FinalFormSaveCancelButtonsLegacyClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminFinalFormSaveCancelButtonsLegacy: FinalFormSaveCancelButtonsLegacyProps;
+    }
+
+    interface Components {
+        CometAdminFinalFormSaveCancelButtonsLegacy?: {
+            defaultProps?: ComponentsPropsList["CometAdminFinalFormSaveCancelButtonsLegacy"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormSaveCancelButtonsLegacy"];
+        };
     }
 }

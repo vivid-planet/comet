@@ -1,5 +1,5 @@
 import { Field, FinalForm, FinalFormInput, Tab, Tabs } from "@comet/admin";
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

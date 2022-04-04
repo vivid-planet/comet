@@ -23,7 +23,7 @@
         }
     },
     "rules": {
-        "simple-import-sort/sort": "error",
+        "simple-import-sort/imports": "error",
         "react/display-name": "off",
         "react/prop-types": "off",
         "sort-imports": "off",

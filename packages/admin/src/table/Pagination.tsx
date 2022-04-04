@@ -1,7 +1,7 @@
-import { Grid, IconButton, Toolbar, Typography } from "@material-ui/core";
-import TableCell from "@material-ui/core/TableCell";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import { Grid, IconButton, Toolbar, Typography } from "@mui/material";
+import TableCell from "@mui/material/TableCell";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
@@ -41,10 +41,10 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                                 </Grid>
                             )}
                             <Grid item>
-                                <IconButton disabled={!pagingInfo.fetchPreviousPage} onClick={() => pagingInfo.fetchPreviousPage!()}>
+                                <IconButton disabled={!pagingInfo.fetchPreviousPage} onClick={() => pagingInfo.fetchPreviousPage!()} size="large">
                                     <KeyboardArrowLeft />
                                 </IconButton>
-                                <IconButton disabled={!pagingInfo.fetchNextPage} onClick={() => pagingInfo.fetchNextPage!()}>
+                                <IconButton disabled={!pagingInfo.fetchNextPage} onClick={() => pagingInfo.fetchNextPage!()} size="large">
                                     <KeyboardArrowRight />
                                 </IconButton>
                             </Grid>

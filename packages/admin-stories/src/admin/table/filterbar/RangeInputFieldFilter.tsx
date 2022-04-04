@@ -1,5 +1,5 @@
 import { Field, FilterBar, FilterBarPopoverFilter, FinalFormRangeInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";

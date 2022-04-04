@@ -1,13 +1,11 @@
-import { createTheme, Theme } from "@material-ui/core";
-import { ThemeOptions } from "@material-ui/core/styles";
-import createPalette, { Palette, PaletteOptions } from "@material-ui/core/styles/createPalette";
-import createSpacing, { Spacing, SpacingOptions } from "@material-ui/core/styles/createSpacing";
-import createTypography, { Typography, TypographyOptions } from "@material-ui/core/styles/createTypography";
-import type {} from "@material-ui/lab/themeAugmentation";
+import { createTheme, Theme, ThemeOptions } from "@mui/material";
+import { Palette, PaletteOptions } from "@mui/material/styles";
+import createPalette from "@mui/material/styles/createPalette";
+import createTypography, { Typography, TypographyOptions } from "@mui/material/styles/createTypography";
+import { createSpacing, Spacing, SpacingOptions } from "@mui/system";
 import merge from "lodash.merge";
 
-import { getMuiOverrides } from "./MuiOverrides/getMuiOverrides";
-import { getMuiProps } from "./MuiProps/getMuiProps";
+import { getComponentsTheme } from "./componentsTheme/getComponentsTheme";
 import { paletteOptions as cometPaletteOptions } from "./paletteOptions";
 import { shadows } from "./shadows";
 import { typographyOptions as cometTypographyOptions } from "./typographyOptions";
@@ -28,7 +26,7 @@ export const createCometTheme = (customThemeOptions: ThemeOptions | undefined = 
     const spacingOptions: SpacingOptions = customThemeOptions?.spacing === undefined ? 5 : customThemeOptions.spacing;
     const spacing: Spacing = createSpacing(spacingOptions);
 
-    const cometThemeOptions = {
+    const cometThemeOptions: ThemeOptions = {
         spacing: spacingOptions,
         palette: paletteOptions,
         typography: typographyOptions,
@@ -36,12 +34,7 @@ export const createCometTheme = (customThemeOptions: ThemeOptions | undefined = 
             borderRadius: 2,
         },
         shadows,
-        props: {
-            ...getMuiProps(),
-        },
-        overrides: {
-            ...getMuiOverrides(palette, typography, spacing),
-        },
+        components: getComponentsTheme(palette, typography, spacing),
     };
 
     const themeOptions: ThemeOptions = merge(cometThemeOptions, customThemeOptions);

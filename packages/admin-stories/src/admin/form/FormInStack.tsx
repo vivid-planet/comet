@@ -11,7 +11,7 @@ import {
     ToolbarActions,
     ToolbarFillSpace,
 } from "@comet/admin";
-import { Box, Button, Card, CardContent } from "@material-ui/core";
+import { Box, Button, Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
@@ -32,11 +32,14 @@ const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
 
 const resolveSubmitErrors = (error: SubmissionErrors) => {
     // error = { errors: [{fieldName: errorMessage},...] }
-
     const result = {};
-    for (const submitError of error?.errors) {
-        Object.assign(result, submitError);
+
+    if (error) {
+        for (const submitError of error.errors) {
+            Object.assign(result, submitError);
+        }
     }
+
     // result = {fieldName: errorMessage, ...}
     return result;
 };

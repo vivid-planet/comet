@@ -1,7 +1,6 @@
-import { WithStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { SvgIconProps } from "@material-ui/core/SvgIcon";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, Theme } from "@mui/material";
+import { SvgIconProps } from "@mui/material/SvgIcon";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import getRteTheme from "../utils/getRteTheme";
@@ -43,7 +42,7 @@ function ControlButton({
 export type RteControlButtonClassKey = "root" | "selected" | "renderAsIcon";
 
 const styles = (theme: Theme) => {
-    const rteTheme = getRteTheme(theme.props?.CometAdminRte);
+    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
 
     return createStyles<RteControlButtonClassKey, IProps>({
         root: {
@@ -85,8 +84,14 @@ const styles = (theme: Theme) => {
 
 export default withStyles(styles, { name: "CometAdminRteControlButton" })(ControlButton);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRteControlButton: RteControlButtonClassKey;
+    }
+
+    interface Components {
+        CometAdminRteControlButton?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteControlButton"];
+        };
     }
 }

@@ -1,5 +1,5 @@
-import { Theme } from "@material-ui/core";
-import { createStyles } from "@material-ui/styles";
+import { Theme } from "@mui/material";
+import { createStyles } from "@mui/styles";
 
 import { MenuProps } from "./Menu";
 

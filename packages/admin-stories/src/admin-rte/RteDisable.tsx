@@ -1,6 +1,6 @@
 import { Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
-import { Box, Button, Card, CardContent } from "@material-ui/core";
+import { Box, Button, Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

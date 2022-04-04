@@ -1,6 +1,6 @@
 import { FormSection } from "@comet/admin";
 import { ReactSelect } from "@comet/admin-react-select";
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

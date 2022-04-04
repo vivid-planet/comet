@@ -1,5 +1,4 @@
-import { CircularProgress, SelectProps } from "@material-ui/core";
-import { MenuItem } from "@material-ui/core";
+import { CircularProgress, MenuItem, SelectProps } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 

@@ -1,7 +1,7 @@
-import FormatBoldIcon from "@material-ui/icons/FormatBold";
-import FormatItalicIcon from "@material-ui/icons/FormatItalic";
-import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
-import StrikethroughSIcon from "@material-ui/icons/StrikethroughS";
+import FormatBoldIcon from "@mui/icons-material/FormatBold";
+import FormatItalicIcon from "@mui/icons-material/FormatItalic";
+import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
+import StrikethroughSIcon from "@mui/icons-material/StrikethroughS";
 import * as detectBrowser from "detect-browser";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";

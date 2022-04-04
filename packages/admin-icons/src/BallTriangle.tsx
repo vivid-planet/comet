@@ -1,4 +1,4 @@
-import { SvgIcon, SvgIconProps } from "@material-ui/core";
+import { SvgIcon, SvgIconProps } from "@mui/material";
 import * as React from "react";
 
 export default function BallTriangle(props: SvgIconProps): JSX.Element {

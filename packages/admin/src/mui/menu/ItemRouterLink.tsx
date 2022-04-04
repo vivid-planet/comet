@@ -1,4 +1,4 @@
-import { ListItemProps } from "@material-ui/core/ListItem";
+import { ListItemProps } from "@mui/material/ListItem";
 import * as React from "react";
 import { Link, LinkProps, Route } from "react-router-dom";
 

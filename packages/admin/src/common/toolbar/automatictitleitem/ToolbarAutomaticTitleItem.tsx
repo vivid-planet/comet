@@ -1,6 +1,5 @@
-import { Typography } from "@material-ui/core";
-import { TypographyTypeMap } from "@material-ui/core/Typography/Typography";
-import { withStyles } from "@material-ui/styles";
+import { Typography, TypographyTypeMap } from "@mui/material";
+import { withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { useStackApi } from "../../../stack/Api";
@@ -24,8 +23,14 @@ function AutomaticTitleItem({ typographyProps }: ToolbarAutomaticTitleItemProps)
 
 export const ToolbarAutomaticTitleItem = withStyles({}, { name: "CometAdminToolbarAutomaticTitleItem" })(AutomaticTitleItem);
 
-declare module "@material-ui/core/styles/props" {
+declare module "@mui/material/styles" {
     interface ComponentsPropsList {
         CometAdminToolbarAutomaticTitleItem: ToolbarAutomaticTitleItemProps;
+    }
+
+    interface Components {
+        CometAdminToolbarAutomaticTitleItem?: {
+            defaultProps?: ComponentsPropsList["CometAdminToolbarAutomaticTitleItem"];
+        };
     }
 }

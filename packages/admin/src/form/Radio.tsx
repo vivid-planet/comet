@@ -1,4 +1,4 @@
-import MuiRadio, { RadioProps } from "@material-ui/core/Radio";
+import MuiRadio, { RadioProps } from "@mui/material/Radio";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 

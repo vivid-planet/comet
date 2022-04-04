@@ -1,5 +1,5 @@
-import FormatIndentDecreaseIcon from "@material-ui/icons/FormatIndentDecrease";
-import FormatIndentIncreaseIcon from "@material-ui/icons/FormatIndentIncrease";
+import FormatIndentDecreaseIcon from "@mui/icons-material/FormatIndentDecrease";
+import FormatIndentIncreaseIcon from "@mui/icons-material/FormatIndentIncrease";
 import { BlockMap, ContentState, EditorState } from "draft-js";
 import * as React from "react";
 import { useIntl } from "react-intl";

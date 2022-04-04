@@ -1,7 +1,5 @@
-import { WithStyles } from "@material-ui/core";
-import MuiTab, { TabProps as MuiTabProps } from "@material-ui/core/Tab";
-import Tabs, { TabsProps } from "@material-ui/core/Tabs";
-import { withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps, Theme } from "@mui/material";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
@@ -10,12 +8,13 @@ import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { StackSwitchApiContext } from "../stack/Switch";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
 
-interface TabProps extends MuiTabProps {
+interface TabProps extends Omit<MuiTabProps, "children"> {
     path: string;
     label: React.ReactNode;
     forceRender?: boolean;
     children: React.ReactNode;
 }
+
 export const RouterTab: React.SFC<TabProps> = () => null;
 
 export interface Props extends RouteComponentProps {
@@ -132,8 +131,14 @@ function RouterTabsComponent({
 
 export const RouterTabs = withRouter(withStyles(styles, { name: "CometAdminRouterTabs" })(RouterTabsComponent));
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRouterTabs: RouterTabsClassKey;
+    }
+
+    interface Components {
+        CometAdminRouterTabs?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRouterTabs"];
+        };
     }
 }

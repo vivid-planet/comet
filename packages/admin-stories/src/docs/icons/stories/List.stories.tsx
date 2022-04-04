@@ -1,17 +1,16 @@
 import * as icons from "@comet/admin-icons";
-import { SvgIcon, Typography } from "@material-ui/core";
+import { styled, SvgIconProps, Typography } from "@mui/material";
 import { color } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import styled from "styled-components";
 
 storiesOf("stories/Icons/List", module).add("Icon List", () => {
-    const Root = styled.div`
+    const Root = styled("div")`
         display: flex;
         flex-wrap: wrap;
     `;
 
-    const IconContainer = styled.div`
+    const IconContainer = styled("div")`
         padding: 10px;
         margin: 10px;
         display: flex;
@@ -23,16 +22,17 @@ storiesOf("stories/Icons/List", module).add("Icon List", () => {
         border-radius: 2px;
     `;
 
-    const IconWrapper = styled.div`
+    const IconWrapper = styled("div")`
         display: flex;
         align-items: center;
         margin-right: 10px;
     `;
+
     return (
         <Root>
             {Object.keys(icons).map((key) => {
                 if (key !== "__esModule" && key != null) {
-                    const Icon = (icons as { [key: string]: typeof SvgIcon })[key];
+                    const Icon = (icons as { [key: string]: React.ElementType<SvgIconProps> })[key];
 
                     return (
                         <IconContainer key={key}>

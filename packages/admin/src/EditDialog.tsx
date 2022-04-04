@@ -1,4 +1,4 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import * as React from "react";
 import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 

@@ -1,9 +1,11 @@
 import { SnackbarProvider } from "@comet/admin";
-import { StoryContext, StoryFn } from "@storybook/addons";
+import { LegacyStoryFn } from "@storybook/addons";
 import * as React from "react";
 
+import { DecoratorContext } from "../../../storyHelpers";
+
 export function snackbarDecorator<StoryFnReturnType = unknown>() {
-    return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
-        return <SnackbarProvider>{fn()}</SnackbarProvider>;
+    return (fn: LegacyStoryFn<StoryFnReturnType>, c: DecoratorContext<StoryFnReturnType>) => {
+        return <SnackbarProvider>{fn(c)}</SnackbarProvider>;
     };
 }

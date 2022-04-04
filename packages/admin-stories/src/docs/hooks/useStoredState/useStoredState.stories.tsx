@@ -1,5 +1,5 @@
 import { FormSection, useStoredState } from "@comet/admin";
-import { Button, InputBase } from "@material-ui/core";
+import { Button, InputBase } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

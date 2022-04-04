@@ -1,7 +1,6 @@
-import { AppBar, AppBarClassKey, WithStyles } from "@material-ui/core";
-import { AppBarProps } from "@material-ui/core/AppBar";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { AppBar, AppBarClassKey, ComponentsOverrides, Theme } from "@mui/material";
+import { AppBarProps } from "@mui/material/AppBar";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { MasterLayoutContext } from "../mui/MasterLayoutContext";
@@ -31,6 +30,8 @@ const styles = ({ palette }: Theme) => {
         colorDefault: {},
         colorPrimary: {},
         colorSecondary: {},
+        colorInherit: {},
+        colorTransparent: {},
     });
 };
 
@@ -52,8 +53,14 @@ function Header({
 
 export const AppHeader = withStyles(styles, { name: "CometAdminAppHeader" })(Header);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminAppHeader: AppHeaderClassKey;
+    }
+
+    interface Components {
+        CometAdminAppHeader?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeader"];
+        };
     }
 }

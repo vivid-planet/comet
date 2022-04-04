@@ -1,13 +1,13 @@
-import { BreadcrumbsClassKey } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles } from "@material-ui/styles";
+import { BreadcrumbsClassKey } from "@mui/material";
+import { Theme } from "@mui/material/styles";
+import { createStyles } from "@mui/styles";
 
-import { StackBreadcrumbProps } from "./StackBreadcrumbs";
+import { StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 export type StackBreadcrumbsClassKey = BreadcrumbsClassKey | "link" | "last";
 
 export const styles = ({ palette }: Theme) => {
-    return createStyles<StackBreadcrumbsClassKey, StackBreadcrumbProps>({
+    return createStyles<StackBreadcrumbsClassKey, StackBreadcrumbsProps>({
         root: {
             paddingTop: 30,
             paddingBottom: 30,

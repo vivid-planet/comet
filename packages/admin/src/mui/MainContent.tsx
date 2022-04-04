@@ -1,6 +1,5 @@
-import { WithStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, Theme } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom";
@@ -36,14 +35,19 @@ function Main({ children, disablePaddingTop, disablePaddingBottom, classes }: Ma
 
 export const MainContent = withStyles(styles, { name: "CometAdminMainContent" })(Main);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminMainContent: MainContentClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminMainContent: MainContentProps;
+    }
+
+    interface Components {
+        CometAdminMainContent?: {
+            defaultProps?: ComponentsPropsList["CometAdminMainContent"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMainContent"];
+        };
     }
 }

@@ -15,7 +15,7 @@ import {
     TableHead,
     TableRow,
     Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -47,44 +47,42 @@ export const Story: React.FC = () => {
                             Contained buttons
                         </Typography>
                         <ButtonsRow>
-                            <Button variant={"contained"} color={"primary"} startIcon={<ArrowRight />}>
+                            <Button variant="contained" startIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"contained"} color={"secondary"} startIcon={<ArrowRight />}>
+                            <Button variant="contained" color="secondary" startIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"contained"} color={"default"} startIcon={<ArrowRight />}>
+                            <Button variant="contained" color="info" startIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"contained"} disabled startIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                        </ButtonsRow>
-                        <ButtonsRow>
-                            <Button variant={"contained"} color={"primary"} endIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                            <Button variant={"contained"} color={"secondary"} endIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                            <Button variant={"contained"} color={"default"} endIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                            <Button variant={"contained"} disabled endIcon={<ArrowRight />}>
+                            <Button variant="contained" disabled startIcon={<ArrowRight />}>
                                 Text
                             </Button>
                         </ButtonsRow>
                         <ButtonsRow>
-                            <Button variant={"contained"} color={"primary"}>
+                            <Button variant="contained" endIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"contained"} color={"secondary"}>
+                            <Button variant="contained" color="secondary" endIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"contained"} color={"default"}>
+                            <Button variant="contained" color="info" endIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"contained"} disabled>
+                            <Button variant="contained" disabled endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                        </ButtonsRow>
+                        <ButtonsRow>
+                            <Button variant="contained">Text</Button>
+                            <Button variant="contained" color="secondary">
+                                Text
+                            </Button>
+                            <Button variant="contained" color="info">
+                                Text
+                            </Button>
+                            <Button variant="contained" disabled>
                                 Text
                             </Button>
                         </ButtonsRow>
@@ -99,7 +97,7 @@ export const Story: React.FC = () => {
                         </Typography>
                         <Grid container spacing={4}>
                             <Grid item>
-                                <ButtonGroup variant="contained" color="primary">
+                                <ButtonGroup variant="contained">
                                     <Button startIcon={<Save />}>Button</Button>
                                     <Button>
                                         <ChevronDown />
@@ -115,7 +113,7 @@ export const Story: React.FC = () => {
                                 </ButtonGroup>
                             </Grid>
                             <Grid item>
-                                <ButtonGroup variant="contained">
+                                <ButtonGroup variant="contained" color="info">
                                     <Button startIcon={<Save />}>Button</Button>
                                     <Button>
                                         <ChevronDown />
@@ -141,44 +139,42 @@ export const Story: React.FC = () => {
                             Text buttons
                         </Typography>
                         <ButtonsRow>
-                            <Button variant={"text"} color={"primary"} startIcon={<ArrowRight />}>
+                            <Button variant="text" startIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"text"} color={"secondary"} startIcon={<ArrowRight />}>
+                            <Button variant="text" color="secondary" startIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"text"} color={"default"} startIcon={<ArrowRight />}>
+                            <Button variant="text" color="info" startIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"text"} disabled startIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                        </ButtonsRow>
-                        <ButtonsRow>
-                            <Button variant={"text"} color={"primary"} endIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                            <Button variant={"text"} color={"secondary"} endIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                            <Button variant={"text"} color={"default"} endIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                            <Button variant={"text"} disabled endIcon={<ArrowRight />}>
+                            <Button variant="text" disabled startIcon={<ArrowRight />}>
                                 Text
                             </Button>
                         </ButtonsRow>
                         <ButtonsRow>
-                            <Button variant={"text"} color={"primary"}>
+                            <Button variant="text" endIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"text"} color={"secondary"}>
+                            <Button variant="text" color="secondary" endIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"text"} color={"default"}>
+                            <Button variant="text" color="info" endIcon={<ArrowRight />}>
                                 Text
                             </Button>
-                            <Button variant={"text"} disabled>
+                            <Button variant="text" disabled endIcon={<ArrowRight />}>
+                                Text
+                            </Button>
+                        </ButtonsRow>
+                        <ButtonsRow>
+                            <Button variant="text">Text</Button>
+                            <Button variant="text" color="secondary">
+                                Text
+                            </Button>
+                            <Button variant="text" color="info">
+                                Text
+                            </Button>
+                            <Button variant="text" disabled>
                                 Text
                             </Button>
                         </ButtonsRow>
@@ -194,54 +190,54 @@ export const Story: React.FC = () => {
                         <AppBar position={"relative"} style={{ padding: 20, backgroundColor: "black", color: "white", textAlign: "center" }}>
                             <Grid container spacing={4}>
                                 <Grid item xs={4}>
-                                    <Button variant={"text"} color={"inherit"} startIcon={<ArrowRight />}>
+                                    <Button variant="text" color="inherit" startIcon={<ArrowRight />}>
                                         Text
                                     </Button>
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <Button variant={"text"} color={"inherit"} startIcon={<ArrowRight />}>
+                                    <Button variant="text" color="inherit" startIcon={<ArrowRight />}>
                                         Text
                                     </Button>
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <Button variant={"text"} color={"inherit"} disabled startIcon={<ArrowRight />}>
+                                    <Button variant="text" color="inherit" disabled startIcon={<ArrowRight />}>
                                         Text
                                     </Button>
                                 </Grid>
                             </Grid>
                         </AppBar>
                         <Box padding={4}>
-                            <Button variant={"text"} startIcon={<Favorite />}>
+                            <Button variant="text" color="info" startIcon={<Favorite />}>
                                 Aligned left
                             </Button>
                         </Box>
                         <Divider />
                         <Box padding={4} style={{ textAlign: "center" }}>
-                            <Button variant={"text"} startIcon={<Favorite />}>
+                            <Button variant="text" color="info" startIcon={<Favorite />}>
                                 Centered
                             </Button>
                         </Box>
                         <Divider />
                         <Box padding={4} style={{ textAlign: "center" }}>
-                            <Button variant={"text"} color={"primary"} startIcon={<Favorite />}>
+                            <Button variant="text" startIcon={<Favorite />}>
                                 Centered Blue
                             </Button>
                         </Box>
                         <Divider />
                         <Box padding={4} display={"flex"} justifyContent={"space-between"}>
-                            <Button variant={"text"} startIcon={<Clear />}>
+                            <Button variant="text" color="info" startIcon={<Clear />}>
                                 Cancel
                             </Button>
-                            <Button variant={"contained"} color={"primary"} startIcon={<Save />}>
+                            <Button variant="contained" color="primary" startIcon={<Save />}>
                                 Save
                             </Button>
                         </Box>
                         <Divider />
                         <Box padding={4} display={"flex"} justifyContent={"space-between"}>
-                            <Button variant={"text"} disabled startIcon={<Clear />}>
+                            <Button variant="text" disabled startIcon={<Clear />}>
                                 Cancel
                             </Button>
-                            <Button variant={"contained"} disabled color={"primary"} startIcon={<Save />}>
+                            <Button variant="contained" disabled color="primary" startIcon={<Save />}>
                                 Save
                             </Button>
                         </Box>
@@ -271,13 +267,13 @@ export const Story: React.FC = () => {
                                             </TableCell>
                                             <TableCell>Foo bar</TableCell>
                                             <TableCell align="right">
-                                                <IconButton>
-                                                    <Edit color={"primary"} />
+                                                <IconButton size="large">
+                                                    <Edit color="primary" />
                                                 </IconButton>
-                                                <IconButton>
+                                                <IconButton size="large">
                                                     <Favorite />
                                                 </IconButton>
-                                                <IconButton>
+                                                <IconButton size="large">
                                                     <MoreVertical />
                                                 </IconButton>
                                             </TableCell>

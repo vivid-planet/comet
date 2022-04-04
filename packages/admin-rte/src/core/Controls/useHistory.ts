@@ -1,5 +1,5 @@
-import RedoIcon from "@material-ui/icons/Redo";
-import UndoIcon from "@material-ui/icons/Undo";
+import RedoIcon from "@mui/icons-material/Redo";
+import UndoIcon from "@mui/icons-material/Undo";
 import { EditorState } from "draft-js";
 import * as React from "react";
 import { useIntl } from "react-intl";

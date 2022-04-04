@@ -1,5 +1,5 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
-import { Card, CardContent, Grid } from "@material-ui/core";
+import { Card, CardContent, Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import { FieldValidator } from "final-form";
 import * as React from "react";

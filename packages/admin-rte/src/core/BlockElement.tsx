@@ -1,6 +1,5 @@
-import { Typography, TypographyProps, WithStyles } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
-import { createStyles, withStyles } from "@material-ui/styles";
+import { ComponentsOverrides, Theme, Typography, TypographyProps } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { SupportedThings } from "./Rte";
@@ -89,14 +88,19 @@ const styles = ({ palette }: Theme) => {
 
 export const BlockElement = withStyles(styles, { name: "CometAdminRteBlockElement" })(RteBlockElement);
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRteBlockElement: RteBlockElementClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminRteBlockElement: RteBlockElementProps;
+    }
+
+    interface Components {
+        CometAdminRteBlockElement?: {
+            defaultProps?: ComponentsPropsList["CometAdminRteBlockElement"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteBlockElement"];
+        };
     }
 }

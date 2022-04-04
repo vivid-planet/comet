@@ -1,16 +1,16 @@
-import { WithStyles } from "@material-ui/core";
+import { WithStyles } from "@mui/styles";
 import * as React from "react";
 import { Hue, Saturation } from "react-color/lib/components/common";
 
 import { colorToHex, stringToHSL, stringToHSV } from "../utils/colorSpaces";
 import { styles } from "./ColorPicker.styles";
 
-interface IPickerProps {
+interface PickerProps {
     color: string;
     onChange: (colorValue: string) => void;
 }
 
-const Picker: React.FC<WithStyles<typeof styles> & IPickerProps> = ({ color, onChange, classes }) => (
+const Picker: React.FC<Pick<WithStyles<typeof styles>, "classes"> & PickerProps> = ({ color, onChange, classes }) => (
     <>
         <div className={classes.saturationWrapper}>
             <Saturation

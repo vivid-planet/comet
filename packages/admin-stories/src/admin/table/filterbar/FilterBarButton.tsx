@@ -1,6 +1,6 @@
 import { FilterBarButton } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
-import { List, ListItem } from "@material-ui/core";
+import { List, ListItem } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

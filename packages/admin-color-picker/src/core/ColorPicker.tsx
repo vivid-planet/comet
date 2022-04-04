@@ -1,5 +1,7 @@
 import { ClearInputButton } from "@comet/admin";
-import { ClickAwayListener, InputAdornment, InputBase, InputBaseProps, Paper, Popper, WithStyles, withStyles } from "@material-ui/core";
+import { ClickAwayListener, ComponentsOverrides, InputAdornment, InputBase, InputBaseProps, Paper, Popper, Theme } from "@mui/material";
+import { WithStyles } from "@mui/styles";
+import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { CustomPicker } from "react-color";
 import { FieldRenderProps } from "react-final-form";
@@ -105,14 +107,19 @@ function ColorPicker({
 
 export default withStyles(styles, { name: "CometAdminColorPicker" })(CustomPicker(ColorPicker));
 
-declare module "@material-ui/core/styles/overrides" {
+declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminColorPicker: ColorPickerClassKey;
     }
-}
 
-declare module "@material-ui/core/styles/props" {
     interface ComponentsPropsList {
         CometAdminColorPicker: ColorPickerProps;
+    }
+
+    interface Components {
+        CometAdminColorPicker?: {
+            defaultProps?: ComponentsPropsList["CometAdminColorPicker"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminColorPicker"];
+        };
     }
 }

@@ -1,5 +1,5 @@
 import { ClearInputButton } from "@comet/admin";
-import { Box, InputAdornment, InputBase, Typography } from "@material-ui/core";
+import { Box, InputAdornment, InputBase, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
