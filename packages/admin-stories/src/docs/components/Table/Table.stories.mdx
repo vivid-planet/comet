@@ -89,6 +89,18 @@ See [Excel Export section](#excel-export)
 
 ## TableQuery
 
+To fill a `Table` with API data, you can use the `useTableQuery` hook in combination with the
+`TableQuery` component.
+
+`TableQuery` has a built-in loading state and error handling.
+All you have to do is passing the `api`, `error` and `loading` props returned by `useTableQuery` to `TableQuery`.
+
+// TODO: More info concerning `useTableQuery`
+
+<Canvas>
+    <Story id="stories-components-table-tablequery--tablequery" />
+</Canvas>
+
 ## Pagination
 
 TODO after https://github.com/vivid-planet/comet-admin/pull/579 is merged
