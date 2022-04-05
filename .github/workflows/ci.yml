@@ -16,7 +16,7 @@ jobs:
     CI:
         runs-on: ubuntu-latest
         steps:
-            - run: echo "${{ github.actor }}"
+            - run: echo "${{ env.GITHUB_ACTOR }}"
 
             - uses: actions/checkout@v3
 
@@ -38,7 +38,7 @@ jobs:
                   yarn lint
 
             - name: Extract i18n strings
-              if: ${{ github.ref_name == 'main' }}
+              if: ${{ env.GITHUB_REF_NAME == 'main' }}
               run: |
                   yarn intl:extract
                   git clone https://github.com/vivid-planet/comet-admin-lang.git
@@ -49,13 +49,13 @@ jobs:
                   if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for ${{ env.GITHUB_SHA }}" && git remote rm origin && git remote add origin https://vivid-planet-bot:${{ secrets.GH_TOKEN }}@github.com/vivid-planet/comet-admin-lang.git && git push --set-upstream origin master; fi
 
             - name: Publish Canary release
-              if: ${{ github.ref_name == 'main' || github.ref_name == 'next' }}
-              run: yarn publish:release --canary --preid=canary.${{ env.GITHUB_RUN_ID }} --dist-tag=canary --yes
+              if: ${{ env.GITHUB_REF_NAME == 'main' || env.GITHUB_REF_NAME == 'next' }}
+              run: yarn publish:release --canary --preid=canary --dist-tag=canary --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: Publish stable release
-              if: ${{ startsWith(github.ref, 'refs/tags') }}
-              run: yarn publish:release --canary --preid=canary.${{ env.GITHUB_RUN_ID }} --dist-tag=canary --yes
+              if: ${{ startsWith(env.GITHUB_REF, 'refs/tags') }}
+              run: yarn publish:release ${{ env.GITHUB_REF_NAME }} --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
