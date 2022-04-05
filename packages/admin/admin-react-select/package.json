@@ -1,0 +1,49 @@
+{
+    "name": "@comet/admin-react-select",
+    "version": "2.0.0",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/admin/admin-react-select"
+    },
+    "dependencies": {
+        "classnames": "^2.2.6"
+    },
+    "devDependencies": {
+        "@comet/admin": "^2.0.0",
+        "@comet/eslint-config": "^2.0.0",
+        "@types/react-select": "^3.1.2",
+        "eslint": "^8.0.0",
+        "prettier": "^2.0.0",
+        "typescript": "^4.0.0",
+        "yarn-run-all": "^3.0.0"
+    },
+    "peerDependencies": {
+        "@comet/admin": "^2.0.0",
+        "@mui/icons-material": "^5.4.1",
+        "@mui/material": "^5.4.1",
+        "@mui/styles": "^5.4.1",
+        "final-form": "^4.16.1",
+        "react": "^17.0",
+        "react-dom": "^17.0",
+        "react-final-form": "^6.3.1",
+        "react-select": "^3.0.4"
+    },
+    "scripts": {
+        "build": "rimraf lib && tsc --project ./tsconfig.json",
+        "start": "rimraf lib && tsc --project ./tsconfig.json --watch --preserveWatchOutput",
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/",
+        "lint:tsc": "tsc --noEmit"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "license": "BSD-2-Clause"
+}
