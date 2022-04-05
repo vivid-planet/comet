@@ -18,6 +18,7 @@ export { StackBackButtonClassKey } from "./stack/backbutton/StackBackButton.styl
 export { StackBackButtonProps } from "./stack/backbutton/StackBackButton";
 export { StackBreadcrumbProps, StackBreadcrumbs } from "./stack/breadcrumbs/StackBreadcrumbs";
 export { StackBreadcrumbsClassKey } from "./stack/breadcrumbs/StackBreadcrumbs.styles";
+export { createOffsetLimitPagingAction } from "./table/paging/createOffsetLimitPagingAction";
 export { createRelayPagingActions } from "./table/paging/createRelayPagingActions";
 export { createRestPagingActions } from "./table/paging/createRestPagingActions";
 export { createPagePagingActions } from "./table/paging/createPagePagingActions";
