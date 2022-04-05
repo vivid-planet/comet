@@ -7,5 +7,5 @@ cd $(dirname $0)
 # use correct npm and install dependencies
 nvm install
 nvm use
-npm i -g npm@7.19
-npm install
+npm i -g npm@7.19 yarn
+yarn install
