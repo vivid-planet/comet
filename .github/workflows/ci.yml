@@ -16,10 +16,7 @@ jobs:
     CI:
         runs-on: ubuntu-latest
         steps:
-            - run: echo "${{ env.GITHUB_ACTOR }}"
-
-            - name: Dump GitHub context
-              run: echo '${{ toJSON(github) }}'
+            - run: echo "${{ github.actor }}"
 
             - uses: actions/checkout@v3
 
@@ -41,7 +38,7 @@ jobs:
                   yarn lint
 
             - name: Extract i18n strings
-              if: ${{ env.GITHUB_REF_NAME == 'main' }}
+              if: ${{ github.ref_name == 'main' }}
               run: |
                   yarn intl:extract
                   git clone https://github.com/vivid-planet/comet-admin-lang.git
@@ -49,16 +46,16 @@ jobs:
                   cd comet-admin-lang
                   git config user.email "vivid-planet-bot@vivid-planet.com"
                   git add .
-                  if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for ${{ env.GITHUB_SHA }}" && git remote rm origin && git remote add origin https://vivid-planet-bot:${{ secrets.GH_TOKEN }}@github.com/vivid-planet/comet-admin-lang.git && git push --set-upstream origin master; fi
+                  if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for ${{ github.sha }}" && git remote rm origin && git remote add origin https://vivid-planet-bot:${{ secrets.GH_TOKEN }}@github.com/vivid-planet/comet-admin-lang.git && git push --set-upstream origin master; fi
 
             - name: Publish Canary release
-              if: ${{ env.GITHUB_REF_NAME == 'main' || env.GITHUB_REF_NAME == 'next' }}
+              if: ${{ github.ref_name == 'main' || github.ref_name == 'next' }}
               run: yarn publish:release --canary --preid=canary --dist-tag=canary --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: Publish stable release
-              if: ${{ startsWith(env.GITHUB_REF, 'refs/tags') }}
-              run: yarn publish:release ${{ env.GITHUB_REF_NAME }} --yes
+              if: ${{ github.ref_type == 'tag' }}
+              run: yarn publish:release ${{ github.ref_name }} --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
