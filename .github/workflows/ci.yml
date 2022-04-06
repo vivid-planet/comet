@@ -50,7 +50,7 @@ jobs:
 
             - name: Publish Canary release
               if: ${{ github.ref_name == 'main' || github.ref_name == 'next' }}
-              run: yarn publish:release --canary --preid=canary --dist-tag=canary --yes
+              run: yarn publish:release --canary --preid=canary.${{ github.run_number }} --dist-tag=canary --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
