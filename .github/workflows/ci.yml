@@ -18,6 +18,9 @@ jobs:
         steps:
             - run: echo "${{ env.GITHUB_ACTOR }}"
 
+            - name: Dump GitHub context
+              run: echo '${{ toJSON(github) }}'
+
             - uses: actions/checkout@v3
 
             - name: Use Node.js 14.x
