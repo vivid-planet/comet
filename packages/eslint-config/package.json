@@ -42,5 +42,6 @@
         "next": {
             "optional": true
         }
-    }
+    },
+    "license": "BSD-2-Clause"
 }
