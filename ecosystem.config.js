@@ -13,6 +13,12 @@ module.exports = {
             autorestart: true,
         },
         {
+            name: "comet-admin-date-time",
+            script: "npx wait-on packages/admin/admin/lib && npx yarn workspace @comet/admin-date-time start",
+            namespace: "comet-admin",
+            autorestart: true,
+        },
+        {
             name: "comet-admin-icons",
             script: "npx yarn workspace @comet/admin-icons start",
             namespace: "comet-admin",
@@ -38,7 +44,7 @@ module.exports = {
         },
         {
             name: "comet-admin-storybook",
-            script: "npx wait-on packages/admin/admin/lib packages/admin/admin-color-picker/lib packages/admin/admin-icons/lib packages/admin/admin-react-select/lib packages/admin/admin-rte/lib packages/admin/admin-theme/lib && npx yarn workspace comet-admin-stories storybook",
+            script: "npx wait-on packages/admin/admin/lib packages/admin/admin-color-picker/lib packages/admin/admin-date-time/lib packages/admin/admin-icons/lib packages/admin/admin-react-select/lib packages/admin/admin-rte/lib packages/admin/admin-theme/lib && npx yarn workspace comet-admin-stories storybook",
             namespace: "comet-admin",
             autorestart: true,
         },

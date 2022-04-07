@@ -64,6 +64,8 @@ export { PrettyBytes } from "./helpers/PrettyBytes";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
 export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
 export { useStoredState } from "./hooks/useStoredState";
+export { InputWithPopper, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
+export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.styles";
 export { MainContent, MainContentClassKey, MainContentProps } from "./mui/MainContent";
 export { MasterLayout, MasterLayoutProps } from "./mui/MasterLayout";
 export { MasterLayoutClassKey } from "./mui/MasterLayout.styles";
