@@ -2,6 +2,8 @@
     "npmClient": "yarn",
     "packages": [
         "packages/admin/*",
+        "packages/api/*",
+        "packages/site/*",
         "packages/eslint-config"
     ],
     "useWorkspaces": true,
