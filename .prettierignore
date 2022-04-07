@@ -8,3 +8,5 @@ lang/
 lib/
 lerna.json
 storybook-static
+schema.graphql
+block-meta.json
