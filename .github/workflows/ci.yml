@@ -29,6 +29,10 @@ jobs:
 
             - run: yarn install
 
+            - name: Prepare block-meta files
+              run: |
+                  cp packages/api/api-cms/block-meta.json packages/site/site-cms/block-meta.json
+
             - name: Build
               run: yarn build
 

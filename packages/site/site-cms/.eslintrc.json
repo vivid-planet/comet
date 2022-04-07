@@ -1,0 +1,7 @@
+{
+    "extends": "@comet/eslint-config/nextjs",
+    "ignorePatterns": ["src/*.generated.ts"],
+    "rules": {
+        "@next/next/no-html-link-for-pages": "off" // disabled because lib has no pages dir
+    }
+}
