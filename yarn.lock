@@ -1199,6 +1199,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/cli@npm:^7.0.0, @babel/cli@npm:^7.17.6":
+  version: 7.17.6
+  resolution: "@babel/cli@npm:7.17.6"
+  dependencies:
+    "@jridgewell/trace-mapping": ^0.3.4
+    "@nicolo-ribaudo/chokidar-2": 2.1.8-no-fsevents.3
+    chokidar: ^3.4.0
+    commander: ^4.0.1
+    convert-source-map: ^1.1.0
+    fs-readdir-recursive: ^1.1.0
+    glob: ^7.0.0
+    make-dir: ^2.1.0
+    slash: ^2.0.0
+    source-map: ^0.5.0
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  dependenciesMeta:
+    "@nicolo-ribaudo/chokidar-2":
+      optional: true
+    chokidar:
+      optional: true
+  bin:
+    babel: ./bin/babel.js
+    babel-external-helpers: ./bin/babel-external-helpers.js
+  checksum: 362c9baf14e3984bad2388647941e0ce3bf1894a5f25cd8595ca0b9bdcd8b94eb06d15eef6590e2215cfc5a191e186ae65c0c6214ed4a3eec226bd0eacc37c44
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:7.12.11":
   version: 7.12.11
   resolution: "@babel/code-frame@npm:7.12.11"
@@ -1248,7 +1276,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.1.0, @babel/core@npm:^7.12.10, @babel/core@npm:^7.12.3, @babel/core@npm:^7.7.2, @babel/core@npm:^7.7.5, @babel/core@npm:^7.8.0, @babel/core@npm:^7.8.3":
+"@babel/core@npm:^7.0.0, @babel/core@npm:^7.1.0, @babel/core@npm:^7.12.10, @babel/core@npm:^7.12.3, @babel/core@npm:^7.7.2, @babel/core@npm:^7.7.5, @babel/core@npm:^7.8.0, @babel/core@npm:^7.8.3":
   version: 7.17.9
   resolution: "@babel/core@npm:7.17.9"
   dependencies:
@@ -1619,7 +1647,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-class-properties@npm:^7.12.1, @babel/plugin-proposal-class-properties@npm:^7.16.7":
+"@babel/plugin-proposal-class-properties@npm:^7.0.0, @babel/plugin-proposal-class-properties@npm:^7.12.1, @babel/plugin-proposal-class-properties@npm:^7.16.7":
   version: 7.16.7
   resolution: "@babel/plugin-proposal-class-properties@npm:7.16.7"
   dependencies:
@@ -2540,7 +2568,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:^7.12.11":
+"@babel/preset-env@npm:^7.0.0, @babel/preset-env@npm:^7.12.11":
   version: 7.16.11
   resolution: "@babel/preset-env@npm:7.16.11"
   dependencies:
@@ -2652,7 +2680,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-react@npm:^7.12.10":
+"@babel/preset-react@npm:^7.0.0, @babel/preset-react@npm:^7.12.10":
   version: 7.16.7
   resolution: "@babel/preset-react@npm:7.16.7"
   dependencies:
@@ -2668,7 +2696,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-typescript@npm:^7.12.7":
+"@babel/preset-typescript@npm:^7.0.0, @babel/preset-typescript@npm:^7.12.7":
   version: 7.16.7
   resolution: "@babel/preset-typescript@npm:7.16.7"
   dependencies:
@@ -2808,17 +2836,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@comet/admin-babel-preset@^2.0.0, @comet/admin-babel-preset@workspace:packages/admin/admin-babel-preset":
+  version: 0.0.0-use.local
+  resolution: "@comet/admin-babel-preset@workspace:packages/admin/admin-babel-preset"
+  dependencies:
+    "@babel/cli": ^7.0.0
+    "@babel/core": ^7.0.0
+    "@babel/plugin-proposal-class-properties": ^7.0.0
+    "@babel/preset-env": ^7.0.0
+    "@babel/preset-react": ^7.0.0
+    "@babel/preset-typescript": ^7.0.0
+    "@emotion/babel-plugin": ^11.0.0
+  peerDependencies:
+    "@babel/cli": ">= 7"
+  languageName: unknown
+  linkType: soft
+
 "@comet/admin-color-picker@^2.0.0, @comet/admin-color-picker@workspace:packages/admin/admin-color-picker":
   version: 0.0.0-use.local
   resolution: "@comet/admin-color-picker@workspace:packages/admin/admin-color-picker"
   dependencies:
+    "@babel/cli": ^7.17.6
     "@comet/admin": ^2.0.0
+    "@comet/admin-babel-preset": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@types/react-color": ^2.17.5
     "@types/tinycolor2": ^1.4.2
     eslint: ^8.0.0
     prettier: ^2.0.0
     react-color: ^2.19.3
+    rimraf: ^3.0.2
     tinycolor2: ^1.4.1
     typescript: ^4.0.0
     yarn-run-all: ^3.0.0
@@ -2837,7 +2884,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@comet/admin-date-time@workspace:packages/admin/admin-date-time"
   dependencies:
+    "@babel/cli": ^7.17.6
     "@comet/admin": ^2.0.0
+    "@comet/admin-babel-preset": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@types/react": ^17.0
     "@types/react-date-range": ^1.4.3
@@ -2845,6 +2894,7 @@ __metadata:
     eslint: ^8.0.0
     prettier: ^2.0.0
     react-date-range: ^1.4.0
+    rimraf: ^3.0.2
     typescript: ^4.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
@@ -2862,6 +2912,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@comet/admin-icons@workspace:packages/admin/admin-icons"
   dependencies:
+    "@babel/cli": ^7.17.6
+    "@comet/admin-babel-preset": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@types/cli-progress": ^3.8.0
     cli-progress: ^3.8.2
@@ -2884,12 +2936,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@comet/admin-react-select@workspace:packages/admin/admin-react-select"
   dependencies:
+    "@babel/cli": ^7.17.6
     "@comet/admin": ^2.0.0
+    "@comet/admin-babel-preset": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@types/react-select": ^3.1.2
     classnames: ^2.2.6
     eslint: ^8.0.0
     prettier: ^2.0.0
+    rimraf: ^3.0.2
     typescript: ^4.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
@@ -2909,12 +2964,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@comet/admin-rte@workspace:packages/admin/admin-rte"
   dependencies:
+    "@babel/cli": ^7.17.6
+    "@comet/admin-babel-preset": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@types/draft-js": ^0.10.38
     "@types/immutable": ^3.8.7
     detect-browser: ^5.2.1
     eslint: ^8.0.0
     prettier: ^2.0.0
+    rimraf: ^3.0.2
     typescript: ^4.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
@@ -2935,7 +2993,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@comet/admin-theme@workspace:packages/admin/admin-theme"
   dependencies:
+    "@babel/cli": ^7.17.6
     "@comet/admin": ^2.0.0
+    "@comet/admin-babel-preset": ^2.0.0
     "@comet/admin-color-picker": ^2.0.0
     "@comet/admin-icons": ^2.0.0
     "@comet/admin-react-select": ^2.0.0
@@ -2945,6 +3005,7 @@ __metadata:
     eslint: ^8.0.0
     lodash.merge: ^4.6.2
     prettier: ^2.0.0
+    rimraf: ^3.0.2
     typescript: ^4.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
@@ -2959,6 +3020,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@comet/admin@workspace:packages/admin/admin"
   dependencies:
+    "@babel/cli": ^7.17.6
+    "@comet/admin-babel-preset": ^2.0.0
     "@comet/admin-icons": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@formatjs/ecma402-abstract": ^1.0.0
@@ -2979,6 +3042,7 @@ __metadata:
     lodash.isequal: ^4.5.0
     prettier: ^2.0.0
     query-string: ^6.8.1
+    rimraf: ^3.0.2
     typescript: ^4.0.0
     use-constant: ^1.0.0
     uuid: ^3.3.2
@@ -3170,7 +3234,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/babel-plugin@npm:^11.7.1":
+"@emotion/babel-plugin@npm:^11.0.0, @emotion/babel-plugin@npm:^11.7.1":
   version: 11.7.2
   resolution: "@emotion/babel-plugin@npm:11.7.2"
   dependencies:
@@ -4279,7 +4343,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jridgewell/trace-mapping@npm:^0.3.0":
+"@jridgewell/trace-mapping@npm:^0.3.0, @jridgewell/trace-mapping@npm:^0.3.4":
   version: 0.3.4
   resolution: "@jridgewell/trace-mapping@npm:0.3.4"
   dependencies:
@@ -5823,6 +5887,13 @@ __metadata:
   version: 11.1.4
   resolution: "@next/swc-win32-x64-msvc@npm:11.1.4"
   conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3":
+  version: 2.1.8-no-fsevents.3
+  resolution: "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3"
+  checksum: ee55cc9241aeea7eb94b8a8551bfa4246c56c53bc71ecda0a2104018fcc328ba5723b33686bdf9cc65d4df4ae65e8016b89e0bbdeb94e0309fe91bb9ced42344
   languageName: node
   linkType: hard
 
@@ -11060,7 +11131,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:^3.2.3, chokidar@npm:^3.4.1, chokidar@npm:^3.4.2, chokidar@npm:^3.5.1":
+"chokidar@npm:^3.2.3, chokidar@npm:^3.4.0, chokidar@npm:^3.4.1, chokidar@npm:^3.4.2, chokidar@npm:^3.5.1":
   version: 3.5.3
   resolution: "chokidar@npm:3.5.3"
   dependencies:
@@ -11508,8 +11579,10 @@ __metadata:
   resolution: "comet-admin-stories@workspace:packages/admin/admin-stories"
   dependencies:
     "@apollo/client": ^3.2.5
+    "@babel/cli": ^7.17.6
     "@babel/core": ^7.8.3
     "@comet/admin": ^2.0.0
+    "@comet/admin-babel-preset": ^2.0.0
     "@comet/admin-color-picker": ^2.0.0
     "@comet/admin-date-time": ^2.0.0
     "@comet/admin-icons": ^2.0.0
@@ -11595,7 +11668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^4.1.1":
+"commander@npm:^4.0.1, commander@npm:^4.1.1":
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
   checksum: d7b9913ff92cae20cb577a4ac6fcc121bd6223319e54a40f51a14740a681ad5c574fd29a57da478a5f234a6fa6c52cbf0b7c641353e03c648b1ae85ba670b977
@@ -11899,7 +11972,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"convert-source-map@npm:^1.4.0, convert-source-map@npm:^1.5.0, convert-source-map@npm:^1.6.0, convert-source-map@npm:^1.7.0":
+"convert-source-map@npm:^1.1.0, convert-source-map@npm:^1.4.0, convert-source-map@npm:^1.5.0, convert-source-map@npm:^1.6.0, convert-source-map@npm:^1.7.0":
   version: 1.8.0
   resolution: "convert-source-map@npm:1.8.0"
   dependencies:
@@ -15182,6 +15255,13 @@ __metadata:
   version: 1.0.3
   resolution: "fs-monkey@npm:1.0.3"
   checksum: cf50804833f9b88a476911ae911fe50f61a98d986df52f890bd97e7262796d023698cb2309fa9b74fdd8974f04315b648748a0a8ee059e7d5257b293bfc409c0
+  languageName: node
+  linkType: hard
+
+"fs-readdir-recursive@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "fs-readdir-recursive@npm:1.1.0"
+  checksum: 29d50f3d2128391c7fc9fd051c8b7ea45bcc8aa84daf31ef52b17218e20bfd2bd34d02382742801954cc8d1905832b68227f6b680a666ce525d8b6b75068ad1e
   languageName: node
   linkType: hard
 
