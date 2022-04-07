@@ -1,21 +1,8 @@
 {
+    "extends": "../tsconfig.base.json",
     "compilerOptions": {
-        "target": "ES2015",
-        "module": "CommonJS",
-        "lib": ["ES2020"],
-        "removeComments": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "sourceMap": true,
         "outDir": "./lib",
-        "baseUrl": "./",
-        "incremental": true,
-        "esModuleInterop": true,
-        "strict": true,
-        "strictPropertyInitialization": false,
-        "strictNullChecks": true,
-        "skipLibCheck": true,
-        "declaration": true
+        "baseUrl": "./"
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "lib"]
