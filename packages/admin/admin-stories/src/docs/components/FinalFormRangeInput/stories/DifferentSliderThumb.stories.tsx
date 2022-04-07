@@ -1,5 +1,5 @@
 import { Field, FinalFormRangeInput } from "@comet/admin";
-import { styled } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";

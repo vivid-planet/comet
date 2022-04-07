@@ -20,12 +20,11 @@ import {
     Grid,
     MenuItem,
     Paper,
-    styled,
     Theme,
     ThemeProvider,
     Typography,
 } from "@mui/material";
-import { StyledEngineProvider } from "@mui/material/styles";
+import { styled, StyledEngineProvider } from "@mui/material/styles";
 import withStyles from "@mui/styles/withStyles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";

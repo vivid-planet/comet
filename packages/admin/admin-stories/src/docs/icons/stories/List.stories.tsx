@@ -1,5 +1,6 @@
 import * as icons from "@comet/admin-icons";
-import { styled, SvgIconProps, Typography } from "@mui/material";
+import { SvgIconProps, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { color } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
