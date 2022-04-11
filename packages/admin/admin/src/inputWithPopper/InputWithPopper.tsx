@@ -5,14 +5,14 @@ import * as React from "react";
 
 import { styles } from "./InputWithPopper.styles";
 
-type InputWithPopperComponentsProps = InputBaseProps["componentsProps"] & {
+export type InputWithPopperComponentsProps = InputBaseProps["componentsProps"] & {
     clickAwayListener?: Partial<ClickAwayListenerProps>;
     popper?: Partial<PopperProps>;
     transition?: Partial<TransitionProps>;
     paper?: Partial<PaperProps>;
 };
 
-type InputWithPopperComponents = InputBaseProps["components"] & {
+export type InputWithPopperComponents = InputBaseProps["components"] & {
     Transition?: React.ElementType<TransitionProps>;
 };
 

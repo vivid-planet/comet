@@ -12,15 +12,15 @@
         "directory": "packages/admin/admin-color-picker"
     },
     "dependencies": {
-        "react-color": "^2.19.3",
-        "tinycolor2": "^1.4.1"
+        "react-colorful": "^5.5.1",
+        "tinycolor2": "^1.4.1",
+        "use-debounce": "^7.0.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@comet/admin": "^2.0.0",
         "@comet/admin-babel-preset": "^2.0.0",
         "@comet/eslint-config": "^2.0.0",
-        "@types/react-color": "^2.17.5",
         "@types/tinycolor2": "^1.4.2",
         "eslint": "^8.0.0",
         "prettier": "^2.0.0",
