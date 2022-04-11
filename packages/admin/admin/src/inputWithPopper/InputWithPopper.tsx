@@ -78,6 +78,8 @@ function InputWithPopper({
 
     return (
         <ClickAwayListener
+            mouseEvent="onMouseDown"
+            touchEvent="onTouchStart"
             onClickAway={() => {
                 closePopper();
             }}
