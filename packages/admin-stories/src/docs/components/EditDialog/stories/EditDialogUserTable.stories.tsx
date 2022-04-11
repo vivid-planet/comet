@@ -39,16 +39,6 @@ const updateUser = (id: string, name: string): User => {
     return users[idx];
 };
 
-const isEditMode = (selection: {
-    id?: string;
-    mode?: "edit" | "add";
-}): selection is {
-    id: string;
-    mode: "edit";
-} => {
-    return selection.mode === "edit";
-};
-
 interface UserFormProps {
     mode?: "add" | "edit";
     id?: string;
@@ -60,14 +50,14 @@ storiesOf("stories/components/EditDialog/Edit Dialog User Table", module)
     .add("Edit Dialog User Table", () => {
         const UserForm: React.VoidFunctionComponent<UserFormProps> = ({ selectionApi, id, mode = "add" }) => {
             const selection = { id, mode };
-            const user = isEditMode(selection) ? getUser(selection.id) : undefined;
+            const user = selection.mode === "edit" ? getUser(selection.id as string) : undefined;
 
             return (
                 <FinalForm<{ name: string }>
                     mode={selection.mode}
                     onSubmit={async ({ name }) => {
-                        if (isEditMode(selection)) {
-                            updateUser(selection.id, name);
+                        if (selection.mode === "edit") {
+                            updateUser(selection.id as string, name);
                         } else {
                             addUser(name);
                         }
