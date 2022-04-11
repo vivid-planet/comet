@@ -104,7 +104,7 @@ storiesOf("stories/components/Table/Table Column Props", module)
             <>
                 <p>
                     <Button onClick={() => setIdVisible((visible) => !visible)} variant="contained" color="primary">
-                        Show ID
+                        Show ID Column
                     </Button>
                 </p>
                 <Table
