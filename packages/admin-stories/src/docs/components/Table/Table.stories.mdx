@@ -18,7 +18,7 @@ import dedent from "ts-dedent";
 
 Table has three required parameters: `data`, `totalCount` and `columns`.
 
-`data` contains the data that should be displayed in the table. It must be an array of objects and each object must have a unique `id`.
+`data` contains the data that should be displayed in the table. It must be an array of objects, and each object must have a unique `id`.
 
 `totalCount` specifies the total number of items.
 It's only relevant if pagination is used. Then, the totalCount should be provided by the API.
@@ -33,13 +33,13 @@ More information can be found in the [column section](#table-column).
 ### name
 
 The only required property of a column is its `name`.
-Per default, the `name` is matched to a property of `data` which is then rendered:
+Per default, the `name` is matched to a property of `data`, which is then rendered:
 
 <Canvas>
     <Story id="stories-components-table-table-column-props--table-column-name-prop" />
 </Canvas>
 
-This also works for nested properties if the `name` is separated by dots:
+Matching also works for nested properties if the `name` is separated by dots:
 
 <Canvas>
     <Story id="stories-components-table-table-column-props--table-column-nested-name-prop" />
@@ -47,7 +47,7 @@ This also works for nested properties if the `name` is separated by dots:
 
 ### render
 
-The default rendering behavior can be overwritten by passing a function to the `render` prop.
+Passing a function to the `render` prop overwrites the default rendering behavior.
 The render function can be used for altering the styling of a column or for rendering columns that don't have a corresponding prop in `data`:
 
 <Canvas>
@@ -75,9 +75,9 @@ If no header is set, the heading of a column is empty.
 
 ### cellProps & headerProps
 
-Internally, the `Table` uses Material UI's `TableCell` for rendering table headers and table cells.
+Internally, the `Table` uses Material UI's `TableCell` to render table headers and cells.
 `cellProps` and `headerProps` can be used to pass props to these internal elements.
-More information can be found in the [Material UI Docs](https://v4.mui.com/api/table-cell/).
+You can find more information in the [Material UI Docs](https://v4.mui.com/api/table-cell/).
 
 ### sortable
 
@@ -116,7 +116,7 @@ The typical procedure to use pagination is as follows:
 4. use one of Comet Admin's paging actions to generate a `pagingInfo` object inside `resolveTableData()`
 5. pass `pagingInfo` to the `Table`
 
-After performing the steps above, a `TableFooter` that allows the user to switch between pages is automatically added to the `Table`.
+After performing the steps above, a `TableFooter` is automatically added to the `Table`. It allows the user to switch between pages.
 
 Comet Admin supports multiple types of pagination:
 
@@ -153,7 +153,7 @@ You can then sort the table ascending or descending by column by clicking on the
 ## Excel Export
 
 The `Table` component has a built-in excel export functionality.
-To use it, following steps are necessary:
+To use it, the following steps are necessary:
 
 1. get an instance of `exportApi` (e.g. from the `useExportDisplayedTableData()` hook like in the example below)
 2. pass the `exportApi` to the `Table`
@@ -193,9 +193,18 @@ Otherwise, the column will be empty in the excel sheet.
 
 ### Excel Export and Pagination
 
-The
+If you want to export data from multiple pages, you can use the `useExportPagedTableQuery()` hook.
 
-// TODO
+<Canvas>
+    <Story id="stories-components-table-excel-export-table--excel-export-and-pagination-useexportpagedtablequery" />
+</Canvas>
+
+If you want to export more (or other) data than displayed independently of pages, you can use the `useExportTableQuery()` hook.
+This also has the advantage that all data is queried in a single request (while `useExportPagedTableQuery()` makes one request per page).
+
+<Canvas>
+    <Story id="stories-components-table-excel-export-table--excel-export-and-pagination-useexporttablequery" />
+</Canvas>
 
 ## TableDndOrder
 

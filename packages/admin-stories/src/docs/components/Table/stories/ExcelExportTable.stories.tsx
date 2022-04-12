@@ -1,17 +1,26 @@
+import { gql } from "@apollo/client";
 import {
+    createOffsetLimitPagingAction,
     ExcelExportButton,
     MainContent,
     Table,
+    TableQuery,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
     useExportDisplayedTableData,
+    useExportPagedTableQuery,
+    useExportTableQuery,
+    useTableQuery,
+    useTableQueryPaging,
     VisibleType,
 } from "@comet/admin";
 import { Typography } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
+
+import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
 
 interface Person {
     id: number;
@@ -24,7 +33,32 @@ interface Person {
     };
 }
 
+const query = gql`
+    query Post($offset: Int, $limit: Int) {
+        posts(offset: $offset, limit: $limit) @rest(type: "PostPayload", path: "posts?_start={args.offset}&_limit={args.limit}") {
+            id
+            title
+        }
+    }
+`;
+
+interface Post {
+    id: string;
+    title: string;
+}
+
+interface QueryResult {
+    posts: Post[];
+    totalCount: number;
+}
+
+interface QueryVariables {
+    offset: number;
+    limit: number;
+}
+
 storiesOf("stories/components/Table/Excel Export Table", module)
+    .addDecorator(apolloStoryDecorator())
     .add("Basic Excel Export Table", () => {
         const data: Person[] = [
             { id: 1, firstname: "Kady", lastname: "Wood", job: { id: 1, name: "Project Manager" } },
@@ -34,7 +68,7 @@ storiesOf("stories/components/Table/Excel Export Table", module)
         ];
 
         // step 1
-        const exportApi = useExportDisplayedTableData({ fileName: "employees.xlsx", worksheetName: "Employees" });
+        const exportApi = useExportDisplayedTableData({ fileName: "useExportDisplayedTableData", worksheetName: "Employees" });
 
         return (
             <>
@@ -87,7 +121,7 @@ storiesOf("stories/components/Table/Excel Export Table", module)
             { id: 5, column1: 1, column2: 2, column3: 3, column4: 4, column5: 5 },
         ];
 
-        const exportApi = useExportDisplayedTableData({ fileName: "export_visibility.xlsx", worksheetName: "Export Visibility" });
+        const exportApi = useExportDisplayedTableData({ fileName: "visibility", worksheetName: "Export Visibility" });
 
         /*
          * Browser: Show columns 1 and 5
@@ -142,62 +176,132 @@ storiesOf("stories/components/Table/Excel Export Table", module)
             </>
         );
     })
-    .add("Excel Export and Custom Rendered Columns", () => {
-        const data: Person[] = [
-            { id: 1, firstname: "Kady", lastname: "Wood", hourlySalary: 12.3, job: { id: 1, name: "Project Manager" } },
-            { id: 2, firstname: "Lewis", lastname: "Chan", hourlySalary: 15.4, job: { id: 2, name: "UI/UX Designer" } },
-            { id: 3, firstname: "Tom", lastname: "Weaver", hourlySalary: 11, job: { id: 3, name: "Frontend Developer" } },
-            { id: 4, firstname: "Mia", lastname: "Carroll", hourlySalary: 15.4, job: { id: 4, name: "Backend Developer" } },
-        ];
+    .add("Excel Export and Pagination (useExportPagedTableQuery)", () => {
+        const pagingApi = useTableQueryPaging(0);
+        const limit = 5;
 
-        const exportApi = useExportDisplayedTableData({ fileName: "employees.xlsx", worksheetName: "Employees" });
+        const { tableData, api, loading, error } = useTableQuery<QueryResult, QueryVariables>()(query, {
+            variables: {
+                offset: pagingApi.current,
+                limit,
+            },
+            resolveTableData: (result) => {
+                const data = {
+                    ...result,
+                    // Don't hardcode this in a real application,
+                    // normally the API should return the totalCount
+                    totalCount: 100,
+                };
+                return {
+                    data: data.posts,
+                    totalCount: data.totalCount,
+                    pagingInfo: createOffsetLimitPagingAction(pagingApi, data, limit),
+                };
+            },
+        });
+
+        const exportApi = useExportPagedTableQuery<QueryVariables>(
+            api,
+            {
+                fromPage: 0,
+                toPage: 2,
+                variablesForPage: (page) => {
+                    return {
+                        offset: page * limit,
+                        limit: limit,
+                    };
+                },
+            },
+            { fileName: "useExportPagedTableQuery" },
+        );
 
         return (
-            <>
-                <Toolbar>
-                    <ToolbarItem>
-                        <Typography variant={"h3"}>Excel Export and Custom Rendered Columns</Typography>
-                    </ToolbarItem>
-                    <ToolbarFillSpace />
-                    <ToolbarActions>
-                        <ExcelExportButton exportApi={exportApi} />
-                    </ToolbarActions>
-                </Toolbar>
+            <TableQuery api={api} loading={loading} error={error}>
+                {tableData && (
+                    <>
+                        <Toolbar>
+                            <ToolbarItem>
+                                <Typography variant={"h3"}>Export Pages</Typography>
+                            </ToolbarItem>
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <ExcelExportButton exportApi={exportApi}>Export Pages 1 to 3</ExcelExportButton>
+                            </ToolbarActions>
+                        </Toolbar>
+                        <Table
+                            exportApis={[exportApi]}
+                            {...tableData}
+                            columns={[
+                                {
+                                    name: "id",
+                                    header: "ID",
+                                },
+                                {
+                                    name: "title",
+                                    header: "Title",
+                                },
+                            ]}
+                        />
+                    </>
+                )}
+            </TableQuery>
+        );
+    })
+    .add("Excel Export and Pagination (useExportTableQuery)", () => {
+        const pagingApi = useTableQueryPaging(0);
+        const limit = 5;
 
-                <MainContent>
-                    <Table
-                        exportApis={[exportApi]}
-                        data={data}
-                        totalCount={data.length}
-                        columns={[
-                            {
-                                name: "id",
-                                header: "ID",
-                            },
-                            {
-                                name: "name",
-                                header: "Name",
-                                render: (row) => (
-                                    <>
-                                        {row.firstname} <strong>{row.lastname}</strong>
-                                    </>
-                                ),
-                                // if there was no renderExcel(), the exported Excel column would be empty
-                                renderExcel: (row) => `${row.firstname} ${row.lastname}`,
-                            },
-                            {
-                                name: "hourlySalary",
-                                header: "Hourly Salary",
-                                formatForExcel: "#,##0.00€",
-                            },
-                            {
-                                name: "job.name",
-                                header: "Job (Nested)",
-                                headerExcel: "Job",
-                            },
-                        ]}
-                    />
-                </MainContent>
-            </>
+        const { tableData, api, loading, error } = useTableQuery<QueryResult, QueryVariables>()(query, {
+            variables: {
+                offset: pagingApi.current,
+                limit,
+            },
+            resolveTableData: (result) => {
+                const data = {
+                    ...result,
+                    // Don't hardcode this in a real application,
+                    // normally the API should return the totalCount
+                    totalCount: 100,
+                };
+                return {
+                    data: data.posts,
+                    totalCount: data.totalCount,
+                    pagingInfo: createOffsetLimitPagingAction(pagingApi, data, limit),
+                };
+            },
+        });
+
+        const exportApi = useExportTableQuery<QueryVariables>(api, { offset: 10, limit: 20 }, { fileName: "useExportTableQuery" });
+
+        return (
+            <TableQuery api={api} loading={loading} error={error}>
+                {tableData && (
+                    <>
+                        <Toolbar>
+                            <ToolbarItem>
+                                <Typography variant={"h3"}>Export Pages</Typography>
+                            </ToolbarItem>
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <ExcelExportButton exportApi={exportApi}>Export Pages 11 to 30</ExcelExportButton>
+                            </ToolbarActions>
+                        </Toolbar>
+                        <Table
+                            exportApis={[exportApi]}
+                            {...tableData}
+                            columns={[
+                                {
+                                    name: "id",
+                                    header: "ID",
+                                },
+                                {
+                                    name: "title",
+                                    header: "Title",
+                                },
+                            ]}
+                        />
+                    </>
+                )}
+            </TableQuery>
         );
     });
