@@ -33,6 +33,7 @@ storiesOf("stories/components/Table/Excel Export Table", module)
             { id: 4, firstname: "Mia", lastname: "Carroll", job: { id: 4, name: "Backend Developer" } },
         ];
 
+        // step 1
         const exportApi = useExportDisplayedTableData({ fileName: "employees.xlsx", worksheetName: "Employees" });
 
         return (
@@ -43,12 +44,14 @@ storiesOf("stories/components/Table/Excel Export Table", module)
                     </ToolbarItem>
                     <ToolbarFillSpace />
                     <ToolbarActions>
+                        {/* step 3 */}
                         <ExcelExportButton exportApi={exportApi} />
                     </ToolbarActions>
                 </Toolbar>
 
                 <MainContent>
                     <Table
+                        // step 2
                         exportApis={[exportApi]}
                         data={data}
                         totalCount={data.length}
@@ -179,6 +182,7 @@ storiesOf("stories/components/Table/Excel Export Table", module)
                                         {row.firstname} <strong>{row.lastname}</strong>
                                     </>
                                 ),
+                                // if there was no renderExcel(), the exported Excel column would be empty
                                 renderExcel: (row) => `${row.firstname} ${row.lastname}`,
                             },
                             {
