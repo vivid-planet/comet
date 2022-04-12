@@ -108,7 +108,7 @@ All you have to do is pass the `api`, `error` and `loading` props returned by `u
 ## Pagination
 
 The `Table` has built-in support for pagination.
-The typical procedure to use pagination in a `Table` is as follows:
+The typical procedure to use pagination is as follows:
 
 1. get an instance of `pagingApi` from the `useTableQueryPaging()` hook
 2. use the `useTableQuery()` hook to load your data
@@ -123,8 +123,8 @@ Comet Admin supports multiple types of pagination:
 -   **(Recommended)** [Offset-based Pagination](https://betterprogramming.pub/building-apis-a-comparison-between-cursor-and-offset-pagination-88261e3885f8#1c1a) (`createOffsetLimitPagingAction()`)
 -   [Cursor-based Pagination](https://betterprogramming.pub/building-apis-a-comparison-between-cursor-and-offset-pagination-88261e3885f8#3cf7) (`createRelayPagingActions()`)
 -   Page-based Pagination (`createPagePagingActions()`)
--   Page-based Pagination for REST APIs (`createRestPagingActions()`)
 -   Offset-based Pagination for REST APIs (`createRestStartLimitPagingActions()`)
+-   Page-based Pagination for REST APIs (`createRestPagingActions()`)
 
 <Canvas>
     <Story id="stories-components-table-pagination-table--pagination-table" />
@@ -149,6 +149,42 @@ You can then sort the table ascending or descending by column by clicking on the
 ## Filterbar
 
 ## Excel Export
+
+The `Table` component has a built-in excel export functionality.
+
+<Canvas>
+    <Story id="stories-components-table-excel-export-table--basic-excel-export-table" />
+</Canvas>
+
+### Excel Export and Visibility
+
+It's possible to control the visibility of a column in the browser and the excel sheet separately by passing a `visible` property to the column.
+
+<Canvas>
+    <Story id="stories-components-table-excel-export-table--excel-export-and-visibility" />
+</Canvas>
+
+### Excel Export and Custom Rendered Columns
+
+There are multiple possibilities to adjust a table for Excel export:
+
+-   `headerExcel` overwrites the browser heading for the Excel sheet
+-   `formatForExcel` allows using [Excel's number formatting](https://support.microsoft.com/en-us/office/number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68) to display numbers in a certain way (e.g. percentages, currencies, ...)
+-   `renderExcel()` overwrites the `render()` function for the Excel sheet
+
+### Caveats
+
+Excel can't handle JSX.
+If you use a `render()` function that returns JSX, you must provide a `renderExcel()` function that returns a plain string.
+Otherwise, the column will be empty in the excel sheet.
+
+<Canvas>
+    <Story id="stories-components-table-excel-export-table--excel-export-and-custom-rendered-columns" />
+</Canvas>
+
+### Excel Export and Pagination
+
+###
 
 ## TableDndOrder
 
