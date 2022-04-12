@@ -41,7 +41,7 @@
         "@nestjs/graphql": "^9.0.0",
         "class-transformer": "^0.3.0",
         "express": "^4.0.0",
-        "graphql": "^14.0.0 || ^15.0.0",
+        "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
         "nestjs-console": "^7.0.0",
         "pg": "^8.0.0",
         "pg-error-constants": "^1.0.0",

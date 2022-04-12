@@ -2993,7 +2993,7 @@ __metadata:
     exceljs: ^3.4.0
     file-saver: ^2.0.2
     final-form: ^4.16.1
-    graphql: ^14.0.0 || ^15.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     history: ^4.10.1
     react: ^17.0
     react-dnd: ^14.0.2
@@ -3098,7 +3098,7 @@ __metadata:
     "@nestjs/graphql": ^9.0.0
     class-transformer: ^0.3.0
     express: ^4.0.0
-    graphql: ^14.0.0 || ^15.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     nestjs-console: ^7.0.0
     pg: ^8.0.0
     pg-error-constants: ^1.0.0
