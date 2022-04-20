@@ -13,3 +13,4 @@ lang/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+junit.xml

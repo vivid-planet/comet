@@ -2,7 +2,7 @@
     "extends": "../../tsconfig.core.json",
     "compilerOptions": {
         "jsx": "react",
-        "lib": ["dom", "es2015", "es2016", "es2017", "esnext.asynciterable"],
+        "lib": ["DOM", "ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ESNext.AsyncIterable"],
         "noImplicitAny": true,
         "sourceMap": true,
         "strictNullChecks": true,
