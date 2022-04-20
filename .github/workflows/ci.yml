@@ -31,6 +31,9 @@ jobs:
 
             - name: Prepare block-meta files
               run: |
+                  cp packages/api/api-cms/block-meta.json packages/admin/admin-blocks/block-meta.json
+                  cp packages/api/api-cms/schema.gql packages/admin/admin-cms/schema.gql
+                  cp packages/api/api-cms/block-meta.json packages/admin/admin-cms/block-meta.json
                   cp packages/api/api-cms/block-meta.json packages/site/site-cms/block-meta.json
 
             - name: Build
@@ -40,6 +43,17 @@ jobs:
               run: |
                   yarn exec prettier -c .
                   yarn lint
+
+            - name: Test
+              run: yarn test
+
+            - name: Test Report
+              uses: dorny/test-reporter@v1
+              if: success() || failure()
+              with:
+                  name: Tests
+                  path: packages/**/junit.xml
+                  reporter: jest-junit
 
             - name: Extract i18n strings
               if: ${{ github.ref_name == 'main' }}
