@@ -1,8 +1,9 @@
 import { buttonClasses } from "@mui/material";
 import { Palette } from "@mui/material/styles";
 import { Components } from "@mui/material/styles/components";
+import { Typography } from "@mui/material/styles/createTypography";
 
-export const getMuiButton = (palette: Palette): Components["MuiButton"] => ({
+export const getMuiButton = (palette: Palette, typography: Typography): Components["MuiButton"] => ({
     defaultProps: {
         disableElevation: true,
     },
@@ -19,6 +20,7 @@ export const getMuiButton = (palette: Palette): Components["MuiButton"] => ({
             },
         },
         text: ({ ownerState }) => ({
+            fontWeight: typography.fontWeightRegular,
             textTransform: "none",
             paddingTop: 12,
             paddingRight: 15,
