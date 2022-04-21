@@ -19,7 +19,7 @@ type InputWithPopperComponents = InputBaseProps["components"] & {
 type ClosePopper = (focusInput?: boolean) => void;
 
 export interface InputWithPopperProps extends Omit<InputBaseProps, "componentsProps" | "components"> {
-    children: (closePopper: ClosePopper) => React.ReactNode;
+    children: ((closePopper: ClosePopper) => React.ReactNode) | React.ReactNode;
     componentsProps?: InputWithPopperComponentsProps;
     components?: InputWithPopperComponents;
 }
@@ -121,7 +121,7 @@ function InputWithPopper({
                     {({ TransitionProps }) => (
                         <Transition {...TransitionProps} {...componentsProps?.transition}>
                             <Paper classes={{ root: classes.paper }} {...componentsProps?.paper}>
-                                {children(closePopper)}
+                                {typeof children === "function" ? children(closePopper) : children}
                             </Paper>
                         </Transition>
                     )}
