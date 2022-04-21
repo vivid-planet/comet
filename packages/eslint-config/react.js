@@ -23,6 +23,18 @@ module.exports = {
         "formatjs/enforce-placeholders": "error",
         "react/display-name": "off",
         "react/prop-types": "off",
+        "no-restricted-imports": [
+            "error",
+            {
+                paths: [
+                    {
+                        name: "@mui/material",
+                        importNames: ["styled"],
+                        message: "Please use styled from @mui/material/styles instead.",
+                    },
+                ],
+            },
+        ],
     },
     overrides: [
         {

@@ -1,5 +1,6 @@
 import { Field, FinalFormRangeInput, Toolbar, ToolbarTitleItem } from "@comet/admin";
-import { Box, Button, Card, CardContent, styled, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";

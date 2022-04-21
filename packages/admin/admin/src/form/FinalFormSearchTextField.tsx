@@ -1,5 +1,6 @@
 import { Search } from "@comet/admin-icons";
-import { InputAdornment, InputAdornmentProps, styled } from "@mui/material";
+import { InputAdornment, InputAdornmentProps } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { withStyles } from "@mui/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
