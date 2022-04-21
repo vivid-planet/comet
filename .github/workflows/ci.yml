@@ -29,7 +29,7 @@ jobs:
 
             - run: yarn install
 
-            - name: Prepare block-meta files
+            - name: Copy schema files
               run: |
                   cp packages/api/api-cms/block-meta.json packages/admin/admin-blocks/block-meta.json
                   cp packages/api/api-cms/schema.gql packages/admin/admin-cms/schema.gql
