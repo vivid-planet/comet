@@ -21,7 +21,9 @@ import { getMuiIconButton } from "./MuiIconButton";
 import { getMuiInputAdornment } from "./MuiInputAdornment";
 import { getMuiInputBase } from "./MuiInputBase";
 import { getMuiLink } from "./MuiLink";
+import { getMuiListItem } from "./MuiListItem";
 import { getMuiPaper } from "./MuiPaper";
+import { getMuiPopover } from "./MuiPopover";
 import { getMuiRadio } from "./MuiRadio";
 import { getMuiSelect } from "./MuiSelect";
 import { getMuiSvgIcon } from "./MuiSvgIcon";
@@ -35,34 +37,36 @@ import { getMuiToggleButtonGroup } from "./MuiToggleButtonGroup";
 import { getMuiTypography } from "./MuiTypography";
 
 export const getComponentsTheme = (palette: Palette, typography: Typography, spacing: Spacing): ThemeOptions["components"] => ({
+    MuiAppBar: getMuiAppBar(),
+    MuiAutocomplete: getMuiAutocomplete(spacing),
+    MuiButton: getMuiButton(palette, typography),
+    MuiButtonGroup: getMuiButtonGroup(palette),
+    MuiCardContent: getMuiCardContent(spacing),
     MuiCheckbox: getMuiCheckbox(palette),
-    MuiRadio: getMuiRadio(palette),
     MuiDialog: getMuiDialog(spacing),
-    MuiDialogTitle: getMuiDialogTitle(palette, typography),
+    MuiDialogActions: getMuiDialogActions(palette),
     MuiDialogContent: getMuiDialogContent(palette),
     MuiDialogContentText: getMuiDialogContentText(palette),
-    MuiDialogActions: getMuiDialogActions(palette),
-    MuiButton: getMuiButton(palette),
-    MuiButtonGroup: getMuiButtonGroup(palette),
-    MuiIconButton: getMuiIconButton(palette),
-    MuiTypography: getMuiTypography(),
-    MuiPaper: getMuiPaper(palette),
-    MuiAppBar: getMuiAppBar(),
-    MuiFormLabel: getMuiFormLabel(palette, typography, spacing),
+    MuiDialogTitle: getMuiDialogTitle(palette, typography),
+    MuiDrawer: getMuiDrawer(palette),
     MuiFormControlLabel: getMuiFormControlLabel(),
+    MuiFormLabel: getMuiFormLabel(palette, typography, spacing),
+    MuiIconButton: getMuiIconButton(palette),
+    MuiInputAdornment: getMuiInputAdornment(),
+    MuiInputBase: getMuiInputBase(palette, spacing),
+    MuiLink: getMuiLink(palette),
+    MuiListItem: getMuiListItem(),
+    MuiPaper: getMuiPaper(palette),
+    MuiPopover: getMuiPopover(),
+    MuiRadio: getMuiRadio(palette),
+    MuiSelect: getMuiSelect(palette),
     MuiSvgIcon: getMuiSvgIcon(palette),
     MuiSwitch: getMuiSwitch(palette),
-    MuiSelect: getMuiSelect(palette),
-    MuiDrawer: getMuiDrawer(palette),
-    MuiInputAdornment: getMuiInputAdornment(),
+    MuiTab: getMuiTab(palette, typography),
     MuiTableCell: getMuiTableCell(palette, typography),
     MuiTableRow: getMuiTableRow(),
     MuiTabs: getMuiTabs(palette, spacing),
-    MuiTab: getMuiTab(palette, typography),
-    MuiCardContent: getMuiCardContent(spacing),
-    MuiAutocomplete: getMuiAutocomplete(spacing),
-    MuiInputBase: getMuiInputBase(palette, spacing),
-    MuiLink: getMuiLink(palette),
     MuiToggleButton: getMuiToggleButton(palette),
     MuiToggleButtonGroup: getMuiToggleButtonGroup(palette),
+    MuiTypography: getMuiTypography(),
 });
