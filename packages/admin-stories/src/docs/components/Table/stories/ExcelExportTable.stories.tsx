@@ -213,7 +213,7 @@ storiesOf("stories/components/Table/Excel Export Table", module)
                                 header: "Name",
                                 render: (row) => (
                                     <>
-                                        {row.firstname} {row.lastname}
+                                        {row.firstname} <strong>{row.lastname}</strong>
                                     </>
                                 ),
                                 renderExcel: (row) => `${row.firstname} ${row.lastname}`,
