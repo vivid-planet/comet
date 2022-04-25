@@ -176,6 +176,54 @@ storiesOf("stories/components/Table/Excel Export Table", module)
             </>
         );
     })
+    .add("Excel Export and Custom Rendered Columns", () => {
+        const data: Person[] = [
+            { id: 1, firstname: "Kady", lastname: "Wood", job: { id: 1, name: "Project Manager" } },
+            { id: 2, firstname: "Lewis", lastname: "Chan", job: { id: 2, name: "UI/UX Designer" } },
+            { id: 3, firstname: "Tom", lastname: "Weaver", job: { id: 3, name: "Frontend Developer" } },
+            { id: 4, firstname: "Mia", lastname: "Carroll", job: { id: 4, name: "Backend Developer" } },
+        ];
+
+        const exportApi = useExportDisplayedTableData({ fileName: "useExportDisplayedTableData", worksheetName: "Employees" });
+
+        return (
+            <>
+                <Toolbar>
+                    <ToolbarItem>
+                        <Typography variant={"h3"}>Excel Export and Custom Rendered Columns</Typography>
+                    </ToolbarItem>
+                    <ToolbarFillSpace />
+                    <ToolbarActions>
+                        <ExcelExportButton exportApi={exportApi} />
+                    </ToolbarActions>
+                </Toolbar>
+
+                <MainContent>
+                    <Table
+                        exportApis={[exportApi]}
+                        data={data}
+                        totalCount={data.length}
+                        columns={[
+                            {
+                                name: "id",
+                                header: "ID",
+                            },
+                            {
+                                name: "name",
+                                header: "Name",
+                                render: (row) => (
+                                    <>
+                                        {row.firstname} {row.lastname}
+                                    </>
+                                ),
+                                renderExcel: (row) => `${row.firstname} ${row.lastname}`,
+                            },
+                        ]}
+                    />
+                </MainContent>
+            </>
+        );
+    })
     .add("Excel Export and Pagination (useExportPagedTableQuery)", () => {
         const pagingApi = useTableQueryPaging(0);
         const limit = 5;
