@@ -161,6 +161,19 @@ To implement various filters, stick to the following steps:
     <Story id="stories-components-table-table-with-filterbar--table-with-filterbar" />
 </Canvas>
 
+### Filterbar and Persisted State
+
+Oftentimes every item in a table can be viewed or edited individually.
+If the user navigates to a detail page or form and later returns to the table page, all the filters are gone.
+
+To prevent this behaviour, you can pass a `persistedStateId` to the `useTableQueryFilter()` hook.
+Then, the filters are saved in a global variable once the user leaves the table page.
+When the user returns, the filters are recovered from the global variable.
+
+<Canvas>
+    <Story id="stories-components-table-table-with-filterbar--table-with-filterbar-and-persisted-state" />
+</Canvas>
+
 ## Excel Export
 
 The `Table` component has a built-in excel export functionality.
@@ -233,11 +246,3 @@ You can see it in action in the example below.
 <Canvas>
     <Story id="stories-components-table-tabledndorder--tabledndorder" />
 </Canvas>
-
-## usePersistedState
-
-// TODO
-
-tba.
-
--   usePersistedState
