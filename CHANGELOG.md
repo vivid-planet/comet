@@ -41,8 +41,12 @@ All notable changes to this project will be documented in this file. This projec
 
 Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/guides/migration-v4/)
 
--   Run the [MUI Codemods](https://mui.com/guides/migration-v4/#run-codemods)
--   Migrate the [Theme Structure](https://mui.com/guides/migration-v4/#theme-structure)
+1. Run the [MUI Codemods](https://mui.com/guides/migration-v4/#run-codemods)
+2. Migrate the [Theme Structure](https://mui.com/guides/migration-v4/#theme-structure)
+3. Migrate from styled-components to MUI's style engine. Automatic migrations using codeshift are available (use -d for dry-run):
+    ```
+    npx jscodeshift --extensions=ts,tsx --parser=tsx -t comet-admin/codemods/3.0.0/mui-style-engine.ts src/
+    ```
 
 ## @comet/admin-date-picker
 
