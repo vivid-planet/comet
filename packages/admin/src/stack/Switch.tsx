@@ -104,9 +104,6 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
 
     const getTargetUrl = React.useCallback(
         (pageName: string, payload: string, subUrl?: string): string => {
-            console.log("pageName ", pageName);
-            console.log("payload ", payload);
-            console.log("isInitialPage ", isInitialPage(pageName));
             if (isInitialPage(pageName)) {
                 return removeTrailingSlash(match.url);
             } else {
