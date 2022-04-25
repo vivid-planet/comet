@@ -45,6 +45,10 @@ function useUuid() {
     return ref.current;
 }
 
+function removeTrailingSlash(url: string) {
+    return url.replace(/\/$/, "");
+}
+
 export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi] {
     const apiRef = React.useRef<IStackSwitchApi>(null);
     const id = useUuid();
@@ -100,10 +104,13 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
 
     const getTargetUrl = React.useCallback(
         (pageName: string, payload: string, subUrl?: string): string => {
+            console.log("pageName ", pageName);
+            console.log("payload ", payload);
+            console.log("isInitialPage ", isInitialPage(pageName));
             if (isInitialPage(pageName)) {
-                return match.url;
+                return removeTrailingSlash(match.url);
             } else {
-                return `${match.url}/${payload}/${pageName}${subUrl ? `/${subUrl}` : ""}`;
+                return `${removeTrailingSlash(match.url)}/${payload}/${pageName}${subUrl ? `/${subUrl}` : ""}`;
             }
         },
         [isInitialPage, match.url],
@@ -152,7 +159,10 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
             return ret;
         } else {
             return (
-                <StackBreadcrumb url={routeProps.match.url} title={pageBreadcrumbTitle[page.props.name] || page.props.title || page.props.name}>
+                <StackBreadcrumb
+                    url={removeTrailingSlash(routeProps.match.url)}
+                    title={pageBreadcrumbTitle[page.props.name] || page.props.title || page.props.name}
+                >
                     {ret}
                 </StackBreadcrumb>
             );
@@ -165,7 +175,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
         <Switch>
             {React.Children.map(props.children, (page: any) => {
                 if (isInitialPage(page.props.name)) return null; // don't render initial Page
-                const path = `${match.url}/:id/${page.props.name}`;
+                const path = `${removeTrailingSlash(match.url)}/:id/${page.props.name}`;
                 return (
                     <Route path={path}>
                         {(routeProps: RouteComponentProps<IRouteParams>) => {
