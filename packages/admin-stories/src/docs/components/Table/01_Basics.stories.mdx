@@ -10,6 +10,87 @@ import dedent from "ts-dedent";
 >
 > \- [MUI Docs](https://mui.com/components/tables/)
 
+The Comet Admin `Table` internally uses [Material UI's `Table` component](https://v4.mui.com/components/tables/) and its [associated components](https://v4.mui.com/components/tables/#api).
+It provides an additional layer of abstraction and adds common table functionalities like [sorting by column](/story/docs-components-table-sorting--page) or [pagination](/story/docs-components-table-pagination--page).
+
+In the following text, `Table` refers to the Comet Admin Table, while `MuiTable` refers to Material UI's Table.
+
+## Differences between Comet Admin `Table` and `MuiTable`
+
+`MuiTable` is very low-level.
+It's extremely flexible but requires more effort to define and configure.
+If you need common table functionalities like pagination or sorting, you have to implement them yourself from scratch.
+
+Comet Admin `Table` adds a layer of abstraction to `MuiTable`.
+It allows you to define simple tables without writing any additional JSX and also has a lot of configuration options for more complex use cases.
+Additionally, it has common table functionalities built-in, as listed below:
+
+|                                                                                     | Material UI `Table` | Comet Admin `Table` |
+| ----------------------------------------------------------------------------------- | ------------------- | ------------------- |
+| Layer of Abstraction                                                                | low-level           | higher-level        |
+| [Managing GraphQL Queries](/story/docs-components-table-tablequery--page)           | -                   | built-in            |
+| [Sorting by column](/story/docs-components-table-sorting--page)                     | -                   | built-in            |
+| [Pagination](/story/docs-components-table-pagination--page)                         | -                   | built-in            |
+| [Filtering](/story/docs-components-table-filterbar--page)                           | -                   | built-in            |
+| [Excel Export](/story/docs-components-table-excel-export--page)                     | -                   | built-in            |
+| [Ordering Rows via Drag and Drop](/story/docs-components-table-tabledndorder--page) | -                   | built-in            |
+
+The following example shows the definition of a simple table with `MuiTable` and Comet Admin `Table`.
+It demonstrates their different layers of abstraction.
+
+With `MuiTable`, you have to write a lot of JSX to define this simple table:
+
+<Source
+    language="tsx"
+    code={dedent`
+        // based on https://v4.mui.com/components/tables/#BasicTable.tsx
+        <MuiTable>
+            <MuiTableHead>
+                <MuiTableRow>
+                    <MuiTableCell>Dessert (100g)</MuiTableCell>
+                    <MuiTableCell>Calories</MuiTableCell>
+                </MuiTableRow>
+            </MuiTableHead>
+            <MuiTableBody>
+                {rows.map((row) => (
+                    <MuiTableRow key={row.name}>
+                        <MuiTableCell>{row.name}</MuiTableCell>
+                        <MuiTableCell>{row.calories}</MuiTableCell>
+                    </MuiTableRow>
+                ))}
+            </MuiTableBody>
+        </MuiTable>
+  `}
+/>
+
+In Comet Admin `Table`, it's sufficient to provide an object containing column definitions:
+
+<Source
+    language="tsx"
+    code={dedent`
+        <Table
+            data={rows}
+            totalCount={rows.length}
+            columns={[
+                {
+                    name: "name",
+                    header: "Dessert (100g)"
+                },
+                {
+                    name: "calories",
+                    header: "Calories"
+                }
+            ]}
+        />
+  `}
+/>
+
+However, Comet Admin `Table` is not limited to simple tables.
+It has lots of configuration options to handle complex use cases.
+Keep reading to learn more.
+
+## Table
+
 <Canvas>
     <Story id="stories-components-table-basic-table--basic-table" />
 </Canvas>
