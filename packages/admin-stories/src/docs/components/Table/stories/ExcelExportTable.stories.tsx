@@ -331,7 +331,7 @@ storiesOf("stories/components/Table/Excel Export Table", module)
                             </ToolbarItem>
                             <ToolbarFillSpace />
                             <ToolbarActions>
-                                <ExcelExportButton exportApi={exportApi}>Export Pages 11 to 30</ExcelExportButton>
+                                <ExcelExportButton exportApi={exportApi}>Export Rows 11 to 30</ExcelExportButton>
                             </ToolbarActions>
                         </Toolbar>
                         <Table
