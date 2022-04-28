@@ -104,20 +104,26 @@ const ColorPicker = ({
         }
     };
 
+    const preview = (
+        <>
+            {previewColor ? (
+                previewColor.isValid() ? (
+                    <ColorPreview className={`${classes.previewIndicator} ${classes.previewIndicatorColor}`} color={previewColor.toRgbString()} />
+                ) : (
+                    <InvalidPreview className={`${classes.previewIndicator} ${classes.previewIndicatorInvalid}`}>?</InvalidPreview>
+                )
+            ) : (
+                <EmptyPreview className={`${classes.previewIndicator} ${classes.previewIndicatorEmpty}`} />
+            )}
+        </>
+    );
+
     let renderInput: InputWithPopperRenderInputFn | undefined = undefined;
 
     if (variant === "icon-only") {
         renderInput = ({ inputRef, openPopper }) => (
             <ButtonBase ref={inputRef} onClick={openPopper} className={classes.preview}>
-                {previewColor ? (
-                    previewColor.isValid() ? (
-                        <ColorPreview className={`${classes.previewIndicator} ${classes.previewIndicatorColor}`} color={previewColor.toRgbString()} />
-                    ) : (
-                        <InvalidPreview className={`${classes.previewIndicator} ${classes.previewIndicatorInvalid}`}>?</InvalidPreview>
-                    )
-                ) : (
-                    <EmptyPreview className={`${classes.previewIndicator} ${classes.previewIndicatorEmpty}`} />
-                )}
+                {preview}
             </ButtonBase>
         );
     }
@@ -129,20 +135,7 @@ const ColorPicker = ({
                     startAdornment
                 ) : (
                     <InputAdornment position="start">
-                        <div className={classes.preview}>
-                            {previewColor ? (
-                                previewColor.isValid() ? (
-                                    <ColorPreview
-                                        className={`${classes.previewIndicator} ${classes.previewIndicatorColor}`}
-                                        color={previewColor.toRgbString()}
-                                    />
-                                ) : (
-                                    <InvalidPreview className={`${classes.previewIndicator} ${classes.previewIndicatorInvalid}`}>?</InvalidPreview>
-                                )
-                            ) : (
-                                <EmptyPreview className={`${classes.previewIndicator} ${classes.previewIndicatorEmpty}`} />
-                            )}
-                        </div>
+                        <div className={classes.preview}>{preview}</div>
                     </InputAdornment>
                 )
             }
