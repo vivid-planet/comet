@@ -12,8 +12,7 @@ export type ColorPickerClassKey =
     | "previewIndicator"
     | "previewIndicatorColor"
     | "previewIndicatorEmpty"
-    | "previewIndicatorInvalid"
-    | "clearButtonWrapper";
+    | "previewIndicatorInvalid";
 
 const emptyIndicatorLineColor = "red";
 const emptyIndicatorLineWidth = 2;
@@ -76,9 +75,6 @@ export const styles = (theme: Theme) => {
             fontWeight: theme.typography.fontWeightBold,
             color: theme.palette.text.secondary,
             textAlign: "center",
-        },
-        clearButtonWrapper: {
-            padding: theme.spacing(2),
         },
     });
 };
