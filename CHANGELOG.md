@@ -73,6 +73,23 @@ The date-picker package has been removed.
 -   The `showPicker` prop has been removed, the picker is now shown by default and can be hidden with the `hidePicker` prop
 -   The `showClearButton` prop has been removed, it can be added manually by adding the `ClearInputButton` component to the `endAdornment`
 
+## @comet/admin-rte
+
+### Highlights
+
+-   Add color picker to editor. Can be added to the toolbar by using the following options
+
+    ```ts
+    const ColorPickerToolbarButton = createColorPickerToolbarButton();
+
+    const rteOptions: IRteOptions = {
+        customToolbarButtons: [ColorPickerToolbarButton],
+        draftJsProps: {
+            customStyleFn: colorStyleFn,
+        },
+    };
+    ```
+
 # [2.1.0]
 
 ## Highlights:
