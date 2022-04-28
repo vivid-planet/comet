@@ -34,13 +34,16 @@ export function DatePicker({
             componentsProps={inputWithPopperComponentsProps}
             readOnly
         >
-            <Calendar
-                date={value}
-                onChange={(date) => {
-                    onChange && onChange(date);
-                }}
-                {...calendarProps}
-            />
+            {(closePopper) => (
+                <Calendar
+                    date={value}
+                    onChange={(date) => {
+                        closePopper(true);
+                        onChange && onChange(date);
+                    }}
+                    {...calendarProps}
+                />
+            )}
         </InputWithPopper>
     );
 }

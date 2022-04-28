@@ -71,21 +71,29 @@ export function DateRangePicker({
 
     return (
         <InputWithPopper value={textValue} {...inputWithPopperProps} componentsProps={inputWithPopperComponentsProps} readOnly>
-            <ReactDateRange
-                ranges={[getRangeFromValue(value)]}
-                onChange={(ranges) => {
-                    const pickedRange = ranges[rangeKey];
-                    if (pickedRange.startDate) {
-                        onChange &&
-                            onChange({
-                                start: pickedRange.startDate,
-                                end: pickedRange.endDate ?? pickedRange.startDate,
-                            });
-                    }
-                }}
-                showDateDisplay={false}
-                {...dateRangeProps}
-            />
+            {(closePopper) => (
+                <ReactDateRange
+                    onRangeFocusChange={(newFocusedRange) => {
+                        const rangeSelectionHasCompleted = newFocusedRange[0] === 0 && newFocusedRange[1] === 0;
+                        if (rangeSelectionHasCompleted) {
+                            closePopper(true);
+                        }
+                    }}
+                    ranges={[getRangeFromValue(value)]}
+                    onChange={(ranges) => {
+                        const pickedRange = ranges[rangeKey];
+                        if (pickedRange.startDate) {
+                            onChange &&
+                                onChange({
+                                    start: pickedRange.startDate,
+                                    end: pickedRange.endDate ?? pickedRange.startDate,
+                                });
+                        }
+                    }}
+                    showDateDisplay={false}
+                    {...dateRangeProps}
+                />
+            )}
         </InputWithPopper>
     );
 }
