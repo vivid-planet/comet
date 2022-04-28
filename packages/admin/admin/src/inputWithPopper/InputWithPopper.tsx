@@ -18,10 +18,60 @@ export type InputWithPopperComponents = InputBaseProps["components"] & {
 
 type ClosePopper = (focusInput?: boolean) => void;
 
+export type InputWithPopperRenderInputFn = (
+    args: Omit<InputWithPopperProps & WithStyles<typeof styles>, "children" | "renderInput"> & {
+        inputRef: React.RefObject<HTMLElement>;
+        openPopper: () => void;
+    },
+) => React.ReactNode;
+
+const defaultRenderInput: InputWithPopperRenderInputFn = ({
+    classes,
+    value,
+    componentsProps,
+    components = {},
+    inputRef,
+    openPopper,
+    ...inputBaseProps
+}) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { Transition = Grow, ...inputBaseComponents } = components;
+
+    return (
+        <InputBase
+            autoComplete="off"
+            value={value}
+            {...inputBaseProps}
+            inputRef={inputRef}
+            classes={{ root: classes.inputBase }}
+            onFocus={(e) => {
+                inputBaseProps?.onFocus && inputBaseProps.onFocus(e);
+                openPopper();
+            }}
+            components={inputBaseComponents}
+            componentsProps={{
+                root: componentsProps?.root,
+                input: {
+                    ...componentsProps?.input,
+                    onClick: (e) => {
+                        componentsProps?.input?.onClick && componentsProps.input.onClick(e);
+                        /**
+                         * Opening the popper when clicking inside the `input`, is necessary to allow the user to re-open the popper,
+                         * when the input is already in focus but the popper has been closed.
+                         */
+                        openPopper();
+                    },
+                },
+            }}
+        />
+    );
+};
+
 export interface InputWithPopperProps extends Omit<InputBaseProps, "componentsProps" | "components"> {
     children: (closePopper: ClosePopper) => React.ReactNode;
     componentsProps?: InputWithPopperComponentsProps;
     components?: InputWithPopperComponents;
+    renderInput?: InputWithPopperRenderInputFn;
 }
 
 function InputWithPopper({
@@ -30,12 +80,13 @@ function InputWithPopper({
     value = "",
     componentsProps,
     components = {},
+    renderInput = defaultRenderInput,
     ...inputBaseProps
 }: InputWithPopperProps & WithStyles<typeof styles>): React.ReactElement {
-    const { Transition = Grow, ...inputBaseComponents } = components;
+    const { Transition = Grow } = components;
 
     const rootRef = React.useRef<HTMLDivElement>(null);
-    const inputRef = React.useRef<HTMLInputElement>(null);
+    const inputRef = React.useRef<HTMLElement>(null);
     const [showPopper, setShowPopper] = React.useState<boolean>(false);
 
     const closePopper: ClosePopper = React.useCallback(
@@ -86,32 +137,7 @@ function InputWithPopper({
             {...componentsProps?.clickAwayListener}
         >
             <div ref={rootRef} className={classes.root}>
-                <InputBase
-                    autoComplete="off"
-                    value={value}
-                    {...inputBaseProps}
-                    inputRef={inputRef}
-                    classes={{ root: classes.inputBase }}
-                    onFocus={(e) => {
-                        inputBaseProps?.onFocus && inputBaseProps.onFocus(e);
-                        openPopper();
-                    }}
-                    components={inputBaseComponents}
-                    componentsProps={{
-                        root: componentsProps?.root,
-                        input: {
-                            ...componentsProps?.input,
-                            onClick: (e) => {
-                                componentsProps?.input?.onClick && componentsProps.input.onClick(e);
-                                /**
-                                 * Opening the popper when clicking inside the `input`, is necessary to allow the user to re-open the popper,
-                                 * when the input is already in focus but the popper has been closed.
-                                 */
-                                openPopper();
-                            },
-                        },
-                    }}
-                />
+                {renderInput({ classes, value, components, componentsProps, ...inputBaseProps, inputRef, openPopper })}
                 <Popper
                     open={showPopper}
                     anchorEl={rootRef.current}

@@ -27,6 +27,7 @@
         "yarn-run-all": "^3.0.0"
     },
     "peerDependencies": {
+        "@comet/admin-color-picker": "*",
         "@mui/icons-material": "^5.4.1",
         "@mui/material": "^5.4.1",
         "@mui/styles": "^5.4.1",
@@ -37,6 +38,11 @@
         "react-dom": "^17.0",
         "react-final-form": "^6.3.1",
         "react-intl": "^5.10.0"
+    },
+    "peerDependenciesMeta": {
+        "@comet/admin-color-picker": {
+            "optional": true
+        }
     },
     "scripts": {
         "build": "rimraf lib && run-p build:babel build:types",

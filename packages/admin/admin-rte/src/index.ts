@@ -4,6 +4,7 @@ export { default as ControlButton, IProps as IControlButtonProps, RteControlButt
 export { default as FeaturesButtonGroup, RteFeaturesButtonGroupClassKey } from "./core/Controls/FeaturesButtonGroup";
 export { default as LinkControls, RteLinkControlsClassKey } from "./core/Controls/LinkControls";
 export { RteToolbarClassKey, default as Toolbar } from "./core/Controls/Toolbar";
+export { colorStyleFn, createColorPickerToolbarButton } from "./core/extension/ColorPicker";
 export { default as LinkDecorator } from "./core/extension/Link/Decorator";
 export { default as filterEditorStateDefault } from "./core/filterEditor/default";
 export { default as filterEditorStateRemoveUnsupportedBlockTypes } from "./core/filterEditor/removeUnsupportedBlockTypes";

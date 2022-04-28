@@ -1,5 +1,11 @@
-import { InputWithPopper, InputWithPopperComponents, InputWithPopperComponentsProps, InputWithPopperProps } from "@comet/admin";
-import { Box, ComponentsOverrides, InputAdornment, InputBaseProps, Theme } from "@mui/material";
+import {
+    InputWithPopper,
+    InputWithPopperComponents,
+    InputWithPopperComponentsProps,
+    InputWithPopperProps,
+    InputWithPopperRenderInputFn,
+} from "@comet/admin";
+import { Box, ButtonBase, ComponentsOverrides, InputAdornment, InputBaseProps, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { HexColorPicker, RgbaStringColorPicker } from "react-colorful";
@@ -32,6 +38,7 @@ export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" 
     invalidIndicatorCharacter?: string;
     components?: ColorPickerPropsComponents;
     componentsProps?: ColorPickerPropsComponentsProps;
+    variant?: "default" | "icon-only";
 }
 
 export interface ColorPickerColorPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -53,6 +60,7 @@ const ColorPicker = ({
     classes,
     componentsProps = {},
     components = {},
+    variant = "default",
     ...rest
 }: ColorPickerProps & WithStyles<typeof styles>): React.ReactElement => {
     const {
@@ -96,6 +104,24 @@ const ColorPicker = ({
         }
     };
 
+    let renderInput: InputWithPopperRenderInputFn | undefined = undefined;
+
+    if (variant === "icon-only") {
+        renderInput = ({ inputRef, openPopper }) => (
+            <ButtonBase ref={inputRef} onClick={openPopper} className={classes.preview}>
+                {previewColor ? (
+                    previewColor.isValid() ? (
+                        <ColorPreview className={`${classes.previewIndicator} ${classes.previewIndicatorColor}`} color={previewColor.toRgbString()} />
+                    ) : (
+                        <InvalidPreview className={`${classes.previewIndicator} ${classes.previewIndicatorInvalid}`}>?</InvalidPreview>
+                    )
+                ) : (
+                    <EmptyPreview className={`${classes.previewIndicator} ${classes.previewIndicatorEmpty}`} />
+                )}
+            </ButtonBase>
+        );
+    }
+
     return (
         <InputWithPopper
             startAdornment={
@@ -130,6 +156,7 @@ const ColorPicker = ({
             }}
             components={inputWithPopperComponents}
             componentsProps={inputWithPopperComponentsProps}
+            renderInput={renderInput}
             {...rest}
         >
             {() => {

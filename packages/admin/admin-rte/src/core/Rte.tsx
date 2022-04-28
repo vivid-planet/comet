@@ -55,7 +55,15 @@ export interface IRteOptions {
     draftJsProps: Partial<
         Pick<
             DraftJsEditorProps,
-            "placeholder" | "autoComplete" | "autoCorrect" | "readOnly" | "spellCheck" | "stripPastedStyles" | "tabIndex" | "editorKey"
+            | "placeholder"
+            | "autoComplete"
+            | "autoCorrect"
+            | "readOnly"
+            | "spellCheck"
+            | "stripPastedStyles"
+            | "tabIndex"
+            | "editorKey"
+            | "customStyleFn"
         >
     >;
     filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
