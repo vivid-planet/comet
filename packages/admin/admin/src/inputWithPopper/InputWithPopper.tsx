@@ -19,9 +19,10 @@ export type InputWithPopperComponents = InputBaseProps["components"] & {
 type ClosePopper = (focusInput?: boolean) => void;
 
 export type InputWithPopperRenderInputFn = (
-    args: Omit<InputWithPopperProps & WithStyles<typeof styles>, "children" | "renderInput"> & {
+    args: Omit<InputWithPopperProps & WithStyles<typeof styles>, "children" | "renderInput" | "components"> & {
         inputRef: React.RefObject<HTMLElement>;
         openPopper: () => void;
+        components: Omit<InputWithPopperComponents, "Transition">;
     },
 ) => React.ReactNode;
 
@@ -34,9 +35,6 @@ const defaultRenderInput: InputWithPopperRenderInputFn = ({
     openPopper,
     ...inputBaseProps
 }) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { Transition = Grow, ...inputBaseComponents } = components;
-
     return (
         <InputBase
             autoComplete="off"
@@ -48,7 +46,7 @@ const defaultRenderInput: InputWithPopperRenderInputFn = ({
                 inputBaseProps?.onFocus && inputBaseProps.onFocus(e);
                 openPopper();
             }}
-            components={inputBaseComponents}
+            components={components}
             componentsProps={{
                 root: componentsProps?.root,
                 input: {
