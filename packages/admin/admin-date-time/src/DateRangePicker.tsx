@@ -82,11 +82,11 @@ export function DateRangePicker({
                     ranges={[getRangeFromValue(value)]}
                     onChange={(ranges) => {
                         const pickedRange = ranges[rangeKey];
-                        if (pickedRange.startDate) {
+                        if (pickedRange.startDate && pickedRange.endDate) {
                             onChange &&
                                 onChange({
                                     start: pickedRange.startDate,
-                                    end: pickedRange.endDate ?? pickedRange.startDate,
+                                    end: pickedRange.endDate,
                                 });
                         }
                     }}
