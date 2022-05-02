@@ -8,13 +8,13 @@ import { Form } from "react-final-form";
 
 const Story = () => {
     interface Values {
-        dateOne?: DateRange | null;
-        dateTwo?: DateRange | null;
+        dateRangeOne?: DateRange | null;
+        dateRangeTwo?: DateRange | null;
     }
 
     const initialValues: Partial<Values> = {
-        dateOne: null,
-        dateTwo: { start: new Date(), end: new Date() },
+        dateRangeOne: null,
+        dateRangeTwo: { start: new Date(), end: new Date() },
     };
 
     return (
@@ -24,10 +24,10 @@ const Story = () => {
                     <form>
                         <Card>
                             <CardContent>
-                                <Field name="dateOne" label="Date" fullWidth component={FinalFormDateRangePicker} />
+                                <Field name="dateRangeOne" label="Date range" fullWidth component={FinalFormDateRangePicker} />
                                 <Field
-                                    name="dateTwo"
-                                    label="Date with icon and clear-button"
+                                    name="dateRangeTwo"
+                                    label="Date range with icon and clear-button"
                                     fullWidth
                                     component={FinalFormDateRangePicker}
                                     startAdornment={
@@ -37,7 +37,7 @@ const Story = () => {
                                     }
                                     endAdornment={
                                         <InputAdornment position="end">
-                                            <ClearInputButton onClick={() => change("dateTwo", null)} />
+                                            <ClearInputButton onClick={() => change("dateRangeTwo", null)} />
                                         </InputAdornment>
                                     }
                                 />
