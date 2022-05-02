@@ -1,10 +1,10 @@
 import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { StoryContext, StoryFn } from "@storybook/addons";
+import { StoryContext } from "@storybook/addons";
 import { RestLink } from "apollo-link-rest";
 import * as React from "react";
 
-export function apolloStoryDecorator<StoryFnReturnType = unknown>(options?: { uri?: string; responseTransformer?: RestLink.ResponseTransformer }) {
-    return (fn: StoryFn<StoryFnReturnType>, c: StoryContext) => {
+export function apolloStoryDecorator(options?: { uri?: string; responseTransformer?: RestLink.ResponseTransformer }) {
+    return (Story: React.ComponentType, c: StoryContext) => {
         const link = ApolloLink.from([
             new RestLink({
                 uri: options?.uri || "https://jsonplaceholder.typicode.com/",
@@ -19,6 +19,10 @@ export function apolloStoryDecorator<StoryFnReturnType = unknown>(options?: { ur
             cache,
         });
 
-        return <ApolloProvider client={client}>{fn()}</ApolloProvider>;
+        return (
+            <ApolloProvider client={client}>
+                <Story />
+            </ApolloProvider>
+        );
     };
 }
