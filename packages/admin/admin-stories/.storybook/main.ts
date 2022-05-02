@@ -27,4 +27,5 @@ export default {
             },
         },
     ],
+    staticDirs: ["../public"],
 };
