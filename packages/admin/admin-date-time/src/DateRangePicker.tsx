@@ -51,6 +51,9 @@ const getRangeFromValue = (value: undefined | DateRange): Range => {
         };
     }
 
+    // The range-picker from react-date-range always requires at least one valid date range to prevent every date from being highlighted as selected.
+    // If no `value` is defined, this returns the current date as the selected range.
+    // This range is only for visual purposes and will never be passed to a change event.
     return {
         key: rangeKey,
         startDate: new Date(),
