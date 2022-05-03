@@ -4,15 +4,15 @@ import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Selection/Selection", module).add("Basic Selection", () => {
+storiesOf("stories/components/Selection/Selection Component", module).add("Selection Component", () => {
     return (
         <>
-            <h2>Basic Selection:</h2>
+            <h2>Selection Component:</h2>
             <Selection>
                 {({ selectedId, selectionApi, selectionMode }) => (
                     <div>
-                        <p>Selected Item Id: {selectedId}</p>
-                        <p>Mode: {selectionMode}</p>
+                        <p>id: {selectedId}</p>
+                        <p>mode: {selectionMode}</p>
                         <List>
                             {["1", "2", "3"].map((id) => {
                                 return (

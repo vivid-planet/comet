@@ -4,12 +4,42 @@ import { Meta, Story, Canvas, Source } from "@storybook/addon-docs";
 
 # Selection
 
-In Comet Admin, a `Selection` can be used to manage which item a user has currently selected.
+In Comet Admin, a _selection_ can be used to manage which item a user has currently selected.
 It's most commonly used for keeping track of selections when combining a table and a form.
 
-## Basic Example
+The selection API is used internally by the `EditDialog`.
 
-<Story id="stories-components-selection-selection--basic-selection" />
+## Selection
+
+There are two ways to integrate a selection.
+
+### useSelection() Hook (Recommended)
+
+The `useSelection()` hook returns an array containing two objects.
+The first object contains two values:
+
+-   `id` holds the id of the currently selected item.
+-   `mode` specifies the goal of the selection. Either `add` (add a new item) or `edit` (edit an existing item).
+
+The second object is the SelectionApi. It provides three functions:
+
+-   `handleSelectId()` for selecting an existing item
+-   `handleAdd()` for adding a new item
+-   `handleDeselect()` for deselection
+
+<Story id="stories-components-selection-useselection-hook--useselection-hook" />
+
+### Selection Component
+
+The `Selection` component passes its values to its children via child function.
+
+It provides the same values as `useSelection()`, but the variable names are slightly different:
+
+-   `selectedId` instead of `id`
+-   `selectionMode` instead of `mode`
+-   `selectionApi` contains the SelectionApi
+
+<Story id="stories-components-selection-selection-component--selection-component" />
 
 tba.
 
