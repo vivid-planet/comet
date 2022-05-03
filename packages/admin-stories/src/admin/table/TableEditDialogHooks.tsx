@@ -107,7 +107,13 @@ function Story() {
                 <EditDialog>
                     {selection.mode && (
                         <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
-                            {(row, { selectionMode: sm }) => <EditForm mode={sm} row={row} />}
+                            {(row, { selectionMode: sm }) => {
+                                if (row === undefined) {
+                                    return null;
+                                }
+
+                                return <EditForm mode={sm} row={row} />;
+                            }}
                         </Selected>
                     )}
                 </EditDialog>

@@ -111,7 +111,13 @@ function Story() {
                         </Grid>
                         <Grid item xs={2}>
                             <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
-                                {(user, { selectionMode: selectedSelectionMode }) => <ExampleForm mode={selectedSelectionMode} user={user} />}
+                                {(user, { selectionMode: selectedSelectionMode }) => {
+                                    if (user === undefined) {
+                                        return null;
+                                    }
+
+                                    return <ExampleForm mode={selectedSelectionMode} user={user} />;
+                                }}
                             </Selected>
                         </Grid>
                     </Grid>
