@@ -14,7 +14,7 @@ import {
 import { Grid } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { Redirect, Route, Switch } from "react-router";
+import { Redirect, Route, Switch, useLocation } from "react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -96,11 +96,14 @@ function Story() {
         }),
     });
 
+    const location = useLocation();
+
     if (!tableData) return null;
 
     return (
         <DirtyHandler>
             <Selection>
+                <div>URL: {location.pathname}</div>
                 <TableQuery api={api} loading={loading} error={error}>
                     <Grid container spacing={4}>
                         <Grid item xs={2}>
