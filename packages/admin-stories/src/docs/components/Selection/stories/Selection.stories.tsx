@@ -1,12 +1,12 @@
 import { Selection } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText, Paper } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 storiesOf("stories/components/Selection/Selection Component", module).add("Selection Component", () => {
     return (
-        <>
+        <Paper style={{ padding: "10px" }}>
             <h2>Selection Component:</h2>
             <Selection>
                 {({ selectedId, selectionApi, selectionMode }) => (
@@ -25,12 +25,12 @@ storiesOf("stories/components/Selection/Selection Component", module).add("Selec
                                 <ListItemIcon>
                                     <Add />
                                 </ListItemIcon>
-                                <ListItemText primary="Add New" />
+                                <ListItemText primary="Add Item" />
                             </ListItem>
                         </List>
                     </div>
                 )}
             </Selection>
-        </>
+        </Paper>
     );
 });
