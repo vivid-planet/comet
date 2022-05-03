@@ -22,6 +22,7 @@ export { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButto
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { CometLogo } from "./common/CometLogo";
+export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
 export { ToolbarAutomaticTitleItem, ToolbarAutomaticTitleItemProps } from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
 export { ToolbarBackButton, ToolbarBackButtonClassKey, ToolbarBackButtonProps } from "./common/toolbar/backbutton/ToolbarBackButton";
@@ -111,7 +112,6 @@ export { StackPageTitle } from "./stack/StackPageTitle";
 export { IStackSwitchApi, StackSwitch, StackSwitchApiContext, useStackSwitch, useStackSwitchApi } from "./stack/Switch";
 export { StackSwitchMeta } from "./stack/SwitchMeta";
 export { TableAddButton } from "./table/AddButton";
-export { ContentWithHoverActions, ContentWithHoverActionsClassKey, ContentWithHoverActionsProps } from "./table/ContentWithHoverActions";
 export { TableDeleteButton } from "./table/DeleteButton";
 export { createExcelExportDownload, IExcelExportOptions } from "./table/excelexport/createExcelExportDownload";
 export { IExportApi } from "./table/excelexport/IExportApi";

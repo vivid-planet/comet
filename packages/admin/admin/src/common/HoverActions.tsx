@@ -2,11 +2,11 @@ import { ComponentsOverrides, Grow, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
-export type ContentWithHoverActionsProps = React.PropsWithChildren<{
+export type HoverActionsProps = React.PropsWithChildren<{
     actions?: React.ReactNode;
 }>;
 
-const ContentWithHoverActions = ({ classes, actions, children }: ContentWithHoverActionsProps & WithStyles<typeof styles>): React.ReactElement => {
+const HoverActions = ({ classes, actions, children }: HoverActionsProps & WithStyles<typeof styles>): React.ReactElement => {
     const [isHovering, setIsHovering] = React.useState<boolean>(false);
 
     return (
@@ -20,10 +20,10 @@ const ContentWithHoverActions = ({ classes, actions, children }: ContentWithHove
     );
 };
 
-export type ContentWithHoverActionsClassKey = "root" | "hoverAreaExpansion" | "actions" | "children";
+export type HoverActionsClassKey = "root" | "hoverAreaExpansion" | "actions" | "children";
 
 const styles = ({ spacing }: Theme) => {
-    return createStyles<ContentWithHoverActionsClassKey, ContentWithHoverActionsProps>({
+    return createStyles<HoverActionsClassKey, HoverActionsProps>({
         root: {},
         hoverAreaExpansion: {
             // This element expands the root's hover area to include the parent's full size, including padding.
@@ -53,23 +53,23 @@ const styles = ({ spacing }: Theme) => {
     });
 };
 
-const ContentWithHoverActionsPropsWithStyles = withStyles(styles, { name: "CometAdminContentWithHoverActions" })(ContentWithHoverActions);
+const HoverActionsWithStyles = withStyles(styles, { name: "CometAdminHoverActions" })(HoverActions);
 
-export { ContentWithHoverActionsPropsWithStyles as ContentWithHoverActions };
+export { HoverActionsWithStyles as HoverActions };
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminContentWithHoverActions: ContentWithHoverActionsClassKey;
+        CometAdminHoverActions: HoverActionsClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminContentWithHoverActions: ContentWithHoverActionsProps;
+        CometAdminHoverActions: HoverActionsProps;
     }
 
     interface Components {
-        CometAdminContentWithHoverActions?: {
-            defaultProps?: ComponentsPropsList["CometAdminContentWithHoverActions"];
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminContentWithHoverActions"];
+        CometAdminHoverActions?: {
+            defaultProps?: ComponentsPropsList["CometAdminHoverActions"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminHoverActions"];
         };
     }
 }

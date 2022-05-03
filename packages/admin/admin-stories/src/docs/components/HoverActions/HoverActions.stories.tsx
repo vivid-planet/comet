@@ -1,10 +1,10 @@
-import { ContentWithHoverActions, CopyToClipboardButton, Table } from "@comet/admin";
+import { CopyToClipboardButton, HoverActions, Table } from "@comet/admin";
 import { Download, Maximize } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/ContentWithHoverActions", module).add("ContentWithHoverActions", () => {
+storiesOf("stories/components/HoverActions", module).add("HoverActions", () => {
     interface Row {
         id: number;
         foo: string;
@@ -30,18 +30,18 @@ storiesOf("stories/components/ContentWithHoverActions", module).add("ContentWith
                 {
                     name: "foo",
                     header: "Foo",
-                    render: ({ foo }) => <ContentWithHoverActions actions={<CopyToClipboardButton copyText={foo} />}>{foo}</ContentWithHoverActions>,
+                    render: ({ foo }) => <HoverActions actions={<CopyToClipboardButton copyText={foo} />}>{foo}</HoverActions>,
                 },
                 {
                     name: "bar",
                     header: "Bar",
-                    render: ({ bar }) => <ContentWithHoverActions actions={<CopyToClipboardButton copyText={bar} />}>{bar}</ContentWithHoverActions>,
+                    render: ({ bar }) => <HoverActions actions={<CopyToClipboardButton copyText={bar} />}>{bar}</HoverActions>,
                 },
                 {
                     name: "fooBar",
                     header: "FooBar",
                     render: ({ foo, bar }) => (
-                        <ContentWithHoverActions
+                        <HoverActions
                             actions={
                                 <>
                                     <CopyToClipboardButton copyText={`${foo} ${bar}`} />
@@ -55,7 +55,7 @@ storiesOf("stories/components/ContentWithHoverActions", module).add("ContentWith
                             }
                         >
                             {foo} {bar}
-                        </ContentWithHoverActions>
+                        </HoverActions>
                     ),
                 },
             ]}
