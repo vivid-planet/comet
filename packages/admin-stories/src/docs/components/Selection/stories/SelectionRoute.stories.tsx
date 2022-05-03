@@ -44,14 +44,14 @@ storiesOf("stories/components/Selection/SelectionRoute Component", module)
 
         return (
             <Paper style={{ padding: "10px" }}>
-                <h2>useSelectionRoute Hook:</h2>
+                <h2>SelectionRoute Component:</h2>
                 <p>
                     <strong>Current URL: </strong> {location.pathname}
                 </p>
                 <Route exact path="/">
-                    <Redirect to="/foo" />
+                    <Redirect to="/example" />
                 </Route>
-                <Route path="/foo">
+                <Route path="/example">
                     <SelectionList />
                 </Route>
             </Paper>

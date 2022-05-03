@@ -11,8 +11,8 @@ storiesOf("stories/components/Selection/Selection Component", module).add("Selec
             <Selection>
                 {({ selectedId, selectionApi, selectionMode }) => (
                     <div>
-                        <p>id: {selectedId}</p>
-                        <p>mode: {selectionMode}</p>
+                        <p>selectedId: {selectedId}</p>
+                        <p>selectionMode: {selectionMode}</p>
                         <List>
                             {["1", "2", "3"].map((id) => {
                                 return (

@@ -16,8 +16,8 @@ storiesOf("stories/components/Selection/useSelectionRoute Hook", module)
             return (
                 <SelectionRoute>
                     <div>
-                        <p>selectedId: {selection.id}</p>
-                        <p>selectionMode: {selection.mode}</p>
+                        <p>id: {selection.id}</p>
+                        <p>mode: {selection.mode}</p>
                         <List>
                             {["1", "2", "3"].map((id) => {
                                 return (
@@ -47,9 +47,9 @@ storiesOf("stories/components/Selection/useSelectionRoute Hook", module)
                     <strong>Current URL: </strong> {location.pathname}
                 </p>
                 <Route exact path="/">
-                    <Redirect to="/foo" />
+                    <Redirect to="/example" />
                 </Route>
-                <Route path="/foo">
+                <Route path="/example">
                     <SelectionList />
                 </Route>
             </Paper>

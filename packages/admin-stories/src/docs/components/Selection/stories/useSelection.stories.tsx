@@ -11,8 +11,8 @@ storiesOf("stories/components/Selection/useSelection Hook", module).add("useSele
         <Paper style={{ padding: "10px" }}>
             <h2>useSelection Hook:</h2>
             <div>
-                <p>selectedId: {selection.id}</p>
-                <p>selectionMode: {selection.mode}</p>
+                <p>id: {selection.id}</p>
+                <p>mode: {selection.mode}</p>
                 <List>
                     {["1", "2", "3"].map((id) => {
                         return (
