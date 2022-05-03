@@ -21,11 +21,7 @@ The first object contains two values:
 -   `id` holds the id of the currently selected item.
 -   `mode` specifies the goal of the selection. Either `add` (add a new item) or `edit` (edit an existing item).
 
-The second object is the SelectionApi. It provides three functions:
-
--   `handleSelectId()` for selecting an existing item
--   `handleAdd()` for adding a new item
--   `handleDeselect()` for deselection
+The second object is the [Selection API](#selection-api).
 
 <Canvas>
     <Story id="stories-components-selection-useselection-hook--useselection-hook" />
@@ -39,7 +35,7 @@ It provides the same values as `useSelection()`, but the variable names are slig
 
 -   `selectedId` instead of `id`
 -   `selectionMode` instead of `mode`
--   `selectionApi` contains the SelectionApi
+-   `selectionApi` contains the [Selection API](#selection-api)
 
 <Canvas>
     <Story id="stories-components-selection-selection-component--selection-component" />
@@ -74,9 +70,15 @@ You can use it exactly like `Selection` since it provides the same values.
     <Story id="stories-components-selection-selectionroute-component--selectionroute-component" />
 </Canvas>
 
+## Selection API
+
+The Selection API provides three functions to select and deselect items:
+
+-   `handleSelectId()` for selecting an existing item
+-   `handleAdd()` for "selecting" a new item. It accepts an optional `id` parameter if you generate the new id on the client-side.
+-   `handleDeselect()` for deselection
+
 tba.
 
 -   Selected
 -   SelectionApi
--   SelectionRoute
--   useSelectionRoute
