@@ -11,7 +11,7 @@ The selection API is used internally by the `EditDialog`.
 
 TODO: extend introduction:
 
--   common use cases (with examples)
+-   common use cases (with examples) => EditDialog and Table Besides Form
 
 ## Selection (without URL State)
 
@@ -81,6 +81,26 @@ The Selection API provides three functions to select and deselect items:
 -   `handleSelectId()` for selecting an existing item
 -   `handleAdd()` for "selecting" a new item. It accepts an optional `id` parameter if you generate the new id on the client-side.
 -   `handleDeselect()` for deselection
+
+## Selected
+
+The `Selected` component gives you direct access to the item that matches a selected id.
+
+In the simplest configuration, you have to provide the props `selectedId`, `selectionMode` and `rows`.
+`rows` must be an array containing all items.
+The `Selected` component uses this array to find the selected item based on its id.
+It then provides the item to its children via child function.
+
+<Canvas>
+    <Story id="stories-components-selection-selected--selected" />
+</Canvas>
+
+If you don't have all item data already loaded, you can provide a `query` and `dataAccessor` (instead of `rows`).
+The item data is then automatically loaded from the API once an item is selected.
+
+<Canvas>
+    <Story id="stories-components-selection-async-selected--async-selected" />
+</Canvas>
 
 TODO:
 
