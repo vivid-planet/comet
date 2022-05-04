@@ -10,12 +10,8 @@ export const ErrorDialogProvider: React.FunctionComponent = ({ children }) => {
     const [errorDialogVisible, setErrorDialogVisible] = React.useState(false);
 
     React.useEffect(() => {
-        if (errorOptions && !errorDialogVisible) {
-            setErrorDialogVisible(true);
-        } else if (errorOptions == null && errorDialogVisible) {
-            setErrorDialogVisible(false);
-        }
-    }, [errorDialogVisible, errorOptions]);
+        setErrorDialogVisible(errorOptions != null);
+    }, [errorOptions]);
 
     return (
         <>
