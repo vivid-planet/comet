@@ -1,8 +1,8 @@
 import { AppHeaderDropdown } from "@comet/admin";
 import { Account, Info, Logout } from "@comet/admin-icons";
+import { useAuthorization, useUser } from "@comet/react-app-auth";
 import { Box, Button as MUIButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { UserContext, useUser } from "@vivid/react-oidc-client";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -26,7 +26,7 @@ const Separator = styled(Box)`
 
 export function UserHeaderItem(): React.ReactElement {
     const [showAboutModal, setShowAboutModal] = React.useState(false);
-    const userContext = React.useContext(UserContext);
+    const authorization = useAuthorization();
     const user = useUser();
 
     return (
@@ -48,8 +48,13 @@ export function UserHeaderItem(): React.ReactElement {
                     variant={"contained"}
                     color={"primary"}
                     endIcon={<Logout />}
-                    onClick={() => {
-                        userContext.signOut();
+                    onClick={async () => {
+                        if (authorization) {
+                            await authorization?.authorizationManager.signOut();
+                        } else {
+                            // eslint-disable-next-line no-console
+                            console.error("Can not log out -> can not find authorizationManager");
+                        }
                     }}
                 >
                     <FormattedMessage id="comet.logout" defaultMessage="Logout" />

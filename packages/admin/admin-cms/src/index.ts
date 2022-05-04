@@ -16,6 +16,7 @@ export { useCmsBlockContext } from "./blocks/useCmsBlockContext";
 export { BuildEntry } from "./builds/BuildEntry";
 export { BuildRuntime } from "./builds/BuildRuntime";
 export { Publisher } from "./builds/Publisher";
+export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";
 export { DropdownMenuItem } from "./common/DropdownMenuItem";
 export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";

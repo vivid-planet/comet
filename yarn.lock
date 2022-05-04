@@ -2943,6 +2943,7 @@ __metadata:
     "@comet/admin-babel-preset": ^2.0.0
     "@comet/admin-blocks": ^2.0.0
     "@comet/eslint-config": ^2.0.0
+    "@comet/react-app-auth": ^1.0.0
     "@graphql-codegen/cli": ^1.0.0
     "@graphql-codegen/fragment-matcher": ^1.0.0
     "@graphql-codegen/introspection": ^1.0.0
@@ -3005,18 +3006,17 @@ __metadata:
     "@comet/admin-react-select": ^2.0.0
     "@comet/admin-rte": ^2.0.0
     "@comet/admin-theme": ^2.0.0
+    "@comet/react-app-auth": ^1.0.0
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
     "@mui/icons-material": ^5.0.0
     "@mui/lab": ^5.0.0-alpha.76
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
-    "@vivid/react-oidc-client": ^2.0.0
     axios: ^0.21.0
     clipboard-copy: ^4.0.0
     final-form: ^4.0.0
     graphql: ^15.0.0
-    oidc-client: ^1.0.0
     react: ^16.8.0 || ^17.0.0
     react-dnd: ^14.0.0
     react-dnd-html5-backend: ^14.0.0
@@ -3261,7 +3261,7 @@ __metadata:
     chokidar-cli: ^2.0.0
     eslint: ^8.0.0
     jest: ^27.0.0
-    jest-junit: ^12.0.0
+    jest-junit: ^13.0.0
     prettier: ^2.0.0
     reflect-metadata: ^0.1.0
     rimraf: ^3.0.0
@@ -3379,6 +3379,26 @@ __metadata:
       optional: true
   languageName: unknown
   linkType: soft
+
+"@comet/react-app-auth@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@comet/react-app-auth@npm:1.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40comet%2Freact-app-auth%2F-%2Freact-app-auth-1.0.0.tgz"
+  dependencies:
+    "@openid/appauth": ^1.3.1
+    date-fns: ^2.28.0
+    js-cookie: ^2.2.1
+    jwt-decode: ^3.1.2
+    query-string: ^6.12.1
+    rxjs: ^7.5.4
+    secure-ls: ^1.2.6
+  peerDependencies:
+    "@apollo/client": ^3.5.10
+    graphql: ^15.8.0
+    react: ^17.0
+    react-dom: ^17.0.0
+  checksum: 927f6a0826ea22e7b92fd01fa9d8477a7a67d4cd68b3410bef9bcd5604c90f756ada3182f6867adec966d65bf8c5661265480914b83e7cd39a41057f0a7d1958
+  languageName: node
+  linkType: hard
 
 "@comet/site-cms@workspace:packages/site/site-cms":
   version: 0.0.0-use.local
@@ -6728,6 +6748,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@openid/appauth@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "@openid/appauth@npm:1.3.1"
+  dependencies:
+    "@types/base64-js": ^1.3.0
+    "@types/jquery": ^3.5.5
+    base64-js: ^1.5.1
+    follow-redirects: ^1.13.3
+    form-data: ^4.0.0
+    opener: ^1.5.2
+  checksum: ecc2b732583852f7d21338878ac64e5c28e57bba82aee164601cc14f8c5543180be7908e646ded9308e2310a80a4d357dccadd24bcd7457914cc8b48c09df2e0
+  languageName: node
+  linkType: hard
+
 "@opentelemetry/api@npm:^1.0.1":
   version: 1.1.0
   resolution: "@opentelemetry/api@npm:1.1.0"
@@ -8030,6 +8064,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/base64-js@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@types/base64-js@npm:1.3.0"
+  checksum: e9a15d49e066a324d06664ca5a42c5143e7ef4696310496507e1eb82c6d835dc39c4981aad1e044d329b43bd26efe5ead532c501c36a1227faef6da4096e1ba4
+  languageName: node
+  linkType: hard
+
 "@types/body-parser@npm:*":
   version: 1.19.2
   resolution: "@types/body-parser@npm:1.19.2"
@@ -8364,6 +8405,15 @@ __metadata:
     jest-matcher-utils: ^27.0.0
     pretty-format: ^27.0.0
   checksum: 5184f3eef4832d01ee8f59bed15eec45ccc8e29c724a5e6ce37bf74396b37bdf04f557000f45ba4fc38ae6075cf9cfcce3d7a75abc981023c61ceb27230a93e4
+  languageName: node
+  linkType: hard
+
+"@types/jquery@npm:^3.5.5":
+  version: 3.5.14
+  resolution: "@types/jquery@npm:3.5.14"
+  dependencies:
+    "@types/sizzle": "*"
+  checksum: 159d6f804ed1a204b3f79f2d591a271d82e866bd45bd49fb6ef40561a25dbe0f47ec7815681b44cc2db5598425f72811e7e80ab0e983d980470998ac56feb375
   languageName: node
   linkType: hard
 
@@ -8937,6 +8987,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/sizzle@npm:*":
+  version: 2.3.3
+  resolution: "@types/sizzle@npm:2.3.3"
+  checksum: 586a9fb1f6ff3e325e0f2cc1596a460615f0bc8a28f6e276ac9b509401039dd242fa8b34496d3a30c52f5b495873922d09a9e76c50c2ab2bcc70ba3fb9c4e160
+  languageName: node
+  linkType: hard
+
 "@types/source-list-map@npm:*":
   version: 0.1.2
   resolution: "@types/source-list-map@npm:0.1.2"
@@ -9237,32 +9294,6 @@ __metadata:
     "@typescript-eslint/types": 5.18.0
     eslint-visitor-keys: ^3.0.0
   checksum: c856e3cf2fde3008e1d9bea3c73bc60d9060c7cb6d6ea186c20db9d74eff84986365f518dd1b4e142dca179e9a5cd7a6ed4381173d6abfd0ebd4d16d5cf50b94
-  languageName: node
-  linkType: hard
-
-"@vivid/react-oidc-client@npm:^2.0.0":
-  version: 2.5.1
-  resolution: "@vivid/react-oidc-client@npm:2.5.1::__archiveUrl=https%3A%2F%2Fgitlab.vivid-planet.com%2Fapi%2Fv4%2Fprojects%2F899%2Fpackages%2Fnpm%2F%40vivid%2Freact-oidc-client%2F-%2F%40vivid%2Freact-oidc-client-2.5.1.tgz"
-  dependencies:
-    "@vivid/roboto-font": ^6.0.2
-    js-cookie: ^2.2.1
-    oidc-client: ^1.11.5
-    query-string: ^6.12.1
-    react-is: ^17.0.2
-    styled-components: ^5.3.1
-  peerDependencies:
-    react: ^16.8
-    react-dom: ^16.8
-    react-router: ^5.1.2
-    react-router-dom: ^5.1.2
-  checksum: b91e222ac253dce9b500100345ac12dda2be9a5428aa33cabdc8f05f7be2035ae023a3dffd3d850f2f6de9271dc09375b5beb4048089a53423b24c435529cdbc
-  languageName: node
-  linkType: hard
-
-"@vivid/roboto-font@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "@vivid/roboto-font@npm:6.0.2::__archiveUrl=https%3A%2F%2Fgitlab.vivid-planet.com%2Fapi%2Fv4%2Fprojects%2F899%2Fpackages%2Fnpm%2F%40vivid%2Froboto-font%2F-%2F%40vivid%2Froboto-font-6.0.2.tgz"
-  checksum: 967dce5b4a7952d1b8bd2887325c1cf8557e81bc88ed0210a45c14ad15d0996dd12edce955104ed40c937c510a143438c60736507b707ae66d45482017d908bf
   languageName: node
   linkType: hard
 
@@ -12913,13 +12944,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.8.3":
-  version: 3.22.2
-  resolution: "core-js@npm:3.22.2"
-  checksum: 23efd6148d2f564852f23de426401c86f1d8af410eacccf22ae5dd82b1e9de558f05692cacd4b7e709d47993c670d7bca6f601d0b2ab32cf397a113fc5b7d80c
-  languageName: node
-  linkType: hard
-
 "core-util-is@npm:1.0.2":
   version: 1.0.2
   resolution: "core-util-is@npm:1.0.2"
@@ -13183,10 +13207,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-js@npm:^4.0.0":
-  version: 4.1.1
-  resolution: "crypto-js@npm:4.1.1"
-  checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
+"crypto-js@npm:^3.1.6":
+  version: 3.3.0
+  resolution: "crypto-js@npm:3.3.0"
+  checksum: 193923143a4784b2f974366068d96fe8280168fd3fef2bfea9551a5c3e32096f5a8fa49ff4eeb5bd0b9716d325618d38cfbe6125e359a4ef488fbca93e600824
   languageName: node
   linkType: hard
 
@@ -16029,6 +16053,16 @@ __metadata:
     inherits: ^2.0.3
     readable-stream: ^2.3.6
   checksum: 42e07747f83bcd4e799da802e621d6039787749ffd41f5517f8c4f786ee967e31ba32b09f8b28a9c6f67bd4f5346772e604202df350e8d99f4141771bae31279
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.13.3":
+  version: 1.15.0
+  resolution: "follow-redirects@npm:1.15.0"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: eaec81c3e0ae57aae2422e38ad3539d0e7279b3a63f9681eeea319bb683dea67502c4e097136b8ce9721542b4e236e092b6b49e34e326cdd7733c274f0a3f378
   languageName: node
   linkType: hard
 
@@ -19069,18 +19103,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-junit@npm:^12.0.0":
-  version: 12.3.0
-  resolution: "jest-junit@npm:12.3.0"
-  dependencies:
-    mkdirp: ^1.0.4
-    strip-ansi: ^5.2.0
-    uuid: ^8.3.2
-    xml: ^1.0.1
-  checksum: b1527eecba967b5f4f021117a14cb5c7cf6b5d99cd0efb50078198ec22a751afde0559db3fd9ff5485959d238787109277fdc8c591d566e270ae742748443407
-  languageName: node
-  linkType: hard
-
 "jest-junit@npm:^13.0.0":
   version: 13.2.0
   resolution: "jest-junit@npm:13.2.0"
@@ -19931,6 +19953,13 @@ __metadata:
     jwa: ^1.4.1
     safe-buffer: ^5.0.1
   checksum: f0213fe5b79344c56cd443428d8f65c16bf842dc8cb8f5aed693e1e91d79c20741663ad6eff07a6d2c433d1831acc9814e8d7bada6a0471fbb91d09ceb2bf5c2
+  languageName: node
+  linkType: hard
+
+"jwt-decode@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "jwt-decode@npm:3.1.2"
+  checksum: 20a4b072d44ce3479f42d0d2c8d3dabeb353081ba4982e40b83a779f2459a70be26441be6c160bfc8c3c6eadf9f6380a036fbb06ac5406b5674e35d8c4205eeb
   languageName: node
   linkType: hard
 
@@ -20928,6 +20957,15 @@ __metadata:
   version: 1.28.0
   resolution: "luxon@npm:1.28.0"
   checksum: 5250cb9f138b6048eeb0b3a9044a4ac994d0058f680c72a0da4b6aeaec8612460385639cba2b1052ef6d5564879e9ed144d686f26d9d97b38ab920d82e18281c
+  languageName: node
+  linkType: hard
+
+"lz-string@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "lz-string@npm:1.4.4"
+  bin:
+    lz-string: bin/bin.js
+  checksum: 54e31238a61a84d8f664d9860a9fba7310c5b97a52c444f80543069bc084815eff40b8d4474ae1d93992fdf6c252dca37cf27f6adbeb4dbc3df2f3ac773d0e61
   languageName: node
   linkType: hard
 
@@ -22735,19 +22773,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oidc-client@npm:^1.11.5":
-  version: 1.11.5
-  resolution: "oidc-client@npm:1.11.5"
-  dependencies:
-    acorn: ^7.4.1
-    base64-js: ^1.5.1
-    core-js: ^3.8.3
-    crypto-js: ^4.0.0
-    serialize-javascript: ^4.0.0
-  checksum: 3d0a84667de96936d7bab1a57c80389e333f2883c4f20e9d6366bdbacde7e4d56bda3625b5df8bd44420df093d4cebe591e6dba3ef6d214bc70c5f86ef41452c
-  languageName: node
-  linkType: hard
-
 "oidc-token-hash@npm:^5.0.1":
   version: 5.0.1
   resolution: "oidc-token-hash@npm:5.0.1"
@@ -22821,6 +22846,15 @@ __metadata:
     is-docker: ^2.0.0
     is-wsl: ^2.1.1
   checksum: 3333900ec0e420d64c23b831bc3467e57031461d843c801f569b2204a1acc3cd7b3ec3c7897afc9dde86491dfa289708eb92bba164093d8bd88fb2c231843c91
+  languageName: node
+  linkType: hard
+
+"opener@npm:^1.5.2":
+  version: 1.5.2
+  resolution: "opener@npm:1.5.2"
+  bin:
+    opener: bin/opener-bin.js
+  checksum: 33b620c0d53d5b883f2abc6687dd1c5fd394d270dbe33a6356f2d71e0a2ec85b100d5bac94694198ccf5c30d592da863b2292c5539009c715a9c80c697b4f6cc
   languageName: node
   linkType: hard
 
@@ -26145,7 +26179,6 @@ __metadata:
     "@storybook/addon-docs": ^6.2.7
     "@types/jscodeshift": ^0.11.4
     "@types/uuid": ^8.3.0
-    "@vivid/react-oidc-client": ^2.0.0
     class-transformer: ^0.3.0
     class-validator: ^0.13.0
     exceljs: ^3.4.0
@@ -26224,7 +26257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.0.0, rxjs@npm:^7.5.5":
+"rxjs@npm:^7.0.0, rxjs@npm:^7.5.4, rxjs@npm:^7.5.5":
   version: 7.5.5
   resolution: "rxjs@npm:7.5.5"
   dependencies:
@@ -26372,6 +26405,16 @@ __metadata:
   version: 1.1.0
   resolution: "scuid@npm:1.1.0"
   checksum: cd094ac3718b0070a222f9a499b280c698fdea10268cc163fa244421099544c1766dd893fdee0e2a8eba5d53ab9d0bcb11067bedff166665030fa6fda25a096b
+  languageName: node
+  linkType: hard
+
+"secure-ls@npm:^1.2.6":
+  version: 1.2.6
+  resolution: "secure-ls@npm:1.2.6"
+  dependencies:
+    crypto-js: ^3.1.6
+    lz-string: ^1.4.4
+  checksum: a931fd5e80024fa5f8eb2224f6f98b057f696645587d9a6592502a59e5eb1ca9864375e612739b82cb7f48132e1a5236641dcebf3dad2632922e6a54df5cead6
   languageName: node
   linkType: hard
 
@@ -27618,7 +27661,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"styled-components@npm:^5.0.0, styled-components@npm:^5.3.1":
+"styled-components@npm:^5.0.0":
   version: 5.3.5
   resolution: "styled-components@npm:5.3.5"
   dependencies:

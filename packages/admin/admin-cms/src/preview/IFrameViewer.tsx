@@ -1,7 +1,7 @@
 import { useIFrameBridge } from "@comet/admin-blocks";
+import { useAuthorization } from "@comet/react-app-auth";
 import { css } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { UserContext } from "@vivid/react-oidc-client";
 import * as React from "react";
 import useDimensions from "react-cool-dimensions";
 
@@ -52,23 +52,29 @@ interface Props {
 }
 
 const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initialPageUrl }, iFrameRef) => {
+    const authorization = useAuthorization();
+
     const iFrameUrl = new URL(initialPageUrl);
     iFrameUrl.searchParams.append("authProvider", "vivid-planet-idp");
 
     const deviceConfig = resolveDeviceConfig(device);
     const iFrameBridge = useIFrameBridge();
 
-    const userContext = React.useContext(UserContext);
     React.useEffect(() => {
-        function setIFrameServiceWorkerAccessToken() {
-            if (!iFrameBridge.iFrameReady) return;
-            if (!userContext.getUser().access_token) return;
-            iFrameBridge.sendAccessToken(userContext.getUser().access_token);
-        }
-        setIFrameServiceWorkerAccessToken();
-        userContext.userManager.events.addUserLoaded(setIFrameServiceWorkerAccessToken);
-        return () => userContext.userManager.events.removeUserLoaded(setIFrameServiceWorkerAccessToken);
-    }, [iFrameBridge, userContext]);
+        const subscription = authorization?.authorizationManager.onOAuthChange((oAuth) => {
+            if (!iFrameBridge.iFrameReady) {
+                return;
+            }
+
+            if (oAuth?.accessToken) {
+                iFrameBridge.sendAccessToken(oAuth.accessToken);
+            }
+        });
+
+        return () => {
+            subscription?.unsubscribe();
+        };
+    }, [iFrameBridge, authorization]);
 
     const { observe: containerRef, width, height } = useDimensions<HTMLDivElement | null>();
 
