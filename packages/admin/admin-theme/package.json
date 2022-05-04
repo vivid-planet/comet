@@ -30,9 +30,9 @@
         "yarn-run-all": "^3.0.0"
     },
     "peerDependencies": {
-        "@mui/material": "^5.4.1",
-        "@mui/styles": "^5.4.1",
-        "@mui/system": "^5.4.1",
+        "@mui/material": "^5.0.0",
+        "@mui/styles": "^5.0.0",
+        "@mui/system": "^5.0.0",
         "react": "^17.0"
     },
     "scripts": {

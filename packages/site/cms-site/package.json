@@ -18,7 +18,7 @@
     },
     "scripts": {
         "build": "rimraf lib/ && npm run generate-block-types && tsc",
-        "dev": "yarn generate-block-types && tsc --watch",
+        "dev": "yarn generate-block-types && tsc --watch --preserveWatchOutput",
         "lint": "yarn generate-block-types && run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx,.json,.md src/",
         "lint:tsc": "tsc --noEmit",

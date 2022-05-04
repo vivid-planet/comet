@@ -5,7 +5,8 @@
         "packages/admin/*",
         "packages/api/*",
         "packages/site/*",
-        "packages/eslint-config"
+        "packages/eslint-config",
+        "demo/*"
     ],
     "private": true,
     "repository": {
@@ -14,8 +15,10 @@
     },
     "scripts": {
         "clean": "lerna run clean --stream --parallel",
-        "start": "pm2 start ecosystem.config.js",
+        "dev:admin": "rimraf packages/admin/**/lib/index.d.ts && dotenv -- pm2 start ecosystem-admin.config.js",
+        "dev:cms": "dotenv -- pm2 start ecosystem-cms.config.js",
         "build": "lerna run build --concurrency=1 --stream",
+        "build:lib": "lerna run build --concurrency=1 --stream --no-private",
         "publish:release": "lerna publish --force-publish --no-private",
         "storybook": "yarn workspace comet-admin-stories storybook",
         "lint": "lerna run lint --concurrency=1 --stream",
@@ -23,6 +26,7 @@
         "lint:tsc": "lerna run lint:tsc --concurrency=1 --stream",
         "lint:lib": "yarn lint --no-private",
         "test": "lerna run test --concurrency=1 --stream",
+        "test:lib": "lerna run test --concurrency=1 --stream --no-private",
         "build:storybook": "yarn build && yarn workspace comet-admin-stories build-storybook",
         "intl:extract": "formatjs extract './packages/admin/**/*.ts*' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './packages/admin/admin-stories/**/*' --format simple",
         "postinstall": "husky install"
@@ -44,6 +48,7 @@
         "@types/uuid": "^8.3.0",
         "class-transformer": "^0.3.0",
         "class-validator": "^0.13.0",
+        "dotenv-cli": "^5.1.0",
         "exceljs": "^3.4.0",
         "express": "^4.0.0",
         "file-saver": "^2.0.2",
@@ -57,6 +62,7 @@
         "lint-staged": "^12.3.7",
         "nestjs-console": "^7.0.0",
         "next": "^11.0.0",
+        "oidc-provider": "^7.11.3",
         "pg": "^8.0.0",
         "pg-error-constants": "^1.0.0",
         "pm2": "^4.5.6",
