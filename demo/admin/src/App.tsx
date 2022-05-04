@@ -1,6 +1,7 @@
 import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 
+import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogProvider, MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
 import {
     AllCategories,
@@ -15,14 +16,16 @@ import {
     SitePreview,
     SitesConfigProvider,
 } from "@comet/admin-cms";
+import { AuthorizationGate, AuthorizationProvider } from "@comet/react-app-auth";
 import { css, Global } from "@emotion/react";
-import ApolloProvider from "@src/common/ApolloProvider";
+import { apolloClient } from "@src/common/apollo/apolloClient";
+import { authorizationManager } from "@src/common/authorization/authorizationManager";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
-import UserProvider, { userService } from "@src/common/UserProvider";
 import config from "@src/config";
 import Dashboard from "@src/dashboard/Dashboard";
+import { ErrorPage } from "@src/pages/errorpage/ErrorPage";
 import theme from "@src/theme";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
@@ -49,7 +52,7 @@ const GlobalStyle = () => (
     />
 );
 
-const apiClient = createHttpClient(config.API_URL, userService);
+const apiClient = createHttpClient(config.API_URL, authorizationManager);
 const sitesConfig = JSON.parse(config.SITES_CONFIG);
 
 const categories: AllCategories = [
@@ -72,20 +75,24 @@ class App extends React.Component {
 
     public render(): JSX.Element {
         return (
-            <>
-                <SitesConfigProvider
-                    value={{
-                        configs: sitesConfig,
-                        resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
-                    }}
-                >
-                    <IntlProvider messages={getMessages()} locale="en">
-                        <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
-                            <MuiThemeProvider theme={theme}>
-                                <RouterBrowserRouter>
-                                    <UserProvider>
-                                        <ErrorDialogProvider>
-                                            <ApolloProvider>
+            <ApolloProvider client={apolloClient}>
+                <AuthorizationProvider authorizationManager={authorizationManager}>
+                    <SitesConfigProvider
+                        value={{
+                            configs: sitesConfig,
+                            resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
+                        }}
+                    >
+                        <IntlProvider messages={getMessages()} locale="en">
+                            <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
+                                <MuiThemeProvider theme={theme}>
+                                    <RouterBrowserRouter>
+                                        <AuthorizationGate
+                                            renderErrorPage={({ error, onRetry }) => {
+                                                return <ErrorPage error={error} onRetry={onRetry} />;
+                                            }}
+                                        >
+                                            <ErrorDialogProvider>
                                                 <DndProvider backend={HTML5Backend}>
                                                     <SnackbarProvider>
                                                         <CmsBlockContextProvider
@@ -178,15 +185,15 @@ class App extends React.Component {
                                                         </CmsBlockContextProvider>
                                                     </SnackbarProvider>
                                                 </DndProvider>
-                                            </ApolloProvider>
-                                        </ErrorDialogProvider>
-                                    </UserProvider>
-                                </RouterBrowserRouter>
-                            </MuiThemeProvider>
-                        </LocaleProvider>
-                    </IntlProvider>
-                </SitesConfigProvider>
-            </>
+                                            </ErrorDialogProvider>
+                                        </AuthorizationGate>
+                                    </RouterBrowserRouter>
+                                </MuiThemeProvider>
+                            </LocaleProvider>
+                        </IntlProvider>
+                    </SitesConfigProvider>
+                </AuthorizationProvider>
+            </ApolloProvider>
         );
     }
 }
