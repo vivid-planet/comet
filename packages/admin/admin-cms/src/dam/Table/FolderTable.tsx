@@ -37,6 +37,7 @@ import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
 import FolderBreadcrumbs from "./breadcrumbs/FolderBreadcrumbs";
+import { DamActions } from "./damActions/DamActions";
 import DamContextMenu from "./DamContextMenu";
 import { DamDnDFooter, FooterType } from "./DamDnDFooter";
 import DamLabel from "./DamLabel";
@@ -45,6 +46,7 @@ import { useFileUpload } from "./fileUpload/useFileUpload";
 import { damFilesListQuery, damFolderQuery, damFoldersListQuery } from "./FolderTable.gql";
 import FolderTableDragLayer from "./FolderTableDragLayer";
 import { FolderTableRow, isFile, isFolder } from "./FolderTableRow";
+import { DamMultiselectContext, useDamMultiselect } from "./multiselect/DamMultiselect";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
 const TableWrapper = styled("div")`
@@ -320,13 +322,16 @@ const FolderTable = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOver]);
 
+    const damMultiselectApi = useDamMultiselect({ totalItemCount: (foldersTableData?.totalCount ?? 0) + (filesTableData?.totalCount ?? 0) });
+
     if (filesTableData === undefined || foldersTableData === undefined) {
         return <CircularProgress />;
     }
 
     return (
-        <>
+        <DamMultiselectContext.Provider value={damMultiselectApi}>
             <TableContainer>
+                {!props.hideDamActions && <DamActions files={filesTableData.data ?? []} folders={foldersTableData.data ?? []} />}
                 <FolderTableDragLayer />
                 <TableWrapper ref={dropTargetRef}>
                     <TableHead
@@ -394,7 +399,7 @@ const FolderTable = ({
                 <DamDnDFooter type={footerType} open={footerType !== undefined} folderName={footerFolderName} />
             </TableContainer>
             {fileUploadDialogs}
-        </>
+        </DamMultiselectContext.Provider>
     );
 };
 

@@ -8,17 +8,16 @@ import * as sc from "./ConfirmDeleteDialog.sc";
 
 interface ConfirmDeleteDialogProps {
     open: boolean;
-    closeDialog: (ok: boolean) => void;
-    assetType: "file" | "folder";
-    onDeleteButtonClick: () => void;
-    name: string;
+    onCloseDialog: (confirmed: boolean) => void;
+    itemType: "file" | "folder" | "selected_items";
+    name?: string;
 }
 
-export const ConfirmDeleteDialog = ({ open, closeDialog, name, assetType, onDeleteButtonClick }: ConfirmDeleteDialogProps): React.ReactElement => {
+export const ConfirmDeleteDialog = ({ open, onCloseDialog, name, itemType }: ConfirmDeleteDialogProps): React.ReactElement => {
     return (
-        <Dialog open={open} onClose={() => closeDialog(false)}>
+        <Dialog open={open} onClose={() => onCloseDialog(false)}>
             <DialogTitle>
-                <FormattedMessage id="dam.delete.confirmDeleting" defaultMessage="Confirm deleting" />
+                <FormattedMessage id="dam.delete.deleteSelection" defaultMessage="Delete selection?" />
             </DialogTitle>
             <sc.ConfirmDialogContent>
                 {/* @TODO: Only show warning if there are dependencies */}
@@ -29,38 +28,48 @@ export const ConfirmDeleteDialog = ({ open, closeDialog, name, assetType, onDele
                             <FormattedMessage id="comet.generic.warning" defaultMessage="Warning" />
                         </sc.WarningHeading>
                         <sc.WarningText>
-                            {assetType === "file" ? (
+                            {itemType === "file" && (
                                 <FormattedMessage
                                     id="dam.delete.file.mightHaveDependenciesWarning"
-                                    defaultMessage="The file {name} might be used somewhere on the website. If you delete this file now, it will disappear from all pages."
+                                    defaultMessage="The file {name} might be used somewhere on the website. If you delete this file, it will disappear from all pages."
                                     values={{ name: name }}
                                 />
-                            ) : (
+                            )}
+                            {itemType === "folder" && (
                                 <FormattedMessage
                                     id="dam.delete.folder.mightHaveDependenciesWarning"
-                                    defaultMessage="If you delete the folder {name}, all files inside this folder are irrevocably removed. Those files might be used somewhere on the website. If you delete them now, they will disappear from all pages."
+                                    defaultMessage="All files inside the folder {name} will also be removed. These files might be used somewhere on the website. If you delete them, they will disappear from all pages."
                                     values={{ name: name }}
+                                />
+                            )}
+                            {itemType === "selected_items" && (
+                                <FormattedMessage
+                                    id="dam.delete.selectedItems.mightHaveDependenciesWarning"
+                                    defaultMessage="All selected files and folders (including their content) will be removed. Some of the files might be used on the website. If you delete them, they will disappear from all pages."
                                 />
                             )}
                         </sc.WarningText>
                     </sc.WarningTextWrapper>
                 </sc.WarningWrapper>
                 <strong>
-                    {assetType === "file" ? (
-                        <FormattedMessage id="dam.delete.file.areYouSure" defaultMessage="Are you really sure you want to delete this file?" />
-                    ) : (
-                        <FormattedMessage id="dam.delete.folder.areYouSure" defaultMessage="Are you really sure you want to delete this folder?" />
+                    {itemType === "file" && (
+                        <FormattedMessage id="dam.delete.file.areYouSure" defaultMessage="Do you still want to delete this file?" />
+                    )}
+                    {itemType === "folder" && (
+                        <FormattedMessage id="dam.delete.folder.areYouSure" defaultMessage="Do you still want to delete this folder?" />
+                    )}
+                    {itemType === "selected_items" && (
+                        <FormattedMessage id="dam.delete.selectedItems.areYouSure" defaultMessage="Do you still want to delete all selected items?" />
                     )}
                 </strong>
             </sc.ConfirmDialogContent>
             <DialogActions>
-                <CancelButton onClick={() => closeDialog(false)} />
+                <CancelButton onClick={() => onCloseDialog(false)} />
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={async () => {
-                        await onDeleteButtonClick();
-                        closeDialog(true);
+                    onClick={() => {
+                        onCloseDialog(true);
                     }}
                     autoFocus={true}
                     startIcon={<Delete />}

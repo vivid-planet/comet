@@ -105,7 +105,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                                 onClick={() => {
                                     editDialogApi.openAddDialog(id);
                                 }}
-                                color="info"
                             >
                                 <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
                             </Button>
@@ -145,6 +144,8 @@ export interface DamConfig {
     /** Filter files by mimetype. Overrules fileCategory. */
     allowedMimetypes?: string[];
     disableScopeIndicator?: boolean;
+    hideMultiselect?: boolean;
+    hideDamActions?: boolean;
 }
 
 interface DamTableProps extends DamConfig {
@@ -154,7 +155,7 @@ interface DamTableProps extends DamConfig {
 export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): React.ReactElement => {
     const intl = useIntl();
 
-    const propsWithDefaultValues = { hideContextMenu: false, disableScopeIndicator: false, ...props };
+    const propsWithDefaultValues = { hideContextMenu: false, disableScopeIndicator: false, hideMultiselect: false, hideDamActions: false, ...props };
 
     const filterApi = useTableQueryFilter<DamFilter>({
         sort: {

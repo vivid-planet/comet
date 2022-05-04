@@ -115,20 +115,20 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
             <FileWrapper>{preview}</FileWrapper>
             <ConfirmDeleteDialog
                 open={deleteDialogOpen}
-                closeDialog={(ok) => {
-                    setDeleteDialogOpen(false);
-                    if (ok) {
+                onCloseDialog={async (confirmed) => {
+                    if (confirmed) {
+                        await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
+                            mutation: deleteDamFileMutation,
+                            variables: { id: file.id },
+                            refetchQueries: [namedOperations.Query.DamFilesList],
+                        });
+
                         stackApi?.goBack();
                     }
+
+                    setDeleteDialogOpen(false);
                 }}
-                onDeleteButtonClick={async () => {
-                    await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
-                        mutation: deleteDamFileMutation,
-                        variables: { id: file.id },
-                        refetchQueries: [namedOperations.Query.DamFilesList],
-                    });
-                }}
-                assetType="file"
+                itemType="file"
                 name={file.name}
             />
         </FilePreviewWrapper>
