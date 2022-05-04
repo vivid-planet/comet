@@ -5,7 +5,8 @@
         "packages/admin/*",
         "packages/api/*",
         "packages/site/*",
-        "packages/eslint-config"
+        "packages/eslint-config",
+        "demo/*"
     ],
     "private": true,
     "repository": {

@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "lib": ["esnext"],
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "outDir": "./dist",
+        "baseUrl": "./",
+        "incremental": true,
+        "esModuleInterop": true,
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "strictNullChecks": true,
+        "skipLibCheck": true,
+        "paths": {
+            "@src/*": ["src/*"]
+        }
+    }
+}

@@ -19,3 +19,16 @@ ln -sf ../../api/api-cms/block-meta.json ./packages/admin/admin-cms/block-meta.j
 
 # site CMS
 ln -sf ../../api/api-cms/block-meta.json ./packages/site/site-cms/block-meta.json
+
+# api DEMO
+ln -sf ../../.env ./demo/api/.env
+
+# admin DEMO
+ln -sf ../../.env ./demo/admin/.env
+ln -sf ../api/schema.gql ./demo/admin/schema.gql
+ln -sf ../api/block-meta.json ./demo/admin/block-meta.json
+
+# site DEMO
+ln -sf ../../.env ./demo/site/.env
+ln -sf ../api/schema.gql ./demo/site/schema.gql
+ln -sf ../api/block-meta.json ./demo/site/block-meta.json
