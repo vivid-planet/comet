@@ -83,6 +83,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, fileCategory, al
                     hideContextMenu={true}
                     fileCategory={fileCategory}
                     allowedMimetypes={allowedMimetypes}
+                    damLocationStorageKey={"choose-file-dam-location"}
                     disableScopeIndicator={true}
                 />
             </MemoryRouter>

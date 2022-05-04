@@ -35,6 +35,7 @@ import { UploadSplitButton } from "./Table/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./Table/filter/DamTableFilter";
 import FolderTable from "./Table/FolderTable";
 import { damFolderQuery } from "./Table/FolderTable.gql";
+import { RedirectToPersistedDamLocation } from "./Table/RedirectToPersistedDamLocation";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
     && {
@@ -146,9 +147,11 @@ export interface DamConfig {
     disableScopeIndicator?: boolean;
 }
 
-type DamTableProps = DamConfig;
+interface DamTableProps extends DamConfig {
+    damLocationStorageKey?: string;
+}
 
-export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
+export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): React.ReactElement => {
     const intl = useIntl();
 
     const propsWithDefaultValues = { hideContextMenu: false, disableScopeIndicator: false, ...props };
@@ -162,6 +165,7 @@ export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
+            <RedirectToPersistedDamLocation stateKey={damLocationStorageKey ?? "dam-location"} />
             <Folder filterApi={filterApi} {...propsWithDefaultValues} />
         </Stack>
     );
