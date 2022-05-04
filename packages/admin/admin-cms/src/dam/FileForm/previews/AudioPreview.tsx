@@ -6,10 +6,13 @@ import { GQLDamFileDetailFragment } from "../../../graphql.generated";
 
 const AudioPreviewWrapper = styled("div")`
     width: 100%;
-    min-height: 200px;
+    min-height: 400px;
     background-color: ${({ theme }) => theme.palette.grey[50]};
+
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `;
 
 const MusicIconContainer = styled("div")`
@@ -20,10 +23,11 @@ const MusicIconContainer = styled("div")`
 `;
 
 const MusicIconWrapper = styled("div")`
-    width: 96px;
-    height: 96px;
+    width: 150px;
+    height: 150px;
     background: white;
     border-radius: 10px;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,8 +35,8 @@ const MusicIconWrapper = styled("div")`
 `;
 
 const StyledMusicIcon = styled(Music)`
-    width: 27px;
-    height: 27px;
+    width: 54px;
+    height: 54px;
     color: ${({ theme }) => theme.palette.primary.main};
 `;
 
