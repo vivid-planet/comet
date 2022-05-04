@@ -35,6 +35,7 @@ export { createErrorDialogApolloLink } from "./error/errordialog/createErrorDial
 export { ErrorDialog, ErrorDialogOptions, ErrorDialogProps } from "./error/errordialog/ErrorDialog";
 export { ErrorDialogProvider } from "./error/errordialog/ErrorDialogProvider";
 export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext } from "./error/errordialog/ErrorScope";
+export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm } from "./FinalForm";
