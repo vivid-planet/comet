@@ -18,6 +18,7 @@ import {
 } from "../block";
 import { BlockField } from "../decorators/field";
 import { TransformDependencies } from "../dependencies";
+import { NameOrOptions } from "./types";
 
 interface Options<B extends Block> {
     block: B;
@@ -34,8 +35,8 @@ export interface ListBlockInputInterface<B extends BlockInputInterface> extends 
 }
 
 export function createListBlock<B extends Block>(
-    { block: block }: Options<B>,
-    name: string,
+    { block }: Options<B>,
+    name: NameOrOptions,
 ): Block<BlockDataInterface, ListBlockInputInterface<ExtractBlockInput<B>>> {
     if (!block) throw new Error("block is undefined (can happen because of cycling imports)");
 
