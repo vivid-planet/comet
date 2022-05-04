@@ -3,7 +3,6 @@ import { BreadcrumbItem, LocalErrorScopeApolloContext } from "@comet/admin";
 import { ChevronRight } from "@comet/admin-icons";
 import { Breadcrumbs, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as path from "path";
 import * as React from "react";
 import { useDrop } from "react-dnd";
 import { FormattedMessage } from "react-intl";
@@ -132,7 +131,7 @@ const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds }: FolderB
             });
         } else {
             const prevUrl = damBreadcrumbs[damBreadcrumbs.length - 1].url;
-            const url = path.join(prevUrl, folderId, "folder");
+            const url = `${prevUrl}/${folderId}/folder`;
 
             damBreadcrumbs.push({
                 id: folderId,

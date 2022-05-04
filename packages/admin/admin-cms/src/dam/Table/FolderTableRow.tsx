@@ -1,5 +1,6 @@
 import { useApolloClient, useMutation } from "@apollo/client";
 import { LocalErrorScopeApolloContext, TableBodyRow, TableBodyRowProps } from "@comet/admin";
+import { Checkbox, TableCell } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useDrag, useDrop } from "react-dnd";
@@ -20,6 +21,7 @@ import { FooterType } from "./DamDnDFooter";
 import { acceptedMimeTypes, acceptedMimeTypesByCategory } from "./fileUpload/acceptedMimeTypes";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { updateDamFileMutation, updateDamFolderMutation } from "./FolderTable.gql";
+import { useDamMultiselectApi } from "./multiselect/DamMultiselect";
 
 export const isFile = (item: GQLDamFileTableFragment | GQLDamFolderTableFragment): item is GQLDamFileTableFragment => item.__typename === "DamFile";
 export const isFolder = (item: GQLDamFileTableFragment | GQLDamFolderTableFragment): item is GQLDamFolderTableFragment =>
@@ -59,10 +61,12 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     footerApi,
     fileCategory,
     allowedMimetypes,
+    hideMultiselect,
 }) => {
+    const multiselectApi = useDamMultiselectApi();
     const client = useApolloClient();
 
-    const rowRef = React.useRef<HTMLTableRowElement>(null);
+    const rowRef = React.useRef<HTMLTableRowElement>();
     const [updateFile] = useMutation<GQLUpdateDamFileMutation, GQLUpdateDamFileMutationVariables>(updateDamFileMutation);
     const [updateFolder] = useMutation<GQLUpdateDamFolderMutation, GQLUpdateDamFolderMutationVariables>(updateDamFolderMutation);
     const [isHovered, setIsHovered] = React.useState<HoverStyle>();
@@ -79,7 +83,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
         },
     });
 
-    // handles upload of native file (e.g. file from desktop) to subfolder
+    // handles upload of native file or folder (e.g. file from desktop) to subfolder
     // If the native file is dropped on a folder row in the table, it is uploaded
     // to said folder
     const { getRootProps: getFolderRootProps } = useDropzone({
@@ -98,8 +102,8 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
         },
     });
 
-    // handles movement of an internal file (file row) to another folder
-    // If a file row is dragged and dropped on a folder row, it is moved to said folder
+    // handles movement of an internal item (file or folder row) to another folder
+    // If a row is dragged and dropped onto a folder row, it is moved to said folder
     const [{ isOverFolder, canDrop }, dropTarget] = useDrop({
         accept: ["folder", "asset"],
         drop: (dragObject: DamDragObject) => {
@@ -200,10 +204,28 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
         <>
             <StyledFolderTableRow
                 {...rowProps}
+                ref={rowRef as React.MutableRefObject<HTMLTableRowElement>}
                 {...(isFolder(dropTargetItem) && getFolderRootProps())}
-                ref={rowRef}
                 $activeHoverStyle={isHovered === "folder"}
             >
+                {!hideMultiselect && (
+                    <TableCell>
+                        <Checkbox
+                            checked={multiselectApi.isSelected(dropTargetItem.id)}
+                            onChange={(event) => {
+                                const checked = event.target.checked;
+                                if (checked) {
+                                    multiselectApi.select({
+                                        id: dropTargetItem.id,
+                                        type: isFolder(dropTargetItem) ? "folder" : "file",
+                                    });
+                                } else {
+                                    multiselectApi.unselect(dropTargetItem.id);
+                                }
+                            }}
+                        />
+                    </TableCell>
+                )}
                 {children}
             </StyledFolderTableRow>
             {fileUploadDialogs}

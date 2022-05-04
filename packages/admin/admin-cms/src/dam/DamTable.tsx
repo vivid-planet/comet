@@ -35,6 +35,7 @@ import { UploadSplitButton } from "./Table/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./Table/filter/DamTableFilter";
 import FolderTable from "./Table/FolderTable";
 import { damFolderQuery } from "./Table/FolderTable.gql";
+import { RedirectToPersistedDamLocation } from "./Table/RedirectToPersistedDamLocation";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
     && {
@@ -104,7 +105,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                                 onClick={() => {
                                     editDialogApi.openAddDialog(id);
                                 }}
-                                color="info"
                             >
                                 <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
                             </Button>
@@ -144,14 +144,18 @@ export interface DamConfig {
     /** Filter files by mimetype. Overrules fileCategory. */
     allowedMimetypes?: string[];
     disableScopeIndicator?: boolean;
+    hideMultiselect?: boolean;
+    hideDamActions?: boolean;
 }
 
-type DamTableProps = DamConfig;
+interface DamTableProps extends DamConfig {
+    damLocationStorageKey?: string;
+}
 
-export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
+export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): React.ReactElement => {
     const intl = useIntl();
 
-    const propsWithDefaultValues = { hideContextMenu: false, disableScopeIndicator: false, ...props };
+    const propsWithDefaultValues = { hideContextMenu: false, disableScopeIndicator: false, hideMultiselect: false, hideDamActions: false, ...props };
 
     const filterApi = useTableQueryFilter<DamFilter>({
         sort: {
@@ -162,6 +166,7 @@ export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
+            <RedirectToPersistedDamLocation stateKey={damLocationStorageKey ?? "dam-location"} />
             <Folder filterApi={filterApi} {...propsWithDefaultValues} />
         </Stack>
     );

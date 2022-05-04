@@ -11,7 +11,6 @@ import {
     createBlock,
     ExtractBlockInput,
     inputToData,
-    MigrateOptions,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "../block";
@@ -19,6 +18,7 @@ import { ChildBlock } from "../decorators/child-block";
 import { ChildBlockInput } from "../decorators/child-block-input";
 import { BlockField } from "../decorators/field";
 import { TransformDependencies } from "../dependencies";
+import { NameOrOptions } from "./types";
 
 export interface OptionalBlockInputInterface<DecoratedBlockInput extends BlockInputInterface> extends SimpleBlockInputInterface {
     block?: DecoratedBlockInput;
@@ -27,7 +27,7 @@ export interface OptionalBlockInputInterface<DecoratedBlockInput extends BlockIn
 
 export function createOptionalBlock<DecoratedBlock extends Block>(
     block: DecoratedBlock,
-    options: { migrate?: MigrateOptions } = {},
+    nameOrOptions: NameOrOptions = `Optional${block.name}`,
 ): Block<BlockDataInterface, OptionalBlockInputInterface<ExtractBlockInput<DecoratedBlock>>> {
     class BlockOptional extends BlockData {
         @ChildBlock(block, { nullable: true })
@@ -71,5 +71,5 @@ export function createOptionalBlock<DecoratedBlock extends Block>(
         }
     }
 
-    return createBlock(BlockOptional, BlockOptionalInput, { name: `Optional${block.name}`, ...options });
+    return createBlock(BlockOptional, BlockOptionalInput, nameOrOptions);
 }

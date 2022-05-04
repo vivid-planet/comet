@@ -34,7 +34,7 @@ interface FileInnerMenuProps {
     handleClose: () => void;
 }
 
-const FolderInnerMenu = React.forwardRef(({ folder, handleClose }: FolderInnerMenuProps, ref): React.ReactElement => {
+const FolderInnerMenu = ({ folder, handleClose }: FolderInnerMenuProps): React.ReactElement => {
     const intl = useIntl();
     const editDialogApi = useEditDialogApi();
     const errorDialog = useErrorDialog();
@@ -88,20 +88,22 @@ const FolderInnerMenu = React.forwardRef(({ folder, handleClose }: FolderInnerMe
                 <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.delete", defaultMessage: "Delete" })} />
                 <ConfirmDeleteDialog
                     open={deleteDialogOpen}
-                    closeDialog={() => {
+                    onCloseDialog={async (confirmed) => {
+                        if (confirmed) {
+                            await handleFolderDelete();
+                        }
                         setDeleteDialogOpen(false);
                         handleClose();
                     }}
-                    onDeleteButtonClick={handleFolderDelete}
                     name={folder.name}
-                    assetType="folder"
+                    itemType="folder"
                 />
             </MenuItem>
         </MenuList>
     );
-});
+};
 
-const FileInnerMenu = React.forwardRef(({ file, handleClose }: FileInnerMenuProps, ref): React.ReactElement => {
+const FileInnerMenu = ({ file, handleClose }: FileInnerMenuProps): React.ReactElement => {
     const client = useApolloClient();
     const intl = useIntl();
     const stackApi = useStackSwitchApi();
@@ -169,24 +171,25 @@ const FileInnerMenu = React.forwardRef(({ file, handleClose }: FileInnerMenuProp
                 <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.deleteFile", defaultMessage: "Delete file" })} />
                 <ConfirmDeleteDialog
                     open={deleteDialogOpen}
-                    closeDialog={() => {
+                    onCloseDialog={async (confirmed) => {
+                        if (confirmed) {
+                            await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
+                                mutation: deleteDamFileMutation,
+                                variables: { id: file.id },
+                                refetchQueries: [namedOperations.Query.DamFilesList],
+                            });
+                        }
+
                         setDeleteDialogOpen(false);
                         handleClose();
                     }}
-                    onDeleteButtonClick={async () => {
-                        await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
-                            mutation: deleteDamFileMutation,
-                            variables: { id: file.id },
-                            refetchQueries: [namedOperations.Query.DamFilesList],
-                        });
-                    }}
                     name={file.name}
-                    assetType="file"
+                    itemType="file"
                 />
             </MenuItem>
         </MenuList>
     );
-});
+};
 
 const DamContextMenu = ({ file, folder }: DamContextMenuProps): React.ReactElement => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -209,7 +212,7 @@ const DamContextMenu = ({ file, folder }: DamContextMenuProps): React.ReactEleme
 
     return (
         <>
-            <IconButton onClick={handleClick} size="large">
+            <IconButton onClick={handleClick}>
                 <MoreVertical />
             </IconButton>
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>

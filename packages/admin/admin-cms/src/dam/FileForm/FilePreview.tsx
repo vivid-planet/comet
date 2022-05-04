@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { useStackApi } from "@comet/admin";
-import { Delete, Download, File } from "@comet/admin-icons";
+import { Delete, Download, ZipFile } from "@comet/admin-icons";
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import saveAs from "file-saver";
@@ -11,6 +11,7 @@ import { GQLDamFileDetailFragment, GQLDeleteDamFileMutation, GQLDeleteDamFileMut
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { deleteDamFileMutation } from "../FileActions/ConfirmDeleteDialog.gql";
 import { AudioPreview } from "./previews/AudioPreview";
+import { DefaultFilePreview } from "./previews/DefaultFilePreview";
 import { ImagePreview } from "./previews/ImagePreview";
 import { VideoPreview } from "./previews/VideoPreview";
 
@@ -35,6 +36,12 @@ const FilePreviewWrapper = styled("div")`
     width: 100%;
 `;
 
+const ZipFileIcon = styled(ZipFile)`
+    color: ${({ theme }) => theme.palette.primary.main};
+    width: 54px;
+    height: 72px;
+`;
+
 interface FilePreviewProps {
     file: GQLDamFileDetailFragment;
 }
@@ -52,8 +59,10 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
         preview = <AudioPreview file={file} />;
     } else if (file.mimetype.startsWith("video/")) {
         preview = <VideoPreview file={file} />;
+    } else if (["application/x-zip-compressed", "application/zip"].includes(file.mimetype)) {
+        preview = <DefaultFilePreview customIcon={<ZipFileIcon />} />;
     } else {
-        preview = <File />;
+        preview = <DefaultFilePreview />;
     }
 
     return (
@@ -106,20 +115,20 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
             <FileWrapper>{preview}</FileWrapper>
             <ConfirmDeleteDialog
                 open={deleteDialogOpen}
-                closeDialog={(ok) => {
-                    setDeleteDialogOpen(false);
-                    if (ok) {
+                onCloseDialog={async (confirmed) => {
+                    if (confirmed) {
+                        await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
+                            mutation: deleteDamFileMutation,
+                            variables: { id: file.id },
+                            refetchQueries: [namedOperations.Query.DamFilesList],
+                        });
+
                         stackApi?.goBack();
                     }
+
+                    setDeleteDialogOpen(false);
                 }}
-                onDeleteButtonClick={async () => {
-                    await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
-                        mutation: deleteDamFileMutation,
-                        variables: { id: file.id },
-                        refetchQueries: [namedOperations.Query.DamFilesList],
-                    });
-                }}
-                assetType="file"
+                itemType="file"
                 name={file.name}
             />
         </FilePreviewWrapper>

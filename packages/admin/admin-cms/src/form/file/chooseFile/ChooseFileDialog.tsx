@@ -19,10 +19,12 @@ const FixedHeightDialog = styled(Dialog)`
 `;
 
 const StyledDialogTitle = styled(DialogTitle)`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+    & > .MuiTypography-root {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
 `;
 
 const CloseButton = styled(IconButton)`
@@ -46,7 +48,7 @@ const renderDamLabel = (
 ) => {
     return isFile(row) ? (
         <div>
-            <TableRowButton disableRipple={true} variant={"text"} color={"info"} onClick={() => onChooseFile(row.id)} fullWidth>
+            <TableRowButton disableRipple={true} variant={"text"} onClick={() => onChooseFile(row.id)} fullWidth>
                 <DamLabel asset={row} matches={matches} />
             </TableRowButton>
         </div>
@@ -80,10 +82,13 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, fileCategory, al
                 <DamTable
                     renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
                     TableContainer={DialogContent}
-                    hideContextMenu={true}
                     fileCategory={fileCategory}
                     allowedMimetypes={allowedMimetypes}
+                    damLocationStorageKey={"choose-file-dam-location"}
+                    hideContextMenu={true}
                     disableScopeIndicator={true}
+                    hideMultiselect={true}
+                    hideDamActions={true}
                 />
             </MemoryRouter>
         </FixedHeightDialog>
