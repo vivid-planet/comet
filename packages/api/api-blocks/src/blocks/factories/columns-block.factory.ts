@@ -18,13 +18,13 @@ import {
 } from "../block";
 import { BlockField } from "../decorators/field";
 import { TransformDependencies } from "../dependencies";
+import { NameOrOptions } from "./types";
 
 interface ColumnsBlockLayout {
     name: string;
 }
 
 interface ColumnsBlockFactoryOptions<B extends Block> {
-    name: string;
     contentBlock: B;
     layouts: ColumnsBlockLayout[];
 }
@@ -41,11 +41,10 @@ export interface ColumnsBlockInputInterface<B extends BlockInputInterface> exten
 }
 
 export class ColumnsBlockFactory {
-    static create<B extends Block>({
-        name,
-        contentBlock,
-        layouts,
-    }: ColumnsBlockFactoryOptions<B>): Block<BlockDataInterface, ColumnsBlockInputInterface<ExtractBlockInput<B>>> {
+    static create<B extends Block>(
+        { contentBlock, layouts }: ColumnsBlockFactoryOptions<B>,
+        nameOrOptions: NameOrOptions,
+    ): Block<BlockDataInterface, ColumnsBlockInputInterface<ExtractBlockInput<B>>> {
         if (layouts.length === 0) {
             throw new Error(`Number of layouts must be greater than 0!`);
         }
@@ -129,6 +128,6 @@ export class ColumnsBlockFactory {
             }
         }
 
-        return createBlock(ColumnsBlockData, ColumnsBlockInput, name);
+        return createBlock(ColumnsBlockData, ColumnsBlockInput, nameOrOptions);
     }
 }

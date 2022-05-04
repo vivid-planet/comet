@@ -22,6 +22,7 @@ import {
 } from "../block";
 import { AnnotationBlockMeta, BlockField } from "../decorators/field";
 import { TransformDependencies } from "../dependencies";
+import { NameOrOptions } from "./types";
 
 type BaseBlockMap = Record<string, Block<BlockDataInterface, BlockInputInterface>>;
 
@@ -56,7 +57,7 @@ type SupportedBlocksInputInterfaces<BlockMap extends BaseBlockMap> = {
 
 export function createOneOfBlock<BlockMap extends BaseBlockMap>(
     { supportedBlocks, allowEmpty = true }: Options<BlockMap>,
-    nameOrOptions: string | { name: string; migrate?: MigrateOptions },
+    nameOrOptions: NameOrOptions,
 ): Block<OneOfBlockDataInterface<BlockMap>, OneOfBlockInputInterface<BlockMap>> {
     const supportedBlockTypes: Array<keyof BlockMap | null> = Object.keys(supportedBlocks);
 

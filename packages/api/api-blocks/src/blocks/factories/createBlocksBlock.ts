@@ -14,12 +14,12 @@ import {
     ExtractBlockInputFactoryProps,
     isBlockDataInterface,
     isBlockInputInterface,
-    MigrateOptions,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
 import { TransformDependencies } from "../dependencies";
+import { NameOrOptions } from "./types";
 
 type BaseBlockMap = Record<string, Block>;
 
@@ -42,7 +42,7 @@ type SupportedBlocksInputInterfaces<BlockMap extends BaseBlockMap> = {
 
 export function createBlocksBlock<BlockMap extends BaseBlockMap>(
     { supportedBlocks }: Options<BlockMap>,
-    nameOrOptions: string | { name: string; migrate?: MigrateOptions },
+    nameOrOptions: NameOrOptions,
 ): Block<BlockDataInterface, BlocksBlockInputInterface<BlockMap>> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
