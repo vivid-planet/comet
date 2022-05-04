@@ -1,23 +1,24 @@
+import { useReactiveVar } from "@apollo/client";
 import * as React from "react";
 
 import { ErrorDialog, ErrorDialogOptions } from "./ErrorDialog";
-import { ErrorDialogContext, ErrorDialogContextProps } from "./ErrorDialogContext";
+import { errorDialogVar } from "./errorDialogVar";
 
 export const ErrorDialogProvider: React.FunctionComponent = ({ children }) => {
-    const [errorOptions, setErrorOptions] = React.useState<ErrorDialogOptions | undefined>(undefined);
+    const errorOptions = useReactiveVar<ErrorDialogOptions | undefined>(errorDialogVar);
+
     const [errorDialogVisible, setErrorDialogVisible] = React.useState(false);
 
-    const errorDialog = React.useMemo((): ErrorDialogContextProps => {
-        return {
-            showError: (options: ErrorDialogOptions) => {
-                setErrorOptions(options);
-                setErrorDialogVisible(true);
-            },
-        };
-    }, []);
+    React.useEffect(() => {
+        if (errorOptions && !errorDialogVisible) {
+            setErrorDialogVisible(true);
+        } else if (errorOptions == null && errorDialogVisible) {
+            setErrorDialogVisible(false);
+        }
+    }, [errorDialogVisible, errorOptions]);
 
     return (
-        <ErrorDialogContext.Provider value={errorDialog}>
+        <>
             {children}
             <ErrorDialog
                 show={errorDialogVisible}
@@ -26,10 +27,10 @@ export const ErrorDialogProvider: React.FunctionComponent = ({ children }) => {
                     setErrorDialogVisible(false);
 
                     setTimeout(() => {
-                        setErrorOptions(undefined); // delay cleaning error so Dialog Content does not go away while fadeout transition
+                        errorDialogVar(undefined);
                     }, 200);
                 }}
             />
-        </ErrorDialogContext.Provider>
+        </>
     );
 };
