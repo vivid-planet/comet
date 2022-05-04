@@ -267,8 +267,8 @@ export const Story: React.FC = () => {
                                             </TableCell>
                                             <TableCell>Foo bar</TableCell>
                                             <TableCell align="right">
-                                                <IconButton size="large">
-                                                    <Edit color="primary" />
+                                                <IconButton size="large" color="primary">
+                                                    <Edit />
                                                 </IconButton>
                                                 <IconButton size="large">
                                                     <Favorite />
