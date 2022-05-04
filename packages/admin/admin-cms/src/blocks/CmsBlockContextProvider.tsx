@@ -1,11 +1,11 @@
 import { ApolloClient, NormalizedCacheObject, useApolloClient } from "@apollo/client";
 import { BlockContextProvider } from "@comet/admin-blocks";
-import { UserContext } from "@vivid/react-oidc-client";
+import { useAuthorization } from "@comet/react-app-auth";
 import { AxiosInstance } from "axios";
 import * as React from "react";
 
 import { AllCategories } from "../pages/pageTree/PageTreeContext";
-interface CmsBlockContext {
+export interface CmsBlockContext {
     apolloClient: ApolloClient<NormalizedCacheObject>;
     damConfig: {
         apiUrl: string;
@@ -17,14 +17,14 @@ interface CmsBlockContext {
     pageTreeCategories?: AllCategories;
 }
 
-interface Props extends Omit<CmsBlockContext, "apolloClient"> {
+interface CmsBlockContextProviderProps extends Omit<CmsBlockContext, "apolloClient"> {
     children: React.ReactNode;
 }
 
-function CmsBlockContextProvider({ children, ...values }: Props): React.ReactElement {
+export const CmsBlockContextProvider: React.FunctionComponent<CmsBlockContextProviderProps> = ({ children, ...values }): React.ReactElement => {
     const apolloClient = useApolloClient();
 
-    const userContext = React.useContext(UserContext);
+    const authorization = useAuthorization();
     React.useEffect(() => {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("/access-token-service-worker.js", { scope: "/" });
@@ -32,22 +32,20 @@ function CmsBlockContextProvider({ children, ...values }: Props): React.ReactEle
             // eslint-disable-next-line no-console
             console.error("Service Worker is required.");
         }
-        function setServiceWorkerAccessToken() {
-            if (!userContext.getUser().access_token) return;
+        const subscription = authorization?.authorizationManager.onOAuthChange((oAuth) => {
             navigator.serviceWorker.ready.then((registration) => {
                 if (registration.active) {
-                    registration.active.postMessage(userContext.getUser().access_token);
+                    if (oAuth?.accessToken) {
+                        registration.active.postMessage(oAuth.accessToken);
+                    }
                 }
             });
-        }
-        setServiceWorkerAccessToken();
-        userContext.userManager.events.addUserLoaded(setServiceWorkerAccessToken);
+        });
+
         return () => {
-            userContext.userManager.events.removeUserLoaded(setServiceWorkerAccessToken);
+            subscription?.unsubscribe();
         };
-    }, [userContext]);
+    }, [authorization]);
 
     return <BlockContextProvider value={{ ...values, apolloClient }}>{children}</BlockContextProvider>;
-}
-
-export { CmsBlockContext, CmsBlockContextProvider };
+};
