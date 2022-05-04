@@ -2894,7 +2894,9 @@ __metadata:
   resolution: "@comet/admin-blocks@workspace:packages/admin/admin-blocks"
   dependencies:
     "@babel/cli": ^7.17.6
+    "@comet/admin": ^2.0.0
     "@comet/admin-babel-preset": ^2.0.0
+    "@comet/admin-icons": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@types/jest": ^27.0.0
     "@types/lodash.isequal": ^4.0.0
@@ -2940,8 +2942,13 @@ __metadata:
   resolution: "@comet/admin-cms@workspace:packages/admin/admin-cms"
   dependencies:
     "@babel/cli": ^7.17.6
+    "@comet/admin": ^2.0.0
     "@comet/admin-babel-preset": ^2.0.0
     "@comet/admin-blocks": ^2.0.0
+    "@comet/admin-icons": ^2.0.0
+    "@comet/admin-react-select": ^2.0.0
+    "@comet/admin-rte": ^2.0.0
+    "@comet/admin-theme": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@comet/react-app-auth": ^1.0.0
     "@graphql-codegen/cli": ^1.0.0

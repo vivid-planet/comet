@@ -57,7 +57,9 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
+        "@comet/admin": "^2.0.0",
         "@comet/admin-babel-preset": "^2.0.0",
+        "@comet/admin-icons": "^2.0.0",
         "@comet/eslint-config": "^2.0.0",
         "@types/jest": "^27.0.0",
         "@types/lodash.isequal": "^4.0.0",
