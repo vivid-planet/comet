@@ -6,6 +6,7 @@ import { Typography } from "@mui/material/styles/createTypography";
 export const getMuiTableCell = (palette: Palette, typography: Typography): Components["MuiTableCell"] => ({
     styleOverrides: {
         root: {
+            position: "relative",
             borderBottomColor: palette.grey[100],
             paddingTop: 15,
             paddingBottom: 15,
@@ -18,7 +19,6 @@ export const getMuiTableCell = (palette: Palette, typography: Typography): Compo
             },
         },
         head: {
-            position: "relative",
             borderTop: `1px solid ${palette.grey[100]}`,
             fontSize: 14,
             lineHeight: "20px",
