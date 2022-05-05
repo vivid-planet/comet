@@ -59,6 +59,7 @@ const transform: Transform = (file, api) => {
 
             j(path)
                 .find(j.MemberExpression)
+                .at(0)
                 .replaceWith(j.callExpression(j.identifier("styled"), [j.literal(htmlTag)]));
         }
     });
