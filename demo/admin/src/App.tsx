@@ -18,7 +18,7 @@ import {
 } from "@comet/admin-cms";
 import { AuthorizationGate, AuthorizationProvider } from "@comet/react-app-auth";
 import { css, Global } from "@emotion/react";
-import { apolloClient } from "@src/common/apollo/apolloClient";
+import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { authorizationManager } from "@src/common/authorization/authorizationManager";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import MasterHeader from "@src/common/MasterHeader";
@@ -54,7 +54,7 @@ const GlobalStyle = () => (
 
 const apiClient = createHttpClient(config.API_URL, authorizationManager);
 const sitesConfig = JSON.parse(config.SITES_CONFIG);
-
+const apolloClient = createApolloClient();
 const categories: AllCategories = [
     {
         category: "MainNavigation",

@@ -7,13 +7,15 @@ import { refreshHandler } from "../authorization/refreshHandler";
 import { inMemoryCache } from "./inMemoryCache";
 import { httpLink } from "./links/httpLink";
 
-const link = ApolloLink.from([
-    includeInvisibleContentContext,
-    createAuthorizationLink({ authorizationConfig, refreshHandler: refreshHandler }),
-    httpLink,
-]);
+export const createApolloClient = () => {
+    const link = ApolloLink.from([
+        includeInvisibleContentContext,
+        createAuthorizationLink({ authorizationConfig, refreshHandler: refreshHandler }),
+        httpLink,
+    ]);
 
-export const apolloClient = new ApolloClient({
-    link,
-    cache: inMemoryCache,
-});
+    return new ApolloClient({
+        link,
+        cache: inMemoryCache,
+    });
+};
