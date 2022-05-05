@@ -95,13 +95,14 @@ It then provides the item to its children via child function.
     <Story id="stories-components-selection-selected--selected" />
 </Canvas>
 
-If you don't have all item data already loaded, you can provide a `query` and `dataAccessor` (instead of `rows`).
-The item data is then automatically loaded from the API once an item is selected.
+### Selected with Lazy Loading
+
+If you don't want to preload all item data, you can also lazy load each item once it's been selected.
+To do that, you have to provide the two props: `query` and `dataAccessor`.
+
+-   `query`: the GraphQL query to load an item
+-   `dataAccessor`: the name of the item in GraphQL's result data
 
 <Canvas>
     <Story id="stories-components-selection-async-selected--async-selected" />
 </Canvas>
-
-TODO:
-
--   Selected

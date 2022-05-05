@@ -39,6 +39,8 @@ query user(
         ) @rest(type: "User", path: "users/{args.id}") {
             id
             name
+            username
+            email
         }
     }
 `;
