@@ -54,6 +54,25 @@ Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/g
 
 The date-picker package has been removed.
 
+## @comet/admin-color-picker
+
+### Highlights
+
+-   A slider for the alpha channel can be enabled by setting the `colorFormat` prop to "rgba"
+-   Add a standalone `ColorPicker` component for use outside final-form
+
+### Bugfixes
+
+-   Disable the input when the `disabled` prop is set
+-   Add missing focus styling to the input
+-   Open & close the picker when focusing & blurring the input with tab navigation
+
+### Incompatible Changes
+
+-   The majority of the classes used for style overrides have been changed, therefore, custom styling may need to be refactored
+-   The `showPicker` prop has been removed, the picker is now shown by default and can be hidden with the `hidePicker` prop
+-   The `showClearButton` prop has been removed, it can be added manually by adding the `ClearInputButton` component to the `endAdornment`
+
 # [2.1.0]
 
 ## Highlights:
