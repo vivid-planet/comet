@@ -6,6 +6,11 @@ import { DecoratorContext } from "../../../../storyHelpers";
 
 export function errorDialogStoryProviderDecorator<StoryFnReturnType = unknown>() {
     return (fn: LegacyStoryFn<StoryFnReturnType>, c: DecoratorContext<StoryFnReturnType>) => {
-        return <ErrorDialogProvider>{fn(c)}</ErrorDialogProvider>;
+        return (
+            <>
+                <ErrorDialogProvider />
+                {fn(c)}
+            </>
+        );
     };
 }
