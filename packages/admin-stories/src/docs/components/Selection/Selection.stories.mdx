@@ -4,14 +4,17 @@ import { Meta, Story, Canvas, Source } from "@storybook/addon-docs";
 
 # Selection
 
-In Comet Admin, a _selection_ can be used to manage which item a user has currently selected.
+In Comet Admin, a _selection_ can be used to manage which item of a list or table a user has currently selected.
 It's most commonly used for keeping track of selections when combining a table and a form.
 
-The selection API is used internally by the `EditDialog`.
+The two most common use cases for selections are
 
-TODO: extend introduction:
+-   creating and editing items in a dialog.
+    Comet Admin has a dedicated `EditDialog` component that uses selection internally.
+    You can find more infos in the [EditDialog docs](/story/docs-components-edit-dialog--page#editdialog-and-table).
 
--   common use cases (with examples) => EditDialog and Table Besides Form
+-   selecting items from a table to edit them in an adjacent form.
+    An example can be found in the [Selection Table docs](/story/docs-components-table-selection-table--page).
 
 ## Selection (without URL State)
 
