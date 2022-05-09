@@ -1,5 +1,5 @@
-import { promises as fs, writeFileSync } from "fs";
-import * as prettier from "prettier";
+import { Command } from "commander";
+import { readFile, writeFile } from "fs/promises";
 
 type BlockMetaField =
     | {
@@ -90,40 +90,41 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
     }
 }
 
-(async () => {
-    // eslint-disable-next-line no-console
-    console.info("Generating blocks.generated.ts...");
+const generateBlockTypes = new Command("generate-block-types")
+    .description("generate block types from block meta")
+    .option("--inputs", "include block inputs")
+    .action(async (options) => {
+        const blockMeta = await readFile("block-meta.json").then((fileContents) => JSON.parse(fileContents.toString()) as BlockMeta[]);
 
-    const blockMeta = await fs.readFile("block-meta.json").then((fileContents) => JSON.parse(fileContents.toString()) as BlockMeta[]);
+        const sortedBlockMeta = blockMeta.sort((a, b) => a.name.localeCompare(b.name));
 
-    const sortedBlockMeta = blockMeta.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
-    sortedBlockMeta.forEach((block) => {
-        content += `export interface ${block.name}BlockData {\n`;
-        block.fields.forEach((field) => {
-            content += field.name;
-            if (field.nullable) content += "?";
-            content += ": ";
-            writeFieldType(field, "BlockData");
-            content += ";\n";
+        sortedBlockMeta.forEach((block) => {
+            content += `export interface ${block.name}BlockData {\n`;
+            block.fields.forEach((field) => {
+                content += field.name;
+                if (field.nullable) content += "?";
+                content += ": ";
+                writeFieldType(field, "BlockData");
+                content += ";\n";
+            });
+            content += "}\n";
         });
-        content += "}\n";
+
+        if (options.inputs) {
+            sortedBlockMeta.forEach((block) => {
+                content += `export interface ${block.name}BlockInput {\n`;
+                block.inputFields.forEach((field) => {
+                    content += field.name;
+                    if (field.nullable) content += "?";
+                    content += ": ";
+                    writeFieldType(field, "BlockInput");
+                    content += ";\n";
+                });
+                content += "}\n";
+            });
+        }
+
+        await writeFile(`./src/blocks.generated.ts`, content);
     });
 
-    sortedBlockMeta.forEach((block) => {
-        content += `export interface ${block.name}BlockInput {\n`;
-        block.inputFields.forEach((field) => {
-            content += field.name;
-            if (field.nullable) content += "?";
-            content += ": ";
-            writeFieldType(field, "BlockInput");
-            content += ";\n";
-        });
-        content += "}\n";
-    });
-
-    const options = await prettier.resolveConfig(process.cwd());
-    writeFileSync(`./src/blocks.generated.ts`, prettier.format(content, { ...options, parser: "typescript" }));
-
-    // eslint-disable-next-line no-console
-    console.info("Done!");
-})();
+export { generateBlockTypes };

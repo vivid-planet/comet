@@ -28,7 +28,7 @@
         "lint:tsc": "tsc --noEmit",
         "generate-graphql-types": "graphql-codegen",
         "generate-graphql-types:watch": "yarn generate-graphql-types --watch",
-        "generate-block-types": "ts-node generate-block-types.ts",
+        "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"yarn generate-block-types\"",
         "test": "jest --verbose=true",
         "test:watch": "jest --watch"
@@ -102,6 +102,7 @@
         "@comet/admin-rte": "^2.0.0",
         "@comet/admin-theme": "^2.0.0",
         "@comet/blocks-admin": "^2.0.0",
+        "@comet/cli": "^2.0.0",
         "@comet/eslint-config": "^2.0.0",
         "@comet/react-app-auth": "^1.0.0",
         "@graphql-codegen/cli": "^1.0.0",
@@ -128,7 +129,6 @@
         "jest-junit": "^13.0.0",
         "prettier": "^2.0.0",
         "ts-jest": "^27.0.0",
-        "ts-node": "^10.0.0",
         "typescript": "^4.0.0",
         "yarn-run-all": "^3.0.0"
     },
