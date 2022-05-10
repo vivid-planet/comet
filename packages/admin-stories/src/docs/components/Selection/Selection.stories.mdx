@@ -102,7 +102,7 @@ It then provides the item to its children via child function.
 If you don't want to preload all item data, you can lazy load each item once it's been selected.
 To do that, you have to provide the two props: `query` and `dataAccessor`.
 
--   `query`: the GraphQL query to load an item
+-   `query`: the GraphQL query to load an item. The query must use the variable `id` for identifying the item
 -   `dataAccessor`: the name of the item in GraphQL's result data
 
 <Canvas>
