@@ -4341,7 +4341,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/roboto@npm:^4.2.3":
+"@fontsource/roboto@npm:^4.2.3, @fontsource/roboto@npm:^4.5.5":
   version: 4.5.5
   resolution: "@fontsource/roboto@npm:4.5.5"
   checksum: ab6675e04392ccd5def878762be67dbbf64f77c49c26030c6a1d03c34ce33045b0eb1199ad1bd3f398f362e5fa1fcbcbe25c18af8dda855ab43df45561eea569
@@ -10399,13 +10399,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webfontloader@npm:^1.0.0":
-  version: 1.6.34
-  resolution: "@types/webfontloader@npm:1.6.34"
-  checksum: acd945cbf76f22f9f1040ed0b86aafba0b0dd1f5fe05238896208273fd4243eec9412e0349fb4991948ee62102270ddacc21e354052dcbdcd5a3278131f83277
-  languageName: node
-  linkType: hard
-
 "@types/webpack-dev-server@npm:^3.0.0":
   version: 3.11.6
   resolution: "@types/webpack-dev-server@npm:3.11.6"
@@ -14494,6 +14487,7 @@ __metadata:
     "@emotion/babel-plugin": ^11.7.2
     "@emotion/react": ^11.9.0
     "@emotion/styled": ^11.8.1
+    "@fontsource/roboto": ^4.5.5
     "@formatjs/cli": ^2.0.0
     "@gitbeaker/node": ^25.0.0
     "@graphql-codegen/cli": ^1.0.0
@@ -14525,7 +14519,6 @@ __metadata:
     "@types/react-router-dom": ^5.0.0
     "@types/react-select": ^3.0.0
     "@types/uuid": ^7.0.0
-    "@types/webfontloader": ^1.0.0
     "@types/webpack": ^4.0.0
     "@types/webpack-dev-server": ^3.0.0
     "@types/webpack-env": ^1.0.0
@@ -14594,7 +14587,6 @@ __metadata:
     typescript: ^4.0.0
     use-debounce: ^5.0.0
     uuid: ^7.0.0
-    webfontloader: ^1.0.0
     webpack: ^4.0.0
     webpack-cli: ^3.0.0
     webpack-dev-server: ^3.0.0
@@ -33824,13 +33816,6 @@ __metadata:
   version: 1.1.4
   resolution: "web-namespaces@npm:1.1.4"
   checksum: 5149842ccbfbc56fe4f8758957b3f8c8616a281874a5bb84aa1b305e4436a9bad853d21c629a7b8f174902449e1489c7a6c724fccf60965077c5636bd8aed42b
-  languageName: node
-  linkType: hard
-
-"webfontloader@npm:^1.0.0":
-  version: 1.6.28
-  resolution: "webfontloader@npm:1.6.28"
-  checksum: cbebbe593cb0d27dbb4d418f7f96bd9893024f1f2062e858af76209b6524e25d766964b6e2a724f3b694fadef661dd3a01065455a96df05337b3281ca09ab656
   languageName: node
   linkType: hard
 

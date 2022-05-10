@@ -1,5 +1,3 @@
-import "@vivid/roboto-font";
-
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
@@ -22,7 +20,7 @@ const Content = styled("div")`
     max-width: 350px;
     text-align: center;
     color: white;
-    font-family: kwfUp-roboto, sans-serif;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
 `;
 
 const Message = styled("p")`
@@ -46,7 +44,7 @@ const RetryButton = styled("button")`
     background-color: #29b6f6;
     padding: 10px 15px;
     text-transform: uppercase;
-    font-family: kwfUp-roboto, sans-serif;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 16px;
     color: #f0f0f0;

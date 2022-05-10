@@ -1,3 +1,7 @@
+import "@fontsource/roboto/100.css";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
 import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 
@@ -33,7 +37,6 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import * as ReactDOM from "react-dom";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Redirect, Route, Switch } from "react-router-dom";
-import * as Webfontloader from "webfontloader";
 
 import { ComponentDemo } from "./common/ComponentDemo";
 import { getMessages } from "./lang";
@@ -64,12 +67,6 @@ const categories: AllCategories = [
 
 class App extends React.Component {
     public static render(baseEl: Element): void {
-        Webfontloader.load({
-            google: {
-                families: ["Roboto:100,300,400,500,700"],
-            },
-        });
-
         ReactDOM.render(<App />, baseEl);
     }
 

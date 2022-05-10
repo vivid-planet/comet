@@ -35,6 +35,7 @@
         "@comet/react-app-auth": "^1.0.0",
         "@emotion/react": "^11.9.0",
         "@emotion/styled": "^11.8.1",
+        "@fontsource/roboto": "^4.5.5",
         "@mui/icons-material": "^5.0.0",
         "@mui/lab": "^5.0.0-alpha.76",
         "@mui/material": "^5.0.0",
@@ -86,7 +87,6 @@
         "typeface-open-sans": "^0.0.75",
         "use-debounce": "^5.0.0",
         "uuid": "^7.0.0",
-        "webfontloader": "^1.0.0",
         "zen-observable": "^0.8.0"
     },
     "devDependencies": {
@@ -118,7 +118,6 @@
         "@types/react-router-dom": "^5.0.0",
         "@types/react-select": "^3.0.0",
         "@types/uuid": "^7.0.0",
-        "@types/webfontloader": "^1.0.0",
         "@types/webpack": "^4.0.0",
         "@types/webpack-dev-server": "^3.0.0",
         "@types/webpack-env": "^1.0.0",
