@@ -21,9 +21,9 @@ storiesOf("stories/components/RouterTabs/RouterTabs", module)
                     <RouterTab path="/tab2" label="Tab 2">
                         <h1>Tab 2</h1>
                     </RouterTab>
-                    {/*<RouterTab path="tab3" label="Tab 3">*/}
-                    {/*    <h1>Tab 3</h1>*/}
-                    {/*</RouterTab>*/}
+                    <RouterTab path="/tab3" label="Tab 3">
+                        <h1>Tab 3</h1>
+                    </RouterTab>
                 </RouterTabs>
             </Paper>
         );
