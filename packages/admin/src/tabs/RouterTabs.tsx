@@ -11,7 +11,7 @@ import { useStackSwitchApi } from "../stack/Switch";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
 
 function deduplicateSlashesInUrl(url: string) {
-    return url.replace(/\/+/, "/");
+    return url.replace(/\/+/g, "/");
 }
 
 interface TabProps extends MuiTabProps {
