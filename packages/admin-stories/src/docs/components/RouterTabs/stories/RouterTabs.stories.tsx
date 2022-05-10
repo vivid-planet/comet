@@ -1,5 +1,4 @@
 import { RouterTab, RouterTabs } from "@comet/admin";
-import { Paper } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useLocation } from "react-router";
@@ -12,7 +11,7 @@ storiesOf("stories/components/RouterTabs/RouterTabs", module)
         const location = useLocation();
 
         return (
-            <Paper>
+            <div>
                 <p>Location: {location.pathname}</p>
                 <RouterTabs>
                     <RouterTab path="" label="Tab 1">
@@ -25,6 +24,6 @@ storiesOf("stories/components/RouterTabs/RouterTabs", module)
                         <h1>Tab 3</h1>
                     </RouterTab>
                 </RouterTabs>
-            </Paper>
+            </div>
         );
     });
