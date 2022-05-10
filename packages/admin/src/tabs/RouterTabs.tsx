@@ -10,6 +10,10 @@ import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
 
+function deduplicateSlashesInUrl(url: string) {
+    return url.replace(/\/+/, "/");
+}
+
 interface TabProps extends MuiTabProps {
     path: string;
     label: React.ReactNode;
@@ -42,7 +46,7 @@ function RouterTabsComponent({
         const paths = childrenArr.map((child) => {
             return React.isValidElement<TabProps>(child) ? child.props.path : null;
         });
-        history.push(match.url + paths[value]);
+        history.push(deduplicateSlashesInUrl(match.url + paths[value]));
     };
 
     const paths = childrenArr.map((child) => {
@@ -80,7 +84,7 @@ function RouterTabsComponent({
     return (
         <div className={classes.root}>
             {shouldShowTabBar && (
-                <Route path={`${match.url}/:tab`}>
+                <Route path={deduplicateSlashesInUrl(`${match.url}/:tab`)}>
                     {({ match }) => {
                         const routePath = match ? `/${match.params.tab}` : "";
                         const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
@@ -101,11 +105,15 @@ function RouterTabsComponent({
             <Switch>
                 {React.Children.map(rearrangedChildren, (child) => {
                     return React.isValidElement<TabProps>(child) ? (
-                        <Route path={`${match.url}${child.props.path}`}>
+                        <Route path={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}>
                             {({ match }) => {
                                 if (match && stackApi && stackSwitchApi) {
                                     return (
-                                        <StackBreadcrumb url={`${match.url}${child.props.path}`} title={child.props.label} invisible={true}>
+                                        <StackBreadcrumb
+                                            url={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}
+                                            title={child.props.label}
+                                            invisible={true}
+                                        >
                                             <div className={classes.content}>{child.props.children}</div>
                                         </StackBreadcrumb>
                                     );
