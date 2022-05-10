@@ -14,14 +14,14 @@ storiesOf("stories/components/Tabs/RouterTabs", module)
             <div>
                 <p>Location: {location.pathname}</p>
                 <RouterTabs>
-                    <RouterTab path="" label="Tab 1">
-                        <h1>Tab 1</h1>
+                    <RouterTab path="" label="Label One">
+                        Content One
                     </RouterTab>
-                    <RouterTab path="/tab2" label="Tab 2">
-                        <h1>Tab 2</h1>
+                    <RouterTab path="/tab2" label="Label Two">
+                        Content Two
                     </RouterTab>
-                    <RouterTab path="/tab3" label="Tab 3">
-                        <h1>Tab 3</h1>
+                    <RouterTab path="/tab3" label="Label Three">
+                        Content Three
                     </RouterTab>
                 </RouterTabs>
             </div>
