@@ -5,7 +5,7 @@ import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../../../story-router.decorator";
 
-storiesOf("stories/components/RouterTabs/Nested StackSwitch with RouterTabs", module)
+storiesOf("stories/components/Tabs/Nested StackSwitch with RouterTabs", module)
     .addDecorator(storyRouterDecorator())
     .add("Nested StackSwitch with RouterTabs", () => {
         const location = useLocation();

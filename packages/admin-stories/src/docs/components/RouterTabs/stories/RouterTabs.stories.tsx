@@ -5,7 +5,7 @@ import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../../../story-router.decorator";
 
-storiesOf("stories/components/RouterTabs/RouterTabs", module)
+storiesOf("stories/components/Tabs/RouterTabs", module)
     .addDecorator(storyRouterDecorator())
     .add("RouterTabs", () => {
         const location = useLocation();

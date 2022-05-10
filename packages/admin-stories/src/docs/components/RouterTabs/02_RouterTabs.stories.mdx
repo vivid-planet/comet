@@ -1,15 +1,11 @@
 import { Canvas, Meta, Story } from "@storybook/addon-docs";
 
-<Meta title="Docs/Components/Router Tabs" />
+<Meta title="Docs/Components/Tabs/Router Tabs" />
 
 # Router Tabs
 
-> Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
->
-> \- [MUI Docs](https://mui.com/material-ui/react-tabs/)
-
-The Comet Admin `RouterTabs` are based on [Material UI's `Tabs`](https://mui.com/material-ui/react-tabs/).
-The `RouterTabs` component manages its state in the URL so that each tab has a unique URL.
+The Comet Admin `RouterTabs` component has largely the same functionality as `Tabs`.
+However, `RouterTabs` manages its state in the URL so that each tab has a unique URL.
 
 `RouterTabs` has following props:
 
@@ -17,7 +13,7 @@ The `RouterTabs` component manages its state in the URL so that each tab has a u
 -   `tabsProps` for passing props to [Material UI's `Tabs` component](https://v4.mui.com/api/tabs/)
 
 <Canvas>
-    <Story id="stories-components-routertabs-routertabs--routertabs" />
+    <Story id="stories-components-tabs-routertabs--routertabs" />
 </Canvas>
 
 ## RouterTabs and Stack
@@ -28,5 +24,5 @@ only two `RouterTabs` are shown simultaneously at each point in time.
 This ensures that the UI doesn't appear cluttered with tabs.
 
 <Canvas>
-    <Story id="stories-components-routertabs-nested-stackswitch-with-routertabs--nested-stackswitch-with-routertabs" />
+    <Story id="stories-components-tabs-nested-stackswitch-with-routertabs--nested-stackswitch-with-routertabs" />
 </Canvas>

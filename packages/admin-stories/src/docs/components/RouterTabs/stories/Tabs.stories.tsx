@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { storyRouterDecorator } from "../../../../story-router.decorator";
 
-storiesOf("stories/components/RouterTabs/Tabs", module)
+storiesOf("stories/components/Tabs/Tabs", module)
     .addDecorator(storyRouterDecorator())
     .add("Tabs", () => {
         return (
