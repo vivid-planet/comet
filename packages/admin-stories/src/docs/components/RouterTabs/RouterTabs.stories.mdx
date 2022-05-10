@@ -22,4 +22,11 @@ The `RouterTabs` component manages its state in the URL so that each tab has a u
 
 ## RouterTabs and Stack
 
-When
+When used inside a `Stack`, `RouterTabs` may behave a little different.
+If you nest multiple `StackSwitch` inside the same `Stack` and there are `RouterTabs` on each level,
+only two `RouterTabs` are shown simultaneously at each point in time.
+This ensures that the UI doesn't appear cluttered with tabs.
+
+<Canvas>
+    <Story id="stories-components-routertabs-nested-stackswitch-with-routertabs--nested-stackswitch-with-routertabs" />
+</Canvas>
