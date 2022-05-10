@@ -1,0 +1,87 @@
+import { Canvas, Meta, Source, Story } from "@storybook/addon-docs";
+
+import dedent from "ts-dedent";
+
+<Meta title="Docs/Components/Tabs" />
+
+# Tabs
+
+> Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy.
+
+\- [MUI Docs](https://mui.com/material-ui/react-tabs/)
+
+The Comet Admin `Tabs` are based on [Material UI's `Tabs`](https://mui.com/material-ui/react-tabs/) (`MuiTabs`).
+
+<Canvas>
+    <Story id="stories-components-routertabs-tabs--tabs" />
+</Canvas>
+
+## Differences between Comet Admin `Tabs` and `MuiTabs`
+
+Like all Material UI components, `MuiTabs` is relatively low-level.
+It's very flexible but has no built-in functionality.
+Comet Admin enhances the `MuiTabs` by adding built-in functionality.
+Therefore, using Comet Admin `Tabs` is considerably easier and faster.
+
+The following example shows the definition of simple tabs with `MuiTabs` and Comet Admin `Tabs`.
+
+With `MuiTabs`, you have to manage the state yourself (`value`) and ensure that only the current tab's content is rendered.
+You can use `MuiTabs` and `MuiTab` only for creating the tab labels.
+The tab content has to be defined separately.
+
+<Source
+    language="tsx"
+    code={dedent`
+        // based on https://v4.mui.com/components/tabs/#SimpleTabs.tsx
+        const [value, setValue] = React.useState(0);
+        const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+            setValue(newValue);
+        };
+        return (
+            <div>
+                <MuiAppBar>
+                    <MuiTabs value={value} onChange={handleChange}>
+                        <MuiTab label="Label One" />
+                        <MuiTab label="Label Two" />
+                        <MuiTab label="Label Three" />
+                    </MuiTabs>
+                </MuiAppBar>
+                <div hidden={value !== 0}>
+                    {value === 0 && (
+                        Content One
+                    )}
+                </div>
+                <div hidden={value !== 1}>
+                    {value === 1 && (
+                        Content Two
+                    )}
+                </div>
+                <div hidden={value !== 2}>
+                    {value === 2 && (
+                        Content Three
+                    )}
+                </div>
+            </div>
+        );
+`}
+/>
+
+With Comet Admin `Tabs`, the state management and rendering logic are built-in.
+And you can simply pass the tab content as child to the `Tab` component.
+
+<Source
+    language="tsx"
+    code={dedent`
+        <Tabs>
+            <Tab label="Label One">
+                Content One
+            </Tab>
+            <Tab label="Label Two">
+                Content Two
+            </Tab>
+            <Tab label="Label Three">
+                Content Three
+            </Tab>
+        </Tabs>
+`}
+/>
