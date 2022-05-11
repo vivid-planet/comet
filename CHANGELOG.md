@@ -8,7 +8,6 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
--   Removed deprecated package `@comet/admin-date-picker`
 -   The minimum version of `react` and `react-dom` has been changed to 17.0
 -   Migrated from "Material-UI" v4 to "MUI" v5
     -   The default color of `MuiButton` and `MuiIconButton` was [changed](https://mui.com/guides/migration-v4/#button) from "default" to "primary", to restore the previous "default" style, set the color to "info"
@@ -48,11 +47,15 @@ Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/g
     npx jscodeshift --extensions=ts,tsx --parser=tsx -t comet-admin/codemods/3.0.0/mui-style-engine.ts src/
     ```
 
-## @comet/admin-date-picker
+## @comet/admin-date-picker -> @comet/admin-date-time
+
+-   Added standalone `DatePicker` and `DateRangePicker` components for use outside of FinalForm
 
 ### Incompatible Changes
 
-The date-picker package has been removed.
+-   `@comet/admin-date-picker` has been renamed `@comet/admin-date-time`, and the date-picker components have been re-implemented from scratch.
+-   The props that previously were passed through to the [react-dates](https://github.com/react-dates/react-dates) components will no longer have any effect, as [react-date-range](https://github.com/hypeserver/react-date-range) is now used internally
+-   The types of the change-value remain the same as with the previous date-picker components
 
 ## @comet/admin-color-picker
 
