@@ -5,13 +5,15 @@ import * as React from "react";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (styleOverrides, { palette }) => ({
+export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (component, { palette }) => ({
+    ...component,
     defaultProps: {
         color: "primary",
         icon: <CheckboxUnchecked />,
         checkedIcon: <CheckboxChecked />,
+        ...component?.defaultProps,
     },
-    styleOverrides: mergeOverrideStyles<"MuiCheckbox">(styleOverrides, {
+    styleOverrides: mergeOverrideStyles<"MuiCheckbox">(component?.styleOverrides, {
         root: {
             [`& .${svgIconClasses.root}`]: {
                 "& .border": {

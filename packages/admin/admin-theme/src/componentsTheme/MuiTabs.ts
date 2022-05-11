@@ -1,8 +1,9 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiTabs: GetMuiComponentTheme<"MuiTabs"> = (styleOverrides, { palette, spacing }) => ({
-    styleOverrides: mergeOverrideStyles<"MuiTabs">(styleOverrides, {
+export const getMuiTabs: GetMuiComponentTheme<"MuiTabs"> = (component, { palette, spacing }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiTabs">(component?.styleOverrides, {
         root: {
             position: "relative",
             marginBottom: spacing(4),

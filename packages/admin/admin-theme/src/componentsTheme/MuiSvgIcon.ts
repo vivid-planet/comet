@@ -1,8 +1,9 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiSvgIcon: GetMuiComponentTheme<"MuiSvgIcon"> = (styleOverrides, { palette }) => ({
-    styleOverrides: mergeOverrideStyles<"MuiSvgIcon">(styleOverrides, {
+export const getMuiSvgIcon: GetMuiComponentTheme<"MuiSvgIcon"> = (component, { palette }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiSvgIcon">(component?.styleOverrides, {
         root: {
             fontSize: 16,
         },

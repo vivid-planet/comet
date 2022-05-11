@@ -4,11 +4,13 @@ import * as React from "react";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiSelect: GetMuiComponentTheme<"MuiSelect"> = (styleOverrides, { palette }) => ({
+export const getMuiSelect: GetMuiComponentTheme<"MuiSelect"> = (component, { palette }) => ({
+    ...component,
     defaultProps: {
         IconComponent: ({ className }) => <ChevronDown classes={{ root: className }} />,
+        ...component?.defaultProps,
     },
-    styleOverrides: mergeOverrideStyles<"MuiSelect">(styleOverrides, {
+    styleOverrides: mergeOverrideStyles<"MuiSelect">(component?.styleOverrides, {
         select: {
             paddingRight: 32,
 

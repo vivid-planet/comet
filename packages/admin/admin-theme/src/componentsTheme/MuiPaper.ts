@@ -1,11 +1,13 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiPaper: GetMuiComponentTheme<"MuiPaper"> = (styleOverrides, { palette }) => ({
+export const getMuiPaper: GetMuiComponentTheme<"MuiPaper"> = (component, { palette }) => ({
+    ...component,
     defaultProps: {
         square: true,
+        ...component?.defaultProps,
     },
-    styleOverrides: mergeOverrideStyles<"MuiPaper">(styleOverrides, {
+    styleOverrides: mergeOverrideStyles<"MuiPaper">(component?.styleOverrides, {
         outlined: {
             borderTop: "none",
             borderRight: "none",

@@ -1,8 +1,9 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiInputAdornment: GetMuiComponentTheme<"MuiInputAdornment"> = (styleOverrides) => ({
-    styleOverrides: mergeOverrideStyles(styleOverrides, {
+export const getMuiInputAdornment: GetMuiComponentTheme<"MuiInputAdornment"> = (component) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles(component?.styleOverrides, {
         root: {
             height: "auto",
             alignSelf: "stretch",

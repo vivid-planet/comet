@@ -1,8 +1,9 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiFormControlLabel: GetMuiComponentTheme<"MuiFormControlLabel"> = (styleOverrides) => ({
-    styleOverrides: mergeOverrideStyles<"MuiFormControlLabel">(styleOverrides, {
+export const getMuiFormControlLabel: GetMuiComponentTheme<"MuiFormControlLabel"> = (component) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiFormControlLabel">(component?.styleOverrides, {
         root: {
             marginLeft: -9,
             marginTop: -7,

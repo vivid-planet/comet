@@ -3,8 +3,9 @@ import { Components } from "@mui/material/styles/components";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiDialog: GetMuiComponentTheme<"MuiDialog"> = (styleOverrides, { spacing }): Components["MuiDialog"] => ({
-    styleOverrides: mergeOverrideStyles<"MuiDialog">(styleOverrides, {
+export const getMuiDialog: GetMuiComponentTheme<"MuiDialog"> = (component, { spacing }): Components["MuiDialog"] => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiDialog">(component?.styleOverrides, {
         paper: {
             borderRadius: 4,
             width: "100%",

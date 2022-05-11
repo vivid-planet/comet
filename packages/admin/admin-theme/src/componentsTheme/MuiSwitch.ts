@@ -3,11 +3,13 @@ import { switchClasses } from "@mui/material";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiSwitch: GetMuiComponentTheme<"MuiSwitch"> = (styleOverrides, { palette }) => ({
+export const getMuiSwitch: GetMuiComponentTheme<"MuiSwitch"> = (component, { palette }) => ({
+    ...component,
     defaultProps: {
         color: "primary",
+        ...component?.defaultProps,
     },
-    styleOverrides: mergeOverrideStyles<"MuiSwitch">(styleOverrides, {
+    styleOverrides: mergeOverrideStyles<"MuiSwitch">(component?.styleOverrides, {
         root: {
             width: 54,
             height: 34,

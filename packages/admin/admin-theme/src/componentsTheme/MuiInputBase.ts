@@ -3,8 +3,9 @@ import { inputBaseClasses, svgIconClasses } from "@mui/material";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (styleOverrides, { palette, spacing }) => ({
-    styleOverrides: mergeOverrideStyles<"MuiInputBase">(styleOverrides, {
+export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component, { palette, spacing }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiInputBase">(component?.styleOverrides, {
         root: {
             border: `1px solid ${palette.grey[100]}`,
             borderRadius: 2,

@@ -3,8 +3,9 @@ import { tabClasses } from "@mui/material";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiTab: GetMuiComponentTheme<"MuiTab"> = (styleOverrides, { palette, typography }) => ({
-    styleOverrides: mergeOverrideStyles<"MuiTab">(styleOverrides, {
+export const getMuiTab: GetMuiComponentTheme<"MuiTab"> = (component, { palette, typography }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiTab">(component?.styleOverrides, {
         root: {
             fontSize: 16,
             lineHeight: 1,

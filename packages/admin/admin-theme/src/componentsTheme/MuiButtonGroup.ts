@@ -3,11 +3,13 @@ import { buttonGroupClasses } from "@mui/material";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiButtonGroup: GetMuiComponentTheme<"MuiButtonGroup"> = (styleOverrides, { palette }) => ({
+export const getMuiButtonGroup: GetMuiComponentTheme<"MuiButtonGroup"> = (component, { palette }) => ({
+    ...component,
     defaultProps: {
         disableElevation: true,
+        ...component?.defaultProps,
     },
-    styleOverrides: mergeOverrideStyles<"MuiButtonGroup">(styleOverrides, {
+    styleOverrides: mergeOverrideStyles<"MuiButtonGroup">(component?.styleOverrides, {
         contained: {
             border: "none",
         },

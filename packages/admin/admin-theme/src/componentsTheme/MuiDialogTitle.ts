@@ -1,8 +1,9 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiDialogTitle: GetMuiComponentTheme<"MuiDialogTitle"> = (styleOverrides, { palette, typography }) => ({
-    styleOverrides: mergeOverrideStyles<"MuiDialogTitle">(styleOverrides, {
+export const getMuiDialogTitle: GetMuiComponentTheme<"MuiDialogTitle"> = (component, { palette, typography }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiDialogTitle">(component?.styleOverrides, {
         root: {
             backgroundColor: palette.grey["A200"],
             color: palette.grey["A100"],

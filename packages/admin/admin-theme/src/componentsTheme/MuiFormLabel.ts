@@ -1,8 +1,9 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiFormLabel: GetMuiComponentTheme<"MuiFormLabel"> = (styleOverrides, { palette, typography, spacing }) => ({
-    styleOverrides: mergeOverrideStyles<"MuiFormLabel">(styleOverrides, {
+export const getMuiFormLabel: GetMuiComponentTheme<"MuiFormLabel"> = (component, { palette, typography, spacing }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiFormLabel">(component?.styleOverrides, {
         root: {
             display: "block",
             color: palette.grey[900],

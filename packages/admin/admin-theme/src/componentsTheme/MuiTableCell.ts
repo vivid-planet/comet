@@ -3,8 +3,9 @@ import { buttonClasses, iconButtonClasses } from "@mui/material";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiTableCell: GetMuiComponentTheme<"MuiTableCell"> = (styleOverrides, { palette, typography }) => ({
-    styleOverrides: mergeOverrideStyles<"MuiTableCell">(styleOverrides, {
+export const getMuiTableCell: GetMuiComponentTheme<"MuiTableCell"> = (component, { palette, typography }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiTableCell">(component?.styleOverrides, {
         root: {
             position: "relative",
             borderBottomColor: palette.grey[100],

@@ -6,13 +6,15 @@ import * as React from "react";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiRadio: GetMuiComponentTheme<"MuiRadio"> = (styleOverrides, { palette }): Components["MuiRadio"] => ({
+export const getMuiRadio: GetMuiComponentTheme<"MuiRadio"> = (component, { palette }): Components["MuiRadio"] => ({
+    ...component,
     defaultProps: {
         color: "primary",
         icon: <RadioUnchecked />,
         checkedIcon: <RadioChecked />,
+        ...component?.defaultProps,
     },
-    styleOverrides: mergeOverrideStyles<"MuiRadio">(styleOverrides, {
+    styleOverrides: mergeOverrideStyles<"MuiRadio">(component?.styleOverrides, {
         root: {
             [`& .${svgIconClasses.root}`]: {
                 "& .border": {
