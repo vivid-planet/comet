@@ -1,8 +1,8 @@
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiSvgIcon = (palette: Palette): Components["MuiSvgIcon"] => ({
-    styleOverrides: {
+export const getMuiSvgIcon: GetMuiComponentTheme<"MuiSvgIcon"> = (styleOverrides, { palette }) => ({
+    styleOverrides: mergeOverrideStyles<"MuiSvgIcon">(styleOverrides, {
         root: {
             fontSize: 16,
         },
@@ -15,5 +15,5 @@ export const getMuiSvgIcon = (palette: Palette): Components["MuiSvgIcon"] => ({
         fontSizeLarge: {
             fontSize: 20,
         },
-    },
+    }),
 });

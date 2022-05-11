@@ -1,16 +1,16 @@
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiPaper = (palette: Palette): Components["MuiPaper"] => ({
+export const getMuiPaper: GetMuiComponentTheme<"MuiPaper"> = (styleOverrides, { palette }) => ({
     defaultProps: {
         square: true,
     },
-    styleOverrides: {
+    styleOverrides: mergeOverrideStyles<"MuiPaper">(styleOverrides, {
         outlined: {
             borderTop: "none",
             borderRight: "none",
             borderBottom: `1px solid ${palette.divider}`,
             borderLeft: "none",
         },
-    },
+    }),
 });

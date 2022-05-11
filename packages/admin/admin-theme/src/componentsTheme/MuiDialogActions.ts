@@ -1,8 +1,8 @@
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiDialogActions = (palette: Palette): Components["MuiDialogActions"] => ({
-    styleOverrides: {
+export const getMuiDialogActions: GetMuiComponentTheme<"MuiDialogActions"> = (styleOverrides, { palette }) => ({
+    styleOverrides: mergeOverrideStyles<"MuiDialogActions">(styleOverrides, {
         root: {
             borderTop: `1px solid ${palette.grey[100]}`,
             padding: 20,
@@ -12,5 +12,5 @@ export const getMuiDialogActions = (palette: Palette): Components["MuiDialogActi
                 marginLeft: "auto",
             },
         },
-    },
+    }),
 });

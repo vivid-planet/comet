@@ -1,16 +1,17 @@
 import { CheckboxChecked, CheckboxUnchecked } from "@comet/admin-icons";
 import { checkboxClasses, svgIconClasses } from "@mui/material";
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
 import * as React from "react";
 
-export const getMuiCheckbox = (palette: Palette): Components["MuiCheckbox"] => ({
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (styleOverrides, { palette }) => ({
     defaultProps: {
         color: "primary",
         icon: <CheckboxUnchecked />,
         checkedIcon: <CheckboxChecked />,
     },
-    styleOverrides: {
+    styleOverrides: mergeOverrideStyles<"MuiCheckbox">(styleOverrides, {
         root: {
             [`& .${svgIconClasses.root}`]: {
                 "& .border": {
@@ -56,5 +57,5 @@ export const getMuiCheckbox = (palette: Palette): Components["MuiCheckbox"] => (
                 },
             },
         },
-    },
+    }),
 });

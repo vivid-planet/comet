@@ -1,6 +1,6 @@
-import { Components } from "@mui/material/styles/components";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiPopover = (): Components["MuiPopover"] => ({
+export const getMuiPopover: GetMuiComponentTheme<"MuiPopover"> = () => ({
     defaultProps: {
         elevation: 1,
     },

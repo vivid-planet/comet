@@ -1,10 +1,10 @@
 import { inputBaseClasses, svgIconClasses } from "@mui/material";
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
-import { Spacing } from "@mui/system";
 
-export const getMuiInputBase = (palette: Palette, spacing: Spacing): Components["MuiInputBase"] => ({
-    styleOverrides: {
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (styleOverrides, { palette, spacing }) => ({
+    styleOverrides: mergeOverrideStyles<"MuiInputBase">(styleOverrides, {
         root: {
             border: `1px solid ${palette.grey[100]}`,
             borderRadius: 2,
@@ -54,5 +54,5 @@ export const getMuiInputBase = (palette: Palette, spacing: Spacing): Components[
         inputAdornedEnd: {
             paddingRight: spacing(2),
         },
-    },
+    }),
 });

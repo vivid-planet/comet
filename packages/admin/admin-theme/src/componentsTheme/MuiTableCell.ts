@@ -1,10 +1,10 @@
 import { buttonClasses, iconButtonClasses } from "@mui/material";
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
-import { Typography } from "@mui/material/styles/createTypography";
 
-export const getMuiTableCell = (palette: Palette, typography: Typography): Components["MuiTableCell"] => ({
-    styleOverrides: {
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+export const getMuiTableCell: GetMuiComponentTheme<"MuiTableCell"> = (styleOverrides, { palette, typography }) => ({
+    styleOverrides: mergeOverrideStyles<"MuiTableCell">(styleOverrides, {
         root: {
             position: "relative",
             borderBottomColor: palette.grey[100],
@@ -38,5 +38,5 @@ export const getMuiTableCell = (palette: Palette, typography: Typography): Compo
             fontSize: 16,
             lineHeight: "20px",
         },
-    },
+    }),
 });

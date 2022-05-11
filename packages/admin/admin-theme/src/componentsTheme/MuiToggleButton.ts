@@ -1,9 +1,10 @@
 import { toggleButtonClasses } from "@mui/material";
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
 
-export const getMuiToggleButton = (palette: Palette): Components["MuiToggleButton"] => ({
-    styleOverrides: {
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+export const getMuiToggleButton: GetMuiComponentTheme<"MuiToggleButton"> = (styleOverrides, { palette }) => ({
+    styleOverrides: mergeOverrideStyles<"MuiToggleButton">(styleOverrides, {
         root: {
             borderColor: palette.grey[100],
 
@@ -13,5 +14,5 @@ export const getMuiToggleButton = (palette: Palette): Components["MuiToggleButto
                 color: palette.primary.main,
             },
         },
-    },
+    }),
 });

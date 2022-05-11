@@ -1,10 +1,8 @@
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
-import { Typography } from "@mui/material/styles/createTypography";
-import { Spacing } from "@mui/system";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiFormLabel = (palette: Palette, typography: Typography, spacing: Spacing): Components["MuiFormLabel"] => ({
-    styleOverrides: {
+export const getMuiFormLabel: GetMuiComponentTheme<"MuiFormLabel"> = (styleOverrides, { palette, typography, spacing }) => ({
+    styleOverrides: mergeOverrideStyles<"MuiFormLabel">(styleOverrides, {
         root: {
             display: "block",
             color: palette.grey[900],
@@ -13,5 +11,5 @@ export const getMuiFormLabel = (palette: Palette, typography: Typography, spacin
             fontWeight: typography.fontWeightBold,
             marginBottom: spacing(2),
         },
-    },
+    }),
 });

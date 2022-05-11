@@ -1,6 +1,6 @@
-import { Components } from "@mui/material/styles/components";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiListItem = (): Components["MuiListItem"] => ({
+export const getMuiListItem: GetMuiComponentTheme<"MuiListItem"> = () => ({
     defaultProps: {
         dense: true,
     },

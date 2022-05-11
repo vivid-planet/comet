@@ -1,8 +1,8 @@
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiIconButton = (palette: Palette): Components["MuiIconButton"] => ({
-    styleOverrides: {
+export const getMuiIconButton: GetMuiComponentTheme<"MuiIconButton"> = (styleOverrides, { palette }) => ({
+    styleOverrides: mergeOverrideStyles<"MuiIconButton">(styleOverrides, {
         root: {
             color: palette.grey[900],
         },
@@ -30,5 +30,5 @@ export const getMuiIconButton = (palette: Palette): Components["MuiIconButton"] 
         colorInfo: {
             color: palette.info.main,
         },
-    },
+    }),
 });

@@ -1,8 +1,10 @@
 import { Components } from "@mui/material/styles/components";
-import { Spacing } from "@mui/system";
 
-export const getMuiDialog = (spacing: Spacing): Components["MuiDialog"] => ({
-    styleOverrides: {
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+export const getMuiDialog: GetMuiComponentTheme<"MuiDialog"> = (styleOverrides, { spacing }): Components["MuiDialog"] => ({
+    styleOverrides: mergeOverrideStyles<"MuiDialog">(styleOverrides, {
         paper: {
             borderRadius: 4,
             width: "100%",
@@ -29,5 +31,5 @@ export const getMuiDialog = (spacing: Spacing): Components["MuiDialog"] => ({
         paperFullWidth: {
             width: `calc(100% - ${spacing(16)})`,
         },
-    },
+    }),
 });
