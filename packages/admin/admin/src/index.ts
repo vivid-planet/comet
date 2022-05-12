@@ -33,7 +33,7 @@ export { ErrorBoundary, ErrorBoundaryClassKey, ErrorBoundaryProps } from "./erro
 export { RouteWithErrorBoundary } from "./error/errorboundary/RouteWithErrorBoundary";
 export { createErrorDialogApolloLink } from "./error/errordialog/createErrorDialogApolloLink";
 export { ErrorDialog, ErrorDialogOptions, ErrorDialogProps } from "./error/errordialog/ErrorDialog";
-export { ErrorDialogProvider } from "./error/errordialog/ErrorDialogProvider";
+export { ErrorDialogHandler } from "./error/errordialog/ErrorDialogHandler";
 export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext } from "./error/errordialog/ErrorScope";
 export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";

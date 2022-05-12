@@ -59,6 +59,7 @@ const Providers: React.FunctionComponent = ({ children }) => {
 ```
 
 -   Removed deprecated package `@comet/admin-date-picker`
+-   Rename `ErrorDialogProvider` to `ErrorDialogHandler` - `ErrorDialogHandler` must not wrap the whole application
 -   The minimum version of `react` and `react-dom` has been changed to 17.0
 -   Migrated from "Material-UI" v4 to "MUI" v5
     -   The default color of `MuiButton` and `MuiIconButton` was [changed](https://mui.com/guides/migration-v4/#button) from "default" to "primary", to restore the previous "default" style, set the color to "info"

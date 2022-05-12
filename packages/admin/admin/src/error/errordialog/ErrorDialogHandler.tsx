@@ -4,7 +4,7 @@ import * as React from "react";
 import { ErrorDialog, ErrorDialogOptions } from "./ErrorDialog";
 import { errorDialogVar } from "./errorDialogVar";
 
-export const ErrorDialogProvider: React.FunctionComponent = ({ children }) => {
+export const ErrorDialogHandler: React.VoidFunctionComponent = () => {
     const errorOptions = useReactiveVar<ErrorDialogOptions | undefined>(errorDialogVar);
 
     const [errorDialogVisible, setErrorDialogVisible] = React.useState(false);
@@ -14,19 +14,16 @@ export const ErrorDialogProvider: React.FunctionComponent = ({ children }) => {
     }, [errorOptions]);
 
     return (
-        <>
-            {children}
-            <ErrorDialog
-                show={errorDialogVisible}
-                errorOptions={errorOptions}
-                onCloseClicked={() => {
-                    setErrorDialogVisible(false);
+        <ErrorDialog
+            show={errorDialogVisible}
+            errorOptions={errorOptions}
+            onCloseClicked={() => {
+                setErrorDialogVisible(false);
 
-                    setTimeout(() => {
-                        errorDialogVar(undefined);
-                    }, 200);
-                }}
-            />
-        </>
+                setTimeout(() => {
+                    errorDialogVar(undefined);
+                }, 200);
+            }}
+        />
     );
 };
