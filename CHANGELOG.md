@@ -55,7 +55,7 @@ Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/g
 
 -   `@comet/admin-date-picker` has been renamed `@comet/admin-date-time`, and the date-picker components have been re-implemented from scratch.
 -   The props that previously were passed through to the [react-dates](https://github.com/react-dates/react-dates) components will no longer have any effect, as [react-date-range](https://github.com/hypeserver/react-date-range) is now used internally
--   The types of the change-value remain the same as with the previous date-picker components
+-   The types of the change value remain the same as with the previous date picker components
 
 ## @comet/admin-color-picker
 
