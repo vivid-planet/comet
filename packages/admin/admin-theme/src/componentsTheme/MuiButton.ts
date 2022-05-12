@@ -1,13 +1,15 @@
 import { buttonClasses } from "@mui/material";
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
-import { Typography } from "@mui/material/styles/createTypography";
 
-export const getMuiButton = (palette: Palette, typography: Typography): Components["MuiButton"] => ({
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { palette, typography }) => ({
+    ...component,
     defaultProps: {
         disableElevation: true,
+        ...component?.defaultProps,
     },
-    styleOverrides: {
+    styleOverrides: mergeOverrideStyles<"MuiButton">(component?.styleOverrides, {
         root: {
             position: "relative",
             top: 1,
@@ -111,5 +113,5 @@ export const getMuiButton = (palette: Palette, typography: Typography): Componen
                 fontSize: 16,
             },
         },
-    },
+    }),
 });

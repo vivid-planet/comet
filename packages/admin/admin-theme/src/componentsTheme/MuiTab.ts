@@ -1,10 +1,11 @@
 import { tabClasses } from "@mui/material";
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
-import { Typography } from "@mui/material/styles/createTypography";
 
-export const getMuiTab = (palette: Palette, typography: Typography): Components["MuiTab"] => ({
-    styleOverrides: {
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+export const getMuiTab: GetMuiComponentTheme<"MuiTab"> = (component, { palette, typography }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiTab">(component?.styleOverrides, {
         root: {
             fontSize: 16,
             lineHeight: 1,
@@ -26,5 +27,5 @@ export const getMuiTab = (palette: Palette, typography: Typography): Components[
         textColorInherit: {
             opacity: 1,
         },
-    },
+    }),
 });

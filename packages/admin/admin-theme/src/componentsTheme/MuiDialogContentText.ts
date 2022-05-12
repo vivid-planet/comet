@@ -1,11 +1,12 @@
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiDialogContentText = (palette: Palette): Components["MuiDialogContentText"] => ({
-    styleOverrides: {
+export const getMuiDialogContentText: GetMuiComponentTheme<"MuiDialogContentText"> = (component, { palette }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiDialogContentText">(component?.styleOverrides, {
         root: {
             color: palette.text.primary,
             marginBottom: 20,
         },
-    },
+    }),
 });

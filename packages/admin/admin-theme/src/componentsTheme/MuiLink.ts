@@ -1,13 +1,15 @@
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiLink = (palette: Palette): Components["MuiLink"] => ({
+export const getMuiLink: GetMuiComponentTheme<"MuiLink"> = (component, { palette }) => ({
+    ...component,
     defaultProps: {
         underline: "always",
+        ...component?.defaultProps,
     },
-    styleOverrides: {
+    styleOverrides: mergeOverrideStyles<"MuiLink">(component?.styleOverrides, {
         root: {
             color: palette.grey[600],
         },
-    },
+    }),
 });

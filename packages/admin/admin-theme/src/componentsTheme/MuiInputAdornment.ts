@@ -1,7 +1,9 @@
-import { Components } from "@mui/material/styles/components";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiInputAdornment = (): Components["MuiInputAdornment"] => ({
-    styleOverrides: {
+export const getMuiInputAdornment: GetMuiComponentTheme<"MuiInputAdornment"> = (component) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles(component?.styleOverrides, {
         root: {
             height: "auto",
             alignSelf: "stretch",
@@ -13,5 +15,5 @@ export const getMuiInputAdornment = (): Components["MuiInputAdornment"] => ({
         positionEnd: {
             marginLeft: 0,
         },
-    },
+    }),
 });

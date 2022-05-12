@@ -1,9 +1,11 @@
-import { Components } from "@mui/material/styles/components";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiTableRow = (): Components["MuiTableRow"] => ({
-    styleOverrides: {
+export const getMuiTableRow: GetMuiComponentTheme<"MuiTableRow"> = (component) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiTableRow">(component?.styleOverrides, {
         root: {
             backgroundColor: "#fff",
         },
-    },
+    }),
 });

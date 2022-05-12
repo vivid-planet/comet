@@ -1,13 +1,16 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
 import * as React from "react";
 
-export const getMuiSelect = (palette: Palette): Components["MuiSelect"] => ({
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+export const getMuiSelect: GetMuiComponentTheme<"MuiSelect"> = (component, { palette }) => ({
+    ...component,
     defaultProps: {
         IconComponent: ({ className }) => <ChevronDown classes={{ root: className }} />,
+        ...component?.defaultProps,
     },
-    styleOverrides: {
+    styleOverrides: mergeOverrideStyles<"MuiSelect">(component?.styleOverrides, {
         select: {
             paddingRight: 32,
 
@@ -21,5 +24,5 @@ export const getMuiSelect = (palette: Palette): Components["MuiSelect"] => ({
             fontSize: 12,
             color: palette.grey[900],
         },
-    },
+    }),
 });

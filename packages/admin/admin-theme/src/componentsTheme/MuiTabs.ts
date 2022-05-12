@@ -1,9 +1,9 @@
-import { Palette } from "@mui/material/styles";
-import { Components } from "@mui/material/styles/components";
-import { Spacing } from "@mui/system";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiTabs = (palette: Palette, spacing: Spacing): Components["MuiTabs"] => ({
-    styleOverrides: {
+export const getMuiTabs: GetMuiComponentTheme<"MuiTabs"> = (component, { palette, spacing }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiTabs">(component?.styleOverrides, {
         root: {
             position: "relative",
             marginBottom: spacing(4),
@@ -25,5 +25,5 @@ export const getMuiTabs = (palette: Palette, spacing: Spacing): Components["MuiT
             backgroundColor: palette.primary.main,
             height: 2,
         },
-    },
+    }),
 });
