@@ -6,7 +6,7 @@ import { Meta, Canvas, Story } from "@storybook/addon-docs";
 
 ## Setup
 
-Setup is easy, just add the `ErrorDialogProvider` to your Provider List.
+Setup is easy, just add the `ErrorDialogProvider` somewhere in your application
 
 ```
 import { ErrorDialogProvider } from "@comet/admin";
@@ -14,7 +14,8 @@ import { ErrorDialogProvider } from "@comet/admin";
 const App: React.FunctionComponent = ({ children }) => {
     return (
         <OtherProvider>
-            <ErrorDialogProvider>{children}</ErrorDialogProvider>
+            <ErrorDialogProvider />
+            {children}
         </OtherProvider>
     );
 };
@@ -27,23 +28,18 @@ There is also the possibility to automatically display an `ErrorDialog` when a G
 Add the `createErrorDialogApolloLink` to your ApolloLink List when setting up the `apolloClient`
 
 ```
-const ApolloProvider: React.FunctionComponent = ({ children }) => {
-    const errorDialog = useErrorDialog();
+const link = ApolloLink.from([
+    createErrorDialogApolloLink(),
+    createHttpLink({
+        uri: `uri`,
+    }),
+]);
+const cache = new InMemoryCache();
 
-    const link = ApolloLink.from([
-        createErrorDialogApolloLink({ errorDialog }),
-        createHttpLink({
-            uri: `uri`,
-        }),
-    ]);
-    const cache = new InMemoryCache();
-
-    const apolloClient = new ApolloClient({
-        link,
-        cache,
-    });
-    return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
-};
+return new ApolloClient({
+    link,
+    cache,
+});
 ```
 
 ## Usage
@@ -53,7 +49,7 @@ const ApolloProvider: React.FunctionComponent = ({ children }) => {
 Error Dialog can be used to display an error in a dialog. Try it out by simply pressing the Button below. You can also use the errorDialog with the `useErrorDialog` Hook
 
 <Canvas>
-    <Story id="stories-components-error-handling-error-dialog-manual-error-dialog--manual-error-dialog" />
+    <Story id="stories-components-error-handling-error-dialog-automatic-graphql-error-dialog--manual-error-dialog" />
 </Canvas>
 
 ### Automatic Error Dialog on GraphQL Error
