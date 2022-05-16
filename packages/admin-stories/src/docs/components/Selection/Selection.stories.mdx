@@ -97,13 +97,27 @@ It then provides the item to its children via child function.
     <Story id="stories-components-selection-selected--selected" />
 </Canvas>
 
-### Selected with Lazy Loading
+### Fallback to Lazy Query
 
-If you don't want to preload all item data, you can lazy load each item once it's been selected.
-To do that, you have to provide the two props: `query` and `dataAccessor`.
+If `Selected` is used in combination with a table that has pagination, a fallback query should be provided.
+
+This is needed in following scenario:
+
+-   you implement a table with pagination and load all item data for the current page
+-   you use a `SelectionRoute` to implement selection
+-   the user selects an item on page 4 of the table
+    => the id of this item is persisted in the url
+-   the user reloads the page
+    => the table is back on page 1 but the item on page 4 is still selected
+    => the item wasn't loaded automatically in the table query
+    => `Selected` falls back to lazy loading the item
+
+You have to provide the two props: `query` and `dataAccessor`.
 
 -   `query`: the GraphQL query to load an item. The query must use the variable `id` for identifying the item
 -   `dataAccessor`: the name of the item in GraphQL's result data
+
+// TODO: updated example
 
 <Canvas>
     <Story id="stories-components-selection-async-selected--async-selected" />
