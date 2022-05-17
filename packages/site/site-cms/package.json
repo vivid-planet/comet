@@ -21,7 +21,7 @@
         "dev": "yarn generate-block-types && tsc --watch",
         "lint": "yarn generate-block-types && run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx,.json,.md src/",
-        "lint:tsc": "tsc",
+        "lint:tsc": "tsc --noEmit",
         "generate-block-types": "ts-node generate-block-types.ts",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"yarn generate-block-types\""
     },
