@@ -1,4 +1,4 @@
-import { ClearInputButton, Field } from "@comet/admin";
+import { Field } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Calendar } from "@comet/admin-icons";
 import { Card, CardContent, InputAdornment } from "@mui/material";
@@ -27,17 +27,13 @@ const Story = () => {
                                 <Field name="dateOne" label="Date" fullWidth component={FinalFormDatePicker} />
                                 <Field
                                     name="dateTwo"
-                                    label="Date with icon and clear-button"
+                                    label="Clearable date with icon"
                                     fullWidth
+                                    clearable
                                     component={FinalFormDatePicker}
                                     startAdornment={
                                         <InputAdornment position="start">
                                             <Calendar />
-                                        </InputAdornment>
-                                    }
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <ClearInputButton onClick={() => change("dateTwo", null)} />
                                         </InputAdornment>
                                     }
                                 />

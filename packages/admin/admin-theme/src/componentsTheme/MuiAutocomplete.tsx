@@ -1,4 +1,5 @@
 import { Clear } from "@comet/admin-icons";
+import { autocompleteClasses } from "@mui/material";
 import * as React from "react";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
@@ -12,8 +13,20 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
     },
     styleOverrides: mergeOverrideStyles<"MuiAutocomplete">(component?.styleOverrides, {
         endAdornment: {
-            top: "auto",
+            top: 0,
+            bottom: 0,
             right: spacing(2),
+            display: "flex",
+        },
+        hasPopupIcon: {
+            [`&.${autocompleteClasses.root} .${autocompleteClasses.inputRoot}`]: {
+                paddingRight: 26,
+            },
+        },
+        popupIndicator: {
+            "&:hover": {
+                backgroundColor: "transparent",
+            },
         },
     }),
 });

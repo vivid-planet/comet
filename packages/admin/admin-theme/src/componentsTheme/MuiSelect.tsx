@@ -1,15 +1,8 @@
-import { ChevronDown } from "@comet/admin-icons";
-import * as React from "react";
-
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiSelect: GetMuiComponentTheme<"MuiSelect"> = (component, { palette }) => ({
     ...component,
-    defaultProps: {
-        IconComponent: ({ className }) => <ChevronDown classes={{ root: className }} />,
-        ...component?.defaultProps,
-    },
     styleOverrides: mergeOverrideStyles<"MuiSelect">(component?.styleOverrides, {
         select: {
             paddingRight: 32,
@@ -17,11 +10,21 @@ export const getMuiSelect: GetMuiComponentTheme<"MuiSelect"> = (component, { pal
             "&:focus": {
                 backgroundColor: "transparent",
             },
+
+            "&:after": {
+                // Expand the clickable area to allow opening by clicking an input adornment, e.g., the arrow-down icon.
+                content: '""',
+                position: "absolute",
+                right: 0,
+                top: 0,
+                bottom: 0,
+                left: 0,
+            },
         },
         icon: {
-            top: "calc(50% - 8px)",
-            right: 12,
-            fontSize: 12,
+            position: "relative",
+            right: 0,
+            order: 1,
             color: palette.grey[900],
         },
     }),

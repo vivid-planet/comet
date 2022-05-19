@@ -1,26 +1,24 @@
 import { Search } from "@comet/admin-icons";
-import { InputAdornment, InputAdornmentProps } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { InputAdornment } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
-import { ClearInputButton } from "..";
+import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { FinalFormInput, FinalFormInputProps } from "./FinalFormInput";
-
-interface ClearInputAdornmentProps extends InputAdornmentProps {
-    $hidden: boolean;
-}
-
-const ClearInputAdornment = styled(InputAdornment)<ClearInputAdornmentProps>`
-    visibility: ${({ $hidden }) => ($hidden ? "hidden" : "initial")};
-`;
 
 export interface FinalFormSearchTextFieldProps extends FinalFormInputProps {
     icon?: React.ReactNode;
+    clearable?: boolean;
 }
 
-function SearchTextField({ icon = <Search />, placeholder, endAdornment, ...restProps }: FinalFormSearchTextFieldProps): React.ReactElement {
+function SearchTextField({
+    icon = <Search />,
+    placeholder,
+    endAdornment,
+    clearable,
+    ...restProps
+}: FinalFormSearchTextFieldProps): React.ReactElement {
     const intl = useIntl();
 
     return (
@@ -29,15 +27,16 @@ function SearchTextField({ icon = <Search />, placeholder, endAdornment, ...rest
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.finalformsearchtextfield.default.placeholder", defaultMessage: "Search" })}
             startAdornment={<InputAdornment position="start">{icon}</InputAdornment>}
             endAdornment={
-                endAdornment ?? (
-                    <ClearInputAdornment position="end" $hidden={restProps.input.value.length === 0}>
-                        <ClearInputButton
-                            onClick={() => {
-                                restProps.input.onChange("");
-                            }}
+                <>
+                    {endAdornment}
+                    {clearable && (
+                        <ClearInputAdornment
+                            position="end"
+                            hasClearableContent={Boolean(restProps.input.value)}
+                            onClick={() => restProps.input.onChange("")}
                         />
-                    </ClearInputAdornment>
-                )
+                    )}
+                </>
             }
         />
     );

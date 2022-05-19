@@ -1,4 +1,4 @@
-import { InputWithPopper, InputWithPopperComponents, InputWithPopperComponentsProps, InputWithPopperProps } from "@comet/admin";
+import { ClearInputAdornment, InputWithPopper, InputWithPopperComponents, InputWithPopperComponentsProps, InputWithPopperProps } from "@comet/admin";
 import { Box, ComponentsOverrides, InputAdornment, InputBaseProps, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
@@ -22,7 +22,7 @@ export interface ColorPickerPropsComponentsProps extends InputWithPopperComponen
 
 export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" | "onChange" | "value" | "componentsProps" | "components"> {
     value?: string | null;
-    onChange?: (color: string | null) => void;
+    onChange?: (color?: string) => void;
     colorFormat?: "hex" | "rgba";
     colorPalette?: string[];
     hidePicker?: boolean;
@@ -30,6 +30,7 @@ export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" 
     startAdornment?: InputBaseProps["startAdornment"];
     endAdornment?: InputBaseProps["endAdornment"];
     invalidIndicatorCharacter?: string;
+    clearable?: boolean;
     components?: ColorPickerPropsComponents;
     componentsProps?: ColorPickerPropsComponentsProps;
 }
@@ -43,14 +44,16 @@ const ColorPickerPreviewColor = ({ color, ...restProps }: ColorPickerColorPrevie
 };
 
 const ColorPicker = ({
+    classes,
     value,
     colorFormat = "hex",
     hidePicker,
     colorPalette,
     onChange,
     startAdornment,
+    endAdornment,
     onBlur,
-    classes,
+    clearable,
     componentsProps = {},
     components = {},
     ...rest
@@ -119,6 +122,14 @@ const ColorPicker = ({
                         </div>
                     </InputAdornment>
                 )
+            }
+            endAdornment={
+                <>
+                    {clearable && (
+                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
+                    )}
+                    {endAdornment}
+                </>
             }
             value={displayValue}
             onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

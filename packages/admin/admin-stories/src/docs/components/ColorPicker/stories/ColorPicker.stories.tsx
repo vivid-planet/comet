@@ -5,10 +5,10 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 storiesOf("stories/components/Color Picker/Color Picker", module).add("Color Picker", () => {
-    const [colorOne, setColorOne] = React.useState<string | null>("#00ff00");
-    const [colorTwo, setColorTwo] = React.useState<string | null>("rgba(255, 127, 80, 0.75)");
-    const [colorThree, setColorThree] = React.useState<string | null>(null);
-    const [colorFour, setColorFour] = React.useState<string | null>(null);
+    const [colorOne, setColorOne] = React.useState<string | undefined>("#00ff00");
+    const [colorTwo, setColorTwo] = React.useState<string | undefined>("rgba(255, 127, 80, 0.75)");
+    const [colorThree, setColorThree] = React.useState<string | undefined>();
+    const [colorFour, setColorFour] = React.useState<string | undefined>();
 
     return (
         <Grid container spacing={4}>

@@ -1,4 +1,4 @@
-import { ClearInputButton, Field } from "@comet/admin";
+import { Field } from "@comet/admin";
 import { DateRange, FinalFormDateRangePicker } from "@comet/admin-date-time";
 import { Calendar } from "@comet/admin-icons";
 import { Card, CardContent, InputAdornment } from "@mui/material";
@@ -12,9 +12,12 @@ const Story = () => {
         dateRangeTwo?: DateRange | null;
     }
 
+    const today = new Date();
+    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+
     const initialValues: Partial<Values> = {
         dateRangeOne: null,
-        dateRangeTwo: { start: new Date(), end: new Date() },
+        dateRangeTwo: { start: today, end: tomorrow },
     };
 
     return (
@@ -27,17 +30,13 @@ const Story = () => {
                                 <Field name="dateRangeOne" label="Date range" fullWidth component={FinalFormDateRangePicker} />
                                 <Field
                                     name="dateRangeTwo"
-                                    label="Date range with icon and clear-button"
+                                    label="Clearable date range with icon"
                                     fullWidth
+                                    clearable
                                     component={FinalFormDateRangePicker}
                                     startAdornment={
                                         <InputAdornment position="start">
                                             <Calendar />
-                                        </InputAdornment>
-                                    }
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <ClearInputButton onClick={() => change("dateRangeTwo", null)} />
                                         </InputAdornment>
                                     }
                                 />
