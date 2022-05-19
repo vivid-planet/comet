@@ -7,7 +7,7 @@ import { Calendar, CalendarProps } from "react-date-range";
 import { FormatDateOptions, useIntl } from "react-intl";
 
 type DatePickerComponentsProps = InputWithPopperProps["componentsProps"] & {
-    calendar?: Partial<Omit<CalendarProps, "onChange">>;
+    calendar?: Partial<Omit<CalendarProps, "onChange" | "date">>;
 };
 
 export interface DatePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "componentsProps"> {

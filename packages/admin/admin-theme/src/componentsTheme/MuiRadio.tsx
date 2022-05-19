@@ -1,16 +1,20 @@
 import { RadioChecked, RadioUnchecked } from "@comet/admin-icons";
 import { radioClasses, svgIconClasses } from "@mui/material";
-import { Palette } from "@mui/material/styles";
 import { Components } from "@mui/material/styles/components";
 import * as React from "react";
 
-export const getMuiRadio = (palette: Palette): Components["MuiRadio"] => ({
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+export const getMuiRadio: GetMuiComponentTheme<"MuiRadio"> = (component, { palette }): Components["MuiRadio"] => ({
+    ...component,
     defaultProps: {
         color: "primary",
         icon: <RadioUnchecked />,
         checkedIcon: <RadioChecked />,
+        ...component?.defaultProps,
     },
-    styleOverrides: {
+    styleOverrides: mergeOverrideStyles<"MuiRadio">(component?.styleOverrides, {
         root: {
             [`& .${svgIconClasses.root}`]: {
                 "& .border": {
@@ -56,5 +60,5 @@ export const getMuiRadio = (palette: Palette): Components["MuiRadio"] => ({
                 },
             },
         },
-    },
+    }),
 });

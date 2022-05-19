@@ -1,13 +1,14 @@
-import { Components } from "@mui/material/styles/components";
-import { Spacing } from "@mui/system";
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiCardContent = (spacing: Spacing): Components["MuiCardContent"] => ({
-    styleOverrides: {
+export const getMuiCardContent: GetMuiComponentTheme<"MuiCardContent"> = (component, { spacing }) => ({
+    ...component,
+    styleOverrides: mergeOverrideStyles<"MuiCardContent">(component?.styleOverrides, {
         root: {
             padding: spacing(4),
             "&:last-child": {
                 paddingBottom: spacing(4),
             },
         },
-    },
+    }),
 });

@@ -94,6 +94,7 @@ const orderComponents = [
     "docs-components-color-picker",
     "docs-components-date-picker",
     "docs-components-react-select",
+    "docs-components-rich-text-editor",
     "docs-components",
 ];
 const orderForm = [

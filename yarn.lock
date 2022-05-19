@@ -3187,9 +3187,8 @@ __metadata:
     "@comet/admin-react-select": ^2.0.0
     "@comet/admin-rte": ^2.0.0
     "@comet/eslint-config": ^2.0.0
-    "@types/lodash.merge": ^4.6.6
+    "@mui/utils": ^5.4.1
     eslint: ^8.0.0
-    lodash.merge: ^4.6.2
     prettier: ^2.0.0
     rimraf: ^3.0.2
     typescript: ^4.0.0
@@ -6119,6 +6118,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/utils@npm:^5.4.1":
+  version: 5.7.0
+  resolution: "@mui/utils@npm:5.7.0"
+  dependencies:
+    "@babel/runtime": ^7.17.2
+    "@types/prop-types": ^15.7.5
+    "@types/react-is": ^16.7.1 || ^17.0.0
+    prop-types: ^15.8.1
+    react-is: ^17.0.2
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0
+  checksum: b2777938fb85b8819452ade6dce06a7760e7bf0624ab9ccb63394d158c30a0bb07a88df734a3d931bca4f80ab78648324bbebb8b1419c9b88904651bb4c2d6bc
+  languageName: node
+  linkType: hard
+
 "@mui/utils@npm:^5.6.0":
   version: 5.6.0
   resolution: "@mui/utils@npm:5.6.0"
@@ -8555,15 +8569,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.merge@npm:^4.6.6":
-  version: 4.6.6
-  resolution: "@types/lodash.merge@npm:4.6.6"
-  dependencies:
-    "@types/lodash": "*"
-  checksum: 62ec56f14b3077f7174497856e9b277db811943cd11b1d67d2a8e51a1803bd49319e8aaf62e745c696af972354a575dbb8a85d3aecf4ae774caf062dc31ac46e
-  languageName: node
-  linkType: hard
-
 "@types/lodash.set@npm:^4.3.6":
   version: 4.3.7
   resolution: "@types/lodash.set@npm:4.3.7"
@@ -8765,6 +8770,13 @@ __metadata:
   version: 15.7.4
   resolution: "@types/prop-types@npm:15.7.4"
   checksum: ef6e1899e59b876c273811b1bd845022fc66d5a3d11cb38a25b6c566b30514ae38fe20a40f67622f362a4f4f7f9224e22d8da101cff3d6e97e11d7b4c307cfc1
+  languageName: node
+  linkType: hard
+
+"@types/prop-types@npm:^15.7.5":
+  version: 15.7.5
+  resolution: "@types/prop-types@npm:15.7.5"
+  checksum: 5b43b8b15415e1f298243165f1d44390403bb2bd42e662bca3b5b5633fdd39c938e91b7fce3a9483699db0f7a715d08cef220c121f723a634972fdf596aec980
   languageName: node
   linkType: hard
 

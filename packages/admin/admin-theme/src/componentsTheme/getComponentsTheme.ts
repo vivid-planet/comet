@@ -1,5 +1,5 @@
-import { ThemeOptions } from "@mui/material";
-import { Palette } from "@mui/material/styles/createPalette";
+import { ComponentNameToClassKey, ThemeOptions } from "@mui/material";
+import { Components, Palette } from "@mui/material/styles";
 import { Typography } from "@mui/material/styles/createTypography";
 import { Spacing } from "@mui/system";
 
@@ -36,37 +36,49 @@ import { getMuiToggleButton } from "./MuiToggleButton";
 import { getMuiToggleButtonGroup } from "./MuiToggleButtonGroup";
 import { getMuiTypography } from "./MuiTypography";
 
-export const getComponentsTheme = (palette: Palette, typography: Typography, spacing: Spacing): ThemeOptions["components"] => ({
-    MuiAppBar: getMuiAppBar(),
-    MuiAutocomplete: getMuiAutocomplete(spacing),
-    MuiButton: getMuiButton(palette, typography),
-    MuiButtonGroup: getMuiButtonGroup(palette),
-    MuiCardContent: getMuiCardContent(spacing),
-    MuiCheckbox: getMuiCheckbox(palette),
-    MuiDialog: getMuiDialog(spacing),
-    MuiDialogActions: getMuiDialogActions(palette),
-    MuiDialogContent: getMuiDialogContent(palette),
-    MuiDialogContentText: getMuiDialogContentText(palette),
-    MuiDialogTitle: getMuiDialogTitle(palette, typography),
-    MuiDrawer: getMuiDrawer(palette),
-    MuiFormControlLabel: getMuiFormControlLabel(),
-    MuiFormLabel: getMuiFormLabel(palette, typography, spacing),
-    MuiIconButton: getMuiIconButton(palette),
-    MuiInputAdornment: getMuiInputAdornment(),
-    MuiInputBase: getMuiInputBase(palette, spacing),
-    MuiLink: getMuiLink(palette),
-    MuiListItem: getMuiListItem(),
-    MuiPaper: getMuiPaper(palette),
-    MuiPopover: getMuiPopover(),
-    MuiRadio: getMuiRadio(palette),
-    MuiSelect: getMuiSelect(palette),
-    MuiSvgIcon: getMuiSvgIcon(palette),
-    MuiSwitch: getMuiSwitch(palette),
-    MuiTab: getMuiTab(palette, typography),
-    MuiTableCell: getMuiTableCell(palette, typography),
-    MuiTableRow: getMuiTableRow(),
-    MuiTabs: getMuiTabs(palette, spacing),
-    MuiToggleButton: getMuiToggleButton(palette),
-    MuiToggleButtonGroup: getMuiToggleButtonGroup(palette),
-    MuiTypography: getMuiTypography(),
+type ThemeData = {
+    palette: Palette;
+    typography: Typography;
+    spacing: Spacing;
+};
+
+export type GetMuiComponentTheme<ClassesName extends keyof ComponentNameToClassKey> = (
+    component: Components[ClassesName],
+    themeData: ThemeData,
+) => Components[ClassesName];
+
+export const getComponentsTheme = (components: Components, themeData: ThemeData): ThemeOptions["components"] => ({
+    ...components,
+    MuiAppBar: getMuiAppBar(components.MuiAppBar, themeData),
+    MuiAutocomplete: getMuiAutocomplete(components.MuiAutocomplete, themeData),
+    MuiButton: getMuiButton(components.MuiButton, themeData),
+    MuiButtonGroup: getMuiButtonGroup(components.MuiButtonGroup, themeData),
+    MuiCardContent: getMuiCardContent(components.MuiCardContent, themeData),
+    MuiCheckbox: getMuiCheckbox(components.MuiCheckbox, themeData),
+    MuiDialog: getMuiDialog(components.MuiDialog, themeData),
+    MuiDialogActions: getMuiDialogActions(components.MuiDialogActions, themeData),
+    MuiDialogContent: getMuiDialogContent(components.MuiDialogContent, themeData),
+    MuiDialogContentText: getMuiDialogContentText(components.MuiDialogContentText, themeData),
+    MuiDialogTitle: getMuiDialogTitle(components.MuiDialogTitle, themeData),
+    MuiDrawer: getMuiDrawer(components.MuiDrawer, themeData),
+    MuiFormControlLabel: getMuiFormControlLabel(components.MuiFormControlLabel, themeData),
+    MuiFormLabel: getMuiFormLabel(components.MuiFormLabel, themeData),
+    MuiIconButton: getMuiIconButton(components.MuiIconButton, themeData),
+    MuiInputAdornment: getMuiInputAdornment(components.MuiInputAdornment, themeData),
+    MuiInputBase: getMuiInputBase(components.MuiInputBase, themeData),
+    MuiLink: getMuiLink(components.MuiLink, themeData),
+    MuiListItem: getMuiListItem(components.MuiListItem, themeData),
+    MuiPaper: getMuiPaper(components.MuiPaper, themeData),
+    MuiPopover: getMuiPopover(components.MuiPopover, themeData),
+    MuiRadio: getMuiRadio(components.MuiRadio, themeData),
+    MuiSelect: getMuiSelect(components.MuiSelect, themeData),
+    MuiSvgIcon: getMuiSvgIcon(components.MuiSvgIcon, themeData),
+    MuiSwitch: getMuiSwitch(components.MuiSwitch, themeData),
+    MuiTab: getMuiTab(components.MuiTab, themeData),
+    MuiTableCell: getMuiTableCell(components.MuiTableCell, themeData),
+    MuiTableRow: getMuiTableRow(components.MuiTableRow, themeData),
+    MuiTabs: getMuiTabs(components.MuiTabs, themeData),
+    MuiToggleButton: getMuiToggleButton(components.MuiToggleButton, themeData),
+    MuiToggleButtonGroup: getMuiToggleButtonGroup(components.MuiToggleButtonGroup, themeData),
+    MuiTypography: getMuiTypography(components.MuiTypography, themeData),
 });

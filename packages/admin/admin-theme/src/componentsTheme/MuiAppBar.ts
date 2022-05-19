@@ -1,7 +1,9 @@
-import { Components } from "@mui/material/styles/components";
+import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiAppBar = (): Components["MuiAppBar"] => ({
+export const getMuiAppBar: GetMuiComponentTheme<"MuiAppBar"> = (component) => ({
+    ...component,
     defaultProps: {
         elevation: 0,
+        ...component?.defaultProps,
     },
 });

@@ -11,7 +11,7 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
     children?: React.ReactNode;
 }
 
-export const FinalFormSelect = <T extends Record<string, any>>({
+export const FinalFormSelect = <T,>({
     input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
     meta,
     isAsync = false,

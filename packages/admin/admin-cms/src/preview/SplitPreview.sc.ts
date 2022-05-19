@@ -72,7 +72,7 @@ export const PreviewContainer = styled("div")<PreviewContainerProps>`
     ${({ minimized, theme }) =>
         minimized &&
         css`
-            transform: translateZ(0) translateY(${-theme.spacing(4)}) scale(0.1);
+            transform: translateZ(0) translateY(-${theme.spacing(4)}) scale(0.1);
             border-radius: 50px;
             overflow: hidden;
         `}

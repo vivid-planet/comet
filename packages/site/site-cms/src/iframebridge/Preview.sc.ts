@@ -1,9 +1,8 @@
 import styled, { css } from "styled-components";
 
 export const Root = styled.div<ISelectionStyleProps>`
+    display: inline-block;
     position: relative;
-    width: inherit;
-    height: inherit;
 `;
 
 export interface ISelectionStyleProps {

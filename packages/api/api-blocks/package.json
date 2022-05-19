@@ -20,7 +20,7 @@
         "dev": "tsc --watch",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint src/",
-        "lint:tsc": "tsc",
+        "lint:tsc": "tsc --noEmit",
         "generate-block-meta": "ts-node generate-block-meta.ts",
         "generate-block-meta:watch": "chokidar \"src/\" -c \"npm run generate-block-meta\"",
         "list-exports": "ts-node list-exports.ts",

@@ -8,6 +8,57 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
+-   options have been removed from `createErrorDialogApolloLink()`, so it has no react hook dependency to error dialog anymore. This is perfect because of this we are not limited to create the apollo client in jsx.
+
+**before:**
+
+```typescript jsx
+const Providers: React.FunctionComponent = ({ children }) => {
+    const errorDialog = useErrorDialog();
+
+    const link = ApolloLink.from([
+        createErrorDialogApolloLink({ errorDialog }),
+        createHttpLink({
+            uri: `https://anyapi.com/graphql`,
+        }),
+    ]);
+    const cache = new InMemoryCache();
+
+    const apolloClient = new ApolloClient({
+    return new ApolloClient({
+        link,
+        cache,
+    });
+    return (<OtherProviders><ApolloProvider client={apolloClient}>{children}</ApolloProvider></OtherProviders>);
+};
+```
+
+**new:**
+
+```typescript jsx
+const createApolloClient = () => {
+    const link = ApolloLink.from([
+        createErrorDialogApolloLink(),
+        createHttpLink({
+            uri: `https://anyapi.com/graphql`,
+        }),
+    ]);
+    const cache = new InMemoryCache();
+
+    const apolloClient = new ApolloClient({
+        return new ApolloClient({
+            link,
+            cache,
+        });
+    };
+}
+const apolloClient = createApolloClient();
+
+const Providers: React.FunctionComponent = ({ children }) => {
+    return (<OtherProviders><ApolloProvider client={apolloClient}>{children}</ApolloProvider></OtherProviders>)};
+```
+
+-   Rename `ErrorDialogProvider` to `ErrorDialogHandler` - `ErrorDialogHandler` must not wrap the whole application
 -   The minimum version of `react` and `react-dom` has been changed to 17.0
 -   Migrated from "Material-UI" v4 to "MUI" v5
     -   The default color of `MuiButton` and `MuiIconButton` was [changed](https://mui.com/guides/migration-v4/#button) from "default" to "primary", to restore the previous "default" style, set the color to "info"
