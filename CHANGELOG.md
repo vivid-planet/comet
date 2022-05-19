@@ -58,7 +58,6 @@ const Providers: React.FunctionComponent = ({ children }) => {
     return (<OtherProviders><ApolloProvider client={apolloClient}>{children}</ApolloProvider></OtherProviders>)};
 ```
 
--   Removed deprecated package `@comet/admin-date-picker`
 -   Rename `ErrorDialogProvider` to `ErrorDialogHandler` - `ErrorDialogHandler` must not wrap the whole application
 -   The minimum version of `react` and `react-dom` has been changed to 17.0
 -   Migrated from "Material-UI" v4 to "MUI" v5
@@ -99,11 +98,14 @@ Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/g
     npx jscodeshift --extensions=ts,tsx --parser=tsx -t comet-admin/codemods/3.0.0/mui-style-engine.ts src/
     ```
 
-## @comet/admin-date-picker
+## @comet/admin-date-picker -> @comet/admin-date-time
+
+-   Added standalone `DatePicker` and `DateRangePicker` components for use outside of FinalForm
 
 ### Incompatible Changes
 
-The date-picker package has been removed.
+-   `@comet/admin-date-picker` has been renamed `@comet/admin-date-time`
+-   The date picker library used internally has been changed from [react-dates](https://github.com/react-dates/react-dates) to [react-date-range](https://github.com/hypeserver/react-date-range). Props specific to react-dates will no longer have any effect.
 
 ## @comet/admin-color-picker
 
