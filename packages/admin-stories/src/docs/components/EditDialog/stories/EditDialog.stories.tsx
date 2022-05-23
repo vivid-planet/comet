@@ -22,7 +22,12 @@ storiesOf("stories/components/EditDialog/Edit Dialog", module)
                             <FinalForm
                                 mode={"add"}
                                 onSubmit={async ({ name }) => {
-                                    window.alert(`Name: ${name}`);
+                                    return new Promise((resolve) => {
+                                        setTimeout(() => {
+                                            window.alert(`Name: ${name}`);
+                                            resolve();
+                                        }, 5000);
+                                    });
                                 }}
                             >
                                 <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
