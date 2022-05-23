@@ -7,6 +7,7 @@ import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
+import { useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
 import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
 import { SubmitError, SubmitResult } from "./form/SubmitResult";
@@ -35,10 +36,12 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const stackApi = React.useContext(StackApiContext);
     const editDialog = React.useContext(EditDialogApiContext);
     const tableQuery = React.useContext(TableQueryContext);
+    const editDialogFormApi = useEditDialogFormApi();
 
     const {
         onAfterSubmit = () => {
             stackApi?.goBack();
+            editDialog?.closeDialog();
         },
         validateWarning,
     } = props;
@@ -174,6 +177,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
         if (ret === undefined) return ret;
 
+        editDialogFormApi?.onSubmit(true);
         return Promise.resolve(ret)
             .then((data) => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
@@ -191,6 +195,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         }
                     }
 
+                    editDialogFormApi?.onSubmit(false);
                     onAfterSubmit(values, form);
                 });
                 return data;
