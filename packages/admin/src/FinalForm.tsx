@@ -177,7 +177,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
         if (ret === undefined) return ret;
 
-        editDialogFormApi?.onSubmit(true);
+        editDialogFormApi?.onFormStatusChange("saving");
         return Promise.resolve(ret)
             .then((data) => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
@@ -195,7 +195,6 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         }
                     }
 
-                    editDialogFormApi?.onSubmit(false);
                     onAfterSubmit(values, form);
                 });
                 return data;
@@ -203,9 +202,12 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             .then(
                 (data) => {
                     // for final-form undefined means success, an obj means error
+                    editDialogFormApi?.resetFormStatus();
                     return undefined;
                 },
                 (error) => {
+                    editDialogFormApi?.onFormStatusChange("error");
+
                     if (props.resolveSubmitErrors) {
                         return props.resolveSubmitErrors(error);
                     }

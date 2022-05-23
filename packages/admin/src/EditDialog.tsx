@@ -133,7 +133,11 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                                 {(injectedDirtyHandlerApi) => {
                                     dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
                                     return (
-                                        <SaveButton saving={editDialogFormApi?.submitting} onClick={handleSaveClick}>
+                                        <SaveButton
+                                            saving={editDialogFormApi?.saving}
+                                            hasErrors={editDialogFormApi?.hasErrors}
+                                            onClick={handleSaveClick}
+                                        >
                                             <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
                                         </SaveButton>
                                     );
