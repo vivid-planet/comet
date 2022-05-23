@@ -41,7 +41,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const {
         onAfterSubmit = () => {
             stackApi?.goBack();
-            editDialog?.closeDialog();
+            editDialog?.closeDialog({ delay: true });
         },
         validateWarning,
     } = props;

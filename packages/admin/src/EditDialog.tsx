@@ -6,7 +6,7 @@ import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { SaveButton } from "./common/buttons/save/SaveButton";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
-import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
+import { CloseDialogOptions, EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
 import { EditDialogFormApiProvider, useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { SubmitResult } from "./form/SubmitResult";
 import { ISelectionApi } from "./SelectionApi";
@@ -50,9 +50,21 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
         [selectionApi],
     );
 
-    const closeDialog = React.useCallback(() => {
-        selectionApi.handleDeselect();
-    }, [selectionApi]);
+    const closeDialog = React.useCallback(
+        (options?: CloseDialogOptions) => {
+            const { delay } = { delay: false, ...options };
+
+            if (delay) {
+                const duration = typeof delay === "number" ? delay : 1000;
+                setTimeout(() => {
+                    selectionApi.handleDeselect();
+                }, duration);
+            } else {
+                selectionApi.handleDeselect();
+            }
+        },
+        [selectionApi],
+    );
 
     const api: IEditDialogApi = React.useMemo(() => {
         return {
@@ -104,7 +116,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                 if (!failed) {
                     setTimeout(() => {
                         if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
-                        api.closeDialog();
+                        api.closeDialog({ delay: true });
                     });
                 }
             });
