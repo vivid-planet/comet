@@ -1,8 +1,72 @@
-import { Meta, Story, Canvas } from "@storybook/addon-docs";
+import { Meta, Story, Canvas, Source } from "@storybook/addon-docs";
+
+import dedent from "ts-dedent";
 
 <Meta title="Docs/Form/Overview" />
 
 # Form Overview
+
+Forms enable users to submit information to a web application. Therefore, forms belong to the essential features of every admin application.
+
+In Comet Admin, React Final Form (RFF) is used for building forms. You can find more information on this framework in the [React Final Form Docs](https://final-form.org/docs/react-final-form/getting-started).
+
+## FinalForm
+
+Comet Admin provides a `FinalForm` component. It's built on top of React Final Form's [`Form` component](https://final-form.org/docs/react-final-form/api/Form).
+
+### Differences between Comet Admin `FinalForm` and RFF `Form`
+
+RFF's `Form` is a pure wrapper component.
+It creates and maintains a [form instance](https://final-form.org/docs/final-form/api#createform) that handles the form state.
+This form instance is provided to child components via React Context.
+It doesn't render any HTML.
+
+Comet Admin `FinalForm` uses the React Contexts of other Comet Admin components to interact with them.
+You can find more information about these interactions in the following sections.
+Additionally, Comet Admin `FinalForm` renders some HTML: a `<form>` wrapper and a div containing submit errors.
+
+The following example shows the definition of a simple form with RFF `Form` and Comet Admin `FinalForm`.
+
+Comet Admin `FinalForm`:
+
+<Source
+    language="tsx"
+    code={dedent`
+        <FinalForm
+            mode="add"
+            onSubmit={(values) => {
+                // ...
+            }}
+        >
+            <Field label="Name" name="name" component={FinalFormInput} />
+            <SaveButton type="submit" />
+        </FinalForm>
+  `}
+/>
+
+Plain RFF `Form`:
+
+<Source
+    language="tsx"
+    code={dedent`
+        <RFFForm
+            onSubmit={(values) => {
+                // ...
+            }}
+        >
+            {(props) => (
+                <form onSubmit={props.handleSubmit}>
+                    <RFFField name="name" component="input" />
+                    <button type="submit">Save</button>
+                </form>
+            )}
+        </RFFForm>
+  `}
+/>
+
+### Dirty Handler
+
+### Context-based Features
 
 For information on how to validate your form, see [Form Validation](/docs/docs-form-validation--page).  
 For information on how to implement different layout-types of your form, see [Form Layout](/docs/docs-form-layout--page).
