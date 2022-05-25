@@ -75,29 +75,3 @@ The `id` then specifies which resource is edited and is appended to the URL (e.g
 <Canvas>
     <Story id="stories-components-editdialog-edit-dialog-and-selection-editdialog-component--edit-dialog-and-selection-editdialog-component" />
 </Canvas>
-
-## Caveats
-
-### EditDialog and Enter
-
-If the user uses the enter key (instead of the Save button) to submit the form inside `EditDialog`,
-the `handleSaveClick` method is not called.
-This may lead to the unwanted behavior that the `EditDialog` doesn't close after a successful submit.
-
-To avoid this behavior, `selectionApi.handleDeselect()` must be called in the form's `onAfterSubmit` method.
-The selectionApi is among the return values of `useEditDialog()`.
-You can find a working example in the [EditDialog and Table section](#editdialog-and-table).
-
-<Source
-    language="tsx"
-    code={dedent`
-    <FinalForm
-        // ...
-        onAfterSubmit={() => {
-            selectionApi.handleDeselect();
-        }}
-    >
-        {/* ... */}
-    </FinalForm>
-`}
-/>
