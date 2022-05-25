@@ -3,16 +3,16 @@ import { Button, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { editDialogDecorator } from "../../docs/components/EditDialog/editDialog.decorator";
+import { editDialogDecorator } from "../editDialog.decorator";
 
-storiesOf("@comet/admin/edit-dialog", module)
+storiesOf("stories/components/EditDialog/Form in EditDialog", module)
     .addDecorator(editDialogDecorator())
-    .add("Edit Dialog States", () => {
+    .add("Edit Dialog and Form States", () => {
         const [EditDialog, , editDialogApi] = useEditDialog();
 
         return (
             <>
-                <h2>Default Loading and Error State of EditDialog:</h2>
+                <h2>Loading and Error State of EditDialog:</h2>
                 <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
                     Open Edit Dialog
                 </Button>
@@ -25,7 +25,7 @@ storiesOf("@comet/admin/edit-dialog", module)
                                     if (desiredOutcome === "success") {
                                         resolve();
                                     } else {
-                                        reject("error");
+                                        reject("This is an Error Message");
                                     }
                                 }, 3000);
                             });
