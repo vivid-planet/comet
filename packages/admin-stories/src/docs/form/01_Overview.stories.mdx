@@ -12,7 +12,12 @@ In Comet Admin, React Final Form (RFF) is used for building forms. You can find 
 
 ## FinalForm
 
-Comet Admin provides a `FinalForm` component. It's built on top of React Final Form's [`Form` component](https://final-form.org/docs/react-final-form/api/Form).
+Comet Admin provides a `FinalForm` component.
+It's built on top of React Final Form's [`Form` component](https://final-form.org/docs/react-final-form/api/Form).
+
+<Canvas>
+    <Story id="stories-form-finalform-basic-finalform--basic-finalform" />
+</Canvas>
 
 ### Differences between Comet Admin `FinalForm` and RFF `Form`
 
@@ -26,23 +31,6 @@ You can find more information about these interactions in the following sections
 Additionally, Comet Admin `FinalForm` renders some HTML: a `<form>` wrapper and a div containing submit errors.
 
 The following example shows the definition of a simple form with RFF `Form` and Comet Admin `FinalForm`.
-
-Comet Admin `FinalForm`:
-
-<Source
-    language="tsx"
-    code={dedent`
-        <FinalForm
-            mode="add"
-            onSubmit={(values) => {
-                // ...
-            }}
-        >
-            <Field label="Name" name="name" component={FinalFormInput} />
-            <SaveButton type="submit" />
-        </FinalForm>
-  `}
-/>
 
 Plain RFF `Form`:
 
@@ -64,6 +52,23 @@ Plain RFF `Form`:
   `}
 />
 
+Comet Admin `FinalForm`:
+
+<Source
+    language="tsx"
+    code={dedent`
+        <FinalForm
+            mode="add"
+            onSubmit={(values) => {
+                // ...
+            }}
+        >
+            <Field label="Name" name="name" component={FinalFormInput} />
+            <SaveButton type="submit" />
+        </FinalForm>
+  `}
+/>
+
 ### Dirty Handler
 
 ### Context-based Features
@@ -73,7 +78,7 @@ For information on how to implement different layout-types of your form, see [Fo
 
 tba.
 
--   How to build a form (when or when not to use final-form)
+-   How to build a form (when or when not to use final-form) -> do use: for complicated, extensive forms; input submitted to API - dont use: single form fields, only client-side changes
 -   FinalForm
 -   present custom fields
 -   submit mutation best practice
