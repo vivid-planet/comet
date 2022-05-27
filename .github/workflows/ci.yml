@@ -1,12 +1,6 @@
 name: CI
 
 on:
-    push:
-        tags:
-            - "[0-9]+.[0-9]+.[0-9]+"
-        branches:
-            - main
-            - next
     pull_request:
         branches:
             - main
@@ -19,6 +13,12 @@ jobs:
             - run: echo "${{ github.actor }}"
 
             - uses: actions/checkout@v3
+              with:
+                  token: ${{ secrets.GH_TOKEN }}
+
+            - run: |
+                  git config user.name github-actions
+                  git config user.email github-actions@github.com
 
             - name: Use Node.js 14.x
               uses: actions/setup-node@v3
@@ -62,7 +62,6 @@ jobs:
                   git clone https://github.com/vivid-planet/comet-admin-lang.git
                   cp -r lang/* comet-admin-lang/
                   cd comet-admin-lang
-                  git config user.email "vivid-planet-bot@vivid-planet.com"
                   git add .
                   if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for ${{ github.sha }}" && git remote rm origin && git remote add origin https://vivid-planet-bot:${{ secrets.GH_TOKEN }}@github.com/vivid-planet/comet-admin-lang.git && git push --set-upstream origin master; fi
 
@@ -75,8 +74,12 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            - name: Publish stable release
-              if: ${{ github.ref_type == 'tag' }}
-              run: yarn publish:release ${{ github.ref_name }} --yes
+            - name: Publish stable minor release
+              if: |
+                  github.event.label.name != 'skip-release' &&
+                  github.base_ref == 'main' &&
+                  github.event.pull_request.merged == true
+              run: yarn publish:release minor --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
