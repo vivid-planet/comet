@@ -16,7 +16,7 @@
         "clean": "lerna run clean --stream --parallel",
         "start": "pm2 start ecosystem.config.js",
         "build": "lerna run build --concurrency=1 --stream",
-        "publish:release": "lerna publish --force-publish --no-push --no-git-tag-version --no-private",
+        "publish:release": "lerna publish --force-publish --no-private",
         "storybook": "yarn workspace comet-admin-stories storybook",
         "lint": "lerna run lint --concurrency=1 --stream",
         "lint:eslint": "lerna run lint:eslint --concurrency=1 --stream",

@@ -66,9 +66,12 @@ jobs:
                   git add .
                   if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for ${{ github.sha }}" && git remote rm origin && git remote add origin https://vivid-planet-bot:${{ secrets.GH_TOKEN }}@github.com/vivid-planet/comet-admin-lang.git && git push --set-upstream origin master; fi
 
-            - name: Publish Canary release
-              if: ${{ github.ref_name == 'main' || github.ref_name == 'next' }}
-              run: yarn publish:release --canary --preid=canary.${{ github.run_number }} --dist-tag=canary --yes
+            - name: Publish premajor canary release
+              if: |
+                  github.event.label.name != 'skip-release' &&
+                  github.base_ref == 'next' &&
+                  github.event.pull_request.merged == true
+              run: yarn publish:release premajor --no-push --no-git-tag-version --canary --preid=canary.${{ github.run_number }} --dist-tag=canary --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
