@@ -3791,6 +3791,7 @@ __metadata:
     base64url: ^3.0.0
     chokidar-cli: ^2.0.0
     class-validator: ^0.13.0
+    commander: ^9.3.0
     cron-parser: ^3.0.0
     date-fns: ^2.28.0
     eslint: ^8.0.0
@@ -3836,6 +3837,8 @@ __metadata:
     pg: ^8.0.0
     pg-error-constants: ^1.0.0
     rxjs: ^7.0.0
+  bin:
+    comet-api-generator: bin/comet-api-generator.js
   languageName: unknown
   linkType: soft
 
@@ -14695,6 +14698,13 @@ __metadata:
   version: 3.0.0
   resolution: "common-path-prefix@npm:3.0.0"
   checksum: fdb3c4f54e51e70d417ccd950c07f757582de800c0678ca388aedefefc84982039f346f9fd9a1252d08d2da9e9ef4019f580a1d1d3a10da031e4bb3c924c5818
+  languageName: node
+  linkType: hard
+
+"commander@npm:^9.3.0":
+  version: 9.3.0
+  resolution: "commander@npm:9.3.0"
+  checksum: d421ce66fee25792a1470c69aa8d1b86434bf873a96483aa92c8267f81a6f20c6f7c426f5e82f88ac50a8ec4855d3f2787aebcdef8aa559e1080a2337a95a217
   languageName: node
   linkType: hard
 

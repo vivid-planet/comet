@@ -88,6 +88,7 @@ export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
+export { CrudQuery, CrudQueryOptions, EntityGenerator, EntityGeneratorOptions } from "./generator/entity-generator.decorator";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
