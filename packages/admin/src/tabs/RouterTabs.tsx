@@ -38,7 +38,6 @@ function RouterTabsComponent({
 }: Props & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
-    const [shouldShowTabBar, setShouldShowTabBar] = React.useState(true);
 
     const childrenArr = React.Children.toArray(children);
 
@@ -71,15 +70,14 @@ function RouterTabsComponent({
         rearrangedChildren.push(defaultPathChild);
     }
 
-    React.useEffect(() => {
-        if (stackApi && stackSwitchApi) {
-            // When inside a Stack show only the last TabBar
-            const ownSwitchIndex = stackSwitchApi.id ? stackApi.switches.findIndex((i) => i.id === stackSwitchApi.id) : -1;
-            const nextSwitchShowsInitialPage = stackApi.switches[ownSwitchIndex + 1] && stackApi.switches[ownSwitchIndex + 1].isInitialPageActive;
+    let shouldShowTabBar = true;
+    if (stackApi && stackSwitchApi) {
+        // When inside a Stack show only the last TabBar
+        const ownSwitchIndex = stackSwitchApi.id ? stackApi.switches.findIndex((i) => i.id === stackSwitchApi.id) : -1;
+        const nextSwitchShowsInitialPage = stackApi.switches[ownSwitchIndex + 1] && stackApi.switches[ownSwitchIndex + 1].isInitialPageActive;
 
-            setShouldShowTabBar(ownSwitchIndex === stackApi.switches.length - (nextSwitchShowsInitialPage ? 2 : 1));
-        }
-    }, [stackApi, stackSwitchApi]);
+        shouldShowTabBar = ownSwitchIndex === stackApi.switches.length - (nextSwitchShowsInitialPage ? 2 : 1);
+    }
 
     return (
         <div className={classes.root}>
