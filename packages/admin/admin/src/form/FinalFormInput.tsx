@@ -2,8 +2,28 @@ import { InputBase, InputBaseProps } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
-export type FinalFormInputProps = InputBaseProps & FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement>;
+import { ClearInputAdornment } from "../common/ClearInputAdornment";
 
-export function FinalFormInput({ meta, input, innerRef, ...props }: FinalFormInputProps): React.ReactElement {
-    return <InputBase {...input} {...props} />;
+export type FinalFormInputProps = InputBaseProps &
+    FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> & {
+        clearable?: boolean;
+    };
+
+export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable, ...props }: FinalFormInputProps): React.ReactElement {
+    return (
+        <InputBase
+            {...input}
+            {...props}
+            endAdornment={
+                clearable ? (
+                    <>
+                        <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
+                        {endAdornment}
+                    </>
+                ) : (
+                    endAdornment
+                )
+            }
+        />
+    );
 }

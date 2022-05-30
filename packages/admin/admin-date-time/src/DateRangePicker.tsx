@@ -1,7 +1,7 @@
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
-import { InputWithPopper, InputWithPopperProps } from "@comet/admin";
+import { ClearInputAdornment, InputWithPopper, InputWithPopperProps } from "@comet/admin";
 import * as React from "react";
 import { DateRange as ReactDateRange, DateRangeProps as ReactDateRangeProps, Range } from "react-date-range";
 import { FormatDateOptions, useIntl } from "react-intl";
@@ -16,11 +16,12 @@ export type DateRange = {
 };
 
 export interface DateRangePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "componentsProps"> {
-    onChange?: (range: DateRange) => void;
+    onChange?: (range?: DateRange) => void;
     value?: DateRange;
     formatDateOptions?: FormatDateOptions;
     rangeStringSeparator?: string;
     componentsProps?: DateRangePickerComponentsProps;
+    clearable?: boolean;
 }
 
 const useDateRangeTextValue = (range: DateRange | null | undefined, rangeStringSeparator: string, formatDateOptions?: FormatDateOptions): string => {
@@ -67,13 +68,30 @@ export function DateRangePicker({
     componentsProps = {},
     formatDateOptions,
     rangeStringSeparator = " - ",
+    endAdornment,
+    clearable,
     ...inputWithPopperProps
 }: DateRangePickerProps): React.ReactElement {
     const { dateRange: dateRangeProps, ...inputWithPopperComponentsProps } = componentsProps;
     const textValue = useDateRangeTextValue(value, rangeStringSeparator, formatDateOptions);
 
     return (
-        <InputWithPopper value={textValue} {...inputWithPopperProps} componentsProps={inputWithPopperComponentsProps} readOnly>
+        <InputWithPopper
+            value={textValue}
+            {...inputWithPopperProps}
+            componentsProps={inputWithPopperComponentsProps}
+            readOnly
+            endAdornment={
+                clearable ? (
+                    <>
+                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
+                        {endAdornment}
+                    </>
+                ) : (
+                    endAdornment
+                )
+            }
+        >
             {(closePopper) => (
                 <ReactDateRange
                     onRangeFocusChange={(newFocusedRange) => {

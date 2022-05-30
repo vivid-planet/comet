@@ -21,6 +21,7 @@ export { SaveButtonClassKey } from "./common/buttons/save/SaveButton.styles";
 export { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButton";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
+export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
@@ -53,7 +54,7 @@ export {
     FinalFormSaveCancelButtonsLegacyProps,
 } from "./FinalFormSaveCancelButtonsLegacy";
 export { FinalFormSaveSplitButton } from "./FinalFormSaveSplitButton";
-export { FinalFormAutocomplete } from "./form/Autocomplete";
+export { FinalFormAutocomplete, FinalFormAutocompleteProps } from "./form/Autocomplete";
 export { FinalFormCheckbox, FinalFormCheckboxProps } from "./form/Checkbox";
 export { Field, FieldProps } from "./form/Field";
 export { FieldContainer, FieldContainerClassKey, FieldContainerComponent, FieldContainerProps } from "./form/FieldContainer";

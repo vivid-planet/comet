@@ -1,14 +1,14 @@
-import { ClearInputButton, FieldContainer } from "@comet/admin";
+import { FieldContainer } from "@comet/admin";
 import { ColorPicker, ColorPickerColorPreviewProps } from "@comet/admin-color-picker";
 import { EmojiEmotions, MoodBad, SentimentDissatisfied } from "@mui/icons-material";
-import { Grid, InputAdornment } from "@mui/material";
+import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 storiesOf("stories/components/Color Picker/Color Picker Customized", module).add("Color Picker Customized", () => {
-    const [colorOne, setColorOne] = React.useState<string | null>("#00ff00");
-    const [colorTwo, setColorTwo] = React.useState<string | null>("rgba(255, 127, 80, 0.75)");
-    const [colorThree, setColorThree] = React.useState<string | null>(null);
+    const [colorOne, setColorOne] = React.useState<string | undefined>("#00ff00");
+    const [colorTwo, setColorTwo] = React.useState<string | undefined>("rgba(255, 127, 80, 0.75)");
+    const [colorThree, setColorThree] = React.useState<string | undefined>();
 
     const CustomColorPreview = ({ color }: ColorPickerColorPreviewProps): React.ReactElement => {
         return <EmojiEmotions htmlColor={color} sx={{ fontSize: 24 }} />;
@@ -55,18 +55,8 @@ storiesOf("stories/components/Color Picker/Color Picker Customized", module).add
                 </FieldContainer>
             </Grid>
             <Grid item md={4}>
-                <FieldContainer label="Clear Input Button" fullWidth>
-                    <ColorPicker
-                        fullWidth
-                        value={colorTwo}
-                        onChange={setColorTwo}
-                        colorFormat="rgba"
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <ClearInputButton onClick={() => setColorTwo(null)} />
-                            </InputAdornment>
-                        }
-                    />
+                <FieldContainer label="Clearable" fullWidth>
+                    <ColorPicker fullWidth clearable value={colorTwo} onChange={setColorTwo} colorFormat="rgba" />
                 </FieldContainer>
             </Grid>
             <Grid item md={4}>

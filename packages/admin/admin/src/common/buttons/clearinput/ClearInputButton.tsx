@@ -1,5 +1,5 @@
 import { Clear } from "@comet/admin-icons";
-import { ButtonBase, ButtonBaseClassKey, ButtonBaseProps, ComponentsOverrides, Theme } from "@mui/material";
+import { ButtonBase, ButtonBaseClassKey, ButtonBaseProps, ComponentsOverrides, inputAdornmentClasses, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -8,12 +8,20 @@ export interface ClearInputButtonProps extends ButtonBaseProps {
     icon?: React.ReactNode;
 }
 
-const styles = ({ palette }: Theme) => {
+const styles = ({ palette, spacing }: Theme) => {
     return createStyles<ClearInputButtonClassKey, ClearInputButtonProps>({
         root: {
             height: "100%",
             width: 40,
             color: palette.action.active,
+
+            [`.${inputAdornmentClasses.positionEnd}:last-child &`]: {
+                marginRight: spacing(-2),
+            },
+
+            [`.${inputAdornmentClasses.positionStart}:first-child &`]: {
+                marginLeft: spacing(-2),
+            },
         },
         disabled: {
             color: palette.action.disabled,
@@ -30,6 +38,9 @@ const ClearInputBtn: React.FC<WithStyles<typeof styles> & ClearInputButtonProps>
     );
 };
 
+/**
+ * @deprecated Use `ClearInputAdornment` directly as the InputAdornment instead
+ */
 export const ClearInputButton = withStyles(styles, { name: "CometAdminClearInputButton" })(ClearInputBtn);
 
 declare module "@mui/material/styles" {

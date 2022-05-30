@@ -86,6 +86,7 @@ const Providers: React.FunctionComponent = ({ children }) => {
         },
     }
     ```
+-   `FinalFormSearchTextField` no longer has a clear button by default. It can be re-enabled using the `clearable` prop.
 
 ### Migration Guide
 

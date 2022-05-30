@@ -1,4 +1,4 @@
-import { inputBaseClasses, svgIconClasses } from "@mui/material";
+import { inputBaseClasses } from "@mui/material";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
@@ -11,17 +11,6 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
             borderRadius: 2,
             backgroundColor: "#fff",
 
-            [`& .${svgIconClasses.root}`]: {
-                pointerEvents: "none",
-            },
-            "& [class*='CometAdminClearInputButton-root']": {
-                marginRight: spacing(-2),
-                marginLeft: spacing(-2),
-
-                [`& .${svgIconClasses.root}`]: {
-                    pointerEvents: "auto",
-                },
-            },
             [`&.${inputBaseClasses.focused}`]: {
                 borderColor: palette.primary.main,
             },

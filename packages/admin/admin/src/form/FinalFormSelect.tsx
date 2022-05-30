@@ -2,6 +2,7 @@ import { CircularProgress, MenuItem, SelectProps } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
+import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { Select } from "./Select";
 
@@ -9,6 +10,7 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
     getOptionSelected?: (option: T, value: T) => boolean;
     getOptionLabel?: (option: T) => string;
     children?: React.ReactNode;
+    clearable?: boolean;
 }
 
 export const FinalFormSelect = <T,>({
@@ -29,11 +31,22 @@ export const FinalFormSelect = <T,>({
         return option === value;
     },
     children,
+    endAdornment,
+    clearable,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
+    const selectEndAdornment = clearable ? (
+        <>
+            <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange(undefined)} />
+            {endAdornment}
+        </>
+    ) : (
+        endAdornment
+    );
+
     if (children) {
         return (
-            <Select {...rest} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
+            <Select {...rest} endAdornment={selectEndAdornment} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
                 {children}
             </Select>
         );
@@ -44,7 +57,7 @@ export const FinalFormSelect = <T,>({
     }
 
     return (
-        <Select {...rest} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
+        <Select {...rest} endAdornment={selectEndAdornment} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
             {options.length === 0 && (loading || value) && (
                 <MenuItem value={value as any} key={JSON.stringify(value)}>
                     {loading ? <CircularProgress size="20px" style={{ marginLeft: "16px" }} /> : getOptionLabel(value)}
