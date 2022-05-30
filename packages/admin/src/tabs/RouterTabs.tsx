@@ -103,17 +103,18 @@ function RouterTabsComponent({
                     return React.isValidElement<TabProps>(child) ? (
                         <Route path={`${match.url}${child.props.path}`}>
                             {({ match }) => {
-                                if (!match && !child.props.forceRender) {
-                                    return null;
-                                }
                                 if (match && stackApi && stackSwitchApi) {
                                     return (
                                         <StackBreadcrumb url={`${match.url}${child.props.path}`} title={child.props.label} invisible={true}>
                                             <div className={classes.content}>{child.props.children}</div>
                                         </StackBreadcrumb>
                                     );
-                                } else {
+                                } else if (match) {
+                                    return <div className={classes.content}>{child.props.children}</div>;
+                                } else if (!match && child.props.forceRender) {
                                     return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
+                                } else {
+                                    return null;
                                 }
                             }}
                         </Route>
