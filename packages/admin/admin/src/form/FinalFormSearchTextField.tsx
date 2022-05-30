@@ -27,16 +27,18 @@ function SearchTextField({
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.finalformsearchtextfield.default.placeholder", defaultMessage: "Search" })}
             startAdornment={<InputAdornment position="start">{icon}</InputAdornment>}
             endAdornment={
-                <>
-                    {endAdornment}
-                    {clearable && (
+                clearable ? (
+                    <>
                         <ClearInputAdornment
                             position="end"
                             hasClearableContent={Boolean(restProps.input.value)}
                             onClick={() => restProps.input.onChange("")}
                         />
-                    )}
-                </>
+                        {endAdornment}
+                    </>
+                ) : (
+                    endAdornment
+                )
             }
         />
     );

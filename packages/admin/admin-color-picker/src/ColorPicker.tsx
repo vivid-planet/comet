@@ -124,12 +124,14 @@ const ColorPicker = ({
                 )
             }
             endAdornment={
-                <>
-                    {clearable && (
+                clearable ? (
+                    <>
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
-                    )}
-                    {endAdornment}
-                </>
+                        {endAdornment}
+                    </>
+                ) : (
+                    endAdornment
+                )
             }
             value={displayValue}
             onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

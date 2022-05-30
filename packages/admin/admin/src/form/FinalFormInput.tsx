@@ -15,12 +15,14 @@ export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable,
             {...input}
             {...props}
             endAdornment={
-                <>
-                    {clearable && (
+                clearable ? (
+                    <>
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
-                    )}
-                    {endAdornment}
-                </>
+                        {endAdornment}
+                    </>
+                ) : (
+                    endAdornment
+                )
             }
         />
     );
