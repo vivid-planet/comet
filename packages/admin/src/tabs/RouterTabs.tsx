@@ -5,9 +5,9 @@ import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
-import { StackApiContext } from "../stack/Api";
+import { useStackApi } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
-import { StackSwitchApiContext } from "../stack/Switch";
+import { useStackSwitchApi } from "../stack/Switch";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
 
 interface TabProps extends MuiTabProps {
@@ -16,7 +16,7 @@ interface TabProps extends MuiTabProps {
     forceRender?: boolean;
     children: React.ReactNode;
 }
-export const RouterTab: React.SFC<TabProps> = () => null;
+export const RouterTab: React.FunctionComponent<TabProps> = () => null;
 
 export interface Props extends RouteComponentProps {
     children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
@@ -32,6 +32,10 @@ function RouterTabsComponent({
     match,
     classes,
 }: Props & WithStyles<typeof styles>) {
+    const stackApi = useStackApi();
+    const stackSwitchApi = useStackSwitchApi();
+    const [shouldShowTabBar, setShouldShowTabBar] = React.useState(true);
+
     const childrenArr = React.Children.toArray(children);
 
     const handleChange = (event: {}, value: number) => {
@@ -63,47 +67,37 @@ function RouterTabsComponent({
         rearrangedChildren.push(defaultPathChild);
     }
 
+    React.useEffect(() => {
+        if (stackApi && stackSwitchApi) {
+            // When inside a Stack show only the last TabBar
+            const ownSwitchIndex = stackSwitchApi.id ? stackApi.switches.findIndex((i) => i.id === stackSwitchApi.id) : -1;
+            const nextSwitchShowsInitialPage = stackApi.switches[ownSwitchIndex + 1] && stackApi.switches[ownSwitchIndex + 1].isInitialPageActive;
+
+            setShouldShowTabBar(ownSwitchIndex === stackApi.switches.length - (nextSwitchShowsInitialPage ? 2 : 1));
+        }
+    }, [stackApi, stackSwitchApi]);
+
     return (
         <div className={classes.root}>
-            <StackApiContext.Consumer>
-                {(stackApi) => (
-                    <StackSwitchApiContext.Consumer>
-                        {(stackSwitchApi) => {
-                            const ret = (
-                                <Route path={`${match.url}/:tab`}>
-                                    {({ match }) => {
-                                        const routePath = match ? `/${match.params.tab}` : "";
-                                        const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
-                                        return (
-                                            <Tabs classes={{ root: classes.tabs }} value={value} onChange={handleChange} {...tabsProps}>
-                                                {React.Children.map(children, (child) => {
-                                                    if (!React.isValidElement<TabProps>(child)) {
-                                                        return null;
-                                                    }
-                                                    const { path, forceRender, children, label, ...restTabProps } = child.props;
-                                                    return <TabComponent label={label} {...restTabProps} />;
-                                                })}
-                                            </Tabs>
-                                        );
-                                    }}
-                                </Route>
-                            );
-
-                            if (stackApi && stackSwitchApi) {
-                                // When inside a Stack show only the last TabBar
-                                const ownSwitchIndex = stackSwitchApi.id ? stackApi.switches.findIndex((i) => i.id === stackSwitchApi.id) : -1;
-                                const nextSwitchShowsInitialPage =
-                                    stackApi.switches[ownSwitchIndex + 1] && stackApi.switches[ownSwitchIndex + 1].isInitialPageActive;
-                                const shouldShowTabBar = ownSwitchIndex === stackApi.switches.length - (nextSwitchShowsInitialPage ? 2 : 1);
-                                if (!shouldShowTabBar) {
-                                    return null;
-                                }
-                            }
-                            return ret;
-                        }}
-                    </StackSwitchApiContext.Consumer>
-                )}
-            </StackApiContext.Consumer>
+            {shouldShowTabBar && (
+                <Route path={`${match.url}/:tab`}>
+                    {({ match }) => {
+                        const routePath = match ? `/${match.params.tab}` : "";
+                        const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
+                        return (
+                            <Tabs classes={{ root: classes.tabs }} value={value} onChange={handleChange} {...tabsProps}>
+                                {React.Children.map(children, (child) => {
+                                    if (!React.isValidElement<TabProps>(child)) {
+                                        return null;
+                                    }
+                                    const { path, forceRender, children, label, ...restTabProps } = child.props;
+                                    return <TabComponent label={label} {...restTabProps} />;
+                                })}
+                            </Tabs>
+                        );
+                    }}
+                </Route>
+            )}
             <Switch>
                 {React.Children.map(rearrangedChildren, (child) => {
                     return React.isValidElement<TabProps>(child) ? (
@@ -112,7 +106,7 @@ function RouterTabsComponent({
                                 if (!match && !child.props.forceRender) {
                                     return null;
                                 }
-                                if (match) {
+                                if (match && stackApi && stackSwitchApi) {
                                     return (
                                         <StackBreadcrumb url={`${match.url}${child.props.path}`} title={child.props.label} invisible={true}>
                                             <div className={classes.content}>{child.props.children}</div>
