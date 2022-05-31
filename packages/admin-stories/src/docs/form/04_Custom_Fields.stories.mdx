@@ -8,15 +8,6 @@ import dedent from "ts-dedent";
 
 Comet Admin provides a set of FinalForm compatible form fields.
 
-## FinalFormAutocomplete
-
-`FinalFormAutocomplete` provides a select with a search field. It can also be used asynchronously with the `useAsyncOptionsProps()` hook.
-It expects the value to be an object to be able to display the current value without having to load the async options.
-
-<Canvas>
-    <Story id="stories-form-custom-fields--finalformautocomplete" />
-</Canvas>
-
 ## Checkbox
 
 ## FinalFormInput
@@ -26,6 +17,23 @@ It expects the value to be an object to be able to display the current value wit
 ## FinalFormSearchTextField
 
 ## FinalFormSelect
+
+`FinalFormSelect` provides a select with multiple options.
+It's possible to load the options asynchronously using the `useAsyncOptionsProps()` hook.
+It expects the value to be an object to be able to display the current value without having to load the async options.
+
+<Canvas>
+    <Story id="stories-form-custom-fields--finalformselect" />
+</Canvas>
+
+## FinalFormAutocomplete
+
+`FinalFormAutocomplete` provides a select with a search field.
+It can be used similarly to [FinalFormSelect](#finalformselect).
+
+<Canvas>
+    <Story id="stories-form-custom-fields--finalformautocomplete" />
+</Canvas>
 
 ## Radio
 

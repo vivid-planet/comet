@@ -1,4 +1,4 @@
-import { Field, FinalForm, FinalFormAutocomplete, useAsyncOptionsProps } from "@comet/admin";
+import { Field, FinalForm, FinalFormAutocomplete, FinalFormSelect, useAsyncOptionsProps } from "@comet/admin";
 import { Button } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -56,6 +56,47 @@ storiesOf("stories/form/Custom Fields", module)
                     }}
                     name="autocompleteAsync"
                     label="AutocompleteAsync"
+                    fullWidth
+                />
+                <Button color="primary" variant="contained" type="submit">
+                    Submit
+                </Button>
+            </FinalForm>
+        );
+    })
+    .add("FinalFormSelect", () => {
+        const selectAsyncProps = useAsyncOptionsProps<Option>(async () => {
+            return new Promise((resolve) => setTimeout(() => resolve(options), 500));
+        });
+
+        return (
+            <FinalForm
+                mode="add"
+                onSubmit={(values) => {
+                    alert(JSON.stringify(values, null, 4));
+                }}
+                initialValues={initialValues}
+            >
+                <Field
+                    component={FinalFormSelect}
+                    getOptionLabel={(option: Option) => option.label}
+                    getOptionSelected={(option: Option, value: Option) => {
+                        return option.value === value.value;
+                    }}
+                    options={options}
+                    name="select"
+                    label="Select"
+                    fullWidth
+                />
+                <Field
+                    component={FinalFormSelect}
+                    getOptionLabel={(option: Option) => option.label}
+                    getOptionSelected={(option: Option, value: Option) => {
+                        return option.value === value.value;
+                    }}
+                    {...selectAsyncProps}
+                    name="selectAsync"
+                    label="SelectAsync"
                     fullWidth
                 />
                 <Button color="primary" variant="contained" type="submit">
