@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 
-storiesOf("stories/form/FinalForm/Basic FinalForm", module)
+storiesOf("stories/form/FinalForm", module)
     .addDecorator(apolloStoryDecorator())
     .add("Basic FinalForm", () => {
         return (
