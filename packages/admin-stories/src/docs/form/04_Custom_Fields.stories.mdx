@@ -8,13 +8,24 @@ import dedent from "ts-dedent";
 
 Comet Admin provides a set of FinalForm compatible form fields.
 
-## Checkbox
-
 ## FinalFormInput
 
-## FinalFormRangeInput
+`FinalFormInput` is a plain input field.
+It can be used like the HTML input element.
+
+<Canvas>
+    <Story id="stories-form-custom-fields--finalforminput" />
+</Canvas>
 
 ## FinalFormSearchTextField
+
+`FinalFormSearchTextField` is a prestyled version of [FinalFormInput](#finalforminput).
+It can be used for implementing a search field.
+It doesn't have any built-in search functionality.
+
+<Canvas>
+    <Story id="stories-form-custom-fields--finalformsearchtextfield" />
+</Canvas>
 
 ## FinalFormSelect
 
@@ -35,10 +46,20 @@ It can be used similarly to [FinalFormSelect](#finalformselect).
     <Story id="stories-form-custom-fields--finalformautocomplete" />
 </Canvas>
 
-## Radio
-
 ## Select
 
-## SubmitResult
+`Select` is a thin wrapper around [Material UI's Select](https://v4.mui.com/components/selects/).
+It's not FinalForm compatible.
+You can use it if you want to add a select outside a FinalForm.
+
+<Canvas>
+    <Story id="stories-form-custom-fields--select" />
+</Canvas>
+
+## Radio
+
+## Checkbox
 
 ## Switch
+
+## FinalFormRangeInput
