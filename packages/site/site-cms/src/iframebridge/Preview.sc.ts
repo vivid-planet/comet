@@ -1,7 +1,6 @@
 import styled, { css } from "styled-components";
 
 export const Root = styled.div<ISelectionStyleProps>`
-    display: inline-block;
     position: relative;
 `;
 
