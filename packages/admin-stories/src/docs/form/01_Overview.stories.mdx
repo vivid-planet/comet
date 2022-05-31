@@ -35,6 +35,40 @@ There are two required properties:
     <Story id="stories-form-finalform--basic-finalform" />
 </Canvas>
 
+### Context-based Features
+
+Comet Admin `FinalForm` uses React Contexts to interact with other Comet Admin components.
+
+#### FinalForm in a Table
+
+If your `FinalForm` is located inside a [TableQuery](/story/docs-components-table-tablequery--page) component, the tableQuery is refetched automatically after submission.
+
+#### FinalForm in a Stack
+
+If a `FinalForm` is used inside a [Stack](/story/docs-components-stack--page), it automatically navigates back to the previous `StackPage`.
+
+<Canvas>
+    <Story id="stories-form-context-based-features--finalform-in-stack" />
+</Canvas>
+
+This is not always desired.
+For example, if the FinalForm isn't located on an own StackPage.
+In this case you have to override the `onAfterSubmit()` function of `FinalForm`.
+
+<Source
+    language="tsx"
+    code={dedent`
+    <FinalForm
+        // ...
+        onAfterSubmit={() => {
+            // noop
+        }}
+    >
+        {/* ... */}
+    </FinalForm>
+`}
+/>
+
 ### Differences between Comet Admin `FinalForm` and RFF `Form`
 
 RFF's `Form` is a pure wrapper component.
@@ -83,40 +117,6 @@ Comet Admin `FinalForm`:
             <SaveButton type="submit" />
         </FinalForm>
   `}
-/>
-
-### Context-based Features
-
-Comet Admin `FinalForm` uses React Contexts to interact with other Comet Admin components.
-
-#### FinalForm in a Table
-
-If your `FinalForm` is located inside a [TableQuery](/story/docs-components-table-tablequery--page) component, the tableQuery is refetched automatically after submission.
-
-#### FinalForm in a Stack
-
-If a `FinalForm` is used inside a [Stack](/story/docs-components-stack--page), it automatically navigates back to the previous `StackPage`.
-
-<Canvas>
-    <Story id="stories-form-context-based-features--finalform-in-stack" />
-</Canvas>
-
-This is not always desired.
-For example, if the FinalForm isn't located on an own StackPage.
-In this case you have to override the `onAfterSubmit()` function of `FinalForm`.
-
-<Source
-    language="tsx"
-    code={dedent`
-    <FinalForm
-        // ...
-        onAfterSubmit={() => {
-            // noop
-        }}
-    >
-        {/* ... */}
-    </FinalForm>
-`}
 />
 
 For information on how to validate your form, see [Form Validation](/docs/docs-form-validation--page).  
