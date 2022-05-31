@@ -11,7 +11,7 @@ Comet Admin provides a set of FinalForm compatible form fields.
 ## FinalFormInput
 
 `FinalFormInput` is a plain input field.
-It can be used like the HTML input element.
+You can use it like the HTML input element.
 
 <Canvas>
     <Story id="stories-form-custom-fields--finalforminput" />
@@ -20,7 +20,7 @@ It can be used like the HTML input element.
 ## FinalFormSearchTextField
 
 `FinalFormSearchTextField` is a prestyled version of [FinalFormInput](#finalforminput).
-It can be used for implementing a search field.
+You can use it for implementing a search field.
 It doesn't have any built-in search functionality.
 
 <Canvas>
@@ -80,10 +80,18 @@ It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/a
 It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/api/form-control-label/#formcontrollabel-api).
 
 Each radio option must be a separate `Field`.
-All the Fields should be wrapped by a `FieldContainer`.
+All the Fields should be wrapped in a `FieldContainer`.
 
 <Canvas>
     <Story id="stories-form-custom-fields--finalformradio" />
 </Canvas>
 
 ## FinalFormRangeInput
+
+`FinalFormRangeInput` adds a range selector.
+It consists of two text input fields and a slider.
+This range input can, for example, be used for filtering products by price.
+
+<Canvas>
+    <Story id="stories-form-custom-fields--finalformrangeinput" />
+</Canvas>

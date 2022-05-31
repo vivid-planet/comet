@@ -6,6 +6,7 @@ import {
     FinalFormCheckbox,
     FinalFormInput,
     FinalFormRadio,
+    FinalFormRangeInput,
     FinalFormSearchTextField,
     FinalFormSelect,
     FinalFormSwitch,
@@ -189,8 +190,8 @@ storiesOf("stories/form/Custom Fields", module)
                     alert(JSON.stringify(values, null, 4));
                 }}
             >
-                <Field name="checkbox" type="checkbox" fullWidth>
-                    {(props) => <FormControlLabel label="FinalFormCheckbox" control={<FinalFormCheckbox {...props} />} />}
+                <Field name="checkbox" label="FinalFormCheckbox" type="checkbox" fullWidth>
+                    {(props) => <FormControlLabel label="Confirm" control={<FinalFormCheckbox {...props} />} />}
                 </Field>
                 <Button color="primary" variant="contained" type="submit">
                     Submit
@@ -231,6 +232,21 @@ storiesOf("stories/form/Custom Fields", module)
                         {(props) => <FormControlLabel label="Option 2" control={<FinalFormRadio {...props} />} />}
                     </Field>
                 </FieldContainer>
+                <Button color="primary" variant="contained" type="submit">
+                    Submit
+                </Button>
+            </FinalForm>
+        );
+    })
+    .add("FinalFormRangeInput", () => {
+        return (
+            <FinalForm
+                mode="add"
+                onSubmit={(values) => {
+                    alert(JSON.stringify(values, null, 4));
+                }}
+            >
+                <Field name="price" label="FinalFormRangeInput" component={FinalFormRangeInput} startAdornment={"€"} fullWidth min={50} max={1000} />
                 <Button color="primary" variant="contained" type="submit">
                     Submit
                 </Button>
