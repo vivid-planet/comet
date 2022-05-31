@@ -48,7 +48,7 @@ It can be used similarly to [FinalFormSelect](#finalformselect).
 
 ## Select
 
-`Select` is a thin wrapper around [Material UI's Select](https://v4.mui.com/components/selects/).
+`Select` is a thin wrapper around [Material UI's `Select`](https://v4.mui.com/components/selects/).
 It's not FinalForm compatible.
 You can use it if you want to add a select outside a FinalForm.
 
@@ -56,10 +56,34 @@ You can use it if you want to add a select outside a FinalForm.
     <Story id="stories-form-custom-fields--select" />
 </Canvas>
 
-## Radio
+## FinalFormCheckbox
 
-## Checkbox
+`FinalFormCheckbox` provides a checkbox.
+It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/api/form-control-label/#formcontrollabel-api).
 
-## Switch
+<Canvas>
+    <Story id="stories-form-custom-fields--finalformcheckbox" />
+</Canvas>
+
+## FinalFormSwitch
+
+`FinalFormSwitch` provides a switch.
+It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/api/form-control-label/#formcontrollabel-api).
+
+<Canvas>
+    <Story id="stories-form-custom-fields--finalformswitch" />
+</Canvas>
+
+## FinalFormRadio
+
+`FinalFormRadio` provides a radio control.
+It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/api/form-control-label/#formcontrollabel-api).
+
+Each radio option must be a separate `Field`.
+All the Fields should be wrapped by a `FieldContainer`.
+
+<Canvas>
+    <Story id="stories-form-custom-fields--finalformradio" />
+</Canvas>
 
 ## FinalFormRangeInput

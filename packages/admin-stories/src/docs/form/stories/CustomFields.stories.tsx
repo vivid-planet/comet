@@ -1,14 +1,18 @@
 import {
     Field,
+    FieldContainer,
     FinalForm,
     FinalFormAutocomplete,
+    FinalFormCheckbox,
     FinalFormInput,
+    FinalFormRadio,
     FinalFormSearchTextField,
     FinalFormSelect,
+    FinalFormSwitch,
     Select,
     useAsyncOptionsProps,
 } from "@comet/admin";
-import { Button, MenuItem } from "@material-ui/core";
+import { Button, FormControlLabel, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -175,5 +179,61 @@ storiesOf("stories/form/Custom Fields", module)
                     </MenuItem>
                 ))}
             </Select>
+        );
+    })
+    .add("FinalFormCheckbox", () => {
+        return (
+            <FinalForm
+                mode="add"
+                onSubmit={(values) => {
+                    alert(JSON.stringify(values, null, 4));
+                }}
+            >
+                <Field name="checkbox" type="checkbox" fullWidth>
+                    {(props) => <FormControlLabel label="FinalFormCheckbox" control={<FinalFormCheckbox {...props} />} />}
+                </Field>
+                <Button color="primary" variant="contained" type="submit">
+                    Submit
+                </Button>
+            </FinalForm>
+        );
+    })
+    .add("FinalFormSwitch", () => {
+        return (
+            <FinalForm
+                mode="add"
+                onSubmit={(values) => {
+                    alert(JSON.stringify(values, null, 4));
+                }}
+            >
+                <Field name="switch" label="FinalFormSwitch" fullWidth>
+                    {(props) => <FormControlLabel label={props.input.value ? "On" : "Off"} control={<FinalFormSwitch {...props} />} />}
+                </Field>
+                <Button color="primary" variant="contained" type="submit">
+                    Submit
+                </Button>
+            </FinalForm>
+        );
+    })
+    .add("FinalFormRadio", () => {
+        return (
+            <FinalForm
+                mode="add"
+                onSubmit={(values) => {
+                    alert(JSON.stringify(values, null, 4));
+                }}
+            >
+                <FieldContainer label="FinalFormRadio" fullWidth>
+                    <Field name="radio" type="radio" value="option1">
+                        {(props) => <FormControlLabel label="Option 1" control={<FinalFormRadio {...props} />} />}
+                    </Field>
+                    <Field name="radio" type="radio" value="option2">
+                        {(props) => <FormControlLabel label="Option 2" control={<FinalFormRadio {...props} />} />}
+                    </Field>
+                </FieldContainer>
+                <Button color="primary" variant="contained" type="submit">
+                    Submit
+                </Button>
+            </FinalForm>
         );
     });
