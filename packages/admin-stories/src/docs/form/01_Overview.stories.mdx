@@ -35,6 +35,20 @@ There are two required properties:
     <Story id="stories-form-finalform--basic-finalform" />
 </Canvas>
 
+### Submit Mutation Best Practices
+
+We recommend abiding by the following best practices considering form submission mutations:
+
+// TODO: best practices
+
+-   mutation in adjacent file .gql.ts
+-   client.mutate instead of useMutation() hook
+-   input object for mutated values
+
+<Canvas>
+    <Story id="stories-form-finalform--submit-mutation-best-practices" />
+</Canvas>
+
 ### Context-based Features
 
 Comet Admin `FinalForm` uses React Contexts to interact with other Comet Admin components.
@@ -118,6 +132,8 @@ Comet Admin `FinalForm`:
         </FinalForm>
   `}
 />
+
+// TODO: remove this
 
 For information on how to validate your form, see [Form Validation](/docs/docs-form-validation--page).  
 For information on how to implement different layout-types of your form, see [Form Layout](/docs/docs-form-layout--page).
