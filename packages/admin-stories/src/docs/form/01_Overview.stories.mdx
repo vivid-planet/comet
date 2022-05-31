@@ -89,6 +89,10 @@ Comet Admin `FinalForm`:
 
 Comet Admin `FinalForm` uses React Contexts to interact with other Comet Admin components.
 
+#### FinalForm in a Table
+
+If your `FinalForm` is located inside a [TableQuery](/story/docs-components-table-tablequery--page) component, the tableQuery is refetched automatically after submission.
+
 #### FinalForm in a Stack
 
 If a `FinalForm` is used inside a [Stack](/story/docs-components-stack--page), it automatically navigates back to the previous `StackPage`.
@@ -114,8 +118,6 @@ In this case you have to override the `onAfterSubmit()` function of `FinalForm`.
     </FinalForm>
 `}
 />
-
-#### FinalForm in a Table
 
 For information on how to validate your form, see [Form Validation](/docs/docs-form-validation--page).  
 For information on how to implement different layout-types of your form, see [Form Layout](/docs/docs-form-layout--page).
