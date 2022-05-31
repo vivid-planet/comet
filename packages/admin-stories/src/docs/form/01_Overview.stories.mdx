@@ -42,9 +42,9 @@ It creates and maintains a [form instance](https://final-form.org/docs/final-for
 This form instance is provided to child components via React Context.
 It doesn't render any HTML.
 
-Comet Admin `FinalForm` uses the React Contexts of other Comet Admin components to interact with them.
+Comet Admin `FinalForm` renders some HTML: a `<form>` wrapper and a div containing submit errors.
+Additionally, it uses the React Contexts of other Comet Admin components to interact with them.
 You can find more information about these interactions in the following sections.
-Additionally, Comet Admin `FinalForm` renders some HTML: a `<form>` wrapper and a div containing submit errors.
 
 The following example shows the definition of a simple form with RFF `Form` and Comet Admin `FinalForm`.
 
@@ -85,10 +85,41 @@ Comet Admin `FinalForm`:
   `}
 />
 
+### Context-based Features
+
+Comet Admin `FinalForm` uses React Contexts to interact with other Comet Admin components.
+
+#### FinalForm in a Stack
+
+If a `FinalForm` is used inside a [Stack](/story/docs-components-stack--page), it automatically navigates back to the previous `StackPage`.
+
+<Canvas>
+    <Story id="stories-form-context-based-features--finalform-in-stack" />
+</Canvas>
+
+This is not always desired.
+For example, if the FinalForm isn't located on an own StackPage.
+In this case you have to override the `onAfterSubmit()` function of `FinalForm`.
+
+<Source
+    language="tsx"
+    code={dedent`
+    <FinalForm
+        // ...
+        onAfterSubmit={() => {
+            // noop
+        }}
+    >
+        {/* ... */}
+    </FinalForm>
+`}
+/>
+
+#### FinalForm in a Table
+
 For information on how to validate your form, see [Form Validation](/docs/docs-form-validation--page).  
 For information on how to implement different layout-types of your form, see [Form Layout](/docs/docs-form-layout--page).
 
 tba.
 
--   present custom fields
 -   submit mutation best practice
