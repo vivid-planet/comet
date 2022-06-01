@@ -1,14 +1,16 @@
 import { ClearInputAdornment, InputWithPopper, InputWithPopperComponents, InputWithPopperComponentsProps, InputWithPopperProps } from "@comet/admin";
-import { Box, ComponentsOverrides, InputAdornment, InputBaseProps, Theme } from "@mui/material";
+import { Close } from "@comet/admin-icons";
+import { Box, ButtonBase, ComponentsOverrides, IconButton, InputAdornment, InputBaseProps, Theme, Typography } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
+import clsx from "clsx";
 import * as React from "react";
 import { HexColorPicker, RgbaStringColorPicker } from "react-colorful";
 import { ColorPickerBaseProps } from "react-colorful/dist/types";
+import { FormattedMessage } from "react-intl";
 import tinycolor from "tinycolor2";
 import { useDebouncedCallback } from "use-debounce";
 
 import { ColorPickerClassKey, styles } from "./ColorPicker.styles";
-
 export interface ColorPickerPropsComponents extends InputWithPopperComponents {
     ColorPickerColorPreview?: React.ElementType<ColorPickerColorPreviewProps>;
     ColorPickerInvalidPreview?: React.ElementType<React.HTMLAttributes<HTMLDivElement>>;
@@ -26,11 +28,15 @@ export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" 
     colorFormat?: "hex" | "rgba";
     colorPalette?: string[];
     hidePicker?: boolean;
+    hideHeader?: boolean;
+    hideFooter?: boolean;
     fullWidth?: boolean;
     startAdornment?: InputBaseProps["startAdornment"];
     endAdornment?: InputBaseProps["endAdornment"];
     invalidIndicatorCharacter?: string;
     clearable?: boolean;
+    titleText?: React.ReactNode;
+    clearButtonText?: React.ReactNode;
     components?: ColorPickerPropsComponents;
     componentsProps?: ColorPickerPropsComponentsProps;
 }
@@ -48,12 +54,16 @@ const ColorPicker = ({
     value,
     colorFormat = "hex",
     hidePicker,
+    hideHeader,
+    hideFooter,
     colorPalette,
     onChange,
     startAdornment,
     endAdornment,
     onBlur,
     clearable,
+    titleText = <FormattedMessage id="cometAdmin.colorPicker.title" defaultMessage="Choose a color" />,
+    clearButtonText = <FormattedMessage id="cometAdmin.colorPicker.clearButton" defaultMessage="clear color" />,
     componentsProps = {},
     components = {},
     ...rest
@@ -145,11 +155,20 @@ const ColorPicker = ({
             componentsProps={inputWithPopperComponentsProps}
             {...rest}
         >
-            {() => {
+            {(closePopper) => {
                 return (
                     <div className={classes.popperRoot}>
+                        {!hideHeader && (
+                            <div className={clsx(classes.popperSection, classes.header)}>
+                                <Typography className={classes.headerTitleText}>{titleText}</Typography>
+                                <IconButton className={classes.headerCloseButton} onClick={() => closePopper(true)}>
+                                    <Close />
+                                </IconButton>
+                            </div>
+                        )}
+
                         {!hidePicker && (
-                            <div className={classes.colorPickerWrapper}>
+                            <div className={clsx(classes.popperSection, classes.colorPickerWrapper)}>
                                 {colorFormat === "hex" && <HexColorPicker color={value ?? ""} onChange={onChangeColor} {...hexColorPickerProps} />}
                                 {colorFormat === "rgba" && (
                                     <RgbaStringColorPicker color={value ?? ""} onChange={onChangeColor} {...rgbaStringColorPickerProps} />
@@ -157,7 +176,7 @@ const ColorPicker = ({
                             </div>
                         )}
                         {colorPalette?.length && (
-                            <div className={classes.colorPalette}>
+                            <div className={clsx(classes.popperSection, classes.colorPalette)}>
                                 {colorPalette.map((color, index) => (
                                     <Box
                                         className={classes.colorPaletteItem}
@@ -166,6 +185,22 @@ const ColorPicker = ({
                                         sx={{ backgroundColor: color }}
                                     />
                                 ))}
+                            </div>
+                        )}
+                        {!hideFooter && (
+                            <div className={clsx(classes.popperSection, classes.footer)}>
+                                <ButtonBase
+                                    className={classes.footerClearButton}
+                                    onClick={() => {
+                                        onChangeColor("");
+                                        closePopper(true);
+                                    }}
+                                >
+                                    <div className={classes.preview}>
+                                        <EmptyPreview className={`${classes.previewIndicator} ${classes.previewIndicatorEmpty}`} />
+                                    </div>
+                                    <Typography>{clearButtonText}</Typography>
+                                </ButtonBase>
                             </div>
                         )}
                     </div>
