@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 const backgroundImageUrl = "https://idp.vivid-planet.cloud/comet-background.jpg";
 const cometLogoUrl = "https://idp.vivid-planet.cloud/comet-logo-claim-white.svg";
@@ -56,19 +57,21 @@ const RetryButton = styled("button")`
     }
 `;
 
-type ErrorPageProps = React.PropsWithChildren<{
+type AuthorizationErrorPageProps = React.PropsWithChildren<{
     error: string;
     onRetry: () => void;
 }>;
 
-export const ErrorPage: React.FunctionComponent<ErrorPageProps> = ({ error, onRetry }) => {
+export const AuthorizationErrorPage: React.FunctionComponent<AuthorizationErrorPageProps> = ({ error, onRetry }) => {
     return (
         <>
             <Root>
                 <Content>
                     <Message>{JSON.stringify(error)}</Message>
                     <div>
-                        <RetryButton onClick={onRetry}>Retry</RetryButton>
+                        <RetryButton onClick={onRetry}>
+                            <FormattedMessage id="comet.generic.retry" defaultMessage="Retry" />
+                        </RetryButton>
                     </div>
                     <CometLogo src={cometLogoUrl} alt="Comet Logo" />
                 </Content>

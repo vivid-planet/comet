@@ -9,6 +9,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogProvider, MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
 import {
     AllCategories,
+    AuthorizationErrorPage,
     CmsBlockContextProvider,
     createHttpClient,
     DamPage,
@@ -28,7 +29,6 @@ import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import config from "@src/config";
 import Dashboard from "@src/dashboard/Dashboard";
-import { ErrorPage } from "@src/pages/errorpage/ErrorPage";
 import theme from "@src/theme";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
@@ -98,11 +98,7 @@ class App extends React.Component {
                             <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                 <MuiThemeProvider theme={theme}>
                                     <RouterBrowserRouter>
-                                        <AuthorizationGate
-                                            renderErrorPage={({ error, onRetry }) => {
-                                                return <ErrorPage error={error} onRetry={onRetry} />;
-                                            }}
-                                        >
+                                        <AuthorizationGate renderErrorPage={AuthorizationErrorPage}>
                                             <ErrorDialogProvider>
                                                 <DndProvider backend={HTML5Backend}>
                                                     <SnackbarProvider>
