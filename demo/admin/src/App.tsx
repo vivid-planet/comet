@@ -20,10 +20,9 @@ import {
     SitePreview,
     SitesConfigProvider,
 } from "@comet/admin-cms";
-import { AuthorizationGate, AuthorizationProvider } from "@comet/react-app-auth";
+import { AuthConfiguration, AuthorizationGate, AuthorizationProvider, createAuthorizationManager, createRefreshHandler } from "@comet/react-app-auth";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
-import { authorizationManager } from "@src/common/authorization/authorizationManager";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
@@ -55,9 +54,24 @@ const GlobalStyle = () => (
     />
 );
 
+const authorizationConfig: AuthConfiguration = {
+    issuer: config.IDP_URL,
+    clientId: config.IDP_CLIENT_ID,
+    redirectUrl: `${config.ADMIN_URL}/process-token`,
+    responseType: "code",
+    scope: "offline openid profile email",
+    usePKCE: true,
+};
+
+const authorizationManager = createAuthorizationManager({ authorizationConfig });
+
+const refreshHandler = createRefreshHandler(authorizationManager);
+refreshHandler.startAutomaticRefresh(60);
+
 const apiClient = createHttpClient(config.API_URL, authorizationManager);
 const sitesConfig = JSON.parse(config.SITES_CONFIG);
-const apolloClient = createApolloClient();
+const apolloClient = createApolloClient({ authorizationConfig, refreshHandler });
+
 const categories: AllCategories = [
     {
         category: "MainNavigation",
