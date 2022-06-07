@@ -45,38 +45,18 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
                 },
             }),
         }),
-        contained: ({ ownerState }) => ({
+        contained: {
             color: "#000",
-            borderWidth: 1,
-            borderStyle: "solid",
-            paddingTop: 11,
+            paddingTop: 12,
             paddingRight: 14,
-            paddingBottom: 11,
+            paddingBottom: 12,
             paddingLeft: 14,
 
             [`&.${buttonClasses.disabled}`]: {
                 backgroundColor: palette.grey[100],
-                borderColor: palette.grey[100],
                 color: palette.grey[300],
             },
-
-            [`&.${buttonClasses.startIcon}`]: {
-                marginRight: 6,
-            },
-
-            [`&.${buttonClasses.endIcon}`]: {
-                marginLeft: 6,
-            },
-
-            ...(ownerState.color === "info" && {
-                backgroundColor: "#fff",
-                borderColor: palette.grey[200],
-
-                "&:hover": {
-                    backgroundColor: palette.grey[50],
-                },
-            }),
-        }),
+        },
         containedPrimary: {
             color: "#000",
             borderColor: palette.primary.main,
@@ -93,6 +73,21 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             "&:hover": {
                 backgroundColor: palette.secondary.dark,
                 borderColor: palette.secondary.dark,
+            },
+        },
+        outlined: {
+            color: palette.grey[900],
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderColor: palette.grey[200],
+            paddingTop: 11,
+            paddingRight: 14,
+            paddingBottom: 11,
+            paddingLeft: 14,
+
+            ":hover": {
+                backgroundColor: palette.grey[50],
+                borderColor: palette.grey[200],
             },
         },
         startIcon: {
