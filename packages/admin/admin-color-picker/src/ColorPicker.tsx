@@ -181,7 +181,10 @@ const ColorPicker = ({
                                     <Box
                                         className={classes.colorPaletteItem}
                                         key={`${index}_${color}`}
-                                        onClick={() => onChangeColor(color)}
+                                        onClick={() => {
+                                            onChangeColor(color);
+                                            closePopper(true);
+                                        }}
                                         sx={{ backgroundColor: color }}
                                     />
                                 ))}
