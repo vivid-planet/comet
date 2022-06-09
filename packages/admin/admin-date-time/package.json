@@ -32,6 +32,7 @@
         "@comet/admin": "^2.0.0",
         "@comet/admin-icons": "^2.0.0",
         "@mui/material": "^5.4.1",
+        "@mui/styles": "^5.4.1",
         "react": "^17.0",
         "react-dom": "^17.0",
         "react-final-form": "^6.5.7",

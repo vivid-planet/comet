@@ -1,0 +1,114 @@
+import { ClearInputAdornment, InputWithPopper, InputWithPopperProps } from "@comet/admin";
+import { ComponentsOverrides, ListItemText, MenuItem, MenuList, Theme } from "@mui/material";
+import { WithStyles, withStyles } from "@mui/styles";
+import * as React from "react";
+import { FormatDateOptions, FormattedTime, useIntl } from "react-intl";
+
+import { getClosestDateToNow, getDateFromTimeValue, getDateRangeListByMinuteStep, getTimeValueFromDate } from "./helpers/timePickerHelpers";
+import { styles, TimePickerClassKey } from "./TimePicker.styles";
+
+export interface TimePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange"> {
+    onChange?: (time?: string) => void;
+    value?: string;
+    formatOptions?: FormatDateOptions;
+    minuteStep?: number;
+    min?: string;
+    max?: string;
+    clearable?: boolean;
+}
+
+function TimePicker({
+    onChange,
+    value,
+    formatOptions,
+    endAdornment,
+    clearable,
+    minuteStep = 15,
+    placeholder = "HH:MM",
+    min = "00:00",
+    max = "23:59",
+    ...inputWithPopperProps
+}: TimePickerProps & WithStyles<typeof styles>): React.ReactElement {
+    const intl = useIntl();
+    const focusedItemRef = React.useRef<HTMLLIElement>(null);
+
+    const dateValue: Date | null = value ? getDateFromTimeValue(value) : null;
+    const timeOptions = getDateRangeListByMinuteStep(min, max, minuteStep);
+    const closestDateToNow = getClosestDateToNow(timeOptions);
+
+    const onOpenPopper = () => {
+        // The timeout is necessary, as the ref might not be ready immediately when the popper starts to open.
+        setTimeout(() => {
+            if (focusedItemRef.current) {
+                focusedItemRef.current.scrollIntoView({ behavior: "auto", block: "center" });
+                focusedItemRef.current.focus();
+            }
+        }, 0);
+    };
+
+    return (
+        <InputWithPopper
+            value={dateValue ? intl.formatTime(dateValue, formatOptions) : ""}
+            placeholder={placeholder}
+            {...inputWithPopperProps}
+            onOpenPopper={onOpenPopper}
+            readOnly
+            endAdornment={
+                clearable ? (
+                    <>
+                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange?.(undefined)} />
+                        {endAdornment}
+                    </>
+                ) : (
+                    endAdornment
+                )
+            }
+        >
+            {(closePopper) => (
+                <MenuList>
+                    {timeOptions.map((timeOptionValue, index) => {
+                        const selected = (dateValue && getTimeValueFromDate(dateValue)) === getTimeValueFromDate(timeOptionValue);
+                        const isFocusedItem = selected || (!dateValue && closestDateToNow === timeOptionValue);
+
+                        return (
+                            <MenuItem
+                                key={index}
+                                selected={selected}
+                                ref={isFocusedItem ? focusedItemRef : null}
+                                onClick={() => {
+                                    onChange?.(getTimeValueFromDate(timeOptionValue));
+                                    closePopper(true);
+                                }}
+                            >
+                                <ListItemText>
+                                    <FormattedTime value={timeOptionValue} {...formatOptions} />
+                                </ListItemText>
+                            </MenuItem>
+                        );
+                    })}
+                </MenuList>
+            )}
+        </InputWithPopper>
+    );
+}
+
+const TimePickerWithStyles = withStyles(styles, { name: "CometAdminTimePicker" })(TimePicker);
+
+export { TimePickerWithStyles as TimePicker };
+
+declare module "@mui/material/styles" {
+    interface ComponentNameToClassKey {
+        CometAdminTimePicker: TimePickerClassKey;
+    }
+
+    interface ComponentsPropsList {
+        CometAdminTimePicker: TimePickerProps;
+    }
+
+    interface Components {
+        CometAdminTimePicker?: {
+            defaultProps?: ComponentsPropsList["CometAdminTimePicker"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimePicker"];
+        };
+    }
+}
