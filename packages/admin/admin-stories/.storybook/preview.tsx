@@ -4,14 +4,24 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 
 import { MainContent, MuiThemeProvider } from "@comet/admin";
+import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { createCometTheme } from "@comet/admin-theme";
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
 import { select, withKnobs } from "@storybook/addon-knobs";
 import { addDecorator, addParameters } from "@storybook/react";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
+import { de as deLocale, enUS as enLocale } from "date-fns/locale";
+import { Locale as DateFnsLocale } from "date-fns";
 
 import { previewGlobalStyles } from "./preview.styles";
+
+type LocaleKey = "de" | "en";
+
+const dateFnsLocales: Record<LocaleKey, DateFnsLocale> = {
+    de: deLocale,
+    en: enLocale,
+};
 
 addDecorator((story, context) => {
     const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
@@ -47,10 +57,12 @@ addDecorator((story, context) => {
             "cometAdmin.core.table.tableQuery.error": "Fehler :( {error}",
         },
     };
-    const selectedLocale = select("Locale", ["en", "de"], "en");
+
+    const selectedLocale = select<LocaleKey>("Locale", ["en", "de"], "en");
+
     return (
         <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
-            {storyWithKnobs}
+            <DateFnsLocaleProvider value={dateFnsLocales[selectedLocale]}>{storyWithKnobs}</DateFnsLocaleProvider>
         </IntlProvider>
     );
 });
