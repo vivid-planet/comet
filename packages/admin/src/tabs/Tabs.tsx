@@ -9,6 +9,7 @@ import { TabScrollButton } from "./TabScrollButton";
 
 interface TabProps extends MuiTabProps {
     label: React.ReactNode;
+    forceRender?: boolean;
     children: React.ReactNode;
 }
 
@@ -20,7 +21,7 @@ interface ITabsState {
 }
 
 export interface TabsProps extends MuiTabsProps {
-    children: Array<React.ReactElement<TabProps>> | React.ReactElement<TabProps>;
+    children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
     tabComponent?: React.ComponentType<MuiTabProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;
@@ -52,6 +53,11 @@ function TabsComponent({
     };
 
     React.Children.forEach(children, (child: React.ReactElement<TabProps>) => {
+        // as seen in https://github.com/mui-org/material-ui/blob/v4.11.0/packages/material-ui/src/Tabs/Tabs.js#L390
+        if (!React.isValidElement<TabProps>(child)) {
+            return null;
+        }
+
         if (child.type !== Tab) {
             throw new Error("RouterTabs must contain only Tab children");
         }
@@ -67,13 +73,23 @@ function TabsComponent({
                 {...restProps}
             >
                 {React.Children.map(children, (child: React.ReactElement<TabProps>) => {
+                    if (!React.isValidElement<TabProps>(child)) {
+                        return null;
+                    }
+
                     const { children, label, ...restTabProps } = child.props;
                     return <TabComponent label={label} {...restTabProps} />;
                 })}
             </MuiTabs>
             {React.Children.map(children, (child: React.ReactElement<TabProps>, index) => {
+                if (!React.isValidElement<TabProps>(child)) {
+                    return null;
+                }
+
                 if (index === value) {
                     return <div className={classes.content}>{child.props.children}</div>;
+                } else if (child.props.forceRender) {
+                    return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
                 }
             })}
         </div>

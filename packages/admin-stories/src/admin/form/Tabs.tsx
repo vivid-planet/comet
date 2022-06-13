@@ -1,39 +1,51 @@
 import { Field, FinalForm, FinalFormInput, Tab, Tabs } from "@comet/admin";
-import { Card, CardContent } from "@material-ui/core";
+import { Button, Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
 function Story() {
+    const [showExample3, setShowExample3] = React.useState(false);
+
     return (
-        <FinalForm
-            mode="edit"
-            onSubmit={(values) => {
-                alert(JSON.stringify(values));
-            }}
-            initialValues={{
-                foo: "foo",
-                bar: "bar",
-            }}
-        >
-            <Tabs>
-                <Tab label="Example 1">
-                    <Card variant="outlined">
-                        <CardContent>
-                            <Field label="Foo" name="foo" component={FinalFormInput} />
-                        </CardContent>
-                    </Card>
-                </Tab>
-                <Tab label="Example 2">
-                    <Card variant="outlined">
-                        <CardContent>
-                            <Field label="Bar" name="bar" component={FinalFormInput} />
-                        </CardContent>
-                    </Card>
-                </Tab>
-            </Tabs>
-        </FinalForm>
+        <>
+            <Button onClick={() => setShowExample3((value) => !value)}>{showExample3 ? "Hide" : "Show"} Example 3</Button>
+            <FinalForm
+                mode="edit"
+                onSubmit={(values) => {
+                    alert(JSON.stringify(values));
+                }}
+                initialValues={{
+                    foo: "foo",
+                    bar: "bar",
+                }}
+            >
+                <Tabs>
+                    <Tab label="Example 1">
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Field label="Foo" name="foo" component={FinalFormInput} />
+                            </CardContent>
+                        </Card>
+                    </Tab>
+                    <Tab label="Example 2" forceRender>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Field label="Bar" name="bar" component={FinalFormInput} />
+                            </CardContent>
+                        </Card>
+                    </Tab>
+                    {showExample3 && (
+                        <Tab label="Example 3">
+                            <Card variant="outlined">
+                                <CardContent>False</CardContent>
+                            </Card>
+                        </Tab>
+                    )}
+                </Tabs>
+            </FinalForm>
+        </>
     );
 }
 
