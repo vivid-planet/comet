@@ -110,7 +110,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
                 return `${removeTrailingSlash(match.url)}/${payload}/${pageName}${subUrl ? `/${subUrl}` : ""}`;
             }
         },
-        [isInitialPage, match.url],
+        [isInitialPage, match],
     );
 
     const activatePage = React.useCallback(

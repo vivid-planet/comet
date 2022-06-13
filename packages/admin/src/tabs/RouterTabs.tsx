@@ -79,6 +79,12 @@ function RouterTabsComponent({
         shouldShowTabBar = ownSwitchIndex === stackApi.switches.length - (nextSwitchShowsInitialPage ? 2 : 1);
     }
 
+    // used for only rendering the first matching child
+    // note: React Router's Switch can't be used because it
+    // prevents the rendering of more than one child
+    // however we need to render all children if forceRender is true
+    let foundFirstMatch = false;
+
     return (
         <div className={classes.root}>
             {shouldShowTabBar && (
@@ -102,9 +108,10 @@ function RouterTabsComponent({
             )}
             {React.Children.map(rearrangedChildren, (child) => {
                 return React.isValidElement<TabProps>(child) ? (
-                    <Route path={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)} exact>
+                    <Route path={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}>
                         {({ match }) => {
-                            if (match && stackApi && stackSwitchApi) {
+                            if (match && stackApi && stackSwitchApi && !foundFirstMatch) {
+                                foundFirstMatch = true;
                                 return (
                                     <StackBreadcrumb
                                         url={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}
@@ -114,7 +121,8 @@ function RouterTabsComponent({
                                         <div className={classes.content}>{child.props.children}</div>
                                     </StackBreadcrumb>
                                 );
-                            } else if (match) {
+                            } else if (match && !foundFirstMatch) {
+                                foundFirstMatch = true;
                                 return <div className={classes.content}>{child.props.children}</div>;
                             } else if (!match && child.props.forceRender) {
                                 return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
