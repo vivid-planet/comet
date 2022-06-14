@@ -52,7 +52,7 @@ storiesOf("stories/form/FinalForm", module).add("Submit Mutation Best Practices"
                 mode="add"
                 onSubmit={async (values) => {
                     // use client.mutate instead of useMutation() hook
-                    await client.mutate({
+                    const result = await client.mutate({
                         mutation: updateUserMutation,
                         variables: {
                             id,
@@ -62,6 +62,8 @@ storiesOf("stories/form/FinalForm", module).add("Submit Mutation Best Practices"
                             },
                         },
                     });
+
+                    window.alert(`Result: ${JSON.stringify(result)}`);
                 }}
                 initialValues={{
                     firstname: "",
