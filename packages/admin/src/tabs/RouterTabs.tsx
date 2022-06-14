@@ -124,7 +124,7 @@ function RouterTabsComponent({
                             } else if (match && !foundFirstMatch) {
                                 foundFirstMatch = true;
                                 return <div className={classes.content}>{child.props.children}</div>;
-                            } else if (!match && child.props.forceRender) {
+                            } else if (child.props.forceRender) {
                                 return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
                             } else {
                                 return null;
