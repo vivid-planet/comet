@@ -108,6 +108,7 @@ const orderForm = [
     "docs-form-components-fieldcontainer",
     "docs-form-components-field",
     "docs-form-components-formsection",
+    "docs-form-custom-fields",
     "docs-form-components",
 ];
 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];

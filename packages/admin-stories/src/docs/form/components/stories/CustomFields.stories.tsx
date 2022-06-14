@@ -17,7 +17,7 @@ import { Button, FormControlLabel, MenuItem } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../../apollo-story.decorator";
+import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
 
 interface Option {
     value: string;
