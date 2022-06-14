@@ -22,7 +22,7 @@ import { storyRouterDecorator } from "../../../../story-router.decorator";
 storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
     .addDecorator(storyRouterDecorator())
     .addDecorator(apolloStoryDecorator())
-    .add("RouterTabs with forceRender", () => {
+    .add("RouterTabs with Form and forceRender", () => {
         const location = useLocation();
 
         return (
@@ -100,7 +100,7 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
             </div>
         );
     })
-    .add("RouterTabs without forceRender", () => {
+    .add("RouterTabs with Form without forceRender", () => {
         const location = useLocation();
 
         return (
