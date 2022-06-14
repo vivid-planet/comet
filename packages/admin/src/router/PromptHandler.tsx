@@ -1,6 +1,6 @@
 import * as History from "history";
 import * as React from "react";
-import { Prompt } from "react-router";
+import { matchPath, Prompt, useLocation } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterContext } from "./Context";
@@ -21,9 +21,30 @@ interface SaveActions {
     [id: string]: SaveAction;
 }
 
+interface ExcludedRoutes {
+    [id: string]: string[];
+}
+
 export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, showDialog, dialogMessage, handleDialogClose }) => {
     const registeredMessages = React.useRef<IMessages>({});
     const saveActions = React.useRef<SaveActions>({});
+    const excludedRoutes = React.useRef<ExcludedRoutes>({});
+
+    const location = useLocation();
+
+    React.useEffect(() => {
+        console.log("excludedRoutes ", excludedRoutes);
+    });
+
+    const registerExcludedRoutes = (id: string, routes: string[]) => {
+        const registeredRoutes = excludedRoutes.current[id] ?? [];
+        const combinedRoutes = [...registeredRoutes, ...routes];
+        excludedRoutes.current[id] = Array.from(new Set(combinedRoutes));
+    };
+
+    const unregisterExcludedRoutes = (id: string) => {
+        delete excludedRoutes.current[id];
+    };
 
     const register = (id: string, message: (location: History.Location, action: History.Action) => string | boolean, saveAction: SaveAction) => {
         registeredMessages.current[id] = message;
@@ -66,11 +87,31 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
         }
     };
 
+    const condition = React.useMemo(() => {
+        const routes = Object.values(excludedRoutes.current).reduce((prevValue, currValue) => {
+            return [...prevValue, ...currValue];
+        }, []);
+
+        console.log("routes ", routes);
+        console.log("location.pathname ", location.pathname);
+        console.log(
+            "matches ",
+            routes.some((route) => matchPath(route, { path: location.pathname })),
+        );
+
+        // TODO: matches parent page => nav should not be possible
+        // TODO: Doesn't work on first render
+
+        return !routes.some((route) => matchPath(route, { path: location.pathname, exact: true }));
+    }, [location.pathname]);
+
     return (
         <RouterContext.Provider
             value={{
                 register,
                 unregister,
+                registerExcludedRoutes,
+                unregisterExcludedRoutes,
             }}
         >
             <RouterConfirmationDialog
@@ -79,7 +120,7 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
                 handleClose={handleClose}
                 showSaveButton={Object.keys(saveActions.current).length > 0}
             />
-            <Prompt when={true} message={promptMessage} />
+            <Prompt when={condition} message={promptMessage} />
             {children}
         </RouterContext.Provider>
     );

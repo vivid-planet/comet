@@ -4,7 +4,10 @@ import Tabs, { TabsProps } from "@material-ui/core/Tabs";
 import { withStyles } from "@material-ui/styles";
 import * as React from "react";
 import { Route, RouteComponentProps, withRouter } from "react-router-dom";
+import useConstant from "use-constant";
+import UUID from "uuid";
 
+import { RouterContext } from "../router/Context";
 import { useStackApi } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
@@ -38,6 +41,14 @@ function RouterTabsComponent({
 }: Props & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
+    const routerContext = React.useContext(RouterContext);
+    const id = useConstant<string>(() => UUID.v4());
+
+    React.useEffect(() => {
+        return () => {
+            routerContext?.unregisterExcludedRoutes(id);
+        };
+    }, []);
 
     const childrenArr = React.Children.toArray(children);
 
@@ -107,7 +118,13 @@ function RouterTabsComponent({
                 </Route>
             )}
             {React.Children.map(rearrangedChildren, (child) => {
-                return React.isValidElement<TabProps>(child) ? (
+                if (!React.isValidElement<TabProps>(child)) {
+                    return null;
+                }
+
+                routerContext?.registerExcludedRoutes(id, [deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)]);
+
+                return (
                     <Route path={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}>
                         {({ match }) => {
                             if (match && stackApi && stackSwitchApi && !foundFirstMatch) {
@@ -131,7 +148,7 @@ function RouterTabsComponent({
                             }
                         }}
                     </Route>
-                ) : null;
+                );
             })}
         </div>
     );
