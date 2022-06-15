@@ -4,6 +4,7 @@ import { MoreHoriz } from "@material-ui/icons";
 import { createStyles, withStyles } from "@material-ui/styles";
 import { Editor } from "draft-js";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 import { IFeatureConfig } from "../types";
 import ControlButton from "./ControlButton";
@@ -57,7 +58,10 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
                 ))}
                 {additionalFeatures.length > 0 && (
                     <div className={classes.buttonWrapper}>
-                        <Tooltip title="More options" placement="top">
+                        <Tooltip
+                            title={<FormattedMessage id="cometAdmin.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
+                            placement="top"
+                        >
                             <span>
                                 <ControlButton onButtonClick={handleMoreOptionsClick} disabled={globallyDisabled} icon={MoreHoriz} />
                             </span>
