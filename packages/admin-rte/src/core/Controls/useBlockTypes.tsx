@@ -7,7 +7,7 @@ import getCurrentBlock from "../utils/getCurrentBlock";
 
 interface IProps {
     editorState: EditorState;
-    setEditorState: (es: EditorState) => void;
+    setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
     supportedThings: SupportedThings[];
     blocktypeMap: IBlocktypeMap;
     editorRef: React.RefObject<Editor>;

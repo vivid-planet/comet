@@ -36,13 +36,13 @@ export interface IFeatureConfig<T extends string = string> {
     Icon?: (props: SvgIconProps) => JSX.Element;
 }
 
-type CustomInlineStyleType = "SUP" | "SUB";
+type CustomInlineStyleType = "SUP" | "SUB" | string;
 
 export type InlineStyleType = CustomInlineStyleType | DraftInlineStyleType;
 
 export interface IControlProps {
     editorState: EditorState;
-    setEditorState: (s: EditorState) => void;
+    setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
     options: IRteOptions;
     editorRef: React.RefObject<Editor>;
     disabled?: boolean;
@@ -65,4 +65,13 @@ interface ICustomBlockType_Deprecated {
  */
 export interface ICustomBlockTypeMap_Deprecated {
     [key: string]: ICustomBlockType_Deprecated;
+}
+
+export interface CustomInlineStyles {
+    [name: string]: {
+        label: React.ReactNode;
+        icon?: (props: SvgIconProps) => JSX.Element;
+        tooltipText?: React.ReactNode;
+        style: React.CSSProperties;
+    };
 }

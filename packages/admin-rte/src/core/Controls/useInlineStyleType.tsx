@@ -3,27 +3,29 @@ import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import StrikethroughSIcon from "@material-ui/icons/StrikethroughS";
 import * as detectBrowser from "detect-browser";
-import { EditorState, RichUtils } from "draft-js";
+import { Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import TextFormatSub from "../../icons/TextFormatSub";
 import TextFormatSup from "../../icons/TextFormatSup";
 import { SupportedThings } from "../Rte";
-import { IFeatureConfig, InlineStyleType } from "../types";
+import { CustomInlineStyles, IFeatureConfig, InlineStyleType } from "../types";
 
 const browser = detectBrowser.detect();
 
 interface IProps {
     editorState: EditorState;
-    setEditorState: (es: EditorState) => void;
+    setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
     supportedThings: SupportedThings[];
+    editorRef: React.RefObject<Editor>;
+    customInlineStyles?: CustomInlineStyles;
 }
 
 const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
         name: "BOLD",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.label" defaultMessage="bold" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.bold.label" defaultMessage="Bold" />,
         icon: FormatBoldIcon,
         tooltipText:
             browser?.os === "Mac OS" ? (
@@ -34,7 +36,7 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     },
     {
         name: "ITALIC",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.label" defaultMessage="italic" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.italic.label" defaultMessage="Italic" />,
         icon: FormatItalicIcon,
         tooltipText:
             browser?.os === "Mac OS" ? (
@@ -56,22 +58,22 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     },
     {
         name: "STRIKETHROUGH",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.strikethrough.label" defaultMessage="strikethrough" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.strikethrough.label" defaultMessage="Strikethrough" />,
         icon: StrikethroughSIcon,
     },
     {
         name: "SUP",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.super.label" defaultMessage="super" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.super.label" defaultMessage="Superscript" />,
         icon: TextFormatSup,
     },
     {
         name: "SUB",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.sub.label" defaultMessage="sub" />,
+        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.sub.label" defaultMessage="Subscript" />,
         icon: TextFormatSub,
     },
 ];
 
-export default function useInlineStyleType({ editorState, setEditorState, supportedThings }: IProps) {
+export default function useInlineStyleType({ editorState, setEditorState, supportedThings, editorRef, customInlineStyles }: IProps) {
     // can check if inlineStyleType is supported by the editor
     const supports = React.useCallback(
         (inlineStyle: InlineStyleType) => {
@@ -106,21 +108,31 @@ export default function useInlineStyleType({ editorState, setEditorState, suppor
     const handleInlineStyleButtonClick = React.useCallback(
         (draftInlineStyleType: InlineStyleType, e: React.MouseEvent) => {
             e.preventDefault();
-            setEditorState(RichUtils.toggleInlineStyle(editorState, draftInlineStyleType));
+            setEditorState((previousEditorState) => RichUtils.toggleInlineStyle(previousEditorState, draftInlineStyleType));
         },
-        [setEditorState, editorState],
+        [setEditorState],
     );
 
     const features: Array<IFeatureConfig<InlineStyleType>> = React.useMemo(
-        () =>
-            defaultFeatures
+        () => [
+            ...defaultFeatures
                 .filter((c) => supports(c.name))
                 .map((c) => ({
                     ...c,
                     selected: inlineStyleActive(c.name),
                     onButtonClick: handleInlineStyleButtonClick.bind(null, c.name),
                 })),
-        [supports, inlineStyleActive, handleInlineStyleButtonClick],
+            ...(customInlineStyles
+                ? Object.entries(customInlineStyles).map(([name, { label, icon }]) => ({
+                      name,
+                      label,
+                      icon,
+                      selected: inlineStyleActive(name),
+                      onButtonClick: handleInlineStyleButtonClick.bind(null, name),
+                  }))
+                : []),
+        ],
+        [supports, inlineStyleActive, handleInlineStyleButtonClick, customInlineStyles],
     );
 
     return {

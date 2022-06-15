@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [Next]
+
+## Highlights
+
+-   [RTE] Add custom inline styles (see story "Custom inline styles")
+
 # [2.1.0]
 
 ## Highlights:

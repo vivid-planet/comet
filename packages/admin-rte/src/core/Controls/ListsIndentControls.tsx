@@ -9,10 +9,11 @@ export default function ListsIndentControls({
     setEditorState,
     options: { supports: supportedThings, listLevelMax },
     disabled,
+    editorRef,
 }: IControlProps) {
     const { features } = useListIndent({ editorState, setEditorState, supportedThings, listLevelMax });
     if (features.length < 1) {
         return null;
     }
-    return <FeaturesButtonGroup features={features} disabled={disabled} />;
+    return <FeaturesButtonGroup features={features} disabled={disabled} editorRef={editorRef} />;
 }
