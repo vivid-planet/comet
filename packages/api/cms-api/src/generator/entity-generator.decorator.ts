@@ -1,8 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface EntityGeneratorOptions {
     targetDirectory: string;
-    plural: string; //TODO auto-generate from entity
-    singular: string; //TODO auto-generate from entity
 }
 
 export function EntityGenerator(options: EntityGeneratorOptions): ClassDecorator {

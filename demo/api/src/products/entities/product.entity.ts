@@ -7,7 +7,7 @@ import { v4 } from "uuid";
     implements: () => [DocumentInterface],
 })
 @Entity()
-@EntityGenerator({ targetDirectory: `${__dirname}/../generated/`, plural: "products", singular: "product" })
+@EntityGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
