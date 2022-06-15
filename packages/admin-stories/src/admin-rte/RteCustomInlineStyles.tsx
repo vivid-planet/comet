@@ -13,8 +13,7 @@ const rteOptions: IRteOptions = {
             label: "Highlight!",
             icon: Highlight,
             style: {
-                color: "blue",
-                textDecoration: "underline",
+                backgroundColor: "yellow",
             },
         },
     },
