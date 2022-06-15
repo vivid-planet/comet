@@ -37,70 +37,12 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
         return null;
     }
 
-    if (maxVisible !== undefined) {
-        const visibleFeatures = features.slice(0, maxVisible);
-        const additionalFeatures = features.slice(maxVisible);
-
-        return (
-            <div className={classes.root}>
-                {visibleFeatures.map(({ name, onButtonClick, tooltipText, disabled, ...rest }) => (
-                    <div className={classes.buttonWrapper} key={name}>
-                        {tooltipText ? (
-                            <Tooltip title={tooltipText} placement="top">
-                                <span>
-                                    <ControlButton onButtonClick={onButtonClick} disabled={globallyDisabled || disabled} {...rest} />
-                                </span>
-                            </Tooltip>
-                        ) : (
-                            <ControlButton onButtonClick={onButtonClick} disabled={globallyDisabled || disabled} {...rest} />
-                        )}
-                    </div>
-                ))}
-                {additionalFeatures.length > 0 && (
-                    <div className={classes.buttonWrapper}>
-                        <Tooltip
-                            title={<FormattedMessage id="cometAdmin.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
-                            placement="top"
-                        >
-                            <span>
-                                <ControlButton onButtonClick={handleMoreOptionsClick} disabled={globallyDisabled} icon={MoreHoriz} />
-                            </span>
-                        </Tooltip>
-                    </div>
-                )}
-                <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleMenuClose}>
-                    {additionalFeatures.map(({ name, onButtonClick, disabled, selected, label, icon: Icon }) => (
-                        <MenuItem
-                            key={name}
-                            onMouseDown={(event) => {
-                                handleMenuClose();
-
-                                // See https://reactjs.org/docs/legacy-event-pooling.html for more information.
-                                event.persist();
-                                setTimeout(() => {
-                                    onButtonClick?.(event);
-                                }, 0);
-                            }}
-                            disabled={globallyDisabled || disabled}
-                            selected={selected}
-                            className={classes.listItem}
-                        >
-                            {label}
-                            {Icon && (
-                                <ListItemIcon className={classes.listItemIcon}>
-                                    <Icon />
-                                </ListItemIcon>
-                            )}
-                        </MenuItem>
-                    ))}
-                </Menu>
-            </div>
-        );
-    }
+    const visibleFeatures = maxVisible === undefined ? features : features.slice(0, maxVisible);
+    const additionalFeatures = maxVisible === undefined ? [] : features.slice(maxVisible);
 
     return (
         <div className={classes.root}>
-            {features.map(({ name, onButtonClick, tooltipText, disabled, ...rest }) => (
+            {visibleFeatures.map(({ name, onButtonClick, tooltipText, disabled, ...rest }) => (
                 <div className={classes.buttonWrapper} key={name}>
                     {tooltipText ? (
                         <Tooltip title={tooltipText} placement="top">
@@ -113,6 +55,46 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
                     )}
                 </div>
             ))}
+            {additionalFeatures.length > 0 && (
+                <>
+                    <div className={classes.buttonWrapper}>
+                        <Tooltip
+                            title={<FormattedMessage id="cometAdmin.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
+                            placement="top"
+                        >
+                            <span>
+                                <ControlButton onButtonClick={handleMoreOptionsClick} disabled={globallyDisabled} icon={MoreHoriz} />
+                            </span>
+                        </Tooltip>
+                    </div>
+                    <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleMenuClose}>
+                        {additionalFeatures.map(({ name, onButtonClick, disabled, selected, label, icon: Icon }) => (
+                            <MenuItem
+                                key={name}
+                                onMouseDown={(event) => {
+                                    handleMenuClose();
+
+                                    // See https://reactjs.org/docs/legacy-event-pooling.html for more information.
+                                    event.persist();
+                                    setTimeout(() => {
+                                        onButtonClick?.(event);
+                                    }, 0);
+                                }}
+                                disabled={globallyDisabled || disabled}
+                                selected={selected}
+                                className={classes.listItem}
+                            >
+                                {label}
+                                {Icon && (
+                                    <ListItemIcon className={classes.listItemIcon}>
+                                        <Icon />
+                                    </ListItemIcon>
+                                )}
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </>
+            )}
         </div>
     );
 }
