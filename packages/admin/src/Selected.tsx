@@ -3,19 +3,19 @@ import { Box, Card, CircularProgress, Typography } from "@material-ui/core";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 
-interface IProps {
+interface IProps<Data extends { id: string | number } = { id: string | number }> {
     selectionMode?: "edit" | "add";
     selectedId?: string;
-    rows?: Array<{ id: string | number }>;
+    rows?: Array<Data>;
     query?: DocumentNode;
     dataAccessor?: string;
-    children: (data: any, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
+    children: (data: Data | undefined, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
     components?: {
         error?: React.ComponentType<{ error: ApolloError }>;
     };
 }
 
-const SelectEdit = (props: IProps) => {
+const SelectEdit = <Data extends { id: string | number }>(props: IProps<Data>) => {
     const queryResult = useQuery(props.query!, { variables: { id: props.selectedId } });
     if (queryResult.error) {
         const ErrorComponent = props.components?.error;
@@ -42,7 +42,7 @@ const SelectEdit = (props: IProps) => {
     return <>{props.children(queryResult.data[props.dataAccessor], { selectionMode: "edit" })}</>;
 };
 
-export function Selected(props: IProps) {
+export function Selected<Data extends { id: string | number }>(props: IProps<Data>) {
     let row;
     if (props.rows) {
         row = props.rows.find((i) => String(i.id) === String(props.selectedId)); // compare as strings as selectedId might come from url
