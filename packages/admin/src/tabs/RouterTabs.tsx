@@ -3,7 +3,7 @@ import MuiTab, { TabProps as MuiTabProps } from "@material-ui/core/Tab";
 import Tabs, { TabsProps } from "@material-ui/core/Tabs";
 import { withStyles } from "@material-ui/styles";
 import * as React from "react";
-import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
+import { Route, RouteComponentProps, withRouter } from "react-router-dom";
 
 import { useStackApi } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
@@ -79,6 +79,12 @@ function RouterTabsComponent({
         shouldShowTabBar = ownSwitchIndex === stackApi.switches.length - (nextSwitchShowsInitialPage ? 2 : 1);
     }
 
+    // used for only rendering the first matching child
+    // note: React Router's Switch can't be used because it
+    // prevents the rendering of more than one child
+    // however we need to render all children if forceRender is true
+    let foundFirstMatch = false;
+
     return (
         <div className={classes.root}>
             {shouldShowTabBar && (
@@ -100,33 +106,33 @@ function RouterTabsComponent({
                     }}
                 </Route>
             )}
-            <Switch>
-                {React.Children.map(rearrangedChildren, (child) => {
-                    return React.isValidElement<TabProps>(child) ? (
-                        <Route path={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}>
-                            {({ match }) => {
-                                if (match && stackApi && stackSwitchApi) {
-                                    return (
-                                        <StackBreadcrumb
-                                            url={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}
-                                            title={child.props.label}
-                                            invisible={true}
-                                        >
-                                            <div className={classes.content}>{child.props.children}</div>
-                                        </StackBreadcrumb>
-                                    );
-                                } else if (match) {
-                                    return <div className={classes.content}>{child.props.children}</div>;
-                                } else if (!match && child.props.forceRender) {
-                                    return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
-                                } else {
-                                    return null;
-                                }
-                            }}
-                        </Route>
-                    ) : null;
-                })}
-            </Switch>
+            {React.Children.map(rearrangedChildren, (child) => {
+                return React.isValidElement<TabProps>(child) ? (
+                    <Route path={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}>
+                        {({ match }) => {
+                            if (match && stackApi && stackSwitchApi && !foundFirstMatch) {
+                                foundFirstMatch = true;
+                                return (
+                                    <StackBreadcrumb
+                                        url={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}
+                                        title={child.props.label}
+                                        invisible={true}
+                                    >
+                                        <div className={classes.content}>{child.props.children}</div>
+                                    </StackBreadcrumb>
+                                );
+                            } else if (match && !foundFirstMatch) {
+                                foundFirstMatch = true;
+                                return <div className={classes.content}>{child.props.children}</div>;
+                            } else if (child.props.forceRender) {
+                                return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
+                            } else {
+                                return null;
+                            }
+                        }}
+                    </Route>
+                ) : null;
+            })}
         </div>
     );
 }
