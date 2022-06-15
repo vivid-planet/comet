@@ -1,10 +1,11 @@
 import { ClearInputAdornment, InputWithPopper, InputWithPopperProps } from "@comet/admin";
 import { ComponentsOverrides, ListItemText, MenuItem, MenuList, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
+import { format } from "date-fns";
 import * as React from "react";
 import { FormatDateOptions, FormattedTime, useIntl } from "react-intl";
 
-import { getClosestDateToNow, getDateFromTimeValue, getDateRangeListByMinuteStep, getTimeValueFromDate } from "./helpers/timePickerHelpers";
+import { getClosestDateToNow, getDateFromTimeValue, getDateRangeListByMinuteStep } from "./helpers/timePickerHelpers";
 import { styles, TimePickerClassKey } from "./TimePicker.styles";
 
 export interface TimePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange"> {
@@ -67,7 +68,7 @@ function TimePicker({
             {(closePopper) => (
                 <MenuList>
                     {timeOptions.map((timeOptionValue, index) => {
-                        const selected = (dateValue && getTimeValueFromDate(dateValue)) === getTimeValueFromDate(timeOptionValue);
+                        const selected = (dateValue && format(dateValue, "HH:mm")) === format(timeOptionValue, "HH:mm");
                         const isFocusedItem = selected || (!dateValue && closestDateToNow === timeOptionValue);
 
                         return (
@@ -76,7 +77,7 @@ function TimePicker({
                                 selected={selected}
                                 ref={isFocusedItem ? focusedItemRef : null}
                                 onClick={() => {
-                                    onChange?.(getTimeValueFromDate(timeOptionValue));
+                                    onChange?.(format(timeOptionValue, "HH:mm"));
                                     closePopper(true);
                                 }}
                             >

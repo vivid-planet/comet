@@ -1,3 +1,5 @@
+import { eachMinuteOfInterval } from "date-fns";
+
 const today = new Date();
 
 export const getDateRangeListByMinuteStep = (startTimeValue: string, endTimeValue: string, minuteStep: number): Date[] => {
@@ -8,24 +10,7 @@ export const getDateRangeListByMinuteStep = (startTimeValue: string, endTimeValu
         throw new Error("End date must be bigger than start date.");
     }
 
-    const dateRangeList: Date[] = [];
-    const endTime = endDate.getTime();
-    let time = startDate.getTime();
-
-    while (time <= endTime) {
-        dateRangeList.push(new Date(time));
-        time += minuteStep * 60 * 1000;
-    }
-
-    return dateRangeList;
-};
-
-const leadingZero = (val: number) => {
-    return val < 10 ? `0${val}` : val;
-};
-
-export const getTimeValueFromDate = (date: Date): string => {
-    return `${leadingZero(date.getHours())}:${leadingZero(date.getMinutes())}`;
+    return eachMinuteOfInterval({ start: startDate, end: endDate }, { step: minuteStep });
 };
 
 export const timeValueIsValid = (timeValue: string): boolean => {
