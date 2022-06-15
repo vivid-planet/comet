@@ -10,6 +10,7 @@ import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "./DatePickerNavigation";
 import { DateRangePickerClassKey, styles } from "./DateRangePicker.styles";
+import { defaultMaxDate, defaultMinDate } from "./helpers/datePickerHelpers";
 
 type DateRangePickerComponentsProps = InputWithPopperProps["componentsProps"] & {
     dateRange?: Partial<Omit<ReactDateRangeProps, "onChange" | "ranges">>;
@@ -69,12 +70,6 @@ const getRangeFromValue = (value: undefined | DateRange): Range => {
         endDate: new Date(),
     };
 };
-
-const defaultMinDate = new Date();
-defaultMinDate.setFullYear(defaultMinDate.getFullYear() - 15);
-
-const defaultMaxDate = new Date();
-defaultMaxDate.setFullYear(defaultMaxDate.getFullYear() + 15);
 
 function DateRangePicker({
     classes,

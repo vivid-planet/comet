@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
-import { Box, Button, buttonClasses, ComponentsOverrides, IconButton, Menu, MenuItem, Theme } from "@mui/material";
+import { Box, Button, buttonClasses, ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
@@ -37,7 +37,12 @@ const DatePickerNavigation = ({ classes, focusedDate, changeShownDate, minDate, 
                 >
                     {intl.formatDate(focusedDate, { month: "long" })}
                 </Button>
-                <Menu open={showMonthSelect} onClose={() => setShowMonthSelect(false)} anchorEl={monthSelectRef.current}>
+                <Menu
+                    className={clsx(classes.selectMenu, classes.selectMonthMenu)}
+                    open={showMonthSelect}
+                    onClose={() => setShowMonthSelect(false)}
+                    anchorEl={monthSelectRef.current}
+                >
                     {new Array(12).fill(null).map((_, month: number) => (
                         <MenuItem
                             selected={month === focusedDate.getMonth()}
@@ -61,7 +66,12 @@ const DatePickerNavigation = ({ classes, focusedDate, changeShownDate, minDate, 
                 >
                     {focusedDate.getFullYear()}
                 </Button>
-                <Menu open={showYearSelect} onClose={() => setShowYearSelect(false)} anchorEl={yearSelectRef.current}>
+                <Menu
+                    className={clsx(classes.selectMenu, classes.selectYearMenu)}
+                    open={showYearSelect}
+                    onClose={() => setShowYearSelect(false)}
+                    anchorEl={yearSelectRef.current}
+                >
                     {new Array(maxDate.getFullYear() - minDate.getFullYear() + 1).fill(maxDate.getFullYear()).map((val, i) => {
                         const year = val - i;
                         return (
@@ -87,7 +97,14 @@ const DatePickerNavigation = ({ classes, focusedDate, changeShownDate, minDate, 
     );
 };
 
-export type DatePickerNavigationClassKey = "root" | "selectButton" | "selectMonthButton" | "selectYearButton";
+export type DatePickerNavigationClassKey =
+    | "root"
+    | "selectButton"
+    | "selectMonthButton"
+    | "selectYearButton"
+    | "selectMenu"
+    | "selectMonthMenu"
+    | "selectYearMenu";
 
 export const styles = ({ palette, spacing, typography }: Theme) => {
     return createStyles<DatePickerNavigationClassKey, DatePickerNavigationProps>({
@@ -115,6 +132,14 @@ export const styles = ({ palette, spacing, typography }: Theme) => {
         },
         selectMonthButton: {},
         selectYearButton: {},
+        selectMenu: {
+            [`& .${menuClasses.paper}`]: {
+                minWidth: 110,
+                maxHeight: 400,
+            },
+        },
+        selectMonthMenu: {},
+        selectYearMenu: {},
     });
 };
 

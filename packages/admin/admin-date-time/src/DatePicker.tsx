@@ -10,6 +10,7 @@ import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerClassKey, styles } from "./DatePicker.styles";
 import { DatePickerNavigation } from "./DatePickerNavigation";
+import { defaultMaxDate, defaultMinDate } from "./helpers/datePickerHelpers";
 
 type DatePickerComponentsProps = InputWithPopperProps["componentsProps"] & {
     calendar?: Partial<Omit<CalendarProps, "onChange" | "date">>;
@@ -25,12 +26,6 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
     maxDate?: Date;
     minDate?: Date;
 }
-
-const defaultMinDate = new Date();
-defaultMinDate.setFullYear(defaultMinDate.getFullYear() - 15);
-
-const defaultMaxDate = new Date();
-defaultMaxDate.setFullYear(defaultMaxDate.getFullYear() + 15);
 
 function DatePicker({
     classes,
