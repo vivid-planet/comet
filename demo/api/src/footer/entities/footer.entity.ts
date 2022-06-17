@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { DocumentInterface, EntityGenerator, RootBlockType } from "@comet/cms-api";
+import { CrudSingleGenerator, DocumentInterface, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Embedded, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
@@ -13,7 +13,7 @@ import { FooterContentScope } from "./footer-content-scope.entity";
     implements: () => [DocumentInterface],
 })
 @RootBlockEntity()
-@EntityGenerator({ targetDirectory: `${__dirname}/../generated/` })
+@CrudSingleGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class Footer extends BaseEntity<Footer, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 

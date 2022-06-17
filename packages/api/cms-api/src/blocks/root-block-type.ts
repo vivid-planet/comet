@@ -2,7 +2,7 @@ import { Block, BlockDataInterface, transformToSave, transformToSaveIndex, Trave
 import { Type } from "@mikro-orm/core";
 
 export class RootBlockType extends Type<BlockDataInterface | null, TraversableTransformResponse | null> {
-    private block: Block;
+    public block: Block;
 
     constructor(block: Block) {
         super();

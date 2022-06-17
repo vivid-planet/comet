@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EntityMetadata } from "@mikro-orm/core";
-import { promises as fs } from "fs";
 import * as path from "path";
-import * as prettier from "prettier";
 
-import { EntityGeneratorOptions } from "./entity-generator.decorator";
+import { CrudGeneratorOptions } from "./crud-generator.decorator";
+import { writeCrudInput as writeCrudInput } from "./generate-crud-input";
+import { writeGenerated } from "./utils/write-generated";
 
-export async function generateCrud(metadata: EntityMetadata<any>): Promise<void> {
-    const generatorOptions = Reflect.getMetadata(`data:entityGeneratorOptions`, metadata.class) as EntityGeneratorOptions;
-    if (!generatorOptions) return; //no decorator used -> skip
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<void> {
     const classNameSingular = metadata.className;
     const classNamePlural = !metadata.className.endsWith("s") ? `${metadata.className}s` : metadata.className;
     const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
@@ -17,68 +14,14 @@ export async function generateCrud(metadata: EntityMetadata<any>): Promise<void>
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
 
-    async function writePettier(path: string, contents: string): Promise<void> {
-        const prettierConfig = await prettier.resolveConfig(process.cwd());
-        await fs.writeFile(path, prettier.format(contents, { ...prettierConfig, parser: "typescript" }));
-        console.log(`generated ${path}`);
-    }
-
-    async function writeInput(): Promise<void> {
-        let fieldsOut = "";
-        const classValidatorImports = new Set<string>();
-        const cometCmsImports = new Set<string>();
-        for (const prop of metadata.props) {
-            const decorators = [] as Array<string>;
-            if (!prop.nullable) {
-                decorators.push("@IsNotEmpty()");
-                classValidatorImports.add("IsNotEmpty");
-            }
-            if (prop.name === "id" || prop.name == "createdAt" || prop.name == "updatedAt") {
-                //skip those (TODO find a non-magic solution?)
-                continue;
-            } else if (prop.enum) {
-                //TODO add support for enum
-                continue;
-            } else if (prop.type === "string") {
-                decorators.push("@IsString()");
-                classValidatorImports.add("IsString");
-                if (prop.name.startsWith("scope_")) {
-                    //TODO add support for scope
-                    continue;
-                } else if (prop.name === "slug") {
-                    //TODO find a non-magic solution
-                    decorators.push("@IsSlug()");
-                    cometCmsImports.add("IsSlug");
-                }
-            } else {
-                //unsupported type TODO support more
-                continue;
-            }
-            fieldsOut += `@Field()
-        ${decorators.join("\n")}
-        ${prop.name}: ${prop.type};
-        
-        `;
-        }
-        const inputOut = `import { Field, InputType } from "@nestjs/graphql";
-    import { ${Array.from(classValidatorImports.values()).join(", ")} } from "class-validator";
-    import { ${Array.from(cometCmsImports.values()).join(", ")} } from "@comet/cms-api";
-    
-    @InputType()
-    export class ${metadata.className}Input {
-        ${fieldsOut}
-    }
-    `;
-
-        await fs.mkdir(`${generatorOptions.targetDirectory}/dto`, { recursive: true });
-        await writePettier(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.input.ts`, inputOut);
-    }
-
     async function writeCrudResolver(): Promise<void> {
         const crudQueryProps = metadata.props.filter((prop) => Reflect.hasMetadata(`data:crudQuery`, metadata.class, prop.name));
         const hasQueryArg = crudQueryProps.length > 0;
         const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
         const hasVisibleProp = metadata.props.some((prop) => prop.name == "visible");
+        const scopeProp = metadata.props.find((prop) => prop.name == "scope");
+        if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
+        const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
         const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
         const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
@@ -90,8 +33,7 @@ export async function generateCrud(metadata: EntityMetadata<any>): Promise<void>
     @ObjectType()
     export class Paginated${classNamePlural} extends PaginatedResponseFactory.create(${metadata.className}) {}
     `;
-        await fs.mkdir(`${generatorOptions.targetDirectory}/dto`, { recursive: true });
-        await writePettier(`${generatorOptions.targetDirectory}/dto/paginated-${fileNamePlural}.ts`, paginatedOut);
+        await writeGenerated(`${generatorOptions.targetDirectory}/dto/paginated-${fileNamePlural}.ts`, paginatedOut);
 
         const argsOut = `import { ArgsType, Field, IntersectionType } from "@nestjs/graphql";
     import { IsOptional, IsString } from "class-validator";
@@ -109,25 +51,22 @@ export async function generateCrud(metadata: EntityMetadata<any>): Promise<void>
         `
                 : ""
         }
-        
     }    
     `;
-        await writePettier(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
+        await writeGenerated(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
 
-        const serviceOut = `import { FilterQuery } from "@mikro-orm/core";
+        const serviceOut = `import { ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
     import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     
     @Injectable()
-    export class ${classNamePlural}Service {
-        constructor(@InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>) {}
-    
+    export class ${classNamePlural}Service {    
         ${
             hasQueryArg
                 ? `
-        getFindCondition(query: string | undefined): FilterQuery<${metadata.className}> {
+        getFindCondition(query: string | undefined): ObjectQuery<${metadata.className}> {
             if (query) {
                 return {
                     $or: [
@@ -145,15 +84,22 @@ export async function generateCrud(metadata: EntityMetadata<any>): Promise<void>
         }
     }
     `;
-        await writePettier(`${generatorOptions.targetDirectory}/${fileNamePlural}.service.ts`, serviceOut);
+        await writeGenerated(`${generatorOptions.targetDirectory}/${fileNamePlural}.service.ts`, serviceOut);
 
         const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
     import { FindOptions } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-    import { SortDirection } from "@comet/cms-api";
+    import { SortDirection, validateNotModified } from "@comet/cms-api";
     
     import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
+    ${
+        scopeProp
+            ? `import { ${scopeProp.targetMeta!.className} } from "${path
+                  .relative(generatorOptions.targetDirectory, scopeProp.targetMeta!.path)
+                  .replace(/\.ts$/, "")}";`
+            : ""
+    }
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
     import { ${classNameSingular}Input } from "./dto/${fileNameSingular}.input";
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
@@ -187,10 +133,12 @@ export async function generateCrud(metadata: EntityMetadata<any>): Promise<void>
         }
     
         @Query(() => [${metadata.className}])
-        async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(@Args() { ${
-            hasQueryArg ? `query, ` : ""
-        }offset, limit, sortColumnName, sortDirection }: ${argsClassName}): Promise<Paginated${classNamePlural}> {
+        async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
+            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
+            @Args() { ${hasQueryArg ? `query, ` : ""}offset, limit, sortColumnName, sortDirection }: ${argsClassName}
+        ): Promise<Paginated${classNamePlural}> {
             const where = ${hasQueryArg ? `this.${instanceNamePlural}Service.getFindCondition(query);` : "{}"}
+            ${scopeProp ? `where.scope = scope;` : ""}
             const options: FindOptions<${metadata.className}> = { offset, limit };
     
             if (sortColumnName) {
@@ -202,12 +150,15 @@ export async function generateCrud(metadata: EntityMetadata<any>): Promise<void>
         }
     
         @Mutation(() => ${metadata.className})
-        async create${classNameSingular}(@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input): Promise<${
-            metadata.className
-        }> {
+        async create${classNameSingular}(
+            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
+            @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
+        ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = new ${metadata.className}();
             ${instanceNameSingular}.assign({
                 ...input,
+                ${hasVisibleProp ? `visible: false,` : ""}
+                ${scopeProp ? `scope,` : ""}
             });
     
             await this.repository.persistAndFlush(${instanceNameSingular});
@@ -215,10 +166,19 @@ export async function generateCrud(metadata: EntityMetadata<any>): Promise<void>
         }
     
         @Mutation(() => ${metadata.className})
-        async update${classNameSingular}(@Args("id", { type: () => ID }) id: string, @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input): Promise<${
-            metadata.className
-        }> {
+        async update${classNameSingular}(
+            @Args("id", { type: () => ID }) id: string,
+            @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input,
+            ${hasUpdatedAt ? `@Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,` : ""}
+        ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
+            ${
+                hasUpdatedAt
+                    ? `if (lastUpdatedAt) {
+                validateNotModified(${instanceNameSingular}, lastUpdatedAt);
+            }`
+                    : ""
+            }
             ${instanceNameSingular}.assign({
                 ...input,
             });
@@ -258,10 +218,9 @@ export async function generateCrud(metadata: EntityMetadata<any>): Promise<void>
     }
     `;
 
-        await fs.mkdir(generatorOptions.targetDirectory, { recursive: true });
-        await writePettier(`${generatorOptions.targetDirectory}/${fileNameSingular}.crud.resolver.ts`, resolverOut);
+        await writeGenerated(`${generatorOptions.targetDirectory}/${fileNameSingular}.crud.resolver.ts`, resolverOut);
     }
 
-    await writeInput();
+    await writeCrudInput(generatorOptions, metadata);
     await writeCrudResolver();
 }

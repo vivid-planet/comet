@@ -3,10 +3,10 @@ import { Module } from "@nestjs/common";
 
 import { Footer } from "./entities/footer.entity";
 import { FooterContentScope } from "./entities/footer-content-scope.entity";
-import { FootersResolver } from "./footer.resolver";
+import { FooterCrudResolver } from "./generated/footer.crud.resolver";
 
 @Module({
     imports: [MikroOrmModule.forFeature([Footer, FooterContentScope])],
-    providers: [FootersResolver],
+    providers: [FooterCrudResolver],
 })
 export class FooterModule {}

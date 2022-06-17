@@ -2,11 +2,11 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { News, NewsContentScope } from "@src/news/entities/news.entity";
 
-import { NewsResolver } from "./news.resolver";
+import { NewsCrudResolver } from "./generated/news.crud.resolver";
 
 @Module({
     imports: [MikroOrmModule.forFeature([News, NewsContentScope])],
-    providers: [NewsResolver],
+    providers: [NewsCrudResolver],
     exports: [],
 })
 export class NewsModule {}

@@ -1,4 +1,4 @@
-import { CrudQuery, DocumentInterface, EntityGenerator } from "@comet/cms-api";
+import { CrudGenerator, CrudQuery, DocumentInterface } from "@comet/cms-api";
 import { BaseEntity, Entity, PrimaryKey, Property, types } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 } from "uuid";
@@ -7,7 +7,7 @@ import { v4 } from "uuid";
     implements: () => [DocumentInterface],
 })
 @Entity()
-@EntityGenerator({ targetDirectory: `${__dirname}/../generated/` })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)

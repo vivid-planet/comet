@@ -1,7 +1,9 @@
 import { ConfigurationLoader, MikroORM, Options, Utils } from "@mikro-orm/core";
 import { Command } from "commander";
 
+import { CrudGeneratorOptions, CrudSingleGeneratorOptions } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
+import { generateCrudSingle } from "./generate-crud-single";
 
 const generate = new Command("generate").action(async (options) => {
     const orm = await getORM(false);
@@ -10,7 +12,19 @@ const generate = new Command("generate").action(async (options) => {
 
     for (const name in entities) {
         const entity = entities[name];
-        await generateCrud(entity);
+        {
+            const generatorOptions = Reflect.getMetadata(`data:crudGeneratorOptions`, entity.class) as CrudGeneratorOptions | undefined;
+            if (generatorOptions) {
+                await generateCrud(generatorOptions, entity);
+            }
+        }
+        {
+            const generatorOptions = Reflect.getMetadata(`data:crudSingleGeneratorOptions`, entity.class) as CrudSingleGeneratorOptions | undefined;
+            console.log(generatorOptions);
+            if (generatorOptions) {
+                await generateCrudSingle(generatorOptions, entity);
+            }
+        }
     }
 
     await orm.close(true);

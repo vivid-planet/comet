@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlockEntity } from "@comet/blocks-api";
-import { CrudQuery, DocumentInterface, EntityGenerator, RootBlockType } from "@comet/cms-api";
+import { CrudGenerator, CrudQuery, DocumentInterface, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Embeddable, Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { ImageBlock } from "@src/pages/blocks/ImageBlock";
@@ -38,7 +38,7 @@ export class NewsContentScope {
     implements: () => [DocumentInterface],
 })
 @Entity()
-@EntityGenerator({ targetDirectory: `${__dirname}/../generated/` })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
