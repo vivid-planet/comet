@@ -2,12 +2,6 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# [Next]
-
-## Highlights
-
--   [RTE] Add custom inline styles (see story "Custom inline styles")
-
 # [2.1.0]
 
 ## Highlights:
@@ -15,6 +9,7 @@ All notable changes to this project will be documented in this file. This projec
 -   Add FinalFormAutocomplete (see Story "Autocomplete / Async Select")
 -   Add useAsyncOptionsProps-Hook to allow async loading of options in FinalFormAutocomplete and FinalFormSelect
 -   Add support to pass options directly via props in FinalFormSelect (they are rendered automatically)
+-   [RTE] Add custom inline styles (see story "Custom inline styles")
 
 ## Changes
 
