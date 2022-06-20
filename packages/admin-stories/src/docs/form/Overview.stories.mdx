@@ -160,48 +160,6 @@ Thereby, you avoid a difficult variable naming process, and your code stays shor
 `}
 />
 
-#### Mutation Variables
-
-A mutation should have an `input` variable that bundles all changeable attributes.
-Attributes that can't be changed should be solitary variables (e.g., `id` or other variables used for identifying a specific resource).
-
-<Source
-    language="tsx"
-    code={dedent`
-        const updateEmployeeMutation = gql\`
-            mutation UpdateEmployee($id: ID!, $input: UpdateEmployeeInput!) {
-                updateEmployee(id: $id, input: $input) {
-                    id
-                    firstname
-                    lastname
-                }
-            }
-        \`;
-        // ...
-        const apolloClient = useApolloClient();
-        // ...
-        <FinalForm
-            mode="add"
-            onSubmit={async (values) => {
-                await apolloClient.mutate({
-                    mutation: updateEmployeeMutation,
-                    variables: {
-                        id: employeeId,
-                        input: {
-                            firstname: values.firstname,
-                            lastname: values.lastname
-                        }
-                    }
-                })
-            }}
-        >
-            <Field label="Firstname" name="firstname" component={FinalFormInput} />
-            <Field label="Lastname" name="lastname" component={FinalFormInput} />
-            <SaveButton type="submit" />
-        </FinalForm>
-`}
-/>
-
 #### Form Submission Example
 
 **Note:** You have to enter "John" and "Doe" for this example to work.
