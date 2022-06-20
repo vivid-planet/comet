@@ -22,7 +22,7 @@ import { storyRouterDecorator } from "../../../../story-router.decorator";
 storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
     .addDecorator(storyRouterDecorator())
     .addDecorator(apolloStoryDecorator())
-    .add("RouterTabs with Form and forceRender", () => {
+    .add("RouterTabs in Form with forceRender", () => {
         const location = useLocation();
 
         return (
@@ -78,14 +78,14 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                     </ToolbarActions>
                                 </Toolbar>
                                 <RouterTabs>
-                                    <RouterTab label="Form 1" path="" forceRender>
+                                    <RouterTab label="Tab 1" path="" forceRender>
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Foo" name="foo" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
                                     </RouterTab>
-                                    <RouterTab label="Form 2" path="/form2" forceRender>
+                                    <RouterTab label="Tab 2" path="/tab2" forceRender>
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Bar" name="bar" component={FinalFormInput} />
@@ -100,7 +100,8 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
             </div>
         );
     })
-    .add("RouterTabs with Form without forceRender", () => {
+    .add("RouterTabs in Form without forceRender", () => {
+        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
         const location = useLocation();
 
         return (
@@ -156,14 +157,14 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                     </ToolbarActions>
                                 </Toolbar>
                                 <RouterTabs>
-                                    <RouterTab label="Form 1" path="">
+                                    <RouterTab label="Tab 1" path="">
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Foo" name="foo" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
                                     </RouterTab>
-                                    <RouterTab label="Form 2" path="/form2">
+                                    <RouterTab label="Tab 2" path="/tab2">
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Bar" name="bar" component={FinalFormInput} />
@@ -175,6 +176,67 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                         );
                     }}
                 </FinalForm>
+            </div>
+        );
+    })
+    .add("Form in RouterTabs with forceRender", () => {
+        const location = useLocation();
+
+        return (
+            <div>
+                <p>Location: {location.pathname}</p>
+                <RouterTabs>
+                    <RouterTab label="Form" path="" forceRender>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <FinalForm
+                                    mode="add"
+                                    onSubmit={(values: any) => {
+                                        alert(JSON.stringify(values));
+                                    }}
+                                >
+                                    <Field label="Name" name="name" component={FinalFormInput} />
+                                </FinalForm>
+                            </CardContent>
+                        </Card>
+                    </RouterTab>
+                    <RouterTab label="Tab 2" path="/tab2">
+                        <Card variant="outlined">
+                            <CardContent>Tab 2</CardContent>
+                        </Card>
+                    </RouterTab>
+                </RouterTabs>
+            </div>
+        );
+    })
+    .add("Form in RouterTabs without forceRender", () => {
+        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
+        const location = useLocation();
+
+        return (
+            <div>
+                <p>Location: {location.pathname}</p>
+                <RouterTabs>
+                    <RouterTab label="Form" path="">
+                        <Card variant="outlined">
+                            <CardContent>
+                                <FinalForm
+                                    mode="add"
+                                    onSubmit={(values: any) => {
+                                        alert(JSON.stringify(values));
+                                    }}
+                                >
+                                    <Field label="Name" name="name" component={FinalFormInput} />
+                                </FinalForm>
+                            </CardContent>
+                        </Card>
+                    </RouterTab>
+                    <RouterTab label="Tab 2" path="/tab2">
+                        <Card variant="outlined">
+                            <CardContent>Tab 2</CardContent>
+                        </Card>
+                    </RouterTab>
+                </RouterTabs>
             </div>
         );
     });
