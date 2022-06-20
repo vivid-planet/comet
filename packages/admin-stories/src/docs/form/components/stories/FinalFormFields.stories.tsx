@@ -24,7 +24,7 @@ interface Option {
     label: string;
 }
 
-storiesOf("stories/form/Custom Fields", module)
+storiesOf("stories/form/FinalForm Fields", module)
     .addDecorator(apolloStoryDecorator())
     .add("FinalFormInput", () => {
         return (

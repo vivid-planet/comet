@@ -2,9 +2,9 @@ import { Meta, Story, Canvas, Source } from "@storybook/addon-docs";
 
 import dedent from "ts-dedent";
 
-<Meta title="Docs/Form/Components/Custom Fields" />
+<Meta title="Docs/Form/Components/FinalForm Fields" />
 
-# Custom Fields
+# Comet Admin FinalForm Fields
 
 Comet Admin provides a set of FinalForm compatible form fields.
 
@@ -14,7 +14,7 @@ Comet Admin provides a set of FinalForm compatible form fields.
 You can use it like the HTML input element.
 
 <Canvas>
-    <Story id="stories-form-custom-fields--finalforminput" />
+    <Story id="stories-form-finalform-fields--finalforminput" />
 </Canvas>
 
 ## FinalFormSearchTextField
@@ -24,7 +24,7 @@ You can use it for implementing a search field.
 It doesn't have any built-in search functionality.
 
 <Canvas>
-    <Story id="stories-form-custom-fields--finalformsearchtextfield" />
+    <Story id="stories-form-finalform-fields--finalformsearchtextfield" />
 </Canvas>
 
 ## FinalFormSelect
@@ -34,7 +34,7 @@ It's possible to load the options asynchronously using the `useAsyncOptionsProps
 It expects the value to be an object to be able to display the current value without having to load the async options.
 
 <Canvas>
-    <Story id="stories-form-custom-fields--finalformselect" />
+    <Story id="stories-form-finalform-fields--finalformselect" />
 </Canvas>
 
 ## FinalFormAutocomplete
@@ -43,7 +43,7 @@ It expects the value to be an object to be able to display the current value wit
 It can be used similarly to [FinalFormSelect](#finalformselect).
 
 <Canvas>
-    <Story id="stories-form-custom-fields--finalformautocomplete" />
+    <Story id="stories-form-finalform-fields--finalformautocomplete" />
 </Canvas>
 
 ## Select
@@ -53,7 +53,7 @@ It's not FinalForm compatible.
 You can use it if you want to add a select outside a FinalForm.
 
 <Canvas>
-    <Story id="stories-form-custom-fields--select" />
+    <Story id="stories-form-finalform-fields--select" />
 </Canvas>
 
 ## FinalFormCheckbox
@@ -62,7 +62,7 @@ You can use it if you want to add a select outside a FinalForm.
 It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/api/form-control-label/#formcontrollabel-api).
 
 <Canvas>
-    <Story id="stories-form-custom-fields--finalformcheckbox" />
+    <Story id="stories-form-finalform-fields--finalformcheckbox" />
 </Canvas>
 
 ## FinalFormSwitch
@@ -71,7 +71,7 @@ It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/a
 It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/api/form-control-label/#formcontrollabel-api).
 
 <Canvas>
-    <Story id="stories-form-custom-fields--finalformswitch" />
+    <Story id="stories-form-finalform-fields--finalformswitch" />
 </Canvas>
 
 ## FinalFormRadio
@@ -83,7 +83,7 @@ Each radio option must be a separate `Field`.
 All the Fields should be wrapped in a `FieldContainer`.
 
 <Canvas>
-    <Story id="stories-form-custom-fields--finalformradio" />
+    <Story id="stories-form-finalform-fields--finalformradio" />
 </Canvas>
 
 ## FinalFormRangeInput
@@ -93,5 +93,5 @@ It consists of two text input fields and a slider.
 This range input can, for example, be used for filtering products by price.
 
 <Canvas>
-    <Story id="stories-form-custom-fields--finalformrangeinput" />
+    <Story id="stories-form-finalform-fields--finalformrangeinput" />
 </Canvas>
