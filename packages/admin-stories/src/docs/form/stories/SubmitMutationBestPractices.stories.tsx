@@ -43,7 +43,7 @@ interface InnerFormProps {
     id: number;
 }
 
-storiesOf("stories/form/FinalForm", module).add("Submit Mutation Best Practices", () => {
+storiesOf("stories/form/Submit Mutation Best Practices", module).add("Submit Mutation Best Practices", () => {
     const InnerForm: React.VoidFunctionComponent<InnerFormProps> = ({ id }) => {
         const client = useApolloClient();
 
