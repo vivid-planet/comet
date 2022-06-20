@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { readFile, writeFile } from "fs/promises";
+import { format, resolveConfig } from "prettier";
 
 type BlockMetaField =
     | {
@@ -123,6 +124,9 @@ const generateBlockTypes = new Command("generate-block-types")
                 content += "}\n";
             });
         }
+
+        const prettierOptions = await resolveConfig(process.cwd());
+        content = format(content, { ...prettierOptions, parser: "typescript" });
 
         await writeFile(`./src/blocks.generated.ts`, content);
     });

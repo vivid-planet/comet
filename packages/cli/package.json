@@ -16,7 +16,8 @@
         "directory": "packages/cli"
     },
     "dependencies": {
-        "commander": "^9.2.0"
+        "commander": "^9.2.0",
+        "prettier": "^2.7.1"
     },
     "devDependencies": {
         "@comet/eslint-config": "^2.0.0",
