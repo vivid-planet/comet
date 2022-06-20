@@ -41,7 +41,34 @@ We recommend abiding by the following best practices considering form submission
 
 #### Location of GraphQL Mutations
 
-You should define form-related mutations in an adjacent file of the same name with the suffix `.gql.ts`.
+You should define form-related mutations at the top of the file that contains the form.
+
+<Source
+    language="tsx"
+    code={dedent`
+        // employees/EmployeeForm.tsx
+        const createEmployeeMutation = gql\`
+            mutation CreateEmployee($input: CreateEmployeeInput!) {
+                createEmployee(input: $input) {
+                    id
+                    name
+                }
+            }
+        \`;
+        // ...
+        <FinalForm
+            mode="add"
+            onSubmit={(values) => {
+                // ...
+            }}
+        >
+            <Field label="Name" name="name" component={FinalFormInput} />
+            <SaveButton type="submit" />
+        </FinalForm>
+`}
+/>
+
+If the form or the mutation is exceptionally long or complex, you can alternatively move the GraphQL definition to an adjacent file of the same name with the suffix `.gql.ts`.
 For example, if your form is located in the file `employees/EmployeeForm.tsx`, the mutation should be defined in `employees/EmployeeForm.gql.ts`.
 
 <Source
@@ -73,33 +100,6 @@ For example, if your form is located in the file `employees/EmployeeForm.tsx`, t
             }
         \`;
   `}
-/>
-
-If the form is short and simple, you can also define the mutation at the top of the same file.
-
-<Source
-    language="tsx"
-    code={dedent`
-        // employees/EmployeeForm.tsx
-        const createEmployeeMutation = gql\`
-            mutation CreateEmployee($input: CreateEmployeeInput!) {
-                createEmployee(input: $input) {
-                    id
-                    name
-                }
-            }
-        \`;
-        // ...
-        <FinalForm
-            mode="add"
-            onSubmit={(values) => {
-                // ...
-            }}
-        >
-            <Field label="Name" name="name" component={FinalFormInput} />
-            <SaveButton type="submit" />
-        </FinalForm>
-`}
 />
 
 #### `apolloClient.mutate()` vs `useMutation()` Hook
