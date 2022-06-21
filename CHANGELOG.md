@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Incompatible Changes
 
+-   Added new default styling for MuiChip component.
 -   options have been removed from `createErrorDialogApolloLink()`, so it has no react hook dependency to error dialog anymore. This is perfect because of this we are not limited to create the apollo client in jsx.
 
 **before:**
