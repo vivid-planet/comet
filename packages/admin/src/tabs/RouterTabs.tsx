@@ -21,6 +21,7 @@ interface TabProps extends MuiTabProps {
     path: string;
     label: React.ReactNode;
     forceRender?: boolean;
+    promptOnNavigation?: boolean;
     children: React.ReactNode;
 }
 export const RouterTab: React.FunctionComponent<TabProps> = () => null;
@@ -122,7 +123,9 @@ function RouterTabsComponent({
                     return null;
                 }
 
-                routerContext?.registerExcludedRoutes(id, [deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)]);
+                if (!child.props.promptOnNavigation) {
+                    routerContext?.registerExcludedRoutes(id, [deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)]);
+                }
 
                 return (
                     <Route path={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}>
