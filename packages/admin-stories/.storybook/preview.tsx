@@ -103,9 +103,9 @@ const orderComponents = [
 ];
 const orderForm = [
     "docs-form-overview",
-    "docs-form-finalform-component",
     "docs-form-validation",
     "docs-form-layout",
+    "docs-form-components-finalform",
     "docs-form-components-fieldcontainer",
     "docs-form-components-field",
     "docs-form-components-formsection",
