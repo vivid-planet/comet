@@ -103,6 +103,7 @@ const orderComponents = [
 ];
 const orderForm = [
     "docs-form-overview",
+    "docs-form-finalform-component",
     "docs-form-validation",
     "docs-form-layout",
     "docs-form-components-fieldcontainer",

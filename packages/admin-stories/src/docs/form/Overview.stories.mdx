@@ -24,230 +24,44 @@ In this case, you can use a plain input component combined with a React state.
 ## `FinalForm` Component
 
 Comet Admin provides a `FinalForm` component.
-It's built on top of React Final Form's [`Form` component](https://final-form.org/docs/react-final-form/api/Form).
+It's built on top of [React Final Form's `Form` component](https://final-form.org/docs/react-final-form/api/Form).
 
-There are two required properties:
-
--   `mode` can be `add` (for creating a new resource) or `edit` (for editing an existing resource)
--   `onSubmit()` handles the submission of form values to the API
+You can find more information on the [FinalForm component page](/story/docs-form-finalform-component--page).
 
 <Canvas>
     <Story id="stories-form-finalform--basic-finalform" />
 </Canvas>
 
-### Submit Mutation Best Practices
+## Validation
 
-We recommend abiding by the following best practices considering form submission mutations:
+For information on how to validate your form, visit the [Validation page](/story/docs-form-validation--page).
 
-#### Location of GraphQL Mutations
+## Layout
 
-You should define form-related mutations at the top of the file that contains the form.
+For information on implementing different layout types in your form, visit the [Layout page](/story/docs-form-layout--page).
 
-<Source
-    language="tsx"
-    code={dedent`
-        // employees/EmployeeForm.tsx
-        const createEmployeeMutation = gql\`
-            mutation CreateEmployee($input: CreateEmployeeInput!) {
-                createEmployee(input: $input) {
-                    id
-                    name
-                }
-            }
-        \`;
-        // ...
-        <FinalForm
-            mode="add"
-            onSubmit={(values) => {
-                // ...
-            }}
-        >
-            <Field label="Name" name="name" component={FinalFormInput} />
-            <SaveButton type="submit" />
-        </FinalForm>
-`}
-/>
+## Components
 
-If the form or the mutation is exceptionally long or complex, you can alternatively move the GraphQL definition to an adjacent file of the same name with the suffix `.gql.ts`.
-For example, if your form is located in the file `employees/EmployeeForm.tsx`, the mutation should be defined in `employees/EmployeeForm.gql.ts`.
+### FieldContainer
 
-<Source
-    language="tsx"
-    code={dedent`
-        // employees/EmployeeForm.tsx
-        <FinalForm
-            mode="add"
-            onSubmit={(values) => {
-                // ...
-            }}
-        >
-            <Field label="Name" name="name" component={FinalFormInput} />
-            <SaveButton type="submit" />
-        </FinalForm>
-  `}
-/>
+Use `FieldContainer` to wrap inputs in non-Final-Form forms.
+It provides a basic layout, a label and can handle error states.
 
-<Source
-    language="ts"
-    code={dedent`
-        // employees/EmployeeForm.gql.ts
-        export const createEmployeeMutation = gql\`
-            mutation CreateEmployee($input: CreateEmployeeInput!) {
-                createEmployee(input: $input) {
-                    id
-                    name
-                }
-            }
-        \`;
-  `}
-/>
+You can find more information on the [FieldContainer page](/story/docs-form-components-fieldcontainer--page).
 
-#### `apolloClient.mutate()` vs `useMutation()` Hook
+### Field
 
-Prefer `apolloClient.mutate()` over the `useMutation()` hook to prevent the introduction of unnecessary new variables.
-Thereby, you avoid a difficult variable naming process, and your code stays short and precise.
+Use `Field` for inputs within a FinalForm form.
 
-**✅ Do this:**
+You can find more information on the [Field page](/story/docs-form-components-field--page).
 
-<Source
-    language="tsx"
-    code={dedent`
-        const apolloClient = useApolloClient();
-        // ...
-        <FinalForm
-            mode="add"
-            onSubmit={async (values) => {
-                await apolloClient.mutate({
-                    mutation: createEmployeeMutation,
-                    variables: {
-                        input: {
-                            name: values.name
-                        }
-                    }
-                })
-            }}
-        >
-            <Field label="Name" name="name" component={FinalFormInput} />
-            <SaveButton type="submit" />
-        </FinalForm>
-`}
-/>
+### FormSection
 
-**❌ Avoid this:**
+`FormSection` can be used to separate a form into smaller groups of related inputs.
+This gives the form structure and makes it easier to comprehend.
 
-<Source
-    language="tsx"
-    code={dedent`
-        // you need to bother with naming this variable
-        const const [createEmployee] = useMutation(createEmployeeMutation);
-        // ...
-        <FinalForm
-            mode="add"
-            onSubmit={async (values) => {
-                // you don't see at first glance, that this is a call to a GraphQL API
-                await createEmployee({
-                    variables: {
-                        input: {
-                            name: values.name
-                        }
-                    }
-                })
-            }}
-        >
-            <Field label="Name" name="name" component={FinalFormInput} />
-            <SaveButton type="submit" />
-        </FinalForm>
-`}
-/>
+You can find more information on the [FormSection page](/story/docs-form-components-formsection--page).
 
-#### Form Submission Example
+### FinalForm Fields in Comet Admin
 
-**Note:** You have to enter "John" and "Doe" for this example to work.
-
-<Canvas>
-    <Story id="stories-form-submit-mutation-best-practices--submit-mutation-best-practices" />
-</Canvas>
-
-### Context-based Features
-
-Comet Admin `FinalForm` uses React Contexts to interact with other Comet Admin components.
-
-#### FinalForm in a Table
-
-If your `FinalForm` is located inside a [TableQuery](/story/docs-components-table-tablequery--page) component, the tableQuery is refetched automatically after submission.
-
-#### FinalForm in a Stack
-
-If a `FinalForm` is used inside a [Stack](/story/docs-components-stack--page), it automatically navigates back to the previous `StackPage`.
-
-<Canvas>
-    <Story id="stories-form-context-based-features--finalform-in-stack" />
-</Canvas>
-
-This is not always desired.
-For example, if the FinalForm isn't located on an own StackPage.
-In this case you have to override the `onAfterSubmit()` function of `FinalForm`.
-
-<Source
-    language="tsx"
-    code={dedent`
-    <FinalForm
-        // ...
-        onAfterSubmit={() => {
-            // noop
-        }}
-    >
-        {/* ... */}
-    </FinalForm>
-`}
-/>
-
-### Differences between Comet Admin `FinalForm` and React Final Form's `Form`
-
-RFF's `Form` is a pure wrapper component.
-It creates and maintains a [form instance](https://final-form.org/docs/final-form/api#createform) that handles the form state.
-This form instance is provided to child components via React Context.
-It doesn't render any HTML.
-
-Comet Admin `FinalForm` renders some HTML: a `<form>` wrapper and a div containing submit errors.
-Additionally, it uses the React Contexts of other Comet Admin components to interact with them.
-You can find more information about these interactions in the following sections.
-
-The following example shows the definition of a simple form with RFF `Form` and Comet Admin `FinalForm`.
-
-Plain RFF `Form`:
-
-<Source
-    language="tsx"
-    code={dedent`
-        <RFFForm
-            onSubmit={(values) => {
-                // ...
-            }}
-        >
-            {(props) => (
-                <form onSubmit={props.handleSubmit}>
-                    <RFFField name="name" component="input" />
-                    <button type="submit">Save</button>
-                </form>
-            )}
-        </RFFForm>
-  `}
-/>
-
-Comet Admin `FinalForm`:
-
-<Source
-    language="tsx"
-    code={dedent`
-        <FinalForm
-            mode="add"
-            onSubmit={(values) => {
-                // ...
-            }}
-        >
-            <Field label="Name" name="name" component={FinalFormInput} />
-            <SaveButton type="submit" />
-        </FinalForm>
-  `}
-/>
+For an overview of all FinalForm-compatible fields/inputs provided by Comet Admin, visit the [FinalForm Fields page](/story/docs-form-components-finalform-fields--page).
