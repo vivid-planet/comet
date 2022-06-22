@@ -2,12 +2,27 @@ import { Field, FinalForm, FinalFormInput, RouterTab, RouterTabs, Stack, StackBr
 import { Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
+import { useForm } from "react-final-form";
 import { useLocation } from "react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+const ResetTab = () => {
+    const formApi = useForm();
+
+    React.useEffect(() => {
+        formApi.reset();
+    }, []);
+
+    return (
+        <Card variant="outlined">
+            <CardContent>You received a Discard unsaved changes prompt before navigating here</CardContent>
+        </Card>
+    );
+};
+
+const Story = () => {
     const location = useLocation();
 
     return (
@@ -67,12 +82,7 @@ function Story() {
                                                                             </Card>
                                                                         </RouterTab>
                                                                         <RouterTab label="Prompt on Navigation" path="/prompt2" promptOnNavigation>
-                                                                            <Card variant="outlined">
-                                                                                <CardContent>
-                                                                                    You received a Discard unsaved changes prompt before navigating
-                                                                                    here
-                                                                                </CardContent>
-                                                                            </Card>
+                                                                            <ResetTab />
                                                                         </RouterTab>
                                                                     </RouterTabs>
                                                                 </StackPage>
@@ -95,16 +105,14 @@ function Story() {
                             </Card>
                         </RouterTab>
                         <RouterTab label="Prompt on Navigation" path="/prompt" promptOnNavigation>
-                            <Card variant="outlined">
-                                <CardContent>You received a Discard unsaved changes prompt before navigating here</CardContent>
-                            </Card>
+                            <ResetTab />
                         </RouterTab>
                     </RouterTabs>
                 </FinalForm>
             </Stack>
         </div>
     );
-}
+};
 
 storiesOf("@comet/admin/tabs", module)
     .addDecorator(storyRouterDecorator())

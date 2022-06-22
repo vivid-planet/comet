@@ -15,12 +15,27 @@ import {
 import { Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
+import { useForm } from "react-final-form";
 import { Redirect, useLocation } from "react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function StackPageOne() {
+const ResetTab = () => {
+    const formApi = useForm();
+
+    React.useEffect(() => {
+        formApi.reset();
+    }, []);
+
+    return (
+        <Card variant="outlined">
+            <CardContent>You received a Discard unsaved changes prompt before navigating here</CardContent>
+        </Card>
+    );
+};
+
+const StackPageOne = () => {
     return (
         <FinalForm
             mode="edit"
@@ -49,16 +64,14 @@ function StackPageOne() {
                     </Card>
                 </RouterTab>
                 <RouterTab label="Prompt on Navigation" path="/prompt" promptOnNavigation>
-                    <Card variant="outlined">
-                        <CardContent>You received a Discard unsaved changes prompt before navigating here</CardContent>
-                    </Card>
+                    <ResetTab />
                 </RouterTab>
             </RouterTabs>
         </FinalForm>
     );
-}
+};
 
-function Story() {
+const Story = () => {
     const location = useLocation();
 
     const [redirected, setRedirected] = React.useState(false);
@@ -89,7 +102,7 @@ function Story() {
             </Stack>
         </div>
     );
-}
+};
 
 storiesOf("@comet/admin/tabs", module)
     .addDecorator(storyRouterDecorator())
