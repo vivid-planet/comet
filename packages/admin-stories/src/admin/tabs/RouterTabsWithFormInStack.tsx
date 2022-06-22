@@ -15,7 +15,7 @@ import {
 import { Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { Redirect } from "react-router";
+import { Redirect, useLocation } from "react-router";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -59,6 +59,8 @@ function StackPageOne() {
 }
 
 function Story() {
+    const location = useLocation();
+
     const [redirected, setRedirected] = React.useState(false);
 
     React.useEffect(() => {
@@ -66,23 +68,26 @@ function Story() {
     }, []);
 
     return (
-        <Stack topLevelTitle="Root Stack">
-            <Toolbar>
-                <ToolbarBackButton />
-            </Toolbar>
-            <StackBreadcrumbs />
-            <StackSwitch>
-                <StackPage name="table">
-                    {!redirected && <Redirect to="/test/edit" />}
-                    <StackLink pageName="edit" payload="test">
-                        Go to Edit
-                    </StackLink>
-                </StackPage>
-                <StackPage name="edit" title="Edit">
-                    <StackPageOne />
-                </StackPage>
-            </StackSwitch>
-        </Stack>
+        <div>
+            <p>Location: {location.pathname}</p>
+            <Stack topLevelTitle="Root Stack">
+                <Toolbar>
+                    <ToolbarBackButton />
+                </Toolbar>
+                <StackBreadcrumbs />
+                <StackSwitch>
+                    <StackPage name="table">
+                        {!redirected && <Redirect to="/test/edit" />}
+                        <StackLink pageName="edit" payload="test">
+                            Go to Edit
+                        </StackLink>
+                    </StackPage>
+                    <StackPage name="edit" title="Edit">
+                        <StackPageOne />
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
+        </div>
     );
 }
 
