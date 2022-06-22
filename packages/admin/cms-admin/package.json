@@ -59,7 +59,7 @@
         "rimraf": "^3.0.0",
         "slugify": "^1.0.0",
         "split.js": "^1.6.4",
-        "use-debounce": "^5.0.0",
+        "use-debounce": "^6.0.0",
         "uuid": "^8.0.0"
     },
     "peerDependencies": {

@@ -129,7 +129,7 @@ const FolderTable = ({
     }, 500);
 
     const hideFooter = () => {
-        if (showFooter.pending()) {
+        if (showFooter.isPending()) {
             showFooter.cancel();
         }
         setFooterType(undefined);
@@ -145,7 +145,7 @@ const FolderTable = ({
     );
 
     const hideHoverStyles = () => {
-        if (showHoverStyles.pending()) {
+        if (showHoverStyles.isPending()) {
             showHoverStyles.cancel();
         }
         setIsHovered(false);
@@ -291,8 +291,8 @@ const FolderTable = ({
     const { getRootProps: getFileRootProps } = useDropzone({
         ...dropzoneConfig,
         onDragEnter: () => {
-            showHoverStyles.callback();
-            showFooter.callback("upload", data?.damFolder.name);
+            showHoverStyles();
+            showFooter("upload", data?.damFolder.name);
         },
         onDragLeave: () => {
             hideHoverStyles();
@@ -352,7 +352,7 @@ const FolderTable = ({
                                             key={row.id}
                                             dropTargetItem={row}
                                             rowProps={rowProps}
-                                            footerApi={{ show: showFooter.callback, hide: hideFooter }}
+                                            footerApi={{ show: showFooter, hide: hideFooter }}
                                             {...props}
                                         >
                                             <TableColumns columns={columns} row={row} />
@@ -374,7 +374,7 @@ const FolderTable = ({
                                                 key={row.id}
                                                 dropTargetItem={row}
                                                 rowProps={rowProps}
-                                                footerApi={{ show: showFooter.callback, hide: hideFooter }}
+                                                footerApi={{ show: showFooter, hide: hideFooter }}
                                                 {...props}
                                             >
                                                 <TableColumns columns={columns} row={row} />

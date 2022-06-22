@@ -75,7 +75,7 @@ const PageTreeRow = ({
 
     const updateHoverState = React.useCallback(
         (newHoverState?: DropInfo) => {
-            debouncedSetHoverState.callback(setHoverState, newHoverState);
+            debouncedSetHoverState(setHoverState, newHoverState);
         },
         [debouncedSetHoverState],
     );

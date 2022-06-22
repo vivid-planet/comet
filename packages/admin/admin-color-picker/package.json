@@ -15,7 +15,7 @@
         "clsx": "^1.1.1",
         "react-colorful": "^5.5.1",
         "tinycolor2": "^1.4.1",
-        "use-debounce": "^7.0.1"
+        "use-debounce": "^6.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",

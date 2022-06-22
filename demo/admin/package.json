@@ -84,7 +84,7 @@
         "react-xml-viewer": "^1.0.0",
         "slugify": "^1.0.0",
         "typeface-open-sans": "^0.0.75",
-        "use-debounce": "^5.0.0",
+        "use-debounce": "^6.0.0",
         "uuid": "^7.0.0",
         "zen-observable": "^0.8.0"
     },
