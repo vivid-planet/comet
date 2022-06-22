@@ -1,6 +1,6 @@
 import * as History from "history";
 import * as React from "react";
-import { matchPath, Prompt, useLocation } from "react-router";
+import { matchPath, Prompt } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterContext } from "./Context";
@@ -29,8 +29,6 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
     const registeredMessages = React.useRef<IMessages>({});
     const saveActions = React.useRef<SaveActions>({});
     const excludedRoutes = React.useRef<ExcludedRoutes>({});
-
-    const location = useLocation();
 
     React.useEffect(() => {
         console.log("excludedRoutes ", excludedRoutes);
@@ -87,23 +85,14 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
         }
     };
 
-    const condition = React.useMemo(() => {
-        const routes = Object.values(excludedRoutes.current).reduce((prevValue, currValue) => {
+    const showPrompt = (location: History.Location) => {
+        const excludedRoutesArr = Object.values(excludedRoutes.current).reduce((prevValue, currValue) => {
             return [...prevValue, ...currValue];
         }, []);
 
-        console.log("routes ", routes);
-        console.log("location.pathname ", location.pathname);
-        console.log(
-            "matches ",
-            routes.some((route) => matchPath(route, { path: location.pathname })),
-        );
-
-        // TODO: matches parent page => nav should not be possible
-        // TODO: Doesn't work on first render
-
-        return !routes.some((route) => matchPath(route, { path: location.pathname, exact: true }));
-    }, [location.pathname]);
+        const matches = excludedRoutesArr.some((route) => matchPath(route, { path: location.pathname, exact: true }));
+        return !matches;
+    };
 
     return (
         <RouterContext.Provider
@@ -120,7 +109,12 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
                 handleClose={handleClose}
                 showSaveButton={Object.keys(saveActions.current).length > 0}
             />
-            <Prompt when={condition} message={promptMessage} />
+            <Prompt
+                when={true}
+                message={(location, action) => {
+                    return showPrompt(location) ? promptMessage(location, action) : true;
+                }}
+            />
             {children}
         </RouterContext.Provider>
     );
