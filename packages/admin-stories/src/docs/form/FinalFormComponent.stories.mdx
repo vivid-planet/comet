@@ -171,8 +171,14 @@ For example, if your form is located in the file `employees/EmployeeForm.tsx`, t
 
 ### `apolloClient.mutate()` vs `useMutation()` Hook
 
-Prefer `apolloClient.mutate()` over the `useMutation()` hook to prevent the introduction of unnecessary new variables.
-Thereby, you avoid a difficult variable naming process, and your code stays short and precise.
+Prefer `apolloClient.mutate()` over the `useMutation()` hook.
+
+The main advantage of `useMutation()` is that it provides access to the GraphQL loading and error states.
+However, the `FinalForm` component provides built-in handling for loading and error states.
+Custom handling is typically unnecessary.
+Therefore `apolloClient.mutate()` is sufficient for most use cases.
+
+Also, `apolloClient.mutate()` helps you avoid a difficult variable naming process and keeps your code short and precise.
 
 **✅ Do this:**
 
@@ -205,8 +211,8 @@ Thereby, you avoid a difficult variable naming process, and your code stays shor
 <Source
     language="tsx"
     code={dedent`
-        // you need to bother with naming this variable
-        const const [createEmployee] = useMutation(createEmployeeMutation);
+        // you don't need the loading and error states because FinalForm handles them for you
+        const const [createEmployee, { loading, error }] = useMutation(createEmployeeMutation);
         // ...
         <FinalForm
             mode="add"
