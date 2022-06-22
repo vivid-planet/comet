@@ -123,21 +123,19 @@ function RouterTabsComponent({
                     return null;
                 }
 
+                const url = deduplicateSlashesInUrl(`${match.url}/${child.props.path}`);
+
                 if (!child.props.promptOnNavigation) {
-                    routerContext?.registerExcludedRoutes(id, [deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)]);
+                    routerContext?.registerExcludedRoutes(id, [url]);
                 }
 
                 return (
-                    <Route path={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}>
+                    <Route path={url}>
                         {({ match }) => {
                             if (match && stackApi && stackSwitchApi && !foundFirstMatch) {
                                 foundFirstMatch = true;
                                 return (
-                                    <StackBreadcrumb
-                                        url={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}
-                                        title={child.props.label}
-                                        invisible={true}
-                                    >
+                                    <StackBreadcrumb url={url} title={child.props.label} invisible={true}>
                                         <div className={classes.content}>{child.props.children}</div>
                                     </StackBreadcrumb>
                                 );
