@@ -5,6 +5,15 @@
 ### Requirements
 
 -   [nvm](https://github.com/nvm-sh/nvm)
+-   [mkcert](https://github.com/FiloSottile/mkcert)
+
+#### Install certificates once.
+
+```bash
+mkcert -install
+mkcert -key-file certs/privkey.pem -cert-file certs/cert.pem *.comet-dxp.dev
+echo NODE_EXTRA_CA_CERTS=$(mkcert -CAROOT)/rootCA.pem > .env.local
+```
 
 Run `install.sh` once.
 

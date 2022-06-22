@@ -15,8 +15,8 @@
     },
     "scripts": {
         "clean": "lerna run clean --stream --parallel",
-        "dev:admin": "rimraf packages/admin/**/lib/index.d.ts && dotenv -- pm2 start ecosystem-admin.config.js",
-        "dev:cms": "dotenv -- pm2 start ecosystem-cms.config.js",
+        "dev:admin": "rimraf packages/admin/**/lib/index.d.ts && dotenv -c -- pm2 start ecosystem-admin.config.js",
+        "dev:cms": "dotenv -c -- pm2 start ecosystem-cms.config.js",
         "build": "lerna run build --concurrency=1 --stream",
         "build:lib": "lerna run build --concurrency=1 --stream --no-private",
         "publish:release": "lerna publish --force-publish --no-private",

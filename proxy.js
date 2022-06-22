@@ -53,7 +53,7 @@ const server = https.createServer(
     {
         key: fs.readFileSync("./certs/privkey.pem", "utf8"),
         cert: fs.readFileSync("./certs/cert.pem", "utf8"),
-        ca: fs.readFileSync("./certs/fullchain.pem", "utf8"),
+        ca: process.env.NODE_EXTRA_CA_CERTS,
     },
     function (req, res) {
         const target = getTarget(req);
