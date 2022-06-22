@@ -30,10 +30,6 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
     const saveActions = React.useRef<SaveActions>({});
     const excludedRoutes = React.useRef<ExcludedRoutes>({});
 
-    React.useEffect(() => {
-        console.log("excludedRoutes ", excludedRoutes);
-    });
-
     const registerExcludedRoutes = (id: string, routes: string[]) => {
         const registeredRoutes = excludedRoutes.current[id] ?? [];
         const combinedRoutes = [...registeredRoutes, ...routes];
