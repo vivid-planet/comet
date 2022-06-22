@@ -10,10 +10,9 @@ import {
     FinalFormSearchTextField,
     FinalFormSelect,
     FinalFormSwitch,
-    Select,
     useAsyncOptionsProps,
 } from "@comet/admin";
-import { Button, FormControlLabel, MenuItem } from "@material-ui/core";
+import { Button, FormControlLabel } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -161,25 +160,6 @@ storiesOf("stories/form/FinalForm Fields", module)
                     Submit
                 </Button>
             </FinalForm>
-        );
-    })
-    .add("Select", () => {
-        const options: Option[] = [
-            { value: "chocolate", label: "Chocolate" },
-            { value: "strawberry", label: "Strawberry" },
-            { value: "vanilla", label: "Vanilla" },
-        ];
-
-        const [value, setValue] = React.useState<string>(options[0].value);
-
-        return (
-            <Select value={value} onChange={(event: React.ChangeEvent<{ name?: string; value: string }>) => setValue(event.target.value)}>
-                {options.map((option) => (
-                    <MenuItem value={option.value} key={JSON.stringify(option)}>
-                        {option.label}
-                    </MenuItem>
-                ))}
-            </Select>
         );
     })
     .add("FinalFormCheckbox", () => {
