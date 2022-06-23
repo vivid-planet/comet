@@ -22,6 +22,7 @@ ln -sf ../../api/cms-api/block-meta.json ./packages/site/cms-site/block-meta.jso
 
 # api DEMO
 ln -sf ../../.env ./demo/api/.env
+ln -sf ../../.env.local ./demo/api/.env.local
 
 # admin DEMO
 ln -sf ../../.env ./demo/admin/.env
