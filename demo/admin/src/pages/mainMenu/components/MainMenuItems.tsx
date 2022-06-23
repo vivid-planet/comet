@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { MainContent, Table, TableQuery, Toolbar, ToolbarAutomaticTitleItem, useStackSwitchApi, useTableQuery } from "@comet/admin";
-import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Domain, Edit } from "@comet/admin-icons";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import { useContentScope } from "@src/common/ContentScopeProvider";

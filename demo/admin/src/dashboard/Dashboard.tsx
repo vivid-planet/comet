@@ -1,6 +1,6 @@
 import { MainContent, Stack } from "@comet/admin";
-import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Domain } from "@comet/admin-icons";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useUser } from "@comet/react-app-auth";
 import { Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";

@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import { MainContent as CometMainContent, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
     BlockPreviewWithTabs,
@@ -11,7 +12,6 @@ import {
     useCmsBlockContext,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { Button, CircularProgress, IconButton } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
