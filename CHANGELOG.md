@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# [2.2.0]
+# [Next]
 
 -   EditDialog now displays loading and error states of a contained form automatically via its SaveButton
 
