@@ -14,6 +14,9 @@ export const styles = ({ zIndex }: Theme) => {
         },
         paper: {
             transformOrigin: "top left",
+            fontSize: 0,
+            lineHeight: 0,
+            borderRadius: 4,
         },
     });
 };

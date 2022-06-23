@@ -3074,8 +3074,10 @@ __metadata:
     "@comet/admin": ^2.0.0
     "@comet/admin-babel-preset": ^2.0.0
     "@comet/eslint-config": ^2.0.0
+    "@mui/utils": ^5.4.1
     "@types/react": ^17.0
     "@types/react-date-range": ^1.4.3
+    clsx: ^1.1.1
     date-fns: ^2.28.0
     eslint: ^8.0.0
     prettier: ^2.0.0
@@ -3087,6 +3089,7 @@ __metadata:
     "@comet/admin": ^2.0.0
     "@comet/admin-icons": ^2.0.0
     "@mui/material": ^5.4.1
+    "@mui/styles": ^5.4.1
     react: ^17.0
     react-dom: ^17.0
     react-final-form: ^6.5.7
