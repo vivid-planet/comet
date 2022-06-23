@@ -22,6 +22,8 @@ export interface InputWithPopperProps extends Omit<InputBaseProps, "componentsPr
     children: ((closePopper: ClosePopper) => React.ReactNode) | React.ReactNode;
     componentsProps?: InputWithPopperComponentsProps;
     components?: InputWithPopperComponents;
+    onOpenPopper?: () => void;
+    onClosePopper?: () => void;
 }
 
 function InputWithPopper({
@@ -29,6 +31,8 @@ function InputWithPopper({
     children,
     value = "",
     componentsProps,
+    onOpenPopper,
+    onClosePopper,
     components = {},
     ...inputBaseProps
 }: InputWithPopperProps & WithStyles<typeof styles>): React.ReactElement {
@@ -49,13 +53,17 @@ function InputWithPopper({
                     inputRef.current?.focus();
                 }
                 setShowPopper(false);
+                onClosePopper?.();
             }
         },
-        [showPopper, inputRef, setShowPopper],
+        [showPopper, onClosePopper, inputRef, setShowPopper],
     );
 
     const openPopper = () => {
-        setShowPopper(true);
+        if (!showPopper) {
+            setShowPopper(true);
+            onOpenPopper?.();
+        }
     };
 
     /**
