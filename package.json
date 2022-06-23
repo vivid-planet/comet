@@ -81,7 +81,9 @@
         "yarn": "3"
     },
     "resolutions": {
-        "@typescript-eslint/parser": "^5.0.0"
+        "@emotion/react": "11.9.3",
+        "@typescript-eslint/parser": "^5.0.0",
+        "@types/react": "^17.0.0"
     },
     "packageManager": "yarn@3.2.0"
 }

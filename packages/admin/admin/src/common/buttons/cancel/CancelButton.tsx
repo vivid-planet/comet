@@ -16,6 +16,7 @@ const styles = () => {
         textInherit: {},
         textPrimary: {},
         textSecondary: {},
+
         outlined: {},
         outlinedInherit: {},
         outlinedPrimary: {},
@@ -46,6 +47,18 @@ const styles = () => {
         iconSizeSmall: {},
         iconSizeMedium: {},
         iconSizeLarge: {},
+        textError: {},
+        textInfo: {},
+        textSuccess: {},
+        textWarning: {},
+        outlinedError: {},
+        outlinedInfo: {},
+        outlinedSuccess: {},
+        outlinedWarning: {},
+        containedError: {},
+        containedInfo: {},
+        containedSuccess: {},
+        containedWarning: {},
     });
 };
 
