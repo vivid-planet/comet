@@ -16,26 +16,20 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-const ButtonsRow = ({ children }: { children: React.ReactNode[] }) => {
-    return (
-        <Box padding={4}>
-            <Grid container spacing={4}>
-                <>
-                    {children.map((child, index: number) => (
-                        <Grid item xs={3} key={index}>
-                            {child}
-                        </Grid>
-                    ))}
-                </>
-            </Grid>
-        </Box>
-    );
-};
+const ButtonsRow = styled("div")`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: ${(props) => props.theme.spacing(2)};
+    margin-bottom: ${(props) => props.theme.spacing(4)};
+`;
 
 export const Story: React.FC = () => {
     return (
@@ -48,42 +42,62 @@ export const Story: React.FC = () => {
                         </Typography>
                         <ButtonsRow>
                             <Button variant="contained" startIcon={<ArrowRight />}>
-                                Text
+                                Contained Primary
                             </Button>
                             <Button variant="contained" color="secondary" startIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                            <Button variant="contained" color="info" startIcon={<ArrowRight />}>
-                                Text
+                                Contained Secondary
                             </Button>
                             <Button variant="contained" disabled startIcon={<ArrowRight />}>
-                                Text
+                                Contained Disabled
                             </Button>
                         </ButtonsRow>
                         <ButtonsRow>
                             <Button variant="contained" endIcon={<ArrowRight />}>
-                                Text
+                                Contained Primary
                             </Button>
                             <Button variant="contained" color="secondary" endIcon={<ArrowRight />}>
-                                Text
-                            </Button>
-                            <Button variant="contained" color="info" endIcon={<ArrowRight />}>
-                                Text
+                                Contained Secondary
                             </Button>
                             <Button variant="contained" disabled endIcon={<ArrowRight />}>
-                                Text
+                                Contained Disabled
                             </Button>
                         </ButtonsRow>
                         <ButtonsRow>
-                            <Button variant="contained">Text</Button>
+                            <Button variant="contained">Contained Primary</Button>
                             <Button variant="contained" color="secondary">
-                                Text
-                            </Button>
-                            <Button variant="contained" color="info">
-                                Text
+                                Contained Secondary
                             </Button>
                             <Button variant="contained" disabled>
-                                Text
+                                Contained Disabled
+                            </Button>
+                        </ButtonsRow>
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid item xs={12}>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Typography variant={"h2"} gutterBottom>
+                            Outlined buttons
+                        </Typography>
+                        <ButtonsRow>
+                            <Button variant="outlined" startIcon={<ArrowRight />}>
+                                Outlined Primary
+                            </Button>
+                            <Button variant="outlined" endIcon={<ArrowRight />}>
+                                Outlined Primary
+                            </Button>
+                            <Button variant="outlined">Outlined Primary</Button>
+                        </ButtonsRow>
+                        <ButtonsRow>
+                            <Button variant="outlined" startIcon={<ArrowRight />} disabled>
+                                Outlined Disabled
+                            </Button>
+                            <Button variant="outlined" endIcon={<ArrowRight />} disabled>
+                                Outlined Disabled
+                            </Button>
+                            <Button variant="outlined" disabled>
+                                Outlined Disabled
                             </Button>
                         </ButtonsRow>
                     </CardContent>
@@ -98,7 +112,7 @@ export const Story: React.FC = () => {
                         <Grid container spacing={4}>
                             <Grid item>
                                 <ButtonGroup variant="contained">
-                                    <Button startIcon={<Save />}>Button</Button>
+                                    <Button startIcon={<Save />}>Contained Primary</Button>
                                     <Button>
                                         <ChevronDown />
                                     </Button>
@@ -106,15 +120,7 @@ export const Story: React.FC = () => {
                             </Grid>
                             <Grid item>
                                 <ButtonGroup variant="contained" color="secondary">
-                                    <Button startIcon={<Save />}>Button</Button>
-                                    <Button>
-                                        <ChevronDown />
-                                    </Button>
-                                </ButtonGroup>
-                            </Grid>
-                            <Grid item>
-                                <ButtonGroup variant="contained" color="info">
-                                    <Button startIcon={<Save />}>Button</Button>
+                                    <Button startIcon={<Save />}>Contained Secondary</Button>
                                     <Button>
                                         <ChevronDown />
                                     </Button>
@@ -122,7 +128,23 @@ export const Story: React.FC = () => {
                             </Grid>
                             <Grid item>
                                 <ButtonGroup variant="contained" disabled>
-                                    <Button startIcon={<Save />}>Button</Button>
+                                    <Button startIcon={<Save />}>Contained Disabled</Button>
+                                    <Button>
+                                        <ChevronDown />
+                                    </Button>
+                                </ButtonGroup>
+                            </Grid>
+                            <Grid item>
+                                <ButtonGroup variant="outlined">
+                                    <Button startIcon={<Save />}>Outlined Primary</Button>
+                                    <Button>
+                                        <ChevronDown />
+                                    </Button>
+                                </ButtonGroup>
+                            </Grid>
+                            <Grid item>
+                                <ButtonGroup variant="outlined" disabled>
+                                    <Button startIcon={<Save />}>Outlined Disabled</Button>
                                     <Button>
                                         <ChevronDown />
                                     </Button>
