@@ -6,7 +6,8 @@ import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { SaveButton } from "./common/buttons/save/SaveButton";
 import { DirtyHandler } from "./DirtyHandler";
 import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
-import { EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
+import { CloseDialogOptions, EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
+import { EditDialogFormApiProvider, useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { SubmitResult } from "./form/SubmitResult";
 import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
@@ -49,18 +50,37 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
         [selectionApi],
     );
 
+    const closeDialog = React.useCallback(
+        (options?: CloseDialogOptions) => {
+            const { delay } = { delay: false, ...options };
+
+            if (delay) {
+                const duration = typeof delay === "number" ? delay : 1000;
+                setTimeout(() => {
+                    selectionApi.handleDeselect();
+                }, duration);
+            } else {
+                selectionApi.handleDeselect();
+            }
+        },
+        [selectionApi],
+    );
+
     const api: IEditDialogApi = React.useMemo(() => {
         return {
             openAddDialog,
             openEditDialog,
+            closeDialog,
         };
-    }, [openAddDialog, openEditDialog]);
+    }, [closeDialog, openAddDialog, openEditDialog]);
 
     const EditDialogWithHookProps = React.useMemo(() => {
         return (props: IProps) => {
             return (
                 <Selection>
-                    <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
+                    <EditDialogFormApiProvider>
+                        <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
+                    </EditDialogFormApiProvider>
                 </Selection>
             );
         };
@@ -80,6 +100,7 @@ interface IHookProps {
 
 const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selection, selectionApi, api, title: maybeTitle, children }) => {
     const intl = useIntl();
+    const editDialogFormApi = useEditDialogFormApi();
 
     const title = maybeTitle ?? {
         edit: intl.formatMessage(messages.edit),
@@ -95,7 +116,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                 if (!failed) {
                     setTimeout(() => {
                         if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
-                        selectionApi.handleDeselect();
+                        api.closeDialog({ delay: true });
                     });
                 }
             });
@@ -104,11 +125,11 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
 
     const handleCancelClick = () => {
         if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
-        selectionApi.handleDeselect();
+        api.closeDialog();
     };
 
     const handleCloseClick = () => {
-        selectionApi.handleDeselect();
+        api.closeDialog();
     };
 
     return (
@@ -124,7 +145,11 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                                 {(injectedDirtyHandlerApi) => {
                                     dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
                                     return (
-                                        <SaveButton onClick={handleSaveClick}>
+                                        <SaveButton
+                                            saving={editDialogFormApi?.saving}
+                                            hasErrors={editDialogFormApi?.hasErrors}
+                                            onClick={handleSaveClick}
+                                        >
                                             <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
                                         </SaveButton>
                                     );
