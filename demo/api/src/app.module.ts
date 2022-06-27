@@ -125,6 +125,7 @@ import { Page } from "./pages/entities/page.entity";
                                       secretAccessKey: config.S3_SECRET_ACCESS_KEY,
                                       endpoint: config.S3_ENDPOINT,
                                       region: config.S3_REGION,
+                                      bucket: config.S3_BUCKET,
                                   }
                                 : undefined,
                     } as BlobStorageConfig["backend"],
