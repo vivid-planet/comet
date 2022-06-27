@@ -8,14 +8,12 @@ import { serializeInitialValues } from "../../../form/serializeInitialValues";
 import { PageTreeNodePosition } from "../PageTreeService";
 
 const IconWrapper = styled("div")`
-    && {
-        padding: 4px;
-        border-radius: 12px;
-        background-color: #fff;
-        border: 1px solid ${({ theme }) => theme.palette.divider};
-        box-shadow: ${({ theme }) => theme.shadows[1]};
-        font-size: 0; // Hides non-breaking-space after icon
-    }
+    padding: 4px;
+    border-radius: 12px;
+    background-color: #fff;
+    border: 1px solid ${({ theme }) => theme.palette.divider};
+    box-shadow: ${({ theme }) => theme.shadows[1]};
+    font-size: 0; // Hides non-breaking-space after icon
 `;
 
 const AddIcon = styled(AddNoCircle)``;

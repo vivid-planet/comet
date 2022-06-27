@@ -1,10 +1,11 @@
 import { IEditDialogApi, useStackSwitchApi } from "@comet/admin";
-import { Checkbox, TableRow } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import React from "react";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { DebouncedState } from "use-debounce/lib/useDebouncedCallback";
 
+import { PageTreeTableRow } from "./common/PageTreeTableRow";
 import InsertInBetweenAction from "./InsertInBetweenAction/InsertInBetweenAction";
 import { useButtonHoverStates } from "./InsertInBetweenAction/useButtonHoverStates";
 import PageActions from "./PageActions";
@@ -165,13 +166,6 @@ const PageTreeRow = ({
         }
         dropTarget(rowRef);
     }, [dragSource, dropTarget, page.visibility]);
-    const classes = sc.useStyles({
-        isDragHovered: hoverState?.dropTarget === "ADD_AS_CHILD",
-        isMouseHovered: hover,
-        isArchived: page.visibility === "Archived",
-        isEditable: isEditable,
-        isSelected: page.selected,
-    });
     const insertInBetweenTopPosition = pageTreeService.calcInsertInBetweenPosition(prevPage, page);
     const insertInBetweenBottomPosition = pageTreeService.calcInsertInBetweenPosition(page, nextPage);
     const topDividerHighlighted = hoverState?.dropTarget === "ADD_BEFORE" || topInBetweenButtonHovered;
@@ -188,7 +182,12 @@ const PageTreeRow = ({
     }, [page, onSelectChanged]);
 
     return (
-        <TableRow
+        <PageTreeTableRow
+            isDragHovered={hoverState?.dropTarget === "ADD_AS_CHILD"}
+            isMouseHovered={hover}
+            isArchived={page.visibility === "Archived"}
+            isSelected={page.selected}
+            clickable={page.visibility !== "Archived" && isEditable}
             style={virtualizedStyle}
             onDragLeave={() => {
                 resetHoverState();
@@ -205,29 +204,27 @@ const PageTreeRow = ({
                 }
             }}
             key={page.id}
-            ref={rowRef}
-            component="div"
-            classes={{ root: classes.root }}
+            rowRef={rowRef}
         >
             <PageTreeRowDivider
                 align="top"
                 leftSpacing={(hoverState?.targetLevel || 0) * pageTreeService.levelOffsetPx}
                 highlight={topDividerHighlighted}
             />
-            <sc.PageTreeCell component="div" classes={{ root: classes.pageTreeCellRoot }}>
+            <sc.SelectPageCell component="div">
                 <Checkbox checked={page.selected} onChange={_onSelectChanged} />
-            </sc.PageTreeCell>
-            <sc.PageTreeCell component="div">
+            </sc.SelectPageCell>
+            <sc.PageInfoCell component="div">
                 <PageInfo page={page} toggleExpand={toggleExpand}>
                     <PageLabel page={page} onClick={onRowClick} />
                 </PageInfo>
-            </sc.PageTreeCell>
-            <sc.PageTreeCell component="div">
+            </sc.PageInfoCell>
+            <sc.PageVisibilityCell component="div">
                 <PageVisibility page={page} />
-            </sc.PageTreeCell>
-            <sc.PageTreeCell component="div">
+            </sc.PageVisibilityCell>
+            <sc.PageActionsCell component="div">
                 <PageActions page={page} editDialog={editDialogApi} siteUrl={siteUrl} />
-            </sc.PageTreeCell>
+            </sc.PageActionsCell>
             <sc.RowClickContainer onClick={onRowClick} />
 
             {hover && (
@@ -257,7 +254,7 @@ const PageTreeRow = ({
                 leftSpacing={(hoverState?.targetLevel || 0) * pageTreeService.levelOffsetPx}
                 highlight={bottomDividerHighlighted}
             />
-        </TableRow>
+        </PageTreeTableRow>
     );
 };
 

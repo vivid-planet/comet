@@ -1,10 +1,9 @@
-import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
 const Root = styled("div")`
     position: relative;
-    grid-column: 1 / 5;
+    width: 100%;
 `;
 
 interface HighlightProps {
@@ -48,12 +47,7 @@ export function PageTreeRowDivider({ align, leftSpacing, highlight }: Props): Re
     return (
         <Root>
             {align === "top" && highlight && <TopHighlight leftSpacing={leftSpacing} />}
-            {align === "bottom" && (
-                <>
-                    <Divider />
-                    {highlight && <BottomHighlight leftSpacing={leftSpacing} />}
-                </>
-            )}
+            {align === "bottom" && <>{highlight && <BottomHighlight leftSpacing={leftSpacing} />}</>}
         </Root>
     );
 }

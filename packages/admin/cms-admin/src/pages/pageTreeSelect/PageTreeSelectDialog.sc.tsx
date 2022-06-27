@@ -13,11 +13,6 @@ export const PageTreeCell = styled(TableCell)`
     }
 `;
 
-export const SelectPageCell = styled(PageTreeCell)`
-    padding-left: 11px;
-    padding-right: 0;
-`;
-
 export const PageInfoCell = styled(PageTreeCell)`
     flex-grow: 1;
     text-align: left;
@@ -28,22 +23,9 @@ export const PageVisibilityCell = styled(PageTreeCell)`
     width: 180px;
 `;
 
-export const PageActionsCell = styled(PageTreeCell)`
-    justify-content: flex-end;
-    width: 160px;
-`;
-
 export const RowClickContainer = styled("div")`
     position: absolute;
     z-index: 10;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-`;
-
-export const AddContainer = styled("div")`
-    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;

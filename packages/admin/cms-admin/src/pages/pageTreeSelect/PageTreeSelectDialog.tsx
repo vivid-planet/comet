@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { Select, Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, TableRow } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
@@ -19,13 +19,14 @@ import {
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { pagesQuery } from "../pagesPage/pagesQuery";
+import { PageTreeTableRow } from "../pageTree/common/PageTreeTableRow";
 import PageInfo from "../pageTree/PageInfo";
+import PageLabel from "../pageTree/PageLabel";
 import { AllCategories } from "../pageTree/PageTreeContext";
-import * as sc from "../pageTree/PageTreeRow.sc";
 import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
-import PageSelectButton from "./PageSelectButton";
+import * as sc from "./PageTreeSelectDialog.sc";
 
 export const selectedPageFragment = gql`
     fragment SelectedPage on PageTreeNode {
@@ -254,12 +255,6 @@ interface RowProps {
 }
 function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowProps) {
     const [hover, setHover] = React.useState(false);
-    const classes = sc.useStyles({
-        isDragHovered: false,
-        isMouseHovered: hover,
-        isSelected: selected || page.selected,
-        isArchived: page.visibility === "Archived",
-    });
 
     const handleRowClick = () => {
         if (page.documentType !== "Link") {
@@ -267,11 +262,17 @@ function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowPr
         }
     };
 
+    const disabled = page.visibility === "Archived" || page.documentType === "Link";
+
     return (
-        <TableRow
+        <PageTreeTableRow
+            isDragHovered={false}
+            isMouseHovered={hover}
+            isSelected={selected || page.selected}
+            isArchived={page.visibility === "Archived"}
+            clickable={page.visibility !== "Archived"}
+            disabled={disabled}
             style={virtualizedStyle}
-            component="div"
-            classes={{ root: classes.root }}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             onMouseMove={() => {
@@ -281,12 +282,12 @@ function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowPr
             }}
         >
             <PageTreeRowDivider align="top" leftSpacing={0} highlight={false} />
-            <sc.PageTreeCell component="div">
+            <sc.PageInfoCell component="div">
                 <PageInfo page={page} toggleExpand={toggleExpand}>
-                    <PageSelectButton page={page} onClick={handleRowClick} />
+                    <PageLabel page={page} onClick={handleRowClick} disabled={disabled} />
                 </PageInfo>
-            </sc.PageTreeCell>
-            <sc.PageTreeCell component="div">
+            </sc.PageInfoCell>
+            <sc.PageVisibilityCell component="div">
                 <PageVisibility>
                     <PageVisibilityIcon visibility={page.visibility} />
                     <FormattedMessage
@@ -297,12 +298,12 @@ function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowPr
                         }}
                     />
                 </PageVisibility>
-            </sc.PageTreeCell>
+            </sc.PageVisibilityCell>
             <sc.PageTreeCell component="div" align="right">
                 <ArrowRight />
             </sc.PageTreeCell>
             <sc.RowClickContainer onClick={handleRowClick} />
             <PageTreeRowDivider align="bottom" leftSpacing={0} highlight={false} />
-        </TableRow>
+        </PageTreeTableRow>
     );
 }
