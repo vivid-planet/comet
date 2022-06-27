@@ -89,7 +89,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                     />
                 </Grid>
                 <Grid item>
-                    <Tooltip title={<FormattedMessage id={"comet.dam.actions.tooltip.delete"} defaultMessage={"Delete"} />}>
+                    <Tooltip title={<FormattedMessage id="comet.dam.actions.tooltip.delete" defaultMessage="Delete" />}>
                         <span>
                             <IconButton
                                 disabled={damMultiselectApi.selectedItems.length === 0}
@@ -112,7 +112,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                     }
                     setDeleteDialogOpen(false);
                 }}
-                itemType={"selected_items"}
+                itemType="selected_items"
             />
         </>
     );

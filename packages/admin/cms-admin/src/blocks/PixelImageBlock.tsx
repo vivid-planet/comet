@@ -153,7 +153,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                 {state.damFile?.image ? (
                     <>
                         <AdminComponentPaper disablePadding>
-                            <ButtonBase component={"div"} onClick={() => setOpen(true)} classes={{ root: classes.contentRoot }}>
+                            <ButtonBase component="div" onClick={() => setOpen(true)} classes={{ root: classes.contentRoot }}>
                                 <Grid container alignItems="center" spacing={3}>
                                     <Grid item>{previewUrl && <PreviewImage src={previewUrl} width="70" height="70" />}</Grid>
                                     <Grid item xs>

@@ -29,7 +29,7 @@ function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.Rea
                     </Grid>
                     <Grid item>
                         <Typography>
-                            <FormattedMessage id={"comet.preview.openLink.title"} defaultMessage={"Open Link"} />
+                            <FormattedMessage id="comet.preview.openLink.title" defaultMessage="Open Link" />
                         </Typography>
                     </Grid>
                 </Grid>
@@ -37,7 +37,7 @@ function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.Rea
             <DialogContent>
                 <Typography>
                     <FormattedMessage
-                        id={"comet.preview.openExternalLink.description"}
+                        id="comet.preview.openExternalLink.description"
                         defaultMessage={'Do you want to open "{url}" in a new Browser tab?'}
                         values={{
                             url: link?.targetUrl,
@@ -55,7 +55,7 @@ function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.Rea
                         onClose?.();
                         window.open(link?.targetUrl);
                     }}
-                    variant={"contained"}
+                    variant="contained"
                     color="primary"
                 >
                     <FormattedMessage id="comet.openLinkDialog.actionButtons.open" defaultMessage="Open" />

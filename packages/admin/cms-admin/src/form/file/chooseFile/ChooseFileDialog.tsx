@@ -48,12 +48,12 @@ const renderDamLabel = (
 ) => {
     return isFile(row) ? (
         <div>
-            <TableRowButton disableRipple={true} variant={"text"} onClick={() => onChooseFile(row.id)} fullWidth>
+            <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
                 <DamLabel asset={row} matches={matches} />
             </TableRowButton>
         </div>
     ) : (
-        <Link underline="none" component={StackLink} pageName={"folder"} payload={row.id}>
+        <Link underline="none" component={StackLink} pageName="folder" payload={row.id}>
             <DamLabel asset={row} matches={matches} />
         </Link>
     );
@@ -80,7 +80,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
                     TableContainer={DialogContent}
                     allowedMimetypes={allowedMimetypes}
-                    damLocationStorageKey={"choose-file-dam-location"}
+                    damLocationStorageKey="choose-file-dam-location"
                     hideContextMenu={true}
                     disableScopeIndicator={true}
                     hideMultiselect={true}

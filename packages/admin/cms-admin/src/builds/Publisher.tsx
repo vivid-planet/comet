@@ -72,7 +72,7 @@ export function Publisher(): React.ReactElement {
             </ContentScopeIndicator>
             <Toolbar>
                 <ToolbarTitleItem>
-                    <FormattedMessage id={"comet.publisher.title"} defaultMessage={"Publisher"} />
+                    <FormattedMessage id="comet.publisher.title" defaultMessage="Publisher" />
                 </ToolbarTitleItem>
                 <ToolbarFillSpace />
                 <ToolbarActions>

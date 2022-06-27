@@ -19,8 +19,8 @@ export const FinalFormSaveSplitButton = ({ localStorageKey }: PropsWithChildren<
     return (
         <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey={localStorageKey}>
             <SaveButton
-                color={"primary"}
-                variant={"contained"}
+                color="primary"
+                variant="contained"
                 saving={submitting}
                 hasErrors={hasSubmitErrors}
                 onClick={() => {
@@ -30,8 +30,8 @@ export const FinalFormSaveSplitButton = ({ localStorageKey }: PropsWithChildren<
                 <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
             </SaveButton>
             <SaveButton
-                color={"primary"}
-                variant={"contained"}
+                color="primary"
+                variant="contained"
                 saving={submitting}
                 hasErrors={hasSubmitErrors}
                 onClick={async () => {

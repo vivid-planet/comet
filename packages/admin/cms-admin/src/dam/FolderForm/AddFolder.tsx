@@ -18,7 +18,7 @@ const AddFolder = ({ parentId, selectionApi }: AddFolderProps): React.ReactEleme
 
     return (
         <FinalForm<FolderFormValues>
-            mode={"add"}
+            mode="add"
             onSubmit={async ({ name }: FolderFormValues) => {
                 await createDamFolder({
                     variables: {

@@ -32,7 +32,7 @@ const EditFolder = ({ id, selectionApi }: EditFolderProps): React.ReactElement =
 
     return (
         <FinalForm<FolderFormValues>
-            mode={"edit"}
+            mode="edit"
             onSubmit={async ({ name }: FolderFormValues) => {
                 await updateDamFolder({
                     variables: {

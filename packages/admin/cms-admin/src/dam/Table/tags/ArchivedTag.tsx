@@ -11,7 +11,7 @@ const StyledTag = styled(Tag)`
 export const ArchivedTag: React.VoidFunctionComponent = () => {
     return (
         <StyledTag>
-            <FormattedMessage id={"comet.pages.dam.tag.archived"} defaultMessage={"Archived"} />
+            <FormattedMessage id="comet.pages.dam.tag.archived" defaultMessage="Archived" />
         </StyledTag>
     );
 };

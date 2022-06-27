@@ -78,7 +78,7 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
             $isHovered={isHovered}
         >
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
-                {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage={"Asset Manager"} /> : data?.damFolder.name}
+                {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
             </Link>
         </FolderBreadcrumbWrapper>
     );

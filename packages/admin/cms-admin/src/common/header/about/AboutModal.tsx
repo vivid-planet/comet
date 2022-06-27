@@ -54,11 +54,11 @@ function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
                 <DialogTitle>
                     <div className={classes.dialogTitle}>
                         <Typography>
-                            <FormattedMessage id={"comet.about.dialog.title"} defaultMessage={"About"} />
+                            <FormattedMessage id="comet.about.dialog.title" defaultMessage="About" />
                         </Typography>
 
                         <div className={classes.spaceBetween} />
-                        <IconButton onClick={onClose} color={"inherit"} size="large">
+                        <IconButton onClick={onClose} color="inherit" size="large">
                             <Close />
                         </IconButton>
                     </div>
@@ -70,8 +70,8 @@ function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
                         <div>
                             <Typography classes={{ root: classes.version }}>
                                 <FormattedMessage
-                                    id={"comet.version.title"}
-                                    defaultMessage={"Version: {buildNumber} ({commitSha})"}
+                                    id="comet.version.title"
+                                    defaultMessage="Version: {buildNumber} ({commitSha})"
                                     values={{
                                         buildNumber: process.env.BUILD_NUMBER,
                                         commitSha: process.env.COMMIT_SHA !== "" ? process.env.COMMIT_SHA : "unknown",
@@ -88,10 +88,10 @@ function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
                         )}
                     </div>
                     <Typography>
-                        <FormattedMessage id={"comet.about.dialog.copyright"} defaultMessage={"Copyright © Vivid Planet Software GmbH"} />
+                        <FormattedMessage id="comet.about.dialog.copyright" defaultMessage="Copyright © Vivid Planet Software GmbH" />
                     </Typography>
 
-                    <Link href={"https://www.vivid-planet.com"} target={"_blank"} underline="hover">
+                    <Link href="https://www.vivid-planet.com" target="_blank" underline="hover">
                         {/* eslint-disable-next-line @calm/react-intl/missing-formatted-message */}
                         <Typography>www.vivid-planet.com</Typography>
                     </Link>

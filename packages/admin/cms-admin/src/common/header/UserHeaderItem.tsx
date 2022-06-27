@@ -45,8 +45,8 @@ export function UserHeaderItem(): React.ReactElement {
                 <Separator />
                 <Button
                     fullWidth
-                    variant={"contained"}
-                    color={"primary"}
+                    variant="contained"
+                    color="primary"
                     endIcon={<Logout />}
                     onClick={async () => {
                         if (authorization) {

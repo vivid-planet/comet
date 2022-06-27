@@ -62,7 +62,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     return (
         <>
             <Drawer
-                variant={"temporary"}
+                variant="temporary"
                 className={temporaryDrawerClasses.join(" ")}
                 open={temporaryOpen}
                 PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
@@ -72,7 +72,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
                 {children}
             </Drawer>
             <Drawer
-                variant={"permanent"}
+                variant="permanent"
                 className={permanentDrawerClasses.join(" ")}
                 open={permanentOpen}
                 style={{ width: permanentOpen ? drawerWidth : 0 }}

@@ -30,7 +30,7 @@ function Breadcrumbs({ typographyProps, classes }: ToolbarBreadcrumbsProps & Wit
                                             {...typographyProps}
                                             classes={{ root: `${classes.typographyRoot} ${isActive ? classes.typographyActiveRoot : ""}` }}
                                         >
-                                            <Link to={url} component={BreadcrumbLink} color={"inherit"}>
+                                            <Link to={url} component={BreadcrumbLink} color="inherit">
                                                 {title}
                                             </Link>
                                         </Typography>

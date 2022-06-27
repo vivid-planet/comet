@@ -113,7 +113,7 @@ export function RedirectsTable(): JSX.Element {
                 </ToolbarItem>
                 <ToolbarItem>
                     <Field
-                        name={"type"}
+                        name="type"
                         label={intl.formatMessage({
                             id: "comet.redirects.redirect.generationType.type",
                             defaultMessage: "Redirect Type",
@@ -134,8 +134,8 @@ export function RedirectsTable(): JSX.Element {
                 <ToolbarItem>
                     {/* TODO: Replace with FinalFormSelect when boolean-values have been changed to strings */}
                     <Field
-                        name={"active"}
-                        defaultValue={"all"}
+                        name="active"
+                        defaultValue="all"
                         label={intl.formatMessage({
                             id: "comet.redirects.redirect.activation.title",
                             defaultMessage: "Activation",
@@ -218,7 +218,7 @@ export function RedirectsTable(): JSX.Element {
                                                 }}
                                                 size="large"
                                             >
-                                                <Edit color={"primary"} />
+                                                <Edit color="primary" />
                                             </IconButton>
                                             <TableDeleteButton
                                                 icon={<DeleteIcon />}

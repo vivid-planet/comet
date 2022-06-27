@@ -24,6 +24,7 @@ module.exports = {
         "react/self-closing-comp": "error",
         "react/display-name": "off",
         "react/prop-types": "off",
+        "react/jsx-curly-brace-presence": "error",
         "no-restricted-imports": [
             "error",
             {

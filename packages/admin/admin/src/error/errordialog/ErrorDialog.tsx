@@ -54,7 +54,7 @@ export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = 
                     {process.env.NODE_ENV === "development" && (
                         <Accordion>
                             <AccordionSummary expandIcon={<KeyboardArrowDown />}>
-                                <FormattedMessage id={"comet.errorDialog.Details"} defaultMessage={"Details"} />
+                                <FormattedMessage id="comet.errorDialog.Details" defaultMessage="Details" />
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography>{error}</Typography>
