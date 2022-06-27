@@ -138,9 +138,9 @@ import { Page } from "./pages/entities/page.entity";
                     filesBaseUrl: `${config.API_URL}/dam/files`,
                     imagesBaseUrl: `${config.API_URL}/dam/images`,
                     secret: config.DAM_SECRET,
+                    additionalMimeTypes: [],
                     allowedImageSizes: config.DAM_ALLOWED_IMAGE_SIZES,
                     allowedAspectRatios: config.DAM_ALLOWED_IMAGE_ASPECT_RATIOS,
-                    additionalMimetypes: config.DAM_ADDITIONAL_MIMETYPES,
                     filesDirectory: `${config.BLOB_STORAGE_DIRECTORY_PREFIX}-files`,
                     cacheDirectory: `${config.BLOB_STORAGE_DIRECTORY_PREFIX}-cache`,
                 },
@@ -160,6 +160,7 @@ import { Page } from "./pages/entities/page.entity";
                 publicUploadConfig: {
                     maxFileSize: config.PUBLIC_UPLOADS_MAX_FILE_SIZE,
                     directory: `${config.BLOB_STORAGE_DIRECTORY_PREFIX}-public-uploads`,
+                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 },
             }),
             inject: [configNS.KEY],

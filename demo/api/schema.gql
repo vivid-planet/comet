@@ -254,20 +254,7 @@ enum SlugAvailability {
 
 input FileFilterInput {
   searchText: String
-
-  """Filter by file category. Is overruled by mimetypes."""
-  category: FileCategory
-
-  """Filter by mimetype. Overrules category."""
   mimetypes: [String!]
-}
-
-enum FileCategory {
-  PIXEL_IMAGE
-  SVG_IMAGE
-  VIDEO
-  AUDIO
-  OTHER
 }
 
 input FolderFilterInput {

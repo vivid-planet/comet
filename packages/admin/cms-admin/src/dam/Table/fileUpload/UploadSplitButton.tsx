@@ -6,31 +6,29 @@ import * as React from "react";
 import { useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
-import { GQLFileCategory } from "../../../graphql.generated";
-import { acceptedMimeTypes, acceptedMimeTypesByCategory } from "./acceptedMimeTypes";
+import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useFileUpload } from "./useFileUpload";
 
 interface UploadSplitButtonProps {
     folderId?: string;
     filter?: {
-        fileCategory?: GQLFileCategory;
         allowedMimetypes?: string[];
     };
 }
 
 export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps): React.ReactElement => {
     const client = useApolloClient();
+    const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
     const fileInputRef = React.useRef<HTMLInputElement>(null);
     const folderInputRef = React.useRef<HTMLInputElement>(null);
 
-    const fileCategoryMimetypes = filter?.fileCategory ? acceptedMimeTypesByCategory[filter.fileCategory] : undefined;
     const {
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
     } = useFileUpload({
-        acceptedMimetypes: filter?.allowedMimetypes ?? fileCategoryMimetypes ?? acceptedMimeTypes,
+        acceptedMimetypes: filter?.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
         },

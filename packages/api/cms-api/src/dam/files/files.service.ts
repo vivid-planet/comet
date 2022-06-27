@@ -24,7 +24,6 @@ import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { FileArgs } from "./dto/file.args";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
-import { FileCategory } from "./dto/file-type.enum";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { File } from "./entities/file.entity";
 import { FileImage } from "./entities/file-image.entity";
@@ -42,7 +41,6 @@ export const withFilesSelect = (
         contentHash?: string;
         archived?: boolean;
         mimetypes?: string[];
-        category?: FileCategory;
         sort?: SortInput;
     },
 ): QueryBuilder<File> => {
@@ -62,19 +60,6 @@ export const withFilesSelect = (
     }
     if (args.mimetypes !== undefined) {
         qb.andWhere({ mimetype: { $in: args.mimetypes } });
-    }
-    if (args.category !== undefined) {
-        if (args.category === FileCategory.SVG_IMAGE) {
-            qb.andWhere("file.mimetype = 'image/svg+xml'");
-        } else if (args.category === FileCategory.PIXEL_IMAGE) {
-            qb.andWhere("file.mimetype LIKE 'image/%' AND file.mimetype != 'image/svg+xml'");
-        } else if (args.category === FileCategory.AUDIO) {
-            qb.andWhere("file.mimetype LIKE 'audio/%'");
-        } else if (args.category === FileCategory.VIDEO) {
-            qb.andWhere("file.mimetype LIKE 'video/%'");
-        } else {
-            qb.andWhere("file.mimetype NOT LIKE 'audio/%' AND file.mimetype NOT LIKE 'video/%' AND file.mimetype NOT LIKE 'image/%'");
-        }
     }
 
     if (args.imageId) qb.andWhere({ image: { id: args.imageId } });
@@ -117,7 +102,6 @@ export class FilesService {
             archived: !includeArchived ? false : undefined,
             folderId: !isSearching ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
-            category: filter?.category,
             query: filter?.searchText,
             sort: sort,
         }).getResult();

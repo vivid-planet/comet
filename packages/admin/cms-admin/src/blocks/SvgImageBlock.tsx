@@ -15,7 +15,7 @@ import { Divider, Grid, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FileField } from "..";
+import { FileField, useDamAcceptedMimeTypes } from "..";
 import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
 import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "../graphql.generated";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
@@ -95,6 +95,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
 
     AdminComponent: ({ state, updateState }) => {
         const context = useCmsBlockContext();
+        const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
         const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl);
 
@@ -130,7 +131,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                             component={FileField}
                             fullWidth
                             buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
-                            fileCategory={"SVG_IMAGE"}
+                            allowedMimetypes={filteredAcceptedMimeTypes.svgImage}
                         />
                     </BlocksFinalForm>
                 )}

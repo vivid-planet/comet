@@ -75,10 +75,6 @@ export class EnvironmentVariables {
     @IsString()
     DAM_ALLOWED_IMAGE_ASPECT_RATIOS: string;
 
-    @IsOptional()
-    @IsString()
-    DAM_ADDITIONAL_MIMETYPES?: string;
-
     @IsString()
     BLOB_STORAGE_DRIVER: BlobStorageConfig["backend"]["driver"];
 

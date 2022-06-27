@@ -8,16 +8,17 @@ import os from "os";
 import { Observable } from "rxjs";
 import { v4 as uuidv4 } from "uuid";
 
-import { CometValidationException } from "../common/errors/validation.exception";
-import { PublicUploadConfig } from "./public-upload.config";
-import { PUBLIC_UPLOAD_CONFIG } from "./public-upload.constants";
+import { CometValidationException } from "../../common/errors/validation.exception";
+import { defaultDamAcceptedMimetypes } from "../common/mimeTypes/default-dam-accepted-mimetypes";
+import { DamConfig } from "../dam.config";
+import { DAM_CONFIG } from "../dam.constants";
 
-export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
+export function DamUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
     @Injectable()
     class Interceptor implements NestInterceptor {
         fileInterceptor: NestInterceptor;
 
-        constructor(@Inject(PUBLIC_UPLOAD_CONFIG) private readonly config: PublicUploadConfig) {
+        constructor(@Inject(DAM_CONFIG) private readonly config: DamConfig) {
             const multerOptions: MulterOptions = {
                 storage: multer.diskStorage({
                     destination: function (req, file, cb) {
@@ -37,10 +38,12 @@ export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterce
                     },
                 }),
                 limits: {
-                    fileSize: config.maxFileSize * 1024 * 1024,
+                    fileSize: Number(process.env.DAM_UPLOADS_MAX_FILE_SIZE) * 1024 * 1024,
                 },
                 fileFilter: (req, file, cb) => {
-                    if (!config.acceptedMimeTypes.includes(file.mimetype)) {
+                    const acceptedMimeTypes = [...defaultDamAcceptedMimetypes, ...(config.additionalMimeTypes ?? [])];
+
+                    if (!acceptedMimeTypes.includes(file.mimetype)) {
                         return cb(new CometValidationException(`Unsupported mime type: ${file.mimetype}`), false);
                     }
 

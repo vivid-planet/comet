@@ -19,6 +19,7 @@ import { FormattedMessage } from "react-intl";
 
 import { FileField } from "..";
 import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
+import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "../graphql.generated";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { EditImageDialog } from "./image/EditImageDialog";
@@ -127,6 +128,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
         const context = useCmsBlockContext();
         const classes = useStyles();
+        const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
         // useSyncImageAttributes({ state, updateState });
 
@@ -221,7 +223,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                             component={FileField}
                             fullWidth
                             buttonText={<FormattedMessage id="comet.blocks.image.chooseImage" defaultMessage="Choose image" />}
-                            fileCategory={"PIXEL_IMAGE"}
+                            allowedMimetypes={filteredAcceptedMimeTypes.pixelImage}
                         />
                     </BlocksFinalForm>
                 )}

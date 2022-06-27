@@ -1,9 +1,8 @@
 import { ArgsType, Field, ID, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsBoolean, IsEnum, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
 import { SortInput } from "../../../index";
-import { FileCategory } from "./file-type.enum";
 
 @InputType()
 class FileFilterInput {
@@ -12,12 +11,7 @@ class FileFilterInput {
     @IsString()
     searchText?: string;
 
-    @Field(() => FileCategory, { nullable: true, description: "Filter by file category. Is overruled by mimetypes." })
-    @IsOptional()
-    @IsEnum(FileCategory)
-    category?: FileCategory;
-
-    @Field(() => [String], { nullable: true, description: "Filter by mimetype. Overrules category." })
+    @Field(() => [String], { nullable: true })
     @IsOptional()
     @IsString({ each: true })
     mimetypes?: string[];

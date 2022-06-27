@@ -16,9 +16,9 @@ import {
     GQLUpdateDamFolderMutationVariables,
     namedOperations,
 } from "../../graphql.generated";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig } from "../DamTable";
 import { FooterType } from "./DamDnDFooter";
-import { acceptedMimeTypes, acceptedMimeTypesByCategory } from "./fileUpload/acceptedMimeTypes";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { updateDamFileMutation, updateDamFolderMutation } from "./FolderTable.gql";
 import { useDamMultiselectApi } from "./multiselect/DamMultiselect";
@@ -67,26 +67,25 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     rowProps,
     children,
     footerApi,
-    fileCategory,
     allowedMimetypes,
     archived,
     hideMultiselect,
 }) => {
     const multiselectApi = useDamMultiselectApi();
     const client = useApolloClient();
+    const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
     const rowRef = React.useRef<HTMLTableRowElement>();
     const [updateFile] = useMutation<GQLUpdateDamFileMutation, GQLUpdateDamFileMutationVariables>(updateDamFileMutation);
     const [updateFolder] = useMutation<GQLUpdateDamFolderMutation, GQLUpdateDamFolderMutationVariables>(updateDamFolderMutation);
     const [isHovered, setIsHovered] = React.useState<HoverStyle>();
 
-    const fileCategoryMimetypes = fileCategory ? acceptedMimeTypesByCategory[fileCategory] : undefined;
     const {
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
     } = useFileUpload({
-        acceptedMimetypes: allowedMimetypes ?? fileCategoryMimetypes ?? acceptedMimeTypes,
+        acceptedMimetypes: allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
         },

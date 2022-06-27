@@ -23,13 +23,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { TextMatch } from "../common/MarkedMatches";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import {
-    GQLDamFileTableFragment,
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamFolderTableFragment,
-    GQLFileCategory,
-} from "../graphql.generated";
+import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../graphql.generated";
 import EditFile from "./FileForm/EditFile";
 import { UploadSplitButton } from "./Table/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./Table/filter/DamTableFilter";
@@ -56,7 +50,6 @@ interface FolderProps extends DamConfig {
 }
 
 export interface DamFilter {
-    fileCategory?: GQLFileCategory;
     allowedMimetypes?: string[];
     archived?: boolean;
     searchText?: string;
@@ -112,7 +105,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             <UploadSplitButton
                                 folderId={id}
                                 filter={{
-                                    fileCategory: props.fileCategory,
                                     allowedMimetypes: props.allowedMimetypes,
                                 }}
                             />
@@ -141,9 +133,6 @@ export interface DamConfig {
     TableContainer?: ({ children }: { children: React.ReactNode }) => React.ReactElement;
     hideArchiveFilter?: boolean;
     hideContextMenu?: boolean;
-    /** Filter files by category. Is overruled by allowedMimetypes. */
-    fileCategory?: GQLFileCategory;
-    /** Filter files by mimetype. Overrules fileCategory. */
     allowedMimetypes?: string[];
     disableScopeIndicator?: boolean;
     hideMultiselect?: boolean;

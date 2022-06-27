@@ -32,6 +32,7 @@ import {
     GQLDamFoldersListQueryVariables,
     GQLDamFolderTableFragment,
 } from "../../graphql.generated";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
@@ -39,7 +40,6 @@ import { DamActions } from "./damActions/DamActions";
 import DamContextMenu from "./DamContextMenu";
 import { DamDnDFooter, FooterType } from "./DamDnDFooter";
 import DamLabel from "./DamLabel";
-import { acceptedMimeTypes, acceptedMimeTypesByCategory } from "./fileUpload/acceptedMimeTypes";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { damFilesListQuery, damFolderQuery, damFoldersListQuery } from "./FolderTable.gql";
 import * as sc from "./FolderTable.sc";
@@ -69,18 +69,18 @@ const FolderTable = ({
 }: FolderTableProps): React.ReactElement => {
     const client = useApolloClient();
     const intl = useIntl();
+    const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
     const [footerType, setFooterType] = React.useState<FooterType>();
     const [footerFolderName, setFooterFolderName] = React.useState<string>();
 
-    const fileCategoryMimetypes = props.fileCategory ? acceptedMimeTypesByCategory[props.fileCategory] : undefined;
     const {
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
     } = useFileUpload({
-        acceptedMimetypes: props.allowedMimetypes ?? fileCategoryMimetypes ?? acceptedMimeTypes,
+        acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
         },
@@ -132,7 +132,6 @@ const FolderTable = ({
             folderId: id,
             includeArchived: filterApi.current.archived,
             fileFilter: {
-                category: props.fileCategory,
                 mimetypes: props.allowedMimetypes,
                 searchText: filterApi.current.searchText,
             },
