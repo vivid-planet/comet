@@ -15,7 +15,6 @@ module.exports = {
     ],
     redirects: async () => {
         var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
-        console.log("Redirects", redirects);
         return redirects;
     },
     images: {
