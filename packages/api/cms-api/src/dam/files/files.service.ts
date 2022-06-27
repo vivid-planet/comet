@@ -157,6 +157,17 @@ export class FilesService {
         return this.save(file);
     }
 
+    async moveBatch(fileIds: string[], targetFolderId?: string): Promise<File[]> {
+        const files = [];
+
+        for (const id of fileIds) {
+            const file = await this.updateById(id, { folderId: targetFolderId });
+            files.push(file);
+        }
+
+        return files;
+    }
+
     async delete(id: string): Promise<boolean> {
         const file = await this.findOneById(id);
         if (!file) throw new CometEntityNotFoundException();

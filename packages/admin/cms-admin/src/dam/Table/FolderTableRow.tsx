@@ -1,5 +1,5 @@
-import { useApolloClient, useMutation } from "@apollo/client";
-import { LocalErrorScopeApolloContext, TableBodyRow, TableBodyRowProps } from "@comet/admin";
+import { useApolloClient } from "@apollo/client";
+import { TableBodyRow, TableBodyRowProps } from "@comet/admin";
 import { Checkbox, TableCell } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -7,20 +7,12 @@ import { useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useDropzone } from "react-dropzone";
 
-import {
-    GQLDamFileTableFragment,
-    GQLDamFolderTableFragment,
-    GQLUpdateDamFileMutation,
-    GQLUpdateDamFileMutationVariables,
-    GQLUpdateDamFolderMutation,
-    GQLUpdateDamFolderMutationVariables,
-    namedOperations,
-} from "../../graphql.generated";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig } from "../DamTable";
 import { FooterType } from "./DamDnDFooter";
+import { useDamDnD } from "./dnd/useDamDnd";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { updateDamFileMutation, updateDamFolderMutation } from "./FolderTable.gql";
 import { useDamMultiselectApi } from "./multiselect/DamMultiselect";
 
 export const isFile = (item: GQLDamFileTableFragment | GQLDamFolderTableFragment): item is GQLDamFileTableFragment => item.__typename === "DamFile";
@@ -74,10 +66,9 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     const multiselectApi = useDamMultiselectApi();
     const client = useApolloClient();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+    const { moveItem } = useDamDnD();
 
     const rowRef = React.useRef<HTMLTableRowElement>();
-    const [updateFile] = useMutation<GQLUpdateDamFileMutation, GQLUpdateDamFileMutationVariables>(updateDamFileMutation);
-    const [updateFolder] = useMutation<GQLUpdateDamFolderMutation, GQLUpdateDamFolderMutationVariables>(updateDamFolderMutation);
     const [isHovered, setIsHovered] = React.useState<HoverStyle>();
 
     const {
@@ -118,36 +109,13 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
             if (isFile(dropTargetItem)) {
                 return;
             }
-            if (dropTargetItem.id === dragObject.item.id) {
-                return;
-            }
-
-            if (isFile(dragObject.item)) {
-                updateFile({
-                    variables: {
-                        id: dragObject.item.id,
-                        input: {
-                            folderId: dropTargetItem.id,
-                        },
-                    },
-                    refetchQueries: [namedOperations.Query.DamList],
-                    context: LocalErrorScopeApolloContext,
-                });
-            } else if (isFolder(dragObject.item)) {
-                updateFolder({
-                    variables: {
-                        id: dragObject.item.id,
-                        input: {
-                            parentId: dropTargetItem.id,
-                        },
-                    },
-                    refetchQueries: [namedOperations.Query.DamList],
-                    context: LocalErrorScopeApolloContext,
-                });
-            }
+            moveItem({ dropTargetItem, dragItem: dragObject.item });
         },
         canDrop: (dragObject: DamDragObject) => {
-            return dropTargetItem.id !== dragObject.item.id;
+            return (
+                dropTargetItem.id !== dragObject.item.id &&
+                !(multiselectApi.isSelected(dragObject.item.id) && multiselectApi.isSelected(dropTargetItem.id))
+            );
         },
         collect: (monitor) => ({
             isOverFolder: monitor.isOver(),

@@ -211,11 +211,13 @@ type Mutation {
   updateRedirectActiveness(input: RedirectUpdateActivenessInput!, id: ID!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(input: UpdateDamFileInput!, id: ID!): DamFile!
+  moveDamFiles(targetFolderId: ID, fileIds: [ID!]!): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
   restoreDamFile(id: ID!): DamFile!
   deleteDamFile(id: ID!): Boolean!
   createDamFolder(input: CreateDamFolderInput!): DamFolder!
   updateDamFolder(input: UpdateDamFolderInput!, id: ID!): DamFolder!
+  moveDamFolders(targetFolderId: ID, folderIds: [ID!]!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
   updatePageTreeNode(input: PageTreeNodeUpdateInput!, id: ID!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!

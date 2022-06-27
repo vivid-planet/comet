@@ -110,6 +110,17 @@ export class FoldersService {
         return folder;
     }
 
+    async moveBatch(folderIds: string[], targetFolderId?: string): Promise<Folder[]> {
+        const folders = [];
+
+        for (const id of folderIds) {
+            const folder = await this.updateById(id, { parentId: targetFolderId });
+            folders.push(folder);
+        }
+
+        return folders;
+    }
+
     async delete(id: string): Promise<boolean> {
         const files = await this.filesService.findAll({ folderId: id });
         for (const file of files) {

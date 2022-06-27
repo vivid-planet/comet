@@ -9,8 +9,7 @@ import {
     GQLUpdateDamFolderMutation,
     GQLUpdateDamFolderMutationVariables,
 } from "../../graphql.generated";
-import { updateDamFolderMutation } from "../Table/FolderTable.gql";
-import { editFolderQuery } from "./EditFolder.gql";
+import { editFolderQuery, updateDamFolderMutation } from "./EditFolder.gql";
 import { FolderFormFields, FolderFormValues } from "./FolderFormFields";
 
 interface EditFolderProps {

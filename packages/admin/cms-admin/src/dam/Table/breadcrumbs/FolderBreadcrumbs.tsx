@@ -1,5 +1,4 @@
-import { useMutation } from "@apollo/client";
-import { BreadcrumbItem, LocalErrorScopeApolloContext } from "@comet/admin";
+import { BreadcrumbItem } from "@comet/admin";
 import { ChevronRight } from "@comet/admin-icons";
 import { Breadcrumbs, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -9,18 +8,9 @@ import { FormattedMessage } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 
 import { useOptimisticQuery } from "../../../common/useOptimisticQuery";
-import {
-    GQLDamFolderBreadcrumbFragment,
-    GQLDamFolderBreadcrumbQuery,
-    GQLDamFolderBreadcrumbQueryVariables,
-    GQLUpdateDamFileMutation,
-    GQLUpdateDamFileMutationVariables,
-    GQLUpdateDamFolderMutation,
-    GQLUpdateDamFolderMutationVariables,
-    namedOperations,
-} from "../../../graphql.generated";
-import { updateDamFileMutation, updateDamFolderMutation } from "../FolderTable.gql";
-import { DamDragObject, isFile, isFolder } from "../FolderTableRow";
+import { GQLDamFolderBreadcrumbFragment, GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables } from "../../../graphql.generated";
+import { useDamDnD } from "../dnd/useDamDnd";
+import { DamDragObject } from "../FolderTableRow";
 import { damFolderBreadcrumbFragment, damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
 
 interface DamBreadcrumbItem {
@@ -48,10 +38,8 @@ const FolderBreadcrumbWrapper = styled("div")<{ $isHovered: boolean }>`
 `;
 
 const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
+    const { moveItem } = useDamDnD();
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
-
-    const [updateFile] = useMutation<GQLUpdateDamFileMutation, GQLUpdateDamFileMutationVariables>(updateDamFileMutation);
-    const [updateFolder] = useMutation<GQLUpdateDamFolderMutation, GQLUpdateDamFolderMutationVariables>(updateDamFolderMutation);
 
     const { data } = useOptimisticQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
         variables: {
@@ -73,30 +61,7 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
     const [, dropTarget] = useDrop({
         accept: ["folder", "asset"],
         drop: (dragObject: DamDragObject) => {
-            if (isFile(dragObject.item)) {
-                updateFile({
-                    variables: {
-                        id: dragObject.item.id,
-                        input: {
-                            folderId: id,
-                        },
-                    },
-                    refetchQueries: [namedOperations.Query.DamList],
-                    context: LocalErrorScopeApolloContext,
-                });
-            } else if (isFolder(dragObject.item)) {
-                updateFolder({
-                    variables: {
-                        id: dragObject.item.id,
-                        input: {
-                            parentId: id,
-                        },
-                    },
-                    refetchQueries: [namedOperations.Query.DamList],
-                    context: LocalErrorScopeApolloContext,
-                });
-            }
-
+            moveItem({ dropTargetItem: { id }, dragItem: dragObject.item });
             setIsHovered(false);
         },
         hover: () => {

@@ -42,6 +42,14 @@ export class FoldersResolver {
         return this.foldersService.updateById(id, input);
     }
 
+    @Mutation(() => [Folder])
+    async moveDamFolders(
+        @Args("folderIds", { type: () => [ID] }) folderIds: string[],
+        @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
+    ): Promise<Folder[]> {
+        return this.foldersService.moveBatch(folderIds, targetFolderId);
+    }
+
     @Mutation(() => Boolean)
     async deleteDamFolder(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         return this.foldersService.delete(id);
