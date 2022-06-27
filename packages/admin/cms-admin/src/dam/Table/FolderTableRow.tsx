@@ -130,7 +130,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
                             folderId: dropTargetItem.id,
                         },
                     },
-                    refetchQueries: [namedOperations.Query.DamFilesList, namedOperations.Query.DamFoldersList],
+                    refetchQueries: [namedOperations.Query.DamList],
                     context: LocalErrorScopeApolloContext,
                 });
             } else if (isFolder(dragObject.item)) {
@@ -141,7 +141,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
                             parentId: dropTargetItem.id,
                         },
                     },
-                    refetchQueries: [namedOperations.Query.DamFilesList, namedOperations.Query.DamFoldersList],
+                    refetchQueries: [namedOperations.Query.DamList],
                     context: LocalErrorScopeApolloContext,
                 });
             }

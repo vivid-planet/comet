@@ -68,7 +68,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
             }
         }
 
-        await client.refetchQueries({ include: [namedOperations.Query.DamFoldersList, namedOperations.Query.DamFilesList] });
+        await client.refetchQueries({ include: [namedOperations.Query.DamList] });
         damMultiselectApi.unselectAll();
         setDeleting(false);
     };

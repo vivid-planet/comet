@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { BreadcrumbItem, LocalErrorScopeApolloContext } from "@comet/admin";
 import { ChevronRight } from "@comet/admin-icons";
 import { Breadcrumbs, Link } from "@mui/material";
@@ -8,7 +8,9 @@ import { useDrop } from "react-dnd";
 import { FormattedMessage } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 
+import { useOptimisticQuery } from "../../../common/useOptimisticQuery";
 import {
+    GQLDamFolderBreadcrumbFragment,
     GQLDamFolderBreadcrumbQuery,
     GQLDamFolderBreadcrumbQueryVariables,
     GQLUpdateDamFileMutation,
@@ -19,21 +21,19 @@ import {
 } from "../../../graphql.generated";
 import { updateDamFileMutation, updateDamFolderMutation } from "../FolderTable.gql";
 import { DamDragObject, isFile, isFolder } from "../FolderTableRow";
-import { damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
+import { damFolderBreadcrumbFragment, damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
 
 interface DamBreadcrumbItem {
     id: string | null;
     url: string;
 }
 
-interface FolderBreadcrumbs {
+type FolderBreadcrumbProps = DamBreadcrumbItem;
+
+interface FolderBreadcrumbsProps {
     breadcrumbs: BreadcrumbItem[];
     folderIds: Array<string | null>;
-}
-
-interface FolderBreadcrumb {
-    id: string | null;
-    url: string;
+    loading?: boolean;
 }
 
 const FolderBreadcrumbWrapper = styled("div")<{ $isHovered: boolean }>`
@@ -47,18 +47,27 @@ const FolderBreadcrumbWrapper = styled("div")<{ $isHovered: boolean }>`
     }
 `;
 
-const FolderBreadcrumb = ({ id, url }: FolderBreadcrumb): React.ReactElement => {
+const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
 
     const [updateFile] = useMutation<GQLUpdateDamFileMutation, GQLUpdateDamFileMutationVariables>(updateDamFileMutation);
     const [updateFolder] = useMutation<GQLUpdateDamFolderMutation, GQLUpdateDamFolderMutationVariables>(updateDamFolderMutation);
 
-    const { data } = useQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
+    const { data } = useOptimisticQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
         variables: {
+            // Cannot be null because of skip
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             id: id!,
         },
         skip: id === null,
+        optimisticResponse: (cache) => {
+            const fragment = cache.readFragment<GQLDamFolderBreadcrumbFragment>({
+                id: cache.identify({ __typename: "DamFolder", id: id }),
+                fragment: damFolderBreadcrumbFragment,
+            });
+
+            return fragment ? { damFolder: fragment } : undefined;
+        },
     });
 
     const [, dropTarget] = useDrop({
@@ -72,7 +81,7 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumb): React.ReactElement => 
                             folderId: id,
                         },
                     },
-                    refetchQueries: [namedOperations.Query.DamFilesList, namedOperations.Query.DamFoldersList],
+                    refetchQueries: [namedOperations.Query.DamList],
                     context: LocalErrorScopeApolloContext,
                 });
             } else if (isFolder(dragObject.item)) {
@@ -83,7 +92,7 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumb): React.ReactElement => 
                             parentId: id,
                         },
                     },
-                    refetchQueries: [namedOperations.Query.DamFilesList, namedOperations.Query.DamFoldersList],
+                    refetchQueries: [namedOperations.Query.DamList],
                     context: LocalErrorScopeApolloContext,
                 });
             }
@@ -104,13 +113,13 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumb): React.ReactElement => 
             $isHovered={isHovered}
         >
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
-                {data?.damFolder.name ?? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage={"Asset Manager"} />}
+                {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage={"Asset Manager"} /> : data?.damFolder.name}
             </Link>
         </FolderBreadcrumbWrapper>
     );
 };
 
-const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds }: FolderBreadcrumbs): React.ReactElement | null => {
+const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds, loading }: FolderBreadcrumbsProps): React.ReactElement | null => {
     // before stackBreadcrumbs are generated, they have no items
     if (stackBreadcrumbs.length === 0) {
         return null;
@@ -142,9 +151,10 @@ const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds }: FolderB
 
     return (
         <Breadcrumbs separator={<ChevronRight fontSize="small" />}>
-            {damBreadcrumbs?.map((damBreadcrumb) => {
-                return <FolderBreadcrumb key={damBreadcrumb.id} id={damBreadcrumb.id} url={damBreadcrumb.url} />;
-            })}
+            {!loading &&
+                damBreadcrumbs?.map((damBreadcrumb) => {
+                    return <FolderBreadcrumb key={damBreadcrumb.id} id={damBreadcrumb.id} url={damBreadcrumb.url} />;
+                })}
         </Breadcrumbs>
     );
 };

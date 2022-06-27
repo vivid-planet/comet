@@ -4,14 +4,16 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLDamFolderQuery } from "../../graphql.generated";
+import { useOptimisticQuery } from "../../common/useOptimisticQuery";
+import { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables } from "../../graphql.generated";
 import FolderBreadcrumbs from "./breadcrumbs/FolderBreadcrumbs";
+import { damFolderMPathFragment, damFolderMPathQuery } from "./TableHead.gql";
 
 interface TableHeadProps {
     isSearching: boolean;
     numberItems?: number;
     breadcrumbs?: BreadcrumbItem[];
-    folderData?: GQLDamFolderQuery;
+    folderId?: string;
 }
 
 const TableHeadWrapper = styled("div")`
@@ -26,8 +28,25 @@ const BoldTypography = styled(Typography)`
     font-weight: 500;
 `;
 
-export const TableHead = ({ isSearching, numberItems, breadcrumbs, folderData }: TableHeadProps): React.ReactElement => {
+export const TableHead = ({ isSearching, numberItems, breadcrumbs, folderId }: TableHeadProps): React.ReactElement => {
     let content: React.ReactNode = null;
+
+    const { data, loading } = useOptimisticQuery<GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables>(damFolderMPathQuery, {
+        variables: {
+            // Cannot be null because of skip
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: folderId!,
+        },
+        skip: !folderId,
+        optimisticResponse: (cache) => {
+            const fragment = cache.readFragment<GQLDamFolderMPathFragment>({
+                id: cache.identify({ __typename: "DamFolder", id: folderId ?? null }),
+                fragment: damFolderMPathFragment,
+            });
+
+            return fragment ? { damFolder: fragment } : undefined;
+        },
+    });
 
     if (isSearching) {
         content = (
@@ -43,12 +62,12 @@ export const TableHead = ({ isSearching, numberItems, breadcrumbs, folderData }:
         );
     } else if (breadcrumbs) {
         const folderIds: Array<string | null> = [null];
-        if (folderData) {
-            folderIds.push(...folderData.damFolder.mpath);
-            folderIds.push(folderData.damFolder.id);
+        if (data?.damFolder) {
+            folderIds.push(...data.damFolder.mpath);
+            folderIds.push(data?.damFolder.id);
         }
 
-        content = <FolderBreadcrumbs breadcrumbs={breadcrumbs} folderIds={folderIds} />;
+        content = <FolderBreadcrumbs breadcrumbs={breadcrumbs} folderIds={folderIds} loading={loading && !data?.damFolder} />;
     }
 
     return <TableHeadWrapper>{content}</TableHeadWrapper>;
