@@ -11,8 +11,7 @@ import {
     useTableQuery,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Domain, Edit } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
-import { EditPageLayout } from "@comet/cms-admin/lib";
+import { ContentScopeIndicator, EditPageLayout } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import { useContentScope } from "@src/common/ContentScopeProvider";
