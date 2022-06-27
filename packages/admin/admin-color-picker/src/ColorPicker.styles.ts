@@ -5,46 +5,102 @@ import { ColorPickerProps } from "./ColorPicker";
 
 export type ColorPickerClassKey =
     | "popperRoot"
+    | "popperSection"
+    | "header"
+    | "headerTitleText"
+    | "headerCloseButton"
     | "colorPickerWrapper"
     | "colorPalette"
     | "colorPaletteItem"
+    | "footer"
+    | "footerClearButton"
     | "preview"
     | "previewIndicator"
     | "previewIndicatorColor"
     | "previewIndicatorEmpty"
     | "previewIndicatorInvalid";
 
-const emptyIndicatorLineColor = "red";
-const emptyIndicatorLineWidth = 2;
-
-export const styles = (theme: Theme) => {
+export const styles = ({ typography, palette, shape, spacing }: Theme) => {
     return createStyles<ColorPickerClassKey, ColorPickerProps>({
         popperRoot: {
-            width: 255,
+            width: 300,
+        },
+        popperSection: {
+            padding: spacing(3),
+
+            "&:not(:last-child)": {
+                borderBottom: `thin solid ${palette.grey[100]}`,
+            },
+        },
+        header: {
+            position: "relative",
+            paddingRight: 40,
+        },
+        headerTitleText: {
+            fontWeight: typography.fontWeightBold,
+        },
+        headerCloseButton: {
+            position: "absolute",
+            top: "50%",
+            transform: "translateY(-50%)",
+            right: spacing(2),
         },
         colorPickerWrapper: {
             "& .react-colorful": {
                 width: "100%",
-                height: 220,
+                height: "auto",
+
+                "&__pointer": {
+                    width: 30,
+                    height: 30,
+                },
 
                 "&__saturation, &__hue, &__alpha": {
                     borderRadius: 0,
+
+                    "&:not(:last-child)": {
+                        marginBottom: spacing(3),
+                    },
+                },
+
+                "&__saturation": {
+                    borderBottom: "none",
+                    height: 270,
+                },
+
+                "&__hue, &__alpha": {
+                    height: 20,
+                },
+
+                "&__alpha-gradient": {
+                    boxShadow: "none",
                 },
             },
         },
         colorPalette: {
             display: "flex",
             flexWrap: "wrap",
-            padding: theme.spacing(2),
-            gap: theme.spacing(1),
+            gap: spacing(1),
         },
         colorPaletteItem: {
             cursor: "pointer",
-            width: 25,
-            height: 25,
+            width: 24,
+            height: 24,
             flexShrink: 0,
-            border: `thin solid ${theme.palette.divider}`,
+            border: `thin solid ${palette.grey[100]}`,
+            borderRadius: shape.borderRadius,
             boxSizing: "border-box",
+        },
+        footer: {
+            padding: spacing(1),
+        },
+        footerClearButton: {
+            padding: spacing(2),
+            borderRadius: shape.borderRadius,
+
+            "& $preview": {
+                marginRight: 8,
+            },
         },
         preview: {
             position: "relative",
@@ -58,22 +114,29 @@ export const styles = (theme: Theme) => {
             right: 0,
             top: 0,
             bottom: 0,
-            border: `thin solid ${theme.palette.divider}`,
-            borderRadius: theme.shape.borderRadius,
+            border: `thin solid ${palette.divider}`,
+            borderRadius: shape.borderRadius,
         },
         previewIndicatorColor: {},
         previewIndicatorEmpty: {
-            background: `linear-gradient(to top left, transparent 0%, transparent calc(50% - ${
-                emptyIndicatorLineWidth / 2
-            }px), ${emptyIndicatorLineColor} calc(50% - ${emptyIndicatorLineWidth / 2}px), ${emptyIndicatorLineColor} calc(50% + ${
-                emptyIndicatorLineWidth / 2
-            }px), transparent calc(50% + ${emptyIndicatorLineWidth / 2}px), transparent 100%)`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+
+            "&:before": {
+                content: "''",
+                display: "block",
+                backgroundColor: "#F62929",
+                width: 1,
+                height: "calc(100% - 4px)",
+                transform: "rotate(45deg)",
+            },
         },
         previewIndicatorInvalid: {
             fontSize: 16,
             lineHeight: "24px",
-            fontWeight: theme.typography.fontWeightBold,
-            color: theme.palette.text.secondary,
+            fontWeight: typography.fontWeightBold,
+            color: palette.text.secondary,
             textAlign: "center",
         },
     });
