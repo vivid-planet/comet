@@ -42,3 +42,5 @@ src/blocks.generated.ts
 
 public/sitemap.xml
 public/robots.txt
+
+tsconfig.tsbuildinfo

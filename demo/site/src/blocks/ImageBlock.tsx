@@ -1,5 +1,6 @@
 import { PixelImageBlock, PreviewSkeleton, PropsWithData, SvgImageBlock, withPreview } from "@comet/cms-site";
 import { ImageBlockData, PixelImageBlockData } from "@src/blocks.generated";
+import { NextImageBottomPaddingFix } from "@src/components/common/NextImageBottomPaddingFix";
 import { ImageProps } from "next/image";
 import * as React from "react";
 import styled, { css } from "styled-components";
@@ -28,7 +29,9 @@ export const ImageBlock = withPreview(
         if (block.type === "pixelImage") {
             return (
                 <ImageWrapper hasShadow={hasShadow} isRound={isRound}>
-                    <PixelImageBlock data={block.props as PixelImageBlockData} layout={layout} aspectRatio={aspectRatio} {...imageProps} />
+                    <NextImageBottomPaddingFix>
+                        <PixelImageBlock data={block.props as PixelImageBlockData} layout={layout} aspectRatio={aspectRatio} {...imageProps} />
+                    </NextImageBottomPaddingFix>
                 </ImageWrapper>
             );
         } else if (block.type === "svgImage") {
