@@ -110,11 +110,11 @@ export class FilesService {
             .leftJoinAndSelect("file.folder", "folder");
     }
 
-    async findAll({ folderId, showArchived, filter, sort }: FileArgs): Promise<File[]> {
+    async findAll({ folderId, includeArchived, filter, sort }: FileArgs): Promise<File[]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
 
         return withFilesSelect(this.selectQueryBuilder(), {
-            archived: !showArchived ? false : undefined,
+            archived: !includeArchived ? false : undefined,
             folderId: !isSearching ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
             category: filter?.category,

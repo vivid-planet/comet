@@ -223,10 +223,10 @@ type Query {
   pageTreeNodeSlugAvailable(slug: String!, parentId: ID, scope: PageTreeNodeScopeInput!): SlugAvailability!
   redirects(query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
   redirect(id: ID!): Redirect!
-  damFilesList(folderId: ID, showArchived: Boolean, filter: FileFilterInput, sort: SortInput): [DamFile!]!
+  damFilesList(folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput, sort: SortInput): [DamFile!]!
   damFile(id: ID!): DamFile!
   damFilenameAlreadyExists(folderId: String, filename: String!): Boolean!
-  damFoldersList(parentId: ID, showArchived: Boolean, filter: FolderFilterInput, sort: SortInput): [DamFolder!]!
+  damFoldersList(parentId: ID, includeArchived: Boolean, filter: FolderFilterInput, sort: SortInput): [DamFolder!]!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(newsId: ID!): News

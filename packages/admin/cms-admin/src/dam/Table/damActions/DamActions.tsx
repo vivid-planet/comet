@@ -15,8 +15,8 @@ import {
     namedOperations,
 } from "../../../graphql.generated";
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
-import { deleteDamFileMutation } from "../../FileActions/ConfirmDeleteDialog.gql";
 import { useDamMultiselectApi } from "../multiselect/DamMultiselect";
+import { deleteDamFileMutation } from "./DamActions.gql";
 
 const GridContainer = styled(Grid)`
     padding: 2px 29px;

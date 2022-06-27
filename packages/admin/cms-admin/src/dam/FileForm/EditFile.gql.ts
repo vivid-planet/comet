@@ -46,21 +46,3 @@ export const updateDamFileMutation = gql`
     }
     ${damFileDetailFragment}
 `;
-
-export const archiveDamFileMutation = gql`
-    mutation ArchiveFile($id: ID!) {
-        archiveDamFile(id: $id) {
-            ...DamFileDetail
-        }
-    }
-    ${damFileDetailFragment}
-`;
-
-export const restoreDamFileMutation = gql`
-    mutation RestoreFile($id: ID!) {
-        restoreDamFile(id: $id) {
-            ...DamFileDetail
-        }
-    }
-    ${damFileDetailFragment}
-`;

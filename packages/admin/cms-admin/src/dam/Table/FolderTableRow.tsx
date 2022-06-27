@@ -36,17 +36,25 @@ interface FolderTableRowProps extends DamConfig {
         show: (type: FooterType, folderName?: string) => void;
         hide: () => void;
     };
+    archived?: boolean;
 }
 
 export interface DamDragObject {
     item: GQLDamFileTableFragment | GQLDamFolderTableFragment;
 }
 
-const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeHoverStyle: boolean }>`
+const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeHoverStyle: boolean; $archived: boolean }>`
     height: 58px;
 
     outline: ${({ $activeHoverStyle, theme }) => ($activeHoverStyle ? `solid 1px ${theme.palette.primary.main};` : "none")};
-    background: ${({ $activeHoverStyle }) => ($activeHoverStyle ? "rgba(41,182,246,0.1)" : "none")};
+    background: ${({ theme, $activeHoverStyle, $archived }) => {
+        if ($activeHoverStyle) {
+            return "rgba(41,182,246,0.1)";
+        } else if ($archived) {
+            return theme.palette.grey[50];
+        }
+        return "none";
+    }};
 
     & .MuiTableCell-root {
         padding-top: 8px;
@@ -61,6 +69,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     footerApi,
     fileCategory,
     allowedMimetypes,
+    archived,
     hideMultiselect,
 }) => {
     const multiselectApi = useDamMultiselectApi();
@@ -207,6 +216,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
                 ref={rowRef as React.MutableRefObject<HTMLTableRowElement>}
                 {...(isFolder(dropTargetItem) && getFolderRootProps())}
                 $activeHoverStyle={isHovered === "folder"}
+                $archived={archived ?? false}
             >
                 {!hideMultiselect && (
                     <TableCell>

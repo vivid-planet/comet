@@ -30,10 +30,10 @@ export class FileArgs {
     @IsUUID()
     folderId?: string;
 
-    @Field({ nullable: true })
+    @Field({ nullable: true, defaultValue: false })
     @IsOptional()
     @IsBoolean()
-    showArchived?: boolean;
+    includeArchived?: boolean;
 
     @Field(() => FileFilterInput, { nullable: true })
     @Type(() => FileFilterInput)

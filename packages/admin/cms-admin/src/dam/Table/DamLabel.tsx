@@ -5,6 +5,7 @@ import * as React from "react";
 import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { isFile } from "./FolderTableRow";
+import { ArchivedTag } from "./tags/ArchivedTag";
 import { DamThumbnail } from "./thumbnail/DamThumbnail";
 
 const LabelWrapper = styled("div")`
@@ -17,6 +18,13 @@ const NameWrapper = styled("div")`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+`;
+
+const TagWrapper = styled("div")`
+    margin-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
 `;
 
 const Path = styled(Typography)`
@@ -56,6 +64,11 @@ const DamLabel = ({ asset, showPath = false, matches }: DamLabelProps): React.Re
                 <Typography>{matches ? <MarkedMatches text={asset.name} matches={matches} /> : asset.name}</Typography>
                 {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
             </NameWrapper>
+            {isFile(asset) && asset.archived && (
+                <TagWrapper>
+                    <ArchivedTag />
+                </TagWrapper>
+            )}
         </LabelWrapper>
     );
 };

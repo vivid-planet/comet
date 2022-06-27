@@ -1,6 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { useEditDialogApi, useErrorDialog, useStackSwitchApi } from "@comet/admin";
-import { Delete, Download, Edit, MoreVertical } from "@comet/admin-icons";
+import { Archive, Delete, Download, Edit, MoreVertical, Restore } from "@comet/admin-icons";
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from "@mui/material";
 import saveAs from "file-saver";
 import * as React from "react";
@@ -8,16 +8,20 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { UnknownError } from "../../common/errors/errorMessages";
 import {
+    GQLArchiveFileMutation,
+    GQLArchiveFileMutationVariables,
     GQLDamFile,
     GQLDamFolder,
     GQLDeleteDamFileMutation,
     GQLDeleteDamFileMutationVariables,
     GQLDeleteDamFolderMutation,
     GQLDeleteDamFolderMutationVariables,
+    GQLRestoreFileMutation,
+    GQLRestoreFileMutationVariables,
     namedOperations,
 } from "../../graphql.generated";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
-import { deleteDamFileMutation } from "../FileActions/ConfirmDeleteDialog.gql";
+import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamContextMenu.gql";
 
 interface DamContextMenuProps {
     file?: Pick<GQLDamFile, "id" | "name" | "fileUrl" | "archived">;
@@ -134,32 +138,31 @@ const FileInnerMenu = ({ file, handleClose }: FileInnerMenuProps): React.ReactEl
                 </ListItemIcon>
                 <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.downloadFile", defaultMessage: "Download file" })} />
             </MenuItem>
-            {/*Todo: Readd Archive Button once archive filter exists*/}
-            {/*<MenuItem*/}
-            {/*    onClick={() => {*/}
-            {/*        handleClose();*/}
-            {/*        if (file.archived) {*/}
-            {/*            client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({*/}
-            {/*                mutation: restoreDamFileMutation,*/}
-            {/*                variables: { id: file.id },*/}
-            {/*            });*/}
-            {/*        } else {*/}
-            {/*            client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({*/}
-            {/*                mutation: archiveDamFileMutation,*/}
-            {/*                variables: { id: file.id },*/}
-            {/*            });*/}
-            {/*        }*/}
-            {/*    }}*/}
-            {/*>*/}
-            {/*    <ListItemIcon>{file.archived ? <Restore /> : <Archive />}</ListItemIcon>*/}
-            {/*    <ListItemText*/}
-            {/*        primary={*/}
-            {/*            file.archived*/}
-            {/*                ? intl.formatMessage({ id: "comet.pages.dam.restoreFile", defaultMessage: "Restore file" })*/}
-            {/*                : intl.formatMessage({ id: "comet.pages.dam.archiveFile", defaultMessage: "Archive file" })*/}
-            {/*        }*/}
-            {/*    />*/}
-            {/*</MenuItem>*/}
+            <MenuItem
+                onClick={() => {
+                    handleClose();
+                    if (file.archived) {
+                        client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
+                            mutation: restoreDamFileMutation,
+                            variables: { id: file.id },
+                        });
+                    } else {
+                        client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
+                            mutation: archiveDamFileMutation,
+                            variables: { id: file.id },
+                        });
+                    }
+                }}
+            >
+                <ListItemIcon>{file.archived ? <Restore /> : <Archive />}</ListItemIcon>
+                <ListItemText
+                    primary={
+                        file.archived
+                            ? intl.formatMessage({ id: "comet.pages.dam.restoreFile", defaultMessage: "Restore file" })
+                            : intl.formatMessage({ id: "comet.pages.dam.archiveFile", defaultMessage: "Archive file" })
+                    }
+                />
+            </MenuItem>
             <MenuItem
                 onClick={() => {
                     setDeleteDialogOpen(true);

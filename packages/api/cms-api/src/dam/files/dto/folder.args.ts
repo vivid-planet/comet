@@ -22,7 +22,7 @@ export class FolderArgs {
     @Field({ nullable: true })
     @IsOptional()
     @IsBoolean()
-    showArchived?: boolean;
+    includeArchived?: boolean;
 
     @Field(() => FolderFilterInput, { nullable: true })
     @Type(() => FolderFilterInput)

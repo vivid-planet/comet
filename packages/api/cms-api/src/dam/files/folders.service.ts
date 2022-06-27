@@ -17,10 +17,10 @@ export class FoldersService {
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
     ) {}
 
-    async findAll({ parentId, showArchived, filter, sort }: FolderArgs): Promise<Folder[]> {
+    async findAll({ parentId, includeArchived, filter, sort }: FolderArgs): Promise<Folder[]> {
         let qb = this.selectQueryBuilder();
 
-        if (!showArchived) {
+        if (!includeArchived) {
             qb.where({ archived: false });
         }
 

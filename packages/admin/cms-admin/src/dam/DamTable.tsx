@@ -15,7 +15,7 @@ import {
     useStackApi,
     useTableQueryFilter,
 } from "@comet/admin";
-import { Domain, Folder as FolderIcon } from "@comet/admin-icons";
+import { AddFolder as AddFolderIcon, Domain } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -58,6 +58,7 @@ interface FolderProps extends DamConfig {
 export interface DamFilter {
     fileCategory?: GQLFileCategory;
     allowedMimetypes?: string[];
+    archived?: boolean;
     searchText?: string;
     sort?: ISortInformation;
 }
@@ -95,13 +96,13 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
 
                     <Toolbar>
                         <ToolbarItem>
-                            <DamTableFilter filterApi={filterApi} />
+                            <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
                         </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <Button
                                 variant="text"
-                                startIcon={<FolderIcon />}
+                                startIcon={<AddFolderIcon />}
                                 onClick={() => {
                                     editDialogApi.openAddDialog(id);
                                 }}
@@ -138,6 +139,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
 export interface DamConfig {
     renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: { matches?: TextMatch[] }) => React.ReactNode;
     TableContainer?: ({ children }: { children: React.ReactNode }) => React.ReactElement;
+    hideArchiveFilter?: boolean;
     hideContextMenu?: boolean;
     /** Filter files by category. Is overruled by allowedMimetypes. */
     fileCategory?: GQLFileCategory;
@@ -155,13 +157,21 @@ interface DamTableProps extends DamConfig {
 export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): React.ReactElement => {
     const intl = useIntl();
 
-    const propsWithDefaultValues = { hideContextMenu: false, disableScopeIndicator: false, hideMultiselect: false, hideDamActions: false, ...props };
+    const propsWithDefaultValues = {
+        disableScopeIndicator: false,
+        hideContextMenu: false,
+        hideMultiselect: false,
+        hideDamActions: false,
+        hideArchiveFilter: false,
+        ...props,
+    };
 
     const filterApi = useTableQueryFilter<DamFilter>({
         sort: {
             columnName: "name",
             direction: SortDirection.ASC,
         },
+        archived: false,
     });
 
     return (
