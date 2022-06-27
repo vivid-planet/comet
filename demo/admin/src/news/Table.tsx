@@ -26,9 +26,12 @@ const NewsTable: React.FC = () => {
     const { scope } = useContentScope();
 
     const { api, tableData, loading, error } = useTableQuery<GQLNewsListQuery, GQLNewsListQueryVariables>()(newsListQuery, {
+        variables: {
+            scope,
+        },
         resolveTableData: (data) => ({
-            data: data.newsList,
-            totalCount: data.newsList.length,
+            data: data.newsList.nodes,
+            totalCount: data.newsList.nodes.length,
         }),
     });
 
@@ -46,7 +49,7 @@ const NewsTable: React.FC = () => {
                 <ToolbarAutomaticTitleItem />
                 <ToolbarFillSpace />
                 <ToolbarItem>
-                    <Button startIcon={<AddIcon />} onClick={() => stackApi.activatePage("edit", "new")} variant={"contained"} color={"primary"}>
+                    <Button startIcon={<AddIcon />} onClick={() => stackApi.activatePage("edit", "new")} variant="contained" color="primary">
                         <FormattedMessage id="comet.news.newNews" defaultMessage="New News" />
                     </Button>
                 </ToolbarItem>
@@ -71,7 +74,7 @@ const NewsTable: React.FC = () => {
                                     render: (news) => (
                                         <>
                                             <IconButton onClick={() => stackApi.activatePage("edit", news.id)}>
-                                                <Edit color={"primary"} />
+                                                <Edit color="primary" />
                                             </IconButton>
                                             <TableDeleteButton
                                                 icon={<DeleteIcon />}
@@ -95,11 +98,13 @@ const NewsTable: React.FC = () => {
 export default NewsTable;
 
 const newsListQuery = gql`
-    query NewsList {
-        newsList {
-            id
-            slug
-            title
+    query NewsList($scope: NewsContentScopeInput!) {
+        newsList(scope: $scope) {
+            nodes {
+                id
+                slug
+                title
+            }
         }
     }
 `;

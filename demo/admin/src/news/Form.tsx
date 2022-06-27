@@ -16,6 +16,7 @@ import {
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
+import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLMutationcreateNewsArgs, GQLMutationupdateNewsArgs, GQLNewsInput, GQLNewsQuery, GQLNewsQueryVariables } from "@src/graphql.generated";
 import { FORM_ERROR } from "final-form";
 import arrayMutators from "final-form-arrays";
@@ -24,7 +25,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 const newsQuery = gql`
     query News($id: ID!) {
-        news(newsId: $id) {
+        news(id: $id) {
             id
             slug
             title
@@ -44,6 +45,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const client = useApolloClient();
+    const { scope } = useContentScope();
 
     const { data } = useQuery<GQLNewsQuery, GQLNewsQueryVariables>(newsQuery, {
         variables: { id: newsId },
@@ -59,7 +61,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
         } else {
             return client.mutate<GQLMutationcreateNewsArgs>({
                 mutation: createNewsMutation,
-                variables: { input },
+                variables: { input, scope },
             });
         }
     };
@@ -83,17 +85,17 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             </IconButton>
                         </ToolbarItem>
                         <ToolbarTitleItem>
-                            {values.title ? values.title : <FormattedMessage id={"comet.news.newsDetail"} defaultMessage={"News Detail"} />}
+                            {values.title ? values.title : <FormattedMessage id="comet.news.newsDetail" defaultMessage="News Detail" />}
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey={"editInspirationSave"}>
-                                <SaveButton color={"primary"} variant={"contained"} hasErrors={hasSubmitErrors} type={"submit"}>
+                            <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editInspirationSave">
+                                <SaveButton color="primary" variant="contained" hasErrors={hasSubmitErrors} type="submit">
                                     <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
                                 </SaveButton>
                                 <SaveButton
-                                    color={"primary"}
-                                    variant={"contained"}
+                                    color="primary"
+                                    variant="contained"
                                     saving={submitting}
                                     hasErrors={hasSubmitErrors}
                                     onClick={async () => {
@@ -146,7 +148,7 @@ export default NewsForm;
 
 const updateNewsMutation = gql`
     mutation UpdateNews($id: ID!, $input: NewsInput!) {
-        updateNews(newsId: $id, input: $input) {
+        updateNews(id: $id, input: $input) {
             id
             slug
             title
@@ -155,8 +157,8 @@ const updateNewsMutation = gql`
 `;
 
 const createNewsMutation = gql`
-    mutation CreateNews($input: NewsInput!) {
-        createNews(input: $input) {
+    mutation CreateNews($scope: NewsContentScopeInput!, $input: NewsInput!) {
+        createNews(scope: $scope, input: $input) {
             id
             slug
             title

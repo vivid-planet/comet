@@ -24,6 +24,7 @@ import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 
+import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
 import { NewsModule } from "./news/news.module";
@@ -167,6 +168,7 @@ import { Page } from "./pages/entities/page.entity";
         }),
         NewsModule,
         MenusModule,
+        FooterModule,
     ],
 })
 export class AppModule {}

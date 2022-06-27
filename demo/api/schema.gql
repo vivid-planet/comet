@@ -183,6 +183,19 @@ type PaginatedPages {
   totalCount: Int!
 }
 
+type FooterContentScope {
+  domain: String!
+  language: String!
+}
+
+type Footer implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: JSONObject!
+  scope: FooterContentScope!
+  createdAt: DateTime!
+}
+
 type MainMenuItem {
   id: ID!
   node: PageTreeNode!
@@ -195,15 +208,47 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
+type NewsContentScope {
+  domain: String!
+  language: String!
+}
+
 type News implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-  title: String!
+  scope: NewsContentScope!
   slug: String!
+  title: String!
+  date: DateTime!
+  category: NewsCategory!
+  visible: Boolean!
+  image: JSONObject!
+  content: JSONObject!
   createdAt: DateTime!
 }
 
+enum NewsCategory {
+  Events
+  Company
+  Awards
+}
+
+type PaginatedNews {
+  nodes: [News!]!
+  totalCount: Int!
+}
+
 input PageTreeNodeScopeInput {
+  domain: String!
+  language: String!
+}
+
+input FooterContentScopeInput {
+  domain: String!
+  language: String!
+}
+
+input NewsContentScopeInput {
   domain: String!
   language: String!
 }
@@ -226,11 +271,12 @@ type Query {
   damFoldersList(sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): [DamFolder!]!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
-  news(newsId: ID!): News
+  news(id: ID!): News
   newsBySlug(slug: String!): News
-  newsList: [News!]!
+  newsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, category: NewsCategory, scope: NewsContentScopeInput!): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
+  footer(scope: FooterContentScopeInput!): Footer
 }
 
 enum SortDirection {
@@ -276,10 +322,12 @@ type Mutation {
   updateDamFolder(input: UpdateDamFolderInput!, id: ID!): DamFolder!
   moveDamFolders(targetFolderId: ID, folderIds: [ID!]!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
-  createNews(input: NewsInput!): News!
-  updateNews(input: NewsInput!, newsId: ID!): News!
+  createNews(input: NewsInput!, scope: NewsContentScopeInput!): News!
+  updateNews(lastUpdatedAt: DateTime, input: NewsInput!, id: ID!): News!
+  updateNewsVisibility(visible: Boolean!, id: ID!): News!
   deleteNews(id: ID!): Boolean!
   updateMainMenuItem(lastUpdatedAt: DateTime, input: MainMenuItemInput!, pageTreeNodeId: ID!): MainMenuItem!
+  saveFooter(lastUpdatedAt: DateTime, input: FooterInput!): Footer!
 }
 
 input PageInput {
@@ -382,8 +430,17 @@ input UpdateDamFolderInput {
 input NewsInput {
   title: String!
   slug: String!
+  date: DateTime!
+  category: NewsCategory!
+  image: JSONObject!
+  content: JSONObject!
 }
 
 input MainMenuItemInput {
   content: JSONObject
+}
+
+input FooterInput {
+  content: JSONObject!
+  scope: FooterContentScopeInput!
 }
