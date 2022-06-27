@@ -8,7 +8,7 @@ import { FormattedMessage } from "react-intl";
 
 import { ExternalLinkBlockData } from "../blocks.generated";
 
-interface OnlyShowVisibleContentModalProps {
+interface OpenLinkDialogProps {
     onClose?: () => void;
     open: boolean;
     link?: ExternalLinkBlockData;
@@ -17,7 +17,7 @@ interface OnlyShowVisibleContentModalProps {
 const IconContainer = styled("div")`
     margin-right: 10px;
 `;
-function OpenLinkDialog({ open, onClose, link }: OnlyShowVisibleContentModalProps): React.ReactElement {
+function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.ReactElement {
     return (
         <Dialog open={open} onClose={onClose} maxWidth={false}>
             <DialogTitle>

@@ -1,24 +1,36 @@
 import { GraphQLClient } from "graphql-request";
 
 interface GraphQLClientOptions {
-    includeInvisibleContent: boolean;
+    includeInvisiblePages: boolean;
+    includeInvisibleBlocks: boolean;
     previewDamUrls: boolean;
 }
 const defaultOptions: GraphQLClientOptions = {
-    includeInvisibleContent: false,
+    includeInvisiblePages: false,
+    includeInvisibleBlocks: false,
     previewDamUrls: false,
 };
 export default function createGraphQLClient(options: Partial<GraphQLClientOptions> = {}): GraphQLClient {
-    const { includeInvisibleContent, previewDamUrls } = { ...defaultOptions, ...options };
+    const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = { ...defaultOptions, ...options };
 
     const headers: Record<string, string> = {
         authorization: `Basic ${Buffer.from(`vivid:${process.env.API_PASSWORD}`).toString("base64")}`,
     };
 
+    const includeInvisibleContentHeaderEntries: string[] = [];
+
+    if (includeInvisiblePages) {
+        includeInvisibleContentHeaderEntries.push("Pages:Unpublished");
+    }
+
+    if (includeInvisibleBlocks) {
+        includeInvisibleContentHeaderEntries.push("Blocks:Invisible");
+    }
+
     // tells api to send invisble content
     // authentication is required when this header is used
-    if (includeInvisibleContent) {
-        headers["x-include-invisible-content"] = "Unpublished"; // do not use @src/graphql.generated here
+    if (includeInvisibleContentHeaderEntries.length > 0) {
+        headers["x-include-invisible-content"] = includeInvisibleContentHeaderEntries.join(",");
     }
 
     // tells api to create preview image urls

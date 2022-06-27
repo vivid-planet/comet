@@ -41,11 +41,11 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-interface OnlyShowVisibleContentModalProps {
+interface AboutModalProps {
     onClose?: () => void;
     open: boolean;
 }
-function AboutModal({ open, onClose }: OnlyShowVisibleContentModalProps): React.ReactElement {
+function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
     const classes = useStyles();
 
     return (

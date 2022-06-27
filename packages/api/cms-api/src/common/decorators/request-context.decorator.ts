@@ -1,6 +1,7 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 import { Request } from "express";
 
+import { BlockVisibility } from "../../blocks/types";
 import { PageTreeNodeVisibility } from "../../page-tree/types";
 import { getRequestFromExecutionContext } from "./utils";
 
@@ -11,10 +12,11 @@ export interface RequestContextInterface {
 }
 
 export const getRequestContextHeadersFromRequest = (request: Request): RequestContextInterface => {
-    const includeInvisibleContent = parseIncludeInvisibleHeader(request.headers["x-include-invisible-content"]);
+    const { includeInvisiblePages, includeInvisibleBlocks } = parseIncludeInvisibleHeader(request.headers["x-include-invisible-content"]);
+
     return {
-        includeInvisiblePages: includeInvisibleContent,
-        includeInvisibleBlocks: includeInvisibleContent && includeInvisibleContent.length > 0,
+        includeInvisiblePages,
+        includeInvisibleBlocks,
         previewDamUrls: !!request.headers["x-preview-dam-urls"],
     };
 };
@@ -27,28 +29,52 @@ export const RequestContext = createParamDecorator((data: unknown, ctx: Executio
 
 function parseIncludeInvisibleHeader(
     rawHeader: undefined | string | string[],
-): undefined | Array<PageTreeNodeVisibility.Archived | PageTreeNodeVisibility.Unpublished> {
+): Pick<RequestContextInterface, "includeInvisiblePages" | "includeInvisibleBlocks"> {
     if (!rawHeader) {
-        return undefined;
+        return {};
     }
+
+    let includeInvisiblePages: Array<PageTreeNodeVisibility.Archived | PageTreeNodeVisibility.Unpublished> | undefined = undefined;
+    let includeInvisibleBlocks: boolean | undefined = undefined;
 
     const header = !Array.isArray(rawHeader) ? rawHeader.split(",").map((c) => c.trim()) : rawHeader;
 
-    const whitelist: Array<PageTreeNodeVisibility.Archived | PageTreeNodeVisibility.Unpublished> = [
-        PageTreeNodeVisibility.Archived,
-        PageTreeNodeVisibility.Unpublished,
-    ];
+    header.forEach((entry) => {
+        switch (entry) {
+            case `Pages:${PageTreeNodeVisibility.Archived}`:
+                if (includeInvisiblePages === undefined) {
+                    includeInvisiblePages = [PageTreeNodeVisibility.Archived];
+                } else {
+                    includeInvisiblePages.push(PageTreeNodeVisibility.Archived);
+                }
+                break;
 
-    const validValues: Array<PageTreeNodeVisibility.Archived | PageTreeNodeVisibility.Unpublished> = [];
-    whitelist.forEach((c) => {
-        if (header.includes(c)) {
-            validValues.push(c);
+            case `Pages:${PageTreeNodeVisibility.Unpublished}`:
+                if (includeInvisiblePages === undefined) {
+                    includeInvisiblePages = [PageTreeNodeVisibility.Unpublished];
+                } else {
+                    includeInvisiblePages.push(PageTreeNodeVisibility.Unpublished);
+                }
+                break;
+
+            case `Blocks:${BlockVisibility.Invisible}`:
+                includeInvisibleBlocks = true;
+                break;
+
+            // Legacy header
+            case PageTreeNodeVisibility.Archived:
+            case PageTreeNodeVisibility.Unpublished:
+                console.warn(`Using legacy header "${entry}" in "x-include-invisible-content". Please update header to "Pages:${entry}"`);
+
+                if (includeInvisiblePages === undefined) {
+                    includeInvisiblePages = [entry];
+                } else {
+                    includeInvisiblePages.push(entry);
+                }
+                includeInvisibleBlocks = true;
+                break;
         }
     });
 
-    if (validValues.length < 1) {
-        return undefined;
-    }
-
-    return validValues;
+    return { includeInvisiblePages, includeInvisibleBlocks };
 }

@@ -14,7 +14,12 @@ export default function AuthenticatedPreviewPage(props: InferGetServerSidePropsT
 
 export const getServerSideProps: GetServerSideProps<PageUniversalProps> = async (context: GetServerSidePropsContext) => {
     const { params, query, locale } = context;
-    const { includeInvisibleContent } = parsePreviewState(query);
-    const getUniversalProps = createGetUniversalProps({ language: locale ?? defaultLanguage, includeInvisibleContent, previewDamUrls: true });
+    const { includeInvisibleBlocks } = parsePreviewState(query);
+    const getUniversalProps = createGetUniversalProps({
+        language: locale ?? defaultLanguage,
+        includeInvisiblePages: true,
+        includeInvisibleBlocks,
+        previewDamUrls: true,
+    });
     return await getUniversalProps({ params });
 };

@@ -51,12 +51,18 @@ export const getStaticProps: GetStaticProps<PageUniversalProps> = async ({ param
 
 interface CreateGetStaticPropsOptions {
     language: string;
-    includeInvisibleContent?: boolean;
+    includeInvisiblePages?: boolean;
+    includeInvisibleBlocks?: boolean;
     previewDamUrls?: boolean;
 }
 
 // a function to create a universal function which can be used as getStaticProps or getServerSideProps (preview)
-export function createGetUniversalProps({ language, includeInvisibleContent = false, previewDamUrls = false }: CreateGetStaticPropsOptions) {
+export function createGetUniversalProps({
+    language,
+    includeInvisiblePages = false,
+    includeInvisibleBlocks = false,
+    previewDamUrls = false,
+}: CreateGetStaticPropsOptions) {
     return async function getUniversalProps({
         params,
     }: {
@@ -66,13 +72,13 @@ export function createGetUniversalProps({ language, includeInvisibleContent = fa
         const contentScope = { domain, language };
 
         //fetch pageType
-        const data = await createGraphQLClient({ includeInvisibleContent, previewDamUrls }).request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(
-            pageTypeQuery,
-            {
-                path: `/${Array.isArray(path) ? path.join("/") : path}`,
-                contentScope,
-            },
-        );
+        const data = await createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls }).request<
+            GQLPageTypeQuery,
+            GQLPageTypeQueryVariables
+        >(pageTypeQuery, {
+            path: `/${Array.isArray(path) ? path.join("/") : path}`,
+            contentScope,
+        });
         if (!data.pageTreeNodeByPath?.documentType) {
             // eslint-disable-next-line no-console
             console.log("got no data from api", data, path);
@@ -82,11 +88,14 @@ export function createGetUniversalProps({ language, includeInvisibleContent = fa
 
         //pageType dependent query
         const { query: queryForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
-        const pageTypeData = await createGraphQLClient({ includeInvisibleContent, previewDamUrls }).request<GQLPage>(queryForPageType, {
-            pageId,
-            domain: contentScope.domain,
-            language: contentScope.language,
-        });
+        const pageTypeData = await createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls }).request<GQLPage>(
+            queryForPageType,
+            {
+                pageId,
+                domain: contentScope.domain,
+                language: contentScope.language,
+            },
+        );
 
         return {
             props: {

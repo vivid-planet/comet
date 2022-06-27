@@ -13,7 +13,7 @@ export function createHttpClient(apiUrl: string, authorizationManager: Authoriza
         }
 
         config.headers.Authorization = `Bearer ${authorizationManager.state.oAuth?.accessToken}`;
-        config.headers["x-include-invisible-content"] = ["Unpublished", "Archived"];
+        config.headers["x-include-invisible-content"] = ["Pages:Unpublished", "Pages:Archived", "Blocks:Invisible"];
 
         return Promise.resolve(config);
     };
