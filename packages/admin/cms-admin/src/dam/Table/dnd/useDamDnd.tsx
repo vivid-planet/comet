@@ -4,6 +4,8 @@ import { FetchResult } from "@apollo/client/link/core";
 import {
     GQLDamFileTableFragment,
     GQLDamFolderTableFragment,
+    GQLDamListQuery,
+    GQLDamListQueryVariables,
     GQLMoveDamFilesMutation,
     GQLMoveDamFilesMutationVariables,
     GQLMoveDamFoldersMutation,
@@ -53,6 +55,9 @@ export const useDamDnD = (): DamDnDApi => {
             }
         }
 
+        const queries = client.getObservableQueries();
+        const damListQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.DamList);
+
         const mutations: Array<Promise<FetchResult>> = [];
 
         if (fileIds.length > 0) {
@@ -62,6 +67,28 @@ export const useDamDnD = (): DamDnDApi => {
                     variables: {
                         fileIds,
                         targetFolderId: dropTargetItem.id,
+                    },
+                    optimisticResponse: ({ fileIds }) => {
+                        return {
+                            moveDamFiles: (fileIds as string[]).map((fileId) => {
+                                return {
+                                    id: fileId,
+                                };
+                            }),
+                        };
+                    },
+                    update: (cache, result) => {
+                        if (damListQuery) {
+                            const movedFileIds = result.data?.moveDamFiles.map((file) => file.id) ?? [];
+
+                            cache.updateQuery<GQLDamListQuery, GQLDamListQueryVariables>({ ...damListQuery.options }, (data) => {
+                                const filteredFilesList = data?.damFilesList.filter((file) => !movedFileIds.includes(file.id));
+                                return {
+                                    damFoldersList: data?.damFoldersList ?? [],
+                                    damFilesList: filteredFilesList ?? [],
+                                };
+                            });
+                        }
                     },
                 }),
             );
@@ -74,6 +101,32 @@ export const useDamDnD = (): DamDnDApi => {
                     variables: {
                         folderIds,
                         targetFolderId: dropTargetItem.id,
+                    },
+                    optimisticResponse: ({ folderIds, targetFolderId }) => {
+                        return {
+                            moveDamFolders: (folderIds as string[]).map((folderId) => {
+                                return {
+                                    id: folderId,
+                                    // this is, of course, not the correct mpath,
+                                    // but it would be complicated (and in some cases impossible) to generate it locally
+                                    // since mpath is only needed for the breadcrumbs, it's sufficient to wait for the API response
+                                    mpath: [],
+                                };
+                            }),
+                        };
+                    },
+                    update: (cache, result) => {
+                        if (damListQuery) {
+                            const movedFolderIds = result.data?.moveDamFolders.map((folder) => folder.id) ?? [];
+
+                            cache.updateQuery<GQLDamListQuery, GQLDamListQueryVariables>({ ...damListQuery.options }, (data) => {
+                                const filteredFoldersList = data?.damFoldersList.filter((folder) => !movedFolderIds.includes(folder.id));
+                                return {
+                                    damFoldersList: filteredFoldersList ?? [],
+                                    damFilesList: data?.damFilesList ?? [],
+                                };
+                            });
+                        }
                     },
                 }),
             );

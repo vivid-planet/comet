@@ -4,10 +4,6 @@ export const moveDamFilesMutation = gql`
     mutation MoveDamFiles($fileIds: [ID!]!, $targetFolderId: ID) {
         moveDamFiles(fileIds: $fileIds, targetFolderId: $targetFolderId) {
             id
-            damPath
-            folder {
-                id
-            }
         }
     }
 `;
@@ -17,12 +13,6 @@ export const moveDamFoldersMutation = gql`
         moveDamFolders(folderIds: $folderIds, targetFolderId: $targetFolderId) {
             id
             mpath
-            parent {
-                id
-            }
-            parents {
-                id
-            }
         }
     }
 `;

@@ -37,21 +37,21 @@ interface DamLabelProps {
     matches?: TextMatch[];
 }
 
-const getFilePath = (asset: GQLDamFileTableFragment) => {
+const getFilePath = (file: GQLDamFileTableFragment) => {
     const pathArr = [];
 
-    if (asset.folder) {
-        const parentFolderNames = asset.folder.parents.map((parentFolder) => parentFolder.name);
+    if (file.folder) {
+        const parentFolderNames = file.folder.parents.map((parentFolder) => parentFolder.name);
 
         pathArr.push(...parentFolderNames);
-        pathArr.push(asset.folder.name);
+        pathArr.push(file.folder.name);
     }
 
     return `/${pathArr.join("/")}`;
 };
 
-const getFolderPath = (asset: GQLDamFolderTableFragment) => {
-    const pathArr = asset.parents.map((parentFolder) => parentFolder.name) ?? [];
+const getFolderPath = (folder: GQLDamFolderTableFragment) => {
+    const pathArr = folder.parents.map((parentFolder) => parentFolder.name) ?? [];
 
     return `/${pathArr.join("/")}`;
 };
