@@ -22,6 +22,7 @@ import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation }
 import { AudioPreview } from "./previews/AudioPreview";
 import { DefaultFilePreview } from "./previews/DefaultFilePreview";
 import { ImagePreview } from "./previews/ImagePreview";
+import { PdfPreview } from "./previews/PdfPreview";
 import { VideoPreview } from "./previews/VideoPreview";
 
 const ActionsContainer = styled("div")`
@@ -68,6 +69,8 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
         preview = <AudioPreview file={file} />;
     } else if (file.mimetype.startsWith("video/")) {
         preview = <VideoPreview file={file} />;
+    } else if (file.mimetype === "application/pdf") {
+        preview = <PdfPreview file={file} />;
     } else if (["application/x-zip-compressed", "application/zip"].includes(file.mimetype)) {
         preview = <DefaultFilePreview customIcon={<ZipFileIcon />} />;
     } else {
