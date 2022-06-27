@@ -11,10 +11,10 @@ import fetch from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
-import { SortInput } from "src/common/sorting/sort.input";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
+import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
@@ -41,7 +41,8 @@ export const withFilesSelect = (
         contentHash?: string;
         archived?: boolean;
         mimetypes?: string[];
-        sort?: SortInput;
+        sortColumnName?: string;
+        sortDirection?: SortDirection;
     },
 ): QueryBuilder<File> => {
     if (args.query) {
@@ -64,8 +65,8 @@ export const withFilesSelect = (
 
     if (args.imageId) qb.andWhere({ image: { id: args.imageId } });
 
-    if (args.sort) {
-        qb.orderBy({ [`file.${args.sort.columnName}`]: args.sort.direction });
+    if (args.sortColumnName && args.sortDirection) {
+        qb.orderBy({ [`file.${args.sortColumnName}`]: args.sortDirection });
     }
 
     return qb;
@@ -95,7 +96,7 @@ export class FilesService {
             .leftJoinAndSelect("file.folder", "folder");
     }
 
-    async findAll({ folderId, includeArchived, filter, sort }: FileArgs): Promise<File[]> {
+    async findAll({ folderId, includeArchived, filter, sortColumnName, sortDirection }: FileArgs): Promise<File[]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
 
         return withFilesSelect(this.selectQueryBuilder(), {
@@ -103,7 +104,8 @@ export class FilesService {
             folderId: !isSearching ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
             query: filter?.searchText,
-            sort: sort,
+            sortColumnName,
+            sortDirection,
         }).getResult();
     }
 

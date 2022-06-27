@@ -135,7 +135,8 @@ const FolderTable = ({
                 mimetypes: props.allowedMimetypes,
                 searchText: filterApi.current.searchText,
             },
-            sort: filterApi.current.sort,
+            sortColumnName: filterApi.current.sort?.columnName,
+            sortDirection: filterApi.current.sort?.direction,
         },
         resolveTableData: ({ damFilesList = [], damFoldersList = [] }) => {
             return {

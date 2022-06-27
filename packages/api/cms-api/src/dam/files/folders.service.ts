@@ -17,7 +17,7 @@ export class FoldersService {
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
     ) {}
 
-    async findAll({ parentId, includeArchived, filter, sort }: FolderArgs): Promise<Folder[]> {
+    async findAll({ parentId, includeArchived, filter, sortColumnName, sortDirection }: FolderArgs): Promise<Folder[]> {
         let qb = this.selectQueryBuilder();
 
         if (!includeArchived) {
@@ -37,8 +37,8 @@ export class FoldersService {
             qb = this.addSearchTermFiltertoQueryBuilder(qb, filter.searchText);
         }
 
-        if (sort) {
-            qb.orderBy({ [`folder.${sort.columnName}`]: sort.direction });
+        if (sortColumnName && sortDirection) {
+            qb.orderBy({ [`folder.${sortColumnName}`]: sortDirection });
         }
 
         return qb.getResult();

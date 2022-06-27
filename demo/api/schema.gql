@@ -181,9 +181,6 @@ union PageContentUnion = Page | Link
 type PaginatedPages {
   nodes: [Page!]!
   totalCount: Int!
-  nextPage: Int
-  previousPage: Int
-  totalPages: Int
 }
 
 type MainMenuItem {
@@ -213,7 +210,7 @@ input PageTreeNodeScopeInput {
 
 type Query {
   page(pageId: ID!): Page
-  pages(offset: Int = 0, limit: Int = 20, sort: SortInput): PaginatedPages!
+  pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
   link(linkId: ID!): Link
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -223,10 +220,10 @@ type Query {
   pageTreeNodeSlugAvailable(slug: String!, parentId: ID, scope: PageTreeNodeScopeInput!): SlugAvailability!
   redirects(query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
   redirect(id: ID!): Redirect!
-  damFilesList(folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput, sort: SortInput): [DamFile!]!
+  damFilesList(sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): [DamFile!]!
   damFile(id: ID!): DamFile!
   damFilenameAlreadyExists(folderId: String, filename: String!): Boolean!
-  damFoldersList(parentId: ID, includeArchived: Boolean, filter: FolderFilterInput, sort: SortInput): [DamFolder!]!
+  damFoldersList(sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): [DamFolder!]!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(newsId: ID!): News
@@ -234,11 +231,6 @@ type Query {
   newsList: [News!]!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
-}
-
-input SortInput {
-  columnName: String!
-  direction: SortDirection = ASC
 }
 
 enum SortDirection {

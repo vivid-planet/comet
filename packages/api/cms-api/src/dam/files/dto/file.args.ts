@@ -2,7 +2,7 @@ import { ArgsType, Field, ID, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { SortInput } from "../../../index";
+import { SortArgs } from "../../../common/sorting/sort.args";
 
 @InputType()
 class FileFilterInput {
@@ -18,7 +18,7 @@ class FileFilterInput {
 }
 
 @ArgsType()
-export class FileArgs {
+export class FileArgs extends SortArgs {
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()
@@ -34,10 +34,4 @@ export class FileArgs {
     @IsOptional()
     @ValidateNested()
     filter?: FileFilterInput;
-
-    @Field(() => SortInput, { nullable: true })
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => SortInput)
-    sort?: SortInput;
 }
