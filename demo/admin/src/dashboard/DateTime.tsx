@@ -4,8 +4,8 @@ import { FormattedDate } from "react-intl";
 
 const Root = styled("div")`
     position: absolute;
-    top: ${({ theme }) => theme.spacing(4)}px;
-    right: ${({ theme }) => theme.spacing(8)}px;
+    top: ${({ theme }) => theme.spacing(4)};
+    right: ${({ theme }) => theme.spacing(8)};
     color: white;
     font-weight: 200;
     text-align: right;

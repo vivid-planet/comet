@@ -29,8 +29,8 @@ const Header = styled("div")`
 
 const Greeting = styled(Typography)`
     position: absolute;
-    left: ${({ theme }) => theme.spacing(8)}px;
-    bottom: ${({ theme }) => theme.spacing(8)}px;
+    left: ${({ theme }) => theme.spacing(8)};
+    bottom: ${({ theme }) => theme.spacing(8)};
     font-size: 55px;
     line-height: 64px;
     font-weight: 200;
