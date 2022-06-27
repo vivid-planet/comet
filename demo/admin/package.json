@@ -16,8 +16,8 @@
         "intl:compile:cms-admin": "formatjs compile-folder --format simple --ast ./cms-admin-lang lang/cms-admin",
         "intl:compile:blocks-admin": "formatjs compile-folder --format simple --ast ./blocks-admin-lang lang/blocks-admin",
         "intl:compile:comet-demo-admin": "formatjs compile-folder --format simple --ast ./comet-demo-lang/admin lang/comet-demo-admin",
-        "intl:compile": "run-p intl:compile:comet-admin intl:compile:cms-admin intl:compile:blocks-admin",
-        "intl:update": "ts-node intl-update.ts",
+        "intl:compile": "echo 'Missing workflow to compile translations. See https://formatjs.io/docs/getting-started/application-workflow for more information.'",
+        "intl:update": "echo 'Missing workflow to download translations. See https://formatjs.io/docs/getting-started/application-workflow for more information.'",
         "generate-block-types": "dotenv -- ts-node generate-block-types.ts",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\""
     },
