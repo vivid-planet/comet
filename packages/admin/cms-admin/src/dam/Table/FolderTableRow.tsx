@@ -180,8 +180,8 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
         <>
             <StyledFolderTableRow
                 {...rowProps}
-                ref={rowRef as React.MutableRefObject<HTMLTableRowElement>}
                 {...(isFolder(dropTargetItem) && getFolderRootProps())}
+                ref={rowRef as React.MutableRefObject<HTMLTableRowElement>}
                 $activeHoverStyle={isHovered === "folder"}
                 $archived={archived ?? false}
             >
