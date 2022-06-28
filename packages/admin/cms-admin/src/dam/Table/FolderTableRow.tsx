@@ -68,7 +68,6 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const { moveItem } = useDamDnD();
 
-    const rowRef = React.useRef<HTMLTableRowElement>();
     const [isHovered, setIsHovered] = React.useState<HoverStyle>();
 
     const {
@@ -85,8 +84,9 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     // handles upload of native file or folder (e.g. file from desktop) to subfolder
     // If the native file is dropped on a folder row in the table, it is uploaded
     // to said folder
-    const { getRootProps: getFolderRootProps } = useDropzone({
+    const { getRootProps: getFolderRootProps, rootRef: rowRef } = useDropzone({
         ...dropzoneConfig,
+        noClick: true,
         onDragOver: () => {
             setIsHovered("folder");
             footerApi.show("upload", dropTargetItem.name);
@@ -174,14 +174,14 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
         if (isFile(dropTargetItem)) {
             dropTargetFile(rowRef);
         }
-    }, [dragSource, dropTarget, dropTargetFile, dropTargetItem]);
+    }, [dragSource, dropTarget, dropTargetFile, dropTargetItem, rowRef]);
 
     return (
         <>
             <StyledFolderTableRow
                 {...rowProps}
                 {...(isFolder(dropTargetItem) && getFolderRootProps())}
-                ref={rowRef as React.MutableRefObject<HTMLTableRowElement>}
+                ref={rowRef as React.RefObject<HTMLTableRowElement>}
                 $activeHoverStyle={isHovered === "folder"}
                 $archived={archived ?? false}
             >
