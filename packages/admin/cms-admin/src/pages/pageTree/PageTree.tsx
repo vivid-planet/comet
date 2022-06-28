@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { ObservableQuery, useApolloClient, useMutation } from "@apollo/client";
 import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -14,8 +14,11 @@ import { useContentScope } from "../../contentScope/Provider";
 import {
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
+    GQLPagesQuery,
+    GQLPagesQueryVariables,
     GQLUpdatePageTreeNodePositionMutation,
     GQLUpdatePageTreeNodePositionMutationVariables,
+    namedOperations,
 } from "../../graphql.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
 import PageTreeRow, { DropTarget, PageTreeDragObject } from "./PageTreeRow";
@@ -60,6 +63,25 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     { pages, editDialogApi, toggleExpand, onSelectChanged, category, siteUrl },
     ref,
 ) => {
+    const client = useApolloClient();
+
+    const queries = client.getObservableQueries();
+    const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.Pages) as
+        | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
+        | undefined;
+
+    if (pagesQuery) {
+        client.cache.watch<GQLPagesQuery, GQLPagesQueryVariables>({
+            query: pagesQuery.query,
+            variables: pagesQuery.variables,
+            callback: (diff, lastDiff) => {
+                console.log("diff ", diff);
+                console.log("lastDiff ", lastDiff);
+            },
+            optimistic: false,
+        });
+    }
+
     const pageTreeService = React.useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
     const { scope } = useContentScope();
     const snackbarApi = useSnackbarApi();
