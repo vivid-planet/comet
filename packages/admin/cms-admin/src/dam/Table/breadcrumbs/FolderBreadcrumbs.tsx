@@ -39,7 +39,6 @@ const FolderBreadcrumbWrapper = styled("div")<{ $isHovered: boolean }>`
 
 const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
     const { moveItem } = useDamDnD();
-    const [isHovered, setIsHovered] = React.useState<boolean>(false);
 
     const { data } = useOptimisticQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
         variables: {
@@ -58,25 +57,18 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
         },
     });
 
-    const [, dropTarget] = useDrop({
+    const [{ isOver }, dropTarget] = useDrop({
         accept: ["folder", "asset"],
         drop: (dragObject: DamDragObject) => {
             moveItem({ dropTargetItem: { id }, dragItem: dragObject.item });
-            setIsHovered(false);
         },
-        hover: () => {
-            setIsHovered(true);
-        },
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+        }),
     });
 
     return (
-        <FolderBreadcrumbWrapper
-            ref={dropTarget}
-            onDragLeave={() => {
-                setIsHovered(false);
-            }}
-            $isHovered={isHovered}
-        >
+        <FolderBreadcrumbWrapper ref={dropTarget} $isHovered={isOver}>
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
                 {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
             </Link>
