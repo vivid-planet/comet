@@ -11,7 +11,7 @@ import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphq
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig } from "../DamTable";
 import { FooterType } from "./DamDnDFooter";
-import { useDamDnD } from "./dnd/useDamDnd";
+import { useDamDnD } from "./dnd/useDamDnD";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { useDamMultiselectApi } from "./multiselect/DamMultiselect";
 

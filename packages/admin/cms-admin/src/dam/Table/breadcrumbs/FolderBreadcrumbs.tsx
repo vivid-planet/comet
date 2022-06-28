@@ -9,7 +9,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { useOptimisticQuery } from "../../../common/useOptimisticQuery";
 import { GQLDamFolderBreadcrumbFragment, GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables } from "../../../graphql.generated";
-import { useDamDnD } from "../dnd/useDamDnd";
+import { useDamDnD } from "../dnd/useDamDnD";
 import { DamDragObject } from "../FolderTableRow";
 import { damFolderBreadcrumbFragment, damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
 
