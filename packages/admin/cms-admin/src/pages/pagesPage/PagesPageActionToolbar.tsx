@@ -70,7 +70,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                     />
                 </Grid>
                 <Grid item classes={{ root: classes.centerContainer }}>
-                    <Tooltip title={<FormattedMessage id={"comet.pagesPageActionToolbar.tooltip.publish"} defaultMessage={"Publish"} />}>
+                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.publish" defaultMessage="Publish" />}>
                         <span>
                             <IconButton
                                 disabled={selectedTree.size === 0}
@@ -90,7 +90,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             </IconButton>
                         </span>
                     </Tooltip>
-                    <Tooltip title={<FormattedMessage id={"comet.pagesPageActionToolbar.tooltip.unpublish"} defaultMessage={"Unpublish"} />}>
+                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.unpublish" defaultMessage="Unpublish" />}>
                         <span>
                             <IconButton
                                 disabled={selectedTree.size === 0}
@@ -107,7 +107,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             </IconButton>
                         </span>
                     </Tooltip>
-                    <Tooltip title={<FormattedMessage id={"comet.pagesPageActionToolbar.tooltip.archive"} defaultMessage={"Archive"} />}>
+                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.archive" defaultMessage="Archive" />}>
                         <span>
                             <IconButton
                                 disabled={selectedTree.size === 0}
@@ -124,7 +124,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                         </span>
                     </Tooltip>
                     <Separator />
-                    <Tooltip title={<FormattedMessage id={"comet.pagesPageActionToolbar.tooltip.copy"} defaultMessage={"Copy"} />}>
+                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.copy" defaultMessage="Copy" />}>
                         <span>
                             <IconButton
                                 disabled={selectedTree.size === 0}
@@ -141,7 +141,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             </IconButton>
                         </span>
                     </Tooltip>
-                    <Tooltip title={<FormattedMessage id={"comet.pagesPageActionToolbar.tooltip.paste"} defaultMessage={"Paste"} />}>
+                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.paste" defaultMessage="Paste" />}>
                         <span>
                             <IconButton
                                 onClick={async () => {
@@ -159,7 +159,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             </IconButton>
                         </span>
                     </Tooltip>
-                    <Tooltip title={<FormattedMessage id={"comet.pagesPageActionToolbar.tooltip.delete"} defaultMessage={"Delete"} />}>
+                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.delete" defaultMessage="Delete" />}>
                         <span>
                             <IconButton
                                 disabled={selectedTree.size === 0}

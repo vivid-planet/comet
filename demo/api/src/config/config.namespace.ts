@@ -75,10 +75,6 @@ export class EnvironmentVariables {
     @IsString()
     DAM_ALLOWED_IMAGE_ASPECT_RATIOS: string;
 
-    @IsOptional()
-    @IsString()
-    DAM_ADDITIONAL_MIMETYPES?: string;
-
     @IsString()
     BLOB_STORAGE_DRIVER: BlobStorageConfig["backend"]["driver"];
 
@@ -116,6 +112,11 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
     @IsString()
     S3_SECRET_ACCESS_KEY: string;
+
+    @IsOptional()
+    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @IsString()
+    S3_BUCKET?: string;
 }
 
 export function env<K extends keyof EnvironmentVariables>(name: K): EnvironmentVariables[K] {

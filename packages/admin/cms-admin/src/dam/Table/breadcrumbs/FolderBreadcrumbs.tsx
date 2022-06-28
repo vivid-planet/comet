@@ -1,5 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { BreadcrumbItem, LocalErrorScopeApolloContext } from "@comet/admin";
+import { BreadcrumbItem } from "@comet/admin";
 import { ChevronRight } from "@comet/admin-icons";
 import { Breadcrumbs, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -8,32 +7,23 @@ import { useDrop } from "react-dnd";
 import { FormattedMessage } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 
-import {
-    GQLDamFolderBreadcrumbQuery,
-    GQLDamFolderBreadcrumbQueryVariables,
-    GQLUpdateDamFileMutation,
-    GQLUpdateDamFileMutationVariables,
-    GQLUpdateDamFolderMutation,
-    GQLUpdateDamFolderMutationVariables,
-    namedOperations,
-} from "../../../graphql.generated";
-import { updateDamFileMutation, updateDamFolderMutation } from "../FolderTable.gql";
-import { DamDragObject, isFile, isFolder } from "../FolderTableRow";
-import { damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
+import { useOptimisticQuery } from "../../../common/useOptimisticQuery";
+import { GQLDamFolderBreadcrumbFragment, GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables } from "../../../graphql.generated";
+import { useDamDnD } from "../dnd/useDamDnD";
+import { DamDragObject } from "../FolderTableRow";
+import { damFolderBreadcrumbFragment, damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
 
 interface DamBreadcrumbItem {
     id: string | null;
     url: string;
 }
 
-interface FolderBreadcrumbs {
+type FolderBreadcrumbProps = DamBreadcrumbItem;
+
+interface FolderBreadcrumbsProps {
     breadcrumbs: BreadcrumbItem[];
     folderIds: Array<string | null>;
-}
-
-interface FolderBreadcrumb {
-    id: string | null;
-    url: string;
+    loading?: boolean;
 }
 
 const FolderBreadcrumbWrapper = styled("div")<{ $isHovered: boolean }>`
@@ -47,47 +37,31 @@ const FolderBreadcrumbWrapper = styled("div")<{ $isHovered: boolean }>`
     }
 `;
 
-const FolderBreadcrumb = ({ id, url }: FolderBreadcrumb): React.ReactElement => {
+const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
+    const { moveItem } = useDamDnD();
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
 
-    const [updateFile] = useMutation<GQLUpdateDamFileMutation, GQLUpdateDamFileMutationVariables>(updateDamFileMutation);
-    const [updateFolder] = useMutation<GQLUpdateDamFolderMutation, GQLUpdateDamFolderMutationVariables>(updateDamFolderMutation);
-
-    const { data } = useQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
+    const { data } = useOptimisticQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
         variables: {
+            // Cannot be null because of skip
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             id: id!,
         },
         skip: id === null,
+        optimisticResponse: (cache) => {
+            const fragment = cache.readFragment<GQLDamFolderBreadcrumbFragment>({
+                id: cache.identify({ __typename: "DamFolder", id: id }),
+                fragment: damFolderBreadcrumbFragment,
+            });
+
+            return fragment ? { damFolder: fragment } : undefined;
+        },
     });
 
     const [, dropTarget] = useDrop({
         accept: ["folder", "asset"],
         drop: (dragObject: DamDragObject) => {
-            if (isFile(dragObject.item)) {
-                updateFile({
-                    variables: {
-                        id: dragObject.item.id,
-                        input: {
-                            folderId: id,
-                        },
-                    },
-                    refetchQueries: [namedOperations.Query.DamFilesList, namedOperations.Query.DamFoldersList],
-                    context: LocalErrorScopeApolloContext,
-                });
-            } else if (isFolder(dragObject.item)) {
-                updateFolder({
-                    variables: {
-                        id: dragObject.item.id,
-                        input: {
-                            parentId: id,
-                        },
-                    },
-                    refetchQueries: [namedOperations.Query.DamFilesList, namedOperations.Query.DamFoldersList],
-                    context: LocalErrorScopeApolloContext,
-                });
-            }
-
+            moveItem({ dropTargetItem: { id }, dragItem: dragObject.item });
             setIsHovered(false);
         },
         hover: () => {
@@ -104,13 +78,13 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumb): React.ReactElement => 
             $isHovered={isHovered}
         >
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
-                {data?.damFolder.name ?? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage={"Asset Manager"} />}
+                {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
             </Link>
         </FolderBreadcrumbWrapper>
     );
 };
 
-const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds }: FolderBreadcrumbs): React.ReactElement | null => {
+const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds, loading }: FolderBreadcrumbsProps): React.ReactElement | null => {
     // before stackBreadcrumbs are generated, they have no items
     if (stackBreadcrumbs.length === 0) {
         return null;
@@ -142,9 +116,10 @@ const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds }: FolderB
 
     return (
         <Breadcrumbs separator={<ChevronRight fontSize="small" />}>
-            {damBreadcrumbs?.map((damBreadcrumb) => {
-                return <FolderBreadcrumb key={damBreadcrumb.id} id={damBreadcrumb.id} url={damBreadcrumb.url} />;
-            })}
+            {!loading &&
+                damBreadcrumbs?.map((damBreadcrumb) => {
+                    return <FolderBreadcrumb key={damBreadcrumb.id} id={damBreadcrumb.id} url={damBreadcrumb.url} />;
+                })}
         </Breadcrumbs>
     );
 };

@@ -14,7 +14,7 @@ function AutomaticTitleItem({ typographyProps }: ToolbarAutomaticTitleItemProps)
 
     return (
         <ToolbarItem>
-            <Typography variant={"h4"} {...typographyProps}>
+            <Typography variant="h4" {...typographyProps}>
                 {stackApi?.breadCrumbs != null && stackApi.breadCrumbs.length > 0 && stackApi.breadCrumbs[stackApi?.breadCrumbs.length - 1].title}
             </Typography>
         </ToolbarItem>

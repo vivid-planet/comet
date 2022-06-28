@@ -1,6 +1,6 @@
 import React from "react";
 
-interface DamMultiselectItem {
+export interface DamMultiselectItem {
     id: string;
     type: "file" | "folder";
 }

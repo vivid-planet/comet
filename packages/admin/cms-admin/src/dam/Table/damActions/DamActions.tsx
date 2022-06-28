@@ -15,8 +15,8 @@ import {
     namedOperations,
 } from "../../../graphql.generated";
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
-import { deleteDamFileMutation } from "../../FileActions/ConfirmDeleteDialog.gql";
 import { useDamMultiselectApi } from "../multiselect/DamMultiselect";
+import { deleteDamFileMutation } from "./DamActions.gql";
 
 const GridContainer = styled(Grid)`
     padding: 2px 29px;
@@ -68,7 +68,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
             }
         }
 
-        await client.refetchQueries({ include: [namedOperations.Query.DamFoldersList, namedOperations.Query.DamFilesList] });
+        await client.refetchQueries({ include: [namedOperations.Query.DamList] });
         damMultiselectApi.unselectAll();
         setDeleting(false);
     };
@@ -89,7 +89,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                     />
                 </Grid>
                 <Grid item>
-                    <Tooltip title={<FormattedMessage id={"comet.dam.actions.tooltip.delete"} defaultMessage={"Delete"} />}>
+                    <Tooltip title={<FormattedMessage id="comet.dam.actions.tooltip.delete" defaultMessage="Delete" />}>
                         <span>
                             <IconButton
                                 disabled={damMultiselectApi.selectedItems.length === 0}
@@ -112,7 +112,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                     }
                     setDeleteDialogOpen(false);
                 }}
-                itemType={"selected_items"}
+                itemType="selected_items"
             />
         </>
     );

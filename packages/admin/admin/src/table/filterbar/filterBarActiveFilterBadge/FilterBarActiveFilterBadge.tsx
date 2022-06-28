@@ -12,7 +12,7 @@ function FilterBadge({ countValue, classes }: React.PropsWithChildren<FilterBarA
     if (countValue > 0) {
         return (
             <div className={classes.hasValueCount}>
-                <Typography variant={"inherit"} display="block">
+                <Typography variant="inherit" display="block">
                     {countValue}
                 </Typography>
             </div>

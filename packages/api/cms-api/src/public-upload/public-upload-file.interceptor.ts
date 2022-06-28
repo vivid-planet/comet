@@ -11,7 +11,6 @@ import { v4 as uuidv4 } from "uuid";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PublicUploadConfig } from "./public-upload.config";
 import { PUBLIC_UPLOAD_CONFIG } from "./public-upload.constants";
-import { acceptedMimeTypesByCategory } from "./public-uploads.controller";
 
 export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
     @Injectable()
@@ -41,7 +40,7 @@ export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterce
                     fileSize: config.maxFileSize * 1024 * 1024,
                 },
                 fileFilter: (req, file, cb) => {
-                    if (Object.values(acceptedMimeTypesByCategory).every((mimetypes) => !mimetypes.includes(file.mimetype))) {
+                    if (!config.acceptedMimeTypes.includes(file.mimetype)) {
                         return cb(new CometValidationException(`Unsupported mime type: ${file.mimetype}`), false);
                     }
 

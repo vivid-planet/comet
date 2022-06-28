@@ -27,7 +27,7 @@ interface CreateSeoBlockOptions {
 
 export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOptions = {}): BlockInterface {
     const OptionalImageBlock = createOptionalBlock(image, {
-        title: <FormattedMessage id={"comet.sitemap.openGraphImage"} defaultMessage={"Open Graph Image"} />,
+        title: <FormattedMessage id="comet.sitemap.openGraphImage" defaultMessage="Open Graph Image" />,
     });
 
     const composed = composeBlocks({ openGraphImage: OptionalImageBlock });
@@ -93,8 +93,8 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                     >
                         {/* Meta */}
                         <Box marginTop={4} marginBottom={8}>
-                            <Typography variant={"h4"} gutterBottom>
-                                <FormattedMessage id={"comet.blocks.seo.meta.sectionTitle"} defaultMessage={"Meta Tags"} />
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.meta.sectionTitle" defaultMessage="Meta Tags" />
                             </Typography>
 
                             <Field
@@ -102,7 +102,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                     id: "comet.blocks.seo.html  Title",
                                     defaultMessage: "Html Title",
                                 })}
-                                name={"htmlTitle"}
+                                name="htmlTitle"
                                 component={FinalFormInput}
                                 fullWidth
                             />
@@ -123,15 +123,15 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
 
                         {/* Open Graph */}
                         <Box marginTop={8} marginBottom={8}>
-                            <Typography variant={"h4"} gutterBottom>
-                                <FormattedMessage id={"comet.blocks.seo.openGraph.sectionTitle"} defaultMessage={"Open Graph"} />
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.openGraph.sectionTitle" defaultMessage="Open Graph" />
                             </Typography>
                             <Field
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.openGraphTitle",
                                     defaultMessage: "Title",
                                 })}
-                                name={"openGraphTitle"}
+                                name="openGraphTitle"
                                 component={FinalFormInput}
                                 fullWidth
                             />
@@ -140,7 +140,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                     id: "comet.blocks.seo.openGraphDescription",
                                     defaultMessage: "Description",
                                 })}
-                                name={"openGraphDescription"}
+                                name="openGraphDescription"
                                 multiline={true}
                                 rows={3}
                                 rowsMax={5}
@@ -152,13 +152,13 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
 
                         {/* Sitemap */}
                         <Box marginTop={8} marginBottom={8}>
-                            <Typography variant={"h4"} gutterBottom>
-                                <FormattedMessage id={"comet.blocks.seo.sitemap.sectionTitle"} defaultMessage={"Sitemap"} />
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.sitemap.sectionTitle" defaultMessage="Sitemap" />
                             </Typography>
 
                             <ReactFinalFormField
-                                name={"noIndex"}
-                                type={"checkbox"}
+                                name="noIndex"
+                                type="checkbox"
                                 parse={(v) => {
                                     return !v; // parse from noIndex to index
                                 }}
@@ -175,7 +175,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                                 header={
                                                     <CollapsibleSwitchButtonHeader
                                                         checked={open}
-                                                        title={<FormattedMessage id={"comet.seo.sitemap.pageIndex"} defaultMessage={"Page Index"} />}
+                                                        title={<FormattedMessage id="comet.seo.sitemap.pageIndex" defaultMessage="Page Index" />}
                                                     />
                                                 }
                                                 onChange={onChange}
@@ -187,7 +187,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                                             id: "comet.blocks.seo.sitemap.priority",
                                                             defaultMessage: "Priority",
                                                         })}
-                                                        name={"priority"}
+                                                        name="priority"
                                                         fullWidth
                                                     >
                                                         {(props) => (
@@ -205,7 +205,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                                             id: "comet.blocks.seo.sitemap.changeFrequency",
                                                             defaultMessage: "Change Frequency",
                                                         })}
-                                                        name={"changeFrequency"}
+                                                        name="changeFrequency"
                                                         fullWidth
                                                     >
                                                         {(props) => (

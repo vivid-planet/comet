@@ -7,7 +7,7 @@ export const includeInvisibleContentContext = setContext((request, prevContext) 
     return {
         headers: {
             ...prevContext.headers,
-            "x-include-invisible-content": ["Unpublished", "Archived"],
+            "x-include-invisible-content": ["Pages:Unpublished", "Pages:Archived", "Blocks:Invisible"],
         },
     };
 });

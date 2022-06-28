@@ -3,6 +3,7 @@ import { IsBoolean, IsEnum, IsOptional, IsUrl, ValidateIf, ValidationArguments }
 
 import { RedirectGenerationType, RedirectSourceTypeValues, RedirectTargetTypeValues } from "../redirects.enum";
 import { IsValidRedirectSource } from "../validators/isValidRedirectSource";
+import { MustNotCreateRedirectLoop } from "../validators/mustNotCreateRedirectLoop";
 import { PageExists } from "../validators/pageExists";
 import { RedirectTargetTypeMatch } from "../validators/redirectTargetTypeMatch";
 
@@ -40,6 +41,7 @@ export class CreateRedirectInput {
 
     @ValidateIf((o: CreateRedirectInput) => o.targetType === RedirectTargetTypeValues.intern)
     @PageExists()
+    @MustNotCreateRedirectLoop()
     @Field({ nullable: true })
     targetPageId?: string;
 

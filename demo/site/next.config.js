@@ -15,7 +15,6 @@ module.exports = {
     ],
     redirects: async () => {
         var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
-        console.log("Redirects", redirects);
         return redirects;
     },
     images: {
@@ -48,10 +47,9 @@ module.exports = {
         localeDetection: process.env.NODE_ENV !== "development",
     },
     typescript: {
-        // !! WARN !!
-        // Dangerously allow production builds to successfully complete even if
-        // your project has type errors.
-        // !! WARN !!
         ignoreBuildErrors: process.env.NODE_ENV === "production",
+    },
+    eslint: {
+        ignoreDuringBuilds: process.env.NODE_ENV === "production",
     },
 };

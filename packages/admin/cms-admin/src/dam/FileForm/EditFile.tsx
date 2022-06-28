@@ -169,10 +169,10 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey={"editFileSave"}>
+                            <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editFileSave">
                                 <SaveButton
-                                    color={"primary"}
-                                    variant={"contained"}
+                                    color="primary"
+                                    variant="contained"
                                     saving={saving}
                                     hasErrors={hasSaveErrors != null}
                                     type="button"
@@ -183,8 +183,8 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                     <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
                                 </SaveButton>
                                 <SaveButton
-                                    color={"primary"}
-                                    variant={"contained"}
+                                    color="primary"
+                                    variant="contained"
                                     saving={saving}
                                     hasErrors={hasSaveErrors != null}
                                     onClick={async () => {

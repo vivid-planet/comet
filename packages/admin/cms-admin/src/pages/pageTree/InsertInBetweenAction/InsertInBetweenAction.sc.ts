@@ -10,7 +10,7 @@ export const Root = styled("div")`
 
 export const TopSpot = styled("div")`
     position: absolute;
-    top: -13px;
+    top: -14px;
     pointer-events: all;
 `;
 

@@ -8,7 +8,7 @@ import { FormattedMessage } from "react-intl";
 
 import { ExternalLinkBlockData } from "../blocks.generated";
 
-interface OnlyShowVisibleContentModalProps {
+interface OpenLinkDialogProps {
     onClose?: () => void;
     open: boolean;
     link?: ExternalLinkBlockData;
@@ -17,7 +17,7 @@ interface OnlyShowVisibleContentModalProps {
 const IconContainer = styled("div")`
     margin-right: 10px;
 `;
-function OpenLinkDialog({ open, onClose, link }: OnlyShowVisibleContentModalProps): React.ReactElement {
+function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.ReactElement {
     return (
         <Dialog open={open} onClose={onClose} maxWidth={false}>
             <DialogTitle>
@@ -29,7 +29,7 @@ function OpenLinkDialog({ open, onClose, link }: OnlyShowVisibleContentModalProp
                     </Grid>
                     <Grid item>
                         <Typography>
-                            <FormattedMessage id={"comet.preview.openLink.title"} defaultMessage={"Open Link"} />
+                            <FormattedMessage id="comet.preview.openLink.title" defaultMessage="Open Link" />
                         </Typography>
                     </Grid>
                 </Grid>
@@ -37,7 +37,7 @@ function OpenLinkDialog({ open, onClose, link }: OnlyShowVisibleContentModalProp
             <DialogContent>
                 <Typography>
                     <FormattedMessage
-                        id={"comet.preview.openExternalLink.description"}
+                        id="comet.preview.openExternalLink.description"
                         defaultMessage={'Do you want to open "{url}" in a new Browser tab?'}
                         values={{
                             url: link?.targetUrl,
@@ -55,7 +55,7 @@ function OpenLinkDialog({ open, onClose, link }: OnlyShowVisibleContentModalProp
                         onClose?.();
                         window.open(link?.targetUrl);
                     }}
-                    variant={"contained"}
+                    variant="contained"
                     color="primary"
                 >
                     <FormattedMessage id="comet.openLinkDialog.actionButtons.open" defaultMessage="Open" />

@@ -1,7 +1,10 @@
 import styled from "styled-components";
 
+// Workaround to remove space below image. See https://github.com/vercel/next.js/issues/18637#issuecomment-803028167 for more information.
+// TODO consider adding this fix to PixelImageBlock directly.
 export const NextImageBottomPaddingFix = styled.div`
-    > div > div {
-        vertical-align: top; //solution for next/image to remove space below img https://github.com/vercel/next.js/issues/18637
+    > span,
+    > div > span {
+        vertical-align: top;
     }
 `;

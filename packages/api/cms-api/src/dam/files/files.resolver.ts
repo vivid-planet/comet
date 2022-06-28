@@ -34,6 +34,14 @@ export class FilesResolver {
         return this.filesService.updateById(id, input);
     }
 
+    @Mutation(() => [File])
+    async moveDamFiles(
+        @Args("fileIds", { type: () => [ID] }) fileIds: string[],
+        @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
+    ): Promise<File[]> {
+        return this.filesService.moveBatch(fileIds, targetFolderId);
+    }
+
     @Mutation(() => File)
     async archiveDamFile(@Args("id", { type: () => ID }) id: string): Promise<File> {
         const entity = await this.filesRepository.findOneOrFail(id);

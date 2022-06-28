@@ -181,9 +181,19 @@ union PageContentUnion = Page | Link
 type PaginatedPages {
   nodes: [Page!]!
   totalCount: Int!
-  nextPage: Int
-  previousPage: Int
-  totalPages: Int
+}
+
+type FooterContentScope {
+  domain: String!
+  language: String!
+}
+
+type Footer implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: JSONObject!
+  scope: FooterContentScope!
+  createdAt: DateTime!
 }
 
 type MainMenuItem {
@@ -198,12 +208,34 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
+type NewsContentScope {
+  domain: String!
+  language: String!
+}
+
 type News implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-  title: String!
+  scope: NewsContentScope!
   slug: String!
+  title: String!
+  date: DateTime!
+  category: NewsCategory!
+  visible: Boolean!
+  image: JSONObject!
+  content: JSONObject!
   createdAt: DateTime!
+}
+
+enum NewsCategory {
+  Events
+  Company
+  Awards
+}
+
+type PaginatedNews {
+  nodes: [News!]!
+  totalCount: Int!
 }
 
 input PageTreeNodeScopeInput {
@@ -211,9 +243,19 @@ input PageTreeNodeScopeInput {
   language: String!
 }
 
+input FooterContentScopeInput {
+  domain: String!
+  language: String!
+}
+
+input NewsContentScopeInput {
+  domain: String!
+  language: String!
+}
+
 type Query {
   page(pageId: ID!): Page
-  pages(offset: Int = 0, limit: Int = 20, sort: SortInput): PaginatedPages!
+  pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
   link(linkId: ID!): Link
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -223,22 +265,18 @@ type Query {
   pageTreeNodeSlugAvailable(slug: String!, parentId: ID, scope: PageTreeNodeScopeInput!): SlugAvailability!
   redirects(query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
   redirect(id: ID!): Redirect!
-  damFilesList(folderId: ID, showArchived: Boolean, filter: FileFilterInput, sort: SortInput): [DamFile!]!
+  damFilesList(sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): [DamFile!]!
   damFile(id: ID!): DamFile!
   damFilenameAlreadyExists(folderId: String, filename: String!): Boolean!
-  damFoldersList(parentId: ID, showArchived: Boolean, filter: FolderFilterInput, sort: SortInput): [DamFolder!]!
+  damFoldersList(sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): [DamFolder!]!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
-  news(newsId: ID!): News
+  news(id: ID!): News
   newsBySlug(slug: String!): News
-  newsList: [News!]!
+  newsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, category: NewsCategory, scope: NewsContentScopeInput!): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
-}
-
-input SortInput {
-  columnName: String!
-  direction: SortDirection = ASC
+  footer(scope: FooterContentScopeInput!): Footer
 }
 
 enum SortDirection {
@@ -254,20 +292,7 @@ enum SlugAvailability {
 
 input FileFilterInput {
   searchText: String
-
-  """Filter by file category. Is overruled by mimetypes."""
-  category: FileCategory
-
-  """Filter by mimetype. Overrules category."""
   mimetypes: [String!]
-}
-
-enum FileCategory {
-  PIXEL_IMAGE
-  SVG_IMAGE
-  VIDEO
-  AUDIO
-  OTHER
 }
 
 input FolderFilterInput {
@@ -289,16 +314,20 @@ type Mutation {
   updateRedirectActiveness(input: RedirectUpdateActivenessInput!, id: ID!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(input: UpdateDamFileInput!, id: ID!): DamFile!
+  moveDamFiles(targetFolderId: ID, fileIds: [ID!]!): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
   restoreDamFile(id: ID!): DamFile!
   deleteDamFile(id: ID!): Boolean!
   createDamFolder(input: CreateDamFolderInput!): DamFolder!
   updateDamFolder(input: UpdateDamFolderInput!, id: ID!): DamFolder!
+  moveDamFolders(targetFolderId: ID, folderIds: [ID!]!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
-  createNews(input: NewsInput!): News!
-  updateNews(input: NewsInput!, newsId: ID!): News!
+  createNews(input: NewsInput!, scope: NewsContentScopeInput!): News!
+  updateNews(lastUpdatedAt: DateTime, input: NewsInput!, id: ID!): News!
+  updateNewsVisibility(visible: Boolean!, id: ID!): News!
   deleteNews(id: ID!): Boolean!
   updateMainMenuItem(lastUpdatedAt: DateTime, input: MainMenuItemInput!, pageTreeNodeId: ID!): MainMenuItem!
+  saveFooter(lastUpdatedAt: DateTime, input: FooterInput!): Footer!
 }
 
 input PageInput {
@@ -401,8 +430,17 @@ input UpdateDamFolderInput {
 input NewsInput {
   title: String!
   slug: String!
+  date: DateTime!
+  category: NewsCategory!
+  image: JSONObject!
+  content: JSONObject!
 }
 
 input MainMenuItemInput {
   content: JSONObject
+}
+
+input FooterInput {
+  content: JSONObject!
+  scope: FooterContentScopeInput!
 }

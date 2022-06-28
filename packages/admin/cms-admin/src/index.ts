@@ -35,6 +35,10 @@ export type { ContentScopeInterface, ContentScopeProviderProps, ContentScopeValu
 export { ContentScopeProvider, useContentScope } from "./contentScope/Provider";
 export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConfig";
 export { useContentScopeConfig } from "./contentScope/useContentScopeConfig";
+export { DamConfigProvider } from "./dam/config/DamConfigProvider";
+export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";
+export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
+export { useDamConfig } from "./dam/config/useDamConfig";
 export { DamPage } from "./dam/DamPage";
 export { rewriteInternalLinks } from "./documents/rewriteInternalLinks";
 export type { DocumentInterface, DocumentType, IdsMap } from "./documents/types";

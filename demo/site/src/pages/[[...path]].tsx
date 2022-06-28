@@ -4,8 +4,15 @@ import NotFound404 from "@src/pages/404";
 import PageTypePage, { pageQuery as PageTypePageQuery } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
-import { GetServerSidePropsResult, GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
-import { ParsedUrlQuery } from "querystring";
+import {
+    GetServerSidePropsContext,
+    GetServerSidePropsResult,
+    GetStaticPaths,
+    GetStaticProps,
+    GetStaticPropsContext,
+    GetStaticPropsResult,
+    InferGetStaticPropsType,
+} from "next";
 import * as React from "react";
 
 interface PageProps {
@@ -44,35 +51,40 @@ const pageTypes = {
     },
 };
 
-export const getStaticProps: GetStaticProps<PageUniversalProps> = async ({ params, locale }) => {
-    const getUniversalProps = createGetUniversalProps({ language: locale ?? defaultLanguage });
-    return await getUniversalProps({ params });
+export const getStaticProps: GetStaticProps<PageUniversalProps> = async (context) => {
+    const getUniversalProps = createGetUniversalProps();
+    return getUniversalProps(context);
 };
 
-interface CreateGetStaticPropsOptions {
-    language: string;
-    includeInvisibleContent?: boolean;
+interface CreateGetUniversalPropsOptions {
+    includeInvisiblePages?: boolean;
+    includeInvisibleBlocks?: boolean;
     previewDamUrls?: boolean;
 }
 
 // a function to create a universal function which can be used as getStaticProps or getServerSideProps (preview)
-export function createGetUniversalProps({ language, includeInvisibleContent = false, previewDamUrls = false }: CreateGetStaticPropsOptions) {
-    return async function getUniversalProps({
+export function createGetUniversalProps({
+    includeInvisiblePages = false,
+    includeInvisibleBlocks = false,
+    previewDamUrls = false,
+}: CreateGetUniversalPropsOptions = {}) {
+    return async function getUniversalProps<Context extends GetStaticPropsContext | GetServerSidePropsContext>({
         params,
-    }: {
-        params: ParsedUrlQuery | undefined;
-    }): Promise<GetStaticPropsResult<PageUniversalProps> | GetServerSidePropsResult<PageUniversalProps>> {
+        locale = defaultLanguage,
+    }: Context): Promise<
+        Context extends GetStaticPropsContext ? GetStaticPropsResult<PageUniversalProps> : GetServerSidePropsResult<PageUniversalProps>
+    > {
         const path = params?.path ?? "";
-        const contentScope = { domain, language };
+        const contentScope = { domain, language: locale };
 
         //fetch pageType
-        const data = await createGraphQLClient({ includeInvisibleContent, previewDamUrls }).request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(
-            pageTypeQuery,
-            {
-                path: `/${Array.isArray(path) ? path.join("/") : path}`,
-                contentScope,
-            },
-        );
+        const data = await createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls }).request<
+            GQLPageTypeQuery,
+            GQLPageTypeQueryVariables
+        >(pageTypeQuery, {
+            path: `/${Array.isArray(path) ? path.join("/") : path}`,
+            contentScope,
+        });
         if (!data.pageTreeNodeByPath?.documentType) {
             // eslint-disable-next-line no-console
             console.log("got no data from api", data, path);
@@ -82,11 +94,14 @@ export function createGetUniversalProps({ language, includeInvisibleContent = fa
 
         //pageType dependent query
         const { query: queryForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
-        const pageTypeData = await createGraphQLClient({ includeInvisibleContent, previewDamUrls }).request<GQLPage>(queryForPageType, {
-            pageId,
-            domain: contentScope.domain,
-            language: contentScope.language,
-        });
+        const pageTypeData = await createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls }).request<GQLPage>(
+            queryForPageType,
+            {
+                pageId,
+                domain: contentScope.domain,
+                language: contentScope.language,
+            },
+        );
 
         return {
             props: {

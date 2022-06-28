@@ -11,7 +11,7 @@ import {
     GQLDamFolderForFolderUploadMutation,
     GQLDamFolderForFolderUploadMutationVariables,
 } from "../../../graphql.generated";
-import { acceptedMimeTypes } from "./acceptedMimeTypes";
+import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
@@ -91,7 +91,9 @@ const addFolderPath = async (acceptedFiles: FileWithFolderPath[]) => {
 export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const context = useCmsBlockContext(); // TODO create separate CmsContext?
     const client = useApolloClient();
-    const accept = options.acceptedMimetypes ?? acceptedMimeTypes;
+
+    const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+    const accept = options.acceptedMimetypes ?? allAcceptedMimeTypes;
 
     const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();

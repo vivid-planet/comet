@@ -51,41 +51,28 @@ export const damFolderQuery = gql`
     ${damFolderTableFragment}
 `;
 
-export const damFilesListQuery = gql`
-    query DamFilesList($folderId: ID, $fileFilter: FileFilterInput, $sort: SortInput) {
-        damFilesList(folderId: $folderId, filter: $fileFilter, sort: $sort) {
+export const damListQuery = gql`
+    query DamList(
+        $folderId: ID
+        $includeArchived: Boolean
+        $fileFilter: FileFilterInput
+        $folderFilter: FolderFilterInput
+        $sortColumnName: String
+        $sortDirection: SortDirection
+    ) {
+        damFilesList(
+            folderId: $folderId
+            includeArchived: $includeArchived
+            filter: $fileFilter
+            sortColumnName: $sortColumnName
+            sortDirection: $sortDirection
+        ) {
             ...DamFileTable
+        }
+        damFoldersList(parentId: $folderId, filter: $folderFilter, sortColumnName: $sortColumnName, sortDirection: $sortDirection) {
+            ...DamFolderTable
         }
     }
     ${damFileTableFragment}
-`;
-
-export const damFoldersListQuery = gql`
-    query DamFoldersList($parentId: ID, $folderFilter: FolderFilterInput, $sort: SortInput) {
-        damFoldersList(parentId: $parentId, filter: $folderFilter, sort: $sort) {
-            ...DamFolderTable
-        }
-    }
     ${damFolderTableFragment}
-`;
-
-export const updateDamFolderMutation = gql`
-    mutation UpdateDamFolder($id: ID!, $input: UpdateDamFolderInput!) {
-        updateDamFolder(id: $id, input: $input) {
-            ...DamFolderTable
-        }
-    }
-    ${damFolderTableFragment}
-`;
-
-export const updateDamFileMutation = gql`
-    mutation UpdateDamFile($id: ID!, $input: UpdateDamFileInput!) {
-        updateDamFile(id: $id, input: $input) {
-            id
-            name
-            size
-            mimetype
-            updatedAt
-        }
-    }
 `;

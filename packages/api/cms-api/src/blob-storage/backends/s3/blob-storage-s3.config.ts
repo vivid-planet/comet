@@ -5,5 +5,6 @@ export interface BlobStorageS3Config {
         secretAccessKey: string;
         endpoint: string;
         region: string;
+        bucket: string;
     };
 }

@@ -13,12 +13,12 @@ interface AddFolderProps {
 
 const AddFolder = ({ parentId, selectionApi }: AddFolderProps): React.ReactElement => {
     const [createDamFolder] = useMutation<GQLCreateDamFolderMutation, GQLCreateDamFolderMutationVariables>(createDamFolderMutation, {
-        refetchQueries: [namedOperations.Query.DamFilesList, namedOperations.Query.DamFoldersList],
+        refetchQueries: [namedOperations.Query.DamList],
     });
 
     return (
         <FinalForm<FolderFormValues>
-            mode={"add"}
+            mode="add"
             onSubmit={async ({ name }: FolderFormValues) => {
                 await createDamFolder({
                     variables: {

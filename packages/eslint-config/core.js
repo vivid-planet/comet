@@ -5,5 +5,6 @@ module.exports = {
     plugins: [...core.plugins, "import"],
     rules: {
         "import/no-extraneous-dependencies": "error",
+        "import/no-duplicates": "error",
     },
 };

@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 const LATEST_CONTENT_UPDATES_QUERY = gql`
     query LatestContentUpdates {
-        pages(offset: 0, limit: 5, sort: { columnName: "updatedAt", direction: DESC }) {
+        pages(offset: 0, limit: 5, sortColumnName: "updatedAt", sortDirection: DESC) {
             nodes {
                 id
                 updatedAt

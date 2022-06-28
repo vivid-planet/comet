@@ -1,4 +1,3 @@
-import { useStoredState } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
 import { IFrameBridgeProvider, IFrameLocationMessage, IFrameMessageType } from "@comet/blocks-admin";
 import { Public, VpnLock } from "@mui/icons-material";
@@ -12,14 +11,13 @@ import { ContentScopeInterface, useContentScope } from "../contentScope/Provider
 import { useSiteConfig } from "../sitesConfig/useSiteConfig";
 import { DeviceToggle } from "./DeviceToggle";
 import { IFrameViewer } from "./IFrameViewer";
-import { OnlyShowVisibleContentModal } from "./OnlyShowVisilbeContentModal";
 import { OpenLinkDialog } from "./OpenLinkDialog";
 import { ActionsContainer, CometLogoWrapper, CometSiteLink, CometSiteLinkWrapper, Root, useStyles } from "./SitePreview.sc";
 import { Device } from "./types";
 import { VisibilityToggle } from "./VisibilityToggle";
 
 interface SiteState {
-    includeInvisibleContent: boolean;
+    includeInvisibleBlocks: boolean;
 }
 
 function buildPreviewUrl(previewUrl: string, previewPath: string, formattedSiteState: string) {
@@ -36,13 +34,27 @@ function SitePreview({ location, resolvePath }: Props): React.ReactElement {
 
     const [previewPath, setPreviewPath] = React.useState<string>(queryParams.get("path") || "");
 
-    const [device, setDevice] = useStoredState<Device>("sitePreviewDevice", Device.Responsive);
-    const [showOnlyVisible, setShowOnlyVisible] = useStoredState<boolean>("sitePreviewShowOnlyVisible", false);
-    const [hasSeenShowOnlyVisibleHint, setHasSeenShowOnlyVisibleHint] = useStoredState<boolean>("hasSeenShowOnlyVisibleHint", false);
+    const [device, setDevice] = React.useState<Device>(() => {
+        const deviceParam = queryParams.get("device");
 
+        if (deviceParam !== null && [Device.Responsive, Device.Mobile, Device.Tablet, Device.Desktop].includes(Number(deviceParam))) {
+            return Number(deviceParam) as Device;
+        } else {
+            return Device.Responsive;
+        }
+    });
+
+    const [showOnlyVisible, setShowOnlyVisible] = React.useState<boolean>(() => {
+        const showOnlyVisibleParam = queryParams.get("showOnlyVisible");
+
+        if (showOnlyVisibleParam === null) {
+            return true;
+        }
+
+        return showOnlyVisibleParam === "true";
+    });
     const [linkToOpen, setLinkToOpen] = React.useState<ExternalLinkBlockData | undefined>(undefined);
-    const showOnlyVisibleHint = !hasSeenShowOnlyVisibleHint && showOnlyVisible;
-    const siteState: SiteState = { includeInvisibleContent: !showOnlyVisible };
+    const siteState: SiteState = { includeInvisibleBlocks: !showOnlyVisible };
     const formattedSiteState = JSON.stringify(siteState);
 
     const { scope } = useContentScope();
@@ -74,13 +86,34 @@ function SitePreview({ location, resolvePath }: Props): React.ReactElement {
                 if (normalizedPathname == "") normalizedPathname = "/";
                 if (previewPath !== normalizedPathname) {
                     setPreviewPath(normalizedPathname);
-                    const search = new URLSearchParams({ path: normalizedPathname });
-                    history.push({ search: search.toString() });
+                    const newQueryParams = new URLSearchParams(location.search);
+                    newQueryParams.set("path", normalizedPathname);
+                    history.push({ search: newQueryParams.toString() });
                 }
             }
         },
-        [previewPath, history],
+        [previewPath, history, location.search],
     );
+
+    const handleDeviceChange = (newDevice: Device) => {
+        setDevice(newDevice);
+
+        const newQueryParams = new URLSearchParams(location.search);
+        newQueryParams.set("device", String(newDevice));
+
+        history.replace({ search: newQueryParams.toString() });
+    };
+
+    const handleShowOnlyVisibleChange = () => {
+        const newShowOnlyVisible = !showOnlyVisible;
+
+        setShowOnlyVisible(newShowOnlyVisible);
+
+        const newQueryParams = new URLSearchParams(location.search);
+        newQueryParams.set("showOnlyVisible", String(newShowOnlyVisible));
+
+        history.replace({ search: newQueryParams.toString() });
+    };
 
     const siteLink = `${siteConfig.url}${resolvePath ? resolvePath(previewPath, scope) : previewPath}`;
 
@@ -127,19 +160,13 @@ function SitePreview({ location, resolvePath }: Props): React.ReactElement {
                             </CometLogoWrapper>
                         </Grid>
                         <Grid item>
-                            <DeviceToggle device={device} onChange={setDevice} />
+                            <DeviceToggle device={device} onChange={handleDeviceChange} />
                         </Grid>
                         <Grid item>
-                            <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={setShowOnlyVisible} />
+                            <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
                         </Grid>
                     </Grid>
                 </ActionsContainer>
-                <OnlyShowVisibleContentModal
-                    open={showOnlyVisibleHint}
-                    onClose={() => {
-                        setHasSeenShowOnlyVisibleHint(true);
-                    }}
-                />
                 <OpenLinkDialog
                     open={linkToOpen != null}
                     onClose={() => {

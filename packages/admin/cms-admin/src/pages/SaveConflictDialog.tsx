@@ -38,22 +38,20 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
     const styles = useStyles();
 
     return (
-        <Dialog open={open} onClose={onClosePressed} maxWidth={"sm"}>
+        <Dialog open={open} onClose={onClosePressed} maxWidth="sm">
             <DialogTitle>
                 <Typography>
-                    <FormattedMessage id={"comet.saveConflictDialog.title"} defaultMessage={"Save Conflict"} />
+                    <FormattedMessage id="comet.saveConflictDialog.title" defaultMessage="Save Conflict" />
                 </Typography>
             </DialogTitle>
             <DialogContent>
                 <Alert variant="outlined" severity="error" icon={<Warning />} classes={{ root: styles.errorAlert }}>
-                    <FormattedMessage id={"comet.saveConflictDialog.description1"} defaultMessage={"There was a conflict while saving"} />
+                    <FormattedMessage id="comet.saveConflictDialog.description1" defaultMessage="There was a conflict while saving" />
                 </Alert>
                 <Typography>
                     <FormattedMessage
-                        id={"comet.saveConflictDialog.description"}
-                        defaultMessage={
-                            "Someone else saved a new version. Therefore this page cannot be saved now. You can open the changed page in a new tab to compare the changes."
-                        }
+                        id="comet.saveConflictDialog.description"
+                        defaultMessage="Someone else saved a new version. Therefore this page cannot be saved now. You can open the changed page in a new tab to compare the changes."
                     />
                 </Typography>
             </DialogContent>
@@ -68,7 +66,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                         onClosePressed();
                         onDiscardChangesPressed();
                     }}
-                    variant={"contained"}
+                    variant="contained"
                     classes={{ root: styles.discardButtonRoot }}
                     color="info"
                 >
@@ -80,7 +78,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                         onClosePressed();
                         window.open(window.location.href, "_blank");
                     }}
-                    variant={"contained"}
+                    variant="contained"
                     color="primary"
                 >
                     <FormattedMessage

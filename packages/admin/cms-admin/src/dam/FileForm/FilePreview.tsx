@@ -1,18 +1,28 @@
 import { useApolloClient } from "@apollo/client";
 import { useStackApi } from "@comet/admin";
-import { Delete, Download, ZipFile } from "@comet/admin-icons";
+import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import saveAs from "file-saver";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLDamFileDetailFragment, GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables, namedOperations } from "../../graphql.generated";
+import {
+    GQLArchiveFileMutation,
+    GQLArchiveFileMutationVariables,
+    GQLDamFileDetailFragment,
+    GQLDeleteDamFileMutation,
+    GQLDeleteDamFileMutationVariables,
+    GQLRestoreFileMutation,
+    GQLRestoreFileMutationVariables,
+    namedOperations,
+} from "../../graphql.generated";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
-import { deleteDamFileMutation } from "../FileActions/ConfirmDeleteDialog.gql";
+import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
 import { AudioPreview } from "./previews/AudioPreview";
 import { DefaultFilePreview } from "./previews/DefaultFilePreview";
 import { ImagePreview } from "./previews/ImagePreview";
+import { PdfPreview } from "./previews/PdfPreview";
 import { VideoPreview } from "./previews/VideoPreview";
 
 const ActionsContainer = styled("div")`
@@ -59,6 +69,8 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
         preview = <AudioPreview file={file} />;
     } else if (file.mimetype.startsWith("video/")) {
         preview = <VideoPreview file={file} />;
+    } else if (file.mimetype === "application/pdf") {
+        preview = <PdfPreview file={file} />;
     } else if (["application/x-zip-compressed", "application/zip"].includes(file.mimetype)) {
         preview = <DefaultFilePreview customIcon={<ZipFileIcon />} />;
     } else {
@@ -80,29 +92,28 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
                 {/*<ActionButton startIcon={<Upload />}>*/}
                 {/*    <FormattedMessage id="comet.dam.file.replaceFile" defaultMessage="Replace File" />*/}
                 {/*</ActionButton>*/}
-                {/*Todo: Readd Archive Button once archive filter exists*/}
-                {/*<ActionButton*/}
-                {/*    startIcon={file.archived ? <Restore /> : <Archive />}*/}
-                {/*    onClick={() => {*/}
-                {/*        if (file.archived) {*/}
-                {/*            client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({*/}
-                {/*                mutation: restoreDamFileMutation,*/}
-                {/*                variables: { id: file.id },*/}
-                {/*            });*/}
-                {/*        } else {*/}
-                {/*            client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({*/}
-                {/*                mutation: archiveDamFileMutation,*/}
-                {/*                variables: { id: file.id },*/}
-                {/*            });*/}
-                {/*        }*/}
-                {/*    }}*/}
-                {/*>*/}
-                {/*    {file.archived ? (*/}
-                {/*        <FormattedMessage id="comet.dam.file.restore" defaultMessage="Restore" />*/}
-                {/*    ) : (*/}
-                {/*        <FormattedMessage id="comet.dam.file.archive" defaultMessage="Archive" />*/}
-                {/*    )}*/}
-                {/*</ActionButton>*/}
+                <ActionButton
+                    startIcon={file.archived ? <Restore /> : <Archive />}
+                    onClick={() => {
+                        if (file.archived) {
+                            client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
+                                mutation: restoreDamFileMutation,
+                                variables: { id: file.id },
+                            });
+                        } else {
+                            client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
+                                mutation: archiveDamFileMutation,
+                                variables: { id: file.id },
+                            });
+                        }
+                    }}
+                >
+                    {file.archived ? (
+                        <FormattedMessage id="comet.dam.file.restore" defaultMessage="Restore" />
+                    ) : (
+                        <FormattedMessage id="comet.dam.file.archive" defaultMessage="Archive" />
+                    )}
+                </ActionButton>
                 <ActionButton
                     startIcon={<Delete />}
                     onClick={() => {
@@ -120,7 +131,7 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
                         await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
                             mutation: deleteDamFileMutation,
                             variables: { id: file.id },
-                            refetchQueries: [namedOperations.Query.DamFilesList],
+                            refetchQueries: [namedOperations.Query.DamList],
                         });
 
                         stackApi?.goBack();

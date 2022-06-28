@@ -95,7 +95,7 @@ function LinkDialog(props: {
     return (
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
             <DialogTitle>
-                <FormattedMessage id={"cometAdmin.rte.extensions.link.editDialogTitle"} defaultMessage={"Link"} />
+                <FormattedMessage id="cometAdmin.rte.extensions.link.editDialogTitle" defaultMessage="Link" />
             </DialogTitle>
             <DialogContent>
                 <FormControl fullWidth>

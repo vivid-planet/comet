@@ -10,7 +10,7 @@ import { TextMatch } from "../../../common/MarkedMatches";
 import { DamTable } from "../../../dam/DamTable";
 import DamLabel from "../../../dam/Table/DamLabel";
 import { isFile } from "../../../dam/Table/FolderTableRow";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment, GQLFileCategory } from "../../../graphql.generated";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
@@ -48,12 +48,12 @@ const renderDamLabel = (
 ) => {
     return isFile(row) ? (
         <div>
-            <TableRowButton disableRipple={true} variant={"text"} onClick={() => onChooseFile(row.id)} fullWidth>
+            <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
                 <DamLabel asset={row} matches={matches} />
             </TableRowButton>
         </div>
     ) : (
-        <Link underline="none" component={StackLink} pageName={"folder"} payload={row.id}>
+        <Link underline="none" component={StackLink} pageName="folder" payload={row.id}>
             <DamLabel asset={row} matches={matches} />
         </Link>
     );
@@ -63,13 +63,10 @@ interface ChooseFileDialogProps {
     open: boolean;
     onClose: (event: React.SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
     onChooseFile: (fileId: string) => void;
-    /** Filter files by category. Is overruled by allowedMimetypes. */
-    fileCategory?: GQLFileCategory;
-    /** Filter files by mimetype. Overrules fileCategory. */
     allowedMimetypes?: string[];
 }
 
-export const ChooseFileDialog = ({ open, onClose, onChooseFile, fileCategory, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
+export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
     return (
         <FixedHeightDialog open={open} onClose={onClose} fullWidth maxWidth="xl">
             <StyledDialogTitle>
@@ -82,13 +79,13 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, fileCategory, al
                 <DamTable
                     renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
                     TableContainer={DialogContent}
-                    fileCategory={fileCategory}
                     allowedMimetypes={allowedMimetypes}
-                    damLocationStorageKey={"choose-file-dam-location"}
+                    damLocationStorageKey="choose-file-dam-location"
                     hideContextMenu={true}
                     disableScopeIndicator={true}
                     hideMultiselect={true}
                     hideDamActions={true}
+                    hideArchiveFilter={true}
                 />
             </MemoryRouter>
         </FixedHeightDialog>

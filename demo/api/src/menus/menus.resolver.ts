@@ -1,4 +1,4 @@
-import { PageTreeNodeVisibility, PageTreeService, PublicApi, RequestContext, RequestContextInterface } from "@comet/cms-api";
+import { PageTreeNodeVisibility, PageTreeService, PublicApi } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Args, Query, Resolver } from "@nestjs/graphql";
@@ -18,13 +18,10 @@ export class MenusResolver {
 
     @Query(() => MainMenuObject)
     @PublicApi()
-    async mainMenu(
-        @Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope,
-        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
-    ): Promise<MainMenuObject> {
+    async mainMenu(@Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope): Promise<MainMenuObject> {
         const rootNodes = await this.pageTreeService
             .createReadApi({
-                visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
+                visibility: [PageTreeNodeVisibility.Published],
             })
             .pageTreeRootNodeList({ scope, excludeHiddenInMenu: true, category: PageTreeNodeCategory.MainNavigation });
 

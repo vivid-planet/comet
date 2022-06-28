@@ -46,8 +46,8 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps & WithStyles<Erro
             classes,
             variant = "filled",
             icon = <Error />,
-            toggleDetailsOpenedIcon = <ChevronRight fontSize={"small"} />,
-            toggleDetailsClosedIcon = <ChevronDown fontSize={"small"} />,
+            toggleDetailsOpenedIcon = <ChevronRight fontSize="small" />,
+            toggleDetailsClosedIcon = <ChevronDown fontSize="small" />,
         } = this.props;
         const { error, errorInfo } = this.state;
 
