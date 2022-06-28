@@ -1,6 +1,8 @@
 import { useApolloClient } from "@apollo/client";
 import axios, { AxiosError, CancelTokenSource } from "axios";
+import * as mimedb from "mime-db";
 import * as React from "react";
+import { Accept, FileRejection } from "react-dropzone";
 
 import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
@@ -35,16 +37,16 @@ interface UploadFileOptions {
 
 interface Files {
     acceptedFiles: FileWithFolderPath[];
-    rejectedFiles: FileWithFolderPath[];
+    fileRejections: FileRejection[];
 }
 
 interface FileUploadApi {
-    uploadFiles: ({ acceptedFiles, rejectedFiles }: Files, folderId?: string) => void;
+    uploadFiles: ({ acceptedFiles, fileRejections }: Files, folderId?: string) => void;
     validationErrors?: FileUploadValidationError[];
     maxFileSizeInBytes: number;
     dialogs: React.ReactNode;
     dropzoneConfig: {
-        accept: string[];
+        accept: Accept;
         multiple: boolean;
         maxSize: number;
     };
@@ -93,7 +95,19 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const client = useApolloClient();
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-    const accept = options.acceptedMimetypes ?? allAcceptedMimeTypes;
+    const accept: Accept = React.useMemo(() => {
+        const acceptObj: Accept = {};
+        const acceptedMimetypes = options.acceptedMimetypes ?? allAcceptedMimeTypes;
+
+        acceptedMimetypes.forEach((mimetype) => {
+            const extensions = mimedb[mimetype]?.extensions;
+            if (extensions) {
+                acceptObj[mimetype] = [...extensions];
+            }
+        });
+
+        return acceptObj;
+    }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
 
     const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
@@ -124,14 +138,14 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     };
 
     const generateValidationErrorsForRejectedFiles = React.useCallback(
-        (rejectedFiles: FileWithFolderPath[]) => {
-            for (const file of rejectedFiles) {
-                if (file.size > maxFileSizeInBytes) {
-                    addValidationError(file, <FileSizeError maxFileSizeInBytes={maxFileSizeInBytes} />);
+        (fileRejections: FileRejection[]) => {
+            for (const fileRejection of fileRejections) {
+                if (fileRejection.file.size > maxFileSizeInBytes) {
+                    addValidationError(fileRejection.file, <FileSizeError maxFileSizeInBytes={maxFileSizeInBytes} />);
                 }
-                if (!accept.includes(file.type)) {
-                    const extension = `.${file.name.split(".").pop()}`;
-                    addValidationError(file, <UnsupportedTypeError extension={extension} />);
+                if (!Object.keys(accept).includes(fileRejection.file.type)) {
+                    const extension = `.${fileRejection.file.name.split(".").pop()}`;
+                    addValidationError(fileRejection.file, <UnsupportedTypeError extension={extension} />);
                 }
             }
         },
@@ -223,14 +237,14 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         [createDamFolder, lookupDamFolder],
     );
 
-    const uploadFiles = async ({ acceptedFiles, rejectedFiles }: Files, folderId?: string) => {
+    const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, folderId?: string) => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
 
         let errorOccurred = false;
-        if (rejectedFiles.length > 0) {
+        if (fileRejections.length > 0) {
             errorOccurred = true;
-            generateValidationErrorsForRejectedFiles(rejectedFiles);
+            generateValidationErrorsForRejectedFiles(fileRejections);
         }
 
         if (acceptedFiles.length > 0) {
