@@ -144,8 +144,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                     addValidationError(fileRejection.file, <FileSizeError maxFileSizeInBytes={maxFileSizeInBytes} />);
                 }
 
-                const acceptMap = new Map(Object.entries(accept));
-                if (!acceptMap.has(fileRejection.file.type)) {
+                if (!accept[fileRejection.file.type]) {
                     const extension = `.${fileRejection.file.name.split(".").pop()}`;
                     addValidationError(fileRejection.file, <UnsupportedTypeError extension={extension} />);
                 }
