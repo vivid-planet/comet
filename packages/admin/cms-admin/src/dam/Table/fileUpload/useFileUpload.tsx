@@ -102,7 +102,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         acceptedMimetypes.forEach((mimetype) => {
             const extensions = mimedb[mimetype]?.extensions;
             if (extensions) {
-                acceptObj[mimetype] = [...extensions];
+                acceptObj[mimetype] = extensions.map((extension) => `.${extension}`);
             }
         });
 
