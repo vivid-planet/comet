@@ -27,7 +27,7 @@ export function PageSearch({ query, onQueryChange, pageSearchApi }: PageSearchPr
     const updateQuery = (newQuery: string) => {
         setInternalQuery(newQuery);
 
-        debouncedOnQueryChange.callback(newQuery);
+        debouncedOnQueryChange(newQuery);
 
         if (newQuery === "") {
             debouncedOnQueryChange.flush();

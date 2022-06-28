@@ -18,6 +18,7 @@ export { BuildRuntime } from "./builds/BuildRuntime";
 export { Publisher } from "./builds/Publisher";
 export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";
 export { DropdownMenuItem } from "./common/DropdownMenuItem";
+export { AuthorizationErrorPage } from "./common/errors/AuthorizationErrorPage";
 export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
 export type { TextMatch } from "./common/MarkedMatches";

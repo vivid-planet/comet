@@ -65,5 +65,17 @@ export const styles = (theme: Theme) => {
                 backgroundColor: theme.palette.success.light,
             },
         },
+        textError: {},
+        textInfo: {},
+        textSuccess: {},
+        textWarning: {},
+        outlinedError: {},
+        outlinedInfo: {},
+        outlinedSuccess: {},
+        outlinedWarning: {},
+        containedError: {},
+        containedInfo: {},
+        containedSuccess: {},
+        containedWarning: {},
     });
 };
