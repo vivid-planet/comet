@@ -14,14 +14,16 @@ import {
     ToolbarTitleItem,
     useStackApi,
 } from "@comet/admin";
-import { CircularProgress, Typography } from "@mui/material";
+import { Card, CardContent, CircularProgress, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FORM_ERROR } from "final-form";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
+import { useContentScope } from "../../contentScope/Provider";
 import {
     GQLDamFileDetailFragment,
     GQLDamFileDetailQuery,
@@ -31,6 +33,7 @@ import {
     GQLUpdateFileMutation,
     GQLUpdateFileMutationVariables,
 } from "../../graphql.generated";
+import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation";
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { FilePreview } from "./FilePreview";
@@ -67,18 +70,35 @@ const useInitialValues = (id: string) => {
 };
 
 const EditFile = ({ id }: EditFormProps): React.ReactElement => {
+    const { match: scopeMatch } = useContentScope();
+    const persistedDamLocationApi = usePersistedDamLocation();
     const initialValues = useInitialValues(id);
     const file = initialValues.data?.damFile;
 
-    if (initialValues.loading || file === undefined) {
+    if (initialValues.loading) {
         return <CircularProgress />;
-    }
+    } else if (initialValues.error || file === undefined) {
+        // otherwise, the user always gets redirected to the broken file and is stuck there
+        persistedDamLocationApi?.reset();
 
-    if (initialValues.error) {
         return (
-            <Typography color="error">
-                <FormattedMessage id="comet.dam.file.failedToLoad" defaultMessage="Failed to load file" />
-            </Typography>
+            <Card>
+                <CardContent>
+                    <Typography color="error">
+                        <FormattedMessage
+                            id="comet.dam.file.failedToLoad"
+                            defaultMessage="Failed to load file. <link>Go to Assets</link>"
+                            values={{
+                                link: (chunks: string) => (
+                                    <Link to={`${scopeMatch.url}/assets`} component={RouterLink}>
+                                        {chunks}
+                                    </Link>
+                                ),
+                            }}
+                        />
+                    </Typography>
+                </CardContent>
+            </Card>
         );
     }
 
