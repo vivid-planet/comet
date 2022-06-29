@@ -25,7 +25,7 @@ function Story() {
         <>
             <Toolbar>
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Filter Clientside</Typography>
+                    <Typography variant="h3">Filter Clientside</Typography>
                 </ToolbarItem>
                 <ToolbarItem>
                     <TableFilterFinalForm filterApi={filterApi}>

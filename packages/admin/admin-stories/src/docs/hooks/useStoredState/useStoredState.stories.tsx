@@ -9,8 +9,8 @@ storiesOf("stories/hooks/useStoredState", module)
         return (
             <FormSection title={`Stored State: ${storedState}`} disableMarginBottom>
                 <Button
-                    variant={"contained"}
-                    color={"primary"}
+                    variant="contained"
+                    color="primary"
                     onClick={() => {
                         setStoredState(storedState + 1);
                     }}
@@ -18,7 +18,7 @@ storiesOf("stories/hooks/useStoredState", module)
                     Increment Stored State
                 </Button>
                 <Button
-                    color={"primary"}
+                    color="primary"
                     onClick={() => {
                         setStoredState(0);
                     }}

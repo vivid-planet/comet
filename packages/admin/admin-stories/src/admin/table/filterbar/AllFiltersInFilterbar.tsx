@@ -109,32 +109,32 @@ function Story({ tableData }: StoryProps) {
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBarPopoverFilter label={"Brand"}>
+                    <FilterBarPopoverFilter label="Brand">
                         <Field name="brand" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
-                    <FilterBarPopoverFilter label={"Model"}>
+                    <FilterBarPopoverFilter label="Model">
                         <Field name="model" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
-                    <FilterBarPopoverFilter label={"Owner"}>
-                        <Field label={"Firstname:"} name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
-                        <Field label={"Lastname:"} name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
+                    <FilterBarPopoverFilter label="Owner">
+                        <Field label="Firstname:" name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
+                        <Field label="Lastname:" name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
                     </FilterBarPopoverFilter>
                     <FilterBarMoreFilters>
-                        <FilterBarPopoverFilter label={"Color"}>
+                        <FilterBarPopoverFilter label="Color">
                             <ColorFilterField colors={tableData.map((item) => item.color)} />
                         </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Horsepower"}>
+                        <FilterBarPopoverFilter label="Horsepower">
                             <Field name="horsepower" component={FinalFormRangeInput} fullWidth min={50} max={200} />
                         </FilterBarPopoverFilter>
-                        <FilterBarPopoverFilter label={"Price"}>
+                        <FilterBarPopoverFilter label="Price">
                             <Box maxWidth={350}>
-                                <Field name="price" component={FinalFormRangeInput} startAdornment={"€"} fullWidth min={50} max={1000} />
+                                <Field name="price" component={FinalFormRangeInput} startAdornment="€" fullWidth min={50} max={1000} />
                                 <Divider />
                                 <Field name="expressDelivery" type="checkbox" fullWidth>
-                                    {(props) => <FormControlLabel label={"Express delivery"} control={<FinalFormSwitch {...props} />} />}
+                                    {(props) => <FormControlLabel label="Express delivery" control={<FinalFormSwitch {...props} />} />}
                                 </Field>
                                 <Box paddingBottom={4} paddingLeft={4} paddingRight={4}>
-                                    <Typography variant={"body2"}>
+                                    <Typography variant="body2">
                                         Show all articles that can be shipped with express delivery (usually shipped within 2-3 work days)
                                     </Typography>
                                 </Box>

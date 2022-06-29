@@ -72,7 +72,7 @@ function ExampleTable(props: IExampleTableProps) {
             <Toolbar>
                 <ToolbarBackButton />
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Stack Table Form Query At Stack</Typography>
+                    <Typography variant="h3">Stack Table Form Query At Stack</Typography>
                 </ToolbarItem>
                 <ToolbarItem>
                     <TableFilterFinalForm filterApi={props.filterApi}>
@@ -143,7 +143,7 @@ function ExampleForm(props: IExampleFormProps) {
             <Toolbar>
                 <ToolbarBackButton />
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Stack Table Form Query At Stack - Detail</Typography>
+                    <Typography variant="h3">Stack Table Form Query At Stack - Detail</Typography>
                 </ToolbarItem>
             </Toolbar>
             <MainContent>

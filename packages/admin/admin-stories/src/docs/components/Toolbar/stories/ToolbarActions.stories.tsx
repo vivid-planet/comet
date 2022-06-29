@@ -16,8 +16,8 @@ storiesOf("stories/components/Toolbar/Toolbar Actions", module)
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button
-                        color={"primary"}
-                        variant={"contained"}
+                        color="primary"
+                        variant="contained"
                         onClick={() => {
                             alert("clicked Action");
                         }}
@@ -37,8 +37,8 @@ storiesOf("stories/components/Toolbar/Toolbar Actions", module)
                     <Grid container spacing={4}>
                         <Grid item>
                             <Button
-                                color={"primary"}
-                                variant={"contained"}
+                                color="primary"
+                                variant="contained"
                                 onClick={() => {
                                     alert("clicked Action 1");
                                 }}
@@ -48,8 +48,8 @@ storiesOf("stories/components/Toolbar/Toolbar Actions", module)
                         </Grid>
                         <Grid item>
                             <Button
-                                color={"secondary"}
-                                variant={"contained"}
+                                color="secondary"
+                                variant="contained"
                                 onClick={() => {
                                     alert("clicked Action 2");
                                 }}

@@ -47,7 +47,7 @@ storiesOf("stories/components/Toolbar/Search Final Form", module)
                                         type="text"
                                         component={FinalFormSearchTextField}
                                         icon={<CometColor />}
-                                        placeholder={"Comet Search"}
+                                        placeholder="Comet Search"
                                     />
                                 </ToolbarItem>
                                 <ToolbarItem>Debug Final Form Values: {JSON.stringify(values)}</ToolbarItem>

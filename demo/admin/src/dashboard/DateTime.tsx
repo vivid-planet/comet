@@ -37,10 +37,10 @@ const DateTime: React.FC = () => {
     return (
         <Root>
             <DateContainer>
-                <FormattedDate value={currentTime} dateStyle={"full"} />
+                <FormattedDate value={currentTime} dateStyle="full" />
             </DateContainer>
             <TimeContainer>
-                <FormattedDate value={currentTime} hour={"2-digit"} minute={"2-digit"} />
+                <FormattedDate value={currentTime} hour="2-digit" minute="2-digit" />
             </TimeContainer>
         </Root>
     );

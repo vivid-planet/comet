@@ -15,8 +15,8 @@ storiesOf("stories/components/Error Handling/Error Dialog/Automatic Graphql Erro
             return (
                 <div>
                     <Button
-                        variant={"contained"}
-                        color={"primary"}
+                        variant="contained"
+                        color="primary"
                         onClick={() => {
                             errorDialog?.showError({
                                 title: "Error",

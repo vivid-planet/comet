@@ -18,7 +18,7 @@ function Story() {
             <Grid item xs={12}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography variant={"h3"}>Simple Icon rendering</Typography>
+                        <Typography variant="h3">Simple Icon rendering</Typography>
                         <Typography>
                             This is and Error <Error /> icon.
                         </Typography>
@@ -28,16 +28,16 @@ function Story() {
             <Grid item xs={12}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography variant={"h3"}>Icon Sizes</Typography>
+                        <Typography variant="h3">Icon Sizes</Typography>
                         <Typography>
-                            Small: <Cookie fontSize={"small"} />
+                            Small: <Cookie fontSize="small" />
                         </Typography>
                         <Typography>
-                            Default Size: <Cookie fontSize={"medium"} />
+                            Default Size: <Cookie fontSize="medium" />
                         </Typography>
 
                         <Typography>
-                            Large: <Cookie fontSize={"large"} />
+                            Large: <Cookie fontSize="large" />
                         </Typography>
                         <Typography>
                             Custom Size (100) <Cookie className={classes.largeIcon} /> icon.
@@ -48,31 +48,31 @@ function Story() {
             <Grid item xs={12}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography variant={"h3"}>Colors</Typography>
+                        <Typography variant="h3">Colors</Typography>
                         <Typography>
                             No Color: <ThreeDotSaving />
                         </Typography>
 
                         <Typography>
-                            Primary: <ThreeDotSaving color={"primary"} />
+                            Primary: <ThreeDotSaving color="primary" />
                         </Typography>
 
                         <Typography>
-                            Secondary: <ThreeDotSaving color={"secondary"} />
+                            Secondary: <ThreeDotSaving color="secondary" />
                         </Typography>
                         <Typography>
-                            Error: <ThreeDotSaving color={"error"} />
-                        </Typography>
-
-                        <Typography>
-                            Disabled: <ThreeDotSaving color={"disabled"} />
-                        </Typography>
-                        <Typography>
-                            Action: <ThreeDotSaving color={"action"} />
+                            Error: <ThreeDotSaving color="error" />
                         </Typography>
 
                         <Typography>
-                            Custom (#ff00ff): <ThreeDotSaving htmlColor={"#ff00ff"} />
+                            Disabled: <ThreeDotSaving color="disabled" />
+                        </Typography>
+                        <Typography>
+                            Action: <ThreeDotSaving color="action" />
+                        </Typography>
+
+                        <Typography>
+                            Custom (#ff00ff): <ThreeDotSaving htmlColor="#ff00ff" />
                         </Typography>
                     </CardContent>
                 </Card>

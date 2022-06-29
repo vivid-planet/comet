@@ -54,8 +54,8 @@ function Page1() {
                     <ToolbarFillSpace />
                     <ToolbarActions>
                         <Button
-                            color={"primary"}
-                            variant={"contained"}
+                            color="primary"
+                            variant="contained"
                             onClick={() => {
                                 switchApi?.activatePage("page2", "test");
                             }}
@@ -96,7 +96,7 @@ function Page2() {
 
 function Story() {
     return (
-        <Stack topLevelTitle={"Stack"}>
+        <Stack topLevelTitle="Stack">
             <StackSwitch>
                 <StackPage name="page1">
                     <Page1 />

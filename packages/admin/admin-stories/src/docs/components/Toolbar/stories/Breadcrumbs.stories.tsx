@@ -21,8 +21,8 @@ storiesOf("stories/components/Toolbar/Breadcrumbs", module)
                             <Grid container spacing={4}>
                                 <Grid item>
                                     <Button
-                                        color={"primary"}
-                                        variant={"contained"}
+                                        color="primary"
+                                        variant="contained"
                                         onClick={() => {
                                             stackSwitchApi.activatePage("page-1", "details");
                                         }}
@@ -32,8 +32,8 @@ storiesOf("stories/components/Toolbar/Breadcrumbs", module)
                                 </Grid>
                                 <Grid item>
                                     <Button
-                                        color={"primary"}
-                                        variant={"contained"}
+                                        color="primary"
+                                        variant="contained"
                                         onClick={() => {
                                             stackSwitchApi.activatePage("page-2", "details");
                                         }}

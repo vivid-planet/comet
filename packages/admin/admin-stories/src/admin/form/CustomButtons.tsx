@@ -46,7 +46,7 @@ function Story() {
     return (
         <div style={{ width: 300 }}>
             <FinalForm
-                mode={"edit"}
+                mode="edit"
                 onSubmit={() => {
                     // add your form-submit function here
                 }}

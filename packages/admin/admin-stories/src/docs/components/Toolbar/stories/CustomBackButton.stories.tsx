@@ -18,13 +18,13 @@ storiesOf("stories/components/Toolbar/Custom Back Button", module)
                         {stackApi && stackApi.breadCrumbs.length > 1 && (
                             <ToolbarItem>
                                 <IconButton
-                                    color={"primary"}
+                                    color="primary"
                                     onClick={() => {
                                         stackApi.goBack?.();
                                     }}
                                     size="large"
                                 >
-                                    <ChevronLeft fontSize={"large"} />
+                                    <ChevronLeft fontSize="large" />
                                     <Typography>Back</Typography>
                                 </IconButton>
                             </ToolbarItem>
@@ -35,8 +35,8 @@ storiesOf("stories/components/Toolbar/Custom Back Button", module)
                                 {(stackSwitchApi) => (
                                     <>
                                         <Button
-                                            variant={"contained"}
-                                            color={"primary"}
+                                            variant="contained"
+                                            color="primary"
                                             onClick={() => {
                                                 stackSwitchApi?.activatePage("automaticTitleDetail", "details");
                                             }}

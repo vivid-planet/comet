@@ -7,20 +7,20 @@ storiesOf("stories/Icons/Colors", module)
         return <ThreeDotSaving />;
     })
     .add("Primary Color", () => {
-        return <ThreeDotSaving color={"primary"} />;
+        return <ThreeDotSaving color="primary" />;
     })
     .add("Secondary Color", () => {
-        return <ThreeDotSaving color={"secondary"} />;
+        return <ThreeDotSaving color="secondary" />;
     })
     .add("Error Color", () => {
-        return <ThreeDotSaving color={"error"} />;
+        return <ThreeDotSaving color="error" />;
     })
     .add("Disabled Color", () => {
-        return <ThreeDotSaving color={"disabled"} />;
+        return <ThreeDotSaving color="disabled" />;
     })
     .add("Action Color", () => {
-        return <ThreeDotSaving color={"action"} />;
+        return <ThreeDotSaving color="action" />;
     })
     .add("Custom Color", () => {
-        return <ThreeDotSaving htmlColor={"#ff00ff"} />;
+        return <ThreeDotSaving htmlColor="#ff00ff" />;
     });

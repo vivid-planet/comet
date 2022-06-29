@@ -33,12 +33,12 @@ storiesOf("stories/components/Snackbar/useSnackbarApi()", module)
             return (
                 <List>
                     <ListItem>
-                        <Button color={"primary"} onClick={showCustomSnackbar}>
+                        <Button color="primary" onClick={showCustomSnackbar}>
                             Show Snackbar
                         </Button>
                     </ListItem>
                     <ListItem>
-                        <Button color={"secondary"} onClick={snackbarApi.hideSnackbar}>
+                        <Button color="secondary" onClick={snackbarApi.hideSnackbar}>
                             Hide Snackbar
                         </Button>
                     </ListItem>

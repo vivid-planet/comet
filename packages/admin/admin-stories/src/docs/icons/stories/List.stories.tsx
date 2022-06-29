@@ -38,7 +38,7 @@ storiesOf("stories/Icons/List", module).add("Icon List", () => {
                     return (
                         <IconContainer key={key}>
                             <IconWrapper>
-                                <Icon htmlColor={color("Tint Color", "#000000")} fontSize={"large"} />
+                                <Icon htmlColor={color("Tint Color", "#000000")} fontSize="large" />
                             </IconWrapper>
                             <Typography>{key}</Typography>
                         </IconContainer>

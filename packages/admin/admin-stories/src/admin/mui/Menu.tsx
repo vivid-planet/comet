@@ -60,7 +60,7 @@ const Content = ({ children }: { children: string }) => (
     <MainContent>
         <Card variant="outlined">
             <CardContent>
-                <Typography variant={"h1"} gutterBottom>
+                <Typography variant="h1" gutterBottom>
                     {children}
                 </Typography>
                 <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>

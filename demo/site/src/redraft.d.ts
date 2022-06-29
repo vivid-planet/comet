@@ -9,7 +9,7 @@ declare module "redraft" {
     }
 
     interface EntityMap {
-        [key: string]: <P extends unknown>(children: React.ReactNode, data: P, options: { key: string }) => React.ReactNode;
+        [key: string]: (children: React.ReactNode, data: P, options: { key: string }) => React.ReactNode;
     }
 
     export interface Renderers {

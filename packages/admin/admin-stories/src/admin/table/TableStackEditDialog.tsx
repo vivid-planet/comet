@@ -62,13 +62,13 @@ function Story() {
                     <StackPage name="table">
                         <Toolbar>
                             <ToolbarItem>
-                                <Typography variant={"h3"}>Table Stack Edit Dialog</Typography>
+                                <Typography variant="h3">Table Stack Edit Dialog</Typography>
                             </ToolbarItem>
                             <ToolbarFillSpace />
                             <ToolbarActions>
                                 <Button
                                     color="primary"
-                                    variant={"contained"}
+                                    variant="contained"
                                     startIcon={<AddIcon />}
                                     onClick={(ev) => {
                                         editDialog.current?.openAddDialog();

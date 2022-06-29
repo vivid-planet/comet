@@ -60,13 +60,13 @@ function Story() {
         <>
             <Toolbar>
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Edit Dialog Hooks</Typography>
+                    <Typography variant="h3">Edit Dialog Hooks</Typography>
                 </ToolbarItem>
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button
                         color="primary"
-                        variant={"contained"}
+                        variant="contained"
                         startIcon={<AddIcon />}
                         onClick={(ev) => {
                             api.openAddDialog();

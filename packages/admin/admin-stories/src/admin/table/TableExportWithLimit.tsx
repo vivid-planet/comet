@@ -85,7 +85,7 @@ function Story() {
                 <>
                     <Toolbar>
                         <ToolbarItem>
-                            <Typography variant={"h3"}>Export Visibility With Limit</Typography>
+                            <Typography variant="h3">Export Visibility With Limit</Typography>
                         </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>

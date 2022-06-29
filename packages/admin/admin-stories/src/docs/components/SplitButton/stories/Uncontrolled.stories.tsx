@@ -5,7 +5,7 @@ import * as React from "react";
 
 storiesOf("stories/components/Split Button/Uncontrolled", module).add("Uncontrolled", () => {
     return (
-        <SplitButton variant={"contained"} color={"primary"}>
+        <SplitButton variant="contained" color="primary">
             <Button
                 onClick={() => {
                     alert("primary clicked");

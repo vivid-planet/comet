@@ -71,9 +71,9 @@ function Story({ tableData }: StoryProps) {
                 <Box marginTop={2}>
                     <FilterBar>
                         <Field name="query" component={FinalFormSearchTextField} />
-                        <FilterBarPopoverFilter label={"Owner"}>
-                            <Field label={"Firstname:"} name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
-                            <Field label={"Lastname:"} name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
+                        <FilterBarPopoverFilter label="Owner">
+                            <Field label="Firstname:" name="owner.firstname" type="text" component={FinalFormInput} fullWidth />
+                            <Field label="Lastname:" name="owner.lastname" type="text" component={FinalFormInput} fullWidth />
                         </FilterBarPopoverFilter>
                     </FilterBar>
                 </Box>

@@ -59,13 +59,13 @@ function Story() {
         <>
             <Toolbar>
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Edit Dialog</Typography>
+                    <Typography variant="h3">Edit Dialog</Typography>
                 </ToolbarItem>
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button
                         color="primary"
-                        variant={"contained"}
+                        variant="contained"
                         startIcon={<AddIcon />}
                         onClick={(ev) => {
                             editDialog.current?.openAddDialog();

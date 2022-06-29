@@ -17,7 +17,7 @@ storiesOf("stories/components/Snackbar/Show Snackbar", module)
                         // Use uuid or object id in production
                         key={Math.random()}
                         autoHideDuration={5000}
-                        message={"Minimal snackbar"}
+                        message="Minimal snackbar"
                     />,
                 );
             };
