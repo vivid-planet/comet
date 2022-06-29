@@ -4,6 +4,7 @@ import { useAuthorization } from "@comet/react-app-auth";
 import { AxiosInstance } from "axios";
 import * as React from "react";
 
+import { DocumentInterface, DocumentType } from "../documents/types";
 import { AllCategories } from "../pages/pageTree/PageTreeContext";
 export interface CmsBlockContext {
     apolloClient: ApolloClient<NormalizedCacheObject>;
@@ -14,7 +15,8 @@ export interface CmsBlockContext {
         maxSrcResolution: string;
         allowedImageAspectRatios: string[];
     };
-    pageTreeCategories?: AllCategories;
+    pageTreeCategories: AllCategories;
+    pageTreeDocumentTypes: Record<DocumentType, DocumentInterface>;
 }
 
 interface CmsBlockContextProviderProps extends Omit<CmsBlockContext, "apolloClient"> {

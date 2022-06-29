@@ -1,3 +1,4 @@
+import { File, FileNotMenu } from "@comet/admin-icons";
 import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { GQLPage, GQLPageInput } from "@src/graphql.generated";
@@ -47,4 +48,6 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             seo: SeoBlock.state2Output(SeoBlock.input2State(input.seo)),
         };
     },
+    menuIcon: File,
+    hideInMenuIcon: FileNotMenu,
 };

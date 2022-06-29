@@ -176,11 +176,18 @@ enum PageTreeNodeCategory {
   MainNavigation
 }
 
-union PageContentUnion = Page | Link
+union PageContentUnion = Page | Link | PredefinedPage
 
 type PaginatedPages {
   nodes: [Page!]!
   totalCount: Int!
+}
+
+type PredefinedPage implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  type: String
 }
 
 type FooterContentScope {
@@ -277,6 +284,8 @@ type Query {
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
+  predefinedPage(id: ID!): PredefinedPage
+  pageTreeNodeForPredefinedPage(scope: PageTreeNodeScopeInput!, type: String!): PageTreeNode
 }
 
 enum SortDirection {
@@ -328,6 +337,7 @@ type Mutation {
   deleteNews(id: ID!): Boolean!
   updateMainMenuItem(lastUpdatedAt: DateTime, input: MainMenuItemInput!, pageTreeNodeId: ID!): MainMenuItem!
   saveFooter(lastUpdatedAt: DateTime, input: FooterInput!): Footer!
+  savePredefinedPage(attachedPageTreeNodeId: ID, lastUpdatedAt: DateTime, input: PredefinedPageInput!, id: ID!): PredefinedPage!
 }
 
 input PageInput {
@@ -443,4 +453,8 @@ input MainMenuItemInput {
 input FooterInput {
   content: JSONObject!
   scope: FooterContentScopeInput!
+}
+
+input PredefinedPageInput {
+  type: String
 }

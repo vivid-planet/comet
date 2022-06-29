@@ -23,6 +23,7 @@ import { configNS } from "@src/config/config.namespace";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
+import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
@@ -32,6 +33,7 @@ import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { PageTreeNodeCategory } from "./page-tree/page-tree-node-category";
 import { Page } from "./pages/entities/page.entity";
+import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 
 @Module({
     imports: [
@@ -93,7 +95,7 @@ import { Page } from "./pages/entities/page.entity";
         PagesModule,
         PageTreeModule.forRoot({
             PageTreeNode: PageTreeNode,
-            Documents: [Page, Link],
+            Documents: [Page, Link, PredefinedPage],
             Scope: PageTreeNodeScope,
             Category: PageTreeNodeCategory,
             reservedPaths: ["/events"],
@@ -170,6 +172,7 @@ import { Page } from "./pages/entities/page.entity";
         NewsModule,
         MenusModule,
         FooterModule,
+        PredefinedPageModule,
     ],
 })
 export class AppModule {}

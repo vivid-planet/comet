@@ -2,11 +2,10 @@ import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
 import { GQLSelectedPageFragment } from "../../graphql.generated";
-import { AllCategories } from "../pageTree/PageTreeContext";
 import PageTreeSelect from "./PageTreeSelect";
 
-type Props = FieldRenderProps<GQLSelectedPageFragment | undefined | null, HTMLDivElement> & { allCategories?: AllCategories };
+type Props = FieldRenderProps<GQLSelectedPageFragment | undefined | null, HTMLDivElement>;
 
-export default function FinalFormPageTreeSelect({ allCategories, input }: Props): JSX.Element {
-    return <PageTreeSelect allCategories={allCategories} value={input.value} onChange={input.onChange} />;
+export default function FinalFormPageTreeSelect({ input }: Props): JSX.Element {
+    return <PageTreeSelect value={input.value} onChange={input.onChange} />;
 }
