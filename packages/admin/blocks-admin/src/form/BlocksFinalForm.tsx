@@ -27,7 +27,7 @@ const noop = () => {
 };
 
 const finalFormContextValues: Omit<FinalFormContextProviderProps, "children"> = {
-    shouldShowFieldError: ({ fieldMeta }) => fieldMeta.error || fieldMeta.submitError, // Doesnt matter if touched or not
+    shouldShowFieldError: ({ fieldMeta }) => fieldMeta.dirty && (fieldMeta.error || fieldMeta.submitError), // Doesnt matter if touched or not
     shouldShowFieldWarning: ({ fieldMeta }) => fieldMeta.data?.warning,
     shouldScrollToField: ({ fieldMeta }) => fieldMeta.error && !fieldMeta.touched, // If a field is not touched yet and has an error we scroll to it
 };
