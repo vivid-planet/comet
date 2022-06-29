@@ -1,10 +1,6 @@
 name: CI
 
 on:
-    push:
-        branches:
-            - main
-            - next
     pull_request:
         types:
             - opened
@@ -83,7 +79,7 @@ jobs:
 
             - name: Publish premajor canary release
               if: |
-                  github.event.label.name != 'skip-release' &&
+                  !contains( github.event.pull_request.labels.*.name, 'skip-release') &&
                   github.base_ref == 'next' &&
                   github.event.pull_request.merged == true
               run: yarn publish:release premajor --no-push --no-git-tag-version --canary --preid=canary.${{ github.run_number }} --dist-tag=canary --yes
@@ -92,7 +88,7 @@ jobs:
 
             - name: Publish stable minor release
               if: |
-                  github.event.label.name != 'skip-release' &&
+                  !contains( github.event.pull_request.labels.*.name, 'skip-release') &&
                   github.base_ref == 'main' &&
                   github.event.pull_request.merged == true
               run: yarn publish:release minor --yes
