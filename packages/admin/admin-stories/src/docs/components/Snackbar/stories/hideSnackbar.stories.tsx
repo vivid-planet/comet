@@ -17,19 +17,19 @@ storiesOf("stories/components/Snackbar/Hide Snackbar", module)
                         // Use uuid or object id in production
                         key={Math.random()}
                         autoHideDuration={5000}
-                        message={"Minimal snackbar"}
+                        message="Minimal snackbar"
                     />,
                 );
             };
             return (
                 <List>
                     <ListItem>
-                        <Button color={"primary"} onClick={showCustomSnackbar}>
+                        <Button color="primary" onClick={showCustomSnackbar}>
                             Show Snackbar
                         </Button>
                     </ListItem>
                     <ListItem>
-                        <Button color={"secondary"} onClick={snackbarApi.hideSnackbar}>
+                        <Button color="secondary" onClick={snackbarApi.hideSnackbar}>
                             Hide Snackbar
                         </Button>
                     </ListItem>

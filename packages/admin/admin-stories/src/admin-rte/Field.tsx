@@ -30,7 +30,7 @@ function Story() {
                                                 color="secondary"
                                                 variant="contained"
                                                 type="button"
-                                                component={"button"}
+                                                component="button"
                                                 disableTouchRipple
                                                 onClick={toggleDisabled}
                                             >
@@ -38,7 +38,7 @@ function Story() {
                                             </Button>
                                         </Grid>
                                         <Grid item>
-                                            <Button color="primary" variant="contained" type="submit" component={"button"} disableTouchRipple>
+                                            <Button color="primary" variant="contained" type="submit" component="button" disableTouchRipple>
                                                 Submit
                                             </Button>
                                         </Grid>

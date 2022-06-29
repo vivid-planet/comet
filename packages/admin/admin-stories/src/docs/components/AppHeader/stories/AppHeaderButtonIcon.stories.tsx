@@ -15,7 +15,7 @@ storiesOf("stories/components/AppHeader/Button icon", module).add("AppHeader But
             </AppHeaderButton>
 
             <AppHeaderButton>
-                <Wrench color={"primary"} />
+                <Wrench color="primary" />
             </AppHeaderButton>
         </AppHeader>
     );

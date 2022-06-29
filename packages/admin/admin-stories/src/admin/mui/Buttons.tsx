@@ -37,7 +37,7 @@ export const Story: React.FC = () => {
             <Grid item xs={12}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography variant={"h2"} gutterBottom>
+                        <Typography variant="h2" gutterBottom>
                             Contained buttons
                         </Typography>
                         <ButtonsRow>
@@ -77,7 +77,7 @@ export const Story: React.FC = () => {
             <Grid item xs={12}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography variant={"h2"} gutterBottom>
+                        <Typography variant="h2" gutterBottom>
                             Outlined buttons
                         </Typography>
                         <ButtonsRow>
@@ -106,7 +106,7 @@ export const Story: React.FC = () => {
             <Grid item xs={12}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography variant={"h2"} gutterBottom>
+                        <Typography variant="h2" gutterBottom>
                             Button groups
                         </Typography>
                         <Grid container spacing={4}>
@@ -157,7 +157,7 @@ export const Story: React.FC = () => {
             <Grid item xs={12}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography variant={"h2"} gutterBottom>
+                        <Typography variant="h2" gutterBottom>
                             Text buttons
                         </Typography>
                         <ButtonsRow>
@@ -206,10 +206,10 @@ export const Story: React.FC = () => {
             <Grid item xs={6}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography variant={"h2"} gutterBottom>
+                        <Typography variant="h2" gutterBottom>
                             Special button usage
                         </Typography>
-                        <AppBar position={"relative"} style={{ padding: 20, backgroundColor: "black", color: "white", textAlign: "center" }}>
+                        <AppBar position="relative" style={{ padding: 20, backgroundColor: "black", color: "white", textAlign: "center" }}>
                             <Grid container spacing={4}>
                                 <Grid item xs={4}>
                                     <Button variant="text" color="inherit" startIcon={<ArrowRight />}>
@@ -246,7 +246,7 @@ export const Story: React.FC = () => {
                             </Button>
                         </Box>
                         <Divider />
-                        <Box padding={4} display={"flex"} justifyContent={"space-between"}>
+                        <Box padding={4} display="flex" justifyContent="space-between">
                             <Button variant="text" color="info" startIcon={<Clear />}>
                                 Cancel
                             </Button>
@@ -255,7 +255,7 @@ export const Story: React.FC = () => {
                             </Button>
                         </Box>
                         <Divider />
-                        <Box padding={4} display={"flex"} justifyContent={"space-between"}>
+                        <Box padding={4} display="flex" justifyContent="space-between">
                             <Button variant="text" disabled startIcon={<Clear />}>
                                 Cancel
                             </Button>
@@ -270,7 +270,7 @@ export const Story: React.FC = () => {
                 <Card variant="outlined">
                     <CardContent>
                         <Box padding={4}>
-                            <Typography variant={"h2"} gutterBottom>
+                            <Typography variant="h2" gutterBottom>
                                 Icon buttons
                             </Typography>
                             <Table>

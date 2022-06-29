@@ -17,8 +17,8 @@ storiesOf("stories/components/Toolbar/Save Button", module)
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <SaveButton
-                        color={"primary"}
-                        variant={"contained"}
+                        color="primary"
+                        variant="contained"
                         saving={saving}
                         onClick={() => {
                             setSaving(true);
@@ -27,7 +27,7 @@ storiesOf("stories/components/Toolbar/Save Button", module)
                             }, 1000);
                         }}
                     >
-                        <FormattedMessage id={"comet.save"} defaultMessage={"Save"} />
+                        <FormattedMessage id="comet.save" defaultMessage="Save" />
                     </SaveButton>
                 </ToolbarActions>
             </Toolbar>

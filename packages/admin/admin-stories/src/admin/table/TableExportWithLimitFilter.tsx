@@ -95,7 +95,7 @@ function Story() {
             <>
                 <Toolbar>
                     <ToolbarItem>
-                        <Typography variant={"h3"}>Export Visibility With LimitFilter</Typography>
+                        <Typography variant="h3">Export Visibility With LimitFilter</Typography>
                     </ToolbarItem>
                     <ToolbarItem>
                         <TableFilterFinalForm filterApi={filterApi}>

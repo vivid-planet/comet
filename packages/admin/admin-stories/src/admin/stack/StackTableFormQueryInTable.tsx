@@ -76,7 +76,7 @@ function ExampleTable(props: { persistedStateId: string }) {
         <TableQuery api={api} loading={loading} error={error}>
             <Toolbar>
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Stack Table Form Query In Table</Typography>
+                    <Typography variant="h3">Stack Table Form Query In Table</Typography>
                 </ToolbarItem>
                 <ToolbarItem>
                     <TableFilterFinalForm filterApi={filterApi}>
@@ -148,7 +148,7 @@ function ExampleForm(props: IExampleFormProps) {
             <Toolbar>
                 <ToolbarBackButton />
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Stack Table Form Query In Table - Detail</Typography>
+                    <Typography variant="h3">Stack Table Form Query In Table - Detail</Typography>
                 </ToolbarItem>
             </Toolbar>
             <MainContent>

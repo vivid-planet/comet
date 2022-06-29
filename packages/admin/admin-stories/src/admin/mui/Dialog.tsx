@@ -95,7 +95,7 @@ function DefaultDialogContent(): React.ReactElement {
             </DialogContent>
             <DialogActions>
                 <CancelButton />
-                <Button startIcon={<Save />} variant={"contained"} color="primary">
+                <Button startIcon={<Save />} variant="contained" color="primary">
                     Save
                 </Button>
             </DialogActions>

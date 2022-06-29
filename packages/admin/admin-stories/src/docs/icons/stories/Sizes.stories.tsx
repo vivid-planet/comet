@@ -5,13 +5,13 @@ import * as React from "react";
 
 storiesOf("stories/Icons/Sizes", module)
     .add("Small Size Icon", () => {
-        return <Cookie fontSize={"small"} />;
+        return <Cookie fontSize="small" />;
     })
     .add("Default Size Icon", () => {
-        return <Cookie fontSize={"medium"} />;
+        return <Cookie fontSize="medium" />;
     })
     .add("Large Size Icon", () => {
-        return <Cookie fontSize={"large"} />;
+        return <Cookie fontSize="large" />;
     })
     .add("Custom Size Icon", () => {
         const useStyles = makeStyles((theme) => ({

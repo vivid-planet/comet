@@ -5,7 +5,7 @@ import * as React from "react";
 
 storiesOf("stories/components/Split Button/Persistent Index", module).add("Local Storage Index", () => {
     return (
-        <SplitButton variant={"contained"} color={"secondary"} localStorageKey={"StorylocalStorageIndexSplitButton"}>
+        <SplitButton variant="contained" color="secondary" localStorageKey="StorylocalStorageIndexSplitButton">
             <Button
                 onClick={() => {
                     alert("primary clicked");

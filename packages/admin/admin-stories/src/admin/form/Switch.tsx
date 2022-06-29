@@ -24,7 +24,7 @@ function Story() {
                                     </Box>
                                     <Field name="bar">
                                         {(props) => (
-                                            <FormControlLabel label={"Switch with label on the right"} control={<FinalFormSwitch {...props} />} />
+                                            <FormControlLabel label="Switch with label on the right" control={<FinalFormSwitch {...props} />} />
                                         )}
                                     </Field>
                                 </CardContent>

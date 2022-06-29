@@ -30,7 +30,7 @@ storiesOf("stories/components/Toolbar/Final Form Save Split Button", module)
         }
         return (
             <FinalForm
-                mode={"edit"}
+                mode="edit"
                 onSubmit={async (values, form) => {
                     // add your form-submit function here
                     console.log("saving async...");
@@ -56,11 +56,11 @@ storiesOf("stories/components/Toolbar/Final Form Save Split Button", module)
                                 <ToolbarFillSpace />
                                 <ToolbarActions>
                                     {canGoBack ? (
-                                        <FinalFormSaveSplitButton localStorageKey={"finalformsavesplitbutton"} />
+                                        <FinalFormSaveSplitButton localStorageKey="finalformsavesplitbutton" />
                                     ) : (
                                         <Button
-                                            variant={"contained"}
-                                            color={"primary"}
+                                            variant="contained"
+                                            color="primary"
                                             onClick={() => {
                                                 stackSwitchApi?.activatePage("automaticTitleDetail", "details");
                                             }}

@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.dashboard", defaultMessage: "Dashboard" })}>
             <Header>
                 <DateTime />
-                <Greeting variant={"h1"}>
+                <Greeting variant="h1">
                     {user ? (
                         <FormattedMessage
                             id="comet.pages.dashboard.helloUser"

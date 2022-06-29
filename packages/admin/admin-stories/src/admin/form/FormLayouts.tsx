@@ -62,7 +62,7 @@ function FieldsInGrid() {
 
 function Story() {
     return (
-        <FinalForm mode={"edit"} onSubmit={() => {}}>
+        <FinalForm mode="edit" onSubmit={() => {}}>
             <Grid container spacing={8} style={{ maxWidth: 1024 }}>
                 <Grid item xs={12}>
                     <VerticalFields />

@@ -15,13 +15,13 @@ function Story() {
                 <Grid item xs={12}>
                     <Card variant="outlined">
                         <CardContent>
-                            <Typography variant={"h4"} gutterBottom>
+                            <Typography variant="h4" gutterBottom>
                                 Single TextField outside of form
                             </Typography>
                             <FieldContainer fullWidth>
                                 <InputBase
                                     autoFocus
-                                    placeholder={"Search..."}
+                                    placeholder="Search..."
                                     startAdornment={
                                         <InputAdornment position="start">
                                             <Search />
@@ -37,12 +37,12 @@ function Story() {
                 <Grid item xs={12}>
                     <Card variant="outlined">
                         <CardContent>
-                            <Typography variant={"h4"} gutterBottom>
+                            <Typography variant="h4" gutterBottom>
                                 With Checkbox
                             </Typography>
                             <FieldContainer fullWidth>
                                 <InputBase
-                                    placeholder={"Search..."}
+                                    placeholder="Search..."
                                     startAdornment={
                                         <InputAdornment position="start">
                                             <Search />
@@ -59,7 +59,7 @@ function Story() {
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckboxValue(e.target.checked)}
                                     />
                                 }
-                                label={"Additional Setting"}
+                                label="Additional Setting"
                             />
                         </CardContent>
                     </Card>

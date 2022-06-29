@@ -5,9 +5,9 @@ import * as React from "react";
 
 storiesOf("stories/components/Split Button/Color Change", module).add("Color change", () => {
     return (
-        <SplitButton variant={"contained"}>
+        <SplitButton variant="contained">
             <Button
-                color={"primary"}
+                color="primary"
                 onClick={() => {
                     alert("primary clicked");
                 }}
@@ -15,7 +15,7 @@ storiesOf("stories/components/Split Button/Color Change", module).add("Color cha
                 Primary Action
             </Button>
             <Button
-                color={"secondary"}
+                color="secondary"
                 onClick={() => {
                     alert("secondary clicked");
                 }}

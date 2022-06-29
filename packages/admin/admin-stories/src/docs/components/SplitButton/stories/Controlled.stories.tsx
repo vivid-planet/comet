@@ -7,8 +7,8 @@ storiesOf("stories/components/Split Button/Controlled", module).add("Controlled"
     const [selectedIndex, setSelectedIndex] = React.useState(1);
     return (
         <SplitButton
-            variant={"contained"}
-            color={"secondary"}
+            variant="contained"
+            color="secondary"
             selectedIndex={selectedIndex}
             onSelectIndex={(index: number) => {
                 setSelectedIndex(index);
