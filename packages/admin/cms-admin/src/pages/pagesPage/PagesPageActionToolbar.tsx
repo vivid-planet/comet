@@ -1,4 +1,5 @@
 import { useApolloClient } from "@apollo/client";
+import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
 import { Button, Checkbox, FormControlLabel, Grid, IconButton, Tooltip, useTheme } from "@mui/material";
 import * as React from "react";
@@ -17,9 +18,17 @@ import { useCopyPastePages } from "../pageTree/useCopyPastePages";
 import { PageTreeSelectionState } from "../pageTree/usePageTree";
 import { usePageTreeContext } from "../pageTree/usePageTreeContext";
 import { areAllSubTreesFullSelected } from "./areAllSubTreesFullSelected";
+import { ConfirmPageActionDialog } from "./ConfirmPageActionDialog";
 import { PageCanNotDeleteDialog } from "./PageCanNotDeleteDialog";
 import { Separator, useStyles } from "./PagesPageActionToolbar.sc";
-import { pageTreeBatchUpdateVisibility } from "./PagesPageActionToolbarBatchUpdateHelper";
+import { pageTreeBatchResetVisibility, pageTreeBatchUpdateVisibility } from "./PagesPageActionToolbarBatchUpdateHelper";
+
+export type PageAction = "publish" | "unpublish" | "archive";
+
+interface ConfirmActionState {
+    action: PageAction;
+    handleAction: () => void;
+}
 
 export interface PagesPageActionToolbarProps {
     selectedState: PageTreeSelectionState;
@@ -39,6 +48,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
 }) => {
     const [showCanNotDeleteDialog, setShowCanNotDeleteDialog] = React.useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+    const [confirmAction, setConfirmAction] = React.useState<ConfirmActionState | null>(null);
 
     const { tree } = usePageTreeContext();
     const [publishLoading, setPublishLoading] = React.useState(false);
@@ -52,6 +62,57 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
     const classes = useStyles();
     const theme = useTheme();
     const client = useApolloClient();
+    const snackbarApi = useSnackbarApi();
+
+    const showUndoSnackbar = (pageTreeNodes: GQLPageTreePageFragment[], message: React.ReactNode) => {
+        snackbarApi.showSnackbar(
+            <UndoSnackbar
+                message={message}
+                payload={pageTreeNodes}
+                onUndoClick={async (pageTreeNodes) => {
+                    if (pageTreeNodes) {
+                        await pageTreeBatchResetVisibility(client, pageTreeNodes);
+                    }
+                }}
+            />,
+        );
+    };
+
+    const handlePublish = async () => {
+        setPublishLoading(true);
+        const pageTreeNodes = treeMapToArray(selectedTree);
+        await pageTreeBatchUpdateVisibility(client, pageTreeNodes, "Published");
+        setPublishLoading(false);
+
+        showUndoSnackbar(
+            pageTreeNodes,
+            <FormattedMessage id="comet.pagesPageActionToolbar.undo.publishedSelected" defaultMessage="Published selected pages" />,
+        );
+    };
+
+    const handleUnpublish = async () => {
+        setUnpublishLoading(true);
+        const pageTreeNodes = treeMapToArray(selectedTree);
+        await pageTreeBatchUpdateVisibility(client, pageTreeNodes, "Unpublished");
+        setUnpublishLoading(false);
+
+        showUndoSnackbar(
+            pageTreeNodes,
+            <FormattedMessage id="comet.pagesPageActionToolbar.undo.unpublishedSelected" defaultMessage="Unpublished selected pages" />,
+        );
+    };
+
+    const handleArchive = async () => {
+        setArchiveLoading(true);
+        const pageTreeNodes = treeMapToArray(selectedTree);
+        await pageTreeBatchUpdateVisibility(client, pageTreeNodes, "Archived");
+        setArchiveLoading(false);
+
+        showUndoSnackbar(
+            pageTreeNodes,
+            <FormattedMessage id="comet.pagesPageActionToolbar.undo.archivedSelected" defaultMessage="Archived selected pages" />,
+        );
+    };
 
     return (
         <>
@@ -75,10 +136,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             <IconButton
                                 disabled={selectedTree.size === 0}
                                 onClick={async () => {
-                                    setPublishLoading(true);
-                                    const pageTreeNodes = treeMapToArray(selectedTree);
-                                    await pageTreeBatchUpdateVisibility(client, pageTreeNodes, "Published");
-                                    setPublishLoading(false);
+                                    setConfirmAction({ action: "publish", handleAction: handlePublish });
                                 }}
                                 size="large"
                             >
@@ -95,11 +153,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             <IconButton
                                 disabled={selectedTree.size === 0}
                                 onClick={async () => {
-                                    setUnpublishLoading(true);
-
-                                    const pageTreeNodes = treeMapToArray(selectedTree);
-                                    await pageTreeBatchUpdateVisibility(client, pageTreeNodes, "Unpublished");
-                                    setUnpublishLoading(false);
+                                    setConfirmAction({ action: "unpublish", handleAction: handleUnpublish });
                                 }}
                                 size="large"
                             >
@@ -112,10 +166,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             <IconButton
                                 disabled={selectedTree.size === 0}
                                 onClick={async () => {
-                                    setArchiveLoading(true);
-                                    const pageTreeNodes = treeMapToArray(selectedTree);
-                                    await pageTreeBatchUpdateVisibility(client, pageTreeNodes, "Archived");
-                                    setArchiveLoading(false);
+                                    setConfirmAction({ action: "archive", handleAction: handleArchive });
                                 }}
                                 size="large"
                             >
@@ -187,6 +238,17 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                     </Button>
                 </Grid>
             </Grid>
+            <ConfirmPageActionDialog
+                open={confirmAction !== null}
+                action={confirmAction?.action}
+                onCloseDialog={(confirmed) => {
+                    if (confirmed) {
+                        confirmAction?.handleAction();
+                    }
+                    setConfirmAction(null);
+                }}
+                selectedPagesCount={treeMapToArray(selectedTree).length}
+            />
             <PageDeleteDialog
                 dialogOpen={showDeleteDialog}
                 handleCancelClick={() => {

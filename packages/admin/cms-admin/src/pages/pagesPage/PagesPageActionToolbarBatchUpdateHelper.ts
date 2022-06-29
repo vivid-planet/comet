@@ -28,3 +28,22 @@ export const pageTreeBatchUpdateVisibility = async (
     );
     return;
 };
+
+export const pageTreeBatchResetVisibility = async (
+    client: ApolloClient<unknown>,
+    pageTreeNodesWithPreviousVisibility: Pick<GQLPageTreePageFragment, "id" | "visibility">[],
+): Promise<void> => {
+    await Promise.all(
+        pageTreeNodesWithPreviousVisibility.map(async (pageTreeNodeWithPreviousVisibility) => {
+            await client.mutate<GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables>({
+                mutation: updatePageVisibilityMutation,
+                variables: {
+                    id: pageTreeNodeWithPreviousVisibility.id,
+                    input: {
+                        visibility: pageTreeNodeWithPreviousVisibility.visibility,
+                    },
+                },
+            });
+        }),
+    );
+};
