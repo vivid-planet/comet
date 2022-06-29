@@ -165,8 +165,9 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
-            <RedirectToPersistedDamLocation stateKey={damLocationStorageKey ?? "dam-location"} />
-            <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+            <RedirectToPersistedDamLocation stateKey={damLocationStorageKey ?? "dam-location"}>
+                <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+            </RedirectToPersistedDamLocation>
         </Stack>
     );
 };
