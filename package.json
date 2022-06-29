@@ -6,6 +6,7 @@
         "packages/api/*",
         "packages/site/*",
         "packages/eslint-config",
+        "packages/cli",
         "demo/*"
     ],
     "private": true,

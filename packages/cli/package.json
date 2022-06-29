@@ -1,0 +1,42 @@
+{
+    "name": "@comet/cli",
+    "version": "2.0.0",
+    "main": "lib/index.js",
+    "typings": "lib/index.d.ts",
+    "bin": {
+        "comet": "bin/comet.js"
+    },
+    "files": [
+        "bin/**/*.js",
+        "lib/**/*.js"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet-admin",
+        "directory": "packages/cli"
+    },
+    "dependencies": {
+        "commander": "^9.2.0",
+        "prettier": "^2.7.1"
+    },
+    "devDependencies": {
+        "@comet/eslint-config": "^2.0.0",
+        "@types/node": "^14.0.0",
+        "eslint": "^8.0.0",
+        "rimraf": "^3.0.0",
+        "typescript": "^4.0.0",
+        "yarn-run-all": "^3.0.0"
+    },
+    "scripts": {
+        "build": "rimraf lib/ && tsc",
+        "dev": "tsc --watch",
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/",
+        "lint:tsc": "tsc"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "license": "BSD-2-Clause"
+}
