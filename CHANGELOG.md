@@ -2,13 +2,16 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# [Next]
+# [2.2.0]
 
--   EditDialog now displays loading and error states of a contained form automatically via its SaveButton
+## Highlights
 
-### Bugfixes
+-   `EditDialog` now displays loading and error states of a contained form automatically via its `SaveButton`
 
--   close the EditDialog after submitting a contained form via ENTER click
+## Bugfixes
+
+-   `EditDialog` closes when a contained form is submitted via `Enter` key press
+-   Fix `FinalFormSelect` value generic to allow simple select values such as `string`
 
 # [2.1.0]
 
