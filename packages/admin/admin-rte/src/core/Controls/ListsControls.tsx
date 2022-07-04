@@ -15,5 +15,5 @@ export default function ListsControls({
     if (listsFeatures.length < 1) {
         return null;
     }
-    return <FeaturesButtonGroup features={listsFeatures} disabled={disabled} />;
+    return <FeaturesButtonGroup features={listsFeatures} disabled={disabled} editorRef={editorRef} />;
 }

@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file. This projec
 
 # [next]
 
+## @comet/admin
+
+### Changes
+
+-   EditDialog now displays loading and error states of a contained form automatically via its SaveButton
+
+### Bugfixes
+
+-   close the EditDialog after submitting a contained form via ENTER click
+
 ## @comet/admin-theme
 
 ### Incompatible Changes
@@ -135,6 +145,7 @@ Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/g
 -   Add FinalFormAutocomplete (see Story "Autocomplete / Async Select")
 -   Add useAsyncOptionsProps-Hook to allow async loading of options in FinalFormAutocomplete and FinalFormSelect
 -   Add support to pass options directly via props in FinalFormSelect (they are rendered automatically)
+-   [RTE] Add custom inline styles (see story "Custom inline styles")
 
 ## Changes
 
