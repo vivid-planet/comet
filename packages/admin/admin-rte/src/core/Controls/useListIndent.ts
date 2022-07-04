@@ -63,7 +63,7 @@ function adjustBlockDepth(type: "increase" | "decrease", editorState: EditorStat
 
 interface IProps {
     editorState: EditorState;
-    setEditorState: (es: EditorState) => void;
+    setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
     supportedThings: SupportedThings[];
     listLevelMax?: number;
 }

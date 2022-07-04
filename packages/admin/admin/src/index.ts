@@ -130,6 +130,7 @@ export { FilterBarPopoverFilter, FilterBarPopoverFilterProps } from "./table/fil
 export { FilterBarPopoverFilterClassKey } from "./table/filterbar/filterBarPopoverFilter/FilterBarPopoverFilter.styles";
 export { TableLocalChangesToolbar } from "./table/LocalChangesToolbar";
 export { TablePagination } from "./table/Pagination";
+export { createOffsetLimitPagingAction } from "./table/paging/createOffsetLimitPagingAction";
 export { createPagePagingActions } from "./table/paging/createPagePagingActions";
 export { createRelayPagingActions } from "./table/paging/createRelayPagingActions";
 export { createRestPagingActions } from "./table/paging/createRestPagingActions";

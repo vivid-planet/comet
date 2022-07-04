@@ -107,7 +107,7 @@ const orderForm = [
     "docs-form-components",
 ];
 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
-const orderIcons = ["docs-icons-list", "docs-icons-usage", "docs-icons"];
+const orderIcons = ["docs-icons-all-icons", "docs-icons-usage", "docs-icons"];
 const orderBestPractices = ["docs-best-practices-overview", "docs-best-theme-and-styling", "docs-best-practices"];
 const orderDevelopment = ["docs-development-overview", "docs-development-create-a-component-with-theme-support", "docs-development"];
 
