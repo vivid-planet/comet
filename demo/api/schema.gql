@@ -245,6 +245,20 @@ enum RedirectGenerationType {
   automatic
 }
 
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  sales: Int!
+}
+
+type PaginatedProducts {
+  nodes: [Product!]!
+  totalCount: Int!
+}
+
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
@@ -287,6 +301,8 @@ type Query {
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  product(id: ID!): Product!
+  products(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, filters: ProductFilterItems): PaginatedProducts!
 }
 
 enum SortDirection {
@@ -307,6 +323,42 @@ input FileFilterInput {
 
 input FolderFilterInput {
   searchText: String
+}
+
+input ProductFilterItems {
+  filterItems: [ProductFilterItem!]!
+  filterItemsOperator: FilterItemsOperator!
+}
+
+input ProductFilterItem {
+  field: ProductFilterField!
+  value: String!
+  operation: FilterOperation!
+}
+
+enum ProductFilterField {
+  Name
+  Description
+}
+
+enum FilterOperation {
+  Contains
+  StartsWith
+  EndsWith
+  IsEqual
+  LessThan
+  GreaterThan
+  LessOrEqual
+  GreaterOrEqual
+  NotEqual
+  IsAnyOf
+  IsEmpty
+  NotEmpty
+}
+
+enum FilterItemsOperator {
+  And
+  Or
 }
 
 type Mutation {
@@ -339,6 +391,9 @@ type Mutation {
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
   saveFooter(input: FooterInput!, lastUpdatedAt: DateTime): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): PredefinedPage!
+  addProduct(data: ProductInput!): Product!
+  updateProduct(data: ProductInput!, id: ID!): Product!
+  deleteProduct(id: ID!): Boolean!
 }
 
 input PageInput {
@@ -447,4 +502,9 @@ input FooterInput {
 
 input PredefinedPageInput {
   type: String
+}
+
+input ProductInput {
+  name: String!
+  description: String!
 }
