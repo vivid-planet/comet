@@ -1,7 +1,6 @@
 /* eslint-disable */
 
 module.exports = {
-    distDir: "build/current",
     headers: async () => [
         {
             source: "/_next/image",
