@@ -46,11 +46,12 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
 
     const response = await createGraphQLClient().request<GQLRedirectsQuery>(query);
 
-    // Map response to nextJs Redirect type
-    return response.redirects.reduce((result, redirect) => {
-        //Handle Source
+    const redirects: Redirect[] = [];
+
+    for (const redirect of response.redirects) {
         let source: string | undefined;
         let destination: string | undefined;
+
         if (redirect.sourceType === "path") {
             source = redirect.source;
         }
@@ -60,12 +61,18 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
         } else if (redirect.targetType === "intern" && redirect.targetPage != null) {
             destination = redirect.targetPage.path;
         }
-        if (source && destination) {
-            result.push({ source, destination, permanent: true });
+
+        if (source === destination) {
+            console.warn(`Skipping redirect loop ${source} -> ${destination}`);
+            continue;
         }
 
-        return result;
-    }, [] as Redirect[]);
+        if (source && destination) {
+            redirects.push({ source, destination, permanent: true });
+        }
+    }
+
+    return redirects;
 };
 
 export { createRedirects };
