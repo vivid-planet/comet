@@ -65,6 +65,8 @@ export function createTextLinkBlock({ link: LinkBlock }: CreateTextLinkBlockOpti
         },
 
         previewContent: (state) => [{ type: "text", content: state.text }],
+
+        dynamicDisplayName: (state) => LinkBlock.dynamicDisplayName?.(state.link),
     };
 
     return TextLinkBlock;

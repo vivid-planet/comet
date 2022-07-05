@@ -74,6 +74,7 @@ export interface BlockMethods<
     isValid: (state: State) => Promise<boolean> | boolean;
     childBlockCount?: (state: State) => number;
     previewContent: (state: State, context?: BlockContext) => PreviewContent[];
+    dynamicDisplayName?: (state: State) => React.ReactNode;
 }
 
 export interface AnonymousBlockInterface<

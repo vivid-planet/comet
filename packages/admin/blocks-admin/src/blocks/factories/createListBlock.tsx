@@ -226,7 +226,7 @@ export function createListBlock<T extends BlockInterface>({
                                                             return (
                                                                 <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
                                                                     <BlockRow
-                                                                        name={block.displayName}
+                                                                        name={block.dynamicDisplayName?.(data.props) ?? block.displayName}
                                                                         id={data.key}
                                                                         previewContent={block.previewContent(data.props, blockContext)}
                                                                         index={blockIndex}
