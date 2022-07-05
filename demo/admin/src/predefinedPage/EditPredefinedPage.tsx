@@ -95,12 +95,10 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                             <ToolbarFillSpace />
                             <ToolbarItem>
                                 <SplitButton disabled={pristine || hasValidationErrors || submitting}>
-                                    <SaveButton color="primary" variant="contained" hasErrors={hasSubmitErrors} type="submit">
+                                    <SaveButton hasErrors={hasSubmitErrors} type="submit">
                                         <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
                                     </SaveButton>
                                     <SaveButton
-                                        color="primary"
-                                        variant="contained"
                                         saving={submitting}
                                         hasErrors={hasSubmitErrors}
                                         onClick={async () => {
