@@ -175,6 +175,7 @@ enum PageTreeNodeVisibility {
 
 enum PageTreeNodeCategory {
   MainNavigation
+  TopMenu
 }
 
 enum PageTreeNodeUserGroup {
@@ -275,7 +276,7 @@ type Query {
   autoBuildStatus: AutoBuildStatus!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(scope: PageTreeNodeScopeInput!, path: String!): PageTreeNode
-  pageTreeNodeList(category: PageTreeNodeCategory, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
+  pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(slug: String!, parentId: ID, scope: PageTreeNodeScopeInput!): SlugAvailability!
   redirects(query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
   redirect(id: ID!): Redirect!
@@ -289,6 +290,7 @@ type Query {
   newsBySlug(slug: String!): News
   newsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, category: NewsCategory, scope: NewsContentScopeInput!): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
+  topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
@@ -323,8 +325,8 @@ type Mutation {
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(input: PageTreeNodeUpdateVisibilityInput!, id: ID!): PageTreeNode!
   updatePageTreeNodePosition(input: PageTreeNodeUpdatePositionInput!, id: ID!): PageTreeNode!
-  updatePageTreeNodeCategory(category: PageTreeNodeCategory!, id: ID!): PageTreeNode!
-  createPageTreeNode(category: PageTreeNodeCategory!, scope: PageTreeNodeScopeInput!, input: PageTreeNodeCreateInput!): PageTreeNode!
+  updatePageTreeNodeCategory(category: String!, id: ID!): PageTreeNode!
+  createPageTreeNode(category: String!, scope: PageTreeNodeScopeInput!, input: PageTreeNodeCreateInput!): PageTreeNode!
   createRedirect(input: CreateRedirectInput!): Redirect!
   updateRedirect(lastUpdatedAt: DateTime, input: UpdateRedirectInput!, id: ID!): Redirect!
   updateRedirectActiveness(input: RedirectUpdateActivenessInput!, id: ID!): Redirect!

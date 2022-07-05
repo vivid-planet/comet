@@ -21,7 +21,6 @@ interface PageTreeModuleOptions {
     PageTreeNodeUpdateInput?: Type<PageTreeNodeBaseUpdateInput>;
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
-    Category?: unknown;
     reservedPaths?: string[];
 }
 
@@ -29,12 +28,11 @@ interface PageTreeModuleOptions {
 @Module({})
 export class PageTreeModule {
     static forRoot(options: PageTreeModuleOptions): DynamicModule {
-        const { Documents, Scope, PageTreeNode, PageTreeNodeCreateInput, PageTreeNodeUpdateInput, Category, reservedPaths } = options;
+        const { Documents, Scope, PageTreeNode, PageTreeNodeCreateInput, PageTreeNodeUpdateInput, reservedPaths } = options;
         const pageTreeResolver = createPageTreeResolver({
             PageTreeNode,
             Documents,
-            Scope: Scope,
-            Category,
+            Scope,
             PageTreeNodeCreateInput,
             PageTreeNodeUpdateInput,
         });

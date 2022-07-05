@@ -23,7 +23,7 @@ export const createPagesQuery = (props?: CreatePagesQueryOptions): DocumentNode 
     });
 
     return gql`
-        query Pages($contentScope: PageTreeNodeScopeInput!, $category: PageTreeNodeCategory!) {
+        query Pages($contentScope: PageTreeNodeScopeInput!, $category: String!) {
             pages: pageTreeNodeList(scope: $contentScope, category: $category) {
                 id
                 ...PageTreePage

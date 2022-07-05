@@ -36,14 +36,12 @@ export function createPageTreeResolver({
     PageTreeNodeUpdateInput = DefaultPageTreeNodeUpdateInput,
     Documents,
     Scope: PassedScope,
-    Category,
 }: {
     PageTreeNode: Type<PageTreeNodeInterface>;
     PageTreeNodeCreateInput?: Type<PageTreeNodeCreateInputInterface>;
     PageTreeNodeUpdateInput?: Type<PageTreeNodeUpdateInputInterface>;
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
-    Category: unknown;
 }): Type<unknown> {
     const Scope = PassedScope || EmptyPageTreeNodeScope;
 
@@ -92,7 +90,7 @@ export function createPageTreeResolver({
         @Query(() => [PageTreeNode])
         async pageTreeNodeList(
             @Args("scope", { type: () => Scope }) scope: ScopeInterface,
-            @Args("category", { type: () => Category, nullable: true }) category: PageTreeNodeCategory,
+            @Args("category", { type: () => String, nullable: true }) category: PageTreeNodeCategory,
             @Context() context: PageTreeGQLContext,
         ): Promise<PageTreeNodeInterface[]> {
             const result = await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category });
@@ -225,7 +223,7 @@ export function createPageTreeResolver({
         @Mutation(() => PageTreeNode)
         async updatePageTreeNodeCategory(
             @Args("id", { type: () => ID }) id: string,
-            @Args("category", { type: () => Category }) category: PageTreeNodeCategory,
+            @Args("category", { type: () => String }) category: PageTreeNodeCategory,
         ): Promise<PageTreeNodeInterface> {
             // Archived pages cannot be updated
             const pageTreeReadApi = this.pageTreeService.createReadApi({
@@ -244,7 +242,7 @@ export function createPageTreeResolver({
         async createPageTreeNode(
             @Args("input", { type: () => PageTreeNodeCreateInput }) input: PageTreeNodeCreateInputInterface,
             @Args("scope", { type: () => Scope }) scope: ScopeInterface,
-            @Args("category", { type: () => Category }) category: PageTreeNodeCategory,
+            @Args("category", { type: () => String }) category: PageTreeNodeCategory,
         ): Promise<PageTreeNodeInterface> {
             // Can not add a subpage under an archived page
             if (input.parentId) {

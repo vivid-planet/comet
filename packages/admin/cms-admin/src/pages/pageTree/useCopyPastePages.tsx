@@ -25,7 +25,7 @@ const slugAvailableQuery = gql`
 `;
 
 const createPageNodeMutation = gql`
-    mutation CreatePageNode($input: PageTreeNodeCreateInput!, $contentScope: PageTreeNodeScopeInput!, $category: PageTreeNodeCategory!) {
+    mutation CreatePageNode($input: PageTreeNodeCreateInput!, $contentScope: PageTreeNodeScopeInput!, $category: String!) {
         createPageTreeNode(input: $input, scope: $contentScope, category: $category) {
             id
         }

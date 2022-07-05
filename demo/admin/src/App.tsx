@@ -79,6 +79,10 @@ const categories: AllCategories = [
         category: "MainNavigation",
         label: <FormattedMessage id="comet.menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
     },
+    {
+        category: "TopMenu",
+        label: <FormattedMessage id="comet.menu.pageTree.topMenu" defaultMessage="Top menu" />,
+    },
 ];
 
 const pageTreeDocumentTypes = {
@@ -146,8 +150,9 @@ class App extends React.Component {
                                                                                                 path={`${match.path}/project-snips/main-menu`}
                                                                                                 component={MainMenu}
                                                                                             />
+
                                                                                             <Route
-                                                                                                path={`${match.path}/pages/pagetree/:category`}
+                                                                                                path={`${match.path}/pages/pagetree/main-navigation`}
                                                                                                 render={() => (
                                                                                                     <PagesPage
                                                                                                         path="/pages/pagetree/main-navigation"
@@ -155,6 +160,19 @@ class App extends React.Component {
                                                                                                         documentTypes={pageTreeDocumentTypes}
                                                                                                         editPageNode={EditPageNode}
                                                                                                         category="MainNavigation"
+                                                                                                    />
+                                                                                                )}
+                                                                                            />
+
+                                                                                            <Route
+                                                                                                path={`${match.path}/pages/pagetree/top-menu`}
+                                                                                                render={() => (
+                                                                                                    <PagesPage
+                                                                                                        path="/pages/pagetree/top-menu"
+                                                                                                        allCategories={categories}
+                                                                                                        documentTypes={pageTreeDocumentTypes}
+                                                                                                        editPageNode={EditPageNode}
+                                                                                                        category="TopMenu"
                                                                                                     />
                                                                                                 )}
                                                                                             />

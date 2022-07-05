@@ -3,6 +3,7 @@ import SeoBlock from "@src/blocks/seo/SeoBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
 import { GQLPageQuery } from "@src/graphql.generated";
 import { Header, headerFragment } from "@src/header/Header";
+import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
 import { gql } from "graphql-request";
 import Head from "next/head";
 import * as React from "react";
@@ -24,14 +25,20 @@ export const pageQuery = gql`
         header: mainMenu(scope: { domain: $domain, language: $language }) {
             ...Header
         }
+
+        topMenu(scope: { domain: $domain, language: $language }) {
+            ...TopMenuPageTreeNode
+        }
     }
 
     ${breadcrumbsFragment}
     ${headerFragment}
+    ${topMenuPageTreeNodeFragment}
 `;
 
 export default function Page(props: GQLPageQuery): JSX.Element {
     const document = props.pageContent?.document;
+
     return (
         <>
             <Head>
@@ -44,6 +51,7 @@ export default function Page(props: GQLPageQuery): JSX.Element {
                     canonicalUrl={`${process.env.SITE_URL}${props.pageContent?.path}`}
                 />
             )}
+            <TopNavigation data={props.topMenu} />
             <Header header={props.header} />
             {props.pageContent && <Breadcrumbs {...props.pageContent} />}
             {document && document.__typename === "Page" ? (
