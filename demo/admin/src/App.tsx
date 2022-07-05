@@ -30,6 +30,7 @@ import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import config from "@src/config";
 import Dashboard from "@src/dashboard/Dashboard";
+import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import theme from "@src/theme";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
@@ -79,6 +80,12 @@ const categories: AllCategories = [
     },
 ];
 
+const pageTreeDocumentTypes = {
+    Page,
+    Link,
+    PredefinedPage,
+};
+
 class App extends React.Component {
     public static render(baseEl: Element): void {
         ReactDOM.render(<App />, baseEl);
@@ -110,6 +117,8 @@ class App extends React.Component {
                                                                 maxSrcResolution: config.IMGPROXY_MAX_SRC_RESOLUTION,
                                                                 allowedImageAspectRatios: config.DAM_ALLOWED_IMAGE_ASPECT_RATIOS.split(","),
                                                             }}
+                                                            pageTreeCategories={categories}
+                                                            pageTreeDocumentTypes={pageTreeDocumentTypes}
                                                         >
                                                             <React.Fragment>
                                                                 <GlobalStyle />
@@ -143,7 +152,7 @@ class App extends React.Component {
                                                                                                         category="MainNavigation"
                                                                                                         allCategories={categories}
                                                                                                         path="/pages/pagetree/main-navigation"
-                                                                                                        documentTypes={{ Page, Link }}
+                                                                                                        documentTypes={pageTreeDocumentTypes}
                                                                                                     />
                                                                                                 )}
                                                                                             />

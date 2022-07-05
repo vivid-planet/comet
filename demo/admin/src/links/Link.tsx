@@ -1,3 +1,4 @@
+import { Link as LinkIcon } from "@comet/admin-icons";
 import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
@@ -43,4 +44,5 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
             content: rewriteInternalLinks(LinkBlock.state2Output(LinkBlock.input2State(input.content)), idsMap),
         };
     },
+    menuIcon: LinkIcon,
 };

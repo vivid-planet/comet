@@ -6,6 +6,7 @@ import { FormattedMessage } from "react-intl";
 import { MarkedMatches } from "../../common/MarkedMatches";
 import { PageTypeIcon } from "./PageTypeIcon";
 import { PageTreePage } from "./usePageTree";
+import { usePageTreeContext } from "./usePageTreeContext";
 
 interface PageLabelProps {
     page: PageTreePage;
@@ -14,8 +15,12 @@ interface PageLabelProps {
 }
 
 const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, onClick }) => {
+    const { documentTypes } = usePageTreeContext();
+    const documentType = documentTypes[page.documentType];
+
     return (
         <Root onClick={onClick}>
+            {documentType.menuIcon}
             <PageTypeIcon page={page} disabled={disabled} />
             <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
                 <MarkedMatches text={page.name} matches={page.matches} />
@@ -28,11 +33,20 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
                     />
                 )}
             </LinkText>
+
+            {documentType?.infoTag && page.document?.__typename && (
+                <InfoPanel size="small" label={documentType?.infoTag({ __typename: page.document.__typename, ...page.document })} />
+            )}
         </Root>
     );
 };
 
 export default PageLabel;
+
+const InfoPanel = styled(Chip)`
+    margin-left: auto;
+    margin-right: 10%;
+`;
 
 const Root = styled("div")`
     display: flex;

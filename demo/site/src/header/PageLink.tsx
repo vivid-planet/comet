@@ -1,6 +1,7 @@
 import { Link, useRouter } from "@comet/cms-site";
 import { LinkBlock } from "@src/blocks/LinkBlock";
-import { GQLPageLinkFragment } from "@src/graphql.generated";
+import { GQLPageLinkFragment, GQLPredefinedPage } from "@src/graphql.generated";
+import { predefinedPagePaths } from "@src/predefinedPages/predefinedPagePaths";
 import { gql } from "graphql-request";
 import * as React from "react";
 
@@ -12,6 +13,9 @@ const pageLinkFragment = gql`
             __typename
             ... on Link {
                 content
+            }
+            ... on PredefinedPage {
+                type
             }
         }
     }
@@ -35,6 +39,18 @@ function PageLink({ page, children }: Props): JSX.Element | null {
     } else if (page.documentType === "Page") {
         return (
             <Link href={page.path} passHref>
+                {typeof children === "function" ? children(active) : children}
+            </Link>
+        );
+    } else if (page.documentType === "PredefinedPage") {
+        if (!page.document) {
+            return null;
+        }
+
+        const type = (page.document as GQLPredefinedPage).type;
+
+        return (
+            <Link href={type && predefinedPagePaths[type] ? predefinedPagePaths[type] : ""} passHref>
                 {typeof children === "function" ? children(active) : children}
             </Link>
         );

@@ -8,6 +8,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List } from "react-window";
 
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
 import {
     GQLPagesQuery,
@@ -18,11 +19,11 @@ import {
 } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { pagesQuery } from "../pagesPage/pagesQuery";
+import { createPagesQuery } from "../pagesPage/createPagesQuery";
 import { PageTreeTableRow } from "../pageTree/common/PageTreeTableRow";
 import PageInfo from "../pageTree/PageInfo";
 import PageLabel from "../pageTree/PageLabel";
-import { AllCategories } from "../pageTree/PageTreeContext";
+import { PageTreeContext } from "../pageTree/PageTreeContext";
 import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
@@ -59,7 +60,6 @@ const PageSearchContainer = styled("div")`
 `;
 
 interface PageTreeSelectProps {
-    allCategories?: AllCategories;
     value: GQLSelectedPageFragment | undefined | null;
     onChange: (newValue: GQLSelectedPageFragment | null) => void;
     open: boolean;
@@ -74,7 +74,8 @@ const useStyles = makeStyles({
     },
 });
 
-export default function PageTreeSelectDialog({ allCategories, value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
+export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
+    const { pageTreeCategories, pageTreeDocumentTypes } = useCmsBlockContext();
     const { scope } = useContentScope();
     const [category, setCategory] = React.useState<GQLPageTreeNodeCategory>(defaultCategory);
     const refList = React.useRef<List>(null);
@@ -82,6 +83,8 @@ export default function PageTreeSelectDialog({ allCategories, value, onChange, o
     const refDialogContent = React.useRef<HTMLDivElement>(null);
     const selectedPageId = value?.id;
     const classes = useStyles();
+
+    const pagesQuery = React.useMemo(() => createPagesQuery({ documentTypes: pageTreeDocumentTypes }), [pageTreeDocumentTypes]);
 
     // Fetch data
     const { data } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
@@ -172,14 +175,14 @@ export default function PageTreeSelectDialog({ allCategories, value, onChange, o
             </StyledDialogTitle>
             <Toolbar>
                 <ToolbarActions>
-                    {allCategories && (
+                    {pageTreeCategories && (
                         <Select
                             value={category}
                             onChange={(event) => {
                                 setCategory(event.target.value as GQLPageTreeNodeCategory);
                             }}
                         >
-                            {allCategories.map(({ category, label }) => (
+                            {pageTreeCategories.map(({ category, label }) => (
                                 <MenuItem key={category} value={category}>
                                     {label}
                                 </MenuItem>
@@ -193,33 +196,37 @@ export default function PageTreeSelectDialog({ allCategories, value, onChange, o
                 </PageSearchContainer>
             </Toolbar>
             <DialogContent ref={refDialogContent}>
-                <List
-                    ref={refList}
-                    height={height}
-                    itemCount={pagesToRenderWithMatches.length}
-                    width="100%"
-                    itemSize={listItemSize}
-                    style={{ background: "white" }}
+                <PageTreeContext.Provider
+                    value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree, query: pagesQuery }}
                 >
-                    {({ index, style }) => {
-                        const page = pagesToRenderWithMatches[index];
-                        return (
-                            <Row
-                                key={page.id}
-                                virtualizedStyle={{
-                                    ...style,
-                                }}
-                                page={page}
-                                toggleExpand={toggleExpand}
-                                selected={page.id === value?.id}
-                                onSelect={() => {
-                                    onChange({ id: page.id, name: page.name, path: page.path });
-                                    onClose();
-                                }}
-                            />
-                        );
-                    }}
-                </List>
+                    <List
+                        ref={refList}
+                        height={height}
+                        itemCount={pagesToRenderWithMatches.length}
+                        width="100%"
+                        itemSize={listItemSize}
+                        style={{ background: "white" }}
+                    >
+                        {({ index, style }) => {
+                            const page = pagesToRenderWithMatches[index];
+                            return (
+                                <Row
+                                    key={page.id}
+                                    virtualizedStyle={{
+                                        ...style,
+                                    }}
+                                    page={page}
+                                    toggleExpand={toggleExpand}
+                                    selected={page.id === value?.id}
+                                    onSelect={() => {
+                                        onChange({ id: page.id, name: page.name, path: page.path });
+                                        onClose();
+                                    }}
+                                />
+                            );
+                        }}
+                    </List>
+                </PageTreeContext.Provider>
             </DialogContent>
             <StyledDialogAction>
                 {value && (
