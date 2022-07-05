@@ -1,7 +1,7 @@
 import fs from "fs";
 
 const createPublicGeneratedDirectory = () => {
-    const generatedDirectory = "./build/current/public.generated/";
+    const generatedDirectory = "./.next/public.generated/";
 
     if (!fs.existsSync(generatedDirectory)) {
         console.log(`✅ Successfully created temp directory: ${generatedDirectory}`);
