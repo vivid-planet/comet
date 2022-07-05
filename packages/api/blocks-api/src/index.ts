@@ -37,7 +37,7 @@ export { ChildBlockInput } from "./blocks/decorators/child-block-input";
 export { AnnotationBlockMeta, BlockField, getFieldKeys } from "./blocks/decorators/field";
 export { RootBlock } from "./blocks/decorators/root-block";
 export { RootBlockEntity, RootBlockEntityOptions } from "./blocks/decorators/root-block-entity";
-export { PageTreeApi, PageTreeNodeInterface, TransformDependencies } from "./blocks/dependencies";
+export { TransformDependencies } from "./blocks/dependencies";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";
 export { BlocksBlockFixturesGeneratorMap, createBlocksBlock } from "./blocks/factories/createBlocksBlock";
@@ -48,7 +48,6 @@ export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates 
 export { composeBlocks } from "./blocks/helpers/composeBlocks";
 export { strictBlockDataFactoryDecorator } from "./blocks/helpers/strictBlockDataFactoryDecorator";
 export { strictBlockInputFactoryDecorator } from "./blocks/helpers/strictBlockInputFactoryDecorator";
-export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
 export { transformToSaveIndex } from "./blocks/transformToSaveIndex/transformToSaveIndex";
 export { YouTubeVideoBlock } from "./blocks/youtube-video.block";

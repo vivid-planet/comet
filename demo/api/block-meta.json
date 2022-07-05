@@ -27,42 +27,6 @@
         ]
     },
     {
-        "name": "InternalLink",
-        "fields": [
-            {
-                "name": "targetPage",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "id",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "name",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "path",
-                            "kind": "String",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "targetPageId",
-                "kind": "String",
-                "nullable": true
-            }
-        ]
-    },
-    {
         "name": "Space",
         "fields": [
             {
@@ -517,6 +481,42 @@
         "inputFields": [
             {
                 "name": "damFileId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "InternalLink",
+        "fields": [
+            {
+                "name": "targetPage",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "path",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "targetPageId",
                 "kind": "String",
                 "nullable": true
             }

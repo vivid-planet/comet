@@ -1,7 +1,7 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
+import { Injectable } from "@nestjs/common";
+import { registerDecorator, ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 
-import { PageTreeService } from "../../page-tree/page-tree.service";
+import { PageTreeService } from "../page-tree.service";
 
 export const PageExists = (validationOptions?: ValidationOptions) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,14 +18,15 @@ export const PageExists = (validationOptions?: ValidationOptions) => {
 @ValidatorConstraint({ name: "PageExists", async: true })
 @Injectable()
 export class PageExistsConstraint implements ValidatorConstraintInterface {
-    @Inject(forwardRef(() => PageTreeService))
-    private pageTreeService: PageTreeService;
+    constructor(private readonly pageTreeService: PageTreeService) {}
 
     async validate(id: string): Promise<boolean> {
-        return !!(await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(id));
+        const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNode(id);
+
+        return node !== null;
     }
 
-    defaultMessage(): string {
-        return `page with this targetPageId does not exist`;
+    defaultMessage({ value: id }: ValidationArguments): string {
+        return `Target page with ID '${id}' doesn't exist`;
     }
 }

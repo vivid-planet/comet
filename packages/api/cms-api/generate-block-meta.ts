@@ -1,7 +1,7 @@
-import { createOneOfBlock, createRichTextBlock, createTextLinkBlock, ExternalLinkBlock, InternalLinkBlock } from "@comet/blocks-api";
+import { createOneOfBlock, createRichTextBlock, createTextLinkBlock, ExternalLinkBlock } from "@comet/blocks-api";
 import { NestFactory } from "@nestjs/core";
 
-import { BlocksModule, createSeoBlock, createTextImageBlock } from "./src";
+import { BlocksModule, createSeoBlock, createTextImageBlock, InternalLinkBlock } from "./src";
 
 async function generateBlockMeta(): Promise<void> {
     console.info("Generating block-meta.json...");

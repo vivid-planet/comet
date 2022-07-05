@@ -10,6 +10,7 @@ import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
 import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeService } from "./page-tree.service";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
+import { PageExistsConstraint } from "./validators/page-exists.validator";
 
 export interface PageTreeConfig {
     reservedPaths: string[];
@@ -55,7 +56,7 @@ export class PageTreeModule {
         return {
             module: PageTreeModule,
             imports: [MikroOrmModule.forFeature([AttachedDocument, PageTreeNode, ...(Scope ? [Scope] : [])])],
-            providers: [PageTreeService, pageTreeResolver, repositoryProvider, pageTreeConfigProvider],
+            providers: [PageTreeService, pageTreeResolver, repositoryProvider, pageTreeConfigProvider, PageExistsConstraint],
             exports: [PageTreeService],
         };
     }

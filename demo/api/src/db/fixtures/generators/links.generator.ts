@@ -1,4 +1,4 @@
-import { InternalLinkBlock } from "@comet/blocks-api";
+import { InternalLinkBlock } from "@comet/cms-api";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { LinkBlock } from "@src/common/blocks/linkBlock/link.block";
 import { PageTreeNodesFixtures } from "@src/db/fixtures/fixtures.console";
