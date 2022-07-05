@@ -9,6 +9,10 @@ import { createCompositeSetting } from "./createCompositeSetting";
 import { createCompositeSettings } from "./createCompositeSettings";
 import { AdminComponentPropsMap, CompositeBlocksConfig, DataMapState } from "./types";
 
+jest.mock("react-dnd", () => {
+    return;
+});
+
 describe("composeBlocks", () => {
     it("composes values of 2 BlockInterfaces", () => {
         const composedBlock = composeBlocks({
