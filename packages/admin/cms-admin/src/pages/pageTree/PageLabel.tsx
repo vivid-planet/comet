@@ -35,7 +35,7 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
             </LinkText>
 
             {documentType?.infoTag && page.document?.__typename && (
-                <InfoPanel style={{ padding: 0 }} label={documentType?.infoTag({ __typename: page.document.__typename, ...page.document })} />
+                <InfoPanel size="small" label={documentType?.infoTag({ __typename: page.document.__typename, ...page.document })} />
             )}
         </Root>
     );
@@ -46,11 +46,6 @@ export default PageLabel;
 const InfoPanel = styled(Chip)`
     margin-left: auto;
     margin-right: 10%;
-    height: 20px;
-
-    span {
-        padding: 0 5px;
-    }
 `;
 
 const Root = styled("div")`
