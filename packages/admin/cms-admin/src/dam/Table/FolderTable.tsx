@@ -17,7 +17,7 @@ import { Link } from "@mui/material";
 import * as React from "react";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
-import { useDropzone } from "react-dropzone";
+import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
@@ -240,10 +240,10 @@ const FolderTable = ({
             hideHoverStyles();
             hideFooter();
         },
-        onDrop: async (acceptedFiles: File[], rejectedFiles: File[]) => {
+        onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             hideHoverStyles();
             hideFooter();
-            await uploadFiles({ acceptedFiles, rejectedFiles }, data?.damFolder.id);
+            await uploadFiles({ acceptedFiles, fileRejections }, data?.damFolder.id);
         },
     });
 

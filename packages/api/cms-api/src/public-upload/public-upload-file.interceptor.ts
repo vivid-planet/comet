@@ -49,7 +49,7 @@ export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterce
                         return cb(new CometValidationException(`Invalid file name: Missing file extension`), false);
                     }
 
-                    const supportedExtensions = mimedb[file.mimetype].extensions;
+                    const supportedExtensions = mimedb[file.mimetype]?.extensions;
                     if (supportedExtensions === undefined || !supportedExtensions.includes(extension)) {
                         return cb(
                             new CometValidationException(`File type and extension mismatch: .${extension} and ${file.mimetype} are incompatible`),

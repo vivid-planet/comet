@@ -3,7 +3,7 @@ import { SplitButton } from "@comet/admin";
 import { Upload } from "@comet/admin-icons";
 import { Button } from "@mui/material";
 import * as React from "react";
-import { useDropzone } from "react-dropzone";
+import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
@@ -36,8 +36,8 @@ export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps):
 
     const { getInputProps } = useDropzone({
         ...dropzoneConfig,
-        onDrop: async (acceptedFiles: File[], rejectedFiles: File[]) => {
-            await uploadFiles({ acceptedFiles, rejectedFiles }, folderId);
+        onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+            await uploadFiles({ acceptedFiles, fileRejections }, folderId);
         },
     });
 
