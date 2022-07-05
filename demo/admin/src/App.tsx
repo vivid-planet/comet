@@ -26,6 +26,7 @@ import { AuthConfiguration, AuthorizationGate, AuthorizationProvider, createAuth
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
+import { EditPageNode } from "@src/common/EditPageNode";
 import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import config from "@src/config";
@@ -149,10 +150,11 @@ class App extends React.Component {
                                                                                                 path={`${match.path}/pages/pagetree/:category`}
                                                                                                 render={() => (
                                                                                                     <PagesPage
-                                                                                                        category="MainNavigation"
-                                                                                                        allCategories={categories}
                                                                                                         path="/pages/pagetree/main-navigation"
+                                                                                                        allCategories={categories}
                                                                                                         documentTypes={pageTreeDocumentTypes}
+                                                                                                        editPageNode={EditPageNode}
+                                                                                                        category="MainNavigation"
                                                                                                     />
                                                                                                 )}
                                                                                             />

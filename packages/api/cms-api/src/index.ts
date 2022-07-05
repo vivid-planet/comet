@@ -93,8 +93,8 @@ export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
 export { AttachedDocumentInput, AttachedDocumentStrictInput } from "./page-tree/dto/attached-document.input";
 export { EmptyPageTreeNodeScope } from "./page-tree/dto/empty-page-tree-node-scope";
 export {
-    PageTreeNodeCreateInput,
-    PageTreeNodeUpdateInput,
+    PageTreeNodeBaseCreateInput,
+    PageTreeNodeBaseUpdateInput,
     PageTreeNodeUpdatePositionInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./page-tree/dto/page-tree-node.input";

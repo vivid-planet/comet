@@ -1,0 +1,54 @@
+import { gql } from "@apollo/client";
+import { Field, FinalFormSelect } from "@comet/admin";
+import { createEditPageNode } from "@comet/cms-admin";
+import { MenuItem } from "@mui/material";
+import * as React from "react";
+import { FormattedMessage } from "react-intl";
+
+const userGroupOptions = [
+    {
+        label: "Show for all",
+        value: "All",
+    },
+    {
+        label: "Show only for Group: User",
+        value: "User",
+    },
+    {
+        label: "Show only for Group: Admin",
+        value: "Admin",
+    },
+];
+
+const additionalPageTreeNodeFieldsFragment = gql`
+    fragment PageTreeNodeAdditionalFields on PageTreeNode {
+        userGroup
+    }
+`;
+
+export const EditPageNode = createEditPageNode({
+    valuesToInput: ({ values }: { values: { userGroup: string } }) => {
+        return {
+            userGroup: values.userGroup,
+        };
+    },
+    nodeFragment: {
+        name: "PageTreeNodeAdditionalFields",
+        fragment: additionalPageTreeNodeFieldsFragment,
+    },
+    additionalFormFields: (
+        <div>
+            <Field label={<FormattedMessage id="cometDemo.pageTreeNode.fields.userGroup" defaultMessage="User-Group" />} name="userGroup" fullWidth>
+                {(props) => (
+                    <FinalFormSelect {...props} fullWidth>
+                        {userGroupOptions.map((option) => (
+                            <MenuItem value={option.value} key={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </FinalFormSelect>
+                )}
+            </Field>
+        </div>
+    ),
+});

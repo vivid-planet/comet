@@ -29,6 +29,7 @@ import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
 import { NewsModule } from "./news/news.module";
+import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { PageTreeNodeCategory } from "./page-tree/page-tree-node-category";
@@ -95,6 +96,8 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
         PagesModule,
         PageTreeModule.forRoot({
             PageTreeNode: PageTreeNode,
+            PageTreeNodeCreateInput: PageTreeNodeCreateInput,
+            PageTreeNodeUpdateInput: PageTreeNodeUpdateInput,
             Documents: [Page, Link, PredefinedPage],
             Scope: PageTreeNodeScope,
             Category: PageTreeNodeCategory,
