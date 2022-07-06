@@ -7,8 +7,8 @@ import { getRequestContextHeadersFromRequest } from "../common/decorators/reques
 import { DocumentInterface } from "../document/dto/document-interface";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
-    PageTreeNodeCreateInput,
-    PageTreeNodeUpdateInput,
+    DefaultPageTreeNodeCreateInput,
+    DefaultPageTreeNodeUpdateInput,
     PageTreeNodeUpdatePositionInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./dto/page-tree-node.input";
@@ -16,7 +16,14 @@ import { SlugAvailability } from "./dto/slug-availability.enum";
 import { PAGE_TREE_CONFIG } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
 import { PageTreeReadApi, PageTreeService } from "./page-tree.service";
-import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, ScopeInterface } from "./types";
+import {
+    PageTreeNodeCategory,
+    PageTreeNodeCreateInputInterface,
+    PageTreeNodeInterface,
+    PageTreeNodeUpdateInputInterface,
+    PageTreeNodeVisibility as Visibility,
+    ScopeInterface,
+} from "./types";
 import { InMemoryPathResolver } from "./utils/in-memory-path-resolver";
 
 interface PageTreeGQLContext {
@@ -25,16 +32,21 @@ interface PageTreeGQLContext {
 
 export function createPageTreeResolver({
     PageTreeNode,
+    PageTreeNodeCreateInput = DefaultPageTreeNodeCreateInput,
+    PageTreeNodeUpdateInput = DefaultPageTreeNodeUpdateInput,
     Documents,
     Scope: PassedScope,
     Category,
 }: {
     PageTreeNode: Type<PageTreeNodeInterface>;
+    PageTreeNodeCreateInput?: Type<PageTreeNodeCreateInputInterface>;
+    PageTreeNodeUpdateInput?: Type<PageTreeNodeUpdateInputInterface>;
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
     Category: unknown;
 }): Type<unknown> {
     const Scope = PassedScope || EmptyPageTreeNodeScope;
+
     const hasNonEmptyScope = !!PassedScope;
 
     function nonEmptyScopeOrNothing(scope: ScopeInterface): ScopeInterface | undefined {
@@ -149,7 +161,7 @@ export function createPageTreeResolver({
         @Mutation(() => PageTreeNode)
         async updatePageTreeNode(
             @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => PageTreeNodeUpdateInput }) input: PageTreeNodeUpdateInput,
+            @Args("input", { type: () => PageTreeNodeUpdateInput }) input: PageTreeNodeUpdateInputInterface,
         ): Promise<PageTreeNodeInterface> {
             // Archived pages cannot be updated
             const pageTreeReadApi = this.pageTreeService.createReadApi({
@@ -230,7 +242,7 @@ export function createPageTreeResolver({
 
         @Mutation(() => PageTreeNode)
         async createPageTreeNode(
-            @Args("input", { type: () => PageTreeNodeCreateInput }) input: PageTreeNodeCreateInput,
+            @Args("input", { type: () => PageTreeNodeCreateInput }) input: PageTreeNodeCreateInputInterface,
             @Args("scope", { type: () => Scope }) scope: ScopeInterface,
             @Args("category", { type: () => Category }) category: PageTreeNodeCategory,
         ): Promise<PageTreeNodeInterface> {

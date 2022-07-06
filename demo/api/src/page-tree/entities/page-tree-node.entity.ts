@@ -4,6 +4,7 @@ import { Field, ObjectType } from "@nestjs/graphql";
 
 import { PageTreeNodeScope } from "../dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "../page-tree-node-category";
+import { PageTreeNodeUserGroup } from "../page-tree-node-user-group";
 
 @Entity({ tableName: PageTreeNodeBase.tableName })
 @ObjectType("PageTreeNode") // name MUST NOT be changed in the app or gql-api in cms-api breaks
@@ -21,4 +22,8 @@ export class PageTreeNode extends PageTreeNodeBase {
     @Enum({ items: () => PageTreeNodeCategory, default: PageTreeNodeCategory.MainNavigation })
     @Field(() => PageTreeNodeCategory)
     category: PageTreeNodeCategory;
+
+    @Enum({ items: () => PageTreeNodeUserGroup, default: PageTreeNodeUserGroup.All })
+    @Field(() => PageTreeNodeUserGroup, { defaultValue: PageTreeNodeUserGroup.All })
+    userGroup: PageTreeNodeUserGroup;
 }

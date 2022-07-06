@@ -4,6 +4,7 @@ import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/comm
 
 import { DocumentInterface } from "../document/dto/document-interface";
 import { createPageTreeResolver } from "./createPageTreeResolver";
+import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
 import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
@@ -16,6 +17,8 @@ export interface PageTreeConfig {
 
 interface PageTreeModuleOptions {
     PageTreeNode: Type<PageTreeNodeBase>;
+    PageTreeNodeCreateInput?: Type<PageTreeNodeBaseCreateInput>;
+    PageTreeNodeUpdateInput?: Type<PageTreeNodeBaseUpdateInput>;
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
     Category?: unknown;
@@ -26,8 +29,15 @@ interface PageTreeModuleOptions {
 @Module({})
 export class PageTreeModule {
     static forRoot(options: PageTreeModuleOptions): DynamicModule {
-        const { Documents, Scope, PageTreeNode, Category, reservedPaths } = options;
-        const pageTreeResolver = createPageTreeResolver({ PageTreeNode, Documents, Scope: Scope, Category });
+        const { Documents, Scope, PageTreeNode, PageTreeNodeCreateInput, PageTreeNodeUpdateInput, Category, reservedPaths } = options;
+        const pageTreeResolver = createPageTreeResolver({
+            PageTreeNode,
+            Documents,
+            Scope: Scope,
+            Category,
+            PageTreeNodeCreateInput,
+            PageTreeNodeUpdateInput,
+        });
 
         const repositoryProvider = {
             provide: PAGE_TREE_REPOSITORY,

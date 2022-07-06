@@ -5,8 +5,9 @@ import { IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsString, IsUUID, Valid
 import { IsSlug } from "../../common/validators/is-slug";
 import { PageTreeNodeVisibility } from "../types";
 import { AttachedDocumentInput } from "./attached-document.input";
+
 @InputType()
-export class PageTreeNodeCreateInput {
+export abstract class PageTreeNodeBaseCreateInput {
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()
@@ -41,10 +42,13 @@ export class PageTreeNodeCreateInput {
     hideInMenu?: boolean;
 }
 
+@InputType("PageTreeNodeCreateInput")
+export class DefaultPageTreeNodeCreateInput extends PageTreeNodeBaseCreateInput {}
+
 // input and output type are the same now
 // @TODO refactor to only one inputType
 @InputType()
-export class PageTreeNodeUpdateInput {
+export abstract class PageTreeNodeBaseUpdateInput {
     @Field()
     @IsString()
     name: string;
@@ -63,6 +67,9 @@ export class PageTreeNodeUpdateInput {
     @IsBoolean()
     hideInMenu?: boolean;
 }
+
+@InputType("PageTreeNodeUpdateInput")
+export class DefaultPageTreeNodeUpdateInput extends PageTreeNodeBaseUpdateInput {}
 
 @InputType()
 export class PageTreeNodeUpdateVisibilityInput {

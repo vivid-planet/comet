@@ -50,6 +50,7 @@ export { SyncFields } from "./form/SyncFields";
 export { createHttpClient } from "./http/createHttpClient";
 export { LocaleProvider } from "./locale/LocaleProvider";
 export { useLocale } from "./locale/useLocale";
+export { createEditPageNode } from "./pages/createEditPageNode";
 export { createUsePage } from "./pages/createUsePage";
 export { EditPageLayout } from "./pages/EditPageLayout";
 export { PagesPage } from "./pages/pagesPage/PagesPage";

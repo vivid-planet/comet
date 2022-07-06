@@ -159,6 +159,7 @@ type PageTreeNode {
   hideInMenu: Boolean!
   scope: PageTreeNodeScope!
   category: PageTreeNodeCategory!
+  userGroup: PageTreeNodeUserGroup!
   childNodes: [PageTreeNode!]!
   parentNode: PageTreeNode
   path: String!
@@ -174,6 +175,12 @@ enum PageTreeNodeVisibility {
 
 enum PageTreeNodeCategory {
   MainNavigation
+}
+
+enum PageTreeNodeUserGroup {
+  All
+  Admin
+  User
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
@@ -354,6 +361,7 @@ input PageTreeNodeUpdateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
+  userGroup: PageTreeNodeUserGroup = All
 }
 
 input AttachedDocumentInput {
@@ -378,6 +386,7 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
+  userGroup: PageTreeNodeUserGroup = All
 }
 
 input CreateRedirectInput {
