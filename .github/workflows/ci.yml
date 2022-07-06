@@ -53,7 +53,7 @@ jobs:
 
             - name: Lint
               run: |
-                  yarn exec prettier -c .
+                  yarn exec prettier --check "./*.{js,json,md,yml}"
                   yarn lint:lib
 
             - name: Test

@@ -18,6 +18,4 @@ storybook-static
 schema.graphql
 block-meta.json
 *.generated.ts
-demo/
-packages/
 .yarn/

@@ -1,3 +1,3 @@
 module.exports = {
-    "*": () => "npx yarn exec prettier -c .",
+    "./*{js,json,md,yml}": "npx yarn exec prettier --check",
 };
