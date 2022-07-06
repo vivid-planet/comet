@@ -5,7 +5,6 @@ import { PageTreeNodeInterface } from "../page-tree/types";
 import { Redirect } from "./entities/redirect.entity";
 import { createRedirectsResolver } from "./redirects.resolver";
 import { RedirectsService } from "./redirects.service";
-import { MustNotCreateRedirectLoopConstraint } from "./validators/mustNotCreateRedirectLoop";
 import { PageExistsConstraint } from "./validators/pageExists";
 
 interface Config {
@@ -18,7 +17,7 @@ export class RedirectsModule {
         return {
             module: RedirectsModule,
             imports: [MikroOrmModule.forFeature([Redirect])],
-            providers: [createRedirectsResolver(PageTreeNode), RedirectsService, PageExistsConstraint, MustNotCreateRedirectLoopConstraint],
+            providers: [createRedirectsResolver(PageTreeNode), RedirectsService, PageExistsConstraint],
             exports: [RedirectsService],
         };
     }
