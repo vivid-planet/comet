@@ -685,6 +685,23 @@
         ]
     },
     {
+        "name": "NewsLink",
+        "fields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "Link",
         "fields": [
             {
@@ -702,7 +719,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": [
                                 "InternalLink",
-                                "ExternalLink"
+                                "ExternalLink",
+                                "NewsLink"
                             ],
                             "nullable": false
                         }
@@ -730,7 +748,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": [
                                 "InternalLink",
-                                "ExternalLink"
+                                "ExternalLink",
+                                "NewsLink"
                             ],
                             "nullable": false
                         }
