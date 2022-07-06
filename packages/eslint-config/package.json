@@ -4,7 +4,7 @@
     "main": "core.js",
     "repository": {
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet-admin",
+        "url": "https://github.com/vivid-planet/comet",
         "directory": "packages/eslint-config"
     },
     "publishConfig": {

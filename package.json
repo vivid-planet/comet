@@ -12,7 +12,7 @@
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet-admin"
+        "url": "https://github.com/vivid-planet/comet"
     },
     "scripts": {
         "clean": "lerna run clean --stream --parallel",
