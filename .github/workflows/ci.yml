@@ -71,7 +71,7 @@ jobs:
               if: ${{ github.ref_name == 'main' }}
               run: |
                   yarn intl:extract
-                  git clone https://github.com/vivid-planet/comet-admin-lang.git
+                  git clone https://github.com/vivid-planet/comet-lang.git
                   cp -r lang/* comet-admin-lang/
                   cd comet-admin-lang
                   git add .

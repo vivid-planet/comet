@@ -418,7 +418,7 @@ This is a bugfix/maintenance release.
 
 ### Highlights
 
--   Added migration guide for 1.0 update https://github.com/vivid-planet/comet-admin/blob/master/CHANGELOG.md#migration-guide
+-   Added migration guide for 1.0 update https://github.com/vivid-planet/comet/blob/main/CHANGELOG.md#migration-guide
 
 ### Bugfixes
 

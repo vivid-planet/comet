@@ -179,7 +179,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
             initialValuesEqual={(prevValues, newValues) => isEqual(prevValues, newValues)}
             onAfterSubmit={() => {
                 // override default onAfterSubmit because default is stackApi.goBack()
-                // https://github.com/vivid-planet/comet-admin/blob/master/packages/admin/src/FinalForm.tsx#L53
+                // https://github.com/vivid-planet/comet/blob/master/packages/admin/src/FinalForm.tsx#L53
             }}
         >
             {({ pristine, hasValidationErrors, submitting, handleSubmit }) => (

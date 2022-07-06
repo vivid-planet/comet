@@ -40,7 +40,7 @@ const AppMenu: React.FC = () => {
                 primary="Comet Admin"
                 secondary="View on GitHub"
                 target="_blank"
-                href="https://github.com/vivid-planet/comet-admin"
+                href="https://github.com/vivid-planet/comet"
                 icon={<CometColor />}
                 secondaryAction={<LinkExternal />}
             />
