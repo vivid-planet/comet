@@ -1,0 +1,246 @@
+import { Meta, Story, Canvas, Source } from "@storybook/addon-docs";
+
+import dedent from "ts-dedent";
+
+<Meta title="Docs/Form/Components/FinalForm" />
+
+# FinalForm
+
+Comet Admin provides a `FinalForm` component.
+It's built on top of [React Final Form's `Form` component](https://final-form.org/docs/react-final-form/api/Form).
+
+There are two required properties:
+
+-   `mode` can be `add` (for creating a new resource) or `edit` (for editing an existing resource)
+-   `onSubmit()` handles the submission of form values to the API
+
+<Canvas>
+    <Story id="stories-form-finalform--basic-finalform" />
+</Canvas>
+
+## Differences between Comet Admin `FinalForm` and React Final Form's `Form`
+
+RFF's `Form` is a pure wrapper component.
+It creates and maintains a [form instance](https://final-form.org/docs/final-form/api#createform) that handles the form state.
+This form instance is provided to child components via React Context.
+It doesn't render any HTML.
+
+Comet Admin `FinalForm` renders some HTML: a `<form>` wrapper and a div containing submit errors.
+Additionally, it uses the React Contexts of other Comet Admin components to interact with them.
+You can find more information about these interactions in the following sections.
+
+The following example shows the definition of a simple form with RFF `Form` and Comet Admin `FinalForm`.
+
+Plain RFF `Form`:
+
+<Source
+    language="tsx"
+    code={dedent`
+        import { Form as RFFForm, Field as RFFField } from "react-final-form";
+        // ...
+        <RFFForm
+            onSubmit={(values) => {
+                // ...
+            }}
+        >
+            {(props) => (
+                <form onSubmit={props.handleSubmit}>
+                    <RFFField name="name" component="input" />
+                    <button type="submit">Save</button>
+                </form>
+            )}
+        </RFFForm>
+  `}
+/>
+
+Comet Admin `FinalForm`:
+
+<Source
+    language="tsx"
+    code={dedent`
+        import { FinalForm, Field, SaveButton } from "@comet/admin";
+        // ...
+        <FinalForm
+            mode="add"
+            onSubmit={(values) => {
+                // ...
+            }}
+        >
+            <Field label="Name" name="name" component={FinalFormInput} />
+            <SaveButton type="submit" />
+        </FinalForm>
+  `}
+/>
+
+## Context-based Features
+
+Comet Admin `FinalForm` uses React Contexts to interact with other Comet Admin components.
+
+### FinalForm in a Table
+
+If your `FinalForm` is located inside a [TableQuery](/story/docs-components-table-tablequery--page) component, the tableQuery is refetched automatically after submission.
+
+### FinalForm in a Stack
+
+If a `FinalForm` is used inside a [Stack](/story/docs-components-stack--page), it automatically navigates back to the previous `StackPage`.
+
+<Canvas>
+    <Story id="stories-form-context-based-features--finalform-in-stack" />
+</Canvas>
+
+This is not always desired.
+For example, if the FinalForm isn't located on an own StackPage.
+In this case you have to override the `onAfterSubmit()` function of `FinalForm`.
+
+<Source
+    language="tsx"
+    code={dedent`
+    <FinalForm
+        // ...
+        onAfterSubmit={() => {
+            // noop
+        }}
+    >
+        {/* ... */}
+    </FinalForm>
+`}
+/>
+
+## Submit Mutation Best Practices
+
+We recommend abiding by the following best practices considering form submission mutations:
+
+### Location of GraphQL Mutations
+
+You should define form-related mutations at the top of the file that contains the form.
+
+<Source
+    language="tsx"
+    code={dedent`
+        // employees/EmployeeForm.tsx
+        const createEmployeeMutation = gql\`
+            mutation CreateEmployee($input: CreateEmployeeInput!) {
+                createEmployee(input: $input) {
+                    id
+                    name
+                }
+            }
+        \`;
+        // ...
+        <FinalForm
+            mode="add"
+            onSubmit={(values) => {
+                // ...
+            }}
+        >
+            <Field label="Name" name="name" component={FinalFormInput} />
+            <SaveButton type="submit" />
+        </FinalForm>
+`}
+/>
+
+If the form or the mutation is exceptionally long or complex, you can alternatively move the GraphQL definition to an adjacent file of the same name with the suffix `.gql.ts`.
+For example, if your form is located in the file `employees/EmployeeForm.tsx`, the mutation should be defined in `employees/EmployeeForm.gql.ts`.
+
+<Source
+    language="tsx"
+    code={dedent`
+        // employees/EmployeeForm.tsx
+        <FinalForm
+            mode="add"
+            onSubmit={(values) => {
+                // ...
+            }}
+        >
+            <Field label="Name" name="name" component={FinalFormInput} />
+            <SaveButton type="submit" />
+        </FinalForm>
+  `}
+/>
+
+<Source
+    language="ts"
+    code={dedent`
+        // employees/EmployeeForm.gql.ts
+        export const createEmployeeMutation = gql\`
+            mutation CreateEmployee($input: CreateEmployeeInput!) {
+                createEmployee(input: $input) {
+                    id
+                    name
+                }
+            }
+        \`;
+  `}
+/>
+
+### `apolloClient.mutate()` vs `useMutation()` Hook
+
+Prefer `apolloClient.mutate()` over the `useMutation()` hook.
+
+The main advantage of `useMutation()` is that it provides access to the GraphQL loading and error states.
+However, the `FinalForm` component provides built-in handling for loading and error states.
+Custom handling is typically unnecessary.
+Therefore `apolloClient.mutate()` is sufficient for most use cases.
+
+Also, `apolloClient.mutate()` helps you avoid a difficult variable naming process and keeps your code short and precise.
+
+**✅ Do this:**
+
+<Source
+    language="tsx"
+    code={dedent`
+        const apolloClient = useApolloClient();
+        // ...
+        <FinalForm
+            mode="add"
+            onSubmit={async (values) => {
+                await apolloClient.mutate({
+                    mutation: createEmployeeMutation,
+                    variables: {
+                        input: {
+                            name: values.name
+                        }
+                    }
+                })
+            }}
+        >
+            <Field label="Name" name="name" component={FinalFormInput} />
+            <SaveButton type="submit" />
+        </FinalForm>
+`}
+/>
+
+**❌ Avoid this:**
+
+<Source
+    language="tsx"
+    code={dedent`
+        // you don't need the loading and error states because FinalForm handles them for you
+        const const [createEmployee, { loading, error }] = useMutation(createEmployeeMutation);
+        // ...
+        <FinalForm
+            mode="add"
+            onSubmit={async (values) => {
+                // you don't see at first glance, that this is a call to a GraphQL API
+                await createEmployee({
+                    variables: {
+                        input: {
+                            name: values.name
+                        }
+                    }
+                })
+            }}
+        >
+            <Field label="Name" name="name" component={FinalFormInput} />
+            <SaveButton type="submit" />
+        </FinalForm>
+`}
+/>
+
+### Form Submission Example
+
+**Note:** You have to enter "John" and "Doe" for this example to work.
+
+<Canvas>
+    <Story id="stories-form-submit-mutation-best-practices--submit-mutation-best-practices" />
+</Canvas>
