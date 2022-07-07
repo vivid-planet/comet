@@ -6,7 +6,7 @@ import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
-import { MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
+import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
 import {
     AllCategories,
     AuthorizationErrorPage,
@@ -199,6 +199,7 @@ class App extends React.Component {
                                                                         </Switch>
                                                                     )}
                                                                 </ContentScopeProvider>
+                                                                <ErrorDialogHandler />
                                                             </React.Fragment>
                                                         </CmsBlockContextProvider>
                                                     </SnackbarProvider>
