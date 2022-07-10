@@ -1,70 +1,87 @@
 import { OffsetBasedPaginationArgs, SortArgs } from "@comet/cms-api";
 import { ArgsType, Field, InputType, IntersectionType, registerEnumType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsArray, IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 
 //TODO move into library
-export enum FilterItemsOperator {
-    And = "And",
-    Or = "Or",
-}
-registerEnumType(FilterItemsOperator, {
-    name: "FilterItemsOperator",
-});
-
-//TODO move into library
-export enum FilterOperation {
+export enum StringFilterOperation {
     Contains = "Contains",
     StartsWith = "StartsWith",
     EndsWith = "EndsWith",
+    IsEqual = "IsEqual",
+    NotEqual = "NotEqual",
+}
+registerEnumType(StringFilterOperation, {
+    name: "StringFilterOperation",
+});
+
+//TODO move into library
+@InputType()
+export class StringFilter {
+    @Field()
+    @IsString()
+    value: string;
+
+    @Field(() => StringFilterOperation)
+    @IsEnum(StringFilterOperation)
+    operation: StringFilterOperation;
+}
+
+//TODO move into library
+export enum NumberFilterOperation {
     IsEqual = "IsEqual",
     LessThan = "LessThan",
     GreaterThan = "GreaterThan",
     LessOrEqual = "LessOrEqual",
     GreaterOrEqual = "GreaterOrEqual",
     NotEqual = "NotEqual",
-    IsAnyOf = "IsAnyOf",
+    /* needed?
     IsEmpty = "IsEmpty",
     NotEmpty = "NotEmpty",
+    */
 }
-registerEnumType(FilterOperation, {
-    name: "FilterOperation",
+registerEnumType(NumberFilterOperation, {
+    name: "NumberFilterOperation",
 });
 
-export enum ProductFilterField {
-    Name = "name",
-    Description = "description",
-}
-registerEnumType(ProductFilterField, {
-    name: "ProductFilterField",
-});
-
+//TODO move into library
 @InputType()
-export class ProductFilterItem {
-    @Field(() => ProductFilterField)
-    @IsEnum(ProductFilterField)
-    field: ProductFilterField;
-
+export class NumberFilter {
     @Field()
-    @IsString()
-    value: string;
+    @IsNumber()
+    value: number;
 
-    @Field(() => FilterOperation)
-    @IsEnum(FilterOperation)
-    operation: FilterOperation;
+    @Field(() => NumberFilterOperation)
+    @IsEnum(NumberFilterOperation)
+    operation: NumberFilterOperation;
 }
 
 @InputType()
-export class ProductFilterItems {
-    @Field(() => [ProductFilterItem])
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => ProductFilterItem)
-    filterItems: ProductFilterItem[];
+export class ProductFilter {
+    @Field(() => StringFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => StringFilter)
+    name?: StringFilter;
 
-    @Field(() => FilterItemsOperator)
-    @IsEnum(FilterItemsOperator)
-    filterItemsOperator: FilterItemsOperator;
+    @Field(() => StringFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => StringFilter)
+    description?: StringFilter;
+
+    @Field(() => NumberFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => NumberFilter)
+    price?: NumberFilter;
+
+    @Field(() => [ProductFilter], { nullable: true })
+    @Type(() => ProductFilter)
+    @ValidateNested({ each: true })
+    and?: ProductFilter[];
+
+    @Field(() => [ProductFilter], { nullable: true })
+    @Type(() => ProductFilter)
+    @ValidateNested({ each: true })
+    or?: ProductFilter[];
 }
 
 @ArgsType()
@@ -74,8 +91,8 @@ export class ProductsArgs extends IntersectionType(OffsetBasedPaginationArgs, So
     @IsString()
     query?: string;
 
-    @Field(() => ProductFilterItems, { nullable: true })
+    @Field(() => ProductFilter, { nullable: true })
     @ValidateNested()
-    @Type(() => ProductFilterItems)
-    filters?: ProductFilterItems;
+    @Type(() => ProductFilter)
+    filter?: ProductFilter;
 }

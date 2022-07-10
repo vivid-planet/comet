@@ -1,4 +1,4 @@
-import { AllowForRole, SortDirection } from "@comet/cms-api"; 
+import { AllowForRole, SortDirection } from "@comet/cms-api";
 import { FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -32,9 +32,9 @@ export class ProductsResolver {
 
     @Query(() => PaginatedProducts)
     async products(
-        @Args() { query, offset, limit, sortColumnName, sortDirection = SortDirection.DESC, filters }: ProductsArgs,
+        @Args() { query, offset, limit, sortColumnName, sortDirection = SortDirection.DESC, filter }: ProductsArgs,
     ): Promise<PaginatedProducts> {
-        const where = this.productsService.getFindCondition(query, filters);
+        const where = this.productsService.getFindCondition(query, filter);
         const options: FindOptions<Product> = { offset, limit };
 
         if (sortColumnName) {

@@ -249,6 +249,7 @@ type Product {
   id: ID!
   name: String!
   description: String!
+  price: Float!
   createdAt: DateTime!
   updatedAt: DateTime
   sales: Int!
@@ -302,7 +303,7 @@ type Query {
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   product(id: ID!): Product!
-  products(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, filters: ProductFilterItems): PaginatedProducts!
+  products(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, filter: ProductFilter): PaginatedProducts!
 }
 
 enum SortDirection {
@@ -325,40 +326,39 @@ input FolderFilterInput {
   searchText: String
 }
 
-input ProductFilterItems {
-  filterItems: [ProductFilterItem!]!
-  filterItemsOperator: FilterItemsOperator!
+input ProductFilter {
+  name: StringFilter
+  description: StringFilter
+  price: NumberFilter
+  and: [ProductFilter!]
+  or: [ProductFilter!]
 }
 
-input ProductFilterItem {
-  field: ProductFilterField!
+input StringFilter {
   value: String!
-  operation: FilterOperation!
+  operation: StringFilterOperation!
 }
 
-enum ProductFilterField {
-  Name
-  Description
-}
-
-enum FilterOperation {
+enum StringFilterOperation {
   Contains
   StartsWith
   EndsWith
+  IsEqual
+  NotEqual
+}
+
+input NumberFilter {
+  value: Float!
+  operation: NumberFilterOperation!
+}
+
+enum NumberFilterOperation {
   IsEqual
   LessThan
   GreaterThan
   LessOrEqual
   GreaterOrEqual
   NotEqual
-  IsAnyOf
-  IsEmpty
-  NotEmpty
-}
-
-enum FilterItemsOperator {
-  And
-  Or
 }
 
 type Mutation {
@@ -507,4 +507,5 @@ input PredefinedPageInput {
 input ProductInput {
   name: String!
   description: String!
+  price: Float!
 }
