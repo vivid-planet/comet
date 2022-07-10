@@ -335,30 +335,20 @@ input ProductFilter {
 }
 
 input StringFilter {
-  value: String!
-  operation: StringFilterOperation!
-}
-
-enum StringFilterOperation {
-  Contains
-  StartsWith
-  EndsWith
-  IsEqual
-  NotEqual
+  contains: String
+  startsWith: String
+  endsWith: String
+  eq: String
+  neq: String
 }
 
 input NumberFilter {
-  value: Float!
-  operation: NumberFilterOperation!
-}
-
-enum NumberFilterOperation {
-  IsEqual
-  LessThan
-  GreaterThan
-  LessOrEqual
-  GreaterOrEqual
-  NotEqual
+  eq: Float
+  lt: Float
+  gt: Float
+  lte: Float
+  gte: Float
+  neq: Float
 }
 
 type Mutation {

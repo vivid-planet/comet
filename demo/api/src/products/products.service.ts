@@ -2,7 +2,7 @@ import { FilterQuery } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { Product } from "@src/products/entities/product.entity";
 
-import { NumberFilter, NumberFilterOperation, ProductFilter, StringFilter, StringFilterOperation } from "./dto/products.args";
+import { NumberFilter, ProductFilter, StringFilter } from "./dto/products.args";
 
 @Injectable()
 export class ProductsService {
@@ -36,34 +36,42 @@ export class ProductsService {
                             acc.$or = value.map(convertFilter);
                         }
                     } else if (filterProperty instanceof StringFilter) {
-                        if (filterProperty.operation == StringFilterOperation.Contains) {
-                            acc[filterPropertyName] = { $ilike: `%${filterProperty.value}%` };
-                        } else if (filterProperty.operation == StringFilterOperation.StartsWith) {
-                            acc[filterPropertyName] = { $ilike: `${filterProperty.value}%` };
-                        } else if (filterProperty.operation == StringFilterOperation.EndsWith) {
-                            acc[filterPropertyName] = { $ilike: `%${filterProperty.value}` };
-                        } else if (filterProperty.operation == StringFilterOperation.IsEqual) {
-                            acc[filterPropertyName] = { $eq: filterProperty.value };
-                        } else if (filterProperty.operation == StringFilterOperation.NotEqual) {
-                            acc[filterPropertyName] = { $neq: filterProperty.value };
-                        } else {
-                            throw new Error(`Unsupported operation ${filterProperty.operation}`);
+                        acc[filterPropertyName] = {};
+                        if (filterProperty.contains !== undefined) {
+                            acc[filterPropertyName].$ilike = `%${filterProperty.contains}%`; //TODO quote
+                        }
+                        if (filterProperty.startsWith !== undefined) {
+                            //TODO don't overwrite $ilike from contains
+                            acc[filterPropertyName].$ilike = `${filterProperty.startsWith}%`;
+                        }
+                        if (filterProperty.endsWith !== undefined) {
+                            acc[filterPropertyName].$ilike = `%${filterProperty.endsWith}`;
+                        }
+                        if (filterProperty.eq !== undefined) {
+                            acc[filterPropertyName].$eq = filterProperty.eq;
+                        }
+                        if (filterProperty.neq !== undefined) {
+                            acc[filterPropertyName].$neq = filterProperty.neq;
                         }
                     } else if (filterProperty instanceof NumberFilter) {
-                        if (filterProperty.operation == NumberFilterOperation.IsEqual) {
-                            acc[filterPropertyName] = { $eq: filterProperty.value };
-                        } else if (filterProperty.operation == NumberFilterOperation.LessThan) {
-                            acc[filterPropertyName] = { $lt: filterProperty.value };
-                        } else if (filterProperty.operation == NumberFilterOperation.GreaterThan) {
-                            acc[filterPropertyName] = { $gt: filterProperty.value };
-                        } else if (filterProperty.operation == NumberFilterOperation.LessOrEqual) {
-                            acc[filterPropertyName] = { $lte: filterProperty.value };
-                        } else if (filterProperty.operation == NumberFilterOperation.GreaterOrEqual) {
-                            acc[filterPropertyName] = { $gte: filterProperty.value };
-                        } else if (filterProperty.operation == NumberFilterOperation.NotEqual) {
-                            acc[filterPropertyName] = { $ne: filterProperty.value };
-                        } else {
-                            throw new Error(`Unsupported operation ${filterProperty.operation}`);
+                        acc[filterPropertyName] = {};
+                        if (filterProperty.eq !== undefined) {
+                            acc[filterPropertyName].$eq = filterProperty.eq;
+                        }
+                        if (filterProperty.lt !== undefined) {
+                            acc[filterPropertyName].$lt = filterProperty.lt;
+                        }
+                        if (filterProperty.gt !== undefined) {
+                            acc[filterPropertyName].$gt = filterProperty.gt;
+                        }
+                        if (filterProperty.lte !== undefined) {
+                            acc[filterPropertyName].$lte = filterProperty.lte;
+                        }
+                        if (filterProperty.gte !== undefined) {
+                            acc[filterPropertyName].$gte = filterProperty.gte;
+                        }
+                        if (filterProperty.neq !== undefined) {
+                            acc[filterPropertyName].$ne = filterProperty.neq;
                         }
                     } else {
                         throw new Error(`Unsupported filter ${filterPropertyName}`);

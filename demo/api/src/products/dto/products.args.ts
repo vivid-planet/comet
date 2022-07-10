@@ -1,59 +1,69 @@
 import { OffsetBasedPaginationArgs, SortArgs } from "@comet/cms-api";
-import { ArgsType, Field, InputType, IntersectionType, registerEnumType } from "@nestjs/graphql";
+import { ArgsType, Field, InputType, IntersectionType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
-
-//TODO move into library
-export enum StringFilterOperation {
-    Contains = "Contains",
-    StartsWith = "StartsWith",
-    EndsWith = "EndsWith",
-    IsEqual = "IsEqual",
-    NotEqual = "NotEqual",
-}
-registerEnumType(StringFilterOperation, {
-    name: "StringFilterOperation",
-});
+import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 
 //TODO move into library
 @InputType()
 export class StringFilter {
-    @Field()
+    @Field({ nullable: true })
+    @IsOptional()
     @IsString()
-    value: string;
+    contains?: string;
 
-    @Field(() => StringFilterOperation)
-    @IsEnum(StringFilterOperation)
-    operation: StringFilterOperation;
-}
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    startsWith?: string;
 
-//TODO move into library
-export enum NumberFilterOperation {
-    IsEqual = "IsEqual",
-    LessThan = "LessThan",
-    GreaterThan = "GreaterThan",
-    LessOrEqual = "LessOrEqual",
-    GreaterOrEqual = "GreaterOrEqual",
-    NotEqual = "NotEqual",
-    /* needed?
-    IsEmpty = "IsEmpty",
-    NotEmpty = "NotEmpty",
-    */
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    endsWith?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    eq?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    neq?: string;
 }
-registerEnumType(NumberFilterOperation, {
-    name: "NumberFilterOperation",
-});
 
 //TODO move into library
 @InputType()
 export class NumberFilter {
-    @Field()
+    @Field({ nullable: true })
+    @IsOptional()
     @IsNumber()
-    value: number;
+    eq?: number;
 
-    @Field(() => NumberFilterOperation)
-    @IsEnum(NumberFilterOperation)
-    operation: NumberFilterOperation;
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsNumber()
+    lt?: number;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsNumber()
+    gt?: number;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsNumber()
+    lte?: number;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsNumber()
+    gte?: number;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsNumber()
+    neq?: number;
 }
 
 @InputType()
