@@ -55,10 +55,12 @@ type SupportedBlocksInputInterfaces<BlockMap extends BaseBlockMap> = {
     };
 }[keyof BlockMap];
 
+export type OneOfBlock<BlockMap extends BaseBlockMap> = Block<OneOfBlockDataInterface<BlockMap>, OneOfBlockInputInterface<BlockMap>>;
+
 export function createOneOfBlock<BlockMap extends BaseBlockMap>(
     { supportedBlocks, allowEmpty = true }: Options<BlockMap>,
     nameOrOptions: NameOrOptions,
-): Block<OneOfBlockDataInterface<BlockMap>, OneOfBlockInputInterface<BlockMap>> {
+): OneOfBlock<BlockMap> {
     const supportedBlockTypes: Array<keyof BlockMap | null> = Object.keys(supportedBlocks);
 
     if (allowEmpty) {

@@ -14,36 +14,69 @@ import {
     ToolbarTitleItem,
     useStackApi,
 } from "@comet/admin";
-import { isValidUrl } from "@comet/blocks-admin";
+import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
 import { Card, CardContent, CircularProgress, Grid, MenuItem } from "@mui/material";
 import { FORM_ERROR } from "final-form";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLRedirectDetailFragment, GQLRedirectDetailQuery, GQLRedirectDetailQueryVariables } from "../graphql.generated";
-import { AllCategories } from "../pages/pageTree/PageTreeContext";
-import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
+import {
+    GQLRedirectDetailFragment,
+    GQLRedirectDetailQuery,
+    GQLRedirectDetailQueryVariables,
+    GQLRedirectSourceTypeValues,
+} from "../graphql.generated";
 import { redirectDetailQuery } from "./RedirectForm.gql";
 import { useSubmitMutation } from "./submitMutation";
 
-interface IRedirectForm {
+interface Props {
     id?: string;
     mode: "edit" | "add";
-    allCategories: AllCategories;
+    linkBlock: BlockInterface;
 }
 
-const useInitialValues = (mode: "edit" | "add", id?: string) => {
-    const { loading, data, error } = useQuery<GQLRedirectDetailQuery, GQLRedirectDetailQueryVariables>(redirectDetailQuery, {
+export interface FormValues {
+    sourceType: GQLRedirectSourceTypeValues;
+    source: string;
+    target: BlockState<BlockInterface>;
+    comment?: string;
+    updatedAt?: string;
+}
+
+const useInitialValues = (id: string | undefined, linkBlock: BlockInterface): FormValues | undefined => {
+    const { data } = useQuery<GQLRedirectDetailQuery, GQLRedirectDetailQueryVariables>(redirectDetailQuery, {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         variables: { id: id! },
         skip: !id,
     });
-    return { loading, data, error };
+
+    if (id === undefined) {
+        return {
+            sourceType: "path",
+            source: "",
+            target: linkBlock.defaultValues(),
+        };
+    }
+
+    if (!data) {
+        return undefined;
+    }
+
+    const { redirect } = data;
+
+    return {
+        sourceType: redirect.sourceType,
+        source: redirect.source,
+        target: linkBlock.input2State(redirect.target),
+        comment: redirect.comment ?? undefined,
+        updatedAt: redirect.updatedAt,
+    };
 };
 
-export const RedirectForm = ({ mode, id, allCategories }: IRedirectForm): JSX.Element => {
+export const RedirectForm = ({ mode, id, linkBlock }: Props): JSX.Element => {
     const intl = useIntl();
-    const initialValues = useInitialValues(mode, id);
+    const initialValues = useInitialValues(id, linkBlock);
+    const targetInput = React.useMemo(() => createFinalFormBlock(linkBlock), [linkBlock]);
 
     const sourceTypeOptions = [
         {
@@ -55,28 +88,11 @@ export const RedirectForm = ({ mode, id, allCategories }: IRedirectForm): JSX.El
         },
     ];
 
-    const targetTypeOptions = [
-        {
-            value: "intern",
-            label: intl.formatMessage({
-                id: "comet.pages.redirects.redirect.target.type.internalPage",
-                defaultMessage: "Internal Page",
-            }),
-        },
-        {
-            value: "extern",
-            label: intl.formatMessage({
-                id: "comet.pages.redirects.redirect.target.type.extern",
-                defaultMessage: "External URL",
-            }),
-        },
-    ];
-
     const stackApi = useStackApi();
 
-    const [submit, { loading: saving, error: saveError }] = useSubmitMutation(mode, id);
+    const [submit, { loading: saving, error: saveError }] = useSubmitMutation(mode, id, linkBlock);
 
-    if (mode === "edit" && initialValues.loading) {
+    if (mode === "edit" && initialValues === undefined) {
         return <CircularProgress />;
     }
 
@@ -98,7 +114,7 @@ export const RedirectForm = ({ mode, id, allCategories }: IRedirectForm): JSX.El
             });
         }
     };
-    const handleSaveClick = (values: GQLRedirectDetailFragment) => {
+    const handleSaveClick = (values: FormValues) => {
         return submit(values);
     };
 
@@ -106,7 +122,7 @@ export const RedirectForm = ({ mode, id, allCategories }: IRedirectForm): JSX.El
         <FinalForm
             mode={mode}
             onSubmit={handleSaveClick}
-            initialValues={{ ...initialValues?.data?.redirect, sourceType: "path" }}
+            initialValues={initialValues}
             renderButtons={() => null}
             onAfterSubmit={(values, form) => {
                 form.reset(values);
@@ -184,64 +200,15 @@ export const RedirectForm = ({ mode, id, allCategories }: IRedirectForm): JSX.El
                                     </Grid>
                                     <Grid item xs={3}>
                                         <Field
+                                            name="target"
                                             label={intl.formatMessage({
-                                                id: "comet.pages.redirects.redirect.target.type",
-                                                defaultMessage: "Target Type",
+                                                id: "comet.pages.redirects.redirect.target",
+                                                defaultMessage: "Target",
                                             })}
-                                            name="targetType"
                                             required
                                             fullWidth
-                                        >
-                                            {(props) => (
-                                                <FinalFormSelect {...props} fullWidth>
-                                                    {targetTypeOptions.map((option) => (
-                                                        <MenuItem value={option.value} key={option.value}>
-                                                            {option.label}
-                                                        </MenuItem>
-                                                    ))}
-                                                </FinalFormSelect>
-                                            )}
-                                        </Field>
-                                    </Grid>
-                                    <Grid item xs={9}>
-                                        <div>
-                                            <Field name="targetType" subscription={{ value: true }} fullWidth>
-                                                {({ input: { value } }) =>
-                                                    value === "extern" && (
-                                                        <Field
-                                                            label={intl.formatMessage({
-                                                                id: "comet.pages.redirects.redirect.target.url",
-                                                                defaultMessage: "Url",
-                                                            })}
-                                                            name="targetUrl"
-                                                            required
-                                                            component={FinalFormInput}
-                                                            validate={validateDomain}
-                                                            fullWidth
-                                                        />
-                                                    )
-                                                }
-                                            </Field>
-                                        </div>
-                                        <div>
-                                            <Field name="targetType" subscription={{ value: true }} fullWidth>
-                                                {({ input: { value } }) =>
-                                                    value === "intern" && (
-                                                        <Field
-                                                            label={intl.formatMessage({
-                                                                id: "comet.pages.redirects.redirect.target.pageId",
-                                                                defaultMessage: "Target PageID",
-                                                            })}
-                                                            name="targetPage"
-                                                            required
-                                                            component={FinalFormPageTreeSelect}
-                                                            allCategories={allCategories}
-                                                            fullWidth
-                                                        />
-                                                    )
-                                                }
-                                            </Field>
-                                        </div>
+                                            component={targetInput}
+                                        />
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Field

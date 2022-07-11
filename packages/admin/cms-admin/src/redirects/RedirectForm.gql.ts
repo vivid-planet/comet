@@ -5,16 +5,9 @@ export const redirectDetailFragment = gql`
         id
         sourceType
         source
-        targetType
-        targetUrl
-        targetPageId
+        target
         comment
         generationType
-        targetPage {
-            id
-            name
-            slug
-        }
         updatedAt
     }
 `;
@@ -29,7 +22,7 @@ export const redirectDetailQuery = gql`
 `;
 
 export const updateRedirectMutation = gql`
-    mutation UpdateRedirect($id: ID!, $lastUpdatedAt: DateTime, $input: UpdateRedirectInput!) {
+    mutation UpdateRedirect($id: ID!, $lastUpdatedAt: DateTime, $input: RedirectInput!) {
         updateRedirect(id: $id, lastUpdatedAt: $lastUpdatedAt, input: $input) {
             ...RedirectDetail
         }
@@ -38,7 +31,7 @@ export const updateRedirectMutation = gql`
 `;
 
 export const createRedirectMutation = gql`
-    mutation CreateRedirect($input: CreateRedirectInput!) {
+    mutation CreateRedirect($input: RedirectInput!) {
         createRedirect(input: $input) {
             ...RedirectDetail
         }

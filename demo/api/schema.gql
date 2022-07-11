@@ -93,45 +93,16 @@ enum BuildJobStatus {
   failed
 }
 
-type Redirect implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  sourceType: RedirectSourceTypeValues!
-  source: String!
-  targetType: RedirectTargetTypeValues!
-  targetUrl: String
-  targetPageId: String
-  comment: String
-  active: Boolean!
-  generationType: RedirectGenerationType!
-  createdAt: DateTime!
-  targetPage: PageTreeNode
-}
-
-interface DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-}
-
-enum RedirectSourceTypeValues {
-  path
-}
-
-enum RedirectTargetTypeValues {
-  intern
-  extern
-}
-
-enum RedirectGenerationType {
-  manual
-  automatic
-}
-
 type Link implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
   content: JSONObject!
   createdAt: DateTime!
+}
+
+interface DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
 }
 
 type Page implements DocumentInterface {
@@ -253,6 +224,27 @@ type PaginatedNews {
   totalCount: Int!
 }
 
+type Redirect implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  sourceType: RedirectSourceTypeValues!
+  source: String!
+  target: JSONObject!
+  comment: String
+  active: Boolean!
+  generationType: RedirectGenerationType!
+  createdAt: DateTime!
+}
+
+enum RedirectSourceTypeValues {
+  path
+}
+
+enum RedirectGenerationType {
+  manual
+  automatic
+}
+
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
@@ -327,8 +319,8 @@ type Mutation {
   updatePageTreeNodePosition(input: PageTreeNodeUpdatePositionInput!, id: ID!): PageTreeNode!
   updatePageTreeNodeCategory(category: String!, id: ID!): PageTreeNode!
   createPageTreeNode(category: String!, scope: PageTreeNodeScopeInput!, input: PageTreeNodeCreateInput!): PageTreeNode!
-  createRedirect(input: CreateRedirectInput!): Redirect!
-  updateRedirect(lastUpdatedAt: DateTime, input: UpdateRedirectInput!, id: ID!): Redirect!
+  createRedirect(input: RedirectInput!): Redirect!
+  updateRedirect(lastUpdatedAt: DateTime, input: RedirectInput!, id: ID!): Redirect!
   updateRedirectActiveness(input: RedirectUpdateActivenessInput!, id: ID!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(input: UpdateDamFileInput!, id: ID!): DamFile!
@@ -391,26 +383,13 @@ input PageTreeNodeCreateInput {
   userGroup: PageTreeNodeUserGroup = All
 }
 
-input CreateRedirectInput {
+input RedirectInput {
   sourceType: RedirectSourceTypeValues!
   source: String!
-  targetType: RedirectTargetTypeValues!
-  targetUrl: String
-  targetPageId: String
+  target: JSONObject!
   comment: String
   active: Boolean
   generationType: RedirectGenerationType!
-}
-
-input UpdateRedirectInput {
-  sourceType: RedirectSourceTypeValues
-  source: String
-  targetType: RedirectTargetTypeValues
-  targetUrl: String
-  targetPageId: String
-  comment: String
-  active: Boolean
-  generationType: RedirectGenerationType
 }
 
 input RedirectUpdateActivenessInput {

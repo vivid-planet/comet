@@ -1,3 +1,4 @@
+import { createOneOfBlock, ExternalLinkBlock } from "@comet/blocks-api";
 import { NestFactory } from "@nestjs/core";
 import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
@@ -11,9 +12,12 @@ import {
     FileImagesResolver,
     FilesResolver,
     FoldersResolver,
+    InternalLinkBlock,
     PageTreeNodeBase,
     PageTreeNodeCategory,
 } from "./src";
+import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
+import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -37,7 +41,14 @@ async function generateSchema(): Promise<void> {
 
     const gqlSchemaFactory = app.get(GraphQLSchemaFactory);
 
-    const redirectsResolver = createRedirectsResolver(PageTreeNode);
+    const linkBlock = createOneOfBlock(
+        { supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock }, allowEmpty: false },
+        "RedirectsLink",
+    );
+    const RedirectEntity = RedirectEntityFactory.create(linkBlock);
+    const RedirectInput = RedirectInputFactory.create(linkBlock);
+
+    const redirectsResolver = createRedirectsResolver(RedirectEntity, RedirectInput);
     const pageTreeResolver = createPageTreeResolver({
         PageTreeNode,
         Documents: [Page],

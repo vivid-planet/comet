@@ -1,6 +1,6 @@
 import { isURL, registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 
-import { RedirectValidationArguments } from "../dto/redirect.input";
+import { RedirectValidationArguments } from "../dto/redirect-input.factory";
 import { RedirectSourceTypeValues } from "../redirects.enum";
 
 export const IsValidRedirectSource = (validationOptions?: ValidationOptions) => {

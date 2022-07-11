@@ -27,6 +27,7 @@ import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.en
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
+import { NewsLinkBlock } from "./news/blocks/news-link.block";
 import { NewsModule } from "./news/news.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
@@ -93,7 +94,7 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
             Scope: PageTreeNodeScope,
             reservedPaths: ["/events"],
         }),
-        RedirectsModule.register({ PageTreeNode: PageTreeNode }),
+        RedirectsModule.register({ customTargets: { news: NewsLinkBlock } }),
         BlobStorageModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (config: ConfigType<typeof configNS>) => ({

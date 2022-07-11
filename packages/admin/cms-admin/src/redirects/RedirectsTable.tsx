@@ -18,6 +18,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
+import { BlockInterface, BlockPreview } from "@comet/blocks-admin";
 import { Button, IconButton, MenuItem, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -36,7 +37,12 @@ interface Filter extends Omit<GQLRedirectsQueryVariables, "active" | "type"> {
     type?: "all" | GQLRedirectGenerationType;
     active?: "all" | boolean;
 }
-export function RedirectsTable(): JSX.Element {
+
+interface Props {
+    linkBlock: BlockInterface;
+}
+
+export function RedirectsTable({ linkBlock }: Props): JSX.Element {
     const intl = useIntl();
 
     const typeOptions = [
@@ -172,7 +178,15 @@ export function RedirectsTable(): JSX.Element {
                                 {
                                     name: "target",
                                     header: intl.formatMessage({ id: "comet.pages.redirects.redirect.target", defaultMessage: "Target" }),
-                                    render: (row: GQLRedirectTableFragment) => (row.targetPage ? row.targetPage.path : row.targetUrl),
+                                    render: (row: GQLRedirectTableFragment) => {
+                                        const state = linkBlock.input2State(row.target);
+                                        return (
+                                            <BlockPreview
+                                                title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
+                                                content={linkBlock.previewContent(state)}
+                                            />
+                                        );
+                                    },
                                 },
                                 {
                                     name: "comment",
@@ -216,7 +230,6 @@ export function RedirectsTable(): JSX.Element {
                                                 onClick={() => {
                                                     stackApi.activatePage("edit", row.id);
                                                 }}
-                                                size="large"
                                             >
                                                 <Edit color="primary" />
                                             </IconButton>

@@ -89,40 +89,6 @@ enum BuildJobStatus {
   failed
 }
 
-type Redirect implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  sourceType: RedirectSourceTypeValues!
-  source: String!
-  targetType: RedirectTargetTypeValues!
-  targetUrl: String
-  targetPageId: String
-  comment: String
-  active: Boolean!
-  generationType: RedirectGenerationType!
-  createdAt: DateTime!
-  targetPage: PageTreeNode
-}
-
-interface DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-}
-
-enum RedirectSourceTypeValues {
-  path
-}
-
-enum RedirectTargetTypeValues {
-  intern
-  extern
-}
-
-enum RedirectGenerationType {
-  manual
-  automatic
-}
-
 type PageTreeNode {
   id: ID!
   parentId: String
@@ -151,6 +117,32 @@ union PageContentUnion = Page
 type Page implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+}
+
+interface DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+}
+
+type Redirect implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  sourceType: RedirectSourceTypeValues!
+  source: String!
+  target: JSONObject!
+  comment: String
+  active: Boolean!
+  generationType: RedirectGenerationType!
+  createdAt: DateTime!
+}
+
+enum RedirectSourceTypeValues {
+  path
+}
+
+enum RedirectGenerationType {
+  manual
+  automatic
 }
 
 type Query {
@@ -196,8 +188,8 @@ enum SlugAvailability {
 
 type Mutation {
   createBuild: Boolean!
-  createRedirect(input: CreateRedirectInput!): Redirect!
-  updateRedirect(lastUpdatedAt: DateTime, input: UpdateRedirectInput!, id: ID!): Redirect!
+  createRedirect(input: RedirectInput!): Redirect!
+  updateRedirect(lastUpdatedAt: DateTime, input: RedirectInput!, id: ID!): Redirect!
   updateRedirectActiveness(input: RedirectUpdateActivenessInput!, id: ID!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(input: UpdateDamFileInput!, id: ID!): DamFile!
@@ -217,26 +209,13 @@ type Mutation {
   createPageTreeNode(category: String!, scope: PageTreeNodeScopeInput!, input: PageTreeNodeCreateInput!): PageTreeNode!
 }
 
-input CreateRedirectInput {
+input RedirectInput {
   sourceType: RedirectSourceTypeValues!
   source: String!
-  targetType: RedirectTargetTypeValues!
-  targetUrl: String
-  targetPageId: String
+  target: JSONObject!
   comment: String
   active: Boolean
   generationType: RedirectGenerationType!
-}
-
-input UpdateRedirectInput {
-  sourceType: RedirectSourceTypeValues
-  source: String
-  targetType: RedirectTargetTypeValues
-  targetUrl: String
-  targetPageId: String
-  comment: String
-  active: Boolean
-  generationType: RedirectGenerationType
 }
 
 input RedirectUpdateActivenessInput {
