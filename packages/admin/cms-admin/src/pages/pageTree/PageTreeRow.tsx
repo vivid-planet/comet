@@ -168,6 +168,7 @@ const PageTreeRow = ({
         }
         dropTarget(rowRef);
     }, [dragSource, dropTarget, page.visibility]);
+
     const insertInBetweenTopPosition = pageTreeService.calcInsertInBetweenPosition(prevPage, page);
     const insertInBetweenBottomPosition = pageTreeService.calcInsertInBetweenPosition(page, nextPage);
     const topDividerHighlighted = hoverState?.dropTarget === "ADD_BEFORE" || topInBetweenButtonHovered;

@@ -204,6 +204,15 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
 
     const propsForVirtualList = useDndWindowScroll();
 
+    React.useEffect(() => {
+        if (newPageIds.current.length > 0) {
+            const index = pages.findIndex((page) => newPageIds.current.includes(page.id));
+            refList.current?.scrollToItem(index, "smart");
+        }
+        // this is only necessary if new pages have been added
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [newPageIds.current]);
+
     return (
         <>
             <PageTreeDragLayer />
