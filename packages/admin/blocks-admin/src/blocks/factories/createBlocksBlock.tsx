@@ -465,7 +465,7 @@ export function createBlocksBlock({
                                                         return (
                                                             <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/blocks`}>
                                                                 <BlockRow
-                                                                    name={block.displayName}
+                                                                    name={block.dynamicDisplayName?.(data.props) ?? block.displayName}
                                                                     id={data.key}
                                                                     previewContent={block.previewContent(data.props, blockContext)}
                                                                     index={blockIndex}
