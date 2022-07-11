@@ -32,7 +32,6 @@ import { NewsModule } from "./news/news.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
-import { PageTreeNodeCategory } from "./page-tree/page-tree-node-category";
 import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 
@@ -100,7 +99,6 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
             PageTreeNodeUpdateInput: PageTreeNodeUpdateInput,
             Documents: [Page, Link, PredefinedPage],
             Scope: PageTreeNodeScope,
-            Category: PageTreeNodeCategory,
             reservedPaths: ["/events"],
         }),
         RedirectsModule.register({ PageTreeNode: PageTreeNode }),

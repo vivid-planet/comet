@@ -11,7 +11,7 @@ import { ContentScopeIndicator, createEditPageNode } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DocumentInterface, DocumentType } from "../../documents/types";
-import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreeNodeCategory, GQLPageTreePageFragment } from "../../graphql.generated";
+import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../../graphql.generated";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
 import { EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
@@ -42,7 +42,7 @@ const ScopeIndicatorLabel = styled(Typography)`
     }
 `;
 interface Props {
-    category: GQLPageTreeNodeCategory;
+    category: string;
     path: string;
     allCategories: AllCategories;
     documentTypes: Record<DocumentType, DocumentInterface>;

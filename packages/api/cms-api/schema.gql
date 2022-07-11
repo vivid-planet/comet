@@ -132,7 +132,7 @@ type PageTreeNode {
   visibility: PageTreeNodeVisibility!
   documentType: String!
   hideInMenu: Boolean!
-  category: PageTreeNodeCategory!
+  category: String!
   childNodes: [PageTreeNode!]!
   parentNode: PageTreeNode
   path: String!
@@ -144,11 +144,6 @@ enum PageTreeNodeVisibility {
   Published
   Unpublished
   Archived
-}
-
-enum PageTreeNodeCategory {
-  MainNavigation
-  Other
 }
 
 union PageContentUnion = Page
@@ -171,7 +166,7 @@ type Query {
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(scope: PageTreeNodeScopeInput!, path: String!): PageTreeNode
-  pageTreeNodeList(category: PageTreeNodeCategory, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
+  pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(slug: String!, parentId: ID, scope: PageTreeNodeScopeInput!): SlugAvailability!
 }
 
@@ -218,8 +213,8 @@ type Mutation {
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(input: PageTreeNodeUpdateVisibilityInput!, id: ID!): PageTreeNode!
   updatePageTreeNodePosition(input: PageTreeNodeUpdatePositionInput!, id: ID!): PageTreeNode!
-  updatePageTreeNodeCategory(category: PageTreeNodeCategory!, id: ID!): PageTreeNode!
-  createPageTreeNode(category: PageTreeNodeCategory!, scope: PageTreeNodeScopeInput!, input: PageTreeNodeCreateInput!): PageTreeNode!
+  updatePageTreeNodeCategory(category: String!, id: ID!): PageTreeNode!
+  createPageTreeNode(category: String!, scope: PageTreeNodeScopeInput!, input: PageTreeNodeCreateInput!): PageTreeNode!
 }
 
 input CreateRedirectInput {

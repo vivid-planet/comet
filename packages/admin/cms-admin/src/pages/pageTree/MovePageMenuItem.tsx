@@ -5,11 +5,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
-import {
-    GQLPageTreeNodeCategory,
-    GQLUpdatePageTreeNodeCategoryMutation,
-    GQLUpdatePageTreeNodeCategoryMutationVariables,
-} from "../../graphql.generated";
+import { GQLUpdatePageTreeNodeCategoryMutation, GQLUpdatePageTreeNodeCategoryMutationVariables } from "../../graphql.generated";
 import { PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
@@ -24,7 +20,7 @@ function MovePageMenuItem({ page, onClose }: Props): React.ReactElement | null {
         GQLUpdatePageTreeNodeCategoryMutation,
         GQLUpdatePageTreeNodeCategoryMutationVariables
     >(gql`
-        mutation UpdatePageTreeNodeCategory($id: ID!, $category: PageTreeNodeCategory!) {
+        mutation UpdatePageTreeNodeCategory($id: ID!, $category: String!) {
             updatePageTreeNodeCategory(id: $id, category: $category) {
                 id
                 category
@@ -47,7 +43,7 @@ function MovePageMenuItem({ page, onClose }: Props): React.ReactElement | null {
         onClose();
     };
 
-    const handleSubMenuItemClick = async (category: GQLPageTreeNodeCategory) => {
+    const handleSubMenuItemClick = async (category: string) => {
         const refetchQueries = [
             { query, variables: { contentScope: scope, category } },
             { query, variables: { contentScope: scope, category: page.category } },

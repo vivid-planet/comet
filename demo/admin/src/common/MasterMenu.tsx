@@ -30,11 +30,17 @@ const MasterMenu: React.FC = () => {
                 icon={<Dashboard />}
                 to={`${match.url}/dashboard`}
             />
-            <MenuItemRouterLink
-                primary={intl.formatMessage({ id: "comet.menu.pageTree", defaultMessage: "Page tree" })}
-                icon={<PageTree />}
-                to={`${match.url}/pages/pagetree/main-navigation`}
-            />
+            <MenuCollapsibleItem primary={intl.formatMessage({ id: "comet.menu.pageTree", defaultMessage: "Page tree" })} icon={<PageTree />}>
+                <MenuItemRouterLink
+                    primary={intl.formatMessage({ id: "comet.menu.pageTree", defaultMessage: "Main menu" })}
+                    to={`${match.url}/pages/pagetree/main-navigation`}
+                />
+                <MenuItemRouterLink
+                    primary={intl.formatMessage({ id: "comet.menu.pageTree", defaultMessage: "Top menu" })}
+                    to={`${match.url}/pages/pagetree/top-menu`}
+                />
+            </MenuCollapsibleItem>
+
             <MenuCollapsibleItem
                 primary={intl.formatMessage({ id: "comet.menu.structuredContent", defaultMessage: "Structured Content" })}
                 icon={<Data />}

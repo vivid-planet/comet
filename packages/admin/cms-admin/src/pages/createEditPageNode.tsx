@@ -22,7 +22,6 @@ import {
     GQLEditPageParentNodeQueryVariables,
     GQLIsPathAvailableQuery,
     GQLIsPathAvailableQueryVariables,
-    GQLPageTreeNodeCategory,
     GQLSlugAvailability,
     GQLUpdatePageNodeMutation,
     GQLUpdatePageNodeMutationVariables,
@@ -46,7 +45,7 @@ interface CreateEditPageNodeProps {
 export interface EditPageNodeProps {
     id: null | SerializedInitialValues | string; // when mode is add: SerializedInitialValues is expected
     mode: "add" | "edit";
-    category: GQLPageTreeNodeCategory;
+    category: string;
     documentTypes: Record<DocumentType, DocumentInterface>;
 }
 
@@ -387,7 +386,7 @@ const editPageParentNodeQuery = gql`
 `;
 
 const createPageNodeMutation = gql`
-    mutation CreatePageNode($input: PageTreeNodeCreateInput!, $contentScope: PageTreeNodeScopeInput!, $category: PageTreeNodeCategory!) {
+    mutation CreatePageNode($input: PageTreeNodeCreateInput!, $contentScope: PageTreeNodeScopeInput!, $category: String!) {
         createPageTreeNode(input: $input, scope: $contentScope, category: $category) {
             id
         }

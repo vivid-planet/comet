@@ -10,13 +10,7 @@ import { FixedSizeList as List } from "react-window";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
-import {
-    GQLPagesQuery,
-    GQLPagesQueryVariables,
-    GQLPageTreeNodeCategory,
-    GQLPageTreePageFragment,
-    GQLSelectedPageFragment,
-} from "../../graphql.generated";
+import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment, GQLSelectedPageFragment } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { createPagesQuery } from "../pagesPage/createPagesQuery";
@@ -64,7 +58,7 @@ interface PageTreeSelectProps {
     onChange: (newValue: GQLSelectedPageFragment | null) => void;
     open: boolean;
     onClose: () => void;
-    defaultCategory: GQLPageTreeNodeCategory;
+    defaultCategory: string;
 }
 
 const useStyles = makeStyles({
@@ -77,7 +71,7 @@ const useStyles = makeStyles({
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
     const { pageTreeCategories, pageTreeDocumentTypes } = useCmsBlockContext();
     const { scope } = useContentScope();
-    const [category, setCategory] = React.useState<GQLPageTreeNodeCategory>(defaultCategory);
+    const [category, setCategory] = React.useState<string>(defaultCategory);
     const refList = React.useRef<List>(null);
     const [height, setHeight] = React.useState(200);
     const refDialogContent = React.useRef<HTMLDivElement>(null);
@@ -179,7 +173,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
                         <Select
                             value={category}
                             onChange={(event) => {
-                                setCategory(event.target.value as GQLPageTreeNodeCategory);
+                                setCategory(event.target.value as string);
                             }}
                         >
                             {pageTreeCategories.map(({ category, label }) => (

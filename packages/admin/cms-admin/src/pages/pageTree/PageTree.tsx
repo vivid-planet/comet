@@ -14,7 +14,6 @@ import { useContentScope } from "../../contentScope/Provider";
 import {
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
-    GQLPageTreeNodeCategory,
     GQLUpdatePageTreeNodePositionMutation,
     GQLUpdatePageTreeNodePositionMutationVariables,
 } from "../../graphql.generated";
@@ -28,7 +27,7 @@ interface PageTreeProps {
     editDialogApi: IEditDialogApi;
     toggleExpand: (pageId: string) => void;
     onSelectChanged: (pageId: string, value: boolean) => void;
-    category: GQLPageTreeNodeCategory;
+    category: string;
     siteUrl: string;
 }
 
@@ -45,7 +44,7 @@ const UPDATE_PAGE_TREE_NODE_POSITION = gql`
 `;
 
 const PAGES_CACHE_QUERY = gql`
-    query PagesCache($contentScope: PageTreeNodeScopeInput!, $category: PageTreeNodeCategory!) {
+    query PagesCache($contentScope: PageTreeNodeScopeInput!, $category: String!) {
         pages: pageTreeNodeList(scope: $contentScope, category: $category) {
             id
             parentId
