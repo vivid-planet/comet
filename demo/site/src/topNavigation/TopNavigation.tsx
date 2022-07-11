@@ -1,9 +1,10 @@
+import { GQLTopMenuPageTreeNodeFragment } from "@src/graphql.generated";
 import { PageLink } from "@src/header/PageLink";
 import { gql } from "graphql-request";
 import styled from "styled-components";
 
 interface Props {
-    data: any;
+    data: GQLTopMenuPageTreeNodeFragment[];
 }
 
 export function TopNavigation({ data }: Props): JSX.Element {
