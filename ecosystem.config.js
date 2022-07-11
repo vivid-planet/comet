@@ -1,4 +1,5 @@
 const packageFolderMapping = {
+    "@comet/cli": "packages/cli",
     "@comet/admin": "packages/admin/admin",
     "@comet/admin-color-picker": "packages/admin/admin-color-picker",
     "@comet/admin-date-time": "packages/admin/admin-date-time",
@@ -19,6 +20,12 @@ const waitForPackages = (...packages) => {
 
 module.exports = {
     apps: [
+        {
+            name: "comet-cli",
+            script: "npx yarn workspace @comet/cli dev",
+            namespace: "comet",
+            autorestart: true,
+        },
         {
             name: "comet-admin",
             script: [waitForPackages("@comet/admin-icons"), "npx yarn workspace @comet/admin start"].join(" && "),
@@ -82,15 +89,18 @@ module.exports = {
         },
         {
             name: "comet-blocks-admin",
-            script: [waitForPackages("@comet/admin", "@comet/admin-icons"), "npx yarn workspace @comet/blocks-admin start"].join(" && "),
+            script: [waitForPackages("@comet/cli", "@comet/admin", "@comet/admin-icons"), "npx yarn workspace @comet/blocks-admin start"].join(
+                " && ",
+            ),
             namespace: "comet-cms",
             autorestart: true,
         },
         {
             name: "comet-blocks-admin-codegen-block-types",
-            script: [waitForPackages("@comet/admin", "@comet/admin-icons"), "npx yarn workspace @comet/blocks-admin generate-block-types:watch"].join(
-                " && ",
-            ),
+            script: [
+                waitForPackages("@comet/cli", "@comet/admin", "@comet/admin-icons"),
+                "npx yarn workspace @comet/blocks-admin generate-block-types:watch",
+            ].join(" && "),
             namespace: "comet-cms",
             autorestart: true,
         },
@@ -98,6 +108,7 @@ module.exports = {
             name: "comet-cms-admin",
             script: [
                 waitForPackages(
+                    "@comet/cli",
                     "@comet/admin",
                     "@comet/admin-icons",
                     "@comet/admin-react-select",
@@ -114,6 +125,7 @@ module.exports = {
             name: "comet-cms-admin-codegen-graphql-types",
             script: [
                 waitForPackages(
+                    "@comet/cli",
                     "@comet/admin",
                     "@comet/admin-icons",
                     "@comet/admin-react-select",
@@ -130,6 +142,7 @@ module.exports = {
             name: "comet-cms-admin-codegen-block-types",
             script: [
                 waitForPackages(
+                    "@comet/cli",
                     "@comet/admin",
                     "@comet/admin-icons",
                     "@comet/admin-react-select",
@@ -175,7 +188,7 @@ module.exports = {
 
         {
             name: "comet-cms-site",
-            script: "npx yarn workspace @comet/cms-site dev",
+            script: [waitForPackages("@comet/cli"), "npx yarn workspace @comet/cms-site dev"].join(" && "),
             namespace: "comet-cms",
             autorestart: true,
         },
