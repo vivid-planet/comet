@@ -64,6 +64,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     ref,
 ) => {
     const client = useApolloClient();
+    const newPageIds = React.useRef<string[]>([]);
 
     const queries = client.getObservableQueries();
     const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.Pages) as
@@ -75,10 +76,17 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
             query: pagesQuery.query,
             variables: pagesQuery.variables,
             callback: (diff, lastDiff) => {
-                console.log("diff ", diff);
-                console.log("lastDiff ", lastDiff);
+                if (diff && lastDiff) {
+                    const existingPages = lastDiff.result?.pages.map((page) => page.id) ?? [];
+                    newPageIds.current = diff.result?.pages.map((page) => page.id).filter((id) => !existingPages.includes(id)) ?? [];
+
+                    setTimeout(() => {
+                        // reset newPageIds to prevent slideIn on every rerender
+                        newPageIds.current = [];
+                    }, 0);
+                }
             },
-            optimistic: false,
+            optimistic: true,
         });
     }
 
@@ -225,6 +233,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                                     ...style,
                                                     top: `${parseFloat(String(style?.top)) + VIRTUAL_LIST_PADDING_SIZE}px`,
                                                 }}
+                                                slideIn={newPageIds.current.includes(page.id)}
                                                 page={page}
                                                 prevPage={prevPage}
                                                 nextPage={nextPage}

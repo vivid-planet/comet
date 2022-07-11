@@ -1,6 +1,16 @@
-import { TableRow, TableRowProps } from "@mui/material";
+import { keyframes, TableRow, TableRowProps } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import * as React from "react";
+
+const slideInAnimation = keyframes`
+    from { 
+        transform: translateX(100%);
+    }
+
+    to { 
+        transform: translateX(0);
+    }
+`;
 
 interface Props extends TableRowProps {
     isDragHovered: boolean;
@@ -9,12 +19,22 @@ interface Props extends TableRowProps {
     isSelected?: boolean;
     clickable?: boolean;
     disabled?: boolean;
+    slideIn?: boolean;
     rowRef?: React.RefObject<HTMLTableRowElement>;
 }
 
-export const PageTreeTableRow: React.FC<Props> = ({ children, clickable, disabled, isSelected, isMouseHovered, rowRef, ...restProps }) => {
+export const PageTreeTableRow: React.FC<Props> = ({ children, clickable, disabled, isSelected, isMouseHovered, slideIn, rowRef, ...restProps }) => {
     return (
-        <Root ref={rowRef} isSelected={isSelected} clickable={clickable} disabled={disabled} isMouseHovered={isMouseHovered} as="div" {...restProps}>
+        <Root
+            ref={rowRef}
+            isSelected={isSelected}
+            clickable={clickable}
+            disabled={disabled}
+            isMouseHovered={isMouseHovered}
+            slideIn={slideIn}
+            as="div"
+            {...restProps}
+        >
             {children}
             <BorderHightlights horizontal={Boolean(isSelected)} vertical={Boolean(isSelected || (isMouseHovered && clickable && !disabled))} />
         </Root>
@@ -64,6 +84,12 @@ const Root = styled(TableRow)<Props>`
                 opacity: 0.1;
             }
         `};
+
+    ${({ slideIn }) =>
+        slideIn &&
+        css`
+            animation: ${slideInAnimation} 0.5s linear;
+        `}
 `;
 
 interface SideBorderHightlightsProps {
