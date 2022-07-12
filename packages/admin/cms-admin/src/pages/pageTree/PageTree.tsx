@@ -67,12 +67,11 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     const newPageIds = React.useRef<string[]>([]);
 
     const queries = client.getObservableQueries();
+    const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.Pages) as
+        | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
+        | undefined;
 
     React.useEffect(() => {
-        const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.Pages) as
-            | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
-            | undefined;
-
         if (pagesQuery) {
             client.cache.watch<GQLPagesQuery, GQLPagesQueryVariables>({
                 query: pagesQuery.query,
@@ -91,7 +90,14 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 optimistic: true,
             });
         }
-    }, [client.cache, queries]);
+    }, [client.cache, pagesQuery]);
+
+    React.useEffect(() => {
+        if (newPageIds.current.length > 0) {
+            const index = pages.findIndex((page) => newPageIds.current.includes(page.id));
+            refList.current?.scrollToItem(index, "smart");
+        }
+    }, [pages]);
 
     const pageTreeService = React.useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
     const { scope } = useContentScope();
@@ -206,15 +212,6 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     }));
 
     const propsForVirtualList = useDndWindowScroll();
-
-    React.useEffect(() => {
-        if (newPageIds.current.length > 0) {
-            const index = pages.findIndex((page) => newPageIds.current.includes(page.id));
-            refList.current?.scrollToItem(index, "smart");
-        }
-        // this is only necessary if new pages have been added
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [newPageIds.current]);
 
     return (
         <>
