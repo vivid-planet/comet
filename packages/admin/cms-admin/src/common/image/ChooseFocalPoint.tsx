@@ -25,19 +25,19 @@ export const ChooseFocalPoint = ({ focalPoint, onChangeFocalPoint }: ChooseFocal
                 }}
                 exclusive
             >
-                <ToggleButton value={"SOUTHWEST"}>
+                <ToggleButton value="SOUTHWEST">
                     <FocusPointSouthwest />
                 </ToggleButton>
-                <ToggleButton value={"NORTHWEST"}>
+                <ToggleButton value="NORTHWEST">
                     <FocusPointNorthwest />
                 </ToggleButton>
-                <ToggleButton value={"CENTER"}>
+                <ToggleButton value="CENTER">
                     <FocusPointCenter />
                 </ToggleButton>
-                <ToggleButton value={"NORTHEAST"}>
+                <ToggleButton value="NORTHEAST">
                     <FocusPointNortheast />
                 </ToggleButton>
-                <ToggleButton value={"SOUTHEAST"}>
+                <ToggleButton value="SOUTHEAST">
                     <FocusPointSoutheast />
                 </ToggleButton>
             </ToggleButtonGroup>

@@ -56,7 +56,7 @@ export function calculateInheritAspectRatio(
     }
 }
 
-export function generateImageUrl({ src, width }: ImageLoaderProps, aspectRatio: number): string {
+export function generateImageUrl({ src, width }: Pick<ImageLoaderProps, "src" | "width">, aspectRatio: number): string {
     return src.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(Math.ceil(width / aspectRatio)));
 }
 

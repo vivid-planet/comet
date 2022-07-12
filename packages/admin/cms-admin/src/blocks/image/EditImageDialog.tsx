@@ -114,7 +114,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                     <Typography>
                                         <FormattedMessage
                                             id="comet.blocks.image.edit"
-                                            defaultMessage={`Edit image „{filename}”`}
+                                            defaultMessage="Edit image „{filename}”"
                                             values={{
                                                 filename: image.name,
                                             }}

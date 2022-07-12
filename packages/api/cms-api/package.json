@@ -8,7 +8,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet-admin",
+        "url": "https://github.com/vivid-planet/comet",
         "directory": "packages/api/cms-api"
     },
     "publishConfig": {
@@ -17,7 +17,7 @@
     },
     "scripts": {
         "build": "rimraf lib/ && tsc",
-        "dev": "tsc --watch",
+        "dev": "rimraf lib/ && tsc --watch --preserveWatchOutput",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/",
         "lint:tsc": "tsc --noEmit",
@@ -95,7 +95,7 @@
         "eslint": "^8.0.0",
         "npm-run-all": "^4.0.0",
         "prettier": "^2.0.0",
-        "ts-node": "^9.0.0",
+        "ts-node": "^10.0.0",
         "typescript": "^4.0.0"
     },
     "license": "BSD-2-Clause"

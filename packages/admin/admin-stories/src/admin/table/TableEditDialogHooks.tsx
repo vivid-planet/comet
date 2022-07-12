@@ -60,13 +60,13 @@ function Story() {
         <>
             <Toolbar>
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Edit Dialog Hooks</Typography>
+                    <Typography variant="h3">Edit Dialog Hooks</Typography>
                 </ToolbarItem>
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button
                         color="primary"
-                        variant={"contained"}
+                        variant="contained"
                         startIcon={<AddIcon />}
                         onClick={(ev) => {
                             api.openAddDialog();
@@ -108,7 +108,13 @@ function Story() {
                 <EditDialog>
                     {selection.mode && (
                         <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
-                            {(row, { selectionMode: sm }) => <EditForm mode={sm} row={row} />}
+                            {(row, { selectionMode: sm }) => {
+                                if (row === undefined) {
+                                    return null;
+                                }
+
+                                return <EditForm mode={sm} row={row} />;
+                            }}
                         </Selected>
                     )}
                 </EditDialog>

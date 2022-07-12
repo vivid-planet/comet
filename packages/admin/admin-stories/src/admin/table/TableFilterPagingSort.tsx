@@ -135,7 +135,7 @@ function Story() {
             <>
                 <Toolbar>
                     <ToolbarItem>
-                        <Typography variant={"h3"}>Filter Paging Sort</Typography>
+                        <Typography variant="h3">Filter Paging Sort</Typography>
                     </ToolbarItem>
                     <ToolbarItem>
                         <TableFilterFinalForm<IFilterValues> filterApi={filterApi}>

@@ -1,31 +1,27 @@
 import { gql, useQuery } from "@apollo/client";
 import { Select, Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, TableRow } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List } from "react-window";
 
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
-import {
-    GQLPagesQuery,
-    GQLPagesQueryVariables,
-    GQLPageTreeNodeCategory,
-    GQLPageTreePageFragment,
-    GQLSelectedPageFragment,
-} from "../../graphql.generated";
+import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment, GQLSelectedPageFragment } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { pagesQuery } from "../pagesPage/pagesQuery";
+import { createPagesQuery } from "../pagesPage/createPagesQuery";
+import { PageTreeTableRow } from "../pageTree/common/PageTreeTableRow";
 import PageInfo from "../pageTree/PageInfo";
-import { AllCategories } from "../pageTree/PageTreeContext";
-import * as sc from "../pageTree/PageTreeRow.sc";
+import PageLabel from "../pageTree/PageLabel";
+import { PageTreeContext } from "../pageTree/PageTreeContext";
 import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
-import PageSelectButton from "./PageSelectButton";
+import * as sc from "./PageTreeSelectDialog.sc";
 
 export const selectedPageFragment = gql`
     fragment SelectedPage on PageTreeNode {
@@ -58,12 +54,11 @@ const PageSearchContainer = styled("div")`
 `;
 
 interface PageTreeSelectProps {
-    allCategories?: AllCategories;
     value: GQLSelectedPageFragment | undefined | null;
     onChange: (newValue: GQLSelectedPageFragment | null) => void;
     open: boolean;
     onClose: () => void;
-    defaultCategory: GQLPageTreeNodeCategory;
+    defaultCategory: string;
 }
 
 const useStyles = makeStyles({
@@ -73,14 +68,17 @@ const useStyles = makeStyles({
     },
 });
 
-export default function PageTreeSelectDialog({ allCategories, value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
+export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
+    const { pageTreeCategories, pageTreeDocumentTypes } = useCmsBlockContext();
     const { scope } = useContentScope();
-    const [category, setCategory] = React.useState<GQLPageTreeNodeCategory>(defaultCategory);
+    const [category, setCategory] = React.useState<string>(defaultCategory);
     const refList = React.useRef<List>(null);
     const [height, setHeight] = React.useState(200);
     const refDialogContent = React.useRef<HTMLDivElement>(null);
     const selectedPageId = value?.id;
     const classes = useStyles();
+
+    const pagesQuery = React.useMemo(() => createPagesQuery({ documentTypes: pageTreeDocumentTypes }), [pageTreeDocumentTypes]);
 
     // Fetch data
     const { data } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
@@ -171,14 +169,14 @@ export default function PageTreeSelectDialog({ allCategories, value, onChange, o
             </StyledDialogTitle>
             <Toolbar>
                 <ToolbarActions>
-                    {allCategories && (
+                    {pageTreeCategories && (
                         <Select
                             value={category}
                             onChange={(event) => {
-                                setCategory(event.target.value as GQLPageTreeNodeCategory);
+                                setCategory(event.target.value as string);
                             }}
                         >
-                            {allCategories.map(({ category, label }) => (
+                            {pageTreeCategories.map(({ category, label }) => (
                                 <MenuItem key={category} value={category}>
                                     {label}
                                 </MenuItem>
@@ -192,33 +190,37 @@ export default function PageTreeSelectDialog({ allCategories, value, onChange, o
                 </PageSearchContainer>
             </Toolbar>
             <DialogContent ref={refDialogContent}>
-                <List
-                    ref={refList}
-                    height={height}
-                    itemCount={pagesToRenderWithMatches.length}
-                    width="100%"
-                    itemSize={listItemSize}
-                    style={{ background: "white" }}
+                <PageTreeContext.Provider
+                    value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree, query: pagesQuery }}
                 >
-                    {({ index, style }) => {
-                        const page = pagesToRenderWithMatches[index];
-                        return (
-                            <Row
-                                key={page.id}
-                                virtualizedStyle={{
-                                    ...style,
-                                }}
-                                page={page}
-                                toggleExpand={toggleExpand}
-                                selected={page.id === value?.id}
-                                onSelect={() => {
-                                    onChange({ id: page.id, name: page.name, path: page.path });
-                                    onClose();
-                                }}
-                            />
-                        );
-                    }}
-                </List>
+                    <List
+                        ref={refList}
+                        height={height}
+                        itemCount={pagesToRenderWithMatches.length}
+                        width="100%"
+                        itemSize={listItemSize}
+                        style={{ background: "white" }}
+                    >
+                        {({ index, style }) => {
+                            const page = pagesToRenderWithMatches[index];
+                            return (
+                                <Row
+                                    key={page.id}
+                                    virtualizedStyle={{
+                                        ...style,
+                                    }}
+                                    page={page}
+                                    toggleExpand={toggleExpand}
+                                    selected={page.id === value?.id}
+                                    onSelect={() => {
+                                        onChange({ id: page.id, name: page.name, path: page.path });
+                                        onClose();
+                                    }}
+                                />
+                            );
+                        }}
+                    </List>
+                </PageTreeContext.Provider>
             </DialogContent>
             <StyledDialogAction>
                 {value && (
@@ -254,12 +256,6 @@ interface RowProps {
 }
 function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowProps) {
     const [hover, setHover] = React.useState(false);
-    const classes = sc.useStyles({
-        isDragHovered: false,
-        isMouseHovered: hover,
-        isSelected: selected || page.selected,
-        isArchived: page.visibility === "Archived",
-    });
 
     const handleRowClick = () => {
         if (page.documentType !== "Link") {
@@ -267,11 +263,17 @@ function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowPr
         }
     };
 
+    const disabled = page.visibility === "Archived" || page.documentType === "Link";
+
     return (
-        <TableRow
+        <PageTreeTableRow
+            isDragHovered={false}
+            isMouseHovered={hover}
+            isSelected={selected || page.selected}
+            isArchived={page.visibility === "Archived"}
+            clickable={page.visibility !== "Archived"}
+            disabled={disabled}
             style={virtualizedStyle}
-            component="div"
-            classes={{ root: classes.root }}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             onMouseMove={() => {
@@ -281,12 +283,12 @@ function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowPr
             }}
         >
             <PageTreeRowDivider align="top" leftSpacing={0} highlight={false} />
-            <sc.PageTreeCell component="div">
+            <sc.PageInfoCell component="div">
                 <PageInfo page={page} toggleExpand={toggleExpand}>
-                    <PageSelectButton page={page} onClick={handleRowClick} />
+                    <PageLabel page={page} onClick={handleRowClick} disabled={disabled} />
                 </PageInfo>
-            </sc.PageTreeCell>
-            <sc.PageTreeCell component="div">
+            </sc.PageInfoCell>
+            <sc.PageVisibilityCell component="div">
                 <PageVisibility>
                     <PageVisibilityIcon visibility={page.visibility} />
                     <FormattedMessage
@@ -297,12 +299,12 @@ function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowPr
                         }}
                     />
                 </PageVisibility>
-            </sc.PageTreeCell>
+            </sc.PageVisibilityCell>
             <sc.PageTreeCell component="div" align="right">
                 <ArrowRight />
             </sc.PageTreeCell>
             <sc.RowClickContainer onClick={handleRowClick} />
             <PageTreeRowDivider align="bottom" leftSpacing={0} highlight={false} />
-        </TableRow>
+        </PageTreeTableRow>
     );
 }

@@ -9,7 +9,7 @@ storiesOf("stories/components/Color Picker/Color Picker Final Form", module).add
     return (
         <Form initialValues={{ color1: "#00ff00", color2: "rgba(255, 127, 80, 0.75)" }} onSubmit={() => {}}>
             {() => (
-                <Grid container spacing={4}>
+                <Grid container spacing={4} sx={{ pb: 2 }}>
                     <Grid item md={3}>
                         <Field name="color1" label="Color-Picker" fullWidth component={FinalFormColorPicker} />
                     </Grid>

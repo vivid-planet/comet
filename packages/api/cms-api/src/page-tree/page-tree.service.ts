@@ -6,11 +6,18 @@ import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { RedirectsService } from "../redirects/redirects.service";
 import { AttachedDocumentStrictInput } from "./dto/attached-document.input";
-import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput, PageTreeNodeUpdatePositionInput } from "./dto/page-tree-node.input";
+import { PageTreeNodeBaseCreateInput, PageTreeNodeUpdatePositionInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
-import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeNodeVisibility as Visibility, ScopeInterface } from "./types";
+import {
+    PageTreeNodeCategory,
+    PageTreeNodeInterface,
+    PageTreeNodeUpdateInputInterface,
+    PageTreeNodeVisibility,
+    PageTreeNodeVisibility as Visibility,
+    ScopeInterface,
+} from "./types";
 import pathBuilder from "./utils/path-builder";
 
 interface Options {
@@ -44,7 +51,7 @@ export class PageTreeService {
         @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
     ) {}
 
-    async createNode(input: PageTreeNodeCreateInput, category: PageTreeNodeCategory, scope?: ScopeInterface): Promise<PageTreeNodeInterface> {
+    async createNode(input: PageTreeNodeBaseCreateInput, category: PageTreeNodeCategory, scope?: ScopeInterface): Promise<PageTreeNodeInterface> {
         // TODO: check for unique id
         // TODO: check ParentId
         const readApi = this.createReadApi({ visibility: "all" });
@@ -98,7 +105,7 @@ export class PageTreeService {
         return await readApi.getNodeOrFail(newNode.id);
     }
 
-    async updateNode(id: string, input: PageTreeNodeUpdateInput): Promise<PageTreeNodeInterface> {
+    async updateNode(id: string, input: PageTreeNodeUpdateInputInterface): Promise<PageTreeNodeInterface> {
         const readApi = this.createReadApi({ visibility: "all" });
 
         const existingNode = await readApi.getNodeOrFail(id);

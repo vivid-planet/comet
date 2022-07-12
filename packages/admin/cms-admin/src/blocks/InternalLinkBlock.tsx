@@ -8,7 +8,6 @@ import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generat
 import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "../graphql.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { useCmsBlockContext } from "./useCmsBlockContext";
 
 type State = InternalLinkBlockData;
 
@@ -63,8 +62,6 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const { pageTreeCategories } = useCmsBlockContext();
-
         return (
             <SelectPreviewComponent>
                 <BlocksFinalForm
@@ -73,7 +70,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
                     }}
                     initialValues={state}
                 >
-                    <Field name="targetPage" component={FinalFormPageTreeSelect} fullWidth allCategories={pageTreeCategories} />
+                    <Field name="targetPage" component={FinalFormPageTreeSelect} fullWidth />
                 </BlocksFinalForm>
             </SelectPreviewComponent>
         );

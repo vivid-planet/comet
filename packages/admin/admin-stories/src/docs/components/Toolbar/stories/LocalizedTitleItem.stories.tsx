@@ -13,7 +13,7 @@ storiesOf("stories/components/Toolbar/Localized Title Item", module)
         return (
             <Toolbar>
                 <ToolbarTitleItem>
-                    <FormattedMessage id={"storybook.toolbartitleitem.title"} defaultMessage={"Localized Title"} />
+                    <FormattedMessage id="storybook.toolbartitleitem.title" defaultMessage="Localized Title" />
                 </ToolbarTitleItem>
             </Toolbar>
         );

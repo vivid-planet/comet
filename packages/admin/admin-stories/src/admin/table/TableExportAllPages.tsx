@@ -92,7 +92,7 @@ function Story() {
                 <>
                     <Toolbar>
                         <ToolbarItem>
-                            <Typography variant={"h3"}>Export All Pages</Typography>
+                            <Typography variant="h3">Export All Pages</Typography>
                         </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>

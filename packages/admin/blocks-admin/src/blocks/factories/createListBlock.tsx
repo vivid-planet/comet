@@ -226,7 +226,7 @@ export function createListBlock<T extends BlockInterface>({
                                                             return (
                                                                 <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
                                                                     <BlockRow
-                                                                        name={block.displayName}
+                                                                        name={block.dynamicDisplayName?.(data.props) ?? block.displayName}
                                                                         id={data.key}
                                                                         previewContent={block.previewContent(data.props, blockContext)}
                                                                         index={blockIndex}
@@ -316,7 +316,7 @@ export function createListBlock<T extends BlockInterface>({
                                                                 <Typography>
                                                                     <FormattedMessage
                                                                         id="comet.blocks.list.add"
-                                                                        defaultMessage={"Add {itemName}"}
+                                                                        defaultMessage="Add {itemName}"
                                                                         values={{ itemName }}
                                                                     />
                                                                 </Typography>
@@ -335,7 +335,7 @@ export function createListBlock<T extends BlockInterface>({
                                                             >
                                                                 <FormattedMessage
                                                                     id="comet.blocks.list.add"
-                                                                    defaultMessage={"Add {itemName}"}
+                                                                    defaultMessage="Add {itemName}"
                                                                     values={{ itemName }}
                                                                 />
                                                             </AdminComponentButton>
@@ -373,7 +373,7 @@ export function createListBlock<T extends BlockInterface>({
                 return [
                     {
                         type: "text",
-                        content: <FormattedMessage id="comet.blocks.list.noBlocks" defaultMessage={"No {itemsName}"} values={{ itemsName }} />,
+                        content: <FormattedMessage id="comet.blocks.list.noBlocks" defaultMessage="No {itemsName}" values={{ itemsName }} />,
                     },
                 ];
             }

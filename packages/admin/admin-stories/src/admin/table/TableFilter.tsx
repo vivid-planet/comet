@@ -86,7 +86,7 @@ function Story() {
             <>
                 <Toolbar>
                     <ToolbarItem>
-                        <Typography variant={"h3"}>Filter</Typography>
+                        <Typography variant="h3">Filter</Typography>
                     </ToolbarItem>
                     <ToolbarItem>
                         <TableFilterFinalForm filterApi={filterApi}>

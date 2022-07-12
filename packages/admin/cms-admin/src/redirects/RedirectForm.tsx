@@ -117,22 +117,18 @@ export const RedirectForm = ({ mode, id, allCategories }: IRedirectForm): JSX.El
                     <Toolbar>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>
-                            {values.source ? (
-                                values.source
-                            ) : (
-                                <FormattedMessage id={"comet.redirects.defaultTitle"} defaultMessage={"Redirect Detail"} />
-                            )}
+                            {values.source ? values.source : <FormattedMessage id="comet.redirects.defaultTitle" defaultMessage="Redirect Detail" />}
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey={"editRedirectSave"}>
-                                <SaveButton color={"primary"} variant={"contained"} saving={saving} hasErrors={saveError != null} type={"submit"}>
+                            <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editRedirectSave">
+                                <SaveButton color="primary" variant="contained" saving={saving} hasErrors={saveError != null} type="submit">
                                     <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
                                 </SaveButton>
 
                                 <SaveButton
-                                    color={"primary"}
-                                    variant={"contained"}
+                                    color="primary"
+                                    variant="contained"
                                     saving={saving}
                                     hasErrors={saveError != null}
                                     onClick={async () => {

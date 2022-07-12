@@ -35,7 +35,7 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
                         )}
                     </>
                 ) : (
-                    <FileIcon fileType={"application/msexcel"} />
+                    <FileIcon fileType="application/msexcel" />
                 )
             }
         >

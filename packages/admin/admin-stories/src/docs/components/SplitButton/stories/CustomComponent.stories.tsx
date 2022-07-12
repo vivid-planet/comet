@@ -15,11 +15,11 @@ storiesOf("stories/components/Split Button/Custom Component", module).add("Custo
                             alert("Pressed");
                         }}
                     >
-                        <Typography color={"initial"}>
+                        <Typography color="initial">
                             <Home /> Home
                         </Typography>
                     </div>
-                    <Button variant={"contained"} color={"primary"}>
+                    <Button variant="contained" color="primary">
                         Primary Action
                     </Button>
                 </SplitButton>
@@ -32,11 +32,11 @@ storiesOf("stories/components/Split Button/Custom Component", module).add("Custo
                             alert("Pressed");
                         }}
                     >
-                        <Typography color={"initial"}>
+                        <Typography color="initial">
                             <Home /> Home
                         </Typography>
                     </div>
-                    <Button variant={"contained"} color={"primary"}>
+                    <Button variant="contained" color="primary">
                         Primary Action
                     </Button>
                 </SplitButton>

@@ -27,17 +27,17 @@ function Story() {
             <Box marginBottom={4}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Typography variant={"h3"} gutterBottom>
+                        <Typography variant="h3" gutterBottom>
                             Error Boundaries
                         </Typography>
-                        <Alert severity={"info"}>
+                        <Alert severity="info">
                             <Typography paragraph>
                                 Error boundaries catch errors anywhere in their child component tree, stops the whole application from crashing and
                                 show a UI to the User to the affected area. The rest of the application should still be accessible
                             </Typography>
                             <Typography paragraph>
                                 More infos to Error Boundaries can be found here:{" "}
-                                <Link href={"https://reactjs.org/docs/error-boundaries.html"}>https://reactjs.org/docs/error-boundaries.html</Link>
+                                <Link href="https://reactjs.org/docs/error-boundaries.html">https://reactjs.org/docs/error-boundaries.html</Link>
                             </Typography>
                             <Typography paragraph>Go to knobs and try to render a view with an error</Typography>
                         </Alert>
@@ -46,7 +46,7 @@ function Story() {
             </Box>
             <Card variant="outlined">
                 <CardContent>
-                    <Typography variant={"h5"} gutterBottom>
+                    <Typography variant="h5" gutterBottom>
                         Error Boundaries
                     </Typography>
                     <ErrorBoundary key={`errorBoundary_${renderViewWithErrors}`}>

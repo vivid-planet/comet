@@ -5,6 +5,7 @@ import * as React from "react";
 import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { isFile } from "./FolderTableRow";
+import { ArchivedTag } from "./tags/ArchivedTag";
 import { DamThumbnail } from "./thumbnail/DamThumbnail";
 
 const LabelWrapper = styled("div")`
@@ -19,6 +20,13 @@ const NameWrapper = styled("div")`
     justify-content: space-between;
 `;
 
+const TagWrapper = styled("div")`
+    margin-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+`;
+
 const Path = styled(Typography)`
     color: ${({ theme }) => theme.palette.grey[300]};
 `;
@@ -29,21 +37,21 @@ interface DamLabelProps {
     matches?: TextMatch[];
 }
 
-const getFilePath = (asset: GQLDamFileTableFragment) => {
+const getFilePath = (file: GQLDamFileTableFragment) => {
     const pathArr = [];
 
-    if (asset.folder) {
-        const parentFolderNames = asset.folder.parents.map((parentFolder) => parentFolder.name);
+    if (file.folder) {
+        const parentFolderNames = file.folder.parents.map((parentFolder) => parentFolder.name);
 
         pathArr.push(...parentFolderNames);
-        pathArr.push(asset.folder.name);
+        pathArr.push(file.folder.name);
     }
 
     return `/${pathArr.join("/")}`;
 };
 
-const getFolderPath = (asset: GQLDamFolderTableFragment) => {
-    const pathArr = asset.parents.map((parentFolder) => parentFolder.name) ?? [];
+const getFolderPath = (folder: GQLDamFolderTableFragment) => {
+    const pathArr = folder.parents.map((parentFolder) => parentFolder.name) ?? [];
 
     return `/${pathArr.join("/")}`;
 };
@@ -56,6 +64,11 @@ const DamLabel = ({ asset, showPath = false, matches }: DamLabelProps): React.Re
                 <Typography>{matches ? <MarkedMatches text={asset.name} matches={matches} /> : asset.name}</Typography>
                 {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
             </NameWrapper>
+            {isFile(asset) && asset.archived && (
+                <TagWrapper>
+                    <ArchivedTag />
+                </TagWrapper>
+            )}
         </LabelWrapper>
     );
 };

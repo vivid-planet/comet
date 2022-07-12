@@ -22,12 +22,12 @@ storiesOf("stories/components/Error Handling/Error Dialog/Automatic Graphql Erro
             return (
                 <div>
                     <div style={{ backgroundColor: brokenQuery ? "red" : "green" }}>
-                        <Typography variant={"h4"}>Current Query: {brokenQuery ? "broken" : "working"}</Typography>
+                        <Typography variant="h4">Current Query: {brokenQuery ? "broken" : "working"}</Typography>
                     </div>
                     <Typography>Query: {query}</Typography>
                     <Button
-                        variant={"contained"}
-                        color={"primary"}
+                        variant="contained"
+                        color="primary"
                         onClick={() => {
                             setBrokenQuery(!brokenQuery);
                         }}

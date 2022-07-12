@@ -5,6 +5,7 @@ import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import {
     DraftBlockType,
     DraftEditorCommand,
+    DraftStyleMap,
     Editor as DraftJsEditor,
     EditorProps as DraftJsEditorProps,
     EditorState,
@@ -19,7 +20,7 @@ import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
 import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
-import { IBlocktypeMap, ICustomBlockTypeMap_Deprecated, ToolbarButtonComponent } from "./types";
+import { CustomInlineStyles, IBlocktypeMap, ICustomBlockTypeMap_Deprecated, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 import getRteTheme from "./utils/getRteTheme";
 
@@ -63,6 +64,7 @@ export interface IRteOptions {
     standardBlockType: DraftBlockType;
     // @deprecated
     customBlockMap?: ICustomBlockTypeMap_Deprecated;
+    customInlineStyles?: CustomInlineStyles;
 }
 
 export type IOptions = Partial<IRteOptions>;
@@ -253,6 +255,14 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
     const rootClasses: string[] = [classes.root];
     if (disabled) rootClasses.push(classes.disabled);
 
+    const customStyleMap: DraftStyleMap = { ...styleMap };
+
+    if (options.customInlineStyles) {
+        Object.entries(options.customInlineStyles).forEach(([name, { style }]) => {
+            customStyleMap[name] = style;
+        });
+    }
+
     return (
         <div ref={editorWrapperRef} className={rootClasses.join(" ")}>
             <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
@@ -267,7 +277,7 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
                     handleKeyCommand={handleKeyCommand}
                     handleReturn={handleReturn}
                     keyBindingFn={keyBindingFn}
-                    customStyleMap={styleMap}
+                    customStyleMap={customStyleMap}
                     blockRenderMap={blockRenderMap}
                     {...options.draftJsProps}
                 />

@@ -76,6 +76,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 variant={variant}
                 fullWidth={fullWidth}
                 scrollTo={shouldScrollToField({ fieldMeta: meta })}
+                {...fieldContainerProps}
             >
                 {render()}
             </FieldContainer>

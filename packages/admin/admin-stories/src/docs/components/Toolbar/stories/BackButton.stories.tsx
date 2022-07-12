@@ -20,8 +20,8 @@ storiesOf("stories/components/Toolbar/Back Button", module)
                         {(stackSwitchApi) => (
                             <>
                                 <Button
-                                    variant={"contained"}
-                                    color={"primary"}
+                                    variant="contained"
+                                    color="primary"
                                     onClick={() => {
                                         stackSwitchApi?.activatePage("automaticTitleDetail", "details");
                                     }}

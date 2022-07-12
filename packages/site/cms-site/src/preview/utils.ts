@@ -3,11 +3,11 @@ import { ParsedUrlQuery } from "querystring";
 import { previewStateUrlParamName } from "./constants";
 
 interface PreviewState {
-    includeInvisibleContent: boolean;
+    includeInvisibleBlocks: boolean;
 }
 
 const defaultState: PreviewState = {
-    includeInvisibleContent: false,
+    includeInvisibleBlocks: false,
 };
 
 export function parsePreviewState(query: ParsedUrlQuery): PreviewState {

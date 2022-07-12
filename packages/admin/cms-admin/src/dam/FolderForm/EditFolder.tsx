@@ -9,8 +9,7 @@ import {
     GQLUpdateDamFolderMutation,
     GQLUpdateDamFolderMutationVariables,
 } from "../../graphql.generated";
-import { updateDamFolderMutation } from "../Table/FolderTable.gql";
-import { editFolderQuery } from "./EditFolder.gql";
+import { editFolderQuery, updateDamFolderMutation } from "./EditFolder.gql";
 import { FolderFormFields, FolderFormValues } from "./FolderFormFields";
 
 interface EditFolderProps {
@@ -33,7 +32,7 @@ const EditFolder = ({ id, selectionApi }: EditFolderProps): React.ReactElement =
 
     return (
         <FinalForm<FolderFormValues>
-            mode={"edit"}
+            mode="edit"
             onSubmit={async ({ name }: FolderFormValues) => {
                 await updateDamFolder({
                     variables: {

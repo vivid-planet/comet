@@ -17,7 +17,6 @@ export class RedirectsModule {
         return {
             module: RedirectsModule,
             imports: [MikroOrmModule.forFeature([Redirect])],
-
             providers: [createRedirectsResolver(PageTreeNode), RedirectsService, PageExistsConstraint],
             exports: [RedirectsService],
         };

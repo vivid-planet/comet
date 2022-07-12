@@ -59,13 +59,13 @@ function Story() {
         <>
             <Toolbar>
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Edit Dialog</Typography>
+                    <Typography variant="h3">Edit Dialog</Typography>
                 </ToolbarItem>
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button
                         color="primary"
-                        variant={"contained"}
+                        variant="contained"
                         startIcon={<AddIcon />}
                         onClick={(ev) => {
                             editDialog.current?.openAddDialog();
@@ -110,7 +110,13 @@ function Story() {
                         <>
                             {selectionMode && (
                                 <Selected selectionMode={selectionMode} selectedId={selectedId} rows={data}>
-                                    {(row, { selectionMode: sm }) => <EditForm mode={sm} row={row} />}
+                                    {(row, { selectionMode: sm }) => {
+                                        if (row === undefined) {
+                                            return null;
+                                        }
+
+                                        return <EditForm mode={sm} row={row} />;
+                                    }}
                                 </Selected>
                             )}
                         </>

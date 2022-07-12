@@ -60,7 +60,7 @@ const AppMenu: React.FC = () => {
                 primary="Comet Admin"
                 secondary="View on GitHub"
                 target="_blank"
-                href="https://github.com/vivid-planet/comet-admin"
+                href="https://github.com/vivid-planet/comet"
                 icon={<CometColor />}
                 secondaryAction={<LinkExternal />}
             />
@@ -80,7 +80,7 @@ const Content = ({ children }: { children: string }) => (
     <MainContent>
         <Card variant="outlined">
             <CardContent>
-                <Typography variant={"h4"} gutterBottom>
+                <Typography variant="h4" gutterBottom>
                     {children}
                 </Typography>
                 <Typography gutterBottom>
@@ -91,25 +91,25 @@ const Content = ({ children }: { children: string }) => (
                 </Typography>
                 <Divider />
                 <br />
-                <Typography variant={"body2"}>Links for testing menu-behaviour when location changes without menu-interaction:</Typography>
+                <Typography variant="body2">Links for testing menu-behaviour when location changes without menu-interaction:</Typography>
                 <ul>
                     <li>
-                        <Link to={"/dashboard"}>Dashboard</Link>
+                        <Link to="/dashboard">Dashboard</Link>
                     </li>
                     <li>
-                        <Link to={"/settings"}>Settings</Link>
+                        <Link to="/settings">Settings</Link>
                     </li>
                     <li>
-                        <Link to={"/foo1"}>Foo1</Link>
+                        <Link to="/foo1">Foo1</Link>
                     </li>
                     <li>
-                        <Link to={"/foo2"}>Foo2</Link>
+                        <Link to="/foo2">Foo2</Link>
                     </li>
                     <li>
-                        <Link to={"/foo3"}>Foo3</Link>
+                        <Link to="/foo3">Foo3</Link>
                     </li>
                     <li>
-                        <Link to={"/foo4"}>Foo4</Link>
+                        <Link to="/foo4">Foo4</Link>
                     </li>
                 </ul>
             </CardContent>

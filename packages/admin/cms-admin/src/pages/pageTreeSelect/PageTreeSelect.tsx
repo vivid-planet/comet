@@ -5,11 +5,9 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables, GQLSelectedPageFragment } from "../../graphql.generated";
-import { AllCategories } from "../pageTree/PageTreeContext";
 import PageTreeSelectDialog from "./PageTreeSelectDialog";
 
 interface PageTreeSelectProps {
-    allCategories?: AllCategories;
     value: GQLSelectedPageFragment | undefined | null;
     onChange: (newValue: GQLSelectedPageFragment | null) => void;
 }
@@ -22,7 +20,7 @@ const pageTreeSelectDetail = gql`
     }
 `;
 
-export default function PageTreeSelect({ allCategories, value, onChange }: PageTreeSelectProps): JSX.Element {
+export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps): JSX.Element {
     const [open, setOpen] = React.useState(false);
 
     const { data, loading } = useQuery<GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables>(pageTreeSelectDetail, {
@@ -51,7 +49,6 @@ export default function PageTreeSelect({ allCategories, value, onChange }: PageT
                     onClose={() => setOpen(false)}
                     value={value}
                     onChange={onChange}
-                    allCategories={allCategories}
                     defaultCategory={selectedCategory}
                 />
             )}

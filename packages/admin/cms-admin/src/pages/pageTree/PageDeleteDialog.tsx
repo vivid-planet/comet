@@ -55,7 +55,7 @@ export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
                 <DeleteContentInformation variant="outlined">
                     <Box padding={4} display="flex" flexDirection="row">
                         <WarningIconWrapper>
-                            <WarningIcon color="inherit" fontSize={"large"} />
+                            <WarningIcon color="inherit" fontSize="large" />
                         </WarningIconWrapper>
                         <Typography variant="h6">
                             {dialogInformation?.hasSubpages ? (

@@ -11,7 +11,7 @@ storiesOf("stories/components/Color Picker/Color Picker", module).add("Color Pic
     const [colorFour, setColorFour] = React.useState<string | undefined>();
 
     return (
-        <Grid container spacing={4}>
+        <Grid container spacing={4} sx={{ pb: 2 }}>
             <Grid item md={3}>
                 <FieldContainer label="Color Picker" fullWidth>
                     <ColorPicker fullWidth value={colorOne} onChange={setColorOne} />

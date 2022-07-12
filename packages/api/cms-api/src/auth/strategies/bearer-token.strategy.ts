@@ -32,15 +32,18 @@ export class BearerTokenStrategy extends PassportStrategy(Strategy) {
     }
 
     async getValidatedUser(token: string): Promise<CurrentUser | undefined> {
+        const headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Forwarded-Proto": "https",
+        };
+        if (this.config.idpConfig.password) {
+            Object.assign(headers, { Authorization: `Basic ${Buffer.from(`vivid:${this.config.idpConfig.password}`).toString("base64")}` });
+        }
         const response = await fetch(`${this.config.idpConfig.url}/oauth2/introspect`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-Forwarded-Proto": "https",
-                Authorization: `Basic ${Buffer.from(`vivid:${this.config.idpConfig.password}`).toString("base64")}`,
-            },
+            headers,
             agent: this.httpsAgent,
-            body: new URLSearchParams({ token }).toString(),
+            body: new URLSearchParams({ token, client_id: this.config.idpConfig.clientId }).toString(), // client_id should not be necessary but oidc-provider needs it
         });
 
         if (response.status !== 200) return;

@@ -16,7 +16,7 @@ storiesOf("stories/components/Toolbar/Save Split Button", module)
                 <ToolbarTitleItem>Save Split Button</ToolbarTitleItem>
                 <ToolbarFillSpace />
                 <ToolbarActions>
-                    <SplitButton localStorageKey={"Page5.SaveSplitButton"} color={"primary"} variant={"contained"}>
+                    <SplitButton localStorageKey="Page5.SaveSplitButton" color="primary" variant="contained">
                         <SaveButton
                             saving={saving}
                             onClick={() => {
@@ -26,7 +26,7 @@ storiesOf("stories/components/Toolbar/Save Split Button", module)
                                 }, 1000);
                             }}
                         >
-                            <FormattedMessage id={"comet.save"} defaultMessage={"Save"} />
+                            <FormattedMessage id="comet.save" defaultMessage="Save" />
                         </SaveButton>
                         <SaveButton
                             saving={saving}
@@ -37,7 +37,7 @@ storiesOf("stories/components/Toolbar/Save Split Button", module)
                                 }, 1000);
                             }}
                         >
-                            <FormattedMessage id={"comet.saveAndGoBack"} defaultMessage={"Save and Go Back"} />
+                            <FormattedMessage id="comet.saveAndGoBack" defaultMessage="Save and Go Back" />
                         </SaveButton>
                     </SplitButton>
                 </ToolbarActions>

@@ -39,8 +39,8 @@ function Story({ tableData }: StoryProps) {
             <TableFilterFinalForm filterApi={filterApi}>
                 <Typography variant="h5">FilterBar</Typography>
                 <FilterBar>
-                    <FilterBarPopoverFilter label={"Horsepower"}>
-                        <Field label={"Horsepower:"} name="horsepower" component={FinalFormRangeInput} fullWidth min={50} max={200} />
+                    <FilterBarPopoverFilter label="Horsepower">
+                        <Field label="Horsepower:" name="horsepower" component={FinalFormRangeInput} fullWidth min={50} max={200} />
                     </FilterBarPopoverFilter>
                 </FilterBar>
             </TableFilterFinalForm>

@@ -48,7 +48,7 @@ function BlockPreview({
                     </Grid>
                 </Grid>
             </ActionsContainer>
-            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={url}></IFrameViewer>
+            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={url} />
         </Root>
     );
 }

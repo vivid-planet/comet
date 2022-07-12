@@ -1,22 +1,37 @@
-import { File, FileNotMenu, Home, Link as LinkIcon } from "@comet/admin-icons";
+import { Home, Link as LinkIcon } from "@comet/admin-icons";
+import { SvgIconProps } from "@mui/material";
 import React from "react";
 
 import { PageTreePage } from "./usePageTree";
+import { usePageTreeContext } from "./usePageTreeContext";
 
 interface PageTypeIconProps {
     page: PageTreePage;
+    disabled?: boolean;
 }
 
-export function PageTypeIcon({ page }: PageTypeIconProps): JSX.Element {
-    let Icon = File;
+export function PageTypeIcon({ page, disabled }: PageTypeIconProps): JSX.Element {
+    let iconColor: SvgIconProps["color"] = "primary";
+    const { documentTypes } = usePageTreeContext();
+    const documentType = documentTypes[page.documentType];
+    let Icon: (props: SvgIconProps<"svg">) => JSX.Element;
 
     if (page.slug === "home") {
         Icon = Home;
     } else if (page.documentType === "Link") {
         Icon = LinkIcon;
-    } else if (page.hideInMenu) {
-        Icon = FileNotMenu;
+        iconColor = "inherit";
+    } else {
+        if (page.hideInMenu && documentType.hideInMenuIcon) {
+            Icon = documentType.hideInMenuIcon;
+        } else {
+            Icon = documentType.menuIcon;
+        }
     }
 
-    return <Icon color={page.visibility === "Published" ? "primary" : "disabled"} />;
+    if (page.visibility !== "Published" || disabled) {
+        iconColor = "disabled";
+    }
+
+    return <Icon color={iconColor} />;
 }

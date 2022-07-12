@@ -43,7 +43,7 @@ storiesOf("stories/components/Toolbar/Search Autocomplete", module)
                             <InputBase
                                 {...restParams}
                                 {...InputProps}
-                                placeholder={"Search"}
+                                placeholder="Search"
                                 startAdornment={
                                     <InputAdornment position="start">
                                         <Search />

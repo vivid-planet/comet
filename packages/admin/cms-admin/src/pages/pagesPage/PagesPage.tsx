@@ -7,20 +7,20 @@ import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeIndicator } from "../..";
+import { ContentScopeIndicator, createEditPageNode } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DocumentInterface, DocumentType } from "../../documents/types";
-import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreeNodeCategory, GQLPageTreePageFragment } from "../../graphql.generated";
+import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../../graphql.generated";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
-import { EditPageNode } from "../EditPageNode";
+import { EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
 import { AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
+import { createPagesQuery } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
-import { pagesQuery } from "./pagesQuery";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
     && {
@@ -42,18 +42,28 @@ const ScopeIndicatorLabel = styled(Typography)`
     }
 `;
 interface Props {
-    category: GQLPageTreeNodeCategory;
+    category: string;
     path: string;
     allCategories: AllCategories;
     documentTypes: Record<DocumentType, DocumentInterface>;
+    editPageNode?: React.ComponentType<EditPageNodeProps>;
 }
 
-export function PagesPage({ category, path, allCategories, documentTypes }: Props): React.ReactElement {
+const DefaultEditPageNode = createEditPageNode({});
+
+export function PagesPage({
+    category,
+    path,
+    allCategories,
+    documentTypes,
+    editPageNode: EditPageNode = DefaultEditPageNode,
+}: Props): React.ReactElement {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
+    const pagesQuery = React.useMemo(() => createPagesQuery({ documentTypes }), [documentTypes]);
 
     React.useEffect(() => {
         setRedirectPathAfterChange(path);
@@ -131,7 +141,7 @@ export function PagesPage({ category, path, allCategories, documentTypes }: Prop
                             </Button>
                         </ToolbarActions>
                     </Toolbar>
-                    <PageTreeContext.Provider value={{ allCategories, documentTypes, tree }}>
+                    <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
                         <FullHeightMainContent>
                             <ActionToolbarBox>
                                 <PagesPageActionToolbar
@@ -171,14 +181,12 @@ export function PagesPage({ category, path, allCategories, documentTypes }: Prop
                     </PageTreeContext.Provider>
 
                     <EditDialog>
-                        {editDialogSelection.mode && (
-                            <EditPageNode
-                                mode={editDialogSelection.mode}
-                                id={editDialogSelection.id || null}
-                                category={category}
-                                documentTypes={documentTypes}
-                            />
-                        )}
+                        <EditPageNode
+                            id={editDialogSelection.id || null}
+                            mode={editDialogSelection.mode ?? "add"}
+                            category={category}
+                            documentTypes={documentTypes}
+                        />
                     </EditDialog>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.pages.editContent", defaultMessage: "Edit content" })}>

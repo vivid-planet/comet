@@ -5,9 +5,9 @@ import * as React from "react";
 
 storiesOf("stories/components/Split Button/Variant Change", module).add("Variant change", () => {
     return (
-        <SplitButton color={"primary"}>
+        <SplitButton color="primary">
             <Button
-                variant={"contained"}
+                variant="contained"
                 onClick={() => {
                     alert("primary clicked");
                 }}
@@ -15,7 +15,7 @@ storiesOf("stories/components/Split Button/Variant Change", module).add("Variant
                 Primary Action
             </Button>
             <Button
-                variant={"outlined"}
+                variant="outlined"
                 onClick={() => {
                     alert("secondary clicked");
                 }}
@@ -23,7 +23,7 @@ storiesOf("stories/components/Split Button/Variant Change", module).add("Variant
                 Secondary Action
             </Button>
             <Button
-                variant={"text"}
+                variant="text"
                 onClick={() => {
                     alert("tertiary clicked");
                 }}

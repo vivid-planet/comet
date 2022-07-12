@@ -1,8 +1,5 @@
 import { ArgsType, Field, Int } from "@nestjs/graphql";
-import { Type } from "class-transformer";
-import { IsInt, IsOptional, Max, Min, ValidateNested } from "class-validator";
-
-import { SortInput } from "../sorting/sort.input";
+import { IsInt, Max, Min } from "class-validator";
 
 @ArgsType()
 export class OffsetBasedPaginationArgs {
@@ -15,10 +12,4 @@ export class OffsetBasedPaginationArgs {
     @Min(1)
     @Max(100)
     limit: number;
-
-    @Field(() => SortInput, { nullable: true })
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => SortInput)
-    sort?: SortInput;
 }

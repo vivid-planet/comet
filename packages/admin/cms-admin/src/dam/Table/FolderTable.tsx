@@ -5,7 +5,6 @@ import {
     IFilterApi,
     ISelectionApi,
     ITableColumn,
-    LocalErrorScopeApolloContext,
     MainContent,
     PrettyBytes,
     Table,
@@ -14,78 +13,38 @@ import {
     useTableQuery,
 } from "@comet/admin";
 import { StackLink } from "@comet/admin/lib/stack/StackLink";
-import { CircularProgress, Link, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Link } from "@mui/material";
 import * as React from "react";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
-import { useDropzone } from "react-dropzone";
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
+import { FileRejection, useDropzone } from "react-dropzone";
+import { FormattedDate, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
 import {
-    GQLDamFilesListQuery,
-    GQLDamFilesListQueryVariables,
     GQLDamFileTableFragment,
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,
-    GQLDamFoldersListQuery,
-    GQLDamFoldersListQueryVariables,
     GQLDamFolderTableFragment,
+    GQLDamListQuery,
+    GQLDamListQueryVariables,
 } from "../../graphql.generated";
+import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
-import FolderBreadcrumbs from "./breadcrumbs/FolderBreadcrumbs";
 import { DamActions } from "./damActions/DamActions";
 import DamContextMenu from "./DamContextMenu";
 import { DamDnDFooter, FooterType } from "./DamDnDFooter";
 import DamLabel from "./DamLabel";
-import { acceptedMimeTypes, acceptedMimeTypesByCategory } from "./fileUpload/acceptedMimeTypes";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { damFilesListQuery, damFolderQuery, damFoldersListQuery } from "./FolderTable.gql";
+import { damFolderQuery, damListQuery } from "./FolderTable.gql";
+import * as sc from "./FolderTable.sc";
 import FolderTableDragLayer from "./FolderTableDragLayer";
 import { FolderTableRow, isFile, isFolder } from "./FolderTableRow";
 import { DamMultiselectContext, useDamMultiselect } from "./multiselect/DamMultiselect";
+import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
-
-const TableWrapper = styled("div")`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    min-height: 80vh;
-    margin-bottom: 70px;
-`;
-
-interface TableHoverHighlightProps {
-    $isHovered?: boolean;
-}
-
-const TableHoverHighlight = styled("div")<TableHoverHighlightProps>`
-    flex-grow: 1;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-
-    // hover styling
-    outline: ${({ theme, $isHovered }) => ($isHovered ? `solid 1px ${theme.palette.primary.main}` : "none")};
-    background: ${({ $isHovered }) => ($isHovered ? "rgba(41,182,246,0.1)" : "#fff")};
-
-    & .CometFilesTableWrapper-root {
-        background: ${({ $isHovered }) => ($isHovered ? "transparent" : "#fff")};
-    }
-`;
-
-const FilesTableWrapper = styled("div")`
-    min-height: 58px;
-    flex-grow: 1;
-    background-color: white;
-`;
-
-const BoldTypography = styled(Typography)`
-    font-weight: 500;
-`;
 
 interface FolderTableProps extends DamConfig {
     id?: string;
@@ -100,24 +59,25 @@ const FolderTable = ({
     breadcrumbs,
     selectionApi,
     hideContextMenu,
+    hideArchiveFilter,
     renderDamLabel,
     TableContainer: ConfigTableContainer,
     ...props
 }: FolderTableProps): React.ReactElement => {
     const client = useApolloClient();
     const intl = useIntl();
+    const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
     const [footerType, setFooterType] = React.useState<FooterType>();
     const [footerFolderName, setFooterFolderName] = React.useState<string>();
 
-    const fileCategoryMimetypes = props.fileCategory ? acceptedMimeTypesByCategory[props.fileCategory] : undefined;
     const {
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
     } = useFileUpload({
-        acceptedMimetypes: props.allowedMimetypes ?? fileCategoryMimetypes ?? acceptedMimeTypes,
+        acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
         },
@@ -129,7 +89,7 @@ const FolderTable = ({
     }, 500);
 
     const hideFooter = () => {
-        if (showFooter.pending()) {
+        if (showFooter.isPending()) {
             showFooter.cancel();
         }
         setFooterType(undefined);
@@ -145,7 +105,7 @@ const FolderTable = ({
     );
 
     const hideHoverStyles = () => {
-        if (showHoverStyles.pending()) {
+        if (showHoverStyles.isPending()) {
             showHoverStyles.cancel();
         }
         setIsHovered(false);
@@ -160,57 +120,39 @@ const FolderTable = ({
     });
 
     const {
-        tableData: filesTableData,
-        api: filesApi,
-        loading: filesLoading,
-        error: filesError,
-    } = useTableQuery<GQLDamFilesListQuery, GQLDamFilesListQueryVariables>()(damFilesListQuery, {
+        tableData,
+        api,
+        loading: tableLoading,
+        error,
+    } = useTableQuery<GQLDamListQuery, GQLDamListQueryVariables>()(damListQuery, {
         variables: {
             folderId: id,
-            fileFilter: {
-                category: props.fileCategory,
-                mimetypes: props.allowedMimetypes,
-                searchText: filterApi.current.searchText,
-            },
-            sort: filterApi.current.sort,
-        },
-        resolveTableData: ({ damFilesList }) => {
-            return {
-                data: damFilesList,
-                totalCount: damFilesList.length,
-            };
-        },
-        fetchPolicy: "cache-and-network",
-        context: LocalErrorScopeApolloContext,
-        notifyOnNetworkStatusChange: true,
-    });
-
-    const {
-        tableData: foldersTableData,
-        api: foldersApi,
-        loading: foldersLoading,
-        error: foldersError,
-    } = useTableQuery<GQLDamFoldersListQuery, GQLDamFoldersListQueryVariables>()(damFoldersListQuery, {
-        variables: {
-            parentId: id,
+            includeArchived: filterApi.current.archived,
             folderFilter: {
                 searchText: filterApi.current.searchText,
             },
-            sort: filterApi.current.sort,
+            fileFilter: {
+                mimetypes: props.allowedMimetypes,
+                searchText: filterApi.current.searchText,
+            },
+            sortColumnName: filterApi.current.sort?.columnName,
+            sortDirection: filterApi.current.sort?.direction,
         },
-        resolveTableData: ({ damFoldersList }) => {
+        resolveTableData: ({ damFilesList = [], damFoldersList = [] }) => {
             return {
-                data: damFoldersList,
-                totalCount: damFoldersList.length,
+                data: [...damFoldersList, ...damFilesList],
+                totalCount: damFilesList.length + damFoldersList.length,
             };
         },
         fetchPolicy: "cache-and-network",
-        context: LocalErrorScopeApolloContext,
-        notifyOnNetworkStatusChange: true,
     });
 
+    const loading = tableLoading && tableData === undefined;
+    const foldersTableData = tableData?.data.filter(isFolder);
+    const filesTableData = tableData?.data.filter(isFile);
+
     const { matches } = useDamSearchHighlighting({
-        items: [...(foldersTableData?.data || []), ...(filesTableData?.data || [])],
+        items: [...(foldersTableData || []), ...(filesTableData || [])],
         query: filterApi.current.searchText ?? "",
     });
 
@@ -291,17 +233,17 @@ const FolderTable = ({
     const { getRootProps: getFileRootProps } = useDropzone({
         ...dropzoneConfig,
         onDragEnter: () => {
-            showHoverStyles.callback();
-            showFooter.callback("upload", data?.damFolder.name);
+            showHoverStyles();
+            showFooter("upload", data?.damFolder.name);
         },
         onDragLeave: () => {
             hideHoverStyles();
             hideFooter();
         },
-        onDrop: async (acceptedFiles: File[], rejectedFiles: File[]) => {
+        onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             hideHoverStyles();
             hideFooter();
-            await uploadFiles({ acceptedFiles, rejectedFiles }, data?.damFolder.id);
+            await uploadFiles({ acceptedFiles, fileRejections }, data?.damFolder.id);
         },
     });
 
@@ -322,29 +264,27 @@ const FolderTable = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOver]);
 
-    const damMultiselectApi = useDamMultiselect({ totalItemCount: (foldersTableData?.totalCount ?? 0) + (filesTableData?.totalCount ?? 0) });
+    const damMultiselectApi = useDamMultiselect({ totalItemCount: tableData?.totalCount ?? 0 });
 
-    if (filesTableData === undefined || foldersTableData === undefined) {
-        return <CircularProgress />;
-    }
+    const fileRootProps = getFileRootProps({
+        onClick: (event) => {
+            event.stopPropagation();
+        },
+    });
 
     return (
         <DamMultiselectContext.Provider value={damMultiselectApi}>
             <TableContainer>
-                {!props.hideDamActions && <DamActions files={filesTableData.data ?? []} folders={foldersTableData.data ?? []} />}
+                {!props.hideDamActions && <DamActions files={filesTableData ?? []} folders={foldersTableData ?? []} />}
                 <FolderTableDragLayer />
-                <TableWrapper ref={dropTargetRef}>
-                    <TableHead
-                        isSearching={isSearching}
-                        numberItems={foldersTableData.totalCount + filesTableData.totalCount}
-                        breadcrumbs={breadcrumbs}
-                        folderData={data}
-                    />
-                    <TableHoverHighlight $isHovered={isHovered}>
-                        <TableQuery api={foldersApi} loading={foldersLoading} error={foldersError}>
+                <sc.TableWrapper ref={dropTargetRef}>
+                    <TableHead isSearching={isSearching} numberItems={tableData?.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
+                    <sc.TableHoverHighlight $isHovered={isHovered}>
+                        <TableQuery api={api} loading={loading} error={error}>
                             <Table<GQLDamFolderTableFragment>
                                 hideTableHead
-                                {...foldersTableData}
+                                totalCount={foldersTableData?.length ?? 0}
+                                data={foldersTableData ?? []}
                                 columns={tableColumns}
                                 renderTableRow={({ columns, row, rowProps }) => {
                                     return (
@@ -352,7 +292,7 @@ const FolderTable = ({
                                             key={row.id}
                                             dropTargetItem={row}
                                             rowProps={rowProps}
-                                            footerApi={{ show: showFooter.callback, hide: hideFooter }}
+                                            footerApi={{ show: showFooter, hide: hideFooter }}
                                             {...props}
                                         >
                                             <TableColumns columns={columns} row={row} />
@@ -360,13 +300,12 @@ const FolderTable = ({
                                     );
                                 }}
                             />
-                        </TableQuery>
 
-                        <FilesTableWrapper className="CometFilesTableWrapper-root" {...getFileRootProps()}>
-                            <TableQuery api={filesApi} loading={filesLoading} error={filesError}>
+                            <sc.FilesTableWrapper className="CometFilesTableWrapper-root" {...fileRootProps}>
                                 <Table<GQLDamFileTableFragment>
                                     hideTableHead
-                                    {...filesTableData}
+                                    totalCount={filesTableData?.length ?? 0}
+                                    data={filesTableData ?? []}
                                     columns={tableColumns}
                                     renderTableRow={({ columns, row, rowProps }) => {
                                         return (
@@ -374,7 +313,8 @@ const FolderTable = ({
                                                 key={row.id}
                                                 dropTargetItem={row}
                                                 rowProps={rowProps}
-                                                footerApi={{ show: showFooter.callback, hide: hideFooter }}
+                                                footerApi={{ show: showFooter, hide: hideFooter }}
+                                                archived={row.archived}
                                                 {...props}
                                             >
                                                 <TableColumns columns={columns} row={row} />
@@ -382,10 +322,10 @@ const FolderTable = ({
                                         );
                                     }}
                                 />
-                            </TableQuery>
-                        </FilesTableWrapper>
-                    </TableHoverHighlight>
-                </TableWrapper>
+                            </sc.FilesTableWrapper>
+                        </TableQuery>
+                    </sc.TableHoverHighlight>
+                </sc.TableWrapper>
                 <EditDialog>
                     {({ selectedId, selectionMode }) => {
                         return (
@@ -401,49 +341,6 @@ const FolderTable = ({
             {fileUploadDialogs}
         </DamMultiselectContext.Provider>
     );
-};
-
-interface TableHeadProps {
-    isSearching: boolean;
-    numberItems?: number;
-    breadcrumbs?: BreadcrumbItem[];
-    folderData?: GQLDamFolderQuery;
-}
-
-const TableHeadWrapper = styled("div")`
-    min-height: 51px;
-    padding: 15px 12px;
-    background-color: white;
-    border-top: 1px solid ${({ theme }) => theme.palette.grey[100]};
-    border-bottom: 1px solid ${({ theme }) => theme.palette.grey[100]};
-`;
-
-const TableHead = ({ isSearching, numberItems, breadcrumbs, folderData }: TableHeadProps): React.ReactElement => {
-    let content: React.ReactNode = null;
-
-    if (isSearching) {
-        content = (
-            <BoldTypography variant="body1">
-                <FormattedMessage
-                    id="comet.pages.dam.foundNumberItems"
-                    defaultMessage="Found {number} items"
-                    values={{
-                        number: numberItems,
-                    }}
-                />
-            </BoldTypography>
-        );
-    } else if (breadcrumbs) {
-        const folderIds: Array<string | null> = [null];
-        if (folderData) {
-            folderIds.push(...folderData.damFolder.mpath);
-            folderIds.push(folderData.damFolder.id);
-        }
-
-        content = <FolderBreadcrumbs breadcrumbs={breadcrumbs} folderIds={folderIds} />;
-    }
-
-    return <TableHeadWrapper>{content}</TableHeadWrapper>;
 };
 
 export default FolderTable;

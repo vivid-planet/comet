@@ -392,6 +392,16 @@ IBlockFactoryOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, any, 
                 return [];
             }
         },
+
+        dynamicDisplayName: (state) => {
+            const { block } = getActiveBlock(state);
+
+            if (block != null) {
+                return block.displayName;
+            } else {
+                return displayName;
+            }
+        },
     };
     return OneOfBlock;
 };

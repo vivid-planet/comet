@@ -21,8 +21,10 @@ module.exports = {
         "@calm/react-intl/missing-formatted-message": ["error", { enforceLabels: true }],
         "formatjs/enforce-default-message": "error",
         "formatjs/enforce-placeholders": "error",
+        "react/self-closing-comp": "error",
         "react/display-name": "off",
         "react/prop-types": "off",
+        "react/jsx-curly-brace-presence": "error",
         "no-restricted-imports": [
             "error",
             {

@@ -40,7 +40,7 @@ const AppMenu: React.FC = () => {
                 primary="Comet Admin"
                 secondary="View on GitHub"
                 target="_blank"
-                href="https://github.com/vivid-planet/comet-admin"
+                href="https://github.com/vivid-planet/comet"
                 icon={<CometColor />}
                 secondaryAction={<LinkExternal />}
             />
@@ -60,7 +60,7 @@ const Content = ({ children }: { children: string }) => (
     <MainContent>
         <Card variant="outlined">
             <CardContent>
-                <Typography variant={"h1"} gutterBottom>
+                <Typography variant="h1" gutterBottom>
                     {children}
                 </Typography>
                 <Typography>The navigation is permanent by default and is temporary below {permanentMenuMinWidth}px.</Typography>

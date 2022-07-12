@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
 
@@ -12,19 +12,13 @@ import {
     FilesResolver,
     FoldersResolver,
     PageTreeNodeBase,
+    PageTreeNodeCategory,
 } from "./src";
-
-export enum ExamplePageTreeNodeCategory {
-    MainNavigation = "main-navigation",
-    Other = "other",
-}
-
-registerEnumType(ExamplePageTreeNodeCategory, { name: "PageTreeNodeCategory" });
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
-    @Field(() => ExamplePageTreeNodeCategory)
-    category: ExamplePageTreeNodeCategory;
+    @Field(() => String)
+    category: PageTreeNodeCategory;
 }
 
 @ObjectType({
@@ -47,7 +41,6 @@ async function generateSchema(): Promise<void> {
     const pageTreeResolver = createPageTreeResolver({
         PageTreeNode,
         Documents: [Page],
-        Category: ExamplePageTreeNodeCategory,
     }); // no scope
 
     const schema = await gqlSchemaFactory.create([

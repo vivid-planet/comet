@@ -9,7 +9,6 @@ module.exports = {
         "simple-import-sort/exports": "error",
         "simple-import-sort/imports": "error",
         "unused-imports/no-unused-imports": "error",
-        "no-duplicate-imports": "error",
         "no-console": ["error", { allow: ["warn", "error"] }],
     },
     overrides: [

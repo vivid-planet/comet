@@ -1,10 +1,6 @@
 name: CI
 
 on:
-    push:
-        branches:
-            - main
-            - next
     pull_request:
         types:
             - opened
@@ -36,6 +32,9 @@ jobs:
                   registry-url: "https://registry.npmjs.org"
                   cache: "yarn" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
 
+            - name: Install NPM 7.x
+              run: npm install -g npm@7.19
+
             - run: yarn install
 
             - name: Copy schema files
@@ -44,17 +43,21 @@ jobs:
                   cp packages/api/cms-api/schema.gql packages/admin/cms-admin/schema.gql
                   cp packages/api/cms-api/block-meta.json packages/admin/cms-admin/block-meta.json
                   cp packages/api/cms-api/block-meta.json packages/site/cms-site/block-meta.json
+                  cp demo/api/block-meta.json demo/admin/block-meta.json
+                  cp demo/api/block-meta.json demo/site/block-meta.json
+                  cp demo/api/schema.gql demo/admin/schema.gql
+                  cp demo/api/schema.gql demo/site/schema.gql
 
             - name: Build
-              run: yarn build
+              run: yarn build:lib
 
             - name: Lint
               run: |
-                  yarn exec prettier -c .
-                  yarn lint
+                  yarn exec prettier --check "./*.{js,json,md,yml}"
+                  yarn lint:lib
 
             - name: Test
-              run: yarn test
+              run: yarn test:lib
 
             - name: Test Report
               uses: dorny/test-reporter@v1
@@ -68,7 +71,7 @@ jobs:
               if: ${{ github.ref_name == 'main' }}
               run: |
                   yarn intl:extract
-                  git clone https://github.com/vivid-planet/comet-admin-lang.git
+                  git clone https://github.com/vivid-planet/comet-lang.git
                   cp -r lang/* comet-admin-lang/
                   cd comet-admin-lang
                   git add .
@@ -76,7 +79,7 @@ jobs:
 
             - name: Publish premajor canary release
               if: |
-                  github.event.label.name != 'skip-release' &&
+                  !contains( github.event.pull_request.labels.*.name, 'skip-release') &&
                   github.base_ref == 'next' &&
                   github.event.pull_request.merged == true
               run: yarn publish:release premajor --no-push --no-git-tag-version --canary --preid=canary.${{ github.run_number }} --dist-tag=canary --yes
@@ -85,7 +88,7 @@ jobs:
 
             - name: Publish stable minor release
               if: |
-                  github.event.label.name != 'skip-release' &&
+                  !contains( github.event.pull_request.labels.*.name, 'skip-release') &&
                   github.base_ref == 'main' &&
                   github.event.pull_request.merged == true
               run: yarn publish:release minor --yes

@@ -9,7 +9,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/vivid-planet/comet-admin",
+        "url": "https://github.com/vivid-planet/comet",
         "directory": "packages/site/cms-site"
     },
     "publishConfig": {
@@ -18,11 +18,11 @@
     },
     "scripts": {
         "build": "rimraf lib/ && npm run generate-block-types && tsc",
-        "dev": "yarn generate-block-types && tsc --watch",
+        "dev": "yarn generate-block-types && tsc --watch --preserveWatchOutput",
         "lint": "yarn generate-block-types && run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx,.json,.md src/",
         "lint:tsc": "tsc --noEmit",
-        "generate-block-types": "ts-node generate-block-types.ts",
+        "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"yarn generate-block-types\""
     },
     "dependencies": {
@@ -32,20 +32,20 @@
         "use-debounce": "^6.0.0"
     },
     "peerDependencies": {
-        "next": "^11.0.0",
+        "next": "^12.0.0",
         "react": "^17.0.0",
         "react-dom": "^17.0.0",
         "styled-components": "^5.0.0"
     },
     "devDependencies": {
+        "@comet/cli": "^2.0.0",
         "@comet/eslint-config": "^2.0.0",
         "@gitbeaker/node": "^34.0.0",
         "@types/styled-components": "^5.0.0",
         "chokidar-cli": "^2.0.0",
         "eslint": "^8.0.0",
-        "next": "^11.0.0",
+        "next": "^12.0.0",
         "prettier": "^2.0.0",
-        "ts-node": "^9.0.0",
         "typescript": "^4.0.0",
         "yarn-run-all": "^3.0.0"
     },

@@ -11,10 +11,10 @@ import fetch from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
-import { SortInput } from "src/common/sorting/sort.input";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
+import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
@@ -24,7 +24,6 @@ import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { FileArgs } from "./dto/file.args";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
-import { FileCategory } from "./dto/file-type.enum";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { File } from "./entities/file.entity";
 import { FileImage } from "./entities/file-image.entity";
@@ -42,8 +41,8 @@ export const withFilesSelect = (
         contentHash?: string;
         archived?: boolean;
         mimetypes?: string[];
-        category?: FileCategory;
-        sort?: SortInput;
+        sortColumnName?: string;
+        sortDirection?: SortDirection;
     },
 ): QueryBuilder<File> => {
     if (args.query) {
@@ -63,24 +62,11 @@ export const withFilesSelect = (
     if (args.mimetypes !== undefined) {
         qb.andWhere({ mimetype: { $in: args.mimetypes } });
     }
-    if (args.category !== undefined) {
-        if (args.category === FileCategory.SVG_IMAGE) {
-            qb.andWhere("file.mimetype = 'image/svg+xml'");
-        } else if (args.category === FileCategory.PIXEL_IMAGE) {
-            qb.andWhere("file.mimetype LIKE 'image/%' AND file.mimetype != 'image/svg+xml'");
-        } else if (args.category === FileCategory.AUDIO) {
-            qb.andWhere("file.mimetype LIKE 'audio/%'");
-        } else if (args.category === FileCategory.VIDEO) {
-            qb.andWhere("file.mimetype LIKE 'video/%'");
-        } else {
-            qb.andWhere("file.mimetype NOT LIKE 'audio/%' AND file.mimetype NOT LIKE 'video/%' AND file.mimetype NOT LIKE 'image/%'");
-        }
-    }
 
     if (args.imageId) qb.andWhere({ image: { id: args.imageId } });
 
-    if (args.sort) {
-        qb.orderBy({ [`file.${args.sort.columnName}`]: args.sort.direction });
+    if (args.sortColumnName && args.sortDirection) {
+        qb.orderBy({ [`file.${args.sortColumnName}`]: args.sortDirection });
     }
 
     return qb;
@@ -110,16 +96,16 @@ export class FilesService {
             .leftJoinAndSelect("file.folder", "folder");
     }
 
-    async findAll({ folderId, showArchived, filter, sort }: FileArgs): Promise<File[]> {
+    async findAll({ folderId, includeArchived, filter, sortColumnName, sortDirection }: FileArgs): Promise<File[]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
 
         return withFilesSelect(this.selectQueryBuilder(), {
-            archived: !showArchived ? false : undefined,
+            archived: !includeArchived ? false : undefined,
             folderId: !isSearching ? folderId || null : undefined,
             mimetypes: filter?.mimetypes,
-            category: filter?.category,
             query: filter?.searchText,
-            sort: sort,
+            sortColumnName,
+            sortDirection,
         }).getResult();
     }
 
@@ -171,6 +157,17 @@ export class FilesService {
             folder: folderId !== undefined ? folder : entity.folder,
         });
         return this.save(file);
+    }
+
+    async moveBatch(fileIds: string[], targetFolderId?: string): Promise<File[]> {
+        const files = [];
+
+        for (const id of fileIds) {
+            const file = await this.updateById(id, { folderId: targetFolderId });
+            files.push(file);
+        }
+
+        return files;
     }
 
     async delete(id: string): Promise<boolean> {

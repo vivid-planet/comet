@@ -23,7 +23,7 @@ storiesOf("stories/components/Color Picker/Color Picker Customized", module).add
     };
 
     return (
-        <Grid container spacing={4}>
+        <Grid container spacing={4} sx={{ pb: 2 }}>
             <Grid item md={4}>
                 <FieldContainer label="Without Picker" fullWidth>
                     <ColorPicker

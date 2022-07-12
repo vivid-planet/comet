@@ -126,7 +126,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         </ListItemIcon>
                         <ListItemText primary={intl.formatMessage({ id: "comet.pages.pages.page.copyUrl", defaultMessage: "Copy Url" })} />
                     </MenuItem>,
-                    <MenuItemSeparator key={"separator2"} />,
+                    <MenuItemSeparator key="separator2" />,
                     <MenuItem
                         key="newSubpage"
                         onClick={() => {
@@ -140,7 +140,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         <ListItemText primary={intl.formatMessage({ id: "comet.pages.pages.page.newSubpage", defaultMessage: "New subpage" })} />
                     </MenuItem>,
                     <MovePageMenuItem key="movePage" page={props.page} onClose={handleClose} />,
-                    <MenuItemSeparator key={"separator3"} />,
+                    <MenuItemSeparator key="separator3" />,
                     <MenuItem
                         key="copy"
                         onClick={async () => {

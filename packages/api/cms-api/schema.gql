@@ -132,7 +132,7 @@ type PageTreeNode {
   visibility: PageTreeNodeVisibility!
   documentType: String!
   hideInMenu: Boolean!
-  category: PageTreeNodeCategory!
+  category: String!
   childNodes: [PageTreeNode!]!
   parentNode: PageTreeNode
   path: String!
@@ -144,11 +144,6 @@ enum PageTreeNodeVisibility {
   Published
   Unpublished
   Archived
-}
-
-enum PageTreeNodeCategory {
-  MainNavigation
-  Other
 }
 
 union PageContentUnion = Page
@@ -163,44 +158,26 @@ type Query {
   autoBuildStatus: AutoBuildStatus!
   redirects(query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
   redirect(id: ID!): Redirect!
-  damFilesList(folderId: ID, showArchived: Boolean, filter: FileFilterInput, sort: SortInput): [DamFile!]!
+  damFilesList(sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): [DamFile!]!
   damFile(id: ID!): DamFile!
   damFilenameAlreadyExists(folderId: String, filename: String!): Boolean!
-  damFoldersList(parentId: ID, showArchived: Boolean, filter: FolderFilterInput, sort: SortInput): [DamFolder!]!
+  damFoldersList(sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): [DamFolder!]!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(scope: PageTreeNodeScopeInput!, path: String!): PageTreeNode
-  pageTreeNodeList(category: PageTreeNodeCategory, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
+  pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(slug: String!, parentId: ID, scope: PageTreeNodeScopeInput!): SlugAvailability!
-}
-
-input FileFilterInput {
-  searchText: String
-
-  """Filter by file category. Is overruled by mimetypes."""
-  category: FileCategory
-
-  """Filter by mimetype. Overrules category."""
-  mimetypes: [String!]
-}
-
-enum FileCategory {
-  PIXEL_IMAGE
-  SVG_IMAGE
-  VIDEO
-  AUDIO
-  OTHER
-}
-
-input SortInput {
-  columnName: String!
-  direction: SortDirection = ASC
 }
 
 enum SortDirection {
   ASC
   DESC
+}
+
+input FileFilterInput {
+  searchText: String
+  mimetypes: [String!]
 }
 
 input FolderFilterInput {
@@ -224,18 +201,20 @@ type Mutation {
   updateRedirectActiveness(input: RedirectUpdateActivenessInput!, id: ID!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(input: UpdateDamFileInput!, id: ID!): DamFile!
+  moveDamFiles(targetFolderId: ID, fileIds: [ID!]!): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
   restoreDamFile(id: ID!): DamFile!
   deleteDamFile(id: ID!): Boolean!
   createDamFolder(input: CreateDamFolderInput!): DamFolder!
   updateDamFolder(input: UpdateDamFolderInput!, id: ID!): DamFolder!
+  moveDamFolders(targetFolderId: ID, folderIds: [ID!]!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
   updatePageTreeNode(input: PageTreeNodeUpdateInput!, id: ID!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(input: PageTreeNodeUpdateVisibilityInput!, id: ID!): PageTreeNode!
   updatePageTreeNodePosition(input: PageTreeNodeUpdatePositionInput!, id: ID!): PageTreeNode!
-  updatePageTreeNodeCategory(category: PageTreeNodeCategory!, id: ID!): PageTreeNode!
-  createPageTreeNode(category: PageTreeNodeCategory!, scope: PageTreeNodeScopeInput!, input: PageTreeNodeCreateInput!): PageTreeNode!
+  updatePageTreeNodeCategory(category: String!, id: ID!): PageTreeNode!
+  createPageTreeNode(category: String!, scope: PageTreeNodeScopeInput!, input: PageTreeNodeCreateInput!): PageTreeNode!
 }
 
 input CreateRedirectInput {

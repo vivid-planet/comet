@@ -30,7 +30,7 @@ const SampleTable: React.FunctionComponent = () => {
                 <Toolbar>
                     <ToolbarBackButton />
                     <ToolbarItem>
-                        <Typography variant={"h3"}>Sample Table</Typography>
+                        <Typography variant="h3">Sample Table</Typography>
                     </ToolbarItem>
                 </Toolbar>
             </Box>
@@ -54,7 +54,7 @@ const SampleTable: React.FunctionComponent = () => {
                             name: "actions",
                             render: (recipe) => (
                                 <IconButton onClick={() => stackApi.activatePage("edit", recipe.id)} size="large">
-                                    <Edit color={"primary"} />
+                                    <Edit color="primary" />
                                 </IconButton>
                             ),
                         },
@@ -76,12 +76,12 @@ const SampleForm: React.FunctionComponent = () => {
             <Toolbar>
                 <ToolbarBackButton />
                 <ToolbarItem>
-                    <Typography variant={"h3"}>Sample Form</Typography>
+                    <Typography variant="h3">Sample Form</Typography>
                 </ToolbarItem>
             </Toolbar>
             <MainContent>
                 <FinalForm
-                    mode={"edit"}
+                    mode="edit"
                     onSubmit={onSubmit}
                     onAfterSubmit={(values, form) => {
                         form.reset(values); //Reset values to new values so dirty state is correct after submitting
@@ -102,12 +102,12 @@ function Story() {
     return (
         <>
             <Switch>
-                <Stack topLevelTitle={"Sample"}>
+                <Stack topLevelTitle="Sample">
                     <StackSwitch initialPage="table">
                         <StackPage name="table">
                             <SampleTable />
                         </StackPage>
-                        <StackPage name="edit" title={"Edit"}>
+                        <StackPage name="edit" title="Edit">
                             <SampleForm />
                         </StackPage>
                     </StackSwitch>
