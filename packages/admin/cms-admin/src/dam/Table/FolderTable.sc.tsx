@@ -6,6 +6,12 @@ export const TableWrapper = styled("div")`
     justify-content: flex-start;
     min-height: 80vh;
     margin-bottom: 70px;
+
+    & .CometAdminTableQuery-root {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
 `;
 
 interface TableHoverHighlightProps {
