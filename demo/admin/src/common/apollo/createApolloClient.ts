@@ -1,4 +1,5 @@
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, PossibleTypesMap } from "@apollo/client";
+import { createErrorDialogApolloLink } from "@comet/admin";
 import { includeInvisibleContentContext } from "@comet/cms-admin";
 import { AuthConfiguration, createAuthorizationLink, RefreshHandler } from "@comet/react-app-auth";
 import config from "@src/config";
@@ -14,7 +15,12 @@ export const createApolloClient = ({ authorizationConfig, refreshHandler }: Crea
         uri: `${config.API_URL}/graphql`,
     });
 
-    const link = ApolloLink.from([includeInvisibleContentContext, createAuthorizationLink({ authorizationConfig, refreshHandler }), httpLink]);
+    const link = ApolloLink.from([
+        createErrorDialogApolloLink(),
+        includeInvisibleContentContext,
+        createAuthorizationLink({ authorizationConfig, refreshHandler }),
+        httpLink,
+    ]);
 
     const possibleTypes: PossibleTypesMap = {};
     for (const type of fragmentTypes.__schema.types) {
