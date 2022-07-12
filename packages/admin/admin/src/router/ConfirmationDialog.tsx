@@ -1,4 +1,4 @@
-import { Delete, Save, Warning } from "@comet/admin-icons";
+import { Delete, Edit, Save, Warning } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Theme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -29,6 +29,12 @@ export const WarningIcon = styled(Warning)`
 
 export const WarningTextWrapper = styled("div")`
     padding-left: 10px;
+`;
+
+export const SaveButton = styled(Button)`
+    // TODO: without !important
+    margin-left: 16px !important;
+    min-width: 120px;
 `;
 
 interface Props {
@@ -62,7 +68,7 @@ export function RouterConfirmationDialog({ warning, message, handleClose, isOpen
                 )}
             </DialogContent>
             <DialogActions>
-                <CancelButton variant="outlined" onClick={() => handleClose(PromptAction.Cancel)} startIcon={null}>
+                <CancelButton onClick={() => handleClose(PromptAction.Cancel)} startIcon={<Edit />}>
                     <FormattedMessage id="cometAdmin.generic.continueEditing" defaultMessage="Continue editing" />
                 </CancelButton>
                 <ToolbarFillSpace />
@@ -70,9 +76,9 @@ export function RouterConfirmationDialog({ warning, message, handleClose, isOpen
                     <FormattedMessage id="cometAdmin.generic.discard" defaultMessage="Discard" />
                 </Button>
                 {showSaveButton && (
-                    <Button startIcon={<Save />} color="primary" variant="contained" onClick={() => handleClose(PromptAction.Save)}>
+                    <SaveButton startIcon={<Save />} color="primary" variant="contained" onClick={() => handleClose(PromptAction.Save)}>
                         <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
-                    </Button>
+                    </SaveButton>
                 )}
             </DialogActions>
         </Dialog>
