@@ -1,5 +1,7 @@
 import { gql } from "@apollo/client";
 import { Selected, Stack, StackPage, StackSwitch } from "@comet/admin";
+import { LinearProgress } from "@mui/material";
+import { GQLEditMainMenuItemFragment } from "@src/graphql.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
@@ -27,8 +29,13 @@ const MainMenu: React.FunctionComponent = () => {
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.mainMenu.editMenuItem", defaultMessage: "Edit menu item" })}>
                     {(selectedId) => (
-                        <Selected selectionMode="edit" selectedId={selectedId} query={MAIN_MENU_ITEM_QUERY} dataAccessor="mainMenuItem">
-                            {(item) => <EditMainMenuItem item={item} />}
+                        <Selected<GQLEditMainMenuItemFragment>
+                            selectionMode="edit"
+                            selectedId={selectedId}
+                            query={MAIN_MENU_ITEM_QUERY}
+                            dataAccessor="mainMenuItem"
+                        >
+                            {(item) => (item === undefined ? <LinearProgress /> : <EditMainMenuItem item={item} />)}
                         </Selected>
                     )}
                 </StackPage>
