@@ -62,7 +62,9 @@ export function RouterConfirmationDialog({ warning, message, handleClose, isOpen
                 )}
             </DialogContent>
             <DialogActions>
-                <CancelButton onClick={() => handleClose(PromptAction.Cancel)} />
+                <CancelButton variant="outlined" onClick={() => handleClose(PromptAction.Cancel)} startIcon={null}>
+                    <FormattedMessage id="cometAdmin.generic.continueEditing" defaultMessage="Continue editing" />
+                </CancelButton>
                 <ToolbarFillSpace />
                 <Button startIcon={<Delete />} color="error" variant="contained" onClick={() => handleClose(PromptAction.Discard)}>
                     <FormattedMessage id="cometAdmin.generic.discard" defaultMessage="Discard" />
