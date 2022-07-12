@@ -1,4 +1,4 @@
-import { ObservableQuery, useApolloClient, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -14,11 +14,8 @@ import { useContentScope } from "../../contentScope/Provider";
 import {
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
-    GQLPagesQuery,
-    GQLPagesQueryVariables,
     GQLUpdatePageTreeNodePositionMutation,
     GQLUpdatePageTreeNodePositionMutationVariables,
-    namedOperations,
 } from "../../graphql.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
 import PageTreeRow, { DropTarget, PageTreeDragObject } from "./PageTreeRow";
@@ -63,42 +60,6 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     { pages, editDialogApi, toggleExpand, onSelectChanged, category, siteUrl },
     ref,
 ) => {
-    const client = useApolloClient();
-    const newPageIds = React.useRef<string[]>([]);
-
-    const queries = client.getObservableQueries();
-    const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.Pages) as
-        | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
-        | undefined;
-
-    React.useEffect(() => {
-        if (pagesQuery) {
-            client.cache.watch<GQLPagesQuery, GQLPagesQueryVariables>({
-                query: pagesQuery.query,
-                variables: pagesQuery.variables,
-                callback: (newPagesQuery, previousPagesQuery) => {
-                    if (newPagesQuery && previousPagesQuery) {
-                        const existingPageIds = previousPagesQuery.result?.pages.map((page) => page.id) ?? [];
-                        newPageIds.current = newPagesQuery.result?.pages.map((page) => page.id).filter((id) => !existingPageIds.includes(id)) ?? [];
-
-                        setTimeout(() => {
-                            // reset newPageIds to prevent slideIn on every rerender
-                            newPageIds.current = [];
-                        }, 0);
-                    }
-                },
-                optimistic: true,
-            });
-        }
-    }, [client.cache, pagesQuery]);
-
-    React.useEffect(() => {
-        if (newPageIds.current.length > 0) {
-            const index = pages.findIndex((page) => newPageIds.current.includes(page.id));
-            refList.current?.scrollToItem(index, "smart");
-        }
-    }, [pages]);
-
     const pageTreeService = React.useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
     const { scope } = useContentScope();
     const snackbarApi = useSnackbarApi();
@@ -207,9 +168,27 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     // expose this method to the public
     useImperativeHandle(ref, () => ({
         scrollToItem: (index: number, align?: Align) => {
-            refList.current?.scrollToItem(index, align);
+            refList.current?.scrollTo(index * 51 + 24);
         },
     }));
+
+    const previousPages = React.useRef<PageTreePage[] | undefined>(undefined);
+
+    React.useEffect(() => {
+        previousPages.current = pages;
+    }, [pages]);
+
+    let newPageIds: string[] = [];
+    if (previousPages.current && previousPages.current.length > 0) {
+        const existingPageIds = previousPages.current.map((page) => page.id) ?? [];
+        newPageIds = pages.map((page) => page.id).filter((id) => !existingPageIds.includes(id)) ?? [];
+
+        if (newPageIds.length > 0) {
+            const index = pages.findIndex((page) => newPageIds.includes(page.id));
+            refList.current?.scrollToItem(index, "smart");
+        }
+    }
+    // TODO: Fix: slideIn happens multiple times because newPageIds is never reset
 
     const propsForVirtualList = useDndWindowScroll();
 
@@ -243,7 +222,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                                     ...style,
                                                     top: `${parseFloat(String(style?.top)) + VIRTUAL_LIST_PADDING_SIZE}px`,
                                                 }}
-                                                slideIn={newPageIds.current.includes(page.id)}
+                                                slideIn={newPageIds?.includes(page.id)}
                                                 page={page}
                                                 prevPage={prevPage}
                                                 nextPage={nextPage}
