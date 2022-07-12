@@ -233,6 +233,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                     width={width}
                                     itemSize={51}
                                     overscanCount={1} // do not increase this for performance reasons
+                                    style={{ scrollBehavior: "smooth" }}
                                     innerElementType={VirtualListPadder}
                                     {...propsForVirtualList}
                                 >
