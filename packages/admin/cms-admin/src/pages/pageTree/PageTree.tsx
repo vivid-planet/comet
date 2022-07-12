@@ -67,28 +67,31 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     const newPageIds = React.useRef<string[]>([]);
 
     const queries = client.getObservableQueries();
-    const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.Pages) as
-        | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
-        | undefined;
 
-    if (pagesQuery) {
-        client.cache.watch<GQLPagesQuery, GQLPagesQueryVariables>({
-            query: pagesQuery.query,
-            variables: pagesQuery.variables,
-            callback: (diff, lastDiff) => {
-                if (diff && lastDiff) {
-                    const existingPages = lastDiff.result?.pages.map((page) => page.id) ?? [];
-                    newPageIds.current = diff.result?.pages.map((page) => page.id).filter((id) => !existingPages.includes(id)) ?? [];
+    React.useEffect(() => {
+        const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.Pages) as
+            | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
+            | undefined;
 
-                    setTimeout(() => {
-                        // reset newPageIds to prevent slideIn on every rerender
-                        newPageIds.current = [];
-                    }, 0);
-                }
-            },
-            optimistic: true,
-        });
-    }
+        if (pagesQuery) {
+            client.cache.watch<GQLPagesQuery, GQLPagesQueryVariables>({
+                query: pagesQuery.query,
+                variables: pagesQuery.variables,
+                callback: (newPagesQuery, previousPagesQuery) => {
+                    if (newPagesQuery && previousPagesQuery) {
+                        const existingPageIds = previousPagesQuery.result?.pages.map((page) => page.id) ?? [];
+                        newPageIds.current = newPagesQuery.result?.pages.map((page) => page.id).filter((id) => !existingPageIds.includes(id)) ?? [];
+
+                        setTimeout(() => {
+                            // reset newPageIds to prevent slideIn on every rerender
+                            newPageIds.current = [];
+                        }, 0);
+                    }
+                },
+                optimistic: true,
+            });
+        }
+    }, [client.cache, queries]);
 
     const pageTreeService = React.useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
     const { scope } = useContentScope();
