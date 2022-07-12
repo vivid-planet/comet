@@ -75,6 +75,9 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
                 borderColor: palette.secondary.dark,
             },
         },
+        containedError: {
+            color: "#fff",
+        },
         outlined: {
             color: palette.grey[900],
             borderWidth: 1,
