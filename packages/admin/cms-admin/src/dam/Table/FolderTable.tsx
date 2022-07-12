@@ -266,6 +266,12 @@ const FolderTable = ({
 
     const damMultiselectApi = useDamMultiselect({ totalItemCount: tableData?.totalCount ?? 0 });
 
+    const fileRootProps = getFileRootProps({
+        onClick: (event) => {
+            event.stopPropagation();
+        },
+    });
+
     return (
         <DamMultiselectContext.Provider value={damMultiselectApi}>
             <TableContainer>
@@ -295,7 +301,7 @@ const FolderTable = ({
                                 }}
                             />
 
-                            <sc.FilesTableWrapper className="CometFilesTableWrapper-root" {...getFileRootProps()}>
+                            <sc.FilesTableWrapper className="CometFilesTableWrapper-root" {...fileRootProps}>
                                 <Table<GQLDamFileTableFragment>
                                     hideTableHead
                                     totalCount={filesTableData?.length ?? 0}
