@@ -6,8 +6,8 @@ import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
 
 interface SvgImageBlockProps extends PropsWithData<SvgImageBlockData> {
-    width?: string | "auto";
-    height?: string | "auto";
+    width?: string | number | "auto";
+    height?: string | number | "auto";
 }
 
 export const SvgImageBlock = withPreview(
