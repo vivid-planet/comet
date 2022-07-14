@@ -1,6 +1,7 @@
 import { createTheme, Theme, ThemeOptions } from "@mui/material";
 import createPalette, { PaletteOptions } from "@mui/material/styles/createPalette";
 import createTypography, { TypographyOptions } from "@mui/material/styles/createTypography";
+import muiDefaultZIndex from "@mui/material/styles/zIndex";
 import { createSpacing } from "@mui/system";
 import { deepmerge } from "@mui/utils";
 
@@ -14,6 +15,7 @@ export const createCometTheme = ({
     typography: passedTypographyOptions = {},
     spacing: passedSpacingOptions = 5,
     components: passedComponentsOptions = {},
+    zIndex: passedZIndexOptions = {},
     ...restPassedOptions
 }: ThemeOptions | undefined = {}): Theme => {
     const paletteOptions: PaletteOptions = deepmerge<PaletteOptions>(cometPaletteOptions, passedPaletteOptions);
@@ -26,6 +28,11 @@ export const createCometTheme = ({
 
     const spacing = createSpacing(passedSpacingOptions);
 
+    const zIndex = {
+        ...muiDefaultZIndex,
+        ...passedZIndexOptions,
+    };
+
     const cometThemeOptions: ThemeOptions = {
         spacing: passedSpacingOptions,
         palette: paletteOptions,
@@ -34,7 +41,8 @@ export const createCometTheme = ({
             borderRadius: 2,
         },
         shadows,
-        components: getComponentsTheme(passedComponentsOptions, { palette, typography, spacing }),
+        zIndex,
+        components: getComponentsTheme(passedComponentsOptions, { palette, typography, spacing, zIndex }),
     };
 
     const themeOptions = deepmerge<ThemeOptions>(cometThemeOptions, restPassedOptions);

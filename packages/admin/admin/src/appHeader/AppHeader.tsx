@@ -14,7 +14,7 @@ interface AppHeaderProps extends AppBarProps {
 
 export type AppHeaderClassKey = AppBarClassKey;
 
-const styles = ({ palette }: Theme) => {
+const styles = ({ palette, zIndex }: Theme) => {
     return createStyles<AppHeaderClassKey, AppHeaderProps>({
         root: {
             backgroundColor: palette.grey["A400"],
