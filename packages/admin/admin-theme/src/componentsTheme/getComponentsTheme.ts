@@ -1,6 +1,7 @@
 import { ComponentNameToClassKey, ThemeOptions } from "@mui/material";
 import { Components, Palette } from "@mui/material/styles";
 import { Typography } from "@mui/material/styles/createTypography";
+import { ZIndex } from "@mui/material/styles/zIndex";
 import { Spacing } from "@mui/system";
 
 import { getMuiAppBar } from "./MuiAppBar";
@@ -41,6 +42,7 @@ type ThemeData = {
     palette: Palette;
     typography: Typography;
     spacing: Spacing;
+    zIndex: ZIndex;
 };
 
 export type GetMuiComponentTheme<ClassesName extends keyof ComponentNameToClassKey> = (
