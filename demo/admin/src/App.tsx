@@ -45,6 +45,7 @@ import { Link } from "./links/Link";
 import News from "./news/News";
 import MainMenu from "./pages/mainMenu/MainMenu";
 import { Page } from "./pages/Page";
+import { urlParamToCategory } from "./utils/pageTreeNodeCategoryMapping";
 
 const GlobalStyle = () => (
     <Global
@@ -150,33 +151,30 @@ class App extends React.Component {
                                                                                                 path={`${match.path}/project-snips/main-menu`}
                                                                                                 component={MainMenu}
                                                                                             />
-
                                                                                             <Route
-                                                                                                path={`${match.path}/pages/pagetree/main-navigation`}
-                                                                                                render={() => (
-                                                                                                    <PagesPage
-                                                                                                        path="/pages/pagetree/main-navigation"
-                                                                                                        allCategories={categories}
-                                                                                                        documentTypes={pageTreeDocumentTypes}
-                                                                                                        editPageNode={EditPageNode}
-                                                                                                        category="MainNavigation"
-                                                                                                    />
-                                                                                                )}
-                                                                                            />
+                                                                                                path={`${match.path}/pages/pagetree/:category`}
+                                                                                                render={({ match: { params } }) => {
+                                                                                                    const category = urlParamToCategory(
+                                                                                                        params.category,
+                                                                                                    );
 
-                                                                                            <Route
-                                                                                                path={`${match.path}/pages/pagetree/top-menu`}
-                                                                                                render={() => (
-                                                                                                    <PagesPage
-                                                                                                        path="/pages/pagetree/top-menu"
-                                                                                                        allCategories={categories}
-                                                                                                        documentTypes={pageTreeDocumentTypes}
-                                                                                                        editPageNode={EditPageNode}
-                                                                                                        category="TopMenu"
-                                                                                                    />
-                                                                                                )}
-                                                                                            />
+                                                                                                    if (category === undefined) {
+                                                                                                        return (
+                                                                                                            <Redirect to={`${match.url}/dashboard`} />
+                                                                                                        );
+                                                                                                    }
 
+                                                                                                    return (
+                                                                                                        <PagesPage
+                                                                                                            path={`/pages/pagetree/${params.category}`}
+                                                                                                            allCategories={categories}
+                                                                                                            documentTypes={pageTreeDocumentTypes}
+                                                                                                            editPageNode={EditPageNode}
+                                                                                                            category={category}
+                                                                                                        />
+                                                                                                    );
+                                                                                                }}
+                                                                                            />
                                                                                             <RouteWithErrorBoundary
                                                                                                 path={`${match.path}/structured-content/news`}
                                                                                                 component={News}
