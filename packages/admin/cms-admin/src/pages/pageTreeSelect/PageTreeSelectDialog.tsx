@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { Select, Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
+import { Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
