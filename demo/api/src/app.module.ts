@@ -14,6 +14,7 @@ import {
     PublicUploadModule,
     RedirectsModule,
 } from "@comet/cms-api";
+import { ApolloDriver } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { GraphQLModule } from "@nestjs/graphql";
@@ -23,6 +24,7 @@ import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
+import { Request } from "express";
 
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
@@ -40,12 +42,13 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
         ConfigModule,
         DbModule,
         GraphQLModule.forRootAsync({
+            driver: ApolloDriver,
             imports: [ConfigModule, BlocksModule],
             useFactory: async (config: ConfigType<typeof configNS>, blocksTransformerService: BlocksTransformerService) => ({
                 debug: config.debug,
                 playground: config.debug,
                 autoSchemaFile: "schema.gql",
-                context: ({ req }) => ({ ...req }),
+                context: ({ req }: { req: Request }) => ({ ...req }),
                 cors: {
                     credentials: true,
                     origin: config.CORS_ALLOWED_ORIGINS.split(",").map((val: string) => new RegExp(val)),

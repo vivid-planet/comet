@@ -26,7 +26,7 @@ type DamFileImage {
   exif: JSONObject
   dominantColor: String
   cropArea: ImageCropArea!
-  url(height: Int!, width: Int!): String
+  url(width: Int!, height: Int!): String
 }
 
 """
@@ -267,14 +267,14 @@ type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   pageTreeNode(id: ID!): PageTreeNode
-  pageTreeNodeByPath(scope: PageTreeNodeScopeInput!, path: String!): PageTreeNode
-  pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
-  pageTreeNodeSlugAvailable(slug: String!, parentId: ID, scope: PageTreeNodeScopeInput!): SlugAvailability!
+  pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
+  pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   redirects(query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
   redirect(id: ID!): Redirect!
   damFilesList(sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): [DamFile!]!
   damFile(id: ID!): DamFile!
-  damFilenameAlreadyExists(folderId: String, filename: String!): Boolean!
+  damFilenameAlreadyExists(filename: String!, folderId: String): Boolean!
   damFoldersList(sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): [DamFolder!]!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
@@ -286,7 +286,7 @@ type Query {
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
-  pageTreeNodeForPredefinedPage(scope: PageTreeNodeScopeInput!, type: String!): PageTreeNode
+  pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
 }
 
 enum SortDirection {
@@ -310,35 +310,35 @@ input FolderFilterInput {
 }
 
 type Mutation {
-  savePage(attachedPageTreeNodeId: ID, lastUpdatedAt: DateTime, input: PageInput!, pageId: ID!): Page!
-  saveLink(attachedPageTreeNodeId: ID, lastUpdatedAt: DateTime, input: LinkInput!, linkId: ID!): Link!
+  savePage(pageId: ID!, input: PageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Page!
+  saveLink(linkId: ID!, input: LinkInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Link!
   createBuild: Boolean!
-  updatePageTreeNode(input: PageTreeNodeUpdateInput!, id: ID!): PageTreeNode!
+  updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
-  updatePageTreeNodeVisibility(input: PageTreeNodeUpdateVisibilityInput!, id: ID!): PageTreeNode!
-  updatePageTreeNodePosition(input: PageTreeNodeUpdatePositionInput!, id: ID!): PageTreeNode!
-  updatePageTreeNodeCategory(category: String!, id: ID!): PageTreeNode!
-  createPageTreeNode(category: String!, scope: PageTreeNodeScopeInput!, input: PageTreeNodeCreateInput!): PageTreeNode!
+  updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
+  updatePageTreeNodePosition(id: ID!, input: PageTreeNodeUpdatePositionInput!): PageTreeNode!
+  updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
+  createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
   createRedirect(input: RedirectInput!): Redirect!
-  updateRedirect(lastUpdatedAt: DateTime, input: RedirectInput!, id: ID!): Redirect!
-  updateRedirectActiveness(input: RedirectUpdateActivenessInput!, id: ID!): Redirect!
+  updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
+  updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   deleteRedirect(id: ID!): Boolean!
-  updateDamFile(input: UpdateDamFileInput!, id: ID!): DamFile!
-  moveDamFiles(targetFolderId: ID, fileIds: [ID!]!): [DamFile!]!
+  updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
+  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
   restoreDamFile(id: ID!): DamFile!
   deleteDamFile(id: ID!): Boolean!
   createDamFolder(input: CreateDamFolderInput!): DamFolder!
-  updateDamFolder(input: UpdateDamFolderInput!, id: ID!): DamFolder!
-  moveDamFolders(targetFolderId: ID, folderIds: [ID!]!): [DamFolder!]!
+  updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
+  moveDamFolders(folderIds: [ID!]!, targetFolderId: ID): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
-  createNews(input: NewsInput!, scope: NewsContentScopeInput!): News!
-  updateNews(lastUpdatedAt: DateTime, input: NewsInput!, id: ID!): News!
-  updateNewsVisibility(visible: Boolean!, id: ID!): News!
+  createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
+  updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!
+  updateNewsVisibility(id: ID!, visible: Boolean!): News!
   deleteNews(id: ID!): Boolean!
-  updateMainMenuItem(lastUpdatedAt: DateTime, input: MainMenuItemInput!, pageTreeNodeId: ID!): MainMenuItem!
-  saveFooter(lastUpdatedAt: DateTime, input: FooterInput!): Footer!
-  savePredefinedPage(attachedPageTreeNodeId: ID, lastUpdatedAt: DateTime, input: PredefinedPageInput!, id: ID!): PredefinedPage!
+  updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
+  saveFooter(input: FooterInput!, lastUpdatedAt: DateTime): Footer!
+  savePredefinedPage(id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): PredefinedPage!
 }
 
 input PageInput {
