@@ -53,7 +53,6 @@ const Root = styled("div")`
 
 const Tabs = styled(MuiTabs)`
     background-color: ${({ theme }) => theme.palette.background.default};
-    max-width: 640px;
 `;
 
 const Tab = styled(MuiTab)<TabProps & LinkProps>`
