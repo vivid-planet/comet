@@ -12,7 +12,7 @@ export const styles = ({ zIndex }: Theme) => {
             flexWrap: "nowrap",
         },
         header: {
-            zIndex: zIndex.drawer + 51, // Above the MuiDrawer-root / CometAdminAppHeader-root
+            zIndex: zIndex.drawer - 10,
         },
         contentWrapper: {
             flexGrow: 1,
