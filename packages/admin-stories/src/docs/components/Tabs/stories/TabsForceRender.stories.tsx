@@ -2,10 +2,10 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
-    RouterTab,
-    RouterTabs,
     SaveButton,
     SplitButton,
+    Tab,
+    Tabs,
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
@@ -14,20 +14,16 @@ import {
 import { Card, CardContent } from "@material-ui/core";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { useLocation } from "react-router";
 
 import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../../../story-router.decorator";
 
-storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
+storiesOf("stories/components/Tabs/Tabs forceRender", module)
     .addDecorator(storyRouterDecorator())
     .addDecorator(apolloStoryDecorator())
-    .add("RouterTabs in Form with forceRender", () => {
-        const location = useLocation();
-
+    .add("Tabs in Form with forceRender", () => {
         return (
             <div>
-                <p>Location: {location.pathname}</p>
                 <FinalForm
                     mode="edit"
                     onSubmit={(values: any) => {
@@ -49,7 +45,7 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                     <ToolbarActions>
                                         <SplitButton
                                             disabled={pristine || hasValidationErrors || submitting}
-                                            localStorageKey={"routertabs-with-forms-save"}
+                                            localStorageKey={"tabs-with-forms-save"}
                                         >
                                             <SaveButton
                                                 color={"primary"}
@@ -77,22 +73,22 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                         </SplitButton>
                                     </ToolbarActions>
                                 </Toolbar>
-                                <RouterTabs>
-                                    <RouterTab label="Tab 1" path="" forceRender>
+                                <Tabs>
+                                    <Tab label="Tab 1" forceRender>
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Foo" name="foo" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
-                                    </RouterTab>
-                                    <RouterTab label="Tab 2" path="/tab2" forceRender>
+                                    </Tab>
+                                    <Tab label="Tab 2" forceRender>
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Bar" name="bar" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
-                                    </RouterTab>
-                                </RouterTabs>
+                                    </Tab>
+                                </Tabs>
                             </>
                         );
                     }}
@@ -100,13 +96,10 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
             </div>
         );
     })
-    .add("RouterTabs in Form without forceRender", () => {
+    .add("Tabs in Form without forceRender", () => {
         // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
-        const location = useLocation();
-
         return (
             <div>
-                <p>Location: {location.pathname}</p>
                 <FinalForm
                     mode="edit"
                     onSubmit={(values: any) => {
@@ -128,7 +121,7 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                     <ToolbarActions>
                                         <SplitButton
                                             disabled={pristine || hasValidationErrors || submitting}
-                                            localStorageKey={"routertabs-with-forms-save"}
+                                            localStorageKey={"tabs-with-forms-save"}
                                         >
                                             <SaveButton
                                                 color={"primary"}
@@ -156,22 +149,22 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                         </SplitButton>
                                     </ToolbarActions>
                                 </Toolbar>
-                                <RouterTabs>
-                                    <RouterTab label="Tab 1" path="">
+                                <Tabs>
+                                    <Tab label="Tab 1">
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Foo" name="foo" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
-                                    </RouterTab>
-                                    <RouterTab label="Tab 2" path="/tab2">
+                                    </Tab>
+                                    <Tab label="Tab 2">
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Bar" name="bar" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
-                                    </RouterTab>
-                                </RouterTabs>
+                                    </Tab>
+                                </Tabs>
                             </>
                         );
                     }}
@@ -179,14 +172,11 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
             </div>
         );
     })
-    .add("Form in RouterTabs with forceRender", () => {
-        const location = useLocation();
-
+    .add("Form in Tabs with forceRender", () => {
         return (
             <div>
-                <p>Location: {location.pathname}</p>
-                <RouterTabs>
-                    <RouterTab label="Form" path="" forceRender>
+                <Tabs>
+                    <Tab label="Form" forceRender>
                         <Card variant="outlined">
                             <CardContent>
                                 <FinalForm
@@ -199,25 +189,22 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                 </FinalForm>
                             </CardContent>
                         </Card>
-                    </RouterTab>
-                    <RouterTab label="Tab 2" path="/tab2">
+                    </Tab>
+                    <Tab label="Tab 2">
                         <Card variant="outlined">
                             <CardContent>Tab 2</CardContent>
                         </Card>
-                    </RouterTab>
-                </RouterTabs>
+                    </Tab>
+                </Tabs>
             </div>
         );
     })
-    .add("Form in RouterTabs without forceRender", () => {
+    .add("Form in Tabs without forceRender", () => {
         // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
-        const location = useLocation();
-
         return (
             <div>
-                <p>Location: {location.pathname}</p>
-                <RouterTabs>
-                    <RouterTab label="Form" path="">
+                <Tabs>
+                    <Tab label="Form">
                         <Card variant="outlined">
                             <CardContent>
                                 <FinalForm
@@ -230,13 +217,13 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                 </FinalForm>
                             </CardContent>
                         </Card>
-                    </RouterTab>
-                    <RouterTab label="Tab 2" path="/tab2">
+                    </Tab>
+                    <Tab label="Tab 2">
                         <Card variant="outlined">
                             <CardContent>Tab 2</CardContent>
                         </Card>
-                    </RouterTab>
-                </RouterTabs>
+                    </Tab>
+                </Tabs>
             </div>
         );
     });
