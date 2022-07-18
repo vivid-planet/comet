@@ -10,6 +10,7 @@ import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerClassKey, styles } from "./DatePicker.styles";
 import { DatePickerNavigation } from "./DatePickerNavigation";
+import { useDateFnsLocale } from "./helpers/DateFnsLocaleProvider";
 import { defaultMaxDate, defaultMinDate } from "./helpers/datePickerHelpers";
 
 type DatePickerComponentsProps = InputWithPopperProps["componentsProps"] & {
@@ -43,6 +44,7 @@ function DatePicker({
     const { calendar: calendarClass, ...inputWithPopperClasses } = classes;
     const { calendar: calendarProps, ...inputWithPopperComponentsProps } = componentsProps;
     const intl = useIntl();
+    const dateFnsLocale = useDateFnsLocale();
 
     return (
         <InputWithPopper
@@ -65,6 +67,7 @@ function DatePicker({
             {(closePopper) => (
                 <Calendar
                     className={calendarClass}
+                    locale={dateFnsLocale}
                     minDate={minDate}
                     maxDate={maxDate}
                     weekStartsOn={1}

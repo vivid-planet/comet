@@ -26,6 +26,7 @@
         "@storybook/addons": "^6.2.7",
         "@storybook/react": "^6.2.7",
         "apollo-link-rest": "^0.8.0-beta.0",
+        "date-fns": "^2.28.0",
         "faker": "^5.5.3",
         "final-form": "^4.16.1",
         "graphql-anywhere": "^4.2.7",

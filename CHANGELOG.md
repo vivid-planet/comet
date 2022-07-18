@@ -122,6 +122,16 @@ Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/g
 
 -   `@comet/admin-date-picker` has been renamed `@comet/admin-date-time`
 -   The date picker library used internally has been changed from [react-dates](https://github.com/react-dates/react-dates) to [react-date-range](https://github.com/hypeserver/react-date-range). Props specific to react-dates will no longer have any effect.
+-   The date-picker & date-range-picker components require a [date-fns locale](https://date-fns.org/v2.28.0/docs/Locale) that can be provided by wrapping the application with the `DateFnsLocaleProvider` and passing in the desired locale as the value.
+
+```tsx
+import { DateFnsLocaleProvider } from "@comet/admin-date-time";
+import { enUS } from "date-fns/locale";
+// ...
+<DateFnsLocaleProvider value={enUS}>
+    <App />
+</DateFnsLocaleProvider>;
+```
 
 ## @comet/admin-color-picker
 
