@@ -1,11 +1,10 @@
-import { Close, Delete, Save } from "@comet/admin-icons";
-import { Button, ComponentsOverrides, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Theme } from "@mui/material";
+import { Close, Delete, Save, Warning } from "@comet/admin-icons";
+import { Button, ComponentsOverrides, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Theme, Typography } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { RouterConfirmationDialogClassKey, styles } from "./ConfirmationDialog.styles";
-import { UnsavedChangesMessage } from "./UnsavedChangesMessage";
 
 export enum PromptAction {
     Cancel,
@@ -28,14 +27,23 @@ export function InternalRouterConfirmationDialog({
     classes,
 }: RouterConfirmationDialogProps & WithStyles<typeof styles>) {
     return (
-        <Dialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} className={classes.root}>
+        <Dialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} className={classes.dialog}>
             <DialogTitle>
                 <FormattedMessage id="cometAdmin.generic.unsavedChanges" defaultMessage="Unsaved Changes" />
                 <IconButton onClick={() => handleClose(PromptAction.Cancel)} className={classes.closeButton}>
                     <Close />
                 </IconButton>
             </DialogTitle>
-            <DialogContent>{message ?? <UnsavedChangesMessage />}</DialogContent>
+            <DialogContent>
+                {message ?? (
+                    <div className={classes.defaultMessageWrapper}>
+                        <Warning className={classes.defaultMessageWarningIcon} />
+                        <Typography className={classes.defaultMessageText}>
+                            <FormattedMessage id="cometAdmin.generic.doYouWantToSaveYourChanges" defaultMessage="Do you want to save your changes?" />
+                        </Typography>
+                    </div>
+                )}
+            </DialogContent>
             <DialogActions>
                 <Button
                     startIcon={<Delete />}
