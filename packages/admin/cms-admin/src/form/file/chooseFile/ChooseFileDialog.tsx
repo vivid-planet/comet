@@ -19,12 +19,10 @@ const FixedHeightDialog = styled(Dialog)`
 `;
 
 const StyledDialogTitle = styled(DialogTitle)`
-    & > .MuiTypography-root {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 `;
 
 const CloseButton = styled(IconButton)`
@@ -35,6 +33,7 @@ const CloseButton = styled(IconButton)`
 const TableRowButton = styled(Button)`
     padding: 0;
     justify-content: left;
+    color: ${({ theme }) => theme.palette.grey[600]};
 
     &:hover {
         background-color: transparent;
