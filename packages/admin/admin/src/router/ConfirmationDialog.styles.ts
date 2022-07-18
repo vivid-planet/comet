@@ -3,7 +3,7 @@ import { createStyles } from "@mui/styles";
 import { RouterConfirmationDialogProps } from "./ConfirmationDialog";
 
 export type RouterConfirmationDialogClassKey =
-    | "dialog"
+    | "root"
     | "closeButton"
     | "messageWrapper"
     | "messageWarningIcon"
@@ -14,7 +14,7 @@ export type RouterConfirmationDialogClassKey =
 
 export const styles = () => {
     return createStyles<RouterConfirmationDialogClassKey, RouterConfirmationDialogProps>({
-        dialog: {
+        root: {
             "& .MuiDialog-paper": {
                 maxWidth: "25vw",
             },

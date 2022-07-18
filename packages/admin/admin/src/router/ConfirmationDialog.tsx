@@ -27,7 +27,7 @@ export function InternalRouterConfirmationDialog({
     classes,
 }: RouterConfirmationDialogProps & WithStyles<typeof styles>) {
     return (
-        <Dialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} className={classes.dialog}>
+        <Dialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} className={classes.root}>
             <DialogTitle>
                 <FormattedMessage id="cometAdmin.generic.unsavedChanges" defaultMessage="Unsaved Changes" />
                 <IconButton onClick={() => handleClose(PromptAction.Cancel)} className={classes.closeButton}>
