@@ -1,4 +1,3 @@
-import { Select } from "@comet/admin";
 import {
     AdminComponentPaper,
     AdminComponentSection,
@@ -9,7 +8,7 @@ import {
     decomposeUpdateStateAction,
     withAdditionalBlockAttributes,
 } from "@comet/blocks-admin";
-import { FormControlLabel, MenuItem, Radio, RadioGroup } from "@mui/material";
+import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 

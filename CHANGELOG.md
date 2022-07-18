@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file. This projec
 
 -   EditDialog now displays loading and error states of a contained form automatically via its SaveButton
 
+### Incompatible Changes
+
+-   Removed the `Select` component, use MUIs `Select` instead.
+
 ### Bugfixes
 
 -   close the EditDialog after submitting a contained form via ENTER click

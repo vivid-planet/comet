@@ -1,10 +1,30 @@
+import { ChevronDown } from "@comet/admin-icons";
+import { InputAdornment, InputBase } from "@mui/material";
+import * as React from "react";
+
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiSelect: GetMuiComponentTheme<"MuiSelect"> = (component, { palette }) => ({
+type IconProps = {
+    className?: string;
+};
+
+const Icon = ({ className }: IconProps) => (
+    <InputAdornment position="end" className={className}>
+        <ChevronDown />
+    </InputAdornment>
+);
+
+export const getMuiSelect: GetMuiComponentTheme<"MuiSelect"> = (component, { palette, spacing }) => ({
     ...component,
+    defaultProps: {
+        IconComponent: Icon,
+        input: <InputBase sx={{ paddingRight: spacing(2) }} />,
+        ...component?.defaultProps,
+    },
     styleOverrides: mergeOverrideStyles<"MuiSelect">(component?.styleOverrides, {
         select: {
+            height: 38,
             paddingRight: 32,
 
             "&:focus": {

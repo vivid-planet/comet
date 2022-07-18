@@ -1,10 +1,9 @@
-import { CircularProgress, MenuItem, SelectProps } from "@mui/material";
+import { CircularProgress, MenuItem, Select, SelectProps } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
-import { Select } from "./Select";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     getOptionSelected?: (option: T, value: T) => boolean;
@@ -60,7 +59,7 @@ export const FinalFormSelect = <T,>({
         <Select {...rest} endAdornment={selectEndAdornment} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
             {options.length === 0 && (loading || value) && (
                 <MenuItem value={value as any} key={JSON.stringify(value)}>
-                    {loading ? <CircularProgress size="20px" style={{ marginLeft: "16px" }} /> : getOptionLabel(value)}
+                    {loading ? <CircularProgress size={20} /> : getOptionLabel(value)}
                 </MenuItem>
             )}
             {options.map((option: T) => (

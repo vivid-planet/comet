@@ -65,7 +65,6 @@ export { FinalFormSearchTextField, FinalFormSearchTextFieldProps } from "./form/
 export { FinalFormSelect, FinalFormSelectProps } from "./form/FinalFormSelect";
 export { FormSection, FormSectionClassKey, FormSectionProps } from "./form/FormSection";
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
-export { Select } from "./form/Select";
 export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
 export { PrettyBytes } from "./helpers/PrettyBytes";
