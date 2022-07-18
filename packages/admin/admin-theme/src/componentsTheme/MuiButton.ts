@@ -93,6 +93,10 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
                 borderColor: palette.grey[200],
             },
         },
+        outlinedError: {
+            color: palette.error.main,
+            borderColor: palette.error.main,
+        },
         startIcon: {
             marginLeft: 0,
             position: "relative",
