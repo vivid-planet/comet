@@ -130,8 +130,8 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                     message={(location) => {
                         if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
                         return intl.formatMessage({
-                            id: "comet.editPage.discardChanges",
-                            defaultMessage: "Discard unsaved changes?",
+                            id: "comet.generic.doYouWantToSaveYourChanges",
+                            defaultMessage: "Do you want to save your changes?",
                         });
                     }}
                     saveAction={handleSaveAction}

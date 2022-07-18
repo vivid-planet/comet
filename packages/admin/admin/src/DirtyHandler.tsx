@@ -17,8 +17,8 @@ type Bindings = IBinding[];
 
 const messages = defineMessages({
     saveChanges: {
-        id: "cometAdmin.dirtyHandler.yourChangesWillBeLost",
-        defaultMessage: "Your changes will be lost if you don't save them.",
+        id: "cometAdmin.generic.doYouWantToSaveYourChanges",
+        defaultMessage: "Do you want to save your changes?",
         description: "Prompt to save unsaved changes",
     },
 });

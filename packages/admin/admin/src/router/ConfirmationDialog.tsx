@@ -35,14 +35,14 @@ export function InternalRouterConfirmationDialog({
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-                {message ?? (
-                    <div className={classes.defaultMessageWrapper}>
-                        <Warning className={classes.defaultMessageWarningIcon} />
-                        <Typography className={classes.defaultMessageText}>
+                <div className={classes.messageWrapper}>
+                    <Warning className={classes.messageWarningIcon} />
+                    <Typography className={classes.messageText}>
+                        {message ?? (
                             <FormattedMessage id="cometAdmin.generic.doYouWantToSaveYourChanges" defaultMessage="Do you want to save your changes?" />
-                        </Typography>
-                    </div>
-                )}
+                        )}
+                    </Typography>
+                </div>
             </DialogContent>
             <DialogActions>
                 <Button

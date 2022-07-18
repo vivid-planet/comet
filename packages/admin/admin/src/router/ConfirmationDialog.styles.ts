@@ -5,9 +5,9 @@ import { RouterConfirmationDialogProps } from "./ConfirmationDialog";
 export type RouterConfirmationDialogClassKey =
     | "dialog"
     | "closeButton"
-    | "defaultMessageWrapper"
-    | "defaultMessageWarningIcon"
-    | "defaultMessageText"
+    | "messageWrapper"
+    | "messageWarningIcon"
+    | "messageText"
     | "actionButton"
     | "saveButton"
     | "discardButton";
@@ -25,11 +25,11 @@ export const styles = () => {
             top: 14,
             color: "#fff",
         },
-        defaultMessageWrapper: {
+        messageWrapper: {
             display: "flex",
         },
-        defaultMessageWarningIcon: { fontSize: 20 },
-        defaultMessageText: { paddingLeft: 10 },
+        messageWarningIcon: { fontSize: 20 },
+        messageText: { paddingLeft: 10 },
         actionButton: {
             minWidth: "47%",
         },

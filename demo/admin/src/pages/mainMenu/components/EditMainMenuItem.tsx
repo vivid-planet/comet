@@ -169,8 +169,8 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                     message={(location) => {
                         if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
                         return intl.formatMessage({
-                            id: "comet.editMainMenuItem.discardChanges",
-                            defaultMessage: "Discard unsaved changes?",
+                            id: "comet.generic.doYouWantToSaveYourChanges",
+                            defaultMessage: "Do you want to save your changes?",
                         });
                     }}
                     saveAction={handleSaveAction}
