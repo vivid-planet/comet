@@ -42,7 +42,7 @@ export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";
 export { BlocksBlockFixturesGeneratorMap, createBlocksBlock } from "./blocks/factories/createBlocksBlock";
 export { createListBlock } from "./blocks/factories/createListBlock";
-export { createOneOfBlock } from "./blocks/factories/createOneOfBlock";
+export { createOneOfBlock, OneOfBlock } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
 export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates } from "./blocks/get-preview-image-url-templates";
 export { composeBlocks } from "./blocks/helpers/composeBlocks";

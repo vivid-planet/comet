@@ -1,6 +1,7 @@
 import { gql } from "graphql-request";
 import { Redirect } from "next/dist/lib/load-custom-routes";
 
+import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "../../src/blocks.generated";
 import { GQLRedirectsQuery } from "../../src/graphql.generated";
 import createGraphQLClient from "../../src/util/createGraphQLClient";
 
@@ -21,20 +22,9 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
     const query = gql`
         query Redirects {
             redirects(active: true) {
-                ...RedirectDetail
-            }
-        }
-        fragment RedirectDetail on Redirect {
-            id
-            sourceType
-            source
-            targetType
-            targetUrl
-            targetPageId
-            comment
-            targetPage {
-                id
-                path
+                sourceType
+                source
+                target
             }
         }
     `;
@@ -56,10 +46,24 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
             source = redirect.source;
         }
 
-        if (redirect.targetType === "extern" && redirect.targetUrl) {
-            destination = redirect.targetUrl;
-        } else if (redirect.targetType === "intern" && redirect.targetPage != null) {
-            destination = redirect.targetPage.path;
+        const target = redirect.target as RedirectsLinkBlockData;
+
+        if (target.block !== undefined) {
+            switch (target.block.type) {
+                case "internal":
+                    destination = (target.block.props as InternalLinkBlockData).targetPage?.path;
+                    break;
+
+                case "external":
+                    destination = (target.block.props as ExternalLinkBlockData).targetUrl;
+                    break;
+                case "news":
+                    if ((target.block.props as NewsLinkBlockData).id !== undefined) {
+                        destination = `/news/${(target.block.props as NewsLinkBlockData).id}`;
+                    }
+
+                    break;
+            }
         }
 
         if (source === destination) {

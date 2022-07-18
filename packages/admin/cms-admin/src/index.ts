@@ -65,7 +65,7 @@ export { SitePreview } from "./preview/SitePreview";
 export { SplitPreview } from "./preview/SplitPreview";
 export type { BlockPreviewApi } from "./preview/useBlockPreview";
 export { useBlockPreview } from "./preview/useBlockPreview";
-export { Redirects } from "./redirects/Redirects";
+export { createRedirectsPage } from "./redirects/createRedirectsPage";
 export { automaticRedirectsRefetchQueryDescription as automaticRedirectsRefetchQueryDescription__temporary__export } from "./redirects/RedirectsTable.gql";
 export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";

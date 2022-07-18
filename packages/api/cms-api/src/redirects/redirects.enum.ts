@@ -5,12 +5,6 @@ export enum RedirectSourceTypeValues {
 }
 registerEnumType(RedirectSourceTypeValues, { name: "RedirectSourceTypeValues" });
 
-export enum RedirectTargetTypeValues {
-    "intern" = "intern",
-    "extern" = "extern",
-}
-registerEnumType(RedirectTargetTypeValues, { name: "RedirectTargetTypeValues" });
-
 export enum RedirectGenerationType {
     "manual" = "manual",
     "automatic" = "automatic",

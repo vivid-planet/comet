@@ -18,17 +18,11 @@ export const redirectTableFragment = gql`
         active
         sourceType
         source
-        targetType
-        targetUrl
-        targetPageId
+        target
         comment
         generationType
-        targetPage {
-            ...RedirectTargetPage
-        }
         ...RedirectActiveness
     }
-    ${redirectTargetPageFragment}
     ${redirectActivenessFragment}
 `;
 

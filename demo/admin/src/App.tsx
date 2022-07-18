@@ -12,12 +12,12 @@ import {
     AuthorizationErrorPage,
     CmsBlockContextProvider,
     createHttpClient,
+    createRedirectsPage,
     DamConfigProvider,
     DamPage,
     LocaleProvider,
     PagesPage,
     Publisher,
-    Redirects,
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
@@ -42,6 +42,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 
 import { ComponentDemo } from "./common/ComponentDemo";
 import { Link } from "./links/Link";
+import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import News from "./news/News";
 import MainMenu from "./pages/mainMenu/MainMenu";
 import { Page } from "./pages/Page";
@@ -91,6 +92,8 @@ const pageTreeDocumentTypes = {
     Link,
     PredefinedPage,
 };
+
+const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock } });
 
 class App extends React.Component {
     public static render(baseEl: Element): void {
@@ -192,10 +195,7 @@ class App extends React.Component {
                                                                                             <RouteWithErrorBoundary
                                                                                                 path={`${match.path}/system/redirects`}
                                                                                                 render={() => (
-                                                                                                    <Redirects
-                                                                                                        redirectPathAfterChange="/system/redirects"
-                                                                                                        allCategories={categories}
-                                                                                                    />
+                                                                                                    <RedirectsPage redirectPathAfterChange="/system/redirects" />
                                                                                                 )}
                                                                                             />
 

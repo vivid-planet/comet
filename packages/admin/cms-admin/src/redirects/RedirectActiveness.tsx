@@ -5,10 +5,14 @@ import { green } from "@mui/material/colors";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLRedirectActivenessFragment, GQLupdateRedirectActivenessMutationMutation, GQLUpdateRedirectMutationVariables } from "../graphql.generated";
+import {
+    GQLRedirectActivenessFragment,
+    GQLUpdateRedirectActivenessMutation,
+    GQLUpdateRedirectActivenessMutationVariables,
+} from "../graphql.generated";
 
 export const updateRedirectActivenessMutation = gql`
-    mutation updateRedirectActivenessMutation($id: ID!, $input: RedirectUpdateActivenessInput!) {
+    mutation UpdateRedirectActiveness($id: ID!, $input: RedirectUpdateActivenessInput!) {
         updateRedirectActiveness(id: $id, input: $input) {
             id
             active
@@ -28,7 +32,7 @@ interface RedirectActivenessProps {
 }
 
 const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element => {
-    const [updateRedirectActiveness] = useMutation<GQLupdateRedirectActivenessMutationMutation, GQLUpdateRedirectMutationVariables>(
+    const [updateRedirectActiveness] = useMutation<GQLUpdateRedirectActivenessMutation, GQLUpdateRedirectActivenessMutationVariables>(
         updateRedirectActivenessMutation,
     );
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
