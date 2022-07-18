@@ -1,3 +1,4 @@
+import { Theme } from "@mui/material";
 import { createStyles } from "@mui/styles";
 
 import { RouterConfirmationDialogProps } from "./ConfirmationDialog";
@@ -12,13 +13,9 @@ export type RouterConfirmationDialogClassKey =
     | "saveButton"
     | "discardButton";
 
-export const styles = () => {
+export const styles = (theme: Theme) => {
     return createStyles<RouterConfirmationDialogClassKey, RouterConfirmationDialogProps>({
-        root: {
-            "& .MuiDialog-paper": {
-                maxWidth: "25vw",
-            },
-        },
+        root: {},
         closeButton: {
             position: "absolute",
             right: 14,
@@ -31,9 +28,14 @@ export const styles = () => {
         messageWarningIcon: { fontSize: 20 },
         messageText: { paddingLeft: 10 },
         actionButton: {
-            minWidth: "47%",
+            flexGrow: 1,
+            flexBasis: "50%",
         },
-        saveButton: {},
-        discardButton: {},
+        saveButton: {
+            marginLeft: theme.spacing(2),
+        },
+        discardButton: {
+            marginRight: theme.spacing(2),
+        },
     });
 };
