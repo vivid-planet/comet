@@ -95,6 +95,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         <ToolbarActions>
                             <Button
                                 variant="text"
+                                color="inherit"
                                 startIcon={<AddFolderIcon />}
                                 onClick={() => {
                                     editDialogApi.openAddDialog(id);
