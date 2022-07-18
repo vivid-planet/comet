@@ -1,4 +1,3 @@
-import { TransformDependencies } from "@comet/blocks-api";
 import {
     AuthModule,
     BlobStorageConfig,
@@ -73,16 +72,9 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
         BlocksModule.forRootAsync({
             imports: [PagesModule],
             useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
-                const blocksApiTransformDependencies: TransformDependencies = {
-                    pageTreeApi: {
-                        getNode: (id) => pageTreeService.createReadApi({ visibility: "all" }).getNode(id), // @TODO: inject pageTreeApi using a function so createReadApi can be called safely
-                        getNodePath: (node) => pageTreeService.createReadApi({ visibility: "all" }).nodePath(node),
-                    },
-                };
-
                 return {
                     transformerDependencies: {
-                        ...blocksApiTransformDependencies,
+                        pageTreeService,
                         filesService,
                         imagesService,
                     },

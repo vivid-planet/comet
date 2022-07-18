@@ -1,8 +1,18 @@
-import { IsOptional, IsString } from "class-validator";
+import {
+    AnnotationBlockMeta,
+    BlockData,
+    BlockField,
+    BlockInput,
+    BlockMetaField,
+    BlockMetaFieldKind,
+    createBlock,
+    inputToData,
+    TransformResponse,
+} from "@comet/blocks-api";
+import { IsOptional, IsUUID } from "class-validator";
 
-import { BlockData, BlockInput, BlockMetaField, BlockMetaFieldKind, createBlock, inputToData, TransformResponse } from "./block";
-import { AnnotationBlockMeta, BlockField } from "./decorators/field";
-import { TransformDependencies } from "./dependencies";
+import { PageTreeService } from "../page-tree.service";
+import { PageExists } from "../validators/page-exists.validator";
 
 interface InternalLinkBlockTransformResponse extends TransformResponse {
     targetPage: {
@@ -15,9 +25,9 @@ interface InternalLinkBlockTransformResponse extends TransformResponse {
 class InternalLinkBlockData extends BlockData {
     targetPageId?: string;
 
-    async transformToPlain({ pageTreeApi }: TransformDependencies): Promise<InternalLinkBlockTransformResponse> {
-        if (!pageTreeApi) {
-            throw new Error("Missing dependency in: pageTreeApi");
+    async transformToPlain({ pageTreeService }: { pageTreeService: PageTreeService }): Promise<InternalLinkBlockTransformResponse> {
+        if (pageTreeService === undefined) {
+            throw new Error("Missing transform dependency pageTreeService!");
         }
 
         if (!this.targetPageId) {
@@ -26,7 +36,9 @@ class InternalLinkBlockData extends BlockData {
             };
         }
 
-        const node = await pageTreeApi.getNode(this.targetPageId);
+        const readApi = pageTreeService.createReadApi({ visibility: "all" });
+
+        const node = await readApi.getNode(this.targetPageId);
 
         if (!node) {
             return { targetPage: null };
@@ -36,17 +48,17 @@ class InternalLinkBlockData extends BlockData {
             targetPage: {
                 id: node.id,
                 name: node.name,
-                path: await pageTreeApi.getNodePath(node),
+                path: await readApi.nodePath(node),
             },
         };
     }
 }
 
 class InternalLinkBlockInput extends BlockInput {
-    @IsOptional()
-    @IsString()
     @BlockField({ nullable: true })
-    // TODO add target page exists validation
+    @IsOptional()
+    @IsUUID()
+    @PageExists()
     targetPageId?: string;
 
     transformToBlockData(): InternalLinkBlockData {

@@ -1,9 +1,9 @@
 import { Field, InputType, PartialType } from "@nestjs/graphql";
 import { IsBoolean, IsEnum, IsOptional, IsUrl, ValidateIf, ValidationArguments } from "class-validator";
 
+import { PageExists } from "../../page-tree/validators/page-exists.validator";
 import { RedirectGenerationType, RedirectSourceTypeValues, RedirectTargetTypeValues } from "../redirects.enum";
 import { IsValidRedirectSource } from "../validators/isValidRedirectSource";
-import { PageExists } from "../validators/pageExists";
 import { RedirectTargetTypeMatch } from "../validators/redirectTargetTypeMatch";
 
 export interface RedirectValidationArguments extends ValidationArguments {
