@@ -45,5 +45,5 @@ export interface DocumentInterface<
     menuIcon: (props: SvgIconProps<"svg">) => JSX.Element;
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element;
     additionalDocumentFragment?: { name: string; fragment: DocumentNode };
-    infoTag?: (document: GQLDocument) => string | undefined;
+    infoTag?: (document: GQLDocument) => React.ReactNode | undefined;
 }
