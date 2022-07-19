@@ -87,8 +87,8 @@ export const EditLink: React.FC<Props> = ({ id }) => {
                 <RouterPrompt
                     message={(location) => {
                         return intl.formatMessage({
-                            id: "comet.editPage.discardChanges",
-                            defaultMessage: "Discard unsaved changes?",
+                            id: "comet.generic.doYouWantToSaveYourChanges",
+                            defaultMessage: "Do you want to save your changes?",
                         });
                     }}
                     saveAction={handleSaveAction}

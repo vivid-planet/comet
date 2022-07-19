@@ -87,6 +87,7 @@ export { MenuClassKey, styles } from "./mui/menu/Menu.styles";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog } from "./router/ConfirmationDialog";
+export { RouterConfirmationDialogClassKey } from "./router/ConfirmationDialog.styles";
 export { RouterContext } from "./router/Context";
 export { RouterMemoryRouter } from "./router/MemoryRouter";
 export { RouterPrompt } from "./router/Prompt";
