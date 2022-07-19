@@ -12,16 +12,12 @@
         "directory": "packages/admin/admin-theme"
     },
     "dependencies": {
+        "@comet/admin-icons": "^2.0.0",
         "@mui/utils": "^5.4.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin": "^2.0.0",
         "@comet/admin-babel-preset": "^2.0.0",
-        "@comet/admin-color-picker": "^2.0.0",
-        "@comet/admin-icons": "^2.0.0",
-        "@comet/admin-react-select": "^2.0.0",
-        "@comet/admin-rte": "^2.0.0",
         "@comet/eslint-config": "^2.0.0",
         "eslint": "^8.0.0",
         "prettier": "^2.0.0",
