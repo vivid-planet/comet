@@ -28,7 +28,7 @@
         "test:watch": "jest -w"
     },
     "peerDependencies": {
-        "@nestjs/common": "^8.0.0",
+        "@nestjs/common": "^9.0.0",
         "class-transformer": "^0.3.0",
         "class-validator": "^0.13.0"
     },
