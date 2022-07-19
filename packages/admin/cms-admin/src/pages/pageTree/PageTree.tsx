@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { ObservableQuery, useApolloClient, useMutation } from "@apollo/client";
 import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -14,8 +14,11 @@ import { useContentScope } from "../../contentScope/Provider";
 import {
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
+    GQLPagesQuery,
+    GQLPagesQueryVariables,
     GQLUpdatePageTreeNodePositionMutation,
     GQLUpdatePageTreeNodePositionMutationVariables,
+    namedOperations,
 } from "../../graphql.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
 import PageTreeRow, { DropTarget, PageTreeDragObject } from "./PageTreeRow";
@@ -60,6 +63,42 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     { pages, editDialogApi, toggleExpand, onSelectChanged, category, siteUrl },
     ref,
 ) => {
+    const client = useApolloClient();
+    const newPageIds = React.useRef<string[]>([]);
+
+    const queries = client.getObservableQueries();
+    const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.Pages) as
+        | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
+        | undefined;
+
+    React.useEffect(() => {
+        if (pagesQuery) {
+            client.cache.watch<GQLPagesQuery, GQLPagesQueryVariables>({
+                query: pagesQuery.query,
+                variables: pagesQuery.variables,
+                callback: (newPagesQuery, previousPagesQuery) => {
+                    if (newPagesQuery && previousPagesQuery) {
+                        const existingPageIds = previousPagesQuery.result?.pages.map((page) => page.id) ?? [];
+                        newPageIds.current = newPagesQuery.result?.pages.map((page) => page.id).filter((id) => !existingPageIds.includes(id)) ?? [];
+
+                        setTimeout(() => {
+                            // reset newPageIds to prevent slideIn on every rerender
+                            newPageIds.current = [];
+                        }, 0);
+                    }
+                },
+                optimistic: true,
+            });
+        }
+    }, [client.cache, pagesQuery]);
+
+    React.useEffect(() => {
+        if (newPageIds.current.length > 0) {
+            const index = pages.findIndex((page) => newPageIds.current.includes(page.id));
+            refList.current?.scrollToItem(index, "smart");
+        }
+    }, [pages]);
+
     const pageTreeService = React.useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
     const { scope } = useContentScope();
     const snackbarApi = useSnackbarApi();
@@ -191,6 +230,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                     width={width}
                                     itemSize={51}
                                     overscanCount={1} // do not increase this for performance reasons
+                                    style={{ scrollBehavior: "smooth" }}
                                     innerElementType={VirtualListPadder}
                                     {...propsForVirtualList}
                                 >
@@ -203,6 +243,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                                     ...style,
                                                     top: `${parseFloat(String(style?.top)) + VIRTUAL_LIST_PADDING_SIZE}px`,
                                                 }}
+                                                slideIn={newPageIds.current.includes(page.id)}
                                                 page={page}
                                                 prevPage={prevPage}
                                                 nextPage={nextPage}

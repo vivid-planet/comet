@@ -163,7 +163,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                             setPasting(true);
                             const pages = await getFromClipboard();
                             if (pages.canPaste) {
-                                await sendPages(props.page.parentId, pages.content);
+                                await sendPages(props.page.parentId, pages.content, { targetPos: props.page.pos + 1 });
                             }
                             setPasting(false);
                             handleClose();
@@ -178,7 +178,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                             const subTree = subTreeFromNode(props.page, tree);
                             const pagesAsArray = treeMapToArray(subTree, "root");
                             const pages = await prepareForClipboard(pagesAsArray);
-                            await sendPages(props.page.parentId, pages);
+                            await sendPages(props.page.parentId, pages, { targetPos: props.page.pos + 1 });
 
                             setDuplicateLoading(false);
                             handleClose();

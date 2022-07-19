@@ -35,6 +35,7 @@ interface PageTreeRowProps {
     >;
     siteUrl: string;
     virtualizedStyle?: React.CSSProperties;
+    slideIn?: boolean;
 }
 
 export interface PageTreeTableRowElement extends HTMLTableRowElement {
@@ -56,6 +57,7 @@ const PageTreeRow = ({
     debouncedSetHoverState,
     siteUrl,
     virtualizedStyle,
+    slideIn,
 }: PageTreeRowProps): React.ReactElement => {
     const rowRef = React.useRef<PageTreeTableRowElement | null>(null);
     const [hover, setHover] = React.useState(false);
@@ -166,6 +168,7 @@ const PageTreeRow = ({
         }
         dropTarget(rowRef);
     }, [dragSource, dropTarget, page.visibility]);
+
     const insertInBetweenTopPosition = pageTreeService.calcInsertInBetweenPosition(prevPage, page);
     const insertInBetweenBottomPosition = pageTreeService.calcInsertInBetweenPosition(page, nextPage);
     const topDividerHighlighted = hoverState?.dropTarget === "ADD_BEFORE" || topInBetweenButtonHovered;
@@ -187,6 +190,7 @@ const PageTreeRow = ({
             isMouseHovered={hover}
             isArchived={page.visibility === "Archived"}
             isSelected={page.selected}
+            slideIn={slideIn}
             clickable={page.visibility !== "Archived" && isEditable}
             style={virtualizedStyle}
             onDragLeave={() => {

@@ -38,6 +38,14 @@ export interface PagesClipboard {
     pages: PageClipboard[];
 }
 
+interface SendPagesOptions {
+    /**
+     * The position where the new page(s) should be pasted.
+     * If undefined, the page(s) are added at the very end
+     * */
+    targetPos?: number;
+}
+
 /**
  * Typeguard to check if an object is a PagesClipboard Type
  * @param pagesClipboard
@@ -85,8 +93,9 @@ interface UseCopyPastePagesApi {
      *
      * @param parentId Parent Id where the paste should be attached to
      * @param pages all pages which should be pasted
+     * @param options customize where the pages are pasted
      */
-    sendPages: (parentId: string | null, pages: PagesClipboard) => Promise<void>;
+    sendPages: (parentId: string | null, pages: PagesClipboard, options?: SendPagesOptions) => Promise<void>;
 }
 
 /**
@@ -191,11 +200,11 @@ function useCopyPastePages(): UseCopyPastePagesApi {
         }
     };
     const sendPages = React.useCallback(
-        async (parentId: string | null, { pages }: PagesClipboard): Promise<void> => {
+        async (parentId: string | null, { pages }: PagesClipboard, options?: SendPagesOptions): Promise<void> => {
             const tree = arrayToTreeMap<PageClipboard>(pages);
             const idsMap = createIdsMap(pages);
 
-            const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null): Promise<string> => {
+            const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
                 // 1a. Create new document
                 const newDocumentId = uuid();
                 const documentType = documentTypes[node.documentType];
@@ -254,7 +263,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                                 type: node.documentType,
                             },
                             parentId: newParentId,
-                            pos: node.pos + 1,
+                            pos: options?.targetPos ? options.targetPos + posOffset : undefined,
                         },
                         contentScope: scope,
                         category: node.category,
@@ -269,8 +278,9 @@ function useCopyPastePages(): UseCopyPastePagesApi {
 
             const traverse = async (parentId = "root", newParentId: string | null = null): Promise<void> => {
                 const nodes = tree.get(parentId) || [];
+                let posOffset = 0;
                 for (const node of nodes) {
-                    const newPageTreeUUID = await handlePageTreeNode(node, newParentId);
+                    const newPageTreeUUID = await handlePageTreeNode(node, newParentId, posOffset++);
 
                     await traverse(node.id, newPageTreeUUID);
                 }
