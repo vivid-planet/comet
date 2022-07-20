@@ -10,6 +10,7 @@ export interface DamConfig {
     filesDirectory: string;
     cacheDirectory: string;
     additionalMimeTypes?: string[];
+    maxFileSize: number;
 }
 
 export const CDN_ORIGIN_CHECK_HEADER = "x-cdn-origin-check";

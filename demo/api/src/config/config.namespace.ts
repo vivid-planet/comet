@@ -75,6 +75,10 @@ export class EnvironmentVariables {
     @IsString()
     DAM_ALLOWED_IMAGE_ASPECT_RATIOS: string;
 
+    @Type(() => Number)
+    @IsInt()
+    DAM_UPLOADS_MAX_FILE_SIZE: number;
+
     @IsString()
     BLOB_STORAGE_DRIVER: BlobStorageConfig["backend"]["driver"];
 

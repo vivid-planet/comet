@@ -38,7 +38,7 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
                     },
                 }),
                 limits: {
-                    fileSize: Number(process.env.DAM_UPLOADS_MAX_FILE_SIZE) * 1024 * 1024,
+                    fileSize: config.maxFileSize * 1024 * 1024,
                 },
                 fileFilter: (req, file, cb) => {
                     const acceptedMimeTypes = [...defaultDamAcceptedMimetypes, ...(config.additionalMimeTypes ?? [])];

@@ -144,6 +144,7 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
                     allowedAspectRatios: config.DAM_ALLOWED_IMAGE_ASPECT_RATIOS,
                     filesDirectory: `${config.BLOB_STORAGE_DIRECTORY_PREFIX}-files`,
                     cacheDirectory: `${config.BLOB_STORAGE_DIRECTORY_PREFIX}-cache`,
+                    maxFileSize: config.DAM_UPLOADS_MAX_FILE_SIZE,
                 },
                 imgproxyConfig: {
                     url: config.IMGPROXY_URL,
