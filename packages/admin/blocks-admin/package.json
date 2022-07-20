@@ -48,7 +48,7 @@
         "clipboard-copy": "^4.0.0",
         "lodash.isequal": "^4.0.0",
         "react": "^16.8.0 || ^17.0.0",
-        "react-dnd": "^14.0.0",
+        "react-dnd": "^16.0.0",
         "react-dom": "^16.8.0 || ^17.0.0",
         "react-final-form": "^6.0.0",
         "react-intl": "^5.0.0",

@@ -3570,7 +3570,7 @@ __metadata:
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     history: ^4.10.1
     react: ^17.0
-    react-dnd: ^14.0.2
+    react-dnd: ^16.0.0
     react-dom: ^17.0
     react-final-form: ^6.3.1
     react-intl: ^5.10.0
@@ -3619,7 +3619,7 @@ __metadata:
     clipboard-copy: ^4.0.0
     lodash.isequal: ^4.0.0
     react: ^16.8.0 || ^17.0.0
-    react-dnd: ^14.0.0
+    react-dnd: ^16.0.0
     react-dom: ^16.8.0 || ^17.0.0
     react-final-form: ^6.0.0
     react-intl: ^5.0.0
@@ -8041,13 +8041,6 @@ __metadata:
   version: 4.0.2
   resolution: "@react-dnd/invariant@npm:4.0.2"
   checksum: 594f6d78896c19bb8f023e101334fd91a9fdff686117bd8e830ba53737ec0a6042dab66971d3d63c7afbc622103909aff7a64c5c6767e0aa8d9561fd42705016
-  languageName: node
-  linkType: hard
-
-"@react-dnd/shallowequal@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@react-dnd/shallowequal@npm:2.0.0"
-  checksum: b5bbdc795d65945bb7ba2322bed5cf8d4c6fe91dced98c3b10e3d16822c438f558751135ff296f8d1aa1eaa9d0037dacab2b522ca5eb812175123b9996966dcb
   languageName: node
   linkType: hard
 
@@ -14362,8 +14355,8 @@ __metadata:
     prettier: ^2.0.0
     qs: ^6.9.1
     react: ^17.0
-    react-dnd: ^14.0.2
-    react-dnd-html5-backend: ^14.0.0
+    react-dnd: ^16.0.0
+    react-dnd-html5-backend: ^16.0.0
     react-docgen-typescript-loader: ^3.1.0
     react-dom: ^17.0.2
     react-final-form: ^6.3.1
@@ -16225,17 +16218,6 @@ __metadata:
   dependencies:
     path-type: ^4.0.0
   checksum: fa05e18324510d7283f55862f3161c6759a3f2f8dbce491a2fc14c8324c498286c54282c1f0e933cb930da8419b30679389499b919122952a4f8592362ef4615
-  languageName: node
-  linkType: hard
-
-"dnd-core@npm:14.0.1":
-  version: 14.0.1
-  resolution: "dnd-core@npm:14.0.1"
-  dependencies:
-    "@react-dnd/asap": ^4.0.0
-    "@react-dnd/invariant": ^2.0.0
-    redux: ^4.1.1
-  checksum: dbc50727f53baad1cb1e0430a2a1b81c5c291389322f90fdc46edeb2fd49cc206ce4fa30a95afb53d88238945228e34866d7465f7ea49285c296baf883551301
   languageName: node
   linkType: hard
 
@@ -28228,46 +28210,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dnd-html5-backend@npm:^14.0.0":
-  version: 14.1.0
-  resolution: "react-dnd-html5-backend@npm:14.1.0"
-  dependencies:
-    dnd-core: 14.0.1
-  checksum: 6aa8d62c6b2288893b3f216d476d2f84495b40d33578ba9e3a5051dc093a71dc59700e6927ed7ac596ff8d7aa3b3f29404f7d173f844bd6144ed633403dd8e96
-  languageName: node
-  linkType: hard
-
 "react-dnd-html5-backend@npm:^16.0.0":
   version: 16.0.1
   resolution: "react-dnd-html5-backend@npm:16.0.1"
   dependencies:
     dnd-core: ^16.0.1
   checksum: e2368bf85d5632a5cd867b743feb54c9052d909ea5331608860fa455edf3c633ac791f5b338e3db29b19ea8670c0ba5fb43c9c1c2510760bea030811d726cdfa
-  languageName: node
-  linkType: hard
-
-"react-dnd@npm:^14.0.2":
-  version: 14.0.5
-  resolution: "react-dnd@npm:14.0.5"
-  dependencies:
-    "@react-dnd/invariant": ^2.0.0
-    "@react-dnd/shallowequal": ^2.0.0
-    dnd-core: 14.0.1
-    fast-deep-equal: ^3.1.3
-    hoist-non-react-statics: ^3.3.2
-  peerDependencies:
-    "@types/hoist-non-react-statics": ">= 3.3.1"
-    "@types/node": ">= 12"
-    "@types/react": ">= 16"
-    react: ">= 16.14"
-  peerDependenciesMeta:
-    "@types/hoist-non-react-statics":
-      optional: true
-    "@types/node":
-      optional: true
-    "@types/react":
-      optional: true
-  checksum: 464e231de8c2b79546049a1600b67b1df0b7f762f23c688d3e9aeddbf334b1e64931ef91d0129df3c8be255f0af76e89426729dbcbefe4bdc09b0f665d2da368
   languageName: node
   linkType: hard
 
@@ -28992,7 +28940,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.4, redux@npm:^4.1.1, redux@npm:^4.2.0":
+"redux@npm:^4.0.4, redux@npm:^4.2.0":
   version: 4.2.0
   resolution: "redux@npm:4.2.0"
   dependencies:
