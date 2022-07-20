@@ -12,11 +12,11 @@
         "directory": "packages/admin/admin-react-select"
     },
     "dependencies": {
+        "@comet/admin": "^2.0.0",
         "classnames": "^2.2.6"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin": "^2.0.0",
         "@comet/admin-babel-preset": "^2.0.0",
         "@comet/eslint-config": "^2.0.0",
         "@types/react-select": "^3.1.2",
@@ -27,7 +27,6 @@
         "yarn-run-all": "^3.0.0"
     },
     "peerDependencies": {
-        "@comet/admin": "^2.0.0",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",

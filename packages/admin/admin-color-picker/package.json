@@ -12,6 +12,8 @@
         "directory": "packages/admin/admin-color-picker"
     },
     "dependencies": {
+        "@comet/admin": "^2.0.0",
+        "@comet/admin-icons": "^2.0.0",
         "clsx": "^1.1.1",
         "react-colorful": "^5.5.1",
         "tinycolor2": "^1.4.1",
@@ -19,7 +21,6 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin": "^2.0.0",
         "@comet/admin-babel-preset": "^2.0.0",
         "@comet/eslint-config": "^2.0.0",
         "@types/tinycolor2": "^1.4.2",
@@ -30,8 +31,6 @@
         "yarn-run-all": "^3.0.0"
     },
     "peerDependencies": {
-        "@comet/admin": "*",
-        "@comet/admin-icons": "^2.0.0",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",

@@ -3371,6 +3371,7 @@ __metadata:
     "@babel/cli": ^7.17.6
     "@comet/admin": ^2.0.0
     "@comet/admin-babel-preset": ^2.0.0
+    "@comet/admin-icons": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@types/tinycolor2": ^1.4.2
     clsx: ^1.1.1
@@ -3383,8 +3384,6 @@ __metadata:
     use-debounce: ^6.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
-    "@comet/admin": "*"
-    "@comet/admin-icons": ^2.0.0
     "@mui/icons-material": ^5.0.0
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
@@ -3402,6 +3401,7 @@ __metadata:
     "@babel/cli": ^7.17.6
     "@comet/admin": ^2.0.0
     "@comet/admin-babel-preset": ^2.0.0
+    "@comet/admin-icons": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@mui/utils": ^5.4.1
     "@types/react": ^17.0
@@ -3415,8 +3415,6 @@ __metadata:
     typescript: ^4.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
-    "@comet/admin": ^2.0.0
-    "@comet/admin-icons": ^2.0.0
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
     react: ^17.0
@@ -3466,7 +3464,6 @@ __metadata:
     typescript: ^4.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
-    "@comet/admin": ^2.0.0
     "@mui/icons-material": ^5.0.0
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
@@ -3512,12 +3509,8 @@ __metadata:
   resolution: "@comet/admin-theme@workspace:packages/admin/admin-theme"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin": ^2.0.0
     "@comet/admin-babel-preset": ^2.0.0
-    "@comet/admin-color-picker": ^2.0.0
     "@comet/admin-icons": ^2.0.0
-    "@comet/admin-react-select": ^2.0.0
-    "@comet/admin-rte": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@mui/utils": ^5.4.1
     eslint: ^8.0.0
@@ -3618,8 +3611,6 @@ __metadata:
     uuid: ^8.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
-    "@comet/admin": ^2.0.0
-    "@comet/admin-icons": ^2.0.0
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
     "@mui/lab": ^5.0.0-alpha.76
@@ -3750,12 +3741,6 @@ __metadata:
     yarn-run-all: ^3.0.0
   peerDependencies:
     "@apollo/client": ^3.0.0
-    "@comet/admin": ^2.0.0
-    "@comet/admin-icons": ^2.0.0
-    "@comet/admin-react-select": ^2.0.0
-    "@comet/admin-rte": ^2.0.0
-    "@comet/admin-theme": ^2.0.0
-    "@comet/blocks-admin": "*"
     "@comet/react-app-auth": ^1.0.0
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
@@ -3835,7 +3820,6 @@ __metadata:
   peerDependencies:
     "@aws-sdk/client-s3": ^3.47.0
     "@azure/storage-blob": ^12.0.0
-    "@comet/blocks-api": "*"
     "@mikro-orm/cli": ^5.0.4
     "@mikro-orm/core": ^5.0.4
     "@mikro-orm/migrations": ^5.0.4
