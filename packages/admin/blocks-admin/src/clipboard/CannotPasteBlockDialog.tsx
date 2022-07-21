@@ -17,7 +17,7 @@ function CannotPasteBlockDialog({ open, onClose, error }: Props): React.ReactEle
             <DialogContent>{error}</DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="info">
-                    <FormattedMessage id="comet.generic.ok" defaultMessage="OK" />
+                    <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
                 </Button>
             </DialogActions>
         </Dialog>
