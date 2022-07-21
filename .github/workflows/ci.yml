@@ -55,6 +55,8 @@ jobs:
               run: |
                   yarn exec prettier --check "./*.{js,json,md,yml}"
                   yarn lint:lib
+                  # check for duplicate ids of formatted messages
+                  yarn intl:extract
 
             - name: Test
               run: yarn test:lib
