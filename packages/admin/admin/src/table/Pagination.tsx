@@ -32,7 +32,7 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                                 <Grid item>
                                     <Typography color="textSecondary" variant="body2">
                                         <FormattedMessage
-                                            id="cometAdmin.table.pagination.pageInfo"
+                                            id="comet.table.pagination.pageInfo"
                                             values={{ total: pagingInfo.totalPages, current: pagingInfo.currentPage }}
                                             defaultMessage="Page {current} of {total}"
                                             description="Pagination-info"

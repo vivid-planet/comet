@@ -20,7 +20,7 @@ const StackBackBtn = ({ startIcon = <ArrowBack />, ...restProps }: StackBackButt
                         startIcon={startIcon}
                         {...restProps}
                     >
-                        <FormattedMessage id="cometAdmin.generic.back" defaultMessage="Back" />
+                        <FormattedMessage id="comet.generic.back" defaultMessage="Back" />
                     </Button>
                 );
             }}

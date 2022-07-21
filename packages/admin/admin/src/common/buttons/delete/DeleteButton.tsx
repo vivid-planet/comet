@@ -67,7 +67,7 @@ const styles = ({ palette }: Theme) => {
 };
 
 function DeleteBtn({
-    children = <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />,
+    children = <FormattedMessage id="comet.generic.delete" defaultMessage="Delete" />,
     startIcon = <Delete />,
     ...restProps
 }: ButtonProps & WithStyles<typeof styles>) {

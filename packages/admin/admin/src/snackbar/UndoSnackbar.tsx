@@ -28,7 +28,7 @@ export const UndoSnackbar = <Payload,>({ onUndoClick, payload, ...props }: UndoS
             autoHideDuration={5000}
             action={
                 <Button color="secondary" size="small" onClick={onClick}>
-                    <FormattedMessage id="cometAdmin.generic.undo" defaultMessage="Undo" />
+                    <FormattedMessage id="comet.generic.undo" defaultMessage="Undo" />
                 </Button>
             }
             TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}

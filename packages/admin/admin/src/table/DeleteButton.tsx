@@ -17,7 +17,7 @@ interface IProps {
     refetchQueries?: Array<string | PureQueryOptions>;
 }
 
-const DeleteMessage = () => <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />;
+const DeleteMessage = () => <FormattedMessage id="comet.generic.delete" defaultMessage="Delete" />;
 
 export class TableDeleteButton extends React.Component<IProps> {
     public render() {

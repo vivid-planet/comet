@@ -22,7 +22,7 @@ export class TableLocalChangesToolbar extends React.Component<IProps> {
                         <SaveButton onClick={this.handleSaveClick} />
                         <FormattedMessage
                             values={{ count: this.props.localChangesCount }}
-                            id="cometAdmin.table.localChangesToolbar.unsavedItems"
+                            id="comet.table.localChangesToolbar.unsavedItems"
                             defaultMessage="{count, plural, =0 {No unsaved changes} one {# unsaved change} other {# unsaved changes}}"
                         />
                     </Toolbar>

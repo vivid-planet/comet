@@ -13,7 +13,7 @@ export class TableAddButton extends React.Component<IProps> {
     public render() {
         return (
             <Button onClick={this.handleAddClick} startIcon={<AddIcon />}>
-                <FormattedMessage id="cometAdmin.generic.add" defaultMessage="Add" />
+                <FormattedMessage id="comet.generic.add" defaultMessage="Add" />
             </Button>
         );
     }

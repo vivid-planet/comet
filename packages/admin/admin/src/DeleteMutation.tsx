@@ -37,11 +37,7 @@ export function DeleteMutation(props: IProps) {
 
             <Dialog open={dialogOpen} onClose={handleNoClick} maxWidth="xs">
                 <DialogTitle>
-                    <FormattedMessage
-                        id="cometAdmin.deleteMutation.promptDelete"
-                        defaultMessage="Delete item?"
-                        description="Prompt to delete an item"
-                    />
+                    <FormattedMessage id="comet.deleteMutation.promptDelete" defaultMessage="Delete item?" description="Prompt to delete an item" />
                 </DialogTitle>
                 <DialogActions>
                     <CancelButton onClick={handleNoClick} />

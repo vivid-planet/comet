@@ -23,12 +23,12 @@ interface IProps {
 
 const messages = defineMessages({
     edit: {
-        id: "cometAdmin.generic.edit",
+        id: "comet.generic.edit",
         defaultMessage: "Edit",
     },
 
     add: {
-        id: "cometAdmin.generic.add",
+        id: "comet.generic.add",
         defaultMessage: "Add",
     },
 });
@@ -150,7 +150,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                                             hasErrors={editDialogFormApi?.hasErrors}
                                             onClick={handleSaveClick}
                                         >
-                                            <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+                                            <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
                                         </SaveButton>
                                     );
                                 }}

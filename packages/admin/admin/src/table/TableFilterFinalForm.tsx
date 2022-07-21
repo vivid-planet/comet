@@ -55,7 +55,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                                                 formRenderProps.form.reset();
                                             }}
                                         >
-                                            <FormattedMessage id="cometAdmin.table.tableFilterFinalForm.resetButton" defaultMessage="Reset filter" />
+                                            <FormattedMessage id="comet.table.tableFilterFinalForm.resetButton" defaultMessage="Reset filter" />
                                         </Button>
                                     </Grid>
                                 )}

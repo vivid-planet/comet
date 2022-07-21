@@ -62,8 +62,8 @@ const ColorPicker = ({
     endAdornment,
     onBlur,
     clearable,
-    titleText = <FormattedMessage id="cometAdmin.colorPicker.title" defaultMessage="Choose a color" />,
-    clearButtonText = <FormattedMessage id="cometAdmin.colorPicker.clearButton" defaultMessage="clear color" />,
+    titleText = <FormattedMessage id="comet.colorPicker.title" defaultMessage="Choose a color" />,
+    clearButtonText = <FormattedMessage id="comet.colorPicker.clearButton" defaultMessage="clear color" />,
     componentsProps = {},
     components = {},
     ...rest

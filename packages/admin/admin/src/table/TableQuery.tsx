@@ -41,7 +41,7 @@ export function Query({ classes, ...otherProps }: IProps & WithStyles<typeof sty
                 {otherProps.error && (
                     <p>
                         <FormattedMessage
-                            id="cometAdmin.table.tableQuery.error"
+                            id="comet.table.tableQuery.error"
                             defaultMessage="Error :( {error}"
                             description="Display apollo error message"
                             values={{

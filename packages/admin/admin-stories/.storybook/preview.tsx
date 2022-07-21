@@ -28,33 +28,33 @@ addDecorator((story, context) => {
     // @TODO: use messages from lang-package
     const messages = {
         en: {
-            "cometAdmin.core.deleteMutation.promptDelete": "Delete data?",
-            "cometAdmin.core.deleteMutation.yes": "Yes",
-            "cometAdmin.core.deleteMutation.no": "No",
-            "cometAdmin.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
-            "cometAdmin.core.editDialog.edit": "Edit",
-            "cometAdmin.core.editDialog.add": "Add",
-            "cometAdmin.core.editDialog.cancel": "Cancel",
-            "cometAdmin.core.editDialog.save": "Save",
-            "cometAdmin.core.finalForm.abort": "Cancel",
-            "cometAdmin.core.finalForm.save": "Save",
-            "cometAdmin.core.router.confirmationDialog.confirm": "OK",
-            "cometAdmin.core.router.confirmationDialog.abort": "Cancel",
-            "cometAdmin.core.stack.stack.back": "Back",
-            "cometAdmin.core.table.addButton": "Add",
-            "cometAdmin.core.table.excelExportButton": "Export",
-            "cometAdmin.core.table.deleteButton": "Delete",
-            "cometAdmin.core.table.pagination.pageInfo": "Page {current} of {total}",
-            "cometAdmin.core.table.localChangesToolbar.save": "Save",
-            "cometAdmin.core.table.localChangesToolbar.unsavedItems":
+            "comet.core.deleteMutation.promptDelete": "Delete data?",
+            "comet.core.deleteMutation.yes": "Yes",
+            "comet.core.deleteMutation.no": "No",
+            "comet.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
+            "comet.core.editDialog.edit": "Edit",
+            "comet.core.editDialog.add": "Add",
+            "comet.core.editDialog.cancel": "Cancel",
+            "comet.core.editDialog.save": "Save",
+            "comet.core.finalForm.abort": "Cancel",
+            "comet.core.finalForm.save": "Save",
+            "comet.core.router.confirmationDialog.confirm": "OK",
+            "comet.core.router.confirmationDialog.abort": "Cancel",
+            "comet.core.stack.stack.back": "Back",
+            "comet.core.table.addButton": "Add",
+            "comet.core.table.excelExportButton": "Export",
+            "comet.core.table.deleteButton": "Delete",
+            "comet.core.table.pagination.pageInfo": "Page {current} of {total}",
+            "comet.core.table.localChangesToolbar.save": "Save",
+            "comet.core.table.localChangesToolbar.unsavedItems":
                 "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
-            "cometAdmin.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
-            "cometAdmin.core.table.tableQuery.error": "Error :( {error}",
+            "comet.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
+            "comet.core.table.tableQuery.error": "Error :( {error}",
         },
         de: {
-            "cometAdmin.core.table.localChangesToolbar.unsavedItems":
+            "comet.core.table.localChangesToolbar.unsavedItems":
                 "{count, plural, =0 {keine ungespeicherten Änderungen} one {# ungespeicherte Änderung} other {# ungespeicherte Änderungen}}",
-            "cometAdmin.core.table.tableQuery.error": "Fehler :( {error}",
+            "comet.core.table.tableQuery.error": "Fehler :( {error}",
         },
     };
 

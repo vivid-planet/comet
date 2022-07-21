@@ -27,7 +27,7 @@ const SelectEdit = <Data extends { id: string | number }>(props: IProps<Data>) =
                 <Box padding={4}>
                     <Typography>
                         <FormattedMessage
-                            id="cometAdmin.table.tableQuery.error"
+                            id="comet.table.tableQuery.error"
                             defaultMessage="Error :( {error}"
                             description="Display apollo error message"
                             values={{
