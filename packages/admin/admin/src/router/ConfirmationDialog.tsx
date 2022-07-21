@@ -39,7 +39,11 @@ export function InternalRouterConfirmationDialog({
                     <Warning className={classes.messageWarningIcon} />
                     <Typography className={classes.messageText}>
                         {message ?? (
-                            <FormattedMessage id="cometAdmin.generic.doYouWantToSaveYourChanges" defaultMessage="Do you want to save your changes?" />
+                            <FormattedMessage
+                                id="cometAdmin.generic.doYouWantToSaveYourChanges"
+                                defaultMessage="Do you want to save your changes?"
+                                description="Prompt to save unsaved changes"
+                            />
                         )}
                     </Typography>
                 </div>

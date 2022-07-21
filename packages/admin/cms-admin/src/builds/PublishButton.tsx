@@ -71,7 +71,7 @@ export const PublishButton: React.FunctionComponent = () => {
                 fullWidth
             >
                 {hasStarted && <FormattedMessage id="comet.pages.publisher.buildStarted" defaultMessage="Build started" />}
-                {hasError && <FormattedMessage id="comet.pages.publisher.buildStarted" defaultMessage="Build start failed" />}
+                {hasError && <FormattedMessage id="comet.pages.publisher.buildStartFailed" defaultMessage="Starting build failed" />}
                 {!hasStarted && !hasError && <FormattedMessage id="comet.pages.publisher.build" defaultMessage="Start build" />}
             </Button>
             {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
