@@ -55,7 +55,7 @@
         "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
         "history": "^4.10.1",
         "react": "^17.0",
-        "react-dnd": "^14.0.2",
+        "react-dnd": "^16.0.0",
         "react-dom": "^17.0",
         "react-final-form": "^6.3.1",
         "react-intl": "^5.10.0",
