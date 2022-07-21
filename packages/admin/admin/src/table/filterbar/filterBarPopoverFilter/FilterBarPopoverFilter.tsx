@@ -95,7 +95,7 @@ function PopoverFilter({
                                             startIcon={<Reset />}
                                             {...resetButtonProps}
                                         >
-                                            <FormattedMessage id="cometAdmin.generic.resetButton" defaultMessage="Reset" />
+                                            <FormattedMessage id="comet.generic.resetButton" defaultMessage="Reset" />
                                         </Button>
 
                                         <Button
@@ -110,7 +110,7 @@ function PopoverFilter({
                                             disabled={Object.values(dirtyFields).length === 0}
                                             {...submitButtonProps}
                                         >
-                                            <FormattedMessage id="cometAdmin.generic.applyButton" defaultMessage="Apply" />
+                                            <FormattedMessage id="comet.generic.applyButton" defaultMessage="Apply" />
                                         </Button>
                                     </div>
                                 </div>

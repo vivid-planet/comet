@@ -95,12 +95,12 @@ function LinkDialog(props: {
     return (
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
             <DialogTitle>
-                <FormattedMessage id="cometAdmin.rte.extensions.link.editDialogTitle" defaultMessage="Link" />
+                <FormattedMessage id="comet.rte.extensions.link.editDialogTitle" defaultMessage="Link" />
             </DialogTitle>
             <DialogContent>
                 <FormControl fullWidth>
                     <FormLabel>
-                        <FormattedMessage id="cometAdmin.rte.extensions.link.url" defaultMessage="Url" />
+                        <FormattedMessage id="comet.rte.extensions.link.url" defaultMessage="Url" />
                     </FormLabel>
                     <InputBase
                         // autoFocus
@@ -113,20 +113,20 @@ function LinkDialog(props: {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} startIcon={<Clear />}>
-                    <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
+                    <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
                 </Button>
                 <div>
                     <Grid container spacing={4}>
                         {linkData && (
                             <Grid item>
                                 <Button variant="contained" startIcon={<Delete />} onClick={handleRemove}>
-                                    <FormattedMessage id="cometAdmin.generic.delete" defaultMessage="Delete" />
+                                    <FormattedMessage id="comet.generic.delete" defaultMessage="Delete" />
                                 </Button>
                             </Grid>
                         )}
                         <Grid item>
                             <Button variant="contained" color="primary" startIcon={<Check />} onClick={handleUpdate} disabled={!newUrl}>
-                                <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+                                <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
                             </Button>
                         </Grid>
                     </Grid>

@@ -22,7 +22,7 @@ export function ToolbarButton({ editorState, setEditorState }: IControlProps): R
 
     return (
         <Tooltip
-            title={<FormattedMessage id="reactAdmin.rte.extensions.softHyphen.buttonTooltip" defaultMessage="Insert a soft hyphen" />}
+            title={<FormattedMessage id="comet.rte.extensions.softHyphen.buttonTooltip" defaultMessage="Insert a soft hyphen" />}
             placement="top"
         >
             <span>

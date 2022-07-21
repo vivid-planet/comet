@@ -42,7 +42,7 @@ export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, ch
             {children != null ? (
                 children
             ) : (
-                <FormattedMessage id="cometAdmin.table.excelExportButton" defaultMessage="Export" description="Export Button" />
+                <FormattedMessage id="comet.table.excelExportButton" defaultMessage="Export" description="Export Button" />
             )}
         </Button>
     );

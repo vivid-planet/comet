@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 import { FieldContainer, FieldContainerProps } from "./FieldContainer";
 import { useFinalFormContext } from "./FinalFormContextProvider";
 
-const requiredValidator = (value: any) => (value ? undefined : <FormattedMessage id="cometAdmin.form.required" defaultMessage="Required" />);
+const requiredValidator = (value: any) => (value ? undefined : <FormattedMessage id="comet.form.required" defaultMessage="Required" />);
 
 const composeValidators =
     (...validators: Array<(value: any, allValues: object) => any>) =>

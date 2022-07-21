@@ -26,7 +26,7 @@ export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error";
 const SaveBtn = ({
     saving = false,
     hasErrors = false,
-    children = <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />,
+    children = <FormattedMessage id="comet.generic.save" defaultMessage="Save" />,
     savingItem = <FormattedMessage id="comet.saveButton.savingItem.title" defaultMessage="Saving" />,
     successItem = <FormattedMessage id="comet.saveButton.successItem.title" defaultMessage="Successfully Saved" />,
     errorItem = <FormattedMessage id="comet.saveButton.errorItem.title" defaultMessage="Save Error" />,

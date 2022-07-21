@@ -29,7 +29,7 @@ export function InternalRouterConfirmationDialog({
     return (
         <Dialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} maxWidth="sm" className={classes.root}>
             <DialogTitle>
-                <FormattedMessage id="cometAdmin.generic.unsavedChanges" defaultMessage="Unsaved Changes" />
+                <FormattedMessage id="comet.generic.unsavedChanges" defaultMessage="Unsaved Changes" />
                 <IconButton onClick={() => handleClose(PromptAction.Cancel)} className={classes.closeButton}>
                     <Close />
                 </IconButton>
@@ -40,7 +40,7 @@ export function InternalRouterConfirmationDialog({
                     <Typography className={classes.messageText}>
                         {message ?? (
                             <FormattedMessage
-                                id="cometAdmin.generic.doYouWantToSaveYourChanges"
+                                id="comet.generic.doYouWantToSaveYourChanges"
                                 defaultMessage="Do you want to save your changes?"
                                 description="Prompt to save unsaved changes"
                             />
@@ -56,7 +56,7 @@ export function InternalRouterConfirmationDialog({
                     onClick={() => handleClose(PromptAction.Discard)}
                     className={`${classes.actionButton} ${classes.discardButton}`}
                 >
-                    <FormattedMessage id="cometAdmin.generic.discard" defaultMessage="Discard" />
+                    <FormattedMessage id="comet.generic.discard" defaultMessage="Discard" />
                 </Button>
                 {showSaveButton && (
                     <Button
@@ -66,7 +66,7 @@ export function InternalRouterConfirmationDialog({
                         onClick={() => handleClose(PromptAction.Save)}
                         className={`${classes.actionButton} ${classes.saveButton}`}
                     >
-                        <FormattedMessage id="cometAdmin.generic.save" defaultMessage="Save" />
+                        <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
                     </Button>
                 )}
             </DialogActions>

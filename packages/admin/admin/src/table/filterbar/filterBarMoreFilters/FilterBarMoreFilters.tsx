@@ -22,7 +22,7 @@ export function MoreFilters({
                 {icon}
                 <div className={classes.textWrapper}>
                     <Typography variant="body1">
-                        <FormattedMessage id="cometAdmin.generic.moreFilter" defaultMessage="More Filter" />
+                        <FormattedMessage id="comet.generic.moreFilter" defaultMessage="More Filter" />
                     </Typography>
                 </div>
             </div>

@@ -6,14 +6,14 @@ import { defineMessage, FormattedMessage } from "react-intl";
 import { BlockElement } from "./BlockElement";
 import { IBlocktypeConfig, IBlocktypeMap } from "./types";
 
-const headerMessage = defineMessage({ id: "cometAdmin.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
+const headerMessage = defineMessage({ id: "comet.rte.controls.blockType.heading", defaultMessage: "Heading {level}" });
 
 const defaultBlocktypeMap: IBlocktypeMap = {
     // "unstyled" is special: only the value for renderConfig and label is considered,
     // other values are ignored
     unstyled: {
         //info:  https://draftjs.org/docs/advanced-topics-custom-block-render-map/#configuring-block-render-map
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.default" defaultMessage="Default" />,
+        label: <FormattedMessage id="comet.rte.controls.blockType.default" defaultMessage="Default" />,
         renderConfig: {
             element: BlockElement,
             aliasedElements: ["p"],
@@ -75,7 +75,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
     },
     blockquote: {
         supportedBy: "blockquote",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.blockquote" defaultMessage="Blockquote" />,
+        label: <FormattedMessage id="comet.rte.controls.blockType.blockquote" defaultMessage="Blockquote" />,
         renderConfig: {
             element: (p) => <BlockElement type="blockquote" {...p} />,
             aliasedElements: ["blockquote"],
@@ -84,7 +84,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
     "unordered-list-item": {
         supportedBy: "unordered-list",
         group: "button",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.unorderedList" defaultMessage="Bulletpoints" />,
+        label: <FormattedMessage id="comet.rte.controls.blockType.unorderedList" defaultMessage="Bulletpoints" />,
         icon: FormatListBulletedIcon,
         renderConfig: {
             wrapper: <BlockElement type="unordered-list" component="ul" />,
@@ -96,7 +96,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
     "ordered-list-item": {
         supportedBy: "ordered-list",
         group: "button",
-        label: <FormattedMessage id="cometAdmin.rte.controls.blockType.orderedList" defaultMessage="Numbering" />,
+        label: <FormattedMessage id="comet.rte.controls.blockType.orderedList" defaultMessage="Numbering" />,
         icon: FormatListNumberedIcon,
         renderConfig: {
             wrapper: <BlockElement type="ordered-list" component="ol" />,

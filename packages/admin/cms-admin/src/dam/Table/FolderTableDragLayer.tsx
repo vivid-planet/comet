@@ -57,7 +57,7 @@ const FolderTableDragLayer = (): React.ReactElement | null => {
                 {selectedItems.length > 1 && isSelected(item.item.id) ? (
                     <MultipleItemsDragLabel>
                         <FormattedMessage
-                            id="dam.dnd.dragMultipleItemsLabel"
+                            id="comet.dam.dnd.dragMultipleItemsLabel"
                             defaultMessage="{numItems} Items"
                             values={{ numItems: selectedItems.length }}
                         />

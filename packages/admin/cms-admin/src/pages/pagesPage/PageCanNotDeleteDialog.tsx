@@ -23,7 +23,7 @@ export const PageCanNotDeleteDialog: React.FunctionComponent<PageCanNotDeleteDia
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClosePressed} color="primary">
-                    <FormattedMessage id="cometAdmin.generic.close" defaultMessage="Close" />
+                    <FormattedMessage id="comet.generic.close" defaultMessage="Close" />
                 </Button>
             </DialogActions>
         </Dialog>

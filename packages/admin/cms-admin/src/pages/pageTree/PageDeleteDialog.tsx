@@ -139,7 +139,7 @@ export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCancelClick} color="inherit" startIcon={<Cancel />}>
-                    <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />
+                    <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
                 </Button>
 
                 <DeleteButton onClick={handleDeleteClick}>

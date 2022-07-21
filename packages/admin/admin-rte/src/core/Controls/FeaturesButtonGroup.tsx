@@ -58,7 +58,7 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
                 <>
                     <div className={classes.buttonWrapper}>
                         <Tooltip
-                            title={<FormattedMessage id="cometAdmin.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
+                            title={<FormattedMessage id="comet.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
                             placement="top"
                         >
                             <span>

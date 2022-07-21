@@ -63,7 +63,7 @@ const styles = () => {
 };
 
 function CancelBtn({
-    children = <FormattedMessage id="cometAdmin.generic.cancel" defaultMessage="Cancel" />,
+    children = <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />,
     startIcon = <Clear />,
     ...restProps
 }: CancelButtonProps & WithStyles<typeof styles>) {

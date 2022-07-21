@@ -17,7 +17,7 @@ type Bindings = IBinding[];
 
 const messages = defineMessages({
     saveChanges: {
-        id: "cometAdmin.generic.doYouWantToSaveYourChanges",
+        id: "comet.generic.doYouWantToSaveYourChanges",
         defaultMessage: "Do you want to save your changes?",
         description: "Prompt to save unsaved changes",
     },
