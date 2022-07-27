@@ -4645,6 +4645,7 @@ __metadata:
     lodash.isequal: ^4.5.0
     prettier: ^2.0.0
     query-string: ^6.8.1
+    react-resize-aware: ^3.1.1
     rimraf: ^3.0.2
     typescript: ^4.0.0
     use-constant: ^1.0.0
@@ -30455,6 +30456,15 @@ __metadata:
   version: 0.11.0
   resolution: "react-refresh@npm:0.11.0"
   checksum: 112178a05b1e0ffeaf5d9fb4e56b4410a34a73adeb04dbf13abdc50d9ac9df2ada83e81485156cca0b3fa296aa3612751b3d6cd13be4464642a43679b819cbc7
+  languageName: node
+  linkType: hard
+
+"react-resize-aware@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "react-resize-aware@npm:3.1.1"
+  peerDependencies:
+    react: ^16.8.0 || 17.x
+  checksum: 0088849e128403ea66f90d588379d9260089c6f218b46e6254da20fe5e4d39c8d13b64da1e6a24bacd0d808db8b7d26bf9dc72801c58606c0b26e9eb5da1bdc5
   languageName: node
   linkType: hard
 

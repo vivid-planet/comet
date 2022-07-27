@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Changes
 
+-   `StackBreadcrumbs` has a new design and show an overflow menu when the items don't fit into a single line.
 -   `comet.generic` messages are exposed as public API through `messages.ts` (this stops them from being translated for every application)
 
 ### Incompatible Changes

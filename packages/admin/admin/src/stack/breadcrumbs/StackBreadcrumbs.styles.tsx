@@ -4,36 +4,60 @@ import { createStyles } from "@mui/styles";
 
 import { StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
-export type StackBreadcrumbsClassKey = BreadcrumbsClassKey | "link" | "last";
+export type StackBreadcrumbsClassKey =
+    | BreadcrumbsClassKey
+    | "breadcrumbs"
+    | "backAndFirstLinkContainer"
+    | "backButton"
+    | "backButtonSeparator"
+    | "link"
+    | "overflowLink"
+    | "lastLink";
 
-export const styles = ({ palette }: Theme) => {
+export const styles = ({ palette, spacing, typography }: Theme) => {
     return createStyles<StackBreadcrumbsClassKey, StackBreadcrumbsProps>({
         root: {
-            paddingTop: 30,
-            paddingBottom: 30,
+            position: "relative",
         },
-        ol: {},
-        li: {},
+        breadcrumbs: {
+            height: 50,
+            borderBottom: `1px solid ${palette.divider}`,
+        },
+        backAndFirstLinkContainer: {
+            display: "flex",
+            alignItems: "center",
+        },
+        backButton: {},
+        backButtonSeparator: {
+            height: 30,
+            width: 1,
+            backgroundColor: palette.divider,
+            marginRight: spacing(2),
+        },
+        ol: {
+            flexWrap: "nowrap",
+            height: "100%",
+            overflowY: "auto", // Make the breadcrumbs scrollable, if they still take up too much space, when only the first, last & the overflow link are visible.
+        },
+        li: {
+            whiteSpace: "nowrap",
+        },
         separator: {
-            color: palette.grey[300],
-            "& [class*='MuiSvgIcon-root']": {
-                fontSize: 12,
-            },
-            link: {
-                color: palette.text.primary,
-                textDecoration: "underline",
-                "& [class*='MuiTypography']": {
-                    fontSize: 13,
-                    lineHeight: "14px",
-                },
-            },
+            fontSize: 12,
         },
-        link: {},
-        last: {
+        link: {
+            fontSize: 13,
+            lineHeight: "14px",
+            fontWeight: typography.fontWeightMedium,
+            color: palette.grey[600],
+            textDecorationColor: "currentColor",
+        },
+        overflowLink: {
+            cursor: "pointer",
+        },
+        lastLink: {
             color: palette.text.disabled,
-            "&, &:hover": {
-                textDecoration: "none",
-            },
+            textDecoration: "none",
         },
     });
 };
