@@ -34,3 +34,18 @@ export function CrudQuery(options: CrudQueryOptions = {}): PropertyDecorator {
         Reflect.defineMetadata(`data:crudQuery`, options, target.constructor, propertyKey);
     };
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface CrudFilterOptions {
+    //nothing so far
+}
+
+/**
+ * Mark a property as filterable by filter parameter in CRUD Generator
+ */
+export function CrudFilter(options: CrudFilterOptions = {}): PropertyDecorator {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return function (target: any, propertyKey: string | symbol) {
+        Reflect.defineMetadata(`data:crudFilter`, options, target.constructor, propertyKey);
+    };
+}

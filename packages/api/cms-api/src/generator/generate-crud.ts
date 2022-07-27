@@ -17,6 +17,8 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     async function writeCrudResolver(): Promise<void> {
         const crudQueryProps = metadata.props.filter((prop) => Reflect.hasMetadata(`data:crudQuery`, metadata.class, prop.name));
         const hasQueryArg = crudQueryProps.length > 0;
+        const crudFilterProps = metadata.props.filter((prop) => Reflect.hasMetadata(`data:crudFilter`, metadata.class, prop.name));
+        const hasFilterArg = crudFilterProps.length > 0;
         const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
         const hasVisibleProp = metadata.props.some((prop) => prop.name == "visible");
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
@@ -24,6 +26,51 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
         const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
         const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
+
+        if (hasFilterArg) {
+            const filterOut = `import { StringFilter, NumberFilter } from "@comet/cms-api";
+            import { Field, InputType } from "@nestjs/graphql";
+            import { Type } from "class-transformer";
+            import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+
+            @InputType()
+            export class ${classNameSingular}Filter {
+                ${crudFilterProps
+                    .map((prop) => {
+                        if (prop.enum) {
+                            //TODO add support for enum
+                        } else if (prop.type === "string") {
+                            return `@Field(() => StringFilter, { nullable: true })
+                            @ValidateNested()
+                            @Type(() => StringFilter)
+                            ${prop.name}?: StringFilter;
+                            `;
+                        } else if (prop.type === "DecimalType") {
+                            return `@Field(() => NumberFilter, { nullable: true })
+                            @ValidateNested()
+                            @Type(() => NumberFilter)
+                            ${prop.name}?: NumberFilter;
+                            `;
+                        } else {
+                            //unsupported type TODO support more
+                        }
+                        return "";
+                    })
+                    .join("\n")}
+
+                @Field(() => [${classNameSingular}Filter], { nullable: true })
+                @Type(() => ${classNameSingular}Filter)
+                @ValidateNested({ each: true })
+                and?: ${classNameSingular}Filter[];
+
+                @Field(() => [${classNameSingular}Filter], { nullable: true })
+                @Type(() => ${classNameSingular}Filter)
+                @ValidateNested({ each: true })
+                or?: ${classNameSingular}Filter[];
+            }
+            `;
+            await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.filter.ts`, filterOut);
+        }
 
         const paginatedOut = `import { ObjectType } from "@nestjs/graphql";
     import { PaginatedResponseFactory } from "@comet/cms-api";
@@ -36,8 +83,10 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         await writeGenerated(`${generatorOptions.targetDirectory}/dto/paginated-${fileNamePlural}.ts`, paginatedOut);
 
         const argsOut = `import { ArgsType, Field, IntersectionType } from "@nestjs/graphql";
-    import { IsOptional, IsString } from "class-validator";
+    import { Type } from "class-transformer";
+    import { IsOptional, IsString, ValidateNested } from "class-validator";
     import { OffsetBasedPaginationArgs, SortArgs } from "@comet/cms-api";
+    import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
     
     @ArgsType()
     export class ${argsClassName} extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {
@@ -51,33 +100,123 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         `
                 : ""
         }
+
+        ${
+            hasFilterArg
+                ? `
+        @Field(() => ${classNameSingular}Filter, { nullable: true })
+        @ValidateNested()
+        @Type(() => ${classNameSingular}Filter)
+        filter?: ${classNameSingular}Filter;
+        `
+                : ""
+        }
     }    
     `;
         await writeGenerated(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
 
-        const serviceOut = `import { ObjectQuery } from "@mikro-orm/core";
+        const serviceOut = `import { StringFilter, NumberFilter } from "@comet/cms-api";
+    import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
     import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
+    import { ${classNameSingular}Filter } from "./dto/${fileNameSingular}.filter";
     
     @Injectable()
     export class ${classNamePlural}Service {    
         ${
-            hasQueryArg
+            hasQueryArg || hasFilterArg
                 ? `
-        getFindCondition(query: string | undefined): ObjectQuery<${metadata.className}> {
-            if (query) {
-                return {
+        getFindCondition(options: { ${hasQueryArg ? "query?: string, " : ""}${
+                      hasFilterArg ? `filter?: ${classNameSingular}Filter, ` : ""
+                  } }): ObjectQuery<${metadata.className}> {
+            const andFilters = [];
+            ${
+                hasQueryArg
+                    ? `
+            if (options.query) {
+                andFilters.push({
                     $or: [
                         {
-                            ${crudQueryProps.map((prop) => `${prop.name}: { $ilike: \`%\${query}%\`, },`).join("\n")}
+                            ${crudQueryProps.map((prop) => `${prop.name}: { $ilike: \`%\${options.query}%\`, },`).join("\n")} //TODO quote
                         },
                     ],
+                });
+            }
+            `
+                    : ""
+            }
+            ${
+                hasFilterArg
+                    ? `
+            if (options.filter) {
+                const convertFilter = (filter: ${classNameSingular}Filter): FilterQuery<${metadata.className}> => {
+                    return Object.entries(filter).reduce((acc, [filterPropertyName, filterProperty]) => {
+                        if (filterPropertyName == "and") {
+                            const value = filterProperty as ${classNameSingular}Filter[];
+                            if (value) {
+                                acc.$and = value.map(convertFilter);
+                            }
+                        } else if (filterPropertyName == "or") {
+                            const value = filterProperty as ${classNameSingular}Filter[];
+                            if (value) {
+                                acc.$or = value.map(convertFilter);
+                            }
+                        } else if (filterProperty instanceof StringFilter) {
+                            //TODO move this code itself into library
+                            acc[filterPropertyName] = {};
+                            if (filterProperty.contains !== undefined) {
+                                acc[filterPropertyName].$ilike = \`%\${filterProperty.contains}%\`; //TODO quote
+                            }
+                            if (filterProperty.startsWith !== undefined) {
+                                //TODO don't overwrite $ilike from contains
+                                acc[filterPropertyName].$ilike = \`\${filterProperty.startsWith}%\`;
+                            }
+                            if (filterProperty.endsWith !== undefined) {
+                                acc[filterPropertyName].$ilike = \`%\${filterProperty.endsWith}\`;
+                            }
+                            if (filterProperty.eq !== undefined) {
+                                acc[filterPropertyName].$eq = filterProperty.eq;
+                            }
+                            if (filterProperty.neq !== undefined) {
+                                acc[filterPropertyName].$neq = filterProperty.neq;
+                            }
+                        } else if (filterProperty instanceof NumberFilter) {
+                            //TODO move this code itself into library
+                            acc[filterPropertyName] = {};
+                            if (filterProperty.eq !== undefined) {
+                                acc[filterPropertyName].$eq = filterProperty.eq;
+                            }
+                            if (filterProperty.lt !== undefined) {
+                                acc[filterPropertyName].$lt = filterProperty.lt;
+                            }
+                            if (filterProperty.gt !== undefined) {
+                                acc[filterPropertyName].$gt = filterProperty.gt;
+                            }
+                            if (filterProperty.lte !== undefined) {
+                                acc[filterPropertyName].$lte = filterProperty.lte;
+                            }
+                            if (filterProperty.gte !== undefined) {
+                                acc[filterPropertyName].$gte = filterProperty.gte;
+                            }
+                            if (filterProperty.neq !== undefined) {
+                                acc[filterPropertyName].$ne = filterProperty.neq;
+                            }
+                        } else {
+                            throw new Error(\`Unsupported filter \${filterPropertyName}\`);
+                        }
+                        return acc;
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    }, {} as FilterQuery<any>);
                 };
+                andFilters.push(convertFilter(options.filter));
+            }
+            `
+                    : ""
             }
     
-            return {};
+            return andFilters.length > 0 ? { $and: andFilters } : {};
         }
         `
                 : ""
@@ -135,9 +274,13 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         @Query(() => [${metadata.className}])
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
-            @Args() { ${hasQueryArg ? `query, ` : ""}offset, limit, sortColumnName, sortDirection }: ${argsClassName}
+            @Args() { ${hasQueryArg ? `query, ` : ""}${hasFilterArg ? `filter, ` : ""}offset, limit, sortColumnName, sortDirection }: ${argsClassName}
         ): Promise<Paginated${classNamePlural}> {
-            const where = ${hasQueryArg ? `this.${instanceNamePlural}Service.getFindCondition(query);` : "{}"}
+            const where = ${
+                hasQueryArg || hasFilterArg
+                    ? `this.${instanceNamePlural}Service.getFindCondition({ ${hasQueryArg ? `query, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
+                    : "{}"
+            }
             ${scopeProp ? `where.scope = scope;` : ""}
             const options: FindOptions<${metadata.className}> = { offset, limit };
     

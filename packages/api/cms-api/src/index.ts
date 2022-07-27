@@ -46,6 +46,8 @@ export { CometEntityNotFoundException } from "./common/errors/entity-not-found.e
 export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
+export { NumberFilter } from "./common/filter/number.filter";
+export { StringFilter } from "./common/filter/string.filter";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";
 export { PaginatedResponseFactory } from "./common/pagination/paginated-response.factory";
 export { SortArgs } from "./common/sorting/sort.args";
@@ -89,6 +91,8 @@ export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
 export {
+    CrudFilter,
+    CrudFilterOptions,
     CrudGenerator,
     CrudGeneratorOptions,
     CrudQuery,

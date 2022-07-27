@@ -293,7 +293,7 @@ type Query {
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   product(id: ID!): Product
   productBySlug(slug: String!): Product
-  products(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String): [Product!]!
+  products(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, filter: ProductFilter): [Product!]!
 }
 
 enum SortDirection {
@@ -314,6 +314,30 @@ input FileFilterInput {
 
 input FolderFilterInput {
   searchText: String
+}
+
+input ProductFilter {
+  title: StringFilter
+  price: NumberFilter
+  and: [ProductFilter!]
+  or: [ProductFilter!]
+}
+
+input StringFilter {
+  contains: String
+  startsWith: String
+  endsWith: String
+  eq: String
+  neq: String
+}
+
+input NumberFilter {
+  eq: Float
+  lt: Float
+  gt: Float
+  lte: Float
+  gte: Float
+  neq: Float
 }
 
 type Mutation {
