@@ -43,6 +43,9 @@ function TimeRangePicker({
     const [startTime, setStartTime] = React.useState<IndividualTimeValue>(value?.start);
     const [endTime, setEndTime] = React.useState<IndividualTimeValue>(value?.end);
 
+    const [startPickerIsOpen, setStartPickerIsOpen] = React.useState<boolean>(false);
+    const [endPickerIsOpen, setEndPickerIsOpen] = React.useState<boolean>(false);
+
     const startPickerRef = React.useRef<HTMLElement>(null);
     const endPickerRef = React.useRef<HTMLElement>(null);
 
@@ -54,6 +57,17 @@ function TimeRangePicker({
         }
     }, [startTime, endTime, onChange]);
 
+    React.useEffect(() => {
+        if (!startPickerIsOpen && !endPickerIsOpen) {
+            if (startTime !== undefined && endTime === undefined) {
+                setEndTime(startTime);
+            }
+            if (startTime === undefined && endTime !== undefined) {
+                setStartTime(endTime);
+            }
+        }
+    }, [startPickerIsOpen, endPickerIsOpen, startTime, endTime]);
+
     const onChangeTimeValue = (newTimeValue: IndividualTimeValue, type: "start" | "end") => {
         const otherTimeValue = type === "start" ? endTime : startTime;
         const setNewTimeValue = type === "start" ? setStartTime : setEndTime;
@@ -64,8 +78,10 @@ function TimeRangePicker({
 
         if (newTimeValue === undefined) {
             setOtherTimeValue(undefined);
-        } else if (otherTimeInputRef.current && otherTimeValue === undefined) {
-            otherTimeInputRef.current.focus();
+        } else if (otherTimeValue === undefined) {
+            if (otherTimeInputRef.current) {
+                otherTimeInputRef.current.focus();
+            }
         }
     };
 
@@ -76,6 +92,8 @@ function TimeRangePicker({
                 value={startTime}
                 className={clsx(classes.timePicker, classes.startTimePicker)}
                 onChange={(time) => onChangeTimeValue(time, "start")}
+                onOpenPopper={() => setStartPickerIsOpen(true)}
+                onClosePopper={() => setStartPickerIsOpen(false)}
                 {...propsForBothTimePickers}
                 {...componentsProps.startPicker}
             />
@@ -85,6 +103,8 @@ function TimeRangePicker({
                 value={endTime}
                 className={clsx(classes.timePicker, classes.endTimePicker)}
                 onChange={(time) => onChangeTimeValue(time, "end")}
+                onOpenPopper={() => setEndPickerIsOpen(true)}
+                onClosePopper={() => setEndPickerIsOpen(false)}
                 {...propsForBothTimePickers}
                 {...componentsProps.endPicker}
             />
