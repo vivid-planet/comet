@@ -34,6 +34,10 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
                 decorators.push("@IsSlug()");
             }
             decorators.push("@Field()");
+        } else if (prop.type === "DecimalType") {
+            decorators.push("@IsNumber()");
+            decorators.push("@Field()");
+            type = "number";
         } else if (prop.type === "RootBlockType") {
             const rootBlockType = prop.customType as RootBlockType | undefined;
             if (!rootBlockType) throw new Error("Custom type not set");
@@ -69,7 +73,7 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
     }
     const inputOut = `import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber } from "class-validator";
 import { IsSlug } from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
