@@ -219,6 +219,11 @@ enum NewsCategory {
   Awards
 }
 
+type PaginatedNews {
+  nodes: [News!]!
+  totalCount: Int!
+}
+
 type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -226,6 +231,11 @@ type Product implements DocumentInterface {
   slug: String!
   price: Float
   createdAt: DateTime!
+}
+
+type PaginatedProducts {
+  nodes: [Product!]!
+  totalCount: Int!
 }
 
 type Redirect implements DocumentInterface {
@@ -284,7 +294,7 @@ type Query {
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News
   newsBySlug(slug: String!): News
-  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String): [News!]!
+  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -293,7 +303,7 @@ type Query {
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   product(id: ID!): Product
   productBySlug(slug: String!): Product
-  products(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, filter: ProductFilter): [Product!]!
+  products(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, filter: ProductFilter): PaginatedProducts!
 }
 
 enum SortDirection {

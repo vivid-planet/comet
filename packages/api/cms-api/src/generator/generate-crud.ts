@@ -271,7 +271,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 : ""
         }
     
-        @Query(() => [${metadata.className}])
+        @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args() { ${hasQueryArg ? `query, ` : ""}${hasFilterArg ? `filter, ` : ""}offset, limit, sortColumnName, sortDirection }: ${argsClassName}
