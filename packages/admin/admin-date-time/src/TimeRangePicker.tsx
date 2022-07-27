@@ -1,4 +1,4 @@
-import { ComponentsOverrides, Theme, Typography } from "@mui/material";
+import { ComponentsOverrides, FormControl, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
@@ -87,27 +87,31 @@ function TimeRangePicker({
 
     return (
         <div className={classes.root}>
-            <TimePicker
-                inputRef={startPickerRef}
-                value={startTime}
-                className={clsx(classes.timePicker, classes.startTimePicker)}
-                onChange={(time) => onChangeTimeValue(time, "start")}
-                onOpenPopper={() => setStartPickerIsOpen(true)}
-                onClosePopper={() => setStartPickerIsOpen(false)}
-                {...propsForBothTimePickers}
-                {...componentsProps.startPicker}
-            />
+            <FormControl>
+                <TimePicker
+                    inputRef={startPickerRef}
+                    value={startTime}
+                    className={clsx(classes.timePicker, classes.startTimePicker)}
+                    onChange={(time) => onChangeTimeValue(time, "start")}
+                    onOpenPopper={() => setStartPickerIsOpen(true)}
+                    onClosePopper={() => setStartPickerIsOpen(false)}
+                    {...propsForBothTimePickers}
+                    {...componentsProps.startPicker}
+                />
+            </FormControl>
             <Typography className={classes.separator}>{separatorText}</Typography>
-            <TimePicker
-                inputRef={endPickerRef}
-                value={endTime}
-                className={clsx(classes.timePicker, classes.endTimePicker)}
-                onChange={(time) => onChangeTimeValue(time, "end")}
-                onOpenPopper={() => setEndPickerIsOpen(true)}
-                onClosePopper={() => setEndPickerIsOpen(false)}
-                {...propsForBothTimePickers}
-                {...componentsProps.endPicker}
-            />
+            <FormControl>
+                <TimePicker
+                    inputRef={endPickerRef}
+                    value={endTime}
+                    className={clsx(classes.timePicker, classes.endTimePicker)}
+                    onChange={(time) => onChangeTimeValue(time, "end")}
+                    onOpenPopper={() => setEndPickerIsOpen(true)}
+                    onClosePopper={() => setEndPickerIsOpen(false)}
+                    {...propsForBothTimePickers}
+                    {...componentsProps.endPicker}
+                />
+            </FormControl>
         </div>
     );
 }
