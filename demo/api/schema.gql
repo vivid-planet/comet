@@ -219,9 +219,13 @@ enum NewsCategory {
   Awards
 }
 
-type PaginatedNews {
-  nodes: [News!]!
-  totalCount: Int!
+type Product implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  title: String!
+  slug: String!
+  price: Float
+  createdAt: DateTime!
 }
 
 type Redirect implements DocumentInterface {
@@ -280,13 +284,16 @@ type Query {
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News
   newsBySlug(slug: String!): News
-  newsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, category: NewsCategory, scope: NewsContentScopeInput!): PaginatedNews!
+  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String): [News!]!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  product(id: ID!): Product
+  productBySlug(slug: String!): Product
+  products(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String): [Product!]!
 }
 
 enum SortDirection {
@@ -334,11 +341,14 @@ type Mutation {
   deleteDamFolder(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!
-  updateNewsVisibility(id: ID!, visible: Boolean!): News!
   deleteNews(id: ID!): Boolean!
+  updateNewsVisibility(id: ID!, visible: Boolean!): News!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
-  saveFooter(input: FooterInput!, lastUpdatedAt: DateTime): Footer!
+  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): PredefinedPage!
+  createProduct(input: ProductInput!): Product!
+  updateProduct(id: ID!, input: ProductInput!, lastUpdatedAt: DateTime): Product!
+  deleteProduct(id: ID!): Boolean!
 }
 
 input PageInput {
@@ -428,10 +438,8 @@ input UpdateDamFolderInput {
 }
 
 input NewsInput {
-  title: String!
   slug: String!
-  date: DateTime!
-  category: NewsCategory!
+  title: String!
   image: JSONObject!
   content: JSONObject!
 }
@@ -442,9 +450,13 @@ input MainMenuItemInput {
 
 input FooterInput {
   content: JSONObject!
-  scope: FooterContentScopeInput!
 }
 
 input PredefinedPageInput {
   type: String
+}
+
+input ProductInput {
+  title: String!
+  slug: String!
 }

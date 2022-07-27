@@ -33,6 +33,7 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
                 //TODO find a non-magic solution
                 decorators.push("@IsSlug()");
             }
+            decorators.push("@Field()");
         } else if (prop.type === "RootBlockType") {
             const rootBlockType = prop.customType as RootBlockType | undefined;
             if (!rootBlockType) throw new Error("Custom type not set");
@@ -61,8 +62,7 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
             //unsupported type TODO support more
             continue;
         }
-        fieldsOut += `@Field()
-    ${decorators.join("\n")}
+        fieldsOut += `${decorators.join("\n")}
     ${prop.name}: ${type};
     
     `;

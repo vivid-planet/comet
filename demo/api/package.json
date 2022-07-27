@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "api-generator": "rimraf src/*/generated && comet-api-generator generate",
+        "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
         "build": "yarn api-generator && rimraf dist && nest build",
         "start": "yarn api-generator && rimraf dist && dotenv -c -- nest start",
         "start:dev": "yarn api-generator && rimraf dist && dotenv -c -- nest start --watch --preserveWatchOutput",
