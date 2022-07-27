@@ -87,7 +87,7 @@ function TimeRangePicker({
 
     return (
         <div className={classes.root}>
-            <FormControl>
+            <FormControl className={classes.formControl}>
                 <TimePicker
                     inputRef={startPickerRef}
                     value={startTime}
@@ -95,12 +95,13 @@ function TimeRangePicker({
                     onChange={(time) => onChangeTimeValue(time, "start")}
                     onOpenPopper={() => setStartPickerIsOpen(true)}
                     onClosePopper={() => setStartPickerIsOpen(false)}
+                    fullWidth
                     {...propsForBothTimePickers}
                     {...componentsProps.startPicker}
                 />
             </FormControl>
             <Typography className={classes.separator}>{separatorText}</Typography>
-            <FormControl>
+            <FormControl className={classes.formControl}>
                 <TimePicker
                     inputRef={endPickerRef}
                     value={endTime}
@@ -108,6 +109,7 @@ function TimeRangePicker({
                     onChange={(time) => onChangeTimeValue(time, "end")}
                     onOpenPopper={() => setEndPickerIsOpen(true)}
                     onClosePopper={() => setEndPickerIsOpen(false)}
+                    fullWidth
                     {...propsForBothTimePickers}
                     {...componentsProps.endPicker}
                 />
@@ -116,7 +118,7 @@ function TimeRangePicker({
     );
 }
 
-export type TimeRangePickerClassKey = "root" | "timePicker" | "startTimePicker" | "endTimePicker" | "separator";
+export type TimeRangePickerClassKey = "root" | "formControl" | "timePicker" | "startTimePicker" | "endTimePicker" | "separator";
 
 export const styles = ({ spacing }: Theme) =>
     createStyles<TimeRangePickerClassKey, TimeRangePickerProps>({
@@ -124,10 +126,10 @@ export const styles = ({ spacing }: Theme) =>
             display: "flex",
             alignItems: "center",
         },
-        timePicker: {
+        formControl: {
             flexGrow: 1,
-            flexBasis: "100%",
         },
+        timePicker: {},
         startTimePicker: {},
         endTimePicker: {},
         separator: {
