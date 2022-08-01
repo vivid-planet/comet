@@ -50,6 +50,7 @@ interface FileUploadApi {
         multiple: boolean;
         maxSize: number;
     };
+    lastUploadedFileIds: string[];
 }
 
 export interface FileUploadValidationError {
@@ -95,6 +96,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const client = useApolloClient();
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+
     const accept: Accept = React.useMemo(() => {
         const acceptObj: Accept = {};
         const acceptedMimetypes = options.acceptedMimetypes ?? allAcceptedMimeTypes;
@@ -108,8 +110,9 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
         return acceptObj;
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
-
     const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
+
+    const [lastUploadedFileIds, setLastUploadedFileIds] = React.useState<string[]>([]);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
     const [errorDialogOpen, setErrorDialogOpen] = React.useState<boolean>(false);
     const [totalSizes, setTotalSizes] = React.useState<{ [key: string]: number }>({});
@@ -242,6 +245,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
 
+        const uploadedFileIds: string[] = [];
+
         let errorOccurred = false;
         if (fileRejections.length > 0) {
             errorOccurred = true;
@@ -262,7 +267,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 const targetFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId;
 
                 try {
-                    await upload(
+                    const response: { data: { id: string } } = await upload(
                         context.damConfig.apiClient,
                         {
                             file,
@@ -275,6 +280,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                             },
                         },
                     );
+
+                    uploadedFileIds.push(response.data.id);
                 } catch (err) {
                     errorOccurred = true;
                     const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
@@ -310,6 +317,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setTotalSizes({});
         setLoadedSizes({});
         options.onAfterUpload?.();
+
+        setLastUploadedFileIds(uploadedFileIds);
     };
 
     return {
@@ -334,5 +343,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             multiple: true,
             maxSize: maxFileSizeInBytes,
         },
+        lastUploadedFileIds,
     };
 };
