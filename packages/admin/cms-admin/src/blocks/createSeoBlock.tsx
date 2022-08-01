@@ -100,7 +100,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                             <Field
                                 label={intl.formatMessage({
                                     id: "comet.blocks.seo.html  Title",
-                                    defaultMessage: "Html Title",
+                                    defaultMessage: "HTML Title",
                                 })}
                                 name="htmlTitle"
                                 component={FinalFormInput}
