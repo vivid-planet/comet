@@ -2,7 +2,6 @@ import {
     AnnotationBlockMeta,
     BlockContext,
     BlockData,
-    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -10,10 +9,12 @@ import {
     inputToData,
     TraversableTransformResponse,
 } from "@comet/blocks-api";
+import { BlockIndexDataArray } from "@comet/blocks-api/lib/blocks/block";
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { FocalPoint } from "../dam/common/enums/focal-point.enum";
+import { File } from "../dam/files/entities/file.entity";
 import { FilesService } from "../dam/files/files.service";
 import { ImageCropAreaInput } from "../dam/images/dto/image-crop-area.input";
 import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
@@ -79,10 +80,13 @@ class PixelImageBlockData extends BlockData {
         return imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, previewDamUrls);
     }
 
-    indexData(): BlockIndexData {
-        return {
-            damFileIds: this.damFileId ? [this.damFileId] : [],
-        };
+    indexData(): BlockIndexDataArray {
+        return [
+            {
+                entityName: File.name,
+                id: this.damFileId,
+            },
+        ];
     }
 }
 

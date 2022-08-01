@@ -6,14 +6,17 @@ import { DiscoverService } from "./discover.service";
 @Injectable()
 export class BlockIndexService {
     private connection: Connection;
+    private readonly entityManager: EntityManager;
 
     constructor(entityManager: EntityManager, private readonly discoverEntitiesService: DiscoverService) {
+        this.entityManager = entityManager;
         this.connection = entityManager.getConnection();
     }
 
     async createViews(): Promise<void> {
         const damFilesIndexSelects: string[] = [];
         for (const discoveredEntity of this.discoverEntitiesService.discoverRootBlocks()) {
+            console.log("discoveredEntity ", discoveredEntity);
             const { metadata, column } = discoveredEntity;
             const primary = metadata.primaryKeys[0];
 
@@ -30,6 +33,18 @@ export class BlockIndexService {
                             json_array_elements_text("index"->'damFileIds') files`;
             damFilesIndexSelects.push(select);
         }
+
+        // console.log("damFilesIndexSelects ", damFilesIndexSelects);
+
+        // const metadataStorage = this.entityManager.getMetadata();
+
+        // console.log("File.name ", File.name);
+        // console.log("File ", File);
+        // console.log("File ", Reflect.getMetadata(`entity`, File));
+        // console.log("File keys ", Reflect.getMetadataKeys(File));
+        // console.log("File keys ", Reflect.getOwnMetadataKeys(File));
+        // console.log("File keys ", metadataStorage.get(File.name).tableName);
+        // console.log("metadata ", metadataStorage.get(File.name));
 
         const viewSql = damFilesIndexSelects.join("\n UNION ALL \n");
 

@@ -27,11 +27,14 @@ export class DiscoverService {
         entities.forEach((entity) => {
             const rootBlockEntityOptions = Reflect.getMetadata(`data:rootBlockEntityOptions`, entity);
             if (rootBlockEntityOptions) {
+                // console.log("entities ", entity);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const keys = Reflect.getMetadata(`keys:rootBlock`, (entity as any).prototype) || [];
+                // console.log("keys ", keys);
                 for (const key of keys) {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const block = Reflect.getMetadata(`data:rootBlock`, (entity as any).prototype, key);
+                    // console.log("block ", block);
                     ret.push({
                         repository: this.orm.em.getRepository(entity),
                         metadata: metadataStorage.get(entity.name),
