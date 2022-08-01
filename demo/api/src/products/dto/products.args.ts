@@ -24,12 +24,12 @@ export class StringFilter {
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
-    eq?: string;
+    equal?: string;
 
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
-    neq?: string;
+    notEqual?: string;
 }
 
 //TODO move into library
@@ -38,32 +38,32 @@ export class NumberFilter {
     @Field({ nullable: true })
     @IsOptional()
     @IsNumber()
-    eq?: number;
+    equal?: number;
 
     @Field({ nullable: true })
     @IsOptional()
     @IsNumber()
-    lt?: number;
+    lowerTan?: number;
 
     @Field({ nullable: true })
     @IsOptional()
     @IsNumber()
-    gt?: number;
+    geraterThan?: number;
 
     @Field({ nullable: true })
     @IsOptional()
     @IsNumber()
-    lte?: number;
+    lowerThanEqual?: number;
 
     @Field({ nullable: true })
     @IsOptional()
     @IsNumber()
-    gte?: number;
+    greaterThanEqual?: number;
 
     @Field({ nullable: true })
     @IsOptional()
     @IsNumber()
-    neq?: number;
+    notEqual?: number;
 }
 
 @InputType()

@@ -47,31 +47,31 @@ export class ProductsService {
                         if (filterProperty.endsWith !== undefined) {
                             acc[filterPropertyName].$ilike = `%${filterProperty.endsWith}`;
                         }
-                        if (filterProperty.eq !== undefined) {
-                            acc[filterPropertyName].$eq = filterProperty.eq;
+                        if (filterProperty.equal !== undefined) {
+                            acc[filterPropertyName].$eq = filterProperty.equal;
                         }
-                        if (filterProperty.neq !== undefined) {
-                            acc[filterPropertyName].$neq = filterProperty.neq;
+                        if (filterProperty.notEqual !== undefined) {
+                            acc[filterPropertyName].$neq = filterProperty.notEqual;
                         }
                     } else if (filterProperty instanceof NumberFilter) {
                         acc[filterPropertyName] = {};
-                        if (filterProperty.eq !== undefined) {
-                            acc[filterPropertyName].$eq = filterProperty.eq;
+                        if (filterProperty.equal !== undefined) {
+                            acc[filterPropertyName].$eq = filterProperty.equal;
                         }
-                        if (filterProperty.lt !== undefined) {
-                            acc[filterPropertyName].$lt = filterProperty.lt;
+                        if (filterProperty.lowerTan !== undefined) {
+                            acc[filterPropertyName].$lt = filterProperty.lowerTan;
                         }
-                        if (filterProperty.gt !== undefined) {
-                            acc[filterPropertyName].$gt = filterProperty.gt;
+                        if (filterProperty.geraterThan !== undefined) {
+                            acc[filterPropertyName].$gt = filterProperty.geraterThan;
                         }
-                        if (filterProperty.lte !== undefined) {
-                            acc[filterPropertyName].$lte = filterProperty.lte;
+                        if (filterProperty.lowerThanEqual !== undefined) {
+                            acc[filterPropertyName].$lte = filterProperty.lowerThanEqual;
                         }
-                        if (filterProperty.gte !== undefined) {
-                            acc[filterPropertyName].$gte = filterProperty.gte;
+                        if (filterProperty.greaterThanEqual !== undefined) {
+                            acc[filterPropertyName].$gte = filterProperty.greaterThanEqual;
                         }
-                        if (filterProperty.neq !== undefined) {
-                            acc[filterPropertyName].$ne = filterProperty.neq;
+                        if (filterProperty.notEqual !== undefined) {
+                            acc[filterPropertyName].$ne = filterProperty.notEqual;
                         }
                     } else {
                         throw new Error(`Unsupported filter ${filterPropertyName}`);
