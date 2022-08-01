@@ -27,19 +27,6 @@ module.exports = {
 
         return config;
     },
-    env: {
-        SITE_URL: process.env.SITE_URL,
-        GTM_ID: process.env.GTM_ID,
-        API_URL: process.env.API_URL,
-        PCM_API_URL: process.env.PCM_API_URL,
-        PCM_API_USER: process.env.PCM_API_USER,
-        PCM_API_PASSWORD: process.env.PCM_API_PASSWORD,
-        DAM_ALLOWED_IMAGE_ASPECT_RATIOS: process.env.DAM_ALLOWED_IMAGE_ASPECT_RATIOS,
-        GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
-        SITE_DOMAIN: process.env.SITE_DOMAIN,
-        SITE_LANGUAGES: process.env.SITE_LANGUAGES,
-        SITE_DEFAULT_LANGUAGE: process.env.SITE_DEFAULT_LANGUAGE,
-    },
     i18n: {
         locales: process.env.SITE_LANGUAGES.split(","),
         defaultLocale: process.env.SITE_DEFAULT_LANGUAGE,
