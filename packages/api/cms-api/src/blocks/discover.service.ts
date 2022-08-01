@@ -34,7 +34,6 @@ export class DiscoverService {
                 for (const key of keys) {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const block = Reflect.getMetadata(`data:rootBlock`, (entity as any).prototype, key);
-                    // console.log("block ", block);
                     ret.push({
                         repository: this.orm.em.getRepository(entity),
                         metadata: metadataStorage.get(entity.name),

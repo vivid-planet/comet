@@ -10,7 +10,7 @@ class ImageBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                entityName: "DamFile",
+                entityName: "File",
                 id: this.damFileId,
             },
         ];
