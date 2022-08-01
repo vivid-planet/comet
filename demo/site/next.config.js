@@ -1,17 +1,6 @@
 /* eslint-disable */
 
 module.exports = {
-    headers: async () => [
-        {
-            source: "/_next/image",
-            headers: [
-                {
-                    key: "Cache-Control",
-                    value: "max-age=31536000",
-                },
-            ],
-        },
-    ],
     redirects: async () => {
         var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
         return redirects;
