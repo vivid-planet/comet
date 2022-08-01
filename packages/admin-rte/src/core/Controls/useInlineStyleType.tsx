@@ -16,7 +16,7 @@ const browser = detectBrowser.detect();
 
 interface IProps {
     editorState: EditorState;
-    setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
+    setEditorState: (editorState: EditorState) => void;
     supportedThings: SupportedThings[];
     editorRef: React.RefObject<Editor>;
     customInlineStyles?: CustomInlineStyles;
@@ -108,9 +108,9 @@ export default function useInlineStyleType({ editorState, setEditorState, suppor
     const handleInlineStyleButtonClick = React.useCallback(
         (draftInlineStyleType: InlineStyleType, e: React.MouseEvent) => {
             e.preventDefault();
-            setEditorState((previousEditorState) => RichUtils.toggleInlineStyle(previousEditorState, draftInlineStyleType));
+            setEditorState(RichUtils.toggleInlineStyle(editorState, draftInlineStyleType));
         },
-        [setEditorState],
+        [setEditorState, editorState],
     );
 
     const features: Array<IFeatureConfig<InlineStyleType>> = React.useMemo(

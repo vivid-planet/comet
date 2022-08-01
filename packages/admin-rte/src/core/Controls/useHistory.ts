@@ -9,7 +9,7 @@ import { IFeatureConfig } from "../types";
 
 interface IProps {
     editorState: EditorState;
-    setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
+    setEditorState: (editorState: EditorState) => void;
     supportedThings: SupportedThings[];
 }
 

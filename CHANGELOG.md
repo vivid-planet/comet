@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [Next]
+
+## Bugfixes
+
+-   [RTE] Fix a bug were `setEditorState` was incorrectly assumed to be a React state setter function.
+
 # [2.2.0]
 
 ## Highlights
