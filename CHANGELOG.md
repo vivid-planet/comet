@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Bugfixes
 
 -   close the EditDialog after submitting a contained form via ENTER click
+-   [RTE] Fix a bug were `setEditorState` was incorrectly assumed to be a React state setter function.
 
 ## @comet/admin-theme
 
