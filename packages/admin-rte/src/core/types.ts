@@ -42,7 +42,7 @@ export type InlineStyleType = CustomInlineStyleType | DraftInlineStyleType;
 
 export interface IControlProps {
     editorState: EditorState;
-    setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
+    setEditorState: (editorState: EditorState) => void;
     options: IRteOptions;
     editorRef: React.RefObject<Editor>;
     disabled?: boolean;
