@@ -75,6 +75,7 @@ export interface BlockMethods<
     childBlockCount?: (state: State) => number;
     previewContent: (state: State, context?: BlockContext) => PreviewContent[];
     dynamicDisplayName?: (state: State) => React.ReactNode;
+    fromRaw?: (raw: unknown) => State | false;
 }
 
 export interface AnonymousBlockInterface<

@@ -208,6 +208,19 @@ IBlockFactoryOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, any, 
                 return await block.isValid(c.props);
             }),
 
+        fromRaw: (raw) => {
+            for (const [type, block] of Object.entries(supportedBlocks)) {
+                if (block.fromRaw?.(raw)) {
+                    return {
+                        attachedBlocks: [{ type, props: block.fromRaw(raw) }],
+                        activeType: type,
+                    };
+                }
+            }
+
+            return false;
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {

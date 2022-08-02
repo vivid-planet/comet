@@ -42,6 +42,17 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
         return state.targetUrl ? isHref(state.targetUrl) : true;
     },
 
+    fromRaw: (raw) => {
+        if (typeof raw === "string" && isHref(raw)) {
+            return {
+                targetUrl: raw,
+                openInNewWindow: false,
+            };
+        }
+
+        return false;
+    },
+
     AdminComponent: ({ state, updateState }) => {
         return (
             <SelectPreviewComponent>

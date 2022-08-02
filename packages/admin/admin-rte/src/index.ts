@@ -18,5 +18,6 @@ export { FilterEditorStateBeforeUpdateFn, IOptions as IRteOptions, IRteRef, defa
 export { IOptions as IRteReadOnlyOptions, IProps as IRteReadOnlyProps, default as RteReadOnly } from "./core/RteReadOnly";
 export { default as findEntityInCurrentSelection } from "./core/utils/findEntityInCurrentSelection";
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
+export { pasteAndFilterText } from "./core/utils/pasteAndFilterText";
 export { default as selectionIsInOneBlock } from "./core/utils/selectionIsInOneBlock";
 export { default as createFinalFormRte } from "./field/createFinalFormRte";
