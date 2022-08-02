@@ -5,6 +5,7 @@ import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import {
     DraftBlockType,
     DraftEditorCommand,
+    DraftHandleValue,
     DraftStyleMap,
     Editor as DraftJsEditor,
     EditorProps as DraftJsEditorProps,
@@ -12,6 +13,7 @@ import {
     getDefaultKeyBinding,
     RichUtils,
 } from "draft-js";
+import { handleDraftEditorPastedText, onDraftEditorCopy, onDraftEditorCut } from "draftjs-conductor";
 import * as React from "react";
 
 import Controls from "./Controls/Controls";
@@ -279,6 +281,20 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
                     keyBindingFn={keyBindingFn}
                     customStyleMap={customStyleMap}
                     blockRenderMap={blockRenderMap}
+                    // @ts-expect-error the onCopy and onPaste APIs are not exposed publicly
+                    onCopy={onDraftEditorCopy}
+                    onCut={onDraftEditorCut}
+                    handlePastedText={(text: string, html: string | undefined, editorState: EditorState): DraftHandleValue => {
+                        let nextEditorState = handleDraftEditorPastedText(html, editorState);
+
+                        if (nextEditorState) {
+                            nextEditorState = defaultFilterEditorStateBeforeUpdate(nextEditorState, options);
+                            decoratedOnChange(nextEditorState);
+                            return "handled";
+                        }
+
+                        return "not-handled";
+                    }}
                     {...options.draftJsProps}
                 />
             </div>

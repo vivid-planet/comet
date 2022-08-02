@@ -3485,6 +3485,7 @@ __metadata:
     "@types/draft-js": ^0.10.38
     "@types/immutable": ^3.8.7
     detect-browser: ^5.2.1
+    draftjs-conductor: ^3.0.0
     eslint: ^8.0.0
     prettier: ^2.0.0
     rimraf: ^3.0.2
@@ -16594,6 +16595,15 @@ __metadata:
     react: ">=0.14.0"
     react-dom: ">=0.14.0"
   checksum: b6d127a5e22838d3d43e736762c689c8d67dc632e9eb53b025c2d9504f892bcd0e05c8137f63051ae7b6ecb8b722c8f3923a13453583023e85b999cc0f6f93f7
+  languageName: node
+  linkType: hard
+
+"draftjs-conductor@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "draftjs-conductor@npm:3.0.0"
+  peerDependencies:
+    draft-js: ^0.10.4 || ^0.11.0 || ^0.12.0
+  checksum: e60aa32cce46a8104572d9508e2c07a7ffa2a5ebd00d8893b12ac0967677f7471e41a7fd6edea5235bf1792aada36ac2b7cef2e777ca03f9600850bcb89e7735
   languageName: node
   linkType: hard
 
