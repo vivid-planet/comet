@@ -49,41 +49,43 @@ function TimeRangePicker({
     const startPickerRef = React.useRef<HTMLElement>(null);
     const endPickerRef = React.useRef<HTMLElement>(null);
 
-    React.useEffect(() => {
-        if (startTime && endTime) {
-            onChange?.({ start: startTime, end: endTime });
-        } else if (startTime === undefined && endTime === undefined) {
-            onChange?.(undefined);
-        }
-    }, [startTime, endTime, onChange]);
+    const onChangeTimeValue = React.useCallback(
+        (newTimeValue: IndividualTimeValue, type: "start" | "end") => {
+            if (newTimeValue === undefined) {
+                onChange?.(undefined);
+                setStartTime(undefined);
+                setEndTime(undefined);
+            } else if (type === "start") {
+                setStartTime(newTimeValue);
 
+                if (endTime) {
+                    onChange?.({ start: newTimeValue, end: endTime });
+                } else {
+                    endPickerRef.current?.focus();
+                }
+            } else if (type === "end") {
+                setEndTime(newTimeValue);
+
+                if (startTime) {
+                    onChange?.({ start: startTime, end: newTimeValue });
+                } else {
+                    startPickerRef.current?.focus();
+                }
+            }
+        },
+        [startTime, endTime, onChange],
+    );
+
+    // Setting both values the same when closing the pickers and one value is undefined needs to be handled inside `useEffect`, as `setStartTime`/`setEndTime` might not be complete when calling `onClosePopper`.
     React.useEffect(() => {
         if (!startPickerIsOpen && !endPickerIsOpen) {
             if (startTime !== undefined && endTime === undefined) {
-                setEndTime(startTime);
-            }
-            if (startTime === undefined && endTime !== undefined) {
-                setStartTime(endTime);
-            }
-        }
-    }, [startPickerIsOpen, endPickerIsOpen, startTime, endTime]);
-
-    const onChangeTimeValue = (newTimeValue: IndividualTimeValue, type: "start" | "end") => {
-        const otherTimeValue = type === "start" ? endTime : startTime;
-        const setNewTimeValue = type === "start" ? setStartTime : setEndTime;
-        const setOtherTimeValue = type === "start" ? setEndTime : setStartTime;
-        const otherTimeInputRef = type === "start" ? endPickerRef : startPickerRef;
-
-        setNewTimeValue(newTimeValue);
-
-        if (newTimeValue === undefined) {
-            setOtherTimeValue(undefined);
-        } else if (otherTimeValue === undefined) {
-            if (otherTimeInputRef.current) {
-                otherTimeInputRef.current.focus();
+                onChangeTimeValue(startTime, "end");
+            } else if (startTime === undefined && endTime !== undefined) {
+                onChangeTimeValue(endTime, "start");
             }
         }
-    };
+    }, [onChangeTimeValue, startPickerIsOpen, endPickerIsOpen, startTime, endTime]);
 
     return (
         <div className={classes.root}>
