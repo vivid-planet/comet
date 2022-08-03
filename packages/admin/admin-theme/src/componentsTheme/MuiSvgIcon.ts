@@ -11,6 +11,7 @@ export const getMuiSvgIcon: GetMuiComponentTheme<"MuiSvgIcon"> = (component, { p
         fontSizeSmall: {
             fontSize: 10,
         },
+        // @ts-expect-error The type for `fontSizeMedium` is missing, but the class exsits.
         fontSizeMedium: {
             fontSize: 16,
         },
