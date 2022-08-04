@@ -26,53 +26,56 @@ const MasterMenu: React.FC = () => {
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
             <MenuItemRouterLink
-                primary={intl.formatMessage({ id: "comet.menu.dashboard", defaultMessage: "Dashboard" })}
+                primary={intl.formatMessage({ id: "cometDemo.menu.dashboard", defaultMessage: "Dashboard" })}
                 icon={<Dashboard />}
                 to={`${match.url}/dashboard`}
             />
-            <MenuCollapsibleItem primary={intl.formatMessage({ id: "comet.menu.pageTree", defaultMessage: "Page tree" })} icon={<PageTree />}>
+            <MenuCollapsibleItem primary={intl.formatMessage({ id: "cometDemo.menu.pageTree", defaultMessage: "Page tree" })} icon={<PageTree />}>
                 <MenuItemRouterLink
-                    primary={intl.formatMessage({ id: "comet.menu.pageTree", defaultMessage: "Main menu" })}
+                    primary={intl.formatMessage({ id: "cometDemo.menu.pageTree", defaultMessage: "Main menu" })}
                     to={`${match.url}/pages/pagetree/main-navigation`}
                 />
                 <MenuItemRouterLink
-                    primary={intl.formatMessage({ id: "comet.menu.pageTree", defaultMessage: "Top menu" })}
+                    primary={intl.formatMessage({ id: "cometDemo.menu.pageTree", defaultMessage: "Top menu" })}
                     to={`${match.url}/pages/pagetree/top-menu`}
                 />
             </MenuCollapsibleItem>
 
             <MenuCollapsibleItem
-                primary={intl.formatMessage({ id: "comet.menu.structuredContent", defaultMessage: "Structured Content" })}
+                primary={intl.formatMessage({ id: "cometDemo.menu.structuredContent", defaultMessage: "Structured Content" })}
                 icon={<Data />}
             >
                 <MenuItemRouterLink
-                    primary={intl.formatMessage({ id: "comet.menu.news", defaultMessage: "News" })}
+                    primary={intl.formatMessage({ id: "cometDemo.menu.news", defaultMessage: "News" })}
                     to={`${match.url}/structured-content/news`}
                 />
             </MenuCollapsibleItem>
             <MenuItemRouterLink
-                primary={intl.formatMessage({ id: "comet.menu.dam", defaultMessage: "Assets" })}
+                primary={intl.formatMessage({ id: "cometDemo.menu.dam", defaultMessage: "Assets" })}
                 icon={<Assets />}
                 to={`${match.url}/assets`}
             />
-            <MenuCollapsibleItem primary={intl.formatMessage({ id: "comet.menu.projectSnips", defaultMessage: "Project snips" })} icon={<Snips />}>
+            <MenuCollapsibleItem
+                primary={intl.formatMessage({ id: "cometDemo.menu.projectSnips", defaultMessage: "Project snips" })}
+                icon={<Snips />}
+            >
                 <MenuItemRouterLink
-                    primary={intl.formatMessage({ id: "comet.menu.mainMenu", defaultMessage: "Main menu" })}
+                    primary={intl.formatMessage({ id: "cometDemo.menu.mainMenu", defaultMessage: "Main menu" })}
                     to={`${match.url}/project-snips/main-menu`}
                 />
             </MenuCollapsibleItem>
-            <MenuCollapsibleItem primary={intl.formatMessage({ id: "comet.menu.system", defaultMessage: "System" })} icon={<Wrench />}>
+            <MenuCollapsibleItem primary={intl.formatMessage({ id: "cometDemo.menu.system", defaultMessage: "System" })} icon={<Wrench />}>
                 <MenuItemRouterLink
-                    primary={intl.formatMessage({ id: "comet.menu.publisher", defaultMessage: "Publisher" })}
+                    primary={intl.formatMessage({ id: "cometDemo.menu.publisher", defaultMessage: "Publisher" })}
                     to={`${match.url}/system/publisher`}
                 />
                 <MenuItemRouterLink
-                    primary={intl.formatMessage({ id: "comet.menu.redirects", defaultMessage: "Redirects" })}
+                    primary={intl.formatMessage({ id: "cometDemo.menu.redirects", defaultMessage: "Redirects" })}
                     to={`${match.url}/system/redirects`}
                 />
             </MenuCollapsibleItem>
             <MenuItemRouterLink
-                primary={intl.formatMessage({ id: "comet.menu.componentDemo", defaultMessage: "Component demo" })}
+                primary={intl.formatMessage({ id: "cometDemo.menu.componentDemo", defaultMessage: "Component demo" })}
                 to={`${match.url}/component-demo`}
                 icon={<Snips />}
             />

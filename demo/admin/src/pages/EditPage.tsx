@@ -153,7 +153,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             openPreviewWindow(pageState.path, contentScopeMatch.url);
                         }}
                     >
-                        <FormattedMessage id="comet.pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                        <FormattedMessage id="cometDemo.pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
                     {pageSaveButton}
                 </ToolbarActions>
@@ -170,7 +170,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             ),
                             content: (
                                 <AdminComponentRoot
-                                    title={intl.formatMessage({ id: "comet.pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
+                                    title={intl.formatMessage({ id: "cometDemo.pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
                                 >
                                     {rootBlocksApi.content.adminUI}
                                 </AdminComponentRoot>
@@ -180,7 +180,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             key: "config",
                             label: (
                                 <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                    <FormattedMessage id="comet.pages.pages.page.edit.config" defaultMessage="Config" />{" "}
+                                    <FormattedMessage id="cometDemo.pages.pages.page.edit.config" defaultMessage="Config" />{" "}
                                 </AdminTabLabel>
                             ),
                             content: rootBlocksApi.seo.adminUI,
