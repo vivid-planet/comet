@@ -134,7 +134,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                             openPreviewWindow(item.node.path, contentScopeMatch.url);
                         }}
                     >
-                        <FormattedMessage id="comet.pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                        <FormattedMessage id="cometDemo.pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
 
                     <SplitButton localStorageKey="EditMainMenuItemSave" disabled={!hasChanges}>
@@ -181,7 +181,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                     <SplitPreview url={`${siteConfig.previewUrl}/admin/main-menu`} previewState={previewState} previewApi={previewApi}>
                         <div>
                             {content ? (
-                                <AdminComponentRoot title={intl.formatMessage({ id: "comet.mainMenu.menuItem", defaultMessage: "Menu item" })}>
+                                <AdminComponentRoot title={intl.formatMessage({ id: "cometDemo.mainMenu.menuItem", defaultMessage: "Menu item" })}>
                                     <RichTextBlock.AdminComponent
                                         state={content}
                                         updateState={(setStateAction) => {
@@ -190,13 +190,13 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                                     />
                                     <HiddenInSubroute>
                                         <Button startIcon={<Delete />} onClick={handleRemoveContentClick}>
-                                            <FormattedMessage id="comet.mainMenu.removeContent" defaultMessage="Remove content" />
+                                            <FormattedMessage id="cometDemo.mainMenu.removeContent" defaultMessage="Remove content" />
                                         </Button>
                                     </HiddenInSubroute>
                                 </AdminComponentRoot>
                             ) : (
                                 <Button startIcon={<Add />} onClick={handleAddContentClick}>
-                                    <FormattedMessage id="comet.mainMenu.addContent" defaultMessage="Add content" />
+                                    <FormattedMessage id="cometDemo.mainMenu.addContent" defaultMessage="Add content" />
                                 </Button>
                             )}
                         </div>

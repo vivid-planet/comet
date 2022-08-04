@@ -79,11 +79,11 @@ const apolloClient = createApolloClient({ authorizationConfig, refreshHandler })
 const categories: AllCategories = [
     {
         category: "MainNavigation",
-        label: <FormattedMessage id="comet.menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
+        label: <FormattedMessage id="cometDemo.menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
     },
     {
         category: "TopMenu",
-        label: <FormattedMessage id="comet.menu.pageTree.topMenu" defaultMessage="Top menu" />,
+        label: <FormattedMessage id="cometDemo.menu.pageTree.topMenu" defaultMessage="Top menu" />,
     },
 ];
 
