@@ -46,6 +46,7 @@ import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import News from "./news/News";
 import MainMenu from "./pages/mainMenu/MainMenu";
 import { Page } from "./pages/Page";
+import Products from "./products/Products";
 import { urlParamToCategory } from "./utils/pageTreeNodeCategoryMapping";
 
 const GlobalStyle = () => (
@@ -202,6 +203,10 @@ class App extends React.Component {
                                                                                             <RouteWithErrorBoundary
                                                                                                 path={`${match.path}/component-demo`}
                                                                                                 component={ComponentDemo}
+                                                                                            />
+                                                                                            <RouteWithErrorBoundary
+                                                                                                path={`${match.path}/products`}
+                                                                                                component={Products}
                                                                                             />
 
                                                                                             <Redirect

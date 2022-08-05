@@ -114,6 +114,16 @@ type Page implements DocumentInterface {
   pageTreeNode: PageTreeNode
 }
 
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  sales: Int!
+}
+
 type PageTreeNodeScope {
   domain: String!
   language: String!
@@ -222,16 +232,6 @@ enum NewsCategory {
 type PaginatedNews {
   nodes: [News!]!
   totalCount: Int!
-}
-
-type Product {
-  id: ID!
-  name: String!
-  description: String!
-  price: Float!
-  createdAt: DateTime!
-  updatedAt: DateTime
-  sales: Int!
 }
 
 type PaginatedProducts {

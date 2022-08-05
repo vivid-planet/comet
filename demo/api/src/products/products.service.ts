@@ -15,6 +15,8 @@ export class ProductsService {
                         name: {
                             $ilike: `%${query}%`,
                         },
+                    },
+                    {
                         description: {
                             $ilike: `%${query}%`,
                         },
