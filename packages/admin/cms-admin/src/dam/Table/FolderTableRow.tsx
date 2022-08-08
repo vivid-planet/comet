@@ -30,14 +30,14 @@ interface FolderTableRowProps extends DamConfig {
     };
     archived?: boolean;
     isNew?: boolean;
-    scrollHere?: boolean;
+    scrollIntoView?: boolean;
 }
 
 export interface DamDragObject {
     item: GQLDamFileTableFragment | GQLDamFolderTableFragment;
 }
 
-const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeHoverStyle: boolean; $archived: boolean; $markAsNew: boolean }>`
+const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeHoverStyle: boolean; $archived: boolean; $highlightAsNew: boolean }>`
     height: 58px;
 
     outline: ${({ $activeHoverStyle, theme }) => ($activeHoverStyle ? `solid 1px ${theme.palette.primary.main};` : "none")};
@@ -49,7 +49,7 @@ const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeH
         }
         return "none";
     }};
-    box-shadow: ${({ $markAsNew, theme }) => ($markAsNew ? `inset 0 0 99999px ${alpha(theme.palette.success.main, 0.4)}` : "none")};
+    box-shadow: ${({ $highlightAsNew, theme }) => ($highlightAsNew ? `inset 0 0 99999px ${alpha(theme.palette.success.main, 0.4)}` : "none")};
     transition: box-shadow 1s ease-in-out;
 
     & .MuiTableCell-root {
@@ -67,7 +67,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     archived,
     hideMultiselect,
     isNew = false,
-    scrollHere = false,
+    scrollIntoView = false,
 }) => {
     const multiselectApi = useDamMultiselectApi();
     const client = useApolloClient();
@@ -193,10 +193,10 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     }, [dragSource, dropTarget, dropTargetFile, dropTargetItem, rowRef]);
 
     React.useEffect(() => {
-        if (scrollHere) {
+        if (scrollIntoView) {
             rowRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
         }
-    }, [rowRef, scrollHere]);
+    }, [rowRef, scrollIntoView]);
 
     return (
         <>
@@ -206,7 +206,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
                 ref={rowRef as React.RefObject<HTMLTableRowElement>}
                 $activeHoverStyle={isHovered === "folder"}
                 $archived={archived ?? false}
-                $markAsNew={markAsNew}
+                $highlightAsNew={markAsNew}
             >
                 {!hideMultiselect && (
                     <TableCell>

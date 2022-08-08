@@ -318,7 +318,7 @@ const FolderTable = ({
                                                 footerApi={{ show: showFooter, hide: hideFooter }}
                                                 archived={row.archived}
                                                 isNew={lastUploadedFileIds.includes(row.id)}
-                                                scrollHere={firstLastUploadedFileId === row.id}
+                                                scrollIntoView={firstLastUploadedFileId === row.id}
                                                 {...props}
                                             >
                                                 <TableColumns columns={columns} row={row} />
