@@ -1,5 +1,5 @@
 import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
-import { BlockCategory, BlockInterface, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
+import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import {
     BlockMapBuilder,
     convertFromHTML,
@@ -90,7 +90,7 @@ async function mapLinkEntitiesDataAsync(rawContent: RawDraftContentState, fn: (l
 }
 
 export interface RichTextBlockFactoryOptions {
-    link: BlockInterface;
+    link: BlockInterface & LinkBlockInterface;
     rte?: IRteOptions;
     minHeight?: number;
 }
@@ -219,9 +219,10 @@ export const createRichTextBlock = (
                                                 const data = entity.getData();
 
                                                 if (typeof data.url === "string") {
-                                                    const stateFromRaw = LinkBlock.fromRaw?.(data.url);
-
-                                                    nextContent = nextContent.replaceEntityData(key, stateFromRaw || LinkBlock.defaultValues());
+                                                    nextContent = nextContent.replaceEntityData(
+                                                        key,
+                                                        LinkBlock.url2State?.(data.url) || LinkBlock.defaultValues(),
+                                                    );
                                                 }
                                             }
                                         }

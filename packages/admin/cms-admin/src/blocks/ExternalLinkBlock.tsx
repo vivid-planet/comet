@@ -1,5 +1,5 @@
 import { Field, FinalFormCheckbox, FinalFormInput } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
+import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import { FormControlLabel } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -9,7 +9,7 @@ import { isHref } from "./externalLinkBlock/isHref";
 
 type State = ExternalLinkBlockData;
 
-export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, ExternalLinkBlockInput> = {
+export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, ExternalLinkBlockInput> & LinkBlockInterface<State> = {
     ...createBlockSkeleton(),
 
     name: "ExternalLink",
@@ -42,10 +42,10 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
         return state.targetUrl ? isHref(state.targetUrl) : true;
     },
 
-    fromRaw: (raw) => {
-        if (typeof raw === "string" && isHref(raw)) {
+    url2State: (url) => {
+        if (isHref(url)) {
             return {
-                targetUrl: raw,
+                targetUrl: url,
                 openInNewWindow: false,
             };
         }

@@ -75,7 +75,6 @@ export interface BlockMethods<
     childBlockCount?: (state: State) => number;
     previewContent: (state: State, context?: BlockContext) => PreviewContent[];
     dynamicDisplayName?: (state: State) => React.ReactNode;
-    fromRaw?: (raw: unknown) => State | false;
 }
 
 export interface AnonymousBlockInterface<
@@ -153,3 +152,10 @@ export const blockCategoryLabels = {
     [BlockCategory.Form]: <FormattedMessage id="comet.blocks.category.form" defaultMessage="Form" />,
     [BlockCategory.Other]: <FormattedMessage id="comet.blocks.category.other" defaultMessage="Other" />,
 };
+
+export interface LinkBlockInterface<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    State = any,
+> {
+    url2State?: (url: string) => State | false;
+}
