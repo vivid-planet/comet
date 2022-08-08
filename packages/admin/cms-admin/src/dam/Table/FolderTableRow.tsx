@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { TableBodyRow, TableBodyRowProps } from "@comet/admin";
-import { Checkbox, TableCell } from "@mui/material";
+import { alpha, Checkbox, TableCell } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useDrag, useDrop } from "react-dnd";
@@ -29,24 +29,27 @@ interface FolderTableRowProps extends DamConfig {
         hide: () => void;
     };
     archived?: boolean;
+    isNew?: boolean;
 }
 
 export interface DamDragObject {
     item: GQLDamFileTableFragment | GQLDamFolderTableFragment;
 }
 
-const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeHoverStyle: boolean; $archived: boolean }>`
+const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeHoverStyle: boolean; $archived: boolean; $markAsNew: boolean }>`
     height: 58px;
 
     outline: ${({ $activeHoverStyle, theme }) => ($activeHoverStyle ? `solid 1px ${theme.palette.primary.main};` : "none")};
     background: ${({ theme, $activeHoverStyle, $archived }) => {
         if ($activeHoverStyle) {
-            return "rgba(41,182,246,0.1)";
+            return alpha(theme.palette.primary.main, 0.1);
         } else if ($archived) {
             return theme.palette.grey[50];
         }
         return "none";
     }};
+    box-shadow: ${({ $markAsNew, theme }) => ($markAsNew ? `inset 0 0 99999px ${alpha(theme.palette.success.main, 0.4)}` : "none")};
+    transition: box-shadow 1s ease-in-out;
 
     & .MuiTableCell-root {
         padding-top: 8px;
@@ -62,6 +65,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     allowedMimetypes,
     archived,
     hideMultiselect,
+    isNew = false,
 }) => {
     const multiselectApi = useDamMultiselectApi();
     const client = useApolloClient();
@@ -69,6 +73,16 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     const { moveItem } = useDamDnD();
 
     const [isHovered, setIsHovered] = React.useState<HoverStyle>();
+    const [markAsNew, setMarkAsNew] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        if (isNew) {
+            setMarkAsNew(true);
+            setTimeout(() => {
+                setMarkAsNew(false);
+            }, 3000);
+        }
+    }, [isNew]);
 
     const {
         uploadFiles,
@@ -184,6 +198,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
                 ref={rowRef as React.RefObject<HTMLTableRowElement>}
                 $activeHoverStyle={isHovered === "folder"}
                 $archived={archived ?? false}
+                $markAsNew={markAsNew}
             >
                 {!hideMultiselect && (
                     <TableCell>

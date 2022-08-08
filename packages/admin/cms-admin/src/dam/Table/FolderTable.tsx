@@ -76,6 +76,7 @@ const FolderTable = ({
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
+        lastUploadedFileIds,
     } = useFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
@@ -315,6 +316,8 @@ const FolderTable = ({
                                                 rowProps={rowProps}
                                                 footerApi={{ show: showFooter, hide: hideFooter }}
                                                 archived={row.archived}
+                                                isNew={lastUploadedFileIds.includes(row.id)}
+                                                // isNew={true}
                                                 {...props}
                                             >
                                                 <TableColumns columns={columns} row={row} />
