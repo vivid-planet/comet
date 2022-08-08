@@ -96,7 +96,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const client = useApolloClient();
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-
     const accept: Accept = React.useMemo(() => {
         const acceptObj: Accept = {};
         const acceptedMimetypes = options.acceptedMimetypes ?? allAcceptedMimeTypes;
@@ -110,8 +109,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
         return acceptObj;
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
-    const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
 
+    const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
     const [lastUploadedFileIds, setLastUploadedFileIds] = React.useState<string[]>([]);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
     const [errorDialogOpen, setErrorDialogOpen] = React.useState<boolean>(false);
