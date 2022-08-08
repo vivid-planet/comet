@@ -30,6 +30,7 @@ interface FolderTableRowProps extends DamConfig {
     };
     archived?: boolean;
     isNew?: boolean;
+    scrollHere?: boolean;
 }
 
 export interface DamDragObject {
@@ -66,6 +67,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     archived,
     hideMultiselect,
     isNew = false,
+    scrollHere = false,
 }) => {
     const multiselectApi = useDamMultiselectApi();
     const client = useApolloClient();
@@ -189,6 +191,12 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
             dropTargetFile(rowRef);
         }
     }, [dragSource, dropTarget, dropTargetFile, dropTargetItem, rowRef]);
+
+    React.useEffect(() => {
+        if (scrollHere) {
+            rowRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }, [rowRef, scrollHere]);
 
     return (
         <>

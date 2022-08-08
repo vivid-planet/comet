@@ -151,6 +151,7 @@ const FolderTable = ({
     const loading = tableLoading && tableData === undefined;
     const foldersTableData = tableData?.data.filter(isFolder);
     const filesTableData = tableData?.data.filter(isFile);
+    const firstLastUploadedFileId = filesTableData?.find((file) => lastUploadedFileIds.includes(file.id))?.id;
 
     const { matches } = useDamSearchHighlighting({
         items: [...(foldersTableData || []), ...(filesTableData || [])],
@@ -317,7 +318,7 @@ const FolderTable = ({
                                                 footerApi={{ show: showFooter, hide: hideFooter }}
                                                 archived={row.archived}
                                                 isNew={lastUploadedFileIds.includes(row.id)}
-                                                // isNew={true}
+                                                scrollHere={firstLastUploadedFileId === row.id}
                                                 {...props}
                                             >
                                                 <TableColumns columns={columns} row={row} />
