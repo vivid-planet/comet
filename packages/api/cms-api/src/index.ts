@@ -51,6 +51,7 @@ export { PaginatedResponseFactory } from "./common/pagination/paginated-response
 export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsSlug } from "./common/validators/is-slug";
+export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";

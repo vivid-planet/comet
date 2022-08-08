@@ -11,7 +11,7 @@ import {
     IPreviewContext,
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
-import { Divider, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -104,15 +104,17 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                 {state.damFile ? (
                     <>
                         <AdminComponentPaper disablePadding>
-                            <Grid container alignItems="center" spacing={3}>
-                                <Grid item>{previewUrl && <img src={previewUrl} width="70" height="70" />}</Grid>
-                                <Grid item xs>
-                                    <Typography variant="subtitle1">{state.damFile.name}</Typography>
-                                    <Typography variant="body1" color="textSecondary">
-                                        {state.damFile.damPath}
-                                    </Typography>
+                            <Box padding={3}>
+                                <Grid container alignItems="center" spacing={3}>
+                                    <Grid item>{previewUrl && <img src={previewUrl} width="70" height="70" />}</Grid>
+                                    <Grid item xs>
+                                        <Typography variant="subtitle1">{state.damFile.name}</Typography>
+                                        <Typography variant="body1" color="textSecondary">
+                                            {state.damFile.damPath}
+                                        </Typography>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
+                            </Box>
                             <Divider />
                             <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
                                 <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
