@@ -2,6 +2,7 @@ import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import * as React from "react";
 
+import { DamImageBlock } from "./DamImageBlock";
 import DamVideoBlock from "./DamVideoBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { HeadlineBlock } from "./HeadlineBlock";
@@ -18,6 +19,7 @@ const supportedBlocks: SupportedBlocks = {
     headline: (props) => <HeadlineBlock data={props} />,
     image: (props) => <ImageBlock data={props} />,
     textImage: (props) => <TextImageBlock data={props} />,
+    damImage: (props) => <DamImageBlock data={props} />,
     damVideo: (props) => <DamVideoBlock data={props} />,
     youTubeVideo: (props) => <YouTubeVideoBlock data={props} />,
     linkList: (props) => <LinkListBlock data={props} />,

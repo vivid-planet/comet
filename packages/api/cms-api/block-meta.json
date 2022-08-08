@@ -122,7 +122,7 @@
                             "nullable": false
                         },
                         {
-                            "name": "type",
+                            "name": "mimetype",
                             "kind": "String",
                             "nullable": false
                         },
@@ -439,7 +439,7 @@
                             "nullable": false
                         },
                         {
-                            "name": "type",
+                            "name": "mimetype",
                             "kind": "String",
                             "nullable": false
                         },
@@ -483,6 +483,69 @@
                 "name": "damFileId",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "DamImage",
+        "fields": [
+            {
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "PixelImage",
+                                "SvgImage"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "PixelImage",
+                                "SvgImage"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": false
             }
         ]
     },
