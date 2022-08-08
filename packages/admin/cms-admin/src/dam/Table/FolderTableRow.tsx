@@ -78,12 +78,15 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     const [markAsNew, setMarkAsNew] = React.useState<boolean>(false);
 
     React.useEffect(() => {
+        let timeout: NodeJS.Timeout;
         if (isNew) {
             setMarkAsNew(true);
-            setTimeout(() => {
+            timeout = setTimeout(() => {
                 setMarkAsNew(false);
             }, 3000);
         }
+
+        return () => clearTimeout(timeout);
     }, [isNew]);
 
     const {
