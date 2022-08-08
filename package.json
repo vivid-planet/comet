@@ -63,7 +63,7 @@
         "jss": "^9.8.7",
         "lerna": "^4.0.0",
         "lint-staged": "^12.3.7",
-        "nestjs-console": "^7.0.0",
+        "nestjs-console": "^8.0.0",
         "next": "^11.0.0",
         "oidc-provider": "^7.11.3",
         "pg": "^8.0.0",

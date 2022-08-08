@@ -3833,7 +3833,7 @@ __metadata:
     class-transformer: ^0.3.0
     express: ^4.0.0
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    nestjs-console: ^7.0.0
+    nestjs-console: ^8.0.0
     pg: ^8.0.0
     pg-error-constants: ^1.0.0
     rxjs: ^7.0.0
@@ -14562,7 +14562,7 @@ __metadata:
     image-size: ^0.9.0
     mime: ^2.0.0
     multer: ^1.0.0
-    nestjs-console: ^7.0.0
+    nestjs-console: ^8.0.0
     node-cache: ^5.0.0
     node-fetch: ^2.0.0
     passport: ^0.4.0
@@ -25035,16 +25035,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nestjs-console@npm:^7.0.0":
-  version: 7.0.1
-  resolution: "nestjs-console@npm:7.0.1"
+"nestjs-console@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "nestjs-console@npm:8.0.0"
   dependencies:
     commander: ^8.1.0
     ora: 5.4.1
   peerDependencies:
-    "@nestjs/common": ^8
-    "@nestjs/core": ^8
-  checksum: 64f8402bb94a7ffa101df50b7c81454e7a296ce53aefe72a4e528fe9e070c3ad1818c9a83c106190800ff51cc27b08845082be081ab229c32f7b076b40934b56
+    "@nestjs/common": ^9
+    "@nestjs/core": ^9
+  checksum: 604b67e4104754c7043d7d5b14a8de9540ad295f816524773e69171879684ab7da4dea26640eecd441741e135d4280f092b347a9fbf82edd564ef457bbae22e9
   languageName: node
   linkType: hard
 
@@ -29641,7 +29641,7 @@ __metadata:
     jss: ^9.8.7
     lerna: ^4.0.0
     lint-staged: ^12.3.7
-    nestjs-console: ^7.0.0
+    nestjs-console: ^8.0.0
     next: ^11.0.0
     oidc-provider: ^7.11.3
     pg: ^8.0.0
