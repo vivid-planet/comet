@@ -24,6 +24,10 @@ export class Product extends BaseEntity<Product, "id"> {
     description: string;
 
     @Field()
+    @Property()
+    price: number;
+
+    @Field()
     @Property({
         columnType: "timestamp with time zone",
     })

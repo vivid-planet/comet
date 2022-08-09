@@ -34,6 +34,7 @@ registerEnumType(FilterOperation, {
 export enum ProductFilterField {
     Name = "name",
     Description = "description",
+    Price = "price",
 }
 registerEnumType(ProductFilterField, {
     name: "ProductFilterField",

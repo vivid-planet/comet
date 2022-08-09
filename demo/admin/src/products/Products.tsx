@@ -17,6 +17,7 @@ const productsQuery = gql`
                 id
                 name
                 description
+                price
             }
         }
     }
@@ -101,6 +102,7 @@ function muiGridFilterToGql(filterModel?: GridFilterModel): { filters?: GqlFilte
 const fieldToFilterField: { [key: string]: string } = {
     name: "Name",
     description: "Description",
+    price: "Price",
 };
 
 function Products() {

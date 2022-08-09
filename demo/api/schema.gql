@@ -224,6 +224,21 @@ type PaginatedNews {
   totalCount: Int!
 }
 
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  sales: Int!
+}
+
+type PaginatedProducts {
+  nodes: [Product!]!
+  totalCount: Int!
+}
+
 type Redirect implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -243,20 +258,6 @@ enum RedirectSourceTypeValues {
 enum RedirectGenerationType {
   manual
   automatic
-}
-
-type Product {
-  id: ID!
-  name: String!
-  description: String!
-  createdAt: DateTime!
-  updatedAt: DateTime
-  sales: Int!
-}
-
-type PaginatedProducts {
-  nodes: [Product!]!
-  totalCount: Int!
 }
 
 input PageTreeNodeScopeInput {
@@ -339,6 +340,7 @@ input ProductFilterItem {
 enum ProductFilterField {
   Name
   Description
+  Price
 }
 
 enum FilterOperation {
@@ -392,7 +394,7 @@ type Mutation {
   saveFooter(input: FooterInput!, lastUpdatedAt: DateTime): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): PredefinedPage!
   addProduct(data: ProductInput!): Product!
-  updateProduct(data: ProductInput!, id: ID!): Product!
+  updateProduct(id: ID!, data: ProductInput!): Product!
   deleteProduct(id: ID!): Boolean!
 }
 
@@ -507,4 +509,5 @@ input PredefinedPageInput {
 input ProductInput {
   name: String!
   description: String!
+  price: Float!
 }
