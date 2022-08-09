@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { DataGridPro, GridColDef, GridFilterModel, GridToolbar } from "@mui/x-data-grid-pro";
+import { DataGridPro, DataGridProProps, GridColDef, GridFilterModel, GridSortModel, GridToolbar } from "@mui/x-data-grid-pro";
 import { GQLProductsListQuery, GQLProductsListQueryVariables } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -11,14 +11,15 @@ const columns: GridColDef[] = [
 ];
 
 const productsQuery = gql`
-    query ProductsList($filter: ProductFilter, $query: String) {
-        products(filter: $filter, query: $query) {
+    query ProductsList($offset: Int, $limit: Int, $sortColumnName: String, $sortDirection: SortDirection, $filter: ProductFilter, $query: String) {
+        products(offset: $offset, limit: $limit, sortColumnName: $sortColumnName, sortDirection: $sortDirection, filter: $filter, query: $query) {
             nodes {
                 id
                 name
                 description
                 price
             }
+            totalCount
         }
     }
 `;
@@ -95,22 +96,76 @@ function muiGridFilterToGql(filterModel?: GridFilterModel): { filter: GqlFilter;
 }
 // END TODO move into library
 
-function Products() {
-    const [filterModel, setFilterModel] = React.useState<GridFilterModel | undefined>();
+//returns props for DataGrid that turns it into a controlled component ready to be used for remote filter/sorting/paging
+function useDataGridRemote(): Omit<DataGridProProps, "rows" | "columns"> & { page: number; pageSize: number } {
+    const [filterModel, setFilterModel] = React.useState<GridFilterModel>({ items: [] });
+    const [page, setPage] = React.useState(0);
+    const [pageSize, setPageSize] = React.useState(20);
+    const [sortModel, setSortModel] = React.useState<GridSortModel>([]);
 
-    const { filter, query } = muiGridFilterToGql(filterModel);
+    const onFilterChange = React.useCallback((filterModel: GridFilterModel) => {
+        setFilterModel(filterModel);
+    }, []);
+
+    const handleSortModelChange = React.useCallback((sortModel: GridSortModel) => {
+        setSortModel(sortModel);
+    }, []);
+
+    return {
+        filterMode: "server",
+        filterModel: filterModel,
+        onFilterModelChange: onFilterChange,
+        paginationMode: "server",
+        page,
+        pageSize,
+        onPageChange: (newPage: number) => {
+            setPage(newPage);
+        },
+        onPageSizeChange: (newPageSize: number) => setPageSize(newPageSize),
+        sortingMode: "server",
+        sortModel,
+        onSortModelChange: handleSortModelChange,
+        components: { Toolbar: GridToolbar },
+        componentsProps: {
+            toolbar: {
+                showQuickFilter: true,
+                quickFilterProps: { debounceMs: 500 },
+            },
+        },
+        pagination: true,
+    };
+}
+
+function useBufferedRowCount(rowCount: number | undefined) {
+    // Some API clients return undefined while loading
+    // Following lines are here to prevent `rowCountState` from being undefined during the loading
+    const [rowCountState, setRowCountState] = React.useState(0);
+
+    React.useEffect(() => {
+        setRowCountState((prevRowCountState) => (rowCount !== undefined ? rowCount : prevRowCountState));
+    }, [rowCount, setRowCountState]);
+
+    return rowCountState;
+}
+
+function ProductsTable() {
+    const dataGridProps = useDataGridRemote();
+    const sortModel = dataGridProps.sortModel;
+
+    const { filter, query } = muiGridFilterToGql(dataGridProps.filterModel);
 
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
             filter,
             query,
+            offset: dataGridProps.page * dataGridProps.pageSize,
+            limit: dataGridProps.pageSize,
+            sortColumnName: sortModel && sortModel.length > 0 ? sortModel[0].field : undefined,
+            sortDirection: sortModel && sortModel.length > 0 ? (sortModel[0].sort == "desc" ? "DESC" : "ASC") : undefined,
         },
     });
     const rows = data?.products.nodes ?? [];
-
-    const onFilterChange = React.useCallback((filterModel: GridFilterModel) => {
-        setFilterModel(filterModel);
-    }, []);
+    const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     if (error) {
         return <>ERROR: {JSON.stringify(error)}</>;
@@ -118,25 +173,9 @@ function Products() {
 
     return (
         <div style={{ height: 300, width: "100%" }}>
-            <DataGridPro
-                rows={rows}
-                columns={columns}
-                filterMode="server"
-                onFilterModelChange={onFilterChange}
-                loading={loading}
-                components={{ Toolbar: GridToolbar }}
-                componentsProps={{
-                    toolbar: {
-                        showQuickFilter: true,
-                        quickFilterProps: { debounceMs: 500 },
-                    },
-                }}
-            />
-            <p>filterModel: {JSON.stringify(filterModel)}</p>
-            <p>filter: {JSON.stringify(filter)}</p>
-            <p>query: {JSON.stringify(query)}</p>
+            <DataGridPro {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
         </div>
     );
 }
 
-export default Products;
+export default ProductsTable;
