@@ -43,7 +43,7 @@ export class NumberFilter {
     @Field({ nullable: true })
     @IsOptional()
     @IsNumber()
-    lowerTan?: number;
+    lowerThan?: number;
 
     @Field({ nullable: true })
     @IsOptional()

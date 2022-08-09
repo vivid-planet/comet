@@ -55,7 +55,7 @@ interface GqlStringFilter {
 }
 interface GqlNumberFilter {
     equal?: number | null;
-    lowerTan?: number | null;
+    lowerThan?: number | null;
     geraterThan?: number | null;
     lowerThanEqual?: number | null;
     greaterThanEqual?: number | null;
