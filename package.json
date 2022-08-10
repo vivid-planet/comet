@@ -13,7 +13,7 @@
         "postinstall": "npm run bootstrap",
         "bootstrap": "lerna bootstrap --no-ci --hoist",
         "clean": "lerna run clean --stream --parallel",
-        "start": "dev-process-manager start",
+        "start": "pm2 start ecosystem.config.js",
         "build": "lerna run build --concurrency=1 --stream",
         "publish:release": "lerna publish --force-publish --no-push --no-git-tag-version --no-private",
         "storybook": "npm run --prefix packages/admin-stories storybook",
@@ -27,7 +27,6 @@
         "prepare": "husky install"
     },
     "devDependencies": {
-        "@comet/dev-process-manager": "^1.0.0",
         "@formatjs/cli": "^2.13.12",
         "@storybook/addon-docs": "^6.2.7",
         "@types/uuid": "^8.3.0",
@@ -50,6 +49,7 @@
         "jss": "^9.8.7",
         "lerna": "^4.0.0",
         "lint-staged": "^10.5.4",
+        "pm2": "^5.2.0",
         "prettier": "^2.1.2",
         "react": "^17.0",
         "react-dom": "^17.0",
