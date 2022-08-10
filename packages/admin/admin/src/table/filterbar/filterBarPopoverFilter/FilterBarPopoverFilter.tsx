@@ -14,9 +14,9 @@ export interface FilterBarPopoverFilterProps {
     label: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
-    submitButtonProps?: ButtonProps;
-    resetButtonProps?: ButtonProps;
-    filterBarButtonProps?: FilterBarButtonProps;
+    submitButtonProps?: Partial<ButtonProps>;
+    resetButtonProps?: Partial<ButtonProps>;
+    filterBarButtonProps?: Partial<FilterBarButtonProps>;
 }
 
 function PopoverFilter({
