@@ -113,9 +113,11 @@ const orderForm = [
     "docs-form-overview",
     "docs-form-validation",
     "docs-form-layout",
+    "docs-form-components-finalform",
     "docs-form-components-fieldcontainer",
     "docs-form-components-field",
     "docs-form-components-formsection",
+    "docs-form-components-finalform-fields",
     "docs-form-components",
 ];
 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
