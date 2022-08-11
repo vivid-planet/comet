@@ -56,22 +56,6 @@ module.exports = {
             autorestart: true,
         },
         {
-            name: "comet-admin-stories",
-            script: [
-                waitForPackages(
-                    "@comet/admin-icons",
-                    "@comet/admin-rte",
-                    "@comet/admin",
-                    "@comet/admin-color-picker",
-                    "@comet/admin-react-select",
-                    "@comet/admin-theme",
-                ),
-                "npx yarn workspace comet-admin-stories storybook",
-            ].join(" && "),
-            namespace: "comet-admin",
-            autorestart: true,
-        },
-        {
             name: "comet-admin-theme",
             script: [
                 waitForPackages("@comet/admin-icons", "@comet/admin-rte", "@comet/admin", "@comet/admin-color-picker", "@comet/admin-react-select"),
