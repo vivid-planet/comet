@@ -2,13 +2,11 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# [next]
+# [Next]
 
 ## @comet/admin
 
 ### Changes
-
--   EditDialog now displays loading and error states of a contained form automatically via its SaveButton
 
 ### Incompatible Changes
 
@@ -152,6 +150,17 @@ import { enUS } from "date-fns/locale";
 -   The majority of the classes used for style overrides have been changed, therefore, custom styling may need to be refactored
 -   The `showPicker` prop has been removed, the picker is now shown by default and can be hidden with the `hidePicker` prop
 -   The `showClearButton` prop has been removed, it can be added manually by adding the `ClearInputButton` component to the `endAdornment`
+
+# [2.2.0]
+
+## Highlights
+
+-   EditDialog now displays loading and error states of a contained form automatically via its SaveButton
+
+## Bugfixes
+
+-   EditDialog closes when a contained form is submitted via Enter key press
+-   Fix FinalFormSelect value generic to allow simple select values such as string
 
 # [2.1.0]
 

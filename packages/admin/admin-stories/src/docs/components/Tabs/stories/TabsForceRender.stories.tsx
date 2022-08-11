@@ -2,10 +2,10 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
-    RouterTab,
-    RouterTabs,
     SaveButton,
     SplitButton,
+    Tab,
+    Tabs,
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
@@ -14,20 +14,16 @@ import {
 import { Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { useLocation } from "react-router";
 
 import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../../../story-router.decorator";
 
-storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
+storiesOf("stories/components/Tabs/Tabs forceRender", module)
     .addDecorator(storyRouterDecorator())
     .addDecorator(apolloStoryDecorator())
-    .add("RouterTabs with Form and forceRender", () => {
-        const location = useLocation();
-
+    .add("Tabs in Form with forceRender", () => {
         return (
             <div>
-                <p>Location: {location.pathname}</p>
                 <FinalForm
                     mode="edit"
                     onSubmit={(values: any) => {
@@ -47,10 +43,7 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                     <ToolbarBackButton />
                                     <ToolbarFillSpace />
                                     <ToolbarActions>
-                                        <SplitButton
-                                            disabled={pristine || hasValidationErrors || submitting}
-                                            localStorageKey="routertabs-with-forms-save"
-                                        >
+                                        <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="tabs-with-forms-save">
                                             <SaveButton
                                                 color="primary"
                                                 variant="contained"
@@ -77,22 +70,22 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                         </SplitButton>
                                     </ToolbarActions>
                                 </Toolbar>
-                                <RouterTabs>
-                                    <RouterTab label="Form 1" path="" forceRender>
+                                <Tabs>
+                                    <Tab label="Tab 1" forceRender>
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Foo" name="foo" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
-                                    </RouterTab>
-                                    <RouterTab label="Form 2" path="/form2" forceRender>
+                                    </Tab>
+                                    <Tab label="Tab 2" forceRender>
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Bar" name="bar" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
-                                    </RouterTab>
-                                </RouterTabs>
+                                    </Tab>
+                                </Tabs>
                             </>
                         );
                     }}
@@ -100,12 +93,10 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
             </div>
         );
     })
-    .add("RouterTabs with Form without forceRender", () => {
-        const location = useLocation();
-
+    .add("Tabs in Form without forceRender", () => {
+        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
         return (
             <div>
-                <p>Location: {location.pathname}</p>
                 <FinalForm
                     mode="edit"
                     onSubmit={(values: any) => {
@@ -125,10 +116,7 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                     <ToolbarBackButton />
                                     <ToolbarFillSpace />
                                     <ToolbarActions>
-                                        <SplitButton
-                                            disabled={pristine || hasValidationErrors || submitting}
-                                            localStorageKey="routertabs-with-forms-save"
-                                        >
+                                        <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="tabs-with-forms-save">
                                             <SaveButton
                                                 color="primary"
                                                 variant="contained"
@@ -155,26 +143,81 @@ storiesOf("stories/components/Tabs/RouterTabs forceRender", module)
                                         </SplitButton>
                                     </ToolbarActions>
                                 </Toolbar>
-                                <RouterTabs>
-                                    <RouterTab label="Form 1" path="">
+                                <Tabs>
+                                    <Tab label="Tab 1">
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Foo" name="foo" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
-                                    </RouterTab>
-                                    <RouterTab label="Form 2" path="/form2">
+                                    </Tab>
+                                    <Tab label="Tab 2">
                                         <Card variant="outlined">
                                             <CardContent>
                                                 <Field label="Bar" name="bar" component={FinalFormInput} />
                                             </CardContent>
                                         </Card>
-                                    </RouterTab>
-                                </RouterTabs>
+                                    </Tab>
+                                </Tabs>
                             </>
                         );
                     }}
                 </FinalForm>
+            </div>
+        );
+    })
+    .add("Form in Tabs with forceRender", () => {
+        return (
+            <div>
+                <Tabs>
+                    <Tab label="Form" forceRender>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <FinalForm
+                                    mode="add"
+                                    onSubmit={(values: any) => {
+                                        alert(JSON.stringify(values));
+                                    }}
+                                >
+                                    <Field label="Name" name="name" component={FinalFormInput} />
+                                </FinalForm>
+                            </CardContent>
+                        </Card>
+                    </Tab>
+                    <Tab label="Tab 2">
+                        <Card variant="outlined">
+                            <CardContent>Tab 2</CardContent>
+                        </Card>
+                    </Tab>
+                </Tabs>
+            </div>
+        );
+    })
+    .add("Form in Tabs without forceRender", () => {
+        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
+        return (
+            <div>
+                <Tabs>
+                    <Tab label="Form">
+                        <Card variant="outlined">
+                            <CardContent>
+                                <FinalForm
+                                    mode="add"
+                                    onSubmit={(values: any) => {
+                                        alert(JSON.stringify(values));
+                                    }}
+                                >
+                                    <Field label="Name" name="name" component={FinalFormInput} />
+                                </FinalForm>
+                            </CardContent>
+                        </Card>
+                    </Tab>
+                    <Tab label="Tab 2">
+                        <Card variant="outlined">
+                            <CardContent>Tab 2</CardContent>
+                        </Card>
+                    </Tab>
+                </Tabs>
             </div>
         );
     });
