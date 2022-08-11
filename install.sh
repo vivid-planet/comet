@@ -38,3 +38,6 @@ git clone https://github.com/vivid-planet/comet-demo-lang demo/admin/lang/comet-
 ln -sf ../../.env ./demo/site/.env
 ln -sf ../api/schema.gql ./demo/site/schema.gql
 ln -sf ../api/block-meta.json ./demo/site/block-meta.json
+
+# Build CLI package to be used for dev startup
+npx yarn workspace @comet/cli build
