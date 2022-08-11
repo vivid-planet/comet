@@ -42,10 +42,22 @@ _It is recommend to run `install.sh` every time you switch to the `main` branch.
 
 ### Start development processes
 
-Start _everything_ (Comet Admin packages, Comet CMS packages, Demo)
+Start Comet Admin packages
 
 ```bash
-yarn dev
+yarn dev:admin
+```
+
+Start CMS packages
+
+```bash
+yarn dev:cms
+```
+
+#### Start Demo
+
+```bash
+yarn dev:demo
 ```
 
 Demo will be available at
@@ -61,20 +73,6 @@ yarn storybook
 ```
 
 Storybook will be available at [http://localhost:26638/](http://localhost:26638/)
-
-#### Start standalone process
-
-Start Comet Admin only (Comet Admin packages)
-
-```bash
-yarn dev:admin
-```
-
-Start CMS and Demo (Comet Admin packages, Comet CMS packages, Demo)
-
-```bash
-yarn dev:cms
-```
 
 ## Develop in a project
 
