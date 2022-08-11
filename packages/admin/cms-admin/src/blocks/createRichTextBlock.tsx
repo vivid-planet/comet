@@ -1,6 +1,15 @@
-import { IRteOptions, makeRteApi, Rte } from "@comet/admin-rte";
-import { BlockCategory, BlockInterface, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
-import { convertFromRaw, convertToRaw, EditorState, RawDraftContentState } from "draft-js";
+import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
+import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
+import {
+    BlockMapBuilder,
+    convertFromHTML,
+    convertFromRaw,
+    convertToRaw,
+    EditorState,
+    EntityInstance,
+    Modifier,
+    RawDraftContentState,
+} from "draft-js";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -81,7 +90,7 @@ async function mapLinkEntitiesDataAsync(rawContent: RawDraftContentState, fn: (l
 }
 
 export interface RichTextBlockFactoryOptions {
-    link: BlockInterface;
+    link: BlockInterface & LinkBlockInterface;
     rte?: IRteOptions;
     minHeight?: number;
 }
@@ -179,7 +188,55 @@ export const createRichTextBlock = (
                 <SelectPreviewComponent>
                     <Rte
                         minHeight={options.minHeight}
-                        options={rteOptions}
+                        options={{
+                            ...rteOptions,
+                            draftJsProps: {
+                                ...rteOptions.draftJsProps,
+                                handlePastedText: (text, html, editorState) => {
+                                    const nextEditorState = pasteAndFilterText(html, editorState, rteOptions);
+
+                                    if (nextEditorState) {
+                                        // Paste is from one Draft.js instance to another -> update directly
+                                        updateState({ editorState: nextEditorState });
+                                        return "handled";
+                                    }
+
+                                    // Pasted text comes from an external source, e.g. a Word document
+                                    if (html !== undefined) {
+                                        const { contentBlocks } = convertFromHTML(html);
+
+                                        let nextContent = Modifier.replaceWithFragment(
+                                            state.editorState.getCurrentContent(),
+                                            state.editorState.getSelection(),
+                                            BlockMapBuilder.createFromArray(contentBlocks),
+                                        );
+
+                                        const entities = (nextContent.getEntityMap().__getAll() as Immutable.Map<string, EntityInstance>).entries();
+
+                                        // @ts-expect-error Immutable.Map#entries is iterable, but missing [Symbol.iterator]()
+                                        for (const [key, entity] of entities) {
+                                            if (entity.getType() === "LINK") {
+                                                const data = entity.getData();
+
+                                                if (typeof data.url === "string") {
+                                                    nextContent = nextContent.replaceEntityData(
+                                                        key,
+                                                        LinkBlock.url2State?.(data.url) || LinkBlock.defaultValues(),
+                                                    );
+                                                }
+                                            }
+                                        }
+
+                                        const newEditorState = EditorState.push(state.editorState, nextContent, "insert-fragment");
+
+                                        updateState({ editorState: newEditorState });
+                                        return "handled";
+                                    }
+
+                                    return "not-handled";
+                                },
+                            },
+                        }}
                         value={state.editorState}
                         onChange={(c: EditorState) => {
                             updateState((prevState) => ({

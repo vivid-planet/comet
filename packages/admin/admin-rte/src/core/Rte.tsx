@@ -13,7 +13,7 @@ import {
     getDefaultKeyBinding,
     RichUtils,
 } from "draft-js";
-import { handleDraftEditorPastedText, onDraftEditorCopy, onDraftEditorCut } from "draftjs-conductor";
+import { onDraftEditorCopy, onDraftEditorCut } from "draftjs-conductor";
 import * as React from "react";
 
 import Controls from "./Controls/Controls";
@@ -25,6 +25,7 @@ import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedin
 import { CustomInlineStyles, IBlocktypeMap, ICustomBlockTypeMap_Deprecated, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 import getRteTheme from "./utils/getRteTheme";
+import { pasteAndFilterText } from "./utils/pasteAndFilterText";
 
 const mandatoryFilterEditorStateFn = composeFilterEditorFns([removeBlocksExceedingBlockLimit, manageDefaultBlockType]);
 
@@ -58,7 +59,15 @@ export interface IRteOptions {
     draftJsProps: Partial<
         Pick<
             DraftJsEditorProps,
-            "placeholder" | "autoComplete" | "autoCorrect" | "readOnly" | "spellCheck" | "stripPastedStyles" | "tabIndex" | "editorKey"
+            | "placeholder"
+            | "autoComplete"
+            | "autoCorrect"
+            | "readOnly"
+            | "spellCheck"
+            | "stripPastedStyles"
+            | "tabIndex"
+            | "editorKey"
+            | "handlePastedText"
         >
     >;
     filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
@@ -95,7 +104,7 @@ export interface RteProps {
     };
 }
 
-const defaultOptions: IRteOptions = {
+export const defaultOptions: IRteOptions = {
     supports: [
         "bold",
         "italic",
@@ -285,10 +294,9 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
                     onCopy={onDraftEditorCopy}
                     onCut={onDraftEditorCut}
                     handlePastedText={(text: string, html: string | undefined, editorState: EditorState): DraftHandleValue => {
-                        let nextEditorState = handleDraftEditorPastedText(html, editorState);
+                        const nextEditorState = pasteAndFilterText(html, editorState, options);
 
                         if (nextEditorState) {
-                            nextEditorState = defaultFilterEditorStateBeforeUpdate(nextEditorState, options);
                             decoratedOnChange(nextEditorState);
                             return "handled";
                         }

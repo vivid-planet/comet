@@ -43,7 +43,7 @@ export interface OneOfBlockPreviewState extends PreviewStateInterface {
 }
 
 type BlockType = string;
-interface IBlockFactoryOptions {
+export interface CreateOneOfBlockOptions {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
@@ -60,7 +60,7 @@ export const createOneOfBlock = ({
     variant = "select",
     allowEmpty = true,
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-IBlockFactoryOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, any, OneOfBlockPreviewState> => {
+CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, any, OneOfBlockPreviewState> => {
     function blockForType(type: string): BlockInterface | null {
         return supportedBlocks[type] ?? null;
     }

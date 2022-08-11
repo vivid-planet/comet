@@ -19,7 +19,7 @@ export { createColumnsBlock } from "./blocks/factories/createColumnsBlock";
 export { createCompositeBlock } from "./blocks/factories/createCompositeBlock";
 export type { ListBlockFragment, ListBlockState } from "./blocks/factories/createListBlock";
 export { createListBlock } from "./blocks/factories/createListBlock";
-export type { OneOfBlockFragment, OneOfBlockState } from "./blocks/factories/createOneOfBlock";
+export type { CreateOneOfBlockOptions, OneOfBlockFragment, OneOfBlockState } from "./blocks/factories/createOneOfBlock";
 export { createOneOfBlock } from "./blocks/factories/createOneOfBlock";
 export type { OptionalBlockDecoratorFragment, OptionalBlockState } from "./blocks/factories/createOptionalBlock";
 export { createOptionalBlock } from "./blocks/factories/createOptionalBlock";
@@ -41,6 +41,7 @@ export type {
     BlockState,
     DispatchSetStateAction,
     IPreviewContext,
+    LinkBlockInterface,
     PreviewStateInterface,
     RootBlockInterface,
     SetStateAction,
