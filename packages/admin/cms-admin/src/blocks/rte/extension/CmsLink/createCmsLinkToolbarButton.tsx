@@ -137,7 +137,7 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
                         </Button>
                     )}
                     <Button onClick={handleUpdate} color="primary">
-                        <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
+                        <FormattedMessage id="comet.generic.ok" defaultMessage="OK" />
                     </Button>
                     <Button onClick={handleClose} color="primary">
                         <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />

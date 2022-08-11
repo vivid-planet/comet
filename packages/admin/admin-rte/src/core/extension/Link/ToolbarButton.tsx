@@ -100,7 +100,7 @@ function LinkDialog(props: {
             <DialogContent>
                 <FormControl fullWidth>
                     <FormLabel>
-                        <FormattedMessage id="comet.rte.extensions.link.url" defaultMessage="Url" />
+                        <FormattedMessage id="comet.rte.extensions.link.url" defaultMessage="URL" />
                     </FormLabel>
                     <InputBase
                         // autoFocus

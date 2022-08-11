@@ -97,7 +97,7 @@ export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors 
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" color="primary" onClick={onClose}>
-                    <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
+                    <FormattedMessage id="comet.generic.ok" defaultMessage="OK" />
                 </Button>
             </DialogActions>
         </Dialog>
