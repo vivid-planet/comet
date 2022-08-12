@@ -280,7 +280,7 @@ type Query {
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News
   newsBySlug(slug: String!): News
-  newsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, category: NewsCategory, scope: NewsContentScopeInput!): PaginatedNews!
+  newsList(offset: Int = 0, limit: Int = 20, query: String, category: NewsCategory, scope: NewsContentScopeInput!, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -307,6 +307,16 @@ input FileFilterInput {
 
 input FolderFilterInput {
   searchText: String
+}
+
+input NewsSort {
+  title: SortDirection
+  slug: SortDirection
+  category: SortDirection
+  date: SortDirection
+  visible: SortDirection
+  updatedAt: SortDirection
+  createdAt: SortDirection
 }
 
 type Mutation {
