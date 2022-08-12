@@ -29,12 +29,17 @@ export class NewsResolver {
 
     @Query(() => PaginatedNews)
     @PublicApi()
-    async newsList(@Args() { scope, query, category, offset, limit, sortColumnName, sortDirection, ...args }: NewsListArgs): Promise<PaginatedNews> {
+    async newsList(@Args() { scope, query, category, offset, limit, sort, ...args }: NewsListArgs): Promise<PaginatedNews> {
         const where: FilterQuery<News> = { scope };
         if (query) where.title = { $ilike: `%${query}%` };
         const options: FindOptions<News> = { offset, limit };
-        if (sortColumnName) {
-            options.orderBy = { [sortColumnName]: sortDirection };
+        if (sort) {
+            options.orderBy = sort.map((sortItem) => {
+                const field = sortItem.field.charAt(0).toLowerCase() + sortItem.field.slice(1); //lowercase first char to turn enum names into column names
+                return {
+                    [field]: sortItem.direction,
+                };
+            });
         }
 
         if (category) where.category = category;
