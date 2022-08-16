@@ -5,6 +5,7 @@ import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nest
 
 import { FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
+import { Filename } from "./dto/filename.args";
 import { File } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 
@@ -68,6 +69,22 @@ export class FilesResolver {
     @Query(() => Boolean)
     async damFilenameAlreadyExists(@Args("filename") filename: string, @Args("folderId", { nullable: true }) folderId?: string): Promise<boolean> {
         return (await this.filesService.findOneByFilenameAndFolder(filename, folderId)) !== null;
+    }
+
+    @Query(() => [Filename])
+    async findAlternativesToDuplicatedFilenames(@Args("filenames", { type: () => [Filename] }) filenames: Array<Filename>): Promise<Array<Filename>> {
+        const nextAvailableFilenames: Array<Filename> = [];
+
+        for (const { id, name, folderId } of filenames) {
+            const nextAvailableName = await this.filesService.findNextAvailableFilename(name, folderId);
+            nextAvailableFilenames.push({
+                id,
+                name: nextAvailableName,
+                folderId,
+            });
+        }
+
+        return nextAvailableFilenames;
     }
 
     @ResolveField(() => String)
