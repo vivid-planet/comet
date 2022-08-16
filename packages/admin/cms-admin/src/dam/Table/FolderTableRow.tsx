@@ -49,7 +49,7 @@ const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeH
         }
         return "none";
     }};
-    box-shadow: ${({ $highlightAsNew, theme }) => ($highlightAsNew ? `inset 0 0 99999px ${alpha(theme.palette.success.main, 0.4)}` : "none")};
+    box-shadow: ${({ $highlightAsNew, theme }) => ($highlightAsNew ? `inset 0 0 99999px ${alpha(theme.palette.primary.dark, 0.4)}` : "none")};
     transition: box-shadow 1s ease-in-out;
 
     & .MuiTableCell-root {
