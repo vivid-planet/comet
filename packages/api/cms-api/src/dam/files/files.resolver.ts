@@ -6,7 +6,7 @@ import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nest
 import { FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { File } from "./entities/file.entity";
-import { FilesService, withFilesSelect } from "./files.service";
+import { FilesService } from "./files.service";
 
 @Resolver(() => File)
 export class FilesResolver {
@@ -67,14 +67,7 @@ export class FilesResolver {
 
     @Query(() => Boolean)
     async damFilenameAlreadyExists(@Args("filename") filename: string, @Args("folderId", { nullable: true }) folderId?: string): Promise<boolean> {
-        return (
-            (
-                await withFilesSelect(this.filesRepository.createQueryBuilder("file"), {
-                    filename,
-                    folderId: folderId || null,
-                }).getResult()
-            ).length > 0
-        );
+        return (await this.filesService.findOneByFilenameAndFolder(filename, folderId)) !== null;
     }
 
     @ResolveField(() => String)
