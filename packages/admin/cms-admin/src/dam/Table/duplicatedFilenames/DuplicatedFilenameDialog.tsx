@@ -11,7 +11,7 @@ interface DuplicateFilenameDialogProps {
     onRename: (newFilename: string) => void;
 }
 
-export const DuplicateFilenameDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
+export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
     open,
     currentFilename,
     suggestedFilename,
