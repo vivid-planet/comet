@@ -43,6 +43,7 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
             >({
                 query: damFindAlternativesToDuplicatedFilenamesQuery,
                 variables: { filenames: filenames },
+                fetchPolicy: "network-only",
             });
 
             return data.alternatives;
@@ -67,7 +68,7 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
 
             setOccupiedFilenames(occupiedFilenames);
             setNewFilenames(unoccupiedFilenames);
-            setCallback(callback);
+            setCallback(() => callback);
         },
         [checkForDuplicates],
     );
@@ -76,7 +77,7 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
         if (occupiedFilenames.length === 0) {
             callback?.(newFilenames);
         }
-    }, [occupiedFilenames.length, callback, newFilenames]);
+    }, [occupiedFilenames.length, callback, newFilenames, occupiedFilenames]);
 
     return (
         <DuplicatedFilenamesResolverContext.Provider

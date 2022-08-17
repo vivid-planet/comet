@@ -2,12 +2,14 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { NotFoundException } from "@nestjs/common";
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { basename, extname } from "path";
 
 import { FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { File } from "./entities/file.entity";
 import { FilesService } from "./files.service";
+import { slugifyFilename } from "./files.utils";
 
 @Resolver(() => File)
 export class FilesResolver {
@@ -78,16 +80,22 @@ export class FilesResolver {
         const nextAvailableFilenames: Array<FilenameResponse> = [];
 
         for (const { name, folderId } of filenames) {
-            const nextAvailableName = await this.filesService.findNextAvailableFilename(name, folderId);
-            const isOccupied = name !== nextAvailableName;
+            const extension = extname(name);
+            const filename = basename(name, extension);
+            const slugifiedName = slugifyFilename(filename, extension);
+
+            const nextAvailableName = await this.filesService.findNextAvailableFilename(slugifiedName, folderId);
+            const isOccupied = slugifiedName !== nextAvailableName;
 
             nextAvailableFilenames.push({
-                originalName: name,
+                originalName: slugifiedName,
                 folderId,
                 isOccupied,
                 alternativeName: isOccupied ? nextAvailableName : undefined,
             });
         }
+
+        console.log(nextAvailableFilenames);
 
         return nextAvailableFilenames;
     }

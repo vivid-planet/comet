@@ -18,7 +18,13 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
     onCancel,
     onRename,
 }) => {
-    const [newFilename, setNewFilename] = React.useState<string>(suggestedFilename ?? "");
+    const [newFilename, setNewFilename] = React.useState<string>("");
+
+    React.useEffect(() => {
+        if (suggestedFilename !== undefined && newFilename.length === 0) {
+            setNewFilename(suggestedFilename);
+        }
+    }, [newFilename.length, suggestedFilename]);
 
     return (
         <Dialog open={open}>
@@ -41,11 +47,20 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                         setNewFilename(event.target.value);
                     }}
                     disableUnderline
+                    fullWidth
+                    autoFocus
                 />
             </DialogContent>
             <DialogActions>
                 <CancelButton onClick={onCancel} />
-                <Button variant="contained" color="primary" onClick={() => onRename(newFilename)}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        onRename(newFilename);
+                        setNewFilename("");
+                    }}
+                >
                     <FormattedMessage id="comet.generic.rename" defaultMessage="Rename" />
                 </Button>
             </DialogActions>

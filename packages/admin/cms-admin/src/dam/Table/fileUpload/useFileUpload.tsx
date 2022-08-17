@@ -303,10 +303,22 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 );
             });
 
-            console.log(newFilenames);
+            const filesWithValidatedName: FileWithFolderPath[] = [];
+            for (let i = 0; i < filesWithFolderPaths.length; i++) {
+                const file = filesWithFolderPaths[i];
+
+                const buffer = await file.arrayBuffer();
+                const newFile: FileWithFolderPath = new File([buffer], newFilenames[i].name, {
+                    lastModified: file.lastModified,
+                    type: file.type,
+                });
+                newFile.path = file.path;
+
+                filesWithValidatedName.push(newFile);
+            }
 
             cancelUpload.current = axios.CancelToken.source();
-            for (const file of filesWithFolderPaths) {
+            for (const file of filesWithValidatedName) {
                 folderIdMap = await createFoldersIfNecessary(folderIdMap, file, folderId);
                 const targetFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId;
 
