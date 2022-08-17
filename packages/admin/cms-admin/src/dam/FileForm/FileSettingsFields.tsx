@@ -11,7 +11,7 @@ interface SettingsFormProps {
     folderId: string | null;
 }
 
-export const damFilenameAlreadyExistsQuery = gql`
+const damFilenameAlreadyExistsQuery = gql`
     query DamFilenameAlreadyExists($filename: String!, $folderId: String) {
         damFilenameAlreadyExists(filename: $filename, folderId: $folderId)
     }
