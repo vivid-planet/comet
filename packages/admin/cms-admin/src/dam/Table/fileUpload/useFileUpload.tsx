@@ -17,7 +17,6 @@ import {
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDuplicatedFilenamesResolver } from "../duplicatedFilenames/DuplicatedFilenamesResolver";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
-import { useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
@@ -288,6 +287,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
         const uploadedFileIds: string[] = [];
 
+        let uploadCanceled = false;
         let errorOccurred = false;
         if (fileRejections.length > 0) {
             errorOccurred = true;
@@ -318,70 +318,78 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 }
             }
 
-            const newFilenames = await new Promise<GQLFilenameInput[]>((resolve) => {
+            const newFilenames: GQLFilenameInput[] = await new Promise<GQLFilenameInput[]>((resolve, reject) => {
                 duplicatedFilenameResolver.resolveDuplicates(
                     filesInExistingDir.map((file) => ({
                         name: file.name,
                         folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId,
                     })),
+                    () => {
+                        reject("Upload was canceled.");
+                    },
                     (newFilenames) => {
                         resolve(newFilenames);
                     },
                 );
+            }).catch(() => {
+                uploadCanceled = true;
+                return [];
             });
 
-            const filesWithValidatedName: FileWithFolderPath[] = [];
-            for (let i = 0; i < filesInExistingDir.length; i++) {
-                const newFile = await postProcessFile(filesInExistingDir[i], newFilenames[i].name);
-                filesWithValidatedName.push(newFile);
-            }
+            if (!uploadCanceled) {
+                const filesWithValidatedName: FileWithFolderPath[] = [];
+                for (let i = 0; i < filesInExistingDir.length; i++) {
+                    const newFile = await postProcessFile(filesInExistingDir[i], newFilenames[i].name);
+                    filesWithValidatedName.push(newFile);
+                }
 
-            filesWithValidatedName.push(...filesInNewDir);
+                filesWithValidatedName.push(...filesInNewDir);
 
-            cancelUpload.current = axios.CancelToken.source();
-            for (const file of filesWithValidatedName) {
-                folderIdMap = await createFoldersIfNecessary(folderIdMap, file, folderId);
-                const targetFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId;
+                cancelUpload.current = axios.CancelToken.source();
+                for (const file of filesWithValidatedName) {
+                    folderIdMap = await createFoldersIfNecessary(folderIdMap, file, folderId);
+                    const targetFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId;
 
-                try {
-                    const response: { data: { id: string } } = await upload(
-                        context.damConfig.apiClient,
-                        {
-                            file,
-                            folderId: targetFolderId,
-                        },
-                        cancelUpload.current.token,
-                        {
-                            onUploadProgress: (progressEvent: ProgressEvent) => {
-                                updateLoadedSize(file.path ?? "", progressEvent.loaded);
+                    try {
+                        const response: { data: { id: string } } = await upload(
+                            context.damConfig.apiClient,
+                            {
+                                file,
+                                folderId: targetFolderId,
                             },
-                        },
-                    );
+                            cancelUpload.current.token,
+                            {
+                                onUploadProgress: (progressEvent: ProgressEvent) => {
+                                    updateLoadedSize(file.path ?? "", progressEvent.loaded);
+                                },
+                            },
+                        );
 
-                    uploadedFileIds.push(response.data.id);
-                } catch (err) {
-                    errorOccurred = true;
-                    const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
+                        uploadedFileIds.push(response.data.id);
+                    } catch (err) {
+                        errorOccurred = true;
+                        const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
 
-                    if (typedErr.response?.data.error === "CometImageResolutionException") {
-                        addValidationError(file, <MaxResolutionError maxResolution={Number(context.damConfig.maxSrcResolution)} />);
-                    } else if (typedErr.response?.data.error === "CometValidationException") {
-                        const message = typedErr.response.data.message;
-                        const extension = `.${file.name.split(".").pop()}`;
+                        if (typedErr.response?.data.error === "CometImageResolutionException") {
+                            addValidationError(file, <MaxResolutionError maxResolution={Number(context.damConfig.maxSrcResolution)} />);
+                        } else if (typedErr.response?.data.error === "CometValidationException") {
+                            const message = typedErr.response.data.message;
+                            const extension = `.${file.name.split(".").pop()}`;
 
-                        if (message.includes("Unsupported mime type")) {
-                            addValidationError(file, <UnsupportedTypeError extension={extension} />);
-                        } else if (message.includes("Missing file extension")) {
-                            addValidationError(file, <MissingFileExtensionError />);
-                        } else if (message.includes("File type and extension mismatch")) {
-                            addValidationError(file, <FileExtensionTypeMismatchError extension={extension} mimetype={file.type} />);
+                            if (message.includes("Unsupported mime type")) {
+                                addValidationError(file, <UnsupportedTypeError extension={extension} />);
+                            } else if (message.includes("Missing file extension")) {
+                                addValidationError(file, <MissingFileExtensionError />);
+                            } else if (message.includes("File type and extension mismatch")) {
+                                addValidationError(file, <FileExtensionTypeMismatchError extension={extension} mimetype={file.type} />);
+                            } else {
+                                addValidationError(file, <UnknownError />);
+                            }
+                        } else if (typedErr.response === undefined && typedErr.request) {
+                            addValidationError(file, <NetworkError />);
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
-                    } else if (typedErr.response === undefined && typedErr.request) {
-                        addValidationError(file, <NetworkError />);
-                    } else {
-                        addValidationError(file, <UnknownError />);
                     }
                 }
             }

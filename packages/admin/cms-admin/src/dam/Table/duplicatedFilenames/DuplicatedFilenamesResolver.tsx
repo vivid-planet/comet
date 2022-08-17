@@ -12,7 +12,11 @@ import { damFindAlternativesToDuplicatedFilenamesQuery } from "./DuplicatedFilen
 
 export interface DuplicatedFilenamesResolverApi {
     checkForDuplicates: (filenames: GQLFilenameInput[]) => Promise<GQLFilenameResponse[]>;
-    resolveDuplicates: (filenames: GQLFilenameInput[], callback: (newFilenames: GQLFilenameInput[]) => unknown) => Promise<void>;
+    resolveDuplicates: (
+        filenames: GQLFilenameInput[],
+        onCancelUpload: () => void,
+        callback: (newFilenames: GQLFilenameInput[]) => unknown,
+    ) => Promise<void>;
 }
 
 export const DuplicatedFilenamesResolverContext = React.createContext<DuplicatedFilenamesResolverApi>({
@@ -33,6 +37,7 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
 
     const [occupiedFilenames, setOccupiedFilenames] = React.useState<GQLFilenameResponse[]>([]);
     const [newFilenames, setNewFilenames] = React.useState<GQLFilenameInput[]>([]);
+    const [onCancelUpload, setOnCancelUpload] = React.useState<() => void>();
     const [callback, setCallback] = React.useState<(newFilenames: GQLFilenameInput[]) => unknown>();
 
     const checkForDuplicates = React.useCallback(
@@ -52,7 +57,7 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
     );
 
     const resolveDuplicates = React.useCallback(
-        async (filenames: GQLFilenameInput[], callback: (newFilenames: GQLFilenameInput[]) => unknown) => {
+        async (filenames: GQLFilenameInput[], onCancelUpload: () => void, callback: (newFilenames: GQLFilenameInput[]) => unknown) => {
             const alternatives = await checkForDuplicates(filenames);
 
             const occupiedFilenames: GQLFilenameResponse[] = [];
@@ -69,6 +74,7 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
             setOccupiedFilenames(occupiedFilenames);
             setNewFilenames(unoccupiedFilenames);
             setCallback(() => callback);
+            setOnCancelUpload(() => onCancelUpload);
         },
         [checkForDuplicates],
     );
@@ -100,7 +106,9 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
                     });
                 }}
                 onCancel={() => {
-                    // TODO
+                    setNewFilenames([]);
+                    setOccupiedFilenames([]);
+                    onCancelUpload?.();
                     return;
                 }}
             />
