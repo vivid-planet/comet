@@ -26,7 +26,6 @@ import { TextMatch } from "../common/MarkedMatches";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../graphql.generated";
 import EditFile from "./FileForm/EditFile";
-import { DuplicatedFilenameDialog } from "./Table/duplicatedFilenames/DuplicatedFilenameDialog";
 import { DuplicatedFilenamesResolver } from "./Table/duplicatedFilenames/DuplicatedFilenamesResolver";
 import { FileUploadContextProvider } from "./Table/fileUpload/FileUploadContext";
 import { UploadSplitButton } from "./Table/fileUpload/UploadSplitButton";
@@ -80,17 +79,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
         <StackSwitch initialPage="table">
             <StackPage name="table">
                 <EditDialogApiContext.Provider value={editDialogApi}>
-                    <DuplicatedFilenameDialog
-                        open={false}
-                        currentFilename="abc.jpg"
-                        suggestedFilename="abc-1.jpg"
-                        onCancel={() => {
-                            return;
-                        }}
-                        onRename={(newFilename) => {
-                            window.alert(newFilename);
-                        }}
-                    />
                     {!props.disableScopeIndicator && (
                         <ContentScopeIndicator variant="toolbar" global>
                             <ScopeIndicatorContent>

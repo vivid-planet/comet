@@ -19,7 +19,7 @@ interface FormValues {
 interface DuplicateFilenameDialogProps {
     open: boolean;
     currentFilename?: string;
-    folderId?: string;
+    folderId: string | null;
     suggestedFilename?: string;
     onCancel: () => void;
     onRename: (newFilename: string) => void;

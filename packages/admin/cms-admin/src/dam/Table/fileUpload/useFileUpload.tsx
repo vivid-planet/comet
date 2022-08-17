@@ -28,8 +28,11 @@ import {
 } from "./fileUploadErrorMessages";
 import { ProgressDialog } from "./ProgressDialog";
 
-interface FileWithFolderPath extends File {
+interface FileWithPath extends File {
     path?: string;
+}
+
+interface FileWithFolderPath extends FileWithPath {
     folderPath?: string;
 }
 
@@ -39,7 +42,7 @@ interface UploadFileOptions {
 }
 
 interface Files {
-    acceptedFiles: FileWithFolderPath[];
+    acceptedFiles: FileWithPath[];
     fileRejections: FileRejection[];
 }
 
@@ -61,33 +64,38 @@ export interface FileUploadValidationError {
     message: React.ReactNode;
 }
 
-const addFolderPath = async (acceptedFiles: FileWithFolderPath[]) => {
+const postProcessFile = async (file: FileWithPath, filename?: string): Promise<FileWithFolderPath> => {
+    let harmonizedPath: string | undefined;
+    // when files are uploaded via input field, the path does not have a "/" prefix
+    // when files are uploaded via drag and drop, the path does have a "/" prefix
+    // if the path has a "/" prefix, this prefix is removed => path is harmonized
+    if (file.path?.startsWith("/")) {
+        harmonizedPath = file.path?.split("/").splice(1).join("/");
+    } else {
+        harmonizedPath = file.path;
+    }
+
+    // Create a new file because of a strange bug in Firefox that when uploading a folder via drag and drop
+    // changes the mimetype of all uploaded files to "application/octet-stream". This behavior only happens in Firefox
+    // (not in Chrome or Safari) and I couldn't find the reason for it.
+    // When looking at the formData in the web dev tools, the mimetype is still correct. It is only changed to a
+    // wrong type in the actual request.
+    // The bug could be avoided by creating a new file. Maybe an issue with Dropzone?
+    const buffer = await file.arrayBuffer();
+    const newFile: FileWithFolderPath = new File([buffer], filename ?? file.name, { lastModified: file.lastModified, type: file.type });
+    newFile.path = file.path;
+
+    const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
+    newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
+
+    return newFile;
+};
+
+const postProcessFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
-        let harmonizedPath: string | undefined;
-        // when files are uploaded via input field, the path does not have a "/" prefix
-        // when files are uploaded via drag and drop, the path does have a "/" prefix
-        // if the path has a "/" prefix, this prefix is removed => path is harmonized
-        if (file.path?.startsWith("/")) {
-            harmonizedPath = file.path?.split("/").splice(1).join("/");
-        } else {
-            harmonizedPath = file.path;
-        }
-
-        // Create a new file because of a strange bug in Firefox that when uploading a folder via drag and drop
-        // changes the mimetype of all uploaded files to "application/octet-stream". This behavior only happens in Firefox
-        // (not in Chrome or Safari) and I couldn't find the reason for it.
-        // When looking at the formData in the web dev tools, the mimetype is still correct. It is only changed to a
-        // wrong type in the actual request.
-        // The bug could be avoided by creating a new file. Maybe an issue with Dropzone?
-        const buffer = await file.arrayBuffer();
-        const newFile: FileWithFolderPath = new File([buffer], file.name, { lastModified: file.lastModified, type: file.type });
-        newFile.path = file.path;
-
-        const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
-        newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
-
+        const newFile = await postProcessFile(file);
         newFiles.push(newFile);
     }
 
@@ -250,7 +258,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             if (file.folderPath === undefined) {
                 return folderIdMap;
             }
-
             const pathArr = file.folderPath.split("/");
 
             for (let i = 1; i <= pathArr.length; i++) {
@@ -265,6 +272,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 }
 
                 const parentId = folderIdMap.has(parentPath) ? folderIdMap.get(parentPath) : currFolderId;
+
                 const id = await createDamFolder(folderName, parentId);
                 folderIdMap.set(completePath, id);
             }
@@ -287,16 +295,35 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         }
 
         if (acceptedFiles.length > 0) {
-            const filesWithFolderPaths = await addFolderPath(acceptedFiles);
-            let folderIdMap = await createInitialFolderIdMap(acceptedFiles, folderId);
+            const filesWithFolderPaths = await postProcessFiles(acceptedFiles);
+            let folderIdMap = await createInitialFolderIdMap(filesWithFolderPaths, folderId);
 
             for (const file of filesWithFolderPaths) {
                 addTotalSize(file.path ?? "", file.size);
             }
 
+            const filesInNewDir: FileWithFolderPath[] = [];
+            const filesInExistingDir: FileWithFolderPath[] = [];
+
+            for (const file of filesWithFolderPaths) {
+                if (file.folderPath === undefined || folderIdMap.has(file.folderPath)) {
+                    filesInExistingDir.push(file);
+                } else {
+                    // filter out files in newly uploaded folders, because the duplicated filename
+                    // check isn't possible for new folders since they don't have an id.
+                    // It's also not necessary because in a local filesystem there
+                    // typically can't be duplicate filenames. If there's still a conflict,
+                    // it's resolved automatically in the API by adding a sequential number.
+                    filesInNewDir.push(file);
+                }
+            }
+
             const newFilenames = await new Promise<GQLFilenameInput[]>((resolve) => {
                 duplicatedFilenameResolver.resolveDuplicates(
-                    filesWithFolderPaths.map((file) => ({ name: file.name, folderId: folderId })),
+                    filesInExistingDir.map((file) => ({
+                        name: file.name,
+                        folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId,
+                    })),
                     (newFilenames) => {
                         resolve(newFilenames);
                     },
@@ -304,18 +331,12 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             });
 
             const filesWithValidatedName: FileWithFolderPath[] = [];
-            for (let i = 0; i < filesWithFolderPaths.length; i++) {
-                const file = filesWithFolderPaths[i];
-
-                const buffer = await file.arrayBuffer();
-                const newFile: FileWithFolderPath = new File([buffer], newFilenames[i].name, {
-                    lastModified: file.lastModified,
-                    type: file.type,
-                });
-                newFile.path = file.path;
-
+            for (let i = 0; i < filesInExistingDir.length; i++) {
+                const newFile = await postProcessFile(filesInExistingDir[i], newFilenames[i].name);
                 filesWithValidatedName.push(newFile);
             }
+
+            filesWithValidatedName.push(...filesInNewDir);
 
             cancelUpload.current = axios.CancelToken.source();
             for (const file of filesWithValidatedName) {
