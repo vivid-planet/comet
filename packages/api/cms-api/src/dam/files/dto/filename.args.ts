@@ -26,4 +26,7 @@ export class FilenameResponse {
 
     @Field({ nullable: true })
     alternativeName?: string;
+
+    @Field()
+    extension: string;
 }

@@ -99,6 +99,7 @@ type FilenameResponse {
   folderId: ID
   isOccupied: Boolean!
   alternativeName: String
+  extension: String!
 }
 
 type PageTreeNode {

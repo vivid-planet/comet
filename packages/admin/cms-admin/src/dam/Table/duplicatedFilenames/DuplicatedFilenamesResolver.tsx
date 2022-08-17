@@ -96,8 +96,9 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
             <DuplicatedFilenameDialog
                 open={occupiedFilenames.length > 0}
                 currentFilename={occupiedFilenames[0]?.originalName}
-                suggestedFilename={occupiedFilenames[0]?.alternativeName ?? undefined}
+                extension={occupiedFilenames[0]?.extension}
                 folderId={occupiedFilenames[0]?.folderId ?? null}
+                suggestedFilename={occupiedFilenames[0]?.alternativeName ?? undefined}
                 onRename={(newFilename) => {
                     setNewFilenames((newFilenames) => [...newFilenames, { name: newFilename, folderId: occupiedFilenames[0].folderId }]);
                     setOccupiedFilenames((alternatives) => {

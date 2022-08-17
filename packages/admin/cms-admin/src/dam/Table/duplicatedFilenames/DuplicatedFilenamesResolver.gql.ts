@@ -7,6 +7,7 @@ export const damFindAlternativesToDuplicatedFilenamesQuery = gql`
             folderId
             isOccupied
             alternativeName
+            extension
         }
     }
 `;

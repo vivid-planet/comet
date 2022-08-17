@@ -19,6 +19,7 @@ interface FormValues {
 interface DuplicateFilenameDialogProps {
     open: boolean;
     currentFilename?: string;
+    extension?: string;
     folderId: string | null;
     suggestedFilename?: string;
     onCancel: () => void;
@@ -28,6 +29,7 @@ interface DuplicateFilenameDialogProps {
 export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
     open,
     currentFilename,
+    extension,
     folderId,
     suggestedFilename,
     onCancel,
@@ -60,7 +62,10 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
             <FinalForm<FormValues>
                 mode="add"
                 onSubmit={(values) => {
-                    onRename(values.newFilename);
+                    const newFilename = values.newFilename;
+                    const newFilenameWithExtension = extension && !newFilename.endsWith(extension) ? `${newFilename}${extension}` : newFilename;
+
+                    onRename(newFilenameWithExtension);
                 }}
                 initialValues={{ newFilename: suggestedFilename }}
                 allowPristineSubmission

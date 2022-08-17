@@ -92,10 +92,9 @@ export class FilesResolver {
                 folderId,
                 isOccupied,
                 alternativeName: isOccupied ? nextAvailableName : undefined,
+                extension,
             });
         }
-
-        console.log(nextAvailableFilenames);
 
         return nextAvailableFilenames;
     }
