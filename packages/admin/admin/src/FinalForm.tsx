@@ -32,6 +32,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
     apiRef?: React.MutableRefObject<FormApi<FormValues> | undefined>;
+    allowPristineSubmission?: boolean;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -48,6 +49,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             editDialog?.closeDialog({ delay: true });
         },
         validateWarning,
+        allowPristineSubmission = false,
     } = props;
 
     const ref = React.useRef();
@@ -69,7 +71,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         const submit = React.useCallback(
             (event: any) => {
                 event.preventDefault(); //  Prevents from reloading the page with GET-params on submit
-                if (!formRenderProps.dirty) return;
+                if (!formRenderProps.dirty && !allowPristineSubmission) return;
                 return new Promise<SubmissionErrors | void>((resolve) => {
                     Promise.resolve(formRenderProps.handleSubmit(event)).then(
                         () => {
