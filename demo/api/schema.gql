@@ -98,10 +98,11 @@ enum JobStatus {
   failed
 }
 
-type Filename {
-  id: ID!
-  name: String!
+type FilenameResponse {
+  originalName: String!
   folderId: ID
+  isOccupied: Boolean!
+  alternativeName: String
 }
 
 type Link implements DocumentInterface {
@@ -256,12 +257,6 @@ enum RedirectGenerationType {
   automatic
 }
 
-input FilenameInput {
-  id: ID!
-  name: String!
-  folderId: ID
-}
-
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
@@ -293,7 +288,7 @@ type Query {
   damFilesList(sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): [DamFile!]!
   damFile(id: ID!): DamFile!
   damFilenameAlreadyExists(filename: String!, folderId: String): Boolean!
-  findAlternativesToDuplicatedFilenames(filenames: [FilenameInput!]!): [Filename!]!
+  findAlternativesToDuplicatedFilenames(filenames: [FilenameInput!]!): [FilenameResponse!]!
   damFoldersList(sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): [DamFolder!]!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
@@ -322,6 +317,11 @@ enum SlugAvailability {
 input FileFilterInput {
   searchText: String
   mimetypes: [String!]
+}
+
+input FilenameInput {
+  name: String!
+  folderId: ID
 }
 
 input FolderFilterInput {

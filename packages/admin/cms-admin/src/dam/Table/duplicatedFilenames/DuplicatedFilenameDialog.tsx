@@ -5,8 +5,8 @@ import { FormattedMessage } from "react-intl";
 
 interface DuplicateFilenameDialogProps {
     open: boolean;
-    currentFilename: string;
-    suggestedFilename: string;
+    currentFilename?: string;
+    suggestedFilename?: string;
     onCancel: () => void;
     onRename: (newFilename: string) => void;
 }
@@ -18,7 +18,7 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
     onCancel,
     onRename,
 }) => {
-    const [newFilename, setNewFilename] = React.useState<string>(suggestedFilename);
+    const [newFilename, setNewFilename] = React.useState<string>(suggestedFilename ?? "");
 
     return (
         <Dialog open={open}>

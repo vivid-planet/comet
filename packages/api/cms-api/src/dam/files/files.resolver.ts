@@ -5,7 +5,7 @@ import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nest
 
 import { FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
-import { Filename } from "./dto/filename.args";
+import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { File } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 
@@ -71,16 +71,21 @@ export class FilesResolver {
         return (await this.filesService.findOneByFilenameAndFolder(filename, folderId)) !== null;
     }
 
-    @Query(() => [Filename])
-    async findAlternativesToDuplicatedFilenames(@Args("filenames", { type: () => [Filename] }) filenames: Array<Filename>): Promise<Array<Filename>> {
-        const nextAvailableFilenames: Array<Filename> = [];
+    @Query(() => [FilenameResponse])
+    async findAlternativesToDuplicatedFilenames(
+        @Args("filenames", { type: () => [FilenameInput] }) filenames: Array<FilenameInput>,
+    ): Promise<Array<FilenameResponse>> {
+        const nextAvailableFilenames: Array<FilenameResponse> = [];
 
-        for (const { id, name, folderId } of filenames) {
+        for (const { name, folderId } of filenames) {
             const nextAvailableName = await this.filesService.findNextAvailableFilename(name, folderId);
+            const isOccupied = name !== nextAvailableName;
+
             nextAvailableFilenames.push({
-                id,
-                name: nextAvailableName,
+                originalName: name,
                 folderId,
+                isOccupied,
+                alternativeName: isOccupied ? nextAvailableName : undefined,
             });
         }
 

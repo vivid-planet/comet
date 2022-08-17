@@ -1,13 +1,8 @@
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
-@InputType("FilenameInput")
-@ObjectType()
-export class Filename {
-    @Field(() => ID)
-    @IsUUID()
-    id: string;
-
+@InputType()
+export class FilenameInput {
     @Field()
     @IsString()
     name: string;
@@ -16,4 +11,19 @@ export class Filename {
     @IsOptional()
     @IsUUID()
     folderId?: string;
+}
+
+@ObjectType()
+export class FilenameResponse {
+    @Field()
+    originalName: string;
+
+    @Field(() => ID, { nullable: true })
+    folderId?: string;
+
+    @Field(() => Boolean)
+    isOccupied: boolean;
+
+    @Field({ nullable: true })
+    alternativeName?: string;
 }
