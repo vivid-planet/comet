@@ -2,7 +2,9 @@ import { gql, useMutation } from "@apollo/client";
 import {
     MainContent,
     RouterPrompt,
+    saveAndGoBackMessage,
     SaveButton,
+    saveMessage,
     SplitButton,
     Toolbar,
     ToolbarActions,
@@ -146,7 +148,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                             variant="contained"
                             onClick={handleSaveClick}
                         >
-                            <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                            <FormattedMessage {...saveMessage} />
                         </SaveButton>
                         <SaveButton
                             startIcon={<Save />}
@@ -159,7 +161,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                                 stackApi?.goBack();
                             }}
                         >
-                            <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                            <FormattedMessage {...saveAndGoBackMessage} />
                         </SaveButton>
                     </SplitButton>
                 </ToolbarActions>

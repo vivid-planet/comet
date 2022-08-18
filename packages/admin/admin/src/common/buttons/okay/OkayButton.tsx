@@ -4,6 +4,8 @@ import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { okMessage } from "../../../messages";
+
 export type OkayButtonClassKey = ButtonClassKey;
 export type OkayButtonProps = ButtonProps;
 
@@ -60,7 +62,7 @@ const styles = () => {
 };
 
 function OkayBtn({
-    children = <FormattedMessage id="comet.generic.ok" defaultMessage="OK" />,
+    children = <FormattedMessage {...okMessage} />,
     startIcon = <Check />,
     color = "primary",
     variant = "contained",

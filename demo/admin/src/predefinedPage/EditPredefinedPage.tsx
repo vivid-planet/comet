@@ -4,7 +4,9 @@ import {
     FinalForm,
     FinalFormSelect,
     MainContent,
+    saveAndGoBackMessage,
     SaveButton,
+    saveMessage,
     SplitButton,
     Toolbar,
     ToolbarFillSpace,
@@ -96,7 +98,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                             <ToolbarItem>
                                 <SplitButton disabled={pristine || hasValidationErrors || submitting}>
                                     <SaveButton hasErrors={hasSubmitErrors} type="submit">
-                                        <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                                        <FormattedMessage {...saveMessage} />
                                     </SaveButton>
                                     <SaveButton
                                         saving={submitting}
@@ -109,7 +111,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                                             }
                                         }}
                                     >
-                                        <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                                        <FormattedMessage {...saveAndGoBackMessage} />
                                     </SaveButton>
                                 </SplitButton>
                             </ToolbarItem>
