@@ -1,6 +1,6 @@
 import { DocumentNode, InternalRefetchQueriesInclude, useApolloClient, useQuery } from "@apollo/client";
 import { StackLink, Toolbar, ToolbarAutomaticTitleItem, ToolbarFillSpace, ToolbarItem, useStoredState } from "@comet/admin";
-import { Add as AddIcon, Copy, Delete as DeleteIcon, Domain, Edit, MoreVertical, Paste, ThreeDotSaving } from "@comet/admin-icons";
+import { Add as AddIcon, Copy, Delete as DeleteIcon, Domain, Edit, Filter, MoreVertical, Paste, ThreeDotSaving } from "@comet/admin-icons";
 import { readClipboard, writeClipboard } from "@comet/blocks-admin";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import {
@@ -12,6 +12,8 @@ import {
     GridSortDirection,
     GridSortModel,
     GridToolbar,
+    GridToolbarQuickFilter,
+    useGridApiContext,
     useGridApiRef,
 } from "@mui/x-data-grid-pro";
 import { GQLProductsListQuery, GQLProductsListQueryVariables } from "@src/graphql.generated";
@@ -410,13 +412,39 @@ function useBufferedRowCount(rowCount: number | undefined) {
 
     return rowCountState;
 }
+
+function GridFilterButton() {
+    const apiRef = useGridApiContext();
+    const handleFilterClick = React.useCallback(() => {
+        apiRef.current.showFilterPanel();
+    }, [apiRef]);
+    return (
+        <Button startIcon={<Filter />} variant="text" color="info" onClick={handleFilterClick}>
+            <FormattedMessage id="comet.core.filter" defaultMessage="Filter" />
+        </Button>
+    );
+}
 // END TODO move into library
 
-/*
-TODO:
-- use comet Toolbar instead of DataGrid Toolbar (quickfilter + Columns/Filters button)
-- Integrate DataGrid Selection with Comet Selection (+in URL)
-*/
+function ProductsTableToolbar() {
+    return (
+        <Toolbar>
+            <ToolbarAutomaticTitleItem />
+            <ToolbarItem>
+                <GridToolbarQuickFilter />
+            </ToolbarItem>
+            <ToolbarFillSpace />
+            <ToolbarItem>
+                <GridFilterButton />
+            </ToolbarItem>
+            <ToolbarItem>
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="edit" payload="new" variant="contained" color="primary">
+                    <FormattedMessage id="cometDemo.products.newProduct" defaultMessage="New Product" />
+                </Button>
+            </ToolbarItem>
+        </Toolbar>
+    );
+}
 
 function ProductsTable() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -479,18 +507,18 @@ function ProductsTable() {
 
     return (
         <div>
-            <Toolbar>
-                <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
-                <ToolbarItem>
-                    <Button startIcon={<AddIcon />} component={StackLink} pageName="edit" payload="new" variant="contained" color="primary">
-                        <FormattedMessage id="comet.products.newProduct" defaultMessage="New Product" />
-                    </Button>
-                </ToolbarItem>
-            </Toolbar>
-
             <div style={{ height: 600, width: "100%" /* TODO use full height (DataGrid fullHeight will make paging scroll down) */ }}>
-                <DataGridPro {...dataGridProps} disableSelectionOnClick rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
+                <DataGridPro
+                    {...dataGridProps}
+                    disableSelectionOnClick
+                    rows={rows}
+                    rowCount={rowCount}
+                    columns={columns}
+                    loading={loading}
+                    components={{
+                        Toolbar: ProductsTableToolbar,
+                    }}
+                />
             </div>
         </div>
     );
