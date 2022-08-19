@@ -23,7 +23,7 @@ export function AdminTabs({ children }: AdminTabsProps): JSX.Element | null {
     const selectedTab = children.find((tab) => tab.key === selected) ? selected : firstTab.key; //fall back to first, as <Switch> does
     return (
         <Root key="tabs">
-            <Tabs value={selectedTab} variant="scrollable" scrollButtons>
+            <Tabs value={selectedTab} variant="scrollable" scrollButtons="auto">
                 {children.map((tab, index) => {
                     const url = index === 0 ? match.url : `${match.url}/${tab.key}`;
                     return <Tab key={tab.key} value={tab.key} label={tab.label} component={Link} to={url} />;
