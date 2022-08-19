@@ -2,7 +2,19 @@ import { DocumentNode, InternalRefetchQueriesInclude, useApolloClient, useQuery 
 import { StackLink, Toolbar, ToolbarAutomaticTitleItem, ToolbarFillSpace, ToolbarItem, useStoredState } from "@comet/admin";
 import { Add as AddIcon, Copy, Delete as DeleteIcon, Domain, Edit, Filter, MoreVertical, Paste, ThreeDotSaving } from "@comet/admin-icons";
 import { readClipboard, writeClipboard } from "@comet/blocks-admin";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+import {
+    Alert,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+} from "@mui/material";
 import {
     DataGridPro,
     DataGridProProps,
@@ -502,7 +514,12 @@ function ProductsTable() {
     );
 
     if (error) {
-        return <>ERROR: {JSON.stringify(error)}</>;
+        return (
+            <Alert severity="error">
+                <FormattedMessage id="comet.error.abstractErrorMessage" defaultMessage="An error has occurred" />
+            </Alert>
+        );
+        //return <>ERROR: {JSON.stringify(error)}</>;
     }
 
     return (
