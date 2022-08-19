@@ -65,24 +65,17 @@ export const StructuredDataTableDeleteDialog: React.FC<StructuredDataTableDelete
     );
 };
 
-interface StructuredDataTableContextMenuProps {
+interface CrudContextMenuProps {
     url?: string;
     onPaste?: (options: { input: unknown; client: ApolloClient<object> }) => Promise<void>;
     onDelete?: (options: { id: unknown; client: ApolloClient<object> }) => Promise<void>;
     id: string | number;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    refetchQueries: RefetchQueriesOptions<any, unknown>;
+    refetchQueries: RefetchQueriesOptions<any, unknown>["include"];
     copyData?: unknown;
 }
 
-function StructuredDataTableContextMenu({
-    url,
-    id,
-    onPaste,
-    onDelete,
-    refetchQueries,
-    copyData,
-}: StructuredDataTableContextMenuProps): React.ReactElement {
+function CrudContextMenu({ url, id, onPaste, onDelete, refetchQueries, copyData }: CrudContextMenuProps): React.ReactElement {
     const intl = useIntl();
     const client = useApolloClient();
     const errorDialog = useErrorDialog();
@@ -106,7 +99,7 @@ function StructuredDataTableContextMenu({
             id,
             client,
         });
-        await client.refetchQueries(refetchQueries);
+        await client.refetchQueries({ include: refetchQueries });
         setDeleteDialogOpen(false);
     };
 
@@ -134,7 +127,7 @@ function StructuredDataTableContextMenu({
                         input,
                         client,
                     });
-                    await client.refetchQueries(refetchQueries);
+                    await client.refetchQueries({ include: refetchQueries });
                 } catch (e) {
                     errorDialog?.showError({
                         userMessage: (
@@ -509,7 +502,7 @@ const columns: GridColDef[] = [
                     <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                         <Edit color="primary" />
                     </IconButton>
-                    <StructuredDataTableContextMenu
+                    <CrudContextMenu
                         onPaste={async ({ input, client }) => {
                             await client.mutate({
                                 mutation: createProductMutation,
