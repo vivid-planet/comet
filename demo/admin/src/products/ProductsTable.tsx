@@ -280,25 +280,38 @@ function muiGridFilterToGql(filterModel?: GridFilterModel): { filter: GqlFilter;
 }
 
 //returns props for DataGrid that turns it into a controlled component ready to be used for remote filter/sorting/paging
-function useDataGridRemote(): Omit<DataGridProProps, "rows" | "columns"> & { page: number; pageSize: number } {
+function useDataGridRemote({
+    queryParamsPrefix = "",
+}: {
+    queryParamsPrefix?: string;
+} = {}): Omit<DataGridProProps, "rows" | "columns"> & { page: number; pageSize: number } {
     const history = useHistory();
     const location = useLocation();
+
+    const sortParamName = `${queryParamsPrefix}sort`;
+    const filterParamName = `${queryParamsPrefix}filter`;
+    const pageParamName = `${queryParamsPrefix}page`;
+    const pageSizeParamName = `${queryParamsPrefix}pageSize`;
 
     const parsedSearch = queryString.parse(location.search, { parseNumbers: true });
     // TODO configurable search prefix (to support multiple grid on one page)
 
-    const page = (parsedSearch.page as number) ?? 0;
+    const page = (parsedSearch[pageParamName] as number) ?? 0;
     const handlePageChange = (newPage: number) => {
-        history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, page: newPage }) });
+        history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [pageParamName]: newPage }) });
     };
 
-    const pageSize = (parsedSearch.pageSize as number) ?? 20;
+    const pageSize = (parsedSearch[pageSizeParamName] as number) ?? 20;
     const handlePageSizeChange = (newPageSize: number) => {
-        history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, pageSize: newPageSize }) });
+        history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [pageSizeParamName]: newPageSize }) });
     };
 
     const sortModel = (
-        !parsedSearch.sort ? [] : !Array.isArray(parsedSearch.sort) ? [parsedSearch.sort as string] : (parsedSearch.sort as string[])
+        !parsedSearch.sort
+            ? []
+            : !Array.isArray(parsedSearch[sortParamName])
+            ? [parsedSearch[sortParamName] as string]
+            : (parsedSearch[sortParamName] as string[])
     ).map((i) => {
         const parts = i.split(":");
         return {
@@ -309,17 +322,17 @@ function useDataGridRemote(): Omit<DataGridProProps, "rows" | "columns"> & { pag
     const handleSortModelChange = React.useCallback(
         (sortModel: GridSortModel) => {
             const sort = sortModel.map((i) => `${i.field}:${i.sort}`);
-            history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, sort }) });
+            history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [sortParamName]: sort }) });
         },
-        [history, location, parsedSearch],
+        [history, location, parsedSearch, sortParamName],
     );
 
-    const filterModel = parsedSearch.filter ? JSON.parse(parsedSearch.filter as string) : { items: [] };
+    const filterModel = parsedSearch.filter ? JSON.parse(parsedSearch[filterParamName] as string) : { items: [] };
     const handleFilterChange = React.useCallback(
         (filterModel: GridFilterModel) => {
-            history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, filter: JSON.stringify(filterModel) }) });
+            history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [filterParamName]: JSON.stringify(filterModel) }) });
         },
-        [history, location, parsedSearch],
+        [history, location, parsedSearch, filterParamName],
     );
 
     return {
