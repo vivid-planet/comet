@@ -241,7 +241,7 @@ interface GqlStringFilter {
 interface GqlNumberFilter {
     equal?: number | null;
     lowerThan?: number | null;
-    geraterThan?: number | null;
+    greaterThan?: number | null;
     lowerThanEqual?: number | null;
     greaterThanEqual?: number | null;
     notEqual?: number | null;
@@ -252,7 +252,7 @@ type GqlFilter = {
     and?: GqlFilter[] | null;
     or?: GqlFilter[] | null;
 };
-function muiGridFilterToGql(filterModel?: GridFilterModel): { filter: GqlFilter; query?: string } {
+function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; query?: string } {
     if (!filterModel) return { filter: {} };
     const filterItems = filterModel.items
         .filter((value) => value.value !== undefined)
@@ -260,9 +260,12 @@ function muiGridFilterToGql(filterModel?: GridFilterModel): { filter: GqlFilter;
             if (!value.operatorValue) throw new Error("operaturValue not set");
             const gqlOperator = muiGridOperatorValueToGqlOperator[value.operatorValue];
             if (!gqlOperator) throw new Error(`unknown operator ${value.operatorValue}`);
+            const column = columns.find((i) => i.field == value.columnField);
+            const type = column?.type;
+            const convertedValue = type === "number" ? parseFloat(value.value) : value.value;
             return {
                 [value.columnField]: {
-                    [gqlOperator]: value.value,
+                    [gqlOperator]: convertedValue,
                 } as GqlStringFilter | GqlNumberFilter,
             };
         });
@@ -507,7 +510,7 @@ function ProductsTable() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
 
-    const { filter, query } = muiGridFilterToGql(dataGridProps.filterModel);
+    const { filter, query } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
