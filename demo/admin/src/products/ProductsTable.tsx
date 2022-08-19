@@ -458,6 +458,38 @@ function ProductsTableToolbar() {
     );
 }
 
+const columns: GridColDef[] = [
+    { field: "name", headerName: "Name", width: 150 },
+    { field: "description", headerName: "Description", width: 150 },
+    { field: "price", headerName: "Price", width: 150, type: "number" },
+    {
+        field: "action",
+        headerName: "",
+        sortable: false,
+        filterable: false,
+        renderCell: (params) => {
+            return (
+                <>
+                    <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                        <Edit color="primary" />
+                    </IconButton>
+                    <StructuredDataTableContextMenu
+                        createMutation={createProductMutation}
+                        // url={url}
+                        deleteMutation={deleteProductMutation}
+                        id={params.id}
+                        refetchQueries={["ProductsList"]}
+                        copyData={{
+                            name: params.row.name,
+                            description: params.row.description,
+                            price: params.row.price,
+                        }}
+                    />
+                </>
+            );
+        },
+    },
+];
 function ProductsTable() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
@@ -476,42 +508,6 @@ function ProductsTable() {
     });
     const rows = data?.products.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.products.totalCount);
-
-    const columns = React.useMemo(
-        (): GridColDef[] => [
-            { field: "name", headerName: "Name", width: 150 },
-            { field: "description", headerName: "Description", width: 150 },
-            { field: "price", headerName: "Price", width: 150, type: "number" },
-            {
-                field: "action",
-                headerName: "",
-                sortable: false,
-                filterable: false,
-                renderCell: (params) => {
-                    return (
-                        <>
-                            <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                <Edit color="primary" />
-                            </IconButton>
-                            <StructuredDataTableContextMenu
-                                createMutation={createProductMutation}
-                                // url={url}
-                                deleteMutation={deleteProductMutation}
-                                id={params.id}
-                                refetchQueries={["ProductsList"]}
-                                copyData={{
-                                    name: params.row.name,
-                                    description: params.row.description,
-                                    price: params.row.price,
-                                }}
-                            />
-                        </>
-                    );
-                },
-            },
-        ],
-        [],
-    );
 
     if (error) {
         return (
