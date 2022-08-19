@@ -1,4 +1,4 @@
-import { DocumentNode, InternalRefetchQueriesInclude, useApolloClient, useQuery } from "@apollo/client";
+import { ApolloClient, RefetchQueriesOptions, useApolloClient, useQuery } from "@apollo/client";
 import { StackLink, Toolbar, ToolbarAutomaticTitleItem, ToolbarFillSpace, ToolbarItem, useErrorDialog, useStoredState } from "@comet/admin";
 import { Add as AddIcon, Copy, Delete as DeleteIcon, Domain, Edit, Filter, MoreVertical, Paste, ThreeDotSaving } from "@comet/admin-icons";
 import { readClipboard, writeClipboard } from "@comet/blocks-admin";
@@ -67,25 +67,25 @@ export const StructuredDataTableDeleteDialog: React.FC<StructuredDataTableDelete
 
 interface StructuredDataTableContextMenuProps {
     url?: string;
-    createMutation?: DocumentNode;
-    deleteMutation: DocumentNode;
+    onPaste?: (options: { input: unknown; client: ApolloClient<object> }) => Promise<void>;
+    onDelete?: (options: { id: unknown; client: ApolloClient<object> }) => Promise<void>;
     id: string | number;
-    refetchQueries: InternalRefetchQueriesInclude;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    refetchQueries: RefetchQueriesOptions<any, unknown>;
     copyData?: unknown;
 }
 
 function StructuredDataTableContextMenu({
     url,
     id,
-    createMutation,
-    deleteMutation,
+    onPaste,
+    onDelete,
     refetchQueries,
     copyData,
 }: StructuredDataTableContextMenuProps): React.ReactElement {
     const intl = useIntl();
     const client = useApolloClient();
     const errorDialog = useErrorDialog();
-    // TODO const { scope } = useContentScope();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
@@ -101,57 +101,55 @@ function StructuredDataTableContextMenu({
     };
 
     const handleDeleteClick = async () => {
-        await client.mutate({
-            mutation: deleteMutation,
-            variables: { id },
-            refetchQueries,
+        if (!onDelete) return;
+        await onDelete({
+            id,
+            client,
         });
+        await client.refetchQueries(refetchQueries);
         setDeleteDialogOpen(false);
     };
 
     const handlePasteClick = async () => {
-        if (createMutation) {
-            const clipboard = await readClipboard();
+        if (!onPaste) return;
+        const clipboard = await readClipboard();
 
-            if (clipboard) {
-                let input;
+        if (clipboard) {
+            let input;
 
+            try {
+                input = JSON.parse(clipboard);
+            } catch (e) {
+                errorDialog?.showError({
+                    userMessage: <FormattedMessage id="comet.common.clipboardInvalidFormat" defaultMessage="Clipboard contains an invalid format" />,
+                    error: e.toString(),
+                });
+                console.error("Bad clidpboard value, parsing JSON failed", e);
+            }
+
+            if (input) {
+                // TODO validate input?
                 try {
-                    input = JSON.parse(clipboard);
+                    await onPaste({
+                        input,
+                        client,
+                    });
+                    await client.refetchQueries(refetchQueries);
                 } catch (e) {
                     errorDialog?.showError({
                         userMessage: (
-                            <FormattedMessage id="comet.common.clipboardInvalidFormat" defaultMessage="Clipboard contains an invalid format" />
+                            <FormattedMessage
+                                id="comet.common.pasteFailedInvalidFormat"
+                                defaultMessage="Paste failed, probably due to an invalid format"
+                            />
                         ),
                         error: e.toString(),
                     });
-                    console.error("Bad clidpboard value, parsing JSON failed", e);
+                    console.error("mutation failed", e);
                 }
-
-                if (input) {
-                    // TODO validate input
-                    try {
-                        await client.mutate({
-                            mutation: createMutation,
-                            variables: { /*TODO scope,*/ input },
-                            refetchQueries,
-                        });
-                    } catch (e) {
-                        errorDialog?.showError({
-                            userMessage: (
-                                <FormattedMessage
-                                    id="comet.common.pasteFailedInvalidFormat"
-                                    defaultMessage="Paste failed, probably due to an invalid format"
-                                />
-                            ),
-                            error: e.toString(),
-                        });
-                        console.error("mutation failed", e);
-                    }
-                }
-            } else {
-                console.error("Clidpboard is empty");
             }
+        } else {
+            console.error("Clidpboard is empty");
         }
     };
 
@@ -192,7 +190,7 @@ function StructuredDataTableContextMenu({
                         <ListItemText primary={intl.formatMessage({ id: "comet.generic.copy", defaultMessage: "Copy" })} />
                     </MenuItem>
                 )}
-                {createMutation && (
+                {onPaste && (
                     <MenuItem
                         key="paste"
                         onClick={async () => {
@@ -206,17 +204,19 @@ function StructuredDataTableContextMenu({
                         <ListItemText primary={intl.formatMessage({ id: "comet.generic.paste", defaultMessage: "Paste" })} />
                     </MenuItem>
                 )}
-                <MenuItem
-                    onClick={() => {
-                        handleClose();
-                        setDeleteDialogOpen(true);
-                    }}
-                >
-                    <ListItemIcon>
-                        <DeleteIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={intl.formatMessage({ id: "comet.generic.deleteItem", defaultMessage: "Delete item" })} />
-                </MenuItem>
+                {onDelete && (
+                    <MenuItem
+                        onClick={() => {
+                            handleClose();
+                            setDeleteDialogOpen(true);
+                        }}
+                    >
+                        <ListItemIcon>
+                            <DeleteIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={intl.formatMessage({ id: "comet.generic.deleteItem", defaultMessage: "Delete item" })} />
+                    </MenuItem>
+                )}
             </Menu>
             <StructuredDataTableDeleteDialog
                 dialogOpen={deleteDialogOpen}
@@ -510,9 +510,19 @@ const columns: GridColDef[] = [
                         <Edit color="primary" />
                     </IconButton>
                     <StructuredDataTableContextMenu
-                        createMutation={createProductMutation}
+                        onPaste={async ({ input, client }) => {
+                            await client.mutate({
+                                mutation: createProductMutation,
+                                variables: { input },
+                            });
+                        }}
+                        onDelete={async ({ id, client }) => {
+                            await client.mutate({
+                                mutation: deleteProductMutation,
+                                variables: { id },
+                            });
+                        }}
                         // url={url}
-                        deleteMutation={deleteProductMutation}
                         id={params.id}
                         refetchQueries={["ProductsList"]}
                         copyData={{
