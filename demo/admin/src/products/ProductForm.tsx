@@ -17,11 +17,11 @@ import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/cms-admin";
 import { CircularProgress, IconButton } from "@mui/material";
 import {
-    GQLCreateProductMutation,
+    GQLProductFormCreateProductMutation,
+    GQLProductFormUpdateProductMutation,
     GQLProductInput,
     GQLProductQuery,
     GQLProductQueryVariables,
-    GQLUpdateProductMutation,
 } from "@src/graphql.generated";
 import { FORM_ERROR } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -42,12 +42,12 @@ function ProductForm({ id }: FormProps): React.ReactElement {
 
     const handleSubmit = async (input: GQLProductInput) => {
         if (mode === "edit") {
-            await client.mutate<GQLUpdateProductMutation>({
+            await client.mutate<GQLProductFormUpdateProductMutation>({
                 mutation: updateProductMutation,
                 variables: { id, data: input },
             });
         } else {
-            await client.mutate<GQLCreateProductMutation>({
+            await client.mutate<GQLProductFormCreateProductMutation>({
                 mutation: createProductMutation,
                 variables: { data: input },
             });

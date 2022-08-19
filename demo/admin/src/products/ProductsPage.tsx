@@ -17,6 +17,9 @@ const ProductsPage: React.FC = () => {
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedId) => <ProductForm id={selectedId} />}
                 </StackPage>
+                <StackPage name="add" title={intl.formatMessage({ id: "comet.products.addProduct", defaultMessage: "Add product" })}>
+                    <ProductForm />
+                </StackPage>
             </StackSwitch>
         </Stack>
     );

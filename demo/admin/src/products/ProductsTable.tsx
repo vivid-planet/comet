@@ -438,7 +438,7 @@ function ProductsTableToolbar() {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="edit" payload="new" variant="contained" color="primary">
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="cometDemo.products.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarItem>

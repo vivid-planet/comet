@@ -18,7 +18,7 @@ export const productQuery = gql`
 `;
 
 export const createProductMutation = gql`
-    mutation CreateProduct($data: ProductInput!) {
+    mutation ProductFormCreateProduct($data: ProductInput!) {
         addProduct(data: $data) {
             ...ProductFormFragment
         }
@@ -27,7 +27,7 @@ export const createProductMutation = gql`
 `;
 
 export const updateProductMutation = gql`
-    mutation UpdateProduct($id: ID!, $data: ProductInput!) {
+    mutation ProductFormUpdateProduct($id: ID!, $data: ProductInput!) {
         updateProduct(id: $id, data: $data) {
             ...ProductFormFragment
         }
