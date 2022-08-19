@@ -1,5 +1,5 @@
 import { DocumentNode, InternalRefetchQueriesInclude, useApolloClient, useQuery } from "@apollo/client";
-import { StackLink, Toolbar, ToolbarAutomaticTitleItem, ToolbarFillSpace, ToolbarItem, useStoredState } from "@comet/admin";
+import { StackLink, Toolbar, ToolbarAutomaticTitleItem, ToolbarFillSpace, ToolbarItem, useErrorDialog, useStoredState } from "@comet/admin";
 import { Add as AddIcon, Copy, Delete as DeleteIcon, Domain, Edit, Filter, MoreVertical, Paste, ThreeDotSaving } from "@comet/admin-icons";
 import { readClipboard, writeClipboard } from "@comet/blocks-admin";
 import {
@@ -84,6 +84,7 @@ function StructuredDataTableContextMenu({
 }: StructuredDataTableContextMenuProps): React.ReactElement {
     const intl = useIntl();
     const client = useApolloClient();
+    const errorDialog = useErrorDialog();
     // TODO const { scope } = useContentScope();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -109,7 +110,6 @@ function StructuredDataTableContextMenu({
     };
 
     const handlePasteClick = async () => {
-        // TODO: more error handling
         if (createMutation) {
             const clipboard = await readClipboard();
 
@@ -119,18 +119,38 @@ function StructuredDataTableContextMenu({
                 try {
                     input = JSON.parse(clipboard);
                 } catch (e) {
-                    throw new Error("Bad clidpboard value");
+                    errorDialog?.showError({
+                        userMessage: (
+                            <FormattedMessage id="comet.common.clipboardInvalidFormat" defaultMessage="Clipboard contains an invalid format" />
+                        ),
+                        error: e.toString(),
+                    });
+                    console.error("Bad clidpboard value, parsing JSON failed", e);
                 }
 
                 if (input) {
-                    await client.mutate({
-                        mutation: createMutation,
-                        variables: { /*TODO scope,*/ input },
-                        refetchQueries,
-                    });
+                    // TODO validate input
+                    try {
+                        await client.mutate({
+                            mutation: createMutation,
+                            variables: { /*TODO scope,*/ input },
+                            refetchQueries,
+                        });
+                    } catch (e) {
+                        errorDialog?.showError({
+                            userMessage: (
+                                <FormattedMessage
+                                    id="comet.common.pasteFailedInvalidFormat"
+                                    defaultMessage="Paste failed, probably due to an invalid format"
+                                />
+                            ),
+                            error: e.toString(),
+                        });
+                        console.error("mutation failed", e);
+                    }
                 }
             } else {
-                throw new Error("Clipboard value is not set");
+                console.error("Clidpboard is empty");
             }
         }
     };
