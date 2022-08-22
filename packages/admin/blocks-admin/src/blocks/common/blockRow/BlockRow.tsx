@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { Copy, Delete, Drag, MoreVertical, Paste, Warning } from "@comet/admin-icons";
 import { Checkbox, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
@@ -195,19 +196,19 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
                         <ListItemIcon>
                             <Copy />
                         </ListItemIcon>
-                        <FormattedMessage id="comet.generic.copy" defaultMessage="Copy" />
+                        <FormattedMessage {...messages.copy} />
                     </MenuItem>
                     <MenuItem onClick={handlePasteClick}>
                         <ListItemIcon>
                             <Paste />
                         </ListItemIcon>
-                        <FormattedMessage id="comet.generic.paste" defaultMessage="Paste" />
+                        <FormattedMessage {...messages.paste} />
                     </MenuItem>
                     <MenuItem onClick={handleDeleteClick}>
                         <ListItemIcon>
                             <Delete />
                         </ListItemIcon>
-                        <FormattedMessage id="comet.generic.delete" defaultMessage="Delete" />
+                        <FormattedMessage {...messages.delete} />
                     </MenuItem>
                 </Menu>
             </sc.Root>

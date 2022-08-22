@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import {
     LocalErrorScopeApolloContext,
     MainContent,
+    messages,
     Stack,
     Table,
     TableQuery,
@@ -66,7 +67,7 @@ export function Publisher(): React.ReactElement {
                 <ScopeIndicatorContent>
                     <Domain fontSize="small" />
                     <ScopeIndicatorLabelBold variant="body2">
-                        <FormattedMessage id="comet.generic.globalContentScope" defaultMessage="Global Content" />
+                        <FormattedMessage {...messages.globalContentScope} />
                     </ScopeIndicatorLabelBold>
                 </ScopeIndicatorContent>
             </ContentScopeIndicator>

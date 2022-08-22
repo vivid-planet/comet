@@ -5,7 +5,7 @@ import { FormattedMessage } from "react-intl";
 
 import { SaveButton } from "./common/buttons/save/SaveButton";
 import { SplitButton } from "./common/buttons/split/SplitButton";
-import { saveAndGoBackMessage, saveMessage } from "./messages";
+import { messages } from "./messages";
 import { useStackApi } from "./stack/Api";
 
 export interface FormSaveButtonProps {
@@ -28,7 +28,7 @@ export const FinalFormSaveSplitButton = ({ localStorageKey }: PropsWithChildren<
                     form.submit();
                 }}
             >
-                <FormattedMessage {...saveMessage} />
+                <FormattedMessage {...messages.save} />
             </SaveButton>
             <SaveButton
                 color="primary"
@@ -43,7 +43,7 @@ export const FinalFormSaveSplitButton = ({ localStorageKey }: PropsWithChildren<
                     }
                 }}
             >
-                <FormattedMessage {...saveAndGoBackMessage} />
+                <FormattedMessage {...messages.saveAndGoBack} />
             </SaveButton>
         </SplitButton>
     );

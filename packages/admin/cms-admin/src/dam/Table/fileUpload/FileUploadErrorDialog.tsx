@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import {
     Button,
     Dialog,
@@ -97,7 +98,7 @@ export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors 
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" color="primary" onClick={onClose}>
-                    <FormattedMessage id="comet.generic.ok" defaultMessage="OK" />
+                    <FormattedMessage {...messages.ok} />
                 </Button>
             </DialogActions>
         </Dialog>

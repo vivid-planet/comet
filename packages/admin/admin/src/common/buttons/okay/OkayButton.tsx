@@ -4,7 +4,7 @@ import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { okMessage } from "../../../messages";
+import { messages } from "../../../messages";
 
 export type OkayButtonClassKey = ButtonClassKey;
 export type OkayButtonProps = ButtonProps;
@@ -62,7 +62,7 @@ const styles = () => {
 };
 
 function OkayBtn({
-    children = <FormattedMessage {...okMessage} />,
+    children = <FormattedMessage {...messages.ok} />,
     startIcon = <Check />,
     color = "primary",
     variant = "contained",

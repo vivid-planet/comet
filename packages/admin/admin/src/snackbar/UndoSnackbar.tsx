@@ -4,7 +4,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import * as UUID from "uuid";
 
-import { undoMessage } from "../messages";
+import { messages } from "../messages";
 import { useSnackbarApi } from "./SnackbarProvider";
 
 export interface UndoSnackbarProps<Payload> extends Omit<SnackbarProps, "action"> {
@@ -29,7 +29,7 @@ export const UndoSnackbar = <Payload,>({ onUndoClick, payload, ...props }: UndoS
             autoHideDuration={5000}
             action={
                 <Button color="secondary" size="small" onClick={onClick}>
-                    <FormattedMessage {...undoMessage} />
+                    <FormattedMessage {...messages.undo} />
                 </Button>
             }
             TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}

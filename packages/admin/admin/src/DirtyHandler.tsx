@@ -3,7 +3,7 @@ import { useIntl, WrappedComponentProps } from "react-intl";
 
 import { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
 import { SubmitResult } from "./form/SubmitResult";
-import { saveUnsavedChangesMessage } from "./messages";
+import { messages } from "./messages";
 import { RouterPrompt } from "./router/Prompt";
 
 interface IProps {
@@ -77,7 +77,7 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
         if (!this.isBindingDirty()) {
             return true;
         } else {
-            return this.props.intl.formatMessage(saveUnsavedChangesMessage);
+            return this.props.intl.formatMessage(messages.saveUnsavedChanges);
         }
     };
 

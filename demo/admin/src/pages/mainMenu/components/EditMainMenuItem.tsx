@@ -1,10 +1,9 @@
 import { gql, useMutation } from "@apollo/client";
 import {
     MainContent,
+    messages,
     RouterPrompt,
-    saveAndGoBackMessage,
     SaveButton,
-    saveMessage,
     SplitButton,
     Toolbar,
     ToolbarActions,
@@ -148,7 +147,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                             variant="contained"
                             onClick={handleSaveClick}
                         >
-                            <FormattedMessage {...saveMessage} />
+                            <FormattedMessage {...messages.save} />
                         </SaveButton>
                         <SaveButton
                             startIcon={<Save />}
@@ -161,7 +160,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                                 stackApi?.goBack();
                             }}
                         >
-                            <FormattedMessage {...saveAndGoBackMessage} />
+                            <FormattedMessage {...messages.saveAndGoBack} />
                         </SaveButton>
                     </SplitButton>
                 </ToolbarActions>
@@ -170,10 +169,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                 <RouterPrompt
                     message={(location) => {
                         if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
-                        return intl.formatMessage({
-                            id: "comet.generic.doYouWantToSaveYourChanges",
-                            defaultMessage: "Do you want to save your changes?",
-                        });
+                        return intl.formatMessage(messages.saveUnsavedChanges);
                     }}
                     saveAction={handleSaveAction}
                 />

@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -5,8 +6,7 @@ export const formatStrong = (chunks: string): React.ReactElement => <strong>{chu
 
 export const NetworkError = (): React.ReactElement => (
     <FormattedMessage
-        id="comet.generic.errors.networkError"
-        defaultMessage="<strong>Could not connect to server.</strong> Please check your internet connection."
+        {...messages.networkError}
         values={{
             strong: formatStrong,
         }}
@@ -15,8 +15,7 @@ export const NetworkError = (): React.ReactElement => (
 
 export const UnknownError = (): React.ReactElement => (
     <FormattedMessage
-        id="comet.generic.errors.unknownError"
-        defaultMessage="<strong>Something went wrong.</strong> Please try again later."
+        {...messages.unknownError}
         values={{
             strong: formatStrong,
         }}

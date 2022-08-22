@@ -4,9 +4,8 @@ import {
     FinalForm,
     FinalFormSelect,
     MainContent,
-    saveAndGoBackMessage,
+    messages,
     SaveButton,
-    saveMessage,
     SplitButton,
     Toolbar,
     ToolbarFillSpace,
@@ -98,7 +97,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                             <ToolbarItem>
                                 <SplitButton disabled={pristine || hasValidationErrors || submitting}>
                                     <SaveButton hasErrors={hasSubmitErrors} type="submit">
-                                        <FormattedMessage {...saveMessage} />
+                                        <FormattedMessage {...messages.save} />
                                     </SaveButton>
                                     <SaveButton
                                         saving={submitting}
@@ -111,7 +110,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                                             }
                                         }}
                                     >
-                                        <FormattedMessage {...saveAndGoBackMessage} />
+                                        <FormattedMessage {...messages.saveAndGoBack} />
                                     </SaveButton>
                                 </SplitButton>
                             </ToolbarItem>

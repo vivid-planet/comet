@@ -1,4 +1,4 @@
-import { MainContent, Stack } from "@comet/admin";
+import { MainContent, messages, Stack } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useUser } from "@comet/react-app-auth";
@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
                     <ScopeIndicatorContent>
                         <Domain fontSize="small" />
                         <ScopeIndicatorLabelBold variant="body2">
-                            <FormattedMessage id="comet.generic.globalContentScope" defaultMessage="Global Content" />
+                            <FormattedMessage {...messages.globalContentScope} />
                         </ScopeIndicatorLabelBold>
                     </ScopeIndicatorContent>
                 </ContentScopeIndicator>

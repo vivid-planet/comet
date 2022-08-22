@@ -4,7 +4,7 @@ import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { discardMessage, saveMessage, saveUnsavedChangesMessage, unsavedChangesMessage } from "../messages";
+import { messages } from "../messages";
 import { RouterConfirmationDialogClassKey, styles } from "./ConfirmationDialog.styles";
 
 export enum PromptAction {
@@ -30,7 +30,7 @@ export function InternalRouterConfirmationDialog({
     return (
         <Dialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} maxWidth="sm" className={classes.root}>
             <DialogTitle>
-                <FormattedMessage {...unsavedChangesMessage} />
+                <FormattedMessage {...messages.saveUnsavedChanges} />
                 <IconButton onClick={() => handleClose(PromptAction.Cancel)} className={classes.closeButton}>
                     <Close />
                 </IconButton>
@@ -38,7 +38,7 @@ export function InternalRouterConfirmationDialog({
             <DialogContent>
                 <div className={classes.messageWrapper}>
                     <Warning className={classes.messageWarningIcon} />
-                    <Typography className={classes.messageText}>{message ?? <FormattedMessage {...saveUnsavedChangesMessage} />}</Typography>
+                    <Typography className={classes.messageText}>{message ?? <FormattedMessage {...messages.saveUnsavedChanges} />}</Typography>
                 </div>
             </DialogContent>
             <DialogActions>
@@ -49,7 +49,7 @@ export function InternalRouterConfirmationDialog({
                     onClick={() => handleClose(PromptAction.Discard)}
                     className={`${classes.actionButton} ${classes.discardButton}`}
                 >
-                    <FormattedMessage {...discardMessage} />
+                    <FormattedMessage {...messages.discard} />
                 </Button>
                 {showSaveButton && (
                     <Button
@@ -59,7 +59,7 @@ export function InternalRouterConfirmationDialog({
                         onClick={() => handleClose(PromptAction.Save)}
                         className={`${classes.actionButton} ${classes.saveButton}`}
                     >
-                        <FormattedMessage {...saveMessage} />
+                        <FormattedMessage {...messages.save} />
                     </Button>
                 )}
             </DialogActions>

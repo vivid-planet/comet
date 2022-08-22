@@ -4,9 +4,8 @@ import {
     FinalForm,
     FinalFormInput,
     MainContent,
-    saveAndGoBackMessage,
+    messages,
     SaveButton,
-    saveMessage,
     SplitButton,
     Toolbar,
     ToolbarActions,
@@ -93,7 +92,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                         <ToolbarActions>
                             <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editInspirationSave">
                                 <SaveButton color="primary" variant="contained" hasErrors={hasSubmitErrors} type="submit">
-                                    <FormattedMessage {...saveMessage} />
+                                    <FormattedMessage {...messages.save} />
                                 </SaveButton>
                                 <SaveButton
                                     color="primary"
@@ -108,7 +107,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                                         }
                                     }}
                                 >
-                                    <FormattedMessage {...saveAndGoBackMessage} />
+                                    <FormattedMessage {...messages.saveAndGoBack} />
                                 </SaveButton>
                             </SplitButton>
                         </ToolbarActions>

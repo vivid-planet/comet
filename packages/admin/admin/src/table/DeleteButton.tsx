@@ -7,7 +7,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DeleteMutation } from "../DeleteMutation";
-import { deleteMessage } from "../messages";
+import { messages } from "../messages";
 
 interface IProps {
     selectedId?: string;
@@ -18,7 +18,7 @@ interface IProps {
     refetchQueries?: Array<string | PureQueryOptions>;
 }
 
-const DeleteMessage = () => <FormattedMessage {...deleteMessage} />;
+const DeleteMessage = () => <FormattedMessage {...messages.delete} />;
 
 export class TableDeleteButton extends React.Component<IProps> {
     public render() {

@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import {
     AdminComponentPaper,
     AdminComponentSection,
@@ -78,16 +79,8 @@ const createTextImageBlock = ({
                                 }));
                             }}
                         >
-                            <FormControlLabel
-                                value="left"
-                                control={<Radio />}
-                                label={<FormattedMessage id="comet.generic.left" defaultMessage="Left" />}
-                            />
-                            <FormControlLabel
-                                value="right"
-                                control={<Radio />}
-                                label={<FormattedMessage id="comet.generic.right" defaultMessage="Right" />}
-                            />
+                            <FormControlLabel value="left" control={<Radio />} label={<FormattedMessage {...messages.left} />} />
+                            <FormControlLabel value="right" control={<Radio />} label={<FormattedMessage {...messages.right} />} />
                         </RadioGroup>
                     </AdminComponentSection>
                     <AdminComponentSection

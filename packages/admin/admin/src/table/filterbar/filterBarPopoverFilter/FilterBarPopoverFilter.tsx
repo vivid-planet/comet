@@ -5,7 +5,7 @@ import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { applyMessage, resetMessage } from "../../../messages";
+import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
 import { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
@@ -96,7 +96,7 @@ function PopoverFilter({
                                             startIcon={<Reset />}
                                             {...resetButtonProps}
                                         >
-                                            <FormattedMessage {...resetMessage} />
+                                            <FormattedMessage {...messages.reset} />
                                         </Button>
 
                                         <Button
@@ -111,7 +111,7 @@ function PopoverFilter({
                                             disabled={Object.values(dirtyFields).length === 0}
                                             {...submitButtonProps}
                                         >
-                                            <FormattedMessage {...applyMessage} />
+                                            <FormattedMessage {...messages.apply} />
                                         </Button>
                                     </div>
                                 </div>

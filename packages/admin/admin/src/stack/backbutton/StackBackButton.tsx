@@ -4,7 +4,7 @@ import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { backMessage } from "../../messages";
+import { messages } from "../../messages";
 import { StackApiContext } from "../Api";
 import { StackBackButtonClassKey, styles } from "./StackBackButton.styles";
 
@@ -21,7 +21,7 @@ const StackBackBtn = ({ startIcon = <ArrowBack />, ...restProps }: StackBackButt
                         startIcon={startIcon}
                         {...restProps}
                     >
-                        <FormattedMessage {...backMessage} />
+                        <FormattedMessage {...messages.back} />
                     </Button>
                 );
             }}

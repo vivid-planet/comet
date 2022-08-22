@@ -9,7 +9,7 @@ import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiConte
 import { CloseDialogOptions, EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
 import { EditDialogFormApiProvider, useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { SubmitResult } from "./form/SubmitResult";
-import { addMessage, editMessage, saveMessage } from "./messages";
+import { messages } from "./messages";
 import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
@@ -92,8 +92,8 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
     const editDialogFormApi = useEditDialogFormApi();
 
     const title = maybeTitle ?? {
-        edit: intl.formatMessage(editMessage),
-        add: intl.formatMessage(addMessage),
+        edit: intl.formatMessage(messages.edit),
+        add: intl.formatMessage(messages.add),
     };
 
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
@@ -139,7 +139,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                                             hasErrors={editDialogFormApi?.hasErrors}
                                             onClick={handleSaveClick}
                                         >
-                                            <FormattedMessage {...saveMessage} />
+                                            <FormattedMessage {...messages.save} />
                                         </SaveButton>
                                     );
                                 }}

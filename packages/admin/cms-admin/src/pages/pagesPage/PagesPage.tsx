@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { MainContent, Stack, StackPage, StackSwitch, Toolbar, ToolbarActions, useEditDialog, useStoredState } from "@comet/admin";
+import { MainContent, messages, Stack, StackPage, StackSwitch, Toolbar, ToolbarActions, useEditDialog, useStoredState } from "@comet/admin";
 import { Add, Domain } from "@comet/admin-icons";
 import { Box, Button, CircularProgress, FormControlLabel, Paper, Switch, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -137,7 +137,7 @@ export function PagesPage({
                                     editDialogApi.openAddDialog();
                                 }}
                             >
-                                <FormattedMessage id="comet.generic.add" defaultMessage="Add" />
+                                <FormattedMessage {...messages.add} />
                             </Button>
                         </ToolbarActions>
                     </Toolbar>
