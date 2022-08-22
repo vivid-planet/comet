@@ -15,6 +15,7 @@ import {
 } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
+import { useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
@@ -110,8 +111,9 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         return acceptObj;
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
 
+    const { lastUploadedFileIds, addLastUploadedFileIds } = useFileUploadContext();
+
     const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
-    const [lastUploadedFileIds, setLastUploadedFileIds] = React.useState<string[]>([]);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
     const [errorDialogOpen, setErrorDialogOpen] = React.useState<boolean>(false);
     const [totalSizes, setTotalSizes] = React.useState<{ [key: string]: number }>({});
@@ -317,7 +319,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setLoadedSizes({});
         options.onAfterUpload?.();
 
-        setLastUploadedFileIds(uploadedFileIds);
+        addLastUploadedFileIds(uploadedFileIds);
     };
 
     return {

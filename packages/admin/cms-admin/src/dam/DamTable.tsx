@@ -25,6 +25,7 @@ import { TextMatch } from "../common/MarkedMatches";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../graphql.generated";
 import EditFile from "./FileForm/EditFile";
+import { FileUploadContextProvider } from "./Table/fileUpload/FileUploadContext";
 import { UploadSplitButton } from "./Table/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./Table/filter/DamTableFilter";
 import FolderTable from "./Table/FolderTable";
@@ -167,7 +168,9 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
             <RedirectToPersistedDamLocation stateKey={damLocationStorageKey ?? "dam-location"}>
-                <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                <FileUploadContextProvider>
+                    <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                </FileUploadContextProvider>
             </RedirectToPersistedDamLocation>
         </Stack>
     );
