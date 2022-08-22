@@ -76,10 +76,18 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
     }
 
     async getFile(folderName: string, fileName: string): Promise<NodeJS.ReadableStream> {
+        if (!(await this.fileExists(folderName, fileName))) {
+            throw new Error(`File does not exist: ${path}`);
+        }
+
         return fs.createReadStream(`${this.path}/${folderName}/${fileName}`);
     }
 
     async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<NodeJS.ReadableStream> {
+        if (!(await this.fileExists(folderName, fileName))) {
+            throw new Error(`File does not exist: ${path}`);
+        }
+
         return fs.createReadStream(`${this.path}/${folderName}/${fileName}`, {
             start: offset,
             end: offset + length - 1,
