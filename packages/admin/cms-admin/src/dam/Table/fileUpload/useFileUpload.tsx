@@ -51,7 +51,7 @@ interface FileUploadApi {
         multiple: boolean;
         maxSize: number;
     };
-    lastUploadedFileIds: string[];
+    newlyUploadedFileIds: string[];
 }
 
 export interface FileUploadValidationError {
@@ -111,7 +111,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         return acceptObj;
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
 
-    const { lastUploadedFileIds, addLastUploadedFileIds } = useFileUploadContext();
+    const { newlyUploadedFileIds, addNewlyUploadedFileIds } = useFileUploadContext();
 
     const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
@@ -319,7 +319,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setLoadedSizes({});
         options.onAfterUpload?.();
 
-        addLastUploadedFileIds(uploadedFileIds);
+        addNewlyUploadedFileIds(uploadedFileIds);
     };
 
     return {
@@ -344,6 +344,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             multiple: true,
             maxSize: maxFileSizeInBytes,
         },
-        lastUploadedFileIds,
+        newlyUploadedFileIds,
     };
 };
