@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { TableBodyRow, TableBodyRowProps } from "@comet/admin";
 import { alpha, Checkbox, TableCell } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
@@ -39,6 +39,8 @@ export interface DamDragObject {
 
 const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeHoverStyle: boolean; $archived: boolean; $highlightAsNew: boolean }>`
     height: 58px;
+    position: relative;
+    z-index: 0;
 
     outline: ${({ $activeHoverStyle, theme }) => ($activeHoverStyle ? `solid 1px ${theme.palette.primary.main};` : "none")};
     background: ${({ theme, $activeHoverStyle, $archived }) => {
@@ -49,12 +51,27 @@ const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeH
         }
         return "none";
     }};
-    box-shadow: ${({ $highlightAsNew, theme }) => ($highlightAsNew ? `inset 0 0 99999px ${alpha(theme.palette.primary.dark, 0.4)}` : "none")};
-    transition: box-shadow 1s ease-in-out;
 
     & .MuiTableCell-root {
         padding-top: 8px;
         padding-bottom: 8px;
+    }
+
+    &:before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transition: background-color 1s ease-in-out;
+
+        ${({ $highlightAsNew, theme }) =>
+            $highlightAsNew &&
+            css`
+                background-color: ${alpha(theme.palette.primary.dark, 0.4)};
+            `}
     }
 `;
 
