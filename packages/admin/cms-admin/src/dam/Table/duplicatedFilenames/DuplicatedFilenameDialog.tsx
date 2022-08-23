@@ -12,6 +12,10 @@ const damFilenameAlreadyExistsQuery = gql`
     }
 `;
 
+const appendExtensionIfNotPresent = (filename: string, extension: string) => {
+    return filename.endsWith(extension) ? filename : `${filename}${extension}`;
+};
+
 interface FormValues {
     newFilename: string;
 }
@@ -29,7 +33,7 @@ interface DuplicateFilenameDialogProps {
 export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
     open,
     currentFilename,
-    extension,
+    extension = "",
     folderId,
     suggestedFilename,
     onCancel,
@@ -63,7 +67,7 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                 mode="add"
                 onSubmit={(values) => {
                     const newFilename = values.newFilename;
-                    const newFilenameWithExtension = extension && !newFilename.endsWith(extension) ? `${newFilename}${extension}` : newFilename;
+                    const newFilenameWithExtension = appendExtensionIfNotPresent(newFilename, extension);
 
                     onRename(newFilenameWithExtension);
                 }}
@@ -86,7 +90,7 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                         label={<FormattedMessage id="comet.dam.duplicateFilenameDialog.form.label" defaultMessage="New filename" />}
                         validate={async (value: string) => {
                             if (value) {
-                                if (await validateFilenameAlreadyExists(value)) {
+                                if (await validateFilenameAlreadyExists(appendExtensionIfNotPresent(value, extension))) {
                                     return intl.formatMessage({
                                         id: "comet.dam.duplicateFilenameDialog.form.validationError.filenameAlreadyExists",
                                         defaultMessage: "Filename already exists",
