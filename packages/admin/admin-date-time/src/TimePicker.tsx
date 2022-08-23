@@ -52,7 +52,10 @@ function TimePicker({
             value={dateValue ? intl.formatTime(dateValue, formatOptions) : ""}
             placeholder={placeholder}
             {...inputWithPopperProps}
-            onOpenPopper={onOpenPopper}
+            onOpenPopper={() => {
+                onOpenPopper();
+                inputWithPopperProps.onOpenPopper?.();
+            }}
             readOnly
             endAdornment={
                 clearable ? (
