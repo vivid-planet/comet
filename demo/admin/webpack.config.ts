@@ -1,6 +1,5 @@
 import "webpack-dev-server";
 
-import ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 import * as fs from "fs";
 import * as HtmlWebpackPlugin from "html-webpack-plugin";
 import * as path from "path";
@@ -43,8 +42,6 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
                 "process.env.NODE_ENV": JSON.stringify("production"),
             }),
         );
-    } else {
-        plugins.push(new ForkTsCheckerWebpackPlugin());
     }
 
     return {
