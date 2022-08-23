@@ -5,8 +5,6 @@ import { FormattedMessage } from "react-intl";
 interface SaveStateOptions<TData> {
     hasChanges: boolean;
     saveConflict: {
-        hasConflict: boolean;
-        loading: boolean;
         dialogs: React.ReactNode;
         checkForConflicts: () => Promise<boolean>;
     };
@@ -19,38 +17,37 @@ interface SaveStateOptions<TData> {
 interface SaveStateReturn {
     handleSaveClick: () => Promise<void>;
     saving: boolean;
-    saveError?: unknown;
-    valid: boolean;
-    validating: boolean;
+    saveError: "invalid" | "conflict" | "error" | undefined;
     saveButton: JSX.Element;
 }
+
 export function useSaveState<TData>(options: SaveStateOptions<TData>): SaveStateReturn {
     const [saving, setSaving] = React.useState(false);
-    const [saveError, setSaveError] = React.useState<unknown>();
-    const [valid, setValid] = React.useState(true);
-    const [validating, setValidating] = React.useState(false);
+    const [saveError, setSaveError] = React.useState<"invalid" | "conflict" | "error" | undefined>();
 
     const handleSaveClick = React.useCallback(
         async (canNavigate = false) => {
-            setValidating(true);
+            setSaving(true);
+            setSaveError(undefined);
             const isValid = await options.validate();
-            setValid(isValid);
-            setValidating(false);
 
             if (!isValid) {
                 //onValidationFailed && onValidationFailed();
+                setSaving(false);
+                setSaveError("invalid");
                 return;
             }
 
             if (options.mode === "edit") {
                 const hasSaveConflict = await options.saveConflict.checkForConflicts();
                 if (hasSaveConflict) {
+                    setSaving(false);
+                    setSaveError("conflict");
                     return; // dialogs open for the user to handle the conflict
                 }
             }
 
             try {
-                setSaving(true);
                 const data = await options.save();
                 options.updateReferenceContent(data);
                 setTimeout(() => {
@@ -59,7 +56,8 @@ export function useSaveState<TData>(options: SaveStateOptions<TData>): SaveState
                     }
                 }, 0);
             } catch (error) {
-                setSaveError(error);
+                console.error(error);
+                setSaveError("error");
             } finally {
                 setSaving(false);
             }
@@ -68,24 +66,13 @@ export function useSaveState<TData>(options: SaveStateOptions<TData>): SaveState
     );
 
     const saveButton = (
-        <SaveStateSaveButton
-            hasChanges={options.hasChanges}
-            handleSaveClick={handleSaveClick}
-            saveError={saveError}
-            saving={saving}
-            valid={valid}
-            validating={validating}
-            checkingSaveConflict={options.saveConflict.loading}
-            hasConflict={options.saveConflict.hasConflict}
-        />
+        <SaveStateSaveButton hasChanges={options.hasChanges} handleSaveClick={handleSaveClick} saveError={saveError} saving={saving} />
     );
 
     return {
         handleSaveClick,
         saving,
         saveError,
-        valid,
-        validating,
         saveButton,
     };
 }
@@ -94,34 +81,22 @@ interface SaveStateSaveButtonProps {
     handleSaveClick: (canNavigate?: boolean) => Promise<void>;
     hasChanges?: boolean;
     saving: boolean;
-    saveError?: unknown;
-    validating: boolean;
-    valid: boolean;
-    checkingSaveConflict: boolean;
-    hasConflict: boolean;
+    saveError: "invalid" | "conflict" | "error" | undefined;
 }
-export function SaveStateSaveButton({
-    handleSaveClick,
-    hasChanges,
-    saving,
-    saveError,
-    validating,
-    valid,
-    checkingSaveConflict,
-    hasConflict,
-}: SaveStateSaveButtonProps): JSX.Element {
+export function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveError }: SaveStateSaveButtonProps): JSX.Element {
     const stackApi = useStackApi();
 
     const saveButtonProps: Omit<SaveButtonProps, "children" | "onClick"> = {
         color: "primary",
         variant: "contained",
-        saving: saving || validating || checkingSaveConflict,
-        hasErrors: !!saveError || !valid || hasConflict,
-        errorItem: !valid ? (
-            <FormattedMessage id="comet.generic.invalidData" defaultMessage="Invalid Data" />
-        ) : hasConflict ? (
-            <FormattedMessage id="comet.generic.saveConflict" defaultMessage="Save Conflict" />
-        ) : undefined,
+        saving,
+        hasErrors: !!saveError,
+        errorItem:
+            saveError == "invalid" ? (
+                <FormattedMessage id="comet.generic.invalidData" defaultMessage="Invalid Data" />
+            ) : saveError == "conflict" ? (
+                <FormattedMessage id="comet.generic.saveConflict" defaultMessage="Save Conflict" />
+            ) : undefined,
     };
 
     return (

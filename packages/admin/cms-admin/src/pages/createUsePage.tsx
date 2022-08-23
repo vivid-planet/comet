@@ -1,5 +1,4 @@
-import { gql, TypedDocumentNode, useMutation, useQuery } from "@apollo/client";
-import { ApolloError } from "@apollo/client/errors";
+import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
 import {
     BindBlockAdminComponent,
@@ -104,11 +103,9 @@ interface UsePageApi<PageState, RootBlocks extends RootBlocksInterface> {
     handleSavePage: () => Promise<void>;
     hasChanges?: boolean;
     loading: boolean;
-    saving: boolean;
     error: ApolloError | undefined;
-    saveError: ApolloError | undefined;
-    validating: boolean;
-    valid: boolean;
+    saving: boolean;
+    saveError: "invalid" | "conflict" | "error" | undefined;
     pageSaveButton: JSX.Element;
     dialogs: React.ReactNode;
     resetPageStateToLatest: () => Promise<void>;
@@ -168,10 +165,11 @@ export const createUsePage: CreateUsePage =
             pageId,
             onValidationFailed,
         }: UsePageProps): UsePageApi<PageState<GQLEditPageQuery, RootBlocks, PageType>, RootBlocks> {
+            const client = useApolloClient();
             const [pageState, setPageState] = React.useState<undefined | PS>(undefined);
             const [referenceOutput, setReferenceOutput] = React.useState<undefined | Output>(undefined);
-            const [valid, setValid] = React.useState(true);
-            const [validating, setValidating] = React.useState(false);
+            const [saving, setSaving] = React.useState(false);
+            const [saveError, setSaveError] = React.useState<"invalid" | "conflict" | "error" | undefined>();
 
             const generateOutput = (ps: PS): Output => {
                 return {
@@ -203,21 +201,15 @@ export const createUsePage: CreateUsePage =
                 } as GQLEditPageQueryVariables,
             });
 
-            const [mutation, { loading: saving, error: saveError }] = useMutation<GQLUpdatePageMutation, GQLUpdatePageMutationVariables>(
-                updateMutation,
-            );
-
             const resetPageStateToLatest = async () => {
                 //resets the page state by refetch data from server
                 await refetch();
             };
 
-            const {
-                loading: saveConflictLoading,
-                dialogs,
-                checkForConflicts: checkForSaveConflict,
-                hasConflict,
-            } = useSaveConflictQuery<GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables>(
+            const { dialogs, checkForConflicts: checkForSaveConflict } = useSaveConflictQuery<
+                GQLCheckForChangesQuery,
+                GQLCheckForChangesQueryVariables
+            >(
                 checkForChangesQuery,
                 {
                     variables: {
@@ -266,67 +258,80 @@ export const createUsePage: CreateUsePage =
             const handleSavePage = React.useCallback(async () => {
                 // TODO show progress and error handling
                 if (pageState && pageState.document && pageState.document.__typename === gqlPageType && pageState.document.id) {
-                    setValidating(true);
+                    setSaving(true);
+                    setSaveError(undefined);
+
                     const isValid = await parallelAsyncEvery(Object.entries(rootBlocks), async ([key, block]) => {
                         return await block.isValid(pageState.document?.[key]);
                     });
-                    setValid(isValid);
-                    setValidating(false);
 
                     if (!isValid) {
                         onValidationFailed && onValidationFailed();
+                        setSaving(false);
+                        setSaveError("invalid");
                         return;
                     }
 
                     const hasSaveConflict = await checkForSaveConflict();
                     if (hasSaveConflict) {
+                        setSaving(false);
+                        setSaveError("conflict");
                         return; // dialogs open for the user to handle the conflict
                     }
 
-                    await mutation({
-                        variables: {
-                            pageId: pageState.document.id,
-                            lastUpdatedAt: data?.page?.document?.updatedAt,
-                            input: {
-                                ...Object.entries(rootBlocks).reduce(
-                                    (a, [key, value]) => ({
-                                        ...a,
-                                        [key]: value.state2Output(pageState.document?.[key]),
-                                    }),
-                                    {},
-                                ),
-                                // stage: pageState.document.stage ? StageBlock.state2Output(pageState.document.stage) : null, refactor stage to optional block
-                            },
-                            attachedPageTreeNodeId: pageId,
-                        } as GQLUpdatePageMutationVariables,
-                        update(cache) {
-                            // update reference to pageTreeNode
-                            // needed for newly created pageTreeNodes
-                            cache.writeFragment({
-                                id: cache.identify({ __typename: "PageTreeNode", id: pageId }),
-                                fragment: gql`
-                                    fragment UpdateReferencePageTree on PageTreeNode {
-                                        document {
-                                            ... on DocumentInterface {
-                                                id
+                    try {
+                        await client.mutate<GQLUpdatePageMutation, GQLUpdatePageMutationVariables>({
+                            mutation: updateMutation,
+                            variables: {
+                                pageId: pageState.document.id,
+                                lastUpdatedAt: data?.page?.document?.updatedAt,
+                                input: {
+                                    ...Object.entries(rootBlocks).reduce(
+                                        (a, [key, value]) => ({
+                                            ...a,
+                                            [key]: value.state2Output(pageState.document?.[key]),
+                                        }),
+                                        {},
+                                    ),
+                                    // stage: pageState.document.stage ? StageBlock.state2Output(pageState.document.stage) : null, refactor stage to optional block
+                                },
+                                attachedPageTreeNodeId: pageId,
+                            } as GQLUpdatePageMutationVariables,
+                            update(cache) {
+                                // update reference to pageTreeNode
+                                // needed for newly created pageTreeNodes
+                                cache.writeFragment({
+                                    id: cache.identify({ __typename: "PageTreeNode", id: pageId }),
+                                    fragment: gql`
+                                        fragment UpdateReferencePageTree on PageTreeNode {
+                                            document {
+                                                ... on DocumentInterface {
+                                                    id
+                                                }
                                             }
                                         }
-                                    }
-                                `,
-                                data: {
-                                    document: {}, // reference to document is somehow magically updated without providing a value
-                                },
-                            });
-                        },
-                    });
+                                    `,
+                                    data: {
+                                        document: {}, // reference to document is somehow magically updated without providing a value
+                                    },
+                                });
+                            },
+                        });
+                    } catch (error) {
+                        console.error(error);
+                        setSaveError("error");
+                    } finally {
+                        setSaving(false);
+                    }
 
                     setReferenceOutput(generateOutput(pageState));
+                    setSaving(false);
                 } else if (pageState && pageState.document) {
                     throw new Error(`saving this type of document (type == ${pageState.document.__typename}) is currently not implemented`);
                 } else {
                     throw new Error("No page state");
                 }
-            }, [data, mutation, pageId, pageState, onValidationFailed, checkForSaveConflict]);
+            }, [data, client, pageId, pageState, onValidationFailed, checkForSaveConflict]);
 
             // allow to create an updateHandler for each block-node
             const createHandleUpdate = React.useCallback((key: string) => {
@@ -373,20 +378,8 @@ export const createUsePage: CreateUsePage =
             );
 
             const pageSaveButton = React.useMemo<JSX.Element>(
-                () => (
-                    <PageSaveButton
-                        hasChanges={hasChanges}
-                        handleSavePage={handleSavePage}
-                        error={error}
-                        saveError={saveError}
-                        saving={saving}
-                        valid={valid}
-                        validating={validating}
-                        checkingSaveConflict={saveConflictLoading}
-                        hasSaveConflict={hasConflict}
-                    />
-                ),
-                [hasChanges, handleSavePage, error, saveError, saving, valid, validating, saveConflictLoading, hasConflict],
+                () => <PageSaveButton hasChanges={hasChanges} handleSavePage={handleSavePage} saveError={saveError} saving={saving} />,
+                [hasChanges, handleSavePage, saveError, saving],
             );
 
             return {
@@ -398,8 +391,6 @@ export const createUsePage: CreateUsePage =
                 error,
                 saveError,
                 saving,
-                valid,
-                validating,
                 pageSaveButton,
                 resetPageStateToLatest,
                 dialogs,
@@ -423,35 +414,22 @@ interface PageSaveButtonProps {
     handleSavePage: () => Promise<void>;
     hasChanges?: boolean;
     saving: boolean;
-    error: ApolloError | undefined;
-    saveError: ApolloError | undefined;
-    validating: boolean;
-    valid: boolean;
-    checkingSaveConflict: boolean;
-    hasSaveConflict: boolean;
+    saveError: "invalid" | "conflict" | "error" | undefined;
 }
-function PageSaveButton({
-    handleSavePage,
-    hasChanges,
-    saving,
-    saveError,
-    validating,
-    valid,
-    checkingSaveConflict,
-    hasSaveConflict,
-}: PageSaveButtonProps): JSX.Element {
+function PageSaveButton({ handleSavePage, hasChanges, saving, saveError }: PageSaveButtonProps): JSX.Element {
     const stackApi = useStackApi();
 
     const saveButtonProps: Omit<SaveButtonProps, "children | onClick"> = {
         color: "primary",
         variant: "contained",
-        saving: saving || validating || checkingSaveConflict,
-        hasErrors: saveError != null || !valid || hasSaveConflict,
-        errorItem: !valid ? (
-            <FormattedMessage id="comet.generic.invalidData" defaultMessage="Invalid Data" />
-        ) : hasSaveConflict ? (
-            <FormattedMessage id="comet.generic.saveConflict" defaultMessage="Save Conflict" />
-        ) : undefined,
+        saving,
+        hasErrors: !!saveError,
+        errorItem:
+            saveError == "invalid" ? (
+                <FormattedMessage id="comet.generic.invalidData" defaultMessage="Invalid Data" />
+            ) : saveError == "conflict" ? (
+                <FormattedMessage id="comet.generic.saveConflict" defaultMessage="Save Conflict" />
+            ) : undefined,
     };
 
     return (

@@ -13,8 +13,6 @@ export interface SaveConflictOptions {
 }
 
 export interface SaveConflictHookReturn {
-    hasConflict: boolean;
-    loading: boolean;
     dialogs: React.ReactNode;
     checkForConflicts: () => Promise<boolean>;
 }
@@ -23,9 +21,7 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
     const { checkConflict, hasChanges, loadLatestVersion, onDiscardButtonPressed } = options;
     const snackbarApi = useSnackbarApi();
 
-    const [loading, setLoading] = React.useState(false);
     const [showDialog, setShowDialog] = React.useState(false);
-    const [hasConflict, setHasConflict] = React.useState(false);
 
     React.useEffect(() => {
         const interval = setInterval(async () => {
@@ -59,16 +55,13 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
     }, [checkConflict, snackbarApi, loadLatestVersion, hasChanges]);
 
     const checkForConflicts = React.useCallback(async () => {
-        setLoading(true);
-        setHasConflict(false);
         const newHasConflict = await checkConflict();
-        setHasConflict(newHasConflict);
-        setLoading(false);
+        if (newHasConflict) {
+            setShowDialog(true);
+        }
         return newHasConflict;
     }, [checkConflict]);
     return {
-        hasConflict,
-        loading,
         checkForConflicts,
         dialogs: (
             <>
@@ -78,7 +71,7 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
                         setShowDialog(false);
                     }}
                     onDiscardChangesPressed={() => {
-                        setHasConflict(false);
+                        setShowDialog(false);
                         onDiscardButtonPressed();
                     }}
                 />
