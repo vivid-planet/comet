@@ -9,7 +9,7 @@ import * as sc from "./ImageCrop.sc";
 
 const focalPoints: GQLFocalPoint[] = ["CENTER", "NORTHEAST", "NORTHWEST", "SOUTHEAST", "SOUTHWEST"];
 
-type ImageCropProps = Pick<ReactCropProps, "src" | "imageStyle" | "disabled">;
+type ImageCropProps = Pick<ReactCropProps, "src" | "imageStyle" | "disabled" | "onImageError">;
 
 export const ImageCrop = (props: ImageCropProps): React.ReactElement => {
     const form = useForm<EditImageFormValues>();

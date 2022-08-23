@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { useStackApi } from "@comet/admin";
+import { useErrorDialog, useStackApi } from "@comet/admin";
 import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -21,6 +21,7 @@ import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
 import { AudioPreview } from "./previews/AudioPreview";
 import { DefaultFilePreview } from "./previews/DefaultFilePreview";
+import { FileNotFound } from "./previews/FileNotFound";
 import { ImagePreview } from "./previews/ImagePreview";
 import { PdfPreview } from "./previews/PdfPreview";
 import { VideoPreview } from "./previews/VideoPreview";
@@ -59,18 +60,35 @@ interface FilePreviewProps {
 export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
     const client = useApolloClient();
     const stackApi = useStackApi();
+    const errorDialog = useErrorDialog();
+
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
+    const [errorLoadingFile, setErrorLoadingFile] = React.useState<boolean>(false);
+
+    const handleError = () => {
+        setErrorLoadingFile(true);
+        errorDialog?.showError({
+            title: <FormattedMessage id="comet.dam.imagePreview.error.title" defaultMessage="File not found" />,
+            userMessage: (
+                <FormattedMessage
+                    id="comet.dam.imagePreview.error.userMessage"
+                    defaultMessage="The requested file could not be found on the server."
+                />
+            ),
+            error: "File not found",
+        });
+    };
 
     let preview: React.ReactNode;
 
     if (file.mimetype.startsWith("image/") && file.image !== undefined) {
-        preview = <ImagePreview file={file} />;
+        preview = <ImagePreview file={file} onError={handleError} />;
     } else if (file.mimetype.startsWith("audio/")) {
-        preview = <AudioPreview file={file} />;
+        preview = <AudioPreview file={file} onError={handleError} />;
     } else if (file.mimetype.startsWith("video/")) {
-        preview = <VideoPreview file={file} />;
+        preview = <VideoPreview file={file} onError={handleError} />;
     } else if (file.mimetype === "application/pdf") {
-        preview = <PdfPreview file={file} />;
+        preview = <PdfPreview file={file} onError={handleError} />;
     } else if (["application/x-zip-compressed", "application/zip"].includes(file.mimetype)) {
         preview = <DefaultFilePreview customIcon={<ZipFileIcon />} />;
     } else {
@@ -123,7 +141,7 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
                     <FormattedMessage id="comet.dam.file.delete" defaultMessage="Delete" />
                 </ActionButton>
             </ActionsContainer>
-            <FileWrapper>{preview}</FileWrapper>
+            <FileWrapper>{errorLoadingFile ? <FileNotFound /> : preview}</FileWrapper>
             <ConfirmDeleteDialog
                 open={deleteDialogOpen}
                 onCloseDialog={async (confirmed) => {

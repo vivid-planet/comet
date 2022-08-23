@@ -7,8 +7,9 @@ const imageStyle = { maxWidth: "100%", maxHeight: "75vh" };
 
 interface Props {
     file: GQLDamFileDetailFragment;
+    onError?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
 
-export function ImagePreview({ file }: Props): JSX.Element {
-    return <ImageCrop src={file.fileUrl} imageStyle={imageStyle} />;
+export function ImagePreview({ file, onError }: Props): JSX.Element {
+    return <ImageCrop src={file.fileUrl} imageStyle={imageStyle} onImageError={onError} />;
 }

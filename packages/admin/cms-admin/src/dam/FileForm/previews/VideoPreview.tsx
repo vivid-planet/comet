@@ -19,12 +19,13 @@ const StyledVideo = styled("video")`
 
 interface VideoPreviewProps {
     file: GQLDamFileDetailFragment;
+    onError?: (event: React.SyntheticEvent<HTMLVideoElement, Event>) => void;
 }
 
-export const VideoPreview = ({ file }: VideoPreviewProps): React.ReactElement => {
+export const VideoPreview = ({ file, onError }: VideoPreviewProps): React.ReactElement => {
     return (
         <VideoPreviewWrapper>
-            <StyledVideo controls src={file.fileUrl}>
+            <StyledVideo controls src={file.fileUrl} onError={onError}>
                 <FormattedMessage
                     id="comet.dam.file.unsupportedVideoTag"
                     defaultMessage="Your browser does not support the video element. Please use another browser."

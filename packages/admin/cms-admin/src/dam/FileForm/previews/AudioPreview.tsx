@@ -46,9 +46,10 @@ const StyledAudio = styled("audio")`
 
 interface AudioPreviewProps {
     file: GQLDamFileDetailFragment;
+    onError?: (event: React.SyntheticEvent<HTMLSourceElement, Event>) => void;
 }
 
-export const AudioPreview = ({ file }: AudioPreviewProps): React.ReactElement => {
+export const AudioPreview = ({ file, onError }: AudioPreviewProps): React.ReactElement => {
     return (
         <AudioPreviewWrapper>
             <MusicIconContainer>
@@ -57,7 +58,7 @@ export const AudioPreview = ({ file }: AudioPreviewProps): React.ReactElement =>
                 </MusicIconWrapper>
             </MusicIconContainer>
             <StyledAudio controls>
-                <source src={file.fileUrl} type={file.mimetype} />
+                <source src={file.fileUrl} type={file.mimetype} onError={onError} />
             </StyledAudio>
         </AudioPreviewWrapper>
     );

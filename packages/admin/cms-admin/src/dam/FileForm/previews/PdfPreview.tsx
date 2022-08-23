@@ -16,12 +16,13 @@ const PdfPreviewIFrame = styled("iframe")`
 
 interface PdfPreviewProps {
     file: GQLDamFileDetailFragment;
+    onError?: (event: React.SyntheticEvent<HTMLIFrameElement, Event>) => void;
 }
 
-export const PdfPreview = ({ file }: PdfPreviewProps): React.ReactElement => {
+export const PdfPreview = ({ file, onError }: PdfPreviewProps): React.ReactElement => {
     return (
         <PdfPreviewWrapper>
-            <PdfPreviewIFrame src={file.fileUrl} />
+            <PdfPreviewIFrame src={file.fileUrl} onError={onError} />
         </PdfPreviewWrapper>
     );
 };
