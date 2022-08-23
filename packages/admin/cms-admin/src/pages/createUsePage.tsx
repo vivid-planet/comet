@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
-import { useSaveConflict } from "./useSaveConflict";
+import { useSaveConflictQuery } from "./useSaveConflictQuery";
 
 type Output = Record<string, unknown>;
 // dictionary of all root-blocks connected to a page
@@ -217,7 +217,7 @@ export const createUsePage: CreateUsePage =
                 dialogs,
                 checkForConflicts: checkForSaveConflict,
                 hasConflict,
-            } = useSaveConflict<GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables>(
+            } = useSaveConflictQuery<GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables>(
                 checkForChangesQuery,
                 {
                     variables: {
