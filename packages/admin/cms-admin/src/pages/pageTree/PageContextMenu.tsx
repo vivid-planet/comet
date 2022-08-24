@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { IEditDialogApi, messages, StackSwitchApiContext } from "@comet/admin";
+import { IEditDialogApi, StackSwitchApiContext } from "@comet/admin";
 import { Add, Copy, Delete, Domain, Edit, MoreVertical, Paste, Settings, ThreeDotSaving } from "@comet/admin-icons";
 import { writeClipboard } from "@comet/blocks-admin";
 import { IconButton, ListItemIcon, ListItemText, Menu as MUIMenu, MenuItem } from "@mui/material";
@@ -100,7 +100,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         <ListItemIcon>
                             <Edit />
                         </ListItemIcon>
-                        <ListItemText primary={<FormattedMessage {...messages.content} />} />
+                        <ListItemText primary={intl.formatMessage({ id: "comet.generic.editContent", defaultMessage: "Edit Content" })} />
                     </MenuItem>,
                     <MenuItem
                         key="editPageProperties"
