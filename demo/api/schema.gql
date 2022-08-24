@@ -78,7 +78,7 @@ type AutoBuildStatus {
 
 type Build {
   id: ID!
-  status: BuildJobStatus!
+  status: JobStatus!
   name: String
   trigger: String
   startTime: DateTime
@@ -86,7 +86,7 @@ type Build {
   estimatedCompletionTime: DateTime
 }
 
-enum BuildJobStatus {
+enum JobStatus {
   pending
   active
   succeeded
