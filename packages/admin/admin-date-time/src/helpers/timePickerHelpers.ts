@@ -1,4 +1,4 @@
-import { eachMinuteOfInterval } from "date-fns";
+import { eachMinuteOfInterval, format } from "date-fns";
 
 const today = new Date();
 
@@ -29,6 +29,17 @@ export const timeValueIsValid = (timeValue: string): boolean => {
     }
 
     return true;
+};
+
+export const getTimeStringFromDate = (date: Date): string => format(date, "HH:mm");
+
+export const getDateValueWithTime = (date: Date, time: string): Date => {
+    const [hours, minutes] = time.split(":");
+    date.setHours(parseInt(hours));
+    date.setMinutes(parseInt(minutes));
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
 };
 
 export const getDateFromTimeValue = (timeValue: string): Date => {
