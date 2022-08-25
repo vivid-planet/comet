@@ -97,6 +97,7 @@ const orderComponents = [
     "docs-components-appheader",
     "docs-components-toolbar",
     "docs-components-table",
+    "docs-components-date-time-pickers",
     "docs-components-stack",
     "docs-components-edit-dialog",
     "docs-components-error-handling",
