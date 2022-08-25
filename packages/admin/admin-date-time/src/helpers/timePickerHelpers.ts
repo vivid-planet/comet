@@ -51,7 +51,7 @@ export const getDateFromTimeValue = (timeValue: string): Date => {
     return new Date(today.getFullYear(), today.getMonth(), today.getDate(), Number(hour), Number(minute));
 };
 
-export const getClosestDateToNow = (dateList: Date[], target: Date = new Date()): Date => {
+export const getClosestDateToDate = (dateList: Date[], target: Date = new Date()): Date => {
     let closestDate: Date = dateList[0];
     const targetTime = target.getTime();
 
