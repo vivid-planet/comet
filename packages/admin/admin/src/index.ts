@@ -5,6 +5,8 @@ export { AppHeaderDropdown, AppHeaderDropdownClassKey, AppHeaderDropdownProps } 
 export { AppHeaderFillSpace, AppHeaderFillSpaceClassKey } from "./appHeader/fillSpace/AppHeaderFillSpace";
 export { AppHeaderMenuButton, AppHeaderMenuButtonClassKey, AppHeaderMenuButtonProps } from "./appHeader/menuButton/AppHeaderMenuButton";
 export { buildCreateRestMutation, buildDeleteRestMutation, buildUpdateRestMutation } from "./buildRestMutation";
+export { readClipboardText } from "./clipboard/readClipboardText";
+export { writeClipboardText } from "./clipboard/writeClipboardText";
 export { CancelButton, CancelButtonClassKey, CancelButtonProps } from "./common/buttons/cancel/CancelButton";
 export { ClearInputButton, ClearInputButtonClassKey, ClearInputButtonProps } from "./common/buttons/clearinput/ClearInputButton";
 export {
@@ -33,6 +35,12 @@ export { ToolbarFillSpace, ToolbarFillSpaceClassKey, ToolbarFillSpaceProps } fro
 export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/toolbar/item/ToolbarItem";
 export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } from "./common/toolbar/titleitem/ToolbarTitleItem";
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
+export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
+export { GridFilterButton } from "./dataGrid/GridFilterButton";
+export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
+export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
+export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
+export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { DeleteMutation } from "./DeleteMutation";
 export { DirtyHandler } from "./DirtyHandler";
 export { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding, useDirtyHandlerApi } from "./DirtyHandlerApiContext";
