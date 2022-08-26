@@ -1,0 +1,21 @@
+import { Meta, Canvas, Story, Source } from "@storybook/addon-docs";
+
+import dedent from "ts-dedent";
+
+## Localization
+
+For localization of the DatePicker, it needs to be wrapped by `DateFnsLocaleProvider` with the desired locale. <br />
+Generally, this is done at the entry point of the application, e.g., in `App.tsx`:
+
+<Source
+    language="tsx"
+    code={dedent`
+        import { en as dateFnsEnLocale } from "date-fns/locale";
+        import { DateFnsLocaleProvider } from "@comet/admin-date-time";
+        export const MyApp = () => (
+            <DateFnsLocaleProvider value={dateFnsEnLocale}>
+                {/* App content */}
+            </DateFnsLocaleProvider>
+        );
+    `}
+/>

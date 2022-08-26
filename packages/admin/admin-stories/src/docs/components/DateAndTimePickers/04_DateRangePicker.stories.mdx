@@ -1,7 +1,33 @@
 import { Meta, Canvas, Story, Source } from "@storybook/addon-docs";
+import DatePickerLocalisation from "./common/DatePickerLocalization.mdx";
 
 <Meta title="Docs/Components/Date & Time Pickers/Date-Range Picker" />
 
 # Date-Range Picker
 
-tba.
+To use the `DateRangePicker` and `FinalFormDateRangePicker` components, install the `@comet/admin-date-time` package.
+
+## Value type
+
+The `value` prop and the value returned by `onChange` are objects with `start` and `end` values, each with the type `Date`.
+
+```ts
+type DateRange = {
+    start: Date;
+    end: Date;
+};
+```
+
+<DatePickerLocalisation />
+
+## Basic usage
+
+<Canvas>
+    <Story id="stories-components-date-time-pickers-date-range-picker--basic" />
+</Canvas>
+
+## Usage inside a final-form
+
+<Canvas>
+    <Story id="stories-components-date-time-pickers-date-range-picker--final-form" />
+</Canvas>

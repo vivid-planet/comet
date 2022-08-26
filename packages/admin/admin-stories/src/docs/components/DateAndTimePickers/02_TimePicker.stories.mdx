@@ -4,26 +4,26 @@ import { Meta, Canvas, Story } from "@storybook/addon-docs";
 
 # Time Picker
 
-To use the `TimePicker` component, install the `@comet/admin-date-time` package.
+To use the `TimePicker` and `FinalFormTimePicker` components, install the `@comet/admin-date-time` package.
 
-_**Note**: For usage inside forms built with final-form, use the `FinalFormTimePicker` component._
-
-Similar to the [HTML time input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time), the time value is a 24-hour string in the format `HH:MM`.
-
-By default, there is only one selectable time option every 15 minutes.
-This shortens the list of options to reduce the need for scrolling.
+By default, there is only one selectable time option every 15 minutes. <br />
+This shortens the list of options to reduce the need for scrolling. <br />
 Use the `minuteStep` prop to change the step size.
 
 The range of selectable options can be limited by passing a time string into the `min` and `max` props.
 
+## Value type
+
+The `value` prop and the value returned by `onChange` are a 24-hour `string` formatted as `HH:MM`, similar to the [HTML time input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time).
+
 ## Basic usage
 
 <Canvas>
-    <Story id="stories-components-time-time-pickers-time-picker--time-picker" />
+    <Story id="stories-components-date-time-pickers-time-picker--basic" />
 </Canvas>
 
 ## Usage inside a final-form
 
 <Canvas>
-    <Story id="stories-components-time-time-pickers-time-picker--time-picker-final-form" />
+    <Story id="stories-components-date-time-pickers-time-picker--time-picker-final-form" />
 </Canvas>

@@ -6,8 +6,8 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Time & Time Pickers/Time Picker", module)
-    .add("Time Picker", () => {
+storiesOf("stories/components/Date & Time Pickers/Time Picker", module)
+    .add("Basic", () => {
         const [timeOne, setTimeOne] = React.useState<string | undefined>();
         const [timeTwo, setTimeTwo] = React.useState<string | undefined>();
         const [timeThree, setTimeThree] = React.useState<string | undefined>();
@@ -49,8 +49,15 @@ storiesOf("stories/components/Time & Time Pickers/Time Picker", module)
         );
     })
     .add("Time Picker Final Form", () => {
+        type Values = {
+            timeOne?: string;
+            timeTwo?: string;
+            timeThree?: string;
+            timeFour?: string;
+        };
+
         return (
-            <Form initialValues={{ timeFour: "14:30" }} onSubmit={() => {}}>
+            <Form<Values> initialValues={{ timeFour: "14:30" }} onSubmit={() => {}}>
                 {() => (
                     <Grid container spacing={4}>
                         <Grid item xs={6} md={3}>
