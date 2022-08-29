@@ -12,10 +12,9 @@ import {
     GQLDamFolderByNameAndParentIdQueryVariables,
     GQLDamFolderForFolderUploadMutation,
     GQLDamFolderForFolderUploadMutationVariables,
-    GQLFilenameInput,
 } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
-import { useDuplicatedFilenamesResolver } from "../duplicatedFilenames/DuplicatedFilenamesResolver";
+import { FileData, useDuplicatedFilenamesResolver } from "../duplicatedFilenames/DuplicatedFilenamesResolver";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
 import { useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
@@ -64,7 +63,7 @@ export interface FileUploadValidationError {
     message: React.ReactNode;
 }
 
-const postProcessFile = async (file: FileWithPath, filename?: string): Promise<FileWithFolderPath> => {
+const preProcessFile = async (file: FileWithPath, filename?: string): Promise<FileWithFolderPath> => {
     let harmonizedPath: string | undefined;
     // when files are uploaded via input field, the path does not have a "/" prefix
     // when files are uploaded via drag and drop, the path does have a "/" prefix
@@ -91,11 +90,11 @@ const postProcessFile = async (file: FileWithPath, filename?: string): Promise<F
     return newFile;
 };
 
-const postProcessFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
+const preProcessFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
-        const newFile = await postProcessFile(file);
+        const newFile = await preProcessFile(file);
         newFiles.push(newFile);
     }
 
@@ -296,7 +295,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         }
 
         if (acceptedFiles.length > 0) {
-            const filesWithFolderPaths = await postProcessFiles(acceptedFiles);
+            const filesWithFolderPaths = await preProcessFiles(acceptedFiles);
             let folderIdMap = await createInitialFolderIdMap(filesWithFolderPaths, folderId);
 
             for (const file of filesWithFolderPaths) {
@@ -319,10 +318,10 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 }
             }
 
-            const newFilenames: GQLFilenameInput[] = await new Promise<GQLFilenameInput[]>((resolve, reject) => {
+            const fileDataToUpload: FileData[] = await new Promise<FileData[]>((resolve, reject) => {
                 duplicatedFilenameResolver.resolveDuplicates(
                     filesInExistingDir.map((file) => ({
-                        name: file.name,
+                        file: file,
                         folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId,
                     })),
                     () => {
@@ -337,17 +336,12 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 return [];
             });
 
+            const filesToUpload = await preProcessFiles(fileDataToUpload.map((fileData) => fileData.file));
+            filesToUpload.push(...filesInNewDir);
+
             if (!uploadCanceled) {
-                const filesWithValidatedName: FileWithFolderPath[] = [];
-                for (let i = 0; i < filesInExistingDir.length; i++) {
-                    const newFile = await postProcessFile(filesInExistingDir[i], newFilenames[i].name);
-                    filesWithValidatedName.push(newFile);
-                }
-
-                filesWithValidatedName.push(...filesInNewDir);
-
                 cancelUpload.current = axios.CancelToken.source();
-                for (const file of filesWithValidatedName) {
+                for (const file of filesToUpload) {
                     folderIdMap = await createFoldersIfNecessary(folderIdMap, file, folderId);
                     const targetFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId;
 

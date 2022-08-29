@@ -1,13 +1,11 @@
 import { gql } from "@apollo/client";
 
-export const damFindAlternativesToDuplicatedFilenamesQuery = gql`
-    query DamFindAlternativesToDuplicatedFilenames($filenames: [FilenameInput!]!) {
-        alternatives: findAlternativesToDuplicatedFilenames(filenames: $filenames) {
-            originalName
+export const damBulkFilenameAlreadyExistsQuery = gql`
+    query DamBulkFilenameAlreadyExists($filenames: [FilenameInput!]!) {
+        filenamesResponse: damBulkFilenameAlreadyExists(filenames: $filenames) {
+            name
             folderId
             isOccupied
-            alternativeName
-            extension
         }
     }
 `;

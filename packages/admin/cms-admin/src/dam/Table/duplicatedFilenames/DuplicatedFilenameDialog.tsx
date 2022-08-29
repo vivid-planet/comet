@@ -1,114 +1,57 @@
-import { gql, useApolloClient } from "@apollo/client";
-import { CancelButton, Field, FinalForm, FinalFormInput } from "@comet/admin";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Typography } from "@mui/material";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
-import { GQLDamFilenameAlreadyExistsQuery, GQLDamFilenameAlreadyExistsQueryVariables } from "../../../graphql.generated";
-
-const damFilenameAlreadyExistsQuery = gql`
-    query DamFilenameAlreadyExists($filename: String!, $folderId: String) {
-        damFilenameAlreadyExists(filename: $filename, folderId: $folderId)
-    }
-`;
-
-const appendExtensionIfNotPresent = (filename: string, extension: string) => {
-    return filename.endsWith(extension) ? filename : `${filename}${extension}`;
-};
-
-interface FormValues {
-    newFilename: string;
-}
+import { FileData } from "./DuplicatedFilenamesResolver";
 
 interface DuplicateFilenameDialogProps {
     open: boolean;
-    currentFilename?: string;
-    extension?: string;
-    folderId: string | null;
-    suggestedFilename?: string;
-    onCancel: () => void;
-    onRename: (newFilename: string) => void;
+    fileData: FileData[];
+    onSkip: () => void;
+    onUpload: () => void;
 }
 
-export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
-    open,
-    currentFilename,
-    extension = "",
-    folderId,
-    suggestedFilename,
-    onCancel,
-    onRename,
-}) => {
-    const client = useApolloClient();
-    const intl = useIntl();
-
-    const validateFilenameAlreadyExists = React.useCallback(
-        async (filename: string): Promise<boolean> => {
-            const { data } = await client.query<GQLDamFilenameAlreadyExistsQuery, GQLDamFilenameAlreadyExistsQueryVariables>({
-                query: damFilenameAlreadyExistsQuery,
-                variables: {
-                    filename,
-                    folderId,
-                },
-                fetchPolicy: "network-only",
-            });
-
-            return data.damFilenameAlreadyExists;
-        },
-        [client, folderId],
-    );
-
+export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({ open, fileData, onSkip, onUpload }) => {
     return (
         <Dialog open={open}>
             <DialogTitle>
-                <FormattedMessage id="comet.dam.duplicateFilenameDialog.title" defaultMessage="Duplicate filename" />
+                <FormattedMessage
+                    id="comet.dam.duplicateFilenameDialog.title"
+                    defaultMessage="Duplicate {count, plural, one {filename} other {filenames}}"
+                    values={{ count: fileData.length }}
+                />
             </DialogTitle>
-            <FinalForm<FormValues>
-                mode="add"
-                onSubmit={(values) => {
-                    const newFilename = values.newFilename;
-                    const newFilenameWithExtension = appendExtensionIfNotPresent(newFilename, extension);
+            <DialogContent>
+                <Typography variant="h4">
+                    <FormattedMessage id="comet.dam.duplicateFilenameDialog.introduction" defaultMessage="The following filenames already exist:" />
+                </Typography>
 
-                    onRename(newFilenameWithExtension);
-                }}
-                initialValues={{ newFilename: suggestedFilename }}
-                allowPristineSubmission
-            >
-                <DialogContent>
-                    <Typography style={{ paddingBottom: "16px" }} variant="body1">
-                        <FormattedMessage
-                            id="comet.dam.duplicateFilenameDialog.heading"
-                            defaultMessage="A file with the name {filename} already exists. Do you want to rename it?"
-                            values={{
-                                filename: currentFilename,
-                            }}
-                        />
-                    </Typography>
-                    <Field
-                        component={FinalFormInput}
-                        name="newFilename"
-                        label={<FormattedMessage id="comet.dam.duplicateFilenameDialog.form.label" defaultMessage="New filename" />}
-                        validate={async (value: string) => {
-                            if (value) {
-                                if (await validateFilenameAlreadyExists(appendExtensionIfNotPresent(value, extension))) {
-                                    return intl.formatMessage({
-                                        id: "comet.dam.duplicateFilenameDialog.form.validationError.filenameAlreadyExists",
-                                        defaultMessage: "Filename already exists",
-                                    });
-                                }
-                            }
+                <List>
+                    {fileData.map((data) => {
+                        return <ListItem key={data.file.name}>{data.file.name}</ListItem>;
+                    })}
+                </List>
+            </DialogContent>
+            <DialogActions>
+                <Button type="submit" variant="contained" color="primary" onClick={onSkip}>
+                    <FormattedMessage
+                        id="comet.dam.duplicateFilenameDialog.action.skip"
+                        defaultMessage="Skip {count, plural, one {file} other {files}}"
+                        values={{
+                            count: fileData.length,
                         }}
-                        fullWidth
-                        autoFocus
                     />
-                </DialogContent>
-                <DialogActions>
-                    <CancelButton onClick={onCancel} />
-                    <Button type="submit" variant="contained" color="primary">
-                        <FormattedMessage id="comet.generic.rename" defaultMessage="Rename" />
-                    </Button>
-                </DialogActions>
-            </FinalForm>
+                </Button>
+                <Button type="submit" variant="contained" color="primary" onClick={onUpload}>
+                    <FormattedMessage
+                        id="comet.dam.duplicateFilenameDialog.action.uploadAsCopy"
+                        defaultMessage="Upload as {count, plural, one {copy} other {copies}}"
+                        values={{
+                            count: fileData.length,
+                        }}
+                    />
+                </Button>
+            </DialogActions>
         </Dialog>
     );
 };

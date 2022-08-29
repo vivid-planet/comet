@@ -70,33 +70,35 @@ export class FilesResolver {
 
     @Query(() => Boolean)
     async damFilenameAlreadyExists(@Args("filename") filename: string, @Args("folderId", { nullable: true }) folderId?: string): Promise<boolean> {
-        return (await this.filesService.findOneByFilenameAndFolder(filename, folderId)) !== null;
+        const extension = extname(filename);
+        const name = basename(filename, extension);
+        const slugifiedName = slugifyFilename(name, extension);
+
+        return (await this.filesService.findOneByFilenameAndFolder(slugifiedName, folderId)) !== null;
     }
 
     @Query(() => [FilenameResponse])
-    async findAlternativesToDuplicatedFilenames(
+    async damBulkFilenameAlreadyExists(
         @Args("filenames", { type: () => [FilenameInput] }) filenames: Array<FilenameInput>,
     ): Promise<Array<FilenameResponse>> {
-        const nextAvailableFilenames: Array<FilenameResponse> = [];
+        const response: Array<FilenameResponse> = [];
 
         for (const { name, folderId } of filenames) {
             const extension = extname(name);
             const filename = basename(name, extension);
             const slugifiedName = slugifyFilename(filename, extension);
 
-            const nextAvailableName = await this.filesService.findNextAvailableFilename(slugifiedName, folderId);
-            const isOccupied = slugifiedName !== nextAvailableName;
+            const existingFile = await this.filesService.findOneByFilenameAndFolder(slugifiedName, folderId);
+            const isOccupied = existingFile !== null;
 
-            nextAvailableFilenames.push({
-                originalName: slugifiedName,
+            response.push({
+                name,
                 folderId,
                 isOccupied,
-                alternativeName: isOccupied ? nextAvailableName : undefined,
-                extension,
             });
         }
 
-        return nextAvailableFilenames;
+        return response;
     }
 
     @ResolveField(() => String)

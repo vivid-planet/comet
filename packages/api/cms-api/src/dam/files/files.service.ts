@@ -224,16 +224,6 @@ export class FilesService {
 
             const name = await this.findNextAvailableFilename(file.originalname, folderId);
 
-            //TODO: let user decide to change name or override file
-            // const extension = extname(file.originalname);
-            // const filename = basename(file.originalname, extension);
-            // let i = 1;
-            // let name = slugifyFilename(filename, extension);
-            // while ((await this.findOneByFilenameAndFolder(name, folderId)) !== null) {
-            //     name = slugifyFilename(`${filename}-${i}`, extension);
-            //     i++;
-            // }
-
             result = await this.create({
                 name,
                 folderId: folderId,

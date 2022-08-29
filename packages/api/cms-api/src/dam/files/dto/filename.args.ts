@@ -16,17 +16,11 @@ export class FilenameInput {
 @ObjectType()
 export class FilenameResponse {
     @Field()
-    originalName: string;
+    name: string;
 
     @Field(() => ID, { nullable: true })
     folderId?: string;
 
     @Field(() => Boolean)
     isOccupied: boolean;
-
-    @Field({ nullable: true })
-    alternativeName?: string;
-
-    @Field()
-    extension: string;
 }
