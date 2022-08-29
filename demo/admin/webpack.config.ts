@@ -1,3 +1,5 @@
+import "webpack-dev-server";
+
 import ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 import * as fs from "fs";
 import * as HtmlWebpackPlugin from "html-webpack-plugin";
@@ -13,7 +15,7 @@ interface IEnvironment {
 const config = ({ production }: IEnvironment): webpack.Configuration => {
     const publicPath = "/";
 
-    const plugins = [
+    const plugins: webpack.WebpackPluginInstance[] = [
         new webpack.DefinePlugin({
             CONFIG_DEV_LOCAL_EXISTS: fs.existsSync(path.resolve(__dirname, "src/config/dev.local.ts")),
             PREVIEW_URL: JSON.stringify(process.env.PREVIEW_URL),
@@ -42,13 +44,7 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
             }),
         );
     } else {
-        plugins.push(
-            new ForkTsCheckerWebpackPlugin({
-                eslint: {
-                    files: "./src/**/*.{ts,tsx,js,jsx,json,md}",
-                },
-            }),
-        );
+        plugins.push(new ForkTsCheckerWebpackPlugin());
     }
 
     return {
@@ -75,7 +71,14 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
                         customize: require.resolve("babel-preset-react-app/webpack-overrides"),
                         babelrc: false,
                         configFile: false,
-                        presets: [require.resolve("babel-preset-react-app")],
+                        presets: [
+                            [
+                                require.resolve("babel-preset-react-app"),
+                                {
+                                    runtime: "automatic",
+                                },
+                            ],
+                        ],
                         plugins: [
                             [
                                 "@emotion",
@@ -111,6 +114,7 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
                         compact: false,
                         presets: [[require.resolve("babel-preset-react-app/dependencies"), { helpers: true }]],
                         cacheDirectory: true,
+                        cacheCompression: false,
                         sourceMaps: false,
                     },
                 },
@@ -133,6 +137,10 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
             alias: {
                 "@src": path.resolve(__dirname, "src/"),
             },
+            fallback: {
+                "react/jsx-runtime": "react/jsx-runtime.js",
+                "react/jsx-dev-runtime": "react/jsx-dev-runtime.js",
+            },
         },
         output: {
             path: path.resolve(__dirname, "build"),
@@ -141,11 +149,18 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
             publicPath,
         },
         devServer: {
-            contentBase: __dirname,
+            static: {
+                directory: path.join(__dirname, "public"),
+            },
             host: "0.0.0.0",
-            disableHostCheck: true,
             port: Number(process.env.ADMIN_PORT || 8001),
-            sockPort: Number(process.env.PROXY_PORT),
+            allowedHosts: "all",
+            compress: true,
+            client: {
+                webSocketURL: {
+                    port: Number(process.env.PROXY_PORT),
+                },
+            },
             historyApiFallback: true,
             headers: {
                 "Access-Control-Allow-Origin": "*",
