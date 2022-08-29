@@ -183,8 +183,6 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
                 setTimeout(() => {
                     if (props.mode === "add") {
-                        form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
-
                         if (tableQuery) {
                             // refetch TableQuery after adding
                             client.query({
@@ -203,6 +201,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 (data) => {
                     // for final-form undefined means success, an obj means error
                     editDialogFormApi?.resetFormStatus();
+                    form.reset(values);
                     return undefined;
                 },
                 (error) => {
