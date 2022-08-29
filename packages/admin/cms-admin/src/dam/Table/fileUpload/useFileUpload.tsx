@@ -17,6 +17,7 @@ import {
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDuplicatedFilenamesResolver } from "../duplicatedFilenames/DuplicatedFilenamesResolver";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
+import { useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
