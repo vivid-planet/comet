@@ -33,7 +33,7 @@ export const timeValueIsValid = (timeValue: string): boolean => {
 
 export const getTimeStringFromDate = (date: Date): string => format(date, "HH:mm");
 
-export const getDateValueWithTime = (date: Date, time: string): Date => {
+export const getDateWithNewTime = (date: Date, time: string): Date => {
     const [hours, minutes] = time.split(":");
     date.setHours(parseInt(hours));
     date.setMinutes(parseInt(minutes));
