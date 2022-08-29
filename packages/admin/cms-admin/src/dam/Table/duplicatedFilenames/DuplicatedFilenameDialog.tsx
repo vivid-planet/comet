@@ -1,3 +1,4 @@
+import { Warning } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -13,6 +14,17 @@ const StyledList = styled(List)`
 
 const StyledListItem = styled(ListItem)`
     padding: ${({ theme }) => theme.spacing(2)} ${({ theme }) => theme.spacing(4)};
+`;
+
+const InstructionWrapper = styled("div")`
+    display: flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.spacing(1)};
+`;
+
+const WarningIcon = styled(Warning)`
+    color: ${({ theme }) => theme.palette.error.main};
+    font-size: 20px;
 `;
 
 interface DuplicateFilenameDialogProps {
@@ -33,9 +45,15 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                 />
             </DialogTitle>
             <DialogContent>
-                <Typography variant="h5" component="h3">
-                    <FormattedMessage id="comet.dam.duplicateFilenameDialog.introduction" defaultMessage="The following filenames already exist:" />
-                </Typography>
+                <InstructionWrapper>
+                    <WarningIcon />
+                    <Typography variant="h5" component="h3">
+                        <FormattedMessage
+                            id="comet.dam.duplicateFilenameDialog.introduction"
+                            defaultMessage="The following filenames already exist:"
+                        />
+                    </Typography>
+                </InstructionWrapper>
 
                 <StyledList>
                     {fileData.map((data, index) => {
@@ -52,7 +70,7 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                 </StyledList>
             </DialogContent>
             <DialogActions>
-                <Button type="submit" variant="contained" color="primary" onClick={onSkip}>
+                <Button variant="outlined" onClick={onSkip}>
                     <FormattedMessage
                         id="comet.dam.duplicateFilenameDialog.action.skip"
                         defaultMessage="Skip {count, plural, one {file} other {files}}"
@@ -61,7 +79,7 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                         }}
                     />
                 </Button>
-                <Button type="submit" variant="contained" color="primary" onClick={onUpload}>
+                <Button variant="contained" color="primary" onClick={onUpload}>
                     <FormattedMessage
                         id="comet.dam.duplicateFilenameDialog.action.uploadAsCopy"
                         defaultMessage="Upload as {count, plural, one {copy} other {copies}}"
