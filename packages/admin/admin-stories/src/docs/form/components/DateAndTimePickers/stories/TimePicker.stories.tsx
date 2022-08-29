@@ -6,7 +6,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Date & Time Pickers/Time Picker", module)
+storiesOf("stories/form/components/Date & Time Pickers/Time Picker", module)
     .add("Basic", () => {
         const [timeOne, setTimeOne] = React.useState<string | undefined>();
         const [timeTwo, setTimeTwo] = React.useState<string | undefined>();

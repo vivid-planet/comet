@@ -6,7 +6,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Date & Time Pickers/Date Picker", module)
+storiesOf("stories/form/components/Date & Time Pickers/Date Picker", module)
     .add("Basic", () => {
         const [dateOne, setDateOne] = React.useState<Date | undefined>();
         const [dateTwo, setDateTwo] = React.useState<Date | undefined>();

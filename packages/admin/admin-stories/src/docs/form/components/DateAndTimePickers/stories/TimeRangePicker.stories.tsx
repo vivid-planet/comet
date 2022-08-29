@@ -6,7 +6,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Date & Time Pickers/Time-Range Picker", module)
+storiesOf("stories/form/components/Date & Time Pickers/Time-Range Picker", module)
     .add("Basic", () => {
         const [timeRangeOne, setTimeRangeOne] = React.useState<TimeRange | undefined>();
         const [timeRangeTwo, setTimeRangeTwo] = React.useState<TimeRange | undefined>({ start: "14:00", end: "16:00" });
