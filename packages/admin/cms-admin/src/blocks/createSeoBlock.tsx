@@ -43,6 +43,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
         openGraphTitle: undefined,
         openGraphDescription: undefined,
         structuredData: undefined,
+        canonicalUrl: undefined,
     })(composedBlock);
 
     type State = BlockState<typeof block>;
@@ -81,6 +82,8 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                 noIndex: values.noIndex,
                                 priority: values.priority,
                                 changeFrequency: values.changeFrequency,
+
+                                canonicalUrl: values.canonicalUrl,
                             }));
                         }}
                         initialValues={{
@@ -95,6 +98,8 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                             noIndex: state.noIndex,
                             priority: state.priority,
                             changeFrequency: state.changeFrequency,
+
+                            canonicalUrl: state.canonicalUrl,
                         }}
                     >
                         {/* Meta */}
@@ -238,6 +243,22 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                     );
                                 }}
                             </ReactFinalFormField>
+                        </Box>
+
+                        {/* Canonical Tag */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.canonicalTag.sectionTitle" defaultMessage="Canonical Tag" />
+                            </Typography>
+                            <Field
+                                label={intl.formatMessage({
+                                    id: "comet.blocks.seo.canonicalUrl",
+                                    defaultMessage: "URL",
+                                })}
+                                name="canonicalUrl"
+                                component={FinalFormInput}
+                                fullWidth
+                            />
                         </Box>
                     </BlocksFinalForm>
                 </div>

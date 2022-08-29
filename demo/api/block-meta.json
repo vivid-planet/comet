@@ -684,6 +684,11 @@
                     "never"
                 ],
                 "nullable": false
+            },
+            {
+                "name": "canonicalUrl",
+                "kind": "String",
+                "nullable": true
             }
         ],
         "inputFields": [
@@ -754,6 +759,11 @@
                     "never"
                 ],
                 "nullable": false
+            },
+            {
+                "name": "canonicalUrl",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
