@@ -32,11 +32,11 @@ const MasterMenu: React.FC = () => {
             />
             <MenuCollapsibleItem primary={intl.formatMessage({ id: "cometDemo.menu.pageTree", defaultMessage: "Page tree" })} icon={<PageTree />}>
                 <MenuItemRouterLink
-                    primary={intl.formatMessage({ id: "cometDemo.menu.pageTree", defaultMessage: "Main menu" })}
+                    primary={intl.formatMessage({ id: "cometDemo.menu.pageTree.mainNavigation", defaultMessage: "Main navigation" })}
                     to={`${match.url}/pages/pagetree/main-navigation`}
                 />
                 <MenuItemRouterLink
-                    primary={intl.formatMessage({ id: "cometDemo.menu.pageTree", defaultMessage: "Top menu" })}
+                    primary={intl.formatMessage({ id: "cometDemo.menu.pageTree.topMenu", defaultMessage: "Top menu" })}
                     to={`${match.url}/pages/pagetree/top-menu`}
                 />
             </MenuCollapsibleItem>
