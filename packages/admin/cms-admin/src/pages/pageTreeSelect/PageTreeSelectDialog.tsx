@@ -44,7 +44,7 @@ const CloseButton = styled(IconButton)`
 `;
 
 const StyledDialogAction = styled(DialogActions)`
-    & > :first-child:last-child {
+    & > :first-of-type:last-child {
         margin-left: initial;
     }
 `;
@@ -247,7 +247,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
 const PageVisibility = styled("div")`
     display: flex;
-    & :first-child {
+    & :first-of-type {
         margin-right: 5px;
     }
     align-items: center;

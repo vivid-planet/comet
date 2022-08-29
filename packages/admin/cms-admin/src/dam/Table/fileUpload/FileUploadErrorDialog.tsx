@@ -25,7 +25,7 @@ const Path = styled(Typography)`
 `;
 
 const TableHeadCell = styled(TableCell)`
-    &.MuiTableCell-head:not(:first-child):not(:empty):before {
+    &.MuiTableCell-head:not(:first-of-type):not(:empty):before {
         background-color: transparent;
     }
 `;
