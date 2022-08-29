@@ -41,6 +41,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import { ComponentDemo } from "./common/ComponentDemo";
+import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import News from "./news/News";
@@ -111,7 +112,7 @@ class App extends React.Component {
                         }}
                     >
                         <DamConfigProvider value={{}}>
-                            <IntlProvider locale="en">
+                            <IntlProvider locale="en" messages={getMessages()}>
                                 <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                     <MuiThemeProvider theme={theme}>
                                         <RouterBrowserRouter>
