@@ -8,7 +8,7 @@ interface SeoBlockProps extends PropsWithData<SeoBlockData> {
     canonicalUrl: string;
 }
 const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
-    data: { htmlTitle, metaDescription, openGraphTitle, openGraphDescription, openGraphImage, noIndex },
+    data: { htmlTitle, metaDescription, openGraphTitle, openGraphDescription, openGraphImage, noIndex, structuredData, structuredDataContent },
     title,
     canonicalUrl,
 }) => {
@@ -31,6 +31,9 @@ const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
                 {openGraphImage.block?.urlTemplate && (
                     <meta property={"og:image"} content={generateImageUrl({ src: openGraphImage.block.urlTemplate, width: 1024 }, 1 / 1)} />
                 )}
+
+                {/* Structured Data */}
+                {structuredData && structuredDataContent && <script type="application/ld+json">{structuredDataContent}</script>}
 
                 {/* No Index */}
                 {noIndex && (

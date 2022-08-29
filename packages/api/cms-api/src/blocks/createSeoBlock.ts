@@ -14,10 +14,12 @@ import {
     OptionalBlockInputInterface,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
+    typesafeMigrationPipe,
 } from "@comet/blocks-api";
-import { IsBoolean, IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { PixelImageBlock } from "./PixelImageBlock";
+import { AddStructuredDataMigration } from "./seoBlock/migrations/1-add-structured-data";
 
 export enum SitemapPagePriority {
     _0_0 = "0_0",
@@ -54,6 +56,8 @@ interface SeoBlockInputInterface<ImageBlockInput extends BlockInputInterface> ex
     openGraphTitle?: string;
     openGraphDescription?: string;
     openGraphImage: OptionalBlockInputInterface<ImageBlockInput>;
+    structuredData: boolean;
+    structuredDataContent?: string;
     noIndex: boolean;
     priority: SitemapPagePriority;
     changeFrequency: SitemapPageChangeFrequency;
@@ -84,6 +88,13 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         @ChildBlock(OptionalImageBlock)
         openGraphImage: BlockDataInterface;
 
+        //Structured Data
+        @BlockField()
+        structuredData: boolean;
+
+        @BlockField({ nullable: true })
+        structuredDataContent?: string;
+
         // Sitemap
         @BlockField()
         noIndex: boolean;
@@ -108,6 +119,9 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
                 openGraphTitle: this.openGraphTitle,
                 openGraphDescription: this.openGraphDescription,
                 openGraphImage: this.openGraphImage,
+
+                structuredData: this.structuredData,
+                structuredDataContent: this.structuredDataContent,
 
                 noIndex: this.noIndex,
                 priority: this.priority,
@@ -144,6 +158,16 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         @ChildBlockInput(OptionalImageBlock)
         openGraphImage: OptionalBlockInputInterface<ExtractBlockInput<ImageBlock>>;
 
+        //Structured Data
+        @IsBoolean()
+        @BlockField()
+        structuredData: boolean;
+
+        @IsJSON()
+        @IsOptional()
+        @BlockField({ nullable: true })
+        structuredDataContent?: string;
+
         // Sitemap
         @IsBoolean()
         @BlockField()
@@ -162,5 +186,8 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         }
     }
 
-    return createBlock(SeoBlockData, SeoBlockInput, "Seo");
+    return createBlock(SeoBlockData, SeoBlockInput, {
+        name: "Seo",
+        migrate: { version: 1, migrations: typesafeMigrationPipe([AddStructuredDataMigration]) },
+    });
 }
