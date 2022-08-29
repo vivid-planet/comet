@@ -60,7 +60,7 @@ const styles = () => {
 };
 
 function OkayBtn({
-    children = <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />,
+    children = <FormattedMessage id="comet.generic.ok" defaultMessage="OK" />,
     startIcon = <Check />,
     color = "primary",
     variant = "contained",

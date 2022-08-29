@@ -124,7 +124,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         <ListItemIcon>
                             <Domain />
                         </ListItemIcon>
-                        <ListItemText primary={intl.formatMessage({ id: "comet.pages.pages.page.copyUrl", defaultMessage: "Copy Url" })} />
+                        <ListItemText primary={intl.formatMessage({ id: "comet.pages.pages.page.copyUrl", defaultMessage: "Copy URL" })} />
                     </MenuItem>,
                     <MenuItemSeparator key="separator2" />,
                     <MenuItem

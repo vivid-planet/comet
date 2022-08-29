@@ -65,7 +65,7 @@ export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = 
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCloseClicked} color="primary" variant="contained">
-                    <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
+                    <FormattedMessage id="comet.generic.ok" defaultMessage="OK" />
                 </Button>
             </DialogActions>
         </Dialog>

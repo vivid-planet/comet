@@ -51,7 +51,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
         ...block,
         name: "Seo",
 
-        displayName: <FormattedMessage id="comet.blocks.seo" defaultMessage="Seo" />,
+        displayName: <FormattedMessage id="comet.blocks.seo" defaultMessage="SEO" />,
 
         AdminComponent: ({ state, updateState }) => {
             const intl = useIntl();
