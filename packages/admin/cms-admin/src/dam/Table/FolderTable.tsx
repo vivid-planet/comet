@@ -76,6 +76,7 @@ const FolderTable = ({
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
+        newlyUploadedFileIds,
     } = useFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
@@ -150,6 +151,7 @@ const FolderTable = ({
     const loading = tableLoading && tableData === undefined;
     const foldersTableData = tableData?.data.filter(isFolder);
     const filesTableData = tableData?.data.filter(isFile);
+    const firstLastUploadedFileId = filesTableData?.find((file) => newlyUploadedFileIds.includes(file.id))?.id;
 
     const { matches } = useDamSearchHighlighting({
         items: [...(foldersTableData || []), ...(filesTableData || [])],
@@ -315,6 +317,8 @@ const FolderTable = ({
                                                 rowProps={rowProps}
                                                 footerApi={{ show: showFooter, hide: hideFooter }}
                                                 archived={row.archived}
+                                                isNew={newlyUploadedFileIds.includes(row.id)}
+                                                scrollIntoView={firstLastUploadedFileId === row.id}
                                                 {...props}
                                             >
                                                 <TableColumns columns={columns} row={row} />

@@ -15,6 +15,7 @@ import {
 } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
+import { useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
@@ -50,6 +51,7 @@ interface FileUploadApi {
         multiple: boolean;
         maxSize: number;
     };
+    newlyUploadedFileIds: string[];
 }
 
 export interface FileUploadValidationError {
@@ -108,6 +110,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
         return acceptObj;
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
+
+    const { newlyUploadedFileIds, addNewlyUploadedFileIds } = useFileUploadContext();
 
     const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
@@ -242,6 +246,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
 
+        const uploadedFileIds: string[] = [];
+
         let errorOccurred = false;
         if (fileRejections.length > 0) {
             errorOccurred = true;
@@ -262,7 +268,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 const targetFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId;
 
                 try {
-                    await upload(
+                    const response: { data: { id: string } } = await upload(
                         context.damConfig.apiClient,
                         {
                             file,
@@ -275,6 +281,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                             },
                         },
                     );
+
+                    uploadedFileIds.push(response.data.id);
                 } catch (err) {
                     errorOccurred = true;
                     const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
@@ -310,6 +318,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setTotalSizes({});
         setLoadedSizes({});
         options.onAfterUpload?.();
+
+        addNewlyUploadedFileIds(uploadedFileIds);
     };
 
     return {
@@ -334,5 +344,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             multiple: true,
             maxSize: maxFileSizeInBytes,
         },
+        newlyUploadedFileIds,
     };
 };
