@@ -25,7 +25,7 @@ export const getMuiTableCell: GetMuiComponentTheme<"MuiTableCell"> = (component,
             lineHeight: "20px",
             fontWeight: typography.fontWeightMedium,
 
-            "&:not(:first-child):not(:empty):before": {
+            "&:not(:first-of-type):not(:empty):before": {
                 content: "''",
                 position: "absolute",
                 top: 15,
