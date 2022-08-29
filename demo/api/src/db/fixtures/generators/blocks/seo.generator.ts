@@ -10,6 +10,7 @@ export const generateSeoBlock = (): BlockInputInterface => {
         openGraphTitle: "",
         openGraphDescription: "",
         openGraphImage: { block: undefined, visible: false },
+        structuredData: "",
         noIndex: false,
         priority: SitemapPagePriority._0_5,
         changeFrequency: SitemapPageChangeFrequency.weekly,

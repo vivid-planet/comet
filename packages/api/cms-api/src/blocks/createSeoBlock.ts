@@ -14,12 +14,10 @@ import {
     OptionalBlockInputInterface,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
-    typesafeMigrationPipe,
 } from "@comet/blocks-api";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { PixelImageBlock } from "./PixelImageBlock";
-import { AddStructuredDataMigration } from "./seoBlock/migrations/1-add-structured-data";
 
 export enum SitemapPagePriority {
     _0_0 = "0_0",
@@ -56,8 +54,7 @@ interface SeoBlockInputInterface<ImageBlockInput extends BlockInputInterface> ex
     openGraphTitle?: string;
     openGraphDescription?: string;
     openGraphImage: OptionalBlockInputInterface<ImageBlockInput>;
-    structuredData: boolean;
-    structuredDataContent?: string;
+    structuredData?: string;
     noIndex: boolean;
     priority: SitemapPagePriority;
     changeFrequency: SitemapPageChangeFrequency;
@@ -89,11 +86,8 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         openGraphImage: BlockDataInterface;
 
         //Structured Data
-        @BlockField()
-        structuredData: boolean;
-
         @BlockField({ nullable: true })
-        structuredDataContent?: string;
+        structuredData?: string;
 
         // Sitemap
         @BlockField()
@@ -121,7 +115,6 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
                 openGraphImage: this.openGraphImage,
 
                 structuredData: this.structuredData,
-                structuredDataContent: this.structuredDataContent,
 
                 noIndex: this.noIndex,
                 priority: this.priority,
@@ -159,14 +152,10 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         openGraphImage: OptionalBlockInputInterface<ExtractBlockInput<ImageBlock>>;
 
         //Structured Data
-        @IsBoolean()
-        @BlockField()
-        structuredData: boolean;
-
         @IsJSON()
         @IsOptional()
         @BlockField({ nullable: true })
-        structuredDataContent?: string;
+        structuredData?: string;
 
         // Sitemap
         @IsBoolean()
@@ -186,8 +175,5 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         }
     }
 
-    return createBlock(SeoBlockData, SeoBlockInput, {
-        name: "Seo",
-        migrate: { version: 1, migrations: typesafeMigrationPipe([AddStructuredDataMigration]) },
-    });
+    return createBlock(SeoBlockData, SeoBlockInput, "Seo");
 }

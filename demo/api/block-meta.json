@@ -645,11 +645,6 @@
             },
             {
                 "name": "structuredData",
-                "kind": "Boolean",
-                "nullable": false
-            },
-            {
-                "name": "structuredDataContent",
                 "kind": "String",
                 "nullable": true
             },
@@ -720,11 +715,6 @@
             },
             {
                 "name": "structuredData",
-                "kind": "Boolean",
-                "nullable": false
-            },
-            {
-                "name": "structuredDataContent",
                 "kind": "String",
                 "nullable": true
             },

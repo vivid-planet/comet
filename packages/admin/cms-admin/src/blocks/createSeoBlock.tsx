@@ -35,7 +35,6 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
     const { api: composedApi, block: composedBlock } = composed;
 
     const block = withAdditionalBlockAttributes<Omit<SeoBlockData, "openGraphImage">>({
-        structuredData: false,
         noIndex: false,
         priority: "0_5",
         changeFrequency: "weekly",
@@ -43,7 +42,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
         metaDescription: undefined,
         openGraphTitle: undefined,
         openGraphDescription: undefined,
-        structuredDataContent: undefined,
+        structuredData: undefined,
     })(composedBlock);
 
     type State = BlockState<typeof block>;
@@ -78,7 +77,6 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                 openGraphDescription: values.openGraphDescription,
 
                                 structuredData: values.structuredData,
-                                structuredDataContent: values.structuredDataContent,
 
                                 noIndex: values.noIndex,
                                 priority: values.priority,
@@ -93,7 +91,6 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                             openGraphDescription: state.openGraphDescription,
 
                             structuredData: state.structuredData,
-                            structuredDataContent: state.structuredDataContent,
 
                             noIndex: state.noIndex,
                             priority: state.priority,
@@ -164,31 +161,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                             <Typography variant="h4" gutterBottom>
                                 <FormattedMessage id="comet.blocks.seo.structuredData.sectionTitle" defaultMessage="Structured Data" />
                             </Typography>
-
-                            <ReactFinalFormField name="structuredData" type="checkbox">
-                                {({ input: { checked, onChange } }) => {
-                                    const open = checked ? checked : false;
-                                    return (
-                                        <Paper variant="outlined">
-                                            <Collapsible
-                                                open={open}
-                                                header={
-                                                    <CollapsibleSwitchButtonHeader
-                                                        checked={open}
-                                                        title={
-                                                            <FormattedMessage id="comet.seo.structuredData.content" defaultMessage="Content (JSON)" />
-                                                        }
-                                                    />
-                                                }
-                                                onChange={onChange}
-                                            >
-                                                <Divider />
-                                                <Field name="structuredDataContent" multiline={true} rows={15} component={FinalFormInput} fullWidth />
-                                            </Collapsible>
-                                        </Paper>
-                                    );
-                                }}
-                            </ReactFinalFormField>
+                            <Field name="structuredData" multiline={true} rows={15} component={FinalFormInput} fullWidth />
                         </Box>
 
                         {/* Sitemap */}
