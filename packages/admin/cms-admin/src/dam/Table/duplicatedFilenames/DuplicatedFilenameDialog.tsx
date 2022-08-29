@@ -1,8 +1,19 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FileData } from "./DuplicatedFilenamesResolver";
+
+const StyledList = styled(List)`
+    margin-top: ${({ theme }) => theme.spacing(4)};
+    background: white;
+    padding: 0;
+`;
+
+const StyledListItem = styled(ListItem)`
+    padding: ${({ theme }) => theme.spacing(2)} ${({ theme }) => theme.spacing(4)};
+`;
 
 interface DuplicateFilenameDialogProps {
     open: boolean;
@@ -22,15 +33,23 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                 />
             </DialogTitle>
             <DialogContent>
-                <Typography variant="h4">
+                <Typography variant="h5" component="h3">
                     <FormattedMessage id="comet.dam.duplicateFilenameDialog.introduction" defaultMessage="The following filenames already exist:" />
                 </Typography>
 
-                <List>
-                    {fileData.map((data) => {
-                        return <ListItem key={data.file.name}>{data.file.name}</ListItem>;
+                <StyledList>
+                    {fileData.map((data, index) => {
+                        return (
+                            <>
+                                {index === 0 && <Divider component="li" />}
+                                <StyledListItem key={data.file.name}>
+                                    <ListItemText primary={<Typography variant="body1">{data.file.name}</Typography>} />
+                                </StyledListItem>
+                                <Divider component="li" />
+                            </>
+                        );
                     })}
-                </List>
+                </StyledList>
             </DialogContent>
             <DialogActions>
                 <Button type="submit" variant="contained" color="primary" onClick={onSkip}>
