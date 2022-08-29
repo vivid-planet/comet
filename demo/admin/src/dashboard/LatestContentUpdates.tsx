@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { Table, TableQuery, useTableQuery } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
+import { IconButton } from "@mui/material";
 import { GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/utils/pageTreeNodeCategoryMapping";
 import * as React from "react";
@@ -71,19 +72,21 @@ export const LatestContentUpdates: React.FC = () => {
                             },
                             {
                                 name: "jumpTo",
+                                cellProps: { align: "right" },
                                 render: (row) => {
                                     if (!row.pageTreeNode) {
                                         return null;
                                     }
 
                                     return (
-                                        <Link
+                                        <IconButton
+                                            component={Link}
                                             to={`/${row.pageTreeNode.scope.domain}/${
                                                 row.pageTreeNode.scope.language
                                             }/pages/pagetree/${categoryToUrlParam(row.pageTreeNode.category)}/${row.pageTreeNode.id}/edit`}
                                         >
                                             <ArrowRight />
-                                        </Link>
+                                        </IconButton>
                                     );
                                 },
                             },

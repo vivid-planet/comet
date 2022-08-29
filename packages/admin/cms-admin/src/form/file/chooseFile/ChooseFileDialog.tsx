@@ -26,8 +26,8 @@ const StyledDialogTitle = styled(DialogTitle)`
 `;
 
 const CloseButton = styled(IconButton)`
-    color: inherit;
-    padding: 0;
+    position: absolute;
+    right: ${({ theme }) => theme.spacing(2)};
 `;
 
 const TableRowButton = styled(Button)`
@@ -70,8 +70,8 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
         <FixedHeightDialog open={open} onClose={onClose} fullWidth maxWidth="xl">
             <StyledDialogTitle>
                 <FormattedMessage id="comet.form.file.selectFile" defaultMessage="Select file from DAM" />
-                <CloseButton onClick={(event) => onClose(event, "backdropClick")}>
-                    <Close fontSize="medium" />
+                <CloseButton onClick={(event) => onClose(event, "backdropClick")} color="inherit">
+                    <Close />
                 </CloseButton>
             </StyledDialogTitle>
             <MemoryRouter>
