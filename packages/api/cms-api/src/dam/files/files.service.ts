@@ -273,7 +273,7 @@ export class FilesService {
         let name = slugifyFilename(filename, extension);
 
         while ((await this.findOneByFilenameAndFolder(name, folderId)) !== null) {
-            name = slugifyFilename(`${filename}-${i}`, extension);
+            name = slugifyFilename(`${filename}-copy${i}`, extension);
             i++;
         }
 
