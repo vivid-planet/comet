@@ -3,6 +3,7 @@ import {
     EditDialogApiContext,
     IFilterApi,
     ISortInformation,
+    messages,
     SortDirection,
     Stack,
     StackPage,
@@ -81,7 +82,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             <ScopeIndicatorContent>
                                 <Domain fontSize="small" />
                                 <ScopeIndicatorLabelBold variant="body2">
-                                    <FormattedMessage id="comet.generic.globalContentScope" defaultMessage="Global Content" />
+                                    <FormattedMessage {...messages.globalContentScope} />
                                 </ScopeIndicatorLabelBold>
                             </ScopeIndicatorContent>
                         </ContentScopeIndicator>

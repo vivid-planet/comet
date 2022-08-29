@@ -5,6 +5,7 @@ import {
     FinalFormInput,
     FinalFormSelect,
     MainContent,
+    messages,
     SaveButton,
     SplitButton,
     Toolbar,
@@ -139,7 +140,7 @@ export const RedirectForm = ({ mode, id, linkBlock }: Props): JSX.Element => {
                         <ToolbarActions>
                             <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editRedirectSave">
                                 <SaveButton color="primary" variant="contained" saving={saving} hasErrors={saveError != null} type="submit">
-                                    <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                                    <FormattedMessage {...messages.save} />
                                 </SaveButton>
 
                                 <SaveButton
@@ -155,7 +156,7 @@ export const RedirectForm = ({ mode, id, linkBlock }: Props): JSX.Element => {
                                         }
                                     }}
                                 >
-                                    <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                                    <FormattedMessage {...messages.saveAndGoBack} />
                                 </SaveButton>
                             </SplitButton>
                         </ToolbarActions>

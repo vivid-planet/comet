@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { ArrowLeft, File, Folder } from "@comet/admin-icons";
 import { List, ListItem, ListItemIcon } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -28,7 +29,7 @@ export function PageList({ items, showBackButton, onItemClick, onBackClick, site
                     <ListItemIcon>
                         <ArrowLeft />
                     </ListItemIcon>
-                    <FormattedMessage id="comet.generic.back" defaultMessage="Back" />
+                    <FormattedMessage {...messages.back} />
                 </ListItem>
             )}
             <ScrollableListSection>

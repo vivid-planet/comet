@@ -1,8 +1,9 @@
 import * as React from "react";
-import { defineMessages, useIntl, WrappedComponentProps } from "react-intl";
+import { useIntl, WrappedComponentProps } from "react-intl";
 
 import { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding } from "./DirtyHandlerApiContext";
 import { SubmitResult } from "./form/SubmitResult";
+import { messages } from "./messages";
 import { RouterPrompt } from "./router/Prompt";
 
 interface IProps {
@@ -15,13 +16,6 @@ interface IBinding {
 }
 type Bindings = IBinding[];
 
-const messages = defineMessages({
-    saveChanges: {
-        id: "comet.generic.doYouWantToSaveYourChanges",
-        defaultMessage: "Do you want to save your changes?",
-        description: "Prompt to save unsaved changes",
-    },
-});
 class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentProps> {
     public static contextType = DirtyHandlerApiContext;
 
@@ -83,7 +77,7 @@ class DirtyHandlerComponent extends React.Component<IProps & WrappedComponentPro
         if (!this.isBindingDirty()) {
             return true;
         } else {
-            return this.props.intl.formatMessage(messages.saveChanges);
+            return this.props.intl.formatMessage(messages.saveUnsavedChanges);
         }
     };
 

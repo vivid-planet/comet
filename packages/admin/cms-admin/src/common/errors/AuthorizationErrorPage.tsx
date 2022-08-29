@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -40,7 +41,7 @@ export const AuthorizationErrorPage: React.FunctionComponent<AuthorizationErrorP
         <Root>
             <Message align="center">{JSON.stringify(error)}</Message>
             <Button variant="contained" onClick={onRetry}>
-                <FormattedMessage id="comet.generic.retry" defaultMessage="Retry" />
+                <FormattedMessage {...messages.retry} />
             </Button>
             <CometLogo src={cometLogoUrl} alt="Comet Logo" />
         </Root>

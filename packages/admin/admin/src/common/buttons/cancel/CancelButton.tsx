@@ -6,6 +6,8 @@ import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { messages } from "../../../messages";
+
 export type CancelButtonProps = ButtonProps;
 export type CancelButtonClassKey = ButtonClassKey;
 
@@ -63,7 +65,7 @@ const styles = () => {
 };
 
 function CancelBtn({
-    children = <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />,
+    children = <FormattedMessage {...messages.cancel} />,
     startIcon = <Clear />,
     ...restProps
 }: CancelButtonProps & WithStyles<typeof styles>) {

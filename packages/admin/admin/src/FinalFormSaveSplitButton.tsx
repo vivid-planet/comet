@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 
 import { SaveButton } from "./common/buttons/save/SaveButton";
 import { SplitButton } from "./common/buttons/split/SplitButton";
+import { messages } from "./messages";
 import { useStackApi } from "./stack/Api";
 
 export interface FormSaveButtonProps {
@@ -27,7 +28,7 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }
                     form.submit();
                 }}
             >
-                <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                <FormattedMessage {...messages.save} />
             </SaveButton>
             <SaveButton
                 color="primary"
@@ -42,7 +43,7 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }
                     }
                 }}
             >
-                <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                <FormattedMessage {...messages.saveAndGoBack} />
             </SaveButton>
         </SplitButton>
     );

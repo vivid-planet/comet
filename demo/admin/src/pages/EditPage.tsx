@@ -1,5 +1,14 @@
 import { gql } from "@apollo/client";
-import { MainContent as CometMainContent, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import {
+    MainContent as CometMainContent,
+    messages,
+    RouterPrompt,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+    useStackApi,
+} from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -129,10 +138,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 <RouterPrompt
                     message={(location) => {
                         if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
-                        return intl.formatMessage({
-                            id: "comet.generic.doYouWantToSaveYourChanges",
-                            defaultMessage: "Do you want to save your changes?",
-                        });
+                        return intl.formatMessage(messages.saveUnsavedChanges);
                     }}
                     saveAction={handleSaveAction}
                 />

@@ -3,6 +3,7 @@ import {
     FinalForm,
     LocalErrorScopeApolloContext,
     MainContent,
+    messages,
     RouterTab,
     RouterTabs,
     SaveButton,
@@ -200,7 +201,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                         await handleSubmit();
                                     }}
                                 >
-                                    <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                                    <FormattedMessage {...messages.save} />
                                 </SaveButton>
                                 <SaveButton
                                     color="primary"
@@ -215,7 +216,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                         }
                                     }}
                                 >
-                                    <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                                    <FormattedMessage {...messages.saveAndGoBack} />
                                 </SaveButton>
                             </SplitButton>
                         </ToolbarActions>

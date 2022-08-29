@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Button, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -13,7 +14,7 @@ export default function BottomAddLink({ onClick }: Props): React.ReactElement {
         <>
             <Divider />
             <AddButton color="primary" onClick={onClick} startIcon={<Add />} fullWidth>
-                <FormattedMessage id="comet.generic.add" defaultMessage="Add" />
+                <FormattedMessage {...messages.add} />
             </AddButton>
         </>
     );

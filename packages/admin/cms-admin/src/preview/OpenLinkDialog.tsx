@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { Dialog, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -47,7 +48,7 @@ function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.Rea
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="info">
-                    <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
+                    <FormattedMessage {...messages.cancel} />
                 </Button>
 
                 <Button

@@ -1,4 +1,4 @@
-import { CancelButton } from "@comet/admin";
+import { CancelButton, messages } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import React from "react";
@@ -25,7 +25,7 @@ export const ConfirmDeleteDialog = ({ open, onCloseDialog, name, itemType }: Con
                     <sc.WarningIcon />
                     <sc.WarningTextWrapper>
                         <sc.WarningHeading>
-                            <FormattedMessage id="comet.generic.warning" defaultMessage="Warning" />
+                            <FormattedMessage {...messages.warning} />
                         </sc.WarningHeading>
                         <sc.WarningText>
                             {itemType === "file" && (
