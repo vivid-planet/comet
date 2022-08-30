@@ -5,10 +5,12 @@ import * as React from "react";
 
 interface SeoBlockProps extends PropsWithData<SeoBlockData> {
     title: string;
+    passedCanonicalUrl?: string;
 }
 const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
     data: { htmlTitle, metaDescription, openGraphTitle, openGraphDescription, openGraphImage, noIndex, canonicalUrl, structuredData },
     title,
+    passedCanonicalUrl,
 }) => {
     const usedHtmlTitle = htmlTitle && htmlTitle != "" ? htmlTitle : title;
     return (
@@ -24,7 +26,7 @@ const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
                 {openGraphTitle && <meta property={"og:title"} content={openGraphTitle} />}
                 {openGraphDescription && <meta property={"og:description"} content={openGraphDescription} />}
                 <meta property={"og:type"} content={"website"} />
-                <meta property={"og:url"} content={canonicalUrl} />
+                <meta property={"og:url"} content={canonicalUrl ?? passedCanonicalUrl} />
                 {openGraphImage.block?.urlTemplate && (
                     <meta property={"og:image"} content={generateImageUrl({ src: openGraphImage.block.urlTemplate, width: 1024 }, 1 / 1)} />
                 )}
@@ -40,7 +42,7 @@ const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
                 )}
 
                 {/* Canonical Url */}
-                <link rel="canonical" href={canonicalUrl} />
+                {(canonicalUrl ?? passedCanonicalUrl) && <link rel="canonical" href={canonicalUrl ?? passedCanonicalUrl} />}
             </Head>
         </>
     );
