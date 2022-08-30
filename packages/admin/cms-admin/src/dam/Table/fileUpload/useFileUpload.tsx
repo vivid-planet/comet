@@ -63,7 +63,7 @@ export interface FileUploadValidationError {
     message: React.ReactNode;
 }
 
-const preProcessFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
+const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
@@ -301,7 +301,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 })),
             );
 
-            const filesToUpload = await preProcessFiles(fileDataToUpload.map((fileData) => fileData.file));
+            const filesToUpload = await addFolderPathToFiles(fileDataToUpload.map((fileData) => fileData.file));
             filesToUpload.push(...filesInNewDir);
 
             return filesToUpload;
@@ -322,7 +322,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         }
 
         if (acceptedFiles.length > 0) {
-            const filesWithFolderPaths = await preProcessFiles(acceptedFiles);
+            const filesWithFolderPaths = await addFolderPathToFiles(acceptedFiles);
             let folderIdMap = await createInitialFolderIdMap(filesWithFolderPaths, folderId);
 
             for (const file of filesWithFolderPaths) {
