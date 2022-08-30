@@ -54,6 +54,12 @@ Start CMS packages
 yarn dev:cms
 ```
 
+It is also possbile to start specific microservices
+
+```bash
+yarn dev:cms:api # (api|admin|site)
+```
+
 #### Start Demo
 
 ```bash
@@ -65,6 +71,12 @@ Demo will be available at
 -   Admin: [https://admin-demo.comet-dxp.dev:8443/](https://admin-demo.comet-dxp.dev:8443/)
 -   API: [https://api-demo.comet-dxp.dev:8443/](https://api-demo.comet-dxp.dev:8443/)
 -   Site: [https://site-demo.comet-dxp.dev:8443/](https://site-demo.comet-dxp.dev:8443/)
+
+It is also possbile to start specific microservices
+
+```bash
+yarn dev:demo:api # (api|admin|site)
+```
 
 #### Start Storybook
 
