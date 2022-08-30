@@ -141,7 +141,7 @@ type PageTreeNode {
   hideInMenu: Boolean!
   scope: PageTreeNodeScope!
   category: PageTreeNodeCategory!
-  userGroup: PageTreeNodeUserGroup!
+  userGroup: UserGroup!
   childNodes: [PageTreeNode!]!
   parentNode: PageTreeNode
   path: String!
@@ -160,7 +160,7 @@ enum PageTreeNodeCategory {
   TopMenu
 }
 
-enum PageTreeNodeUserGroup {
+enum UserGroup {
   All
   Admin
   User
@@ -377,7 +377,7 @@ input PageTreeNodeUpdateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  userGroup: PageTreeNodeUserGroup = All
+  userGroup: UserGroup = All
 }
 
 input AttachedDocumentInput {
@@ -402,7 +402,7 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  userGroup: PageTreeNodeUserGroup = All
+  userGroup: UserGroup = All
 }
 
 input RedirectInput {

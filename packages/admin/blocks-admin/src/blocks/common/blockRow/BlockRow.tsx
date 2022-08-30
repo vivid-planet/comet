@@ -33,6 +33,7 @@ interface BlockRowProps {
     isValidFn: () => boolean | Promise<boolean>;
     slideIn: boolean;
     hideBottomInsertBetweenButton?: boolean;
+    additionalMenuItems?: (onMenuClose: () => void) => React.ReactNode;
 }
 
 interface IDragItem {
@@ -210,6 +211,7 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
                         </ListItemIcon>
                         <FormattedMessage {...messages.delete} />
                     </MenuItem>
+                    {props.additionalMenuItems?.(handleMenuClose)}
                 </Menu>
             </sc.Root>
         </sc.BlockWrapper>
