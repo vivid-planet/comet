@@ -1,9 +1,9 @@
 import { useApolloClient } from "@apollo/client";
 import * as React from "react";
 
-import { GQLDamBulkFilenameAlreadyExistsQuery, GQLDamBulkFilenameAlreadyExistsQueryVariables, GQLFilenameResponse } from "../../../graphql.generated";
+import { GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables, GQLFilenameResponse } from "../../../graphql.generated";
 import { DuplicatedFilenameDialog } from "./DuplicatedFilenameDialog";
-import { damBulkFilenameAlreadyExistsQuery } from "./DuplicatedFilenamesResolver.gql";
+import { damAreFilenamesOccupied } from "./DuplicatedFilenamesResolver.gql";
 
 export interface DuplicatedFilenamesResolverApi {
     checkForDuplicates: (fileData: FileData[]) => Promise<GQLFilenameResponse[]>;
@@ -37,8 +37,8 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
 
     const checkForDuplicates = React.useCallback(
         async (fileData: FileData[]) => {
-            const { data } = await client.query<GQLDamBulkFilenameAlreadyExistsQuery, GQLDamBulkFilenameAlreadyExistsQueryVariables>({
-                query: damBulkFilenameAlreadyExistsQuery,
+            const { data } = await client.query<GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables>({
+                query: damAreFilenamesOccupied,
                 variables: {
                     filenames: fileData.map((data) => ({
                         name: data.file.name,

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const damBulkFilenameAlreadyExistsQuery = gql`
-    query DamBulkFilenameAlreadyExists($filenames: [FilenameInput!]!) {
-        filenamesResponse: damBulkFilenameAlreadyExists(filenames: $filenames) {
+export const damAreFilenamesOccupied = gql`
+    query DamAreFilenamesOccupied($filenames: [FilenameInput!]!) {
+        filenamesResponse: damAreFilenamesOccupied(filenames: $filenames) {
             name
             folderId
             isOccupied
