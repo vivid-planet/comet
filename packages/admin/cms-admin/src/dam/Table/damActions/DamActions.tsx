@@ -1,22 +1,27 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Delete, ThreeDotSaving } from "@comet/admin-icons";
+import { Archive, Delete, Restore, ThreeDotSaving } from "@comet/admin-icons";
 import { Checkbox, FormControlLabel, Grid, IconButton, Tooltip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
+    GQLArchiveFileMutation,
+    GQLArchiveFileMutationVariables,
     GQLDamFileTableFragment,
     GQLDamFolderTableFragment,
     GQLDeleteDamFileMutation,
     GQLDeleteDamFileMutationVariables,
     GQLDeleteDamFolderMutation,
     GQLDeleteDamFolderMutationVariables,
+    GQLRestoreFileMutation,
+    GQLRestoreFileMutationVariables,
     namedOperations,
 } from "../../../graphql.generated";
+import { Separator } from "../../../pages/pagesPage/PagesPageActionToolbar.sc";
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { useDamMultiselectApi } from "../multiselect/DamMultiselect";
-import { deleteDamFileMutation } from "./DamActions.gql";
+import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamActions.gql";
 
 const GridContainer = styled(Grid)`
     padding: 2px 29px;
@@ -31,8 +36,11 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
     const client = useApolloClient();
     const damMultiselectApi = useDamMultiselectApi();
 
+    const [archiveLoading, setArchiveLoading] = React.useState<boolean>(false);
+    const [restoreLoading, setRestoreLoading] = React.useState<boolean>(false);
+
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
-    const [deleting, setDeleting] = React.useState(false);
+    const [deleteLoading, setDeleteLoading] = React.useState(false);
 
     const onSelectAllPressed = () => {
         if (damMultiselectApi.selectedState === "all_selected") {
@@ -48,8 +56,42 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
         }
     };
 
+    const archiveSelected = async () => {
+        setArchiveLoading(true);
+
+        for (const selectedItem of damMultiselectApi.selectedItems) {
+            if (selectedItem.type === "file") {
+                await client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
+                    mutation: archiveDamFileMutation,
+                    variables: { id: selectedItem.id },
+                });
+            }
+        }
+
+        await client.refetchQueries({ include: [namedOperations.Query.DamList] });
+        damMultiselectApi.unselectAll();
+        setArchiveLoading(false);
+    };
+
+    const restoreSelected = async () => {
+        setRestoreLoading(true);
+
+        for (const selectedItem of damMultiselectApi.selectedItems) {
+            if (selectedItem.type === "file") {
+                await client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
+                    mutation: restoreDamFileMutation,
+                    variables: { id: selectedItem.id },
+                });
+            }
+        }
+
+        await client.refetchQueries({ include: [namedOperations.Query.DamList] });
+        damMultiselectApi.unselectAll();
+        setRestoreLoading(false);
+    };
+
     const deleteSelected = async () => {
-        setDeleting(true);
+        setDeleteLoading(true);
         for (const selectedItem of damMultiselectApi.selectedItems) {
             if (selectedItem.type === "file") {
                 await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
@@ -70,7 +112,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
 
         await client.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
         damMultiselectApi.unselectAll();
-        setDeleting(false);
+        setDeleteLoading(false);
     };
 
     return (
@@ -88,7 +130,34 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                         label={<FormattedMessage id="comet.dam.actions.selectAll" defaultMessage="Select all" />}
                     />
                 </Grid>
-                <Grid item>
+                <Grid item display="flex" alignItems="center">
+                    <Tooltip title={<FormattedMessage id="comet.dam.actions.tooltip.restore" defaultMessage="Restore" />}>
+                        <span>
+                            <IconButton
+                                disabled={damMultiselectApi.selectedItems.length === 0}
+                                onClick={async () => {
+                                    await restoreSelected();
+                                }}
+                                size="large"
+                            >
+                                {restoreLoading ? <ThreeDotSaving /> : <Restore />}
+                            </IconButton>
+                        </span>
+                    </Tooltip>
+                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.archive" defaultMessage="Archive" />}>
+                        <span>
+                            <IconButton
+                                disabled={damMultiselectApi.selectedItems.length === 0}
+                                onClick={async () => {
+                                    await archiveSelected();
+                                }}
+                                size="large"
+                            >
+                                {archiveLoading ? <ThreeDotSaving /> : <Archive />}
+                            </IconButton>
+                        </span>
+                    </Tooltip>
+                    <Separator />
                     <Tooltip title={<FormattedMessage id="comet.dam.actions.tooltip.delete" defaultMessage="Delete" />}>
                         <span>
                             <IconButton
@@ -97,7 +166,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                                     setDeleteDialogOpen(true);
                                 }}
                             >
-                                {!deleting ? <Delete /> : <ThreeDotSaving />}
+                                {deleteLoading ? <ThreeDotSaving /> : <Delete />}
                             </IconButton>
                         </span>
                     </Tooltip>
