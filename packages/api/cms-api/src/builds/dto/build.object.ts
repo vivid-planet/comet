@@ -1,14 +1,14 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 
-import { BuildJobStatus } from "../build-job-status.enum";
+import { JobStatus } from "../job-status.enum";
 
 @ObjectType("Build")
 export class BuildObject {
     @Field(() => ID)
     id: string;
 
-    @Field(() => BuildJobStatus)
-    status: BuildJobStatus;
+    @Field(() => JobStatus)
+    status: JobStatus;
 
     @Field({ nullable: true })
     name?: string;
