@@ -14,7 +14,7 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
-import { FileData, useDuplicatedFilenamesResolver } from "../duplicatedFilenames/DuplicatedFilenamesResolver";
+import { useDuplicatedFilenamesResolver } from "../duplicatedFilenames/DuplicatedFilenamesResolver";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
 import { useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
@@ -287,7 +287,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
         const uploadedFileIds: string[] = [];
 
-        let uploadCanceled = false;
+        const uploadCanceled = false;
         let errorOccurred = false;
         if (fileRejections.length > 0) {
             errorOccurred = true;
@@ -318,23 +318,12 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 }
             }
 
-            const fileDataToUpload: FileData[] = await new Promise<FileData[]>((resolve, reject) => {
-                duplicatedFilenameResolver.resolveDuplicates(
-                    filesInExistingDir.map((file) => ({
-                        file: file,
-                        folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId,
-                    })),
-                    () => {
-                        reject("Upload was canceled.");
-                    },
-                    (newFilenames) => {
-                        resolve(newFilenames);
-                    },
-                );
-            }).catch(() => {
-                uploadCanceled = true;
-                return [];
-            });
+            const fileDataToUpload = await duplicatedFilenameResolver.resolveDuplicates(
+                filesInExistingDir.map((file) => ({
+                    file: file,
+                    folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId,
+                })),
+            );
 
             const filesToUpload = await preProcessFiles(fileDataToUpload.map((fileData) => fileData.file));
             filesToUpload.push(...filesInNewDir);
