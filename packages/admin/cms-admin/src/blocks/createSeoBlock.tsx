@@ -1,4 +1,4 @@
-import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormInput, FinalFormSelect, messages } from "@comet/admin";
 import {
     BlockInterface,
     BlocksFinalForm,
@@ -250,15 +250,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                             <Typography variant="h4" gutterBottom>
                                 <FormattedMessage id="comet.blocks.seo.canonicalTag.sectionTitle" defaultMessage="Canonical Tag" />
                             </Typography>
-                            <Field
-                                label={intl.formatMessage({
-                                    id: "comet.blocks.seo.canonicalUrl",
-                                    defaultMessage: "URL",
-                                })}
-                                name="canonicalUrl"
-                                component={FinalFormInput}
-                                fullWidth
-                            />
+                            <Field label={<FormattedMessage {...messages.url} />} name="canonicalUrl" component={FinalFormInput} fullWidth />
                         </Box>
                     </BlocksFinalForm>
                 </div>
