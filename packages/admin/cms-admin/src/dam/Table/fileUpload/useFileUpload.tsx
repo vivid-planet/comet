@@ -63,38 +63,33 @@ export interface FileUploadValidationError {
     message: React.ReactNode;
 }
 
-const preProcessFile = async (file: FileWithPath, filename?: string): Promise<FileWithFolderPath> => {
-    let harmonizedPath: string | undefined;
-    // when files are uploaded via input field, the path does not have a "/" prefix
-    // when files are uploaded via drag and drop, the path does have a "/" prefix
-    // if the path has a "/" prefix, this prefix is removed => path is harmonized
-    if (file.path?.startsWith("/")) {
-        harmonizedPath = file.path?.split("/").splice(1).join("/");
-    } else {
-        harmonizedPath = file.path;
-    }
-
-    // Create a new file because of a strange bug in Firefox that when uploading a folder via drag and drop
-    // changes the mimetype of all uploaded files to "application/octet-stream". This behavior only happens in Firefox
-    // (not in Chrome or Safari) and I couldn't find the reason for it.
-    // When looking at the formData in the web dev tools, the mimetype is still correct. It is only changed to a
-    // wrong type in the actual request.
-    // The bug could be avoided by creating a new file. Maybe an issue with Dropzone?
-    const buffer = await file.arrayBuffer();
-    const newFile: FileWithFolderPath = new File([buffer], filename ?? file.name, { lastModified: file.lastModified, type: file.type });
-    newFile.path = file.path;
-
-    const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
-    newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
-
-    return newFile;
-};
-
 const preProcessFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
-        const newFile = await preProcessFile(file);
+        let harmonizedPath: string | undefined;
+        // when files are uploaded via input field, the path does not have a "/" prefix
+        // when files are uploaded via drag and drop, the path does have a "/" prefix
+        // if the path has a "/" prefix, this prefix is removed => path is harmonized
+        if (file.path?.startsWith("/")) {
+            harmonizedPath = file.path?.split("/").splice(1).join("/");
+        } else {
+            harmonizedPath = file.path;
+        }
+
+        // Create a new file because of a strange bug in Firefox that when uploading a folder via drag and drop
+        // changes the mimetype of all uploaded files to "application/octet-stream". This behavior only happens in Firefox
+        // (not in Chrome or Safari) and I couldn't find the reason for it.
+        // When looking at the formData in the web dev tools, the mimetype is still correct. It is only changed to a
+        // wrong type in the actual request.
+        // The bug could be avoided by creating a new file. Maybe an issue with Dropzone?
+        const buffer = await file.arrayBuffer();
+        const newFile: FileWithFolderPath = new File([buffer], file.name, { lastModified: file.lastModified, type: file.type });
+        newFile.path = file.path;
+
+        const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
+        newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
+
         newFiles.push(newFile);
     }
 
