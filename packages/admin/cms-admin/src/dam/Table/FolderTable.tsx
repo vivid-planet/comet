@@ -18,7 +18,7 @@ import * as React from "react";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
 import { FileRejection, useDropzone } from "react-dropzone";
-import { FormattedDate, FormattedTime, useIntl } from "react-intl";
+import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
 import {
@@ -330,7 +330,12 @@ const FolderTable = ({
                         </TableQuery>
                     </sc.TableHoverHighlight>
                 </sc.TableWrapper>
-                <EditDialog>
+                <EditDialog
+                    title={{
+                        edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,
+                        add: <FormattedMessage id="comet.dam.folderEditDialog.addFolder" defaultMessage="Add folder" />,
+                    }}
+                >
                     {({ selectedId, selectionMode }) => {
                         return (
                             <>
