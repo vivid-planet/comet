@@ -14,7 +14,7 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
-import { useDuplicatedFilenamesResolver } from "../duplicatedFilenames/DuplicatedFilenamesResolver";
+import { FilenameData, useDuplicatedFilenamesResolver } from "../duplicatedFilenames/DuplicatedFilenamesResolver";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
 import { useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
@@ -276,8 +276,29 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         [createDamFolder],
     );
 
+    const mapFilenameDataToFiles = (
+        filenameDataList: FilenameData[],
+        files: FileWithFolderPath[],
+        currentFolderId: string | undefined,
+        folderIdMap: Map<string, string>,
+    ) => {
+        const filesToUpload = filenameDataList.map((data) => {
+            return files.find((file) => {
+                const fileFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : currentFolderId;
+
+                return file.name === data.name && fileFolderId === data.folderId;
+            }) as FileWithFolderPath;
+        });
+
+        return filesToUpload;
+    };
+
     const resolveDuplicatedFilenames = React.useCallback(
-        async (filesWithFolderPaths: FileWithFolderPath[], currentFolderId: string | undefined, folderIdMap: Map<string, string>) => {
+        async (
+            filesWithFolderPaths: FileWithFolderPath[],
+            currentFolderId: string | undefined,
+            folderIdMap: Map<string, string>,
+        ): Promise<FileWithFolderPath[]> => {
             const filesInNewDir: FileWithFolderPath[] = [];
             const filesInExistingDir: FileWithFolderPath[] = [];
 
@@ -294,17 +315,18 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 }
             }
 
-            const fileDataToUpload = await duplicatedFilenameResolver.resolveDuplicates(
+            const revisedFilenameDataList = await duplicatedFilenameResolver.resolveDuplicates(
                 filesInExistingDir.map((file) => ({
-                    file: file,
+                    name: file.name,
                     folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : currentFolderId,
                 })),
             );
 
-            const filesToUpload = await addFolderPathToFiles(fileDataToUpload.map((fileData) => fileData.file));
-            filesToUpload.push(...filesInNewDir);
+            const filesToUpload = mapFilenameDataToFiles(revisedFilenameDataList, filesWithFolderPaths, currentFolderId, folderIdMap);
+            const filesToUploadWithFolderPath = await addFolderPathToFiles(filesToUpload);
 
-            return filesToUpload;
+            filesToUploadWithFolderPath.push(...filesInNewDir);
+            return filesToUploadWithFolderPath;
         },
         [duplicatedFilenameResolver],
     );

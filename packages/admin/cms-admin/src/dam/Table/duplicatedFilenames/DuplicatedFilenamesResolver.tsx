@@ -6,12 +6,12 @@ import { DuplicatedFilenameDialog } from "./DuplicatedFilenameDialog";
 import { damAreFilenamesOccupied } from "./DuplicatedFilenamesResolver.gql";
 
 export interface DuplicatedFilenamesResolverApi {
-    checkForDuplicates: (fileData: FileData[]) => Promise<GQLFilenameResponse[]>;
-    resolveDuplicates: (fileData: FileData[]) => Promise<FileData[]>;
+    checkForDuplicates: (fileData: FilenameData[]) => Promise<GQLFilenameResponse[]>;
+    resolveDuplicates: (fileData: FilenameData[]) => Promise<FilenameData[]>;
 }
 
-export interface FileData {
-    file: File;
+export interface FilenameData {
+    name: string;
     folderId?: string;
 }
 
@@ -31,18 +31,18 @@ export const useDuplicatedFilenamesResolver = (): DuplicatedFilenamesResolverApi
 export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children }) => {
     const client = useApolloClient();
 
-    const [occupiedFilenames, setOccupiedFilenames] = React.useState<FileData[]>([]);
-    const [unoccupiedFilenames, setUnoccupiedFilenames] = React.useState<FileData[]>([]);
-    const [callback, setCallback] = React.useState<(newFilenames: FileData[]) => unknown>();
+    const [occupiedFilenames, setOccupiedFilenames] = React.useState<FilenameData[]>([]);
+    const [unoccupiedFilenames, setUnoccupiedFilenames] = React.useState<FilenameData[]>([]);
+    const [callback, setCallback] = React.useState<(newFilenames: FilenameData[]) => unknown>();
 
     const checkForDuplicates = React.useCallback(
-        async (fileData: FileData[]) => {
+        async (filenameData: FilenameData[]) => {
             const { data } = await client.query<GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables>({
                 query: damAreFilenamesOccupied,
                 variables: {
-                    filenames: fileData.map((data) => ({
-                        name: data.file.name,
-                        folderId: data.folderId,
+                    filenames: filenameData.map((file) => ({
+                        name: file.name,
+                        folderId: file.folderId,
                     })),
                 },
                 fetchPolicy: "network-only",
@@ -54,36 +54,33 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
     );
 
     const resolveDuplicates = React.useCallback(
-        async (fileData: FileData[]): Promise<FileData[]> => {
+        async (fileData: FilenameData[]): Promise<FilenameData[]> => {
             const potentialDuplicates = await checkForDuplicates(fileData);
 
-            const occupiedFilenames: FileData[] = [];
-            const unoccupiedFilenames: FileData[] = [];
+            const occupiedFilenames: FilenameData[] = [];
+            const unoccupiedFilenames: FilenameData[] = [];
 
             for (const potentialDuplicate of potentialDuplicates) {
+                const potentialDuplicateFilenameData = { ...potentialDuplicate, folderId: potentialDuplicate.folderId ?? undefined };
                 if (potentialDuplicate.isOccupied) {
-                    occupiedFilenames.push(
-                        fileData.find((data) => {
-                            return data.file.name === potentialDuplicate.name && (data.folderId ?? null) === potentialDuplicate.folderId;
-                        }) as FileData,
-                    );
+                    occupiedFilenames.push(potentialDuplicateFilenameData);
                 } else {
-                    unoccupiedFilenames.push(
-                        fileData.find((data) => {
-                            return data.file.name === potentialDuplicate.name && (data.folderId ?? null) === potentialDuplicate.folderId;
-                        }) as FileData,
-                    );
+                    unoccupiedFilenames.push(potentialDuplicateFilenameData);
                 }
+            }
+
+            if (occupiedFilenames.length === 0) {
+                return unoccupiedFilenames;
             }
 
             setOccupiedFilenames(occupiedFilenames);
             setUnoccupiedFilenames(unoccupiedFilenames);
 
-            const finalFileData = await new Promise<FileData[]>((resolve) => {
-                setCallback(() => (fileData: FileData[]) => resolve(fileData));
+            const finalFilenameData = await new Promise<FilenameData[]>((resolve) => {
+                setCallback(() => (fileData: FilenameData[]) => resolve(fileData));
             });
 
-            return finalFileData;
+            return finalFilenameData;
         },
         [checkForDuplicates],
     );
@@ -106,7 +103,7 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
             }}
         >
             {children}
-            <DuplicatedFilenameDialog open={occupiedFilenames.length > 0} fileData={occupiedFilenames} onSkip={onSkip} onUpload={onUpload} />
+            <DuplicatedFilenameDialog open={occupiedFilenames.length > 0} filenameData={occupiedFilenames} onSkip={onSkip} onUpload={onUpload} />
         </DuplicatedFilenamesResolverContext.Provider>
     );
 };

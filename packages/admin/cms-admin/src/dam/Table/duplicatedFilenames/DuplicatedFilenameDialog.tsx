@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FileData } from "./DuplicatedFilenamesResolver";
+import { FilenameData } from "./DuplicatedFilenamesResolver";
 
 const StyledList = styled(List)`
     margin-top: ${({ theme }) => theme.spacing(4)};
@@ -29,19 +29,19 @@ const WarningIcon = styled(Warning)`
 
 interface DuplicateFilenameDialogProps {
     open: boolean;
-    fileData: FileData[];
+    filenameData: FilenameData[];
     onSkip: () => void;
     onUpload: () => void;
 }
 
-export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({ open, fileData, onSkip, onUpload }) => {
+export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({ open, filenameData, onSkip, onUpload }) => {
     return (
         <Dialog open={open}>
             <DialogTitle>
                 <FormattedMessage
                     id="comet.dam.duplicateFilenameDialog.title"
                     defaultMessage="Duplicate {count, plural, one {filename} other {filenames}}"
-                    values={{ count: fileData.length }}
+                    values={{ count: filenameData.length }}
                 />
             </DialogTitle>
             <DialogContent>
@@ -56,12 +56,12 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                 </InstructionWrapper>
 
                 <StyledList>
-                    {fileData.map((data, index) => {
+                    {filenameData.map((data, index) => {
                         return (
                             <>
                                 {index === 0 && <Divider component="li" />}
-                                <StyledListItem key={data.file.name}>
-                                    <ListItemText primary={<Typography variant="body1">{data.file.name}</Typography>} />
+                                <StyledListItem key={data.name}>
+                                    <ListItemText primary={<Typography variant="body1">{data.name}</Typography>} />
                                 </StyledListItem>
                                 <Divider component="li" />
                             </>
@@ -75,7 +75,7 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                         id="comet.dam.duplicateFilenameDialog.action.skip"
                         defaultMessage="Skip {count, plural, one {file} other {files}}"
                         values={{
-                            count: fileData.length,
+                            count: filenameData.length,
                         }}
                     />
                 </Button>
@@ -84,7 +84,7 @@ export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFile
                         id="comet.dam.duplicateFilenameDialog.action.uploadAsCopy"
                         defaultMessage="Upload as {count, plural, one {copy} other {copies}}"
                         values={{
-                            count: fileData.length,
+                            count: filenameData.length,
                         }}
                     />
                 </Button>
