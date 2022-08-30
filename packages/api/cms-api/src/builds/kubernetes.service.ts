@@ -27,16 +27,16 @@ export class KubernetesService {
             this.namespace = fs.readFileSync(path, "utf8");
 
             kc.loadFromCluster();
+            this.batchApi = kc.makeApiClient(BatchV1Api);
         }
         // DEBUG-Code if used locally, you need to be logged in (e.g. by using oc login)
         /*else {
             this.namespace = "comet-demo";
 
             kc.loadFromDefault();
+            this.batchApi = kc.makeApiClient(BatchV1Api);
             this.localMode = false;
         }*/
-
-        this.batchApi = kc.makeApiClient(BatchV1Api);
     }
 
     async getAllCronJobs(labelSelector: string): Promise<V1CronJob[]> {
