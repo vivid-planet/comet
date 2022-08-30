@@ -100,7 +100,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         <ListItemIcon>
                             <Edit />
                         </ListItemIcon>
-                        <ListItemText primary={intl.formatMessage({ id: "comet.generic.editContent", defaultMessage: "Edit content" })} />
+                        <ListItemText primary={intl.formatMessage({ id: "comet.pages.pages.page.editContent", defaultMessage: "Edit content" })} />
                     </MenuItem>,
                     <MenuItem
                         key="editPageProperties"
