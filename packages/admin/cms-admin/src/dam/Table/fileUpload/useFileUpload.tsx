@@ -281,6 +281,39 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         [createDamFolder],
     );
 
+    const resolveDuplicatedFilenames = React.useCallback(
+        async (filesWithFolderPaths: FileWithFolderPath[], currentFolderId: string | undefined, folderIdMap: Map<string, string>) => {
+            const filesInNewDir: FileWithFolderPath[] = [];
+            const filesInExistingDir: FileWithFolderPath[] = [];
+
+            for (const file of filesWithFolderPaths) {
+                if (file.folderPath === undefined || folderIdMap.has(file.folderPath)) {
+                    filesInExistingDir.push(file);
+                } else {
+                    // filter out files in newly uploaded folders, because the duplicated filename
+                    // check isn't possible for new folders since they don't have an id.
+                    // It's also not necessary because in a local filesystem there
+                    // typically can't be duplicate filenames. If there's still a conflict,
+                    // it's resolved automatically in the API by adding a sequential number.
+                    filesInNewDir.push(file);
+                }
+            }
+
+            const fileDataToUpload = await duplicatedFilenameResolver.resolveDuplicates(
+                filesInExistingDir.map((file) => ({
+                    file: file,
+                    folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : currentFolderId,
+                })),
+            );
+
+            const filesToUpload = await preProcessFiles(fileDataToUpload.map((fileData) => fileData.file));
+            filesToUpload.push(...filesInNewDir);
+
+            return filesToUpload;
+        },
+        [duplicatedFilenameResolver],
+    );
+
     const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, folderId?: string) => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
@@ -302,31 +335,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 addTotalSize(file.path ?? "", file.size);
             }
 
-            const filesInNewDir: FileWithFolderPath[] = [];
-            const filesInExistingDir: FileWithFolderPath[] = [];
-
-            for (const file of filesWithFolderPaths) {
-                if (file.folderPath === undefined || folderIdMap.has(file.folderPath)) {
-                    filesInExistingDir.push(file);
-                } else {
-                    // filter out files in newly uploaded folders, because the duplicated filename
-                    // check isn't possible for new folders since they don't have an id.
-                    // It's also not necessary because in a local filesystem there
-                    // typically can't be duplicate filenames. If there's still a conflict,
-                    // it's resolved automatically in the API by adding a sequential number.
-                    filesInNewDir.push(file);
-                }
-            }
-
-            const fileDataToUpload = await duplicatedFilenameResolver.resolveDuplicates(
-                filesInExistingDir.map((file) => ({
-                    file: file,
-                    folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId,
-                })),
-            );
-
-            const filesToUpload = await preProcessFiles(fileDataToUpload.map((fileData) => fileData.file));
-            filesToUpload.push(...filesInNewDir);
+            const filesToUpload = await resolveDuplicatedFilenames(filesWithFolderPaths, folderId, folderIdMap);
 
             if (!uploadCanceled) {
                 cancelUpload.current = axios.CancelToken.source();
