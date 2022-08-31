@@ -5,12 +5,12 @@ import * as React from "react";
 
 interface SeoBlockProps extends PropsWithData<SeoBlockData> {
     title: string;
-    passedCanonicalUrl?: string;
+    canonicalUrl?: string;
 }
 const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
     data: { htmlTitle, metaDescription, openGraphTitle, openGraphDescription, openGraphImage, noIndex, canonicalUrl, structuredData },
     title,
-    passedCanonicalUrl,
+    canonicalUrl: passedCanonicalUrl,
 }) => {
     const usedHtmlTitle = htmlTitle && htmlTitle != "" ? htmlTitle : title;
     return (
