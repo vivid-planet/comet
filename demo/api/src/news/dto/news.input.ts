@@ -1,7 +1,6 @@
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
-import { IsSlug } from "@comet/cms-api";
+import { DamImageBlock, IsSlug } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
-import { ImageBlock } from "@src/pages/blocks/ImageBlock";
 import { Transform } from "class-transformer";
 import { IsDate, IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 import { GraphQLJSONObject } from "graphql-type-json";
@@ -30,7 +29,7 @@ export class NewsInput {
     category: NewsCategory;
 
     @Field(() => GraphQLJSONObject)
-    @Transform((value) => (isBlockInputInterface(value) ? value : ImageBlock.blockInputFactory(value)), { toClassOnly: true })
+    @Transform((value) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
     image: BlockInputInterface;
 

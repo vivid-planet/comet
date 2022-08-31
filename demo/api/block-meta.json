@@ -953,69 +953,6 @@
         ]
     },
     {
-        "name": "Image",
-        "fields": [
-            {
-                "name": "attachedBlocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "PixelImage",
-                                "SvgImage"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            },
-            {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "block",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "PixelImage",
-                                "SvgImage"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": false
-            }
-        ]
-    },
-    {
         "name": "OptionalRichText",
         "fields": [
             {
@@ -1050,7 +987,7 @@
             {
                 "name": "image",
                 "kind": "Block",
-                "block": "Image",
+                "block": "DamImage",
                 "nullable": false
             },
             {
@@ -1064,7 +1001,7 @@
             {
                 "name": "image",
                 "kind": "Block",
-                "block": "Image",
+                "block": "DamImage",
                 "nullable": false
             },
             {
@@ -1142,7 +1079,7 @@
             {
                 "name": "image",
                 "kind": "Block",
-                "block": "Image",
+                "block": "DamImage",
                 "nullable": false
             },
             {
@@ -1170,7 +1107,7 @@
             {
                 "name": "image",
                 "kind": "Block",
-                "block": "Image",
+                "block": "DamImage",
                 "nullable": false
             },
             {
@@ -1219,9 +1156,8 @@
                                 "Space",
                                 "RichText",
                                 "Headline",
-                                "Image",
-                                "TextImage",
                                 "DamImage",
+                                "TextImage",
                                 "DamVideo",
                                 "YouTubeVideo",
                                 "LinkList",
@@ -1424,7 +1360,7 @@
                             "blocks": [
                                 "Headline",
                                 "RichText",
-                                "Image",
+                                "DamImage",
                                 "TextImage"
                             ],
                             "nullable": false

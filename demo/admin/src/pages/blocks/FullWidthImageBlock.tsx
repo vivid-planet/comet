@@ -1,5 +1,5 @@
 import { BlockCategory, createCompositeBlock, createOptionalBlock } from "@comet/blocks-admin";
-import { ImageBlock } from "@src/common/blocks/ImageBlock";
+import { DamImageBlock } from "@comet/cms-admin";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -14,7 +14,7 @@ export const FullWidthImageBlock = createCompositeBlock({
     category: BlockCategory.Media,
     blocks: {
         image: {
-            block: ImageBlock,
+            block: DamImageBlock,
             title: <FormattedMessage id="cometDemo.generic.image" defaultMessage="Image" />,
             paper: true,
         },
