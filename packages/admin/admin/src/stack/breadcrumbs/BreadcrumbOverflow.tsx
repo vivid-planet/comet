@@ -25,7 +25,7 @@ export const BreadcrumbOverflow = ({ items, classes }: Props & WithStyles<typeof
                 className={clsx(classes.link, classes.overflowLink)}
                 variant="body2"
             >
-                ...
+                . . .
             </Link>
             <Menu open={showOverflowMenu} onClose={() => setShowOverflowMenu(false)} anchorEl={overflowLinkRef.current}>
                 {items.map(({ id, url, title }) => (
