@@ -1,6 +1,8 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Module, ModuleMetadata } from "@nestjs/common";
 
+import { BuildTemplatesResolver } from "./build-templates.resolver";
+import { BuildTemplatesService } from "./build-templates.service";
 import { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds.constants";
 import { BuildsResolver } from "./builds.resolver";
 import { BuildsService } from "./builds.service";
@@ -47,6 +49,8 @@ export class BuildsModule {
                 optionsProvider,
                 publicUploadConfigProvider,
                 KubernetesService,
+                BuildTemplatesResolver,
+                BuildTemplatesService,
                 BuildsResolver,
                 BuildsService,
                 {

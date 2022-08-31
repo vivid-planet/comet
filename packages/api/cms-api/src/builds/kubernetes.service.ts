@@ -39,6 +39,14 @@ export class KubernetesService {
         }*/
     }
 
+    async getCronJob(name: string): Promise<V1CronJob> {
+        const { response, body } = await this.batchApi.readNamespacedCronJob(name, this.namespace);
+        if (response.statusCode !== 200) {
+            throw new Error(`Error fetching Job "${name}"`);
+        }
+        return body;
+    }
+
     async getAllCronJobs(labelSelector: string): Promise<V1CronJob[]> {
         const { response, body } = await this.batchApi.listNamespacedCronJob(
             this.namespace,

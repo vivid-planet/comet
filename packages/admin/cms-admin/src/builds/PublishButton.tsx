@@ -1,80 +1,30 @@
-import { gql, useMutation } from "@apollo/client";
-import { LocalErrorScopeApolloContext } from "@comet/admin";
-import { Button, CircularProgress, Theme } from "@mui/material";
-import { green, red } from "@mui/material/colors";
+import { Button, Theme } from "@mui/material";
 import createStyles from "@mui/styles/createStyles";
 import makeStyles from "@mui/styles/makeStyles";
-import clsx from "clsx";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLCreateBuildMutation, namedOperations } from "../graphql.generated";
-
-const createBuildMutation = gql`
-    mutation CreateBuild {
-        createBuild
-    }
-`;
+import { StartBuildsDialog } from "./StartBuildsDialog";
 
 export const PublishButton: React.FunctionComponent = () => {
     const classes = useStyles();
-    const [startBuild, { loading, error, data }] = useMutation<GQLCreateBuildMutation>(createBuildMutation);
-    const [hasStarted, setHasStarted] = React.useState(false);
-    const [hasError, setHasError] = React.useState(false);
-
-    React.useEffect(() => {
-        if (error) {
-            setHasError(true);
-
-            const timeout = window.setTimeout(() => {
-                setHasError(false);
-            }, 2000);
-
-            return () => {
-                window.clearTimeout(timeout);
-            };
-        }
-    }, [error]);
-
-    React.useEffect(() => {
-        if (data?.createBuild === true) {
-            setHasStarted(true);
-
-            const timeout = window.setTimeout(() => {
-                setHasStarted(false);
-            }, 2000);
-
-            return () => {
-                window.clearTimeout(timeout);
-            };
-        }
-    }, [data]);
+    const [isStartBuildsDialogOpen, setIsStartBuildsDialogOpen] = React.useState(false);
 
     const handlePublishClick = () => {
-        startBuild({
-            refetchQueries: [namedOperations.Query.Builds],
-            context: LocalErrorScopeApolloContext,
-        });
+        setIsStartBuildsDialogOpen(true);
     };
 
     return (
         <div className={classes.wrapper}>
-            <Button
-                variant="contained"
-                color="primary"
-                className={clsx({
-                    [classes.buttonSuccess]: hasStarted,
-                    [classes.buttonError]: hasError,
-                })}
-                disabled={loading}
-                onClick={handlePublishClick}
-                fullWidth
-            >
-                {hasStarted && <FormattedMessage id="comet.pages.publisher.buildStarted" defaultMessage="Build started" />}
-                {hasError && <FormattedMessage id="comet.pages.publisher.buildStartFailed" defaultMessage="Starting build failed" />}
-                {!hasStarted && !hasError && <FormattedMessage id="comet.pages.publisher.build" defaultMessage="Start build" />}
+            <Button variant="contained" color="primary" onClick={handlePublishClick} disabled={process.env.NODE_ENV === "development"} fullWidth>
+                <FormattedMessage id="comet.pages.publisher.build" defaultMessage="Start builds" />
             </Button>
-            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            <StartBuildsDialog
+                open={isStartBuildsDialogOpen}
+                onClose={() => {
+                    setIsStartBuildsDialogOpen(false);
+                }}
+            />
         </div>
     );
 };
@@ -85,26 +35,6 @@ const useStyles = makeStyles((theme: Theme) =>
             position: "relative",
             width: "100%",
             margin: theme.spacing(1),
-        },
-        buttonSuccess: {
-            backgroundColor: green[500],
-            "&:hover": {
-                backgroundColor: green[700],
-            },
-        },
-        buttonError: {
-            backgroundColor: red[500],
-            "&:hover": {
-                backgroundColor: red[700],
-            },
-        },
-        buttonProgress: {
-            color: green[500],
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            marginTop: -12,
-            marginLeft: -12,
         },
     }),
 );

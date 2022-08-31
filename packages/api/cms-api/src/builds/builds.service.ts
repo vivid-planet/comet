@@ -1,9 +1,11 @@
+import { V1CronJob } from "@kubernetes/client-node";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
 
+import { BUILD_CHECKER_LABEL, BUILDER_LABEL, INSTANCE_LABEL, PARENT_CRON_JOB_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { BuildObject } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
@@ -12,14 +14,6 @@ import { KubernetesService } from "./kubernetes.service";
 
 const JOB_HISTORY_LIMIT = 20;
 
-const BUILD_CHECKER_LABEL = "comet-dxp.com/build-checker";
-
-const TRIGGER_ANNOTATION = "comet-dxp.com/trigger";
-
-const BUILDER_LABEL = "comet-dxp.com/builder";
-const INSTANCE_LABEL = "comet-dxp.com/instance";
-const PARENT_CRON_JOB_LABEL = "comet-dxp.com/parent-cron-job";
-
 @Injectable()
 export class BuildsService {
     constructor(
@@ -27,14 +21,17 @@ export class BuildsService {
         private readonly kubernetesService: KubernetesService,
     ) {}
 
-    async createBuild(trigger = "manual"): Promise<boolean> {
+    async createBuilds(trigger: string, builderCronJobs?: V1CronJob[]): Promise<boolean> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
 
-        const builderCronJobs = await this.kubernetesService.getAllCronJobs(
-            `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
-        );
+        if (!builderCronJobs) {
+            // no CronJobs specified means a full rebuild
+            builderCronJobs = await this.kubernetesService.getAllCronJobs(
+                `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
+            );
+        }
 
         const builderJobs = await this.kubernetesService.getAllJobs(
             `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,

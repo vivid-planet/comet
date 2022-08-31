@@ -16,6 +16,7 @@ import {
     PageTreeNodeBase,
     PageTreeNodeCategory,
 } from "./src";
+import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
 
@@ -56,6 +57,7 @@ async function generateSchema(): Promise<void> {
 
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,
+        BuildTemplatesResolver,
         redirectsResolver,
         FilesResolver,
         FileImagesResolver,
