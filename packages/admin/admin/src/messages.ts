@@ -43,4 +43,5 @@ export const messages = defineMessages({
     warning: { id: "comet.generic.warning", defaultMessage: "Warning" },
     content: { id: "comet.generic.content", defaultMessage: "Content" },
     close: { id: "comet.generic.close", defaultMessage: "Close" },
+    url: { id: "comet.generic.url", defaultMessage: "URL" },
 });
