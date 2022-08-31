@@ -35,11 +35,12 @@ export const getTimeStringFromDate = (date: Date): string => format(date, "HH:mm
 
 export const getDateWithNewTime = (date: Date, time: string): Date => {
     const [hours, minutes] = time.split(":");
-    date.setHours(parseInt(hours));
-    date.setMinutes(parseInt(minutes));
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-    return date;
+    const newDate = new Date(date);
+    newDate.setHours(parseInt(hours));
+    newDate.setMinutes(parseInt(minutes));
+    newDate.setSeconds(0);
+    newDate.setMilliseconds(0);
+    return newDate;
 };
 
 export const getDateFromTimeValue = (timeValue: string): Date => {
