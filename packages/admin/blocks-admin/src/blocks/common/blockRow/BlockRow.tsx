@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { Copy, Delete, Drag, MoreVertical, Paste, Warning } from "@comet/admin-icons";
-import { Checkbox, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { Box, Checkbox, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl";
@@ -34,6 +34,7 @@ interface BlockRowProps {
     slideIn: boolean;
     hideBottomInsertBetweenButton?: boolean;
     additionalMenuItems?: (onMenuClose: () => void) => React.ReactNode;
+    additionalContent?: React.ReactNode;
 }
 
 interface IDragItem {
@@ -178,6 +179,7 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
                                 <BlockPreview title={props.name} content={previewContent} />
                             </sc.PreviewTextContainer>
                         </sc.Content>
+                        {props.additionalContent !== undefined && <Box paddingTop={2}>{props.additionalContent}</Box>}
                     </sc.OuterContent>
                     <sc.ButtonContainer>
                         {props.visibilityButton}

@@ -52,6 +52,7 @@ type BlockType = string;
 interface AdditionalField<Value = unknown> {
     defaultValue: Value;
     ContextMenuItem: React.FunctionComponent<{ value: Value; onChange: (value: Value) => void; onMenuClose: () => void }>;
+    Indicator?: React.FunctionComponent<{ value: Value }>;
 }
 
 interface CreateBlocksBlockOptions {
@@ -548,6 +549,10 @@ export function createBlocksBlock({
                                                                             />
                                                                         ))
                                                                     }
+                                                                    additionalContent={Object.entries(additionalFields).map(
+                                                                        ([field, { Indicator }]) =>
+                                                                            Indicator ? <Indicator value={data[field]} /> : null,
+                                                                    )}
                                                                 />
                                                             </HoverPreviewComponent>
                                                         );

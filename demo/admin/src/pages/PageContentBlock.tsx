@@ -2,7 +2,7 @@ import { messages } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { createBlocksBlock, Space as SpaceBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
 import { DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem, Select } from "@mui/material";
+import { Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem, Select } from "@mui/material";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import * as React from "react";
@@ -101,6 +101,13 @@ export const PageContentBlock = createBlocksBlock({
                         </Dialog>
                     </>
                 );
+            },
+            Indicator: ({ value }) => {
+                if (value === "All") {
+                    return null;
+                } else {
+                    return <Chip label={userGroupOptions.find((option) => option.value === value)?.label} />;
+                }
             },
         },
     },
