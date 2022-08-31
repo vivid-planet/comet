@@ -2,8 +2,21 @@ import { Field, FieldContainer } from "@comet/admin";
 import { DateTimePicker, FinalFormDateTimePicker } from "@comet/admin-date-time";
 import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
-import * as React from "react";
+import * as RealReact from "react";
 import { Form } from "react-final-form";
+
+const React = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    useState: function <T>(defaultValue?: Date | undefined): [Date | undefined, RealReact.Dispatch<RealReact.SetStateAction<Date | undefined>>] {
+        const [date, setDate] = RealReact.useState<Date | undefined>(defaultValue);
+        return [
+            date,
+            (newDate: Date | undefined) => {
+                setDate(newDate ? new Date(newDate.getTime()) : undefined);
+            },
+        ];
+    },
+};
 
 storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module)
     .add("Basic", () => {
