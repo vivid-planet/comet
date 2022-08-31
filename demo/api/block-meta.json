@@ -644,6 +644,11 @@
                 "nullable": false
             },
             {
+                "name": "structuredData",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "noIndex",
                 "kind": "Boolean",
                 "nullable": false
@@ -707,6 +712,11 @@
                 "kind": "Block",
                 "block": "OptionalPixelImage",
                 "nullable": false
+            },
+            {
+                "name": "structuredData",
+                "kind": "String",
+                "nullable": true
             },
             {
                 "name": "noIndex",

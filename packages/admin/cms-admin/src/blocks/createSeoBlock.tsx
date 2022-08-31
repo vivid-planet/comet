@@ -42,6 +42,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
         metaDescription: undefined,
         openGraphTitle: undefined,
         openGraphDescription: undefined,
+        structuredData: undefined,
     })(composedBlock);
 
     type State = BlockState<typeof block>;
@@ -74,6 +75,9 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
 
                                 openGraphTitle: values.openGraphTitle,
                                 openGraphDescription: values.openGraphDescription,
+
+                                structuredData: values.structuredData,
+
                                 noIndex: values.noIndex,
                                 priority: values.priority,
                                 changeFrequency: values.changeFrequency,
@@ -85,6 +89,8 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
 
                             openGraphTitle: state.openGraphTitle,
                             openGraphDescription: state.openGraphDescription,
+
+                            structuredData: state.structuredData,
 
                             noIndex: state.noIndex,
                             priority: state.priority,
@@ -148,6 +154,14 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                 fullWidth
                             />
                             {openGraphImage}
+                        </Box>
+
+                        {/* Structured Data */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.structuredData.sectionTitle" defaultMessage="Structured Data" />
+                            </Typography>
+                            <Field name="structuredData" multiline={true} rows={15} component={FinalFormInput} fullWidth />
                         </Box>
 
                         {/* Sitemap */}
