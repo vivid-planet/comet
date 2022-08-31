@@ -99,7 +99,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             position: "relative",
             top: -1,
 
-            [`&.${buttonClasses.iconSizeMedium} > *:first-child`]: {
+            [`&.${buttonClasses.iconSizeMedium} > *:first-of-type`]: {
                 fontSize: 16,
             },
         },
@@ -108,7 +108,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             position: "relative",
             top: -1,
 
-            [`&.${buttonClasses.iconSizeMedium} > *:first-child`]: {
+            [`&.${buttonClasses.iconSizeMedium} > *:first-of-type`]: {
                 fontSize: 16,
             },
         },

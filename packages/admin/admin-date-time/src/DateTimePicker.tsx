@@ -4,7 +4,7 @@ import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { DatePicker, DatePickerProps } from "./DatePicker";
-import { getDateValueWithTime, getTimeStringFromDate } from "./helpers/timePickerHelpers";
+import { getDateWithNewTime, getTimeStringFromDate } from "./helpers/timePickerHelpers";
 import { TimePicker, TimePickerProps } from "./TimePicker";
 
 export interface DateTimePickerComponentsProps {
@@ -29,39 +29,31 @@ function DateTimePicker({
     const datePickerRef = React.useRef<HTMLElement>(null);
     const timePickerRef = React.useRef<HTMLElement>(null);
 
-    const [valueWasUndefinedBeforeLastOnChange, setValueWasUndefinedBeforeLastOnChange] = React.useState(!value);
-
-    const onChangeDateOrTime = (val?: Date | string) => {
-        if (val === undefined) {
+    const onChangeDate = (newDate?: Date) => {
+        if (newDate === undefined) {
             onChange?.(undefined);
-            setValueWasUndefinedBeforeLastOnChange(true);
         } else {
-            setValueWasUndefinedBeforeLastOnChange(false);
-        }
-    };
+            const timePickerShouldBeFocused = !value;
+            const time = getTimeStringFromDate(value ? value : new Date());
+            const newDateTime = getDateWithNewTime(newDate, time);
+            onChange?.(newDateTime);
 
-    const onChangeDate = (date?: Date) => {
-        onChangeDateOrTime(date);
-
-        if (date !== undefined) {
-            const dateValueWithTime = value ? value : new Date();
-            const newDateValue = getDateValueWithTime(date, getTimeStringFromDate(dateValueWithTime));
-            onChange?.(newDateValue);
-
-            if (valueWasUndefinedBeforeLastOnChange) {
+            if (timePickerShouldBeFocused) {
                 timePickerRef.current?.focus();
             }
         }
     };
 
-    const onChangeTime = (time?: string) => {
-        onChangeDateOrTime(time);
-
-        if (time !== undefined) {
+    const onChangeTime = (newTime?: string) => {
+        if (newTime === undefined) {
+            onChange?.(undefined);
+        } else {
+            const datePickerShouldBeFocused = !value;
             const date = value ? value : new Date();
-            onChange?.(getDateValueWithTime(date, time));
+            const newDateTime = getDateWithNewTime(date, newTime);
+            onChange?.(newDateTime);
 
-            if (valueWasUndefinedBeforeLastOnChange) {
+            if (datePickerShouldBeFocused) {
                 datePickerRef.current?.focus();
             }
         }

@@ -100,7 +100,7 @@ function LinkDialog(props: {
             <DialogContent>
                 <FormControl fullWidth>
                     <FormLabel>
-                        <FormattedMessage id="comet.rte.extensions.link.url" defaultMessage="Url" />
+                        <FormattedMessage id="comet.rte.extensions.link.url" defaultMessage="URL" />
                     </FormLabel>
                     <InputBase
                         // autoFocus
@@ -113,6 +113,7 @@ function LinkDialog(props: {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} startIcon={<Clear />}>
+                    {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                     <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
                 </Button>
                 <div>
@@ -120,12 +121,14 @@ function LinkDialog(props: {
                         {linkData && (
                             <Grid item>
                                 <Button variant="contained" startIcon={<Delete />} onClick={handleRemove}>
+                                    {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                                     <FormattedMessage id="comet.generic.delete" defaultMessage="Delete" />
                                 </Button>
                             </Grid>
                         )}
                         <Grid item>
                             <Button variant="contained" color="primary" startIcon={<Check />} onClick={handleUpdate} disabled={!newUrl}>
+                                {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                                 <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
                             </Button>
                         </Grid>

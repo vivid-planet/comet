@@ -47,7 +47,7 @@ export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext
 export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
-export { FinalForm } from "./FinalForm";
+export { FinalForm, useFormApiRef } from "./FinalForm";
 export {
     FinalFormSaveCancelButtonsLegacy,
     FinalFormSaveCancelButtonsLegacyClassKey,
@@ -73,6 +73,7 @@ export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptions
 export { useStoredState } from "./hooks/useStoredState";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperComponentsProps, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
 export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.styles";
+export { messages } from "./messages";
 export { MainContent, MainContentClassKey, MainContentProps } from "./mui/MainContent";
 export { MasterLayout, MasterLayoutProps } from "./mui/MasterLayout";
 export { MasterLayoutClassKey } from "./mui/MasterLayout.styles";

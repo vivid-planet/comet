@@ -58,24 +58,24 @@ const StyledToggleButton = styled(ToggleButton)<{ $optionsPerRow?: number }>`
                 border-left: 1px solid ${neutrals[100]};
 
                 // first row
-                &:nth-child(-n + ${$optionsPerRow}) {
+                &:nth-of-type(-n + ${$optionsPerRow}) {
                     border-top: 1px solid ${neutrals[100]};
                 }
 
                 // last column
-                &:nth-child(${$optionsPerRow}n) {
+                &:nth-of-type(${$optionsPerRow}n) {
                     border-right: 1px solid ${neutrals[100]};
                 }
 
-                &:first-child {
+                &:first-of-type {
                     border-top-left-radius: 2px;
                 }
 
-                &:nth-child(${$optionsPerRow}) {
+                &:nth-of-type(${$optionsPerRow}) {
                     border-top-right-radius: 2px;
                 }
 
-                &:nth-last-child(${$optionsPerRow}) {
+                &:nth-last-of-type(${$optionsPerRow}) {
                     border-bottom-left-radius: 2px;
                 }
 

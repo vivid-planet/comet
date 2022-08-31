@@ -3,6 +3,7 @@ import {
     EditDialogApiContext,
     IFilterApi,
     ISortInformation,
+    messages,
     SortDirection,
     Stack,
     StackPage,
@@ -25,6 +26,7 @@ import { TextMatch } from "../common/MarkedMatches";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../graphql.generated";
 import EditFile from "./FileForm/EditFile";
+import { FileUploadContextProvider } from "./Table/fileUpload/FileUploadContext";
 import { UploadSplitButton } from "./Table/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./Table/filter/DamTableFilter";
 import FolderTable from "./Table/FolderTable";
@@ -81,7 +83,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             <ScopeIndicatorContent>
                                 <Domain fontSize="small" />
                                 <ScopeIndicatorLabelBold variant="body2">
-                                    <FormattedMessage id="comet.generic.globalContentScope" defaultMessage="Global Content" />
+                                    <FormattedMessage {...messages.globalContentScope} />
                                 </ScopeIndicatorLabelBold>
                             </ScopeIndicatorContent>
                         </ContentScopeIndicator>
@@ -167,7 +169,9 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
             <RedirectToPersistedDamLocation stateKey={damLocationStorageKey ?? "dam-location"}>
-                <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                <FileUploadContextProvider>
+                    <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                </FileUploadContextProvider>
             </RedirectToPersistedDamLocation>
         </Stack>
     );

@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { MainContent, RouterPrompt, RouterTab, RouterTabs, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import { MainContent, messages, RouterPrompt, RouterTab, RouterTabs, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { AdminComponentRoot } from "@comet/blocks-admin";
 import { createUsePage, EditPageLayout, PageName } from "@comet/cms-admin";
@@ -86,10 +86,7 @@ export const EditLink: React.FC<Props> = ({ id }) => {
             {hasChanges && (
                 <RouterPrompt
                     message={(location) => {
-                        return intl.formatMessage({
-                            id: "comet.generic.doYouWantToSaveYourChanges",
-                            defaultMessage: "Do you want to save your changes?",
-                        });
+                        return intl.formatMessage(messages.saveUnsavedChanges);
                     }}
                     saveAction={handleSaveAction}
                 />
@@ -106,7 +103,7 @@ export const EditLink: React.FC<Props> = ({ id }) => {
             </Toolbar>
             <MainContent>
                 <RouterTabs>
-                    <RouterTab label={intl.formatMessage({ id: "comet.generic.content", defaultMessage: "Content" })} path="">
+                    <RouterTab label={intl.formatMessage(messages.content)} path="">
                         <AdminComponentRoot>{rootBlocksApi.content.adminUI}</AdminComponentRoot>
                     </RouterTab>
                 </RouterTabs>

@@ -8,8 +8,7 @@ generated
 fragmentTypes.json
 lang
 lang-extracted
-/comet-admin-lang
-/cms-admin-lang
+lang-compiled
 /blocks-admin-lang
 graphql.generated.ts
 block-meta.json

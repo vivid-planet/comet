@@ -4,6 +4,8 @@ import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { messages } from "../../../messages";
+
 export type DeleteButtonClassKey = ButtonClassKey;
 export type DeleteButtonProps = ButtonProps;
 
@@ -67,7 +69,7 @@ const styles = ({ palette }: Theme) => {
 };
 
 function DeleteBtn({
-    children = <FormattedMessage id="comet.generic.delete" defaultMessage="Delete" />,
+    children = <FormattedMessage {...messages.delete} />,
     startIcon = <Delete />,
     ...restProps
 }: ButtonProps & WithStyles<typeof styles>) {

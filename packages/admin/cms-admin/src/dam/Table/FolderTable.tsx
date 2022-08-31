@@ -18,7 +18,7 @@ import * as React from "react";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
 import { FileRejection, useDropzone } from "react-dropzone";
-import { FormattedDate, FormattedTime, useIntl } from "react-intl";
+import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
 import {
@@ -76,6 +76,7 @@ const FolderTable = ({
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
+        newlyUploadedFileIds,
     } = useFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
@@ -150,6 +151,7 @@ const FolderTable = ({
     const loading = tableLoading && tableData === undefined;
     const foldersTableData = tableData?.data.filter(isFolder);
     const filesTableData = tableData?.data.filter(isFile);
+    const firstLastUploadedFileId = filesTableData?.find((file) => newlyUploadedFileIds.includes(file.id))?.id;
 
     const { matches } = useDamSearchHighlighting({
         items: [...(foldersTableData || []), ...(filesTableData || [])],
@@ -315,6 +317,8 @@ const FolderTable = ({
                                                 rowProps={rowProps}
                                                 footerApi={{ show: showFooter, hide: hideFooter }}
                                                 archived={row.archived}
+                                                isNew={newlyUploadedFileIds.includes(row.id)}
+                                                scrollIntoView={firstLastUploadedFileId === row.id}
                                                 {...props}
                                             >
                                                 <TableColumns columns={columns} row={row} />
@@ -326,7 +330,12 @@ const FolderTable = ({
                         </TableQuery>
                     </sc.TableHoverHighlight>
                 </sc.TableWrapper>
-                <EditDialog>
+                <EditDialog
+                    title={{
+                        edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,
+                        add: <FormattedMessage id="comet.dam.folderEditDialog.addFolder" defaultMessage="Add folder" />,
+                    }}
+                >
                     {({ selectedId, selectionMode }) => {
                         return (
                             <>

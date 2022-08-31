@@ -15,7 +15,7 @@ import {
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "@comet/blocks-api";
-import { IsBoolean, IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { PixelImageBlock } from "./PixelImageBlock";
 
@@ -54,6 +54,7 @@ interface SeoBlockInputInterface<ImageBlockInput extends BlockInputInterface> ex
     openGraphTitle?: string;
     openGraphDescription?: string;
     openGraphImage: OptionalBlockInputInterface<ImageBlockInput>;
+    structuredData?: string;
     noIndex: boolean;
     priority: SitemapPagePriority;
     changeFrequency: SitemapPageChangeFrequency;
@@ -84,6 +85,10 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         @ChildBlock(OptionalImageBlock)
         openGraphImage: BlockDataInterface;
 
+        //Structured Data
+        @BlockField({ nullable: true })
+        structuredData?: string;
+
         // Sitemap
         @BlockField()
         noIndex: boolean;
@@ -108,6 +113,8 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
                 openGraphTitle: this.openGraphTitle,
                 openGraphDescription: this.openGraphDescription,
                 openGraphImage: this.openGraphImage,
+
+                structuredData: this.structuredData,
 
                 noIndex: this.noIndex,
                 priority: this.priority,
@@ -143,6 +150,12 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         @IsOptional() // @TODO: Should not be optional as the image-block is already optional itself
         @ChildBlockInput(OptionalImageBlock)
         openGraphImage: OptionalBlockInputInterface<ExtractBlockInput<ImageBlock>>;
+
+        //Structured Data
+        @IsJSON()
+        @IsOptional()
+        @BlockField({ nullable: true })
+        structuredData?: string;
 
         // Sitemap
         @IsBoolean()

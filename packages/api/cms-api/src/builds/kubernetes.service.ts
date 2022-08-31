@@ -1,0 +1,139 @@
+import { BatchV1Api, KubeConfig, V1CronJob, V1Job, V1ObjectMeta } from "@kubernetes/client-node";
+import { Inject, Injectable } from "@nestjs/common";
+import { addMinutes, differenceInMinutes } from "date-fns";
+import fs from "fs";
+
+import { BUILDS_CONFIG } from "./builds.constants";
+import { BuildsConfig } from "./builds.module";
+import { JobStatus } from "./job-status.enum";
+
+@Injectable()
+export class KubernetesService {
+    localMode: boolean;
+
+    namespace: string;
+    helmRelease: string;
+
+    batchApi: BatchV1Api;
+
+    constructor(@Inject(BUILDS_CONFIG) readonly config: BuildsConfig) {
+        const path = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
+        this.localMode = !fs.existsSync(path);
+        this.helmRelease = config.helmRelease;
+
+        const kc = new KubeConfig();
+
+        if (!this.localMode) {
+            this.namespace = fs.readFileSync(path, "utf8");
+
+            kc.loadFromCluster();
+            this.batchApi = kc.makeApiClient(BatchV1Api);
+        }
+        // DEBUG-Code if used locally, you need to be logged in (e.g. by using oc login)
+        /*else {
+            this.namespace = "comet-demo";
+
+            kc.loadFromDefault();
+            this.batchApi = kc.makeApiClient(BatchV1Api);
+            this.localMode = false;
+        }*/
+    }
+
+    async getAllCronJobs(labelSelector: string): Promise<V1CronJob[]> {
+        const { response, body } = await this.batchApi.listNamespacedCronJob(
+            this.namespace,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            labelSelector,
+        );
+        if (response.statusCode !== 200) {
+            throw new Error(`Error fetching CronJobs for selector "${labelSelector}"`);
+        }
+
+        return body.items;
+    }
+
+    async deleteJob(name: string): Promise<void> {
+        const { response } = await this.batchApi.deleteNamespacedJob(name, this.namespace);
+        if (response.statusCode !== 200) {
+            throw new Error(`Error deleting Job "${name}"`);
+        }
+    }
+
+    /**
+     * Returns all Jobs for a labelFilter sorted by creationTimestamp DESC (most recent first)
+     */
+    async getAllJobs(labelFilter?: string): Promise<V1Job[]> {
+        const { response, body } = await this.batchApi.listNamespacedJob(this.namespace, undefined, undefined, undefined, undefined, labelFilter);
+        if (response.statusCode != 200) {
+            throw new Error(`Error listing Jobs for labelFilter "${labelFilter}"`);
+        }
+        return body.items.sort((a, b) => (b.metadata?.creationTimestamp?.getTime() || 0) - (a.metadata?.creationTimestamp?.getTime() || 0));
+    }
+
+    async createJobFromCronJob(cronJob: V1CronJob, overwriteJobMetaData: V1ObjectMeta): Promise<V1Job> {
+        const { response, body } = await this.batchApi.createNamespacedJob(this.namespace, {
+            apiVersion: "batch/v1",
+            kind: "Job",
+            metadata: { ...cronJob.spec?.jobTemplate.metadata, ...overwriteJobMetaData },
+            spec: cronJob.spec?.jobTemplate.spec,
+        });
+        if (response.statusCode !== 201) {
+            throw new Error("Error creating Job");
+        }
+
+        return body;
+    }
+
+    getStatusForKubernetesJob(job: V1Job): JobStatus {
+        let status = JobStatus.pending;
+        if (job.status?.active ?? 0 > 0) {
+            status = JobStatus.active;
+        }
+        // A job can have both succeeded = 1 and failed = 1 states. This may happend due to a job's restart policy. For instance, a job may fail on
+        // the first attempt (failed = 1) and succeed on the second attempt (succeeded = 1). We therefore check the succeeded status before the failed
+        // status.
+        else if (job.status?.succeeded ?? 0 > 0) {
+            status = JobStatus.succeeded;
+        } else if (job.status?.failed ?? 0 > 0) {
+            status = JobStatus.failed;
+        }
+        return status;
+    }
+
+    /**
+     * Estimate Job completion time based on previos run
+     * Uses labelSelector to catch manual runs as well
+     */
+    async estimateJobCompletionTime(job: V1Job, labelSelector: string): Promise<Date | undefined> {
+        const jobStatus = this.getStatusForKubernetesJob(job);
+        if (jobStatus === JobStatus.failed || jobStatus === JobStatus.succeeded) {
+            return;
+        }
+
+        const jobStartTime = job.status?.startTime;
+        if (!jobStartTime) {
+            return;
+        }
+
+        const previousJobs = await this.getAllJobs(labelSelector);
+        if (!previousJobs || previousJobs.length < 1) {
+            return;
+        }
+        const previousJob = previousJobs[0];
+
+        const previousJobStartTime = previousJob.status?.startTime;
+        const previousJobCompletionTime = previousJob.status?.completionTime;
+
+        if (!previousJobStartTime || !previousJobCompletionTime) {
+            return;
+        }
+
+        const previousJobRuntime = differenceInMinutes(previousJobCompletionTime, previousJobStartTime);
+        const estimatedCompletionTime = addMinutes(jobStartTime, previousJobRuntime);
+
+        return estimatedCompletionTime;
+    }
+}

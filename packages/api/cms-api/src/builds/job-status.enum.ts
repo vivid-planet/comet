@@ -1,10 +1,10 @@
 import { registerEnumType } from "@nestjs/graphql";
 
-export enum BuildJobStatus {
+export enum JobStatus {
     "pending" = "pending",
     "active" = "active",
     "succeeded" = "succeeded",
     "failed" = "failed",
 }
 
-registerEnumType(BuildJobStatus, { name: "BuildJobStatus" });
+registerEnumType(JobStatus, { name: "JobStatus" });

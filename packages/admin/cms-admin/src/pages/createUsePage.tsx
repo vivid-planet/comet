@@ -1,6 +1,6 @@
 import { gql, TypedDocumentNode, useMutation, useQuery } from "@apollo/client";
 import { ApolloError } from "@apollo/client/errors";
-import { SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
+import { messages, SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
 import {
     BindBlockAdminComponent,
     BlockInterface,
@@ -448,16 +448,16 @@ function PageSaveButton({
         saving: saving || validating || checkingSaveConflict,
         hasErrors: saveError != null || !valid || hasSaveConflict,
         errorItem: !valid ? (
-            <FormattedMessage id="comet.generic.invalidData" defaultMessage="Invalid Data" />
+            <FormattedMessage {...messages.invalidData} />
         ) : hasSaveConflict ? (
-            <FormattedMessage id="comet.generic.saveConflict" defaultMessage="Save Conflict" />
+            <FormattedMessage {...messages.saveConflict} />
         ) : undefined,
     };
 
     return (
-        <SplitButton localStorageKey="EditPageSave" disabled={!hasChanges}>
+        <SplitButton localStorageKey="SaveSplitButton" disabled={!hasChanges}>
             <SaveButton onClick={handleSavePage} {...saveButtonProps}>
-                <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                <FormattedMessage {...messages.save} />
             </SaveButton>
             <SaveButton
                 onClick={async () => {
@@ -466,7 +466,7 @@ function PageSaveButton({
                 }}
                 {...saveButtonProps}
             >
-                <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                <FormattedMessage {...messages.saveAndGoBack} />
             </SaveButton>
         </SplitButton>
     );

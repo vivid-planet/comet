@@ -1,4 +1,4 @@
-import { SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
+import { messages, SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -118,16 +118,16 @@ export function SaveStateSaveButton({
         saving: saving || validating || checkingSaveConflict,
         hasErrors: !!saveError || !valid || hasConflict,
         errorItem: !valid ? (
-            <FormattedMessage id="comet.generic.invalidData" defaultMessage="Invalid Data" />
+            <FormattedMessage {...messages.invalidData} />
         ) : hasConflict ? (
-            <FormattedMessage id="comet.generic.saveConflict" defaultMessage="Save Conflict" />
+            <FormattedMessage {...messages.saveConflict} />
         ) : undefined,
     };
 
     return (
-        <SplitButton localStorageKey="SaveStateSaveButton" disabled={!hasChanges}>
+        <SplitButton localStorageKey="SaveSplitButton" disabled={!hasChanges}>
             <SaveButton onClick={() => handleSaveClick(true)} {...saveButtonProps}>
-                <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                <FormattedMessage {...messages.save} />
             </SaveButton>
             <SaveButton
                 onClick={async () => {
@@ -136,7 +136,7 @@ export function SaveStateSaveButton({
                 }}
                 {...saveButtonProps}
             >
-                <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                <FormattedMessage {...messages.saveAndGoBack} />
             </SaveButton>
         </SplitButton>
     );

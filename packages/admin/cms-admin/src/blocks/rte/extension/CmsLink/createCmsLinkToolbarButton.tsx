@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { Link } from "@comet/admin-icons";
 import { ControlButton, findEntityInCurrentSelection, findTextInCurrentSelection, selectionIsInOneBlock } from "@comet/admin-rte";
 import { BlockInterface, BlockState } from "@comet/blocks-admin";
@@ -137,10 +138,10 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
                         </Button>
                     )}
                     <Button onClick={handleUpdate} color="primary">
-                        <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
+                        <FormattedMessage {...messages.ok} />
                     </Button>
                     <Button onClick={handleClose} color="primary">
-                        <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
+                        <FormattedMessage {...messages.cancel} />
                     </Button>
                 </DialogActions>
             </Dialog>

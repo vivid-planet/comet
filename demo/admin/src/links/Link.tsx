@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
 import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
@@ -8,7 +9,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
-    displayName: <FormattedMessage id="comet.generic.link" defaultMessage="Link" />,
+    displayName: <FormattedMessage {...messages.link} />,
     editComponent: EditLink,
     getQuery: gql`
         query LinkDocument($id: ID!) {
