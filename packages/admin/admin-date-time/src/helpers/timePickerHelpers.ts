@@ -1,4 +1,4 @@
-import { eachMinuteOfInterval } from "date-fns";
+import { eachMinuteOfInterval, format } from "date-fns";
 
 const today = new Date();
 
@@ -31,6 +31,17 @@ export const timeValueIsValid = (timeValue: string): boolean => {
     return true;
 };
 
+export const getTimeStringFromDate = (date: Date): string => format(date, "HH:mm");
+
+export const getDateWithNewTime = (date: Date, time: string): Date => {
+    const [hours, minutes] = time.split(":");
+    date.setHours(parseInt(hours));
+    date.setMinutes(parseInt(minutes));
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+};
+
 export const getDateFromTimeValue = (timeValue: string): Date => {
     if (!timeValueIsValid(timeValue)) {
         throw new Error(`Time value ${timeValue} is not valid, must be in format HH:mm.`);
@@ -40,7 +51,7 @@ export const getDateFromTimeValue = (timeValue: string): Date => {
     return new Date(today.getFullYear(), today.getMonth(), today.getDate(), Number(hour), Number(minute));
 };
 
-export const getClosestDateToNow = (dateList: Date[], target: Date = new Date()): Date => {
+export const getClosestDateToDate = (dateList: Date[], target: Date = new Date()): Date => {
     let closestDate: Date = dateList[0];
     const targetTime = target.getTime();
 
