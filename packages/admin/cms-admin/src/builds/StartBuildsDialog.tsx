@@ -1,6 +1,6 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
-import { Alert, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Alert, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -55,28 +55,28 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                         defaultMessage="The more builds you start, the longer it takes until they are completed. If you need to rebuild manually, select only the scopes required."
                     />
                 </Alert>
-                <Box sx={{ height: 400, width: "100%" }}>
-                    <DataGrid
-                        rows={rows}
-                        columns={[
-                            {
-                                field: "name",
-                                headerName: intl.formatMessage({
-                                    id: "comet.pages.publisher.startBuildsDialog.buildTemplates.name",
-                                    defaultMessage: "Name",
-                                }),
-                                flex: 1,
-                            },
-                        ]}
-                        checkboxSelection
-                        disableColumnSelector
-                        onSelectionModelChange={(newSelectionModel) => {
-                            setSelectionModel(newSelectionModel);
-                        }}
-                        selectionModel={selectionModel}
-                        autoPageSize
-                    />
-                </Box>
+                <DataGrid
+                    autoHeight
+                    rows={rows}
+                    columns={[
+                        {
+                            field: "name",
+                            headerName: intl.formatMessage({
+                                id: "comet.pages.publisher.startBuildsDialog.buildTemplates.name",
+                                defaultMessage: "Name",
+                            }),
+                            flex: 1,
+                        },
+                    ]}
+                    checkboxSelection
+                    disableColumnSelector
+                    onSelectionModelChange={(newSelectionModel) => {
+                        setSelectionModel(newSelectionModel);
+                    }}
+                    selectionModel={selectionModel}
+                    pageSize={5}
+                    hideFooterPagination={rows.length <= 5}
+                />
             </DialogContent>
             <DialogActions>
                 <CancelButton onClick={() => onClose()} />
