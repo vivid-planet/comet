@@ -33,7 +33,7 @@ const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
                 )}
 
                 {/* Structured Data */}
-                {structuredData && <script type="application/ld+json">{structuredData}</script>}
+                {structuredData && structuredData.length > 0 && <script type="application/ld+json">{structuredData}</script>}
 
                 {/* No Index */}
                 {noIndex && (
