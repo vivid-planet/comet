@@ -66,6 +66,11 @@ type DamFile {
   damPath: String!
 }
 
+type BuildTemplate {
+  id: ID!
+  name: String!
+}
+
 type AutoBuildStatus {
   hasChangesSinceLastBuild: Boolean!
   lastCheck: DateTime
@@ -148,6 +153,7 @@ enum RedirectGenerationType {
 type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
+  buildTemplates: [BuildTemplate!]!
   redirects(query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
   redirect(id: ID!): Redirect!
   damFilesList(sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): [DamFile!]!
@@ -187,7 +193,7 @@ enum SlugAvailability {
 }
 
 type Mutation {
-  createBuild: Boolean!
+  createBuilds(input: CreateBuildsInput!): Boolean!
   createRedirect(input: RedirectInput!): Redirect!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
@@ -207,6 +213,10 @@ type Mutation {
   updatePageTreeNodePosition(id: ID!, input: PageTreeNodeUpdatePositionInput!): PageTreeNode!
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
+}
+
+input CreateBuildsInput {
+  names: [String!]!
 }
 
 input RedirectInput {
