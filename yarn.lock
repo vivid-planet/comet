@@ -15568,7 +15568,6 @@ __metadata:
     eslint: ^8.0.0
     exceljs: ^3.0.0
     fast-xml-parser: ^3.0.0
-    file-loader: ^6.0.0
     file-saver: ^2.0.0
     final-form: ^4.0.0
     final-form-arrays: ^3.0.0
@@ -19346,7 +19345,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-loader@npm:^6.0.0, file-loader@npm:^6.2.0":
+"file-loader@npm:^6.2.0":
   version: 6.2.0
   resolution: "file-loader@npm:6.2.0"
   dependencies:
