@@ -55,15 +55,6 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
         module: {
             rules: [
                 {
-                    enforce: "pre",
-                    test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-                    loader: "file-loader",
-                    options: {
-                        outputPath: "files/",
-                        name: "[name].[ext]",
-                    },
-                },
-                {
                     test: /\.(js|mjs|jsx|ts|tsx)$/,
                     exclude: /(node_modules|bower_components)/,
                     loader: require.resolve("babel-loader"),
@@ -121,6 +112,10 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
                 {
                     test: /\.css?$/,
                     use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+                },
+                {
+                    test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+                    type: "asset/resource",
                 },
             ],
         },
