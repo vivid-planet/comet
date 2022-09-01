@@ -5,7 +5,6 @@ import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { HeadlineBlock } from "./headline.block";
-import { ImageBlock } from "./ImageBlock";
 import { TextImageBlock } from "./TextImageBlock";
 
 export const PageContentBlock = createBlocksBlock(
@@ -14,9 +13,8 @@ export const PageContentBlock = createBlocksBlock(
             space: SpaceBlock,
             richtext: RichTextBlock,
             headline: HeadlineBlock,
-            image: ImageBlock,
+            image: DamImageBlock,
             textImage: TextImageBlock,
-            damImage: DamImageBlock,
             damVideo: DamVideoBlock,
             youTubeVideo: YouTubeVideoBlock,
             linkList: LinkListBlock,
