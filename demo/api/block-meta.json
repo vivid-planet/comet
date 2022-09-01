@@ -953,6 +953,169 @@
         ]
     },
     {
+        "name": "Headline",
+        "fields": [
+            {
+                "name": "eyebrow",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "headline",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "level",
+                "kind": "Enum",
+                "enum": [
+                    "header-one",
+                    "header-two",
+                    "header-three",
+                    "header-four",
+                    "header-five",
+                    "header-six"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "eyebrow",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "headline",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "level",
+                "kind": "Enum",
+                "enum": [
+                    "header-one",
+                    "header-two",
+                    "header-three",
+                    "header-four",
+                    "header-five",
+                    "header-six"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "ColumnsContent",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "Space",
+                                "RichText",
+                                "Headline",
+                                "DamImage"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": []
+    },
+    {
+        "name": "Columns",
+        "fields": [
+            {
+                "name": "layout",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "ColumnsContent",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "layout",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "ColumnsContent",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "OptionalRichText",
         "fields": [
             {
@@ -1008,61 +1171,6 @@
                 "name": "content",
                 "kind": "Block",
                 "block": "OptionalRichText",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "Headline",
-        "fields": [
-            {
-                "name": "eyebrow",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "headline",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": false
-            },
-            {
-                "name": "level",
-                "kind": "Enum",
-                "enum": [
-                    "header-one",
-                    "header-two",
-                    "header-three",
-                    "header-four",
-                    "header-five",
-                    "header-six"
-                ],
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "eyebrow",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "headline",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": false
-            },
-            {
-                "name": "level",
-                "kind": "Enum",
-                "enum": [
-                    "header-one",
-                    "header-two",
-                    "header-three",
-                    "header-four",
-                    "header-five",
-                    "header-six"
-                ],
                 "nullable": false
             }
         ]
@@ -1161,7 +1269,8 @@
                                 "DamVideo",
                                 "YouTubeVideo",
                                 "LinkList",
-                                "FullWidthImage"
+                                "FullWidthImage",
+                                "Columns"
                             ],
                             "nullable": false
                         }
