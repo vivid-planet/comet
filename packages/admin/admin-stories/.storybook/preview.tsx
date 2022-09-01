@@ -113,6 +113,7 @@ const orderForm = [
     "docs-form-overview",
     "docs-form-validation",
     "docs-form-layout",
+    "docs-form-components-date-time-pickers",
     "docs-form-components-finalform",
     "docs-form-components-fieldcontainer",
     "docs-form-components-field",

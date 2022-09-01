@@ -142,7 +142,10 @@ Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/g
 
 ## @comet/admin-date-picker -> @comet/admin-date-time
 
--   Added standalone `DatePicker` and `DateRangePicker` components for use outside of FinalForm
+### Changes
+
+-   Add standalone `DatePicker` and `DateRangePicker` components for use outside Final Form.
+-   Add new `TimePicker`, `DateTimePicker` and `TimeRangePicker` components. Each comes standalone and with a separate Final Form component.
 
 ### Incompatible Changes
 
