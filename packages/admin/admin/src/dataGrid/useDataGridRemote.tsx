@@ -1,4 +1,4 @@
-import { DataGridProProps, GridFilterModel, GridSortDirection, GridSortModel, GridToolbar } from "@mui/x-data-grid-pro";
+import { DataGridProps, GridFilterModel, GridSortDirection, GridSortModel, GridToolbar } from "@mui/x-data-grid";
 import queryString from "query-string";
 import * as React from "react";
 import { useHistory, useLocation } from "react-router";
@@ -8,7 +8,7 @@ export function useDataGridRemote({
     queryParamsPrefix = "",
 }: {
     queryParamsPrefix?: string;
-} = {}): Omit<DataGridProProps, "rows" | "columns"> & { page: number; pageSize: number } {
+} = {}): Omit<DataGridProps, "rows" | "columns"> & { page: number; pageSize: number } {
     const history = useHistory();
     const location = useLocation();
 

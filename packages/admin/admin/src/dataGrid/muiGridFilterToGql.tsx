@@ -1,4 +1,4 @@
-import { GridColDef, GridFilterModel } from "@mui/x-data-grid-pro";
+import { GridColDef, GridFilterModel } from "@mui/x-data-grid";
 
 const muiGridOperatorValueToGqlOperator: { [key: string]: string } = {
     contains: "contains",

@@ -1,6 +1,6 @@
 import { Filter } from "@comet/admin-icons";
 import { Button } from "@mui/material";
-import { useGridApiContext } from "@mui/x-data-grid-pro";
+import { useGridApiContext } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 

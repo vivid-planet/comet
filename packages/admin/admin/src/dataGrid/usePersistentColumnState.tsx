@@ -1,9 +1,9 @@
-import { DataGridProProps, GridColumnVisibilityModel, useGridApiRef } from "@mui/x-data-grid-pro";
+import { DataGridProps, GridColumnVisibilityModel, useGridApiRef } from "@mui/x-data-grid";
 import * as React from "react";
 
 import { useStoredState } from "../hooks/useStoredState";
 
-export function usePersistentColumnState(stateKey: string): Omit<DataGridProProps, "rows" | "columns"> {
+export function usePersistentColumnState(stateKey: string): Omit<DataGridProps, "rows" | "columns"> {
     const apiRef = useGridApiRef();
 
     const [columnVisibilityModel, setColumnVisibilityModel] = useStoredState<GridColumnVisibilityModel>(`${stateKey}ColumnVisibility`, {});
@@ -56,6 +56,9 @@ export function usePersistentColumnState(stateKey: string): Omit<DataGridProProp
         columnVisibilityModel,
         onColumnVisibilityModelChange: handleColumnVisibilityModelChange,
 
+        // TODO find a better solution (problem: pinnedColumns is a Pro Feature)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         pinnedColumns,
         onPinnedColumnsChange: handlePinnedColumnsChange,
 
