@@ -37,17 +37,16 @@ const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
     );
 };
 
-export interface CrudContextMenuProps {
+export interface CrudContextMenuProps<CopyData> {
     url?: string;
-    onPaste?: (options: { input: unknown; client: ApolloClient<object> }) => Promise<void>;
-    onDelete?: (options: { id: unknown; client: ApolloClient<object> }) => Promise<void>;
-    id: string | number;
+    onPaste?: (options: { input: CopyData; client: ApolloClient<object> }) => Promise<void>;
+    onDelete?: (options: { client: ApolloClient<object> }) => Promise<void>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     refetchQueries: RefetchQueriesOptions<any, unknown>["include"];
-    copyData?: unknown;
+    copyData?: () => Promise<CopyData> | CopyData;
 }
 
-export function CrudContextMenu({ url, id, onPaste, onDelete, refetchQueries, copyData }: CrudContextMenuProps): React.ReactElement {
+export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueries, copyData }: CrudContextMenuProps<CopyData>): React.ReactElement {
     const intl = useIntl();
     const client = useApolloClient();
     const errorDialog = useErrorDialog();
@@ -68,7 +67,6 @@ export function CrudContextMenu({ url, id, onPaste, onDelete, refetchQueries, co
     const handleDeleteClick = async () => {
         if (!onDelete) return;
         await onDelete({
-            id,
             client,
         });
         await client.refetchQueries({ include: refetchQueries });
@@ -119,7 +117,7 @@ export function CrudContextMenu({ url, id, onPaste, onDelete, refetchQueries, co
     };
 
     const handleCopyClick = async () => {
-        await writeClipboardText(JSON.stringify(copyData));
+        await writeClipboardText(JSON.stringify(await copyData!()));
     };
 
     return (

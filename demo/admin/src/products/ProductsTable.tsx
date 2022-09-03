@@ -15,7 +15,16 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Alert, Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { GQLProductsListQuery, GQLProductsListQueryVariables } from "@src/graphql.generated";
+import {
+    GQLCreateProductMutation,
+    GQLCreateProductMutationVariables,
+    GQLDeleteProductMutation,
+    GQLDeleteProductMutationVariables,
+    GQLProductsListFragmentFragment,
+    GQLProductsListQuery,
+    GQLProductsListQueryVariables,
+} from "@src/graphql.generated";
+import { filter } from "graphql-anywhere";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -40,7 +49,7 @@ function ProductsTableToolbar() {
     );
 }
 
-const columns: GridColDef[] = [
+const columns: GridColDef<GQLProductsListFragmentFragment>[] = [
     { field: "name", headerName: "Name", width: 150 },
     { field: "description", headerName: "Description", width: 150 },
     { field: "price", headerName: "Price", width: 150, type: "number" },
@@ -57,24 +66,21 @@ const columns: GridColDef[] = [
                     </IconButton>
                     <CrudContextMenu
                         onPaste={async ({ input, client }) => {
-                            await client.mutate({
+                            await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                                 mutation: createProductMutation,
                                 variables: { input },
                             });
                         }}
-                        onDelete={async ({ id, client }) => {
-                            await client.mutate({
+                        onDelete={async ({ client }) => {
+                            await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
                                 mutation: deleteProductMutation,
-                                variables: { id },
+                                variables: { id: params.row.id },
                             });
                         }}
                         // url={url}
-                        id={params.id}
                         refetchQueries={["ProductsList"]}
-                        copyData={{
-                            name: params.row.name,
-                            description: params.row.description,
-                            price: params.row.price,
+                        copyData={() => {
+                            return filter<GQLProductsListFragmentFragment>(productsFragment, params.row);
                         }}
                     />
                 </>
@@ -129,18 +135,25 @@ function ProductsTable() {
     );
 }
 
+const productsFragment = gql`
+    fragment ProductsListFragment on Product {
+        id
+        name
+        description
+        price
+    }
+`;
+
 const productsQuery = gql`
     query ProductsList($offset: Int, $limit: Int, $sortColumnName: String, $sortDirection: SortDirection, $filter: ProductFilter, $query: String) {
         products(offset: $offset, limit: $limit, sortColumnName: $sortColumnName, sortDirection: $sortDirection, filter: $filter, query: $query) {
             nodes {
-                id
-                name
-                description
-                price
+                ...ProductsListFragment
             }
             totalCount
         }
     }
+    ${productsFragment}
 `;
 
 const deleteProductMutation = gql`
