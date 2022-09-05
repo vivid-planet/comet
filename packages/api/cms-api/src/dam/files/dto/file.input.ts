@@ -23,22 +23,28 @@ export class ImageFileInput {
     cropArea?: ImageCropAreaInput;
 }
 
+@InputType()
 export class LicenseInput {
+    @Field()
     @IsString()
     type: string;
 
+    @Field({ nullable: true })
     @IsOptional()
     @IsString()
     details?: string;
 
+    @Field({ nullable: true })
     @IsOptional()
     @IsString()
     author?: string;
 
+    @Field(() => Date, { nullable: true })
     @IsOptional()
     @IsDate()
     durationFrom?: Date;
 
+    @Field(() => Date, { nullable: true })
     @IsOptional()
     @IsDate()
     durationTo?: Date;

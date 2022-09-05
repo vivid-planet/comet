@@ -362,6 +362,7 @@ input UpdateDamFileInput {
   altText: String
   image: UpdateImageFileInput
   folderId: ID
+  license: LicenseInput
 }
 
 input UpdateImageFileInput {
@@ -374,6 +375,14 @@ input ImageCropAreaInput {
   height: Float
   x: Float
   y: Float
+}
+
+input LicenseInput {
+  type: String!
+  details: String
+  author: String
+  durationFrom: DateTime
+  durationTo: DateTime
 }
 
 input CreateDamFolderInput {

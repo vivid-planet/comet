@@ -1,7 +1,10 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Field, FinalFormInput, FormSection } from "@comet/admin";
+import { Field, FieldContainer, FinalFormInput, FormSection } from "@comet/admin";
+import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { Calendar } from "@comet/admin-icons";
+import { InputAdornment } from "@mui/material";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "../../graphql.generated";
 import { CropSettingsFields } from "./CropSettingsFields";
@@ -79,6 +82,52 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                     component={FinalFormInput}
                     fullWidth
                 />
+            </FormSection>
+            <FormSection title={intl.formatMessage({ id: "comet.dam.file.licenseInformation", defaultMessage: "License information" })}>
+                <Field
+                    label={<FormattedMessage id="comet.dam.file.type" defaultMessage="Type" />}
+                    name="license.type"
+                    component={FinalFormInput}
+                    fullWidth
+                />
+                <Field
+                    label={<FormattedMessage id="comet.dam.file.licenseDetails" defaultMessage="License details" />}
+                    name="license.details"
+                    component={FinalFormInput}
+                    multiline
+                    minRows={3}
+                    fullWidth
+                />
+                <Field
+                    label={<FormattedMessage id="comet.dam.file.creatorOrAuthor" defaultMessage="Creator/Author" />}
+                    name="license.author"
+                    component={FinalFormInput}
+                    fullWidth
+                />
+                <FieldContainer label={<FormattedMessage id="comet.dam.file.licenseDuration" defaultMessage="License duration" />} fullWidth>
+                    <Field
+                        name="license.durationFrom"
+                        label={<FormattedMessage id="comet.dam.file.from" defaultMessage="from" />}
+                        component={FinalFormDatePicker}
+                        clearable
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <Calendar />
+                            </InputAdornment>
+                        }
+                    />
+                    <Field
+                        name="license.durationTo"
+                        label={<FormattedMessage id="comet.dam.file.to" defaultMessage="to" />}
+                        component={FinalFormDatePicker}
+                        clearable
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <Calendar />
+                            </InputAdornment>
+                        }
+                    />
+                </FieldContainer>
             </FormSection>
         </div>
     );

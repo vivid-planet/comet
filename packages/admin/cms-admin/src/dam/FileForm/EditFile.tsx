@@ -31,6 +31,7 @@ import {
     GQLDamFileDetailQueryVariables,
     GQLFocalPoint,
     GQLImageCropAreaInput,
+    GQLLicenseInput,
     GQLUpdateFileMutation,
     GQLUpdateFileMutationVariables,
 } from "../../graphql.generated";
@@ -55,6 +56,7 @@ interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
+    license: GQLLicenseInput;
 }
 
 interface EditFormProps {
@@ -151,6 +153,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                         image: {
                             cropArea,
                         },
+                        license: values.license,
                     },
                 },
             });
@@ -176,6 +179,13 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 },
                 altText: file.altText,
                 title: file.title,
+                license: {
+                    type: file.license.type,
+                    details: file.license.details,
+                    author: file.license.author,
+                    durationFrom: file.license.durationFrom ? Date.parse(file.license.durationFrom) : undefined,
+                    durationTo: file.license.durationTo ? Date.parse(file.license.durationTo) : undefined,
+                },
             }}
             initialValuesEqual={(prevValues, newValues) => isEqual(prevValues, newValues)}
             onAfterSubmit={() => {

@@ -25,6 +25,13 @@ export const damFileDetailFragment = gql`
             }
             exif
         }
+        license {
+            type
+            details
+            author
+            durationFrom
+            durationTo
+        }
         fileUrl
     }
 `;
