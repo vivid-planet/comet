@@ -327,7 +327,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             );
 
             const filesToUpload = mapFilenameDataToFiles(revisedFilenameDataList, filesWithFolderPaths, currentFolderId, folderIdMap);
-            // const filesToUploadWithFolderPath = await addFolderPathToFiles(filesToUpload);
 
             filesToUpload.push(...filesInNewDir);
             return filesToUpload;
