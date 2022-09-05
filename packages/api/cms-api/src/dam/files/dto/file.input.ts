@@ -1,8 +1,9 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsDate, IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsDate, IsEnum, IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
+import { LicenseType } from "../entities/license.embeddable";
 
 export class ImageFileInput {
     @IsOptional()
@@ -25,9 +26,9 @@ export class ImageFileInput {
 
 @InputType()
 export class LicenseInput {
-    @Field()
-    @IsString()
-    type: string;
+    @Field(() => LicenseType)
+    @IsEnum(LicenseType)
+    type: LicenseType;
 
     @Field({ nullable: true })
     @IsOptional()

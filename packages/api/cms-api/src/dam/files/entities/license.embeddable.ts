@@ -1,13 +1,20 @@
-import { Embeddable, Property } from "@mikro-orm/core";
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Embeddable, Enum, Property } from "@mikro-orm/core";
+import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
+
+export enum LicenseType {
+    ROYALTY_FREE = "royalty_free",
+    RIGHTS_MANAGED = "rights_managed",
+    SUBSCRIPTION = "subscription",
+    MICRO = "micro",
+}
+registerEnumType(LicenseType, { name: "LicenseType" });
 
 @ObjectType("DamFileLicense")
 @Embeddable()
 export class License {
-    // TODO: maybe change to enum, depending on the available types
-    @Property({ columnType: "text", default: "royalty_free" })
-    @Field()
-    type?: string = "royalty_free";
+    @Enum({ items: () => LicenseType, default: LicenseType.ROYALTY_FREE })
+    @Field(() => LicenseType)
+    type?: LicenseType = LicenseType.ROYALTY_FREE;
 
     @Property({
         columnType: "text",
