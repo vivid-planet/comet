@@ -5,9 +5,9 @@ import { Field, ObjectType } from "@nestjs/graphql";
 @Embeddable()
 export class License {
     // TODO: maybe change to enum, depending on the available types
-    @Property()
+    @Property({ columnType: "text", default: "royalty_free" })
     @Field()
-    type: string;
+    type?: string = "royalty_free";
 
     @Property({
         columnType: "text",

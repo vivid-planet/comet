@@ -48,6 +48,11 @@ class DamVideoBlockData extends BlockData {
         return {
             damFile: {
                 ...data,
+                license: {
+                    ...file.license,
+                    durationFrom: file.license.durationFrom?.toISOString(),
+                    durationTo: file.license.durationTo?.toISOString(),
+                },
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
             autoplay: this.autoplay,

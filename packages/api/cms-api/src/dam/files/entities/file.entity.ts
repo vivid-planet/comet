@@ -81,7 +81,7 @@ export class File extends BaseEntity<File, "id"> {
 
     @Field(() => License)
     @Embedded(() => License)
-    license: License;
+    license: License = new License();
 
     @Property({
         columnType: "timestamp with time zone",

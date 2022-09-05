@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsDate, IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
 
@@ -21,6 +21,27 @@ export class ImageFileInput {
     @IsOptional()
     @ValidateNested()
     cropArea?: ImageCropAreaInput;
+}
+
+export class LicenseInput {
+    @IsString()
+    type: string;
+
+    @IsOptional()
+    @IsString()
+    details?: string;
+
+    @IsOptional()
+    @IsString()
+    author?: string;
+
+    @IsOptional()
+    @IsDate()
+    durationFrom?: Date;
+
+    @IsOptional()
+    @IsDate()
+    durationTo?: Date;
 }
 
 export class CreateFileInput {
@@ -48,6 +69,11 @@ export class CreateFileInput {
     @IsOptional()
     @IsUUID()
     folderId?: string;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => LicenseInput)
+    license?: LicenseInput;
 }
 
 @InputType({ isAbstract: true })
@@ -88,4 +114,10 @@ export class UpdateFileInput {
     @IsUUID()
     @IsOptional()
     folderId?: string;
+
+    @Field({ nullable: true })
+    @Type(() => LicenseInput)
+    @IsOptional()
+    @ValidateNested()
+    license?: LicenseInput;
 }

@@ -54,6 +54,11 @@ class PixelImageBlockData extends BlockData {
                           dominantColor: file.image.dominantColor,
                       }
                     : undefined,
+                license: {
+                    ...file.license,
+                    durationFrom: file.license.durationFrom?.toISOString(),
+                    durationTo: file.license.durationTo?.toISOString(),
+                },
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
             cropArea: this.cropArea ? { ...this.cropArea } : undefined,
