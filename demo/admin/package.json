@@ -5,7 +5,7 @@
     "scripts": {
         "postinstall": "cd server && npm install",
         "start": "run-s intl:update intl:compile && run-p gql:types generate-block-types && dotenv -- cross-env BABEL_ENV=development webpack serve --config ./webpack.config.ts --mode development",
-        "build": "run-s intl:update intl:compile && run-p gql:types generate-block-types && cross-env BABEL_ENV=production webpack --config ./webpack.config.ts --mode production --progress",
+        "build": "run-s intl:update intl:compile && run-p gql:types generate-block-types && cross-env BABEL_ENV=production webpack --config ./webpack.config.ts --env production --mode production --progress",
         "gql:types": "graphql-codegen",
         "gql:watch": "graphql-codegen --watch",
         "lint": "run-s intl:update intl:compile && run-p gql:types generate-block-types && run-p lint:eslint lint:tsc",
