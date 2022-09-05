@@ -2,12 +2,12 @@ import { useApolloClient } from "@apollo/client";
 import * as React from "react";
 
 import { GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables, GQLFilenameResponse } from "../../../graphql.generated";
-import { DuplicatedFilenameDialog } from "./DuplicatedFilenameDialog";
-import { damAreFilenamesOccupied } from "./DuplicatedFilenamesResolver.gql";
+import { damAreFilenamesOccupied } from "./ManualDuplicatedFilenamesHandler.gql";
+import { ManuallyHandleDuplicatedFilenamesDialog } from "./ManuallyHandleDuplicatedFilenamesDialog";
 
-export interface DuplicatedFilenamesResolverApi {
+export interface ManualDuplicatedFilenamesHandlerApi {
     checkForDuplicates: (fileData: FilenameData[]) => Promise<GQLFilenameResponse[]>;
-    resolveDuplicates: (fileData: FilenameData[]) => Promise<FilenameData[]>;
+    letUserHandleDuplicates: (fileData: FilenameData[]) => Promise<FilenameData[]>;
 }
 
 export interface FilenameData {
@@ -15,20 +15,13 @@ export interface FilenameData {
     folderId?: string;
 }
 
-export const DuplicatedFilenamesResolverContext = React.createContext<DuplicatedFilenamesResolverApi>({
-    checkForDuplicates: () => {
-        throw new Error("DuplicatedFilenamesResolver has to be defined higher up in the tree");
-    },
-    resolveDuplicates: () => {
-        throw new Error("DuplicatedFilenamesResolver has to be defined higher up in the tree");
-    },
-});
+export const ManualDuplicatedFilenamesHandlerContext = React.createContext<ManualDuplicatedFilenamesHandlerApi | undefined>(undefined);
 
-export const useDuplicatedFilenamesResolver = (): DuplicatedFilenamesResolverApi => {
-    return React.useContext(DuplicatedFilenamesResolverContext);
+export const useManualDuplicatedFilenamesHandler = (): ManualDuplicatedFilenamesHandlerApi | undefined => {
+    return React.useContext(ManualDuplicatedFilenamesHandlerContext);
 };
 
-export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children }) => {
+export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComponent = ({ children }) => {
     const client = useApolloClient();
 
     const [occupiedFilenames, setOccupiedFilenames] = React.useState<FilenameData[]>([]);
@@ -53,7 +46,7 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
         [client],
     );
 
-    const resolveDuplicates = React.useCallback(
+    const letUserHandleDuplicates = React.useCallback(
         async (fileData: FilenameData[]): Promise<FilenameData[]> => {
             const potentialDuplicates = await checkForDuplicates(fileData);
 
@@ -96,14 +89,19 @@ export const DuplicatedFilenamesResolver: React.FunctionComponent = ({ children 
     };
 
     return (
-        <DuplicatedFilenamesResolverContext.Provider
+        <ManualDuplicatedFilenamesHandlerContext.Provider
             value={{
                 checkForDuplicates,
-                resolveDuplicates,
+                letUserHandleDuplicates,
             }}
         >
             {children}
-            <DuplicatedFilenameDialog open={occupiedFilenames.length > 0} filenameData={occupiedFilenames} onSkip={onSkip} onUpload={onUpload} />
-        </DuplicatedFilenamesResolverContext.Provider>
+            <ManuallyHandleDuplicatedFilenamesDialog
+                open={occupiedFilenames.length > 0}
+                filenameData={occupiedFilenames}
+                onSkip={onSkip}
+                onUpload={onUpload}
+            />
+        </ManualDuplicatedFilenamesHandlerContext.Provider>
     );
 };

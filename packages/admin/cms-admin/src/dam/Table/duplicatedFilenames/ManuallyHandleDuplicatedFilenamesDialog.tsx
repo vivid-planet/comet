@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FilenameData } from "./DuplicatedFilenamesResolver";
+import { FilenameData } from "./ManualDuplicatedFilenamesHandler";
 
 const StyledList = styled(List)`
     margin-top: ${({ theme }) => theme.spacing(4)};
@@ -34,7 +34,12 @@ interface DuplicateFilenameDialogProps {
     onUpload: () => void;
 }
 
-export const DuplicatedFilenameDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({ open, filenameData, onSkip, onUpload }) => {
+export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
+    open,
+    filenameData,
+    onSkip,
+    onUpload,
+}) => {
     return (
         <Dialog open={open}>
             <DialogTitle>

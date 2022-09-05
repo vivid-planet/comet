@@ -14,7 +14,7 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
-import { FilenameData, useDuplicatedFilenamesResolver } from "../duplicatedFilenames/DuplicatedFilenamesResolver";
+import { FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
 import { useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
@@ -99,7 +99,7 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<File
 export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const context = useCmsBlockContext(); // TODO create separate CmsContext?
     const client = useApolloClient();
-    const duplicatedFilenameResolver = useDuplicatedFilenamesResolver();
+    const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const accept: Accept = React.useMemo(() => {
@@ -293,12 +293,16 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         return filesToUpload;
     };
 
-    const resolveDuplicatedFilenames = React.useCallback(
+    const handleDuplicatedFilenames = React.useCallback(
         async (
             filesWithFolderPaths: FileWithFolderPath[],
             currentFolderId: string | undefined,
             folderIdMap: Map<string, string>,
         ): Promise<FileWithFolderPath[]> => {
+            if (manualDuplicatedFilenamesHandler === undefined) {
+                return filesWithFolderPaths;
+            }
+
             const filesInNewDir: FileWithFolderPath[] = [];
             const filesInExistingDir: FileWithFolderPath[] = [];
 
@@ -315,7 +319,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 }
             }
 
-            const revisedFilenameDataList = await duplicatedFilenameResolver.resolveDuplicates(
+            const revisedFilenameDataList = await manualDuplicatedFilenamesHandler?.letUserHandleDuplicates(
                 filesInExistingDir.map((file) => ({
                     name: file.name,
                     folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : currentFolderId,
@@ -323,12 +327,12 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             );
 
             const filesToUpload = mapFilenameDataToFiles(revisedFilenameDataList, filesWithFolderPaths, currentFolderId, folderIdMap);
-            const filesToUploadWithFolderPath = await addFolderPathToFiles(filesToUpload);
+            // const filesToUploadWithFolderPath = await addFolderPathToFiles(filesToUpload);
 
-            filesToUploadWithFolderPath.push(...filesInNewDir);
-            return filesToUploadWithFolderPath;
+            filesToUpload.push(...filesInNewDir);
+            return filesToUpload;
         },
-        [duplicatedFilenameResolver],
+        [manualDuplicatedFilenamesHandler],
     );
 
     const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, folderId?: string) => {
@@ -351,7 +355,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 addTotalSize(file.path ?? "", file.size);
             }
 
-            const filesToUpload = await resolveDuplicatedFilenames(filesWithFolderPaths, folderId, folderIdMap);
+            const filesToUpload = await handleDuplicatedFilenames(filesWithFolderPaths, folderId, folderIdMap);
 
             cancelUpload.current = axios.CancelToken.source();
             for (const file of filesToUpload) {
