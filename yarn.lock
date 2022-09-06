@@ -4810,14 +4810,18 @@ __metadata:
     "@comet/cli": ^2.0.0
     "@comet/eslint-config": ^2.0.0
     "@gitbeaker/node": ^34.0.0
+    "@types/jest": ^27.0.0
     "@types/styled-components": ^5.0.0
     chokidar-cli: ^2.0.0
     eslint: ^8.0.0
+    jest: ^27.0.0
+    jest-junit: ^13.0.0
     next: ^12.0.0
     next-auth: ^3.0.0
     prettier: ^2.0.0
     rimraf: ^3.0.0
     scroll-into-view-if-needed: ^2.0.0
+    ts-jest: ^27.0.0
     typescript: ^4.0.0
     use-debounce: ^6.0.0
     yarn-run-all: ^3.0.0
