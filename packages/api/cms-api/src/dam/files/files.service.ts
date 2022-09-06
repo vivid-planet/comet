@@ -222,15 +222,7 @@ export class FilesService {
 
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
-            //TODO: let user decide to change name or override file
-            const extension = extname(file.originalname);
-            const filename = basename(file.originalname, extension);
-            let i = 1;
-            let name = slugifyFilename(filename, extension);
-            while ((await this.findOneByFilenameAndFolder(name, folderId)) !== null) {
-                name = slugifyFilename(`${filename}-${i}`, extension);
-                i++;
-            }
+            const name = await this.findNextAvailableFilename(file.originalname, folderId);
 
             result = await this.create({
                 name,
@@ -271,6 +263,21 @@ export class FilesService {
         }
 
         return result;
+    }
+
+    async findNextAvailableFilename(filePath: string, folderId: string | null = null): Promise<string> {
+        const extension = extname(filePath);
+        const filename = basename(filePath, extension);
+
+        let i = 1;
+        let name = slugifyFilename(filename, extension);
+
+        while ((await this.findOneByFilenameAndFolder(name, folderId)) !== null) {
+            name = slugifyFilename(`${filename}-copy${i}`, extension);
+            i++;
+        }
+
+        return name;
     }
 
     async calculateDominantColor(contentHash: string): Promise<string | undefined> {

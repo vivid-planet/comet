@@ -2,11 +2,14 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { NotFoundException } from "@nestjs/common";
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { basename, extname } from "path";
 
 import { FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
+import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { File } from "./entities/file.entity";
-import { FilesService, withFilesSelect } from "./files.service";
+import { FilesService } from "./files.service";
+import { slugifyFilename } from "./files.utils";
 
 @Resolver(() => File)
 export class FilesResolver {
@@ -66,15 +69,36 @@ export class FilesResolver {
     }
 
     @Query(() => Boolean)
-    async damFilenameAlreadyExists(@Args("filename") filename: string, @Args("folderId", { nullable: true }) folderId?: string): Promise<boolean> {
-        return (
-            (
-                await withFilesSelect(this.filesRepository.createQueryBuilder("file"), {
-                    filename,
-                    folderId: folderId || null,
-                }).getResult()
-            ).length > 0
-        );
+    async damIsFilenameOccupied(@Args("filename") filename: string, @Args("folderId", { nullable: true }) folderId?: string): Promise<boolean> {
+        const extension = extname(filename);
+        const name = basename(filename, extension);
+        const slugifiedName = slugifyFilename(name, extension);
+
+        return (await this.filesService.findOneByFilenameAndFolder(slugifiedName, folderId)) !== null;
+    }
+
+    @Query(() => [FilenameResponse])
+    async damAreFilenamesOccupied(
+        @Args("filenames", { type: () => [FilenameInput] }) filenames: Array<FilenameInput>,
+    ): Promise<Array<FilenameResponse>> {
+        const response: Array<FilenameResponse> = [];
+
+        for (const { name, folderId } of filenames) {
+            const extension = extname(name);
+            const filename = basename(name, extension);
+            const slugifiedName = slugifyFilename(filename, extension);
+
+            const existingFile = await this.filesService.findOneByFilenameAndFolder(slugifiedName, folderId);
+            const isOccupied = existingFile !== null;
+
+            response.push({
+                name,
+                folderId,
+                isOccupied,
+            });
+        }
+
+        return response;
     }
 
     @ResolveField(() => String)
