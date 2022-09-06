@@ -8,6 +8,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables, GQLLicenseType } from "../../graphql.generated";
 import { CropSettingsFields } from "./CropSettingsFields";
+import { EditFileFormValues } from "./EditFile";
 
 interface SettingsFormProps {
     isImage: boolean;
@@ -140,6 +141,16 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                 <Calendar />
                             </InputAdornment>
                         }
+                        validate={(value: Date | undefined, allValues) => {
+                            if (value && allValues && value < (allValues as EditFileFormValues).license.durationFrom) {
+                                return (
+                                    <FormattedMessage
+                                        id="comet.dam.file.error.durationTo"
+                                        defaultMessage="The end date of the license must be after the start date"
+                                    />
+                                );
+                            }
+                        }}
                     />
                 </FieldContainer>
             </FormSection>

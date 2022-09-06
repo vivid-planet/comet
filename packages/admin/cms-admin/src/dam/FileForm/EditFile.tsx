@@ -52,7 +52,7 @@ export interface EditImageFormValues {
     };
 }
 
-interface EditFileFormValues extends EditImageFormValues {
+export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
