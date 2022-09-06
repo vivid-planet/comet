@@ -45,70 +45,70 @@ export const PageContentBlock = createBlocksBlock({
     additionalFields: {
         userGroup: {
             defaultValue: "All",
-            ContextMenuItem: ({ value, onChange, onMenuClose }) => {
-                const [internalValue, setInternalValue] = React.useState(value);
-                const [dialogOpen, setDialogOpen] = React.useState(false);
-                return (
-                    <>
-                        <MenuItem
+        },
+    },
+    AdditionalContextMenuItems: ({ block, onChange, onMenuClose }) => {
+        const [internalValue, setInternalValue] = React.useState(block.userGroup);
+        const [dialogOpen, setDialogOpen] = React.useState(false);
+        return (
+            <>
+                <MenuItem
+                    onClick={() => {
+                        setDialogOpen(true);
+                    }}
+                >
+                    <ListItemIcon>
+                        <Account />
+                    </ListItemIcon>
+                    <FormattedMessage id="cometDemo.pageContentBlock.userGroup.menuItem" defaultMessage="Visibility rules" />
+                </MenuItem>
+                <Dialog
+                    open={dialogOpen}
+                    onClose={() => {
+                        setDialogOpen(false);
+                        onMenuClose();
+                    }}
+                >
+                    <DialogTitle>
+                        <FormattedMessage id="cometDemo.pageContentBlock.userGroup.dialogTitle" defaultMessage="Visibility rules" />
+                    </DialogTitle>
+                    <DialogContent>
+                        <Select value={internalValue} onChange={(event) => setInternalValue(event.target.value)} fullWidth>
+                            {userGroupOptions.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
                             onClick={() => {
-                                setDialogOpen(true);
-                            }}
-                        >
-                            <ListItemIcon>
-                                <Account />
-                            </ListItemIcon>
-                            <FormattedMessage id="cometDemo.pageContentBlock.userGroup.menuItem" defaultMessage="Visibility rules" />
-                        </MenuItem>
-                        <Dialog
-                            open={dialogOpen}
-                            onClose={() => {
                                 setDialogOpen(false);
                                 onMenuClose();
                             }}
                         >
-                            <DialogTitle>
-                                <FormattedMessage id="cometDemo.pageContentBlock.userGroup.dialogTitle" defaultMessage="Visibility rules" />
-                            </DialogTitle>
-                            <DialogContent>
-                                <Select value={internalValue} onChange={(event) => setInternalValue(event.target.value)} fullWidth>
-                                    {userGroupOptions.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button
-                                    onClick={() => {
-                                        setDialogOpen(false);
-                                        onMenuClose();
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.cancel} />
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        onChange(internalValue);
-                                        setDialogOpen(false);
-                                        onMenuClose();
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.ok} />
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-                    </>
-                );
-            },
-            Indicator: ({ value }) => {
-                if (value === "All") {
-                    return null;
-                } else {
-                    return <Chip label={userGroupOptions.find((option) => option.value === value)?.label} />;
-                }
-            },
-        },
+                            <FormattedMessage {...messages.cancel} />
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                onChange({ ...block, userGroup: internalValue });
+                                setDialogOpen(false);
+                                onMenuClose();
+                            }}
+                        >
+                            <FormattedMessage {...messages.ok} />
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </>
+        );
+    },
+    AdditionalBlockRowContent: ({ block }) => {
+        if (block.userGroup === "All") {
+            return null;
+        } else {
+            return <Chip label={userGroupOptions.find((option) => option.value === block.userGroup)?.label} />;
+        }
     },
 });

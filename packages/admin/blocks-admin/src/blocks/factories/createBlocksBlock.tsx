@@ -51,8 +51,6 @@ type BlockType = string;
 
 interface AdditionalField<Value = unknown> {
     defaultValue: Value;
-    ContextMenuItem: React.FunctionComponent<{ value: Value; onChange: (value: Value) => void; onMenuClose: () => void }>;
-    Indicator?: React.FunctionComponent<{ value: Value }>;
 }
 
 interface CreateBlocksBlockOptions {
@@ -60,6 +58,12 @@ interface CreateBlocksBlockOptions {
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
     additionalFields?: Record<string, AdditionalField>;
+    AdditionalContextMenuItems?: React.FunctionComponent<{
+        block: BlocksBlockItem;
+        onChange: (block: BlocksBlockItem) => void;
+        onMenuClose: () => void;
+    }>;
+    AdditionalBlockRowContent?: React.FunctionComponent<{ block: BlocksBlockItem }>;
 }
 
 export function createBlocksBlock({
@@ -67,6 +71,8 @@ export function createBlocksBlock({
     name,
     displayName = <FormattedMessage id="comet.blocks.blocks.name" defaultMessage="Blocks" />,
     additionalFields = {},
+    AdditionalContextMenuItems,
+    AdditionalBlockRowContent,
 }: CreateBlocksBlockOptions): BlockInterface<BlocksBlockFragment, BlocksBlockState> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
@@ -532,27 +538,25 @@ export function createBlocksBlock({
                                                                     slideIn={data.slideIn}
                                                                     hideBottomInsertBetweenButton={blockIndex >= state.blocks.length - 1}
                                                                     additionalMenuItems={(onMenuClose) =>
-                                                                        Object.entries(additionalFields).map(([field, config]) => (
-                                                                            <config.ContextMenuItem
-                                                                                key={field}
-                                                                                value={data[field]}
-                                                                                onChange={(value) => {
+                                                                        AdditionalContextMenuItems ? (
+                                                                            <AdditionalContextMenuItems
+                                                                                block={data}
+                                                                                onChange={(updatedBlock) => {
                                                                                     updateState((previousState) => ({
                                                                                         blocks: previousState.blocks.map((block) =>
-                                                                                            block.key === data.key
-                                                                                                ? { ...block, [field]: value }
-                                                                                                : block,
+                                                                                            block.key === data.key ? updatedBlock : block,
                                                                                         ),
                                                                                     }));
                                                                                 }}
                                                                                 onMenuClose={onMenuClose}
                                                                             />
-                                                                        ))
+                                                                        ) : undefined
                                                                     }
-                                                                    additionalContent={Object.entries(additionalFields).map(
-                                                                        ([field, { Indicator }]) =>
-                                                                            Indicator ? <Indicator value={data[field]} /> : null,
-                                                                    )}
+                                                                    additionalContent={
+                                                                        AdditionalBlockRowContent ? (
+                                                                            <AdditionalBlockRowContent block={data} />
+                                                                        ) : undefined
+                                                                    }
                                                                 />
                                                             </HoverPreviewComponent>
                                                         );
