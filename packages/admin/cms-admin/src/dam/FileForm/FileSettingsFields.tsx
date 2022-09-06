@@ -1,12 +1,12 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Field, FieldContainer, FinalFormInput, FormSection } from "@comet/admin";
+import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Calendar } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "../../graphql.generated";
+import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables, GQLLicenseType } from "../../graphql.generated";
 import { CropSettingsFields } from "./CropSettingsFields";
 
 interface SettingsFormProps {
@@ -19,6 +19,15 @@ const damIsFilenameOccupiedQuery = gql`
         damIsFilenameOccupied(filename: $filename, folderId: $folderId)
     }
 `;
+
+const licenseTypeArray: readonly GQLLicenseType[] = ["ROYALTY_FREE", "RIGHTS_MANAGED", "SUBSCRIPTION", "MICRO"];
+
+const licenseTypeLabels: { [key in GQLLicenseType]: React.ReactNode } = {
+    ROYALTY_FREE: <FormattedMessage id="comet.dam.file.licenseType.royaltyFree" defaultMessage="Royalty free" />,
+    RIGHTS_MANAGED: <FormattedMessage id="comet.dam.file.licenseType.rightsManaged" defaultMessage="Rights managed" />,
+    SUBSCRIPTION: <FormattedMessage id="comet.dam.file.licenseType.subscription" defaultMessage="Subscription" />,
+    MICRO: <FormattedMessage id="comet.dam.file.licenseType.micro" defaultMessage="Micro" />,
+};
 
 export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): React.ReactElement => {
     const intl = useIntl();
@@ -83,11 +92,16 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                     fullWidth
                 />
             </FormSection>
-            <FormSection title={intl.formatMessage({ id: "comet.dam.file.licenseInformation", defaultMessage: "License information" })}>
+            <FormSection title={<FormattedMessage id="comet.dam.file.licenseInformation" defaultMessage="License information" />}>
                 <Field
-                    label={<FormattedMessage id="comet.dam.file.type" defaultMessage="Type" />}
+                    component={FinalFormSelect}
+                    getOptionLabel={(option: GQLLicenseType) => licenseTypeLabels[option]}
+                    getOptionSelected={(option: GQLLicenseType, selectedOption: GQLLicenseType) => {
+                        return option === selectedOption;
+                    }}
+                    options={licenseTypeArray}
                     name="license.type"
-                    component={FinalFormInput}
+                    label={<FormattedMessage id="comet.dam.file.type" defaultMessage="Type" />}
                     fullWidth
                 />
                 <Field
