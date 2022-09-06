@@ -1,5 +1,5 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, ButtonGroup, ButtonGroupProps, MenuItem, MenuList, Popover } from "@mui/material";
+import { Button, ButtonGroup, ButtonGroupProps, MenuItem, MenuList, Popover, PopoverProps } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import * as React from "react";
 import { PropsWithChildren } from "react";
@@ -15,6 +15,7 @@ export interface SplitButtonProps extends ButtonGroupProps<any> {
     localStorageKey?: string;
     autoClickOnSelect?: boolean;
     storage?: Storage;
+    popoverProps?: Partial<PopoverProps>;
 }
 
 // Based on https://v4.mui.com/components/button-group/#split-button
@@ -27,6 +28,7 @@ const SplitBtn = ({
     localStorageKey,
     storage,
     autoClickOnSelect = true,
+    popoverProps,
     ...restProps
 }: PropsWithChildren<SplitButtonProps>) => {
     const [showSelectButtonState, setShowSelectButtonState] = React.useState<boolean | undefined>(undefined);
@@ -91,8 +93,14 @@ const SplitBtn = ({
             <Popover
                 open={open}
                 anchorEl={anchorRef.current}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                transformOrigin={{ vertical: "top", horizontal: "center" }}
+                anchorOrigin={{
+                    vertical: popoverProps?.anchorOrigin?.vertical ?? "bottom",
+                    horizontal: popoverProps?.anchorOrigin?.horizontal ?? "center",
+                }}
+                transformOrigin={{
+                    vertical: popoverProps?.transformOrigin?.vertical ?? "top",
+                    horizontal: popoverProps?.transformOrigin?.horizontal ?? "center",
+                }}
                 onClose={handleClose}
             >
                 <MenuList>
