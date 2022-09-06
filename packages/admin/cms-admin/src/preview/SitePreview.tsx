@@ -20,9 +20,12 @@ interface SiteState {
     includeInvisibleBlocks: boolean;
 }
 
-function buildPreviewUrl(previewUrl: string, previewPath: string, formattedSiteState: string) {
-    const GET_PARAM = "__preview";
-    return `${previewUrl}${previewPath}?${GET_PARAM}=${formattedSiteState}`;
+export function buildPreviewUrl(previewUrl: string, previewPath: string, formattedSiteState: string) {
+    const url = new URL(`${previewUrl}${previewPath}`);
+
+    url.searchParams.append("__preview", `${formattedSiteState}`);
+
+    return url.toString();
 }
 
 interface Props extends RouteComponentProps {
