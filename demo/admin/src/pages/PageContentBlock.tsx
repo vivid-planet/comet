@@ -3,6 +3,7 @@ import { DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 
+import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
 import { HeadlineBlock } from "./blocks/HeadlineBlock";
 import { TextImageBlock } from "./blocks/TextImageBlock";
@@ -19,5 +20,6 @@ export const PageContentBlock = createBlocksBlock({
         youTubeVideo: YouTubeVideoBlock,
         linkList: LinkListBlock,
         fullWidthImage: FullWidthImageBlock,
+        columns: ColumnsBlock,
     },
 });
