@@ -1,5 +1,5 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Module, ModuleMetadata } from "@nestjs/common";
+import { DynamicModule, Global, Module, ModuleMetadata } from "@nestjs/common";
 
 import { BuildTemplatesResolver } from "./build-templates.resolver";
 import { BuildTemplatesService } from "./build-templates.service";
@@ -27,6 +27,7 @@ interface BuildsModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
 }
 
 @Module({})
+@Global()
 export class BuildsModule {
     static registerAsync(options: BuildsModuleAsyncOptions): DynamicModule {
         const optionsProvider = {
