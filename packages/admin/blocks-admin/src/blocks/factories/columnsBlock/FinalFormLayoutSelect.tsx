@@ -1,4 +1,4 @@
-import { Divider, ListItemText, ListSubheader, MenuItem, Select as MuiSelect, SelectChangeEvent, Typography } from "@mui/material";
+import { Divider, ListItemText as MuiListItemText, ListSubheader, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
@@ -80,13 +80,7 @@ const MenuItemContent = styled("div")`
     align-items: center;
 `;
 
-const Select = styled(MuiSelect)`
-    && {
-        height: 64px;
-    }
-
-    &.MuiInput-underline::before,
-    &.MuiInput-underline::after {
-        display: none;
-    }
+const ListItemText = styled(MuiListItemText)`
+    margin-top: 0;
+    margin-bottom: 0;
 `;
