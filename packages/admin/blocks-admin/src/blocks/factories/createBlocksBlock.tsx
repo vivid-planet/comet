@@ -49,7 +49,7 @@ export interface BlocksBlockFragment {
 
 type BlockType = string;
 
-interface AdditionalField<Value = unknown> {
+interface AdditionalItemField<Value = unknown> {
     defaultValue: Value;
 }
 
@@ -57,22 +57,22 @@ interface CreateBlocksBlockOptions {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
-    additionalFields?: Record<string, AdditionalField>;
-    AdditionalContextMenuItems?: React.FunctionComponent<{
-        block: BlocksBlockItem;
-        onChange: (block: BlocksBlockItem) => void;
+    additionalItemFields?: Record<string, AdditionalItemField>;
+    AdditionalItemContextMenuItems?: React.FunctionComponent<{
+        item: BlocksBlockItem;
+        onChange: (item: BlocksBlockItem) => void;
         onMenuClose: () => void;
     }>;
-    AdditionalBlockRowContent?: React.FunctionComponent<{ block: BlocksBlockItem }>;
+    AdditionalItemContent?: React.FunctionComponent<{ item: BlocksBlockItem }>;
 }
 
 export function createBlocksBlock({
     supportedBlocks,
     name,
     displayName = <FormattedMessage id="comet.blocks.blocks.name" defaultMessage="Blocks" />,
-    additionalFields = {},
-    AdditionalContextMenuItems,
-    AdditionalBlockRowContent,
+    additionalItemFields = {},
+    AdditionalItemContextMenuItems,
+    AdditionalItemContent,
 }: CreateBlocksBlockOptions): BlockInterface<BlocksBlockFragment, BlocksBlockState> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
@@ -114,7 +114,7 @@ export function createBlocksBlock({
                 blocks.push({
                     ...item,
                     props: block.input2State(item.props),
-                    ...Object.keys(additionalFields).reduce((fields, field) => ({ ...fields, [field]: item[field] }), {}),
+                    ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: item[field] }), {}),
                     selected: false,
                     slideIn: false,
                 });
@@ -136,7 +136,7 @@ export function createBlocksBlock({
                         visible: c.visible,
                         type: c.type,
                         props: block.state2Output(c.props),
-                        ...Object.keys(additionalFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                     };
                 }),
             };
@@ -181,7 +181,7 @@ export function createBlocksBlock({
                             type: c.type,
                             adminRoute: blockAdminRoute,
                             props: block.createPreviewState(c.props, { ...previewCtx, parentUrl: blockAdminRoute }),
-                            ...Object.keys(additionalFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                            ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                         };
                     }),
                 adminMeta: { route: previewCtx.parentUrl },
@@ -307,7 +307,7 @@ export function createBlocksBlock({
                     selected: false,
                     props: block.defaultValues(),
                     slideIn: true,
-                    ...Object.entries(additionalFields).reduce((fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }), {}),
+                    ...Object.entries(additionalItemFields).reduce((fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }), {}),
                 };
 
                 const newBlocks = [...state.blocks];
@@ -538,13 +538,13 @@ export function createBlocksBlock({
                                                                     slideIn={data.slideIn}
                                                                     hideBottomInsertBetweenButton={blockIndex >= state.blocks.length - 1}
                                                                     additionalMenuItems={(onMenuClose) =>
-                                                                        AdditionalContextMenuItems ? (
-                                                                            <AdditionalContextMenuItems
-                                                                                block={data}
-                                                                                onChange={(updatedBlock) => {
+                                                                        AdditionalItemContextMenuItems ? (
+                                                                            <AdditionalItemContextMenuItems
+                                                                                item={data}
+                                                                                onChange={(updatedItem) => {
                                                                                     updateState((previousState) => ({
                                                                                         blocks: previousState.blocks.map((block) =>
-                                                                                            block.key === data.key ? updatedBlock : block,
+                                                                                            block.key === data.key ? updatedItem : block,
                                                                                         ),
                                                                                     }));
                                                                                 }}
@@ -553,9 +553,7 @@ export function createBlocksBlock({
                                                                         ) : undefined
                                                                     }
                                                                     additionalContent={
-                                                                        AdditionalBlockRowContent ? (
-                                                                            <AdditionalBlockRowContent block={data} />
-                                                                        ) : undefined
+                                                                        AdditionalItemContent ? <AdditionalItemContent item={data} /> : undefined
                                                                     }
                                                                 />
                                                             </HoverPreviewComponent>

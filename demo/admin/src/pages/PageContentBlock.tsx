@@ -44,12 +44,12 @@ export const PageContentBlock = createBlocksBlock({
         fullWidthImage: FullWidthImageBlock,
         columns: ColumnsBlock,
     },
-    additionalFields: {
+    additionalItemFields: {
         userGroup: {
             defaultValue: "All",
         },
     },
-    AdditionalContextMenuItems: ({ block, onChange, onMenuClose }) => {
+    AdditionalItemContextMenuItems: ({ item, onChange, onMenuClose }) => {
         const [dialogOpen, setDialogOpen] = React.useState(false);
 
         interface FormValues {
@@ -57,7 +57,7 @@ export const PageContentBlock = createBlocksBlock({
         }
 
         const handleSubmit = (values: FormValues) => {
-            onChange({ ...block, userGroup: values.userGroup });
+            onChange({ ...item, userGroup: values.userGroup });
             setDialogOpen(false);
             onMenuClose();
         };
@@ -84,7 +84,7 @@ export const PageContentBlock = createBlocksBlock({
                     <DialogTitle>
                         <FormattedMessage id="cometDemo.pageContentBlock.userGroup.dialogTitle" defaultMessage="Visibility rules" />
                     </DialogTitle>
-                    <Form<FormValues> onSubmit={handleSubmit} initialValues={{ userGroup: block.userGroup as GQLUserGroup }}>
+                    <Form<FormValues> onSubmit={handleSubmit} initialValues={{ userGroup: item.userGroup as GQLUserGroup }}>
                         {({ handleSubmit }) => (
                             <form onSubmit={handleSubmit}>
                                 <DialogContent>
@@ -121,11 +121,11 @@ export const PageContentBlock = createBlocksBlock({
             </>
         );
     },
-    AdditionalBlockRowContent: ({ block }) => {
-        if (block.userGroup === "All") {
+    AdditionalItemContent: ({ item }) => {
+        if (item.userGroup === "All") {
             return null;
         } else {
-            return <Chip label={userGroupOptions.find((option) => option.value === block.userGroup)?.label} />;
+            return <Chip label={userGroupOptions.find((option) => option.value === item.userGroup)?.label} />;
         }
     },
 });
