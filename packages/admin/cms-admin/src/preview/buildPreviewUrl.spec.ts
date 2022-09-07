@@ -1,10 +1,6 @@
-import { buildPreviewUrl } from "./SitePreview";
+import { buildPreviewUrl } from "./buildPreviewUrl";
 
-jest.mock("react-dnd", () => {
-    return;
-});
-
-describe("SitePreview", () => {
+describe("buildPreviewUrl", () => {
     const previewUrl = "https://admin.com/preview/";
     const formattedSiteState = JSON.stringify({ includeInvisibleBlocks: true });
 

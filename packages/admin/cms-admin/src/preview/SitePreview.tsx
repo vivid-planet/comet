@@ -9,6 +9,7 @@ import { RouteComponentProps, useHistory } from "react-router";
 import { ExternalLinkBlockData } from "../blocks.generated";
 import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
 import { useSiteConfig } from "../sitesConfig/useSiteConfig";
+import { buildPreviewUrl } from "./buildPreviewUrl";
 import { DeviceToggle } from "./DeviceToggle";
 import { IFrameViewer } from "./IFrameViewer";
 import { OpenLinkDialog } from "./OpenLinkDialog";
@@ -18,14 +19,6 @@ import { VisibilityToggle } from "./VisibilityToggle";
 
 interface SiteState {
     includeInvisibleBlocks: boolean;
-}
-
-export function buildPreviewUrl(previewUrl: string, previewPath: string, formattedSiteState: string) {
-    const url = new URL(`${previewUrl}${previewPath}`);
-
-    url.searchParams.append("__preview", `${formattedSiteState}`);
-
-    return url.toString();
 }
 
 interface Props extends RouteComponentProps {
