@@ -1,11 +1,13 @@
-import { messages } from "@comet/admin";
+import { Field, FinalFormSelect, messages } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { createBlocksBlock, Space as SpaceBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
 import { DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
-import { Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem, Select } from "@mui/material";
+import { Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from "@mui/material";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { GQLUserGroup } from "@src/graphql.generated";
 import * as React from "react";
+import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
@@ -48,8 +50,18 @@ export const PageContentBlock = createBlocksBlock({
         },
     },
     AdditionalContextMenuItems: ({ block, onChange, onMenuClose }) => {
-        const [internalValue, setInternalValue] = React.useState(block.userGroup);
         const [dialogOpen, setDialogOpen] = React.useState(false);
+
+        interface FormValues {
+            userGroup: GQLUserGroup;
+        }
+
+        const handleSubmit = (values: FormValues) => {
+            onChange({ ...block, userGroup: values.userGroup });
+            setDialogOpen(false);
+            onMenuClose();
+        };
+
         return (
             <>
                 <MenuItem
@@ -72,34 +84,39 @@ export const PageContentBlock = createBlocksBlock({
                     <DialogTitle>
                         <FormattedMessage id="cometDemo.pageContentBlock.userGroup.dialogTitle" defaultMessage="Visibility rules" />
                     </DialogTitle>
-                    <DialogContent>
-                        <Select value={internalValue} onChange={(event) => setInternalValue(event.target.value)} fullWidth>
-                            {userGroupOptions.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button
-                            onClick={() => {
-                                setDialogOpen(false);
-                                onMenuClose();
-                            }}
-                        >
-                            <FormattedMessage {...messages.cancel} />
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                onChange({ ...block, userGroup: internalValue });
-                                setDialogOpen(false);
-                                onMenuClose();
-                            }}
-                        >
-                            <FormattedMessage {...messages.ok} />
-                        </Button>
-                    </DialogActions>
+                    <Form<FormValues> onSubmit={handleSubmit} initialValues={{ userGroup: block.userGroup as GQLUserGroup }}>
+                        {({ handleSubmit }) => (
+                            <form onSubmit={handleSubmit}>
+                                <DialogContent>
+                                    <Field name="userGroup" fullWidth required>
+                                        {(props) => (
+                                            <FinalFormSelect {...props}>
+                                                {userGroupOptions.map((option) => (
+                                                    <MenuItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </FinalFormSelect>
+                                        )}
+                                    </Field>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button
+                                        type="button"
+                                        onClick={() => {
+                                            setDialogOpen(false);
+                                            onMenuClose();
+                                        }}
+                                    >
+                                        <FormattedMessage {...messages.cancel} />
+                                    </Button>
+                                    <Button type="submit">
+                                        <FormattedMessage {...messages.ok} />
+                                    </Button>
+                                </DialogActions>
+                            </form>
+                        )}
+                    </Form>
                 </Dialog>
             </>
         );
