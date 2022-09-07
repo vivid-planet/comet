@@ -11,7 +11,7 @@ export interface ToolbarBackButtonProps {
     backIcon?: React.ReactNode;
 }
 
-const styles = () => {
+const styles = ({ spacing }: Theme) => {
     return createStyles<ToolbarBackButtonClassKey, ToolbarBackButtonProps>({
         root: {
             flex: 0,
@@ -20,13 +20,13 @@ const styles = () => {
 
             "& [class*='CometAdminToolbarItem-root']": {
                 padding: 0,
-                paddingRight: 5,
+                paddingRight: spacing(3),
             },
         },
     });
 };
 
-function BackButton({ backIcon = <ArrowLeft />, classes }: ToolbarBackButtonProps & WithStyles<typeof styles>) {
+function BackButton({ backIcon = <ArrowLeft sx={{ fontSize: 24 }} />, classes }: ToolbarBackButtonProps & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
 
     return stackApi && stackApi.breadCrumbs.length > 1 ? (
