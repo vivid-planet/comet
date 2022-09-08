@@ -52,7 +52,7 @@ describe("FlatBlocks", () => {
         const visitor = new FlatBlocks(testBlock);
         const nodes = visitor.breadthFirst();
 
-        expect(nodes[0]?.block.constructor.name).toBe("BlockBlocks");
+        expect(nodes[0]?.block.constructor.name).toBe("BlocksBlockData");
         expect(nodes[1]?.block.constructor.name).toBe("CBlockData");
     });
 });
