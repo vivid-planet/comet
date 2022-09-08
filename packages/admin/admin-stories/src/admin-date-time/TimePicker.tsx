@@ -1,7 +1,6 @@
 import { Field } from "@comet/admin";
 import { FinalFormTimePicker } from "@comet/admin-date-time";
-import { Time } from "@comet/admin-icons";
-import { Card, CardContent, InputAdornment } from "@mui/material";
+import { Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -25,18 +24,7 @@ const Story = () => {
                         <Card>
                             <CardContent>
                                 <Field name="timeOne" label="Time" fullWidth component={FinalFormTimePicker} />
-                                <Field
-                                    name="timeTwo"
-                                    label="Clearable time with icon"
-                                    fullWidth
-                                    clearable
-                                    component={FinalFormTimePicker}
-                                    startAdornment={
-                                        <InputAdornment position="start">
-                                            <Time />
-                                        </InputAdornment>
-                                    }
-                                />
+                                <Field name="timeTwo" label="Clearable" fullWidth clearable component={FinalFormTimePicker} />
                             </CardContent>
                         </Card>
                         <pre>{JSON.stringify(values, null, 4)}</pre>

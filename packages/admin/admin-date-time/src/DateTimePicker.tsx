@@ -1,5 +1,4 @@
-import { Calendar, Time } from "@comet/admin-icons";
-import { ComponentsOverrides, FormControl, InputAdornment, Theme } from "@mui/material";
+import { ComponentsOverrides, FormControl, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -68,11 +67,6 @@ function DateTimePicker({
                     className={classes.datePicker}
                     onChange={onChangeDate}
                     fullWidth
-                    startAdornment={
-                        <InputAdornment position="start">
-                            <Calendar />
-                        </InputAdornment>
-                    }
                     {...propsForBothTimePickers}
                     {...componentsProps.datePicker}
                 />
@@ -84,11 +78,6 @@ function DateTimePicker({
                     className={classes.timePicker}
                     onChange={onChangeTime}
                     fullWidth
-                    startAdornment={
-                        <InputAdornment position="start">
-                            <Time />
-                        </InputAdornment>
-                    }
                     {...propsForBothTimePickers}
                     {...componentsProps.timePicker}
                 />

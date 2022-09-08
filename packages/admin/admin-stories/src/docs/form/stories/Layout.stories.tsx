@@ -86,7 +86,7 @@ storiesOf("stories/form/Layout", module)
                         onSubmit={() => {}}
                         render={({ handleSubmit }) => (
                             <form onSubmit={handleSubmit}>
-                                <FormSection title="Sidebar example first section">
+                                <FormSection title="First section">
                                     <Field name="text1" label="Text 1" fullWidth component={FinalFormInput} />
                                     <Field name="select" label="Select" fullWidth>
                                         {(props) => (

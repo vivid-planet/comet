@@ -1,7 +1,6 @@
 import { Field, FieldContainer } from "@comet/admin";
 import { DatePicker, FinalFormDatePicker } from "@comet/admin-date-time";
-import { Calendar } from "@comet/admin-icons";
-import { Grid, InputAdornment } from "@mui/material";
+import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -26,18 +25,8 @@ storiesOf("stories/form/components/Date & Time Pickers/Date Picker", module)
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                    <FieldContainer label="Clearable with icon" fullWidth>
-                        <DatePicker
-                            fullWidth
-                            value={dateThree}
-                            onChange={setDateThree}
-                            clearable
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <Calendar />
-                                </InputAdornment>
-                            }
-                        />
+                    <FieldContainer label="Clearable" fullWidth>
+                        <DatePicker fullWidth value={dateThree} onChange={setDateThree} clearable />
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={3}>
@@ -72,18 +61,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date Picker", module)
                             <Field name="dateTwo" label="Show two months" fullWidth component={FinalFormDatePicker} monthsToShow={2} />
                         </Grid>
                         <Grid item xs={6} md={3}>
-                            <Field
-                                name="dateThree"
-                                label="Clearable with icon"
-                                fullWidth
-                                component={FinalFormDatePicker}
-                                clearable
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <Calendar />
-                                    </InputAdornment>
-                                }
-                            />
+                            <Field name="dateThree" label="Clearable " fullWidth component={FinalFormDatePicker} clearable />
                         </Grid>
                         <Grid item xs={6} md={3}>
                             <Field

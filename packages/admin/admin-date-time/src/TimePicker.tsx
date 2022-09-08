@@ -1,5 +1,6 @@
 import { ClearInputAdornment, InputWithPopper, InputWithPopperProps } from "@comet/admin";
-import { ComponentsOverrides, ListItemText, MenuItem, MenuList, Theme } from "@mui/material";
+import { Time } from "@comet/admin-icons";
+import { ComponentsOverrides, InputAdornment, ListItemText, MenuItem, MenuList, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import { format } from "date-fns";
 import * as React from "react";
@@ -52,6 +53,11 @@ function TimePicker({
         <InputWithPopper
             value={dateValue ? intl.formatTime(dateValue, formatOptions) : ""}
             placeholder={placeholder}
+            startAdornment={
+                <InputAdornment position="start" disablePointerEvents>
+                    <Time />
+                </InputAdornment>
+            }
             {...inputWithPopperProps}
             onOpenPopper={() => {
                 onOpenPopper();

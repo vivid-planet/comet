@@ -87,9 +87,7 @@ const styles = (theme: Theme) => {
                 borderColor: theme.palette.error.main,
             },
         },
-        error: {
-            fontSize: 14,
-        },
+        error: {},
         hasWarning: {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.warning.main,
@@ -99,7 +97,6 @@ const styles = (theme: Theme) => {
             },
         },
         warning: {
-            fontSize: 14,
             color: theme.palette.warning.main,
         },
     });

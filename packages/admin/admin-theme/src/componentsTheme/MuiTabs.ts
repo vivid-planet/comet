@@ -23,7 +23,7 @@ export const getMuiTabs: GetMuiComponentTheme<"MuiTabs"> = (component, { palette
         },
         indicator: {
             backgroundColor: palette.primary.main,
-            height: 2,
+            height: 1,
         },
     }),
 });

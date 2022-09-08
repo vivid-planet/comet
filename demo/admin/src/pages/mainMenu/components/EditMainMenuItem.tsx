@@ -130,6 +130,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button
+                        color="info"
                         startIcon={<Preview />}
                         onClick={() => {
                             openPreviewWindow(item.node.path, contentScopeMatch.url);
