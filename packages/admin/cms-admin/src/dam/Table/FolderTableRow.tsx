@@ -37,7 +37,9 @@ export interface DamDragObject {
     item: GQLDamFileTableFragment | GQLDamFolderTableFragment;
 }
 
-const StyledFolderTableRow = styled(TableBodyRow)<TableBodyRowProps & { $activeHoverStyle: boolean; $archived: boolean; $highlightAsNew: boolean }>`
+const StyledFolderTableRow = styled(TableBodyRow, {
+    shouldForwardProp: (prop) => prop !== "$activeHoverStyle" && prop !== "$archived" && prop !== "$highlightAsNew",
+})<TableBodyRowProps & { $activeHoverStyle: boolean; $archived: boolean; $highlightAsNew: boolean }>`
     height: 58px;
     position: relative;
     z-index: 0;
