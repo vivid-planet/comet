@@ -1,4 +1,12 @@
-import { Divider, ListItemText as MuiListItemText, ListSubheader, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
+import {
+    Divider,
+    ListItemText as MuiListItemText,
+    ListSubheader as MuiListSubheader,
+    MenuItem as MuiMenuItem,
+    Select,
+    SelectChangeEvent,
+    Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
@@ -53,12 +61,14 @@ export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: P
         <Select value={value.name} onChange={handleChange} fullWidth>
             {sections.map((section, i) => [
                 hasMultipleSections ? (
-                    <ListSubheader key={`section-${section.name}`}>
-                        {i > 0 ? <Divider /> : null}
-                        <Typography variant="h6" color="textPrimary">
-                            {section.label}
-                        </Typography>
-                    </ListSubheader>
+                    <>
+                        {i > 0 ? <SectionDivider /> : null}
+                        <ListSubheader key={`section-${section.name}`}>
+                            <Typography variant="body2" fontWeight="bold" color="text.primary">
+                                {section.label}
+                            </Typography>
+                        </ListSubheader>
+                    </>
                 ) : null,
                 ...section.layouts.map((layout) => (
                     <MenuItem key={layout.name} value={layout.name}>
@@ -73,10 +83,28 @@ export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: P
     );
 }
 
+const ListSubheader = styled(MuiListSubheader)`
+    padding-top: ${({ theme }) => theme.spacing(2)};
+    padding-bottom: ${({ theme }) => theme.spacing(2)};
+`;
+
+const SectionDivider = styled(Divider)`
+    && {
+        margin-top: ${({ theme }) => theme.spacing(2)};
+        margin-bottom: ${({ theme }) => theme.spacing(2)};
+    }
+`;
+
+const MenuItem = styled(MuiMenuItem)`
+    padding-top: ${({ theme }) => theme.spacing(2)};
+    padding-bottom: ${({ theme }) => theme.spacing(2)};
+    margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;
+
 const MenuItemContent = styled("div")`
     display: grid;
     grid-template-columns: minmax(80px, 1fr) 2fr;
-    column-gap: 20px;
+    column-gap: ${({ theme }) => theme.spacing(2)};
     align-items: center;
 `;
 
