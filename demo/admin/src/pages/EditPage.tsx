@@ -153,6 +153,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button
+                        color="info"
                         startIcon={<Preview />}
                         disabled={!pageState}
                         onClick={() => {

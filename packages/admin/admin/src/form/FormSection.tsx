@@ -15,7 +15,7 @@ const styles = ({ spacing }: Theme) => {
     return createStyles<FormSectionClassKey, any>({
         root: {
             "&:not($disableMarginBottom)": {
-                marginBottom: spacing(8),
+                marginBottom: spacing(12),
             },
         },
         disableMarginBottom: {},
@@ -41,7 +41,7 @@ function Section({
 
     return (
         <div className={rootClasses.join(" ")}>
-            {title && <div className={classes.title}>{disableTypography ? title : <Typography variant="h4">{title}</Typography>}</div>}
+            {title && <div className={classes.title}>{disableTypography ? title : <Typography variant="h3">{title}</Typography>}</div>}
             <div className={classes.children}>{children}</div>
         </div>
     );

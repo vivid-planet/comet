@@ -1,7 +1,7 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiFormLabel: GetMuiComponentTheme<"MuiFormLabel"> = (component, { palette, typography, spacing }) => ({
+export const getMuiFormLabel: GetMuiComponentTheme<"MuiFormLabel"> = (component, { palette, typography }) => ({
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiFormLabel">(component?.styleOverrides, {
         root: {
@@ -10,7 +10,7 @@ export const getMuiFormLabel: GetMuiComponentTheme<"MuiFormLabel"> = (component,
             fontSize: 16,
             lineHeight: "20px",
             fontWeight: typography.fontWeightBold,
-            marginBottom: spacing(2),
+            marginBottom: 4,
         },
     }),
 });

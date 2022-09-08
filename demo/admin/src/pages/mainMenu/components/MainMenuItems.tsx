@@ -69,8 +69,9 @@ const MainMenuItems: React.FunctionComponent = () => {
                                 {
                                     name: "edit",
                                     header: "",
+                                    cellProps: { align: "right" },
                                     render: (item) => (
-                                        <IconButton onClick={() => stackApi.activatePage("edit", item.node.id)}>
+                                        <IconButton color="primary" onClick={() => stackApi.activatePage("edit", item.node.id)}>
                                             <Edit />
                                         </IconButton>
                                     ),
