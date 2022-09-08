@@ -25,7 +25,11 @@ function SearchTextField({
         <FinalFormInput
             {...restProps}
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.finalformsearchtextfield.default.placeholder", defaultMessage: "Search" })}
-            startAdornment={<InputAdornment position="start">{icon}</InputAdornment>}
+            startAdornment={
+                <InputAdornment position="start" disablePointerEvents>
+                    {icon}
+                </InputAdornment>
+            }
             endAdornment={
                 clearable ? (
                     <>

@@ -115,7 +115,7 @@ const ColorPicker = ({
                 startAdornment ? (
                     startAdornment
                 ) : (
-                    <InputAdornment position="start">
+                    <InputAdornment position="start" disablePointerEvents>
                         <div className={classes.preview}>
                             {previewColor ? (
                                 previewColor.isValid() ? (

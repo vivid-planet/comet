@@ -1,7 +1,6 @@
 import { Field, FieldContainer } from "@comet/admin";
 import { FinalFormTimePicker, TimePicker } from "@comet/admin-date-time";
-import { Time } from "@comet/admin-icons";
-import { Grid, InputAdornment } from "@mui/material";
+import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -31,18 +30,8 @@ storiesOf("stories/form/components/Date & Time Pickers/Time Picker", module)
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                    <FieldContainer label="With icon & clearable" fullWidth>
-                        <TimePicker
-                            fullWidth
-                            clearable
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <Time />
-                                </InputAdornment>
-                            }
-                            value={timeFour}
-                            onChange={setTimeFour}
-                        />
+                    <FieldContainer label="Clearable" fullWidth>
+                        <TimePicker fullWidth clearable value={timeFour} onChange={setTimeFour} />
                     </FieldContainer>
                 </Grid>
             </Grid>
@@ -77,18 +66,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Time Picker", module)
                             />
                         </Grid>
                         <Grid item xs={6} md={3}>
-                            <Field
-                                name="timeFour"
-                                label="With icon & clearable"
-                                fullWidth
-                                component={FinalFormTimePicker}
-                                clearable
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <Time />
-                                    </InputAdornment>
-                                }
-                            />
+                            <Field name="timeFour" label="Clearable" fullWidth component={FinalFormTimePicker} clearable />
                         </Grid>
                     </Grid>
                 )}

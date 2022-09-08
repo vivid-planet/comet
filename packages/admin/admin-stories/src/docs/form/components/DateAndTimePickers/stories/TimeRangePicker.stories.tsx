@@ -1,7 +1,6 @@
 import { Field, FieldContainer } from "@comet/admin";
 import { FinalFormTimeRangePicker, TimeRange, TimeRangePicker } from "@comet/admin-date-time";
-import { Time } from "@comet/admin-icons";
-import { Grid, InputAdornment } from "@mui/material";
+import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -19,28 +18,8 @@ storiesOf("stories/form/components/Date & Time Pickers/Time-Range Picker", modul
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6}>
-                    <FieldContainer label="Clearable with icon" fullWidth>
-                        <TimeRangePicker
-                            value={timeRangeTwo}
-                            onChange={setTimeRangeTwo}
-                            clearable
-                            componentsProps={{
-                                startPicker: {
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Time />
-                                        </InputAdornment>
-                                    ),
-                                },
-                                endPicker: {
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Time />
-                                        </InputAdornment>
-                                    ),
-                                },
-                            }}
-                        />
+                    <FieldContainer label="Clearable" fullWidth>
+                        <TimeRangePicker value={timeRangeTwo} onChange={setTimeRangeTwo} clearable />
                     </FieldContainer>
                 </Grid>
             </Grid>
@@ -60,29 +39,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Time-Range Picker", modul
                             <Field name="timeRangeOne" label="Time-Range Picker" fullWidth component={FinalFormTimeRangePicker} />
                         </Grid>
                         <Grid item xs={6}>
-                            <Field
-                                name="timeRangeThree"
-                                label="Clearable with icon"
-                                fullWidth
-                                component={FinalFormTimeRangePicker}
-                                clearable
-                                componentsProps={{
-                                    startPicker: {
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <Time />
-                                            </InputAdornment>
-                                        ),
-                                    },
-                                    endPicker: {
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <Time />
-                                            </InputAdornment>
-                                        ),
-                                    },
-                                }}
-                            />
+                            <Field name="timeRangeThree" label="Clearable" fullWidth component={FinalFormTimeRangePicker} clearable />
                         </Grid>
                     </Grid>
                 )}
