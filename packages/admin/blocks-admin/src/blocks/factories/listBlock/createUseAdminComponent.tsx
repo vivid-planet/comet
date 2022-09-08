@@ -7,11 +7,12 @@ import { CannotPasteBlockDialog } from "../../../clipboard/CannotPasteBlockDialo
 import { ClipboardContent, useBlockClipboard } from "../../../clipboard/useBlockClipboard";
 import { BlockAdminComponentProps, BlockInterface, BlockState, DispatchSetStateAction } from "../../types";
 import { resolveNewState } from "../../utils";
-import { ListBlockState } from "../createListBlock";
+import { AdditionalItemField, ListBlockState } from "../createListBlock";
 
 interface CreateListBlockUseAdminComponentOptions<T extends BlockInterface> {
     block: T;
     maxVisibleBlocks?: number;
+    additionalItemFields?: Record<string, AdditionalItemField>;
 }
 
 type ListBlockUseAdminComponentProps<T extends BlockInterface> = BlockAdminComponentProps<ListBlockState<T>>;
@@ -38,6 +39,7 @@ type RemovedListBlockItem<T extends BlockInterface> = ListBlockItem<T> & { remov
 export function createUseAdminComponent<T extends BlockInterface>({
     block,
     maxVisibleBlocks,
+    additionalItemFields = {},
 }: CreateListBlockUseAdminComponentOptions<T>): (props: ListBlockUseAdminComponentProps<T>) => ListBlockUseAdminComponentApi<T> {
     const useListBlockAdminComponent: (props: ListBlockUseAdminComponentProps<T>) => ListBlockUseAdminComponentApi<T> = ({ state, updateState }) => {
         const [cannotPasteBlockError, setCannotPasteBlockError] = React.useState<React.ReactNode>();
@@ -138,6 +140,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
                 props: block.defaultValues(),
                 selected: false,
                 slideIn: false,
+                ...Object.entries(additionalItemFields).reduce((fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }), {}),
             };
 
             const newBlocks = [...state.blocks];
