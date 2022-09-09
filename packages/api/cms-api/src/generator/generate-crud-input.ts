@@ -40,22 +40,29 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
             type = "number";
         } else if (prop.type === "RootBlockType") {
             const rootBlockType = prop.customType as RootBlockType | undefined;
-            if (!rootBlockType) throw new Error("Custom type not set");
-            if (!rootBlockType.block.path) throw new Error(`No path found for block ${rootBlockType.block.name}`);
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const exports = require(rootBlockType.block.path);
-            const blockExport = Object.entries(exports).find((i) => {
-                const b = i[1] as Block | undefined;
-                return b && b.blockDataFactory == rootBlockType.block.blockDataFactory;
-            });
-            if (!blockExport) {
-                throw new Error(`Can't find block export ${rootBlockType.block.name} in ${rootBlockType.block.path}`);
+            let blockExportName: string;
+            if (rootBlockType?.block.name == "DamImage") {
+                // TODO (detect that is block is defined in library (or use completely other technique))
+                importsOut += `import { DamImageBlock } from "@comet/cms-api";`;
+                blockExportName = "DamImageBlock";
+            } else {
+                if (!rootBlockType) throw new Error("Custom type not set");
+                if (!rootBlockType.block.path) throw new Error(`No path found for block ${rootBlockType.block.name}`);
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
+                const exports = require(rootBlockType.block.path);
+                const blockExport = Object.entries(exports).find((i) => {
+                    const b = i[1] as Block | undefined;
+                    return b && b.blockDataFactory == rootBlockType.block.blockDataFactory;
+                });
+                if (!blockExport) {
+                    throw new Error(`Can't find block export ${rootBlockType.block.name} in ${rootBlockType.block.path}`);
+                }
+                blockExportName = blockExport[0];
+                importsOut += `import { ${blockExportName} } from "${path
+                    .relative(`${generatorOptions.targetDirectory}/dto`, rootBlockType.block.path)
+                    .replace(/\.ts$/, "")}";`;
             }
-            const blockExportName = blockExport[0];
 
-            importsOut += `import { ${blockExportName} } from "${path
-                .relative(`${generatorOptions.targetDirectory}/dto`, rootBlockType.block.path)
-                .replace(/\.ts$/, "")}";`;
             decorators.push("@Field(() => GraphQLJSONObject)");
             decorators.push(
                 `@Transform((value) => (isBlockInputInterface(value) ? value : ${blockExportName}.blockInputFactory(value)), { toClassOnly: true })`,
