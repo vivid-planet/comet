@@ -20,32 +20,22 @@ export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassD
     };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface CrudQueryOptions {
-    //nothing so far
+export interface CrudFieldOptions {
+    query?: boolean;
+    filter?: boolean;
+    sort?: boolean;
+    input?: boolean;
 }
 
-/**
- * Mark a property as seachable by query parameter in CRUD Generator
- */
-export function CrudQuery(options: CrudQueryOptions = {}): PropertyDecorator {
+export function CrudField({ query = true, filter = true, sort = true, input = true }: CrudFieldOptions = {}): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudQuery`, options, target.constructor, propertyKey);
+        Reflect.defineMetadata(`data:crudField`, { query, filter, sort, input }, target.constructor, propertyKey);
     };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface CrudFilterOptions {
-    //nothing so far
-}
-
-/**
- * Mark a property as filterable by filter parameter in CRUD Generator
- */
-export function CrudFilter(options: CrudFilterOptions = {}): PropertyDecorator {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudFilter`, options, target.constructor, propertyKey);
-    };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function hasFieldFeature(metadataClass: any, propName: string, option: keyof CrudFieldOptions): boolean {
+    const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as CrudFieldOptions;
+    return crudField[option] ?? true;
 }

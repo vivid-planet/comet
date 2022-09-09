@@ -93,12 +93,10 @@ export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
 export {
-    CrudFilter,
-    CrudFilterOptions,
+    CrudField,
+    CrudFieldOptions,
     CrudGenerator,
     CrudGeneratorOptions,
-    CrudQuery,
-    CrudQueryOptions,
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
 } from "./generator/crud-generator.decorator";

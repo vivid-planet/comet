@@ -1,4 +1,4 @@
-import { CrudFilter, CrudGenerator, CrudQuery, DocumentInterface } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DocumentInterface } from "@comet/cms-api";
 import { BaseEntity, Entity, PrimaryKey, Property, types } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 } from "uuid";
@@ -15,8 +15,12 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @Property()
     @Field()
-    @CrudQuery()
-    @CrudFilter()
+    @CrudField({
+        query: true,
+        filter: true,
+        sort: true,
+        input: true,
+    })
     title: string;
 
     @Property()
@@ -25,7 +29,6 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @Property({ type: types.decimal, nullable: true })
     @Field({ nullable: true })
-    @CrudFilter()
     price?: number;
 
     @Property()

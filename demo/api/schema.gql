@@ -307,7 +307,7 @@ type Query {
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News
   newsBySlug(slug: String!): News
-  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String): PaginatedNews!
+  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, filter: NewsFilter): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -344,11 +344,11 @@ input FolderFilterInput {
   searchText: String
 }
 
-input ProductFilter {
+input NewsFilter {
+  slug: StringFilter
   title: StringFilter
-  price: NumberFilter
-  and: [ProductFilter!]
-  or: [ProductFilter!]
+  and: [NewsFilter!]
+  or: [NewsFilter!]
 }
 
 input StringFilter {
@@ -357,6 +357,14 @@ input StringFilter {
   endsWith: String
   eq: String
   neq: String
+}
+
+input ProductFilter {
+  title: StringFilter
+  slug: StringFilter
+  price: NumberFilter
+  and: [ProductFilter!]
+  or: [ProductFilter!]
 }
 
 input NumberFilter {

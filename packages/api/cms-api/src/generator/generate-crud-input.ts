@@ -3,6 +3,7 @@ import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
 import { RootBlockType } from "src/blocks/root-block-type";
 
+import { hasFieldFeature } from "./crud-generator.decorator";
 import { writeGenerated } from "./utils/write-generated";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,9 +12,13 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
     const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
 
+    const props = metadata.props.filter((prop) => {
+        return hasFieldFeature(metadata.class, prop.name, "input");
+    });
+
     let fieldsOut = "";
     let importsOut = "";
-    for (const prop of metadata.props) {
+    for (const prop of props) {
         let type = prop.type;
         const decorators = [] as Array<string>;
         if (!prop.nullable) {

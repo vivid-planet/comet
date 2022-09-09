@@ -1,7 +1,7 @@
 import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
 
-import { CrudGeneratorOptions } from "./crud-generator.decorator";
+import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { writeCrudInput as writeCrudInput } from "./generate-crud-input";
 import { writeGenerated } from "./utils/write-generated";
 
@@ -15,9 +15,16 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
 
     async function writeCrudResolver(): Promise<void> {
-        const crudQueryProps = metadata.props.filter((prop) => Reflect.hasMetadata(`data:crudQuery`, metadata.class, prop.name));
+        const crudQueryProps = metadata.props.filter(
+            (prop) => prop.type === "string" && hasFieldFeature(metadata.class, prop.name, "query") && !prop.name.startsWith("scope_"),
+        );
         const hasQueryArg = crudQueryProps.length > 0;
-        const crudFilterProps = metadata.props.filter((prop) => Reflect.hasMetadata(`data:crudFilter`, metadata.class, prop.name));
+        const crudFilterProps = metadata.props.filter(
+            (prop) =>
+                hasFieldFeature(metadata.class, prop.name, "filter") &&
+                !prop.name.startsWith("scope_") &&
+                (prop.type === "string" || prop.type === "DecimalType"),
+        );
         const hasFilterArg = crudFilterProps.length > 0;
         const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
         const hasVisibleProp = metadata.props.some((prop) => prop.name == "visible");
@@ -28,7 +35,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
         const blockProps = metadata.props.filter((prop) => {
-            return prop.type === "RootBlockType";
+            return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });
 
         if (hasFilterArg) {
@@ -304,7 +311,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             const ${instanceNameSingular} = new ${metadata.className}();
             ${instanceNameSingular}.assign({
                 ...input,
-                ${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}
+                ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
                 ${hasVisibleProp ? `visible: false,` : ""}
                 ${scopeProp ? `scope,` : ""}
             });
@@ -329,7 +336,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             }
             ${instanceNameSingular}.assign({
                 ...input,
-                ${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}
+                ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
             });
     
             await this.repository.persistAndFlush(${instanceNameSingular});

@@ -1,7 +1,7 @@
 import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
 
-import { CrudSingleGeneratorOptions } from "./crud-generator.decorator";
+import { CrudSingleGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { writeCrudInput } from "./generate-crud-input";
 import { writeGenerated } from "./utils/write-generated";
 
@@ -21,7 +21,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
         const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
         const blockProps = metadata.props.filter((prop) => {
-            return prop.type === "RootBlockType";
+            return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });
 
         const serviceOut = `import { ObjectQuery } from "@mikro-orm/core";
@@ -95,7 +95,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     
                 ${instanceNameSingular}.assign({
                     ...input,
-                    ${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}
+                    ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
                 });
             }
     

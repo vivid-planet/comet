@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlockEntity } from "@comet/blocks-api";
-import { CrudGenerator, CrudQuery, DamImageBlock, DocumentInterface, RootBlockType } from "@comet/cms-api";
+import { CrudGenerator, DamImageBlock, DocumentInterface, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Embeddable, Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
@@ -55,7 +55,6 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
 
     @Property()
     @Field()
-    @CrudQuery()
     title: string;
 
     @Property()
