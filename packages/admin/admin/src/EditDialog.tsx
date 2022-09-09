@@ -1,6 +1,6 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import * as React from "react";
-import { defineMessages, FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { SaveButton } from "./common/buttons/save/SaveButton";
@@ -9,6 +9,7 @@ import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiConte
 import { CloseDialogOptions, EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
 import { EditDialogFormApiProvider, useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { SubmitResult } from "./form/SubmitResult";
+import { messages } from "./messages";
 import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
@@ -20,18 +21,6 @@ interface ITitle {
 interface IProps {
     title?: ITitle | string;
 }
-
-const messages = defineMessages({
-    edit: {
-        id: "comet.generic.edit",
-        defaultMessage: "Edit",
-    },
-
-    add: {
-        id: "comet.generic.add",
-        defaultMessage: "Add",
-    },
-});
 
 export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
@@ -150,7 +139,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
                                             hasErrors={editDialogFormApi?.hasErrors}
                                             onClick={handleSaveClick}
                                         >
-                                            <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                                            <FormattedMessage {...messages.save} />
                                         </SaveButton>
                                     );
                                 }}

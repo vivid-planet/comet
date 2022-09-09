@@ -1,5 +1,6 @@
 export { CmsBlockContext, CmsBlockContextProvider } from "./blocks/CmsBlockContextProvider";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
+export { createLinkBlock } from "./blocks/createLinkBlock";
 export type { RichTextBlockFactoryOptions } from "./blocks/createRichTextBlock";
 export { createRichTextBlock, isRichTextEmpty, isRichTextEqual } from "./blocks/createRichTextBlock";
 export { createSeoBlock } from "./blocks/createSeoBlock";
@@ -35,6 +36,7 @@ export type { ContentScopeInterface, ContentScopeProviderProps, ContentScopeValu
 export { ContentScopeProvider, useContentScope } from "./contentScope/Provider";
 export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConfig";
 export { useContentScopeConfig } from "./contentScope/useContentScopeConfig";
+export { DamImageBlock } from "./dam/blocks/DamImageBlock";
 export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";
 export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
@@ -58,6 +60,7 @@ export type { AllCategories } from "./pages/pageTree/PageTreeContext";
 export { useCopyPastePages } from "./pages/pageTree/useCopyPastePages";
 export { resolveHasSaveConflict } from "./pages/resolveHasSaveConflict";
 export { useSaveConflict } from "./pages/useSaveConflict";
+export { useSaveConflictQuery } from "./pages/useSaveConflictQuery";
 export { BlockPreview } from "./preview/BlockPreview";
 export { BlockPreviewWithTabs } from "./preview/BlockPreviewWithTabs";
 export { openPreviewWindow } from "./preview/openPreviewWindow";

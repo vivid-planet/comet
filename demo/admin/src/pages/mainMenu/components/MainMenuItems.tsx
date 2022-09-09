@@ -60,17 +60,18 @@ const MainMenuItems: React.FunctionComponent = () => {
                             columns={[
                                 {
                                     name: "node.name",
-                                    header: <FormattedMessage id="comet.mainMenuItems.name" defaultMessage="Name" />,
+                                    header: <FormattedMessage id="cometDemo.mainMenuItems.name" defaultMessage="Name" />,
                                 },
                                 {
                                     name: "node.path",
-                                    header: <FormattedMessage id="comet.mainMenuItems.path" defaultMessage="Path" />,
+                                    header: <FormattedMessage id="cometDemo.mainMenuItems.path" defaultMessage="Path" />,
                                 },
                                 {
                                     name: "edit",
                                     header: "",
+                                    cellProps: { align: "right" },
                                     render: (item) => (
-                                        <IconButton onClick={() => stackApi.activatePage("edit", item.node.id)}>
+                                        <IconButton color="primary" onClick={() => stackApi.activatePage("edit", item.node.id)}>
                                             <Edit />
                                         </IconButton>
                                     ),

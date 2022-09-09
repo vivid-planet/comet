@@ -1,6 +1,6 @@
 import "react-image-crop/dist/ReactCrop.css";
 
-import { CancelButton, Field, FormSection, SaveButton } from "@comet/admin";
+import { CancelButton, Field, FormSection, messages, SaveButton } from "@comet/admin";
 import {
     Box,
     Dialog,
@@ -196,13 +196,7 @@ const YesNoSwitch = ({ checked, onChange }: YesNoSwitchProps): React.ReactElemen
     return (
         <FormControlLabel
             control={<Switch checked={checked} onChange={onChange} />}
-            label={
-                checked ? (
-                    <FormattedMessage id="comet.generic.yes" defaultMessage="Yes" />
-                ) : (
-                    <FormattedMessage id="comet.generic.no" defaultMessage="No" />
-                )
-            }
+            label={checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
         />
     );
 };

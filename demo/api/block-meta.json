@@ -122,7 +122,7 @@
                             "nullable": false
                         },
                         {
-                            "name": "type",
+                            "name": "mimetype",
                             "kind": "String",
                             "nullable": false
                         },
@@ -439,7 +439,7 @@
                             "nullable": false
                         },
                         {
-                            "name": "type",
+                            "name": "mimetype",
                             "kind": "String",
                             "nullable": false
                         },
@@ -483,6 +483,69 @@
                 "name": "damFileId",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "DamImage",
+        "fields": [
+            {
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "PixelImage",
+                                "SvgImage"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "PixelImage",
+                                "SvgImage"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": false
             }
         ]
     },
@@ -581,6 +644,11 @@
                 "nullable": false
             },
             {
+                "name": "structuredData",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "noIndex",
                 "kind": "Boolean",
                 "nullable": false
@@ -616,6 +684,11 @@
                     "never"
                 ],
                 "nullable": false
+            },
+            {
+                "name": "canonicalUrl",
+                "kind": "String",
+                "nullable": true
             }
         ],
         "inputFields": [
@@ -646,6 +719,11 @@
                 "nullable": false
             },
             {
+                "name": "structuredData",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "noIndex",
                 "kind": "Boolean",
                 "nullable": false
@@ -681,6 +759,11 @@
                     "never"
                 ],
                 "nullable": false
+            },
+            {
+                "name": "canonicalUrl",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -870,129 +953,6 @@
         ]
     },
     {
-        "name": "Image",
-        "fields": [
-            {
-                "name": "attachedBlocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "PixelImage",
-                                "SvgImage"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            },
-            {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "block",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "PixelImage",
-                                "SvgImage"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "OptionalRichText",
-        "fields": [
-            {
-                "name": "block",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": true
-            },
-            {
-                "name": "visible",
-                "kind": "Boolean",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "block",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": true
-            },
-            {
-                "name": "visible",
-                "kind": "Boolean",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "FullWidthImage",
-        "fields": [
-            {
-                "name": "image",
-                "kind": "Block",
-                "block": "Image",
-                "nullable": false
-            },
-            {
-                "name": "content",
-                "kind": "Block",
-                "block": "OptionalRichText",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "image",
-                "kind": "Block",
-                "block": "Image",
-                "nullable": false
-            },
-            {
-                "name": "content",
-                "kind": "Block",
-                "block": "OptionalRichText",
-                "nullable": false
-            }
-        ]
-    },
-    {
         "name": "Headline",
         "fields": [
             {
@@ -1048,6 +1008,174 @@
         ]
     },
     {
+        "name": "ColumnsContent",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "Space",
+                                "RichText",
+                                "Headline",
+                                "DamImage"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": []
+    },
+    {
+        "name": "Columns",
+        "fields": [
+            {
+                "name": "layout",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "ColumnsContent",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "layout",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "ColumnsContent",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "OptionalRichText",
+        "fields": [
+            {
+                "name": "block",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "block",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "FullWidthImage",
+        "fields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "content",
+                "kind": "Block",
+                "block": "OptionalRichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "content",
+                "kind": "Block",
+                "block": "OptionalRichText",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "TextImage",
         "fields": [
             {
@@ -1059,7 +1187,7 @@
             {
                 "name": "image",
                 "kind": "Block",
-                "block": "Image",
+                "block": "DamImage",
                 "nullable": false
             },
             {
@@ -1087,7 +1215,7 @@
             {
                 "name": "image",
                 "kind": "Block",
-                "block": "Image",
+                "block": "DamImage",
                 "nullable": false
             },
             {
@@ -1136,12 +1264,23 @@
                                 "Space",
                                 "RichText",
                                 "Headline",
-                                "Image",
+                                "DamImage",
                                 "TextImage",
                                 "DamVideo",
                                 "YouTubeVideo",
                                 "LinkList",
-                                "FullWidthImage"
+                                "FullWidthImage",
+                                "Columns"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "userGroup",
+                            "kind": "Enum",
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
                             ],
                             "nullable": false
                         }
@@ -1340,7 +1479,7 @@
                             "blocks": [
                                 "Headline",
                                 "RichText",
-                                "Image",
+                                "DamImage",
                                 "TextImage"
                             ],
                             "nullable": false

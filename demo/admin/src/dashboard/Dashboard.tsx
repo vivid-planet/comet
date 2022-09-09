@@ -1,4 +1,4 @@
-import { MainContent, Stack } from "@comet/admin";
+import { MainContent, messages, Stack } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useUser } from "@comet/react-app-auth";
@@ -42,18 +42,18 @@ const Dashboard: React.FC = () => {
     const user = useUser();
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "comet.dashboard", defaultMessage: "Dashboard" })}>
+        <Stack topLevelTitle={intl.formatMessage({ id: "cometDemo.dashboard", defaultMessage: "Dashboard" })}>
             <Header>
                 <DateTime />
                 <Greeting variant="h1">
                     {user ? (
                         <FormattedMessage
-                            id="comet.pages.dashboard.helloUser"
+                            id="cometDemo.pages.dashboard.helloUser"
                             defaultMessage="Hallo {givenName}!"
                             values={{ givenName: user.given_name }}
                         />
                     ) : (
-                        <FormattedMessage id="comet.pages.dashboard.hello" defaultMessage="Hallo!" />
+                        <FormattedMessage id="cometDemo.pages.dashboard.hello" defaultMessage="Hallo!" />
                     )}
                 </Greeting>
             </Header>
@@ -62,19 +62,19 @@ const Dashboard: React.FC = () => {
                     <ScopeIndicatorContent>
                         <Domain fontSize="small" />
                         <ScopeIndicatorLabelBold variant="body2">
-                            <FormattedMessage id="comet.generic.globalContentScope" defaultMessage="Global Content" />
+                            <FormattedMessage {...messages.globalContentScope} />
                         </ScopeIndicatorLabelBold>
                     </ScopeIndicatorContent>
                 </ContentScopeIndicator>
                 <Grid container direction="row" spacing={4}>
                     <DashboardWidgetContainer
-                        header={<FormattedMessage id="comet.pages.dashboard.latestContentUpdates" defaultMessage="Latest Content Updates" />}
+                        header={<FormattedMessage id="cometDemo.pages.dashboard.latestContentUpdates" defaultMessage="Latest Content Updates" />}
                     >
                         <LatestContentUpdates />
                     </DashboardWidgetContainer>
                     {process.env.NODE_ENV !== "development" && (
                         <DashboardWidgetContainer
-                            header={<FormattedMessage id="comet.pages.dashboard.latestBuilds" defaultMessage="Latest Builds" />}
+                            header={<FormattedMessage id="cometDemo.pages.dashboard.latestBuilds" defaultMessage="Latest Builds" />}
                         >
                             <LatestBuilds />
                         </DashboardWidgetContainer>

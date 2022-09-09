@@ -1,9 +1,11 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
+import { BlockInterface, BlocksFinalForm, createBlockSkeleton, LinkBlockInterface } from "@comet/blocks-admin";
 import { NewsLinkBlockData, NewsLinkBlockInput } from "@src/blocks.generated";
 import * as React from "react";
 
-const NewsLinkBlock: BlockInterface<NewsLinkBlockData, NewsLinkBlockData, NewsLinkBlockInput> = {
+type State = NewsLinkBlockData;
+
+const NewsLinkBlock: BlockInterface<NewsLinkBlockData, State, NewsLinkBlockInput> & LinkBlockInterface<State> = {
     ...createBlockSkeleton(),
 
     name: "NewsLink",

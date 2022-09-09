@@ -12,7 +12,8 @@
         "directory": "packages/admin/admin-rte"
     },
     "dependencies": {
-        "detect-browser": "^5.2.1"
+        "detect-browser": "^5.2.1",
+        "draftjs-conductor": "^3.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",

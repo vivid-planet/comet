@@ -21,6 +21,7 @@ import { BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } fr
 import { resolveNewState } from "../utils";
 
 interface BlocksBlockItem<T extends BlockInterface = BlockInterface> {
+    [key: string]: unknown;
     key: string;
     type: string;
     visible: boolean;
@@ -37,6 +38,7 @@ export interface BlocksBlockState {
 
 export interface BlocksBlockFragment {
     blocks: {
+        [key: string]: unknown;
         key: string;
         type: string;
         visible: boolean;
@@ -47,16 +49,30 @@ export interface BlocksBlockFragment {
 
 type BlockType = string;
 
+interface AdditionalItemField<Value = unknown> {
+    defaultValue: Value;
+}
+
 interface CreateBlocksBlockOptions {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
+    additionalItemFields?: Record<string, AdditionalItemField>;
+    AdditionalItemContextMenuItems?: React.FunctionComponent<{
+        item: BlocksBlockItem;
+        onChange: (item: BlocksBlockItem) => void;
+        onMenuClose: () => void;
+    }>;
+    AdditionalItemContent?: React.FunctionComponent<{ item: BlocksBlockItem }>;
 }
 
 export function createBlocksBlock({
     supportedBlocks,
     name,
     displayName = <FormattedMessage id="comet.blocks.blocks.name" defaultMessage="Blocks" />,
+    additionalItemFields = {},
+    AdditionalItemContextMenuItems,
+    AdditionalItemContent,
 }: CreateBlocksBlockOptions): BlockInterface<BlocksBlockFragment, BlocksBlockState> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
@@ -95,7 +111,13 @@ export function createBlocksBlock({
                     continue;
                 }
 
-                blocks.push({ ...item, props: block.input2State(item.props), selected: false, slideIn: false });
+                blocks.push({
+                    ...item,
+                    props: block.input2State(item.props),
+                    ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: item[field] }), {}),
+                    selected: false,
+                    slideIn: false,
+                });
             }
 
             return {
@@ -114,6 +136,7 @@ export function createBlocksBlock({
                         visible: c.visible,
                         type: c.type,
                         props: block.state2Output(c.props),
+                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                     };
                 }),
             };
@@ -158,6 +181,7 @@ export function createBlocksBlock({
                             type: c.type,
                             adminRoute: blockAdminRoute,
                             props: block.createPreviewState(c.props, { ...previewCtx, parentUrl: blockAdminRoute }),
+                            ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                         };
                     }),
                 adminMeta: { route: previewCtx.parentUrl },
@@ -283,6 +307,7 @@ export function createBlocksBlock({
                     selected: false,
                     props: block.defaultValues(),
                     slideIn: true,
+                    ...Object.entries(additionalItemFields).reduce((fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }), {}),
                 };
 
                 const newBlocks = [...state.blocks];
@@ -512,6 +537,24 @@ export function createBlocksBlock({
                                                                     isValidFn={() => block.isValid(data.props)}
                                                                     slideIn={data.slideIn}
                                                                     hideBottomInsertBetweenButton={blockIndex >= state.blocks.length - 1}
+                                                                    additionalMenuItems={(onMenuClose) =>
+                                                                        AdditionalItemContextMenuItems ? (
+                                                                            <AdditionalItemContextMenuItems
+                                                                                item={data}
+                                                                                onChange={(updatedItem) => {
+                                                                                    updateState((previousState) => ({
+                                                                                        blocks: previousState.blocks.map((block) =>
+                                                                                            block.key === data.key ? updatedItem : block,
+                                                                                        ),
+                                                                                    }));
+                                                                                }}
+                                                                                onMenuClose={onMenuClose}
+                                                                            />
+                                                                        ) : undefined
+                                                                    }
+                                                                    additionalContent={
+                                                                        AdditionalItemContent ? <AdditionalItemContent item={data} /> : undefined
+                                                                    }
                                                                 />
                                                             </HoverPreviewComponent>
                                                         );

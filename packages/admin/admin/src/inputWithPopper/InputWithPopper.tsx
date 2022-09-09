@@ -18,12 +18,13 @@ export type InputWithPopperComponents = InputBaseProps["components"] & {
 
 type ClosePopper = (focusInput?: boolean) => void;
 
-export interface InputWithPopperProps extends Omit<InputBaseProps, "componentsProps" | "components"> {
+export interface InputWithPopperProps extends Omit<InputBaseProps, "componentsProps" | "components" | "inputRef"> {
     children: ((closePopper: ClosePopper) => React.ReactNode) | React.ReactNode;
     componentsProps?: InputWithPopperComponentsProps;
     components?: InputWithPopperComponents;
     onOpenPopper?: () => void;
     onClosePopper?: () => void;
+    inputRef?: React.RefObject<HTMLElement>;
 }
 
 function InputWithPopper({
@@ -34,13 +35,16 @@ function InputWithPopper({
     onOpenPopper,
     onClosePopper,
     components = {},
+    inputRef: inputRefProp,
     ...inputBaseProps
 }: InputWithPopperProps & WithStyles<typeof styles>): React.ReactElement {
     const { Transition = Grow, ...inputBaseComponents } = components;
 
     const rootRef = React.useRef<HTMLDivElement>(null);
-    const inputRef = React.useRef<HTMLInputElement>(null);
+    const ownInputRef = React.useRef<HTMLElement>(null);
     const [showPopper, setShowPopper] = React.useState<boolean>(false);
+
+    const inputRef = inputRefProp ?? ownInputRef;
 
     const closePopper: ClosePopper = React.useCallback(
         (focusInput) => {

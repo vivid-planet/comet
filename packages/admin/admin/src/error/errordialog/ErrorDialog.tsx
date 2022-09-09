@@ -13,6 +13,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { messages } from "../../messages";
+
 export interface ErrorDialogOptions {
     error: string;
     title?: React.ReactNode;
@@ -65,7 +67,7 @@ export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = 
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCloseClicked} color="primary" variant="contained">
-                    <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
+                    <FormattedMessage {...messages.ok} />
                 </Button>
             </DialogActions>
         </Dialog>

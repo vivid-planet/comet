@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import {
     Button,
     Dialog,
@@ -24,7 +25,7 @@ const Path = styled(Typography)`
 `;
 
 const TableHeadCell = styled(TableCell)`
-    &.MuiTableCell-head:not(:first-child):not(:empty):before {
+    &.MuiTableCell-head:not(:first-of-type):not(:empty):before {
         background-color: transparent;
     }
 `;
@@ -97,7 +98,7 @@ export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors 
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" color="primary" onClick={onClose}>
-                    <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
+                    <FormattedMessage {...messages.ok} />
                 </Button>
             </DialogActions>
         </Dialog>

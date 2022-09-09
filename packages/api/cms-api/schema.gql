@@ -66,6 +66,11 @@ type DamFile {
   damPath: String!
 }
 
+type BuildTemplate {
+  id: ID!
+  name: String!
+}
+
 type AutoBuildStatus {
   hasChangesSinceLastBuild: Boolean!
   lastCheck: DateTime
@@ -74,7 +79,7 @@ type AutoBuildStatus {
 
 type Build {
   id: ID!
-  status: BuildJobStatus!
+  status: JobStatus!
   name: String
   trigger: String
   startTime: DateTime
@@ -82,11 +87,17 @@ type Build {
   estimatedCompletionTime: DateTime
 }
 
-enum BuildJobStatus {
+enum JobStatus {
   pending
   active
   succeeded
   failed
+}
+
+type FilenameResponse {
+  name: String!
+  folderId: ID
+  isOccupied: Boolean!
 }
 
 type PageTreeNode {
@@ -148,11 +159,13 @@ enum RedirectGenerationType {
 type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
+  buildTemplates: [BuildTemplate!]!
   redirects(query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
   redirect(id: ID!): Redirect!
   damFilesList(sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): [DamFile!]!
   damFile(id: ID!): DamFile!
-  damFilenameAlreadyExists(filename: String!, folderId: String): Boolean!
+  damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
+  damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
   damFoldersList(sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): [DamFolder!]!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
@@ -172,6 +185,11 @@ input FileFilterInput {
   mimetypes: [String!]
 }
 
+input FilenameInput {
+  name: String!
+  folderId: ID
+}
+
 input FolderFilterInput {
   searchText: String
 }
@@ -187,7 +205,7 @@ enum SlugAvailability {
 }
 
 type Mutation {
-  createBuild: Boolean!
+  createBuilds(input: CreateBuildsInput!): Boolean!
   createRedirect(input: RedirectInput!): Redirect!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
@@ -207,6 +225,10 @@ type Mutation {
   updatePageTreeNodePosition(id: ID!, input: PageTreeNodeUpdatePositionInput!): PageTreeNode!
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
+}
+
+input CreateBuildsInput {
+  names: [String!]!
 }
 
 input RedirectInput {

@@ -10,7 +10,7 @@ import { EditPage } from "./EditPage";
 import { PageContentBlock } from "./PageContentBlock";
 
 export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> = {
-    displayName: <FormattedMessage id="comet.generic.page" defaultMessage="Page" />,
+    displayName: <FormattedMessage id="cometDemo.generic.page" defaultMessage="Page" />,
     editComponent: EditPage,
     getQuery: gql`
         query PageDocument($id: ID!) {

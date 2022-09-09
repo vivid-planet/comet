@@ -9,12 +9,12 @@ const News: React.FC = () => {
     const intl = useIntl();
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "comet.news.news", defaultMessage: "News" })}>
+        <Stack topLevelTitle={intl.formatMessage({ id: "cometDemo.news.news", defaultMessage: "News" })}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <NewsTable />
                 </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "comet.news.editNews", defaultMessage: "Edit news" })}>
+                <StackPage name="edit" title={intl.formatMessage({ id: "cometDemo.news.editNews", defaultMessage: "Edit news" })}>
                     {(selectedId) => <NewsForm newsId={selectedId} />}
                 </StackPage>
             </StackSwitch>

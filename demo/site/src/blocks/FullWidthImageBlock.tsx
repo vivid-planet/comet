@@ -3,14 +3,14 @@ import { FullWidthImageBlockData } from "@src/blocks.generated";
 import * as React from "react";
 import styled from "styled-components";
 
-import { ImageBlock } from "./ImageBlock";
+import { DamImageBlock } from "./DamImageBlock";
 import RichTextBlock from "./RichTextBlock";
 
 export const FullWidthImageBlock = withPreview(
     ({ data: { image, content } }: PropsWithData<FullWidthImageBlockData>) => {
         return (
             <Root>
-                <ImageBlock data={image} layout="responsive" sizes="100vw" />
+                <DamImageBlock data={image} layout="responsive" sizes="100vw" />
                 <OptionalBlock
                     block={(props) => (
                         <Content>

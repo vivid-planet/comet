@@ -79,7 +79,7 @@ const FolderInnerMenu = ({ folder, handleClose }: FolderInnerMenuProps): React.R
                 <ListItemIcon>
                     <Edit />
                 </ListItemIcon>
-                <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })} />
+                <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.rename", defaultMessage: "Rename" })} />
             </MenuItem>
             <MenuItem
                 onClick={() => {

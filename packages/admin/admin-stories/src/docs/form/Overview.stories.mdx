@@ -1,15 +1,67 @@
-import { Meta, Story, Canvas } from "@storybook/addon-docs";
+import { Meta, Story, Canvas, Source } from "@storybook/addon-docs";
+
+import dedent from "ts-dedent";
 
 <Meta title="Docs/Form/Overview" />
 
 # Form Overview
 
-For information on how to validate your form, see [Form Validation](/docs/docs-form-validation--page).  
-For information on how to implement different layout-types of your form, see [Form Layout](/docs/docs-form-layout--page).
+Forms enable users to submit information to a web application. Therefore, forms belong to the essential features of every admin application.
 
-tba.
+In Comet Admin, React Final Form (RFF) is used for building forms. You can find more information on this framework in the [React Final Form Docs](https://final-form.org/docs/react-final-form/getting-started).
 
--   How to build a form (when or when not to use final-form)
--   FinalForm
--   present custom fields
--   submit mutation best practice
+## When (not) to use Final Form
+
+Final Form is strongly recommended if you
+
+-   are building an extensive or complicated form
+-   want to submit the form data to an API
+
+However, Final Form might not be sensible for every use case.
+Final Form may be needlessly complex if you want to create a solitary input field (e.g., a single select field for client-side filtering).
+In this case, you can use a plain input component combined with a React state.
+
+## Validation
+
+For information on how to validate your form, visit the [Validation page](/story/docs-form-validation--page).
+
+## Layout
+
+For information on implementing different layout types in your form, visit the [Layout page](/story/docs-form-layout--page).
+
+## Components
+
+### FinalForm
+
+Comet Admin provides a `FinalForm` component.
+It's built on top of [React Final Form's `Form` component](https://final-form.org/docs/react-final-form/api/Form).
+
+You can find more information on the [FinalForm component page](/story/docs-form-components-finalform--page).
+
+<Canvas>
+    <Story id="stories-form-finalform--basic-finalform" />
+</Canvas>
+
+### FieldContainer
+
+Use `FieldContainer` to wrap inputs in non-Final-Form forms.
+It provides a basic layout, a label and can handle error states.
+
+You can find more information on the [FieldContainer page](/story/docs-form-components-fieldcontainer--page).
+
+### Field
+
+Use `Field` for inputs within a FinalForm form.
+
+You can find more information on the [Field page](/story/docs-form-components-field--page).
+
+### FormSection
+
+`FormSection` can be used to separate a form into smaller groups of related inputs.
+This gives the form structure and makes it easier to comprehend.
+
+You can find more information on the [FormSection page](/story/docs-form-components-formsection--page).
+
+### FinalForm Fields in Comet Admin
+
+For an overview of all FinalForm-compatible fields/inputs provided by Comet Admin, visit the [FinalForm Fields page](/story/docs-form-components-finalform-fields--page).

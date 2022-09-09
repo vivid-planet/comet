@@ -1,5 +1,14 @@
 import { gql } from "@apollo/client";
-import { MainContent as CometMainContent, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import {
+    MainContent as CometMainContent,
+    messages,
+    RouterPrompt,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+    useStackApi,
+} from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -129,10 +138,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 <RouterPrompt
                     message={(location) => {
                         if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
-                        return intl.formatMessage({
-                            id: "comet.generic.doYouWantToSaveYourChanges",
-                            defaultMessage: "Do you want to save your changes?",
-                        });
+                        return intl.formatMessage(messages.saveUnsavedChanges);
                     }}
                     saveAction={handleSaveAction}
                 />
@@ -147,13 +153,14 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button
+                        color="info"
                         startIcon={<Preview />}
                         disabled={!pageState}
                         onClick={() => {
                             openPreviewWindow(pageState.path, contentScopeMatch.url);
                         }}
                     >
-                        <FormattedMessage id="comet.pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                        <FormattedMessage id="cometDemo.pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
                     {pageSaveButton}
                 </ToolbarActions>
@@ -170,7 +177,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             ),
                             content: (
                                 <AdminComponentRoot
-                                    title={intl.formatMessage({ id: "comet.pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
+                                    title={intl.formatMessage({ id: "cometDemo.pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
                                 >
                                     {rootBlocksApi.content.adminUI}
                                 </AdminComponentRoot>
@@ -180,7 +187,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             key: "config",
                             label: (
                                 <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                    <FormattedMessage id="comet.pages.pages.page.edit.config" defaultMessage="Config" />{" "}
+                                    <FormattedMessage id="cometDemo.pages.pages.page.edit.config" defaultMessage="Config" />{" "}
                                 </AdminTabLabel>
                             ),
                             content: rootBlocksApi.seo.adminUI,

@@ -23,6 +23,7 @@ const Root = styled("div")<{ columns: string }>`
 
 export const ColumnsLayoutPreviewSpacing = styled("span")<ItemProps>`
     height: 40px;
+    background-color: #fff;
 `;
 
 const RootContent = styled(ColumnsLayoutPreviewSpacing)`

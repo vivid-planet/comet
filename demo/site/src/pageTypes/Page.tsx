@@ -44,13 +44,7 @@ export default function Page(props: GQLPageQuery): JSX.Element {
             <Head>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {document?.__typename === "Page" && (
-                <SeoBlock
-                    data={document.seo}
-                    title={props.pageContent?.name ?? ""}
-                    canonicalUrl={`${process.env.SITE_URL}${props.pageContent?.path}`}
-                />
-            )}
+            {document?.__typename === "Page" && <SeoBlock data={document.seo} title={props.pageContent?.name ?? ""} />}
             <TopNavigation data={props.topMenu} />
             <Header header={props.header} />
             {props.pageContent && <Breadcrumbs {...props.pageContent} />}

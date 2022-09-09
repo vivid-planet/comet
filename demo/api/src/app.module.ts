@@ -87,7 +87,15 @@ import { ProductsModule } from "./products/products.module";
             },
             inject: [PageTreeService, FilesService, ImagesService],
         }),
-        BuildsModule,
+        BuildsModule.registerAsync({
+            imports: [ConfigModule],
+            useFactory: async (config: ConfigType<typeof configNS>) => ({
+                config: {
+                    helmRelease: config.HELM_RELEASE,
+                },
+            }),
+            inject: [configNS.KEY],
+        }),
         LinksModule,
         PagesModule,
         PageTreeModule.forRoot({

@@ -1,6 +1,5 @@
-import { neutrals } from "@comet/admin-theme";
-import { css, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { ButtonBase } from "@mui/material";
+import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
@@ -15,28 +14,24 @@ export function FinalFormToggleButtonGroup<FieldValue = unknown>({
     optionsPerRow,
 }: Props<FieldValue>): React.ReactElement {
     return (
-        <StyledToggleButtonGroup
-            exclusive
-            value={value}
-            onChange={(event, value: FieldValue | null) => {
-                if (value === null) {
-                    return;
-                }
-
-                onChange(value);
-            }}
-            $optionsPerRow={optionsPerRow}
-        >
-            {options.map(({ value, icon }, index) => (
-                <StyledToggleButton key={index} value={value} $optionsPerRow={optionsPerRow}>
+        <Root $optionsPerRow={optionsPerRow}>
+            {options.map(({ value: optionValue, icon }, index) => (
+                <Button key={index} $selected={value === optionValue} onClick={() => onChange(optionValue)} focusRipple>
                     {icon}
-                </StyledToggleButton>
+                </Button>
             ))}
-        </StyledToggleButtonGroup>
+        </Root>
     );
 }
 
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)<{ $optionsPerRow?: number }>`
+const Root = styled("div")<{ $optionsPerRow?: number }>`
+    display: inline-flex;
+    border: 1px solid ${({ theme }) => theme.palette.divider};
+    background-color: ${({ theme }) => theme.palette.divider};
+    border-radius: 2px;
+    overflow: hidden;
+    gap: 1px;
+
     ${({ $optionsPerRow }) =>
         $optionsPerRow &&
         css`
@@ -45,43 +40,28 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)<{ $optionsPerRow?: num
         `}
 `;
 
-const StyledToggleButton = styled(ToggleButton)<{ $optionsPerRow?: number }>`
-    ${({ $optionsPerRow }) =>
-        $optionsPerRow &&
+const Button = styled(ButtonBase)<{ $selected?: boolean }>`
+    width: 46px;
+    height: 46px;
+    background-color: ${({ theme }) => theme.palette.background.paper};
+
+    :hover {
+        background-color: ${({ theme }) => theme.palette.grey[50]};
+    }
+
+    ${({ $selected, theme }) =>
+        $selected &&
         css`
-            && {
-                margin-left: 0;
-                border-radius: 0;
-                border-top: none;
-                border-right: none;
-                border-bottom: 1px solid ${neutrals[100]};
-                border-left: 1px solid ${neutrals[100]};
+            color: ${theme.palette.primary.main};
 
-                // first row
-                &:nth-child(-n + ${$optionsPerRow}) {
-                    border-top: 1px solid ${neutrals[100]};
-                }
-
-                // last column
-                &:nth-child(${$optionsPerRow}n) {
-                    border-right: 1px solid ${neutrals[100]};
-                }
-
-                &:first-child {
-                    border-top-left-radius: 2px;
-                }
-
-                &:nth-child(${$optionsPerRow}) {
-                    border-top-right-radius: 2px;
-                }
-
-                &:nth-last-child(${$optionsPerRow}) {
-                    border-bottom-left-radius: 2px;
-                }
-
-                &:last-child {
-                    border-bottom-right-radius: 2px;
-                }
+            :before {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 2px;
+                background-color: ${theme.palette.primary.main};
             }
         `}
 `;

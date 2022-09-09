@@ -28,21 +28,20 @@ import {
     createOptionalBlock,
     resolveNewState,
 } from "@comet/blocks-admin";
-import { FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/cms-admin";
+import { DamImageBlock, FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/cms-admin";
 import { FormatAlignCenter, VerticalAlignBottom, VerticalAlignCenter } from "@mui/icons-material";
 import { Box, FormControlLabel, Grid, MenuItem, Typography } from "@mui/material";
 import * as React from "react";
 
-import { ImageBlock } from "./blocks/ImageBlock";
 import { RichTextBlock } from "./blocks/RichTextBlock";
 
 const FinalFormRichTextBlock = createFinalFormBlock(RichTextBlock);
 
 const OptionalRichTextBlock = createOptionalBlock(RichTextBlock, { title: "Optional block" });
 
-const ListBlock = createListBlock({ name: "ListBlock", block: ImageBlock });
+const ListBlock = createListBlock({ name: "ListBlock", block: DamImageBlock });
 
-const BlocksBlock = createBlocksBlock({ name: "BlocksBlock", supportedBlocks: { image: ImageBlock, richText: RichTextBlock } });
+const BlocksBlock = createBlocksBlock({ name: "BlocksBlock", supportedBlocks: { image: DamImageBlock, richText: RichTextBlock } });
 
 const ColumnsBlock = createColumnsBlock({
     name: "ColumnsBlock",
@@ -94,7 +93,7 @@ export function ComponentDemo(): React.ReactElement {
     const [listBlockState, setListBlockState] = React.useState(ListBlock.defaultValues());
     const [blocksBlockState, setBlocksBlockState] = React.useState(BlocksBlock.defaultValues());
     const [columnsBlockState, setColumnsBlockState] = React.useState(ColumnsBlock.defaultValues());
-    const [imageBlockState, setImageBlockState] = React.useState(ImageBlock.defaultValues());
+    const [imageBlockState, setImageBlockState] = React.useState(DamImageBlock.defaultValues());
 
     return (
         <Stack topLevelTitle="Component demo">
@@ -343,7 +342,7 @@ export function ComponentDemo(): React.ReactElement {
 
                         <AdminComponentSection>
                             <AdminComponentPaper disablePadding>
-                                <ImageBlock.AdminComponent
+                                <DamImageBlock.AdminComponent
                                     state={imageBlockState}
                                     updateState={(setStateAction) =>
                                         setImageBlockState((prevState) => resolveNewState({ prevState, setStateAction }))

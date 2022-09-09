@@ -14,16 +14,6 @@ services:
         networks:
             - postgres
 
-    phppgadmin:
-        image: bitnami/phppgadmin:latest
-        tty: true
-        ports:
-            - "${PGADMIN_PORT}:8080"
-        environment:
-            DATABASE_HOST: postgres
-        networks:
-            - postgres
-
     imgproxy:
         image: darthsim/imgproxy:latest
         volumes:

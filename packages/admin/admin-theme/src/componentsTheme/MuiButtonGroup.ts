@@ -14,7 +14,7 @@ export const getMuiButtonGroup: GetMuiComponentTheme<"MuiButtonGroup"> = (compon
             border: "none",
         },
         groupedContained: ({ ownerState }) => ({
-            "&:not(:first-child)": {
+            "&:not(:first-of-type)": {
                 borderLeftWidth: 0,
             },
 

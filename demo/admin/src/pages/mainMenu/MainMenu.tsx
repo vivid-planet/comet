@@ -22,12 +22,12 @@ const MainMenu: React.FunctionComponent = () => {
     const intl = useIntl();
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "comet.mainMenu.menuItems", defaultMessage: "Menu items" })}>
+        <Stack topLevelTitle={intl.formatMessage({ id: "cometDemo.mainMenu.menuItems", defaultMessage: "Menu items" })}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <MainMenuItems />
                 </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "comet.mainMenu.editMenuItem", defaultMessage: "Edit menu item" })}>
+                <StackPage name="edit" title={intl.formatMessage({ id: "cometDemo.mainMenu.editMenuItem", defaultMessage: "Edit menu item" })}>
                     {(selectedId) => (
                         <Selected<GQLEditMainMenuItemFragment>
                             selectionMode="edit"

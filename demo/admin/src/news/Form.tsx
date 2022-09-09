@@ -4,6 +4,7 @@ import {
     FinalForm,
     FinalFormInput,
     MainContent,
+    messages,
     SaveButton,
     SplitButton,
     Toolbar,
@@ -85,13 +86,13 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             </IconButton>
                         </ToolbarItem>
                         <ToolbarTitleItem>
-                            {values.title ? values.title : <FormattedMessage id="comet.news.newsDetail" defaultMessage="News Detail" />}
+                            {values.title ? values.title : <FormattedMessage id="cometDemo.news.newsDetail" defaultMessage="News Detail" />}
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editInspirationSave">
                                 <SaveButton color="primary" variant="contained" hasErrors={hasSubmitErrors} type="submit">
-                                    <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                                    <FormattedMessage {...messages.save} />
                                 </SaveButton>
                                 <SaveButton
                                     color="primary"
@@ -106,7 +107,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                                         }
                                     }}
                                 >
-                                    <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                                    <FormattedMessage {...messages.saveAndGoBack} />
                                 </SaveButton>
                             </SplitButton>
                         </ToolbarActions>
@@ -116,7 +117,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             type="text"
                             name="title"
                             fullWidth
-                            label={intl.formatMessage({ id: "comet.generic.title", defaultMessage: "Title" })}
+                            label={intl.formatMessage({ id: "cometDemo.news.title", defaultMessage: "Title" })}
                             component={FinalFormInput}
                             required
                         />
@@ -124,14 +125,14 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             type="text"
                             name="slug"
                             fullWidth
-                            label={intl.formatMessage({ id: "comet.generic.slug", defaultMessage: "Slug" })}
+                            label={intl.formatMessage({ id: "cometDemo.news.slug", defaultMessage: "Slug" })}
                             component={FinalFormInput}
                             required
                             format={(value: string) => (value ? value.toLowerCase() : "")}
                             validate={async (value) => {
                                 if (!isValidSlug(value)) {
                                     return intl.formatMessage({
-                                        id: "comet.news.slugErrorMsg",
+                                        id: "cometDemo.news.slugErrorMsg",
                                         defaultMessage: "Slug contains forbidden symbols",
                                     });
                                 }

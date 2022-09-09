@@ -64,6 +64,10 @@ const styles = (theme: Theme) => {
             lineHeight: "24px",
             fontSize: 14,
             padding: 0,
+
+            [`&.${selectClasses.select}`]: {
+                minHeight: 0,
+            },
         },
     });
 };

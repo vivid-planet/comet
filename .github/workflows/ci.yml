@@ -55,6 +55,8 @@ jobs:
               run: |
                   yarn exec prettier --check "./*.{js,json,md,yml}"
                   yarn lint:lib
+                  # check for duplicate ids of formatted messages
+                  yarn intl:extract
 
             - name: Test
               run: yarn test:lib
@@ -67,15 +69,46 @@ jobs:
                   path: packages/**/junit.xml
                   reporter: jest-junit
 
-            - name: Extract i18n strings
-              if: ${{ github.ref_name == 'main' }}
+            - name: "Library: Clone translations"
+              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-lang
+                  token: ${{ secrets.GH_TOKEN }}
+                  path: "comet-lang"
+
+            - name: "Library: Extract i18n strings"
+              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
               run: |
                   yarn intl:extract
-                  git clone https://github.com/vivid-planet/comet-lang.git
-                  cp -r lang/* comet-admin-lang/
-                  cd comet-admin-lang
-                  git add .
-                  if [[ `git status --porcelain` ]]; then git commit -m "add translatable strings for ${{ github.sha }}" && git remote rm origin && git remote add origin https://vivid-planet-bot:${{ secrets.GH_TOKEN }}@github.com/vivid-planet/comet-admin-lang.git && git push --set-upstream origin master; fi
+                  cp -r lang/* comet-lang/
+
+            - name: "Library: Update translateable strings"
+              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              uses: EndBug/add-and-commit@v9
+              with:
+                  cwd: "./comet-lang"
+
+            - name: "Demo: Clone translations"
+              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GH_TOKEN }}
+                  path: "demo/admin/comet-demo-lang"
+
+            - name: "Demo: Extract i18n strings"
+              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              run: |
+                  cd demo/admin
+                  yarn intl:extract
+                  cp -r lang-extracted/* comet-demo-lang/
+
+            - name: "Demo: Update translateable strings"
+              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              uses: EndBug/add-and-commit@v9
+              with:
+                  cwd: "./demo/admin/comet-demo-lang"
 
             - name: Publish premajor canary release
               if: |

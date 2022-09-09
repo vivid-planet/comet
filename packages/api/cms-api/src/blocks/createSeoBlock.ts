@@ -15,7 +15,7 @@ import {
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "@comet/blocks-api";
-import { IsBoolean, IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
 import { PixelImageBlock } from "./PixelImageBlock";
 
@@ -54,9 +54,11 @@ interface SeoBlockInputInterface<ImageBlockInput extends BlockInputInterface> ex
     openGraphTitle?: string;
     openGraphDescription?: string;
     openGraphImage: OptionalBlockInputInterface<ImageBlockInput>;
+    structuredData?: string;
     noIndex: boolean;
     priority: SitemapPagePriority;
     changeFrequency: SitemapPageChangeFrequency;
+    canonicalUrl?: string;
 }
 
 export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock>(
@@ -84,6 +86,10 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         @ChildBlock(OptionalImageBlock)
         openGraphImage: BlockDataInterface;
 
+        //Structured Data
+        @BlockField({ nullable: true })
+        structuredData?: string;
+
         // Sitemap
         @BlockField()
         noIndex: boolean;
@@ -100,6 +106,10 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         })
         changeFrequency: SitemapPageChangeFrequency;
 
+        //Canonical Tag
+        @BlockField({ nullable: true })
+        canonicalUrl?: string;
+
         async transformToPlain(): Promise<TraversableTransformResponse> {
             return {
                 htmlTitle: this.htmlTitle,
@@ -109,9 +119,13 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
                 openGraphDescription: this.openGraphDescription,
                 openGraphImage: this.openGraphImage,
 
+                structuredData: this.structuredData,
+
                 noIndex: this.noIndex,
                 priority: this.priority,
                 changeFrequency: this.changeFrequency,
+
+                canonicalUrl: this.canonicalUrl,
             };
         }
     }
@@ -144,6 +158,12 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         @ChildBlockInput(OptionalImageBlock)
         openGraphImage: OptionalBlockInputInterface<ExtractBlockInput<ImageBlock>>;
 
+        //Structured Data
+        @IsJSON()
+        @IsOptional()
+        @BlockField({ nullable: true })
+        structuredData?: string;
+
         // Sitemap
         @IsBoolean()
         @BlockField()
@@ -156,6 +176,12 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         @IsEnum(SitemapPageChangeFrequency)
         @BlockField({ type: "enum", enum: SitemapPageChangeFrequency })
         changeFrequency: SitemapPageChangeFrequency;
+
+        //Canonical Tag
+        @IsUrl()
+        @IsOptional()
+        @BlockField({ nullable: true })
+        canonicalUrl?: string;
 
         transformToBlockData(): SeoBlockData {
             return inputToData(SeoBlockData, this);

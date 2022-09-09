@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
+import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -11,7 +11,7 @@ import { CmsBlockContext } from "./CmsBlockContextProvider";
 
 type State = InternalLinkBlockData;
 
-export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, InternalLinkBlockInput> = {
+export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, InternalLinkBlockInput> & LinkBlockInterface<State> = {
     ...createBlockSkeleton(),
 
     name: "InternalLink",

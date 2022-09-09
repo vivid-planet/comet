@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Field, FieldContainer, FinalFormSwitch } from "@comet/admin";
+import { Field, FieldContainer, FinalFormSwitch, messages } from "@comet/admin";
 import { Delete, Video } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentPaper, BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
 import { Box, Divider, Grid, Typography } from "@mui/material";
@@ -79,7 +79,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                 initialValues={state}
             >
                 {state.damFile ? (
-                    <FieldContainer label={<FormattedMessage id="comet.generic.file" defaultMessage="File" />} fullWidth>
+                    <FieldContainer label={<FormattedMessage {...messages.file} />} fullWidth>
                         <AdminComponentPaper disablePadding>
                             <Box padding={3}>
                                 <Grid container alignItems="center" spacing={3}>
@@ -104,7 +104,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                 ) : (
                     <Field
                         name="damFile"
-                        label={<FormattedMessage id="comet.generic.file" defaultMessage="File" />}
+                        label={<FormattedMessage {...messages.file} />}
                         component={FileField}
                         fullWidth
                         allowedMimetypes={["video/mp4"]}

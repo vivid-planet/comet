@@ -6,11 +6,11 @@ import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import { FixedSizeList as List } from "react-window";
+import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
-import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment, GQLSelectedPageFragment } from "../../graphql.generated";
+import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment, GQLSelectedPageFragment, Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { createPagesQuery } from "../pagesPage/createPagesQuery";
@@ -32,16 +32,19 @@ export const selectedPageFragment = gql`
 `;
 
 const StyledDialogTitle = styled(DialogTitle)`
-    & > .MuiTypography-root {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+`;
+
+const CloseButton = styled(IconButton)`
+    position: absolute;
+    right: ${({ theme }) => theme.spacing(2)};
 `;
 
 const StyledDialogAction = styled(DialogActions)`
-    & > :first-child:last-child {
+    & > :first-of-type:last-child {
         margin-left: initial;
     }
 `;
@@ -149,6 +152,24 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
     const { pagesToRenderWithMatches, query, setQuery } = pageSearchApi;
 
+    const handleSelect = React.useCallback(
+        (page: PageTreePage) => {
+            onChange({ id: page.id, name: page.name, path: page.path });
+            onClose();
+        },
+        [onChange, onClose],
+    );
+
+    const itemData = React.useMemo<ItemData>(
+        () => ({
+            pages: pagesToRenderWithMatches,
+            toggleExpand,
+            onSelect: handleSelect,
+            selectedPage: value,
+        }),
+        [pagesToRenderWithMatches, toggleExpand, handleSelect, value],
+    );
+
     return (
         <Dialog
             classes={{ paper: classes.dialogPaper }}
@@ -163,9 +184,9 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
         >
             <StyledDialogTitle>
                 <FormattedMessage id="comet.pages.pageTreeSelect.label" defaultMessage="Select Page" />
-                <IconButton onClick={onClose} color="inherit" size="large">
-                    <Close fontSize="medium" />
-                </IconButton>
+                <CloseButton onClick={onClose} color="inherit">
+                    <Close />
+                </CloseButton>
             </StyledDialogTitle>
             <Toolbar>
                 <ToolbarActions>
@@ -197,28 +218,12 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
                         ref={refList}
                         height={height}
                         itemCount={pagesToRenderWithMatches.length}
+                        itemData={itemData}
                         width="100%"
                         itemSize={listItemSize}
                         style={{ background: "white" }}
                     >
-                        {({ index, style }) => {
-                            const page = pagesToRenderWithMatches[index];
-                            return (
-                                <Row
-                                    key={page.id}
-                                    virtualizedStyle={{
-                                        ...style,
-                                    }}
-                                    page={page}
-                                    toggleExpand={toggleExpand}
-                                    selected={page.id === value?.id}
-                                    onSelect={() => {
-                                        onChange({ id: page.id, name: page.name, path: page.path });
-                                        onClose();
-                                    }}
-                                />
-                            );
-                        }}
+                        {Row}
                     </List>
                 </PageTreeContext.Provider>
             </DialogContent>
@@ -242,24 +247,27 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
 const PageVisibility = styled("div")`
     display: flex;
-    & :first-child {
+    & :first-of-type {
         margin-right: 5px;
     }
     align-items: center;
 `;
-interface RowProps {
-    page: PageTreePage;
+
+interface ItemData {
+    pages: PageTreePage[];
     toggleExpand: (pageId: string) => void;
-    virtualizedStyle?: React.CSSProperties;
-    selected: boolean;
-    onSelect: () => void;
+    selectedPage?: Maybe<GQLSelectedPageFragment>;
+    onSelect: (page: PageTreePage) => void;
 }
-function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowProps) {
+
+const Row = React.memo(({ index, style, data: { pages, selectedPage, toggleExpand, onSelect } }: ListChildComponentProps<ItemData>) => {
     const [hover, setHover] = React.useState(false);
+
+    const page = pages[index];
 
     const handleRowClick = () => {
         if (page.documentType !== "Link") {
-            onSelect();
+            onSelect(page);
         }
     };
 
@@ -269,11 +277,11 @@ function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowPr
         <PageTreeTableRow
             isDragHovered={false}
             isMouseHovered={hover}
-            isSelected={selected || page.selected}
+            isSelected={page.id === selectedPage?.id || page.selected}
             isArchived={page.visibility === "Archived"}
             clickable={page.visibility !== "Archived"}
             disabled={disabled}
-            style={virtualizedStyle}
+            style={style}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             onMouseMove={() => {
@@ -307,4 +315,4 @@ function Row({ page, toggleExpand, virtualizedStyle, onSelect, selected }: RowPr
             <PageTreeRowDivider align="bottom" leftSpacing={0} highlight={false} />
         </PageTreeTableRow>
     );
-}
+});

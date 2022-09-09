@@ -1,4 +1,4 @@
-import { Field, FinalFormInput } from "@comet/admin";
+import { Field, FinalFormInput, messages } from "@comet/admin";
 import {
     AdminComponentPaper,
     BlockCategory,
@@ -33,7 +33,7 @@ export function createTextLinkBlock({ link: LinkBlock }: CreateTextLinkBlockOpti
 
         name: "TextLink",
 
-        displayName: <FormattedMessage id="comet.generic.link" defaultMessage="Link" />,
+        displayName: <FormattedMessage {...messages.link} />,
 
         category: BlockCategory.Navigation,
 
@@ -51,12 +51,7 @@ export function createTextLinkBlock({ link: LinkBlock }: CreateTextLinkBlockOpti
                             }}
                             initialValues={{ text: state.text }}
                         >
-                            <Field
-                                label={<FormattedMessage id="comet.generic.text" defaultMessage="Text" />}
-                                name="text"
-                                component={FinalFormInput}
-                                fullWidth
-                            />
+                            <Field label={<FormattedMessage {...messages.text} />} name="text" component={FinalFormInput} fullWidth />
                         </BlocksFinalForm>
                     </Box>
                     {link}

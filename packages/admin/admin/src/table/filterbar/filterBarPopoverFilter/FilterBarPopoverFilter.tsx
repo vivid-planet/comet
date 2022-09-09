@@ -5,6 +5,7 @@ import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
 import { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
@@ -14,9 +15,9 @@ export interface FilterBarPopoverFilterProps {
     label: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
-    submitButtonProps?: ButtonProps;
-    resetButtonProps?: ButtonProps;
-    filterBarButtonProps?: FilterBarButtonProps;
+    submitButtonProps?: Partial<ButtonProps>;
+    resetButtonProps?: Partial<ButtonProps>;
+    filterBarButtonProps?: Partial<FilterBarButtonProps>;
 }
 
 function PopoverFilter({
@@ -95,7 +96,7 @@ function PopoverFilter({
                                             startIcon={<Reset />}
                                             {...resetButtonProps}
                                         >
-                                            <FormattedMessage id="comet.generic.resetButton" defaultMessage="Reset" />
+                                            <FormattedMessage {...messages.reset} />
                                         </Button>
 
                                         <Button
@@ -110,7 +111,7 @@ function PopoverFilter({
                                             disabled={Object.values(dirtyFields).length === 0}
                                             {...submitButtonProps}
                                         >
-                                            <FormattedMessage id="comet.generic.applyButton" defaultMessage="Apply" />
+                                            <FormattedMessage {...messages.apply} />
                                         </Button>
                                     </div>
                                 </div>

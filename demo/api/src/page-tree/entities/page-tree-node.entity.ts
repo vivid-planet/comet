@@ -1,10 +1,10 @@
 import { PageTreeNodeBase } from "@comet/cms-api";
 import { Embedded, Entity, Enum, Index, ManyToOne } from "@mikro-orm/core";
 import { Field, ObjectType } from "@nestjs/graphql";
+import { UserGroup } from "@src/user-groups/user-group";
 
 import { PageTreeNodeScope } from "../dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "../page-tree-node-category";
-import { PageTreeNodeUserGroup } from "../page-tree-node-user-group";
 
 @Entity({ tableName: PageTreeNodeBase.tableName })
 @ObjectType("PageTreeNode") // name MUST NOT be changed in the app or gql-api in cms-api breaks
@@ -23,7 +23,7 @@ export class PageTreeNode extends PageTreeNodeBase {
     @Field(() => PageTreeNodeCategory)
     category: PageTreeNodeCategory;
 
-    @Enum({ items: () => PageTreeNodeUserGroup, default: PageTreeNodeUserGroup.All })
-    @Field(() => PageTreeNodeUserGroup, { defaultValue: PageTreeNodeUserGroup.All })
-    userGroup: PageTreeNodeUserGroup;
+    @Enum({ items: () => UserGroup, default: UserGroup.All })
+    @Field(() => UserGroup, { defaultValue: UserGroup.All })
+    userGroup: UserGroup;
 }

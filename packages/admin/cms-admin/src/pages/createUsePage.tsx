@@ -1,6 +1,6 @@
 import { gql, TypedDocumentNode, useMutation, useQuery } from "@apollo/client";
 import { ApolloError } from "@apollo/client/errors";
-import { SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
+import { messages, SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
 import {
     BindBlockAdminComponent,
     BlockInterface,
@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
-import { useSaveConflict } from "./useSaveConflict";
+import { useSaveConflictQuery } from "./useSaveConflictQuery";
 
 type Output = Record<string, unknown>;
 // dictionary of all root-blocks connected to a page
@@ -217,7 +217,7 @@ export const createUsePage: CreateUsePage =
                 dialogs,
                 checkForConflicts: checkForSaveConflict,
                 hasConflict,
-            } = useSaveConflict<GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables>(
+            } = useSaveConflictQuery<GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables>(
                 checkForChangesQuery,
                 {
                     variables: {
@@ -448,16 +448,16 @@ function PageSaveButton({
         saving: saving || validating || checkingSaveConflict,
         hasErrors: saveError != null || !valid || hasSaveConflict,
         errorItem: !valid ? (
-            <FormattedMessage id="comet.generic.invalidData" defaultMessage="Invalid Data" />
+            <FormattedMessage {...messages.invalidData} />
         ) : hasSaveConflict ? (
-            <FormattedMessage id="comet.generic.saveConflict" defaultMessage="Save Conflict" />
+            <FormattedMessage {...messages.saveConflict} />
         ) : undefined,
     };
 
     return (
-        <SplitButton localStorageKey="EditPageSave" disabled={!hasChanges}>
+        <SplitButton localStorageKey="SaveSplitButton" disabled={!hasChanges}>
             <SaveButton onClick={handleSavePage} {...saveButtonProps}>
-                <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                <FormattedMessage {...messages.save} />
             </SaveButton>
             <SaveButton
                 onClick={async () => {
@@ -466,7 +466,7 @@ function PageSaveButton({
                 }}
                 {...saveButtonProps}
             >
-                <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                <FormattedMessage {...messages.saveAndGoBack} />
             </SaveButton>
         </SplitButton>
     );

@@ -34,7 +34,7 @@ export interface OneOfBlockFragment {
     activeType: string | null;
 }
 
-interface PreviewState extends PreviewStateInterface {
+export interface OneOfBlockPreviewState extends PreviewStateInterface {
     block?: {
         type: string;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,7 +43,7 @@ interface PreviewState extends PreviewStateInterface {
 }
 
 type BlockType = string;
-interface IBlockFactoryOptions {
+export interface CreateOneOfBlockOptions {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
@@ -60,7 +60,7 @@ export const createOneOfBlock = ({
     variant = "select",
     allowEmpty = true,
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-IBlockFactoryOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, any, PreviewState> => {
+CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, any, OneOfBlockPreviewState> => {
     function blockForType(type: string): BlockInterface | null {
         return supportedBlocks[type] ?? null;
     }
@@ -98,7 +98,7 @@ IBlockFactoryOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, any, 
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, any, PreviewState> = {
+    const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, any, OneOfBlockPreviewState> = {
         ...createBlockSkeleton(),
 
         name,

@@ -4,6 +4,7 @@ import {
     FinalForm,
     FinalFormSelect,
     MainContent,
+    messages,
     SaveButton,
     SplitButton,
     Toolbar,
@@ -96,7 +97,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                             <ToolbarItem>
                                 <SplitButton disabled={pristine || hasValidationErrors || submitting}>
                                     <SaveButton hasErrors={hasSubmitErrors} type="submit">
-                                        <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                                        <FormattedMessage {...messages.save} />
                                     </SaveButton>
                                     <SaveButton
                                         saving={submitting}
@@ -109,13 +110,13 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                                             }
                                         }}
                                     >
-                                        <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                                        <FormattedMessage {...messages.saveAndGoBack} />
                                     </SaveButton>
                                 </SplitButton>
                             </ToolbarItem>
                         </Toolbar>
                         <MainContent>
-                            <Field label={<FormattedMessage id="comet.structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
+                            <Field label={<FormattedMessage id="cometDemo.structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
                                 {(props) => (
                                     <FinalFormSelect {...props}>
                                         {predefinedPageOptions.map((item, index) => (

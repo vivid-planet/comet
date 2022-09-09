@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { messages } from "../messages";
 import { ISelectionApi } from "../SelectionApi";
 
 interface IProps {
@@ -13,7 +14,7 @@ export class TableAddButton extends React.Component<IProps> {
     public render() {
         return (
             <Button onClick={this.handleAddClick} startIcon={<AddIcon />}>
-                <FormattedMessage id="comet.generic.add" defaultMessage="Add" />
+                <FormattedMessage {...messages.add} />
             </Button>
         );
     }

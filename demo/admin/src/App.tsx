@@ -41,6 +41,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import { ComponentDemo } from "./common/ComponentDemo";
+import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import News from "./news/News";
@@ -79,11 +80,11 @@ const apolloClient = createApolloClient({ authorizationConfig, refreshHandler })
 const categories: AllCategories = [
     {
         category: "MainNavigation",
-        label: <FormattedMessage id="comet.menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
+        label: <FormattedMessage id="cometDemo.menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
     },
     {
         category: "TopMenu",
-        label: <FormattedMessage id="comet.menu.pageTree.topMenu" defaultMessage="Top menu" />,
+        label: <FormattedMessage id="cometDemo.menu.pageTree.topMenu" defaultMessage="Top menu" />,
     },
 ];
 
@@ -111,7 +112,7 @@ class App extends React.Component {
                         }}
                     >
                         <DamConfigProvider value={{}}>
-                            <IntlProvider locale="en">
+                            <IntlProvider locale="en" messages={getMessages()}>
                                 <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                     <MuiThemeProvider theme={theme}>
                                         <RouterBrowserRouter>

@@ -4,6 +4,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import * as UUID from "uuid";
 
+import { messages } from "../messages";
 import { useSnackbarApi } from "./SnackbarProvider";
 
 export interface UndoSnackbarProps<Payload> extends Omit<SnackbarProps, "action"> {
@@ -28,7 +29,7 @@ export const UndoSnackbar = <Payload,>({ onUndoClick, payload, ...props }: UndoS
             autoHideDuration={5000}
             action={
                 <Button color="secondary" size="small" onClick={onClick}>
-                    <FormattedMessage id="comet.generic.undo" defaultMessage="Undo" />
+                    <FormattedMessage {...messages.undo} />
                 </Button>
             }
             TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}

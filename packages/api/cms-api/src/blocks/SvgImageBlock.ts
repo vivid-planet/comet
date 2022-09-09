@@ -88,7 +88,7 @@ class Meta extends AnnotationBlockMeta {
                         nullable: false,
                     },
                     {
-                        name: "type",
+                        name: "mimetype",
                         kind: BlockMetaFieldKind.String,
                         nullable: false,
                     },

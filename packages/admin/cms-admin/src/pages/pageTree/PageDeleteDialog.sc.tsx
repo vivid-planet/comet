@@ -22,7 +22,7 @@ export const PageVisibility = styled("div")`
     align-items: center;
     flex: 1;
 
-    & :first-child {
+    & :first-of-type {
         margin-right: 5px;
     }
 `;
