@@ -65,10 +65,21 @@ storiesOf("stories/form/FinalForm Fields", module)
             { value: "vanilla", label: "Vanilla" },
         ];
 
-        const initialValues = {
-            autocomplete: { value: "strawberry", label: "Strawberry" },
-            autocompleteAsync: { value: "strawberry", label: "Strawberry" },
-        };
+        const initialValues = React.useMemo(
+            // Why useMemo()?
+            // FinalForm reinitializes the form every time initalValues changes. A shallow equality check is used.
+            // Therefore, without useMemo() FinalForm would reinitialize on every render.
+            // for alternative approaches to prevent this behavior, see https://final-form.org/docs/react-final-form/types/FormProps#initialvaluesequal
+            //
+            // In a real life application, useMemo() is probably not necessary:
+            // Case 1: the initial values are provided via GraphQL API => GraphQL handles the state => useMemo() not necessary
+            // Case 2: the initial values are hardcoded => hardcode them outside of React Component => useMemo() not necessary
+            () => ({
+                autocomplete: { value: "strawberry", label: "Strawberry" },
+                autocompleteAsync: { value: "strawberry", label: "Strawberry" },
+            }),
+            [],
+        );
 
         const acAsyncProps = useAsyncOptionsProps<Option>(async () => {
             return new Promise((resolve) => setTimeout(() => resolve(options), 3000));
@@ -117,10 +128,15 @@ storiesOf("stories/form/FinalForm Fields", module)
             { value: "vanilla", label: "Vanilla" },
         ];
 
-        const initialValues = {
-            autocomplete: { value: "strawberry", label: "Strawberry" },
-            autocompleteAsync: { value: "strawberry", label: "Strawberry" },
-        };
+        const initialValues = React.useMemo(
+            // Why useMemo()?
+            // see "FinalFormAutocomplete" story
+            () => ({
+                select: { value: "strawberry", label: "Strawberry" },
+                selectAsync: { value: "strawberry", label: "Strawberry" },
+            }),
+            [],
+        );
 
         const selectAsyncProps = useAsyncOptionsProps<Option>(async () => {
             return new Promise((resolve) => setTimeout(() => resolve(options), 500));

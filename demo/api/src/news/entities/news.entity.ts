@@ -1,8 +1,7 @@
 import { BlockDataInterface, RootBlockEntity } from "@comet/blocks-api";
-import { DocumentInterface, RootBlockType } from "@comet/cms-api";
+import { DamImageBlock, DocumentInterface, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Embeddable, Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
-import { ImageBlock } from "@src/pages/blocks/ImageBlock";
 import { IsString } from "class-validator";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 } from "uuid";
@@ -69,7 +68,7 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     @Field()
     visible: boolean;
 
-    @Property({ customType: new RootBlockType(ImageBlock) })
+    @Property({ customType: new RootBlockType(DamImageBlock) })
     @Field(() => GraphQLJSONObject)
     image: BlockDataInterface;
 

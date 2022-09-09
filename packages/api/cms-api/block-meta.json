@@ -812,6 +812,11 @@
                 "nullable": false
             },
             {
+                "name": "structuredData",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "noIndex",
                 "kind": "Boolean",
                 "nullable": false
@@ -847,6 +852,11 @@
                     "never"
                 ],
                 "nullable": false
+            },
+            {
+                "name": "canonicalUrl",
+                "kind": "String",
+                "nullable": true
             }
         ],
         "inputFields": [
@@ -877,6 +887,11 @@
                 "nullable": false
             },
             {
+                "name": "structuredData",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "noIndex",
                 "kind": "Boolean",
                 "nullable": false
@@ -912,6 +927,11 @@
                     "never"
                 ],
                 "nullable": false
+            },
+            {
+                "name": "canonicalUrl",
+                "kind": "String",
+                "nullable": true
             }
         ]
     }

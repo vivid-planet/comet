@@ -1,9 +1,9 @@
 import { registerEnumType } from "@nestjs/graphql";
 
-export enum PageTreeNodeUserGroup {
+export enum UserGroup {
     All = "All",
     Admin = "Admin",
     User = "User",
 }
 
-registerEnumType(PageTreeNodeUserGroup, { name: "PageTreeNodeUserGroup" });
+registerEnumType(UserGroup, { name: "UserGroup" });

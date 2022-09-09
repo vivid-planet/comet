@@ -2,7 +2,8 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
 import { ClearInputAdornment, InputWithPopper, InputWithPopperProps } from "@comet/admin";
-import { ComponentsOverrides, Theme } from "@mui/material";
+import { Calendar as CalendarIcon } from "@comet/admin-icons";
+import { ComponentsOverrides, InputAdornment, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { Calendar, CalendarProps } from "react-date-range";
@@ -50,6 +51,11 @@ function DatePicker({
         <InputWithPopper
             classes={inputWithPopperClasses}
             value={value ? intl.formatDate(value, formatDateOptions) : ""}
+            startAdornment={
+                <InputAdornment position="start" disablePointerEvents>
+                    <CalendarIcon />
+                </InputAdornment>
+            }
             {...inputWithPopperProps}
             componentsProps={inputWithPopperComponentsProps}
             readOnly

@@ -5,12 +5,12 @@ import * as React from "react";
 
 interface SeoBlockProps extends PropsWithData<SeoBlockData> {
     title: string;
-    canonicalUrl: string;
+    canonicalUrl?: string;
 }
 const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
-    data: { htmlTitle, metaDescription, openGraphTitle, openGraphDescription, openGraphImage, noIndex },
+    data: { htmlTitle, metaDescription, openGraphTitle, openGraphDescription, openGraphImage, noIndex, canonicalUrl, structuredData },
     title,
-    canonicalUrl,
+    canonicalUrl: passedCanonicalUrl,
 }) => {
     const usedHtmlTitle = htmlTitle && htmlTitle != "" ? htmlTitle : title;
     return (
@@ -21,16 +21,18 @@ const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
 
                 {/* Meta*/}
                 {metaDescription && <meta name="description" content={metaDescription} />}
-                <link rel="canonical" href={canonicalUrl} />
 
                 {/* Open Graph */}
                 {openGraphTitle && <meta property={"og:title"} content={openGraphTitle} />}
                 {openGraphDescription && <meta property={"og:description"} content={openGraphDescription} />}
                 <meta property={"og:type"} content={"website"} />
-                <meta property={"og:url"} content={canonicalUrl} />
+                <meta property={"og:url"} content={canonicalUrl ?? passedCanonicalUrl} />
                 {openGraphImage.block?.urlTemplate && (
                     <meta property={"og:image"} content={generateImageUrl({ src: openGraphImage.block.urlTemplate, width: 1024 }, 1 / 1)} />
                 )}
+
+                {/* Structured Data */}
+                {structuredData && structuredData.length > 0 && <script type="application/ld+json">{structuredData}</script>}
 
                 {/* No Index */}
                 {noIndex && (
@@ -38,6 +40,9 @@ const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
                         <meta name={"robots"} content={"noindex"} />
                     </>
                 )}
+
+                {/* Canonical Url */}
+                {(canonicalUrl ?? passedCanonicalUrl) && <link rel="canonical" href={canonicalUrl ?? passedCanonicalUrl} />}
             </Head>
         </>
     );

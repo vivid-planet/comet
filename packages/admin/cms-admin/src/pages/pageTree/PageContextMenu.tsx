@@ -100,7 +100,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         <ListItemIcon>
                             <Edit />
                         </ListItemIcon>
-                        <ListItemText primary={intl.formatMessage({ id: "comet.generic.content", defaultMessage: "Content" })} />
+                        <ListItemText primary={<FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />} />
                     </MenuItem>,
                     <MenuItem
                         key="editPageProperties"
@@ -124,7 +124,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         <ListItemIcon>
                             <Domain />
                         </ListItemIcon>
-                        <ListItemText primary={intl.formatMessage({ id: "comet.pages.pages.page.copyUrl", defaultMessage: "Copy Url" })} />
+                        <ListItemText primary={intl.formatMessage({ id: "comet.pages.pages.page.copyUrl", defaultMessage: "Copy URL" })} />
                     </MenuItem>,
                     <MenuItemSeparator key="separator2" />,
                     <MenuItem

@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { Clear, Delete, OpenNewTab, Warning } from "@comet/admin-icons";
 import { fontWeights } from "@comet/admin-theme";
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
@@ -57,7 +58,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClosePressed} startIcon={<Clear />} color="info">
-                    <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
+                    <FormattedMessage {...messages.cancel} />
                 </Button>
                 <div className={styles.fillSpace} />
                 <Button

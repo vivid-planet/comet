@@ -9,25 +9,24 @@ import {
     ExtractBlockData,
     inputToData,
 } from "@comet/blocks-api";
+import { DamImageBlock } from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { ValidateNested } from "class-validator";
-
-import { ImageBlock } from "./ImageBlock";
 
 const FullWidthImageContentBlock = createOptionalBlock(RichTextBlock);
 
 class FullWidthImageBlockData extends BlockData {
-    @ChildBlock(ImageBlock)
-    image: ExtractBlockData<typeof ImageBlock>;
+    @ChildBlock(DamImageBlock)
+    image: ExtractBlockData<typeof DamImageBlock>;
 
     @ChildBlock(FullWidthImageContentBlock)
     content: ExtractBlockData<typeof FullWidthImageContentBlock>;
 }
 
 class FullWidthImageBlockInput extends BlockInput {
-    @ChildBlockInput(ImageBlock)
+    @ChildBlockInput(DamImageBlock)
     @ValidateNested()
-    image: ExtractBlockData<typeof ImageBlock>;
+    image: ExtractBlockData<typeof DamImageBlock>;
 
     @ChildBlockInput(FullWidthImageContentBlock)
     @ValidateNested()

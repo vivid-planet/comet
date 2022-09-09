@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -17,7 +18,7 @@ function CannotPasteBlockDialog({ open, onClose, error }: Props): React.ReactEle
             <DialogContent>{error}</DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="info">
-                    <FormattedMessage id="comet.generic.ok" defaultMessage="Ok" />
+                    <FormattedMessage {...messages.ok} />
                 </Button>
             </DialogActions>
         </Dialog>

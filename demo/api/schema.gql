@@ -70,6 +70,11 @@ type DamFile {
   damPath: String!
 }
 
+type BuildTemplate {
+  id: ID!
+  name: String!
+}
+
 type AutoBuildStatus {
   hasChangesSinceLastBuild: Boolean!
   lastCheck: DateTime
@@ -78,7 +83,7 @@ type AutoBuildStatus {
 
 type Build {
   id: ID!
-  status: BuildJobStatus!
+  status: JobStatus!
   name: String
   trigger: String
   startTime: DateTime
@@ -86,11 +91,17 @@ type Build {
   estimatedCompletionTime: DateTime
 }
 
-enum BuildJobStatus {
+enum JobStatus {
   pending
   active
   succeeded
   failed
+}
+
+type FilenameResponse {
+  name: String!
+  folderId: ID
+  isOccupied: Boolean!
 }
 
 type Link implements DocumentInterface {
@@ -130,7 +141,7 @@ type PageTreeNode {
   hideInMenu: Boolean!
   scope: PageTreeNodeScope!
   category: PageTreeNodeCategory!
-  userGroup: PageTreeNodeUserGroup!
+  userGroup: UserGroup!
   childNodes: [PageTreeNode!]!
   parentNode: PageTreeNode
   path: String!
@@ -149,7 +160,7 @@ enum PageTreeNodeCategory {
   TopMenu
 }
 
-enum PageTreeNodeUserGroup {
+enum UserGroup {
   All
   Admin
   User
@@ -264,6 +275,7 @@ type Query {
   page(pageId: ID!): Page
   pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
   link(linkId: ID!): Link
+  buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   pageTreeNode(id: ID!): PageTreeNode
@@ -274,7 +286,8 @@ type Query {
   redirect(id: ID!): Redirect!
   damFilesList(sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): [DamFile!]!
   damFile(id: ID!): DamFile!
-  damFilenameAlreadyExists(filename: String!, folderId: String): Boolean!
+  damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
+  damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
   damFoldersList(sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): [DamFolder!]!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
@@ -305,6 +318,11 @@ input FileFilterInput {
   mimetypes: [String!]
 }
 
+input FilenameInput {
+  name: String!
+  folderId: ID
+}
+
 input FolderFilterInput {
   searchText: String
 }
@@ -312,7 +330,7 @@ input FolderFilterInput {
 type Mutation {
   savePage(pageId: ID!, input: PageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Page!
   saveLink(linkId: ID!, input: LinkInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Link!
-  createBuild: Boolean!
+  createBuilds(input: CreateBuildsInput!): Boolean!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
@@ -350,12 +368,16 @@ input LinkInput {
   content: JSONObject!
 }
 
+input CreateBuildsInput {
+  names: [String!]!
+}
+
 input PageTreeNodeUpdateInput {
   name: String!
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  userGroup: PageTreeNodeUserGroup = All
+  userGroup: UserGroup = All
 }
 
 input AttachedDocumentInput {
@@ -380,7 +402,7 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  userGroup: PageTreeNodeUserGroup = All
+  userGroup: UserGroup = All
 }
 
 input RedirectInput {

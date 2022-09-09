@@ -48,7 +48,6 @@ export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps):
                     variant="contained"
                     color="primary"
                     startIcon={<Upload />}
-                    component="label"
                     onClick={() => {
                         // Add explicit onClick to make it work in SplitButton
                         fileInputRef.current?.click();
@@ -60,7 +59,6 @@ export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps):
                     variant="contained"
                     color="primary"
                     startIcon={<Upload />}
-                    component="label"
                     onClick={() => {
                         // Add explicit onClick to make it work in SplitButton
                         folderInputRef.current?.click();

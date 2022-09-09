@@ -48,7 +48,7 @@ export function AdminTabs({ children }: AdminTabsProps): JSX.Element | null {
 const Root = styled("div")`
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 100%;
 `;
 
 const Tabs = styled(MuiTabs)`

@@ -9,7 +9,7 @@ export const getMuiDialogActions: GetMuiComponentTheme<"MuiDialogActions"> = (co
             padding: 20,
             justifyContent: "space-between",
 
-            "&>:first-child:last-child": {
+            "&>:first-of-type:last-child": {
                 marginLeft: "auto",
             },
         },

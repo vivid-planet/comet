@@ -3,16 +3,16 @@ import { TextImageBlockData } from "@src/blocks.generated";
 import * as React from "react";
 import styled from "styled-components";
 
-import { ImageBlock } from "./ImageBlock";
+import { DamImageBlock } from "./DamImageBlock";
 import RichTextBlock from "./RichTextBlock";
 
 export const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {
         return (
             <Root>
-                {imagePosition === "left" && <ImageBlock data={image} aspectRatio={imageAspectRatio} />}
+                {imagePosition === "left" && <DamImageBlock data={image} aspectRatio={imageAspectRatio} />}
                 <RichTextBlock data={text} />
-                {imagePosition === "right" && <ImageBlock data={image} aspectRatio={imageAspectRatio} />}
+                {imagePosition === "right" && <DamImageBlock data={image} aspectRatio={imageAspectRatio} />}
             </Root>
         );
     },

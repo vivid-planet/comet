@@ -14,6 +14,9 @@ import { SubmitError, SubmitResult } from "./form/SubmitResult";
 import { StackApiContext } from "./stack/Api";
 import { TableQueryContext } from "./table/TableQueryContext";
 
+export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
+    React.useRef<FormApi<FormValues, InitialFormValues>>();
+
 interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     mode: "edit" | "add";
     resolveSubmitErrors?: (error: SubmissionErrors) => SubmissionErrors;
@@ -28,6 +31,7 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
+    apiRef?: React.MutableRefObject<FormApi<FormValues> | undefined>;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -58,6 +62,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     );
 
     function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
+        if (props.apiRef) props.apiRef.current = formRenderProps.form;
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
 
@@ -183,8 +188,6 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
                 setTimeout(() => {
                     if (props.mode === "add") {
-                        form.reset(); // reset form to initial values so it is not dirty anymore (needed when adding)
-
                         if (tableQuery) {
                             // refetch TableQuery after adding
                             client.query({
@@ -203,6 +206,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 (data) => {
                     // for final-form undefined means success, an obj means error
                     editDialogFormApi?.resetFormStatus();
+                    form.reset(values);
                     return undefined;
                 },
                 (error) => {

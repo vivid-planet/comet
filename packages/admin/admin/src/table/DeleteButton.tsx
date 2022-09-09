@@ -7,6 +7,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DeleteMutation } from "../DeleteMutation";
+import { messages } from "../messages";
 
 interface IProps {
     selectedId?: string;
@@ -17,7 +18,7 @@ interface IProps {
     refetchQueries?: Array<string | PureQueryOptions>;
 }
 
-const DeleteMessage = () => <FormattedMessage id="comet.generic.delete" defaultMessage="Delete" />;
+const DeleteMessage = () => <FormattedMessage {...messages.delete} />;
 
 export class TableDeleteButton extends React.Component<IProps> {
     public render() {

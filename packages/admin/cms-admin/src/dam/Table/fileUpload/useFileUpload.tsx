@@ -14,7 +14,9 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
+import { FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
+import { useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
@@ -25,18 +27,21 @@ import {
 } from "./fileUploadErrorMessages";
 import { ProgressDialog } from "./ProgressDialog";
 
-interface FileWithFolderPath extends File {
+interface FileWithPath extends File {
     path?: string;
+}
+
+interface FileWithFolderPath extends FileWithPath {
     folderPath?: string;
 }
 
 interface UploadFileOptions {
     acceptedMimetypes?: string[];
-    onAfterUpload?: () => void;
+    onAfterUpload?: (errorOccurred: boolean) => void;
 }
 
 interface Files {
-    acceptedFiles: FileWithFolderPath[];
+    acceptedFiles: FileWithPath[];
     fileRejections: FileRejection[];
 }
 
@@ -50,6 +55,7 @@ interface FileUploadApi {
         multiple: boolean;
         maxSize: number;
     };
+    newlyUploadedFileIds: string[];
 }
 
 export interface FileUploadValidationError {
@@ -57,7 +63,7 @@ export interface FileUploadValidationError {
     message: React.ReactNode;
 }
 
-const addFolderPath = async (acceptedFiles: FileWithFolderPath[]) => {
+const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
@@ -93,6 +99,7 @@ const addFolderPath = async (acceptedFiles: FileWithFolderPath[]) => {
 export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const context = useCmsBlockContext(); // TODO create separate CmsContext?
     const client = useApolloClient();
+    const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const accept: Accept = React.useMemo(() => {
@@ -108,6 +115,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
         return acceptObj;
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
+
+    const { newlyUploadedFileIds, addNewlyUploadedFileIds } = useFileUploadContext();
 
     const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
@@ -188,15 +197,61 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         [client],
     );
 
+    const createInitialFolderIdMap = React.useCallback(
+        async (files: FileWithFolderPath[], currFolderId?: string) => {
+            const folderIdMap = new Map<string, string>();
+
+            for (const file of files) {
+                let noLookup = false;
+                if (file.folderPath === undefined) {
+                    return folderIdMap;
+                }
+
+                const pathArr = file.folderPath.split("/");
+
+                for (let i = 1; i <= pathArr.length; i++) {
+                    const path = pathArr.slice(0, i);
+
+                    const completePath = path.join("/");
+                    const folderName = path[path.length - 1];
+                    const parentPath = path.slice(0, -1).join("/");
+
+                    if (folderIdMap.has(completePath)) {
+                        continue;
+                    }
+
+                    const parentId = folderIdMap.has(parentPath) ? folderIdMap.get(parentPath) : currFolderId;
+
+                    if (!noLookup) {
+                        // parentId cannot be null because then noLookup would be true
+                        const id = await lookupDamFolder(folderName, parentId);
+
+                        if (id === undefined) {
+                            // paths are looked up hierarchically starting with the first folder e.g.
+                            //   1. lookup: media_folder
+                            //   2. lookup: media_folder/inner_folder
+                            // if media_folder doesn't exist, there is no point in looking up inner_folder
+                            // because it cannot exist without its parent => noLookup
+                            noLookup = true;
+                        } else {
+                            folderIdMap.set(completePath, id);
+                        }
+                    }
+                }
+            }
+
+            return folderIdMap;
+        },
+        [lookupDamFolder],
+    );
+
     const createFoldersIfNecessary = React.useCallback(
         async (externalFolderIdMap: Map<string, string>, file: FileWithFolderPath, currFolderId?: string) => {
             const folderIdMap = new Map(externalFolderIdMap);
 
-            let noLookup = false;
             if (file.folderPath === undefined) {
                 return folderIdMap;
             }
-
             const pathArr = file.folderPath.split("/");
 
             for (let i = 1; i <= pathArr.length; i++) {
@@ -212,35 +267,78 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
                 const parentId = folderIdMap.has(parentPath) ? folderIdMap.get(parentPath) : currFolderId;
 
-                if (!noLookup) {
-                    // parentId cannot be null because then noLookup would be true
-                    const id = await lookupDamFolder(folderName, parentId);
-
-                    if (id === undefined) {
-                        // paths are looked up hierarchically starting with the first folder e.g.
-                        //   1. lookup: media_folder
-                        //   2. lookup: media_folder/inner_folder
-                        // if media_folder doesn't exist, there is no point in looking up inner_folder
-                        // because it cannot exist without its parent => noLookup
-                        noLookup = true;
-                    } else {
-                        folderIdMap.set(completePath, id);
-                        continue;
-                    }
-                }
-
                 const id = await createDamFolder(folderName, parentId);
                 folderIdMap.set(completePath, id);
             }
 
             return folderIdMap;
         },
-        [createDamFolder, lookupDamFolder],
+        [createDamFolder],
+    );
+
+    const mapFilenameDataToFiles = (
+        filenameDataList: FilenameData[],
+        files: FileWithFolderPath[],
+        currentFolderId: string | undefined,
+        folderIdMap: Map<string, string>,
+    ) => {
+        const filesToUpload = filenameDataList.map((data) => {
+            return files.find((file) => {
+                const fileFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : currentFolderId;
+
+                return file.name === data.name && fileFolderId === data.folderId;
+            }) as FileWithFolderPath;
+        });
+
+        return filesToUpload;
+    };
+
+    const handleDuplicatedFilenames = React.useCallback(
+        async (
+            filesWithFolderPaths: FileWithFolderPath[],
+            currentFolderId: string | undefined,
+            folderIdMap: Map<string, string>,
+        ): Promise<FileWithFolderPath[]> => {
+            if (manualDuplicatedFilenamesHandler === undefined) {
+                return filesWithFolderPaths;
+            }
+
+            const filesInNewDir: FileWithFolderPath[] = [];
+            const filesInExistingDir: FileWithFolderPath[] = [];
+
+            for (const file of filesWithFolderPaths) {
+                if (file.folderPath === undefined || folderIdMap.has(file.folderPath)) {
+                    filesInExistingDir.push(file);
+                } else {
+                    // filter out files in newly uploaded folders, because the duplicated filename
+                    // check isn't possible for new folders since they don't have an id.
+                    // It's also not necessary because in a local filesystem there
+                    // typically can't be duplicate filenames. If there's still a conflict,
+                    // it's resolved automatically in the API by adding a sequential number.
+                    filesInNewDir.push(file);
+                }
+            }
+
+            const revisedFilenameDataList = await manualDuplicatedFilenamesHandler?.letUserHandleDuplicates(
+                filesInExistingDir.map((file) => ({
+                    name: file.name,
+                    folderId: file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : currentFolderId,
+                })),
+            );
+
+            const filesToUpload = mapFilenameDataToFiles(revisedFilenameDataList, filesWithFolderPaths, currentFolderId, folderIdMap);
+
+            filesToUpload.push(...filesInNewDir);
+            return filesToUpload;
+        },
+        [manualDuplicatedFilenamesHandler],
     );
 
     const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, folderId?: string) => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
+
+        const uploadedFileIds: string[] = [];
 
         let errorOccurred = false;
         if (fileRejections.length > 0) {
@@ -249,20 +347,22 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         }
 
         if (acceptedFiles.length > 0) {
-            const filesWithFolderPaths = await addFolderPath(acceptedFiles);
-            let folderIdMap = new Map<string, string>();
+            const filesWithFolderPaths = await addFolderPathToFiles(acceptedFiles);
+            let folderIdMap = await createInitialFolderIdMap(filesWithFolderPaths, folderId);
 
             for (const file of filesWithFolderPaths) {
                 addTotalSize(file.path ?? "", file.size);
             }
 
+            const filesToUpload = await handleDuplicatedFilenames(filesWithFolderPaths, folderId, folderIdMap);
+
             cancelUpload.current = axios.CancelToken.source();
-            for (const file of filesWithFolderPaths) {
+            for (const file of filesToUpload) {
                 folderIdMap = await createFoldersIfNecessary(folderIdMap, file, folderId);
                 const targetFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId;
 
                 try {
-                    await upload(
+                    const response: { data: { id: string } } = await upload(
                         context.damConfig.apiClient,
                         {
                             file,
@@ -275,6 +375,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                             },
                         },
                     );
+
+                    uploadedFileIds.push(response.data.id);
                 } catch (err) {
                     errorOccurred = true;
                     const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
@@ -309,7 +411,9 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         }
         setTotalSizes({});
         setLoadedSizes({});
-        options.onAfterUpload?.();
+        options.onAfterUpload?.(errorOccurred);
+
+        addNewlyUploadedFileIds(uploadedFileIds);
     };
 
     return {
@@ -334,5 +438,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             multiple: true,
             maxSize: maxFileSizeInBytes,
         },
+        newlyUploadedFileIds,
     };
 };

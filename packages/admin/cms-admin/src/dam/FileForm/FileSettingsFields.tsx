@@ -3,7 +3,7 @@ import { Field, FinalFormInput, FormSection } from "@comet/admin";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
-import { GQLDamFilenameAlreadyExistsQuery, GQLDamFilenameAlreadyExistsQueryVariables } from "../../graphql.generated";
+import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "../../graphql.generated";
 import { CropSettingsFields } from "./CropSettingsFields";
 
 interface SettingsFormProps {
@@ -11,19 +11,19 @@ interface SettingsFormProps {
     folderId: string | null;
 }
 
-export const damFilenameAlreadyExistsQuery = gql`
-    query DamFilenameAlreadyExists($filename: String!, $folderId: String) {
-        damFilenameAlreadyExists(filename: $filename, folderId: $folderId)
+const damIsFilenameOccupiedQuery = gql`
+    query DamIsFilenameOccupied($filename: String!, $folderId: String) {
+        damIsFilenameOccupied(filename: $filename, folderId: $folderId)
     }
 `;
 
 export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): React.ReactElement => {
     const intl = useIntl();
     const apollo = useApolloClient();
-    const damFilenameAlreadyExists = React.useCallback(
+    const damIsFilenameOccupied = React.useCallback(
         async (filename: string): Promise<boolean> => {
-            const { data } = await apollo.query<GQLDamFilenameAlreadyExistsQuery, GQLDamFilenameAlreadyExistsQueryVariables>({
-                query: damFilenameAlreadyExistsQuery,
+            const { data } = await apollo.query<GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables>({
+                query: damIsFilenameOccupiedQuery,
                 variables: {
                     filename,
                     folderId,
@@ -31,7 +31,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                 fetchPolicy: "network-only",
             });
 
-            return data.damFilenameAlreadyExists;
+            return data.damIsFilenameOccupied;
         },
         [apollo, folderId],
     );
@@ -48,7 +48,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                     component={FinalFormInput}
                     validate={async (value, allValues, meta) => {
                         if (value && meta?.dirty) {
-                            if (await damFilenameAlreadyExists(value)) {
+                            if (await damIsFilenameOccupied(value)) {
                                 return intl.formatMessage({
                                     id: "comet.dam.file.validate.filename.error",
                                     defaultMessage: "Filename already exists",

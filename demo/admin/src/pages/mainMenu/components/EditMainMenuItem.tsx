@@ -1,6 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import {
     MainContent,
+    messages,
     RouterPrompt,
     SaveButton,
     SplitButton,
@@ -129,6 +130,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <Button
+                        color="info"
                         startIcon={<Preview />}
                         onClick={() => {
                             openPreviewWindow(item.node.path, contentScopeMatch.url);
@@ -146,7 +148,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                             variant="contained"
                             onClick={handleSaveClick}
                         >
-                            <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                            <FormattedMessage {...messages.save} />
                         </SaveButton>
                         <SaveButton
                             startIcon={<Save />}
@@ -159,7 +161,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                                 stackApi?.goBack();
                             }}
                         >
-                            <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                            <FormattedMessage {...messages.saveAndGoBack} />
                         </SaveButton>
                     </SplitButton>
                 </ToolbarActions>
@@ -168,10 +170,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                 <RouterPrompt
                     message={(location) => {
                         if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
-                        return intl.formatMessage({
-                            id: "comet.generic.doYouWantToSaveYourChanges",
-                            defaultMessage: "Do you want to save your changes?",
-                        });
+                        return intl.formatMessage(messages.saveUnsavedChanges);
                     }}
                     saveAction={handleSaveAction}
                 />

@@ -1,7 +1,6 @@
 import { Field } from "@comet/admin";
 import { DateRange, FinalFormDateRangePicker } from "@comet/admin-date-time";
-import { Calendar } from "@comet/admin-icons";
-import { Card, CardContent, InputAdornment } from "@mui/material";
+import { Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -28,18 +27,7 @@ const Story = () => {
                         <Card>
                             <CardContent>
                                 <Field name="dateRangeOne" label="Date range" fullWidth component={FinalFormDateRangePicker} />
-                                <Field
-                                    name="dateRangeTwo"
-                                    label="Clearable date range with icon"
-                                    fullWidth
-                                    clearable
-                                    component={FinalFormDateRangePicker}
-                                    startAdornment={
-                                        <InputAdornment position="start">
-                                            <Calendar />
-                                        </InputAdornment>
-                                    }
-                                />
+                                <Field name="dateRangeTwo" label="Clearable" fullWidth clearable component={FinalFormDateRangePicker} />
                             </CardContent>
                         </Card>
                         <pre>{JSON.stringify(values, null, 4)}</pre>

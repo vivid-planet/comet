@@ -40,7 +40,12 @@ export { RootBlockEntity, RootBlockEntityOptions } from "./blocks/decorators/roo
 export { TransformDependencies } from "./blocks/dependencies";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";
-export { BlocksBlockFixturesGeneratorMap, createBlocksBlock } from "./blocks/factories/createBlocksBlock";
+export {
+    BaseBlocksBlockItemData,
+    BaseBlocksBlockItemInput,
+    BlocksBlockFixturesGeneratorMap,
+    createBlocksBlock,
+} from "./blocks/factories/createBlocksBlock";
 export { createListBlock } from "./blocks/factories/createListBlock";
 export { createOneOfBlock, OneOfBlock } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";

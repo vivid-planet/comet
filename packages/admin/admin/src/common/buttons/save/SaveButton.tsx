@@ -6,6 +6,7 @@ import { ClassNameMap } from "@mui/styles/withStyles/withStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { messages } from "../../../messages";
 import { useSplitButtonContext } from "../split/useSplitButtonContext";
 import { SaveButtonClassKey, styles } from "./SaveButton.styles";
 
@@ -26,7 +27,7 @@ export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error";
 const SaveBtn = ({
     saving = false,
     hasErrors = false,
-    children = <FormattedMessage id="comet.generic.save" defaultMessage="Save" />,
+    children = <FormattedMessage {...messages.save} />,
     savingItem = <FormattedMessage id="comet.saveButton.savingItem.title" defaultMessage="Saving" />,
     successItem = <FormattedMessage id="comet.saveButton.successItem.title" defaultMessage="Successfully Saved" />,
     errorItem = <FormattedMessage id="comet.saveButton.errorItem.title" defaultMessage="Save Error" />,

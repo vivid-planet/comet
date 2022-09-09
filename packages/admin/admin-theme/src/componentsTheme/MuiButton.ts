@@ -15,6 +15,8 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             top: 1,
             fontSize: 16,
             lineHeight: 1,
+            textTransform: "none",
+            fontWeight: typography.fontWeightRegular,
 
             [`&.${buttonClasses.textSizeSmall}`]: {
                 fontSize: 14,
@@ -22,8 +24,6 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             },
         },
         text: ({ ownerState }) => ({
-            fontWeight: typography.fontWeightRegular,
-            textTransform: "none",
             paddingTop: 12,
             paddingRight: 15,
             paddingBottom: 12,
@@ -51,6 +51,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             paddingRight: 14,
             paddingBottom: 12,
             paddingLeft: 14,
+            borderRadius: 4,
 
             [`&.${buttonClasses.disabled}`]: {
                 backgroundColor: palette.grey[100],
@@ -84,6 +85,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             paddingRight: 14,
             paddingBottom: 11,
             paddingLeft: 14,
+            borderRadius: 4,
 
             ":hover": {
                 backgroundColor: palette.grey[50],
@@ -99,7 +101,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             position: "relative",
             top: -1,
 
-            [`&.${buttonClasses.iconSizeMedium} > *:first-child`]: {
+            [`&.${buttonClasses.iconSizeMedium} > *:first-of-type`]: {
                 fontSize: 16,
             },
         },
@@ -108,7 +110,7 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
             position: "relative",
             top: -1,
 
-            [`&.${buttonClasses.iconSizeMedium} > *:first-child`]: {
+            [`&.${buttonClasses.iconSizeMedium} > *:first-of-type`]: {
                 fontSize: 16,
             },
         },

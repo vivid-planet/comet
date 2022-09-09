@@ -1,4 +1,4 @@
-import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormInput, FinalFormSelect, messages } from "@comet/admin";
 import {
     BlockInterface,
     BlocksFinalForm,
@@ -42,6 +42,8 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
         metaDescription: undefined,
         openGraphTitle: undefined,
         openGraphDescription: undefined,
+        structuredData: undefined,
+        canonicalUrl: undefined,
     })(composedBlock);
 
     type State = BlockState<typeof block>;
@@ -51,7 +53,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
         ...block,
         name: "Seo",
 
-        displayName: <FormattedMessage id="comet.blocks.seo" defaultMessage="Seo" />,
+        displayName: <FormattedMessage id="comet.blocks.seo" defaultMessage="SEO" />,
 
         AdminComponent: ({ state, updateState }) => {
             const intl = useIntl();
@@ -74,9 +76,14 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
 
                                 openGraphTitle: values.openGraphTitle,
                                 openGraphDescription: values.openGraphDescription,
+
+                                structuredData: values.structuredData,
+
                                 noIndex: values.noIndex,
                                 priority: values.priority,
                                 changeFrequency: values.changeFrequency,
+
+                                canonicalUrl: values.canonicalUrl,
                             }));
                         }}
                         initialValues={{
@@ -86,9 +93,13 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                             openGraphTitle: state.openGraphTitle,
                             openGraphDescription: state.openGraphDescription,
 
+                            structuredData: state.structuredData,
+
                             noIndex: state.noIndex,
                             priority: state.priority,
                             changeFrequency: state.changeFrequency,
+
+                            canonicalUrl: state.canonicalUrl,
                         }}
                     >
                         {/* Meta */}
@@ -148,6 +159,14 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                 fullWidth
                             />
                             {openGraphImage}
+                        </Box>
+
+                        {/* Structured Data */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.structuredData.sectionTitle" defaultMessage="Structured Data" />
+                            </Typography>
+                            <Field name="structuredData" multiline={true} rows={15} component={FinalFormInput} fullWidth />
                         </Box>
 
                         {/* Sitemap */}
@@ -224,6 +243,14 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                     );
                                 }}
                             </ReactFinalFormField>
+                        </Box>
+
+                        {/* Canonical Tag */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <Typography variant="h4" gutterBottom>
+                                <FormattedMessage id="comet.blocks.seo.canonicalTag.sectionTitle" defaultMessage="Canonical Tag" />
+                            </Typography>
+                            <Field label={<FormattedMessage {...messages.url} />} name="canonicalUrl" component={FinalFormInput} fullWidth />
                         </Box>
                     </BlocksFinalForm>
                 </div>

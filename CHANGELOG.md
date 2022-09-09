@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Changes
 
+-   `comet.generic` messages are exposed as public API through `messages.ts` (this stops them from being translated for every application)
+
 ### Incompatible Changes
 
 -   Removed the `Select` component, use MUIs `Select` instead.
@@ -16,6 +18,31 @@ All notable changes to this project will be documented in this file. This projec
 
 -   close the EditDialog after submitting a contained form via ENTER click
 -   [RTE] Fix a bug were `setEditorState` was incorrectly assumed to be a React state setter function.
+
+### Migration Guide
+
+-   replace all occurrences of `<FormattedMessage id="comet.generic.XXX" />` and `intl.formatMessage({id: "comet.generic.XXX"})`
+
+    **before**
+
+    ```typescript jsx
+    <FormattedMessage id="comet.generic.globalContentScope" defaultMessage="Global Content" />;
+
+    intl.formatMessage({
+        id: "comet.generic.doYouWantToSaveYourChanges",
+        defaultMessage: "Do you want to save your changes?",
+    });
+    ```
+
+    **new**
+
+    ```typescript jsx
+    import { messages } from "@comet/admin";
+
+    <FormattedMessage {...messages.globalContentScope} />;
+
+    intl.formatMessage(messages.saveUnsavedChanges);
+    ```
 
 ## @comet/admin-theme
 
@@ -115,7 +142,10 @@ Migrate to MUI 5, following the official [MUI Migration Guide](https://mui.com/g
 
 ## @comet/admin-date-picker -> @comet/admin-date-time
 
--   Added standalone `DatePicker` and `DateRangePicker` components for use outside of FinalForm
+### Changes
+
+-   Add standalone `DatePicker` and `DateRangePicker` components for use outside Final Form.
+-   Add new `TimePicker`, `DateTimePicker` and `TimeRangePicker` components. Each comes standalone and with a separate Final Form component.
 
 ### Incompatible Changes
 

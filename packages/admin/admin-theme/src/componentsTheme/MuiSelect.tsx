@@ -24,7 +24,7 @@ export const getMuiSelect: GetMuiComponentTheme<"MuiSelect"> = (component, { pal
     },
     styleOverrides: mergeOverrideStyles<"MuiSelect">(component?.styleOverrides, {
         select: {
-            height: 38,
+            minHeight: 38,
             paddingRight: 32,
 
             "&:focus": {
@@ -43,6 +43,7 @@ export const getMuiSelect: GetMuiComponentTheme<"MuiSelect"> = (component, { pal
         },
         icon: {
             position: "relative",
+            top: 0,
             right: 0,
             order: 1,
             color: palette.grey[900],

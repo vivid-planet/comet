@@ -32,16 +32,19 @@ export const selectedPageFragment = gql`
 `;
 
 const StyledDialogTitle = styled(DialogTitle)`
-    & > .MuiTypography-root {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+`;
+
+const CloseButton = styled(IconButton)`
+    position: absolute;
+    right: ${({ theme }) => theme.spacing(2)};
 `;
 
 const StyledDialogAction = styled(DialogActions)`
-    & > :first-child:last-child {
+    & > :first-of-type:last-child {
         margin-left: initial;
     }
 `;
@@ -181,9 +184,9 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
         >
             <StyledDialogTitle>
                 <FormattedMessage id="comet.pages.pageTreeSelect.label" defaultMessage="Select Page" />
-                <IconButton onClick={onClose} color="inherit" size="large">
-                    <Close fontSize="medium" />
-                </IconButton>
+                <CloseButton onClick={onClose} color="inherit">
+                    <Close />
+                </CloseButton>
             </StyledDialogTitle>
             <Toolbar>
                 <ToolbarActions>
@@ -244,7 +247,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
 const PageVisibility = styled("div")`
     display: flex;
-    & :first-child {
+    & :first-of-type {
         margin-right: 5px;
     }
     align-items: center;

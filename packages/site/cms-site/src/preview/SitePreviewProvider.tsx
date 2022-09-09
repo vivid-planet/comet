@@ -1,17 +1,17 @@
+import { useRouter } from "next/router";
 import * as React from "react";
 
 import { IFrameLocationMessage, IFrameMessageType } from "../iframebridge/IFrameMessage";
 import { useIFrameBridge } from "../iframebridge/useIFrameBridge";
-import { useRouter } from "../router/useRouter";
 import { previewStateUrlParamName } from "./constants";
 import { PreviewContext, Url } from "./PreviewContext";
-import { parsePreviewState } from "./utils";
+import { createPathToPreviewPath, defaultPreviewPath, parsePreviewState } from "./utils";
 
 interface Props {
     previewPath?: string;
 }
 
-export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, previewPath = "/preview" }) => {
+export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, previewPath = defaultPreviewPath }) => {
     const router = useRouter();
 
     const iFrame = useIFrameBridge();
@@ -20,7 +20,7 @@ export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, 
         function sendUpstreamMessage() {
             const url = new URL(router.asPath, window.location.origin);
             const { pathname, searchParams } = url;
-            searchParams.delete("__preview"); // Remove __preview query parameter -> that's frontend preview internal
+            searchParams.delete(previewStateUrlParamName); // Remove __preview query parameter -> that's frontend preview internal
 
             const message: IFrameLocationMessage = {
                 cometType: IFrameMessageType.SitePreviewLocation,
@@ -40,28 +40,8 @@ export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, 
     // maps the original-path to the preview-path
     const pathToPreviewPath = React.useCallback(
         (path: Url) => {
-            if (typeof path === "string") {
-                return `${previewPath}${path}?${previewStateUrlParamName}=${JSON.stringify(previewState)}`;
-            } else {
-                let query = path.query;
-
-                if (typeof query === "string") {
-                    query += `&${previewStateUrlParamName}=${JSON.stringify(previewState)}`;
-                } else if (typeof query === "object") {
-                    query = {
-                        ...query,
-                        [previewStateUrlParamName]: JSON.stringify(previewState),
-                    };
-                }
-
-                return {
-                    ...path,
-                    pathname: `${previewPath}${path.pathname}`,
-                    query,
-                };
-            }
+            return createPathToPreviewPath({ path, previewPath, previewState, baseUrl: window.location.origin });
         },
-
         [previewPath, previewState],
     );
     const previewPathToPath = React.useCallback(
