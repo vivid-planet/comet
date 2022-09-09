@@ -93,9 +93,9 @@ export function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveE
         hasErrors: !!saveError,
         errorItem:
             saveError == "invalid" ? (
-                <FormattedMessage id="comet.generic.invalidData" defaultMessage="Invalid Data" />
+                <FormattedMessage {...messages.invalidData} />
             ) : saveError == "conflict" ? (
-                <FormattedMessage id="comet.generic.saveConflict" defaultMessage="Save Conflict" />
+                <FormattedMessage {...messages.saveConflict} />
             ) : undefined,
     };
 
