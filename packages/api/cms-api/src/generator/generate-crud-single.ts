@@ -20,6 +20,9 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
         const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
         const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
+        const blockProps = metadata.props.filter((prop) => {
+            return prop.type === "RootBlockType";
+        });
 
         const serviceOut = `import { ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
@@ -90,7 +93,10 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
                     validateNotModified(${instanceNameSingular}, lastUpdatedAt);
                 }
     
-                ${instanceNameSingular}.assign({ ...input });
+                ${instanceNameSingular}.assign({
+                    ...input,
+                    ${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}
+                });
             }
     
             await this.repository.persistAndFlush(${instanceNameSingular});

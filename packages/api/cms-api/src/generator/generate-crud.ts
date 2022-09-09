@@ -27,6 +27,10 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
         const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
+        const blockProps = metadata.props.filter((prop) => {
+            return prop.type === "RootBlockType";
+        });
+
         if (hasFilterArg) {
             const filterOut = `import { StringFilter, NumberFilter } from "@comet/cms-api";
             import { Field, InputType } from "@nestjs/graphql";
@@ -300,6 +304,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             const ${instanceNameSingular} = new ${metadata.className}();
             ${instanceNameSingular}.assign({
                 ...input,
+                ${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}
                 ${hasVisibleProp ? `visible: false,` : ""}
                 ${scopeProp ? `scope,` : ""}
             });
@@ -324,6 +329,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             }
             ${instanceNameSingular}.assign({
                 ...input,
+                ${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}
             });
     
             await this.repository.persistAndFlush(${instanceNameSingular});
