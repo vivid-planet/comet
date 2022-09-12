@@ -1,4 +1,4 @@
-import { Block, BlockDataInterface, RootBlockEntity } from "@comet/blocks-api";
+import { Block, BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
 import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Type } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
@@ -46,6 +46,7 @@ export class RedirectEntityFactory {
             @Field()
             source: string;
 
+            @RootBlock(linkBlock)
             @Property({ customType: new RootBlockType(linkBlock) })
             @Field(() => GraphQLJSONObject)
             target: BlockDataInterface;

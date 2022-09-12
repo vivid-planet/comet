@@ -32,17 +32,17 @@ export class BlockIndexService {
                             '${metadata.tableName}' "tableName",
                             '${column}' "columnName",
                             '${primary}' "primaryKey",
-                            index->>'blockname' "blockname",
-                            index->>'jsonPath' "jsonPath",
-                            (index->>'visible')::boolean "visible",
-                            target->>'entityName' "targetEntityName",
+                            indexObj->>'blockname' "blockname",
+                            indexObj->>'jsonPath' "jsonPath",
+                            (indexObj->>'visible')::boolean "visible",
+                            targetObj->>'entityName' "targetEntityName",
                             targetTableData->>'tableName' "targetTableName",
                             targetTableData->>'primary' "targetPrimaryKey",
-                            target->>'id' "targetId"
+                            targetObj->>'id' "targetId"
                         FROM "${metadata.tableName}",
-                            json_array_elements("${metadata.tableName}"."${column}"->'index') index,
-                            json_array_elements("index"->'target') target,
-                            jsonb_extract_path('${JSON.stringify(allEntitiesNameData)}', target->>'entityName') targetTableData`;
+                            json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
+                            json_array_elements(indexObj->'target') targetObj,
+                            json_extract_path('${JSON.stringify(allEntitiesNameData)}', targetObj->>'entityName') targetTableData`;
 
             console.log(select);
             indexSelects.push(select);
