@@ -13,8 +13,11 @@ export class BlockIndexService {
 
     async createViews(): Promise<void> {
         const indexSelects: string[] = [];
-        for (const discoveredEntity of this.discoverEntitiesService.discoverRootBlocks()) {
-            const { metadata, column } = discoveredEntity;
+        const allEntities = this.discoverEntitiesService.discoverAllEntities();
+        const allEntitiesNameData = allEntities.map((entity) => ({ entityName: entity.metadata.name, tableName: entity.metadata.tableName }));
+
+        for (const rootBlockEntity of this.discoverEntitiesService.discoverRootBlocks()) {
+            const { metadata, column } = rootBlockEntity;
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT "${metadata.tableName}"."${primary}" id,
@@ -29,6 +32,7 @@ export class BlockIndexService {
                         FROM "${metadata.tableName}",
                             json_array_elements("${metadata.tableName}"."${column}"->'index') index,
                             json_array_elements("index"->'target') target`;
+            // json_array_elements(${allEntitiesNameData}) entityNameData`;
             indexSelects.push(select);
         }
 

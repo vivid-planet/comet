@@ -32,6 +32,7 @@ export {
 } from "./blocks/block";
 export { createRichTextBlock } from "./blocks/createRichTextBlock";
 export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
+export { BlockDependencyTarget, BlockDependencyTargetOptions } from "./blocks/decorators/block-dependency-target";
 export { ChildBlock } from "./blocks/decorators/child-block";
 export { ChildBlockInput } from "./blocks/decorators/child-block-input";
 export { AnnotationBlockMeta, BlockField, getFieldKeys } from "./blocks/decorators/field";
