@@ -13,7 +13,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment, GQLSelectedPageFragment, Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { createPagesQuery } from "../pagesPage/createPagesQuery";
+import { pagesQuery } from "../pagesPage/pagesQuery";
 import { PageTreeTableRow } from "../pageTree/common/PageTreeTableRow";
 import PageInfo from "../pageTree/PageInfo";
 import PageLabel from "../pageTree/PageLabel";
@@ -80,8 +80,6 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const refDialogContent = React.useRef<HTMLDivElement>(null);
     const selectedPageId = value?.id;
     const classes = useStyles();
-
-    const pagesQuery = React.useMemo(() => createPagesQuery({ documentTypes: pageTreeDocumentTypes }), [pageTreeDocumentTypes]);
 
     // Fetch data
     const { data } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
@@ -211,9 +209,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
                 </PageSearchContainer>
             </Toolbar>
             <DialogContent ref={refDialogContent}>
-                <PageTreeContext.Provider
-                    value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree, query: pagesQuery }}
-                >
+                <PageTreeContext.Provider value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree }}>
                     <List
                         ref={refList}
                         height={height}
