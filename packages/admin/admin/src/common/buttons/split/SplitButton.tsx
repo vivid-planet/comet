@@ -93,15 +93,10 @@ const SplitBtn = ({
             <Popover
                 open={open}
                 anchorEl={anchorRef.current}
-                anchorOrigin={{
-                    vertical: popoverProps?.anchorOrigin?.vertical ?? "bottom",
-                    horizontal: popoverProps?.anchorOrigin?.horizontal ?? "center",
-                }}
-                transformOrigin={{
-                    vertical: popoverProps?.transformOrigin?.vertical ?? "top",
-                    horizontal: popoverProps?.transformOrigin?.horizontal ?? "center",
-                }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                transformOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={handleClose}
+                {...popoverProps}
             >
                 <MenuList>
                     {childrenArray.map((child: React.ReactElement, index) => {

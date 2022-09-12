@@ -13,8 +13,8 @@ storiesOf("stories/components/Split Button/Override Popover Props", module).add(
                     horizontal: "right",
                 },
                 transformOrigin: {
-                    vertical: "bottom",
-                    horizontal: "right",
+                    vertical: "top",
+                    horizontal: "left",
                 },
             }}
         >
