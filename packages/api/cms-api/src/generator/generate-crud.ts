@@ -244,9 +244,9 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     
     import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     ${
-        scopeProp
-            ? `import { ${scopeProp.targetMeta!.className} } from "${path
-                  .relative(generatorOptions.targetDirectory, scopeProp.targetMeta!.path)
+        scopeProp && scopeProp.targetMeta
+            ? `import { ${scopeProp.targetMeta.className} } from "${path
+                  .relative(generatorOptions.targetDirectory, scopeProp.targetMeta.path)
                   .replace(/\.ts$/, "")}";`
             : ""
     }
