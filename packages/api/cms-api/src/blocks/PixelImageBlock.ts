@@ -2,6 +2,7 @@ import {
     AnnotationBlockMeta,
     BlockContext,
     BlockData,
+    BlockIndexDataArray,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -9,7 +10,6 @@ import {
     inputToData,
     TraversableTransformResponse,
 } from "@comet/blocks-api";
-import { BlockIndexDataArray } from "@comet/blocks-api/lib/blocks/block";
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 
