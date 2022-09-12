@@ -1,49 +1,37 @@
-import { BreadcrumbsClassKey } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { createStyles } from "@mui/styles";
 
 import { StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 export type StackBreadcrumbsClassKey =
-    | BreadcrumbsClassKey
+    | "root"
     | "breadcrumbs"
-    | "backAndFirstLinkContainer"
-    | "backButton"
-    | "backButtonSeparator"
+    | "listItem"
     | "link"
+    | "disabledLink"
     | "overflowLink"
-    | "lastLink";
+    | "separator"
+    | "backButton"
+    | "backButtonSeparator";
 
-export const styles = ({ palette, spacing, typography }: Theme) => {
-    return createStyles<StackBreadcrumbsClassKey, StackBreadcrumbsProps>({
+export const styles = ({ palette, typography }: Theme) =>
+    createStyles<StackBreadcrumbsClassKey, StackBreadcrumbsProps>({
         root: {
             position: "relative",
         },
         breadcrumbs: {
+            display: "flex",
             height: 50,
             borderBottom: `1px solid ${palette.divider}`,
+            boxSizing: "border-box",
+            flexWrap: "nowrap",
+            overflowX: "auto", // Make the breadcrumbs scrollable, if they still take up too much space, when only the first, last & the overflow link are visible.
         },
-        backAndFirstLinkContainer: {
+        listItem: {
             display: "flex",
             alignItems: "center",
-        },
-        backButton: {},
-        backButtonSeparator: {
-            height: 30,
-            width: 1,
-            backgroundColor: palette.divider,
-            marginRight: spacing(2),
-        },
-        ol: {
-            flexWrap: "nowrap",
-            height: "100%",
-            overflowY: "auto", // Make the breadcrumbs scrollable, if they still take up too much space, when only the first, last & the overflow link are visible.
-        },
-        li: {
+            flexShrink: 0,
             whiteSpace: "nowrap",
-        },
-        separator: {
-            fontSize: 12,
         },
         link: {
             fontSize: 13,
@@ -52,12 +40,25 @@ export const styles = ({ palette, spacing, typography }: Theme) => {
             color: palette.grey[600],
             textDecorationColor: "currentColor",
         },
+        disabledLink: {
+            color: palette.text.disabled,
+        },
         overflowLink: {
             cursor: "pointer",
+            paddingTop: 12,
+            paddingBottom: 12,
         },
-        lastLink: {
-            color: palette.text.disabled,
-            textDecoration: "none",
+        separator: {
+            fontSize: 12,
+            lineHeight: 0,
+            marginLeft: 8,
+            marginRight: 8,
+        },
+        backButton: {},
+        backButtonSeparator: {
+            height: 30,
+            width: 1,
+            backgroundColor: palette.divider,
+            marginRight: 12,
         },
     });
-};

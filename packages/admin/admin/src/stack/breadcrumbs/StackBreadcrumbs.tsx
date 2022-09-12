@@ -1,57 +1,61 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { Breadcrumbs as MuiBreadcrumbs, BreadcrumbsProps, ComponentsOverrides, Theme, useTheme } from "@mui/material";
+import { ComponentsOverrides, Theme, useTheme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import useResizeAware from "react-resize-aware";
 
 import { useStackApi } from "../Api";
-import { BreadcrumbOverflow } from "./BreadcrumbOverflow";
-import { getBreadcrumbLinkNodes } from "./getBreadcrumbLinkNodes";
 import { StackBreadcrumbsClassKey, styles } from "./StackBreadcrumbs.styles";
-import { useNumberOfItemsToBeHidden } from "./useNumberOfItemsToBeHidden";
+import { getElementOuterWidth, useItemsToRender } from "./utils";
 
-export type StackBreadcrumbsProps = Omit<BreadcrumbsProps, "maxItems" | "itemsAfterCollapse">;
+export interface StackBreadcrumbsProps {
+    separator?: React.ReactNode;
+    overflowLinkText?: React.ReactNode;
+}
 
 const StackBreadcrumbsComponent = ({
-    separator,
-    itemsBeforeCollapse = 1,
     classes,
-    ...otherProps
+    separator,
+    overflowLinkText = ". . .",
 }: StackBreadcrumbsProps & WithStyles<typeof styles>): React.ReactElement | null => {
     const stackApi = useStackApi();
     const { palette } = useTheme();
-    const breadcrumbsRef = React.useRef<HTMLElement>(null);
-    const [breadcrumbsResizeListener, { width: breadcrumbsContainerWidth }] = useResizeAware();
+    const [breadcrumbsResizeListener, { width: containerWidth }] = useResizeAware();
+    const breadcrumbsRef = React.useRef<HTMLDivElement>(null);
+    const [itemWidths, setItemWidths] = React.useState<number[] | undefined>();
 
-    const numberOfItemsToBeHidden = useNumberOfItemsToBeHidden(breadcrumbsRef.current, breadcrumbsContainerWidth, itemsBeforeCollapse);
+    const breadcrumbItems = React.useMemo(() => stackApi?.breadCrumbs ?? [], [stackApi]);
 
-    if (!stackApi?.breadCrumbs.length) return null;
+    React.useEffect(() => {
+        setItemWidths(undefined);
+    }, [breadcrumbItems]);
 
-    const breadcrumbItemsBeforeCollapse = stackApi.breadCrumbs.slice(0, itemsBeforeCollapse);
-    const breadcrumbItemsAfterCollapse = stackApi.breadCrumbs.slice(itemsBeforeCollapse, stackApi.breadCrumbs.length);
-    const breadcrumbItemsInsideOverflowMenu = breadcrumbItemsAfterCollapse.splice(0, numberOfItemsToBeHidden ?? 0);
+    React.useEffect(() => {
+        if (breadcrumbItems?.length && !itemWidths?.length) {
+            const listItems = breadcrumbsRef.current?.getElementsByClassName(classes.listItem);
+            const newItemWidths = listItems ? Object.values(listItems).map((listItem) => getElementOuterWidth(listItem)) : [];
+            setItemWidths(newItemWidths);
+        }
+    }, [breadcrumbItems, itemWidths, classes.listItem]);
+
+    const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
+    const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, classes, itemWidths, overflowLinkText, backButtonUrl);
+
+    if (!breadcrumbItems) return null;
 
     return (
         <div className={classes.root}>
             {breadcrumbsResizeListener}
-            <MuiBreadcrumbs
-                ref={breadcrumbsRef}
-                maxItems={stackApi.breadCrumbs.length + 1} // Prevent the default collapse behavior to use our own overflow menu.
-                classes={{ root: classes.breadcrumbs, ol: classes.ol, li: classes.li, separator: classes.separator }}
-                separator={separator === undefined ? <ChevronRight fontSize="inherit" htmlColor={palette.grey[900]} /> : separator}
-                {...otherProps}
-            >
-                {getBreadcrumbLinkNodes(
-                    breadcrumbItemsBeforeCollapse,
-                    breadcrumbItemsBeforeCollapse.length === stackApi.breadCrumbs.length,
-                    classes,
-                    stackApi.breadCrumbs.length > 1 ? stackApi.breadCrumbs[stackApi.breadCrumbs.length - 2].url : undefined,
-                )}
-                {(breadcrumbItemsInsideOverflowMenu.length || numberOfItemsToBeHidden === null) && (
-                    <BreadcrumbOverflow items={breadcrumbItemsInsideOverflowMenu} classes={classes} />
-                )}
-                {getBreadcrumbLinkNodes(breadcrumbItemsAfterCollapse, true, classes)}
-            </MuiBreadcrumbs>
+            <div className={classes.breadcrumbs} ref={breadcrumbsRef}>
+                {itemsToRender.map((item, index) => (
+                    <div className={classes.listItem} key={index}>
+                        {item}
+                        {index < itemsToRender.length - 1 && (
+                            <div className={classes.separator}>{separator ?? <ChevronRight fontSize="inherit" htmlColor={palette.grey[300]} />}</div>
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
