@@ -35,9 +35,8 @@ export class NewsResolver {
         const options: FindOptions<News> = { offset, limit };
         if (sort) {
             options.orderBy = sort.map((sortItem) => {
-                const field = sortItem.field.charAt(0).toLowerCase() + sortItem.field.slice(1); //lowercase first char to turn enum names into column names
                 return {
-                    [field]: sortItem.direction,
+                    [sortItem.field]: sortItem.direction,
                 };
             });
         }

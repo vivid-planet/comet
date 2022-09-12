@@ -315,13 +315,13 @@ input NewsSort {
 }
 
 enum NewsSortField {
-  Title
-  Slug
-  Category
-  Date
-  Visible
-  UpdatedAt
-  CreatedAt
+  title
+  slug
+  category
+  date
+  visible
+  updatedAt
+  createdAt
 }
 
 type Mutation {

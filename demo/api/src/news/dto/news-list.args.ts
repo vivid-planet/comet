@@ -6,13 +6,13 @@ import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 import { NewsCategory, NewsContentScope } from "../entities/news.entity";
 
 export enum NewsSortField {
-    Title = "Title",
-    Slug = "Slug",
-    Category = "Category",
-    Date = "Date",
-    Visible = "Visible",
-    UpdatedAt = "UpdatedAt",
-    CreatedAt = "CreatedAt",
+    title = "title",
+    slug = "slug",
+    category = "category",
+    date = "date",
+    visible = "visible",
+    updatedAt = "updatedAt",
+    createdAt = "createdAt",
 }
 registerEnumType(NewsSortField, {
     name: "NewsSortField",
