@@ -32,7 +32,7 @@ const createPageNodeMutation = gql`
     }
 `;
 
-type PageClipboard = Omit<GQLPageTreePageFragment, "document"> & { document?: GQLDocument | null };
+type PageClipboard = GQLPageTreePageFragment & { document?: GQLDocument | null };
 
 export interface PagesClipboard {
     pages: PageClipboard[];

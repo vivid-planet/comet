@@ -34,9 +34,7 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
                 )}
             </LinkText>
 
-            {documentType?.infoTag && page.document?.__typename && (
-                <InfoPanel size="small" label={documentType?.infoTag({ __typename: page.document.__typename, ...page.document })} />
-            )}
+            {documentType.InfoTag !== undefined && <InfoPanel size="small" label={<documentType.InfoTag page={page} />} />}
         </Root>
     );
 };

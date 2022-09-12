@@ -1,8 +1,8 @@
 import { TypedDocumentNode } from "@apollo/client";
 import { SvgIconProps } from "@mui/material";
-import { DocumentNode } from "graphql";
 
 import { GQLDocumentInterface, Maybe } from "../graphql.generated";
+import { PageTreePage } from "../pages/pageTree/usePageTree";
 
 export type DocumentType = string;
 
@@ -44,6 +44,5 @@ export interface DocumentInterface<
     inputToOutput?: (input: DocumentInput, context: { idsMap: IdsMap }) => DocumentOutput;
     menuIcon: (props: SvgIconProps<"svg">) => JSX.Element;
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element;
-    additionalDocumentFragment?: { name: string; fragment: DocumentNode };
-    infoTag?: (document: GQLDocument) => React.ReactNode | undefined;
+    InfoTag?: React.ComponentType<{ page: PageTreePage }>;
 }

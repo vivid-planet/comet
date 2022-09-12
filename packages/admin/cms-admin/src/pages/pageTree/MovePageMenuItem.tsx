@@ -6,6 +6,7 @@ import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { GQLUpdatePageTreeNodeCategoryMutation, GQLUpdatePageTreeNodeCategoryMutationVariables } from "../../graphql.generated";
+import { pagesQuery } from "../pagesPage/pagesQuery";
 import { PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
@@ -28,7 +29,7 @@ function MovePageMenuItem({ page, onClose }: Props): React.ReactElement | null {
         }
     `);
     const { scope } = useContentScope();
-    const { allCategories, query } = usePageTreeContext();
+    const { allCategories } = usePageTreeContext();
 
     if (allCategories.length <= 1) {
         return null;
@@ -45,8 +46,8 @@ function MovePageMenuItem({ page, onClose }: Props): React.ReactElement | null {
 
     const handleSubMenuItemClick = async (category: string) => {
         const refetchQueries = [
-            { query, variables: { contentScope: scope, category } },
-            { query, variables: { contentScope: scope, category: page.category } },
+            { query: pagesQuery, variables: { contentScope: scope, category } },
+            { query: pagesQuery, variables: { contentScope: scope, category: page.category } },
         ];
 
         await updatePageTreeNodeCategory({

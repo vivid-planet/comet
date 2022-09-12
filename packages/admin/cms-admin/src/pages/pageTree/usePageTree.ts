@@ -18,12 +18,6 @@ export const pageTreePageFragment = gql`
         hideInMenu
         visibility
         slug
-        document {
-            ... on DocumentInterface {
-                id
-                updatedAt
-            }
-        }
     }
 `;
 

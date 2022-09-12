@@ -14,6 +14,7 @@ import { PageInput } from "@src/pages/dto/page.input";
 import { Page } from "@src/pages/entities/page.entity";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
+import slugify from "slugify";
 
 import { generateLinks } from "./generators/links.generator";
 import { ManyImagesTestPageGenerator } from "./generators/many-images-test-page.generator";
@@ -195,5 +196,62 @@ export class FixturesConsole {
         const manyImagesTestGenerator = new ManyImagesTestPageGenerator(this.pageTreeService, this.filesService, this.pagesRepository);
         await manyImagesTestGenerator.execute();
         console.log("many images test page created");
+
+        console.log("generate lorem ispum fixtures");
+
+        const NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT = 0; // Increase number to generate lorum ipsum fixtures
+
+        for (let domainNum = 0; domainNum < NUMBER_OF_DOMAINS_WITH_LORUM_IPSUM_CONTENT; domainNum++) {
+            const domain = domainNum === 0 ? "secondary" : `${faker.random.word().toLowerCase()}.com`;
+            let pagesCount = 0;
+            const pages = [];
+            for (let level = 0; level < 10; level++) {
+                const pagesForLevel: PageTreeNodeInterface[] = [];
+
+                for (let i = 0; i < faker.datatype.number({ min: 100, max: 200 }); i++) {
+                    const name = faker.lorem.sentence();
+                    const page = await this.pageTreeService.createNode(
+                        {
+                            name: name,
+                            slug: slugify(name),
+                            parentId: level > 0 ? faker.random.arrayElement(pages[level - 1]).id : undefined,
+                            attachedDocument: { type: "Page" },
+                        },
+                        PageTreeNodeCategory.MainNavigation,
+                        {
+                            domain,
+                            language: "en",
+                        },
+                    );
+                    pagesForLevel.push(page);
+                    pagesCount++;
+
+                    const pageInput = getDefaultPageInput();
+
+                    const pageId = faker.datatype.uuid();
+
+                    await this.pagesRepository.persistAndFlush(
+                        this.pagesRepository.create({
+                            id: pageId,
+                            content: pageInput.content.transformToBlockData(),
+                            seo: pageInput.seo.transformToBlockData(),
+                        }),
+                    );
+                    await this.pageTreeService.attachDocument({ id: pageId, type: "Page" }, page.id);
+
+                    await this.pageTreeService.updateNodeVisibility(
+                        page.id,
+                        faker.random.arrayElement([
+                            PageTreeNodeVisibility.Published,
+                            PageTreeNodeVisibility.Unpublished,
+                            PageTreeNodeVisibility.Archived,
+                        ]),
+                    );
+                }
+
+                pages.push(pagesForLevel);
+            }
+            console.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
+        }
     }
 }

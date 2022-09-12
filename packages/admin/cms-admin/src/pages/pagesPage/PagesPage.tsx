@@ -19,8 +19,8 @@ import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
 import { AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
-import { createPagesQuery } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
+import { pagesQuery } from "./pagesQuery";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
     && {
@@ -63,7 +63,6 @@ export function PagesPage({
     useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
-    const pagesQuery = React.useMemo(() => createPagesQuery({ documentTypes }), [documentTypes]);
 
     React.useEffect(() => {
         setRedirectPathAfterChange(path);
@@ -141,7 +140,7 @@ export function PagesPage({
                             </Button>
                         </ToolbarActions>
                     </Toolbar>
-                    <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
+                    <PageTreeContext.Provider value={{ allCategories, documentTypes, tree }}>
                         <FullHeightMainContent>
                             <ActionToolbarBox>
                                 <PagesPageActionToolbar
