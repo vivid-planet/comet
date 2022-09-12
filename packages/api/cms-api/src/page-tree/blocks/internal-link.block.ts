@@ -2,6 +2,7 @@ import {
     AnnotationBlockMeta,
     BlockData,
     BlockField,
+    BlockIndexDataArray,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -51,6 +52,15 @@ class InternalLinkBlockData extends BlockData {
                 path: await readApi.nodePath(node),
             },
         };
+    }
+
+    indexData(): BlockIndexDataArray {
+        return [
+            {
+                entityName: "PageTreeNode",
+                id: this.targetPageId,
+            },
+        ];
     }
 }
 
