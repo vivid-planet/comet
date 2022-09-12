@@ -16,7 +16,7 @@ export class BlockIndexService {
         const allEntities = this.discoverEntitiesService.discoverAllEntities();
         // const allEntitiesNameData = allEntities.map((entity) => ({ entityName: entity.metadata.name, tableName: entity.metadata.tableName }));
         const allEntitiesNameData = allEntities.reduce((obj, entity) => {
-            return { ...obj, [entity.metadata.name as string]: entity.metadata.tableName };
+            return { ...obj, [entity.metadata.name as string]: { tableName: entity.metadata.tableName, primary: entity.metadata.primaryKeys[0] } };
         }, {});
 
         console.log("allEntitiesNameData ", allEntitiesNameData);
@@ -36,12 +36,13 @@ export class BlockIndexService {
                             index->>'jsonPath' "jsonPath",
                             (index->>'visible')::boolean "visible",
                             target->>'entityName' "targetEntityName",
-                            targetTableName "targetTableName",
+                            targetTableData->>'tableName' "targetTableName",
+                            targetTableData->>'primary' "targetPrimaryKey",
                             target->>'id' "targetId"
                         FROM "${metadata.tableName}",
                             json_array_elements("${metadata.tableName}"."${column}"->'index') index,
                             json_array_elements("index"->'target') target,
-                            jsonb_extract_path_text('${JSON.stringify(allEntitiesNameData)}', target->>'entityName') targetTableName`;
+                            jsonb_extract_path('${JSON.stringify(allEntitiesNameData)}', target->>'entityName') targetTableData`;
 
             console.log(select);
             indexSelects.push(select);
