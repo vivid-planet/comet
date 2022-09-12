@@ -126,7 +126,6 @@
         "dotenv-cli": "^4.0.0",
         "eslint": "^8.0.0",
         "fast-xml-parser": "^3.0.0",
-        "fork-ts-checker-webpack-plugin": "^7.0.0",
         "graphql-request": "^3.0.0",
         "html-webpack-plugin": "^5.0.0",
         "pascal-case": "^3.0.0",
