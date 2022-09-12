@@ -14,13 +14,21 @@ export class BlockIndexService {
     async createViews(): Promise<void> {
         const indexSelects: string[] = [];
         const allEntities = this.discoverEntitiesService.discoverAllEntities();
-        const allEntitiesNameData = allEntities.map((entity) => ({ entityName: entity.metadata.name, tableName: entity.metadata.tableName }));
+        // const allEntitiesNameData = allEntities.map((entity) => ({ entityName: entity.metadata.name, tableName: entity.metadata.tableName }));
+        const allEntitiesNameData = allEntities.reduce((obj, entity) => {
+            return { ...obj, [entity.metadata.name as string]: entity.metadata.tableName };
+        }, {});
+
+        console.log("allEntitiesNameData ", allEntitiesNameData);
+        console.log("json allEntitiesNameData ", JSON.stringify(allEntitiesNameData));
 
         for (const rootBlockEntity of this.discoverEntitiesService.discoverRootBlocks()) {
             const { metadata, column } = rootBlockEntity;
             const primary = metadata.primaryKeys[0];
 
-            const select = `SELECT "${metadata.tableName}"."${primary}" id,
+            const select = `SELECT 
+                            "${metadata.tableName}"."${primary}" id,
+                            '${metadata.name}' "entityName",
                             '${metadata.tableName}' "tableName",
                             '${column}' "columnName",
                             '${primary}' "primaryKey",
@@ -28,11 +36,14 @@ export class BlockIndexService {
                             index->>'jsonPath' "jsonPath",
                             (index->>'visible')::boolean "visible",
                             target->>'entityName' "targetEntityName",
+                            targetTableName "targetTableName",
                             target->>'id' "targetId"
                         FROM "${metadata.tableName}",
                             json_array_elements("${metadata.tableName}"."${column}"->'index') index,
-                            json_array_elements("index"->'target') target`;
-            // json_array_elements(${allEntitiesNameData}) entityNameData`;
+                            json_array_elements("index"->'target') target,
+                            jsonb_extract_path_text('${JSON.stringify(allEntitiesNameData)}', target->>'entityName') targetTableName`;
+
+            console.log(select);
             indexSelects.push(select);
         }
 
