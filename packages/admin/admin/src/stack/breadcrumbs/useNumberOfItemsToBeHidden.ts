@@ -1,6 +1,8 @@
 import { breadcrumbsClasses } from "@mui/material";
 import * as React from "react";
 
+import { useStackApi } from "../Api";
+
 const getElementOuterWidth = (element: HTMLElement): number =>
     element.offsetWidth + parseFloat(getComputedStyle(element).marginLeft) + parseFloat(getComputedStyle(element).marginRight);
 
@@ -72,9 +74,11 @@ const useLinkWidths = (breadcrumbsElement: HTMLElement | null, itemsBeforeCollap
 export const useNumberOfItemsToBeHidden = (
     breadcrumbsElement: HTMLElement | null,
     breadcrumbsContainerWidth: number | null,
-    totalNumberOfItems: number,
     itemsBeforeCollapse: number,
 ): number | null => {
+    const stackApi = useStackApi();
+    const totalNumberOfItems = stackApi?.breadCrumbs.length ?? 0;
+
     const separatorWidth = useSeparatorWidth(breadcrumbsElement);
     const { overflowLinkWidth, breadcrumbItemWidths } = useLinkWidths(breadcrumbsElement, itemsBeforeCollapse);
     const [numberOfItemsToBeHidden, setNumberOfItemsToBeHidden] = React.useState<number | null>(null);

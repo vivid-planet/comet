@@ -23,14 +23,9 @@ const StackBreadcrumbsComponent = ({
     const breadcrumbsRef = React.useRef<HTMLElement>(null);
     const [breadcrumbsResizeListener, { width: breadcrumbsContainerWidth }] = useResizeAware();
 
-    const numberOfItemsToBeHidden = useNumberOfItemsToBeHidden(
-        breadcrumbsRef.current,
-        breadcrumbsContainerWidth,
-        stackApi?.breadCrumbs ? stackApi.breadCrumbs.length : 0,
-        itemsBeforeCollapse,
-    );
+    const numberOfItemsToBeHidden = useNumberOfItemsToBeHidden(breadcrumbsRef.current, breadcrumbsContainerWidth, itemsBeforeCollapse);
 
-    if (!stackApi?.breadCrumbs?.length) return null;
+    if (!stackApi?.breadCrumbs.length) return null;
 
     const breadcrumbItemsBeforeCollapse = stackApi.breadCrumbs.slice(0, itemsBeforeCollapse);
     const breadcrumbItemsAfterCollapse = stackApi.breadCrumbs.slice(itemsBeforeCollapse, stackApi.breadCrumbs.length);
