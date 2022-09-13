@@ -1,18 +1,23 @@
 import { NotFoundException } from "@nestjs/common";
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
+import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { FolderArgs, FolderByNameAndParentIdArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { Folder } from "./entities/folder.entity";
 import { FoldersService } from "./folders.service";
 
+@ObjectType()
+export class PaginatedFolders extends PaginatedResponseFactory.create(Folder) {}
+
 @Resolver(() => Folder)
 export class FoldersResolver {
     constructor(private readonly foldersService: FoldersService) {}
 
-    @Query(() => [Folder])
-    async damFoldersList(@Args() args: FolderArgs): Promise<Folder[]> {
-        return this.foldersService.findAll(args);
+    @Query(() => PaginatedFolders)
+    async damFoldersList(@Args() args: FolderArgs): Promise<PaginatedFolders> {
+        const [folders, totalCount] = await this.foldersService.findAndCount(args);
+        return new PaginatedFolders(folders, totalCount);
     }
 
     @Query(() => Folder)

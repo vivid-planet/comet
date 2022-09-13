@@ -98,10 +98,27 @@ enum JobStatus {
   failed
 }
 
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
+
 type FilenameResponse {
   name: String!
   folderId: ID
   isOccupied: Boolean!
+}
+
+type PaginatedFiles {
+  nodes: [DamFile!]!
+  totalCount: Int!
+}
+
+type PaginatedFolders {
+  nodes: [DamFolder!]!
+  totalCount: Int!
 }
 
 type Link implements DocumentInterface {
@@ -285,11 +302,12 @@ type Query {
   redirects(sortColumnName: String, sortDirection: SortDirection = ASC, query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(source: String!): Boolean!
-  damFilesList(sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): [DamFile!]!
+  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
-  damFoldersList(sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): [DamFolder!]!
+  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News
@@ -314,6 +332,16 @@ enum SlugAvailability {
   Reserved
 }
 
+input DamItemFilterInput {
+  searchText: String
+  folderFilters: FolderFilterInput
+  fileFilters: FileFilterInput
+}
+
+input FolderFilterInput {
+  searchText: String
+}
+
 input FileFilterInput {
   searchText: String
   mimetypes: [String!]
@@ -322,10 +350,6 @@ input FileFilterInput {
 input FilenameInput {
   name: String!
   folderId: ID
-}
-
-input FolderFilterInput {
-  searchText: String
 }
 
 type Mutation {
