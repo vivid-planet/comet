@@ -13,7 +13,7 @@ const isHeightValid = (h: number) => h <= 1000;
 
 const DEFAULT_HEIGHT = 100;
 
-export const Space: BlockInterface<SpaceBlockData, State, SpaceBlockInput> = {
+export const SpaceBlock: BlockInterface<SpaceBlockData, State, SpaceBlockInput> = {
     ...createBlockSkeleton(),
 
     name: "Space",
@@ -25,7 +25,7 @@ export const Space: BlockInterface<SpaceBlockData, State, SpaceBlockInput> = {
     category: BlockCategory.Layout,
 
     createPreviewState: (state, previewContext) => ({
-        ...(Space.isValid(state) ? state : Space.defaultValues()),
+        ...(SpaceBlock.isValid(state) ? state : SpaceBlock.defaultValues()),
         adminMeta: { route: previewContext.parentUrl },
     }),
     isValid: (state) => isHeightValid(state.height),
