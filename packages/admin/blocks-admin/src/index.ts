@@ -29,7 +29,7 @@ export { createCompositeSettings } from "./blocks/helpers/composeBlocks/createCo
 export { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
 export { default as decomposeUpdateStateAction } from "./blocks/helpers/decomposeUpdateStateAction";
 export { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
-export { Space } from "./blocks/Space";
+export { SpaceBlock } from "./blocks/SpaceBlock";
 export type {
     AdminComponentPart,
     BindBlockAdminComponent,
