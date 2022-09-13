@@ -94,6 +94,13 @@ enum JobStatus {
   failed
 }
 
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
+
 type FilenameResponse {
   name: String!
   folderId: ID
@@ -184,6 +191,7 @@ type Query {
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
+  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
 }
 
 enum SortDirection {
@@ -213,6 +221,12 @@ enum SlugAvailability {
   Available
   Taken
   Reserved
+}
+
+input DamItemFilterInput {
+  searchText: String
+  folderFilters: FolderFilterInput
+  fileFilters: FileFilterInput
 }
 
 type Mutation {
