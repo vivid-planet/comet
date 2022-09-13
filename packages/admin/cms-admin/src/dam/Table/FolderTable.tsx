@@ -26,8 +26,8 @@ import {
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,
     GQLDamFolderTableFragment,
-    GQLDamListQuery,
-    GQLDamListQueryVariables,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
 } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
@@ -38,7 +38,7 @@ import DamContextMenu from "./DamContextMenu";
 import { DamDnDFooter, FooterType } from "./DamDnDFooter";
 import DamLabel from "./DamLabel";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { damFolderQuery, damListQuery } from "./FolderTable.gql";
+import { damFolderQuery, damItemsListQuery } from "./FolderTable.gql";
 import * as sc from "./FolderTable.sc";
 import FolderTableDragLayer from "./FolderTableDragLayer";
 import { FolderTableRow, isFile, isFolder } from "./FolderTableRow";
@@ -125,32 +125,29 @@ const FolderTable = ({
         api,
         loading: tableLoading,
         error,
-    } = useTableQuery<GQLDamListQuery, GQLDamListQueryVariables>()(damListQuery, {
+    } = useTableQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>()(damItemsListQuery, {
         variables: {
             folderId: id,
             includeArchived: filterApi.current.archived,
-            folderFilter: {
-                searchText: filterApi.current.searchText,
-            },
-            fileFilter: {
+            filter: {
                 mimetypes: props.allowedMimetypes,
                 searchText: filterApi.current.searchText,
             },
             sortColumnName: filterApi.current.sort?.columnName,
             sortDirection: filterApi.current.sort?.direction,
         },
-        resolveTableData: ({ damFilesList = [], damFoldersList = [] }) => {
+        resolveTableData: ({ damItemsList }) => {
             return {
-                data: [...damFoldersList, ...damFilesList],
-                totalCount: damFilesList.length + damFoldersList.length,
+                data: damItemsList.nodes,
+                totalCount: damItemsList.totalCount,
             };
         },
         fetchPolicy: "cache-and-network",
     });
 
     const loading = tableLoading && tableData === undefined;
-    const foldersTableData = tableData?.data.filter(isFolder);
-    const filesTableData = tableData?.data.filter(isFile);
+    const foldersTableData = tableData?.data?.filter(isFolder);
+    const filesTableData = tableData?.data?.filter(isFile);
     const firstLastUploadedFileId = filesTableData?.find((file) => newlyUploadedFileIds.includes(file.id))?.id;
 
     const { matches } = useDamSearchHighlighting({

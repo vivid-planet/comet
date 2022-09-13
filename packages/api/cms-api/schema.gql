@@ -225,8 +225,7 @@ enum SlugAvailability {
 
 input DamItemFilterInput {
   searchText: String
-  folderFilters: FolderFilterInput
-  fileFilters: FileFilterInput
+  mimetypes: [String!]
 }
 
 type Mutation {

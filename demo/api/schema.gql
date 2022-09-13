@@ -334,12 +334,7 @@ enum SlugAvailability {
 
 input DamItemFilterInput {
   searchText: String
-  folderFilters: FolderFilterInput
-  fileFilters: FileFilterInput
-}
-
-input FolderFilterInput {
-  searchText: String
+  mimetypes: [String!]
 }
 
 input FileFilterInput {
@@ -350,6 +345,10 @@ input FileFilterInput {
 input FilenameInput {
   name: String!
   folderId: ID
+}
+
+input FolderFilterInput {
+  searchText: String
 }
 
 type Mutation {

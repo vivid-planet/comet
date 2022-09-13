@@ -18,20 +18,10 @@ export class DamItemsService {
         offset,
         limit,
     }: DamItemsArgs): Promise<[typeof DamItem[], number]> {
-        // const [files, totalCount] = await this.filesService.findAndCount({
-        //     folderId,
-        //     includeArchived,
-        //     filter: { searchText: filter?.searchText, ...filter?.fileFilters },
-        //     sortColumnName,
-        //     sortDirection,
-        //     offset,
-        //     limit,
-        // });
-
         const [folders, foldersTotalCount] = await this.foldersService.findAndCount({
             parentId: folderId,
             includeArchived,
-            filter: { searchText: filter?.searchText, ...filter?.folderFilters },
+            filter: { searchText: filter?.searchText },
             sortDirection,
             sortColumnName,
             offset,
@@ -44,7 +34,7 @@ export class DamItemsService {
         const [files, filesTotalCount] = await this.filesService.findAndCount({
             folderId,
             includeArchived,
-            filter: { searchText: filter?.searchText, ...filter?.fileFilters },
+            filter: { searchText: filter?.searchText, mimetypes: filter?.mimetypes },
             sortColumnName,
             sortDirection,
             offset: filesOffset,

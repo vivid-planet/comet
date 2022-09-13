@@ -131,7 +131,7 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
                         await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
                             mutation: deleteDamFileMutation,
                             variables: { id: file.id },
-                            refetchQueries: [namedOperations.Query.DamList],
+                            refetchQueries: [namedOperations.Query.DamItemsList],
                         });
 
                         stackApi?.goBack();
