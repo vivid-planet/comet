@@ -1,4 +1,5 @@
 import { plainToClass, Transform, Type } from "class-transformer";
+import { ClassType } from "class-transformer/ClassTransformer";
 import { Allow, IsBoolean, IsString, ValidateNested } from "class-validator";
 
 import {
@@ -11,6 +12,7 @@ import {
     ChildBlockInfo,
     createBlock,
     ExtractBlockInput,
+    inputToData,
     isBlockDataInterface,
     isBlockInputInterface,
     SimpleBlockInputInterface,
@@ -20,73 +22,54 @@ import { BlockField } from "../decorators/field";
 import { TransformDependencies } from "../dependencies";
 import { NameOrOptions } from "./types";
 
-interface Options<B extends Block> {
-    block: B;
+export interface ListBlockItemDataInterface extends BlockData {
+    key: string;
+    visible: boolean;
+    props: BlockDataInterface;
 }
 
-export interface ListBlockInputInterface<B extends BlockInputInterface> extends SimpleBlockInputInterface {
-    blocks: Array<
-        {
-            key: string;
-            visible: boolean;
-            props: B;
-        } & SimpleBlockInputInterface
-    >;
-}
-
-export function createListBlock<B extends Block>(
-    { block }: Options<B>,
-    name: NameOrOptions,
-): Block<BlockDataInterface, ListBlockInputInterface<ExtractBlockInput<B>>> {
-    if (!block) throw new Error("block is undefined (can happen because of cycling imports)");
-
-    class BlockBlockListItem extends BlockData {
+export function BaseListBlockItemData<B extends Block>(block: B): ClassType<ListBlockItemDataInterface> {
+    class ListBlockItemData extends BlockData {
         @BlockField()
         key: string;
 
         @BlockField()
         visible: boolean;
 
-        @Transform(
-            (value) => {
-                return isBlockDataInterface(value) ? value : block.blockDataFactory(value);
-            },
-            { toClassOnly: true },
-        )
+        @Transform((value) => (isBlockDataInterface(value) ? value : block.blockDataFactory(value)), { toClassOnly: true })
         @BlockField(block)
         props: BlockDataInterface;
 
-        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain(
+            dependencies: TransformDependencies,
+            { includeInvisibleContent }: BlockContext,
+        ): Promise<TraversableTransformResponse> {
+            const { key, visible, props, ...additionalFields } = this;
+
             return {
-                key: this.key,
-                visible: this.visible,
-                props: includeInvisibleContent || this.visible ? this.props : {},
+                key,
+                visible,
+                props: includeInvisibleContent || visible ? this.props : {},
+                ...additionalFields,
             };
         }
     }
 
-    class BlockBlockList extends BlockData {
-        @Type(() => BlockBlockListItem)
-        @BlockField(BlockBlockListItem)
-        blocks: BlockBlockListItem[];
+    return ListBlockItemData;
+}
 
-        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
-            return {
-                blocks: includeInvisibleContent ? this.blocks : this.blocks.filter((c) => c.visible),
-            };
-        }
+export interface ListBlockItemInputInterface<Input extends BlockInputInterface> extends BlockInput {
+    key: string;
+    visible: boolean;
+    props: Input;
+    transformToBlockData(): ListBlockItemDataInterface;
+}
 
-        childBlocksInfo(): ChildBlockInfo[] {
-            return this.blocks.map((childBlock, index) => ({
-                visible: childBlock.visible,
-                relJsonPath: ["blocks", index, "props"],
-                block: childBlock.props,
-                name: block.name,
-            }));
-        }
-    }
-
-    class BlockBlockListItemInput<Input extends BlockInputInterface> extends BlockInput {
+export function BaseListBlockItemInput<B extends Block>(
+    block: B,
+    ListBlockItemData: ClassType<ListBlockItemDataInterface>,
+): ClassType<ListBlockItemInputInterface<ExtractBlockInput<B>>> {
+    class ListBlockItemInput extends BlockInput {
         @Allow()
         @IsString()
         @BlockField()
@@ -104,31 +87,72 @@ export function createListBlock<B extends Block>(
         )
         @ValidateNested()
         @BlockField(block)
-        props: Input;
+        props: ExtractBlockInput<B>;
 
-        transformToBlockData(): BlockBlockListItem {
-            return plainToClass(BlockBlockListItem, {
-                ...this,
-                key: this.key,
-                visible: this.visible,
-                props: this.props.transformToBlockData(),
-            });
+        transformToBlockData(): ListBlockItemDataInterface {
+            return inputToData(ListBlockItemData, this);
         }
     }
 
-    class BlockBlockListInput extends BlockInput {
-        @Type(() => BlockBlockListItemInput)
-        @ValidateNested({ each: true })
-        @BlockField(BlockBlockListItemInput)
-        blocks: BlockBlockListItemInput<ExtractBlockInput<B>>[];
+    return ListBlockItemInput;
+}
 
-        transformToBlockData(): BlockBlockList {
-            return plainToClass(BlockBlockList, {
+export interface ListBlockInputInterface<B extends BlockInputInterface> extends SimpleBlockInputInterface {
+    blocks: Array<
+        {
+            key: string;
+            visible: boolean;
+            props: B;
+        } & SimpleBlockInputInterface
+    >;
+}
+
+interface Options<B extends Block> {
+    block: B;
+    ListBlockItemData?: ClassType<ListBlockItemDataInterface>;
+    ListBlockItemInput?: ClassType<ListBlockItemInputInterface<ExtractBlockInput<B>>>;
+}
+
+export function createListBlock<B extends Block>(
+    { block, ListBlockItemData = BaseListBlockItemData(block), ListBlockItemInput = BaseListBlockItemInput(block, ListBlockItemData) }: Options<B>,
+    name: NameOrOptions,
+): Block<BlockDataInterface, ListBlockInputInterface<ExtractBlockInput<B>>> {
+    if (!block) throw new Error("block is undefined (can happen because of cycling imports)");
+
+    class ListBlockData extends BlockData {
+        @Type(() => ListBlockItemData)
+        @BlockField(ListBlockItemData)
+        blocks: ListBlockItemDataInterface[];
+
+        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+            return {
+                blocks: includeInvisibleContent ? this.blocks : this.blocks.filter((c) => c.visible),
+            };
+        }
+
+        childBlocksInfo(): ChildBlockInfo[] {
+            return this.blocks.map((childBlock, index) => ({
+                visible: childBlock.visible,
+                relJsonPath: ["blocks", index, "props"],
+                block: childBlock.props,
+                name: block.name,
+            }));
+        }
+    }
+
+    class ListBlockInput extends BlockInput {
+        @Type(() => ListBlockItemInput)
+        @ValidateNested({ each: true })
+        @BlockField(ListBlockItemInput)
+        blocks: ListBlockItemInputInterface<ExtractBlockInput<B>>[];
+
+        transformToBlockData(): ListBlockData {
+            return plainToClass(ListBlockData, {
                 ...this,
                 blocks: this.blocks.map((block) => block.transformToBlockData()),
             });
         }
     }
 
-    return createBlock(BlockBlockList, BlockBlockListInput, name);
+    return createBlock(ListBlockData, ListBlockInput, name);
 }

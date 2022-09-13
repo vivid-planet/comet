@@ -13,6 +13,7 @@ import {
     createBlock,
     ExtractBlockInput,
     ExtractBlockInputFactoryProps,
+    inputToData,
     isBlockDataInterface,
     isBlockInputInterface,
     SimpleBlockInputInterface,
@@ -57,12 +58,15 @@ export function BaseBlocksBlockItemData<BlockMap extends BaseBlockMap>(supported
         props: BlockDataInterface;
 
         async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+            const { key, visible, type, props, ...additionalFields } = this;
+
             return {
-                key: this.key,
-                visible: this.visible,
-                type: this.type,
+                key,
+                visible,
+                type,
                 // admin must see the subblock, site must only see sublock when it is not hidden, all otherr cases do not get the subblock
                 props: includeInvisibleContent || this.visible ? this.props : {},
+                ...additionalFields,
             };
         }
     }
@@ -110,12 +114,7 @@ export function BaseBlocksBlockItemInput<BlockMap extends BaseBlockMap>(
         props: BlockInputInterface;
 
         transformToBlockData(): BlocksBlockItemDataInterface {
-            return plainToClass(BlocksBlockItemData, {
-                key: this.key,
-                visible: this.visible,
-                type: this.type,
-                props: this.props.transformToBlockData(),
-            });
+            return inputToData(BlocksBlockItemData, this);
         }
     }
 
