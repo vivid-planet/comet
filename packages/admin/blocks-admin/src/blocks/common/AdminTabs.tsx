@@ -48,11 +48,12 @@ export function AdminTabs({ children }: AdminTabsProps): JSX.Element | null {
 const Root = styled("div")`
     display: flex;
     flex-direction: column;
-    min-height: 100%;
+    height: 100%;
 `;
 
 const Tabs = styled(MuiTabs)`
     background-color: ${({ theme }) => theme.palette.background.default};
+    flex-shrink: 0;
 `;
 
 const Tab = styled(MuiTab)<TabProps & LinkProps>`
