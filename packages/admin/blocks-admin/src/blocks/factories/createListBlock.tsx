@@ -307,6 +307,10 @@ export function createListBlock<T extends BlockInterface>({
                                                                                     name: block.name,
                                                                                     visible: data.visible,
                                                                                     state: data.props,
+                                                                                    additionalFields: Object.keys(additionalItemFields).reduce(
+                                                                                        (fields, field) => ({ ...fields, [field]: data[field] }),
+                                                                                        {},
+                                                                                    ),
                                                                                 },
                                                                             ]);
                                                                         }}

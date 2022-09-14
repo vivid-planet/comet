@@ -368,6 +368,7 @@ export function createBlocksBlock({
                             visible: block.visible,
                             props: block.state,
                             slideIn: true,
+                            ...block.additionalFields,
                         };
                     });
 
@@ -428,6 +429,7 @@ export function createBlocksBlock({
                             name: blockInterface.name,
                             visible: block.visible,
                             state: block.props,
+                            additionalFields: Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: block[field] }), {}),
                         };
                     });
 
@@ -524,6 +526,10 @@ export function createBlocksBlock({
                                                                                 name: block.name,
                                                                                 visible: data.visible,
                                                                                 state: data.props,
+                                                                                additionalFields: Object.keys(additionalItemFields).reduce(
+                                                                                    (fields, field) => ({ ...fields, [field]: data[field] }),
+                                                                                    {},
+                                                                                ),
                                                                             },
                                                                         ]);
                                                                     }}

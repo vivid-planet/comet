@@ -206,6 +206,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
                         props: block.state,
                         selected: false,
                         slideIn: true,
+                        ...block.additionalFields,
                     };
                 });
 
@@ -250,6 +251,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
                     name: block.name,
                     visible: item.visible,
                     state: item.props,
+                    additionalFields: Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: item[field] }), {}),
                 }));
 
             updateClipboardContent(blocksToCopy);
