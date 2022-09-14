@@ -22,16 +22,16 @@ export class BearerTokenStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(token: string): Promise<CurrentUser | undefined> {
-        let validatedUser: CurrentUser | undefined = this.validatedUserCache.get(token);
-        if (!validatedUser) {
+    async validate(token: string): Promise<CurrentUser | null | undefined> {
+        let validatedUser: CurrentUser | null | undefined = this.validatedUserCache.get(token);
+        if (validatedUser === undefined) {
             validatedUser = await this.getValidatedUser(token);
             this.validatedUserCache.set(token, validatedUser, 60);
         }
         return validatedUser;
     }
 
-    async getValidatedUser(token: string): Promise<CurrentUser | undefined> {
+    async getValidatedUser(token: string): Promise<CurrentUser | null> {
         const headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "X-Forwarded-Proto": "https",
@@ -46,12 +46,12 @@ export class BearerTokenStrategy extends PassportStrategy(Strategy) {
             body: new URLSearchParams({ token, client_id: this.config.idpConfig.clientId }).toString(), // client_id should not be necessary but oidc-provider needs it
         });
 
-        if (response.status !== 200) return;
+        if (response.status !== 200) return null;
 
         const data = await response.json();
 
-        if (!data || !data.active) return;
-        if (data.client_id !== this.config.idpConfig.clientId) return;
+        if (!data || !data.active) return null;
+        if (data.client_id !== this.config.idpConfig.clientId) return null;
 
         const user = new CurrentUser();
         user.id = data.sub;
