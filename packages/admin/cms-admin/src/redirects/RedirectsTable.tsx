@@ -19,6 +19,7 @@ import {
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
 import { BlockInterface, BlockPreview } from "@comet/blocks-admin";
 import { Button, IconButton, MenuItem, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -186,16 +187,21 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
                                     render: (row: GQLRedirectTableFragment) => {
                                         const state = linkBlock.input2State(row.target);
                                         return (
-                                            <BlockPreview
-                                                title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
-                                                content={linkBlock.previewContent(state)}
-                                            />
+                                            <TargetWrapper>
+                                                <BlockPreview
+                                                    title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
+                                                    content={linkBlock.previewContent(state)}
+                                                />
+                                            </TargetWrapper>
                                         );
                                     },
                                 },
                                 {
                                     name: "comment",
                                     header: intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" }),
+                                    render: ({ comment }) => {
+                                        return <div>{comment}</div>;
+                                    },
                                 },
                                 {
                                     name: "generationType",
@@ -256,3 +262,7 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
         </TableFilterFinalForm>
     );
 }
+
+const TargetWrapper = styled("div")`
+    max-width: 25vw;
+`;
