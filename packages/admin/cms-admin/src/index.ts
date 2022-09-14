@@ -74,3 +74,8 @@ export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
 export { useSitesConfig } from "./sitesConfig/useSitesConfig";
+
+// import can not be used here as this file is outside of rootDir
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const version: string = require("../package.json").version;
+export { version };
