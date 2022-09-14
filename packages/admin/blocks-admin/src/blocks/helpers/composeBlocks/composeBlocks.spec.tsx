@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Space } from "../../Space";
+import { SpaceBlock } from "../../SpaceBlock";
 import { BlockInputApi, BlockState } from "../../types";
 import { resolveNewState } from "../../utils";
 import { YouTubeVideoBlock } from "../../YouTubeVideoBlock";
@@ -16,7 +16,7 @@ jest.mock("react-dnd", () => {
 describe("composeBlocks", () => {
     it("composes values of 2 BlockInterfaces", () => {
         const composedBlock = composeBlocks({
-            space: Space,
+            space: SpaceBlock,
             video: YouTubeVideoBlock,
         });
 
@@ -49,9 +49,12 @@ describe("composeBlocks", () => {
             },
         };
 
-        expect(defaultValues()).toStrictEqual({ space: Space.defaultValues(), video: YouTubeVideoBlock.defaultValues() });
-        expect(input2State(input)).toStrictEqual({ space: Space.input2State(input.space), video: YouTubeVideoBlock.input2State(input.video) });
-        expect(state2Output(state)).toStrictEqual({ space: Space.state2Output(state.space), video: YouTubeVideoBlock.state2Output(state.video) });
+        expect(defaultValues()).toStrictEqual({ space: SpaceBlock.defaultValues(), video: YouTubeVideoBlock.defaultValues() });
+        expect(input2State(input)).toStrictEqual({ space: SpaceBlock.input2State(input.space), video: YouTubeVideoBlock.input2State(input.video) });
+        expect(state2Output(state)).toStrictEqual({
+            space: SpaceBlock.state2Output(state.space),
+            video: YouTubeVideoBlock.state2Output(state.video),
+        });
 
         // test update state methods
 
@@ -79,7 +82,7 @@ describe("composeBlocks", () => {
             baz?: number;
         }
         const composedBlock = composeBlocks({
-            space1: Space,
+            space1: SpaceBlock,
             $settings: createCompositeSettings<Settings>({
                 defaultValues: {
                     foo: "bar",
@@ -109,9 +112,9 @@ describe("composeBlocks", () => {
             foo: "bar2",
         };
 
-        expect(defaultValues()).toStrictEqual({ space1: Space.defaultValues(), foo: "bar", baz: undefined });
-        expect(input2State(input)).toStrictEqual({ space1: Space.input2State(input.space1), foo: "bar1", baz: 1 });
-        expect(state2Output(state)).toStrictEqual({ space1: Space.state2Output(state.space1), foo: "bar2" });
+        expect(defaultValues()).toStrictEqual({ space1: SpaceBlock.defaultValues(), foo: "bar", baz: undefined });
+        expect(input2State(input)).toStrictEqual({ space1: SpaceBlock.input2State(input.space1), foo: "bar1", baz: 1 });
+        expect(state2Output(state)).toStrictEqual({ space1: SpaceBlock.state2Output(state.space1), foo: "bar2" });
 
         // test update state methods
 
@@ -137,7 +140,7 @@ describe("composeBlocks", () => {
     it("composes values of 2 BlockInterface and 1 scalar setting", () => {
         type Setting = string;
         const composedBlock = composeBlocks({
-            space: Space,
+            space: SpaceBlock,
             video: YouTubeVideoBlock,
             foo: createCompositeSetting<Setting>({
                 defaultValue: "bar",
@@ -176,14 +179,14 @@ describe("composeBlocks", () => {
             foo: "bar2",
         };
 
-        expect(defaultValues()).toStrictEqual({ space: Space.defaultValues(), video: YouTubeVideoBlock.defaultValues(), foo: "bar" });
+        expect(defaultValues()).toStrictEqual({ space: SpaceBlock.defaultValues(), video: YouTubeVideoBlock.defaultValues(), foo: "bar" });
         expect(input2State(input)).toStrictEqual({
-            space: Space.input2State(input.space),
+            space: SpaceBlock.input2State(input.space),
             video: YouTubeVideoBlock.input2State(input.video),
             foo: "bar1",
         });
         expect(state2Output(state)).toStrictEqual({
-            space: Space.state2Output(state.space),
+            space: SpaceBlock.state2Output(state.space),
             video: YouTubeVideoBlock.state2Output(state.video),
             foo: "bar2",
         });
@@ -218,7 +221,7 @@ describe("composeBlocks", () => {
         type Setting = string | undefined;
 
         const composedBlock = composeBlocks({
-            space1: Space,
+            space1: SpaceBlock,
             foo: createCompositeSetting<Setting>({
                 defaultValue: undefined,
                 AdminComponent: () => <>not testing</>,
@@ -248,12 +251,12 @@ describe("composeBlocks", () => {
 
         delete state.foo; // make really undefined
 
-        expect(defaultValues()).toStrictEqual({ space1: Space.defaultValues(), foo: undefined });
-        expect(input2State(input)).toStrictEqual({ space1: Space.input2State(input.space1), foo: undefined });
-        // expect(input2State(input)).toStrictEqual({ space1: Space.input2State(input.space1) }); // should this be expected instead?
+        expect(defaultValues()).toStrictEqual({ space1: SpaceBlock.defaultValues(), foo: undefined });
+        expect(input2State(input)).toStrictEqual({ space1: SpaceBlock.input2State(input.space1), foo: undefined });
+        // expect(input2State(input)).toStrictEqual({ space1: SpaceBlock.input2State(input.space1) }); // should this be expected instead?
 
-        expect(state2Output(state)).toStrictEqual({ space1: Space.state2Output(state.space1), foo: undefined });
-        // expect(state2Output(state)).toStrictEqual({ space1: Space.state2Output(state.space1) }); // should this be expected instead?
+        expect(state2Output(state)).toStrictEqual({ space1: SpaceBlock.state2Output(state.space1), foo: undefined });
+        // expect(state2Output(state)).toStrictEqual({ space1: SpaceBlock.state2Output(state.space1) }); // should this be expected instead?
 
         // test update state methods
 

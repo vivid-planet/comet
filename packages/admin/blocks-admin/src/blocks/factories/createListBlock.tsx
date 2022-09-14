@@ -20,6 +20,7 @@ import { BlockInterface, BlockState, PreviewContent } from "../types";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
 export interface ListBlockItem<T extends BlockInterface> {
+    [key: string]: unknown;
     key: string;
     visible: boolean;
     props: BlockState<T>;
@@ -33,11 +34,16 @@ export interface ListBlockState<T extends BlockInterface> {
 
 export interface ListBlockFragment {
     blocks: Array<{
+        [key: string]: unknown;
         key: string;
         visible: boolean;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         props: any;
     }>;
+}
+
+export interface AdditionalItemField<Value = unknown> {
+    defaultValue: Value;
 }
 
 interface CreateListBlockOptions<T extends BlockInterface> {
@@ -48,6 +54,13 @@ interface CreateListBlockOptions<T extends BlockInterface> {
     block: T;
     maxVisibleBlocks?: number;
     createDefaultListEntry?: boolean;
+    additionalItemFields?: Record<string, AdditionalItemField>;
+    AdditionalItemContextMenuItems?: React.FunctionComponent<{
+        item: ListBlockItem<T>;
+        onChange: (item: ListBlockItem<T>) => void;
+        onMenuClose: () => void;
+    }>;
+    AdditionalItemContent?: React.FunctionComponent<{ item: ListBlockItem<T> }>;
 }
 
 export function createListBlock<T extends BlockInterface>({
@@ -58,8 +71,11 @@ export function createListBlock<T extends BlockInterface>({
     itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
     maxVisibleBlocks,
     createDefaultListEntry,
+    additionalItemFields = {},
+    AdditionalItemContextMenuItems,
+    AdditionalItemContent,
 }: CreateListBlockOptions<T>): BlockInterface<ListBlockFragment, ListBlockState<T>> {
-    const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks });
+    const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
     const BlockListBlock: BlockInterface<ListBlockFragment, ListBlockState<T>> = {
         ...createBlockSkeleton(),
 
@@ -76,6 +92,10 @@ export function createListBlock<T extends BlockInterface>({
                           props: block.defaultValues(),
                           selected: false,
                           slideIn: false,
+                          ...Object.entries(additionalItemFields).reduce(
+                              (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
+                              {},
+                          ),
                       },
                   ]
                 : [],
@@ -92,6 +112,7 @@ export function createListBlock<T extends BlockInterface>({
                         key: c.key,
                         visible: c.visible,
                         props: block.input2State(c.props),
+                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                         selected: false,
                         slideIn: false,
                     };
@@ -106,6 +127,7 @@ export function createListBlock<T extends BlockInterface>({
                         key: c.key,
                         visible: c.visible,
                         props: block.state2Output(c.props),
+                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                     };
                 }),
             };
@@ -139,6 +161,7 @@ export function createListBlock<T extends BlockInterface>({
                             key: c.key,
                             visible: c.visible,
                             props: block.createPreviewState(c.props, { ...previewCtx, parentUrl: blockAdminRoute }),
+                            ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                             adminRoute: blockAdminRoute,
                             adminMeta: { route: blockAdminRoute },
                         };
@@ -284,6 +307,10 @@ export function createListBlock<T extends BlockInterface>({
                                                                                     name: block.name,
                                                                                     visible: data.visible,
                                                                                     state: data.props,
+                                                                                    additionalFields: Object.keys(additionalItemFields).reduce(
+                                                                                        (fields, field) => ({ ...fields, [field]: data[field] }),
+                                                                                        {},
+                                                                                    ),
                                                                                 },
                                                                             ]);
                                                                         }}
@@ -297,6 +324,24 @@ export function createListBlock<T extends BlockInterface>({
                                                                         isValidFn={() => block.isValid(data.props)}
                                                                         slideIn={data.slideIn}
                                                                         hideBottomInsertBetweenButton={blockIndex >= state.blocks.length - 1}
+                                                                        additionalMenuItems={(onMenuClose) =>
+                                                                            AdditionalItemContextMenuItems ? (
+                                                                                <AdditionalItemContextMenuItems
+                                                                                    item={data}
+                                                                                    onChange={(updatedItem) => {
+                                                                                        updateState((previousState) => ({
+                                                                                            blocks: previousState.blocks.map((block) =>
+                                                                                                block.key === data.key ? updatedItem : block,
+                                                                                            ),
+                                                                                        }));
+                                                                                    }}
+                                                                                    onMenuClose={onMenuClose}
+                                                                                />
+                                                                            ) : undefined
+                                                                        }
+                                                                        additionalContent={
+                                                                            AdditionalItemContent ? <AdditionalItemContent item={data} /> : undefined
+                                                                        }
                                                                     />
                                                                 </HoverPreviewComponent>
                                                             );

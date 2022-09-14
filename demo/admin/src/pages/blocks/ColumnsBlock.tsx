@@ -4,7 +4,7 @@ import {
     ColumnsLayoutPreviewSpacing,
     createBlocksBlock,
     createColumnsBlock,
-    Space as SpaceBlock,
+    SpaceBlock,
 } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";

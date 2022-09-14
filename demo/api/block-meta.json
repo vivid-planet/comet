@@ -901,6 +901,16 @@
                             "kind": "Block",
                             "block": "TextLink",
                             "nullable": false
+                        },
+                        {
+                            "name": "userGroup",
+                            "kind": "Enum",
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
+                            "nullable": false
                         }
                     ]
                 },
@@ -927,6 +937,16 @@
                             "name": "props",
                             "kind": "Block",
                             "block": "TextLink",
+                            "nullable": false
+                        },
+                        {
+                            "name": "userGroup",
+                            "kind": "Enum",
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
                             "nullable": false
                         }
                     ]

@@ -10,6 +10,7 @@ interface ClipboardBlock {
     name: string;
     visible: boolean;
     state: BlockState<BlockInterface>;
+    additionalFields?: Record<string, unknown>;
 }
 
 type ClipboardContent = ClipboardBlock[];
@@ -18,6 +19,7 @@ interface TransformedClipboardBlock {
     name: string;
     visible: boolean;
     output: BlockOutputApi<BlockInterface>;
+    additionalFields?: Record<string, unknown>;
 }
 
 type TransformedClipboardContent = TransformedClipboardBlock[];
@@ -49,7 +51,7 @@ function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboa
     };
 
     const updateClipboardContent = async (content: ClipboardContent) => {
-        const blocks = content.map((block) => {
+        const blocks = content.map<TransformedClipboardBlock>((block) => {
             const blockInterface = findBlockInterfaceForClipboardBlock(block);
 
             if (!blockInterface) {
@@ -60,6 +62,7 @@ function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboa
                 name: block.name,
                 visible: block.visible,
                 output: blockInterface.state2Output(block.state),
+                additionalFields: block.additionalFields,
             };
         });
 
@@ -137,7 +140,7 @@ function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboa
                 };
             }
 
-            blocks.push({ name: clipboardBlock.name, visible: clipboardBlock.visible, state });
+            blocks.push({ name: clipboardBlock.name, visible: clipboardBlock.visible, state, additionalFields: clipboardBlock.additionalFields });
         }
 
         return { canPaste: true, content: blocks };

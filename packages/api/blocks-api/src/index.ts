@@ -46,7 +46,7 @@ export {
     BlocksBlockFixturesGeneratorMap,
     createBlocksBlock,
 } from "./blocks/factories/createBlocksBlock";
-export { createListBlock } from "./blocks/factories/createListBlock";
+export { BaseListBlockItemData, BaseListBlockItemInput, createListBlock } from "./blocks/factories/createListBlock";
 export { createOneOfBlock, OneOfBlock } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
 export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates } from "./blocks/get-preview-image-url-templates";

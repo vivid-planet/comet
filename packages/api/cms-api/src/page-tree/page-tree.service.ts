@@ -224,7 +224,7 @@ export class PageTreeService {
                 .where({
                     pos: { $gte: input.pos },
                     id: { $ne: id },
-                    parentId: null,
+                    parentId,
                 });
 
             if (parentId) {
