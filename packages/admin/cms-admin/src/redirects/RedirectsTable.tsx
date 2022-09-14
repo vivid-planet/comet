@@ -17,7 +17,6 @@ import {
     useTableQueryFilter,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
-import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { BlockInterface, BlockPreview } from "@comet/blocks-admin";
 import { Button, IconButton, MenuItem, Typography } from "@mui/material";
 import * as React from "react";
@@ -35,7 +34,7 @@ import { deleteRedirectMutation, redirectsQuery } from "./RedirectsTable.gql";
 
 interface Filter extends Omit<GQLRedirectsQueryVariables, "active" | "type"> {
     type?: "all" | GQLRedirectGenerationType;
-    active?: "all" | boolean;
+    active?: "all" | "activated" | "deactivated";
 }
 
 interface Props {
@@ -82,14 +81,14 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
                 id: "comet.redirects.redirect.active.activated",
                 defaultMessage: "activated",
             }),
-            value: true,
+            value: "activated",
         },
         {
             label: intl.formatMessage({
                 id: "comet.redirects.redirect.active.deactivated",
                 defaultMessage: "deactivated",
             }),
-            value: false,
+            value: "deactivated",
         },
     ];
 
@@ -99,7 +98,7 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
     const { tableData, api, loading, error } = useTableQuery<GQLRedirectsQuery, GQLRedirectsQueryVariables>()(redirectsQuery, {
         variables: {
             type: filterApi.current.type !== "all" ? filterApi.current.type : undefined,
-            active: filterApi.current.active !== "all" ? filterApi.current.active : undefined,
+            active: filterApi.current.active !== "all" ? filterApi.current.active === "activated" : undefined,
             query: filterApi.current.query ?? undefined,
         },
         resolveTableData: ({ redirects }) => {
@@ -138,18 +137,24 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
                     </Field>
                 </ToolbarItem>
                 <ToolbarItem>
-                    {/* TODO: Replace with FinalFormSelect when boolean-values have been changed to strings */}
                     <Field
                         name="active"
-                        defaultValue="all"
                         label={intl.formatMessage({
                             id: "comet.redirects.redirect.activation.title",
                             defaultMessage: "Activation",
                         })}
-                        component={FinalFormReactSelectStaticOptions}
-                        options={activeOptions}
-                        isSearchable={false}
-                    />
+                        fullWidth
+                    >
+                        {(props) => (
+                            <FinalFormSelect {...props} fullWidth>
+                                {activeOptions.map((option) => (
+                                    <MenuItem value={option.value} key={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </FinalFormSelect>
+                        )}
+                    </Field>
                 </ToolbarItem>
                 <ToolbarFillSpace />
                 <ToolbarActions>
