@@ -64,7 +64,7 @@ const authorizationConfig: AuthConfiguration = {
     clientId: config.IDP_CLIENT_ID,
     redirectUrl: `${config.ADMIN_URL}/process-token`,
     responseType: "code",
-    scope: "offline openid profile email",
+    scope: "offline openid profile email role",
     usePKCE: true,
 };
 
