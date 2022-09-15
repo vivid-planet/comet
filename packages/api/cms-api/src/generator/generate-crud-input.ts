@@ -12,6 +12,12 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
     const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
 
+    const inputOut = await generateCrudInput(generatorOptions, metadata);
+    await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.input.ts`, inputOut);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function generateCrudInput(generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): Promise<string> {
     const props = metadata.props.filter((prop) => {
         return hasFieldFeature(metadata.class, prop.name, "input");
     });
@@ -43,6 +49,10 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
             decorators.push("@IsNumber()");
             decorators.push("@Field()");
             type = "number";
+        } else if (prop.type === "DateType") {
+            decorators.push("@IsDate()");
+            decorators.push("@Field()");
+            type = "Date";
         } else if (prop.type === "RootBlockType") {
             const rootBlockType = prop.customType as RootBlockType | undefined;
             let blockExportName: string;
@@ -97,5 +107,5 @@ export class ${metadata.className}Input {
 }
 `;
 
-    await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.input.ts`, inputOut);
+    return inputOut;
 }
