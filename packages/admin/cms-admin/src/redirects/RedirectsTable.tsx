@@ -101,6 +101,8 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
             type: filterApi.current.type !== "all" ? filterApi.current.type : undefined,
             active: filterApi.current.active !== "all" ? filterApi.current.active : undefined,
             query: filterApi.current.query ?? undefined,
+            sortDirection: "ASC",
+            sortColumnName: "source",
         },
         resolveTableData: ({ redirects }) => {
             return {

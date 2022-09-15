@@ -1,3 +1,4 @@
+import { FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Type } from "@nestjs/common";
@@ -35,9 +36,15 @@ export function createRedirectsResolver(Redirect: Type<RedirectInterface>, Redir
         }
 
         @Query(() => [Redirect])
-        async redirects(@Args() { query, type, active }: RedirectArgs): Promise<RedirectInterface[]> {
+        async redirects(@Args() { query, type, active, sortColumnName, sortDirection }: RedirectArgs): Promise<RedirectInterface[]> {
             const where = this.redirectService.getFindCondition({ query, type, active });
-            return this.repository.find(where);
+
+            const options: FindOptions<RedirectInterface> = {};
+            if (sortColumnName) {
+                options.orderBy = { [sortColumnName]: sortDirection };
+            }
+
+            return this.repository.find(where, options);
         }
 
         @Query(() => Redirect)
