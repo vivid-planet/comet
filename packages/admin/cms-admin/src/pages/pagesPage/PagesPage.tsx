@@ -1,13 +1,12 @@
 import { useQuery } from "@apollo/client";
 import { MainContent, messages, Stack, StackPage, StackSwitch, Toolbar, ToolbarActions, useEditDialog, useStoredState } from "@comet/admin";
-import { Add, Domain } from "@comet/admin-icons";
-import { Box, Button, CircularProgress, FormControlLabel, Paper, Switch, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Add } from "@comet/admin-icons";
+import { Box, Button, CircularProgress, FormControlLabel, Paper, Switch } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeIndicator, createEditPageNode } from "../..";
+import { createEditPageNode } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DocumentInterface, DocumentType } from "../../documents/types";
@@ -22,31 +21,13 @@ import { usePageTree } from "../pageTree/usePageTree";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 import { pagesQuery } from "./pagesQuery";
 
-const ScopeIndicatorLabelBold = styled(Typography)`
-    && {
-        font-weight: 400;
-        padding: 0 8px 0 4px;
-        text-transform: uppercase;
-    }
-`;
-
-const ScopeIndicatorContent = styled("div")`
-    display: flex;
-    align-items: center;
-`;
-
-const ScopeIndicatorLabel = styled(Typography)`
-    && {
-        padding-left: 8px;
-        text-transform: uppercase;
-    }
-`;
 interface Props {
     category: string;
     path: string;
     allCategories: AllCategories;
     documentTypes: Record<DocumentType, DocumentInterface>;
     editPageNode?: React.ComponentType<EditPageNodeProps>;
+    renderContentScopeIndicator: (scope: ContentScopeInterface) => React.ReactNode;
 }
 
 const DefaultEditPageNode = createEditPageNode({});
@@ -57,6 +38,7 @@ export function PagesPage({
     allCategories,
     documentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
+    renderContentScopeIndicator,
 }: Props): React.ReactElement {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
@@ -113,14 +95,7 @@ export function PagesPage({
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
             <StackSwitch>
                 <StackPage name="table">
-                    <ContentScopeIndicator variant="toolbar">
-                        <ScopeIndicatorContent>
-                            <Domain fontSize="small" />
-                            <ScopeIndicatorLabelBold variant="body2">{scope.domain}</ScopeIndicatorLabelBold>
-                        </ScopeIndicatorContent>
-                        {` | `}
-                        <ScopeIndicatorLabel variant="body2">{scope.language}</ScopeIndicatorLabel>
-                    </ContentScopeIndicator>
+                    {renderContentScopeIndicator(scope)}
                     <Toolbar>
                         <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
                         <FormControlLabel
