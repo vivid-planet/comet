@@ -236,7 +236,7 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
                                     name: "actions",
                                     header: "",
                                     render: (row: GQLRedirectTableFragment) => (
-                                        <>
+                                        <IconWrapper>
                                             <IconButton
                                                 onClick={() => {
                                                     stackApi.activatePage("edit", row.id);
@@ -251,7 +251,7 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
                                                 selectedId={row.id}
                                                 text=""
                                             />
-                                        </>
+                                        </IconWrapper>
                                     ),
                                 },
                             ]}
@@ -265,4 +265,9 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
 
 const TargetWrapper = styled("div")`
     max-width: 25vw;
+`;
+
+const IconWrapper = styled("div")`
+    display: flex;
+    flex-direction: row;
 `;
