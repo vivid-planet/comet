@@ -22,9 +22,8 @@ export class NewsResolver {
     }
 
     @Query(() => News, { nullable: true })
-    //TODO add scope argument
-    async newsBySlug(@Args("slug") slug: string): Promise<News | null> {
-        const news = await this.newsRepository.findOne({ slug });
+    async newsBySlug(@Args("scope", { type: () => NewsContentScope }) scope: NewsContentScope, @Args("slug") slug: string): Promise<News | null> {
+        const news = await this.newsRepository.findOne({ scope, slug });
 
         return news ?? null;
     }
