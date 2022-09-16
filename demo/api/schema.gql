@@ -272,7 +272,6 @@ input NewsContentScopeInput {
 }
 
 type Query {
-  page(pageId: ID!): Page
   pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
   link(linkId: ID!): Link
   buildTemplates: [BuildTemplate!]!

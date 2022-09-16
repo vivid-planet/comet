@@ -25,12 +25,6 @@ export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortA
 export class PagesResolver {
     constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
 
-    @Query(() => Page, { nullable: true })
-    @SubjectEntity(Page, { idArg: "pageId" }) //TODO this doesn't work, as it has no relation to pageTreeNode
-    async page(@Args("pageId", { type: () => ID }) pageId: string): Promise<Page | null> {
-        return this.repository.findOne(pageId);
-    }
-
     // TODO add scope argument (who uses this anyway? probably dashboard)
     @Query(() => PaginatedPages)
     async pages(@Args() { offset, limit, sortColumnName, sortDirection }: PagesArgs): Promise<PaginatedPages> {
