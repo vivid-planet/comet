@@ -56,6 +56,11 @@ export class BearerTokenStrategy extends PassportStrategy(Strategy) {
         const user = new CurrentUser();
         user.id = data.sub;
         user.role = data.ext?.role;
+        user.contentScopes = data.ext?.domain.map((domain: string) => {
+            return {
+                domain,
+            };
+        });
         return user;
     }
 }

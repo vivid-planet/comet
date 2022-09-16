@@ -14,7 +14,8 @@ require("elastic-apm-node").start({
     active: !!process.env.API_ENABLE_APM,
 });
 
-import { ExceptionInterceptor, GlobalAuthGuard, ValidationExceptionFactory } from "@comet/cms-api";
+import { ExceptionInterceptor, GlobalAuthGuard, PageTreeService, ValidationExceptionFactory } from "@comet/cms-api";
+import { MikroORM } from "@mikro-orm/core";
 import { ValidationPipe } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { NestFactory, Reflector } from "@nestjs/core";
@@ -24,6 +25,8 @@ import { configNS } from "@src/config/config.namespace";
 import { useContainer } from "class-validator";
 import compression from "compression";
 import cookieParser from "cookie-parser";
+
+import { GlobalScopeGuard } from "./auth/scope.guard";
 
 async function bootstrap(): Promise<void> {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -50,6 +53,7 @@ async function bootstrap(): Promise<void> {
     );
 
     app.useGlobalGuards(new GlobalAuthGuard(app.get(Reflector)));
+    app.useGlobalGuards(new GlobalScopeGuard(app.get(Reflector), app.get(MikroORM), app.get(PageTreeService)));
     app.use(compression());
     app.use(cookieParser());
 

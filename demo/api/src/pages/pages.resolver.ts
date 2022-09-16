@@ -4,6 +4,7 @@ import {
     PageTreeNodeVisibility,
     PageTreeService,
     SortArgs,
+    SubjectEntity,
     validateNotModified,
 } from "@comet/cms-api";
 import { FindOptions } from "@mikro-orm/core";
@@ -25,10 +26,12 @@ export class PagesResolver {
     constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
 
     @Query(() => Page, { nullable: true })
+    @SubjectEntity(Page, { idArg: "pageId" }) //TODO this doesn't work, as it has no relation to pageTreeNode
     async page(@Args("pageId", { type: () => ID }) pageId: string): Promise<Page | null> {
         return this.repository.findOne(pageId);
     }
 
+    // TODO add scope argument (who uses this anyway? probably dashboard)
     @Query(() => PaginatedPages)
     async pages(@Args() { offset, limit, sortColumnName, sortDirection }: PagesArgs): Promise<PaginatedPages> {
         const options: FindOptions<Page> = { offset, limit };
@@ -46,19 +49,18 @@ export class PagesResolver {
     }
 
     @Mutation(() => Page)
+    @SubjectEntity(Page, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async savePage(
         @Args("pageId", { type: () => ID }) pageId: string,
         @Args("input", { type: () => PageInput }) input: PageInput,
+        @Args("attachedPageTreeNodeId", { type: () => ID }) attachedPageTreeNodeId: string,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
-        @Args("attachedPageTreeNodeId", { nullable: true, type: () => ID }) attachedPageTreeNodeId?: string,
     ): Promise<Page | null> {
         // all pageTypes need this is-archived-page-check
         // TODO: maybe implemented in a base-(document|page)-service which lives in @comet/cms-api
-        if (attachedPageTreeNodeId) {
-            const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
-            if (pageTreeNode.visibility === PageTreeNodeVisibility.Archived) {
-                throw new UnauthorizedException("Archived pages cannot be updated");
-            }
+        const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
+        if (pageTreeNode.visibility === PageTreeNodeVisibility.Archived) {
+            throw new UnauthorizedException("Archived pages cannot be updated");
         }
 
         let page = await this.repository.findOne(pageId);
@@ -82,9 +84,7 @@ export class PagesResolver {
             this.repository.persist(page);
         }
 
-        if (attachedPageTreeNodeId) {
-            await this.pageTreeService.attachDocument({ id: pageId, type: "Page" }, attachedPageTreeNodeId);
-        }
+        await this.pageTreeService.attachDocument({ id: pageId, type: "Page" }, attachedPageTreeNodeId);
 
         await this.repository.flush();
 

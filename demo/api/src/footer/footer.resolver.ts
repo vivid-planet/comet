@@ -24,6 +24,7 @@ export class FootersResolver {
     }
 
     @Mutation(() => Footer)
+    //TODO move scope out of input into own arg (so it can be validated)
     async saveFooter(
         @Args("input", { type: () => FooterInput }) input: FooterInput,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,

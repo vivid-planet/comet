@@ -1,0 +1,116 @@
+import { CurrentUser, PageTreeService, SubjectEntityMeta } from "@comet/cms-api";
+import { MikroORM } from "@mikro-orm/core";
+import { CanActivate, ExecutionContext, HttpException, Injectable } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { GqlExecutionContext } from "@nestjs/graphql";
+import { AuthGuard } from "@nestjs/passport";
+import { Request } from "express";
+import { isObservable, lastValueFrom } from "rxjs";
+
+@Injectable()
+export class GlobalScopeGuard extends AuthGuard(["bearer", "basic"]) implements CanActivate {
+    constructor(private reflector: Reflector, private readonly orm: MikroORM, private readonly pageTreeService: PageTreeService) {
+        super();
+    }
+
+    getRequest(context: ExecutionContext): Request {
+        return context.getType().toString() === "graphql"
+            ? GqlExecutionContext.create(context).getContext().req
+            : context.switchToHttp().getRequest();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+    handleRequest<CurrentUser>(err: unknown, user: any): CurrentUser {
+        if (err) {
+            throw err;
+        }
+        if (user) {
+            return user;
+        }
+        throw new HttpException("AccessTokenInvalid", 200);
+    }
+
+    async inferScopeFromRequest(context: ExecutionContext): Promise<Record<string, string> | undefined> {
+        if (context.getType().toString() === "graphql") {
+            const gqlContext = GqlExecutionContext.create(context);
+            const args = gqlContext.getArgs();
+
+            const subjectEntity = this.reflector.getAllAndOverride<SubjectEntityMeta>("subjectEntity", [context.getHandler(), context.getClass()]);
+            if (subjectEntity) {
+                let subjectScope: Record<string, string> | undefined;
+                const repo = this.orm.em.getRepository<any>(subjectEntity.entity);
+                if (subjectEntity.options.idArg) {
+                    if (!args[subjectEntity.options.idArg]) {
+                        throw new Error(`${subjectEntity.options.idArg} arg not found`);
+                    }
+                    const row = await repo.findOneOrFail(args[subjectEntity.options.idArg]);
+                    if (row.scope) {
+                        subjectScope = row.scope;
+                    } else {
+                        //TODO get scope from parent row using something like @Scoped(entity => entity.parent.scope) (at entity class)
+                        throw new Error("not yet implemented");
+                    }
+                } else if (subjectEntity.options.pageTreeNodeIdArg && args[subjectEntity.options.pageTreeNodeIdArg]) {
+                    if (!args[subjectEntity.options.pageTreeNodeIdArg]) {
+                        throw new Error(`${subjectEntity.options.pageTreeNodeIdArg} arg not found`);
+                    }
+                    const node = await this.pageTreeService
+                        .createReadApi({ visibility: "all" })
+                        .getNode(args[subjectEntity.options.pageTreeNodeIdArg]);
+                    if (!node) throw new Error("Can't find pageTreeNode");
+                    subjectScope = node.scope;
+                } else {
+                    // TODO implement something more flexible that supports something like that: @SubjectEntity(Product, EntityLoader)
+                    throw new Error("not yet implemented");
+                }
+                if (subjectScope === undefined) throw new Error("Scope not found");
+                if (args.scope) {
+                    // args.scope also exists, check if they match
+                    if (
+                        !Array.from(new Set([...Object.keys(args.scope), ...Object.keys(subjectScope)])).every(
+                            (key) => args.scope[key] === subjectScope?.[key],
+                        )
+                    ) {
+                        throw new Error("Content Scope from arg doesn't match subjectEntity scope, usually you only need one of them");
+                    }
+                }
+                return subjectScope;
+            }
+            if (args.scope) {
+                return args.scope;
+            }
+        }
+        return undefined;
+    }
+
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        const canActivate = await super.canActivate(context);
+        const isAllowed = isObservable(canActivate) ? await lastValueFrom(canActivate) : canActivate;
+
+        const isPublicApi = this.reflector.getAllAndOverride("publicApi", [context.getHandler(), context.getClass()]);
+        if (isPublicApi) {
+            return true;
+        }
+
+        const user = this.getRequest(context).user as CurrentUser | undefined;
+        if (!user) return isAllowed;
+        if (user.contentScopes === undefined) return isAllowed; //user has no contentScope restriction
+
+        const requestScope = await this.inferScopeFromRequest(context);
+        if (requestScope) {
+            const canAccessScope = user.contentScopes.some((userScope) => {
+                return Object.entries(userScope).every(([scopeKey, scopeValue]) => {
+                    return !requestScope[scopeKey] || requestScope[scopeKey] == scopeValue;
+                });
+            });
+            // console.log(user.contentScopes, requestScope, canAccessScope);
+            if (!canAccessScope) {
+                return false;
+            }
+        } else {
+            //not a scoped request, open to anyone
+        }
+
+        return isAllowed;
+    }
+}
