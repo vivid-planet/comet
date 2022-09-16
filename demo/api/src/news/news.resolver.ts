@@ -2,12 +2,13 @@ import { PublicApi, SubjectEntity, validateNotModified } from "@comet/cms-api";
 import { FilterQuery, FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { NewsInput } from "@src/news/dto/news.input";
 
 import { NewsListArgs } from "./dto/news-list.args";
 import { PaginatedNews } from "./dto/paginated-news";
 import { News, NewsContentScope } from "./entities/news.entity";
+import { NewsComment } from "./entities/news-comment.entity";
 
 @Resolver(() => News)
 export class NewsResolver {
@@ -107,5 +108,10 @@ export class NewsResolver {
         await this.newsRepository.removeAndFlush({ id });
 
         return true;
+    }
+
+    @ResolveField(() => [NewsComment])
+    async comments(@Parent() news: News): Promise<NewsComment[]> {
+        return news.comments.loadItems();
     }
 }

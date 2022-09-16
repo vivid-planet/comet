@@ -205,6 +205,13 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
+type NewsComment implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  comment: String!
+  createdAt: DateTime!
+}
+
 type NewsContentScope {
   domain: String!
   language: String!
@@ -222,6 +229,7 @@ type News implements DocumentInterface {
   image: JSONObject!
   content: JSONObject!
   createdAt: DateTime!
+  comments: [NewsComment!]!
 }
 
 enum NewsCategory {
@@ -353,6 +361,9 @@ type Mutation {
   updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!
   updateNewsVisibility(id: ID!, visible: Boolean!): News!
   deleteNews(id: ID!): Boolean!
+  createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
+  updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
+  deleteNewsComment(id: ID!): Boolean!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
   saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
@@ -455,6 +466,10 @@ input NewsInput {
   category: NewsCategory!
   image: JSONObject!
   content: JSONObject!
+}
+
+input NewsCommentInput {
+  comment: String!
 }
 
 input MainMenuItemInput {

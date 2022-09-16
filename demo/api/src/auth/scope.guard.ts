@@ -1,5 +1,5 @@
-import { CurrentUser, PageTreeService, SubjectEntityMeta } from "@comet/cms-api";
-import { MikroORM } from "@mikro-orm/core";
+import { CurrentUser, PageTreeService, ScopedMeta, SubjectEntityMeta } from "@comet/cms-api";
+import { EntityClass, MikroORM } from "@mikro-orm/core";
 import { CanActivate, ExecutionContext, HttpException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
@@ -38,6 +38,7 @@ export class GlobalScopeGuard extends AuthGuard(["bearer", "basic"]) implements 
             const subjectEntity = this.reflector.getAllAndOverride<SubjectEntityMeta>("subjectEntity", [context.getHandler(), context.getClass()]);
             if (subjectEntity) {
                 let subjectScope: Record<string, string> | undefined;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const repo = this.orm.em.getRepository<any>(subjectEntity.entity);
                 if (subjectEntity.options.idArg) {
                     if (!args[subjectEntity.options.idArg]) {
@@ -47,8 +48,9 @@ export class GlobalScopeGuard extends AuthGuard(["bearer", "basic"]) implements 
                     if (row.scope) {
                         subjectScope = row.scope;
                     } else {
-                        //TODO get scope from parent row using something like @Scoped(entity => entity.parent.scope) (at entity class)
-                        throw new Error("not yet implemented");
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const scoped = this.reflector.getAllAndOverride<ScopedMeta>("scoped", [subjectEntity.entity as EntityClass<any>]);
+                        subjectScope = await scoped.fn(row);
                     }
                 } else if (subjectEntity.options.pageTreeNodeIdArg && args[subjectEntity.options.pageTreeNodeIdArg]) {
                     if (!args[subjectEntity.options.pageTreeNodeIdArg]) {
