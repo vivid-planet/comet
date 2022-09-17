@@ -1,34 +1,12 @@
 import { CurrentUser, PageTreeService, ScopedEntityMeta, SubjectEntityMeta } from "@comet/cms-api";
 import { EntityClass, MikroORM } from "@mikro-orm/core";
-import { CanActivate, ExecutionContext, HttpException, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
-import { AuthGuard } from "@nestjs/passport";
-import { Request } from "express";
-import { isObservable, lastValueFrom } from "rxjs";
 
 @Injectable()
-export class GlobalScopeGuard extends AuthGuard(["bearer", "basic"]) implements CanActivate {
-    constructor(private reflector: Reflector, private readonly orm: MikroORM, private readonly pageTreeService: PageTreeService) {
-        super();
-    }
-
-    getRequest(context: ExecutionContext): Request {
-        return context.getType().toString() === "graphql"
-            ? GqlExecutionContext.create(context).getContext().req
-            : context.switchToHttp().getRequest();
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-    handleRequest<CurrentUser>(err: unknown, user: any): CurrentUser {
-        if (err) {
-            throw err;
-        }
-        if (user) {
-            return user;
-        }
-        throw new HttpException("AccessTokenInvalid", 200);
-    }
+export class GlobalScopeGuard implements CanActivate {
+    constructor(private reflector: Reflector, private readonly orm: MikroORM, private readonly pageTreeService: PageTreeService) {}
 
     async inferScopeFromRequest(context: ExecutionContext): Promise<Record<string, string> | undefined> {
         if (context.getType().toString() === "graphql") {
@@ -86,17 +64,16 @@ export class GlobalScopeGuard extends AuthGuard(["bearer", "basic"]) implements 
     }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const canActivate = await super.canActivate(context);
-        const isAllowed = isObservable(canActivate) ? await lastValueFrom(canActivate) : canActivate;
-
         const isPublicApi = this.reflector.getAllAndOverride("publicApi", [context.getHandler(), context.getClass()]);
         if (isPublicApi) {
             return true;
         }
 
-        const user = this.getRequest(context).user as CurrentUser | undefined;
-        if (!user) return isAllowed;
-        if (user.contentScopes === undefined) return isAllowed; //user has no contentScope restriction
+        const request =
+            context.getType().toString() === "graphql" ? GqlExecutionContext.create(context).getContext().req : context.switchToHttp().getRequest();
+        const user = request.user as CurrentUser | undefined;
+        if (!user) return true;
+        if (user.contentScopes === undefined) return true; //user has no contentScope restriction
 
         const requestScope = await this.inferScopeFromRequest(context);
         if (requestScope) {
@@ -113,6 +90,6 @@ export class GlobalScopeGuard extends AuthGuard(["bearer", "basic"]) implements 
             //not a scoped request, open to anyone
         }
 
-        return isAllowed;
+        return true;
     }
 }
