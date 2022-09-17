@@ -1,4 +1,4 @@
-import { CurrentUser, PageTreeService, ScopedMeta, SubjectEntityMeta } from "@comet/cms-api";
+import { CurrentUser, PageTreeService, ScopedEntityMeta, SubjectEntityMeta } from "@comet/cms-api";
 import { EntityClass, MikroORM } from "@mikro-orm/core";
 import { CanActivate, ExecutionContext, HttpException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
@@ -49,7 +49,7 @@ export class GlobalScopeGuard extends AuthGuard(["bearer", "basic"]) implements 
                         subjectScope = row.scope;
                     } else {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        const scoped = this.reflector.getAllAndOverride<ScopedMeta>("scoped", [subjectEntity.entity as EntityClass<any>]);
+                        const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scoped", [subjectEntity.entity as EntityClass<any>]);
                         subjectScope = await scoped.fn(row);
                     }
                 } else if (subjectEntity.options.pageTreeNodeIdArg && args[subjectEntity.options.pageTreeNodeIdArg]) {
@@ -62,8 +62,8 @@ export class GlobalScopeGuard extends AuthGuard(["bearer", "basic"]) implements 
                     if (!node) throw new Error("Can't find pageTreeNode");
                     subjectScope = node.scope;
                 } else {
-                    // TODO implement something more flexible that supports something like that: @SubjectEntity(Product, EntityLoader)
-                    throw new Error("not yet implemented");
+                    // TODO implement something more flexible that supports something like that: @SubjectEntity(Product, ProductEntityLoader)
+                    throw new Error("idArg or pageTreeNodeIdArg is required");
                 }
                 if (subjectScope === undefined) throw new Error("Scope not found");
                 if (args.scope) {
