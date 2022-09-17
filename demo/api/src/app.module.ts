@@ -8,6 +8,7 @@ import {
     BuildsModule,
     DamModule,
     FilesService,
+    GlobalAuthGuard,
     ImagesService,
     PageTreeModule,
     PageTreeService,
@@ -17,6 +18,7 @@ import {
 import { ApolloDriver } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ConfigModule } from "@src/config/config.module";
 import { configNS } from "@src/config/config.namespace";
@@ -27,6 +29,7 @@ import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.en
 import { Request } from "express";
 
 import { CurrentUserLoaderService } from "./auth/current-user-loader.service";
+import { GlobalScopeGuard } from "./auth/scope.guard";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -181,6 +184,10 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
         MenusModule,
         FooterModule,
         PredefinedPageModule,
+    ],
+    providers: [
+        { provide: APP_GUARD, useClass: GlobalAuthGuard },
+        { provide: APP_GUARD, useClass: GlobalScopeGuard },
     ],
 })
 export class AppModule {}
