@@ -27,7 +27,7 @@ export class GlobalScopeGuard implements CanActivate {
                         subjectScope = row.scope;
                     } else {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scoped", [subjectEntity.entity as EntityClass<any>]);
+                        const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [subjectEntity.entity as EntityClass<any>]);
                         subjectScope = await scoped.fn(row);
                     }
                 } else if (subjectEntity.options.pageTreeNodeIdArg && args[subjectEntity.options.pageTreeNodeIdArg]) {
