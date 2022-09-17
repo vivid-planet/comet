@@ -6,15 +6,19 @@ import fetch from "node-fetch";
 import { Strategy } from "passport-http-bearer";
 import { URLSearchParams } from "url";
 
-import { AUTH_CONFIG } from "../auth.constants";
+import { AUTH_CONFIG, AUTH_CURRENT_USER_LOADER } from "../auth.constants";
 import { AuthConfig } from "../auth.module";
 import { CurrentUser } from "../dto/current-user";
+import { CurrentUserLoaderInterface } from "../interfaces/current-user-loader.interface";
 
 @Injectable()
 export class BearerTokenStrategy extends PassportStrategy(Strategy) {
     private validatedUserCache: NodeCache;
     private httpsAgent: Agent;
-    constructor(@Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig) {
+    constructor(
+        @Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig,
+        @Inject(AUTH_CURRENT_USER_LOADER) private readonly currentUserLoader: CurrentUserLoaderInterface,
+    ) {
         super();
         this.validatedUserCache = new NodeCache();
         this.httpsAgent = new https.Agent({
@@ -53,14 +57,6 @@ export class BearerTokenStrategy extends PassportStrategy(Strategy) {
         if (!data || !data.active) return null;
         if (data.client_id !== this.config.idpConfig.clientId) return null;
 
-        const user = new CurrentUser();
-        user.id = data.sub;
-        user.role = data.ext?.role;
-        user.contentScopes = data.ext?.domain.map((domain: string) => {
-            return {
-                domain,
-            };
-        });
-        return user;
+        return this.currentUserLoader.load(token, data);
     }
 }

@@ -1,4 +1,4 @@
-export class CurrentUser {
+export interface CurrentUser {
     id: string;
     role: string | undefined;
     contentScopes?: Array<Record<string, string>>;

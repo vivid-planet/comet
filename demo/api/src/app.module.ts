@@ -26,6 +26,7 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
+import { CurrentUserLoaderService } from "./auth/current-user-loader.service";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -72,6 +73,7 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
                 },
             }),
             inject: [configNS.KEY],
+            currentUserLoaderService: CurrentUserLoaderService,
         }),
         BlocksModule.forRootAsync({
             imports: [PagesModule],
