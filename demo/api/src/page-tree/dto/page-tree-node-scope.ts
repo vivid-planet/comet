@@ -16,4 +16,6 @@ export class PageTreeNodeScope {
     @Field()
     @IsString()
     language: string;
+
+    [key: string]: string;
 }

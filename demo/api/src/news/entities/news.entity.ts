@@ -31,6 +31,8 @@ export class NewsContentScope {
     @Field()
     @IsString()
     language: string;
+
+    [key: string]: string;
 }
 
 @RootBlockEntity()
