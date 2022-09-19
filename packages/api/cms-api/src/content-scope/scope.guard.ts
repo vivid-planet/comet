@@ -2,12 +2,14 @@ import { EntityClass, MikroORM } from "@mikro-orm/core";
 import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
+import isEqual from "lodash.isequal";
 
 import { CurrentUser } from "../auth/dto/current-user";
+import { ContentScope } from "../common/decorators/content-scope.interface";
 import { ScopedEntityMeta } from "../common/decorators/scoped-entity.decorator";
 import { SubjectEntityMeta } from "../common/decorators/subject-entity.decorator";
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { CONTENT_SCOPES_FROM_USER } from "./conent-scope.constants";
+import { CAN_ACCESS_SCOPE } from "./conent-scope.constants";
 
 @Injectable()
 export class ScopeGuard implements CanActivate {
@@ -15,17 +17,17 @@ export class ScopeGuard implements CanActivate {
         private reflector: Reflector,
         private readonly orm: MikroORM,
         private readonly pageTreeService: PageTreeService,
-        @Inject(CONTENT_SCOPES_FROM_USER) private contentScopesFromUser: (user: CurrentUser) => Array<Record<string, string>> | undefined,
+        @Inject(CAN_ACCESS_SCOPE) private canAccessScope: (requestScope: ContentScope, user: CurrentUser) => boolean,
     ) {}
 
-    async inferScopeFromRequest(context: ExecutionContext): Promise<Record<string, string> | undefined> {
+    async inferScopeFromRequest(context: ExecutionContext): Promise<ContentScope | undefined> {
         if (context.getType().toString() === "graphql") {
             const gqlContext = GqlExecutionContext.create(context);
             const args = gqlContext.getArgs();
 
             const subjectEntity = this.reflector.getAllAndOverride<SubjectEntityMeta>("subjectEntity", [context.getHandler(), context.getClass()]);
             if (subjectEntity) {
-                let subjectScope: Record<string, string> | undefined;
+                let subjectScope: ContentScope | undefined;
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const repo = this.orm.em.getRepository<any>(subjectEntity.entity);
                 if (subjectEntity.options.idArg) {
@@ -57,11 +59,7 @@ export class ScopeGuard implements CanActivate {
                 if (subjectScope === undefined) throw new Error("Scope not found");
                 if (args.scope) {
                     // args.scope also exists, check if they match
-                    if (
-                        !Array.from(new Set([...Object.keys(args.scope), ...Object.keys(subjectScope)])).every(
-                            (key) => args.scope[key] === subjectScope?.[key],
-                        )
-                    ) {
+                    if (!isEqual(args.scope, subjectScope)) {
                         throw new Error("Content Scope from arg doesn't match subjectEntity scope, usually you only need one of them");
                     }
                 }
@@ -87,21 +85,11 @@ export class ScopeGuard implements CanActivate {
 
         const requestScope = await this.inferScopeFromRequest(context);
         if (requestScope) {
-            return this.canAccessScope(user, requestScope);
+            return this.canAccessScope(requestScope, user);
         } else {
             //not a scoped request, open to anyone
         }
 
         return true;
-    }
-
-    canAccessScope(user: CurrentUser, requestScope: Record<string, string>): boolean {
-        const userScopes = this.contentScopesFromUser(user);
-        if (userScopes === undefined) return true; //user has no contentScope restriction
-        return userScopes.some((userScopes) => {
-            return Object.entries(userScopes).every(([scopeKey, scopeValue]) => {
-                return !requestScope[scopeKey] || requestScope[scopeKey] === scopeValue;
-            });
-        });
     }
 }

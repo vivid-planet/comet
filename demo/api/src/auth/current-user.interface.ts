@@ -3,13 +3,6 @@ import { CurrentUser } from "@comet/cms-api";
 
 declare module "@comet/cms-api" {
     interface CurrentUser {
-        contentScopes?: Array<Record<string, string>>;
+        domains?: Array<"main" | "secondary">;
     }
-    /*
-    contentScrops: [
-        {
-            domain: "at",
-        }
-    ]
-    */
 }

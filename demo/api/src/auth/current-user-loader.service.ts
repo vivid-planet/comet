@@ -8,11 +8,7 @@ export class CurrentUserLoaderService implements CurrentUserLoaderInterface {
         const user = {
             id: data.sub,
             role: data.ext?.role,
-            contentScopes: data.ext?.domain.map((domain: string) => {
-                return {
-                    domain,
-                };
-            }),
+            domains: data.ext?.domain,
         };
         return user;
     }

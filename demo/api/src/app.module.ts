@@ -6,8 +6,8 @@ import {
     BlocksTransformerMiddlewareFactory,
     BlocksTransformerService,
     BuildsModule,
+    ContentScope,
     ContentScopeModule,
-    CurrentUser,
     DamModule,
     FilesService,
     GlobalAuthGuard,
@@ -80,7 +80,10 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
             currentUserLoaderService: CurrentUserLoaderService,
         }),
         ContentScopeModule.forRoot({
-            contentScopesFromUser: (user: CurrentUser) => user.contentScopes,
+            canAccessScope(requestScope: ContentScope, user) {
+                if (!user.domains) return true; //all domains
+                return user.domains.includes(requestScope.domain);
+            },
         }),
         BlocksModule.forRootAsync({
             imports: [PagesModule],

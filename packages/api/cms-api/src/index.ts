@@ -41,6 +41,7 @@ export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-buil
 export { JobStatus } from "./builds/job-status.enum";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
 export { SkipBuildInterceptor } from "./builds/skip-build.interceptor";
+export { ContentScope } from "./common/decorators/content-scope.interface";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./common/decorators/scoped-entity.decorator";
 export { SubjectEntity, SubjectEntityMeta, SubjectEntityOptions } from "./common/decorators/subject-entity.decorator";

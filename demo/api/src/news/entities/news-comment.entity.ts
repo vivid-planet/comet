@@ -10,7 +10,11 @@ import { News } from "./news.entity";
     implements: () => [DocumentInterface],
 })
 @ScopedEntity(async (newsComment: NewsComment) => {
-    return (await newsComment.news.init()).scope;
+    const scope = (await newsComment.news.init()).scope;
+    return {
+        domain: scope.domain as "main" | "secondary",
+        language: scope.language,
+    };
 })
 export class NewsComment extends BaseEntity<NewsComment, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";

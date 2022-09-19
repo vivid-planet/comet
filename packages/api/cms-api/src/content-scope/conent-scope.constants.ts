@@ -1,1 +1,1 @@
-export const CONTENT_SCOPES_FROM_USER = "content-scopes-from-user";
+export const CAN_ACCESS_SCOPE = "can-access-scope";
