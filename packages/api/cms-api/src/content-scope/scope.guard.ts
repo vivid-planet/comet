@@ -1,12 +1,22 @@
-import { CurrentUser, PageTreeService, ScopedEntityMeta, SubjectEntityMeta } from "@comet/cms-api";
 import { EntityClass, MikroORM } from "@mikro-orm/core";
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 
+import { CurrentUser } from "../auth/dto/current-user";
+import { ScopedEntityMeta } from "../common/decorators/scoped-entity.decorator";
+import { SubjectEntityMeta } from "../common/decorators/subject-entity.decorator";
+import { PageTreeService } from "../page-tree/page-tree.service";
+import { CONTENT_SCOPES_FROM_USER } from "./conent-scope.constants";
+
 @Injectable()
-export class GlobalScopeGuard implements CanActivate {
-    constructor(private reflector: Reflector, private readonly orm: MikroORM, private readonly pageTreeService: PageTreeService) {}
+export class ScopeGuard implements CanActivate {
+    constructor(
+        private reflector: Reflector,
+        private readonly orm: MikroORM,
+        private readonly pageTreeService: PageTreeService,
+        @Inject(CONTENT_SCOPES_FROM_USER) private contentScopesFromUser: (user: CurrentUser) => Array<Record<string, string>> | undefined,
+    ) {}
 
     async inferScopeFromRequest(context: ExecutionContext): Promise<Record<string, string> | undefined> {
         if (context.getType().toString() === "graphql") {
@@ -28,6 +38,7 @@ export class GlobalScopeGuard implements CanActivate {
                     } else {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [subjectEntity.entity as EntityClass<any>]);
+                        if (!scoped) throw new Error(`Can't find scope of entity use @ScopedEntity decorator`);
                         subjectScope = await scoped.fn(row);
                     }
                 } else if (subjectEntity.options.pageTreeNodeIdArg && args[subjectEntity.options.pageTreeNodeIdArg]) {
@@ -73,23 +84,26 @@ export class GlobalScopeGuard implements CanActivate {
             context.getType().toString() === "graphql" ? GqlExecutionContext.create(context).getContext().req : context.switchToHttp().getRequest();
         const user = request.user as CurrentUser | undefined;
         if (!user) return true;
-        if (user.contentScopes === undefined) return true; //user has no contentScope restriction
 
         const requestScope = await this.inferScopeFromRequest(context);
         if (requestScope) {
-            const canAccessScope = user.contentScopes.some((userScope) => {
-                return Object.entries(userScope).every(([scopeKey, scopeValue]) => {
-                    return !requestScope[scopeKey] || requestScope[scopeKey] == scopeValue;
-                });
-            });
-            // console.log(user.contentScopes, requestScope, canAccessScope);
-            if (!canAccessScope) {
-                return false;
-            }
+            const canAccessScope = this.canAccessScope(user, requestScope);
+            // console.log(user, requestScope, canAccessScope);
+            return canAccessScope;
         } else {
             //not a scoped request, open to anyone
         }
 
         return true;
+    }
+
+    canAccessScope(user: CurrentUser, requestScope: Record<string, string>): boolean {
+        const userScopes = this.contentScopesFromUser(user);
+        if (userScopes === undefined) return true; //user has no contentScope restriction
+        return userScopes.some((userScopes) => {
+            return Object.entries(userScopes).every(([scopeKey, scopeValue]) => {
+                return !requestScope[scopeKey] || requestScope[scopeKey] == scopeValue;
+            });
+        });
     }
 }

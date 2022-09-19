@@ -6,6 +6,8 @@ import {
     BlocksTransformerMiddlewareFactory,
     BlocksTransformerService,
     BuildsModule,
+    ContentScopeModule,
+    CurrentUser,
     DamModule,
     FilesService,
     GlobalAuthGuard,
@@ -29,7 +31,6 @@ import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.en
 import { Request } from "express";
 
 import { CurrentUserLoaderService } from "./auth/current-user-loader.service";
-import { GlobalScopeGuard } from "./auth/scope.guard";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -77,6 +78,9 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
             }),
             inject: [configNS.KEY],
             currentUserLoaderService: CurrentUserLoaderService,
+        }),
+        ContentScopeModule.forRoot({
+            contentScopesFromUser: (user: CurrentUser) => user.contentScopes,
         }),
         BlocksModule.forRootAsync({
             imports: [PagesModule],
@@ -185,9 +189,6 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
         FooterModule,
         PredefinedPageModule,
     ],
-    providers: [
-        { provide: APP_GUARD, useClass: GlobalAuthGuard },
-        { provide: APP_GUARD, useClass: GlobalScopeGuard },
-    ],
+    providers: [{ provide: APP_GUARD, useClass: GlobalAuthGuard }],
 })
 export class AppModule {}
