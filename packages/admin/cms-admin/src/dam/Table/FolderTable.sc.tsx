@@ -1,5 +1,7 @@
 import { styled } from "@mui/material/styles";
 
+import { folderTableRowHeight } from "./FolderTableRow";
+
 export const TableWrapper = styled("div")`
     display: flex;
     flex-direction: column;
@@ -35,7 +37,26 @@ export const TableHoverHighlight = styled("div", { shouldForwardProp: (prop) => 
 `;
 
 export const FilesTableWrapper = styled("div")`
-    min-height: 58px;
+    min-height: ${folderTableRowHeight}px;
     flex-grow: 1;
     background-color: white;
+`;
+
+interface IntersectionTargetProps {
+    bottomOffset: number;
+}
+
+export const IntersectionTarget = styled("div")<IntersectionTargetProps>`
+    position: relative;
+    bottom: ${({ bottomOffset }) => bottomOffset}px;
+
+    //visually hidden
+    // https://www.a11yproject.com/posts/how-to-hide-content/
+    z-index: -1;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 1px;
 `;

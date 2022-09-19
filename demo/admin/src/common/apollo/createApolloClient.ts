@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, PossibleTypesMap } from "@apollo/client";
 import { createErrorDialogApolloLink } from "@comet/admin";
-import { includeInvisibleContentContext } from "@comet/cms-admin";
+import { includeInvisibleContentContext, offsetLimitPagination } from "@comet/cms-admin";
 import { AuthConfiguration, createAuthorizationLink, RefreshHandler } from "@comet/react-app-auth";
 import config from "@src/config";
 import fragmentTypes from "@src/fragmentTypes.json";
@@ -29,7 +29,13 @@ export const createApolloClient = ({ authorizationConfig, refreshHandler }: Crea
 
     const cache = new InMemoryCache({
         possibleTypes,
-        typePolicies: {},
+        typePolicies: {
+            Query: {
+                fields: {
+                    damItemsList: offsetLimitPagination(["folderId", "includeArchived", "filter", "sortColumnName", "sortDirection"]),
+                },
+            },
+        },
     });
 
     return new ApolloClient({
