@@ -30,6 +30,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
         if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
         }
+        console.log(prop);
         if (prop.name === "id" || prop.name == "createdAt" || prop.name == "updatedAt") {
             //skip those (TODO find a non-magic solution?)
             continue;
@@ -53,6 +54,10 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             decorators.push("@IsDate()");
             decorators.push("@Field()");
             type = "Date";
+        } else if (prop.type === "boolean") {
+            decorators.push("@IsBoolean()");
+            decorators.push("@Field()");
+            type = "boolean";
         } else if (prop.type === "RootBlockType") {
             const rootBlockType = prop.customType as RootBlockType | undefined;
             let blockExportName: string;

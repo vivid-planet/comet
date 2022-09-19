@@ -47,6 +47,8 @@ export { CometEntityNotFoundException } from "./common/errors/entity-not-found.e
 export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
+export { BooleanFilter } from "./common/filter/boolean.filter";
+export { DateFilter } from "./common/filter/date.filter";
 export { NumberFilter } from "./common/filter/number.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";

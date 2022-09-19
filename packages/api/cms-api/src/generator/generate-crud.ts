@@ -39,7 +39,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         });
 
         if (hasFilterArg) {
-            const filterOut = `import { StringFilter, NumberFilter } from "@comet/cms-api";
+            const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter } from "@comet/cms-api";
             import { Field, InputType } from "@nestjs/graphql";
             import { Type } from "class-transformer";
             import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -61,6 +61,18 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                             @ValidateNested()
                             @Type(() => NumberFilter)
                             ${prop.name}?: NumberFilter;
+                            `;
+                        } else if (prop.type === "boolean") {
+                            return `@Field(() => BooleanFilter, { nullable: true })
+                            @ValidateNested()
+                            @Type(() => BooleanFilter)
+                            ${prop.name}?: BooleanFilter;
+                            `;
+                        } else if (prop.type === "DateType") {
+                            return `@Field(() => DateFilter, { nullable: true })
+                            @ValidateNested()
+                            @Type(() => DateFilter)
+                            ${prop.name}?: DateFilter;
                             `;
                         } else {
                             //unsupported type TODO support more
@@ -126,7 +138,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     `;
         await writeGenerated(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
 
-        const serviceOut = `import { StringFilter, NumberFilter } from "@comet/cms-api";
+        const serviceOut = `import { StringFilter, NumberFilter, DateFilter, BooleanFilter } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
@@ -213,6 +225,33 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                             }
                             if (filterProperty.neq !== undefined) {
                                 acc[filterPropertyName].$ne = filterProperty.neq;
+                            }
+                        } else if (filterProperty instanceof DateFilter) {
+                            //TODO move this code itself into library
+                            acc[filterPropertyName] = {};
+                            if (filterProperty.eq !== undefined) {
+                                acc[filterPropertyName].$eq = filterProperty.eq;
+                            }
+                            if (filterProperty.lt !== undefined) {
+                                acc[filterPropertyName].$lt = filterProperty.lt;
+                            }
+                            if (filterProperty.gt !== undefined) {
+                                acc[filterPropertyName].$gt = filterProperty.gt;
+                            }
+                            if (filterProperty.lte !== undefined) {
+                                acc[filterPropertyName].$lte = filterProperty.lte;
+                            }
+                            if (filterProperty.gte !== undefined) {
+                                acc[filterPropertyName].$gte = filterProperty.gte;
+                            }
+                            if (filterProperty.neq !== undefined) {
+                                acc[filterPropertyName].$ne = filterProperty.neq;
+                            }
+                        } else if (filterProperty instanceof BooleanFilter) {
+                            //TODO move this code itself into library
+                            acc[filterPropertyName] = {};
+                            if (filterProperty.eq !== undefined) {
+                                acc[filterPropertyName].$eq = filterProperty.eq;
                             }
                         } else {
                             throw new Error(\`Unsupported filter \${filterPropertyName}\`);
