@@ -87,9 +87,7 @@ export class ScopeGuard implements CanActivate {
 
         const requestScope = await this.inferScopeFromRequest(context);
         if (requestScope) {
-            const canAccessScope = this.canAccessScope(user, requestScope);
-            // console.log(user, requestScope, canAccessScope);
-            return canAccessScope;
+            return this.canAccessScope(user, requestScope);
         } else {
             //not a scoped request, open to anyone
         }
