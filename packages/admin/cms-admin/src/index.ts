@@ -20,6 +20,8 @@ export { Publisher } from "./builds/Publisher";
 export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";
 export { DropdownMenuItem } from "./common/DropdownMenuItem";
 export { AuthorizationErrorPage } from "./common/errors/AuthorizationErrorPage";
+export { BuildInformationContext } from "./common/header/about/build-information/BuildInformationContext";
+export { BuildInformationProvider } from "./common/header/about/build-information/BuildInformationProvider";
 export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
 export type { TextMatch } from "./common/MarkedMatches";
