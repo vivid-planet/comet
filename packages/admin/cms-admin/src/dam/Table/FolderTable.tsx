@@ -75,7 +75,12 @@ const FolderTable = ({
     const [footerFolderName, setFooterFolderName] = React.useState<string>();
 
     const intersectionObserver = React.useRef<IntersectionObserver>();
-    const intersectionTarget = React.useRef<HTMLDivElement>(null);
+    // the upperIntersectionTarget is placed at the beginning of a 50-rows-block to enable seamless scrolling (as good as possible)
+    const upperIntersectionTarget = React.useRef<HTMLDivElement>(null);
+    // the lowerIntersectionTarget is placed at the end of a 50-rows-block.
+    // It is a fallback that is needed e.g. if you scroll down -> navigate to another page -> navigate back.
+    // In this case you might start further down on the page and the upperIntersectionTarget is never visible.
+    const lowerIntersectionTarget = React.useRef<HTMLDivElement>(null);
 
     const {
         uploadFiles,
@@ -85,6 +90,7 @@ const FolderTable = ({
     } = useFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
+            console.log("observable queries ", client.getObservableQueries());
             client.reFetchObservableQueries();
         },
     });
@@ -154,8 +160,16 @@ const FolderTable = ({
     });
 
     React.useEffect(() => {
+        if (intersectionObserver.current) {
+            intersectionObserver.current.disconnect();
+        }
+
         intersectionObserver.current = new IntersectionObserver(([entry]) => {
-            if (entry && entry.isIntersecting) {
+            console.log("intersection fires ");
+            console.log("entry ", entry);
+            console.log("entry.isIntersecting ", entry.isIntersecting);
+
+            if (entry && entry.isIntersecting && tableData?.data && tableData?.data?.length < tableData?.totalCount) {
                 fetchMore<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>({
                     variables: {
                         offset: tableData?.data?.length ?? 0,
@@ -164,10 +178,13 @@ const FolderTable = ({
             }
         });
 
-        if (intersectionTarget.current) {
-            intersectionObserver.current.observe(intersectionTarget.current);
+        if (upperIntersectionTarget.current) {
+            intersectionObserver.current.observe(upperIntersectionTarget.current);
         }
-    }, [fetchMore, tableData?.data?.length]);
+        if (lowerIntersectionTarget.current) {
+            intersectionObserver.current.observe(lowerIntersectionTarget.current);
+        }
+    }, [fetchMore, tableData?.data, tableData?.data?.length, tableData?.totalCount]);
 
     const loading = tableLoading && tableData === undefined;
     const foldersTableData = tableData?.data?.filter(isFolder);
@@ -350,7 +367,8 @@ const FolderTable = ({
                             </sc.FilesTableWrapper>
                         </TableQuery>
                     </sc.TableHoverHighlight>
-                    <sc.IntersectionTarget bottomOffset={folderTableRowHeight * damItemsListLimit} ref={intersectionTarget} />
+                    <sc.IntersectionTarget bottomOffset={folderTableRowHeight * damItemsListLimit} ref={upperIntersectionTarget} />
+                    <sc.IntersectionTarget bottomOffset={0} ref={lowerIntersectionTarget} />
                 </sc.TableWrapper>
                 <EditDialog
                     title={{
