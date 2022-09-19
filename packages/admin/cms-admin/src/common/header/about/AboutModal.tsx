@@ -2,8 +2,9 @@ import { Close } from "@comet/admin-icons";
 import { Dialog, DialogContent, DialogTitle, IconButton, Link, Modal, Typography } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import makeStyles from "@mui/styles/makeStyles";
+import config from "@src/config";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 
 import { version } from "../../..";
 import { CometDigitalExperienceLogo } from "./CometDigitalExperienceLogo";
@@ -66,7 +67,26 @@ function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
                 </DialogTitle>
                 <DialogContent classes={{ root: classes.content }}>
                     <CometDigitalExperienceLogo />
-                    <div className={classes.versionContainer}>{`v${version}`}</div>
+                    <div className={classes.versionContainer}>
+                        <Typography classes={{ root: classes.version }}>{`v${version}`}</Typography>
+                        {config.BUILD_NUMBER && config.COMMIT_SHA && (
+                            <Typography>
+                                <FormattedMessage
+                                    id="comet.version.title"
+                                    defaultMessage="{buildNumber} ({commitSha})"
+                                    values={{
+                                        buildNumber: config.BUILD_NUMBER,
+                                        commitSha: config.COMMIT_SHA ?? "unknown",
+                                    }}
+                                />
+                            </Typography>
+                        )}
+                        {config.BUILD_DATE && (
+                            <Typography>
+                                <FormattedDate value={config.BUILD_DATE} /> <FormattedTime value={config.BUILD_DATE} />
+                            </Typography>
+                        )}
+                    </div>
                     <Typography>
                         <FormattedMessage id="comet.about.dialog.copyright" defaultMessage="Copyright © Vivid Planet Software GmbH" />
                     </Typography>

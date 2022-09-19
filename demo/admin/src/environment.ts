@@ -8,4 +8,7 @@ export default [
     "SITES_CONFIG",
     "DAM_ALLOWED_IMAGE_ASPECT_RATIOS",
     "COMET_DEMO_API_URL",
+    "BUILD_DATE",
+    "BUILD_NUMBER",
+    "COMMIT_SHA",
 ] as const;
