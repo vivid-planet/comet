@@ -102,7 +102,7 @@ export class ScopeGuard implements CanActivate {
         if (userScopes === undefined) return true; //user has no contentScope restriction
         return userScopes.some((userScopes) => {
             return Object.entries(userScopes).every(([scopeKey, scopeValue]) => {
-                return !requestScope[scopeKey] || requestScope[scopeKey] == scopeValue;
+                return !requestScope[scopeKey] || requestScope[scopeKey] === scopeValue;
             });
         });
     }
