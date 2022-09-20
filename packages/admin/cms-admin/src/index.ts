@@ -18,7 +18,6 @@ export { BuildEntry } from "./builds/BuildEntry";
 export { BuildRuntime } from "./builds/BuildRuntime";
 export { Publisher } from "./builds/Publisher";
 export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";
-export { OffsetLimitPagination, offsetLimitPagination } from "./common/apollo/pagination/offsetLimitPagination";
 export { DropdownMenuItem } from "./common/DropdownMenuItem";
 export { AuthorizationErrorPage } from "./common/errors/AuthorizationErrorPage";
 export { BuildInformationProvider } from "./common/header/about/build-information/BuildInformationProvider";

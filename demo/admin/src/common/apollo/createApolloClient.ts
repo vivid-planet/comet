@@ -29,6 +29,7 @@ export const createApolloClient = ({ authorizationConfig, refreshHandler }: Crea
 
     const cache = new InMemoryCache({
         possibleTypes,
+        typePolicies: {},
     });
 
     return new ApolloClient({
