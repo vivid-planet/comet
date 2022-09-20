@@ -1,6 +1,5 @@
-import { QueryResult, useApolloClient, useQuery } from "@apollo/client";
+import { QueryResult, useQuery } from "@apollo/client";
 import { IFilterApi } from "@comet/admin";
-import React from "react";
 
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment, GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
 import { DamFilter } from "../DamTable";
@@ -46,9 +45,6 @@ export interface FolderTableQueryApi extends QueryResult<GQLDamItemsListQuery, G
 }
 
 export const useFolderTableQuery = ({ folderId, filterApi, allowedMimetypes }: FolderTableQueryProps): FolderTableQueryApi => {
-    const loadAllInProgress = React.useRef(false);
-    const client = useApolloClient();
-
     const { data, fetchMore, ...rest } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
             folderId: folderId,
@@ -62,29 +58,21 @@ export const useFolderTableQuery = ({ folderId, filterApi, allowedMimetypes }: F
             limit: damItemsListLimit,
             offset: 0,
         },
-        // fetchPolicy: "cache-and-network",
         onCompleted: async (data) => {
-            if (!loadAllInProgress.current && data) {
-                loadAllInProgress.current = true;
-
+            if (data) {
                 const currentDataLength = data.damItemsList.nodes.length;
                 const totalCount = data.damItemsList.totalCount;
 
                 if (totalCount > currentDataLength) {
-                    const numNecessaryRequests = totalCount / damItemsListLimit;
-
-                    for (let i = 1; i <= numNecessaryRequests; i++) {
-                        await fetchMore<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>({
-                            variables: {
-                                offset: i * damItemsListLimit,
-                            },
-                            updateQuery: (previousQueryResult, { fetchMoreResult, variables }) => {
-                                return mergeDamItemsList(previousQueryResult, fetchMoreResult, variables);
-                            },
-                        });
-                    }
+                    await fetchMore<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>({
+                        variables: {
+                            offset: data.damItemsList.nodes.length,
+                        },
+                        updateQuery: (previousQueryResult, { fetchMoreResult, variables }) => {
+                            return mergeDamItemsList(previousQueryResult, fetchMoreResult, variables);
+                        },
+                    });
                 }
-                loadAllInProgress.current = false;
             }
         },
     });
@@ -96,26 +84,6 @@ export const useFolderTableQuery = ({ folderId, filterApi, allowedMimetypes }: F
             totalCount: data.damItemsList.totalCount,
         };
     }
-
-    console.log("tableData ", tableData?.data.length);
-    console.log(
-        "cache ",
-        client.cache.readQuery({
-            query: damItemsListQuery,
-            variables: {
-                folderId: folderId,
-                includeArchived: filterApi.current.archived,
-                filter: {
-                    mimetypes: allowedMimetypes,
-                    searchText: filterApi.current.searchText,
-                },
-                sortColumnName: filterApi.current.sort?.columnName,
-                sortDirection: filterApi.current.sort?.direction,
-                limit: damItemsListLimit,
-                offset: 0,
-            },
-        })?.damItemsList.nodes.length,
-    );
 
     const loading = tableData === undefined || tableData?.data.length < tableData?.totalCount;
 
