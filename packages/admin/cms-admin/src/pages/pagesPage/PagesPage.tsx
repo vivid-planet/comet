@@ -6,7 +6,7 @@ import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { createEditPageNode } from "../..";
+import { ContentScopeInterface, createEditPageNode } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DocumentInterface, DocumentType } from "../../documents/types";
