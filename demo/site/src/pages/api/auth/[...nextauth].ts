@@ -47,7 +47,7 @@ const options: NextAuthOptions = {
             version: "2.0",
             clientId: process.env.IDP_CLIENT_ID as string,
             clientSecret: "",
-            scope: "offline openid profile email",
+            scope: "offline openid profile email role",
             params: { grant_type: "authorization_code" },
             accessTokenUrl: `${process.env.IDP_URL}/oauth2/token`,
             authorizationUrl: `${process.env.IDP_URL}/oauth2/auth?response_type=code`,

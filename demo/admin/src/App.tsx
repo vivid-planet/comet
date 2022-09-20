@@ -7,11 +7,13 @@ import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
+import { Domain } from "@comet/admin-icons";
 import {
     AllCategories,
     AuthorizationErrorPage,
     BuildInformationProvider,
     CmsBlockContextProvider,
+    ContentScopeIndicator,
     createHttpClient,
     createRedirectsPage,
     DamConfigProvider,
@@ -26,6 +28,7 @@ import {
 import { AuthConfiguration, AuthorizationGate, AuthorizationProvider, createAuthorizationManager, createRefreshHandler } from "@comet/react-app-auth";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
+import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { EditPageNode } from "@src/common/EditPageNode";
 import MasterHeader from "@src/common/MasterHeader";
@@ -65,7 +68,7 @@ const authorizationConfig: AuthConfiguration = {
     clientId: config.IDP_CLIENT_ID,
     redirectUrl: `${config.ADMIN_URL}/process-token`,
     responseType: "code",
-    scope: "offline openid profile email",
+    scope: "offline openid profile email role",
     usePKCE: true,
 };
 
@@ -179,6 +182,24 @@ class App extends React.Component {
                                                                                                                 documentTypes={pageTreeDocumentTypes}
                                                                                                                 editPageNode={EditPageNode}
                                                                                                                 category={category}
+                                                                                                                renderContentScopeIndicator={(
+                                                                                                                    scope,
+                                                                                                                ) => {
+                                                                                                                    return (
+                                                                                                                        <ContentScopeIndicator variant="toolbar">
+                                                                                                                            <ScopeIndicatorContent>
+                                                                                                                                <Domain fontSize="small" />
+                                                                                                                                <ScopeIndicatorLabelBold variant="body2">
+                                                                                                                                    {scope.domain}
+                                                                                                                                </ScopeIndicatorLabelBold>
+                                                                                                                            </ScopeIndicatorContent>
+                                                                                                                            {` | `}
+                                                                                                                            <ScopeIndicatorLabel variant="body2">
+                                                                                                                                {scope.language}
+                                                                                                                            </ScopeIndicatorLabel>
+                                                                                                                        </ContentScopeIndicator>
+                                                                                                                    );
+                                                                                                                }}
                                                                                                             />
                                                                                                         );
                                                                                                     }}
