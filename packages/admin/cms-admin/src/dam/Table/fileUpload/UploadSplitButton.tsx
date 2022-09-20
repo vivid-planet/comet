@@ -30,7 +30,6 @@ export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps):
     } = useFileUpload({
         acceptedMimetypes: filter?.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
-            console.log("observable queries ", client.getObservableQueries());
             client.reFetchObservableQueries();
         },
     });

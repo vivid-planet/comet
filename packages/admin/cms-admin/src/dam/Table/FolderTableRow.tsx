@@ -116,7 +116,6 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     } = useFileUpload({
         acceptedMimetypes: allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
-            console.log("observable queries ", client.getObservableQueries());
             client.reFetchObservableQueries();
         },
     });

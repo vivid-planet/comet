@@ -10,7 +10,6 @@ import {
     Table,
     TableColumns,
     TableQuery,
-    useTableQuery,
 } from "@comet/admin";
 import { StackLink } from "@comet/admin/lib/stack/StackLink";
 import { Link } from "@mui/material";
@@ -21,14 +20,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
-import {
-    GQLDamFileTableFragment,
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamFolderTableFragment,
-    GQLDamItemsListQuery,
-    GQLDamItemsListQueryVariables,
-} from "../../graphql.generated";
+import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
@@ -38,15 +30,14 @@ import DamContextMenu from "./DamContextMenu";
 import { DamDnDFooter, FooterType } from "./DamDnDFooter";
 import DamLabel from "./DamLabel";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { damFolderQuery, damItemsListQuery } from "./FolderTable.gql";
+import { damFolderQuery } from "./FolderTable.gql";
 import * as sc from "./FolderTable.sc";
 import FolderTableDragLayer from "./FolderTableDragLayer";
-import { FolderTableRow, folderTableRowHeight, isFile, isFolder } from "./FolderTableRow";
+import { FolderTableRow, isFile, isFolder } from "./FolderTableRow";
 import { DamMultiselectContext, useDamMultiselect } from "./multiselect/DamMultiselect";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
-
-export const damItemsListLimit = 50;
+import { useFolderTableQuery } from "./useFolderTableQuery";
 
 interface FolderTableProps extends DamConfig {
     id?: string;
@@ -74,14 +65,6 @@ const FolderTable = ({
     const [footerType, setFooterType] = React.useState<FooterType>();
     const [footerFolderName, setFooterFolderName] = React.useState<string>();
 
-    const intersectionObserver = React.useRef<IntersectionObserver>();
-    // the upperIntersectionTarget is placed at the beginning of a 50-rows-block to enable seamless scrolling (as good as possible)
-    const upperIntersectionTarget = React.useRef<HTMLDivElement>(null);
-    // the lowerIntersectionTarget is placed at the end of a 50-rows-block.
-    // It is a fallback that is needed e.g. if you scroll down -> navigate to another page -> navigate back.
-    // In this case you might start further down on the page and the upperIntersectionTarget is never visible.
-    const lowerIntersectionTarget = React.useRef<HTMLDivElement>(null);
-
     const {
         uploadFiles,
         dialogs: fileUploadDialogs,
@@ -90,7 +73,6 @@ const FolderTable = ({
     } = useFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
-            console.log("observable queries ", client.getObservableQueries());
             client.reFetchObservableQueries();
         },
     });
@@ -136,57 +118,8 @@ const FolderTable = ({
         api,
         loading: tableLoading,
         error,
-        fetchMore,
-    } = useTableQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>()(damItemsListQuery, {
-        variables: {
-            folderId: id,
-            includeArchived: filterApi.current.archived,
-            filter: {
-                mimetypes: props.allowedMimetypes,
-                searchText: filterApi.current.searchText,
-            },
-            sortColumnName: filterApi.current.sort?.columnName,
-            sortDirection: filterApi.current.sort?.direction,
-            limit: damItemsListLimit,
-            offset: 0,
-        },
-        resolveTableData: ({ damItemsList }) => {
-            return {
-                data: damItemsList.nodes,
-                totalCount: damItemsList.totalCount,
-            };
-        },
-        fetchPolicy: "cache-and-network",
-    });
+    } = useFolderTableQuery({ folderId: id, filterApi, allowedMimetypes: props.allowedMimetypes });
 
-    React.useEffect(() => {
-        if (intersectionObserver.current) {
-            intersectionObserver.current.disconnect();
-        }
-
-        intersectionObserver.current = new IntersectionObserver(([entry]) => {
-            console.log("intersection fires ");
-            console.log("entry ", entry);
-            console.log("entry.isIntersecting ", entry.isIntersecting);
-
-            if (entry && entry.isIntersecting && tableData?.data && tableData?.data?.length < tableData?.totalCount) {
-                fetchMore<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>({
-                    variables: {
-                        offset: tableData?.data?.length ?? 0,
-                    },
-                });
-            }
-        });
-
-        if (upperIntersectionTarget.current) {
-            intersectionObserver.current.observe(upperIntersectionTarget.current);
-        }
-        if (lowerIntersectionTarget.current) {
-            intersectionObserver.current.observe(lowerIntersectionTarget.current);
-        }
-    }, [fetchMore, tableData?.data, tableData?.data?.length, tableData?.totalCount]);
-
-    const loading = tableLoading && tableData === undefined;
     const foldersTableData = tableData?.data?.filter(isFolder);
     const filesTableData = tableData?.data?.filter(isFile);
     const firstLastUploadedFileId = filesTableData?.find((file) => newlyUploadedFileIds.includes(file.id))?.id;
@@ -320,11 +253,11 @@ const FolderTable = ({
                 <sc.TableWrapper ref={dropTargetRef}>
                     <TableHead isSearching={isSearching} numberItems={tableData?.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
                     <sc.TableHoverHighlight $isHovered={isHovered}>
-                        <TableQuery api={api} loading={loading} error={error}>
+                        <TableQuery api={api} loading={tableLoading} error={error}>
                             <Table<GQLDamFolderTableFragment>
                                 hideTableHead
                                 totalCount={foldersTableData?.length ?? 0}
-                                data={foldersTableData ?? []}
+                                data={tableLoading || foldersTableData === undefined ? [] : foldersTableData}
                                 columns={tableColumns}
                                 renderTableRow={({ columns, row, rowProps }) => {
                                     return (
@@ -345,7 +278,7 @@ const FolderTable = ({
                                 <Table<GQLDamFileTableFragment>
                                     hideTableHead
                                     totalCount={filesTableData?.length ?? 0}
-                                    data={filesTableData ?? []}
+                                    data={tableLoading || filesTableData === undefined ? [] : filesTableData}
                                     columns={tableColumns}
                                     renderTableRow={({ columns, row, rowProps }) => {
                                         return (
@@ -367,8 +300,6 @@ const FolderTable = ({
                             </sc.FilesTableWrapper>
                         </TableQuery>
                     </sc.TableHoverHighlight>
-                    <sc.IntersectionTarget bottomOffset={folderTableRowHeight * damItemsListLimit} ref={upperIntersectionTarget} />
-                    <sc.IntersectionTarget bottomOffset={0} ref={lowerIntersectionTarget} />
                 </sc.TableWrapper>
                 <EditDialog
                     title={{
