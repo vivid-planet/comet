@@ -5,12 +5,6 @@ import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-v
 import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
 import { SortArgs } from "../../../common/sorting/sort.args";
 
-// @InputType()
-// class FolderSpecificFilters extends OmitType(FolderFilterInput, ["searchText"] as const) {}
-//
-// @InputType()
-// class FileSpecificFilters extends OmitType(FileFilterInput, ["searchText"] as const) {}
-
 @InputType()
 export class DamItemFilterInput {
     @Field({ nullable: true })
