@@ -1,16 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import {
-    BreadcrumbItem,
-    EditDialog,
-    IFilterApi,
-    ISelectionApi,
-    ITableColumn,
-    MainContent,
-    PrettyBytes,
-    Table,
-    TableColumns,
-    TableQuery,
-} from "@comet/admin";
+import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, ITableColumn, MainContent, PrettyBytes, Table, TableColumns } from "@comet/admin";
 import { StackLink } from "@comet/admin/lib/stack/StackLink";
 import { Link } from "@mui/material";
 import * as React from "react";
@@ -34,6 +23,7 @@ import { damFolderQuery } from "./FolderTable.gql";
 import * as sc from "./FolderTable.sc";
 import FolderTableDragLayer from "./FolderTableDragLayer";
 import { FolderTableRow, isFile, isFolder } from "./FolderTableRow";
+import { InnerTableWrapper } from "./InnerTableWrapper";
 import { DamMultiselectContext, useDamMultiselect } from "./multiselect/DamMultiselect";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
@@ -113,12 +103,7 @@ const FolderTable = ({
         skip: id === undefined,
     });
 
-    const {
-        tableData,
-        api,
-        loading: tableLoading,
-        error,
-    } = useFolderTableQuery({ folderId: id, filterApi, allowedMimetypes: props.allowedMimetypes });
+    const { tableData, loading: tableLoading, error } = useFolderTableQuery({ folderId: id, filterApi, allowedMimetypes: props.allowedMimetypes });
 
     const foldersTableData = tableData?.data?.filter(isFolder);
     const filesTableData = tableData?.data?.filter(isFile);
@@ -253,7 +238,7 @@ const FolderTable = ({
                 <sc.TableWrapper ref={dropTargetRef}>
                     <TableHead isSearching={isSearching} numberItems={tableData?.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
                     <sc.TableHoverHighlight $isHovered={isHovered}>
-                        <TableQuery api={api} loading={tableLoading} error={error}>
+                        <InnerTableWrapper error={error} loading={tableLoading}>
                             <Table<GQLDamFolderTableFragment>
                                 hideTableHead
                                 totalCount={foldersTableData?.length ?? 0}
@@ -298,7 +283,7 @@ const FolderTable = ({
                                     }}
                                 />
                             </sc.FilesTableWrapper>
-                        </TableQuery>
+                        </InnerTableWrapper>
                     </sc.TableHoverHighlight>
                 </sc.TableWrapper>
                 <EditDialog
