@@ -6,7 +6,7 @@ import * as React from "react";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 
 import { version } from "../../..";
-import { BuildInformationContext } from "./build-information/BuildInformationContext";
+import { useBuildInformation } from "./build-information/useBuildInformation";
 import { CometDigitalExperienceLogo } from "./CometDigitalExperienceLogo";
 
 const useStyles = makeStyles(() => ({
@@ -49,7 +49,7 @@ interface AboutModalProps {
 }
 function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
     const classes = useStyles();
-    const buildInformation = React.useContext(BuildInformationContext);
+    const buildInformation = useBuildInformation();
 
     return (
         <Modal className={classes.modal} open={open} onClose={onClose} closeAfterTransition BackdropComponent={Backdrop}>
