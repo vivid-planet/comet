@@ -137,7 +137,7 @@ const FolderTable = ({
                         payload={row.id}
                         onClick={() => {
                             if (isFolder(row)) {
-                                filterApi.formApi.change("searchText", "");
+                                filterApi.formApi.change("searchText", undefined);
                             }
                         }}
                     >
