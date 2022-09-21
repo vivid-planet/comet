@@ -1,6 +1,5 @@
 import { Button, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
 
 export const Root = styled("div")`
     display: flex;
@@ -18,32 +17,31 @@ export const StyledButton = styled(Button)`
     color: ${({ theme }) => theme.palette.common.white};
 `;
 
-export const CometLogoWrapper = styled("div")`
+export const SiteInformation = styled("div")`
     display: flex;
     align-items: center;
     color: ${({ theme }) => theme.palette.common.white};
-    text-transform: uppercase;
+    padding: 0 6px;
+    gap: 20px;
 `;
 
-export const CometSiteLinkWrapper = styled("div")`
-    margin-left: 20px;
-    display: flex;
+export const LogoWrapper = styled("div")`
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 `;
 
-export const CometSiteLink = styled(Link)`
-    margin-left: 6px;
+export const SiteLinkWrapper = styled("div")`
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+`;
+
+export const SiteLink = styled(Link)`
     color: ${({ theme }) => theme.palette.common.white};
-    text-transform: none;
+    text-decoration-color: ${({ theme }) => theme.palette.common.white};
 `;
 
 export const ActionsContainer = styled("div")`
     background-color: ${({ theme }) => theme.palette.grey["A400"]};
 `;
-
-export const useStyles = makeStyles({
-    cometIcon: {
-        fontSize: 32,
-        height: "auto",
-        padding: 6,
-    },
-});
