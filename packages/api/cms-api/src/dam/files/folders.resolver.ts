@@ -8,16 +8,16 @@ import { Folder } from "./entities/folder.entity";
 import { FoldersService } from "./folders.service";
 
 @ObjectType()
-export class PaginatedFolders extends PaginatedResponseFactory.create(Folder) {}
+export class PaginatedDamFolders extends PaginatedResponseFactory.create(Folder) {}
 
 @Resolver(() => Folder)
 export class FoldersResolver {
     constructor(private readonly foldersService: FoldersService) {}
 
-    @Query(() => PaginatedFolders)
-    async damFoldersList(@Args() args: FolderArgs): Promise<PaginatedFolders> {
+    @Query(() => PaginatedDamFolders)
+    async damFoldersList(@Args() args: FolderArgs): Promise<PaginatedDamFolders> {
         const [folders, totalCount] = await this.foldersService.findAndCount(args);
-        return new PaginatedFolders(folders, totalCount);
+        return new PaginatedDamFolders(folders, totalCount);
     }
 
     @Query(() => Folder)

@@ -13,16 +13,16 @@ import { FilesService } from "./files.service";
 import { slugifyFilename } from "./files.utils";
 
 @ObjectType()
-export class PaginatedFiles extends PaginatedResponseFactory.create(File) {}
+export class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
 
 @Resolver(() => File)
 export class FilesResolver {
     constructor(private readonly filesService: FilesService, @InjectRepository(File) private readonly filesRepository: EntityRepository<File>) {}
 
-    @Query(() => PaginatedFiles)
-    async damFilesList(@Args() args: FileArgs): Promise<PaginatedFiles> {
+    @Query(() => PaginatedDamFiles)
+    async damFilesList(@Args() args: FileArgs): Promise<PaginatedDamFiles> {
         const [files, totalCount] = await this.filesService.findAndCount(args);
-        return new PaginatedFiles(files, totalCount);
+        return new PaginatedDamFiles(files, totalCount);
     }
 
     @Query(() => File)
