@@ -29,12 +29,12 @@ export class NewsInput {
     category: NewsCategory;
 
     @Field(() => GraphQLJSONObject)
-    @Transform((value) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })
+    @Transform(({ value }) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
     image: BlockInputInterface;
 
     @Field(() => GraphQLJSONObject)
-    @Transform((value) => (isBlockInputInterface(value) ? value : NewsContentBlock.blockInputFactory(value)), { toClassOnly: true })
+    @Transform(({ value }) => (isBlockInputInterface(value) ? value : NewsContentBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
     content: BlockInputInterface;
 }

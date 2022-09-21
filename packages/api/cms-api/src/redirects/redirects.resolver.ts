@@ -3,7 +3,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Type } from "@nestjs/common";
 import { Args, CONTEXT, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { plainToClass } from "class-transformer";
+import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Request } from "express";
 
@@ -61,7 +61,7 @@ export function createRedirectsResolver(Redirect: Type<RedirectInterface>, Redir
 
         @Mutation(() => Redirect)
         async createRedirect(@Args("input", { type: () => RedirectInput }) input: RedirectInputInterface): Promise<RedirectInterface> {
-            const tranformedInput = plainToClass(RedirectInput, input);
+            const tranformedInput = plainToInstance(RedirectInput, input);
 
             const errors = await validate(tranformedInput, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -80,7 +80,7 @@ export function createRedirectsResolver(Redirect: Type<RedirectInterface>, Redir
             @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
             @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
         ): Promise<RedirectInterface> {
-            const tranformedInput = plainToClass(RedirectInput, input);
+            const tranformedInput = plainToInstance(RedirectInput, input);
 
             const errors = await validate(tranformedInput, { whitelist: true, forbidNonWhitelisted: true });
 

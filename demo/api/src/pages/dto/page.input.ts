@@ -10,12 +10,12 @@ import { SeoBlock } from "../blocks/seo.block";
 @InputType()
 export class PageInput {
     @Field(() => GraphQLJSONObject)
-    @Transform((value) => PageContentBlock.blockInputFactory(value), { toClassOnly: true })
+    @Transform(({ value }) => PageContentBlock.blockInputFactory(value), { toClassOnly: true })
     @ValidateNested()
     content: BlockInputInterface;
 
     @Field(() => GraphQLJSONObject)
-    @Transform((value) => SeoBlock.blockInputFactory(value), { toClassOnly: true })
+    @Transform(({ value }) => SeoBlock.blockInputFactory(value), { toClassOnly: true })
     @ValidateNested()
     seo: BlockInputInterface;
 }
