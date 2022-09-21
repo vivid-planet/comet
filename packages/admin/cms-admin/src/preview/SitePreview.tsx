@@ -13,7 +13,7 @@ import { buildPreviewUrl } from "./buildPreviewUrl";
 import { DeviceToggle } from "./DeviceToggle";
 import { IFrameViewer } from "./IFrameViewer";
 import { OpenLinkDialog } from "./OpenLinkDialog";
-import { ActionsContainer, CometLogoWrapper, CometSiteLink, CometSiteLinkWrapper, Root, useStyles } from "./SitePreview.sc";
+import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 import { Device } from "./types";
 import { VisibilityToggle } from "./VisibilityToggle";
 
@@ -23,9 +23,10 @@ interface SiteState {
 
 interface Props extends RouteComponentProps {
     resolvePath?: (path: string, scope: ContentScopeInterface) => string;
+    logo?: React.ReactNode;
 }
 
-function SitePreview({ location, resolvePath }: Props): React.ReactElement {
+function SitePreview({ location, resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
     const queryParams = new URLSearchParams(location.search);
 
     const [previewPath, setPreviewPath] = React.useState<string>(queryParams.get("path") || "");
@@ -65,8 +66,6 @@ function SitePreview({ location, resolvePath }: Props): React.ReactElement {
         // the src-value is just the default value, the iframe keeps its own src-state (by clicking links inside the iframe)
         setInitialPageUrl(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSiteState));
     }, [formattedSiteState]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    const classes = useStyles();
 
     const history = useHistory();
     const intl = useIntl();
@@ -131,12 +130,14 @@ function SitePreview({ location, resolvePath }: Props): React.ReactElement {
                 <ActionsContainer>
                     <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap">
                         <Grid item>
-                            <CometLogoWrapper>
-                                <CometColor className={classes.cometIcon} />
-                                <Typography>
-                                    <FormattedMessage defaultMessage="Preview" id="comet.sitePreview.preview" />
-                                </Typography>
-                                <CometSiteLinkWrapper>
+                            <SiteInformation>
+                                <LogoWrapper>
+                                    {logo}
+                                    <Typography textTransform="uppercase" color="white">
+                                        <FormattedMessage defaultMessage="Preview" id="comet.sitePreview.preview" />
+                                    </Typography>
+                                </LogoWrapper>
+                                <SiteLinkWrapper>
                                     {siteConfig.preloginEnabled ? (
                                         <Tooltip
                                             title={intl.formatMessage({
@@ -149,11 +150,11 @@ function SitePreview({ location, resolvePath }: Props): React.ReactElement {
                                     ) : (
                                         <Public />
                                     )}
-                                    <CometSiteLink variant="body1" href={siteLink} target="_blank">
+                                    <SiteLink variant="body1" href={siteLink} target="_blank">
                                         {siteLink}
-                                    </CometSiteLink>
-                                </CometSiteLinkWrapper>
-                            </CometLogoWrapper>
+                                    </SiteLink>
+                                </SiteLinkWrapper>
+                            </SiteInformation>
                         </Grid>
                         <Grid item>
                             <DeviceToggle device={device} onChange={handleDeviceChange} />
