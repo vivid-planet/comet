@@ -30,7 +30,6 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
         if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
         }
-        console.log(prop);
         if (prop.name === "id" || prop.name == "createdAt" || prop.name == "updatedAt") {
             //skip those (TODO find a non-magic solution?)
             continue;

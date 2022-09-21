@@ -23,9 +23,17 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             (prop) =>
                 hasFieldFeature(metadata.class, prop.name, "filter") &&
                 !prop.name.startsWith("scope_") &&
-                (prop.type === "string" || prop.type === "DecimalType"),
+                (prop.type === "string" || prop.type === "DecimalType" || prop.type === "boolean" || prop.type === "DateType"),
         );
         const hasFilterArg = crudFilterProps.length > 0;
+        const crudSortProps = metadata.props.filter(
+            (prop) =>
+                hasFieldFeature(metadata.class, prop.name, "sort") &&
+                !prop.name.startsWith("scope_") &&
+                (prop.type === "string" || prop.type === "DecimalType" || prop.type === "boolean" || prop.type === "DateType"),
+        );
+        const hasSortArg = crudSortProps.length > 0;
+
         const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
         const hasVisibleProp = metadata.props.some((prop) => prop.name == "visible");
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
@@ -94,7 +102,36 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             `;
             await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.filter.ts`, filterOut);
         }
+        if (hasSortArg) {
+            const sortOut = `import { SortDirection } from "@comet/cms-api";
+            import { Field, InputType, registerEnumType } from "@nestjs/graphql";
+            import { Type } from "class-transformer";
+            import { IsEnum } from "class-validator";
 
+            export enum ${classNameSingular}SortField {
+                ${crudSortProps
+                    .map((prop) => {
+                        return `${prop.name} = "${prop.name}",`;
+                    })
+                    .join("\n")}
+            }
+            registerEnumType(${classNameSingular}SortField, {
+                name: "${classNameSingular}SortField",
+            });
+            
+            @InputType()
+            export class ${classNameSingular}Sort {
+                @Field(() => ${classNameSingular}SortField)
+                @IsEnum(${classNameSingular}SortField)
+                field: ${classNameSingular}SortField;
+            
+                @Field(() => SortDirection, { defaultValue: SortDirection.ASC })
+                @IsEnum(SortDirection)
+                direction: SortDirection = SortDirection.ASC;
+            }
+            `;
+            await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.sort.ts`, sortOut);
+        }
         const paginatedOut = `import { ObjectType } from "@nestjs/graphql";
     import { PaginatedResponseFactory } from "@comet/cms-api";
     
@@ -108,11 +145,12 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         const argsOut = `import { ArgsType, Field, IntersectionType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsOptional, IsString, ValidateNested } from "class-validator";
-    import { OffsetBasedPaginationArgs, SortArgs } from "@comet/cms-api";
+    import { OffsetBasedPaginationArgs } from "@comet/cms-api";
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
+    import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
     
     @ArgsType()
-    export class ${argsClassName} extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {
+    export class ${argsClassName} extends OffsetBasedPaginationArgs {
         ${
             hasQueryArg
                 ? `
@@ -134,7 +172,18 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         `
                 : ""
         }
-    }    
+
+        ${
+            hasSortArg
+                ? `
+        @Field(() => [${classNameSingular}Sort], { nullable: true })
+        @ValidateNested({ each: true })
+        @Type(() => ${classNameSingular}Sort)
+        sort?: ${classNameSingular}Sort[];
+        `
+                : ""
+        }
+    }
     `;
         await writeGenerated(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
 
@@ -324,7 +373,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
-            @Args() { ${hasQueryArg ? `query, ` : ""}${hasFilterArg ? `filter, ` : ""}offset, limit, sortColumnName, sortDirection }: ${argsClassName}
+            @Args() { ${hasQueryArg ? `query, ` : ""}${hasFilterArg ? `filter, ` : ""}${hasSortArg ? `sort, ` : ""}offset, limit }: ${argsClassName}
         ): Promise<Paginated${classNamePlural}> {
             const where = ${
                 hasQueryArg || hasFilterArg
@@ -334,9 +383,18 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             ${scopeProp ? `where.scope = scope;` : ""}
             const options: FindOptions<${metadata.className}> = { offset, limit };
     
-            if (sortColumnName) {
-                options.orderBy = { [sortColumnName]: sortDirection };
+            ${
+                hasSortArg
+                    ? `if (sort) {
+                options.orderBy = sort.map((sortItem) => {
+                    return {
+                        [sortItem.field]: sortItem.direction,
+                    };
+                });
+            }`
+                    : ""
             }
+
             const [entities, totalCount] = await this.repository.findAndCount(where, options);
             return new Paginated${classNamePlural}(entities, totalCount);
     
