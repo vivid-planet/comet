@@ -22,8 +22,10 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
         <Root onClick={onClick}>
             {documentType.menuIcon}
             <PageTypeIcon page={page} disabled={disabled} />
-            <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
-                <MarkedMatches text={page.name} matches={page.matches} />
+            <LinkContent>
+                <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
+                    <MarkedMatches text={page.name} matches={page.matches} />
+                </LinkText>
                 {page.visibility === "Archived" && (
                     <ArchivedChip
                         label={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
@@ -32,7 +34,7 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
                         size="small"
                     />
                 )}
-            </LinkText>
+            </LinkContent>
 
             {documentType.InfoTag !== undefined && <InfoPanel size="small" label={<documentType.InfoTag page={page} />} />}
         </Root>
@@ -49,11 +51,18 @@ const InfoPanel = styled(Chip)`
 const Root = styled("div")`
     display: flex;
     align-items: center;
-    flex-grow: 1;
+`;
+
+const LinkContent = styled("div")`
+    margin-left: ${({ theme }) => theme.spacing(2)};
+    display: flex;
+    min-width: 0;
 `;
 
 const LinkText = styled(Typography)`
-    margin-left: ${({ theme }) => theme.spacing(2)};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 
 const ArchivedChip = styled(Chip)`
