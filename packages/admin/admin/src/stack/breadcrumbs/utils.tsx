@@ -50,7 +50,7 @@ const useNumberOfItemsToBeHidden = (
         }
 
         setNumberOfItemsToBeHidden(newNumberOfItemsToBeHidden);
-    }, [items, itemWidths, containerWidth, showBackButton, numberOfItemsToBeHidden]);
+    }, [items, itemWidths, containerWidth, showBackButton]);
 
     return numberOfItemsToBeHidden;
 };
