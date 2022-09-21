@@ -39,7 +39,7 @@ export const SiteLinkWrapper = styled("div")`
 
 export const SiteLink = styled(Link)`
     color: ${({ theme }) => theme.palette.common.white};
-    text-decoration-color: ${({ theme }) => theme.palette.common.white};
+    text-decoration-color: currentColor;
 `;
 
 export const ActionsContainer = styled("div")`
