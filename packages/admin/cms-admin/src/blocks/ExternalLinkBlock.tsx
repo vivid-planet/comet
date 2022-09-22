@@ -5,7 +5,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
-import { isHref } from "./externalLinkBlock/isHref";
+import { isHref } from "../validation/isHref";
+import { validateUrl } from "../validation/validateUrl";
 
 type State = ExternalLinkBlockData;
 
@@ -67,11 +68,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         name="targetUrl"
                         component={FinalFormInput}
                         fullWidth
-                        validate={(url) => {
-                            if (url && !isHref(url)) {
-                                return <FormattedMessage id="comet.blocks.link.external.targetUrl.invalid" defaultMessage="Invalid URL" />;
-                            }
-                        }}
+                        validate={(url) => validateUrl(url)}
                     />
                     <Field name="openInNewWindow" type="checkbox">
                         {(props) => (
