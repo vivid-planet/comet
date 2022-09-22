@@ -272,7 +272,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                         {/* Alternate Hreflang */}
                         <Box marginTop={8} marginBottom={8}>
                             <AdminComponentSectionGroup
-                                title={<FormattedMessage id="comet.blocks.seo.alternativeLinks.sectionTitle" defaultMessage="Alternate Hreflang" />}
+                                title={<FormattedMessage id="comet.blocks.seo.alternativeLinks.sectionTitle" defaultMessage="Alternate links" />}
                             >
                                 <AdminComponentPaper>
                                     <FieldArray name="alternativeLinks">
