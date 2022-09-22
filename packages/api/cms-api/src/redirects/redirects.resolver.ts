@@ -53,6 +53,12 @@ export function createRedirectsResolver(Redirect: Type<RedirectInterface>, Redir
             return redirect ?? null;
         }
 
+        @Query(() => Boolean)
+        async redirectSourceAvailable(@Args("source", { type: () => String }) source: string): Promise<boolean> {
+            const redirect = await this.repository.findOne({ source });
+            return redirect === null;
+        }
+
         @Mutation(() => Redirect)
         async createRedirect(@Args("input", { type: () => RedirectInput }) input: RedirectInputInterface): Promise<RedirectInterface> {
             const tranformedInput = plainToClass(RedirectInput, input);
