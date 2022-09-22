@@ -26,7 +26,7 @@ import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
-import { isHref } from "./externalLinkBlock/isHref";
+import { validateUrl } from "../validation/validateUrl";
 import { PixelImageBlock } from "./PixelImageBlock";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
@@ -299,16 +299,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                                                 name={`${link}.url`}
                                                                 component={FinalFormInput}
                                                                 fullWidth
-                                                                validate={(url) => {
-                                                                    if (url && !isHref(url)) {
-                                                                        return (
-                                                                            <FormattedMessage
-                                                                                id="comet.blocks.link.external.targetUrl.invalid"
-                                                                                defaultMessage="Invalid URL"
-                                                                            />
-                                                                        );
-                                                                    }
-                                                                }}
+                                                                validate={(url) => validateUrl(url)}
                                                             />
                                                         </Grid>
                                                         <Grid item alignSelf="flex-start">
