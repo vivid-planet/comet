@@ -8,11 +8,22 @@ interface SeoBlockProps extends PropsWithData<SeoBlockData> {
     canonicalUrl?: string;
 }
 const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
-    data: { htmlTitle, metaDescription, openGraphTitle, openGraphDescription, openGraphImage, noIndex, canonicalUrl, structuredData },
+    data: {
+        htmlTitle,
+        metaDescription,
+        openGraphTitle,
+        openGraphDescription,
+        openGraphImage,
+        noIndex,
+        canonicalUrl,
+        structuredData,
+        alternativeLinks,
+    },
     title,
     canonicalUrl: passedCanonicalUrl,
 }) => {
     const usedHtmlTitle = htmlTitle && htmlTitle != "" ? htmlTitle : title;
+
     return (
         <>
             <Head>
@@ -43,6 +54,11 @@ const SeoBlock: React.FunctionComponent<SeoBlockProps> = ({
 
                 {/* Canonical Url */}
                 {(canonicalUrl ?? passedCanonicalUrl) && <link rel="canonical" href={canonicalUrl ?? passedCanonicalUrl} />}
+
+                {/* Alternate Hreflang */}
+                {alternativeLinks &&
+                    alternativeLinks.length > 0 &&
+                    alternativeLinks.map((item) => <link key={item.code} rel="alternate" hrefLang={item.code} href={item.url} />)}
             </Head>
         </>
     );

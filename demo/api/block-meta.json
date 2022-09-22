@@ -689,6 +689,11 @@
                 "name": "canonicalUrl",
                 "kind": "String",
                 "nullable": true
+            },
+            {
+                "name": "alternativeLinks",
+                "kind": "Json",
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -764,6 +769,11 @@
                 "name": "canonicalUrl",
                 "kind": "String",
                 "nullable": true
+            },
+            {
+                "name": "alternativeLinks",
+                "kind": "Json",
+                "nullable": false
             }
         ]
     },
