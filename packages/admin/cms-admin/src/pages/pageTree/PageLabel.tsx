@@ -26,6 +26,7 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
                 <MarkedMatches text={page.name} matches={page.matches} />
                 {page.visibility === "Archived" && (
                     <ArchivedChip
+                        component="span"
                         label={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
                         color="primary"
                         clickable={false}
@@ -59,4 +60,4 @@ const LinkText = styled(Typography)`
 const ArchivedChip = styled(Chip)`
     margin-left: ${({ theme }) => theme.spacing(2)};
     cursor: inherit;
-`;
+` as typeof Chip;
