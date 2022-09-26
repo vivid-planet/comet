@@ -148,7 +148,6 @@ export const RedirectForm = ({ mode, id, linkBlock }: Props): JSX.Element => {
         const response = await submit(values);
 
         if (response.data && "createRedirect" in response.data) {
-            // console.log((response.data as GQLCreateRedirectMutation).createRedirect.id);
             newlyCreatedRedirectId.current = (response.data as GQLCreateRedirectMutation).createRedirect.id;
         }
     };
