@@ -21,7 +21,7 @@ interface ScopeIndicatorProps {
     global: boolean;
 }
 
-const ScopeIndicator = styled("div")<ScopeIndicatorProps>`
+const ScopeIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "global" })<ScopeIndicatorProps>`
     position: ${({ variant }) => (variant === "toolbar" ? "fixed" : "absolute")};
     top: -12px;
     left: 0;
@@ -54,13 +54,13 @@ const ScopeIndicator = styled("div")<ScopeIndicatorProps>`
         `}
 `;
 
-const ToolbarIndicator = styled("div")<{ global: boolean }>`
+const ToolbarIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "global" })<{ global: boolean }>`
     width: 4px;
     height: 100%;
     background-color: ${({ theme, global }) => (global ? theme.palette.primary.main : "#596980")};
 `;
 
-const Content = styled("div")<{ global: boolean }>`
+const Content = styled("div", { shouldForwardProp: (prop) => prop !== "global" })<{ global: boolean }>`
     background: ${({ theme, global }) => (global ? theme.palette.primary.main : "#596980")};
     border-top-left-radius: 12px;
     border-bottom-right-radius: 12px;

@@ -41,7 +41,16 @@ export const PageTreeTableRow: React.FC<Props> = ({ children, clickable, disable
     );
 };
 
-const Root = styled(TableRow)<Props>`
+const Root = styled(TableRow, {
+    shouldForwardProp: (prop) =>
+        prop !== "isDragHovered" &&
+        prop !== "isMouseHovered" &&
+        prop !== "isArchived" &&
+        prop !== "isSelected" &&
+        prop !== "clickable" &&
+        prop !== "disabled" &&
+        prop !== "slideIn",
+})<Props>`
     scroll-margin-top: 160px;
     scroll-snap-margin-top: 160px; // Safari
     box-sizing: border-box;
@@ -97,7 +106,7 @@ interface SideBorderHightlightsProps {
     horizontal: boolean;
 }
 
-const BorderHightlights = styled("div")<SideBorderHightlightsProps>`
+const BorderHightlights = styled("div", { shouldForwardProp: (prop) => prop !== "vertical" && prop !== "horizontal" })<SideBorderHightlightsProps>`
     position: absolute;
     top: 0;
     left: 0;

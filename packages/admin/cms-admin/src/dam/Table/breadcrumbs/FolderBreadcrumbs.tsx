@@ -26,7 +26,7 @@ interface FolderBreadcrumbsProps {
     loading?: boolean;
 }
 
-const FolderBreadcrumbWrapper = styled("div")<{ $isHovered: boolean }>`
+const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$isHovered" })<{ $isHovered: boolean }>`
     font-weight: 500;
     padding: 6px;
     outline: ${({ theme, $isHovered }) => ($isHovered ? `solid 1px ${theme.palette.primary.main}` : "none")};

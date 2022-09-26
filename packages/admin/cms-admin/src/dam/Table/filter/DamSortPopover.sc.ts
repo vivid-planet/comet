@@ -5,7 +5,7 @@ interface WrapperProps {
     $active: boolean;
 }
 
-export const Wrapper = styled("div")<WrapperProps>`
+export const Wrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$active" })<WrapperProps>`
     width: fit-content;
     position: relative;
     border: 1px solid ${({ theme, $active }) => ($active ? theme.palette.grey[400] : theme.palette.grey[100])};

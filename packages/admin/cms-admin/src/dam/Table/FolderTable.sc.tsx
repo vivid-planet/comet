@@ -18,7 +18,7 @@ interface TableHoverHighlightProps {
     $isHovered?: boolean;
 }
 
-export const TableHoverHighlight = styled("div")<TableHoverHighlightProps>`
+export const TableHoverHighlight = styled("div", { shouldForwardProp: (prop) => prop !== "$isHovered" })<TableHoverHighlightProps>`
     flex-grow: 1;
 
     display: flex;
