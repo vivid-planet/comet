@@ -218,7 +218,7 @@ const PageTreeRow = ({
             <sc.SelectPageCell component="div">
                 <Checkbox checked={page.selected} onChange={_onSelectChanged} />
             </sc.SelectPageCell>
-            <sc.PageInfoCell component="div">
+            <sc.PageInfoCell component="div" title={page.name}>
                 <PageInfo page={page} toggleExpand={toggleExpand}>
                     <PageLabel page={page} onClick={onRowClick} />
                 </PageInfo>

@@ -3,11 +3,11 @@ import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 
 const slideInAnimation = keyframes`
-    from { 
+    from {
         transform: translateX(100%);
     }
 
-    to { 
+    to {
         transform: translateX(0);
     }
 `;
@@ -56,7 +56,6 @@ const Root = styled(TableRow, {
     box-sizing: border-box;
     position: relative;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
 
