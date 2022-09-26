@@ -73,6 +73,7 @@ export class FilesResolver {
     }
 
     @Mutation(() => Boolean)
+    @SkipBuild()
     async deleteDamFile(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         return this.filesService.delete(id);
     }

@@ -60,6 +60,7 @@ export class FoldersResolver {
     }
 
     @Mutation(() => Boolean)
+    @SkipBuild()
     async deleteDamFolder(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         return this.foldersService.delete(id);
     }
