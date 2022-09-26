@@ -1,6 +1,6 @@
 import { Field, FieldContainer, FormSection } from "@comet/admin";
 import { Reset } from "@comet/admin-icons";
-import { Button, FormControlLabel, Switch } from "@mui/material";
+import { Box, Button, FormControlLabel, Switch, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useForm, useFormState } from "react-final-form";
@@ -8,6 +8,15 @@ import { FormattedMessage } from "react-intl";
 
 import { ChooseFocalPoint } from "../../common/image/ChooseFocalPoint";
 import { EditImageFormValues } from "./EditFile";
+
+const CroppingInfoBox = styled(Box)`
+    margin-top: ${({ theme }) => theme.spacing(2)};
+    padding-left: ${({ theme }) => theme.spacing(2)};
+
+    & > p:first-of-type {
+        margin-bottom: ${({ theme }) => theme.spacing(1)};
+    }
+`;
 
 interface Props {
     disabled?: boolean;
@@ -40,6 +49,20 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                         control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
                         label={<FormattedMessage id="comet.dam.file.smartFocusPoint" defaultMessage="Smart focus point" />}
                     />
+                    <CroppingInfoBox>
+                        <Typography variant="body2">
+                            <FormattedMessage
+                                id="comet.dam.file.croppingInfoText"
+                                defaultMessage="Cropping selects the maximum visible area. Depending on the aspect ratio, the image may be cropped further on the page."
+                            />
+                        </Typography>
+                        <Typography variant="body2">
+                            <FormattedMessage
+                                id="comet.dam.file.focusPointInfoText"
+                                defaultMessage="The focus point marks the most important part of the image, which is always visible. Choose it wisely."
+                            />
+                        </Typography>
+                    </CroppingInfoBox>
                 </FieldContainer>
                 {showChooseManualFocusPointButtons && (
                     <Field name="focalPoint">
