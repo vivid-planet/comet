@@ -37,6 +37,7 @@ function DatePicker({
     formatDateOptions,
     endAdornment,
     clearable,
+    placeholder,
     monthsToShow,
     minDate = defaultMinDate,
     maxDate = defaultMaxDate,
@@ -56,6 +57,7 @@ function DatePicker({
                     <CalendarIcon />
                 </InputAdornment>
             }
+            placeholder={placeholder ?? intl.formatMessage({ id: "comet.datePicker.selectDate", defaultMessage: "Select date" })}
             {...inputWithPopperProps}
             componentsProps={inputWithPopperComponentsProps}
             readOnly

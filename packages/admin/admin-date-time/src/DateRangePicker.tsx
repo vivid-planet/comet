@@ -82,11 +82,13 @@ function DateRangePicker({
     rangeStringSeparator = "  —  ",
     endAdornment,
     clearable,
+    placeholder,
     monthsToShow = 2,
     minDate = defaultMinDate,
     maxDate = defaultMaxDate,
     ...inputWithPopperProps
 }: DateRangePickerProps & WithStyles<typeof styles>): React.ReactElement {
+    const intl = useIntl();
     const { calendar: calendarClass, ...inputWithPopperClasses } = classes;
     const { dateRange: dateRangeProps, ...inputWithPopperComponentsProps } = componentsProps;
     const textValue = useDateRangeTextValue(value, rangeStringSeparator, formatDateOptions);
@@ -101,6 +103,7 @@ function DateRangePicker({
                     <Calendar />
                 </InputAdornment>
             }
+            placeholder={placeholder ?? intl.formatMessage({ id: "comet.dateRangePicker.selectDateRange", defaultMessage: "Select date range" })}
             {...inputWithPopperProps}
             componentsProps={inputWithPopperComponentsProps}
             readOnly
