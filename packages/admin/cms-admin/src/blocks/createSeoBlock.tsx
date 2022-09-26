@@ -17,11 +17,9 @@ import {
 } from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-// eslint-disable-next-line import/no-extraneous-dependencies
 import arrayMutators from "final-form-arrays";
 import * as React from "react";
 import { Field as ReactFinalFormField } from "react-final-form";
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
