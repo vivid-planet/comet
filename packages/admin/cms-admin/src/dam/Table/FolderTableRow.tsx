@@ -46,13 +46,13 @@ const StyledFolderTableRow = styled(TableBodyRow, {
     z-index: 0;
     outline: ${({ $activeHoverStyle, theme }) => ($activeHoverStyle ? `solid 1px ${theme.palette.primary.main};` : "none")};
     background: ${({ theme, $activeHoverStyle, $archived }) => {
-    if ($activeHoverStyle) {
-        return alpha(theme.palette.primary.main, 0.1);
-    } else if ($archived) {
-        return theme.palette.grey[50];
-    }
-    return "none";
-}};
+        if ($activeHoverStyle) {
+            return alpha(theme.palette.primary.main, 0.1);
+        } else if ($archived) {
+            return theme.palette.grey[50];
+        }
+        return "none";
+    }};
     & .MuiTableCell-root {
         padding-top: 8px;
         padding-bottom: 8px;
@@ -67,13 +67,12 @@ const StyledFolderTableRow = styled(TableBodyRow, {
         left: 0;
         transition: background-color 1s ease-in-out;
         ${({ $highlightAsNew, theme }) =>
-    $highlightAsNew &&
-    css`
+            $highlightAsNew &&
+            css`
                 background-color: ${alpha(theme.palette.primary.dark, 0.4)};
             `}
     }
 `;
-
 
 export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
     dropTargetItem,
