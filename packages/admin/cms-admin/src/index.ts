@@ -20,6 +20,8 @@ export { Publisher } from "./builds/Publisher";
 export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";
 export { DropdownMenuItem } from "./common/DropdownMenuItem";
 export { AuthorizationErrorPage } from "./common/errors/AuthorizationErrorPage";
+export { BuildInformationProvider } from "./common/header/about/build-information/BuildInformationProvider";
+export { useBuildInformation } from "./common/header/about/build-information/useBuildInformation";
 export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
 export type { TextMatch } from "./common/MarkedMatches";
@@ -74,3 +76,8 @@ export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
 export { useSitesConfig } from "./sitesConfig/useSitesConfig";
+
+// import can not be used here as this file is outside of rootDir
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const version: string = require("../package.json").version;
+export { version };
