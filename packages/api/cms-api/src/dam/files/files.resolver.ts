@@ -4,6 +4,7 @@ import { NotFoundException } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { basename, extname } from "path";
 
+import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
@@ -43,6 +44,7 @@ export class FilesResolver {
     }
 
     @Mutation(() => [File])
+    @SkipBuild()
     async moveDamFiles(
         @Args("fileIds", { type: () => [ID] }) fileIds: string[],
         @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
@@ -51,6 +53,7 @@ export class FilesResolver {
     }
 
     @Mutation(() => File)
+    @SkipBuild()
     async archiveDamFile(@Args("id", { type: () => ID }) id: string): Promise<File> {
         const entity = await this.filesRepository.findOneOrFail(id);
         entity.archived = true;
@@ -60,6 +63,7 @@ export class FilesResolver {
     }
 
     @Mutation(() => File)
+    @SkipBuild()
     async restoreDamFile(@Args("id", { type: () => ID }) id: string): Promise<File> {
         const entity = await this.filesRepository.findOneOrFail(id);
         entity.archived = false;

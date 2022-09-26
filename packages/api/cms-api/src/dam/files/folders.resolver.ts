@@ -1,6 +1,7 @@
 import { NotFoundException } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
+import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { FolderArgs, FolderByNameAndParentIdArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
@@ -35,11 +36,13 @@ export class FoldersResolver {
     }
 
     @Mutation(() => Folder)
+    @SkipBuild()
     async createDamFolder(@Args("input", { type: () => CreateFolderInput }) data: CreateFolderInput): Promise<Folder> {
         return this.foldersService.create(data);
     }
 
     @Mutation(() => Folder)
+    @SkipBuild()
     async updateDamFolder(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => UpdateFolderInput }) input: UpdateFolderInput,
@@ -48,6 +51,7 @@ export class FoldersResolver {
     }
 
     @Mutation(() => [Folder])
+    @SkipBuild()
     async moveDamFolders(
         @Args("folderIds", { type: () => [ID] }) folderIds: string[],
         @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
