@@ -58,6 +58,7 @@ export const useFolderTableQuery = ({ folderId, filterApi, allowedMimetypes }: F
             limit: damItemsListLimit,
             offset: 0,
         },
+        fetchPolicy: "cache-and-network",
         onCompleted: async (data) => {
             if (data) {
                 const currentDataLength = data.damItemsList.nodes.length;
