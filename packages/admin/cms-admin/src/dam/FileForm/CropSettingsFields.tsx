@@ -9,15 +9,6 @@ import { FormattedMessage } from "react-intl";
 import { ChooseFocalPoint } from "../../common/image/ChooseFocalPoint";
 import { EditImageFormValues } from "./EditFile";
 
-const CroppingInfoBox = styled(Box)`
-    margin-top: ${({ theme }) => theme.spacing(2)};
-    padding-left: ${({ theme }) => theme.spacing(2)};
-
-    & > p:first-of-type {
-        margin-bottom: ${({ theme }) => theme.spacing(1)};
-    }
-`;
-
 interface Props {
     disabled?: boolean;
 }
@@ -49,8 +40,8 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                         control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
                         label={<FormattedMessage id="comet.dam.file.smartFocusPoint" defaultMessage="Smart focus point" />}
                     />
-                    <CroppingInfoBox>
-                        <Typography variant="body2">
+                    <Box mt={2} pl={2}>
+                        <Typography variant="body2" paragraph>
                             <FormattedMessage
                                 id="comet.dam.file.croppingInfoText"
                                 defaultMessage="Cropping selects the maximum visible area. Depending on the aspect ratio, the image may be cropped further on the page."
@@ -62,7 +53,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                                 defaultMessage="The focus point marks the most important part of the image, which is always visible. Choose it wisely."
                             />
                         </Typography>
-                    </CroppingInfoBox>
+                    </Box>
                 </FieldContainer>
                 {showChooseManualFocusPointButtons && (
                     <Field name="focalPoint">
