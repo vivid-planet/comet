@@ -49,6 +49,7 @@ export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
 export { BooleanFilter } from "./common/filter/boolean.filter";
 export { DateFilter } from "./common/filter/date.filter";
+export { filterToMikroOrmQuery, mikroOrmFilter, mikroOrmQueryFields } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";

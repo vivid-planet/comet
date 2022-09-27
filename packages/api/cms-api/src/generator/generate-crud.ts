@@ -187,7 +187,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     `;
         await writeGenerated(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
 
-        const serviceOut = `import { StringFilter, NumberFilter, DateFilter, BooleanFilter } from "@comet/cms-api";
+        const serviceOut = `import { mikroOrmFilter, mikroOrmQueryFields } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
@@ -208,13 +208,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 hasQueryArg
                     ? `
             if (options.query) {
-                andFilters.push({
-                    $or: [
-                        {
-                            ${crudQueryProps.map((prop) => `${prop.name}: { $ilike: \`%\${options.query}%\`, },`).join("\n")} //TODO quote
-                        },
-                    ],
-                });
+                andFilters.push(mikroOrmQueryFields(options.query, [${crudQueryProps.map((prop) => `"${prop.name}", `).join("")}]));
             }
             `
                     : ""
@@ -223,93 +217,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 hasFilterArg
                     ? `
             if (options.filter) {
-                const convertFilter = (filter: ${classNameSingular}Filter): FilterQuery<${metadata.className}> => {
-                    return Object.entries(filter).reduce((acc, [filterPropertyName, filterProperty]) => {
-                        if (filterPropertyName == "and") {
-                            const value = filterProperty as ${classNameSingular}Filter[];
-                            if (value) {
-                                acc.$and = value.map(convertFilter);
-                            }
-                        } else if (filterPropertyName == "or") {
-                            const value = filterProperty as ${classNameSingular}Filter[];
-                            if (value) {
-                                acc.$or = value.map(convertFilter);
-                            }
-                        } else if (filterProperty instanceof StringFilter) {
-                            //TODO move this code itself into library
-                            acc[filterPropertyName] = {};
-                            if (filterProperty.contains !== undefined) {
-                                acc[filterPropertyName].$ilike = \`%\${filterProperty.contains}%\`; //TODO quote
-                            }
-                            if (filterProperty.startsWith !== undefined) {
-                                //TODO don't overwrite $ilike from contains
-                                acc[filterPropertyName].$ilike = \`\${filterProperty.startsWith}%\`;
-                            }
-                            if (filterProperty.endsWith !== undefined) {
-                                acc[filterPropertyName].$ilike = \`%\${filterProperty.endsWith}\`;
-                            }
-                            if (filterProperty.eq !== undefined) {
-                                acc[filterPropertyName].$eq = filterProperty.eq;
-                            }
-                            if (filterProperty.neq !== undefined) {
-                                acc[filterPropertyName].$neq = filterProperty.neq;
-                            }
-                        } else if (filterProperty instanceof NumberFilter) {
-                            //TODO move this code itself into library
-                            acc[filterPropertyName] = {};
-                            if (filterProperty.eq !== undefined) {
-                                acc[filterPropertyName].$eq = filterProperty.eq;
-                            }
-                            if (filterProperty.lt !== undefined) {
-                                acc[filterPropertyName].$lt = filterProperty.lt;
-                            }
-                            if (filterProperty.gt !== undefined) {
-                                acc[filterPropertyName].$gt = filterProperty.gt;
-                            }
-                            if (filterProperty.lte !== undefined) {
-                                acc[filterPropertyName].$lte = filterProperty.lte;
-                            }
-                            if (filterProperty.gte !== undefined) {
-                                acc[filterPropertyName].$gte = filterProperty.gte;
-                            }
-                            if (filterProperty.neq !== undefined) {
-                                acc[filterPropertyName].$ne = filterProperty.neq;
-                            }
-                        } else if (filterProperty instanceof DateFilter) {
-                            //TODO move this code itself into library
-                            acc[filterPropertyName] = {};
-                            if (filterProperty.eq !== undefined) {
-                                acc[filterPropertyName].$eq = filterProperty.eq;
-                            }
-                            if (filterProperty.lt !== undefined) {
-                                acc[filterPropertyName].$lt = filterProperty.lt;
-                            }
-                            if (filterProperty.gt !== undefined) {
-                                acc[filterPropertyName].$gt = filterProperty.gt;
-                            }
-                            if (filterProperty.lte !== undefined) {
-                                acc[filterPropertyName].$lte = filterProperty.lte;
-                            }
-                            if (filterProperty.gte !== undefined) {
-                                acc[filterPropertyName].$gte = filterProperty.gte;
-                            }
-                            if (filterProperty.neq !== undefined) {
-                                acc[filterPropertyName].$ne = filterProperty.neq;
-                            }
-                        } else if (filterProperty instanceof BooleanFilter) {
-                            //TODO move this code itself into library
-                            acc[filterPropertyName] = {};
-                            if (filterProperty.eq !== undefined) {
-                                acc[filterPropertyName].$eq = filterProperty.eq;
-                            }
-                        } else {
-                            throw new Error(\`Unsupported filter \${filterPropertyName}\`);
-                        }
-                        return acc;
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    }, {} as FilterQuery<any>);
-                };
-                andFilters.push(convertFilter(options.filter));
+                andFilters.push(mikroOrmFilter(options.filter));
             }
             `
                     : ""
