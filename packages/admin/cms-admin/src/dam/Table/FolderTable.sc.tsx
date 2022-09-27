@@ -1,5 +1,7 @@
 import { styled } from "@mui/material/styles";
 
+import { folderTableRowHeight } from "./FolderTableRow";
+
 export const TableWrapper = styled("div")`
     display: flex;
     flex-direction: column;
@@ -35,7 +37,7 @@ export const TableHoverHighlight = styled("div", { shouldForwardProp: (prop) => 
 `;
 
 export const FilesTableWrapper = styled("div")`
-    min-height: 58px;
+    min-height: ${folderTableRowHeight}px;
     flex-grow: 1;
     background-color: white;
 `;

@@ -1,17 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import {
-    BreadcrumbItem,
-    EditDialog,
-    IFilterApi,
-    ISelectionApi,
-    ITableColumn,
-    MainContent,
-    PrettyBytes,
-    Table,
-    TableColumns,
-    TableQuery,
-    useTableQuery,
-} from "@comet/admin";
+import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, ITableColumn, MainContent, PrettyBytes, Table, TableColumns } from "@comet/admin";
 import { StackLink } from "@comet/admin/lib/stack/StackLink";
 import { Link } from "@mui/material";
 import * as React from "react";
@@ -21,14 +9,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
-import {
-    GQLDamFileTableFragment,
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamFolderTableFragment,
-    GQLDamListQuery,
-    GQLDamListQueryVariables,
-} from "../../graphql.generated";
+import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
@@ -38,13 +19,15 @@ import DamContextMenu from "./DamContextMenu";
 import { DamDnDFooter, FooterType } from "./DamDnDFooter";
 import DamLabel from "./DamLabel";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { damFolderQuery, damListQuery } from "./FolderTable.gql";
+import { damFolderQuery } from "./FolderTable.gql";
 import * as sc from "./FolderTable.sc";
 import FolderTableDragLayer from "./FolderTableDragLayer";
 import { FolderTableRow, isFile, isFolder } from "./FolderTableRow";
+import { InnerTableWrapper } from "./InnerTableWrapper";
 import { DamMultiselectContext, useDamMultiselect } from "./multiselect/DamMultiselect";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
+import { useFolderTableQuery } from "./useFolderTableQuery";
 
 interface FolderTableProps extends DamConfig {
     id?: string;
@@ -120,37 +103,10 @@ const FolderTable = ({
         skip: id === undefined,
     });
 
-    const {
-        tableData,
-        api,
-        loading: tableLoading,
-        error,
-    } = useTableQuery<GQLDamListQuery, GQLDamListQueryVariables>()(damListQuery, {
-        variables: {
-            folderId: id,
-            includeArchived: filterApi.current.archived,
-            folderFilter: {
-                searchText: filterApi.current.searchText,
-            },
-            fileFilter: {
-                mimetypes: props.allowedMimetypes,
-                searchText: filterApi.current.searchText,
-            },
-            sortColumnName: filterApi.current.sort?.columnName,
-            sortDirection: filterApi.current.sort?.direction,
-        },
-        resolveTableData: ({ damFilesList = [], damFoldersList = [] }) => {
-            return {
-                data: [...damFoldersList, ...damFilesList],
-                totalCount: damFilesList.length + damFoldersList.length,
-            };
-        },
-        fetchPolicy: "cache-and-network",
-    });
+    const { tableData, loading: tableLoading, error } = useFolderTableQuery({ folderId: id, filterApi, allowedMimetypes: props.allowedMimetypes });
 
-    const loading = tableLoading && tableData === undefined;
-    const foldersTableData = tableData?.data.filter(isFolder);
-    const filesTableData = tableData?.data.filter(isFile);
+    const foldersTableData = tableData?.data?.filter(isFolder);
+    const filesTableData = tableData?.data?.filter(isFile);
     const firstLastUploadedFileId = filesTableData?.find((file) => newlyUploadedFileIds.includes(file.id))?.id;
 
     const { matches } = useDamSearchHighlighting({
@@ -181,7 +137,7 @@ const FolderTable = ({
                         payload={row.id}
                         onClick={() => {
                             if (isFolder(row)) {
-                                filterApi.formApi.change("searchText", "");
+                                filterApi.formApi.change("searchText", undefined);
                             }
                         }}
                     >
@@ -282,11 +238,11 @@ const FolderTable = ({
                 <sc.TableWrapper ref={dropTargetRef}>
                     <TableHead isSearching={isSearching} numberItems={tableData?.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
                     <sc.TableHoverHighlight $isHovered={isHovered}>
-                        <TableQuery api={api} loading={loading} error={error}>
+                        <InnerTableWrapper error={error} loading={tableLoading}>
                             <Table<GQLDamFolderTableFragment>
                                 hideTableHead
                                 totalCount={foldersTableData?.length ?? 0}
-                                data={foldersTableData ?? []}
+                                data={tableLoading || foldersTableData === undefined ? [] : foldersTableData}
                                 columns={tableColumns}
                                 renderTableRow={({ columns, row, rowProps }) => {
                                     return (
@@ -307,7 +263,7 @@ const FolderTable = ({
                                 <Table<GQLDamFileTableFragment>
                                     hideTableHead
                                     totalCount={filesTableData?.length ?? 0}
-                                    data={filesTableData ?? []}
+                                    data={tableLoading || filesTableData === undefined ? [] : filesTableData}
                                     columns={tableColumns}
                                     renderTableRow={({ columns, row, rowProps }) => {
                                         return (
@@ -327,7 +283,7 @@ const FolderTable = ({
                                     }}
                                 />
                             </sc.FilesTableWrapper>
-                        </TableQuery>
+                        </InnerTableWrapper>
                     </sc.TableHoverHighlight>
                 </sc.TableWrapper>
                 <EditDialog

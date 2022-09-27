@@ -17,6 +17,7 @@ import {
     PageTreeNodeCategory,
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
+import { DamItemsResolver } from "./src/dam/files/dam-items.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
 
@@ -63,6 +64,7 @@ async function generateSchema(): Promise<void> {
         FileImagesResolver,
         FoldersResolver,
         pageTreeResolver,
+        DamItemsResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

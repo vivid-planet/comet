@@ -5,6 +5,8 @@ import { BlobStorageModule } from "..";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_MODULE_OPTIONS, IMGPROXY_CONFIG } from "./dam.constants";
+import { DamItemsResolver } from "./files/dam-items.resolver";
+import { DamItemsService } from "./files/dam-items.service";
 import { File } from "./files/entities/file.entity";
 import { FileImage } from "./files/entities/file-image.entity";
 import { Folder } from "./files/entities/folder.entity";
@@ -66,6 +68,8 @@ export class DamModule {
             providers: [
                 optionsProvider,
                 damConfigProvider,
+                DamItemsResolver,
+                DamItemsService,
                 imgproxyConfigProvider,
                 ScaledImagesCacheService,
                 ImgproxyService,

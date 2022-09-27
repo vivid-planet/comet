@@ -36,14 +36,14 @@ interface FolderTableRowProps extends DamConfig {
 export interface DamDragObject {
     item: GQLDamFileTableFragment | GQLDamFolderTableFragment;
 }
+export const folderTableRowHeight = 58;
 
 const StyledFolderTableRow = styled(TableBodyRow, {
     shouldForwardProp: (prop) => prop !== "$activeHoverStyle" && prop !== "$archived" && prop !== "$highlightAsNew",
 })<TableBodyRowProps & { $activeHoverStyle: boolean; $archived: boolean; $highlightAsNew: boolean }>`
-    height: 58px;
+    height: ${folderTableRowHeight}px;
     position: relative;
     z-index: 0;
-
     outline: ${({ $activeHoverStyle, theme }) => ($activeHoverStyle ? `solid 1px ${theme.palette.primary.main};` : "none")};
     background: ${({ theme, $activeHoverStyle, $archived }) => {
         if ($activeHoverStyle) {
@@ -53,12 +53,10 @@ const StyledFolderTableRow = styled(TableBodyRow, {
         }
         return "none";
     }};
-
     & .MuiTableCell-root {
         padding-top: 8px;
         padding-bottom: 8px;
     }
-
     &:before {
         content: "";
         position: absolute;
@@ -68,7 +66,6 @@ const StyledFolderTableRow = styled(TableBodyRow, {
         bottom: 0;
         left: 0;
         transition: background-color 1s ease-in-out;
-
         ${({ $highlightAsNew, theme }) =>
             $highlightAsNew &&
             css`
@@ -105,7 +102,10 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
             }, 3000);
         }
 
-        return () => clearTimeout(timeout);
+        return () => {
+            clearTimeout(timeout);
+            setMarkAsNew(false);
+        };
     }, [isNew]);
 
     const {
