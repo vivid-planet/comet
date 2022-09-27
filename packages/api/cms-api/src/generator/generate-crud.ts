@@ -2,7 +2,7 @@ import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
 
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
-import { writeCrudInput as writeCrudInput } from "./generate-crud-input";
+import { writeCrudInput } from "./generate-crud-input";
 import { writeGenerated } from "./utils/write-generated";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
