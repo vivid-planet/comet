@@ -22,6 +22,7 @@ const config = createOrmConfig({
         path: "./src/db/migrations",
         migrationsList: createMigrationsList(path.resolve(__dirname, "migrations")),
         disableForeignKeys: false,
+        snapshot: false,
     },
 });
 

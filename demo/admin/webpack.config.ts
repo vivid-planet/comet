@@ -1,6 +1,5 @@
 import "webpack-dev-server";
 
-import * as fs from "fs";
 import * as HtmlWebpackPlugin from "html-webpack-plugin";
 import * as path from "path";
 import * as webpack from "webpack";
@@ -15,14 +14,10 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
     const publicPath = "/";
 
     const plugins: webpack.WebpackPluginInstance[] = [
-        new webpack.DefinePlugin({
-            CONFIG_DEV_LOCAL_EXISTS: fs.existsSync(path.resolve(__dirname, "src/config/dev.local.ts")),
-            PREVIEW_URL: JSON.stringify(process.env.PREVIEW_URL),
-        }),
         new HtmlWebpackPlugin({
             template: "public/index.ejs",
             templateParameters: {
-                environmentValues: environment.map((env) => ({ key: env, value: production ? `$${env}` : process.env[env] })),
+                environmentValues: environment.map((env) => ({ key: env, value: production ? `$${env}` : process.env[env] ?? "" })),
             },
             hash: true,
         }),

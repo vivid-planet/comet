@@ -3,10 +3,62 @@ import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
+import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { FolderArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { Folder } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
+
+export const withFoldersSelect = (
+    qb: QueryBuilder<Folder>,
+    args: {
+        includeArchived?: boolean;
+        parentId?: string | null;
+        query?: string;
+        sortColumnName?: string;
+        sortDirection?: SortDirection;
+        offset?: number;
+        limit?: number;
+    },
+): QueryBuilder<Folder> => {
+    if (!args.includeArchived) {
+        qb.where({ archived: false });
+    }
+
+    const isSearching = args.query !== undefined && args.query.length > 0;
+    if (!isSearching) {
+        if (args.parentId !== undefined) {
+            qb.where({ parent: { id: args.parentId } });
+        } else {
+            qb.where({ parent: { id: null } });
+        }
+    }
+
+    if (args.query) {
+        qb = addSearchTermFiltertoQueryBuilder(qb, args.query);
+    }
+
+    if (args.sortColumnName && args.sortDirection) {
+        qb.orderBy({ [`folder.${args.sortColumnName}`]: args.sortDirection });
+    }
+
+    if (args.offset) {
+        qb.offset(args.offset);
+    }
+    if (args.limit) {
+        qb.limit(args.limit);
+    }
+
+    return qb;
+};
+
+const addSearchTermFiltertoQueryBuilder = (qb: QueryBuilder<Folder>, searchText: string): QueryBuilder<Folder> => {
+    const terms = searchText.split(" ");
+    for (const term of terms) {
+        qb.andWhere({ name: { $ilike: `%${term}%` } });
+    }
+    return qb;
+};
 
 @Injectable()
 export class FoldersService {
@@ -17,31 +69,36 @@ export class FoldersService {
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
     ) {}
 
-    async findAll({ parentId, includeArchived, filter, sortColumnName, sortDirection }: FolderArgs): Promise<Folder[]> {
-        let qb = this.selectQueryBuilder();
-
-        if (!includeArchived) {
-            qb.where({ archived: false });
-        }
-
-        const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
-        if (!isSearching) {
-            if (parentId !== undefined) {
-                qb.where({ parent: { id: parentId } });
-            } else {
-                qb.where({ parent: { id: null } });
-            }
-        }
-
-        if (filter?.searchText) {
-            qb = this.addSearchTermFiltertoQueryBuilder(qb, filter.searchText);
-        }
-
-        if (sortColumnName && sortDirection) {
-            qb.orderBy({ [`folder.${sortColumnName}`]: sortDirection });
-        }
+    async findAll({ parentId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FolderArgs, "offset" | "limit">): Promise<Folder[]> {
+        const qb = withFoldersSelect(this.selectQueryBuilder(), {
+            includeArchived,
+            parentId,
+            query: filter?.searchText,
+            sortColumnName,
+            sortDirection,
+        });
 
         return qb.getResult();
+    }
+
+    async findAndCount({ parentId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: FolderArgs): Promise<[Folder[], number]> {
+        const args = {
+            includeArchived,
+            parentId,
+            query: filter?.searchText,
+            sortColumnName,
+            sortDirection,
+            offset,
+            limit,
+        };
+
+        const qb = withFoldersSelect(this.selectQueryBuilder(), args);
+        const folders = await qb.getResult();
+
+        const countQb = withFoldersSelect(this.countQueryBuilder(), args);
+        const totalCount = await countQb.getCount();
+
+        return [folders, totalCount];
     }
 
     async findAllByIds(ids: string[]): Promise<Folder[]> {
@@ -153,14 +210,6 @@ export class FoldersService {
         return mpath.map((id) => folders.find((folder) => folder.id === id) as Folder);
     }
 
-    private addSearchTermFiltertoQueryBuilder(qb: QueryBuilder<Folder>, searchText: string): QueryBuilder<Folder> {
-        const terms = searchText.split(" ");
-        for (const term of terms) {
-            qb.andWhere({ name: { $ilike: `%${term}%` } });
-        }
-        return qb;
-    }
-
     private selectQueryBuilder(): QueryBuilder<Folder> {
         return this.foldersRepository
             .createQueryBuilder("folder")
@@ -171,5 +220,9 @@ export class FoldersService {
             .addSelect('COUNT(DISTINCT files.id) as "numberOfFiles"')
             .leftJoin("folder.files", "files")
             .groupBy(["folder.id", "parent.id"]);
+    }
+
+    private countQueryBuilder(): QueryBuilder<Folder> {
+        return this.foldersRepository.createQueryBuilder("folder").select("*");
     }
 }

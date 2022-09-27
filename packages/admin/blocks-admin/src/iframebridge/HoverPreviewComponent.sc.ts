@@ -13,7 +13,8 @@ export const Children = styled("div")`
 interface HoverProps {
     isHovered: boolean;
 }
-export const Hover = styled("div")<HoverProps>`
+
+export const Hover = styled("div", { shouldForwardProp: (prop) => prop !== "isHovered" })<HoverProps>`
     ${(props) => {
         if (props.isHovered) {
             return css`

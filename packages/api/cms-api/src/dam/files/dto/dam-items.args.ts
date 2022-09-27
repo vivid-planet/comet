@@ -6,7 +6,7 @@ import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-bas
 import { SortArgs } from "../../../common/sorting/sort.args";
 
 @InputType()
-export class FileFilterInput {
+export class DamItemFilterInput {
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
@@ -19,20 +19,20 @@ export class FileFilterInput {
 }
 
 @ArgsType()
-export class FileArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {
+export class DamItemsArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()
     folderId?: string;
 
-    @Field({ nullable: true, defaultValue: false })
+    @Field({ nullable: true })
     @IsOptional()
     @IsBoolean()
     includeArchived?: boolean;
 
-    @Field(() => FileFilterInput, { nullable: true })
-    @Type(() => FileFilterInput)
+    @Field(() => DamItemFilterInput, { nullable: true })
+    @Type(() => DamItemFilterInput)
     @IsOptional()
     @ValidateNested()
-    filter?: FileFilterInput;
+    filter?: DamItemFilterInput;
 }

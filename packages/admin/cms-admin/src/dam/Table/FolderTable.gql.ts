@@ -51,26 +51,34 @@ export const damFolderQuery = gql`
     ${damFolderTableFragment}
 `;
 
-export const damListQuery = gql`
-    query DamList(
+export const damItemsListQuery = gql`
+    query DamItemsList(
         $folderId: ID
         $includeArchived: Boolean
-        $fileFilter: FileFilterInput
-        $folderFilter: FolderFilterInput
+        $filter: DamItemFilterInput
         $sortColumnName: String
         $sortDirection: SortDirection
+        $offset: Int
+        $limit: Int
     ) {
-        damFilesList(
+        damItemsList(
             folderId: $folderId
             includeArchived: $includeArchived
-            filter: $fileFilter
+            filter: $filter
             sortColumnName: $sortColumnName
             sortDirection: $sortDirection
+            offset: $offset
+            limit: $limit
         ) {
-            ...DamFileTable
-        }
-        damFoldersList(parentId: $folderId, filter: $folderFilter, sortColumnName: $sortColumnName, sortDirection: $sortDirection) {
-            ...DamFolderTable
+            nodes {
+                ... on DamFile {
+                    ...DamFileTable
+                }
+                ... on DamFolder {
+                    ...DamFolderTable
+                }
+            }
+            totalCount
         }
     }
     ${damFileTableFragment}

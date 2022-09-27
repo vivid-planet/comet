@@ -11,12 +11,6 @@ interface PageInfoProps {
     children: React.ReactNode;
 }
 
-const ExpandIconWrapper = styled("div")`
-    margin-top: -12px;
-    margin-bottom: -10px;
-    width: 44px;
-`;
-
 export default function PageInfo({ page, toggleExpand, children }: PageInfoProps): React.ReactElement {
     return (
         <Root style={{ paddingLeft: `${page.level * 33}px` }}>
@@ -32,13 +26,23 @@ export default function PageInfo({ page, toggleExpand, children }: PageInfoProps
                     </IconButton>
                 )}
             </ExpandIconWrapper>
-            {children}
+            <ChildrenWrapper>{children}</ChildrenWrapper>
         </Root>
     );
 }
 
 const Root = styled("div")`
-    width: 100%;
     display: flex;
     align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+`;
+
+const ExpandIconWrapper = styled("div")`
+    width: 44px;
+    flex-shrink: 0;
+`;
+
+const ChildrenWrapper = styled("div")`
+    min-width: 0;
 `;

@@ -26,7 +26,7 @@ export function AdminComponentSection({ children, title, disableBottomMargin }: 
     return <Root disableBottomMargin={disableBottomMargin}>{children}</Root>;
 }
 
-const Root = styled("div")<Pick<Props, "variant" | "disableBottomMargin">>`
+const Root = styled("div", { shouldForwardProp: (prop) => prop !== "disableBottomMargin" })<Pick<Props, "variant" | "disableBottomMargin">>`
     ${({ disableBottomMargin, variant, theme }) =>
         !disableBottomMargin &&
         css`

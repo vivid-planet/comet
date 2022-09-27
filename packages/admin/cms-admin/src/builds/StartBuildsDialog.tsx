@@ -52,7 +52,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                 <Alert severity="info">
                     <FormattedMessage
                         id="comet.pages.publisher.startBuildsDialog.hint"
-                        defaultMessage="The more builds you start, the longer it takes until they are completed. If you need to rebuild manually, select only the scopes required."
+                        defaultMessage="Please use this function only in exceptional cases. The more builds you start, the longer it takes until they are completed. If you need to rebuild manually, select only the scopes required."
                     />
                 </Alert>
                 <DataGrid

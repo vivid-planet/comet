@@ -4,15 +4,15 @@ import { FetchResult } from "@apollo/client/link/core";
 import {
     GQLDamFileTableFragment,
     GQLDamFolderTableFragment,
-    GQLDamListQuery,
-    GQLDamListQueryVariables,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
     GQLMoveDamFilesMutation,
     GQLMoveDamFilesMutationVariables,
     GQLMoveDamFoldersMutation,
     GQLMoveDamFoldersMutationVariables,
     namedOperations,
 } from "../../../graphql.generated";
-import { isFile } from "../FolderTableRow";
+import { isFile, isFolder } from "../FolderTableRow";
 import { DamMultiselectItem, useDamMultiselectApi } from "../multiselect/DamMultiselect";
 import { moveDamFilesMutation, moveDamFoldersMutation } from "./useDamDnD.gql";
 
@@ -56,7 +56,7 @@ export const useDamDnD = (): DamDnDApi => {
         }
 
         const queries = client.getObservableQueries();
-        const damListQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.DamList);
+        const damItemsListQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.DamItemsList);
 
         const mutations: Array<Promise<FetchResult>> = [];
 
@@ -78,14 +78,21 @@ export const useDamDnD = (): DamDnDApi => {
                         };
                     },
                     update: (cache, result) => {
-                        if (damListQuery) {
+                        if (damItemsListQuery) {
                             const movedFileIds = result.data?.moveDamFiles.map((file) => file.id) ?? [];
 
-                            cache.updateQuery<GQLDamListQuery, GQLDamListQueryVariables>({ ...damListQuery.options }, (data) => {
-                                const filteredFilesList = data?.damFilesList.filter((file) => !movedFileIds.includes(file.id));
+                            cache.updateQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>({ ...damItemsListQuery.options }, (data) => {
+                                const filteredItemsList = data?.damItemsList.nodes.filter(
+                                    (item) => isFolder(item) || !movedFileIds.includes(item.id),
+                                );
+
+                                const newTotalCount = data?.damItemsList.totalCount ? data?.damItemsList.totalCount - movedFileIds.length : 0;
+
                                 return {
-                                    damFoldersList: data?.damFoldersList ?? [],
-                                    damFilesList: filteredFilesList ?? [],
+                                    damItemsList: {
+                                        nodes: filteredItemsList ?? [],
+                                        totalCount: newTotalCount,
+                                    },
                                 };
                             });
                         }
@@ -116,14 +123,21 @@ export const useDamDnD = (): DamDnDApi => {
                         };
                     },
                     update: (cache, result) => {
-                        if (damListQuery) {
+                        if (damItemsListQuery) {
                             const movedFolderIds = result.data?.moveDamFolders.map((folder) => folder.id) ?? [];
 
-                            cache.updateQuery<GQLDamListQuery, GQLDamListQueryVariables>({ ...damListQuery.options }, (data) => {
-                                const filteredFoldersList = data?.damFoldersList.filter((folder) => !movedFolderIds.includes(folder.id));
+                            cache.updateQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>({ ...damItemsListQuery.options }, (data) => {
+                                const filteredItemsList = data?.damItemsList?.nodes.filter(
+                                    (item) => isFile(item) || !movedFolderIds.includes(item.id),
+                                );
+
+                                const newTotalCount = data?.damItemsList.totalCount ? data?.damItemsList.totalCount - movedFolderIds.length : 0;
+
                                 return {
-                                    damFoldersList: filteredFoldersList ?? [],
-                                    damFilesList: data?.damFilesList ?? [],
+                                    damItemsList: {
+                                        nodes: filteredItemsList ?? [],
+                                        totalCount: newTotalCount,
+                                    },
                                 };
                             });
                         }
@@ -135,7 +149,7 @@ export const useDamDnD = (): DamDnDApi => {
         await Promise.all(mutations);
 
         damMultiselectApi.unselectAll();
-        await client.refetchQueries({ include: [namedOperations.Query.DamList] });
+        await client.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
     };
 
     return { moveItem };

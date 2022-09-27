@@ -287,7 +287,7 @@ const Row = React.memo(({ index, style, data: { pages, selectedPage, toggleExpan
             }}
         >
             <PageTreeRowDivider align="top" leftSpacing={0} highlight={false} />
-            <sc.PageInfoCell component="div">
+            <sc.PageInfoCell component="div" title={page.name}>
                 <PageInfo page={page} toggleExpand={toggleExpand}>
                     <PageLabel page={page} onClick={handleRowClick} disabled={disabled} />
                 </PageInfo>

@@ -54,7 +54,7 @@ const FolderInnerMenu = ({ folder, handleClose }: FolderInnerMenuProps): React.R
                 }
             `,
             variables: { id: folder.id },
-            refetchQueries: [namedOperations.Query.DamList],
+            refetchQueries: [namedOperations.Query.DamItemsList],
         });
 
         if (!data?.deleteSuccessful) {
@@ -179,7 +179,7 @@ const FileInnerMenu = ({ file, handleClose }: FileInnerMenuProps): React.ReactEl
                             await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
                                 mutation: deleteDamFileMutation,
                                 variables: { id: file.id },
-                                refetchQueries: [namedOperations.Query.DamList],
+                                refetchQueries: [namedOperations.Query.DamItemsList],
                             });
                         }
 

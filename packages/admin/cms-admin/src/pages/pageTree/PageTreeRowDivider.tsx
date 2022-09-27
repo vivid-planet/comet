@@ -1,16 +1,21 @@
-import { styled } from "@mui/material/styles";
+import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 
-const Root = styled("div")`
-    position: relative;
+const Root = styled("div")<Pick<Props, "align">>`
+    position: absolute;
     width: 100%;
+
+    ${({ align }) =>
+        align === "top"
+            ? css`
+                  top: 0;
+              `
+            : css`
+                  bottom: 0;
+              `}
 `;
 
-interface HighlightProps {
-    leftSpacing: number;
-}
-
-const Highlight = styled("div")<HighlightProps>`
+const Highlight = styled("div")<Pick<Props, "leftSpacing">>`
     position: absolute;
     z-index: 1;
     left: 0;
@@ -45,7 +50,7 @@ interface Props {
 
 export function PageTreeRowDivider({ align, leftSpacing, highlight }: Props): React.ReactElement {
     return (
-        <Root>
+        <Root align={align}>
             {align === "top" && highlight && <TopHighlight leftSpacing={leftSpacing} />}
             {align === "bottom" && <>{highlight && <BottomHighlight leftSpacing={leftSpacing} />}</>}
         </Root>
