@@ -326,7 +326,7 @@ type Query {
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News
   newsBySlug(slug: String!): News
-  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, filter: NewsFilter): PaginatedNews!
+  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, query: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -335,7 +335,7 @@ type Query {
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   product(id: ID!): Product
   productBySlug(slug: String!): Product
-  products(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, filter: ProductFilter): PaginatedProducts!
+  products(offset: Int = 0, limit: Int = 20, query: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
 }
 
 enum SortDirection {
@@ -371,6 +371,7 @@ input FolderFilterInput {
 input NewsFilter {
   slug: StringFilter
   title: StringFilter
+  visible: BooleanFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
 }
@@ -381,6 +382,22 @@ input StringFilter {
   endsWith: String
   eq: String
   neq: String
+}
+
+input BooleanFilter {
+  eq: Boolean
+}
+
+input NewsSort {
+  field: NewsSortField!
+  direction: SortDirection = ASC
+}
+
+enum NewsSortField {
+  slug
+  title
+  category
+  visible
 }
 
 input ProductFilter {
@@ -398,6 +415,17 @@ input NumberFilter {
   lte: Float
   gte: Float
   neq: Float
+}
+
+input ProductSort {
+  field: ProductSortField!
+  direction: SortDirection = ASC
+}
+
+enum ProductSortField {
+  title
+  slug
+  price
 }
 
 type Mutation {
@@ -528,6 +556,7 @@ input UpdateDamFolderInput {
 input NewsInput {
   slug: String!
   title: String!
+  visible: Boolean!
   image: JSONObject!
   content: JSONObject!
 }
