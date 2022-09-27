@@ -25,7 +25,7 @@ describe("mikroOrmQueryFields", () => {
 describe("filterToMikroOrmQuery", () => {
     it("string equal", async () => {
         const f = new StringFilter();
-        f.eq = "foo";
+        f.equal = "foo";
 
         expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
             $eq: "foo",
@@ -33,7 +33,7 @@ describe("filterToMikroOrmQuery", () => {
     });
     it("string not equal", async () => {
         const f = new StringFilter();
-        f.neq = "foo";
+        f.notEqual = "foo";
 
         expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
             $ne: "foo",
@@ -90,7 +90,7 @@ describe("filterToMikroOrmQuery", () => {
     });
     it("number equals", async () => {
         const f = new NumberFilter();
-        f.eq = 123;
+        f.equal = 123;
 
         expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
             $eq: 123,
@@ -98,7 +98,7 @@ describe("filterToMikroOrmQuery", () => {
     });
     it("number not equals", async () => {
         const f = new NumberFilter();
-        f.neq = 123;
+        f.notEqual = 123;
 
         expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
             $ne: 123,
@@ -106,7 +106,7 @@ describe("filterToMikroOrmQuery", () => {
     });
     it("number gt", async () => {
         const f = new NumberFilter();
-        f.gt = 123;
+        f.geraterThan = 123;
 
         expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
             $gt: 123,
@@ -114,7 +114,7 @@ describe("filterToMikroOrmQuery", () => {
     });
     it("boolean equals", async () => {
         const f = new BooleanFilter();
-        f.eq = true;
+        f.equal = true;
 
         expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
             $eq: true,
@@ -136,7 +136,7 @@ describe("mikroOrmFilter", () => {
     it("string equal", async () => {
         const f = new FooFilter();
         f.foo = new StringFilter();
-        f.foo.eq = "bar";
+        f.foo.equal = "bar";
 
         expect(mikroOrmFilter(f)).toStrictEqual({
             foo: {

@@ -35,53 +35,53 @@ export function filterToMikroOrmQuery(
                 };
             });
         }
-        if (filterProperty.eq !== undefined) {
-            ret.$eq = filterProperty.eq;
+        if (filterProperty.equal !== undefined) {
+            ret.$eq = filterProperty.equal;
         }
-        if (filterProperty.neq !== undefined) {
-            ret.$ne = filterProperty.neq;
+        if (filterProperty.notEqual !== undefined) {
+            ret.$ne = filterProperty.notEqual;
         }
     } else if (filterProperty instanceof NumberFilter) {
-        if (filterProperty.eq !== undefined) {
-            ret.$eq = filterProperty.eq;
+        if (filterProperty.equal !== undefined) {
+            ret.$eq = filterProperty.equal;
         }
-        if (filterProperty.lt !== undefined) {
-            ret.$lt = filterProperty.lt;
+        if (filterProperty.lowerThan !== undefined) {
+            ret.$lt = filterProperty.lowerThan;
         }
-        if (filterProperty.gt !== undefined) {
-            ret.$gt = filterProperty.gt;
+        if (filterProperty.geraterThan !== undefined) {
+            ret.$gt = filterProperty.geraterThan;
         }
-        if (filterProperty.lte !== undefined) {
-            ret.$lte = filterProperty.lte;
+        if (filterProperty.lowerThanEqual !== undefined) {
+            ret.$lte = filterProperty.lowerThanEqual;
         }
-        if (filterProperty.gte !== undefined) {
-            ret.$gte = filterProperty.gte;
+        if (filterProperty.greaterThanEqual !== undefined) {
+            ret.$gte = filterProperty.greaterThanEqual;
         }
-        if (filterProperty.neq !== undefined) {
-            ret.$ne = filterProperty.neq;
+        if (filterProperty.notEqual !== undefined) {
+            ret.$ne = filterProperty.notEqual;
         }
     } else if (filterProperty instanceof DateFilter) {
-        if (filterProperty.eq !== undefined) {
-            ret.$eq = filterProperty.eq;
+        if (filterProperty.equal !== undefined) {
+            ret.$eq = filterProperty.equal;
         }
-        if (filterProperty.lt !== undefined) {
-            ret.$lt = filterProperty.lt;
+        if (filterProperty.lowerThan !== undefined) {
+            ret.$lt = filterProperty.lowerThan;
         }
-        if (filterProperty.gt !== undefined) {
-            ret.$gt = filterProperty.gt;
+        if (filterProperty.geraterThan !== undefined) {
+            ret.$gt = filterProperty.geraterThan;
         }
-        if (filterProperty.lte !== undefined) {
-            ret.$lte = filterProperty.lte;
+        if (filterProperty.lowerThanEqual !== undefined) {
+            ret.$lte = filterProperty.lowerThanEqual;
         }
-        if (filterProperty.gte !== undefined) {
-            ret.$gte = filterProperty.gte;
+        if (filterProperty.greaterThanEqual !== undefined) {
+            ret.$gte = filterProperty.greaterThanEqual;
         }
-        if (filterProperty.neq !== undefined) {
-            ret.$ne = filterProperty.neq;
+        if (filterProperty.notEqual !== undefined) {
+            ret.$ne = filterProperty.notEqual;
         }
     } else if (filterProperty instanceof BooleanFilter) {
-        if (filterProperty.eq !== undefined) {
-            ret.$eq = filterProperty.eq;
+        if (filterProperty.equal !== undefined) {
+            ret.$eq = filterProperty.equal;
         }
     } else {
         throw new Error(`Unsupported filter`);

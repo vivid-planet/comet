@@ -380,12 +380,12 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
-  eq: String
-  neq: String
+  equal: String
+  notEqual: String
 }
 
 input BooleanFilter {
-  eq: Boolean
+  equal: Boolean
 }
 
 input NewsSort {
@@ -409,12 +409,12 @@ input ProductFilter {
 }
 
 input NumberFilter {
-  eq: Float
-  lt: Float
-  gt: Float
-  lte: Float
-  gte: Float
-  neq: Float
+  equal: Float
+  lowerThan: Float
+  geraterThan: Float
+  lowerThanEqual: Float
+  greaterThanEqual: Float
+  notEqual: Float
 }
 
 input ProductSort {

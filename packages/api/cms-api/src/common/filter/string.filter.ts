@@ -21,10 +21,10 @@ export class StringFilter {
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
-    eq?: string;
+    equal?: string;
 
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
-    neq?: string;
+    notEqual?: string;
 }

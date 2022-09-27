@@ -6,5 +6,5 @@ export class BooleanFilter {
     @Field({ nullable: true })
     @IsOptional()
     @IsBoolean()
-    eq?: boolean;
+    equal?: boolean;
 }
