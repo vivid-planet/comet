@@ -20,7 +20,6 @@ const generate = new Command("generate").action(async (options) => {
         }
         {
             const generatorOptions = Reflect.getMetadata(`data:crudSingleGeneratorOptions`, entity.class) as CrudSingleGeneratorOptions | undefined;
-            console.log(generatorOptions);
             if (generatorOptions) {
                 await generateCrudSingle(generatorOptions, entity);
             }
