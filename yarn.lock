@@ -4252,6 +4252,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.19.0":
+  version: 7.19.0
+  resolution: "@babel/runtime@npm:7.19.0"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: fa69c351bb05e1db3ceb9a02fdcf620c234180af68cdda02152d3561015f6d55277265d3109815992f96d910f3db709458cae4f8df1c3def66f32e0867d82294
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.12.7, @babel/template@npm:^7.16.7, @babel/template@npm:^7.3.3":
   version: 7.16.7
   resolution: "@babel/template@npm:7.16.7"
@@ -4658,7 +4667,7 @@ __metadata:
     "@mui/icons-material": ^5.0.0
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
-    "@mui/x-data-grid-pro": ^5.0.0
+    "@mui/x-data-grid": ^5.0.0
     exceljs: ^3.4.0
     file-saver: ^2.0.2
     final-form: ^4.16.1
@@ -8402,6 +8411,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/utils@npm:^5.10.3":
+  version: 5.10.6
+  resolution: "@mui/utils@npm:5.10.6"
+  dependencies:
+    "@babel/runtime": ^7.19.0
+    "@types/prop-types": ^15.7.5
+    "@types/react-is": ^16.7.1 || ^17.0.0
+    prop-types: ^15.8.1
+    react-is: ^18.2.0
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0
+  checksum: 794d856b820d3b65f74af32f479fc3ace9693473ae19c54c4d64d655fd162e8e6a16b7429a87d9fa81081bacb70e1c488851599692644124b4b312bbbcaacba4
+  languageName: node
+  linkType: hard
+
 "@mui/utils@npm:^5.4.1, @mui/utils@npm:^5.6.0, @mui/utils@npm:^5.8.4":
   version: 5.8.4
   resolution: "@mui/utils@npm:5.8.4"
@@ -8432,12 +8456,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid@npm:^5.0.0":
-  version: 5.16.0
-  resolution: "@mui/x-data-grid@npm:5.16.0"
+"@mui/x-data-grid-pro@npm:^5.15.2":
+  version: 5.17.4
+  resolution: "@mui/x-data-grid-pro@npm:5.17.4"
   dependencies:
     "@babel/runtime": ^7.18.9
-    "@mui/utils": ^5.9.3
+    "@mui/utils": ^5.10.3
+    "@mui/x-data-grid": 5.17.4
+    "@mui/x-license-pro": 5.17.0
+    "@types/format-util": ^1.0.2
     clsx: ^1.2.1
     prop-types: ^15.8.1
     reselect: ^4.1.6
@@ -8446,7 +8473,25 @@ __metadata:
     "@mui/system": ^5.4.1
     react: ^17.0.2 || ^18.0.0
     react-dom: ^17.0.2 || ^18.0.0
-  checksum: e339384f2fcdda9167bb100252da6a271a50e8d19d3ab0f79c4c56ab366876d809a4432551106d3b6c40687f9315c88cd799e2273159c70808d400edef676764
+  checksum: 80b44e1512bfc8dbf45b8efe4de694d3398aa8e693343d7235f6edd9fc525240ed72e23413b6ef05888c73078167bb506ce8d693cd8c51812c283744ae644f60
+  languageName: node
+  linkType: hard
+
+"@mui/x-data-grid@npm:5.17.4, @mui/x-data-grid@npm:^5.15.2":
+  version: 5.17.4
+  resolution: "@mui/x-data-grid@npm:5.17.4"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@mui/utils": ^5.10.3
+    clsx: ^1.2.1
+    prop-types: ^15.8.1
+    reselect: ^4.1.6
+  peerDependencies:
+    "@mui/material": ^5.4.1
+    "@mui/system": ^5.4.1
+    react: ^17.0.2 || ^18.0.0
+    react-dom: ^17.0.2 || ^18.0.0
+  checksum: 9f88883fd9c99600ade8debc78d81ac4829690dede2c440f8feffae7832c3147c6e5d9e5a894b9fa36c043add4d2698496f82ab1988139f602375dbaed1f59a2
   languageName: node
   linkType: hard
 
@@ -8482,6 +8527,18 @@ __metadata:
     moment:
       optional: true
   checksum: 83d69f199a2ca8b4b3826fe2c89ab23030cff2beff6dc35297e3a25e7844d1e83745d438c527af9439ee78b0c313ca8f30229c5df361a6f01695dee1a525faf0
+  languageName: node
+  linkType: hard
+
+"@mui/x-license-pro@npm:5.17.0":
+  version: 5.17.0
+  resolution: "@mui/x-license-pro@npm:5.17.0"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@mui/utils": ^5.9.3
+  peerDependencies:
+    react: ^17.0.2 || ^18.0.0
+  checksum: 49ee29c8b3113b4b078f4225b484b7b715452baf6ac61b58f8322387401150ecd617f5e5c42b14b7bd6a2035f5ad0b231cb4c389dc0ea5158a3935c38ac377f6
   languageName: node
   linkType: hard
 
@@ -10979,6 +11036,13 @@ __metadata:
   dependencies:
     final-form: 4.x.x
   checksum: cbb56f511c014e885cce3988c8fdafe5922a2170fe12add930b5a79e732e079c8810f0747758fb8028b36075505fb0be585b870391d606628f5bbf942fb71340
+  languageName: node
+  linkType: hard
+
+"@types/format-util@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@types/format-util@npm:1.0.2"
+  checksum: 59b5d0f7d83cd64cd4ef57485db1f62d232c48e1d30b04f78386de974446ed57d3415134fcdaa2e8052baf0926b89148a34f6575ab21245fea77802a9f4de0a3
   languageName: node
   linkType: hard
 
@@ -16114,7 +16178,8 @@ __metadata:
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
     "@mui/system": ^5.0.0
-    "@mui/x-data-grid": ^5.0.0
+    "@mui/x-data-grid": ^5.15.2
+    "@mui/x-data-grid-pro": ^5.15.2
     "@ory/hydra-client": ^1.0.0
     "@types/draft-js": ^0.10.0
     "@types/final-form-set-field-touched": ^1.0.0
@@ -16168,6 +16233,7 @@ __metadata:
     pascal-case: ^3.0.0
     prettier: ^2.0.0
     prop-types: ^15.7.2
+    query-string: ^7.1.1
     react: ^17.0.2
     react-app-polyfill: ^1.0.0
     react-copy-to-clipboard: ^5.0.0
@@ -30144,7 +30210,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"query-string@npm:^7.0.0":
+"query-string@npm:^7.0.0, query-string@npm:^7.1.1":
   version: 7.1.1
   resolution: "query-string@npm:7.1.1"
   dependencies:

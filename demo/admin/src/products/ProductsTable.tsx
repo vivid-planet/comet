@@ -14,7 +14,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Alert, Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColDef, GridSortModel, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -50,7 +50,7 @@ function ProductsTableToolbar() {
 }
 
 const columns: GridColDef<GQLProductsListFragmentFragment>[] = [
-    { field: "name", headerName: "Name", width: 150 },
+    { field: "title", headerName: "Title", width: 150 },
     { field: "description", headerName: "Description", width: 150 },
     { field: "price", headerName: "Price", width: 150, type: "number" },
     {
@@ -88,6 +88,17 @@ const columns: GridColDef<GQLProductsListFragmentFragment>[] = [
         },
     },
 ];
+
+function muiGridSortToGql(sortModel?: GridSortModel) {
+    if (!sortModel) return undefined;
+    return sortModel.map((i) => {
+        return {
+            field: i.field as any,
+            direction: (i.sort == "desc" ? "DESC" : "ASC") as "DESC" | "ASC",
+        };
+    });
+}
+
 function ProductsTable() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
@@ -100,8 +111,7 @@ function ProductsTable() {
             query,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
-            sortColumnName: sortModel && sortModel.length > 0 ? sortModel[0].field : undefined,
-            sortDirection: sortModel && sortModel.length > 0 ? (sortModel[0].sort == "desc" ? "DESC" : "ASC") : undefined,
+            sort: muiGridSortToGql(sortModel),
         },
     });
     const rows = data?.products.nodes ?? [];
@@ -137,17 +147,18 @@ function ProductsTable() {
 
 const productsFragment = gql`
     fragment ProductsListFragment on Product {
-        id
-        name
+        slug
+        title
         description
         price
     }
 `;
 
 const productsQuery = gql`
-    query ProductsList($offset: Int, $limit: Int, $sortColumnName: String, $sortDirection: SortDirection, $filter: ProductFilter, $query: String) {
-        products(offset: $offset, limit: $limit, sortColumnName: $sortColumnName, sortDirection: $sortDirection, filter: $filter, query: $query) {
+    query ProductsList($offset: Int, $limit: Int, $sort: [ProductSort!], $filter: ProductFilter, $query: String) {
+        products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, query: $query) {
             nodes {
+                id
                 ...ProductsListFragment
             }
             totalCount
@@ -164,7 +175,7 @@ const deleteProductMutation = gql`
 
 const createProductMutation = gql`
     mutation CreateProduct($input: ProductInput!) {
-        addProduct(data: $input) {
+        createProduct(input: $input) {
             id
         }
     }

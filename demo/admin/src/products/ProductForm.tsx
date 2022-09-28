@@ -18,8 +18,10 @@ import { EditPageLayout } from "@comet/cms-admin";
 import { CircularProgress, IconButton } from "@mui/material";
 import {
     GQLProductFormCreateProductMutation,
+    GQLProductFormCreateProductMutationVariables,
+    GQLProductFormFragmentFragment,
     GQLProductFormUpdateProductMutation,
-    GQLProductInput,
+    GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
 } from "@src/graphql.generated";
@@ -34,22 +36,31 @@ interface FormProps {
     id?: string;
 }
 
+type FormState = Omit<GQLProductFormFragmentFragment, "price"> & {
+    price: string;
+};
+
 function ProductForm({ id }: FormProps): React.ReactElement {
     const intl = useIntl();
     const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
 
-    const handleSubmit = async (input: GQLProductInput) => {
+    const handleSubmit = async (formState: FormState) => {
+        const input = {
+            ...formState,
+            price: parseFloat(formState.price),
+        };
         if (mode === "edit") {
-            await client.mutate<GQLProductFormUpdateProductMutation>({
+            if (!id) throw new Error();
+            await client.mutate<GQLProductFormUpdateProductMutation, GQLProductFormUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, data: input },
+                variables: { id, input },
             });
         } else {
-            await client.mutate<GQLProductFormCreateProductMutation>({
+            await client.mutate<GQLProductFormCreateProductMutation, GQLProductFormCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { data: input },
+                variables: { input },
             });
         }
     };
@@ -68,7 +79,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<GQLProductInput>
+        <FinalForm<FormState>
             onSubmit={handleSubmit}
             mode={mode}
             initialValues={initialValues}
@@ -86,7 +97,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             </IconButton>
                         </ToolbarItem>
                         <ToolbarTitleItem>
-                            {values.name ? values.name : <FormattedMessage id="comet.products.productDetail" defaultMessage="Product Detail" />}
+                            {values.title ? values.title : <FormattedMessage id="comet.products.productDetail" defaultMessage="Product Detail" />}
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
@@ -116,9 +127,16 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field
                             required
                             fullWidth
-                            name="name"
+                            name="title"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "demo.product.name", defaultMessage: "Name" })}
+                            label={intl.formatMessage({ id: "demo.product.title", defaultMessage: "Titel" })}
+                        />
+                        <Field
+                            required
+                            fullWidth
+                            name="slug"
+                            component={FinalFormInput}
+                            label={intl.formatMessage({ id: "demo.product.slug", defaultMessage: "Slug" })}
                         />
                         <Field
                             required
@@ -130,7 +148,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             label={intl.formatMessage({ id: "demo.product.description", defaultMessage: "Beschreibung" })}
                         />
                         <Field
-                            required
                             fullWidth
                             name="price"
                             component={FinalFormInput}
