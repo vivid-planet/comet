@@ -89,7 +89,7 @@ export function filterToMikroOrmQuery(
     return ret;
 }
 
-export function mikroOrmFilter(
+export function filtersToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filter: any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,7 +125,7 @@ export function mikroOrmFilter(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mikroOrmQueryFields(query: string, fields: string[]): ObjectQuery<any> {
+export function queryToMikroOrmQuery(query: string, fields: string[]): ObjectQuery<any> {
     const quotedQuery = query.replace(/([%_\\])/g, "\\$1");
     return {
         $or: fields.map((field) => {

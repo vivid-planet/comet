@@ -1,22 +1,22 @@
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
-import { filterToMikroOrmQuery, mikroOrmFilter, mikroOrmQueryFields } from "./mikro-orm";
+import { filtersToMikroOrmQuery, filterToMikroOrmQuery, queryToMikroOrmQuery } from "./mikro-orm";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
 
-describe("mikroOrmQueryFields", () => {
+describe("queryToMikroOrmQuery", () => {
     it("should work", async () => {
-        expect(mikroOrmQueryFields("foo", ["title", "description"])).toStrictEqual({
+        expect(queryToMikroOrmQuery("foo", ["title", "description"])).toStrictEqual({
             $or: [{ title: { $ilike: "%foo%" } }, { description: { $ilike: "%foo%" } }],
         });
     });
     it("should escape %", async () => {
-        expect(mikroOrmQueryFields("fo%o", ["title", "description"])).toStrictEqual({
+        expect(queryToMikroOrmQuery("fo%o", ["title", "description"])).toStrictEqual({
             $or: [{ title: { $ilike: "%fo\\%o%" } }, { description: { $ilike: "%fo\\%o%" } }],
         });
     });
     it("should escape _", async () => {
-        expect(mikroOrmQueryFields("fo_o", ["title", "description"])).toStrictEqual({
+        expect(queryToMikroOrmQuery("fo_o", ["title", "description"])).toStrictEqual({
             $or: [{ title: { $ilike: "%fo\\_o%" } }, { description: { $ilike: "%fo\\_o%" } }],
         });
     });
@@ -132,13 +132,13 @@ class Foo2Filter {
     foo?: Equals42;
     str?: StringFilter;
 }
-describe("mikroOrmFilter", () => {
+describe("filtersToMikroOrmQuery", () => {
     it("string equal", async () => {
         const f = new FooFilter();
         f.foo = new StringFilter();
         f.foo.equal = "bar";
 
-        expect(mikroOrmFilter(f)).toStrictEqual({
+        expect(filtersToMikroOrmQuery(f)).toStrictEqual({
             foo: {
                 $eq: "bar",
             },
@@ -152,7 +152,7 @@ describe("mikroOrmFilter", () => {
         f.and[1].foo = new StringFilter();
         f.and[1].foo.contains = "123";
 
-        expect(mikroOrmFilter(f)).toStrictEqual({
+        expect(filtersToMikroOrmQuery(f)).toStrictEqual({
             $and: [
                 {
                     foo: {
@@ -175,7 +175,7 @@ describe("mikroOrmFilter", () => {
         f.or[1].foo = new StringFilter();
         f.or[1].foo.contains = "123";
 
-        expect(mikroOrmFilter(f)).toStrictEqual({
+        expect(filtersToMikroOrmQuery(f)).toStrictEqual({
             $or: [
                 {
                     foo: {
@@ -195,7 +195,7 @@ describe("mikroOrmFilter", () => {
         f.foo = new Equals42();
 
         expect(
-            mikroOrmFilter(f, (acc, filterValue, filterKey) => {
+            filtersToMikroOrmQuery(f, (acc, filterValue, filterKey) => {
                 if (filterValue instanceof Equals42) {
                     acc[filterKey] = 42;
                 } else {
@@ -212,7 +212,7 @@ describe("mikroOrmFilter", () => {
         f.str = new StringFilter();
         f.str.contains = "abc";
         expect(
-            mikroOrmFilter(f, (acc, filterValue, filterKey) => {
+            filtersToMikroOrmQuery(f, (acc, filterValue, filterKey) => {
                 if (filterValue instanceof Equals42) {
                     acc[filterKey] = 42;
                 } else if (

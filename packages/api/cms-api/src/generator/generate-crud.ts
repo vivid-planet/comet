@@ -187,7 +187,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     `;
         await writeGenerated(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
 
-        const serviceOut = `import { mikroOrmFilter, mikroOrmQueryFields } from "@comet/cms-api";
+        const serviceOut = `import { filtersToMikroOrmQuery, queryToMikroOrmQuery } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
@@ -208,7 +208,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 hasQueryArg
                     ? `
             if (options.query) {
-                andFilters.push(mikroOrmQueryFields(options.query, [${crudQueryProps.map((prop) => `"${prop.name}", `).join("")}]));
+                andFilters.push(queryToMikroOrmQuery(options.query, [${crudQueryProps.map((prop) => `"${prop.name}", `).join("")}]));
             }
             `
                     : ""
@@ -217,7 +217,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 hasFilterArg
                     ? `
             if (options.filter) {
-                andFilters.push(mikroOrmFilter(options.filter));
+                andFilters.push(filtersToMikroOrmQuery(options.filter));
             }
             `
                     : ""
