@@ -123,6 +123,7 @@ export interface ITableProps<TRow extends IRow> {
     sortApi?: ISortApi;
     paginationPosition?: "bottom" | "top" | "both";
     exportApis?: Array<IExportApi<TRow>>;
+    className?: string;
 }
 
 function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRowProps<TRow>) {
@@ -157,7 +158,7 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
         const shouldRenderBottomPagination = paginationPosition === "bottom" || paginationPosition === "both";
 
         return (
-            <MuiTable ref={this.domRef}>
+            <MuiTable ref={this.domRef} className={this.props.className}>
                 {!this.props.hideTableHead && (
                     <TableHead>
                         {this.props.pagingInfo && shouldRenderTopPagination && (
