@@ -14,7 +14,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Alert, Button, IconButton } from "@mui/material";
+import { Alert, Box, Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateProductMutation,
@@ -118,21 +118,19 @@ function ProductsTable() {
     }
 
     return (
-        <div>
-            <div style={{ height: 600, width: "100%" /* TODO use full height (DataGrid fullHeight will make paging scroll down) */ }}>
-                <DataGridPro
-                    {...dataGridProps}
-                    disableSelectionOnClick
-                    rows={rows}
-                    rowCount={rowCount}
-                    columns={columns}
-                    loading={loading}
-                    components={{
-                        Toolbar: ProductsTableToolbar,
-                    }}
-                />
-            </div>
-        </div>
+        <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
+            <DataGridPro
+                {...dataGridProps}
+                disableSelectionOnClick
+                rows={rows}
+                rowCount={rowCount}
+                columns={columns}
+                loading={loading}
+                components={{
+                    Toolbar: ProductsTableToolbar,
+                }}
+            />
+        </Box>
     );
 }
 
