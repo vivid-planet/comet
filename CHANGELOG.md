@@ -9,10 +9,12 @@ All notable changes to this project will be documented in this file. This projec
 ### Changes
 
 -   `comet.generic` messages are exposed as public API through `messages.ts` (this stops them from being translated for every application)
+-   `StackBreadcrumbs` has a new design and shows an overflow menu when the items don't fit into a single line.
 
 ### Incompatible Changes
 
 -   Removed the `Select` component, use MUIs `Select` instead.
+-   `StackBreadcrumbs` no longer supports props from MUIs `Breadcrumbs` component.
 -   Upgraded class-transformer from 0.3.1 to 0.5.x, see [CHANGELOG](https://github.com/typestack/class-transformer/blob/develop/CHANGELOG.md)
 
 ### Bugfixes

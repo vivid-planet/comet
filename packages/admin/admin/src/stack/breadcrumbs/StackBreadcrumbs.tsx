@@ -1,46 +1,62 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { Breadcrumbs as MuiBreadcrumbs, BreadcrumbsProps, ComponentsOverrides, Link, Theme, Typography } from "@mui/material";
+import { ComponentsOverrides, Theme, useTheme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
-import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
+import useResizeAware from "react-resize-aware";
 
-import { StackApiContext } from "../Api";
+import { useStackApi } from "../Api";
 import { StackBreadcrumbsClassKey, styles } from "./StackBreadcrumbs.styles";
+import { getElementOuterWidth, useItemsToRender } from "./utils";
 
-export type StackBreadcrumbsProps = BreadcrumbsProps;
-
-const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ href, to, ...rest }, ref) => (
-    <RouterLink innerRef={ref} to={to ?? href} {...rest} />
-));
+export interface StackBreadcrumbsProps {
+    separator?: React.ReactNode;
+    overflowLinkText?: React.ReactNode;
+}
 
 const StackBreadcrumbsComponent = ({
-    separator = <ChevronRight />,
     classes,
-    ...otherProps
-}: StackBreadcrumbsProps & WithStyles<typeof styles>): React.ReactElement => {
-    return (
-        <StackApiContext.Consumer>
-            {(stackApi) => {
-                return (
-                    <MuiBreadcrumbs
-                        classes={{ root: classes.root, ol: classes.ol, li: classes.li, separator: classes.separator }}
-                        separator={separator}
-                        {...otherProps}
-                    >
-                        {stackApi?.breadCrumbs.map(({ id, url, title }, index) => {
-                            const isLast = index + 1 >= stackApi?.breadCrumbs.length;
-                            const linkClassName = classes.link + (isLast ? ` ${classes.last}` : "");
+    separator,
+    overflowLinkText = ". . .",
+}: StackBreadcrumbsProps & WithStyles<typeof styles>): React.ReactElement | null => {
+    const stackApi = useStackApi();
+    const { palette } = useTheme();
+    const [breadcrumbsResizeListener, { width: containerWidth }] = useResizeAware();
+    const breadcrumbsRef = React.useRef<HTMLDivElement>(null);
+    const [itemWidths, setItemWidths] = React.useState<number[] | undefined>();
 
-                            return (
-                                <Link key={id} to={url} component={BreadcrumbLink} className={linkClassName}>
-                                    <Typography variant="body2">{title}</Typography>
-                                </Link>
-                            );
-                        })}
-                    </MuiBreadcrumbs>
-                );
-            }}
-        </StackApiContext.Consumer>
+    const breadcrumbItems = React.useMemo(() => stackApi?.breadCrumbs ?? [], [stackApi]);
+
+    React.useEffect(() => {
+        setItemWidths(undefined);
+    }, [breadcrumbItems]);
+
+    React.useEffect(() => {
+        if (breadcrumbItems?.length && !itemWidths?.length) {
+            const listItems = breadcrumbsRef.current?.getElementsByClassName(classes.listItem);
+            const newItemWidths = listItems ? Object.values(listItems).map((listItem) => getElementOuterWidth(listItem)) : [];
+            setItemWidths(newItemWidths);
+        }
+    }, [breadcrumbItems, itemWidths, classes.listItem]);
+
+    const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
+    const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, classes, itemWidths, overflowLinkText, backButtonUrl);
+
+    if (!breadcrumbItems) return null;
+
+    return (
+        <div className={classes.root}>
+            {breadcrumbsResizeListener}
+            <div className={classes.breadcrumbs} ref={breadcrumbsRef}>
+                {itemsToRender.map((item, index) => (
+                    <div className={classes.listItem} key={index}>
+                        {item}
+                        {index < itemsToRender.length - 1 && (
+                            <div className={classes.separator}>{separator ?? <ChevronRight fontSize="inherit" htmlColor={palette.grey[300]} />}</div>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 };
 
