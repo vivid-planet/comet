@@ -246,6 +246,7 @@ type News implements DocumentInterface {
   image: JSONObject!
   content: JSONObject!
   createdAt: DateTime!
+  comments: [NewsComment!]!
 }
 
 enum NewsCategory {
