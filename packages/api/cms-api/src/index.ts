@@ -51,6 +51,11 @@ export { CometEntityNotFoundException } from "./common/errors/entity-not-found.e
 export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
+export { BooleanFilter } from "./common/filter/boolean.filter";
+export { DateFilter } from "./common/filter/date.filter";
+export { filtersToMikroOrmQuery, queryToMikroOrmQuery } from "./common/filter/mikro-orm";
+export { NumberFilter } from "./common/filter/number.filter";
+export { StringFilter } from "./common/filter/string.filter";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";
 export { PaginatedResponseFactory } from "./common/pagination/paginated-response.factory";
 export { SortArgs } from "./common/sorting/sort.args";
@@ -95,6 +100,14 @@ export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
+export {
+    CrudField,
+    CrudFieldOptions,
+    CrudGenerator,
+    CrudGeneratorOptions,
+    CrudSingleGenerator,
+    CrudSingleGeneratorOptions,
+} from "./generator/crud-generator.decorator";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";

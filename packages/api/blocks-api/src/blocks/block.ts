@@ -7,6 +7,7 @@ import { BlockMigrationInterface } from "../migrations/types";
 import { SearchText } from "../search/get-search-text";
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
 import { TransformDependencies } from "./dependencies";
+import { lookupPath } from "./helpers/lookupPath";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
@@ -210,6 +211,7 @@ export type Block<BlockType extends BlockDataInterface = BlockDataInterface, Blo
     blockInputFactory: BlockInputFactory<BlockInputType>;
     blockMeta: BlockMetaInterface;
     blockInputMeta: BlockMetaInterface;
+    path: string | undefined;
 };
 
 const blocks: Block[] = [];
@@ -271,6 +273,7 @@ export function createBlock<BlockType extends BlockDataInterface, BlockInputType
         blockInputFactory: decorateBlockInputFactory,
         blockMeta: options.blockMeta ? options.blockMeta : new AnnotationBlockMeta(BlockData),
         blockInputMeta: options.blockInputMeta ? options.blockInputMeta : new AnnotationBlockMeta(BlockInput),
+        path: lookupPath(),
     };
 
     const finalBlock = overwrite(block);

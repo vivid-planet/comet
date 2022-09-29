@@ -260,6 +260,21 @@ type PaginatedNews {
   totalCount: Int!
 }
 
+type Product implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  title: String!
+  slug: String!
+  description: String!
+  price: Float
+  createdAt: DateTime!
+}
+
+type PaginatedProducts {
+  nodes: [Product!]!
+  totalCount: Int!
+}
+
 type Redirect implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -318,14 +333,17 @@ type Query {
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News
-  newsBySlug(scope: NewsContentScopeInput!, slug: String!): News
-  newsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, category: NewsCategory, scope: NewsContentScopeInput!): PaginatedNews!
+  newsBySlug(slug: String!): News
+  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, query: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  product(id: ID!): Product
+  productBySlug(slug: String!): Product
+  products(offset: Int = 0, limit: Int = 20, query: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
 }
 
 enum SortDirection {
@@ -358,6 +376,68 @@ input FolderFilterInput {
   searchText: String
 }
 
+input NewsFilter {
+  slug: StringFilter
+  title: StringFilter
+  visible: BooleanFilter
+  and: [NewsFilter!]
+  or: [NewsFilter!]
+}
+
+input StringFilter {
+  contains: String
+  startsWith: String
+  endsWith: String
+  equal: String
+  notEqual: String
+}
+
+input BooleanFilter {
+  equal: Boolean
+}
+
+input NewsSort {
+  field: NewsSortField!
+  direction: SortDirection = ASC
+}
+
+enum NewsSortField {
+  slug
+  title
+  category
+  visible
+}
+
+input ProductFilter {
+  title: StringFilter
+  slug: StringFilter
+  description: StringFilter
+  price: NumberFilter
+  and: [ProductFilter!]
+  or: [ProductFilter!]
+}
+
+input NumberFilter {
+  equal: Float
+  lowerThan: Float
+  geraterThan: Float
+  lowerThanEqual: Float
+  greaterThanEqual: Float
+  notEqual: Float
+}
+
+input ProductSort {
+  field: ProductSortField!
+  direction: SortDirection = ASC
+}
+
+enum ProductSortField {
+  title
+  slug
+  description
+  price
+}
+
 type Mutation {
   savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
   saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
@@ -383,14 +463,17 @@ type Mutation {
   deleteDamFolder(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!
-  updateNewsVisibility(id: ID!, visible: Boolean!): News!
   deleteNews(id: ID!): Boolean!
+  updateNewsVisibility(id: ID!, visible: Boolean!): News!
   createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
   updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
   saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
+  createProduct(input: ProductInput!): Product!
+  updateProduct(id: ID!, input: ProductInput!, lastUpdatedAt: DateTime): Product!
+  deleteProduct(id: ID!): Boolean!
 }
 
 input PageInput {
@@ -484,10 +567,9 @@ input UpdateDamFolderInput {
 }
 
 input NewsInput {
-  title: String!
   slug: String!
-  date: DateTime!
-  category: NewsCategory!
+  title: String!
+  visible: Boolean!
   image: JSONObject!
   content: JSONObject!
 }
@@ -506,4 +588,11 @@ input FooterInput {
 
 input PredefinedPageInput {
   type: String
+}
+
+input ProductInput {
+  title: String!
+  slug: String!
+  description: String!
+  price: Float
 }

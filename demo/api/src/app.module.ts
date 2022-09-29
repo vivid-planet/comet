@@ -41,6 +41,7 @@ import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
+import { ProductsModule } from "./products/products.module";
 
 @Module({
     imports: [
@@ -191,6 +192,7 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
         MenusModule,
         FooterModule,
         PredefinedPageModule,
+        ProductsModule,
     ],
     providers: [{ provide: APP_GUARD, useClass: GlobalAuthGuard }],
 })
