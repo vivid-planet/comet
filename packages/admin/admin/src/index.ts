@@ -38,6 +38,7 @@ export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
+export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";

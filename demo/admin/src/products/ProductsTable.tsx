@@ -3,6 +3,7 @@ import {
     CrudContextMenu,
     GridFilterButton,
     muiGridFilterToGql,
+    muiGridSortToGql,
     StackLink,
     Toolbar,
     ToolbarAutomaticTitleItem,
@@ -14,7 +15,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Alert, Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridSortModel, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -88,16 +89,6 @@ const columns: GridColDef<GQLProductsListFragmentFragment>[] = [
         },
     },
 ];
-
-function muiGridSortToGql(sortModel?: GridSortModel) {
-    if (!sortModel) return undefined;
-    return sortModel.map((i) => {
-        return {
-            field: i.field as any,
-            direction: (i.sort == "desc" ? "DESC" : "ASC") as "DESC" | "ASC",
-        };
-    });
-}
 
 function ProductsTable() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
