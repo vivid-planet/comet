@@ -44,18 +44,18 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
                 //TODO find a non-magic solution
                 decorators.push("@IsSlug()");
             }
-            decorators.push("@Field()");
+            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
         } else if (prop.type === "DecimalType") {
             decorators.push("@IsNumber()");
-            decorators.push("@Field()");
+            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "number";
         } else if (prop.type === "DateType") {
             decorators.push("@IsDate()");
-            decorators.push("@Field()");
+            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "Date";
         } else if (prop.type === "boolean") {
             decorators.push("@IsBoolean()");
-            decorators.push("@Field()");
+            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "boolean";
         } else if (prop.type === "RootBlockType") {
             const rootBlockType = prop.customType as RootBlockType | undefined;
@@ -82,7 +82,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
                     .replace(/\.ts$/, "")}";`;
             }
 
-            decorators.push("@Field(() => GraphQLJSONObject)");
+            decorators.push(`@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push(
                 `@Transform((value) => (isBlockInputInterface(value) ? value : ${blockExportName}.blockInputFactory(value)), { toClassOnly: true })`,
             );

@@ -576,5 +576,5 @@ input PredefinedPageInput {
 input ProductInput {
   title: String!
   slug: String!
-  price: Float!
+  price: Float
 }
