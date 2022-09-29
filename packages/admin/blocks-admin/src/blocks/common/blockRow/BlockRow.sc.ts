@@ -16,11 +16,11 @@ interface RootStyleProps {
 }
 
 const slideInAnimation = keyframes`
-    from { 
+    from {
         transform: translateX(100%);
     }
 
-    to { 
+    to {
         transform: translateX(0);
     }
 `;
@@ -97,10 +97,10 @@ export const OuterContent = styled("div")`
     min-width: 0;
 `;
 
-export const ButtonContainer = styled("div")`
-    display: flex;
-    flex-direction: row;
+export const RowActionsContainer = styled("div")`
     position: relative;
+    display: flex;
+    align-items: center;
     z-index: 11;
 `;
 

@@ -1,6 +1,6 @@
-import { messages } from "@comet/admin";
-import { Copy, Delete, Drag, MoreVertical, Paste, Warning } from "@comet/admin-icons";
-import { Checkbox, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { messages, RowActions } from "@comet/admin";
+import { Copy, Delete, Drag, Paste, Warning } from "@comet/admin-icons";
+import { Checkbox } from "@mui/material";
 import * as React from "react";
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl";
@@ -108,31 +108,6 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
     const opacity = isDragging ? 0 : 1;
     drag(drop(ref));
 
-    const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement>();
-
-    const handleMoreClick: React.MouseEventHandler<HTMLElement> = (event) => {
-        setMenuAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setMenuAnchorEl(undefined);
-    };
-
-    const handleCopyClick = () => {
-        props.onCopyClick?.();
-        handleMenuClose();
-    };
-
-    const handlePasteClick = () => {
-        props.onPasteClick?.();
-        handleMenuClose();
-    };
-
-    const handleDeleteClick = () => {
-        props.onDeleteClick?.();
-        handleMenuClose();
-    };
-
     // Evaluate is valid
     const isValid = usePromise(props.isValidFn, { initialValue: true });
 
@@ -181,40 +156,44 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
                         </sc.Content>
                         {props.additionalContent}
                     </sc.OuterContent>
-                    <sc.ButtonContainer>
-                        {props.visibilityButton}
-                        <IconButton size="small" onClick={handleMoreClick}>
-                            <MoreVertical color="action" />
-                        </IconButton>
-                    </sc.ButtonContainer>
                 </sc.InnerBlock>
                 <sc.RowClickContainer
                     onClick={() => {
                         if (props.onContentClick) props.onContentClick();
                     }}
                 />
-
-                <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
-                    <MenuItem onClick={handleCopyClick}>
-                        <ListItemIcon>
-                            <Copy />
-                        </ListItemIcon>
-                        <FormattedMessage {...messages.copy} />
-                    </MenuItem>
-                    <MenuItem onClick={handlePasteClick}>
-                        <ListItemIcon>
-                            <Paste />
-                        </ListItemIcon>
-                        <FormattedMessage {...messages.paste} />
-                    </MenuItem>
-                    <MenuItem onClick={handleDeleteClick}>
-                        <ListItemIcon>
-                            <Delete />
-                        </ListItemIcon>
-                        <FormattedMessage {...messages.delete} />
-                    </MenuItem>
-                    {props.additionalMenuItems?.(handleMenuClose)}
-                </Menu>
+                <sc.RowActionsContainer>
+                    <RowActions
+                        iconActions={[<React.Fragment key="visibilityButton">{props.visibilityButton}</React.Fragment>]}
+                        menuActions={[
+                            {
+                                text: <FormattedMessage {...messages.copy} />,
+                                icon: <Copy />,
+                                onClick: (_, closeMenu) => {
+                                    props.onCopyClick?.();
+                                    closeMenu();
+                                },
+                            },
+                            {
+                                text: <FormattedMessage {...messages.paste} />,
+                                icon: <Paste />,
+                                onClick: (_, closeMenu) => {
+                                    props.onPasteClick?.();
+                                    closeMenu();
+                                },
+                            },
+                            {
+                                text: <FormattedMessage {...messages.delete} />,
+                                icon: <Delete />,
+                                onClick: (_, closeMenu) => {
+                                    props.onDeleteClick?.();
+                                    closeMenu();
+                                },
+                            },
+                            (closeMenu) => <span key="additionalMenuItems">{props.additionalMenuItems?.(closeMenu)}</span>,
+                        ]}
+                    />
+                </sc.RowActionsContainer>
             </sc.Root>
         </sc.BlockWrapper>
     );
