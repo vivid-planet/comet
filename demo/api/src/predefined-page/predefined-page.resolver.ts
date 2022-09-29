@@ -4,6 +4,7 @@ import {
     PageTreeService,
     RequestContext,
     RequestContextInterface,
+    SubjectEntity,
     validateNotModified,
 } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
@@ -26,24 +27,24 @@ export class PredefinedPageResolver {
     ) {}
 
     @Query(() => PredefinedPage, { nullable: true })
+    @SubjectEntity(PredefinedPage)
     async predefinedPage(@Args("id", { type: () => ID }) id: string): Promise<PredefinedPage | null> {
         return this.repository.findOneOrFail(id);
     }
 
     @Mutation(() => PredefinedPage)
+    @SubjectEntity(PredefinedPage, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async savePredefinedPage(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => PredefinedPageInput }) input: PredefinedPageInput,
+        @Args("attachedPageTreeNodeId", { type: () => ID }) attachedPageTreeNodeId: string,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
-        @Args("attachedPageTreeNodeId", { nullable: true, type: () => ID }) attachedPageTreeNodeId?: string,
     ): Promise<PredefinedPage | null> {
         // all pageTypes need this is-archived-page-check
         // TODO: maybe implemented in a base-(document|page)-service which lives in @comet/cms-api
-        if (attachedPageTreeNodeId) {
-            const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
-            if (pageTreeNode.visibility === PageTreeNodeVisibility.Archived) {
-                throw new UnauthorizedException("Archived Structured Content cannot be updated");
-            }
+        const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
+        if (pageTreeNode.visibility === PageTreeNodeVisibility.Archived) {
+            throw new UnauthorizedException("Archived Structured Content cannot be updated");
         }
 
         let predefinedPage = await this.repository.findOne(id);
@@ -65,9 +66,7 @@ export class PredefinedPageResolver {
             this.repository.persist(predefinedPage);
         }
 
-        if (attachedPageTreeNodeId) {
-            await this.pageTreeService.attachDocument({ id, type: "PredefinedPage" }, attachedPageTreeNodeId);
-        }
+        await this.pageTreeService.attachDocument({ id, type: "PredefinedPage" }, attachedPageTreeNodeId);
 
         await this.repository.flush();
 

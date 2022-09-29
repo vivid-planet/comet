@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { classToPlain, plainToClass } from "class-transformer";
-import type { ClassType } from "class-transformer/ClassTransformer";
+import { ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
 
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
@@ -159,7 +158,7 @@ export abstract class BlockInput<BlockType extends BlockDataInterface = BlockDat
             }),
         );
 
-        return classToPlain(dataWithChildBlocksTransformed) as CreateToPlainReturn<this>;
+        return instanceToPlain(dataWithChildBlocksTransformed) as CreateToPlainReturn<this>;
     }
 }
 
@@ -218,7 +217,7 @@ export type Block<BlockType extends BlockDataInterface = BlockDataInterface, Blo
 const blocks: Block[] = [];
 
 export interface MigrateOptions {
-    migrations: ClassType<BlockMigrationInterface>[];
+    migrations: ClassConstructor<BlockMigrationInterface>[];
     version: number;
 }
 interface CreateBlockOptions {
@@ -229,8 +228,8 @@ interface CreateBlockOptions {
 }
 
 export function createBlock<BlockType extends BlockDataInterface, BlockInputType extends BlockInputInterface>(
-    BlockData: ClassType<BlockType>,
-    BlockInput: ClassType<BlockInputType>,
+    BlockData: ClassConstructor<BlockType>,
+    BlockInput: ClassConstructor<BlockInputType>,
     nameOrOptions: string | CreateBlockOptions,
     {
         // 4th argument is an options-hash
@@ -252,10 +251,10 @@ export function createBlock<BlockType extends BlockDataInterface, BlockInputType
     }
 
     const blockDataFactory: BlockDataFactory<BlockType> = (o) => {
-        return plainToClass(BlockData, o);
+        return plainToInstance(BlockData, o);
     };
 
-    const blockInputFactory: BlockInputFactory<BlockInputType> = (o) => plainToClass(BlockInput, o);
+    const blockInputFactory: BlockInputFactory<BlockInputType> = (o) => plainToInstance(BlockInput, o);
 
     // Decorate BlockDataFactory
     let decorateBlockDataFactory = blockDataFactory;
@@ -317,7 +316,7 @@ export function transformToSave(block: BlockDataInterface): TraversableTransform
     return traverse(block) as TraversableTransformResponse;
 }
 
-export function inputToData<T extends BlockDataInterface, V extends BlockInputInterface>(cls: ClassType<T>, plain: V): T {
+export function inputToData<T extends BlockDataInterface, V extends BlockInputInterface>(cls: ClassConstructor<T>, plain: V): T {
     const dataWithChildBlocksTransformed = Object.fromEntries(
         Object.entries(plain).map(([k, v]) => {
             if (isBlockInputInterface(v)) {
@@ -326,5 +325,5 @@ export function inputToData<T extends BlockDataInterface, V extends BlockInputIn
             return [k, v];
         }),
     );
-    return plainToClass(cls, dataWithChildBlocksTransformed);
+    return plainToInstance(cls, dataWithChildBlocksTransformed);
 }

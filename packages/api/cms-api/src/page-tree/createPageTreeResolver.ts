@@ -4,6 +4,7 @@ import { Request } from "express";
 import { GraphQLError } from "graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
+import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
@@ -76,6 +77,7 @@ export function createPageTreeResolver({
         }
 
         @Query(() => PageTreeNode, { nullable: true })
+        @SubjectEntity(PageTreeNode)
         async pageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<PageTreeNodeInterface> {
             return this.pageTreeReadApi.getNodeOrFail(id);
         }
@@ -157,6 +159,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => PageTreeNode)
+        @SubjectEntity(PageTreeNode)
         async updatePageTreeNode(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => PageTreeNodeUpdateInput }) input: PageTreeNodeUpdateInputInterface,
@@ -174,6 +177,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => Boolean)
+        @SubjectEntity(PageTreeNode)
         async deletePageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
@@ -184,6 +188,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => PageTreeNode)
+        @SubjectEntity(PageTreeNode)
         async updatePageTreeNodeVisibility(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => PageTreeNodeUpdateVisibilityInput }) input: PageTreeNodeUpdateVisibilityInput,
@@ -199,6 +204,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => PageTreeNode)
+        @SubjectEntity(PageTreeNode)
         async updatePageTreeNodePosition(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => PageTreeNodeUpdatePositionInput }) input: PageTreeNodeUpdatePositionInput,
@@ -221,6 +227,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => PageTreeNode)
+        @SubjectEntity(PageTreeNode)
         async updatePageTreeNodeCategory(
             @Args("id", { type: () => ID }) id: string,
             @Args("category", { type: () => String }) category: PageTreeNodeCategory,

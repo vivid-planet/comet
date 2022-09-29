@@ -8,7 +8,7 @@ import { GraphQLJSONObject } from "graphql-type-json";
 @InputType()
 export class LinkInput {
     @Field(() => GraphQLJSONObject)
-    @Transform((value) => LinkBlock.blockInputFactory(value), { toClassOnly: true })
+    @Transform(({ value }) => LinkBlock.blockInputFactory(value), { toClassOnly: true })
     @ValidateNested()
     content: BlockInputInterface;
 }

@@ -84,7 +84,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
 
             decorators.push(`@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push(
-                `@Transform((value) => (isBlockInputInterface(value) ? value : ${blockExportName}.blockInputFactory(value)), { toClassOnly: true })`,
+                `@Transform(({ value }) => (isBlockInputInterface(value) ? value : ${blockExportName}.blockInputFactory(value)), { toClassOnly: true })`,
             );
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";

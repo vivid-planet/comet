@@ -4741,7 +4741,7 @@ __metadata:
     yarn-run-all: ^3.0.0
   peerDependencies:
     "@nestjs/common": ^9.0.0
-    class-transformer: ^0.3.0
+    class-transformer: ^0.5.0
     class-validator: ^0.13.0
   languageName: unknown
   linkType: soft
@@ -4931,7 +4931,7 @@ __metadata:
     "@nestjs/common": ^9.0.0
     "@nestjs/core": ^9.0.0
     "@nestjs/graphql": ^10.0.0
-    class-transformer: ^0.3.0
+    class-transformer: ^0.5.0
     express: ^4.0.0
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     nestjs-console: ^8.0.0
@@ -15604,10 +15604,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"class-transformer@npm:^0.3.0":
-  version: 0.3.1
-  resolution: "class-transformer@npm:0.3.1"
-  checksum: 3a3f7a92cbfd6e7fb5904f9a350bbca8b1e04954dc1f75b39eba949775ecb8bcdf96223e2ca563ec67155e38bdf6d6616ad6b989f8b1ffe377cda3300f5b719a
+"class-transformer@npm:^0.5.0":
+  version: 0.5.1
+  resolution: "class-transformer@npm:0.5.1"
+  checksum: f191c8b4cc4239990f5efdd790cabdd852c243ed66248e39f6616a349c910c6eed2d9fd1fbf7ee6ea89f69b4f1d0b493b27347fe0cd0ae26b47c3745a805b6d3
   languageName: node
   linkType: hard
 
@@ -16244,7 +16244,7 @@ __metadata:
     apollo-server-express: ^3.0.0
     async: ^3.0.0
     base64url: ^3.0.0
-    class-transformer: ^0.3.0
+    class-transformer: ^0.5.0
     class-validator: ^0.13.0
     commander: ^8.0.0
     compression: ^1.0.0
@@ -31797,7 +31797,7 @@ __metadata:
     "@types/jest": ^29.0.1
     "@types/jscodeshift": ^0.11.4
     "@types/uuid": ^8.3.0
-    class-transformer: ^0.3.0
+    class-transformer: ^0.5.0
     class-validator: ^0.13.0
     dotenv-cli: ^5.1.0
     exceljs: ^3.4.0

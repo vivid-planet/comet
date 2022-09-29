@@ -1,4 +1,4 @@
-import type { ClassType } from "class-transformer/ClassTransformer";
+import type { ClassConstructor } from "class-transformer";
 
 import {
     Block,
@@ -31,7 +31,9 @@ type BlockFieldOptions =
           block: Block;
       };
 
-export function BlockField(type?: Block | Block[] | ClassType<BlockDataInterface | BlockInputInterface> | BlockFieldOptions): PropertyDecorator {
+export function BlockField(
+    type?: Block | Block[] | ClassConstructor<BlockDataInterface | BlockInputInterface> | BlockFieldOptions,
+): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (ctorPrototype: any, propertyKey: string | symbol): void {
         if (type) {
@@ -50,8 +52,8 @@ type BlockFieldData =
       }
     | { kind: BlockMetaFieldKind.Enum; enum: string[]; nullable: boolean }
     | { kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }
-    | { kind: BlockMetaFieldKind.NestedObject; object: ClassType<BlockDataInterface | BlockInputInterface>; nullable: boolean }
-    | { kind: BlockMetaFieldKind.NestedObjectList; object: ClassType<BlockDataInterface | BlockInputInterface>; nullable: boolean }
+    | { kind: BlockMetaFieldKind.NestedObject; object: ClassConstructor<BlockDataInterface | BlockInputInterface>; nullable: boolean }
+    | { kind: BlockMetaFieldKind.NestedObjectList; object: ClassConstructor<BlockDataInterface | BlockInputInterface>; nullable: boolean }
     | { kind: BlockMetaFieldKind.OneOfBlocks; blocks: Block[]; nullable: boolean };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -122,7 +124,7 @@ export function getFieldKeys(ctor: { prototype: any }): string[] {
 }
 
 export class AnnotationBlockMeta implements BlockMetaInterface {
-    constructor(protected object: ClassType<BlockDataInterface | BlockInputInterface>) {}
+    constructor(protected object: ClassConstructor<BlockDataInterface | BlockInputInterface>) {}
     get fields(): BlockMetaField[] {
         const ret: BlockMetaField[] = [];
         for (const name of getFieldKeys(this.object)) {

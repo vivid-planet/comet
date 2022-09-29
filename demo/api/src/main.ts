@@ -14,10 +14,10 @@ require("elastic-apm-node").start({
     active: !!process.env.API_ENABLE_APM,
 });
 
-import { ExceptionInterceptor, GlobalAuthGuard, ValidationExceptionFactory } from "@comet/cms-api";
+import { ExceptionInterceptor, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
-import { NestFactory, Reflector } from "@nestjs/core";
+import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "@src/app.module";
 import { configNS } from "@src/config/config.namespace";
@@ -49,7 +49,6 @@ async function bootstrap(): Promise<void> {
         }),
     );
 
-    app.useGlobalGuards(new GlobalAuthGuard(app.get(Reflector)));
     app.use(compression());
     app.use(cookieParser());
 
