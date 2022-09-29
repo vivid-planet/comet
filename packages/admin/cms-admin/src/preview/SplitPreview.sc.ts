@@ -58,7 +58,7 @@ interface PreviewContainerProps {
     minimized: boolean;
 }
 
-export const PreviewContainer = styled("div")<PreviewContainerProps>`
+export const PreviewContainer = styled("div", { shouldForwardProp: (prop) => prop !== "minimized" })<PreviewContainerProps>`
     position: absolute;
     z-index: 15;
     top: 0;
