@@ -351,7 +351,8 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     
         @Mutation(() => Boolean)
         async delete${metadata.className}(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
-            await this.repository.removeAndFlush({ id });
+            const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
+            await this.repository.removeAndFlush(${instanceNameSingular});
     
             return true;
         }
