@@ -10,7 +10,7 @@ import { FooterContentScope } from "../entities/footer-content-scope.entity";
 @InputType()
 export class FooterInput {
     @Field(() => GraphQLJSONObject)
-    @Transform((value) => FooterContentBlock.blockInputFactory(value), { toClassOnly: true })
+    @Transform(({ value }) => FooterContentBlock.blockInputFactory(value), { toClassOnly: true })
     @ValidateNested()
     content: BlockInputInterface;
 

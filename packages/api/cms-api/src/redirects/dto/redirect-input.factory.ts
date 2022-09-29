@@ -33,7 +33,7 @@ export class RedirectInputFactory {
             @Field()
             source: string;
 
-            @Transform((value) => linkBlock.blockInputFactory(value), { toClassOnly: true })
+            @Transform(({ value }) => linkBlock.blockInputFactory(value), { toClassOnly: true })
             @ValidateNested()
             @Field(() => GraphQLJSONObject)
             target: ExtractBlockInput<typeof linkBlock>;

@@ -13,7 +13,7 @@ export function ChildBlock(block: Block, options?: ChildBlockOptions): PropertyD
     return function (target: any, key: string | symbol) {
         BlockField({ type: "block", block, nullable })(target, key);
         Transform(
-            (value) =>
+            ({ value }) =>
                 isBlockDataInterface(value) ? value : nullable && (value === undefined || value === null) ? undefined : block.blockDataFactory(value),
             {
                 toClassOnly: true,
