@@ -236,7 +236,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     import { EntityRepository } from "@mikro-orm/postgresql";
     import { FindOptions } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-    import { SortDirection, validateNotModified } from "@comet/cms-api";
+    import { SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
     
     import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     ${
@@ -259,6 +259,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         ) {}
     
         @Query(() => ${metadata.className}, { nullable: true })
+        @SubjectEntity(${metadata.className})
         async ${instanceNameSingular}(@Args("id", { type: () => ID }) id: string): Promise<${metadata.className} | null> {
             const ${instanceNameSingular} = await this.repository.findOne(id);
     
@@ -326,6 +327,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         }
     
         @Mutation(() => ${metadata.className})
+        @SubjectEntity(${metadata.className})
         async update${classNameSingular}(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input,
@@ -350,6 +352,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         }
     
         @Mutation(() => Boolean)
+        @SubjectEntity(${metadata.className})
         async delete${metadata.className}(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             await this.repository.removeAndFlush(${instanceNameSingular});
@@ -361,6 +364,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             hasVisibleProp
                 ? `
         @Mutation(() => ${metadata.className})
+        @SubjectEntity(${metadata.className})
         async update${classNameSingular}Visibility(
             @Args("id", { type: () => ID }) id: string,
             @Args("visible", { type: () => Boolean }) visible: boolean,
