@@ -257,6 +257,7 @@ type Product implements DocumentInterface {
   updatedAt: DateTime!
   title: String!
   slug: String!
+  description: String!
   price: Float
   createdAt: DateTime!
 }
@@ -403,6 +404,7 @@ enum NewsSortField {
 input ProductFilter {
   title: StringFilter
   slug: StringFilter
+  description: StringFilter
   price: NumberFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
@@ -425,6 +427,7 @@ input ProductSort {
 enum ProductSortField {
   title
   slug
+  description
   price
 }
 
@@ -576,5 +579,6 @@ input PredefinedPageInput {
 input ProductInput {
   title: String!
   slug: String!
+  description: String!
   price: Float
 }

@@ -27,6 +27,10 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field()
     slug: string;
 
+    @Property()
+    @Field()
+    description: string;
+
     @Property({ type: types.decimal, nullable: true })
     @Field({ nullable: true })
     price?: number;
