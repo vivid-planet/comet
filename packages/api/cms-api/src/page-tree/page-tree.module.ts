@@ -56,7 +56,19 @@ export class PageTreeModule {
         return {
             module: PageTreeModule,
             imports: [MikroOrmModule.forFeature([AttachedDocument, PageTreeNode, ...(Scope ? [Scope] : [])])],
-            providers: [PageTreeService, pageTreeResolver, repositoryProvider, pageTreeConfigProvider, PageExistsConstraint],
+            providers: [
+                PageTreeService,
+                pageTreeResolver,
+                repositoryProvider,
+                pageTreeConfigProvider,
+                {
+                    provide: PageExistsConstraint,
+                    useFactory: (pageTreeService: PageTreeService) => {
+                        new PageExistsConstraint(pageTreeService);
+                    },
+                    inject: [PageTreeService],
+                },
+            ],
             exports: [PageTreeService],
         };
     }

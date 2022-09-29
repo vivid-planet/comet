@@ -222,6 +222,13 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
+type NewsComment implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  comment: String!
+  createdAt: DateTime!
+}
+
 type NewsContentScope {
   domain: String!
   language: String!
@@ -239,6 +246,7 @@ type News implements DocumentInterface {
   image: JSONObject!
   content: JSONObject!
   createdAt: DateTime!
+  comments: [NewsComment!]!
 }
 
 enum NewsCategory {
@@ -289,7 +297,6 @@ input NewsContentScopeInput {
 }
 
 type Query {
-  page(pageId: ID!): Page
   pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
   link(linkId: ID!): Link
   buildTemplates: [BuildTemplate!]!
@@ -311,7 +318,7 @@ type Query {
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News
-  newsBySlug(slug: String!): News
+  newsBySlug(scope: NewsContentScopeInput!, slug: String!): News
   newsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, query: String, category: NewsCategory, scope: NewsContentScopeInput!): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
@@ -352,8 +359,8 @@ input FolderFilterInput {
 }
 
 type Mutation {
-  savePage(pageId: ID!, input: PageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Page!
-  saveLink(linkId: ID!, input: LinkInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Link!
+  savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
+  saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
   createBuilds(input: CreateBuildsInput!): Boolean!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
@@ -378,9 +385,12 @@ type Mutation {
   updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!
   updateNewsVisibility(id: ID!, visible: Boolean!): News!
   deleteNews(id: ID!): Boolean!
+  createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
+  updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
+  deleteNewsComment(id: ID!): Boolean!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
-  saveFooter(input: FooterInput!, lastUpdatedAt: DateTime): Footer!
-  savePredefinedPage(id: ID!, input: PredefinedPageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): PredefinedPage!
+  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
+  savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
 }
 
 input PageInput {
@@ -482,13 +492,16 @@ input NewsInput {
   content: JSONObject!
 }
 
+input NewsCommentInput {
+  comment: String!
+}
+
 input MainMenuItemInput {
   content: JSONObject
 }
 
 input FooterInput {
   content: JSONObject!
-  scope: FooterContentScopeInput!
 }
 
 input PredefinedPageInput {

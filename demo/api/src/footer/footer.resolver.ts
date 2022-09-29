@@ -25,13 +25,14 @@ export class FootersResolver {
 
     @Mutation(() => Footer)
     async saveFooter(
+        @Args("scope", { type: () => FooterContentScope }) scope: FooterContentScope,
         @Args("input", { type: () => FooterInput }) input: FooterInput,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<Footer> {
-        let footer = await this.footersRepository.findOne({ scope: input.scope });
+        let footer = await this.footersRepository.findOne({ scope });
 
         if (!footer) {
-            footer = this.footersRepository.create({ ...input, content: input.content.transformToBlockData() });
+            footer = this.footersRepository.create({ scope, ...input, content: input.content.transformToBlockData() });
         } else if (lastUpdatedAt) {
             validateNotModified(footer, lastUpdatedAt);
 

@@ -1,18 +1,20 @@
-import { PublicApi, validateNotModified } from "@comet/cms-api";
+import { PublicApi, SubjectEntity, validateNotModified } from "@comet/cms-api";
 import { FilterQuery, FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { NewsInput } from "@src/news/dto/news.input";
 
 import { NewsListArgs } from "./dto/news-list.args";
 import { PaginatedNews } from "./dto/paginated-news";
 import { News, NewsContentScope } from "./entities/news.entity";
+import { NewsComment } from "./entities/news-comment.entity";
 
 @Resolver(() => News)
 export class NewsResolver {
     constructor(@InjectRepository(News) private readonly newsRepository: EntityRepository<News>) {}
 
+    @SubjectEntity(News)
     @Query(() => News, { nullable: true })
     async news(@Args("id", { type: () => ID }) id: string): Promise<News | null> {
         const news = await this.newsRepository.findOne(id);
@@ -21,8 +23,8 @@ export class NewsResolver {
     }
 
     @Query(() => News, { nullable: true })
-    async newsBySlug(@Args("slug") slug: string): Promise<News | null> {
-        const news = await this.newsRepository.findOne({ slug });
+    async newsBySlug(@Args("scope", { type: () => NewsContentScope }) scope: NewsContentScope, @Args("slug") slug: string): Promise<News | null> {
+        const news = await this.newsRepository.findOne({ scope, slug });
 
         return news ?? null;
     }
@@ -62,6 +64,7 @@ export class NewsResolver {
     }
 
     @Mutation(() => News)
+    @SubjectEntity(News)
     async updateNews(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => NewsInput }) input: NewsInput,
@@ -84,6 +87,7 @@ export class NewsResolver {
     }
 
     @Mutation(() => News)
+    @SubjectEntity(News)
     async updateNewsVisibility(
         @Args("id", { type: () => ID }) id: string,
         @Args("visible", { type: () => Boolean }) visible: boolean,
@@ -99,9 +103,15 @@ export class NewsResolver {
     }
 
     @Mutation(() => Boolean)
+    @SubjectEntity(News)
     async deleteNews(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         await this.newsRepository.removeAndFlush({ id });
 
         return true;
+    }
+
+    @ResolveField(() => [NewsComment])
+    async comments(@Parent() news: News): Promise<NewsComment[]> {
+        return news.comments.loadItems();
     }
 }

@@ -6,8 +6,11 @@ import {
     BlocksTransformerMiddlewareFactory,
     BlocksTransformerService,
     BuildsModule,
+    ContentScope,
+    ContentScopeModule,
     DamModule,
     FilesService,
+    GlobalAuthGuard,
     ImagesService,
     PageTreeModule,
     PageTreeService,
@@ -17,6 +20,7 @@ import {
 import { ApolloDriver } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ConfigModule } from "@src/config/config.module";
 import { configNS } from "@src/config/config.namespace";
@@ -26,6 +30,7 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
+import { CurrentUserLoaderService } from "./auth/current-user-loader.service";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -72,6 +77,13 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
                 },
             }),
             inject: [configNS.KEY],
+            currentUserLoaderService: CurrentUserLoaderService,
+        }),
+        ContentScopeModule.forRoot({
+            canAccessScope(requestScope: ContentScope, user) {
+                if (!user.domains) return true; //all domains
+                return user.domains.includes(requestScope.domain);
+            },
         }),
         BlocksModule.forRootAsync({
             imports: [PagesModule],
@@ -180,5 +192,6 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
         FooterModule,
         PredefinedPageModule,
     ],
+    providers: [{ provide: APP_GUARD, useClass: GlobalAuthGuard }],
 })
 export class AppModule {}
