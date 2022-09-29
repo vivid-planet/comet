@@ -15,6 +15,7 @@ import {
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "@comet/blocks-api";
+import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
 import { PixelImageBlock } from "./PixelImageBlock";
@@ -59,6 +60,7 @@ interface SeoBlockInputInterface<ImageBlockInput extends BlockInputInterface> ex
     priority: SitemapPagePriority;
     changeFrequency: SitemapPageChangeFrequency;
     canonicalUrl?: string;
+    alternativeLinks: AlternativeLink[];
 }
 
 export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock>(
@@ -110,6 +112,10 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         @BlockField({ nullable: true })
         canonicalUrl?: string;
 
+        //Alternate Hreflang
+        @BlockField({ type: "json" })
+        alternativeLinks: AlternativeLink[] = [];
+
         async transformToPlain(): Promise<TraversableTransformResponse> {
             return {
                 htmlTitle: this.htmlTitle,
@@ -126,6 +132,8 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
                 changeFrequency: this.changeFrequency,
 
                 canonicalUrl: this.canonicalUrl,
+
+                alternativeLinks: this.alternativeLinks,
             };
         }
     }
@@ -183,10 +191,29 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         @BlockField({ nullable: true })
         canonicalUrl?: string;
 
+        //Alternate Hreflang
+        @BlockField({ type: "json" }) // TODO support array types in block meta
+        @Type(() => AlternativeLink)
+        @ValidateNested({ each: true })
+        alternativeLinks: AlternativeLink[] = [];
+
         transformToBlockData(): SeoBlockData {
             return inputToData(SeoBlockData, this);
         }
     }
 
     return createBlock(SeoBlockData, SeoBlockInput, "Seo");
+}
+
+class AlternativeLink {
+    [key: string]: string | undefined;
+
+    @IsString()
+    @IsOptional()
+    code?: string;
+
+    @IsString()
+    @IsOptional()
+    @IsUrl()
+    url?: string;
 }

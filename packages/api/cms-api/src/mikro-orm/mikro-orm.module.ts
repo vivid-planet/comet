@@ -21,7 +21,7 @@ export function createMigrationsList(migrationsDir: string): MigrationObject[] {
     // loaded from the source directory (typically `src/`) and have a ".ts" extension. In production migrations are loaded from the output directory
     // (typically `dist/` or `lib/`) and may either have a ".js", a ".js.map" or a ".d.ts" extensions (we are only interested in ".js" files). We
     // therefore assume to be in the development setup when all files in the migration directory have a ".ts" file extension.
-    const isInSourceDirectory = files.every((file) => file.endsWith(".ts"));
+    const isInSourceDirectory = files.filter((file) => file != ".snapshot-main.json").every((file) => file.endsWith(".ts"));
     const fileExtension = isInSourceDirectory ? ".ts" : ".js";
 
     return files

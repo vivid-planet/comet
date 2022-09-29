@@ -5,6 +5,8 @@ import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 
+import { version } from "../../..";
+import { useBuildInformation } from "./build-information/useBuildInformation";
 import { CometDigitalExperienceLogo } from "./CometDigitalExperienceLogo";
 
 const useStyles = makeStyles(() => ({
@@ -47,6 +49,7 @@ interface AboutModalProps {
 }
 function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
     const classes = useStyles();
+    const buildInformation = useBuildInformation();
 
     return (
         <Modal className={classes.modal} open={open} onClose={onClose} closeAfterTransition BackdropComponent={Backdrop}>
@@ -65,26 +68,24 @@ function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
                 </DialogTitle>
                 <DialogContent classes={{ root: classes.content }}>
                     <CometDigitalExperienceLogo />
-
                     <div className={classes.versionContainer}>
-                        <div>
-                            <Typography classes={{ root: classes.version }}>
+                        <Typography classes={{ root: classes.version }}>{`v${version}`}</Typography>
+                        {buildInformation?.number && buildInformation.commitHash && (
+                            <Typography>
                                 <FormattedMessage
                                     id="comet.version.title"
-                                    defaultMessage="Version: {buildNumber} ({commitSha})"
+                                    defaultMessage="{buildNumber} ({commitSha})"
                                     values={{
-                                        buildNumber: process.env.BUILD_NUMBER,
-                                        commitSha: process.env.COMMIT_SHA !== "" ? process.env.COMMIT_SHA : "unknown",
+                                        buildNumber: buildInformation.number,
+                                        commitSha: buildInformation.commitHash,
                                     }}
                                 />
                             </Typography>
-                        </div>
-                        {process.env.BUILD_DATE != "" && (
-                            <div>
-                                <Typography>
-                                    <FormattedDate value={process.env.BUILD_DATE} /> <FormattedTime value={process.env.BUILD_DATE} />
-                                </Typography>
-                            </div>
+                        )}
+                        {buildInformation?.date && (
+                            <Typography>
+                                <FormattedDate value={buildInformation.date} /> <FormattedTime value={buildInformation.date} />
+                            </Typography>
                         )}
                     </div>
                     <Typography>

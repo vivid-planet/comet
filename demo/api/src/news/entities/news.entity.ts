@@ -1,12 +1,13 @@
 import { BlockDataInterface, RootBlockEntity } from "@comet/blocks-api";
-import { DamImageBlock, DocumentInterface, RootBlockType } from "@comet/cms-api";
-import { BaseEntity, Embeddable, Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { CrudGenerator, DamImageBlock, DocumentInterface, RootBlockType } from "@comet/cms-api";
+import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 } from "uuid";
 
 import { NewsContentBlock } from "../blocks/news-content.block";
+import { NewsComment } from "./news-comment.entity";
 
 export enum NewsCategory {
     Events = "Events",
@@ -37,6 +38,7 @@ export class NewsContentScope {
     implements: () => [DocumentInterface],
 })
 @Entity()
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
@@ -75,6 +77,9 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     @Property({ customType: new RootBlockType(NewsContentBlock) })
     @Field(() => GraphQLJSONObject)
     content: BlockDataInterface;
+
+    @OneToMany(() => NewsComment, (newsComment) => newsComment.news)
+    comments = new Collection<NewsComment>(this);
 
     @Property({
         columnType: "timestamp with time zone",

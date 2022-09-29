@@ -24,7 +24,7 @@ export function FinalFormToggleButtonGroup<FieldValue = unknown>({
     );
 }
 
-const Root = styled("div")<{ $optionsPerRow?: number }>`
+const Root = styled("div", { shouldForwardProp: (prop) => prop !== "$optionsPerRow" })<{ $optionsPerRow?: number }>`
     display: inline-flex;
     border: 1px solid ${({ theme }) => theme.palette.divider};
     background-color: ${({ theme }) => theme.palette.divider};
@@ -40,7 +40,7 @@ const Root = styled("div")<{ $optionsPerRow?: number }>`
         `}
 `;
 
-const Button = styled(ButtonBase)<{ $selected?: boolean }>`
+const Button = styled(ButtonBase, { shouldForwardProp: (prop) => prop !== "$selected" })<{ $selected?: boolean }>`
     width: 46px;
     height: 46px;
     background-color: ${({ theme }) => theme.palette.background.paper};

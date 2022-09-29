@@ -1,4 +1,4 @@
-import { classToPlain, plainToClass } from "class-transformer";
+import { instanceToPlain, plainToInstance } from "class-transformer";
 import { Allow, IsObject } from "class-validator";
 import type { DraftBlockType, DraftEntityMutability, DraftInlineStyleType, RawDraftContentState, RawDraftEntityRange } from "draft-js";
 
@@ -17,6 +17,7 @@ import {
     registerBlock,
 } from "./block";
 import { AnnotationBlockMeta, BlockField } from "./decorators/field";
+import { lookupPath } from "./helpers/lookupPath";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
@@ -115,7 +116,7 @@ export function createRichTextBlock<LinkBlock extends Block>({
         draftContent: DraftJsInput<ExtractBlockInput<LinkBlock>>;
 
         transformToBlockData(): RichTextBlockData {
-            return plainToClass(RichTextBlockData, {
+            return plainToInstance(RichTextBlockData, {
                 ...this,
                 draftContent: {
                     ...this.draftContent,
@@ -126,7 +127,7 @@ export function createRichTextBlock<LinkBlock extends Block>({
                                     key,
                                     {
                                         ...entity,
-                                        // we need plainToClass here as data is not typed by class-transformer
+                                        // we need plainToInstance here as data is not typed by class-transformer
                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                         data: LinkBlock.blockInputFactory(entity.data as any).transformToBlockData(),
                                     },
@@ -140,7 +141,7 @@ export function createRichTextBlock<LinkBlock extends Block>({
             });
         }
         toPlain(): ReturnType<RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>["toPlain"]> {
-            return classToPlain(this) as ReturnType<RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>["toPlain"]>;
+            return instanceToPlain(this) as ReturnType<RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>["toPlain"]>;
         }
     }
 
@@ -152,7 +153,7 @@ export function createRichTextBlock<LinkBlock extends Block>({
                         key,
                         {
                             ...entity,
-                            // we need plainToClass here as data is not typed by class-transformer
+                            // we need plainToInstance here as data is not typed by class-transformer
                             data: LinkBlock.blockDataFactory(entity.data),
                         },
                     ];
@@ -162,7 +163,7 @@ export function createRichTextBlock<LinkBlock extends Block>({
             }),
         );
 
-        return plainToClass(RichTextBlockData, {
+        return plainToInstance(RichTextBlockData, {
             draftContent: {
                 ...draftContent,
                 entityMap,
@@ -170,7 +171,7 @@ export function createRichTextBlock<LinkBlock extends Block>({
         });
     };
     const blockInputFactory: BlockInputFactory<RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> = (o) =>
-        plainToClass(RichTextBlockInput, o);
+        plainToInstance(RichTextBlockInput, o);
 
     // Decorate BlockDataFactory
     let decorateBlockDataFactory = blockDataFactory;
@@ -189,6 +190,7 @@ export function createRichTextBlock<LinkBlock extends Block>({
         blockInputFactory: decorateBlockInputFactory,
         blockMeta: new AnnotationBlockMeta(RichTextBlockData),
         blockInputMeta: new AnnotationBlockMeta(RichTextBlockInput),
+        path: lookupPath(),
     };
 
     registerBlock(RichTextBlock);

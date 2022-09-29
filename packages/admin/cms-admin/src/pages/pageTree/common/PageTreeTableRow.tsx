@@ -3,11 +3,11 @@ import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 
 const slideInAnimation = keyframes`
-    from { 
+    from {
         transform: translateX(100%);
     }
 
-    to { 
+    to {
         transform: translateX(0);
     }
 `;
@@ -41,13 +41,21 @@ export const PageTreeTableRow: React.FC<Props> = ({ children, clickable, disable
     );
 };
 
-const Root = styled(TableRow)<Props>`
+const Root = styled(TableRow, {
+    shouldForwardProp: (prop) =>
+        prop !== "isDragHovered" &&
+        prop !== "isMouseHovered" &&
+        prop !== "isArchived" &&
+        prop !== "isSelected" &&
+        prop !== "clickable" &&
+        prop !== "disabled" &&
+        prop !== "slideIn",
+})<Props>`
     scroll-margin-top: 160px;
     scroll-snap-margin-top: 160px; // Safari
     box-sizing: border-box;
     position: relative;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
 
@@ -97,7 +105,7 @@ interface SideBorderHightlightsProps {
     horizontal: boolean;
 }
 
-const BorderHightlights = styled("div")<SideBorderHightlightsProps>`
+const BorderHightlights = styled("div", { shouldForwardProp: (prop) => prop !== "vertical" && prop !== "horizontal" })<SideBorderHightlightsProps>`
     position: absolute;
     top: 0;
     left: 0;

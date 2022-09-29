@@ -1,5 +1,53 @@
 const Provider = require("oidc-provider");
 
+const users = [
+    {
+        given_name: "Test",
+        family_name: "Admin",
+        name: "Test Admin",
+        email: "admin@comet-dxp.com",
+        email_verified: true,
+        language: "en",
+        role: {
+            role: "admin",
+            rights: ["right1", "right2"],
+            domain: ["main", "secondary"],
+        },
+    },
+    {
+        given_name: "Test",
+        family_name: "Superuser",
+        name: "Test Superuser",
+        email: "superuser@comet-dxp.com",
+        email_verified: true,
+        language: "en",
+        role: {
+            role: "superuser",
+            rights: ["right1"],
+            domain: ["main"],
+        },
+    },
+    {
+        given_name: "Test",
+        family_name: "User",
+        name: "Test User",
+        email: "user@comet-dxp.com",
+        email_verified: true,
+        language: "en",
+        role: {
+            role: "user",
+            rights: [],
+            domain: ["secondary"],
+        },
+    },
+];
+
+const getUserBySub = (sub) => {
+    let user = users.find((user) => user.email === sub);
+    if (!user) user = users[0];
+    return user;
+};
+
 const provider = new Provider(process.env.IDP_URL, {
     clients: [
         {
@@ -23,18 +71,12 @@ const provider = new Provider(process.env.IDP_URL, {
     findAccount: (ctx, sub, token) => {
         return {
             accountId: sub,
-            claims: (use, scope, claims, rejected) => {
-                return {
-                    sub,
-                    given_name: "Test",
-                    family_name: "User",
-                    name: "Testuser",
-                    email: "test@comet-dxp.com",
-                    email_verified: true,
-                    language: "en",
-                    role: "admin",
-                };
-            },
+            claims: (use, scope, claims, rejected) => getUserBySub(sub),
+        };
+    },
+    extraTokenClaims: async (ctx, token) => {
+        return {
+            ext: getUserBySub(token.accountId).role,
         };
     },
     routes: {
@@ -51,6 +93,7 @@ const provider = new Provider(process.env.IDP_URL, {
         pushed_authorization_request: "/request",
         registration: "/reg",
     },
+    conformIdTokenClaims: false,
     clientBasedCORS: () => true,
     features: {
         introspection: {

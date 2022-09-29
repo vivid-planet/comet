@@ -9,7 +9,7 @@ import { GraphQLJSONObject } from "graphql-type-json";
 export class MainMenuItemInput {
     @Field(() => GraphQLJSONObject, { nullable: true })
     @IsOptional()
-    @Transform((value) => RichTextBlock.blockInputFactory(value), { toClassOnly: true })
+    @Transform(({ value }) => RichTextBlock.blockInputFactory(value), { toClassOnly: true })
     @ValidateNested()
     content: BlockInputInterface | null;
 }

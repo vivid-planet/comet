@@ -1,9 +1,11 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { NotFoundException } from "@nestjs/common";
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { basename, extname } from "path";
 
+import { SkipBuild } from "../../builds/skip-build.decorator";
+import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
@@ -11,13 +13,17 @@ import { File } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 import { slugifyFilename } from "./files.utils";
 
+@ObjectType()
+export class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
+
 @Resolver(() => File)
 export class FilesResolver {
     constructor(private readonly filesService: FilesService, @InjectRepository(File) private readonly filesRepository: EntityRepository<File>) {}
 
-    @Query(() => [File])
-    async damFilesList(@Args() args: FileArgs): Promise<File[]> {
-        return this.filesService.findAll(args);
+    @Query(() => PaginatedDamFiles)
+    async damFilesList(@Args() args: FileArgs): Promise<PaginatedDamFiles> {
+        const [files, totalCount] = await this.filesService.findAndCount(args);
+        return new PaginatedDamFiles(files, totalCount);
     }
 
     @Query(() => File)
@@ -38,6 +44,7 @@ export class FilesResolver {
     }
 
     @Mutation(() => [File])
+    @SkipBuild()
     async moveDamFiles(
         @Args("fileIds", { type: () => [ID] }) fileIds: string[],
         @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
@@ -46,6 +53,7 @@ export class FilesResolver {
     }
 
     @Mutation(() => File)
+    @SkipBuild()
     async archiveDamFile(@Args("id", { type: () => ID }) id: string): Promise<File> {
         const entity = await this.filesRepository.findOneOrFail(id);
         entity.archived = true;
@@ -55,6 +63,7 @@ export class FilesResolver {
     }
 
     @Mutation(() => File)
+    @SkipBuild()
     async restoreDamFile(@Args("id", { type: () => ID }) id: string): Promise<File> {
         const entity = await this.filesRepository.findOneOrFail(id);
         entity.archived = false;
@@ -64,6 +73,7 @@ export class FilesResolver {
     }
 
     @Mutation(() => Boolean)
+    @SkipBuild()
     async deleteDamFile(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         return this.filesService.delete(id);
     }

@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { ApolloError } from "@apollo/client/errors";
+import { FetchResult } from "@apollo/client/link/core";
 import { BlockInterface } from "@comet/blocks-admin";
 
 import { GQLCreateRedirectMutation, GQLRedirectInput, GQLUpdateRedirectMutation } from "../graphql.generated";
@@ -23,7 +24,10 @@ export const useSubmitMutation = (
     mode: "edit" | "add",
     id: string | undefined,
     linkBlock: BlockInterface,
-): [(values: FormValues) => void, { loading: boolean; error: ApolloError | undefined }] => {
+): [
+    (values: FormValues) => Promise<FetchResult<GQLCreateRedirectMutation | GQLUpdateRedirectMutation>>,
+    { loading: boolean; error: ApolloError | undefined },
+] => {
     const [create, { loading: createLoading, error: createError }] = useMutation<GQLCreateRedirectMutation>(createRedirectMutation);
     const [update, { loading: updateLoading, error: updateError }] = useMutation<GQLUpdateRedirectMutation>(updateRedirectMutation);
     const loading = mode === "edit" ? updateLoading : createLoading;

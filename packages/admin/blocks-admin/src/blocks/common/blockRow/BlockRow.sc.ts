@@ -33,7 +33,7 @@ export const BlockWrapper = styled("div")`
     }
 `;
 
-export const Root = styled("div")<RootStyleProps>`
+export const Root = styled("div", { shouldForwardProp: (prop) => prop !== "isMouseHover" && prop !== "slideIn" })<RootStyleProps>`
     position: relative;
     display: flex;
     border-bottom: 1px solid ${({ theme }) => theme.palette.divider};

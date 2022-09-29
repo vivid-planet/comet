@@ -2,7 +2,7 @@ import { ComponentsOverrides, FormControl, Theme, Typography } from "@mui/materi
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
-import { FormatDateOptions, FormattedMessage } from "react-intl";
+import { FormatDateOptions, FormattedMessage, useIntl } from "react-intl";
 
 import { TimePicker, TimePickerProps } from "./TimePicker";
 
@@ -40,6 +40,8 @@ function TimeRangePicker({
     componentsProps = {},
     ...propsForBothTimePickers
 }: TimeRangePickerProps & WithStyles<typeof styles>) {
+    const intl = useIntl();
+
     const [startTime, setStartTime] = React.useState<IndividualTimeValue>(value?.start);
     const [endTime, setEndTime] = React.useState<IndividualTimeValue>(value?.end);
 
@@ -93,6 +95,7 @@ function TimeRangePicker({
                 <TimePicker
                     inputRef={startPickerRef}
                     value={startTime}
+                    placeholder={intl.formatMessage({ id: "comet.timeRangePicker.start", defaultMessage: "Start" })}
                     className={clsx(classes.timePicker, classes.startTimePicker)}
                     onChange={(time) => onChangeTimeValue(time, "start")}
                     onOpenPopper={() => setStartPickerIsOpen(true)}
@@ -107,6 +110,7 @@ function TimeRangePicker({
                 <TimePicker
                     inputRef={endPickerRef}
                     value={endTime}
+                    placeholder={intl.formatMessage({ id: "comet.timeRangePicker.end", defaultMessage: "End" })}
                     className={clsx(classes.timePicker, classes.endTimePicker)}
                     onChange={(time) => onChangeTimeValue(time, "end")}
                     onOpenPopper={() => setEndPickerIsOpen(true)}

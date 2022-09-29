@@ -1,5 +1,9 @@
 import { Field, FinalFormInput, FinalFormSelect, messages } from "@comet/admin";
+import { Add, Delete } from "@comet/admin-icons";
 import {
+    AdminComponentButton,
+    AdminComponentPaper,
+    AdminComponentSectionGroup,
     BlockInterface,
     BlocksFinalForm,
     BlockState,
@@ -11,12 +15,16 @@ import {
     decomposeUpdateStateAction,
     withAdditionalBlockAttributes,
 } from "@comet/blocks-admin";
-import { Box, Divider, MenuItem, Paper, Typography } from "@mui/material";
+import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import arrayMutators from "final-form-arrays";
 import * as React from "react";
 import { Field as ReactFinalFormField } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
+import { validateUrl } from "../validation/validateUrl";
 import { PixelImageBlock } from "./PixelImageBlock";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
@@ -38,6 +46,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
         noIndex: false,
         priority: "0_5",
         changeFrequency: "weekly",
+        alternativeLinks: [],
         htmlTitle: undefined,
         metaDescription: undefined,
         openGraphTitle: undefined,
@@ -84,8 +93,11 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                                 changeFrequency: values.changeFrequency,
 
                                 canonicalUrl: values.canonicalUrl,
+
+                                alternativeLinks: values.alternativeLinks,
                             }));
                         }}
+                        mutators={{ ...arrayMutators }}
                         initialValues={{
                             htmlTitle: state.htmlTitle,
                             metaDescription: state.metaDescription,
@@ -100,6 +112,8 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                             changeFrequency: state.changeFrequency,
 
                             canonicalUrl: state.canonicalUrl,
+
+                            alternativeLinks: state.alternativeLinks,
                         }}
                     >
                         {/* Meta */}
@@ -252,6 +266,63 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                             </Typography>
                             <Field label={<FormattedMessage {...messages.url} />} name="canonicalUrl" component={FinalFormInput} fullWidth />
                         </Box>
+
+                        {/* Alternate Hreflang */}
+                        <Box marginTop={8} marginBottom={8}>
+                            <AdminComponentSectionGroup
+                                title={<FormattedMessage id="comet.blocks.seo.alternativeLinks.sectionTitle" defaultMessage="Alternate links" />}
+                            >
+                                <AdminComponentPaper>
+                                    <FieldArray name="alternativeLinks">
+                                        {({ fields }) => (
+                                            <>
+                                                {fields.map((link, i) => (
+                                                    <Grid key={i} container spacing={2} sx={{ marginBottom: 2 }}>
+                                                        <Grid item xs={3}>
+                                                            <Field
+                                                                label={
+                                                                    <FormattedMessage
+                                                                        id="comet.blocks.seo.alternativeLinks.code"
+                                                                        defaultMessage="Code"
+                                                                    />
+                                                                }
+                                                                name={`${link}.code`}
+                                                                component={FinalFormInput}
+                                                                placeholder="en-US"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs>
+                                                            <Field
+                                                                label={<FormattedMessage {...messages.url} />}
+                                                                name={`${link}.url`}
+                                                                component={FinalFormInput}
+                                                                fullWidth
+                                                                validate={(url) => validateUrl(url)}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item alignSelf="flex-start">
+                                                            <DeleteButtonWrapper>
+                                                                <IconButton onClick={() => fields.remove(i)} size="large">
+                                                                    <Delete />
+                                                                </IconButton>
+                                                            </DeleteButtonWrapper>
+                                                        </Grid>
+                                                    </Grid>
+                                                ))}
+                                                <AdminComponentButton variant="primary" onClick={() => fields.push({ code: "", url: "" })}>
+                                                    <AddButtonContent>
+                                                        <AddButtonIcon />
+                                                        <Typography>
+                                                            <FormattedMessage {...messages.add} />
+                                                        </Typography>
+                                                    </AddButtonContent>
+                                                </AdminComponentButton>
+                                            </>
+                                        )}
+                                    </FieldArray>
+                                </AdminComponentPaper>
+                            </AdminComponentSectionGroup>
+                        </Box>
                     </BlocksFinalForm>
                 </div>
             );
@@ -260,3 +331,19 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
 
     return SeoBlock;
 }
+
+const AddButtonContent = styled("span")`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 0;
+`;
+
+const AddButtonIcon = styled(Add)`
+    font-size: 24px;
+    margin-bottom: 8px;
+`;
+
+const DeleteButtonWrapper = styled("div")`
+    padding-top: 24px;
+`;

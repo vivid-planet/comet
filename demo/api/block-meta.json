@@ -487,6 +487,42 @@
         ]
     },
     {
+        "name": "InternalLink",
+        "fields": [
+            {
+                "name": "targetPage",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "path",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "targetPageId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "DamImage",
         "fields": [
             {
@@ -546,42 +582,6 @@
                 "name": "activeType",
                 "kind": "String",
                 "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "InternalLink",
-        "fields": [
-            {
-                "name": "targetPage",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "id",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "name",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "path",
-                            "kind": "String",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "targetPageId",
-                "kind": "String",
-                "nullable": true
             }
         ]
     },
@@ -689,6 +689,11 @@
                 "name": "canonicalUrl",
                 "kind": "String",
                 "nullable": true
+            },
+            {
+                "name": "alternativeLinks",
+                "kind": "Json",
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -764,6 +769,11 @@
                 "name": "canonicalUrl",
                 "kind": "String",
                 "nullable": true
+            },
+            {
+                "name": "alternativeLinks",
+                "kind": "Json",
+                "nullable": false
             }
         ]
     },

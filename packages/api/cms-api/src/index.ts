@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-export { AUTH_CONFIG, AUTH_MODULE_OPTIONS } from "./auth/auth.constants";
+export { AUTH_CONFIG, AUTH_CURRENT_USER_LOADER, AUTH_MODULE_OPTIONS } from "./auth/auth.constants";
 export { AuthModule } from "./auth/auth.module";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
@@ -8,6 +8,7 @@ export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decor
 export { PublicApi } from "./auth/decorators/public-api.decorator";
 export { CurrentUser } from "./auth/dto/current-user";
 export { GlobalAuthGuard } from "./auth/guards/global.guard";
+export { CurrentUserLoaderInterface } from "./auth/interfaces/current-user-loader.interface";
 export { BasicAuthStrategy } from "./auth/strategies/basic-auth.strategy";
 export { BearerTokenStrategy } from "./auth/strategies/bearer-token.strategy";
 export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
@@ -40,18 +41,27 @@ export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-buil
 export { JobStatus } from "./builds/job-status.enum";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
 export { SkipBuildInterceptor } from "./builds/skip-build.interceptor";
+export { ContentScope } from "./common/decorators/content-scope.interface";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
+export { ScopedEntity, ScopedEntityMeta } from "./common/decorators/scoped-entity.decorator";
+export { SubjectEntity, SubjectEntityMeta, SubjectEntityOptions } from "./common/decorators/subject-entity.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
 export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
+export { BooleanFilter } from "./common/filter/boolean.filter";
+export { DateFilter } from "./common/filter/date.filter";
+export { filtersToMikroOrmQuery, queryToMikroOrmQuery } from "./common/filter/mikro-orm";
+export { NumberFilter } from "./common/filter/number.filter";
+export { StringFilter } from "./common/filter/string.filter";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";
 export { PaginatedResponseFactory } from "./common/pagination/paginated-response.factory";
 export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsSlug } from "./common/validators/is-slug";
+export { ContentScopeModule } from "./content-scope/content-scope.module";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";
@@ -90,6 +100,14 @@ export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
+export {
+    CrudField,
+    CrudFieldOptions,
+    CrudGenerator,
+    CrudGeneratorOptions,
+    CrudSingleGenerator,
+    CrudSingleGeneratorOptions,
+} from "./generator/crud-generator.decorator";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";

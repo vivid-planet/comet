@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Removed the `Select` component, use MUIs `Select` instead.
 -   `StackBreadcrumbs` no longer supports props from MUIs `Breadcrumbs` component.
+-   Upgraded class-transformer from 0.3.1 to 0.5.x, see [CHANGELOG](https://github.com/typestack/class-transformer/blob/develop/CHANGELOG.md)
 
 ### Bugfixes
 
@@ -44,6 +45,42 @@ All notable changes to this project will be documented in this file. This projec
     <FormattedMessage {...messages.globalContentScope} />;
 
     intl.formatMessage(messages.saveUnsavedChanges);
+    ```
+
+-   class-transformer changes:
+
+    exported functions has been renamed
+
+    ```typescript
+    classToPlain -> instanceToPlain
+    plainToClass -> plainToInstance
+    classToClass -> instanceToInstance
+    ```
+
+    Signature change for @Transform decorator
+    Before
+
+    ```typescript
+    @Transform((value, obj, type) => /* Do some stuff with value here. */)
+    ```
+
+    After
+
+    ```typescript
+    @Transform(({ value, key, obj, type }) => /* Do some stuff with value here. */)
+    ```
+
+    `ClassType` export changed
+    Before
+
+    ```typescript
+    import { ClassType } from "class-transformer/ClassTransformer";
+    ```
+
+    After
+
+    ```typescript
+    import { ClassConstructor } from "class-transformer";
     ```
 
 ## @comet/admin-theme

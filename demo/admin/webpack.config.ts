@@ -17,7 +17,7 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
         new HtmlWebpackPlugin({
             template: "public/index.ejs",
             templateParameters: {
-                environmentValues: environment.map((env) => ({ key: env, value: production ? `$${env}` : process.env[env] })),
+                environmentValues: environment.map((env) => ({ key: env, value: production ? `$${env}` : process.env[env] ?? "" })),
             },
             hash: true,
         }),

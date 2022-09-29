@@ -1,18 +1,24 @@
 import { NotFoundException } from "@nestjs/common";
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
+import { SkipBuild } from "../../builds/skip-build.decorator";
+import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { FolderArgs, FolderByNameAndParentIdArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { Folder } from "./entities/folder.entity";
 import { FoldersService } from "./folders.service";
 
+@ObjectType()
+export class PaginatedDamFolders extends PaginatedResponseFactory.create(Folder) {}
+
 @Resolver(() => Folder)
 export class FoldersResolver {
     constructor(private readonly foldersService: FoldersService) {}
 
-    @Query(() => [Folder])
-    async damFoldersList(@Args() args: FolderArgs): Promise<Folder[]> {
-        return this.foldersService.findAll(args);
+    @Query(() => PaginatedDamFolders)
+    async damFoldersList(@Args() args: FolderArgs): Promise<PaginatedDamFolders> {
+        const [folders, totalCount] = await this.foldersService.findAndCount(args);
+        return new PaginatedDamFolders(folders, totalCount);
     }
 
     @Query(() => Folder)
@@ -30,11 +36,13 @@ export class FoldersResolver {
     }
 
     @Mutation(() => Folder)
+    @SkipBuild()
     async createDamFolder(@Args("input", { type: () => CreateFolderInput }) data: CreateFolderInput): Promise<Folder> {
         return this.foldersService.create(data);
     }
 
     @Mutation(() => Folder)
+    @SkipBuild()
     async updateDamFolder(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => UpdateFolderInput }) input: UpdateFolderInput,
@@ -43,6 +51,7 @@ export class FoldersResolver {
     }
 
     @Mutation(() => [Folder])
+    @SkipBuild()
     async moveDamFolders(
         @Args("folderIds", { type: () => [ID] }) folderIds: string[],
         @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
@@ -51,6 +60,7 @@ export class FoldersResolver {
     }
 
     @Mutation(() => Boolean)
+    @SkipBuild()
     async deleteDamFolder(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         return this.foldersService.delete(id);
     }

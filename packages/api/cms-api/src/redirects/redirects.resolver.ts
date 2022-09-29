@@ -1,8 +1,9 @@
+import { FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Type } from "@nestjs/common";
 import { Args, CONTEXT, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { plainToClass } from "class-transformer";
+import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Request } from "express";
 
@@ -35,9 +36,15 @@ export function createRedirectsResolver(Redirect: Type<RedirectInterface>, Redir
         }
 
         @Query(() => [Redirect])
-        async redirects(@Args() { query, type, active }: RedirectArgs): Promise<RedirectInterface[]> {
+        async redirects(@Args() { query, type, active, sortColumnName, sortDirection }: RedirectArgs): Promise<RedirectInterface[]> {
             const where = this.redirectService.getFindCondition({ query, type, active });
-            return this.repository.find(where);
+
+            const options: FindOptions<RedirectInterface> = {};
+            if (sortColumnName) {
+                options.orderBy = { [sortColumnName]: sortDirection };
+            }
+
+            return this.repository.find(where, options);
         }
 
         @Query(() => Redirect)
@@ -46,9 +53,15 @@ export function createRedirectsResolver(Redirect: Type<RedirectInterface>, Redir
             return redirect ?? null;
         }
 
+        @Query(() => Boolean)
+        async redirectSourceAvailable(@Args("source", { type: () => String }) source: string): Promise<boolean> {
+            const redirect = await this.repository.findOne({ source });
+            return redirect === null;
+        }
+
         @Mutation(() => Redirect)
         async createRedirect(@Args("input", { type: () => RedirectInput }) input: RedirectInputInterface): Promise<RedirectInterface> {
-            const tranformedInput = plainToClass(RedirectInput, input);
+            const tranformedInput = plainToInstance(RedirectInput, input);
 
             const errors = await validate(tranformedInput, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -67,7 +80,7 @@ export function createRedirectsResolver(Redirect: Type<RedirectInterface>, Redir
             @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
             @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
         ): Promise<RedirectInterface> {
-            const tranformedInput = plainToClass(RedirectInput, input);
+            const tranformedInput = plainToInstance(RedirectInput, input);
 
             const errors = await validate(tranformedInput, { whitelist: true, forbidNonWhitelisted: true });
 

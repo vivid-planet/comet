@@ -19,9 +19,11 @@ export const SelectPageCell = styled(PageTreeCell)`
 `;
 
 export const PageInfoCell = styled(PageTreeCell)`
-    flex-grow: 1;
+    flex-basis: 100%;
     text-align: left;
     padding-left: 0;
+    padding-right: 0;
+    overflow: hidden;
 `;
 
 export const PageVisibilityCell = styled(PageTreeCell)`

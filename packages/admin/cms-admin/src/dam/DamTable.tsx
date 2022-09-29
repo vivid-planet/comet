@@ -164,7 +164,6 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
             columnName: "name",
             direction: SortDirection.ASC,
         },
-        archived: false,
     });
 
     return (

@@ -1,6 +1,7 @@
 import { ComponentsOverrides, FormControl, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
+import { useIntl } from "react-intl";
 
 import { DatePicker, DatePickerProps } from "./DatePicker";
 import { getDateWithNewTime, getTimeStringFromDate } from "./helpers/timePickerHelpers";
@@ -25,6 +26,7 @@ function DateTimePicker({
     componentsProps = {},
     ...propsForBothTimePickers
 }: DateTimePickerProps & WithStyles<typeof styles>) {
+    const intl = useIntl();
     const datePickerRef = React.useRef<HTMLElement>(null);
     const timePickerRef = React.useRef<HTMLElement>(null);
 
@@ -75,6 +77,7 @@ function DateTimePicker({
                 <TimePicker
                     inputRef={timePickerRef}
                     value={value ? getTimeStringFromDate(value) : undefined}
+                    placeholder={intl.formatMessage({ id: "comet.timeTimePicker.time", defaultMessage: "Time" })}
                     className={classes.timePicker}
                     onChange={onChangeTime}
                     fullWidth

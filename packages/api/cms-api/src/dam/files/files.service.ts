@@ -43,6 +43,8 @@ export const withFilesSelect = (
         mimetypes?: string[];
         sortColumnName?: string;
         sortDirection?: SortDirection;
+        offset?: number;
+        limit?: number;
     },
 ): QueryBuilder<File> => {
     if (args.query) {
@@ -67,6 +69,13 @@ export const withFilesSelect = (
 
     if (args.sortColumnName && args.sortDirection) {
         qb.orderBy({ [`file.${args.sortColumnName}`]: args.sortDirection });
+    }
+
+    if (args.offset) {
+        qb.offset(args.offset);
+    }
+    if (args.limit) {
+        qb.limit(args.limit);
     }
 
     return qb;
@@ -96,7 +105,7 @@ export class FilesService {
             .leftJoinAndSelect("file.folder", "folder");
     }
 
-    async findAll({ folderId, includeArchived, filter, sortColumnName, sortDirection }: FileArgs): Promise<File[]> {
+    async findAll({ folderId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FileArgs, "offset" | "limit">): Promise<File[]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
 
         return withFilesSelect(this.selectQueryBuilder(), {
@@ -107,6 +116,34 @@ export class FilesService {
             sortColumnName,
             sortDirection,
         }).getResult();
+    }
+
+    async findAndCount({ folderId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: FileArgs): Promise<[File[], number]> {
+        const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
+
+        const files = await withFilesSelect(this.selectQueryBuilder(), {
+            archived: !includeArchived ? false : undefined,
+            folderId: !isSearching ? folderId || null : undefined,
+            mimetypes: filter?.mimetypes,
+            query: filter?.searchText,
+            sortColumnName,
+            sortDirection,
+            offset,
+            limit,
+        }).getResult();
+
+        const totalCount = await withFilesSelect(this.selectQueryBuilder(), {
+            archived: !includeArchived ? false : undefined,
+            folderId: !isSearching ? folderId || null : undefined,
+            mimetypes: filter?.mimetypes,
+            query: filter?.searchText,
+            sortColumnName,
+            sortDirection,
+            offset,
+            limit,
+        }).getCount();
+
+        return [files, totalCount];
     }
 
     async findAllByHash(contentHash: string): Promise<File[]> {
@@ -136,7 +173,7 @@ export class FilesService {
 
     async create({ folderId, ...data }: CreateFileInput): Promise<File> {
         const folder = folderId ? await this.foldersService.findOneById(folderId) : undefined;
-        return this.save(this.filesRepository.create({ ...data, folder }));
+        return this.save(this.filesRepository.create({ ...data, folder: folder?.id }));
     }
 
     async updateById(id: string, data: UpdateFileInput): Promise<File> {

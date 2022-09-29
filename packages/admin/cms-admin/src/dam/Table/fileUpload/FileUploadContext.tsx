@@ -23,6 +23,7 @@ export const FileUploadContextProvider: React.FunctionComponent = ({ children })
             for (const timeout of timeouts.current) {
                 clearTimeout(timeout);
             }
+            setNewlyUploadedFileIds([]);
         };
     }, []);
 

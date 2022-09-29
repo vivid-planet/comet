@@ -20,7 +20,6 @@ import { IconButton } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLMutationcreateNewsArgs, GQLMutationupdateNewsArgs, GQLNewsInput, GQLNewsQuery, GQLNewsQueryVariables } from "@src/graphql.generated";
 import { FORM_ERROR } from "final-form";
-import arrayMutators from "final-form-arrays";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -71,7 +70,6 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
             onSubmit={handleSubmit}
             mode={newsId ? "edit" : "add"}
             initialValues={data?.news ? { title: data.news.title, slug: data.news.slug } : { title: "", slug: "" }}
-            mutators={{ ...arrayMutators }}
             renderButtons={() => null}
             onAfterSubmit={(values, form) => {
                 form.reset(values);

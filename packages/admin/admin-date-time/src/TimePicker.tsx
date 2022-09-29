@@ -26,7 +26,7 @@ function TimePicker({
     endAdornment,
     clearable,
     minuteStep = 15,
-    placeholder = "HH:MM",
+    placeholder,
     min = "00:00",
     max = "23:59",
     ...inputWithPopperProps
@@ -52,7 +52,7 @@ function TimePicker({
     return (
         <InputWithPopper
             value={dateValue ? intl.formatTime(dateValue, formatOptions) : ""}
-            placeholder={placeholder}
+            placeholder={placeholder ?? intl.formatMessage({ id: "comet.timePicker.select", defaultMessage: "Select" })}
             startAdornment={
                 <InputAdornment position="start" disablePointerEvents>
                     <Time />
