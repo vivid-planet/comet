@@ -25,6 +25,17 @@
         "dev:demo:api": "yarn build:cms:api:skippable && dotenv -c -- pm2 start ecosystem-demo-api.config.js",
         "dev:demo:admin": "yarn build:admin:skippable && yarn build:cms:admin:skippable && dotenv -c -- pm2 start ecosystem-demo-admin.config.js",
         "dev:demo:site": "yarn build:cms:site:skippable && dotenv -c -- pm2 start ecosystem-demo-site.config.js",
+
+        "dev-pm:admin": "dotenv -c -- dev-pm start comet-admin",
+        "dev-pm:cms": "yarn build:admin:skippable && dotenv -c -- dev-pm start cms",
+        "dev-pm:cms:api": "dotenv -c -- dev-pm start cms-api",
+        "dev-pm:cms:admin": "yarn build:admin:skippable && dotenv -c -- dev-pm start cms-admin",
+        "dev-pm:cms:site": "dotenv -c -- dev-pm start cms-site",
+        "dev-pm:demo": "yarn build:admin:skippable && yarn build:cms:skippable && dotenv -c -- dev-pm start demo",
+        "dev-pm:demo:api": "yarn build:cms:api:skippable && dotenv -c -- dev-pm start demo-api",
+        "dev-pm:demo:admin": "yarn build:admin:skippable && yarn build:cms:admin:skippable && dotenv -c -- dev-pm start demo-admin",
+        "dev-pm:demo:site": "yarn build:cms:site:skippable && dotenv -c -- dev-pm start demo-site",
+
         "build": "lerna run build --concurrency=1 --stream",
         "build:admin": "lerna run build --scope '@comet/admin*'",
         "build:admin:skippable": "test -f packages/admin/admin/lib/index.d.ts && echo 'Skipping Admin build' || yarn build:admin",
