@@ -20,7 +20,7 @@ export interface ClearInputAdornmentProps extends InputAdornmentProps {
 
 export const ClearAdornment = ({
     classes,
-    icon = <Clear />,
+    icon = <Clear fontSize="inherit" />,
     onClick,
     hasClearableContent,
     ...restProps
@@ -64,8 +64,10 @@ const styles = ({ palette, spacing }: Theme) => {
         sizeSmall: {},
         buttonBase: {
             height: "100%",
-            width: 40,
-            color: palette.action.active,
+            color: palette.grey[200],
+            paddingLeft: 10,
+            paddingRight: 10,
+            fontSize: 12,
         },
     });
 };
