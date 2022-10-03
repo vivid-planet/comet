@@ -79,10 +79,10 @@ export class PageTreeNodeUpdateVisibilityInput {
 }
 
 @InputType()
-export class PageTreeNodeUpdatePositionInput {
+export class MovePageTreeNodesInput {
     @Field(() => String, { nullable: true })
     @IsOptional()
-    @IsUUID()
+    // @IsUUID()
     parentId: string | null;
 
     @Field(() => Int)

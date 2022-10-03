@@ -10,7 +10,7 @@ import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
     DefaultPageTreeNodeCreateInput,
     DefaultPageTreeNodeUpdateInput,
-    PageTreeNodeUpdatePositionInput,
+    MovePageTreeNodesInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./dto/page-tree-node.input";
 import { SlugAvailability } from "./dto/slug-availability.enum";
@@ -203,27 +203,37 @@ export function createPageTreeResolver({
             return await readApi.getNodeOrFail(id);
         }
 
-        @Mutation(() => PageTreeNode)
-        @SubjectEntity(PageTreeNode)
-        async updatePageTreeNodePosition(
-            @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => PageTreeNodeUpdatePositionInput }) input: PageTreeNodeUpdatePositionInput,
-        ): Promise<PageTreeNodeInterface> {
+        @Mutation(() => [PageTreeNode])
+        @SubjectEntity(PageTreeNode, { idArg: "ids" })
+        async movePageTreeNodes(
+            @Args("ids", { type: () => [ID] }) ids: string[],
+            @Args("input", { type: () => MovePageTreeNodesInput }) input: MovePageTreeNodesInput,
+        ): Promise<PageTreeNodeInterface[]> {
             // Archived pages cannot be updated
             const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
             });
-            const node = await pageTreeReadApi.getNodeOrFail(id);
-            if (node.visibility === Visibility.Archived) {
-                throw new GraphQLError("Can not update an archived page.");
+
+            let pos = input.pos;
+            const modifiedPageTreeNodes = [];
+
+            for (const id of ids) {
+                const node = await pageTreeReadApi.getNodeOrFail(id);
+                if (node.visibility === Visibility.Archived) {
+                    throw new GraphQLError("Cannot update an archived page.");
+                }
+
+                if (node.slug === "home" && input.parentId !== null) {
+                    throw new GraphQLError(`Page "home" cannot be moved to subtree`);
+                }
+
+                const modifiedPageTreeNode = await this.pageTreeService.updateNodePosition(id, { parentId: input.parentId, pos });
+                pos = modifiedPageTreeNode.pos + 1;
+
+                modifiedPageTreeNodes.push(modifiedPageTreeNode);
             }
 
-            if (node.slug === "home" && input.parentId !== null) {
-                throw new GraphQLError(`Page "home" cannot be moved to subtree`);
-            }
-
-            await this.pageTreeService.updateNodePosition(id, input);
-            return await this.pageTreeNode(id);
+            return modifiedPageTreeNodes;
         }
 
         @Mutation(() => PageTreeNode)
