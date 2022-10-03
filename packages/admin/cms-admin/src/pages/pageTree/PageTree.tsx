@@ -119,18 +119,24 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     const moveRequest = React.useCallback(
         // @TODO: handle path collisions when moving pages
         async ({ id, parentId, position }: { id: string; parentId: string | null; position: number }) => {
-            const selectedPageIds: string[] = [];
-            for (const page of pages) {
-                if (page.selected && (page.parentId === null || !selectedPageIds.includes(page.parentId))) {
-                    selectedPageIds.push(page.id);
-                }
-            }
+            const selectedPages: PageTreePage[] = pages.filter((page) => page.selected);
+            const selectedPageIds: string[] = selectedPages.map((page) => page.id);
 
-            const ids = selectedPageIds.length === 0 || !selectedPageIds.includes(id) ? [id] : selectedPageIds;
+            let idsToMove: string[];
+            if (selectedPageIds.length === 0 || !selectedPageIds.includes(id)) {
+                idsToMove = [id];
+            } else {
+                // filter out subpages if their parent is selected => only the parent has to be moved
+                idsToMove = selectedPages
+                    .filter((page) => {
+                        return page.parentId === null || !selectedPageIds.includes(page.parentId);
+                    })
+                    .map((page) => page.id);
+            }
 
             await movePageTreeNodes({
                 variables: {
-                    ids: ids,
+                    ids: idsToMove,
                     input: {
                         parentId: parentId,
                         pos: position,
@@ -170,7 +176,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                     const updatedPages = pagesData.map((pageData) => {
                         const updatedPageData = { ...pageData };
                         if (
-                            !ids.includes(pageData.id) &&
+                            !idsToMove.includes(pageData.id) &&
                             pageData.parentId === firstMovedPageTreeNode.parentId &&
                             pageData.pos >= movedPageTreeNodes[0].pos
                         ) {
