@@ -12,12 +12,12 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { useContentScope } from "../../contentScope/Provider";
 import {
+    GQLMovePageTreeNodesMutation,
+    GQLMovePageTreeNodesMutationVariables,
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
     GQLPagesQuery,
     GQLPagesQueryVariables,
-    GQLUpdatePageTreeNodePositionMutation,
-    GQLUpdatePageTreeNodePositionMutationVariables,
     namedOperations,
 } from "../../graphql.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
@@ -36,9 +36,9 @@ interface PageTreeProps {
 
 type PageTreeRefApi = { scrollToItem: List["scrollToItem"] };
 
-const UPDATE_PAGE_TREE_NODE_POSITION = gql`
-    mutation UpdatePageTreeNodePosition($id: ID!, $input: PageTreeNodeUpdatePositionInput!) {
-        updatePageTreeNodePosition(id: $id, input: $input) {
+const MOVE_PAGE_TREE_NODES = gql`
+    mutation MovePageTreeNodes($ids: [ID!]!, $input: MovePageTreeNodesInput!) {
+        movePageTreeNodes(ids: $ids, input: $input) {
             id
             parentId
             pos
@@ -102,9 +102,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     const pageTreeService = React.useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
     const { scope } = useContentScope();
     const snackbarApi = useSnackbarApi();
-    const [updatePageTreeNodePosition] = useMutation<GQLUpdatePageTreeNodePositionMutation, GQLUpdatePageTreeNodePositionMutationVariables>(
-        UPDATE_PAGE_TREE_NODE_POSITION,
-    );
+    const [movePageTreeNodes] = useMutation<GQLMovePageTreeNodesMutation, GQLMovePageTreeNodesMutationVariables>(MOVE_PAGE_TREE_NODES);
     const debouncedSetHoverState = useDebouncedCallback(
         (setHoverState: React.Dispatch<React.SetStateAction<DropInfo | undefined>>, newHoverState: DropInfo | undefined) => {
             setHoverState((prevState) => {
@@ -118,30 +116,46 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         5,
     );
 
-    const updateRequest = React.useCallback(
+    const moveRequest = React.useCallback(
         // @TODO: handle path collisions when moving pages
         async ({ id, parentId, position }: { id: string; parentId: string | null; position: number }) => {
-            await updatePageTreeNodePosition({
+            const selectedPageIds: string[] = [];
+            for (const page of pages) {
+                if (page.selected && (page.parentId === null || !selectedPageIds.includes(page.parentId))) {
+                    selectedPageIds.push(page.id);
+                }
+            }
+
+            const ids = selectedPageIds.length === 0 || !selectedPageIds.includes(id) ? [id] : selectedPageIds;
+
+            await movePageTreeNodes({
                 variables: {
-                    id: id,
+                    ids: ids,
                     input: {
                         parentId: parentId,
                         pos: position,
                     },
                 },
-                optimisticResponse: {
-                    updatePageTreeNodePosition: {
-                        __typename: "PageTreeNode",
-                        id: id,
-                        parentId: parentId,
-                        pos: position,
-                    },
+                optimisticResponse: (variables) => {
+                    const pageTreeNodes: GQLMovePageTreeNodesMutation["movePageTreeNodes"] = (variables.ids as string[]).map((id, index) => {
+                        return {
+                            __typename: "PageTreeNode",
+                            id: id,
+                            parentId: parentId,
+                            pos: position + index,
+                        };
+                    });
+
+                    return {
+                        movePageTreeNodes: pageTreeNodes,
+                    };
                 },
                 update: (proxy, { data }) => {
                     // The page positions of all other pagetree nodes are updated in the cache
                     // => realtime update
-                    const updatePageTreeNodePosition = data?.updatePageTreeNodePosition;
-                    if (!updatePageTreeNodePosition) {
+                    const movedPageTreeNodes = data?.movePageTreeNodes;
+                    const firstMovedPageTreeNode = movedPageTreeNodes?.[0];
+                    if (!movedPageTreeNodes || !firstMovedPageTreeNode) {
                         return;
                     }
 
@@ -156,11 +170,11 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                     const updatedPages = pagesData.map((pageData) => {
                         const updatedPageData = { ...pageData };
                         if (
-                            pageData.id !== id &&
-                            pageData.parentId === updatePageTreeNodePosition.parentId &&
-                            pageData.pos >= updatePageTreeNodePosition.pos
+                            !ids.includes(pageData.id) &&
+                            pageData.parentId === firstMovedPageTreeNode.parentId &&
+                            pageData.pos >= movedPageTreeNodes[0].pos
                         ) {
-                            updatedPageData.pos++;
+                            updatedPageData.pos = updatedPageData.pos + movedPageTreeNodes.length;
                         }
 
                         return updatedPageData;
@@ -169,7 +183,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 },
             });
         },
-        [scope, updatePageTreeNodePosition, category],
+        [pages, movePageTreeNodes, scope, category],
     );
 
     const onDrop = React.useCallback(
@@ -184,7 +198,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 return;
             }
 
-            await updateRequest({ id: dragObject.id, parentId: updateInfo.parentId, position: updateInfo.position });
+            await moveRequest({ id: dragObject.id, parentId: updateInfo.parentId, position: updateInfo.position });
 
             snackbarApi.showSnackbar(
                 <UndoSnackbar
@@ -194,13 +208,13 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                         if (movedPage) {
                             const { id, parentId, pos: position } = movedPage;
                             // Previous position may be occupied => Add at previous position + 1 => order stays correct
-                            updateRequest({ id, parentId, position: position + 1 });
+                            moveRequest({ id, parentId, position: position + 1 });
                         }
                     }}
                 />,
             );
         },
-        [pageTreeService, snackbarApi, updateRequest],
+        [pageTreeService, snackbarApi, moveRequest],
     );
 
     const refList = useRef<List>(null);
