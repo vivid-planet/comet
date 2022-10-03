@@ -17,8 +17,8 @@
         "mikro-orm": "mikro-orm",
         "mikro-orm:drop": "mikro-orm schema:drop -r",
         "mikro-orm:migration:generate": "mikro-orm migration:create",
-        "db:migrate:prod": "yarn console:prod migrate --",
-        "db:migrate": "yarn console migrate --",
+        "db:migrate:prod": "yarn api-generator && yarn console:prod migrate --",
+        "db:migrate": "yarn api-generator && yarn console migrate --",
         "fixtures:prod": "yarn console:prod fixtures --",
         "fixtures": "yarn console fixtures --"
     },
