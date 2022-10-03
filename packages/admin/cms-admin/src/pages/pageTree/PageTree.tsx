@@ -116,11 +116,18 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         5,
     );
 
+    const [selectedPages, selectedPageIds] = React.useMemo(() => {
+        const selectedPages: PageTreePage[] = pages.filter((page) => page.selected);
+        const selectedPageIds: string[] = selectedPages.map((page) => page.id);
+
+        return [selectedPages, selectedPageIds];
+    }, [pages]);
+
     const moveRequest = React.useCallback(
         // @TODO: handle path collisions when moving pages
         async ({ id, parentId, position }: { id: string; parentId: string | null; position: number }) => {
-            const selectedPages: PageTreePage[] = pages.filter((page) => page.selected);
-            const selectedPageIds: string[] = selectedPages.map((page) => page.id);
+            // const selectedPages: PageTreePage[] = pages.filter((page) => page.selected);
+            // const selectedPageIds: string[] = selectedPages.map((page) => page.id);
 
             let idsToMove: string[];
             if (selectedPageIds.length === 0 || !selectedPageIds.includes(id)) {
@@ -189,7 +196,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 },
             });
         },
-        [pages, movePageTreeNodes, scope, category],
+        [selectedPageIds, movePageTreeNodes, selectedPages, scope, category],
     );
 
     const onDrop = React.useCallback(
@@ -235,7 +242,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
 
     return (
         <>
-            <PageTreeDragLayer />
+            <PageTreeDragLayer numberSelectedPages={selectedPages.length} />
             <Root>
                 <Divider />
                 <Table>
