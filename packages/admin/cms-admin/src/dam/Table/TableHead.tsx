@@ -53,7 +53,7 @@ export const TableHead = ({ isSearching, numberItems, breadcrumbs, folderId }: T
             <BoldTypography variant="body1">
                 <FormattedMessage
                     id="comet.pages.dam.foundNumberItems"
-                    defaultMessage="Found {number} items"
+                    defaultMessage="Found {number} {number, plural, one {item} other {items}}"
                     values={{
                         number: numberItems,
                     }}
