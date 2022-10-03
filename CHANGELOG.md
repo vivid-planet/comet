@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Next]
+## 2.2.1
+
+_Oct 3, 2022_
 
 ### @comet/admin-rte
 
