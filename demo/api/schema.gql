@@ -275,27 +275,6 @@ type PaginatedProducts {
   totalCount: Int!
 }
 
-type Redirect implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  sourceType: RedirectSourceTypeValues!
-  source: String!
-  target: JSONObject!
-  comment: String
-  active: Boolean!
-  generationType: RedirectGenerationType!
-  createdAt: DateTime!
-}
-
-enum RedirectSourceTypeValues {
-  path
-}
-
-enum RedirectGenerationType {
-  manual
-  automatic
-}
-
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
@@ -321,8 +300,6 @@ type Query {
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  redirects(sortColumnName: String, sortDirection: SortDirection = ASC, query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
-  redirect(id: ID!): Redirect!
   redirectSourceAvailable(source: String!): Boolean!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
   damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
@@ -448,10 +425,6 @@ type Mutation {
   updatePageTreeNodePosition(id: ID!, input: PageTreeNodeUpdatePositionInput!): PageTreeNode!
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
-  createRedirect(input: RedirectInput!): Redirect!
-  updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
-  updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
-  deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
@@ -520,19 +493,6 @@ input PageTreeNodeCreateInput {
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
   userGroup: UserGroup = All
-}
-
-input RedirectInput {
-  sourceType: RedirectSourceTypeValues!
-  source: String!
-  target: JSONObject!
-  comment: String
-  active: Boolean
-  generationType: RedirectGenerationType!
-}
-
-input RedirectUpdateActivenessInput {
-  active: Boolean!
 }
 
 input UpdateDamFileInput {

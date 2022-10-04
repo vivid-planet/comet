@@ -39,7 +39,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
 
         const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
-    import { FindOptions } from "@mikro-orm/core";
+    import { FindOptions, wrap } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
     import { SortDirection, validateNotModified } from "@comet/cms-api";
     
@@ -93,7 +93,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
                     validateNotModified(${instanceNameSingular}, lastUpdatedAt);
                 }
     
-                ${instanceNameSingular}.assign({
+                wrap(${instanceNameSingular}).assign({
                     ...input,
                     ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
                 });

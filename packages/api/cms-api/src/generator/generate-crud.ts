@@ -234,7 +234,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
 
         const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
-    import { FindOptions } from "@mikro-orm/core";
+    import { FindOptions, wrap } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
     import { SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
     
@@ -315,7 +315,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = new ${metadata.className}();
-            ${instanceNameSingular}.assign({
+            wrap(${instanceNameSingular}).assign({
                 ...input,
                 ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
                 ${hasVisibleProp ? `visible: false,` : ""}
@@ -341,7 +341,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             }`
                     : ""
             }
-            ${instanceNameSingular}.assign({
+            wrap(${instanceNameSingular}).assign({
                 ...input,
                 ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
             });
@@ -371,7 +371,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
     
-            ${instanceNameSingular}.assign({
+            wrap(${instanceNameSingular}).assign({
                 visible,
             });
             await this.repository.flush();
