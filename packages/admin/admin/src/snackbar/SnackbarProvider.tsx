@@ -1,5 +1,6 @@
 import { SnackbarCloseReason, SnackbarProps } from "@mui/material";
 import * as React from "react";
+import * as UUID from "uuid";
 
 import { UndoSnackbarProps } from "./UndoSnackbar";
 
@@ -60,6 +61,7 @@ export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
             {children}
             {snackbar !== undefined &&
                 React.cloneElement<SnackbarProps>(snackbar, {
+                    key: UUID.v4(),
                     open: open,
                     onClose: (event, reason) => handleClose(event, reason, snackbar?.props.onClose),
                 })}
