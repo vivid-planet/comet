@@ -214,9 +214,21 @@ export function createPageTreeResolver({
                 visibility: "all",
             });
 
-            let pos = input.pos;
-            const modifiedPageTreeNodes = [];
+            if (input.parentId !== null) {
+                const newParentNode = await pageTreeReadApi.getNodeOrFail(input.parentId);
 
+                let parentId = newParentNode.parentId;
+                while (parentId !== null) {
+                    if (ids.includes(parentId)) {
+                        throw new GraphQLError("Cannot make a page a child of its own child.");
+                    }
+
+                    const parentNode = await pageTreeReadApi.getNodeOrFail(parentId);
+                    parentId = parentNode.parentId;
+                }
+            }
+
+            const nodes: PageTreeNodeInterface[] = [];
             for (const id of ids) {
                 const node = await pageTreeReadApi.getNodeOrFail(id);
                 if (node.visibility === Visibility.Archived) {
@@ -224,10 +236,16 @@ export function createPageTreeResolver({
                 }
 
                 if (node.slug === "home" && input.parentId !== null) {
-                    throw new GraphQLError(`Page "home" cannot be moved to subtree`);
+                    throw new GraphQLError(`Page "home" cannot be moved to subtree.`);
                 }
 
-                const modifiedPageTreeNode = await this.pageTreeService.updateNodePosition(id, { parentId: input.parentId, pos });
+                nodes.push(node);
+            }
+
+            let pos = input.pos;
+            const modifiedPageTreeNodes: PageTreeNodeInterface[] = [];
+            for (const node of nodes) {
+                const modifiedPageTreeNode = await this.pageTreeService.updateNodePosition(node.id, { parentId: input.parentId, pos });
                 pos = modifiedPageTreeNode.pos + 1;
 
                 modifiedPageTreeNodes.push(modifiedPageTreeNode);

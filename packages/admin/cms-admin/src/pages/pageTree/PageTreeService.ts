@@ -1,4 +1,4 @@
-import { DropTarget, DropTargetBeforeAfter, PageTreeDragObject } from "./PageTreeRow";
+import { DropTarget, DropTargetBeforeAfter } from "./PageTreeRow";
 import { PageTreePage } from "./usePageTree";
 
 export interface IPageTreeUpdateInfo {
@@ -92,22 +92,28 @@ class PageTreeService {
     // Returns an IPageTreeUpdateInfo object if drop is possible.
     // Otherwise returns false
     dropAllowed(
-        dragObject: PageTreeDragObject,
+        draggedPages: PageTreePage[],
         dropTargetPage: PageTreePage,
         dropTarget: DropTarget,
         targetLevel: number,
     ): IPageTreeUpdateInfo | false {
-        if (dragObject.slug === "home" && dropTarget === "ADD_AS_CHILD") {
-            return false;
-        }
-
         const updateInfo = this.getPageTreeNodeUpdateInfo(targetLevel, dropTargetPage, dropTarget);
 
-        if (
-            !updateInfo || // No fitting parent exists
-            updateInfo.parentId === dragObject.id || // Item cannot be its own parent
-            updateInfo.neighbourPage.ancestorIds.includes(dragObject.id) // Item cannot be its own subitem
-        ) {
+        for (const draggedPage of draggedPages) {
+            if (draggedPage.slug === "home" && dropTarget === "ADD_AS_CHILD") {
+                return false;
+            }
+
+            if (
+                !updateInfo || // No fitting parent exists
+                updateInfo.parentId === draggedPage.id || // Item cannot be its own parent
+                updateInfo.neighbourPage.ancestorIds.includes(draggedPage.id) // Item cannot be its own subitem
+            ) {
+                return false;
+            }
+        }
+
+        if (updateInfo === null) {
             return false;
         }
 

@@ -116,34 +116,16 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         5,
     );
 
-    const [selectedPages, selectedPageIds] = React.useMemo(() => {
-        const selectedPages: PageTreePage[] = pages.filter((page) => page.selected);
-        const selectedPageIds: string[] = selectedPages.map((page) => page.id);
-
-        return [selectedPages, selectedPageIds];
+    const selectedPages = React.useMemo(() => {
+        return pages.filter((page) => page.selected);
     }, [pages]);
 
     const moveRequest = React.useCallback(
         // @TODO: handle path collisions when moving pages
-        async ({ id, parentId, position }: { id: string; parentId: string | null; position: number }) => {
-            // const selectedPages: PageTreePage[] = pages.filter((page) => page.selected);
-            // const selectedPageIds: string[] = selectedPages.map((page) => page.id);
-
-            let idsToMove: string[];
-            if (selectedPageIds.length === 0 || !selectedPageIds.includes(id)) {
-                idsToMove = [id];
-            } else {
-                // filter out subpages if their parent is selected => only the parent has to be moved
-                idsToMove = selectedPages
-                    .filter((page) => {
-                        return page.parentId === null || !selectedPageIds.includes(page.parentId);
-                    })
-                    .map((page) => page.id);
-            }
-
+        async ({ ids, parentId, position }: { ids: string[]; parentId: string | null; position: number }) => {
             await movePageTreeNodes({
                 variables: {
-                    ids: idsToMove,
+                    ids: ids,
                     input: {
                         parentId: parentId,
                         pos: position,
@@ -183,7 +165,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                     const updatedPages = pagesData.map((pageData) => {
                         const updatedPageData = { ...pageData };
                         if (
-                            !idsToMove.includes(pageData.id) &&
+                            !ids.includes(pageData.id) &&
                             pageData.parentId === firstMovedPageTreeNode.parentId &&
                             pageData.pos >= movedPageTreeNodes[0].pos
                         ) {
@@ -196,38 +178,60 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 },
             });
         },
-        [selectedPageIds, movePageTreeNodes, selectedPages, scope, category],
+        [movePageTreeNodes, scope, category],
     );
 
     const onDrop = React.useCallback(
         async (dragObject: PageTreeDragObject, dropTargetPage: PageTreePage, dropTarget: DropTarget, targetLevel: number) => {
-            const updateInfo = pageTreeService.dropAllowed(dragObject, dropTargetPage, dropTarget, targetLevel);
-            if (
-                !updateInfo ||
-                // Update is redundant because parent and list order stay the same
-                (updateInfo.parentId === dragObject.parentId &&
-                    (updateInfo.position === dragObject.pos || updateInfo.position === dragObject.pos + 1))
-            ) {
+            const selectedPageIds = selectedPages.map((page) => page.id);
+            let pagesToMove: PageTreePage[];
+            let idsToMove: string[];
+
+            if (selectedPageIds.includes(dragObject.id)) {
+                // filter out subpages if their parent is selected => only the parent has to be moved
+                const filteredSelectedPages = selectedPages.filter((page) => {
+                    return page.parentId === null || !selectedPageIds.includes(page.parentId);
+                });
+                idsToMove = filteredSelectedPages.map((page) => page.id);
+
+                pagesToMove = filteredSelectedPages;
+            } else {
+                idsToMove = [dragObject.id];
+                pagesToMove = [dragObject];
+            }
+
+            const updateInfo = pageTreeService.dropAllowed(pagesToMove, dropTargetPage, dropTarget, targetLevel);
+            if (!updateInfo) {
                 return;
             }
 
-            await moveRequest({ id: dragObject.id, parentId: updateInfo.parentId, position: updateInfo.position });
+            await moveRequest({ ids: idsToMove, parentId: updateInfo.parentId, position: updateInfo.position });
 
             snackbarApi.showSnackbar(
                 <UndoSnackbar
                     message={<FormattedMessage id="comet.pagetree.pageMoved" defaultMessage="Page Moved" />}
-                    payload={dragObject}
-                    onUndoClick={(movedPage) => {
-                        if (movedPage) {
-                            const { id, parentId, pos: position } = movedPage;
-                            // Previous position may be occupied => Add at previous position + 1 => order stays correct
-                            moveRequest({ id, parentId, position: position + 1 });
+                    payload={{ pagesToMove, updateInfo }}
+                    onUndoClick={(payload) => {
+                        if (payload) {
+                            const { pagesToMove, updateInfo } = payload;
+                            for (const pageToMove of pagesToMove) {
+                                // Previous position may be occupied if page was moved on the same level
+                                // => Add at previous position + pagesToMove.length => order stays correct
+                                const position = pageToMove.parentId !== updateInfo.parentId ? pageToMove.pos : pageToMove.pos + pagesToMove.length;
+                                moveRequest({ ids: [pageToMove.id], parentId: pageToMove.parentId, position });
+                            }
                         }
+
+                        // if (movedPage) {
+                        //     const { id, parentId, pos: position } = movedPage;
+                        //     // Previous position may be occupied => Add at previous position + 1 => order stays correct
+                        //     moveRequest({ id, parentId, position: position + 1 });
+                        // }
                     }}
                 />,
             );
         },
-        [pageTreeService, snackbarApi, moveRequest],
+        [pageTreeService, moveRequest, snackbarApi, selectedPages],
     );
 
     const refList = useRef<List>(null);
@@ -281,6 +285,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                                 pageTreeService={pageTreeService}
                                                 debouncedSetHoverState={debouncedSetHoverState}
                                                 siteUrl={siteUrl}
+                                                selectedPages={selectedPages}
                                             />
                                         );
                                     }}
