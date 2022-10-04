@@ -1,4 +1,4 @@
-import { ObservableQuery, useApolloClient, useMutation } from "@apollo/client";
+import { ObservableQuery, useApolloClient } from "@apollo/client";
 import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -12,10 +12,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { useContentScope } from "../../contentScope/Provider";
 import {
-    GQLMovePageTreeNodesByNeighbourMutation,
-    GQLMovePageTreeNodesByNeighbourMutationVariables,
     GQLMovePageTreeNodesByPosMutation,
-    GQLMovePageTreeNodesByPosMutationVariables,
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
     GQLPagesQuery,
@@ -115,12 +112,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     const pageTreeService = React.useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
     const { scope } = useContentScope();
     const snackbarApi = useSnackbarApi();
-    const [movePageTreeNodesByPos] = useMutation<GQLMovePageTreeNodesByPosMutation, GQLMovePageTreeNodesByPosMutationVariables>(
-        MOVE_PAGE_TREE_NODES_BY_POS,
-    );
-    const [movePageTreeNodesByNeighbour] = useMutation<GQLMovePageTreeNodesByNeighbourMutation, GQLMovePageTreeNodesByNeighbourMutationVariables>(
-        MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS,
-    );
+
     const debouncedSetHoverState = useDebouncedCallback(
         (setHoverState: React.Dispatch<React.SetStateAction<DropInfo | undefined>>, newHoverState: DropInfo | undefined) => {
             setHoverState((prevState) => {
@@ -141,7 +133,8 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     const moveByPosRequest = React.useCallback(
         // @TODO: handle path collisions when moving pages
         async ({ ids, parentId, position }: { ids: string[]; parentId: string | null; position: number }) => {
-            await movePageTreeNodesByPos({
+            await client.mutate({
+                mutation: MOVE_PAGE_TREE_NODES_BY_POS,
                 variables: {
                     ids: ids,
                     input: {
@@ -187,7 +180,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                         if (
                             !ids.includes(pageData.id) &&
                             pageData.parentId === firstMovedPageTreeNode.parentId &&
-                            pageData.pos >= movedPageTreeNodes[0].pos
+                            pageData.pos >= firstMovedPageTreeNode.pos
                         ) {
                             updatedPageData.pos = updatedPageData.pos + movedPageTreeNodes.length;
                         }
@@ -198,13 +191,13 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 },
             });
         },
-        [movePageTreeNodesByPos, scope, category],
+        [client, scope, category],
     );
 
     const moveByNeighbourRequest = React.useCallback(
-        // @TODO: handle path collisions when moving pages
         async ({ ids, parentId, afterId, beforeId }: { ids: string[]; parentId: string | null; afterId: string | null; beforeId: string | null }) => {
-            await movePageTreeNodesByNeighbour({
+            await client.mutate({
+                mutation: MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS,
                 variables: {
                     ids: ids,
                     input: {
@@ -215,7 +208,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 },
             });
         },
-        [movePageTreeNodesByNeighbour],
+        [client],
     );
 
     const onDrop = React.useCallback(
