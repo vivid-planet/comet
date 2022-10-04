@@ -6,7 +6,7 @@ import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { RedirectsService } from "../redirects/redirects.service";
 import { AttachedDocumentStrictInput } from "./dto/attached-document.input";
-import { MovePageTreeNodesInput, PageTreeNodeBaseCreateInput } from "./dto/page-tree-node.input";
+import { MovePageTreeNodesByPosInput, PageTreeNodeBaseCreateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
@@ -197,7 +197,7 @@ export class PageTreeService {
             .execute();
     }
 
-    async updateNodePosition(id: string, input: MovePageTreeNodesInput): Promise<PageTreeNodeInterface> {
+    async updateNodePosition(id: string, input: MovePageTreeNodesByPosInput): Promise<PageTreeNodeInterface> {
         const readApi = this.createReadApi({ visibility: "all" });
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");

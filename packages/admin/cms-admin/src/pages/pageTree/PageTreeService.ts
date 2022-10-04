@@ -1,10 +1,15 @@
 import { DropTarget, DropTargetBeforeAfter } from "./PageTreeRow";
 import { PageTreePage } from "./usePageTree";
 
-export interface IPageTreeUpdateInfo {
+export interface PageTreeUpdateInfo {
     parentId: string | null;
     position: number;
     neighbourPage: PageTreePage;
+}
+
+export interface PageTreeUndoUpdateInfo {
+    afterId: string | null;
+    beforeId: string | null;
 }
 
 export interface DropInfo {
@@ -91,12 +96,7 @@ class PageTreeService {
 
     // Returns an IPageTreeUpdateInfo object if drop is possible.
     // Otherwise returns false
-    dropAllowed(
-        draggedPages: PageTreePage[],
-        dropTargetPage: PageTreePage,
-        dropTarget: DropTarget,
-        targetLevel: number,
-    ): IPageTreeUpdateInfo | false {
+    dropAllowed(draggedPages: PageTreePage[], dropTargetPage: PageTreePage, dropTarget: DropTarget, targetLevel: number): PageTreeUpdateInfo | false {
         const updateInfo = this.getPageTreeNodeUpdateInfo(targetLevel, dropTargetPage, dropTarget);
 
         for (const draggedPage of draggedPages) {
@@ -125,7 +125,7 @@ class PageTreeService {
     // Returns an IPageTreeUpdateInfo object containing all information needed for an update if a suiting
     // neighbour is found.
     // Returns null if no suiting neighbour is found.
-    getPageTreeNodeUpdateInfo(targetLevel: number, dropTargetPage: PageTreePage, dropTarget: DropTarget): IPageTreeUpdateInfo | null {
+    getPageTreeNodeUpdateInfo(targetLevel: number, dropTargetPage: PageTreePage, dropTarget: DropTarget): PageTreeUpdateInfo | null {
         if (dropTarget === "ADD_AS_CHILD") {
             return this.getAddAsChildUpdateInfo(dropTargetPage);
         }
@@ -216,7 +216,72 @@ class PageTreeService {
         };
     }
 
-    private getAddAsChildUpdateInfo(dropTargetPage: PageTreePage): IPageTreeUpdateInfo {
+    getUndoUpdateInfo(
+        allPagesBeforeMove: PageTreePage[],
+        pageBeforeMove: PageTreePage,
+        disallowedReferencePages: PageTreePage[],
+    ): PageTreeUndoUpdateInfo {
+        // disallowedReferencePages are pages that haven't been moved back to their old position yet.
+        // Therefore, they cannot be used as a reference point for moving other pages.
+        //
+        // Example:
+        //
+        // Starting Point:
+        // - node-1
+        // - - node-1-1
+        // - - node-1-2
+        // - node-2
+        //
+        // Then you move node-1-1 and node-1-2 to the root:
+        // - node-1
+        // - node-2
+        // - node-1-1
+        // - node-1-2
+        //
+        // Now you want to undo these changes.
+        // Per default, the algorithm below would make the nodes reference each other:
+        // - node-1-1 should be before node-1-2
+        // - node-1-2 should be after node-1-1
+        //
+        // That doesn't work when actually moving the page because node-1-1 should be located before node-1-2 AND be a child of node-1.
+        // Since node-1-2 at the time of this move isn't a child of node-1, these requirements contradict each other.
+        // => Error
+        //
+        // To avoid this problem, pages that haven't been moved back to their original position should be in disallowedReferencePages.
+        const disallowedReferenceIds = disallowedReferencePages.map((page) => page.id);
+        let pageIdx = allPagesBeforeMove.findIndex((page) => page.id === pageBeforeMove.id);
+
+        let afterPage: PageTreePage | null = null;
+        let beforePage: PageTreePage | null = null;
+
+        let foundAllowedReference = false;
+        let checkedAllAfterPages = false;
+        do {
+            if (pageIdx - 1 >= 0 && !checkedAllAfterPages) {
+                afterPage = this.findNeighbourUpwards(pageIdx - 1, pageBeforeMove.level, allPagesBeforeMove);
+            }
+
+            if (pageIdx + 1 < allPagesBeforeMove.length && afterPage === null) {
+                checkedAllAfterPages = true;
+                beforePage = this.findNeighbourDownwards(pageIdx + 1, pageBeforeMove.level, allPagesBeforeMove);
+            }
+
+            if (afterPage && disallowedReferenceIds.includes(afterPage.id)) {
+                pageIdx = allPagesBeforeMove.findIndex((page) => page.id === afterPage?.id);
+            } else if (beforePage && disallowedReferenceIds.includes(beforePage.id)) {
+                pageIdx = allPagesBeforeMove.findIndex((page) => page.id === beforePage?.id);
+            } else {
+                foundAllowedReference = true;
+            }
+        } while (!foundAllowedReference);
+
+        return {
+            afterId: afterPage?.id ?? null,
+            beforeId: beforePage?.id ?? null,
+        };
+    }
+
+    private getAddAsChildUpdateInfo(dropTargetPage: PageTreePage): PageTreeUpdateInfo {
         // Get position of last child of target item => add new item after that (at the end of the sublist)
         const position = this.pages.reduce<number>((maxPosition, page) => {
             if (page.parentId === dropTargetPage.id) {
@@ -231,7 +296,7 @@ class PageTreeService {
         dropTargetPage: PageTreePage,
         targetLevel: number,
         dropTarget: DropTargetBeforeAfter,
-    ): IPageTreeUpdateInfo | null {
+    ): PageTreeUpdateInfo | null {
         // Check if drop target page is a suitable neighbour
         if (targetLevel === dropTargetPage.level) {
             return {
@@ -252,22 +317,22 @@ class PageTreeService {
         if (dropTarget === "ADD_BEFORE") {
             // When adding before an item, first search for a neighbour before this item (upwards in the list)
             searchDirection = "UPWARDS";
-            neighbourPage = this.findNeighbourUpwards(startIdxUpwardSearch, targetLevel);
+            neighbourPage = this.findNeighbourUpwards(startIdxUpwardSearch, targetLevel, this.pages);
 
             // If none is found, search for neighbour after this item (downwards in the list)
             if (!neighbourPage) {
                 searchDirection = "DOWNWARDS";
-                neighbourPage = this.findNeighbourDownwards(startIdxDownwardSearch, targetLevel);
+                neighbourPage = this.findNeighbourDownwards(startIdxDownwardSearch, targetLevel, this.pages);
             }
         } else {
             // When adding after an item, first search for a neighbour after this item (downwards in the list)
             searchDirection = "DOWNWARDS";
-            neighbourPage = this.findNeighbourDownwards(startIdxDownwardSearch, targetLevel);
+            neighbourPage = this.findNeighbourDownwards(startIdxDownwardSearch, targetLevel, this.pages);
 
             // If none is found, search for neighbour before this item (upwards in the list)
             if (!neighbourPage) {
                 searchDirection = "UPWARDS";
-                neighbourPage = this.findNeighbourUpwards(startIdxUpwardSearch, targetLevel);
+                neighbourPage = this.findNeighbourUpwards(startIdxUpwardSearch, targetLevel, this.pages);
             }
         }
 
@@ -278,19 +343,24 @@ class PageTreeService {
         return this.getUpdateInfoFromNeighbourPage(neighbourPage, searchDirection);
     }
 
-    private findNeighbourUpwards(idx: number | null, targetLevel: number): PageTreePage | null {
-        return this.findNeighbour(idx, targetLevel, (prevIdx) => (prevIdx - 1 >= 0 ? prevIdx - 1 : null));
+    private findNeighbourUpwards(idx: number | null, targetLevel: number, pages: PageTreePage[]): PageTreePage | null {
+        return this.findNeighbour(idx, targetLevel, (prevIdx) => (prevIdx - 1 >= 0 ? prevIdx - 1 : null), pages);
     }
 
-    private findNeighbourDownwards(idx: number | null, targetLevel: number): PageTreePage | null {
-        return this.findNeighbour(idx, targetLevel, (prevIdx) => (prevIdx + 1 < this.pages.length ? prevIdx + 1 : null));
+    private findNeighbourDownwards(idx: number | null, targetLevel: number, pages: PageTreePage[]): PageTreePage | null {
+        return this.findNeighbour(idx, targetLevel, (prevIdx) => (prevIdx + 1 < pages.length ? prevIdx + 1 : null), pages);
     }
 
-    private findNeighbour(idx: number | null, targetLevel: number, calculateNewIdx: (prevIdx: number) => number | null): PageTreePage | null {
+    private findNeighbour(
+        idx: number | null,
+        targetLevel: number,
+        calculateNewIdx: (prevIdx: number) => number | null,
+        pages: PageTreePage[],
+    ): PageTreePage | null {
         while (idx !== null) {
-            if (this.pages[idx].level === targetLevel) {
-                return this.pages[idx];
-            } else if (this.pages[idx].level < targetLevel) {
+            if (pages[idx].level === targetLevel) {
+                return pages[idx];
+            } else if (pages[idx].level < targetLevel) {
                 // Prevent sliding into a different list on the same level
                 idx = null;
             } else {

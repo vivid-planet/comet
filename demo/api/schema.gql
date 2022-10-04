@@ -445,7 +445,8 @@ type Mutation {
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
-  movePageTreeNodes(ids: [ID!]!, input: MovePageTreeNodesInput!): [PageTreeNode!]!
+  movePageTreeNodesByPos(ids: [ID!]!, input: MovePageTreeNodesByPosInput!): [PageTreeNode!]!
+  movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
   createRedirect(input: RedirectInput!): Redirect!
@@ -506,9 +507,15 @@ input PageTreeNodeUpdateVisibilityInput {
   visibility: PageTreeNodeVisibility!
 }
 
-input MovePageTreeNodesInput {
+input MovePageTreeNodesByPosInput {
   parentId: String
   pos: Int!
+}
+
+input MovePageTreeNodesByNeighbourInput {
+  parentId: String
+  afterId: String
+  beforeId: String
 }
 
 input PageTreeNodeCreateInput {
