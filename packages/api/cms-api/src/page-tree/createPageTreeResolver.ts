@@ -221,7 +221,7 @@ export function createPageTreeResolver({
                 let parentId = newParentNode.parentId;
                 while (parentId !== null) {
                     if (ids.includes(parentId)) {
-                        throw new GraphQLError("Cannot make a page a child of its own child.");
+                        throw new GraphQLError("Cannot make a page its own child.");
                     }
 
                     const parentNode = await pageTreeReadApi.getNodeOrFail(parentId);
