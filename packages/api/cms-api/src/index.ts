@@ -128,6 +128,8 @@ export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, Sc
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
 export { PublicUpload } from "./public-upload/entities/public-upload.entity";
 export { PublicUploadModule } from "./public-upload/public-upload.module";
+export { RedirectBaseInput } from "./redirects/dto/redirect-base.input";
+export { RedirectBase } from "./redirects/entities/redirect-base.entity";
 export { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects/redirects.enum";
 export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";

@@ -1,12 +1,15 @@
-import { Block, createOneOfBlock, ExternalLinkBlock, OneOfBlock } from "@comet/blocks-api";
+import { Block, ExternalLinkBlock, OneOfBlock } from "@comet/blocks-api";
+import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Module, ValueProvider } from "@nestjs/common";
+import { DynamicModule, Global, Module, Type } from "@nestjs/common";
 
 import { InternalLinkBlock } from "../page-tree/blocks/internal-link.block";
-import { RedirectInputFactory } from "./dto/redirect-input.factory";
-import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
+import { RedirectBaseInput } from "./dto/redirect-base.input";
+import { RedirectBase } from "./entities/redirect-base.entity";
+import { REDIRECT_REPOSITORY } from "./redirect.constants";
 import { createRedirectsResolver } from "./redirects.resolver";
 import { RedirectsService } from "./redirects.service";
+import type { RedirectInterface, RedirectScopeInterface } from "./types";
 
 type CustomTargets = Record<string, Block>;
 
@@ -14,30 +17,40 @@ export type RedirectsLinkBlock = OneOfBlock<CustomTargets & { internal: typeof I
 
 export const REDIRECTS_LINK_BLOCK = "REDIRECTS_LINK_BLOCK";
 
-interface Config {
-    customTargets?: CustomTargets;
+interface RedirectsModuleOptions {
+    Redirect: Type<RedirectBase>;
+    RedirectInput: Type<RedirectBaseInput>;
+    Scope?: Type<RedirectScopeInterface>;
+    LinkBlock: Block;
 }
 @Global()
 @Module({})
 export class RedirectsModule {
-    static register({ customTargets }: Config = {}): DynamicModule {
-        const linkBlock = createOneOfBlock(
-            { supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets }, allowEmpty: false },
-            "RedirectsLink",
-        );
+    static forRoot(options: RedirectsModuleOptions): DynamicModule {
+        const { Redirect, RedirectInput, Scope, LinkBlock } = options;
 
-        const Redirect = RedirectEntityFactory.create(linkBlock);
-        const RedirectInput = RedirectInputFactory.create(linkBlock);
+        const redirectResolver = createRedirectsResolver({
+            Redirect,
+            RedirectInput,
+            Scope,
+        });
 
-        const linkBlockProvider: ValueProvider<RedirectsLinkBlock> = {
-            provide: REDIRECTS_LINK_BLOCK,
-            useValue: linkBlock,
+        const repositoryProvider = {
+            provide: REDIRECT_REPOSITORY,
+            useFactory: async (em: EntityManager): Promise<EntityRepository<RedirectInterface>> => {
+                return em.getRepository(Redirect);
+            },
+            inject: [EntityManager],
         };
 
+        const linkBlockProvider = {
+            provide: REDIRECTS_LINK_BLOCK,
+            useValue: LinkBlock,
+        };
         return {
             module: RedirectsModule,
-            imports: [MikroOrmModule.forFeature([Redirect])],
-            providers: [createRedirectsResolver(Redirect, RedirectInput), RedirectsService, linkBlockProvider],
+            imports: [MikroOrmModule.forFeature([Redirect, ...(Scope ? [Scope] : [])])],
+            providers: [redirectResolver, RedirectsService, repositoryProvider, linkBlockProvider],
             exports: [RedirectsService],
         };
     }

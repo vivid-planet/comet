@@ -8,6 +8,7 @@ import { v4 } from "uuid";
 import { RootBlockType } from "../../blocks/root-block-type";
 import { DocumentInterface } from "../../document/dto/document-interface";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
+import { RedirectScopeInterface } from "../types";
 
 export interface RedirectInterface extends BaseEntity<RedirectInterface, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt" | "active";
@@ -20,6 +21,7 @@ export interface RedirectInterface extends BaseEntity<RedirectInterface, "id"> {
     generationType: RedirectGenerationType;
     createdAt: Date;
     updatedAt: Date;
+    scope?: RedirectScopeInterface;
 }
 
 export class RedirectEntityFactory {

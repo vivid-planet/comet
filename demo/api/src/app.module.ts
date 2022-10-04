@@ -34,7 +34,6 @@ import { CurrentUserLoaderService } from "./auth/current-user-loader.service";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
-import { NewsLinkBlock } from "./news/blocks/news-link.block";
 import { NewsModule } from "./news/news.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
@@ -42,6 +41,10 @@ import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
+import { RedirectsLinkBlock } from "./redirects/blocks/link.block";
+import { RedirectInput } from "./redirects/dto/redirect.input";
+import { RedirectScope } from "./redirects/dto/redirect-scope";
+import { Redirect } from "./redirects/entities/redirect.entity";
 
 @Module({
     imports: [
@@ -118,7 +121,12 @@ import { ProductsModule } from "./products/products.module";
             Scope: PageTreeNodeScope,
             reservedPaths: ["/events"],
         }),
-        RedirectsModule.register({ customTargets: { news: NewsLinkBlock } }),
+        RedirectsModule.forRoot({
+            Redirect,
+            RedirectInput,
+            Scope: RedirectScope,
+            LinkBlock: RedirectsLinkBlock,
+        }),
         BlobStorageModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (config: ConfigType<typeof configNS>) => ({
