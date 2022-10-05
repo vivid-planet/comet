@@ -87,7 +87,6 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                     userMessage: <FormattedMessage id="comet.common.clipboardInvalidFormat" defaultMessage="Clipboard contains an invalid format" />,
                     error: e.toString(),
                 });
-                console.error("Bad clidpboard value, parsing JSON failed", e);
             }
 
             if (input) {
