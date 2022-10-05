@@ -31,8 +31,8 @@ export const updateRedirectMutation = gql`
 `;
 
 export const createRedirectMutation = gql`
-    mutation CreateRedirect($input: RedirectInput!) {
-        createRedirect(input: $input) {
+    mutation CreateRedirect($scope: RedirectScopeInput!, $input: RedirectInput!) {
+        createRedirect(scope: $scope, input: $input) {
             ...RedirectDetail
         }
     }

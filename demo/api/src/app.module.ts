@@ -42,6 +42,7 @@ import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
+import { RedirectScope } from "./redirects/dto/redirect-scope";
 
 @Module({
     imports: [
@@ -118,7 +119,7 @@ import { ProductsModule } from "./products/products.module";
             Scope: PageTreeNodeScope,
             reservedPaths: ["/events"],
         }),
-        RedirectsModule.register({ customTargets: { news: NewsLinkBlock } }),
+        RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
         BlobStorageModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (config: ConfigType<typeof configNS>) => ({

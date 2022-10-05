@@ -38,6 +38,7 @@ interface Props {
     id?: string;
     mode: "edit" | "add";
     linkBlock: BlockInterface;
+    scope: Record<string, unknown>;
 }
 
 export interface FormValues {
@@ -78,7 +79,7 @@ const useInitialValues = (id: string | undefined, linkBlock: BlockInterface): Fo
     };
 };
 
-export const RedirectForm = ({ mode, id, linkBlock }: Props): JSX.Element => {
+export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element => {
     const intl = useIntl();
     const initialValues = useInitialValues(id, linkBlock);
     const targetInput = React.useMemo(() => createFinalFormBlock(linkBlock), [linkBlock]);
@@ -97,7 +98,7 @@ export const RedirectForm = ({ mode, id, linkBlock }: Props): JSX.Element => {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
 
-    const [submit, { loading: saving, error: saveError }] = useSubmitMutation(mode, id, linkBlock);
+    const [submit, { loading: saving, error: saveError }] = useSubmitMutation(mode, id, linkBlock, scope);
     const newlyCreatedRedirectId = React.useRef<string>();
 
     if (mode === "edit" && initialValues === undefined) {
@@ -112,11 +113,12 @@ export const RedirectForm = ({ mode, id, linkBlock }: Props): JSX.Element => {
 
             const { data } = await client.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
                 query: gql`
-                    query RedirectSourceAvailable($source: String!) {
-                        redirectSourceAvailable(source: $source)
+                    query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!) {
+                        redirectSourceAvailable(scope: $scope, source: $source)
                     }
                 `,
                 variables: {
+                    scope,
                     source: value,
                 },
             });

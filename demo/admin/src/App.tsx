@@ -99,7 +99,7 @@ const pageTreeDocumentTypes = {
     PredefinedPage,
 };
 
-const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock } });
+const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
 class App extends React.Component {
     public static render(baseEl: Element): void {

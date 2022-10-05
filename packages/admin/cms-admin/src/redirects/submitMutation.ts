@@ -24,6 +24,7 @@ export const useSubmitMutation = (
     mode: "edit" | "add",
     id: string | undefined,
     linkBlock: BlockInterface,
+    scope: Record<string, unknown>,
 ): [
     (values: FormValues) => Promise<FetchResult<GQLCreateRedirectMutation | GQLUpdateRedirectMutation>>,
     { loading: boolean; error: ApolloError | undefined },
@@ -41,6 +42,7 @@ export const useSubmitMutation = (
 
             return mutation({
                 variables: {
+                    scope: mode === "add" ? scope : undefined,
                     id,
                     input,
                     lastUpdatedAt: values.updatedAt,

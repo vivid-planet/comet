@@ -5,6 +5,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";
 import { InternalLinkBlock } from "../blocks/InternalLinkBlock";
+import { useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { RedirectForm } from "./RedirectForm";
 import { RedirectsTable } from "./RedirectsTable";
@@ -15,9 +16,10 @@ interface RedirectsPageProps {
 
 interface CreateRedirectsPageOptions {
     customTargets?: Record<string, BlockInterface>;
+    scopeParts?: string[];
 }
 
-function createRedirectsPage({ customTargets }: CreateRedirectsPageOptions = {}): React.ComponentType<RedirectsPageProps> {
+function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirectsPageOptions = {}): React.ComponentType<RedirectsPageProps> {
     const linkBlock = createOneOfBlock({
         supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
         name: "RedirectsLink",
@@ -29,20 +31,26 @@ function createRedirectsPage({ customTargets }: CreateRedirectsPageOptions = {})
         const intl = useIntl();
         useContentScopeConfig({ redirectPathAfterChange });
 
+        const { scope: completeScope } = useContentScope();
+        const scope = scopeParts.reduce((acc, scopePart) => {
+            acc[scopePart] = completeScope[scopePart];
+            return acc;
+        }, {} as { [key: string]: unknown });
+
         return (
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.redirects", defaultMessage: "Redirects" })}>
                 <StackSwitch initialPage="redirectsTable">
                     <StackPage name="redirectsTable">
-                        <RedirectsTable linkBlock={linkBlock} />
+                        <RedirectsTable linkBlock={linkBlock} scope={scope} />
                     </StackPage>
                     <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.redirects.edit", defaultMessage: "edit" })}>
                         {(selectedId: string) => {
-                            return <RedirectForm mode="edit" id={selectedId} linkBlock={linkBlock} />;
+                            return <RedirectForm mode="edit" id={selectedId} linkBlock={linkBlock} scope={scope} />;
                         }}
                     </StackPage>
                     <StackPage name="add" title={intl.formatMessage({ id: "comet.pages.redirects.create", defaultMessage: "create" })}>
                         {() => {
-                            return <RedirectForm mode="add" linkBlock={linkBlock} />;
+                            return <RedirectForm mode="add" linkBlock={linkBlock} scope={scope} />;
                         }}
                     </StackPage>
                 </StackSwitch>

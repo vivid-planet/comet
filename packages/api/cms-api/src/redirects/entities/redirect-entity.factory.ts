@@ -1,5 +1,5 @@
 import { Block, BlockDataInterface, RootBlockEntity } from "@comet/blocks-api";
-import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Type } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
@@ -8,8 +8,9 @@ import { v4 } from "uuid";
 import { RootBlockType } from "../../blocks/root-block-type";
 import { DocumentInterface } from "../../document/dto/document-interface";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
+import { RedirectScopeInterface } from "../types";
 
-export interface RedirectInterface extends BaseEntity<RedirectInterface, "id"> {
+export interface RedirectInterface {
     [OptionalProps]?: "createdAt" | "updatedAt" | "active";
     id: string;
     sourceType: RedirectSourceTypeValues;
@@ -20,16 +21,17 @@ export interface RedirectInterface extends BaseEntity<RedirectInterface, "id"> {
     generationType: RedirectGenerationType;
     createdAt: Date;
     updatedAt: Date;
+    scope?: RedirectScopeInterface;
 }
 
 export class RedirectEntityFactory {
-    static create(linkBlock: Block): Type<RedirectInterface> {
-        @Entity()
+    static create({ linkBlock, Scope: RedirectScope }: { linkBlock: Block; Scope?: Type<RedirectScopeInterface> }): Type<RedirectInterface> {
+        @Entity({ abstract: true })
         @ObjectType({
             implements: () => [DocumentInterface],
+            isAbstract: true,
         })
-        @RootBlockEntity()
-        class Redirect extends BaseEntity<Redirect, "id"> implements RedirectInterface, DocumentInterface {
+        class RedirectBase implements RedirectInterface, DocumentInterface {
             [OptionalProps]?: "createdAt" | "updatedAt" | "active";
 
             @PrimaryKey({ columnType: "uuid" })
@@ -79,6 +81,26 @@ export class RedirectEntityFactory {
             updatedAt: Date = new Date();
         }
 
-        return Redirect;
+        if (RedirectScope) {
+            @Entity()
+            @ObjectType({
+                implements: () => [DocumentInterface],
+            })
+            @RootBlockEntity()
+            class Redirect extends RedirectBase {
+                @Embedded(() => RedirectScope)
+                @Field(() => RedirectScope)
+                scope: typeof RedirectScope;
+            }
+            return Redirect;
+        } else {
+            @Entity()
+            @ObjectType({
+                implements: () => [DocumentInterface],
+            })
+            @RootBlockEntity()
+            class Redirect extends RedirectBase {}
+            return Redirect;
+        }
     }
 }
