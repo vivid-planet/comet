@@ -10,15 +10,15 @@ import { useErrorDialog } from "../error/errordialog/useErrorDialog";
 
 interface DeleteDialogProps {
     dialogOpen: boolean;
-    handleNoClick: () => void;
-    handleYesClick: () => void;
+    onDelete: () => void;
+    onCancel: () => void;
 }
 
 const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
-    const { dialogOpen, handleNoClick, handleYesClick } = props;
+    const { dialogOpen, onDelete, onCancel } = props;
 
     return (
-        <Dialog open={dialogOpen} onClose={handleNoClick}>
+        <Dialog open={dialogOpen} onClose={onDelete}>
             <DialogTitle>
                 <FormattedMessage id="comet.table.deleteDialog.title" defaultMessage="Delete item?" />
             </DialogTitle>
@@ -26,10 +26,10 @@ const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
                 <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="WARNING: This cannot be undone!" />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleYesClick} color="primary" variant="contained">
+                <Button onClick={onCancel} color="primary" variant="contained">
                     <FormattedMessage id="comet.generic.yes" defaultMessage="Yes" />
                 </Button>
-                <Button onClick={handleNoClick} color="primary">
+                <Button onClick={onDelete} color="primary">
                     <FormattedMessage id="comet.generic.no" defaultMessage="No" />
                 </Button>
             </DialogActions>
@@ -182,10 +182,10 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
             </Menu>
             <DeleteDialog
                 dialogOpen={deleteDialogOpen}
-                handleNoClick={() => {
+                onDelete={() => {
                     setDeleteDialogOpen(false);
                 }}
-                handleYesClick={handleDeleteClick}
+                onCancel={handleDeleteClick}
             />
         </>
     );
