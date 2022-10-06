@@ -11,7 +11,7 @@ export function GridFilterButton() {
     }, [apiRef]);
     return (
         <Button startIcon={<Filter />} variant="text" color="info" onClick={handleFilterClick}>
-            <FormattedMessage id="comet.core.filter" defaultMessage="Filter" />
+            <FormattedMessage id="comet.generic.filter" defaultMessage="Filter" />
         </Button>
     );
 }
