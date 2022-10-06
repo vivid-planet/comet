@@ -4,6 +4,7 @@ import {
     FinalForm,
     FinalFormInput,
     MainContent,
+    messages,
     SaveButton,
     SplitButton,
     Toolbar,
@@ -103,7 +104,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         <ToolbarActions>
                             <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editInspirationSave">
                                 <SaveButton color="primary" variant="contained" hasErrors={hasSubmitErrors} type="submit">
-                                    <FormattedMessage id="comet.generic.save" defaultMessage="Save" />
+                                    <FormattedMessage {...messages.save} />
                                 </SaveButton>
                                 <SaveButton
                                     color="primary"
@@ -118,7 +119,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                                         }
                                     }}
                                 >
-                                    <FormattedMessage id="comet.generic.saveAndGoBack" defaultMessage="Save and go back" />
+                                    <FormattedMessage {...messages.saveAndGoBack} />
                                 </SaveButton>
                             </SplitButton>
                         </ToolbarActions>

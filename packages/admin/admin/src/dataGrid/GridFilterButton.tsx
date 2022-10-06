@@ -4,6 +4,8 @@ import { useGridApiContext } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { messages } from "../messages";
+
 export function GridFilterButton() {
     const apiRef = useGridApiContext();
     const handleFilterClick = React.useCallback(() => {
@@ -11,7 +13,7 @@ export function GridFilterButton() {
     }, [apiRef]);
     return (
         <Button startIcon={<Filter />} variant="text" color="info" onClick={handleFilterClick}>
-            <FormattedMessage id="comet.generic.filter" defaultMessage="Filter" />
+            <FormattedMessage {...messages.filter} />
         </Button>
     );
 }

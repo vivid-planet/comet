@@ -7,6 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { readClipboardText } from "../clipboard/readClipboardText";
 import { writeClipboardText } from "../clipboard/writeClipboardText";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
+import { messages } from "../messages";
 
 interface DeleteDialogProps {
     dialogOpen: boolean;
@@ -27,10 +28,10 @@ const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel} color="primary" variant="contained">
-                    <FormattedMessage id="comet.generic.yes" defaultMessage="Yes" />
+                    <FormattedMessage {...messages.yes} />
                 </Button>
                 <Button onClick={onDelete} color="primary">
-                    <FormattedMessage id="comet.generic.no" defaultMessage="No" />
+                    <FormattedMessage {...messages.no} />
                 </Button>
             </DialogActions>
         </Dialog>
@@ -136,7 +137,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                         <ListItemIcon>
                             <Domain />
                         </ListItemIcon>
-                        <ListItemText primary={intl.formatMessage({ id: "comet.generic.copyUrl", defaultMessage: "Copy Url" })} />
+                        <ListItemText primary={intl.formatMessage(messages.copyUrl)} />
                     </MenuItem>
                 )}
                 {copyData && (
@@ -149,7 +150,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                         }}
                     >
                         <ListItemIcon>{!copyLoading ? <Copy /> : <ThreeDotSaving />}</ListItemIcon>
-                        <ListItemText primary={intl.formatMessage({ id: "comet.generic.copy", defaultMessage: "Copy" })} />
+                        <ListItemText primary={intl.formatMessage(messages.copy)} />
                     </MenuItem>
                 )}
                 {onPaste && (
@@ -163,7 +164,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                         }}
                     >
                         <ListItemIcon>{!pasting ? <Paste /> : <ThreeDotSaving />}</ListItemIcon>
-                        <ListItemText primary={intl.formatMessage({ id: "comet.generic.paste", defaultMessage: "Paste" })} />
+                        <ListItemText primary={intl.formatMessage(messages.paste)} />
                     </MenuItem>
                 )}
                 {onDelete && (
@@ -176,7 +177,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                         <ListItemIcon>
                             <DeleteIcon />
                         </ListItemIcon>
-                        <ListItemText primary={intl.formatMessage({ id: "comet.generic.deleteItem", defaultMessage: "Delete item" })} />
+                        <ListItemText primary={intl.formatMessage(messages.deleteItem)} />
                     </MenuItem>
                 )}
             </Menu>
