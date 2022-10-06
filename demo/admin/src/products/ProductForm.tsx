@@ -19,7 +19,7 @@ import { CircularProgress, IconButton } from "@mui/material";
 import {
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
-    GQLProductFormFragmentFragment,
+    GQLProductFormFragment,
     GQLProductFormUpdateProductMutation,
     GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
@@ -36,7 +36,7 @@ interface FormProps {
     id?: string;
 }
 
-type FormState = Omit<GQLProductFormFragmentFragment, "price"> & {
+type FormState = Omit<GQLProductFormFragment, "price"> & {
     price: string;
 };
 

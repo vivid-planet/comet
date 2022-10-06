@@ -21,7 +21,7 @@ import {
     GQLCreateProductMutationVariables,
     GQLDeleteProductMutation,
     GQLDeleteProductMutationVariables,
-    GQLProductsListFragmentFragment,
+    GQLProductsListFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
 } from "@src/graphql.generated";
@@ -50,7 +50,7 @@ function ProductsTableToolbar() {
     );
 }
 
-const columns: GridColDef<GQLProductsListFragmentFragment>[] = [
+const columns: GridColDef<GQLProductsListFragment>[] = [
     { field: "title", headerName: "Title", width: 150 },
     { field: "description", headerName: "Description", width: 150 },
     { field: "price", headerName: "Price", width: 150, type: "number" },
@@ -81,7 +81,7 @@ const columns: GridColDef<GQLProductsListFragmentFragment>[] = [
                         // url={url}
                         refetchQueries={["ProductsList"]}
                         copyData={() => {
-                            return filter<GQLProductsListFragmentFragment>(productsFragment, params.row);
+                            return filter<GQLProductsListFragment>(productsFragment, params.row);
                         }}
                     />
                 </>
@@ -135,7 +135,7 @@ function ProductsTable() {
 }
 
 const productsFragment = gql`
-    fragment ProductsListFragment on Product {
+    fragment ProductsList on Product {
         slug
         title
         description
@@ -148,7 +148,7 @@ const productsQuery = gql`
         products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, query: $query) {
             nodes {
                 id
-                ...ProductsListFragment
+                ...ProductsList
             }
             totalCount
         }
