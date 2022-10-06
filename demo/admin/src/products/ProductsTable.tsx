@@ -78,7 +78,6 @@ const columns: GridColDef<GQLProductsListFragment>[] = [
                                 variables: { id: params.row.id },
                             });
                         }}
-                        // url={url}
                         refetchQueries={["ProductsList"]}
                         copyData={() => {
                             return filter<GQLProductsListFragment>(productsFragment, params.row);
