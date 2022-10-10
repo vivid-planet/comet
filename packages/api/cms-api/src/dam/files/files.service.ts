@@ -271,7 +271,7 @@ export class FilesService {
                         ? {
                               width: image.width,
                               height: image.height,
-                              exif: await exifr.parse(file.path),
+                              exif: await exifr.parse(file.path).catch(() => undefined),
                               cropArea: {
                                   focalPoint: FocalPoint.SMART,
                               },
