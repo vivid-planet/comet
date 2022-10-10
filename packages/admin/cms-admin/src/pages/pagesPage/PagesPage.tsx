@@ -73,10 +73,6 @@ export function PagesPage({
         filter: ignorePages,
     });
 
-    // React.useEffect(() => {
-    //     console.log(tree);
-    // }, [tree]);
-
     const pageSearchApi = usePageSearch({
         tree,
         pagesToRender,
