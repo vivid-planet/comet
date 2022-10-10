@@ -23,7 +23,7 @@ import { Card, CardContent, CircularProgress, Grid, IconButton, Typography } fro
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 const gqlRest = gql;
@@ -187,6 +187,6 @@ function Story() {
 }
 
 storiesOf("@comet/admin/stack", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .addDecorator(storyRouterDecorator())
     .add("Stack Table Form Query in Table", () => <Story />);

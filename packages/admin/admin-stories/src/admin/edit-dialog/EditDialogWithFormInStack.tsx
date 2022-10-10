@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 interface RootPageProps {
@@ -109,5 +109,5 @@ function Story() {
 
 storiesOf("@comet/admin/edit-dialog", module)
     .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Edit Dialog with Form in Stack", () => <Story />);

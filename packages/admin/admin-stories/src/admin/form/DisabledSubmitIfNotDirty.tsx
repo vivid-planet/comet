@@ -2,10 +2,10 @@ import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@come
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 storiesOf("stories/form/FinalForm", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Disabled Submit If Not Dirty", () => {
         return (
             <FinalForm

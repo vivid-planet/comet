@@ -16,7 +16,7 @@ import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
@@ -110,6 +110,6 @@ function Story() {
 }
 
 storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .addDecorator(storyRouterDecorator())
     .add("FormInStack", () => <Story />);

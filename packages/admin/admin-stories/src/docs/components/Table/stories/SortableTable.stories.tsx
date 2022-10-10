@@ -3,7 +3,7 @@ import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } fr
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
 
 const query = gql`
     query users($sort: String, $order: String) {
@@ -32,7 +32,7 @@ interface QueryVariables {
 }
 
 storiesOf("stories/components/Table/Sortable Table", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Sortable Table", () => {
         // step 1
         const sortApi = useTableQuerySort({
