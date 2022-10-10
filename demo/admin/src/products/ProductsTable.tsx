@@ -113,7 +113,6 @@ function ProductsTable() {
                 <FormattedMessage id="comet.error.abstractErrorMessage" defaultMessage="An error has occurred" />
             </Alert>
         );
-        //return <>ERROR: {JSON.stringify(error)}</>;
     }
 
     return (
