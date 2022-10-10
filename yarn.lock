@@ -62,7 +62,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.0.0":
+"@apollo/client@npm:^3.7.0":
   version: 3.7.0
   resolution: "@apollo/client@npm:3.7.0"
   dependencies:
@@ -95,38 +95,6 @@ __metadata:
     subscriptions-transport-ws:
       optional: true
   checksum: e6e2fb6c4f05509a0ec1c632fc8eeae7bd4831dbafd2db243bad1412b3c024476a3efb838e31568888cf6b07bd8833467343edac2309e58d60c7bf50f67d449c
-  languageName: node
-  linkType: hard
-
-"@apollo/client@npm:^3.2.5":
-  version: 3.6.9
-  resolution: "@apollo/client@npm:3.6.9"
-  dependencies:
-    "@graphql-typed-document-node/core": ^3.1.1
-    "@wry/context": ^0.6.0
-    "@wry/equality": ^0.5.0
-    "@wry/trie": ^0.3.0
-    graphql-tag: ^2.12.6
-    hoist-non-react-statics: ^3.3.2
-    optimism: ^0.16.1
-    prop-types: ^15.7.2
-    symbol-observable: ^4.0.0
-    ts-invariant: ^0.10.3
-    tslib: ^2.3.0
-    zen-observable-ts: ^1.2.5
-  peerDependencies:
-    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    graphql-ws: ^5.5.5
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    subscriptions-transport-ws: ^0.9.0 || ^0.11.0
-  peerDependenciesMeta:
-    graphql-ws:
-      optional: true
-    react:
-      optional: true
-    subscriptions-transport-ws:
-      optional: true
-  checksum: a3c037ef3465cb5d736d8495c9c2dcb9741e39d9c102f147b479af1923c5913f710981a311d1098b9969ebe87769b749c22274decb5977ad0619032e7ac2cf26
   languageName: node
   linkType: hard
 
@@ -4688,7 +4656,7 @@ __metadata:
     uuid: ^3.3.2
     yarn-run-all: ^3.0.0
   peerDependencies:
-    "@apollo/client": ^3.2.5
+    "@apollo/client": ^3.7.0
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
     "@mui/icons-material": ^5.0.0
@@ -4872,7 +4840,7 @@ __metadata:
     uuid: ^8.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
-    "@apollo/client": ^3.0.0
+    "@apollo/client": ^3.7.0
     "@comet/react-app-auth": ^1.0.0
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
@@ -16061,7 +16029,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "comet-admin-stories@workspace:packages/admin/admin-stories"
   dependencies:
-    "@apollo/client": ^3.2.5
+    "@apollo/client": ^3.7.0
     "@babel/cli": ^7.17.6
     "@babel/core": ^7.8.3
     "@comet/admin": ^2.0.0
@@ -16130,7 +16098,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "comet-demo-admin@workspace:demo/admin"
   dependencies:
-    "@apollo/client": ^3.0.0
+    "@apollo/client": ^3.7.0
     "@babel/core": ^7.0.0
     "@comet/admin": ^2.0.0
     "@comet/admin-icons": ^2.0.0

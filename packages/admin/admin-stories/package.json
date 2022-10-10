@@ -6,7 +6,7 @@
         "src"
     ],
     "dependencies": {
-        "@apollo/client": "^3.2.5",
+        "@apollo/client": "^3.7.0",
         "@comet/admin": "^2.0.0",
         "@comet/admin-color-picker": "^2.0.0",
         "@comet/admin-date-time": "^2.0.0",
