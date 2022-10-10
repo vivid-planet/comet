@@ -44,7 +44,7 @@ export const TableHead = ({ isSearching, numberItems, breadcrumbs, folderId }: T
                 fragment: damFolderMPathFragment,
             });
 
-            return fragment ? { damFolder: fragment } : undefined;
+            return fragment === null || Object.keys(fragment).length === 0 ? undefined : { damFolder: fragment };
         },
     });
 

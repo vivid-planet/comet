@@ -20,7 +20,7 @@
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\""
     },
     "dependencies": {
-        "@apollo/client": "^3.0.0",
+        "@apollo/client": "^3.7.0",
         "@babel/core": "^7.0.0",
         "@comet/admin": "^2.0.0",
         "@comet/admin-icons": "^2.0.0",
