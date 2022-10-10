@@ -8495,6 +8495,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/x-data-grid@npm:^5.17.6":
+  version: 5.17.6
+  resolution: "@mui/x-data-grid@npm:5.17.6"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@mui/utils": ^5.10.3
+    clsx: ^1.2.1
+    prop-types: ^15.8.1
+    reselect: ^4.1.6
+  peerDependencies:
+    "@mui/material": ^5.4.1
+    "@mui/system": ^5.4.1
+    react: ^17.0.2 || ^18.0.0
+    react-dom: ^17.0.2 || ^18.0.0
+  checksum: 02e23706f932c519aba917da95d922727178a2ba300b36a18466e57c16b80634fcb3759d66be2385db0fc753380dab90bbc0412a163655dc59b5b9747b78ee40
+  languageName: node
+  linkType: hard
+
 "@mui/x-date-pickers@npm:5.0.0-alpha.1":
   version: 5.0.0-alpha.1
   resolution: "@mui/x-date-pickers@npm:5.0.0-alpha.1"
@@ -16099,6 +16117,7 @@ __metadata:
     "@mui/icons-material": ^5.0.0
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
+    "@mui/x-data-grid": ^5.17.6
     "@storybook/addon-actions": ^6.2.7
     "@storybook/addon-knobs": ^6.2.7
     "@storybook/addon-storysource": ^6.2.7
