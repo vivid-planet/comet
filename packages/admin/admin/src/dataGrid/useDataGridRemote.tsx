@@ -1,4 +1,4 @@
-import { DataGridProps, GridFilterModel, GridSortDirection, GridSortModel, GridToolbar } from "@mui/x-data-grid";
+import { DataGridProps, GridFilterModel, GridSortDirection, GridSortModel } from "@mui/x-data-grid";
 import queryString from "query-string";
 import * as React from "react";
 import { useHistory, useLocation } from "react-router";
@@ -69,11 +69,12 @@ export function useDataGridRemote({
         pageSize,
         onPageChange: handlePageChange,
         onPageSizeChange: handlePageSizeChange,
+        pagination: true,
 
         sortingMode: "server",
         sortModel,
         onSortModelChange: handleSortModelChange,
-
+        /*
         components: { Toolbar: GridToolbar },
         componentsProps: {
             toolbar: {
@@ -81,6 +82,6 @@ export function useDataGridRemote({
                 quickFilterProps: { debounceMs: 500 },
             },
         },
-        pagination: true,
+*/
     };
 }
