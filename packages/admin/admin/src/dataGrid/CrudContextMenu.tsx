@@ -43,7 +43,7 @@ export interface CrudContextMenuProps<CopyData> {
     onPaste?: (options: { input: CopyData; client: ApolloClient<object> }) => Promise<void>;
     onDelete?: (options: { client: ApolloClient<object> }) => Promise<void>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    refetchQueries: RefetchQueriesOptions<any, unknown>["include"];
+    refetchQueries?: RefetchQueriesOptions<any, unknown>["include"];
     copyData?: () => Promise<CopyData> | CopyData;
 }
 
@@ -70,7 +70,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
         await onDelete({
             client,
         });
-        await client.refetchQueries({ include: refetchQueries });
+        if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
         setDeleteDialogOpen(false);
     };
 
@@ -97,7 +97,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                         input,
                         client,
                     });
-                    await client.refetchQueries({ include: refetchQueries });
+                    if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
                 } catch (e) {
                     errorDialog?.showError({
                         userMessage: (
