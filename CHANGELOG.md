@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## @comet/admin
 
+### Highlights
+
+-   new [MUI X DataGrid](https://mui.com/x/react-data-grid/) helper functions added
+
 ### Changes
 
 -   `comet.generic` messages are exposed as public API through `messages.ts` (this stops them from being translated for every application)
