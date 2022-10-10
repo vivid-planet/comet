@@ -6,9 +6,11 @@ import { useHistory, useLocation } from "react-router";
 //returns props for DataGrid that turns it into a controlled component ready to be used for remote filter/sorting/paging
 export function useDataGridRemote({
     queryParamsPrefix = "",
+    pageSize: initialPageSize = 20,
 }: {
     queryParamsPrefix?: string;
-} = {}): Omit<DataGridProps, "rows" | "columns"> & { page: number; pageSize: number } {
+    pageSize?: number;
+} = {}): Omit<DataGridProps, "rows" | "columns"> & { page: number; pageSize: number; sortModel: GridSortModel } {
     const history = useHistory();
     const location = useLocation();
 
@@ -18,14 +20,13 @@ export function useDataGridRemote({
     const pageSizeParamName = `${queryParamsPrefix}pageSize`;
 
     const parsedSearch = queryString.parse(location.search, { parseNumbers: true });
-    // TODO configurable search prefix (to support multiple grid on one page)
 
     const page = (parsedSearch[pageParamName] as number) ?? 0;
     const handlePageChange = (newPage: number) => {
         history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [pageParamName]: newPage }) });
     };
 
-    const pageSize = (parsedSearch[pageSizeParamName] as number) ?? 20;
+    const pageSize = (parsedSearch[pageSizeParamName] as number) ?? initialPageSize;
     const handlePageSizeChange = (newPageSize: number) => {
         history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [pageSizeParamName]: newPageSize }) });
     };
