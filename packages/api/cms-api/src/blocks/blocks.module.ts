@@ -54,10 +54,9 @@ export class BlocksModule {
             providers: [
                 optionsProvider,
                 transformerDependenciesProvider,
-                blockIndexesProvider,
                 BlocksTransformerService,
                 BlocksMetaService,
-                ...(!options.withoutIndex ? [DiscoverService, BlockIndexService, CommandsService, BlockMigrateService] : []),
+                ...(!options.withoutIndex ? [blockIndexesProvider, DiscoverService, BlockIndexService, CommandsService, BlockMigrateService] : []),
             ],
             exports: [BlocksTransformerService, ...(!options.withoutIndex ? [BlockIndexService] : [])],
         };
