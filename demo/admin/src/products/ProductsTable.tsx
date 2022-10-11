@@ -14,7 +14,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Alert, Box, Button, IconButton } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateProductMutation,
@@ -54,6 +54,7 @@ const columns: GridColDef<GQLProductsListFragment>[] = [
     { field: "title", headerName: "Title", width: 150 },
     { field: "description", headerName: "Description", width: 150 },
     { field: "price", headerName: "Price", width: 150, type: "number" },
+    { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
     {
         field: "action",
         headerName: "",
@@ -131,6 +132,7 @@ const productsFragment = gql`
         title
         description
         price
+        inStock
     }
 `;
 

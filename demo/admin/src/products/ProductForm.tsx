@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
+    FinalFormCheckbox,
     FinalFormInput,
     MainContent,
     messages,
@@ -16,7 +17,7 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/cms-admin";
-import { CircularProgress, IconButton } from "@mui/material";
+import { CircularProgress, FormControlLabel, IconButton } from "@mui/material";
 import {
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
@@ -155,6 +156,14 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             inputProps={{ type: "number" }}
                             label={intl.formatMessage({ id: "demo.product.description", defaultMessage: "Preis" })}
                         />
+                        <Field name="inStock" label="" type="checkbox" fullWidth>
+                            {(props) => (
+                                <FormControlLabel
+                                    label={intl.formatMessage({ id: "demo.product.inStock", defaultMessage: "Auf Lager" })}
+                                    control={<FinalFormCheckbox {...props} />}
+                                />
+                            )}
+                        </Field>
                     </MainContent>
                 </EditPageLayout>
             )}

@@ -267,6 +267,7 @@ type Product implements DocumentInterface {
   slug: String!
   description: String!
   price: Float
+  inStock: Boolean!
   createdAt: DateTime!
 }
 
@@ -413,6 +414,7 @@ input ProductFilter {
   slug: StringFilter
   description: StringFilter
   price: NumberFilter
+  inStock: BooleanFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
 }
@@ -436,6 +438,7 @@ enum ProductSortField {
   slug
   description
   price
+  inStock
 }
 
 type Mutation {
@@ -595,4 +598,5 @@ input ProductInput {
   slug: String!
   description: String!
   price: Float
+  inStock: Boolean!
 }

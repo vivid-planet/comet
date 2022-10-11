@@ -43,6 +43,19 @@ type GqlFilter = {
     and?: GqlFilter[] | null;
     or?: GqlFilter[] | null;
 };
+
+function convertValueByType(value: string, type?: string) {
+    if (type === "number") {
+        return parseFloat(value);
+    } else if (type === "boolean") {
+        if (value === "true") return true;
+        if (value === "false") return false;
+        return undefined;
+    } else {
+        return value;
+    }
+}
+
 export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; query?: string } {
     if (!filterModel) return { filter: {} };
     const filterItems = filterModel.items
@@ -52,8 +65,7 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
             const gqlOperator = muiGridOperatorValueToGqlOperator[value.operatorValue];
             if (!gqlOperator) throw new Error(`unknown operator ${value.operatorValue}`);
             const column = columns.find((i) => i.field == value.columnField);
-            const type = column?.type;
-            const convertedValue = type === "number" ? parseFloat(value.value) : value.value;
+            const convertedValue = convertValueByType(value.value, column?.type);
             return {
                 [value.columnField]: {
                     [gqlOperator]: convertedValue,

@@ -35,6 +35,11 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field({ nullable: true })
     price?: number;
 
+    // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+    @Property({ type: types.boolean })
+    @Field()
+    inStock: boolean = true;
+
     @Property()
     @Field()
     createdAt: Date = new Date();
