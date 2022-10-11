@@ -1,6 +1,5 @@
-import { CancelButton, messages } from "@comet/admin";
-import { Delete } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
+import { CancelButton, DeleteButton, messages } from "@comet/admin";
+import { Dialog, DialogActions, DialogTitle } from "@mui/material";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -68,17 +67,14 @@ export const ConfirmDeleteDialog = ({ open, onCloseDialog, name, itemType }: Con
             </sc.ConfirmDialogContent>
             <DialogActions>
                 <CancelButton onClick={() => onCloseDialog(false)} />
-                <Button
-                    variant="contained"
-                    color="primary"
+                <DeleteButton
                     onClick={() => {
                         onCloseDialog(true);
                     }}
                     autoFocus={true}
-                    startIcon={<Delete />}
                 >
                     <FormattedMessage id="comet.dam.delete.deleteNow" defaultMessage="Delete Now" />
-                </Button>
+                </DeleteButton>
             </DialogActions>
         </Dialog>
     );

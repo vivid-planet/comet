@@ -72,7 +72,7 @@
         "uuid": "^8.0.0"
     },
     "peerDependencies": {
-        "@apollo/client": "^3.0.0",
+        "@apollo/client": "^3.7.0",
         "@comet/react-app-auth": "^1.0.0",
         "@emotion/react": "^11.0.0",
         "@emotion/styled": "^11.0.0",

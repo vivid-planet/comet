@@ -44,7 +44,7 @@
         "yarn-run-all": "^3.0.0"
     },
     "peerDependencies": {
-        "@apollo/client": "^3.2.5",
+        "@apollo/client": "^3.7.0",
         "@emotion/react": "^11.0.0",
         "@emotion/styled": "^11.0.0",
         "@mui/icons-material": "^5.0.0",

@@ -64,7 +64,7 @@ export class PageTreeModule {
                 {
                     provide: PageExistsConstraint,
                     useFactory: (pageTreeService: PageTreeService) => {
-                        new PageExistsConstraint(pageTreeService);
+                        return new PageExistsConstraint(pageTreeService);
                     },
                     inject: [PageTreeService],
                 },
