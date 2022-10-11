@@ -48,8 +48,8 @@ export function filterToMikroOrmQuery(
         if (filterProperty.lowerThan !== undefined) {
             ret.$lt = filterProperty.lowerThan;
         }
-        if (filterProperty.geraterThan !== undefined) {
-            ret.$gt = filterProperty.geraterThan;
+        if (filterProperty.greaterThan !== undefined) {
+            ret.$gt = filterProperty.greaterThan;
         }
         if (filterProperty.lowerThanEqual !== undefined) {
             ret.$lte = filterProperty.lowerThanEqual;
@@ -67,8 +67,8 @@ export function filterToMikroOrmQuery(
         if (filterProperty.lowerThan !== undefined) {
             ret.$lt = filterProperty.lowerThan;
         }
-        if (filterProperty.geraterThan !== undefined) {
-            ret.$gt = filterProperty.geraterThan;
+        if (filterProperty.greaterThan !== undefined) {
+            ret.$gt = filterProperty.greaterThan;
         }
         if (filterProperty.lowerThanEqual !== undefined) {
             ret.$lte = filterProperty.lowerThanEqual;
@@ -113,7 +113,10 @@ export function filtersToMikroOrmQuery(
                     if (applyFilter) {
                         applyFilter(acc, filterProperty, filterPropertyName);
                     } else {
-                        acc[filterPropertyName] = filterToMikroOrmQuery(filterProperty, filterPropertyName);
+                        const query = filterToMikroOrmQuery(filterProperty, filterPropertyName);
+                        if (Object.keys(query).length > 0) {
+                            acc[filterPropertyName] = query;
+                        }
                     }
                 }
             }
