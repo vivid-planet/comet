@@ -1,7 +1,6 @@
 import { IsOptional, IsString } from "class-validator";
 
-import { BlockIndexDataArray } from "../../../../../lib/blocks/block";
-import { BlockData, BlockInput, createBlock, inputToData } from "../../../block";
+import { BlockData, BlockIndexDataArray, BlockInput, createBlock, inputToData } from "../../../block";
 import { BlockField } from "../../../decorators/field";
 
 class ImageBlockData extends BlockData {
@@ -11,7 +10,7 @@ class ImageBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                indexName: "DamFileIndex",
+                dependencyType: "DamFileIndex",
                 id: this.damFileId,
             },
         ];

@@ -1,7 +1,7 @@
 import { DynamicModule, Global, Module, ModuleMetadata } from "@nestjs/common";
 
 import { BlockIndexService } from "./block-index.service";
-import { BlockIndexDefinition, DamFileIndexDefinition } from "./block-index-definitions";
+import { BlockIndexDependencyDefinition, DamFileBlockIndexDependency } from "./block-index-definitions";
 import { BlockMigrateService } from "./block-migrate.service";
 import { BLOCKS_MODULE_BLOCK_INDEXES, BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks.constants";
 import { BlocksMetaService } from "./blocks-meta.service";
@@ -11,7 +11,7 @@ import { DiscoverService } from "./discover.service";
 
 export interface BlocksModuleOptions {
     transformerDependencies: Record<string, unknown>;
-    blockIndexes?: BlockIndexDefinition[];
+    blockIndexes?: BlockIndexDependencyDefinition[];
 }
 
 export interface BlocksModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
@@ -41,9 +41,9 @@ export class BlocksModule {
 
         const blockIndexesProvider = {
             provide: BLOCKS_MODULE_BLOCK_INDEXES,
-            useFactory: async (options: BlocksModuleOptions): Promise<BlockIndexDefinition[]> => {
+            useFactory: async (options: BlocksModuleOptions): Promise<BlockIndexDependencyDefinition[]> => {
                 const appBlockIndexes = options.blockIndexes ?? [];
-                return [DamFileIndexDefinition, ...appBlockIndexes];
+                return [DamFileBlockIndexDependency, ...appBlockIndexes];
             },
             inject: [BLOCKS_MODULE_OPTIONS],
         };

@@ -2,6 +2,7 @@ import {
     AnnotationBlockMeta,
     BlockData,
     BlockField,
+    BlockIndexDataArray,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -9,10 +10,9 @@ import {
     inputToData,
     TransformResponse,
 } from "@comet/blocks-api";
-import { BlockIndexDataArray } from "@comet/blocks-api/lib/blocks/block";
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
-import { PAGE_INDEX_NAME } from "../../blocks/block-index-definitions";
+import { PAGE_BLOCK_INDEX_DEPENDENCY_NAME } from "../../blocks/block-index-definitions";
 import { PageTreeService } from "../page-tree.service";
 import { PageExists } from "../validators/page-exists.validator";
 
@@ -65,7 +65,7 @@ class InternalLinkBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                indexName: PAGE_INDEX_NAME,
+                dependencyType: PAGE_BLOCK_INDEX_DEPENDENCY_NAME,
                 id: this.targetPageId,
             },
         ];
