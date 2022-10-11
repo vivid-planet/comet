@@ -7,6 +7,7 @@ export {
     BlockDataFactory,
     BlockDataInterface,
     BlockIndexData,
+    BlockIndexDataArray,
     BlockInput,
     BlockInputFactory,
     BlockInputInterface,
