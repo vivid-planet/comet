@@ -12,7 +12,7 @@ import {
     FilesService,
     ImagesService,
     KubernetesModule,
-    PAGE_INDEX_NAME,
+    PAGE_BLOCK_INDEX_DEPENDENCY_NAME,
     PageTreeModule,
     PageTreeService,
     PublicUploadModule,
@@ -87,7 +87,7 @@ export class AppModule {
                             },
                             blockIndexes: [
                                 {
-                                    name: PAGE_INDEX_NAME,
+                                    name: PAGE_BLOCK_INDEX_DEPENDENCY_NAME,
                                     entityName: PageTreeNode.name,
                                 },
                             ],

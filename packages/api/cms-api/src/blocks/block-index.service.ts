@@ -14,21 +14,24 @@ export class BlockIndexService {
     async createViews(): Promise<void> {
         const indexSelects: string[] = [];
         const targetEntities = this.discoverEntitiesService.discoverTargetEntities();
+
         const targetEntitiesNameData = targetEntities.reduce((obj, entity) => {
             return {
                 ...obj,
-                [entity.indexName]: { entityName: entity.entityName, tableName: entity.metadata.tableName, primary: entity.metadata.primaryKeys[0] },
+                [entity.dependencyType]: {
+                    entityName: entity.entityName,
+                    tableName: entity.metadata.tableName,
+                    primary: entity.metadata.primaryKeys[0],
+                },
             };
         }, {});
-
-        console.log("targetEntitiesNameData ", targetEntitiesNameData);
-        console.log("json targetEntitiesNameData ", JSON.stringify(targetEntitiesNameData));
 
         for (const rootBlockEntity of this.discoverEntitiesService.discoverRootBlocks()) {
             const { metadata, column } = rootBlockEntity;
             const primary = metadata.primaryKeys[0];
 
-            const select = `SELECT 
+            const select = `SELECT
+                            targetObj->>'dependencyType' dependencyType,
                             "${metadata.tableName}"."${primary}" id,
                             '${metadata.name}' "entityName",
                             '${metadata.tableName}' "tableName",
@@ -44,9 +47,8 @@ export class BlockIndexService {
                         FROM "${metadata.tableName}",
                             json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
                             json_array_elements(indexObj->'target') targetObj,
-                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', targetObj->>'indexName') targetTableData`;
+                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', targetObj->>'dependencyType') targetTableData`;
 
-            console.log(select);
             indexSelects.push(select);
         }
 

@@ -1,13 +1,13 @@
 import { File } from "../dam/files/entities/file.entity";
 
-export interface BlockIndexDefinition {
+export interface BlockIndexDependencyDefinition {
     name: string;
     entityName: string;
 }
 
-export const DamFileIndexDefinition: BlockIndexDefinition = {
-    name: "DamFileIndex",
+export const DamFileBlockIndexDependency: BlockIndexDependencyDefinition = {
+    name: "DamFileDependency",
     entityName: File.name,
 };
 
-export const PAGE_INDEX_NAME = "PageIndex";
+export const PAGE_BLOCK_INDEX_DEPENDENCY_NAME = "PageDependency";
