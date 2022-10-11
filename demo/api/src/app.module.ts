@@ -12,6 +12,7 @@ import {
     FilesService,
     ImagesService,
     KubernetesModule,
+    PAGE_INDEX_NAME,
     PageTreeModule,
     PageTreeService,
     PublicUploadModule,
@@ -81,6 +82,12 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
                         filesService,
                         imagesService,
                     },
+                    blockIndexes: [
+                        {
+                            name: PAGE_INDEX_NAME,
+                            entityName: PageTreeNode.name,
+                        },
+                    ],
                 };
             },
             inject: [PageTreeService, FilesService, ImagesService],

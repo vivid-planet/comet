@@ -19,7 +19,8 @@ export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storag
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
 export { BlockIndexService } from "./blocks/block-index.service";
-export { BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
+export { BlockIndexDefinition, DamFileIndexDefinition, PAGE_INDEX_NAME } from "./blocks/block-index-definitions";
+export { BLOCKS_MODULE_BLOCK_INDEXES, BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
 export { BlocksModule, BlocksModuleAsyncOptions, BlocksModuleOptions } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
