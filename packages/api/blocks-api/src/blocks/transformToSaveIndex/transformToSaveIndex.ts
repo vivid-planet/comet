@@ -9,7 +9,7 @@ export function transformToSaveIndex(block: Block, blockData: BlockDataInterface
             blockname: c.name,
             jsonPath: c.pathToString(),
             visible: c.visible,
-            ...c.block.indexData(),
+            target: c.block.indexData(),
         };
     });
 }
