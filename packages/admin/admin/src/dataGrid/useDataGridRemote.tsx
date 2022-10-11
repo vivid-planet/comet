@@ -75,14 +75,5 @@ export function useDataGridRemote({
         sortingMode: "server",
         sortModel,
         onSortModelChange: handleSortModelChange,
-        /*
-        components: { Toolbar: GridToolbar },
-        componentsProps: {
-            toolbar: {
-                showQuickFilter: true,
-                quickFilterProps: { debounceMs: 500 },
-            },
-        },
-*/
     };
 }
