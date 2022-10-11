@@ -2,7 +2,6 @@ import {
     AnnotationBlockMeta,
     BlockContext,
     BlockData,
-    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -10,6 +9,7 @@ import {
     inputToData,
     TraversableTransformResponse,
 } from "@comet/blocks-api";
+import { BlockIndexDataArray } from "@comet/blocks-api/lib/blocks/block";
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 
@@ -18,6 +18,7 @@ import { FilesService } from "../dam/files/files.service";
 import { ImageCropAreaInput } from "../dam/images/dto/image-crop-area.input";
 import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
 import { ImagesService } from "../dam/images/images.service";
+import { DamFileIndexDefinition } from "./block-index-definitions";
 
 // @TODO: make factory to support flexible validation
 class PixelImageBlockData extends BlockData {
@@ -79,10 +80,13 @@ class PixelImageBlockData extends BlockData {
         return imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, previewDamUrls);
     }
 
-    indexData(): BlockIndexData {
-        return {
-            damFileIds: this.damFileId ? [this.damFileId] : [],
-        };
+    indexData(): BlockIndexDataArray {
+        return [
+            {
+                indexName: DamFileIndexDefinition.name,
+                id: this.damFileId,
+            },
+        ];
     }
 }
 

@@ -4,7 +4,6 @@ import {
     BlockData,
     BlockDataInterface,
     BlockField,
-    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -12,9 +11,11 @@ import {
     inputToData,
     TraversableTransformResponse,
 } from "@comet/blocks-api";
+import { BlockIndexDataArray } from "@comet/blocks-api/lib/blocks/block";
 import { IsBoolean, IsOptional, IsUUID } from "class-validator";
 
 import { FilesService } from "../dam/files/files.service";
+import { DamFileIndexDefinition } from "./block-index-definitions";
 
 class DamVideoBlockData extends BlockData {
     damFileId?: string;
@@ -57,10 +58,13 @@ class DamVideoBlockData extends BlockData {
         };
     }
 
-    indexData(): BlockIndexData {
-        return {
-            damFileIds: this.damFileId ? [this.damFileId] : [],
-        };
+    indexData(): BlockIndexDataArray {
+        return [
+            {
+                indexName: DamFileIndexDefinition.name,
+                id: this.damFileId,
+            },
+        ];
     }
 }
 

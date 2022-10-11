@@ -2,7 +2,6 @@ import {
     AnnotationBlockMeta,
     BlockContext,
     BlockData,
-    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -10,9 +9,11 @@ import {
     inputToData,
     TraversableTransformResponse,
 } from "@comet/blocks-api";
+import { BlockIndexDataArray } from "@comet/blocks-api/lib/blocks/block";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 import { FilesService } from "../dam/files/files.service";
+import { DamFileIndexDefinition } from "./block-index-definitions";
 
 // @TODO: make factory to support flexible validation
 class SvgImageBlockData extends BlockData {
@@ -45,10 +46,13 @@ class SvgImageBlockData extends BlockData {
         };
     }
 
-    indexData(): BlockIndexData {
-        return {
-            damFileIds: this.damFileId ? [this.damFileId] : [],
-        };
+    indexData(): BlockIndexDataArray {
+        return [
+            {
+                indexName: DamFileIndexDefinition.name,
+                id: this.damFileId,
+            },
+        ];
     }
 }
 
