@@ -12,6 +12,8 @@ export class BlockIndexService {
     }
 
     async createViews(): Promise<void> {
+        this.discoverEntitiesService.discoverTargetEntities();
+
         const damFilesIndexSelects: string[] = [];
         for (const discoveredEntity of this.discoverEntitiesService.discoverRootBlocks()) {
             const { metadata, column } = discoveredEntity;
