@@ -3,7 +3,7 @@ import { EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/core";
 import { EntityClass } from "@mikro-orm/core/typings";
 import { Inject, Injectable } from "@nestjs/common";
 
-import { BlockIndexDefinition } from "./block-index-definitions";
+import { BlockIndexDependencyDefinition } from "./block-index-definitions";
 import { BLOCKS_MODULE_BLOCK_INDEXES } from "./blocks.constants";
 
 interface DiscoverRootBlocksResult {
@@ -17,7 +17,7 @@ interface DiscoverRootBlocksResult {
 }
 
 interface DiscoverTargetEntitiesResult {
-    indexName: string;
+    dependencyType: string;
     entityName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repository: EntityRepository<any>;
@@ -27,7 +27,7 @@ interface DiscoverTargetEntitiesResult {
 
 @Injectable()
 export class DiscoverService {
-    constructor(private readonly orm: MikroORM, @Inject(BLOCKS_MODULE_BLOCK_INDEXES) private blockIndexes: BlockIndexDefinition[]) {}
+    constructor(private readonly orm: MikroORM, @Inject(BLOCKS_MODULE_BLOCK_INDEXES) private blockIndexes: BlockIndexDependencyDefinition[]) {}
 
     discoverRootBlocks(): DiscoverRootBlocksResult[] {
         const ret: DiscoverRootBlocksResult[] = [];
@@ -64,7 +64,7 @@ export class DiscoverService {
 
         this.blockIndexes.forEach((blockIndex) => {
             ret.push({
-                indexName: blockIndex.name,
+                dependencyType: blockIndex.name,
                 entityName: blockIndex.entityName,
                 repository: this.orm.em.getRepository(blockIndex.entityName),
                 metadata: metadataStorage.get(blockIndex.entityName),

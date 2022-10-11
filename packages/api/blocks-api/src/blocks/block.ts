@@ -38,7 +38,7 @@ export interface ChildBlockInfo {
 }
 export type BlockIndexDataArray = Array<BlockIndexData>;
 export interface BlockIndexData {
-    indexName: string;
+    dependencyType: string;
     id?: string;
 }
 export declare type BlockIndex = Array<{
