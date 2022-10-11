@@ -9,3 +9,5 @@ export const DamFileIndexDefinition: BlockIndexDefinition = {
     name: "DamFileIndex",
     entityName: File.name,
 };
+
+export const PAGE_INDEX_NAME = "PageIndex";
