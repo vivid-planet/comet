@@ -40,7 +40,9 @@ export class ScopeGuard implements CanActivate {
                     } else {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [subjectEntity.entity as EntityClass<any>]);
-                        if (!scoped) throw new Error(`Can't find scope of entity use @ScopedEntity decorator`);
+                        if (!scoped) {
+                            return undefined;
+                        }
                         subjectScope = await scoped.fn(row);
                     }
                 } else if (subjectEntity.options.pageTreeNodeIdArg && args[subjectEntity.options.pageTreeNodeIdArg]) {
