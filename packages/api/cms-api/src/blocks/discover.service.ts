@@ -17,6 +17,8 @@ interface DiscoverRootBlocksResult {
 }
 
 interface DiscoverTargetEntitiesResult {
+    indexName: string;
+    entityName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repository: EntityRepository<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,6 +64,8 @@ export class DiscoverService {
 
         this.blockIndexes.forEach((blockIndex) => {
             ret.push({
+                indexName: blockIndex.name,
+                entityName: blockIndex.entityName,
                 repository: this.orm.em.getRepository(blockIndex.entityName),
                 metadata: metadataStorage.get(blockIndex.entityName),
             });

@@ -9,8 +9,10 @@ import {
     inputToData,
     TransformResponse,
 } from "@comet/blocks-api";
+import { BlockIndexDataArray } from "@comet/blocks-api/lib/blocks/block";
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
+import { PAGE_INDEX_NAME } from "../../blocks/block-index-definitions";
 import { PageTreeService } from "../page-tree.service";
 import { PageExists } from "../validators/page-exists.validator";
 
@@ -58,6 +60,15 @@ class InternalLinkBlockData extends BlockData {
             },
             targetPageAnchor: this.targetPageAnchor,
         };
+    }
+
+    indexData(): BlockIndexDataArray {
+        return [
+            {
+                indexName: PAGE_INDEX_NAME,
+                id: this.targetPageId,
+            },
+        ];
     }
 }
 
