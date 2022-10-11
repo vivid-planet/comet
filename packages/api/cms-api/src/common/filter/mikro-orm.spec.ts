@@ -233,4 +233,10 @@ describe("filtersToMikroOrmQuery", () => {
             },
         });
     });
+    it("empty filter", async () => {
+        const f = new FooFilter();
+        f.foo = new StringFilter();
+
+        expect(filtersToMikroOrmQuery(f)).toStrictEqual({});
+    });
 });
