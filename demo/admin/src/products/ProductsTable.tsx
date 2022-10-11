@@ -107,14 +107,6 @@ function ProductsTable() {
     const rows = data?.products.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
-    if (error) {
-        return (
-            <Alert severity="error">
-                <FormattedMessage id="comet.error.abstractErrorMessage" defaultMessage="An error has occurred" />
-            </Alert>
-        );
-    }
-
     return (
         <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
             <DataGridPro
@@ -124,6 +116,7 @@ function ProductsTable() {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
+                error={error}
                 components={{
                     Toolbar: ProductsTableToolbar,
                 }}

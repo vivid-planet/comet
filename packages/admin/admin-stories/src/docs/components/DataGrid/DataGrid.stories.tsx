@@ -57,7 +57,7 @@ storiesOf("stories/components/DataGrid", module)
 
         const dataGridProps = useDataGridRemote();
 
-        const { data, loading } = useQuery(
+        const { data, loading, error } = useQuery(
             gql`
                 query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
                     launchesPastResult(limit: $limit, offset: $offset, sort: $sort, order: $order) {
@@ -87,7 +87,7 @@ storiesOf("stories/components/DataGrid", module)
 
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
             </Box>
         );
     })
