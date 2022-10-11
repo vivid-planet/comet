@@ -1,6 +1,6 @@
 {
     "extends": "@comet/eslint-config/react",
-    "ignorePatterns": ["src/*.generated.ts"],
+    "ignorePatterns": ["src/*.generated.ts", "lib/**"],
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-non-null-assertion": "off"
