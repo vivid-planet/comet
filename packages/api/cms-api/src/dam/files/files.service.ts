@@ -30,6 +30,8 @@ import { FileImage } from "./entities/file-image.entity";
 import { createHashedPath, slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
+const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
+
 export const withFilesSelect = (
     qb: QueryBuilder<File>,
     args: {
@@ -261,6 +263,11 @@ export class FilesService {
 
             const name = await this.findNextAvailableFilename(file.originalname, folderId);
 
+            let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
+            if (exifrSupportedMimetypes.includes(file.mimetype)) {
+                exifData = await exifr.parse(file.path);
+            }
+
             result = await this.create({
                 name,
                 folderId: folderId,
@@ -271,7 +278,7 @@ export class FilesService {
                         ? {
                               width: image.width,
                               height: image.height,
-                              exif: await exifr.parse(file.path).catch(() => undefined),
+                              exif: exifData,
                               cropArea: {
                                   focalPoint: FocalPoint.SMART,
                               },
