@@ -16,7 +16,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Property()
     @Field()
     @CrudField({
-        query: true,
+        search: true,
         filter: true,
         sort: true,
         input: true,

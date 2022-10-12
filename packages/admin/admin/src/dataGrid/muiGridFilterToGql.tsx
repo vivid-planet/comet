@@ -56,7 +56,7 @@ function convertValueByType(value: string, type?: string) {
     }
 }
 
-export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; query?: string } {
+export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
     const filterItems = filterModel.items
         .filter((value) => value.value !== undefined)
@@ -76,11 +76,11 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
     const op: "and" | "or" = filterModel.linkOperator ?? "or";
     filter[op] = filterItems;
 
-    let query: undefined | string = undefined;
+    let search: undefined | string = undefined;
 
     if (filterModel.quickFilterValues) {
-        query = filterModel.quickFilterValues.join(" ");
+        search = filterModel.quickFilterValues.join(" ");
     }
 
-    return { filter, query };
+    return { filter, search };
 }

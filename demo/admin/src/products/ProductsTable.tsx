@@ -134,8 +134,8 @@ const productsFragment = gql`
 `;
 
 const productsQuery = gql`
-    query ProductsList($offset: Int, $limit: Int, $sort: [ProductSort!], $filter: ProductFilter, $query: String) {
-        products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, query: $query) {
+    query ProductsList($offset: Int, $limit: Int, $sort: [ProductSort!], $filter: ProductFilter, $search: String) {
+        products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
             nodes {
                 id
                 ...ProductsList
