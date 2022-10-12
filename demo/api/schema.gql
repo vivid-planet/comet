@@ -379,7 +379,10 @@ input FolderFilterInput {
 input NewsFilter {
   slug: StringFilter
   title: StringFilter
+  date: DateFilter
   visible: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
 }
@@ -390,6 +393,15 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+}
+
+input DateFilter {
+  equal: DateTime
+  lowerThan: DateTime
+  greaterThan: DateTime
+  lowerThanEqual: DateTime
+  greaterThanEqual: DateTime
+  notEqual: DateTime
 }
 
 input BooleanFilter {
@@ -404,8 +416,11 @@ input NewsSort {
 enum NewsSortField {
   slug
   title
+  date
   category
   visible
+  createdAt
+  updatedAt
 }
 
 input ProductFilter {
@@ -413,6 +428,9 @@ input ProductFilter {
   slug: StringFilter
   description: StringFilter
   price: NumberFilter
+  inStock: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
 }
@@ -420,7 +438,7 @@ input ProductFilter {
 input NumberFilter {
   equal: Float
   lowerThan: Float
-  geraterThan: Float
+  greaterThan: Float
   lowerThanEqual: Float
   greaterThanEqual: Float
   notEqual: Float
@@ -436,6 +454,9 @@ enum ProductSortField {
   slug
   description
   price
+  inStock
+  createdAt
+  updatedAt
 }
 
 type Mutation {
@@ -569,6 +590,7 @@ input UpdateDamFolderInput {
 input NewsInput {
   slug: String!
   title: String!
+  date: DateTime!
   visible: Boolean!
   image: JSONObject!
   content: JSONObject!
@@ -595,4 +617,5 @@ input ProductInput {
   slug: String!
   description: String!
   price: Float
+  inStock: Boolean!
 }

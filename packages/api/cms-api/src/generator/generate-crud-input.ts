@@ -49,11 +49,11 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             decorators.push("@IsNumber()");
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "number";
-        } else if (prop.type === "DateType") {
+        } else if (prop.type === "DateType" || prop.type === "Date") {
             decorators.push("@IsDate()");
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "Date";
-        } else if (prop.type === "boolean") {
+        } else if (prop.type === "BooleanType" || prop.type === "boolean") {
             decorators.push("@IsBoolean()");
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "boolean";

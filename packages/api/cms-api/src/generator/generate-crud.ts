@@ -18,19 +18,30 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         const crudQueryProps = metadata.props.filter(
             (prop) => prop.type === "string" && hasFieldFeature(metadata.class, prop.name, "query") && !prop.name.startsWith("scope_"),
         );
+
         const hasQueryArg = crudQueryProps.length > 0;
         const crudFilterProps = metadata.props.filter(
             (prop) =>
                 hasFieldFeature(metadata.class, prop.name, "filter") &&
                 !prop.name.startsWith("scope_") &&
-                (prop.type === "string" || prop.type === "DecimalType" || prop.type === "boolean" || prop.type === "DateType"),
+                (prop.type === "string" ||
+                    prop.type === "DecimalType" ||
+                    prop.type === "BooleanType" ||
+                    prop.type === "boolean" ||
+                    prop.type === "DateType" ||
+                    prop.type === "Date"),
         );
         const hasFilterArg = crudFilterProps.length > 0;
         const crudSortProps = metadata.props.filter(
             (prop) =>
                 hasFieldFeature(metadata.class, prop.name, "sort") &&
                 !prop.name.startsWith("scope_") &&
-                (prop.type === "string" || prop.type === "DecimalType" || prop.type === "boolean" || prop.type === "DateType"),
+                (prop.type === "string" ||
+                    prop.type === "DecimalType" ||
+                    prop.type === "BooleanType" ||
+                    prop.type === "boolean" ||
+                    prop.type === "DateType" ||
+                    prop.type === "Date"),
         );
         const hasSortArg = crudSortProps.length > 0;
 
@@ -70,13 +81,13 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                             @Type(() => NumberFilter)
                             ${prop.name}?: NumberFilter;
                             `;
-                        } else if (prop.type === "boolean") {
+                        } else if (prop.type === "boolean" || prop.type === "BooleanType") {
                             return `@Field(() => BooleanFilter, { nullable: true })
                             @ValidateNested()
                             @Type(() => BooleanFilter)
                             ${prop.name}?: BooleanFilter;
                             `;
-                        } else if (prop.type === "DateType") {
+                        } else if (prop.type === "DateType" || prop.type === "Date") {
                             return `@Field(() => DateFilter, { nullable: true })
                             @ValidateNested()
                             @Type(() => DateFilter)

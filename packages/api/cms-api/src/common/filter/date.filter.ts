@@ -1,35 +1,35 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsNumber, IsOptional } from "class-validator";
+import { IsDate, IsOptional } from "class-validator";
 
 @InputType()
 export class DateFilter {
     @Field({ nullable: true })
     @IsOptional()
-    @IsNumber()
-    equal?: number;
+    @IsDate()
+    equal?: Date;
 
     @Field({ nullable: true })
     @IsOptional()
-    @IsNumber()
-    lowerThan?: number;
+    @IsDate()
+    lowerThan?: Date;
 
     @Field({ nullable: true })
     @IsOptional()
-    @IsNumber()
-    geraterThan?: number;
+    @IsDate()
+    greaterThan?: Date;
 
     @Field({ nullable: true })
     @IsOptional()
-    @IsNumber()
-    lowerThanEqual?: number;
+    @IsDate()
+    lowerThanEqual?: Date;
 
     @Field({ nullable: true })
     @IsOptional()
-    @IsNumber()
-    greaterThanEqual?: number;
+    @IsDate()
+    greaterThanEqual?: Date;
 
     @Field({ nullable: true })
     @IsOptional()
-    @IsNumber()
-    notEqual?: number;
+    @IsDate()
+    notEqual?: Date;
 }
