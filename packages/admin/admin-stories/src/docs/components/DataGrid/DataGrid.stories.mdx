@@ -94,11 +94,9 @@ Typical Usage Example:
 ```
 const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 const sortModel = dataGridProps.sortModel;
-const { filter, query } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
     variables: {
-        filter,
-        query,
+        ...muiGridFilterToGql(columns, dataGridProps.filterModel),
         offset: dataGridProps.page * dataGridProps.pageSize,
         limit: dataGridProps.pageSize,
         sort: muiGridSortToGql(sortModel),
