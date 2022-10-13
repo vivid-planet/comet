@@ -152,7 +152,7 @@ This release is the first stable version.
 
 -   Change the majority of classes used for style overrides. This may break custom styles
 -   Remove `showPicker` prop from `ColorPicker` and show the picker by default. Hide by using the `hidePicker` prop
--   Remove `showClearButton` prop from `ColorPicker`. Re-add it by including the `ClearInputButton` component in the `endAdornment` prop
+-   Rename the `showClearButton` prop to `clearable` in `ColorPicker`
 
 #### Changes
 
