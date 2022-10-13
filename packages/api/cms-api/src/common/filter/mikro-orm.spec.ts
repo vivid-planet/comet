@@ -106,7 +106,7 @@ describe("filterToMikroOrmQuery", () => {
     });
     it("number gt", async () => {
         const f = new NumberFilter();
-        f.geraterThan = 123;
+        f.greaterThan = 123;
 
         expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
             $gt: 123,

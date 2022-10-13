@@ -48,8 +48,8 @@ export function filterToMikroOrmQuery(
         if (filterProperty.lowerThan !== undefined) {
             ret.$lt = filterProperty.lowerThan;
         }
-        if (filterProperty.geraterThan !== undefined) {
-            ret.$gt = filterProperty.geraterThan;
+        if (filterProperty.greaterThan !== undefined) {
+            ret.$gt = filterProperty.greaterThan;
         }
         if (filterProperty.lowerThanEqual !== undefined) {
             ret.$lte = filterProperty.lowerThanEqual;
@@ -67,8 +67,8 @@ export function filterToMikroOrmQuery(
         if (filterProperty.lowerThan !== undefined) {
             ret.$lt = filterProperty.lowerThan;
         }
-        if (filterProperty.geraterThan !== undefined) {
-            ret.$gt = filterProperty.geraterThan;
+        if (filterProperty.greaterThan !== undefined) {
+            ret.$gt = filterProperty.greaterThan;
         }
         if (filterProperty.lowerThanEqual !== undefined) {
             ret.$lte = filterProperty.lowerThanEqual;
