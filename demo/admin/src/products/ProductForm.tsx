@@ -67,8 +67,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { data, error, loading } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, { variables: { id: id! }, skip: !id });
+    const { data, error, loading } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, id ? { variables: { id } } : { skip: true });
 
     const initialValues = data?.product ? filter(productFormFragment, data.product) : {};
 
