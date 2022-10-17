@@ -119,12 +119,12 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            - name: Publish stable minor release
+            - name: Publish preminor canary release
               if: |
                   !contains( github.event.pull_request.labels.*.name, 'skip-release') &&
                   github.base_ref == 'main' &&
                   github.event.pull_request.merged == true
-              run: yarn publish:release minor --yes
+              run: yarn publish:release preminor --no-push --no-git-tag-version --canary --preid=alpha.${{ github.run_number }} --dist-tag=alpha --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
                   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
