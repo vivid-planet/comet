@@ -10,12 +10,20 @@ import {
     MenuItem,
     MenuItemProps,
     MenuProps,
+    Tooltip,
+    TooltipProps,
 } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
+export interface RowActionsIconItemComponentsProps {
+    tooltip?: Omit<TooltipProps, "children">;
+}
+
 export interface RowActionsIconItemProps extends Omit<IconButtonProps, "children"> {
     icon: React.ReactNode;
+    tooltip?: string;
+    componentsProps?: RowActionsIconItemComponentsProps;
 }
 
 export interface RowActionsMenuItemComponentsProps {
@@ -71,7 +79,16 @@ const RowActions = ({
                 <>
                     {iconActions.map((action, index) => {
                         if (iconActionIsPropsObject(action)) {
-                            const { icon, ...restIconButtonProps } = action;
+                            const { icon, tooltip, componentsProps = {}, ...restIconButtonProps } = action;
+                            const { tooltip: tooltipProps } = componentsProps;
+
+                            if (tooltip) {
+                                return (
+                                    <Tooltip key={index} title={tooltip} {...tooltipProps}>
+                                        <IconButton {...restIconButtonProps}>{icon}</IconButton>
+                                    </Tooltip>
+                                );
+                            }
 
                             return (
                                 <IconButton key={index} {...restIconButtonProps}>
