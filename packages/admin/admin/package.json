@@ -50,6 +50,7 @@
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
+        "@mui/x-data-grid": "^5.0.0",
         "exceljs": "^3.4.0",
         "file-saver": "^2.0.2",
         "final-form": "^4.16.1",

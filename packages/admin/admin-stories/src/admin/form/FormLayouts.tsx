@@ -3,7 +3,7 @@ import { Card, CardContent, Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 function VerticalFields() {
     return (
@@ -79,5 +79,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Form Layouts", () => <Story />);

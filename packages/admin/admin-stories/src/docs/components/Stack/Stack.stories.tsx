@@ -16,11 +16,11 @@ import { Button, Link } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
 storiesOf("stories/components/Stack", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .addDecorator(storyRouterDecorator())
     .add("Basic", () => {
         return (

@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloSwapiStoryDecorator } from "../../../../../apollo-swapi-story.decorator";
+import { apolloSwapiStoryDecorator } from "../../../../../apollo-story.decorator";
 import { errorDialogStoryProviderDecorator } from "../error-dialog-provider.decorator";
 
 storiesOf("stories/components/Error Handling/Error Dialog/Automatic Graphql Error Dialog", module)

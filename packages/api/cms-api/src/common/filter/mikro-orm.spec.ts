@@ -1,22 +1,22 @@
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
-import { filtersToMikroOrmQuery, filterToMikroOrmQuery, queryToMikroOrmQuery } from "./mikro-orm";
+import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery } from "./mikro-orm";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
 
-describe("queryToMikroOrmQuery", () => {
+describe("searchToMikroOrmQuery", () => {
     it("should work", async () => {
-        expect(queryToMikroOrmQuery("foo", ["title", "description"])).toStrictEqual({
+        expect(searchToMikroOrmQuery("foo", ["title", "description"])).toStrictEqual({
             $or: [{ title: { $ilike: "%foo%" } }, { description: { $ilike: "%foo%" } }],
         });
     });
     it("should escape %", async () => {
-        expect(queryToMikroOrmQuery("fo%o", ["title", "description"])).toStrictEqual({
+        expect(searchToMikroOrmQuery("fo%o", ["title", "description"])).toStrictEqual({
             $or: [{ title: { $ilike: "%fo\\%o%" } }, { description: { $ilike: "%fo\\%o%" } }],
         });
     });
     it("should escape _", async () => {
-        expect(queryToMikroOrmQuery("fo_o", ["title", "description"])).toStrictEqual({
+        expect(searchToMikroOrmQuery("fo_o", ["title", "description"])).toStrictEqual({
             $or: [{ title: { $ilike: "%fo\\_o%" } }, { description: { $ilike: "%fo\\_o%" } }],
         });
     });

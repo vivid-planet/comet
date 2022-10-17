@@ -128,12 +128,12 @@ export function filtersToMikroOrmQuery(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function queryToMikroOrmQuery(query: string, fields: string[]): ObjectQuery<any> {
-    const quotedQuery = query.replace(/([%_\\])/g, "\\$1");
+export function searchToMikroOrmQuery(search: string, fields: string[]): ObjectQuery<any> {
+    const quotedSearch = search.replace(/([%_\\])/g, "\\$1");
     return {
         $or: fields.map((field) => {
             return {
-                [field]: { $ilike: `%${quotedQuery}%` },
+                [field]: { $ilike: `%${quotedSearch}%` },
             };
         }),
     };
