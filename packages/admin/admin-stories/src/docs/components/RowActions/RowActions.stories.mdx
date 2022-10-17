@@ -1,24 +1,74 @@
 import { Meta, Canvas, Story, Source } from "@storybook/addon-docs";
 
-<Meta title="Docs/Components/Row Actions" />
+<Meta title="Docs/Components/RowActions" />
 
-# Row Actions (Icon Buttons & Menu)
+# RowActions (Icon Buttons & More-Menu)
 
-RowActions is a list of IconButtons with a "More" icon to open a menu of additional ListItems. <br/>
+A list of IconButtons with a "More" icon to open a menu of additional ListItems. <br/>
 Generally, RowActions are used within table rows or similar lists of items.
 
-## Example in table
+## Icon Actions
+
+IconButtons can be added using the `iconActions` prop. <br/>
+The value should be an array of `IconButton` props objects.
 
 <Canvas>
-    <Story id="stories-components-row-actions--example-in-table" />
+    <Story id="stories-components-rowactions--iconactions-with-props-object" />
 </Canvas>
 
-## Customization
+### Render custom icon actions
+
+You can define a node instead of the props object for use cases where the default `IconButton` is not an option.
 
 <Canvas>
-    <Story id="stories-components-row-actions--icons-with-space-hover-styles" />
+    <Story id="stories-components-rowactions--iconactions-with-react-node" />
+</Canvas>
+
+## Menu Actions
+
+Actions can be added to the "More" menu using the `menuActions` prop. <br/>
+The value should be an array of `ListItem` props objects.
+
+<Canvas>
+    <Story id="stories-components-rowactions--menuactions-with-props-object" />
+</Canvas>
+
+### Render custom menu actions
+
+You can define a node instead of the props object for a `Divider` or other use cases where the default `ListItem` is not an option.
+
+_Note: Closing the menu must be handled manually in this case by using the `closeMenu` function, available when passing a function that returns the node._
+
+<Canvas>
+    <Story id="stories-components-rowactions--menuactions-with-react-node" />
+</Canvas>
+
+### Manually handle closing the menu
+
+By default, the "More" menu is closed when clicking the item. <br/>
+This can be prevented by setting `preventCloseOnClick` in the props object or by rendering a custom node.
+
+The `closeMenu` function is passed as a parameter to the `onClick` function of the props object. <br/>
+When rendering a custom node, `closeMenu` is available when passing a function that returns the node.
+
+<Canvas>
+    <Story id="stories-components-rowactions--menuactions-with-props-object-custom-closing" />
+</Canvas>
+
+## Examples
+
+### Usage in a table
+
+<Canvas>
+    <Story id="stories-components-rowactions--example-in-table" />
+</Canvas>
+
+### Special cases
+
+<Canvas>
+    <Story id="stories-components-rowactions--icons-with-space-hover-styles" />
 </Canvas>
 
 <Canvas>
-    <Story id="stories-components-row-actions--render-custom-menu-items" />
+    <Story id="stories-components-rowactions--render-custom-menu-items" />
 </Canvas>

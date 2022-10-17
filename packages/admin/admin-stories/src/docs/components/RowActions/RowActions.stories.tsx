@@ -13,16 +13,262 @@ import {
     LinkExternal,
     Master,
     MasterUnlock,
+    Save,
     ThreeDotSaving,
     Wrench,
 } from "@comet/admin-icons";
-import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Paper, SxProps, Theme, Typography } from "@mui/material";
+import {
+    Box,
+    CircularProgress,
+    Divider,
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Paper,
+    SxProps,
+    Theme,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
-storiesOf("stories/components/Row Actions", module)
+type MenuItem = {
+    text: string;
+    icon: React.ElementType;
+};
+
+const menuItems: MenuItem[] = [
+    {
+        text: "Account Settings",
+        icon: Account,
+    },
+    {
+        text: "Device Settings",
+        icon: DeviceResponsive,
+    },
+    {
+        text: "Global Settings",
+        icon: Domain,
+    },
+];
+
+storiesOf("stories/components/RowActions", module)
+    .addDecorator(storyRouterDecorator())
+    .addDecorator((Story) => (
+        <Paper
+            variant="outlined"
+            sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                padding: 2,
+                maxWidth: 320,
+                marginLeft: "auto",
+                marginRight: "auto",
+            }}
+        >
+            <Story />
+        </Paper>
+    ))
+    .add("IconActions with props object", () => (
+        <RowActions
+            iconActions={[
+                {
+                    icon: <Edit />,
+                    color: "primary",
+                    tooltip: "Edit",
+                    onClick: () => {
+                        // Do something
+                    },
+                },
+                {
+                    icon: <FavoriteAdd />,
+                    tooltip: "Add to favorites",
+                    onClick: () => {
+                        // Do something
+                    },
+                },
+            ]}
+        />
+    ))
+    .add("IconActions with react node", () => {
+        const SaveButton = () => {
+            const [loading, setLoading] = React.useState(false);
+
+            return (
+                <Tooltip title="Save">
+                    {loading ? (
+                        <CircularProgress size={16} sx={{ padding: "8px" }} />
+                    ) : (
+                        <IconButton
+                            onClick={() => {
+                                setLoading(true);
+                                // Pretending to do something...
+                                setTimeout(() => {
+                                    setLoading(false);
+                                }, 2000);
+                            }}
+                        >
+                            <Save />
+                        </IconButton>
+                    )}
+                </Tooltip>
+            );
+        };
+
+        return (
+            <RowActions
+                iconActions={[
+                    {
+                        icon: <Edit />,
+                        tooltip: "Edit",
+                        color: "primary",
+                        onClick: () => {
+                            // Do something
+                        },
+                    },
+                    <SaveButton key="save" />,
+                ]}
+            />
+        );
+    })
+    .add("MenuActions with props object", () => (
+        <RowActions
+            menuActions={[
+                {
+                    text: "Edit item",
+                    icon: <Edit />,
+                    onClick: () => {
+                        // Do something
+                    },
+                },
+                {
+                    text: "Add to favourites",
+                    icon: <FavoriteAdd />,
+                    onClick: () => {
+                        // Do something
+                    },
+                },
+            ]}
+        />
+    ))
+    .add("MenuActions with react node", () => {
+        type SettingsMenuItemProps = {
+            closeRowActionsMenu: () => void;
+        };
+
+        const SettingsMenuItem = ({ closeRowActionsMenu }: SettingsMenuItemProps) => {
+            const [showSettingsMenu, setShowSettingsMenu] = React.useState(false);
+            const settingsMenuItemRef = React.useRef(null);
+
+            return (
+                <>
+                    <MenuItem ref={settingsMenuItemRef} onClick={() => setShowSettingsMenu(true)}>
+                        <ListItemIcon>
+                            <Wrench />
+                        </ListItemIcon>
+                        <ListItemText primary="Settings" />
+                        <ChevronRight color="action" />
+                    </MenuItem>
+                    <Menu
+                        anchorEl={settingsMenuItemRef.current}
+                        open={showSettingsMenu}
+                        onClose={() => {
+                            setShowSettingsMenu(false);
+                            closeRowActionsMenu();
+                        }}
+                        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                        transformOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    >
+                        {menuItems.map(({ text, icon: Icon }, index) => (
+                            <MenuItem
+                                key={index}
+                                onClick={() => {
+                                    // Do something
+                                    setShowSettingsMenu(false);
+                                    closeRowActionsMenu();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Icon />
+                                </ListItemIcon>
+                                <ListItemText primary={text} />
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </>
+            );
+        };
+
+        return (
+            <RowActions
+                menuActions={[
+                    {
+                        text: "Edit item",
+                        icon: <Edit />,
+                        onClick: () => {
+                            // Do something
+                        },
+                    },
+                    {
+                        text: "Add to favourites",
+                        icon: <FavoriteAdd />,
+                        onClick: () => {
+                            // Do something
+                        },
+                    },
+                    <Divider key="first-divider" />,
+                    (closeMenu) => <SettingsMenuItem key="settingsMenu" closeRowActionsMenu={closeMenu} />,
+                ]}
+            />
+        );
+    })
+
+    .add("MenuActions with props object custom closing", () => {
+        const [isDeleting, setIsDeleting] = React.useState(false);
+
+        return (
+            <RowActions
+                menuActions={[
+                    {
+                        text: isDeleting ? "Deleting..." : "Delete",
+                        icon: isDeleting ? <ThreeDotSaving /> : <Delete />,
+                        disabled: isDeleting,
+                        preventCloseOnClick: true,
+                        onClick: (event, closeMenu) => {
+                            setIsDeleting(true);
+                            // Pretending to do something...
+                            setTimeout(() => {
+                                closeMenu();
+                                setIsDeleting(false);
+                            }, 2000);
+                        },
+                    },
+                    (closeMenu) => (
+                        <MenuItem
+                            key="archive"
+                            onClick={() => {
+                                // Do something
+                                closeMenu();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <Archive />
+                            </ListItemIcon>
+                            <ListItemText primary="Archive" />
+                        </MenuItem>
+                    ),
+                ]}
+            />
+        );
+    });
+
+storiesOf("stories/components/RowActions", module)
     .addDecorator(storyRouterDecorator())
     .add("Example in Table", () => {
         const [isDeleting, setIsDeleting] = React.useState(false);
@@ -55,12 +301,13 @@ storiesOf("stories/components/Row Actions", module)
                         },
                         {
                             name: "actions",
-                            render: ({ firstname }) => {
+                            render: () => {
                                 return (
                                     <RowActions
                                         iconActions={[
                                             {
                                                 icon: <Edit />,
+                                                tooltip: "Edit",
                                                 color: "primary",
                                                 onClick: () => {
                                                     // Do something
@@ -68,6 +315,7 @@ storiesOf("stories/components/Row Actions", module)
                                             },
                                             {
                                                 icon: <FavoriteAdd />,
+                                                tooltip: "Add to favorites",
                                                 onClick: () => {
                                                     // Do something
                                                 },
@@ -77,17 +325,15 @@ storiesOf("stories/components/Row Actions", module)
                                             {
                                                 text: "Promote",
                                                 icon: <Master />,
-                                                onClick: (event, closeMenu) => {
+                                                onClick: () => {
                                                     // Do something
-                                                    closeMenu();
                                                 },
                                             },
                                             {
                                                 text: "Demote",
                                                 icon: <MasterUnlock />,
-                                                onClick: (event, closeMenu) => {
+                                                onClick: () => {
                                                     // Do something
-                                                    closeMenu();
                                                 },
                                             },
                                             <Divider key="menuDivider" />,
@@ -95,6 +341,7 @@ storiesOf("stories/components/Row Actions", module)
                                                 text: isDeleting ? "Deleting..." : "Delete",
                                                 icon: isDeleting ? <ThreeDotSaving /> : <Delete />,
                                                 disabled: isDeleting,
+                                                preventCloseOnClick: true,
                                                 onClick: (event, closeMenu) => {
                                                     setIsDeleting(true);
                                                     // Pretending to do something...
@@ -122,19 +369,19 @@ storiesOf("stories/components/Row Actions", module)
                 <Typography>Icons with space & hover styles</Typography>
                 <RowActions
                     iconActions={[
-                        { icon: <Copy />, sx: iconButtonStyles },
-                        { icon: <Cut />, sx: iconButtonStyles },
+                        { icon: <Copy />, tooltip: "Copy", sx: iconButtonStyles },
+                        { icon: <Cut />, tooltip: "Cut", sx: iconButtonStyles },
                         <Box key="iconSpacerOne" sx={{ width: 15 }} />,
-                        { icon: <Archive />, sx: iconButtonStyles },
-                        { icon: <Delete />, sx: ({ palette }) => ({ ":hover": { color: palette.error.main } }) },
+                        { icon: <Archive />, tooltip: "Archive", sx: iconButtonStyles },
+                        { icon: <Delete />, tooltip: "Delete", sx: ({ palette }) => ({ ":hover": { color: palette.error.main } }) },
                         <Box key="iconSpacerTwo" sx={{ width: 15 }} />,
                     ]}
                     menuActions={[
                         {
                             text: "Do something",
                             icon: <LinkExternal />,
-                            onClick(_, closeMenu) {
-                                closeMenu();
+                            onClick() {
+                                // Do something
                             },
                         },
                     ]}
@@ -163,43 +410,28 @@ storiesOf("stories/components/Row Actions", module)
                     <Menu
                         anchorEl={settingsMenuItemRef.current}
                         open={showSettingsMenu}
-                        onClose={() => setShowSettingsMenu(false)}
+                        onClose={() => {
+                            setShowSettingsMenu(false);
+                            closeMenu();
+                        }}
                         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
                         transformOrigin={{ vertical: "bottom", horizontal: "right" }}
                     >
-                        <MenuItem
-                            onClick={() => {
-                                setShowSettingsMenu(false);
-                                closeMenu();
-                            }}
-                        >
-                            <ListItemIcon>
-                                <Account />
-                            </ListItemIcon>
-                            <ListItemText primary="Account Settings" />
-                        </MenuItem>
-                        <MenuItem
-                            onClick={() => {
-                                setShowSettingsMenu(false);
-                                closeMenu();
-                            }}
-                        >
-                            <ListItemIcon>
-                                <DeviceResponsive />
-                            </ListItemIcon>
-                            <ListItemText primary="Device Settings" />
-                        </MenuItem>
-                        <MenuItem
-                            onClick={() => {
-                                setShowSettingsMenu(false);
-                                closeMenu();
-                            }}
-                        >
-                            <ListItemIcon>
-                                <Domain />
-                            </ListItemIcon>
-                            <ListItemText primary="Global Settings" />
-                        </MenuItem>
+                        {menuItems.map(({ text, icon: Icon }, index) => (
+                            <MenuItem
+                                key={index}
+                                onClick={() => {
+                                    // Do something
+                                    setShowSettingsMenu(false);
+                                    closeMenu();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Icon />
+                                </ListItemIcon>
+                                <ListItemText primary={text} />
+                            </MenuItem>
+                        ))}
                         <Divider />
                         <MenuItem
                             onClick={() => {
@@ -226,8 +458,8 @@ storiesOf("stories/components/Row Actions", module)
                         {
                             text: "Do something",
                             icon: <LinkExternal />,
-                            onClick(_, closeMenu) {
-                                closeMenu();
+                            onClick() {
+                                // Do something
                             },
                         },
                         (closeMenu) => <SettingsMenuItem key="settingsMenu" closeMenu={closeMenu} />,
