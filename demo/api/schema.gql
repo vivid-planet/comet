@@ -333,7 +333,7 @@ type Query {
   damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
-  news(id: ID!): News
+  news(id: ID!): News!
   newsBySlug(slug: String!): News
   newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
@@ -342,7 +342,7 @@ type Query {
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
-  product(id: ID!): Product
+  product(id: ID!): Product!
   productBySlug(slug: String!): Product
   products(offset: Int = 0, limit: Int = 20, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
 }

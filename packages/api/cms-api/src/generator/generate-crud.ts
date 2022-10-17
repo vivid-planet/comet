@@ -268,12 +268,11 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>
         ) {}
     
-        @Query(() => ${metadata.className}, { nullable: true })
+        @Query(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
-        async ${instanceNameSingular}(@Args("id", { type: () => ID }) id: string): Promise<${metadata.className} | null> {
-            const ${instanceNameSingular} = await this.repository.findOne(id);
-    
-            return ${instanceNameSingular} ?? null;
+        async ${instanceNameSingular}(@Args("id", { type: () => ID }) id: string): Promise<${metadata.className}> {
+            const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
+            return ${instanceNameSingular};
         }
     
         ${
