@@ -4,7 +4,7 @@ import { select } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 interface FormValues {
     foo: string;
@@ -82,5 +82,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Show Error Strategies", () => <Story />);

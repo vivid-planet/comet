@@ -15,22 +15,32 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
 
     async function writeCrudResolver(): Promise<void> {
-        const crudQueryProps = metadata.props.filter(
-            (prop) => prop.type === "string" && hasFieldFeature(metadata.class, prop.name, "query") && !prop.name.startsWith("scope_"),
+        const crudSearchProps = metadata.props.filter(
+            (prop) => prop.type === "string" && hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"),
         );
-        const hasQueryArg = crudQueryProps.length > 0;
+        const hasSearchArg = crudSearchProps.length > 0;
         const crudFilterProps = metadata.props.filter(
             (prop) =>
                 hasFieldFeature(metadata.class, prop.name, "filter") &&
                 !prop.name.startsWith("scope_") &&
-                (prop.type === "string" || prop.type === "DecimalType" || prop.type === "boolean" || prop.type === "DateType"),
+                (prop.type === "string" ||
+                    prop.type === "DecimalType" ||
+                    prop.type === "BooleanType" ||
+                    prop.type === "boolean" ||
+                    prop.type === "DateType" ||
+                    prop.type === "Date"),
         );
         const hasFilterArg = crudFilterProps.length > 0;
         const crudSortProps = metadata.props.filter(
             (prop) =>
                 hasFieldFeature(metadata.class, prop.name, "sort") &&
                 !prop.name.startsWith("scope_") &&
-                (prop.type === "string" || prop.type === "DecimalType" || prop.type === "boolean" || prop.type === "DateType"),
+                (prop.type === "string" ||
+                    prop.type === "DecimalType" ||
+                    prop.type === "BooleanType" ||
+                    prop.type === "boolean" ||
+                    prop.type === "DateType" ||
+                    prop.type === "Date"),
         );
         const hasSortArg = crudSortProps.length > 0;
 
@@ -70,13 +80,13 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                             @Type(() => NumberFilter)
                             ${prop.name}?: NumberFilter;
                             `;
-                        } else if (prop.type === "boolean") {
+                        } else if (prop.type === "boolean" || prop.type === "BooleanType") {
                             return `@Field(() => BooleanFilter, { nullable: true })
                             @ValidateNested()
                             @Type(() => BooleanFilter)
                             ${prop.name}?: BooleanFilter;
                             `;
-                        } else if (prop.type === "DateType") {
+                        } else if (prop.type === "DateType" || prop.type === "Date") {
                             return `@Field(() => DateFilter, { nullable: true })
                             @ValidateNested()
                             @Type(() => DateFilter)
@@ -152,12 +162,12 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     @ArgsType()
     export class ${argsClassName} extends OffsetBasedPaginationArgs {
         ${
-            hasQueryArg
+            hasSearchArg
                 ? `
         @Field({ nullable: true })
         @IsOptional()
         @IsString()
-        query?: string;
+        search?: string;
         `
                 : ""
         }
@@ -187,7 +197,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     `;
         await writeGenerated(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
 
-        const serviceOut = `import { filtersToMikroOrmQuery, queryToMikroOrmQuery } from "@comet/cms-api";
+        const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
@@ -198,17 +208,17 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     @Injectable()
     export class ${classNamePlural}Service {    
         ${
-            hasQueryArg || hasFilterArg
+            hasSearchArg || hasFilterArg
                 ? `
-        getFindCondition(options: { ${hasQueryArg ? "query?: string, " : ""}${
+        getFindCondition(options: { ${hasSearchArg ? "search?: string, " : ""}${
                       hasFilterArg ? `filter?: ${classNameSingular}Filter, ` : ""
                   } }): ObjectQuery<${metadata.className}> {
             const andFilters = [];
             ${
-                hasQueryArg
+                hasSearchArg
                     ? `
-            if (options.query) {
-                andFilters.push(queryToMikroOrmQuery(options.query, [${crudQueryProps.map((prop) => `"${prop.name}", `).join("")}]));
+            if (options.search) {
+                andFilters.push(searchToMikroOrmQuery(options.search, [${crudSearchProps.map((prop) => `"${prop.name}", `).join("")}]));
             }
             `
                     : ""
@@ -258,12 +268,11 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>
         ) {}
     
-        @Query(() => ${metadata.className}, { nullable: true })
+        @Query(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
-        async ${instanceNameSingular}(@Args("id", { type: () => ID }) id: string): Promise<${metadata.className} | null> {
-            const ${instanceNameSingular} = await this.repository.findOne(id);
-    
-            return ${instanceNameSingular} ?? null;
+        async ${instanceNameSingular}(@Args("id", { type: () => ID }) id: string): Promise<${metadata.className}> {
+            const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
+            return ${instanceNameSingular};
         }
     
         ${
@@ -282,11 +291,11 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
-            @Args() { ${hasQueryArg ? `query, ` : ""}${hasFilterArg ? `filter, ` : ""}${hasSortArg ? `sort, ` : ""}offset, limit }: ${argsClassName}
+            @Args() { ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${hasSortArg ? `sort, ` : ""}offset, limit }: ${argsClassName}
         ): Promise<Paginated${classNamePlural}> {
             const where = ${
-                hasQueryArg || hasFilterArg
-                    ? `this.${instanceNamePlural}Service.getFindCondition({ ${hasQueryArg ? `query, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
+                hasSearchArg || hasFilterArg
+                    ? `this.${instanceNamePlural}Service.getFindCondition({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
                     : "{}"
             }
             ${scopeProp ? `where.scope = scope;` : ""}

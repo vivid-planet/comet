@@ -20,6 +20,7 @@
         "lodash.debounce": "^4.0.8",
         "lodash.isequal": "^4.5.0",
         "query-string": "^6.8.1",
+        "react-resize-aware": "^3.1.1",
         "use-constant": "^1.0.0",
         "uuid": "^3.3.2"
     },
@@ -43,12 +44,13 @@
         "yarn-run-all": "^3.0.0"
     },
     "peerDependencies": {
-        "@apollo/client": "^3.2.5",
+        "@apollo/client": "^3.7.0",
         "@emotion/react": "^11.0.0",
         "@emotion/styled": "^11.0.0",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
+        "@mui/x-data-grid": "^5.0.0",
         "exceljs": "^3.4.0",
         "file-saver": "^2.0.2",
         "final-form": "^4.16.1",

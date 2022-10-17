@@ -16,7 +16,7 @@ export class NumberFilter {
     @Field({ nullable: true })
     @IsOptional()
     @IsNumber()
-    geraterThan?: number;
+    greaterThan?: number;
 
     @Field({ nullable: true })
     @IsOptional()

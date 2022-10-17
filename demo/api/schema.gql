@@ -267,6 +267,7 @@ type Product implements DocumentInterface {
   slug: String!
   description: String!
   price: Float
+  inStock: Boolean!
   createdAt: DateTime!
 }
 
@@ -332,18 +333,18 @@ type Query {
   damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
-  news(id: ID!): News
+  news(id: ID!): News!
   newsBySlug(slug: String!): News
-  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, query: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
-  product(id: ID!): Product
+  product(id: ID!): Product!
   productBySlug(slug: String!): Product
-  products(offset: Int = 0, limit: Int = 20, query: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+  products(offset: Int = 0, limit: Int = 20, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
 }
 
 enum SortDirection {
@@ -379,7 +380,10 @@ input FolderFilterInput {
 input NewsFilter {
   slug: StringFilter
   title: StringFilter
+  date: DateFilter
   visible: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
 }
@@ -390,6 +394,15 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+}
+
+input DateFilter {
+  equal: DateTime
+  lowerThan: DateTime
+  greaterThan: DateTime
+  lowerThanEqual: DateTime
+  greaterThanEqual: DateTime
+  notEqual: DateTime
 }
 
 input BooleanFilter {
@@ -404,8 +417,11 @@ input NewsSort {
 enum NewsSortField {
   slug
   title
+  date
   category
   visible
+  createdAt
+  updatedAt
 }
 
 input ProductFilter {
@@ -413,6 +429,9 @@ input ProductFilter {
   slug: StringFilter
   description: StringFilter
   price: NumberFilter
+  inStock: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
 }
@@ -420,7 +439,7 @@ input ProductFilter {
 input NumberFilter {
   equal: Float
   lowerThan: Float
-  geraterThan: Float
+  greaterThan: Float
   lowerThanEqual: Float
   greaterThanEqual: Float
   notEqual: Float
@@ -436,6 +455,9 @@ enum ProductSortField {
   slug
   description
   price
+  inStock
+  createdAt
+  updatedAt
 }
 
 type Mutation {
@@ -569,6 +591,7 @@ input UpdateDamFolderInput {
 input NewsInput {
   slug: String!
   title: String!
+  date: DateTime!
   visible: Boolean!
   image: JSONObject!
   content: JSONObject!
@@ -595,4 +618,5 @@ input ProductInput {
   slug: String!
   description: String!
   price: Float
+  inStock: Boolean!
 }

@@ -16,7 +16,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Property()
     @Field()
     @CrudField({
-        query: true,
+        search: true,
         filter: true,
         sort: true,
         input: true,
@@ -34,6 +34,11 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Property({ type: types.decimal, nullable: true })
     @Field({ nullable: true })
     price?: number;
+
+    // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+    @Property({ type: types.boolean })
+    @Field()
+    inStock: boolean = true;
 
     @Property()
     @Field()

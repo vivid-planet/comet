@@ -6,7 +6,8 @@
         "noImplicitAny": true,
         "sourceMap": true,
         "strictNullChecks": true,
-        "target": "es5"
+        "target": "es5",
+        "declarationMap": true
     },
     "compileOnSave": false
 }

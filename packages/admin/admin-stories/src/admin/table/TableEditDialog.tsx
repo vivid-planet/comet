@@ -17,7 +17,7 @@ import { Button, IconButton, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
@@ -129,5 +129,5 @@ function Story() {
 
 storiesOf("@comet/admin/table", module)
     .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("EditDialog", () => <Story />);

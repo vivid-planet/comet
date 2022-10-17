@@ -53,7 +53,7 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
                 fragment: damFolderBreadcrumbFragment,
             });
 
-            return fragment ? { damFolder: fragment } : undefined;
+            return fragment === null || Object.keys(fragment).length === 0 ? undefined : { damFolder: fragment };
         },
     });
 

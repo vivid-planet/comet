@@ -15,12 +15,12 @@ import { Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../../../story-router.decorator";
 
 storiesOf("stories/components/Tabs/Tabs forceRender", module)
     .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Tabs in Form with forceRender", () => {
         return (
             <div>

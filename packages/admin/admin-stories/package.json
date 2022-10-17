@@ -6,7 +6,7 @@
         "src"
     ],
     "dependencies": {
-        "@apollo/client": "^3.2.5",
+        "@apollo/client": "^3.7.0",
         "@comet/admin": "^2.0.0",
         "@comet/admin-color-picker": "^2.0.0",
         "@comet/admin-date-time": "^2.0.0",
@@ -20,6 +20,7 @@
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
+        "@mui/x-data-grid": "^5.17.6",
         "@storybook/addon-actions": "^6.2.7",
         "@storybook/addon-knobs": "^6.2.7",
         "@storybook/addon-storysource": "^6.2.7",

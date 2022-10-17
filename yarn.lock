@@ -62,18 +62,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.0.0, @apollo/client@npm:^3.2.5":
-  version: 3.6.9
-  resolution: "@apollo/client@npm:3.6.9"
+"@apollo/client@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@apollo/client@npm:3.7.0"
   dependencies:
     "@graphql-typed-document-node/core": ^3.1.1
-    "@wry/context": ^0.6.0
+    "@wry/context": ^0.7.0
     "@wry/equality": ^0.5.0
     "@wry/trie": ^0.3.0
     graphql-tag: ^2.12.6
     hoist-non-react-statics: ^3.3.2
     optimism: ^0.16.1
     prop-types: ^15.7.2
+    response-iterator: ^0.2.6
     symbol-observable: ^4.0.0
     ts-invariant: ^0.10.3
     tslib: ^2.3.0
@@ -82,15 +83,18 @@ __metadata:
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     graphql-ws: ^5.5.5
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     subscriptions-transport-ws: ^0.9.0 || ^0.11.0
   peerDependenciesMeta:
     graphql-ws:
       optional: true
     react:
       optional: true
+    react-dom:
+      optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: a3c037ef3465cb5d736d8495c9c2dcb9741e39d9c102f147b479af1923c5913f710981a311d1098b9969ebe87769b749c22274decb5977ad0619032e7ac2cf26
+  checksum: e6e2fb6c4f05509a0ec1c632fc8eeae7bd4831dbafd2db243bad1412b3c024476a3efb838e31568888cf6b07bd8833467343edac2309e58d60c7bf50f67d449c
   languageName: node
   linkType: hard
 
@@ -4252,6 +4256,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.19.0":
+  version: 7.19.0
+  resolution: "@babel/runtime@npm:7.19.0"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: fa69c351bb05e1db3ceb9a02fdcf620c234180af68cdda02152d3561015f6d55277265d3109815992f96d910f3db709458cae4f8df1c3def66f32e0867d82294
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.12.7, @babel/template@npm:^7.16.7, @babel/template@npm:^7.3.3":
   version: 7.16.7
   resolution: "@babel/template@npm:7.16.7"
@@ -4645,18 +4658,20 @@ __metadata:
     lodash.isequal: ^4.5.0
     prettier: ^2.0.0
     query-string: ^6.8.1
+    react-resize-aware: ^3.1.1
     rimraf: ^3.0.2
     typescript: ^4.0.0
     use-constant: ^1.0.0
     uuid: ^3.3.2
     yarn-run-all: ^3.0.0
   peerDependencies:
-    "@apollo/client": ^3.2.5
+    "@apollo/client": ^3.7.0
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
     "@mui/icons-material": ^5.0.0
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
+    "@mui/x-data-grid": ^5.0.0
     exceljs: ^3.4.0
     file-saver: ^2.0.2
     final-form: ^4.16.1
@@ -4835,7 +4850,7 @@ __metadata:
     uuid: ^8.0.0
     yarn-run-all: ^3.0.0
   peerDependencies:
-    "@apollo/client": ^3.0.0
+    "@apollo/client": ^3.7.0
     "@comet/react-app-auth": ^1.0.0
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
@@ -8400,6 +8415,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/utils@npm:^5.10.3":
+  version: 5.10.6
+  resolution: "@mui/utils@npm:5.10.6"
+  dependencies:
+    "@babel/runtime": ^7.19.0
+    "@types/prop-types": ^15.7.5
+    "@types/react-is": ^16.7.1 || ^17.0.0
+    prop-types: ^15.8.1
+    react-is: ^18.2.0
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0
+  checksum: 794d856b820d3b65f74af32f479fc3ace9693473ae19c54c4d64d655fd162e8e6a16b7429a87d9fa81081bacb70e1c488851599692644124b4b312bbbcaacba4
+  languageName: node
+  linkType: hard
+
 "@mui/utils@npm:^5.4.1, @mui/utils@npm:^5.6.0, @mui/utils@npm:^5.8.4":
   version: 5.8.4
   resolution: "@mui/utils@npm:5.8.4"
@@ -8430,12 +8460,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid@npm:^5.0.0":
-  version: 5.16.0
-  resolution: "@mui/x-data-grid@npm:5.16.0"
+"@mui/x-data-grid-pro@npm:^5.15.2":
+  version: 5.17.4
+  resolution: "@mui/x-data-grid-pro@npm:5.17.4"
   dependencies:
     "@babel/runtime": ^7.18.9
-    "@mui/utils": ^5.9.3
+    "@mui/utils": ^5.10.3
+    "@mui/x-data-grid": 5.17.4
+    "@mui/x-license-pro": 5.17.0
+    "@types/format-util": ^1.0.2
     clsx: ^1.2.1
     prop-types: ^15.8.1
     reselect: ^4.1.6
@@ -8444,7 +8477,43 @@ __metadata:
     "@mui/system": ^5.4.1
     react: ^17.0.2 || ^18.0.0
     react-dom: ^17.0.2 || ^18.0.0
-  checksum: e339384f2fcdda9167bb100252da6a271a50e8d19d3ab0f79c4c56ab366876d809a4432551106d3b6c40687f9315c88cd799e2273159c70808d400edef676764
+  checksum: 80b44e1512bfc8dbf45b8efe4de694d3398aa8e693343d7235f6edd9fc525240ed72e23413b6ef05888c73078167bb506ce8d693cd8c51812c283744ae644f60
+  languageName: node
+  linkType: hard
+
+"@mui/x-data-grid@npm:5.17.4, @mui/x-data-grid@npm:^5.15.2":
+  version: 5.17.4
+  resolution: "@mui/x-data-grid@npm:5.17.4"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@mui/utils": ^5.10.3
+    clsx: ^1.2.1
+    prop-types: ^15.8.1
+    reselect: ^4.1.6
+  peerDependencies:
+    "@mui/material": ^5.4.1
+    "@mui/system": ^5.4.1
+    react: ^17.0.2 || ^18.0.0
+    react-dom: ^17.0.2 || ^18.0.0
+  checksum: 9f88883fd9c99600ade8debc78d81ac4829690dede2c440f8feffae7832c3147c6e5d9e5a894b9fa36c043add4d2698496f82ab1988139f602375dbaed1f59a2
+  languageName: node
+  linkType: hard
+
+"@mui/x-data-grid@npm:^5.17.6":
+  version: 5.17.6
+  resolution: "@mui/x-data-grid@npm:5.17.6"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@mui/utils": ^5.10.3
+    clsx: ^1.2.1
+    prop-types: ^15.8.1
+    reselect: ^4.1.6
+  peerDependencies:
+    "@mui/material": ^5.4.1
+    "@mui/system": ^5.4.1
+    react: ^17.0.2 || ^18.0.0
+    react-dom: ^17.0.2 || ^18.0.0
+  checksum: 02e23706f932c519aba917da95d922727178a2ba300b36a18466e57c16b80634fcb3759d66be2385db0fc753380dab90bbc0412a163655dc59b5b9747b78ee40
   languageName: node
   linkType: hard
 
@@ -8480,6 +8549,18 @@ __metadata:
     moment:
       optional: true
   checksum: 83d69f199a2ca8b4b3826fe2c89ab23030cff2beff6dc35297e3a25e7844d1e83745d438c527af9439ee78b0c313ca8f30229c5df361a6f01695dee1a525faf0
+  languageName: node
+  linkType: hard
+
+"@mui/x-license-pro@npm:5.17.0":
+  version: 5.17.0
+  resolution: "@mui/x-license-pro@npm:5.17.0"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@mui/utils": ^5.9.3
+  peerDependencies:
+    react: ^17.0.2 || ^18.0.0
+  checksum: 49ee29c8b3113b4b078f4225b484b7b715452baf6ac61b58f8322387401150ecd617f5e5c42b14b7bd6a2035f5ad0b231cb4c389dc0ea5158a3935c38ac377f6
   languageName: node
   linkType: hard
 
@@ -10980,6 +11061,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/format-util@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@types/format-util@npm:1.0.2"
+  checksum: 59b5d0f7d83cd64cd4ef57485db1f62d232c48e1d30b04f78386de974446ed57d3415134fcdaa2e8052baf0926b89148a34f6575ab21245fea77802a9f4de0a3
+  languageName: node
+  linkType: hard
+
 "@types/fs-extra@npm:^9.0.0, @types/fs-extra@npm:^9.0.1":
   version: 9.0.13
   resolution: "@types/fs-extra@npm:9.0.13"
@@ -12691,6 +12779,15 @@ __metadata:
   dependencies:
     tslib: ^2.3.0
   checksum: 4187863175061a8f54659f124e3e5c202e010b2b65bf886b4de9777ce8a45cf183b6f6d88f1f537002cbcbea52103a2eadc337d494106490def10acaf9522c5d
+  languageName: node
+  linkType: hard
+
+"@wry/context@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "@wry/context@npm:0.7.0"
+  dependencies:
+    tslib: ^2.3.0
+  checksum: f4ff78023a0b949122037aae766232b7d2284dc415204d22d9ea6d7969ff8f5f29b18128bc9a40e68dc054c8a12b1bf5868a357fdb50c398c447290c3a5b0496
   languageName: node
   linkType: hard
 
@@ -16015,7 +16112,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "comet-admin-stories@workspace:packages/admin/admin-stories"
   dependencies:
-    "@apollo/client": ^3.2.5
+    "@apollo/client": ^3.7.0
     "@babel/cli": ^7.17.6
     "@babel/core": ^7.8.3
     "@comet/admin": ^2.0.0
@@ -16033,6 +16130,7 @@ __metadata:
     "@mui/icons-material": ^5.0.0
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
+    "@mui/x-data-grid": ^5.17.6
     "@storybook/addon-actions": ^6.2.7
     "@storybook/addon-knobs": ^6.2.7
     "@storybook/addon-storysource": ^6.2.7
@@ -16084,7 +16182,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "comet-demo-admin@workspace:demo/admin"
   dependencies:
-    "@apollo/client": ^3.0.0
+    "@apollo/client": ^3.7.0
     "@babel/core": ^7.0.0
     "@comet/admin": ^2.0.0
     "@comet/admin-icons": ^2.0.0
@@ -16112,7 +16210,8 @@ __metadata:
     "@mui/material": ^5.0.0
     "@mui/styles": ^5.0.0
     "@mui/system": ^5.0.0
-    "@mui/x-data-grid": ^5.0.0
+    "@mui/x-data-grid": ^5.15.2
+    "@mui/x-data-grid-pro": ^5.15.2
     "@ory/hydra-client": ^1.0.0
     "@types/draft-js": ^0.10.0
     "@types/final-form-set-field-touched": ^1.0.0
@@ -16166,6 +16265,7 @@ __metadata:
     pascal-case: ^3.0.0
     prettier: ^2.0.0
     prop-types: ^15.7.2
+    query-string: ^7.1.1
     react: ^17.0.2
     react-app-polyfill: ^1.0.0
     react-copy-to-clipboard: ^5.0.0
@@ -30142,7 +30242,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"query-string@npm:^7.0.0":
+"query-string@npm:^7.0.0, query-string@npm:^7.1.1":
   version: 7.1.1
   resolution: "query-string@npm:7.1.1"
   dependencies:
@@ -30651,6 +30751,15 @@ __metadata:
   version: 0.11.0
   resolution: "react-refresh@npm:0.11.0"
   checksum: 112178a05b1e0ffeaf5d9fb4e56b4410a34a73adeb04dbf13abdc50d9ac9df2ada83e81485156cca0b3fa296aa3612751b3d6cd13be4464642a43679b819cbc7
+  languageName: node
+  linkType: hard
+
+"react-resize-aware@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "react-resize-aware@npm:3.1.1"
+  peerDependencies:
+    react: ^16.8.0 || 17.x
+  checksum: 0088849e128403ea66f90d588379d9260089c6f218b46e6254da20fe5e4d39c8d13b64da1e6a24bacd0d808db8b7d26bf9dc72801c58606c0b26e9eb5da1bdc5
   languageName: node
   linkType: hard
 
@@ -31641,6 +31750,13 @@ __metadata:
   bin:
     resolve: bin/resolve
   checksum: 4bf9f4f8a458607af90518ff73c67a4bc1a38b5a23fef2bb0ccbd45e8be89820a1639b637b0ba377eb2be9eedfb1739a84cde24fe4cd670c8207d8fea922b011
+  languageName: node
+  linkType: hard
+
+"response-iterator@npm:^0.2.6":
+  version: 0.2.6
+  resolution: "response-iterator@npm:0.2.6"
+  checksum: b0db3c0665a0d698d65512951de9623c086b9c84ce015a76076d4bd0bf733779601d0b41f0931d16ae38132fba29e1ce291c1f8e6550fc32daaa2dc3ab4f338d
   languageName: node
   linkType: hard
 
