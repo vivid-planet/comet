@@ -1,0 +1,622 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ImageCropArea {
+  focalPoint: FocalPoint!
+  width: Float
+  height: Float
+  x: Float
+  y: Float
+}
+
+enum FocalPoint {
+  SMART
+  CENTER
+  NORTHWEST
+  NORTHEAST
+  SOUTHWEST
+  SOUTHEAST
+}
+
+type DamFileImage {
+  id: ID!
+  width: Int!
+  height: Int!
+  exif: JSONObject
+  dominantColor: String
+  cropArea: ImageCropArea!
+  url(width: Int!, height: Int!): String
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type DamFolder {
+  id: ID!
+  name: String!
+  parent: DamFolder
+  numberOfChildFolders: Int!
+  numberOfFiles: Int!
+  mpath: [ID!]!
+  archived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  parents: [DamFolder!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type DamFile {
+  id: ID!
+  folder: DamFolder
+  name: String!
+  size: Int!
+  mimetype: String!
+  contentHash: String!
+  title: String
+  altText: String
+  archived: Boolean!
+  image: DamFileImage
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  fileUrl: String!
+  duplicates: [DamFile!]!
+  damPath: String!
+}
+
+type BuildTemplate {
+  id: ID!
+  name: String!
+}
+
+type AutoBuildStatus {
+  hasChangesSinceLastBuild: Boolean!
+  lastCheck: DateTime
+  nextCheck: DateTime!
+}
+
+type Build {
+  id: ID!
+  status: JobStatus!
+  name: String
+  trigger: String
+  startTime: DateTime
+  completionTime: DateTime
+  estimatedCompletionTime: DateTime
+}
+
+enum JobStatus {
+  pending
+  active
+  succeeded
+  failed
+}
+
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
+
+type FilenameResponse {
+  name: String!
+  folderId: ID
+  isOccupied: Boolean!
+}
+
+type PaginatedDamFiles {
+  nodes: [DamFile!]!
+  totalCount: Int!
+}
+
+type PaginatedDamFolders {
+  nodes: [DamFolder!]!
+  totalCount: Int!
+}
+
+type Link implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: JSONObject!
+  createdAt: DateTime!
+}
+
+interface DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+}
+
+type Page implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: JSONObject!
+  seo: JSONObject!
+  createdAt: DateTime!
+  pageTreeNode: PageTreeNode
+}
+
+type PageTreeNodeScope {
+  domain: String!
+  language: String!
+}
+
+type PageTreeNode {
+  id: ID!
+  parentId: String
+  pos: Int!
+  name: String!
+  slug: String!
+  visibility: PageTreeNodeVisibility!
+  documentType: String!
+  hideInMenu: Boolean!
+  scope: PageTreeNodeScope!
+  category: PageTreeNodeCategory!
+  userGroup: UserGroup!
+  childNodes: [PageTreeNode!]!
+  parentNode: PageTreeNode
+  path: String!
+  parentNodes: [PageTreeNode!]!
+  document: PageContentUnion
+}
+
+enum PageTreeNodeVisibility {
+  Published
+  Unpublished
+  Archived
+}
+
+enum PageTreeNodeCategory {
+  MainNavigation
+  TopMenu
+}
+
+enum UserGroup {
+  All
+  Admin
+  User
+}
+
+union PageContentUnion = Page | Link | PredefinedPage
+
+type PaginatedPages {
+  nodes: [Page!]!
+  totalCount: Int!
+}
+
+type PredefinedPage implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  type: String
+}
+
+type FooterContentScope {
+  domain: String!
+  language: String!
+}
+
+type Footer implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: JSONObject!
+  scope: FooterContentScope!
+  createdAt: DateTime!
+}
+
+type MainMenuItem {
+  id: ID!
+  node: PageTreeNode!
+  content: JSONObject
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type MainMenu {
+  items: [MainMenuItem!]!
+}
+
+type NewsComment implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  comment: String!
+  createdAt: DateTime!
+}
+
+type NewsContentScope {
+  domain: String!
+  language: String!
+}
+
+type News implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  scope: NewsContentScope!
+  slug: String!
+  title: String!
+  date: DateTime!
+  category: NewsCategory!
+  visible: Boolean!
+  image: JSONObject!
+  content: JSONObject!
+  createdAt: DateTime!
+  comments: [NewsComment!]!
+}
+
+enum NewsCategory {
+  Events
+  Company
+  Awards
+}
+
+type PaginatedNews {
+  nodes: [News!]!
+  totalCount: Int!
+}
+
+type Product implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  title: String!
+  slug: String!
+  description: String!
+  price: Float
+  inStock: Boolean!
+  createdAt: DateTime!
+}
+
+type PaginatedProducts {
+  nodes: [Product!]!
+  totalCount: Int!
+}
+
+type Redirect implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  sourceType: RedirectSourceTypeValues!
+  source: String!
+  target: JSONObject!
+  comment: String
+  active: Boolean!
+  generationType: RedirectGenerationType!
+  createdAt: DateTime!
+}
+
+enum RedirectSourceTypeValues {
+  path
+}
+
+enum RedirectGenerationType {
+  manual
+  automatic
+}
+
+input PageTreeNodeScopeInput {
+  domain: String!
+  language: String!
+}
+
+input FooterContentScopeInput {
+  domain: String!
+  language: String!
+}
+
+input NewsContentScopeInput {
+  domain: String!
+  language: String!
+}
+
+type Query {
+  pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
+  link(linkId: ID!): Link
+  buildTemplates: [BuildTemplate!]!
+  builds(limit: Float): [Build!]!
+  autoBuildStatus: AutoBuildStatus!
+  pageTreeNode(id: ID!): PageTreeNode
+  pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
+  pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
+  redirects(sortColumnName: String, sortDirection: SortDirection = ASC, query: String, type: RedirectGenerationType, active: Boolean): [Redirect!]!
+  redirect(id: ID!): Redirect!
+  redirectSourceAvailable(source: String!): Boolean!
+  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
+  damFile(id: ID!): DamFile!
+  damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
+  damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
+  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
+  damFolder(id: ID!): DamFolder!
+  damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
+  news(id: ID!): News!
+  newsBySlug(slug: String!): News
+  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
+  topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
+  mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
+  footer(scope: FooterContentScopeInput!): Footer
+  predefinedPage(id: ID!): PredefinedPage
+  pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  product(id: ID!): Product!
+  productBySlug(slug: String!): Product
+  products(offset: Int = 0, limit: Int = 20, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+enum SlugAvailability {
+  Available
+  Taken
+  Reserved
+}
+
+input DamItemFilterInput {
+  searchText: String
+  mimetypes: [String!]
+}
+
+input FileFilterInput {
+  searchText: String
+  mimetypes: [String!]
+}
+
+input FilenameInput {
+  name: String!
+  folderId: ID
+}
+
+input FolderFilterInput {
+  searchText: String
+}
+
+input NewsFilter {
+  slug: StringFilter
+  title: StringFilter
+  date: DateFilter
+  visible: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [NewsFilter!]
+  or: [NewsFilter!]
+}
+
+input StringFilter {
+  contains: String
+  startsWith: String
+  endsWith: String
+  equal: String
+  notEqual: String
+}
+
+input DateFilter {
+  equal: DateTime
+  lowerThan: DateTime
+  greaterThan: DateTime
+  lowerThanEqual: DateTime
+  greaterThanEqual: DateTime
+  notEqual: DateTime
+}
+
+input BooleanFilter {
+  equal: Boolean
+}
+
+input NewsSort {
+  field: NewsSortField!
+  direction: SortDirection = ASC
+}
+
+enum NewsSortField {
+  slug
+  title
+  date
+  category
+  visible
+  createdAt
+  updatedAt
+}
+
+input ProductFilter {
+  title: StringFilter
+  slug: StringFilter
+  description: StringFilter
+  price: NumberFilter
+  inStock: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [ProductFilter!]
+  or: [ProductFilter!]
+}
+
+input NumberFilter {
+  equal: Float
+  lowerThan: Float
+  greaterThan: Float
+  lowerThanEqual: Float
+  greaterThanEqual: Float
+  notEqual: Float
+}
+
+input ProductSort {
+  field: ProductSortField!
+  direction: SortDirection = ASC
+}
+
+enum ProductSortField {
+  title
+  slug
+  description
+  price
+  inStock
+  createdAt
+  updatedAt
+}
+
+type Mutation {
+  savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
+  saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
+  createBuilds(input: CreateBuildsInput!): Boolean!
+  updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
+  deletePageTreeNode(id: ID!): Boolean!
+  updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
+  updatePageTreeNodePosition(id: ID!, input: PageTreeNodeUpdatePositionInput!): PageTreeNode!
+  updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
+  createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
+  createRedirect(input: RedirectInput!): Redirect!
+  updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
+  updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
+  deleteRedirect(id: ID!): Boolean!
+  updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
+  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
+  archiveDamFile(id: ID!): DamFile!
+  restoreDamFile(id: ID!): DamFile!
+  deleteDamFile(id: ID!): Boolean!
+  createDamFolder(input: CreateDamFolderInput!): DamFolder!
+  updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
+  moveDamFolders(folderIds: [ID!]!, targetFolderId: ID): [DamFolder!]!
+  deleteDamFolder(id: ID!): Boolean!
+  createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
+  updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!
+  deleteNews(id: ID!): Boolean!
+  updateNewsVisibility(id: ID!, visible: Boolean!): News!
+  createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
+  updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
+  deleteNewsComment(id: ID!): Boolean!
+  updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
+  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
+  savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
+  createProduct(input: ProductInput!): Product!
+  updateProduct(id: ID!, input: ProductInput!, lastUpdatedAt: DateTime): Product!
+  deleteProduct(id: ID!): Boolean!
+}
+
+input PageInput {
+  content: JSONObject!
+  seo: JSONObject!
+}
+
+input LinkInput {
+  content: JSONObject!
+}
+
+input CreateBuildsInput {
+  names: [String!]!
+}
+
+input PageTreeNodeUpdateInput {
+  name: String!
+  slug: String!
+  attachedDocument: AttachedDocumentInput!
+  hideInMenu: Boolean
+  userGroup: UserGroup = All
+}
+
+input AttachedDocumentInput {
+  type: String!
+  id: String
+}
+
+input PageTreeNodeUpdateVisibilityInput {
+  visibility: PageTreeNodeVisibility!
+}
+
+input PageTreeNodeUpdatePositionInput {
+  parentId: String
+  pos: Int!
+}
+
+input PageTreeNodeCreateInput {
+  id: ID
+  name: String!
+  parentId: String
+  pos: Int
+  slug: String!
+  attachedDocument: AttachedDocumentInput!
+  hideInMenu: Boolean
+  userGroup: UserGroup = All
+}
+
+input RedirectInput {
+  sourceType: RedirectSourceTypeValues!
+  source: String!
+  target: JSONObject!
+  comment: String
+  active: Boolean
+  generationType: RedirectGenerationType!
+}
+
+input RedirectUpdateActivenessInput {
+  active: Boolean!
+}
+
+input UpdateDamFileInput {
+  name: String
+  title: String
+  altText: String
+  image: UpdateImageFileInput
+  folderId: ID
+}
+
+input UpdateImageFileInput {
+  cropArea: ImageCropAreaInput
+}
+
+input ImageCropAreaInput {
+  focalPoint: FocalPoint!
+  width: Float
+  height: Float
+  x: Float
+  y: Float
+}
+
+input CreateDamFolderInput {
+  name: String!
+  parentId: ID
+}
+
+input UpdateDamFolderInput {
+  name: String
+  parentId: ID
+  archived: Boolean
+}
+
+input NewsInput {
+  slug: String!
+  title: String!
+  date: DateTime!
+  visible: Boolean!
+  image: JSONObject!
+  content: JSONObject!
+}
+
+input NewsCommentInput {
+  comment: String!
+}
+
+input MainMenuItemInput {
+  content: JSONObject
+}
+
+input FooterInput {
+  content: JSONObject!
+}
+
+input PredefinedPageInput {
+  type: String
+}
+
+input ProductInput {
+  title: String!
+  slug: String!
+  description: String!
+  price: Float
+  inStock: Boolean!
+}

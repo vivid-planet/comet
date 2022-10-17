@@ -7,5 +7,37 @@ cd $(dirname $0)
 # use correct npm and install dependencies
 nvm install
 nvm use
-npm i -g npm@7.19
-npm install
+npm i -g npm@7.19 yarn
+yarn install
+
+# admin Blocks
+ln -sf ../../api/blocks-api/block-meta.json ./packages/admin/blocks-admin/block-meta.json
+
+# admin CMS
+ln -sf ../../api/cms-api/schema.gql ./packages/admin/cms-admin/schema.gql
+ln -sf ../../api/cms-api/block-meta.json ./packages/admin/cms-admin/block-meta.json
+
+# site CMS
+ln -sf ../../api/cms-api/block-meta.json ./packages/site/cms-site/block-meta.json
+
+# api DEMO
+ln -sf ../../.env ./demo/api/.env
+ln -sf ../../.env.local ./demo/api/.env.local
+
+# admin DEMO
+ln -sf ../../.env ./demo/admin/.env
+ln -sf ../api/schema.gql ./demo/admin/schema.gql
+ln -sf ../api/block-meta.json ./demo/admin/block-meta.json
+
+rm -rf demo/admin/lang
+mkdir -p demo/admin/lang
+git clone https://github.com/vivid-planet/comet-lang.git demo/admin/lang/comet-lang
+git clone https://github.com/vivid-planet/comet-demo-lang demo/admin/lang/comet-demo-lang
+
+# site DEMO
+ln -sf ../../.env ./demo/site/.env
+ln -sf ../api/schema.gql ./demo/site/schema.gql
+ln -sf ../api/block-meta.json ./demo/site/block-meta.json
+
+# Build CLI package to be used for dev startup
+npx yarn workspace @comet/cli build

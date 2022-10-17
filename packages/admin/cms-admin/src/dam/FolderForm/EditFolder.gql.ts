@@ -1,0 +1,19 @@
+import { gql } from "@apollo/client/core";
+
+export const updateDamFolderMutation = gql`
+    mutation UpdateDamFolder($id: ID!, $input: UpdateDamFolderInput!) {
+        updateDamFolder(id: $id, input: $input) {
+            id
+            name
+        }
+    }
+`;
+
+export const editFolderQuery = gql`
+    query EditFolder($id: ID!) {
+        damFolder(id: $id) {
+            id
+            name
+        }
+    }
+`;

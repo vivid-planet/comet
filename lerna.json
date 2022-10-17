@@ -1,7 +1,10 @@
 {
-    "npmClient": "npm",
+    "npmClient": "yarn",
     "packages": [
-        "packages/*"
+        "packages/admin/*",
+        "packages/api/*",
+        "packages/site/*",
+        "packages/eslint-config"
     ],
     "useWorkspaces": true,
     "version": "2.2.1",

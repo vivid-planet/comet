@@ -1,4 +1,3 @@
 module.exports = {
-    "packages/**/*.{ts,tsx,js,jsx}": () => "npm run lint",
-    "*": () => "npx prettier -c .",
+    "./*{js,json,md,yml}": "npx yarn exec prettier --check",
 };

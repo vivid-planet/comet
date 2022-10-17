@@ -1,0 +1,11 @@
+{
+    "extends": "../../tsconfig.core.json",
+    "compilerOptions": {
+        "target": "ES2015",
+        "noImplicitAny": true,
+        "jsx": "react",
+        "noEmitOnError": true,
+        "strict": true,
+        "declarationMap": true
+    }
+}
