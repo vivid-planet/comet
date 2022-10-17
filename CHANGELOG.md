@@ -145,6 +145,7 @@ This release is the first stable version.
     ```
 
 -   `StackBreadcrumbs` now shows an overflow menu when its items do not fit into a single row
+-   Add a `RowActions` component - a consistent way of creating a list of IconButtons with a "more" menu in table rows and similar use cases.
 
 ### @comet/admin-color-picker
 
