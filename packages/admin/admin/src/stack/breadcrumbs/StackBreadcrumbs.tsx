@@ -25,10 +25,11 @@ const StackBreadcrumbsComponent = ({
     const [itemWidths, setItemWidths] = React.useState<number[] | undefined>();
 
     const breadcrumbItems = React.useMemo(() => stackApi?.breadCrumbs ?? [], [stackApi]);
+    const combinedTitlesOfBreadcrumbs = breadcrumbItems.map(({ title }) => title).join("");
 
     React.useEffect(() => {
         setItemWidths(undefined);
-    }, [breadcrumbItems]);
+    }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs]);
 
     React.useEffect(() => {
         if (breadcrumbItems?.length && !itemWidths?.length) {
@@ -36,7 +37,7 @@ const StackBreadcrumbsComponent = ({
             const newItemWidths = listItems ? Object.values(listItems).map((listItem) => getElementOuterWidth(listItem)) : [];
             setItemWidths(newItemWidths);
         }
-    }, [breadcrumbItems, itemWidths, classes.listItem]);
+    }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs, itemWidths, classes.listItem]);
 
     const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
     const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, classes, itemWidths, overflowLinkText, backButtonUrl);
