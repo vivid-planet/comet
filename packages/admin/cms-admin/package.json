@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -34,12 +34,12 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/admin": "^3.0.0",
-        "@comet/admin-icons": "^3.0.0",
-        "@comet/admin-react-select": "^3.0.0",
-        "@comet/admin-rte": "^3.0.0",
-        "@comet/admin-theme": "^3.0.0",
-        "@comet/blocks-admin": "^3.0.0",
+        "@comet/admin": "^3.0.1",
+        "@comet/admin-icons": "^3.0.1",
+        "@comet/admin-react-select": "^3.0.1",
+        "@comet/admin-rte": "^3.0.1",
+        "@comet/admin-theme": "^3.0.1",
+        "@comet/blocks-admin": "^3.0.1",
         "@graphql-typed-document-node/core": "^3.1.1",
         "class-validator": "^0.13.0",
         "clsx": "^1.1.1",
@@ -99,9 +99,9 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^3.0.0",
-        "@comet/cli": "^3.0.0",
-        "@comet/eslint-config": "^3.0.0",
+        "@comet/admin-babel-preset": "^3.0.1",
+        "@comet/cli": "^3.0.1",
+        "@comet/eslint-config": "^3.0.1",
         "@comet/react-app-auth": "^1.0.0",
         "@graphql-codegen/cli": "^1.0.0",
         "@graphql-codegen/fragment-matcher": "^1.0.0",
