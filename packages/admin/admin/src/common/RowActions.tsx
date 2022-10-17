@@ -27,6 +27,7 @@ export interface RowActionsMenuItemProps extends Omit<MenuItemProps, "children" 
     icon?: React.ReactNode;
     text: React.ReactNode;
     onClick?: (e: React.MouseEvent<HTMLElement>, closeMenu: () => void) => void;
+    preventCloseOnClick?: boolean;
     componentsProps?: RowActionsMenuItemComponentsProps;
 }
 
@@ -93,11 +94,20 @@ const RowActions = ({
                             const executedAction = typeof action === "function" ? action(() => setShowMenu(false)) : action;
 
                             if (menuActionIsPropsObject(executedAction)) {
-                                const { text, icon, onClick, componentsProps = {}, ...restMenuItemProps } = executedAction;
+                                const { text, icon, onClick, preventCloseOnClick, componentsProps = {}, ...restMenuItemProps } = executedAction;
                                 const { listItemIcon: listItemIconProps, listItemText: listItemTextProps } = componentsProps;
 
                                 return (
-                                    <MenuItem key={index} {...restMenuItemProps} onClick={(e) => onClick?.(e, () => setShowMenu(false))}>
+                                    <MenuItem
+                                        key={index}
+                                        {...restMenuItemProps}
+                                        onClick={(e) => {
+                                            onClick?.(e, () => setShowMenu(false));
+                                            if (!preventCloseOnClick) {
+                                                setShowMenu(false);
+                                            }
+                                        }}
+                                    >
                                         {icon && <ListItemIcon {...listItemIconProps}>{icon}</ListItemIcon>}
                                         <ListItemText primary={text} {...listItemTextProps} />
                                     </MenuItem>
