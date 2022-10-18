@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [next]
+
+### @comet/admin
+
+#### Changes
+
+-   Add a `RowActions` component - a consistent way of creating a list of IconButtons with a "More" menu in table rows and similar use cases.
+
 ## 3.0.0
 
 _Oct 17, 2022_
@@ -145,7 +153,6 @@ This release is the first stable version.
     ```
 
 -   `StackBreadcrumbs` now shows an overflow menu when its items do not fit into a single row
--   Add a `RowActions` component - a consistent way of creating a list of IconButtons with a "more" menu in table rows and similar use cases.
 
 ### @comet/admin-color-picker
 
