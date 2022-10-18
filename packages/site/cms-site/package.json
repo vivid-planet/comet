@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-site",
-    "version": "2.0.0",
+    "version": "3.0.1",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -40,8 +40,8 @@
         "styled-components": "^5.0.0"
     },
     "devDependencies": {
-        "@comet/cli": "^2.0.0",
-        "@comet/eslint-config": "^2.0.0",
+        "@comet/cli": "^3.0.1",
+        "@comet/eslint-config": "^3.0.1",
         "@gitbeaker/node": "^34.0.0",
         "@types/jest": "^27.0.0",
         "@types/styled-components": "^5.0.0",

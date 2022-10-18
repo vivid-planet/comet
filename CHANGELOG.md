@@ -2,9 +2,9 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Next]
+## 3.0.0
 
-_Date, Year_
+_Oct 17, 2022_
 
 This release marks the first public release of the CMS packages used for [Comet DXP](https://comet-dxp.com) applications. See the [documentation](https://docs.comet-dxp.com) for more information.
 
@@ -93,7 +93,7 @@ This release is the first stable version.
 
     **After**
 
-    ```typescript jsx
+    ```tsx
     const apolloClient = new ApolloClient({
         link: ApolloLink.from([
             createErrorDialogApolloLink(),
