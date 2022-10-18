@@ -17,8 +17,8 @@ module.exports = {
         return config;
     },
     i18n: {
-        locales: process.env.SITE_LANGUAGES.split(","),
-        defaultLocale: process.env.SITE_DEFAULT_LANGUAGE,
+        locales: process.env.NEXT_PUBLIC_SITE_LANGUAGES.split(","),
+        defaultLocale: process.env.NEXT_PUBLIC_SITE_DEFAULT_LANGUAGE,
         localeDetection: process.env.NODE_ENV !== "development",
     },
     typescript: {

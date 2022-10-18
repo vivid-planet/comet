@@ -25,7 +25,7 @@ declare global {
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric): void {
     // https://nextjs.org/docs/advanced-features/measuring-performance#sending-results-to-analytics
-    if (process.env.GTM_ID) {
+    if (process.env.NEXT_PUBLIC_GTM_ID) {
         const event = {
             event: "web-vitals",
             event_category: label === "web-vital" ? "Web Vitals" : "Next.js custom metric",
@@ -48,7 +48,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
             <Provider session={undefined}>
                 <Head>
                     <meta name="viewport" content="width=device-width, initial-scale=1" />
-                    {process.env.GTM_ID && (
+                    {process.env.NEXT_PUBLIC_GTM_ID && (
                         <Script
                             id="gtm-script"
                             strategy="afterInteractive"
@@ -59,7 +59,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
                             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                            })(window,document,'script','dataLayer','${process.env.GTM_ID}');
+                            })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
                             <!-- End Google Tag Manager -->`,
                             }}
                         />
