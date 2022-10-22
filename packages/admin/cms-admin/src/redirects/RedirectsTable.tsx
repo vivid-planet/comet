@@ -116,9 +116,11 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
     return (
         <TableFilterFinalForm filterApi={filterApi}>
             <Toolbar>
-                <ToolbarItem>
-                    <Field name="query" component={FinalFormSearchTextField} />
-                </ToolbarItem>
+                <ToolbarSearchItem>
+                    <ToolbarItem>
+                        <Field name="query" component={FinalFormSearchTextField} />
+                    </ToolbarItem>
+                </ToolbarSearchItem>
                 <ToolbarItem>
                     <Field
                         name="type"
@@ -264,6 +266,11 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
         </TableFilterFinalForm>
     );
 }
+
+const ToolbarSearchItem = styled("div")`
+    display: flex;
+    align-items: flex-end;
+`;
 
 const TargetWrapper = styled("div")`
     max-width: 25vw;
