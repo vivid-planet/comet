@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Add scope support for redirects (`@comet/cms-api` and `@comet/cms-admin`)
 
+### @comet/admin
+
+#### Changes
+
+-   Add `useFocusAwareQuery` hook that wraps `useQuery` and only fetches when the current browser tab is focused
+
 ## 3.0.0
 
 _Oct 17, 2022_

@@ -1,5 +1,5 @@
-import { gql, useQuery } from "@apollo/client";
-import { Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
+import { gql } from "@apollo/client";
+import { Toolbar, ToolbarActions, ToolbarFillSpace, useFocusAwareQuery } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -82,7 +82,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const classes = useStyles();
 
     // Fetch data
-    const { data } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
+    const { data } = useFocusAwareQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         variables: {
             contentScope: scope,
             category,
