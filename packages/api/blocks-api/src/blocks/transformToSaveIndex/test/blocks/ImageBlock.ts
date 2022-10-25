@@ -10,7 +10,7 @@ class ImageBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                dependencyType: "DamFileIndex",
+                targetIdentifier: "DamFile_BlockIndex",
                 id: this.damFileId,
             },
         ];

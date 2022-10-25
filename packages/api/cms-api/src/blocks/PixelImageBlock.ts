@@ -18,7 +18,7 @@ import { FilesService } from "../dam/files/files.service";
 import { ImageCropAreaInput } from "../dam/images/dto/image-crop-area.input";
 import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
 import { ImagesService } from "../dam/images/images.service";
-import { DamFileBlockIndexDependency } from "./block-index-definitions";
+import { DAM_FILE_BLOCK_INDEX_IDENTIFIER } from "./block-index-identifiers";
 
 // @TODO: make factory to support flexible validation
 class PixelImageBlockData extends BlockData {
@@ -83,7 +83,7 @@ class PixelImageBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                dependencyType: DamFileBlockIndexDependency.name,
+                targetIdentifier: DAM_FILE_BLOCK_INDEX_IDENTIFIER,
                 id: this.damFileId,
             },
         ];

@@ -12,7 +12,6 @@ import {
     FilesService,
     GlobalAuthGuard,
     ImagesService,
-    PAGE_BLOCK_INDEX_DEPENDENCY_NAME,
     PageTreeModule,
     PageTreeService,
     PublicUploadModule,
@@ -97,12 +96,6 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
                         filesService,
                         imagesService,
                     },
-                    blockIndexes: [
-                        {
-                            name: PAGE_BLOCK_INDEX_DEPENDENCY_NAME,
-                            entityName: PageTreeNode.name,
-                        },
-                    ],
                 };
             },
             inject: [PageTreeService, FilesService, ImagesService],
