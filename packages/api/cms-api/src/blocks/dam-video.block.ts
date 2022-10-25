@@ -15,7 +15,7 @@ import {
 import { IsBoolean, IsOptional, IsUUID } from "class-validator";
 
 import { FilesService } from "../dam/files/files.service";
-import { DamFileBlockIndexDependency } from "./block-index-definitions";
+import { DAM_FILE_BLOCK_INDEX_IDENTIFIER } from "./block-index-identifiers";
 
 class DamVideoBlockData extends BlockData {
     damFileId?: string;
@@ -61,7 +61,7 @@ class DamVideoBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                dependencyType: DamFileBlockIndexDependency.name,
+                targetIdentifier: DAM_FILE_BLOCK_INDEX_IDENTIFIER,
                 id: this.damFileId,
             },
         ];
