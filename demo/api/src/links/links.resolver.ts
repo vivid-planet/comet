@@ -25,11 +25,6 @@ export class LinksResolver {
         @Args("attachedPageTreeNodeId", { type: () => ID }) attachedPageTreeNodeId: string,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<Link | null> {
-        console.log("linkId ", linkId);
-        console.log("input ", input);
-        console.log("attachedPageTreeNodeId ", attachedPageTreeNodeId);
-        console.log("lastUpdatedAt ", lastUpdatedAt);
-
         // all pageTypes need this is-archived-page-check
         // TODO: maybe implemented in a base-(document|page)-service which lives in @comet/cms-api
         const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
