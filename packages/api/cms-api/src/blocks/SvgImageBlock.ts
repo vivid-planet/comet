@@ -13,7 +13,7 @@ import {
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 import { FilesService } from "../dam/files/files.service";
-import { DamFileBlockIndexDependency } from "./block-index-definitions";
+import { DAM_FILE_BLOCK_INDEX_IDENTIFIER } from "./block-index-identifiers";
 
 // @TODO: make factory to support flexible validation
 class SvgImageBlockData extends BlockData {
@@ -49,7 +49,7 @@ class SvgImageBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                dependencyType: DamFileBlockIndexDependency.name,
+                targetIdentifier: DAM_FILE_BLOCK_INDEX_IDENTIFIER,
                 id: this.damFileId,
             },
         ];

@@ -1,5 +1,7 @@
 import "reflect-metadata";
 
+export { AUTH_CONFIG, AUTH_CURRENT_USER_LOADER, AUTH_MODULE_OPTIONS } from "./auth/auth.constants";
+export { AuthModule } from "./auth/auth.module";
 export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
@@ -19,8 +21,8 @@ export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storag
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
 export { BlockIndexService } from "./blocks/block-index.service";
-export { BlockIndexDependencyDefinition, DamFileBlockIndexDependency, PAGE_BLOCK_INDEX_DEPENDENCY_NAME } from "./blocks/block-index-definitions";
-export { BLOCKS_MODULE_BLOCK_INDEXES, BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
+export { DAM_FILE_BLOCK_INDEX_IDENTIFIER, PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER } from "./blocks/block-index-identifiers";
+export { BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
 export { BlocksModule, BlocksModuleAsyncOptions, BlocksModuleOptions } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
@@ -138,3 +140,4 @@ export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
+export { BlockIndexTarget } from "@comet/blocks-api/lib/blocks/decorators/block-index-target";

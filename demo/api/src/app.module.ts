@@ -13,7 +13,6 @@ import {
     FilesService,
     ImagesService,
     KubernetesModule,
-    PAGE_BLOCK_INDEX_DEPENDENCY_NAME,
     PageTreeModule,
     PageTreeService,
     PublicUploadModule,
@@ -86,12 +85,6 @@ export class AppModule {
                                 filesService,
                                 imagesService,
                             },
-                            blockIndexes: [
-                                {
-                                    name: PAGE_BLOCK_INDEX_DEPENDENCY_NAME,
-                                    entityName: PageTreeNode.name,
-                                },
-                            ],
                         };
                     },
                     inject: [PageTreeService, FilesService, ImagesService],
