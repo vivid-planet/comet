@@ -1,10 +1,7 @@
 import { Block, RootBlockEntityOptions } from "@comet/blocks-api";
 import { EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/core";
 import { EntityClass } from "@mikro-orm/core/typings";
-import { Inject, Injectable } from "@nestjs/common";
-
-import { BlockIndexDependencyDefinition } from "./block-index-definitions";
-import { BLOCKS_MODULE_BLOCK_INDEXES } from "./blocks.constants";
+import { Injectable } from "@nestjs/common";
 
 interface DiscoverRootBlocksResult {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,7 +14,7 @@ interface DiscoverRootBlocksResult {
 }
 
 interface DiscoverTargetEntitiesResult {
-    dependencyType: string;
+    targetIdentifier: string;
     entityName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repository: EntityRepository<any>;
@@ -27,7 +24,7 @@ interface DiscoverTargetEntitiesResult {
 
 @Injectable()
 export class DiscoverService {
-    constructor(private readonly orm: MikroORM, @Inject(BLOCKS_MODULE_BLOCK_INDEXES) private blockIndexes: BlockIndexDependencyDefinition[]) {}
+    constructor(private readonly orm: MikroORM) {}
 
     discoverRootBlocks(): DiscoverRootBlocksResult[] {
         const ret: DiscoverRootBlocksResult[] = [];
@@ -60,15 +57,20 @@ export class DiscoverService {
     discoverTargetEntities(): DiscoverTargetEntitiesResult[] {
         const ret: DiscoverTargetEntitiesResult[] = [];
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const entities = this.orm.config.get("entities") as EntityClass<any>[];
         const metadataStorage = this.orm.em.getMetadata();
 
-        this.blockIndexes.forEach((blockIndex) => {
-            ret.push({
-                dependencyType: blockIndex.name,
-                entityName: blockIndex.entityName,
-                repository: this.orm.em.getRepository(blockIndex.entityName),
-                metadata: metadataStorage.get(blockIndex.entityName),
-            });
+        entities.forEach((entity) => {
+            const targetIdentifier = Reflect.getMetadata(`data:blockIndexTargetIdentifier`, entity) as string;
+            if (targetIdentifier) {
+                ret.push({
+                    targetIdentifier: targetIdentifier,
+                    entityName: entity.name,
+                    repository: this.orm.em.getRepository(entity.name),
+                    metadata: metadataStorage.get(entity.name),
+                });
+            }
         });
 
         return ret;

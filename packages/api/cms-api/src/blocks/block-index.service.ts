@@ -18,7 +18,7 @@ export class BlockIndexService {
         const targetEntitiesNameData = targetEntities.reduce((obj, entity) => {
             return {
                 ...obj,
-                [entity.dependencyType]: {
+                [entity.targetIdentifier]: {
                     entityName: entity.entityName,
                     tableName: entity.metadata.tableName,
                     primary: entity.metadata.primaryKeys[0],
@@ -31,7 +31,7 @@ export class BlockIndexService {
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
-                            targetObj->>'dependencyType' dependencyType,
+                            targetObj->>'targetIdentifier' targetIdentifier,
                             "${metadata.tableName}"."${primary}" id,
                             '${metadata.name}' "entityName",
                             '${metadata.tableName}' "tableName",
@@ -47,7 +47,7 @@ export class BlockIndexService {
                         FROM "${metadata.tableName}",
                             json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
                             json_array_elements(indexObj->'target') targetObj,
-                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', targetObj->>'dependencyType') targetTableData`;
+                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', targetObj->>'targetIdentifier') targetTableData`;
 
             indexSelects.push(select);
         }
