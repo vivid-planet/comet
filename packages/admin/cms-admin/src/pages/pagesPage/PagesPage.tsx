@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import {
     MainContent,
     messages,
@@ -7,7 +8,7 @@ import {
     Toolbar,
     ToolbarActions,
     useEditDialog,
-    useFocusAwareQuery,
+    useFocusAwarePolling,
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
@@ -63,12 +64,18 @@ export function PagesPage({
         };
     }, [setRedirectPathAfterChange, path]);
 
-    const { loading, data } = useFocusAwareQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
+    const { loading, data, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         variables: {
             contentScope: scope,
             category,
         },
+    });
+
+    useFocusAwarePolling({
         pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        refetch,
+        startPolling,
+        stopPolling,
     });
 
     const [EditDialog, editDialogSelection, editDialogApi] = useEditDialog();

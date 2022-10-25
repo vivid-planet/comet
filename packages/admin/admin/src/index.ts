@@ -1,4 +1,4 @@
-export { useFocusAwareQuery } from "./apollo/useFocusAwareQuery";
+export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
 export { AppHeader, AppHeaderClassKey } from "./appHeader/AppHeader";
 export { AppHeaderButton, AppHeaderButtonProps } from "./appHeader/button/AppHeaderButton";
 export { AppHeaderButtonClassKey } from "./appHeader/button/AppHeaderButton.styles";

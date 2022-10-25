@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file. This projec
 
 #### Changes
 
--   Add `useFocusAwareQuery` hook that wraps `useQuery` and only fetches when the current browser tab is focused
+-   Add `useFocusAwarePolling` hook that can be used in combination with `useQuery` and only fetches when the current browser tab is focused
 
 ## 3.0.0
 
