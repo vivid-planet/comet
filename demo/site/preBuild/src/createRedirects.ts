@@ -2,7 +2,8 @@ import { gql } from "graphql-request";
 import { Redirect } from "next/dist/lib/load-custom-routes";
 
 import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "../../src/blocks.generated";
-import { GQLRedirectsQuery } from "../../src/graphql.generated";
+import { domain } from "../../src/config";
+import { GQLRedirectsQuery, GQLRedirectsQueryVariables } from "../../src/graphql.generated";
 import createGraphQLClient from "../../src/util/createGraphQLClient";
 
 const createRedirects = async () => {
@@ -10,18 +11,23 @@ const createRedirects = async () => {
 };
 
 const createInternalRedirects = async (): Promise<Redirect[]> => {
+    if (process.env.ADMIN_URL === undefined) {
+        console.error(`Cannot create "/admin" redirect: Missing ADMIN_URL environment variable`);
+        return [];
+    }
+
     return [
         {
             source: "/admin",
-            destination: process.env.ADMIN_URL!,
+            destination: process.env.ADMIN_URL,
             permanent: false,
         },
     ];
 };
 const createApiRedirects = async (): Promise<Redirect[]> => {
     const query = gql`
-        query Redirects {
-            redirects(active: true) {
+        query Redirects($scope: RedirectScopeInput!) {
+            redirects(scope: $scope, active: true) {
                 sourceType
                 source
                 target
@@ -34,7 +40,7 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
         return [];
     }
 
-    const response = await createGraphQLClient().request<GQLRedirectsQuery>(query);
+    const response = await createGraphQLClient().request<GQLRedirectsQuery, GQLRedirectsQueryVariables>(query, { scope: { domain } });
 
     const redirects: Redirect[] = [];
 
