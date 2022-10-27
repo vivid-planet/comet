@@ -1,19 +1,10 @@
-import { ObservableQuery, OperationVariables, QueryHookOptions } from "@apollo/client";
+import { ObservableQuery, QueryHookOptions } from "@apollo/client";
 import { useEffect } from "react";
 
-type FocusAwarePollingHookOptions<TData = any, TVariables = OperationVariables> = Pick<
-    ObservableQuery<TData, TVariables>,
-    "refetch" | "startPolling" | "stopPolling"
-> &
-    Pick<QueryHookOptions<TData, TVariables>, "pollInterval" | "skip">;
+type FocusAwarePollingHookOptions = Pick<ObservableQuery, "refetch" | "startPolling" | "stopPolling"> &
+    Pick<QueryHookOptions, "pollInterval" | "skip">;
 
-function useFocusAwarePolling<TData = any, TVariables = OperationVariables>({
-    pollInterval,
-    skip,
-    refetch,
-    startPolling,
-    stopPolling,
-}: FocusAwarePollingHookOptions<TData, TVariables>): void {
+function useFocusAwarePolling({ pollInterval, skip, refetch, startPolling, stopPolling }: FocusAwarePollingHookOptions): void {
     useEffect(() => {
         if (pollInterval === undefined || skip) {
             stopPolling();
