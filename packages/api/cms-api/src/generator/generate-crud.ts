@@ -323,8 +323,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
-            const ${instanceNameSingular} = new ${metadata.className}();
-            ${instanceNameSingular}.assign({
+            const ${instanceNameSingular} = this.repository.create({
                 ...input,
                 ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
                 ${hasVisibleProp ? `visible: false,` : ""}
