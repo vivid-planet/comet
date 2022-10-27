@@ -344,7 +344,7 @@ type Query {
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!): News
-  newsList(scope: NewsContentScopeInput!, offset: Int = 0, limit: Int = 20, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int = 0, limit: Int = 20, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!

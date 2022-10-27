@@ -158,9 +158,27 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     import { OffsetBasedPaginationArgs } from "@comet/cms-api";
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
     import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
-    
+    ${
+        scopeProp && scopeProp.targetMeta
+            ? `import { ${scopeProp.targetMeta.className} } from "../${path
+                  .relative(generatorOptions.targetDirectory, scopeProp.targetMeta.path)
+                  .replace(/\.ts$/, "")}";`
+            : ""
+    }
+
     @ArgsType()
     export class ${argsClassName} extends OffsetBasedPaginationArgs {
+        ${
+            scopeProp
+                ? `
+        @Field(() => ${scopeProp.type})
+        @ValidateNested()
+        @Type(() => ${scopeProp.type})
+        scope: ${scopeProp.type};
+        `
+                : ""
+        }
+
         ${
             hasSearchArg
                 ? `
@@ -290,8 +308,9 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
-            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
-            @Args() { ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${hasSortArg ? `sort, ` : ""}offset, limit }: ${argsClassName}
+            @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
+            hasSortArg ? `sort, ` : ""
+        }offset, limit }: ${argsClassName}
         ): Promise<Paginated${classNamePlural}> {
             const where = ${
                 hasSearchArg || hasFilterArg
