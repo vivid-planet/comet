@@ -18,8 +18,6 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
         if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
         const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
-        const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
-        const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
         const blockProps = metadata.props.filter((prop) => {
             return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });
@@ -54,7 +52,6 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
     import { ${classNameSingular}Input } from "./dto/${fileNameSingular}.input";
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
-    import { ${argsClassName} } from "./dto/${argsFileName}";
 
     @Resolver(() => ${metadata.className})
     export class ${classNameSingular}CrudResolver {
