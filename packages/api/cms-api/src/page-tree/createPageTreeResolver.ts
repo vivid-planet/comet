@@ -4,6 +4,8 @@ import { Args, CONTEXT, Context, createUnionType, ID, Mutation, Parent, Query, R
 import { Request } from "express";
 import { GraphQLError } from "graphql";
 
+import { BlockIndexService } from "../blocks/block-index.service";
+import { PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER } from "../blocks/block-index-identifiers";
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { DocumentInterface } from "../document/dto/document-interface";
@@ -69,6 +71,7 @@ export function createPageTreeResolver({
 
         constructor(
             protected readonly pageTreeService: PageTreeService,
+            protected readonly blockIndexService: BlockIndexService,
             @Inject(forwardRef(() => PAGE_TREE_REPOSITORY)) public readonly pageTreeRepository: EntityRepository<PageTreeNodeInterface>,
             @Inject(CONTEXT) private context: { req: Request },
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
@@ -159,6 +162,22 @@ export function createPageTreeResolver({
                 return null;
             }
             return this.pageTreeService.resolveDocument(activeDocument.type, activeDocument.documentId);
+        }
+
+        @ResolveField(() => String)
+        async dependents(@Parent() node: PageTreeNodeInterface): Promise<string> {
+            const dependents = await this.blockIndexService.getDependentsByTargetIdentifier(PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER, node.id);
+            console.log(dependents);
+            // return dependents;
+            return "dependents";
+        }
+
+        @ResolveField(() => String)
+        async dependencies(@Parent() node: PageTreeNodeInterface): Promise<string> {
+            const dependencies = await this.blockIndexService.getDependenciesByTargetIdentifier(PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER, node.id);
+            console.log(dependencies);
+            // return dependencies;
+            return "dependencies";
         }
 
         @Mutation(() => PageTreeNode)
