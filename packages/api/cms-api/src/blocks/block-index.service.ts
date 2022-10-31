@@ -1,13 +1,16 @@
 import { Connection, EntityManager } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 
+import { BlockIndexDependency } from "./block-index-dependency";
 import { DiscoverService } from "./discover.service";
 
 @Injectable()
 export class BlockIndexService {
+    private entityManager: EntityManager;
     private connection: Connection;
 
     constructor(entityManager: EntityManager, private readonly discoverEntitiesService: DiscoverService) {
+        this.entityManager = entityManager;
         this.connection = entityManager.getConnection();
     }
 
@@ -31,8 +34,8 @@ export class BlockIndexService {
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
-                            targetObj->>'targetIdentifier' targetIdentifier,
-                            "${metadata.tableName}"."${primary}" id,
+                            targetObj->>'targetIdentifier' "targetIdentifier",
+                            "${metadata.tableName}"."${primary}" "id",
                             '${metadata.name}' "entityName",
                             '${metadata.tableName}' "tableName",
                             '${column}' "columnName",
@@ -68,5 +71,19 @@ export class BlockIndexService {
         console.time("refresh materialized block dependency");
         await this.connection.execute("REFRESH MATERIALIZED VIEW block_index_dependencies");
         console.timeEnd("refresh materialized block dependency");
+    }
+
+    async getDependentsByTargetIdentifier(targetIdentifier: string, id: string): Promise<BlockIndexDependency[]> {
+        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetIdentifier" = ? AND idx."targetId" = ?`, [
+            targetIdentifier,
+            id,
+        ]);
+    }
+
+    async getDependenciesByTargetIdentifier(targetIdentifier: string, id: string): Promise<BlockIndexDependency[]> {
+        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetIdentifier" = ? AND idx."id" = ?`, [
+            targetIdentifier,
+            id,
+        ]);
     }
 }

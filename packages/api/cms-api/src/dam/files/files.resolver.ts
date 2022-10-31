@@ -4,6 +4,8 @@ import { NotFoundException } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { basename, extname } from "path";
 
+import { BlockIndexService } from "../../blocks/block-index.service";
+import { DAM_FILE_BLOCK_INDEX_IDENTIFIER } from "../../blocks/block-index-identifiers";
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { FileArgs } from "./dto/file.args";
@@ -18,7 +20,11 @@ export class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
 
 @Resolver(() => File)
 export class FilesResolver {
-    constructor(private readonly filesService: FilesService, @InjectRepository(File) private readonly filesRepository: EntityRepository<File>) {}
+    constructor(
+        private readonly filesService: FilesService,
+        @InjectRepository(File) private readonly filesRepository: EntityRepository<File>,
+        private readonly blockIndexService: BlockIndexService,
+    ) {}
 
     @Query(() => PaginatedDamFiles)
     async damFilesList(@Args() args: FileArgs): Promise<PaginatedDamFiles> {
@@ -125,5 +131,13 @@ export class FilesResolver {
     @ResolveField(() => String)
     async damPath(@Parent() file: File): Promise<string> {
         return await this.filesService.getDamPath(file);
+    }
+
+    @ResolveField(() => String)
+    async dependents(@Parent() file: File): Promise<string> {
+        const dependents = await this.blockIndexService.getDependentsByTargetIdentifier(DAM_FILE_BLOCK_INDEX_IDENTIFIER, file.id);
+        console.log(dependents);
+        // return dependents;
+        return "test";
     }
 }

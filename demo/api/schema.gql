@@ -68,6 +68,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  dependents: String!
 }
 
 type BuildTemplate {
@@ -212,6 +213,8 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
+  dependents: String!
+  dependencies: String!
 }
 
 enum PageTreeNodeVisibility {
