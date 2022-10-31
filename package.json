@@ -16,6 +16,7 @@
     },
     "scripts": {
         "clean": "lerna run clean --stream --parallel",
+        "copy-schema-files": "node copy-schema-files.js",
         "dev:admin": "dotenv -c -- pm2 start ecosystem-admin.config.js",
         "dev:cms": "yarn build:admin:skippable && dotenv -c -- pm2 start ecosystem-cms.config.js",
         "dev:cms:api": "dotenv -c -- pm2 start ecosystem-cms-api.config.js",
