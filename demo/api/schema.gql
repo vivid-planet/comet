@@ -128,16 +128,55 @@ type PaginatedDamFolders {
   totalCount: Int!
 }
 
-type Link implements DocumentInterface {
+type NewsComment implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-  content: LinkBlockData!
+  comment: String!
   createdAt: DateTime!
 }
 
 interface DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+}
+
+type NewsContentScope {
+  domain: String!
+  language: String!
+}
+
+type News implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  scope: NewsContentScope!
+  slug: String!
+  title: String!
+  date: DateTime!
+  category: NewsCategory!
+  visible: Boolean!
+  image: DamImageBlockData!
+  content: NewsContentBlockData!
+  createdAt: DateTime!
+  comments: [NewsComment!]!
+}
+
+enum NewsCategory {
+  Events
+  Company
+  Awards
+}
+
+"""DamImage root block data"""
+scalar DamImageBlockData
+
+"""NewsContent root block data"""
+scalar NewsContentBlockData
+
+type Link implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: LinkBlockData!
+  createdAt: DateTime!
 }
 
 """Link root block data"""
@@ -252,45 +291,6 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
-type NewsComment implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  comment: String!
-  createdAt: DateTime!
-}
-
-type NewsContentScope {
-  domain: String!
-  language: String!
-}
-
-type News implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  scope: NewsContentScope!
-  slug: String!
-  title: String!
-  date: DateTime!
-  category: NewsCategory!
-  visible: Boolean!
-  image: DamImageBlockData!
-  content: NewsContentBlockData!
-  createdAt: DateTime!
-  comments: [NewsComment!]!
-}
-
-enum NewsCategory {
-  Events
-  Company
-  Awards
-}
-
-"""DamImage root block data"""
-scalar DamImageBlockData
-
-"""NewsContent root block data"""
-scalar NewsContentBlockData
-
 type PaginatedNews {
   nodes: [News!]!
   totalCount: Int!
@@ -343,17 +343,17 @@ type PaginatedRedirects {
   totalCount: Int!
 }
 
+input NewsContentScopeInput {
+  domain: String!
+  language: String!
+}
+
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
 }
 
 input FooterContentScopeInput {
-  domain: String!
-  language: String!
-}
-
-input NewsContentScopeInput {
   domain: String!
   language: String!
 }
