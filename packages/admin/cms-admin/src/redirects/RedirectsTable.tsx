@@ -119,7 +119,15 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
         <TableFilterFinalForm filterApi={filterApi}>
             <Toolbar>
                 <ToolbarItem>
-                    <Field name="query" component={FinalFormSearchTextField} />
+                    <Field
+                        name="query"
+                        component={FinalFormSearchTextField}
+                        label={intl.formatMessage({
+                            id: "comet.redirects.redirect.search",
+                            defaultMessage: "Search",
+                        })}
+                        fullWidth
+                    />
                 </ToolbarItem>
                 <ToolbarItem>
                     <Field
