@@ -14,6 +14,12 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Add `useFocusAwarePolling` hook that can be used in combination with `useQuery` to only fetch when the current browser tab is focused
 
+### @comet/cms-admin
+
+#### Changes
+
+-   `useSaveConflict` now only checks for conflicts when the current browser tab is focused
+
 ## 3.0.0
 
 _Oct 17, 2022_
