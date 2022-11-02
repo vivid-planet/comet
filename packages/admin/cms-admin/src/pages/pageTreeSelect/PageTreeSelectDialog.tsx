@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
+import { Toolbar, ToolbarActions, ToolbarFillSpace, useFocusAwarePolling } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -82,13 +82,20 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const classes = useStyles();
 
     // Fetch data
-    const { data } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
+    const { data, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         variables: {
             contentScope: scope,
             category,
         },
+        skip: !open,
+    });
+
+    useFocusAwarePolling({
         pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
         skip: !open,
+        refetch,
+        startPolling,
+        stopPolling,
     });
 
     // Exclude all archived pages from selectables, except if the selected page itself is archived

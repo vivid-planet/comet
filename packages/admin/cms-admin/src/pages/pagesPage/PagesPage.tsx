@@ -1,5 +1,16 @@
 import { useQuery } from "@apollo/client";
-import { MainContent, messages, Stack, StackPage, StackSwitch, Toolbar, ToolbarActions, useEditDialog, useStoredState } from "@comet/admin";
+import {
+    MainContent,
+    messages,
+    Stack,
+    StackPage,
+    StackSwitch,
+    Toolbar,
+    ToolbarActions,
+    useEditDialog,
+    useFocusAwarePolling,
+    useStoredState,
+} from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, Button, CircularProgress, FormControlLabel, Paper, Switch } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
@@ -53,12 +64,18 @@ export function PagesPage({
         };
     }, [setRedirectPathAfterChange, path]);
 
-    const { loading, data } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
+    const { loading, data, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         variables: {
             contentScope: scope,
             category,
         },
+    });
+
+    useFocusAwarePolling({
         pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        refetch,
+        startPolling,
+        stopPolling,
     });
 
     const [EditDialog, editDialogSelection, editDialogApi] = useEditDialog();
