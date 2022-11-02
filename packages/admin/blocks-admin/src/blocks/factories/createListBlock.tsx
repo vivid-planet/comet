@@ -4,7 +4,7 @@ import { Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mu
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { useBlockContext } from "../../context/useBlockContext";
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
@@ -87,7 +87,7 @@ export function createListBlock<T extends BlockInterface>({
             blocks: createDefaultListEntry
                 ? [
                       {
-                          key: uuidv4(),
+                          key: uuid(),
                           visible: true,
                           props: block.defaultValues(),
                           selected: false,

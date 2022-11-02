@@ -72,7 +72,7 @@
         "rimraf": "^3.0.0",
         "rxjs": "^7.0.0",
         "slugify": "^1.0.0",
-        "uuid": "^8.0.0",
+        "uuid": "^9.0.0",
         "webpack": "^5.64.2"
     },
     "devDependencies": {

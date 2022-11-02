@@ -5,7 +5,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 import { GraphQLJSONObject } from "graphql-type-json";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 @Entity()
 @ObjectType()
@@ -15,7 +15,7 @@ export class MainMenuItem extends BaseEntity<MainMenuItem, "id"> implements Docu
 
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @OneToOne({ joinColumn: "nodeId", onDelete: "CASCADE" })
     @Field(() => PageTreeNode)

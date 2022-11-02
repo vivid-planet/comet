@@ -4,7 +4,7 @@ import { Checkbox, FormControlLabel, IconButton, Typography } from "@mui/materia
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { AdminComponentButton, AdminComponentPaper, useBlockContext } from "../..";
 import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
@@ -294,7 +294,7 @@ export function createBlocksBlock({
             };
 
             const addNewBlock = (type: BlockType, beforeIndex?: number) => {
-                const key = uuidv4();
+                const key = uuid();
 
                 const block = blockForType(type);
                 if (!block) {
@@ -362,7 +362,7 @@ export function createBlocksBlock({
                         }
 
                         return {
-                            key: uuidv4(),
+                            key: uuid(),
                             type,
                             selected: false,
                             visible: block.visible,
