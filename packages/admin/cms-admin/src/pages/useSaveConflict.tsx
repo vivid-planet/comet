@@ -24,7 +24,7 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
     const [showDialog, setShowDialog] = React.useState(false);
 
     React.useEffect(() => {
-        const interval = setInterval(async () => {
+        const checkChanges = async () => {
             const newHasConflict = await checkConflict();
             //we don't need setHasConflict as that is used during save only
             if (newHasConflict) {
@@ -48,9 +48,42 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
             } else {
                 setShowDialog(false);
             }
-        }, 10000);
+        };
+
+        let intervalId: number | undefined;
+
+        const startPolling = () => {
+            intervalId = window.setInterval(checkChanges, 10000);
+        };
+
+        const stopPolling = () => {
+            if (intervalId !== undefined) {
+                window.clearInterval(intervalId);
+                intervalId = undefined;
+            }
+        };
+
+        const handleFocus = () => {
+            checkChanges();
+            startPolling();
+        };
+
+        const handleBlur = () => {
+            stopPolling();
+        };
+
+        window.addEventListener("focus", handleFocus);
+        window.addEventListener("blur", handleBlur);
+
+        if (document.hasFocus()) {
+            startPolling();
+        }
+
         return () => {
-            clearInterval(interval);
+            window.removeEventListener("focus", handleFocus);
+            window.removeEventListener("blur", handleBlur);
+
+            stopPolling();
         };
     }, [checkConflict, snackbarApi, loadLatestVersion, hasChanges]);
 
