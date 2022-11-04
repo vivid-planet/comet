@@ -69,7 +69,7 @@ export class ScopeGuard implements CanActivate {
                 if (subjectScope === undefined) throw new Error("Scope not found");
                 if (args.scope) {
                     // args.scope also exists, check if they match
-                    if (!isEqual(args.scope, subjectScope)) {
+                    if (!isEqual(args.scope, JSON.parse(JSON.stringify(subjectScope)))) {
                         throw new Error("Content Scope from arg doesn't match subjectEntity scope, usually you only need one of them");
                     }
                 }
