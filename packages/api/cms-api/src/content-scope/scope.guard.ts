@@ -25,16 +25,24 @@ export class ScopeGuard implements CanActivate {
             const gqlContext = GqlExecutionContext.create(context);
             const args = gqlContext.getArgs();
 
-            const subjectEntity = this.reflector.getAllAndOverride<SubjectEntityMeta>("subjectEntity", [context.getHandler(), context.getClass()]);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const subjectEntity = this.reflector.getAllAndOverride<SubjectEntityMeta<any>>("subjectEntity", [
+                context.getHandler(),
+                context.getClass(),
+            ]);
             if (subjectEntity) {
                 let subjectScope: ContentScope | undefined;
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const repo = this.orm.em.getRepository<any>(subjectEntity.entity);
-                if (subjectEntity.options.idArg) {
-                    if (!args[subjectEntity.options.idArg]) {
-                        throw new Error(`${subjectEntity.options.idArg} arg not found`);
+                let row;
+                const repo = this.orm.em.getRepository(subjectEntity.entity);
+                if (subjectEntity.options.idArg || subjectEntity.options.getEntity) {
+                    if (subjectEntity.options.getEntity) {
+                        row = await subjectEntity.options.getEntity(repo, args);
+                    } else if (subjectEntity.options.idArg) {
+                        if (!args[subjectEntity.options.idArg]) {
+                            throw new Error(`${subjectEntity.options.idArg} arg not found`);
+                        }
+                        row = await repo.findOneOrFail(args[subjectEntity.options.idArg]);
                     }
-                    const row = await repo.findOneOrFail(args[subjectEntity.options.idArg]);
                     if (row.scope) {
                         subjectScope = row.scope;
                     } else {

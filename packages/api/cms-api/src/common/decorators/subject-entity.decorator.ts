@@ -1,20 +1,22 @@
-import { EntityName } from "@mikro-orm/core";
+/* eslint-disable @typescript-eslint/ban-types */
+import { EntityName, Loaded } from "@mikro-orm/core";
+import { SqlEntityRepository } from "@mikro-orm/postgresql";
 import { CustomDecorator, SetMetadata } from "@nestjs/common";
 
-export interface SubjectEntityOptions {
+export interface SubjectEntityOptions<Entity extends {}> {
     idArg?: string;
     pageTreeNodeIdArg?: string;
-}
-export interface SubjectEntityMeta {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    entity: EntityName<any>; //TODO
-    options: SubjectEntityOptions;
+    getEntity?: (repo: SqlEntityRepository<Entity>, args: any) => Promise<Loaded<Entity, never>>;
+}
+export interface SubjectEntityMeta<Entity extends {}> {
+    entity: EntityName<Entity>;
+    options: SubjectEntityOptions<Entity>;
 }
 
-export const SubjectEntity = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    entity: EntityName<any>,
-    { idArg, pageTreeNodeIdArg }: SubjectEntityOptions = { idArg: "id" },
+export const SubjectEntity = <Entity extends {}>(
+    entity: EntityName<Entity>,
+    { idArg, pageTreeNodeIdArg, getEntity }: SubjectEntityOptions<Entity> = { idArg: "id" },
 ): CustomDecorator<string> => {
-    return SetMetadata("subjectEntity", { entity, options: { idArg, pageTreeNodeIdArg } });
+    return SetMetadata("subjectEntity", { entity, options: { idArg, pageTreeNodeIdArg, getEntity } });
 };
