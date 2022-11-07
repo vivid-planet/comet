@@ -7,7 +7,7 @@ export interface SubjectEntityOptions<Entity extends {}> {
     idArg?: string;
     pageTreeNodeIdArg?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getEntity?: (repo: SqlEntityRepository<Entity>, args: any) => Promise<Loaded<Entity, never>>;
+    entityByArgs?: (repo: SqlEntityRepository<Entity>, args: any) => Promise<Loaded<Entity, never>>;
 }
 export interface SubjectEntityMeta<Entity extends {}> {
     entity: EntityName<Entity>;
@@ -16,7 +16,7 @@ export interface SubjectEntityMeta<Entity extends {}> {
 
 export const SubjectEntity = <Entity extends {}>(
     entity: EntityName<Entity>,
-    { idArg, pageTreeNodeIdArg, getEntity }: SubjectEntityOptions<Entity> = { idArg: "id" },
+    { idArg, pageTreeNodeIdArg, entityByArgs }: SubjectEntityOptions<Entity> = { idArg: "id" },
 ): CustomDecorator<string> => {
-    return SetMetadata("subjectEntity", { entity, options: { idArg, pageTreeNodeIdArg, getEntity } });
+    return SetMetadata("subjectEntity", { entity, options: { idArg, pageTreeNodeIdArg, entityByArgs } });
 };

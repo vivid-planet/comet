@@ -34,9 +34,9 @@ export class ScopeGuard implements CanActivate {
                 let subjectScope: ContentScope | undefined;
                 let row;
                 const repo = this.orm.em.getRepository(subjectEntity.entity);
-                if (subjectEntity.options.idArg || subjectEntity.options.getEntity) {
-                    if (subjectEntity.options.getEntity) {
-                        row = await subjectEntity.options.getEntity(repo, args);
+                if (subjectEntity.options.idArg || subjectEntity.options.entityByArgs) {
+                    if (subjectEntity.options.entityByArgs) {
+                        row = await subjectEntity.options.entityByArgs(repo, args);
                     } else if (subjectEntity.options.idArg) {
                         if (!args[subjectEntity.options.idArg]) {
                             throw new Error(`${subjectEntity.options.idArg} arg not found`);
