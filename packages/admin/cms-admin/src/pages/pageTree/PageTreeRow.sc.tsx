@@ -24,6 +24,7 @@ export const PageInfoCell = styled(PageTreeCell)`
     padding-left: 0;
     padding-right: 0;
     overflow: hidden;
+    pointer-events: none;
 `;
 
 export const PageVisibilityCell = styled(PageTreeCell)`
