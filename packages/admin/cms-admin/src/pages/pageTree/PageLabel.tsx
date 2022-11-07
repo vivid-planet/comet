@@ -20,7 +20,6 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
 
     return (
         <Root onClick={onClick}>
-            {documentType.menuIcon}
             <PageTypeIcon page={page} disabled={disabled} />
             <LinkContent>
                 <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
