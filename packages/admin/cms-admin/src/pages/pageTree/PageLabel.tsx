@@ -44,8 +44,7 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
 export default PageLabel;
 
 const InfoPanel = styled(Chip)`
-    margin-left: auto;
-    margin-right: 10%;
+    margin-left: 20px;
 `;
 
 const Root = styled("div")`
