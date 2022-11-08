@@ -11,7 +11,7 @@ import {
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
@@ -149,7 +149,7 @@ export const createUsePage: CreateUsePage =
         type PS = PageState<GQLEditPageQuery, RootBlocks, PageType>;
         function createEmptyPageDocument(): PS["document"] {
             return {
-                id: uuidv4(),
+                id: uuid(),
                 __typename: gqlPageType,
                 ...Object.entries(rootBlocks).reduce(
                     (a, [key, value]) => ({

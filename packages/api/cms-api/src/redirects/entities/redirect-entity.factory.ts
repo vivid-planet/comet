@@ -3,7 +3,7 @@ import { Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mi
 import { Type } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { RootBlockType } from "../../blocks/root-block-type";
 import { DocumentInterface } from "../../document/dto/document-interface";
@@ -36,7 +36,7 @@ export class RedirectEntityFactory {
 
             @PrimaryKey({ columnType: "uuid" })
             @Field(() => ID)
-            id: string = v4();
+            id: string = uuid();
 
             @Enum(() => RedirectSourceTypeValues)
             @Field(() => RedirectSourceTypeValues)

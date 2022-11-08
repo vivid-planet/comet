@@ -1,7 +1,7 @@
 import { DocumentInterface } from "@comet/cms-api";
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 @Entity()
 @ObjectType({
@@ -12,7 +12,7 @@ export class PredefinedPage extends BaseEntity<PredefinedPage, "id"> implements 
 
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @Property({
         columnType: "timestamp with time zone",

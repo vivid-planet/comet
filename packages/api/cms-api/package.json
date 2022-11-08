@@ -83,7 +83,7 @@
         "reflect-metadata": "^0.1.0",
         "rimraf": "^3.0.0",
         "slugify": "^1.6.4",
-        "uuid": "^8.3.2"
+        "uuid": "^9.0.0"
     },
     "devDependencies": {
         "@aws-sdk/types": "^3.47.0",

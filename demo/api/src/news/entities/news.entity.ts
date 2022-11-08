@@ -4,7 +4,7 @@ import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, 
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 import { GraphQLJSONObject } from "graphql-type-json";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { NewsComment } from "./news-comment.entity";
@@ -44,7 +44,7 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @Embedded(() => NewsContentScope)
     @Field(() => NewsContentScope)

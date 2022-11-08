@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { StackBreadcrumb } from "./Breadcrumb";
 import { IStackPageProps } from "./Page";
@@ -40,7 +40,7 @@ interface IRouteParams {
 function useUuid() {
     const ref = React.useRef<string | undefined>(undefined);
     if (ref.current === undefined) {
-        ref.current = v4() as string;
+        ref.current = uuid() as string;
     }
     return ref.current;
 }
