@@ -1,7 +1,8 @@
 import { File, FileNotMenu } from "@comet/admin-icons";
 import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
+import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
-import { GQLPage, GQLPageInput } from "@src/graphql.generated";
+import { GQLPage, GQLPageInput, GQLPageTreeNodeAdditionalFieldsFragment } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -47,6 +48,9 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             content: rewriteInternalLinks(PageContentBlock.state2Output(PageContentBlock.input2State(input.content)), idsMap),
             seo: SeoBlock.state2Output(SeoBlock.input2State(input.seo)),
         };
+    },
+    InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
+        return <>{page.userGroup}</>;
     },
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,

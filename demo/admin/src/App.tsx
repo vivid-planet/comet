@@ -30,7 +30,7 @@ import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
-import { EditPageNode } from "@src/common/EditPageNode";
+import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/EditPageNode";
 import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import config from "@src/config";
@@ -135,6 +135,7 @@ class App extends React.Component {
                                                                 }}
                                                                 pageTreeCategories={categories}
                                                                 pageTreeDocumentTypes={pageTreeDocumentTypes}
+                                                                additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
                                                             >
                                                                 <React.Fragment>
                                                                     <GlobalStyle />
