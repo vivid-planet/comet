@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file. This projec
 #### Changes
 
 -   `useSaveConflict` now only checks for conflicts when the current browser tab is focused
+-   Add `additionalPageTreeNodeFragment` prop to `CmsBlockContextProvider` that can be used to load additional page tree node fields in the page tree
 
 ## 3.0.0
 

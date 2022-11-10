@@ -17,7 +17,7 @@ import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeInterface, createEditPageNode } from "../..";
+import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DocumentInterface, DocumentType } from "../../documents/types";
@@ -29,8 +29,8 @@ import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
 import { AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
+import { createPagesQuery } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
-import { pagesQuery } from "./pagesQuery";
 
 interface Props {
     category: string;
@@ -53,9 +53,11 @@ export function PagesPage({
 }: Props): React.ReactElement {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
+    const { additionalPageTreeNodeFragment } = useCmsBlockContext();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
+    const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
 
     React.useEffect(() => {
         setRedirectPathAfterChange(path);
@@ -132,7 +134,7 @@ export function PagesPage({
                             </Button>
                         </ToolbarActions>
                     </Toolbar>
-                    <PageTreeContext.Provider value={{ allCategories, documentTypes, tree }}>
+                    <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
                         <FullHeightMainContent>
                             <ActionToolbarBox>
                                 <PagesPageActionToolbar

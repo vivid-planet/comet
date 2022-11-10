@@ -13,7 +13,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment, GQLSelectedPageFragment, Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { pagesQuery } from "../pagesPage/pagesQuery";
+import { createPagesQuery } from "../pagesPage/createPagesQuery";
 import { PageTreeTableRow } from "../pageTree/common/PageTreeTableRow";
 import PageInfo from "../pageTree/PageInfo";
 import PageLabel from "../pageTree/PageLabel";
@@ -72,7 +72,7 @@ const useStyles = makeStyles({
 });
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
-    const { pageTreeCategories, pageTreeDocumentTypes } = useCmsBlockContext();
+    const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
     const { scope } = useContentScope();
     const [category, setCategory] = React.useState<string>(defaultCategory);
     const refList = React.useRef<List>(null);
@@ -80,6 +80,8 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const refDialogContent = React.useRef<HTMLDivElement>(null);
     const selectedPageId = value?.id;
     const classes = useStyles();
+
+    const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
 
     // Fetch data
     const { data, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
@@ -216,7 +218,9 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
                 </PageSearchContainer>
             </Toolbar>
             <DialogContent ref={refDialogContent}>
-                <PageTreeContext.Provider value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree }}>
+                <PageTreeContext.Provider
+                    value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree, query: pagesQuery }}
+                >
                     <List
                         ref={refList}
                         height={height}
