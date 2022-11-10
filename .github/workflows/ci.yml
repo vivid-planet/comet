@@ -10,6 +10,9 @@ on:
         branches:
             - main
             - next
+    push:
+        tags:
+            - "v*"
 
 jobs:
     CI:
@@ -119,4 +122,9 @@ jobs:
               run: yarn publish:release preminor --no-push --no-git-tag-version --canary --preid=alpha.${{ github.run_number }} --dist-tag=alpha --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-                  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+            - name: "Publish stable version"
+              if: startsWith(github.event.ref, 'refs/tags/v')
+              run: yarn publish:release from-git --yes
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
