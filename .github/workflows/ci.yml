@@ -62,7 +62,7 @@ jobs:
                   reporter: jest-junit
 
             - name: "Library: Clone translations"
-              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              if: ${{ github.ref_name == 'main' }}
               uses: actions/checkout@v3
               with:
                   repository: vivid-planet/comet-lang
@@ -70,19 +70,19 @@ jobs:
                   path: "comet-lang"
 
             - name: "Library: Extract i18n strings"
-              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              if: ${{ github.ref_name == 'main' }}
               run: |
                   yarn intl:extract
                   cp -r lang/* comet-lang/
 
             - name: "Library: Update translateable strings"
-              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              if: ${{ github.ref_name == 'main' }}
               uses: EndBug/add-and-commit@v9
               with:
                   cwd: "./comet-lang"
 
             - name: "Demo: Clone translations"
-              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              if: ${{ github.ref_name == 'main' }}
               uses: actions/checkout@v3
               with:
                   repository: vivid-planet/comet-demo-lang
@@ -90,14 +90,14 @@ jobs:
                   path: "demo/admin/comet-demo-lang"
 
             - name: "Demo: Extract i18n strings"
-              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              if: ${{ github.ref_name == 'main' }}
               run: |
                   cd demo/admin
                   yarn intl:extract
                   cp -r lang-extracted/* comet-demo-lang/
 
             - name: "Demo: Update translateable strings"
-              if: ${{ github.ref_name == 'next' }} # TODO: change me to main
+              if: ${{ github.ref_name == 'main' }}
               uses: EndBug/add-and-commit@v9
               with:
                   cwd: "./demo/admin/comet-demo-lang"
