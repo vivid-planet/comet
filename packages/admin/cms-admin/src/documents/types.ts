@@ -1,6 +1,5 @@
 import { TypedDocumentNode } from "@apollo/client";
 import { SvgIconProps } from "@mui/material";
-import * as React from "react";
 
 import { GQLDocumentInterface, Maybe } from "../graphql.generated";
 import { PageTreePage } from "../pages/pageTree/usePageTree";
