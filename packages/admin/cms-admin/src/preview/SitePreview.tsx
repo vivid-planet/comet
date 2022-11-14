@@ -4,7 +4,7 @@ import { Public, VpnLock } from "@mui/icons-material";
 import { Grid, Tooltip, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { RouteComponentProps, useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 import { ExternalLinkBlockData } from "../blocks.generated";
 import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
@@ -21,35 +21,41 @@ interface SiteState {
     includeInvisibleBlocks: boolean;
 }
 
-interface Props extends RouteComponentProps {
+interface Props {
     resolvePath?: (path: string, scope: ContentScopeInterface) => string;
     logo?: React.ReactNode;
 }
 
-function SitePreview({ location, resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
+function useSearchState<ParseFunction extends (value: string | undefined) => ReturnType<ParseFunction>>(
+    name: string,
+    parseValue: ParseFunction,
+): [ReturnType<ParseFunction>, (value: string) => void] {
+    const history = useHistory();
+    const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
+    const strValue = queryParams.get(name);
+    const value = parseValue(strValue !== null ? strValue : undefined);
+    const setValue = React.useCallback(
+        (newValue: string) => {
+            const newQueryParams = new URLSearchParams(location.search);
+            newQueryParams.set(name, newValue);
+            history.replace({ search: newQueryParams.toString() });
+        },
+        [location.search, history, name],
+    );
+    return [value, setValue];
+}
+function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
+    const [previewPath, setPreviewPath] = useSearchState("path", (v) => v ?? "");
 
-    const [previewPath, setPreviewPath] = React.useState<string>(queryParams.get("path") || "");
-
-    const [device, setDevice] = React.useState<Device>(() => {
-        const deviceParam = queryParams.get("device");
-
-        if (deviceParam !== null && [Device.Responsive, Device.Mobile, Device.Tablet, Device.Desktop].includes(Number(deviceParam))) {
-            return Number(deviceParam) as Device;
-        } else {
+    const [device, setDevice] = useSearchState("device", (v) => {
+        if (![Device.Responsive, Device.Mobile, Device.Tablet, Device.Desktop].includes(Number(v))) {
             return Device.Responsive;
         }
+        return Number(v) as Device;
     });
+    const [showOnlyVisible, setShowOnlyVisible] = useSearchState("showOnlyVisible", (v) => !v || v === "true");
 
-    const [showOnlyVisible, setShowOnlyVisible] = React.useState<boolean>(() => {
-        const showOnlyVisibleParam = queryParams.get("showOnlyVisible");
-
-        if (showOnlyVisibleParam === null) {
-            return true;
-        }
-
-        return showOnlyVisibleParam === "true";
-    });
     const [linkToOpen, setLinkToOpen] = React.useState<ExternalLinkBlockData | undefined>(undefined);
     const siteState: SiteState = { includeInvisibleBlocks: !showOnlyVisible };
     const formattedSiteState = JSON.stringify(siteState);
@@ -67,7 +73,6 @@ function SitePreview({ location, resolvePath, logo = <CometColor sx={{ fontSize:
         setInitialPageUrl(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSiteState));
     }, [formattedSiteState]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const history = useHistory();
     const intl = useIntl();
 
     // the site in the iframe notifies us about it's current location
@@ -81,33 +86,19 @@ function SitePreview({ location, resolvePath, logo = <CometColor sx={{ fontSize:
                 if (normalizedPathname == "") normalizedPathname = "/";
                 if (previewPath !== normalizedPathname) {
                     setPreviewPath(normalizedPathname);
-                    const newQueryParams = new URLSearchParams(location.search);
-                    newQueryParams.set("path", normalizedPathname);
-                    history.push({ search: newQueryParams.toString() });
                 }
             }
         },
-        [previewPath, history, location.search],
+        [setPreviewPath, previewPath],
     );
 
     const handleDeviceChange = (newDevice: Device) => {
-        setDevice(newDevice);
-
-        const newQueryParams = new URLSearchParams(location.search);
-        newQueryParams.set("device", String(newDevice));
-
-        history.replace({ search: newQueryParams.toString() });
+        setDevice(String(newDevice));
     };
 
     const handleShowOnlyVisibleChange = () => {
         const newShowOnlyVisible = !showOnlyVisible;
-
-        setShowOnlyVisible(newShowOnlyVisible);
-
-        const newQueryParams = new URLSearchParams(location.search);
-        newQueryParams.set("showOnlyVisible", String(newShowOnlyVisible));
-
-        history.replace({ search: newQueryParams.toString() });
+        setShowOnlyVisible(String(newShowOnlyVisible));
     };
 
     const siteLink = `${siteConfig.url}${resolvePath ? resolvePath(previewPath, scope) : previewPath}`;
