@@ -39,6 +39,8 @@
         "build:cms:site:skippable": "test -f packages/site/cms-site/lib/index.d.ts && echo 'Skipping CMS Site build' || yarn build:cms:site",
         "build:lib": "lerna run build --concurrency=1 --stream --no-private",
         "publish:release": "lerna publish --force-publish --no-private",
+        "publish:version": "lerna version --force-publish --no-private",
+        "version": "yarn install && git stage yarn.lock",
         "storybook": "yarn workspace comet-admin-stories storybook",
         "lint": "lerna run lint --concurrency=1 --stream",
         "lint:eslint": "lerna run lint:eslint --concurrency=1 --stream",
