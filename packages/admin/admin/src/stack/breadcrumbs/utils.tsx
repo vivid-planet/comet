@@ -1,11 +1,11 @@
 import { ClassKeyOfStyles, ClassNameMap } from "@mui/styles";
+import debounce from "lodash.debounce";
 import * as React from "react";
 
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbsEntry } from "./BreadcrumbsEntry";
 import { BreadcrumbsOverflow } from "./BreadcrumbsOverflow";
 import { styles } from "./StackBreadcrumbs.styles";
-
 export const getElementOuterWidth = (element: Element): number =>
     element.clientWidth + parseFloat(getComputedStyle(element).marginLeft) + parseFloat(getComputedStyle(element).marginRight);
 
@@ -86,4 +86,29 @@ export const useItemsToRender = (
     ));
 
     return [firstItemWithBackButton, showOverflowMenu && overflowMenu, ...remainingItems].filter((item) => item !== false);
+};
+
+export const useObservedWidth = (ref: React.RefObject<HTMLElement>): number => {
+    const [containerWidth, setContainerWidth] = React.useState(ref.current?.clientWidth ?? 0);
+    const element = ref.current;
+
+    const elementObserver = React.useMemo(() => {
+        return new ResizeObserver(() => {
+            debounce(() => {
+                if (!element) return;
+                setContainerWidth(element.clientWidth);
+            }, 500)();
+        });
+    }, [element]);
+
+    React.useEffect(() => {
+        if (!element) return;
+        elementObserver.observe(element);
+
+        return () => {
+            elementObserver.unobserve(element);
+        };
+    }, [element, elementObserver]);
+
+    return containerWidth;
 };
