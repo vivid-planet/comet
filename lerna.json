@@ -10,7 +10,7 @@
     "version": "3.0.1",
     "command": {
         "version": {
-            "message": "chore(release): publish %s"
+            "message": "Publish %s"
         },
         "publish": {
             "registry": "https://registry.npmjs.org",
