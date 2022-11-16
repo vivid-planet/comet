@@ -15,7 +15,7 @@ export const createPagesQuery = ({ additionalPageTreeNodeFragment }: CreatePages
                 id
                 ...PageTreePage
                 ...PageSearch
-                ${additionalPageTreeNodeFragment ? "...".concat(additionalPageTreeNodeFragment.name) : undefined}
+                ${additionalPageTreeNodeFragment ? "...".concat(additionalPageTreeNodeFragment.name) : ""}
             }
         }
         ${pageTreePageFragment}
