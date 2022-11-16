@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## NEXT
+
+### @comet/cms-admin
+
+-   Fix a bug where the pages query would query for a field `undefined` when no `additionalPageTreeNodeFragment` is set
+
 ## 3.1.0
 
 _Nov 15, 2022_
