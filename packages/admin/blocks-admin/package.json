@@ -16,10 +16,11 @@
         "access": "public"
     },
     "scripts": {
-        "build": "rimraf lib && yarn generate-block-types && run-p build:babel build:types",
+        "clean": "rimraf lib",
+        "build": "yarn run clean && yarn generate-block-types && run-p build:babel build:types",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "start": "rimraf lib && yarn generate-block-types && run-p start:babel start:types",
+        "start": "yarn generate-block-types && run-p start:babel start:types",
         "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "lint": "yarn generate-block-types && run-p lint:eslint lint:tsc",

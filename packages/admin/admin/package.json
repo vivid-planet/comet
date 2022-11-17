@@ -69,10 +69,11 @@
         }
     },
     "scripts": {
-        "build": "rimraf lib && run-p build:babel build:types",
+        "clean": "rimraf lib",
+        "build": "yarn run clean && run-p build:babel build:types",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "start": "rimraf lib && run-p start:babel start:types",
+        "start": "run-p start:babel start:types",
         "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "lint": "run-p lint:eslint lint:tsc",

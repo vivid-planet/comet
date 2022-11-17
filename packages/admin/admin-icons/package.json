@@ -14,7 +14,7 @@
         "build": "run-s clean generate-icons && run-p build:babel build:types",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "start": "run-s clean generate-icons && run-p start:babel start:types",
+        "start": "yarn run generate-icons && run-p start:babel start:types",
         "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "lint": "run-p lint:eslint lint:tsc",
