@@ -10,6 +10,7 @@ import { ScopedEntityMeta } from "../common/decorators/scoped-entity.decorator";
 import { SubjectEntityMeta } from "../common/decorators/subject-entity.decorator";
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { CAN_ACCESS_SCOPE } from "./conent-scope.constants";
+import { SCOPE_GUARD_ACTIVE_METADATA_KEY, ScopeGuardActiveMetadataValue } from "./decorators/scope-guard-active.decorator";
 
 @Injectable()
 export class ScopeGuard implements CanActivate {
@@ -77,6 +78,15 @@ export class ScopeGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const isPublicApi = this.reflector.getAllAndOverride("publicApi", [context.getHandler(), context.getClass()]);
         if (isPublicApi) {
+            return true;
+        }
+
+        const scopeGuardActive = this.reflector.getAllAndOverride<ScopeGuardActiveMetadataValue | undefined>(SCOPE_GUARD_ACTIVE_METADATA_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+
+        if (scopeGuardActive === false) {
             return true;
         }
 

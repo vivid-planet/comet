@@ -10,6 +10,7 @@ import { Request } from "express";
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
+import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
 import { validateNotModified } from "../document/validateNotModified";
 import { PageTreeReadApi, PageTreeService } from "../page-tree/page-tree.service";
 import { PageTreeNodeVisibility } from "../page-tree/types";
@@ -46,6 +47,7 @@ export function createRedirectsResolver({
     class RedirectsArgs extends RedirectsArgsFactory.create({ Scope }) {}
 
     @Resolver(() => Redirect)
+    @ScopeGuardActive(hasNonEmptyScope)
     class RedirectsResolver {
         protected pageTreeReadApi: PageTreeReadApi;
 
@@ -86,7 +88,7 @@ export function createRedirectsResolver({
 
         @Query(() => Boolean)
         async redirectSourceAvailable(
-            @Args("scope", { type: () => Scope }) scope: typeof Scope,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("source", { type: () => String }) source: string,
         ): Promise<boolean> {
             const redirect = await this.repository.findOne({ source, ...(hasNonEmptyScope ? { scope: nonEmptyScopeOrNothing(scope) } : {}) });
@@ -95,7 +97,7 @@ export function createRedirectsResolver({
 
         @Mutation(() => Redirect)
         async createRedirect(
-            @Args("scope", { type: () => Scope }) scope: typeof Scope,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
         ): Promise<RedirectInterface> {
             const tranformedInput = plainToInstance(RedirectInput, input);
