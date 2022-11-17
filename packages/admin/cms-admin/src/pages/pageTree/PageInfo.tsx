@@ -39,10 +39,12 @@ const Root = styled("div")`
 `;
 
 const ExpandIconWrapper = styled("div")`
+    pointer-events: auto;
     width: 44px;
     flex-shrink: 0;
 `;
 
 const ChildrenWrapper = styled("div")`
+    pointer-events: auto;
     min-width: 0;
 `;

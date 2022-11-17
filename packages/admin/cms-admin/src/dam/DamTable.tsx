@@ -14,6 +14,7 @@ import {
     ToolbarItem,
     useEditDialog,
     useStackApi,
+    useStoredState,
     useTableQueryFilter,
 } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Domain } from "@comet/admin-icons";
@@ -149,6 +150,10 @@ interface DamTableProps extends DamConfig {
 
 export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): React.ReactElement => {
     const intl = useIntl();
+    const [sorting, setSorting] = useStoredState<ISortInformation>("dam_filter_sorting", {
+        columnName: "name",
+        direction: SortDirection.ASC,
+    });
 
     const propsWithDefaultValues = {
         disableScopeIndicator: false,
@@ -160,11 +165,14 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
     };
 
     const filterApi = useTableQueryFilter<DamFilter>({
-        sort: {
-            columnName: "name",
-            direction: SortDirection.ASC,
-        },
+        sort: sorting,
     });
+
+    React.useEffect(() => {
+        if (filterApi.current.sort) {
+            setSorting(filterApi.current.sort);
+        }
+    }, [filterApi, filterApi.current.sort, setSorting]);
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>

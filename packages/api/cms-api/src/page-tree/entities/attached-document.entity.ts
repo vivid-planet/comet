@@ -1,6 +1,6 @@
 import { BaseEntity, Entity, Index, PrimaryKey, Property, Unique } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 @ObjectType()
 @Entity({ tableName: "PageTreeNodeDocument" })
@@ -8,7 +8,7 @@ import { v4 } from "uuid";
 export class AttachedDocument extends BaseEntity<AttachedDocument, "id"> {
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @Property({ columnType: "uuid" })
     @Index()

@@ -1,27 +1,32 @@
-import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { StoryContext } from "@storybook/addons";
-import { RestLink } from "apollo-link-rest";
+import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
+import { createErrorDialogApolloLink } from "@comet/admin";
+import type { StoryContext } from "@storybook/addons";
 import * as React from "react";
 
-export function apolloStoryDecorator(options?: { uri?: string; responseTransformer?: RestLink.ResponseTransformer }) {
+const createApolloClient = (uri: string) => {
+    const link = ApolloLink.from([
+        createErrorDialogApolloLink(),
+        createHttpLink({
+            uri,
+        }),
+    ]);
+    const cache = new InMemoryCache();
+    return new ApolloClient({
+        link,
+        cache,
+    });
+};
+
+export function apolloStoryDecorator(clientOrUri: ApolloClient<any> | string) {
     return (Story: React.ComponentType, c: StoryContext) => {
-        const link = ApolloLink.from([
-            new RestLink({
-                uri: options?.uri || "https://jsonplaceholder.typicode.com/",
-                responseTransformer: options?.responseTransformer,
-            }),
-        ]);
-
-        const cache = new InMemoryCache();
-        const client = new ApolloClient({
-            link,
-            cache,
-        });
-
         return (
-            <ApolloProvider client={client}>
+            <ApolloProvider client={typeof clientOrUri == "string" ? createApolloClient(clientOrUri) : clientOrUri}>
                 <Story />
             </ApolloProvider>
         );
     };
+}
+
+export function apolloSwapiStoryDecorator() {
+    return apolloStoryDecorator(`https://swapi-graphql.netlify.app/.netlify/functions/index`); // Test API here: https://graphql.org/swapi-graphql
 }

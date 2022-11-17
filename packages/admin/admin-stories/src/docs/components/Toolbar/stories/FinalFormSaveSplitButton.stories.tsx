@@ -16,7 +16,7 @@ import { Button, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloSwapiStoryDecorator } from "../../../../apollo-swapi-story.decorator";
+import { apolloSwapiStoryDecorator } from "../../../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../../../story-router.decorator";
 import { toolbarDecorator } from "../toolbar.decorator";
 

@@ -1,9 +1,9 @@
-import { ClassType } from "class-transformer/ClassTransformer";
+import type { ClassConstructor } from "class-transformer";
 
 import { BlockMigrationInterface, BlockMigrationTransformFn } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MigrationClass<T extends BlockMigrationTransformFn = any> = ClassType<BlockMigrationInterface<T>>; // alias
+type MigrationClass<T extends BlockMigrationTransformFn = any> = ClassConstructor<BlockMigrationInterface<T>>; // alias
 
 // For type-safety
 export function typesafeMigrationPipe<A1, R1, R2, R3, R4, R5, R6, R7>(

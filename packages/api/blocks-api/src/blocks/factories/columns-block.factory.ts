@@ -1,4 +1,4 @@
-import { plainToClass, Transform, Type } from "class-transformer";
+import { plainToInstance, Transform, Type } from "class-transformer";
 import { IsBoolean, IsIn, IsUUID, ValidateNested } from "class-validator";
 
 import {
@@ -58,7 +58,7 @@ export class ColumnsBlockFactory {
             @BlockField()
             visible: boolean;
 
-            @Transform((value) => (isBlockDataInterface(value) ? value : contentBlock.blockDataFactory(value)), { toClassOnly: true })
+            @Transform(({ value }) => (isBlockDataInterface(value) ? value : contentBlock.blockDataFactory(value)), { toClassOnly: true })
             @BlockField(contentBlock)
             props: BlockDataInterface;
         }
@@ -72,13 +72,13 @@ export class ColumnsBlockFactory {
             @BlockField()
             visible: boolean;
 
-            @Transform((value) => (isBlockInputInterface(value) ? value : contentBlock.blockInputFactory(value)), { toClassOnly: true })
+            @Transform(({ value }) => (isBlockInputInterface(value) ? value : contentBlock.blockInputFactory(value)), { toClassOnly: true })
             @ValidateNested()
             @BlockField(contentBlock)
             props: Input;
 
             transformToBlockData(): ColumnsBlockColumn {
-                return plainToClass(ColumnsBlockColumn, {
+                return plainToInstance(ColumnsBlockColumn, {
                     ...this,
                     props: this.props.transformToBlockData(),
                 });
@@ -121,7 +121,7 @@ export class ColumnsBlockFactory {
             columns: ColumnsBlockColumnInput<ExtractBlockInput<B>>[];
 
             transformToBlockData(): ColumnsBlockData {
-                return plainToClass(ColumnsBlockData, {
+                return plainToInstance(ColumnsBlockData, {
                     ...this,
                     columns: this.columns.map((column) => column.transformToBlockData()),
                 });

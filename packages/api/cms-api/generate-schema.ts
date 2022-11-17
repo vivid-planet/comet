@@ -47,10 +47,10 @@ async function generateSchema(): Promise<void> {
         { supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock }, allowEmpty: false },
         "RedirectsLink",
     );
-    const RedirectEntity = RedirectEntityFactory.create(linkBlock);
-    const RedirectInput = RedirectInputFactory.create(linkBlock);
+    const RedirectEntity = RedirectEntityFactory.create({ linkBlock });
+    const RedirectInput = RedirectInputFactory.create({ linkBlock });
 
-    const redirectsResolver = createRedirectsResolver(RedirectEntity, RedirectInput);
+    const redirectsResolver = createRedirectsResolver({ Redirect: RedirectEntity, RedirectInput });
     const pageTreeResolver = createPageTreeResolver({
         PageTreeNode,
         Documents: [Page],

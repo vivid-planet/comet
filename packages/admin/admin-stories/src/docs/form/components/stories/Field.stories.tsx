@@ -2,10 +2,10 @@ import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
 
 storiesOf("stories/Form/Components", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Field", () => {
         return (
             <FinalForm mode="add" onSubmit={() => {}}>

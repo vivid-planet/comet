@@ -1,5 +1,5 @@
 import * as React from "react";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { StackApiContext } from "./Api";
 
@@ -18,7 +18,7 @@ export class StackBreadcrumb extends React.Component<IProps> {
     private parentId?: string;
     constructor(props: IProps) {
         super(props);
-        this.id = v4();
+        this.id = uuid();
     }
     public render() {
         return (

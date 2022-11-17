@@ -48,7 +48,7 @@ const getQuery = gql`
 `;
 
 const updateMutation = gql`
-    mutation UpdatePredefinedPage($pageId: ID!, $input: PredefinedPageInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID) {
+    mutation UpdatePredefinedPage($pageId: ID!, $input: PredefinedPageInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID!) {
         savePredefinedPage(id: $pageId, input: $input, lastUpdatedAt: $lastUpdatedAt, attachedPageTreeNodeId: $attachedPageTreeNodeId) {
             id
             type

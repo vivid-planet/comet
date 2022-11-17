@@ -18,7 +18,7 @@ export function ChildBlockInput(block: Block, options?: ChildBlockInputOptions):
         }
         BlockField({ type: "block", block, nullable })(target, key);
         Transform(
-            (value) =>
+            ({ value }) =>
                 isBlockInputInterface(value)
                     ? value
                     : nullable && (value === undefined || value === null)

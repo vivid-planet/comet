@@ -1,8 +1,9 @@
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
 import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
+import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
+import { GQLLink, GQLLinkInput, GQLPageTreeNodeAdditionalFieldsFragment } from "@src/graphql.generated";
 import { EditLink } from "@src/links/EditLink";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -32,7 +33,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
         }
     `,
     updateMutation: gql`
-        mutation UpdateLink($pageId: ID!, $input: LinkInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID) {
+        mutation UpdateLink($pageId: ID!, $input: LinkInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID!) {
             saveLink(linkId: $pageId, input: $input, lastUpdatedAt: $lastUpdatedAt, attachedPageTreeNodeId: $attachedPageTreeNodeId) {
                 id
                 content
@@ -44,6 +45,9 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
         return {
             content: rewriteInternalLinks(LinkBlock.state2Output(LinkBlock.input2State(input.content)), idsMap),
         };
+    },
+    InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
+        return <>{page.userGroup}</>;
     },
     menuIcon: LinkIcon,
 };

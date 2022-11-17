@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
 interface User {
@@ -27,7 +27,7 @@ const usersData: User[] = [
 ];
 
 storiesOf("stories/form/Context-based Features", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .addDecorator(storyRouterDecorator())
     .add("FinalForm in Stack", () => {
         const [StackSwitch, switchApi] = useStackSwitch();

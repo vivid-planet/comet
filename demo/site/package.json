@@ -24,7 +24,7 @@
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"yarn generate-block-types\""
     },
     "dependencies": {
-        "@comet/cms-site": "^2.0.0",
+        "@comet/cms-site": "^3.0.0",
         "@googlemaps/js-api-loader": "^1.0.0",
         "@googlemaps/markerclustererplus": "^1.0.0",
         "babel-plugin-inline-react-svg": "^2.0.0",
@@ -49,7 +49,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.16.0",
-        "@comet/eslint-config": "^2.0.0",
+        "@comet/eslint-config": "^3.0.0",
         "@graphql-codegen/cli": "^1.0.0",
         "@graphql-codegen/named-operations-object": "^2.2.0",
         "@graphql-codegen/typescript": "^1.0.0",

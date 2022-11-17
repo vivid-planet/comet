@@ -27,8 +27,15 @@ export const redirectTableFragment = gql`
 `;
 
 export const redirectsQuery = gql`
-    query Redirects($type: RedirectGenerationType, $active: Boolean, $query: String, $sortDirection: SortDirection, $sortColumnName: String) {
-        redirects(type: $type, active: $active, query: $query, sortDirection: $sortDirection, sortColumnName: $sortColumnName) {
+    query Redirects(
+        $scope: RedirectScopeInput!
+        $type: RedirectGenerationType
+        $active: Boolean
+        $query: String
+        $sortDirection: SortDirection
+        $sortColumnName: String
+    ) {
+        redirects(scope: $scope, type: $type, active: $active, query: $query, sortDirection: $sortDirection, sortColumnName: $sortColumnName) {
             ...RedirectTable
         }
     }

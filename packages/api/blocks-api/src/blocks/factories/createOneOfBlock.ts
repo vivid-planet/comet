@@ -1,4 +1,4 @@
-import { plainToClass, Transform } from "class-transformer";
+import { plainToInstance, Transform } from "class-transformer";
 import { ArrayMinSize, IsIn, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import {
@@ -72,7 +72,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
         type: string;
 
         @Transform(
-            (value, obj) => {
+            ({ value, obj }) => {
                 const blockType = obj.type as string;
                 const block = supportedBlocks[blockType];
 
@@ -96,8 +96,8 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
     }
 
     class BlockOneOf extends BlockData {
-        @Transform((items: BlockOneOfItem[]) =>
-            items
+        @Transform(({ value }: { value: BlockOneOfItem[] }) =>
+            value
                 .filter((item) => {
                     if (!supportedBlocks[item.type]) {
                         console.warn(`Unknown block type "${item.type}"`);
@@ -106,7 +106,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
 
                     return true;
                 })
-                .map((item) => plainToClass(BlockOneOfItem, item)),
+                .map((item) => plainToInstance(BlockOneOfItem, item)),
         )
         attachedBlocks: OneOfBlockDataInterface<BlockMap>["attachedBlocks"][number][];
 
@@ -137,8 +137,8 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
     }
 
     class BlockOneOfInput extends BlockInput {
-        @Transform((items: BlockOneOfItemInput[]) =>
-            items
+        @Transform(({ value }: { value: BlockOneOfItemInput[] }) =>
+            value
                 .filter((item) => {
                     if (!supportedBlocks[item.type]) {
                         console.warn(`Unknown block type "${item.type}"`);
@@ -147,7 +147,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
 
                     return true;
                 })
-                .map((item) => plainToClass(BlockOneOfItemInput, item)),
+                .map((item) => plainToInstance(BlockOneOfItemInput, item)),
         )
         @ArrayMinSize(allowEmpty ? 0 : 1)
         @ValidateNested({ each: true })
@@ -161,7 +161,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
         transformToBlockData(): BlockOneOf {
             const attachedBlocks = this.attachedBlocks.map((block) => block.transformToBlockData());
 
-            return plainToClass(BlockOneOf, {
+            return plainToInstance(BlockOneOf, {
                 attachedBlocks,
                 activeType: this.activeType && supportedBlocks[this.activeType] ? this.activeType : null,
             });
@@ -173,7 +173,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
         type: string;
 
         @Transform(
-            (value, obj) => {
+            ({ value, obj }) => {
                 const blockType = obj.type as string;
                 const block = supportedBlocks[blockType];
 
@@ -196,7 +196,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
                 throw new Error(`unknown type ${blockType}`);
             }
 
-            return plainToClass(BlockOneOfItem, {
+            return plainToInstance(BlockOneOfItem, {
                 type: this.type,
                 props: this.props.transformToBlockData(),
             });

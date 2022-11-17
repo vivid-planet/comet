@@ -6,7 +6,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useFormState } from "react-final-form";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 const StyledButton = withStyles({
     root: {
@@ -66,5 +66,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("CustomButtons", () => <Story />);

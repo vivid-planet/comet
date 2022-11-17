@@ -1,7 +1,7 @@
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { CannotPasteBlockDialog } from "../../../clipboard/CannotPasteBlockDialog";
 import { ClipboardContent, useBlockClipboard } from "../../../clipboard/useBlockClipboard";
@@ -132,7 +132,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
         };
 
         const addNewBlock = (beforeIndex?: number) => {
-            const key = uuidv4();
+            const key = uuid();
 
             const newBlock = {
                 key,
@@ -201,7 +201,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
 
                 const newBlocks: ListBlockItem<T>[] = content.map((block) => {
                     return {
-                        key: uuidv4(),
+                        key: uuid(),
                         visible: canAddVisibleBlock ? block.visible : false,
                         props: block.state,
                         selected: false,

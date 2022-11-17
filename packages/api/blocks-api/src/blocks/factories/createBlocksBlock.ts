@@ -1,5 +1,5 @@
 import { Type } from "@nestjs/common";
-import { plainToClass, Transform } from "class-transformer";
+import { plainToInstance, Transform } from "class-transformer";
 import { Allow, IsBoolean, IsString, ValidateNested } from "class-validator";
 
 import {
@@ -42,7 +42,7 @@ export function BaseBlocksBlockItemData<BlockMap extends BaseBlockMap>(supported
         type: string;
 
         @Transform(
-            (value, obj) => {
+            ({ value, obj }) => {
                 const blockType = obj.type as string;
                 const block = supportedBlocks[blockType];
 
@@ -98,7 +98,7 @@ export function BaseBlocksBlockItemInput<BlockMap extends BaseBlockMap>(
         type: string;
 
         @Transform(
-            (value, obj) => {
+            ({ value, obj }) => {
                 const blockType = obj.type as string;
                 const block = supportedBlocks[blockType];
 
@@ -163,8 +163,8 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
     }
 
     class BlocksBlockData extends BlockData {
-        @Transform((items: BlocksBlockItemDataInterface[]) =>
-            items
+        @Transform(({ value }: { value: BlocksBlockItemDataInterface[] }) =>
+            value
                 .filter((item) => {
                     if (!supportedBlocks[item.type]) {
                         console.warn(`Unknown block type "${item.type}"`);
@@ -173,7 +173,7 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
 
                     return true;
                 })
-                .map((item) => plainToClass(BlocksBlockItemData, item)),
+                .map((item) => plainToInstance(BlocksBlockItemData, item)),
         )
         @BlockField(BlocksBlockItemData)
         blocks: BlocksBlockItemDataInterface[];
@@ -195,8 +195,8 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
     }
 
     class BlocksBlockInput extends BlockInput {
-        @Transform((items: BlocksBlockItemInputInterface[]) =>
-            items
+        @Transform(({ value }: { value: BlocksBlockItemInputInterface[] }) =>
+            value
                 .filter((item) => {
                     if (!supportedBlocks[item.type]) {
                         console.warn(`Unknown block type "${item.type}"`);
@@ -205,13 +205,13 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
 
                     return true;
                 })
-                .map((item) => plainToClass(BlocksBlockItemInput, item)),
+                .map((item) => plainToInstance(BlocksBlockItemInput, item)),
         )
         @ValidateNested({ each: true })
         blocks: BlocksBlockInputInterface<BlockMap>["blocks"];
 
         transformToBlockData(): BlocksBlockData {
-            return plainToClass(BlocksBlockData, {
+            return plainToInstance(BlocksBlockData, {
                 blocks: this.blocks.map((block) => block.transformToBlockData()),
             });
         }

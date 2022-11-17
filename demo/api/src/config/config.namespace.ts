@@ -13,7 +13,7 @@ export class EnvironmentVariables {
 
     @IsOptional()
     @IsBoolean()
-    @Transform((val) => val === "true")
+    @Transform(({ value }) => value === "true")
     POSTGRESQL_USE_SSL: boolean;
 
     @Type(() => Number)

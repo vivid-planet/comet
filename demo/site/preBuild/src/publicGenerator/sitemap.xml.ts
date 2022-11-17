@@ -51,9 +51,9 @@ const sitemapXml = async () => {
 
     smStream.pipe(createWriteStream(resolve(filePath)));
 
-    const domain = process.env.SITE_DOMAIN ?? "";
-    const languages = process.env.SITE_LANGUAGES?.split(",") ?? [];
-    const defaultLanguage = process.env.SITE_DEFAULT_LANGUAGE ?? "";
+    const domain = process.env.NEXT_PUBLIC_SITE_DOMAIN ?? "";
+    const languages = process.env.NEXT_PUBLIC_SITE_LANGUAGES?.split(",") ?? [];
+    const defaultLanguage = process.env.NEXT_PUBLIC_SITE_DEFAULT_LANGUAGE ?? "";
 
     // TODO: paging?
     let siteMapEntryCreated = false;

@@ -1,6 +1,6 @@
 import { BaseEntity, BigIntType, Entity, Index, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 @ObjectType("PublicUpload")
 @Entity()
@@ -9,7 +9,7 @@ export class PublicUpload extends BaseEntity<PublicUpload, "id"> {
 
     @Field(() => ID)
     @PrimaryKey({ columnType: "uuid" })
-    id: string = v4();
+    id: string = uuid();
 
     @Field()
     @Property({ columnType: "text" })

@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
+import { Toolbar, ToolbarActions, ToolbarFillSpace, useFocusAwarePolling } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -13,7 +13,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment, GQLSelectedPageFragment, Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { pagesQuery } from "../pagesPage/pagesQuery";
+import { createPagesQuery } from "../pagesPage/createPagesQuery";
 import { PageTreeTableRow } from "../pageTree/common/PageTreeTableRow";
 import PageInfo from "../pageTree/PageInfo";
 import PageLabel from "../pageTree/PageLabel";
@@ -72,7 +72,7 @@ const useStyles = makeStyles({
 });
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
-    const { pageTreeCategories, pageTreeDocumentTypes } = useCmsBlockContext();
+    const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
     const { scope } = useContentScope();
     const [category, setCategory] = React.useState<string>(defaultCategory);
     const refList = React.useRef<List>(null);
@@ -81,14 +81,23 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const selectedPageId = value?.id;
     const classes = useStyles();
 
+    const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
+
     // Fetch data
-    const { data } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
+    const { data, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         variables: {
             contentScope: scope,
             category,
         },
+        skip: !open,
+    });
+
+    useFocusAwarePolling({
         pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
         skip: !open,
+        refetch,
+        startPolling,
+        stopPolling,
     });
 
     // Exclude all archived pages from selectables, except if the selected page itself is archived
@@ -209,7 +218,9 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
                 </PageSearchContainer>
             </Toolbar>
             <DialogContent ref={refDialogContent}>
-                <PageTreeContext.Provider value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree }}>
+                <PageTreeContext.Provider
+                    value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree, query: pagesQuery }}
+                >
                     <List
                         ref={refList}
                         height={height}

@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "2.0.0",
+    "version": "3.1.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -17,10 +17,11 @@
         "access": "public"
     },
     "scripts": {
-        "build": "rimraf lib && run-p generate-graphql-types generate-block-types && run-p build:babel build:types",
+        "clean": "rimraf lib",
+        "build": "yarn run clean && run-p generate-graphql-types generate-block-types && run-p build:babel build:types",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "start": "rimraf lib && run-p generate-graphql-types generate-block-types && run-p start:babel start:types",
+        "start": "run-p generate-graphql-types generate-block-types && run-p start:babel start:types",
         "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "lint": "run-p generate-graphql-types generate-block-types && run-p lint:eslint lint:tsc",
@@ -34,12 +35,12 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/admin": "^2.0.0",
-        "@comet/admin-icons": "^2.0.0",
-        "@comet/admin-react-select": "^2.0.0",
-        "@comet/admin-rte": "^2.0.0",
-        "@comet/admin-theme": "^2.0.0",
-        "@comet/blocks-admin": "^2.0.0",
+        "@comet/admin": "^3.1.0",
+        "@comet/admin-icons": "^3.1.0",
+        "@comet/admin-react-select": "^3.1.0",
+        "@comet/admin-rte": "^3.1.0",
+        "@comet/admin-theme": "^3.1.0",
+        "@comet/blocks-admin": "^3.1.0",
         "@graphql-typed-document-node/core": "^3.1.1",
         "class-validator": "^0.13.0",
         "clsx": "^1.1.1",
@@ -69,10 +70,10 @@
         "slugify": "^1.0.0",
         "split.js": "^1.6.4",
         "use-debounce": "^6.0.0",
-        "uuid": "^8.0.0"
+        "uuid": "^9.0.0"
     },
     "peerDependencies": {
-        "@apollo/client": "^3.0.0",
+        "@apollo/client": "^3.7.0",
         "@comet/react-app-auth": "^1.0.0",
         "@emotion/react": "^11.0.0",
         "@emotion/styled": "^11.0.0",
@@ -99,9 +100,9 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^2.0.0",
-        "@comet/cli": "^2.0.0",
-        "@comet/eslint-config": "^2.0.0",
+        "@comet/admin-babel-preset": "^3.1.0",
+        "@comet/cli": "^3.1.0",
+        "@comet/eslint-config": "^3.1.0",
         "@comet/react-app-auth": "^1.0.0",
         "@graphql-codegen/cli": "^1.0.0",
         "@graphql-codegen/fragment-matcher": "^1.0.0",

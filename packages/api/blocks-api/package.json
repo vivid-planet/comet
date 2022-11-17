@@ -1,6 +1,6 @@
 {
     "name": "@comet/blocks-api",
-    "version": "2.0.0",
+    "version": "3.1.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -16,8 +16,9 @@
         "access": "public"
     },
     "scripts": {
-        "build": "rimraf lib/ && tsc",
-        "dev": "rimraf lib/ && tsc --watch --preserveWatchOutput",
+        "clean": "rimraf lib",
+        "build": "yarn run clean && tsc",
+        "dev": "tsc --watch --preserveWatchOutput",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint src/",
         "lint:tsc": "tsc --noEmit",
@@ -29,14 +30,14 @@
     },
     "peerDependencies": {
         "@nestjs/common": "^9.0.0",
-        "class-transformer": "^0.3.0",
+        "class-transformer": "^0.5.0",
         "class-validator": "^0.13.0"
     },
     "dependencies": {
         "rimraf": "^3.0.0"
     },
     "devDependencies": {
-        "@comet/eslint-config": "^2.0.0",
+        "@comet/eslint-config": "^3.1.0",
         "@types/draft-js": "^0.10.0",
         "@types/jest": "^27.0.0",
         "chokidar-cli": "^2.0.0",

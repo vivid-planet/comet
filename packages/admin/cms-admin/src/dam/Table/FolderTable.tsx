@@ -157,7 +157,15 @@ const FolderTable = ({
                 if (isFile(row)) {
                     return <PrettyBytes value={row.size} />;
                 } else {
-                    return `${row.numberOfFiles + row.numberOfChildFolders} items`;
+                    return (
+                        <FormattedMessage
+                            id="comet.dam.folderSize"
+                            defaultMessage="{number} {number, plural, one {item} other {items}}"
+                            values={{
+                                number: row.numberOfFiles + row.numberOfChildFolders,
+                            }}
+                        />
+                    );
                 }
             },
         },

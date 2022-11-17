@@ -27,7 +27,7 @@ const Breadcrumbs: React.FunctionComponent<GQLBreadcrumbsFragment> = ({ name, pa
                             <Link href={parentNode.path} passHref>
                                 <sc.Link> {parentNode.name}</sc.Link>
                             </Link>
-                            <sc.Divider></sc.Divider>
+                            <sc.Divider />
                         </React.Fragment>
                     ))}
                     <Link href={path} passHref>

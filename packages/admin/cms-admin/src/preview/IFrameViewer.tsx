@@ -123,7 +123,7 @@ interface IFrameProps {
     deviceConfig: DeviceConfig | null;
 }
 
-const OuterFrame = styled("div")<IFrameProps>`
+const OuterFrame = styled("div", { shouldForwardProp: (prop) => prop !== "deviceConfig" })<IFrameProps>`
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -142,7 +142,7 @@ const OuterFrame = styled("div")<IFrameProps>`
         `}
 `;
 
-const IFrame = styled("iframe")<IFrameProps>`
+const IFrame = styled("iframe", { shouldForwardProp: (prop) => prop !== "deviceConfig" })<IFrameProps>`
     display: block;
     border-style: unset;
     border-width: 1px;

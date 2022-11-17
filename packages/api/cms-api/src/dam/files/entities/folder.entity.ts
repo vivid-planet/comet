@@ -1,6 +1,6 @@
 import { ArrayType, BaseEntity, Cascade, Entity, Index, ManyToOne, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { File } from "./file.entity";
 
@@ -11,7 +11,7 @@ export class Folder extends BaseEntity<Folder, "id"> {
 
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @Property({ columnType: "text" })
     @Field()

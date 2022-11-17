@@ -1,11 +1,11 @@
-import { ClassType } from "class-transformer/ClassTransformer";
+import type { ClassConstructor } from "class-transformer";
 
 import { BlockMigrationInterface } from "./types";
 
 // Applies all Migration to a raw json-data from the database
 // the argument `blockName` is useful as debug output
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function applyMigrations<T = any>(rawData: T, migrationClasses?: ClassType<BlockMigrationInterface>[], blockName?: string): T {
+export function applyMigrations<T = any>(rawData: T, migrationClasses?: ClassConstructor<BlockMigrationInterface>[], blockName?: string): T {
     if (!migrationClasses || migrationClasses.length < 1) {
         return rawData;
     }

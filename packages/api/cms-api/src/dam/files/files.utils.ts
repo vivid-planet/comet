@@ -6,7 +6,7 @@ import { sep } from "path";
 import slugify from "slugify";
 import stream from "stream";
 import { promisify } from "util";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { FilesService } from "./files.service";
@@ -18,7 +18,7 @@ export function slugifyFilename(filename: string, extension: string): string {
 const pipeline = promisify(stream.pipeline);
 export async function download(url: string): Promise<FileUploadInterface> {
     const tempDir = fs.mkdtempSync(`${os.tmpdir()}/download`);
-    const fakeName = uuidv4();
+    const fakeName = uuid();
     const tempFile = `${tempDir}/${fakeName}`;
 
     if (url.substr(0, 4) === "http") {

@@ -44,7 +44,7 @@ export const TableHead = ({ isSearching, numberItems, breadcrumbs, folderId }: T
                 fragment: damFolderMPathFragment,
             });
 
-            return fragment ? { damFolder: fragment } : undefined;
+            return fragment === null || Object.keys(fragment).length === 0 ? undefined : { damFolder: fragment };
         },
     });
 
@@ -53,7 +53,7 @@ export const TableHead = ({ isSearching, numberItems, breadcrumbs, folderId }: T
             <BoldTypography variant="body1">
                 <FormattedMessage
                     id="comet.pages.dam.foundNumberItems"
-                    defaultMessage="Found {number} items"
+                    defaultMessage="Found {number} {number, plural, one {item} other {items}}"
                     values={{
                         number: numberItems,
                     }}

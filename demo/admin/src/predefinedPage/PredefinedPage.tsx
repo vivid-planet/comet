@@ -46,7 +46,7 @@ export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, 
         }
     `,
     updateMutation: gql`
-        mutation UpdatePredefinedPageDocument($pageId: ID!, $input: PredefinedPageInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID) {
+        mutation UpdatePredefinedPageDocument($pageId: ID!, $input: PredefinedPageInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID!) {
             savePredefinedPage(id: $pageId, input: $input, lastUpdatedAt: $lastUpdatedAt, attachedPageTreeNodeId: $attachedPageTreeNodeId) {
                 id
                 type

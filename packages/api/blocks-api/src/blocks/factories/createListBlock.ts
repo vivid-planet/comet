@@ -1,5 +1,4 @@
-import { plainToClass, Transform, Type } from "class-transformer";
-import { ClassType } from "class-transformer/ClassTransformer";
+import { ClassConstructor, plainToInstance, Transform, Type } from "class-transformer";
 import { Allow, IsBoolean, IsString, ValidateNested } from "class-validator";
 
 import {
@@ -28,7 +27,7 @@ export interface ListBlockItemDataInterface extends BlockData {
     props: BlockDataInterface;
 }
 
-export function BaseListBlockItemData<B extends Block>(block: B): ClassType<ListBlockItemDataInterface> {
+export function BaseListBlockItemData<B extends Block>(block: B): ClassConstructor<ListBlockItemDataInterface> {
     class ListBlockItemData extends BlockData {
         @BlockField()
         key: string;
@@ -36,7 +35,7 @@ export function BaseListBlockItemData<B extends Block>(block: B): ClassType<List
         @BlockField()
         visible: boolean;
 
-        @Transform((value) => (isBlockDataInterface(value) ? value : block.blockDataFactory(value)), { toClassOnly: true })
+        @Transform(({ value }) => (isBlockDataInterface(value) ? value : block.blockDataFactory(value)), { toClassOnly: true })
         @BlockField(block)
         props: BlockDataInterface;
 
@@ -67,8 +66,8 @@ export interface ListBlockItemInputInterface<Input extends BlockInputInterface> 
 
 export function BaseListBlockItemInput<B extends Block>(
     block: B,
-    ListBlockItemData: ClassType<ListBlockItemDataInterface>,
-): ClassType<ListBlockItemInputInterface<ExtractBlockInput<B>>> {
+    ListBlockItemData: ClassConstructor<ListBlockItemDataInterface>,
+): ClassConstructor<ListBlockItemInputInterface<ExtractBlockInput<B>>> {
     class ListBlockItemInput extends BlockInput {
         @Allow()
         @IsString()
@@ -80,7 +79,7 @@ export function BaseListBlockItemInput<B extends Block>(
         visible: boolean;
 
         @Transform(
-            (value) => {
+            ({ value }) => {
                 return isBlockInputInterface(value) ? value : block.blockInputFactory(value);
             },
             { toClassOnly: true },
@@ -109,8 +108,8 @@ export interface ListBlockInputInterface<B extends BlockInputInterface> extends 
 
 interface Options<B extends Block> {
     block: B;
-    ListBlockItemData?: ClassType<ListBlockItemDataInterface>;
-    ListBlockItemInput?: ClassType<ListBlockItemInputInterface<ExtractBlockInput<B>>>;
+    ListBlockItemData?: ClassConstructor<ListBlockItemDataInterface>;
+    ListBlockItemInput?: ClassConstructor<ListBlockItemInputInterface<ExtractBlockInput<B>>>;
 }
 
 export function createListBlock<B extends Block>(
@@ -147,7 +146,7 @@ export function createListBlock<B extends Block>(
         blocks: ListBlockItemInputInterface<ExtractBlockInput<B>>[];
 
         transformToBlockData(): ListBlockData {
-            return plainToClass(ListBlockData, {
+            return plainToInstance(ListBlockData, {
                 ...this,
                 blocks: this.blocks.map((block) => block.transformToBlockData()),
             });

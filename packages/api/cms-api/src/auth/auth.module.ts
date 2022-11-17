@@ -1,6 +1,8 @@
-import { DynamicModule, Module, ModuleMetadata } from "@nestjs/common";
+import { DynamicModule, Module, ModuleMetadata, Type } from "@nestjs/common";
 
-import { AUTH_CONFIG, AUTH_MODULE_OPTIONS } from "./auth.constants";
+import { AUTH_CONFIG, AUTH_CURRENT_USER_LOADER, AUTH_MODULE_OPTIONS } from "./auth.constants";
+import { DefaultCurrentUserLoaderService } from "./default-current-user-loader.service";
+import { CurrentUserLoaderInterface } from "./interfaces/current-user-loader.interface";
 import { BasicAuthStrategy } from "./strategies/basic-auth.strategy";
 import { BearerTokenStrategy } from "./strategies/bearer-token.strategy";
 
@@ -24,6 +26,7 @@ interface AuthModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
     useFactory: (...args: any[]) => Promise<AuthModuleOptions> | AuthModuleOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
+    currentUserLoaderService?: Type<CurrentUserLoaderInterface>;
 }
 
 @Module({})
@@ -41,11 +44,19 @@ export class AuthModule {
             },
             inject: [AUTH_MODULE_OPTIONS],
         };
-
         return {
             module: AuthModule,
             imports: options.imports ?? [],
-            providers: [optionsProvider, authConfigProvider, BearerTokenStrategy, BasicAuthStrategy],
+            providers: [
+                optionsProvider,
+                authConfigProvider,
+                {
+                    provide: AUTH_CURRENT_USER_LOADER,
+                    useClass: options.currentUserLoaderService ?? DefaultCurrentUserLoaderService,
+                },
+                BearerTokenStrategy,
+                BasicAuthStrategy,
+            ],
         };
     }
 }

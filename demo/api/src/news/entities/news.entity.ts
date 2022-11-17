@@ -1,12 +1,13 @@
 import { BlockDataInterface, RootBlockEntity } from "@comet/blocks-api";
-import { DamImageBlock, DocumentInterface, RootBlockType } from "@comet/cms-api";
-import { BaseEntity, Embeddable, Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { CrudGenerator, DamImageBlock, DocumentInterface, RootBlockType } from "@comet/cms-api";
+import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 import { GraphQLJSONObject } from "graphql-type-json";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { NewsContentBlock } from "../blocks/news-content.block";
+import { NewsComment } from "./news-comment.entity";
 
 export enum NewsCategory {
     Events = "Events",
@@ -37,12 +38,13 @@ export class NewsContentScope {
     implements: () => [DocumentInterface],
 })
 @Entity()
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class News extends BaseEntity<News, "id"> implements DocumentInterface {
-    [OptionalProps]?: "createdAt" | "updatedAt";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "category"; // TODO remove "category" once CRUD generator supports enums
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @Embedded(() => NewsContentScope)
     @Field(() => NewsContentScope)
@@ -62,7 +64,7 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
 
     @Enum({ items: () => NewsCategory })
     @Field(() => NewsCategory)
-    category: NewsCategory;
+    category: NewsCategory = NewsCategory.Awards; // TODO remove default value once CRUD generator supports enums
 
     @Property({ default: false })
     @Field()
@@ -75,6 +77,9 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     @Property({ customType: new RootBlockType(NewsContentBlock) })
     @Field(() => GraphQLJSONObject)
     content: BlockDataInterface;
+
+    @OneToMany(() => NewsComment, (newsComment) => newsComment.news)
+    comments = new Collection<NewsComment>(this);
 
     @Property({
         columnType: "timestamp with time zone",

@@ -103,6 +103,7 @@ const orderComponents = [
     "docs-components-router",
     "docs-components-router-tabs",
     "docs-components-selection",
+    "docs-components-datagrid",
     "docs-components-color-picker",
     "docs-components-date-picker",
     "docs-components-react-select",
@@ -122,6 +123,7 @@ const orderForm = [
     "docs-form-components",
 ];
 const orderHooks = ["docs-hooks-hooks", "docs-hooks"];
+const orderHelper = ["docs-helper-clipboard"];
 const orderIcons = ["docs-icons-all-icons", "docs-icons-usage", "docs-icons"];
 const orderBestPractices = ["docs-best-practices-overview", "docs-best-theme-and-styling", "docs-best-practices"];
 const orderDevelopment = ["docs-development-overview", "docs-development-create-a-component-with-theme-support", "docs-development"];
@@ -132,6 +134,7 @@ const order = [
     ...orderComponents,
     ...orderForm,
     ...orderHooks,
+    ...orderHelper,
     ...orderIcons,
     ...orderBestPractices,
     ...orderDevelopment,

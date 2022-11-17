@@ -4,7 +4,7 @@ import { storiesOf } from "@storybook/react";
 import gql from "graphql-tag";
 import * as React from "react";
 
-import { apolloSwapiStoryDecorator } from "../../apollo-swapi-story.decorator";
+import { apolloSwapiStoryDecorator } from "../../apollo-story.decorator";
 import { errorDialogStoryProviderDecorator } from "../../docs/components/ErrorHandling/ErrorDialog/error-dialog-provider.decorator";
 
 interface People {

@@ -6,8 +6,11 @@ import {
     BlocksTransformerMiddlewareFactory,
     BlocksTransformerService,
     BuildsModule,
+    ContentScope,
+    ContentScopeModule,
     DamModule,
     FilesService,
+    GlobalAuthGuard,
     ImagesService,
     PageTreeModule,
     PageTreeService,
@@ -17,6 +20,7 @@ import {
 import { ApolloDriver } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ConfigModule } from "@src/config/config.module";
 import { configNS } from "@src/config/config.namespace";
@@ -26,6 +30,7 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
+import { CurrentUserLoaderService } from "./auth/current-user-loader.service";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -36,6 +41,8 @@ import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
+import { ProductsModule } from "./products/products.module";
+import { RedirectScope } from "./redirects/dto/redirect-scope";
 
 @Module({
     imports: [
@@ -72,6 +79,13 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
                 },
             }),
             inject: [configNS.KEY],
+            currentUserLoaderService: CurrentUserLoaderService,
+        }),
+        ContentScopeModule.forRoot({
+            canAccessScope(requestScope: ContentScope, user) {
+                if (!user.domains) return true; //all domains
+                return user.domains.includes(requestScope.domain);
+            },
         }),
         BlocksModule.forRootAsync({
             imports: [PagesModule],
@@ -105,7 +119,7 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
             Scope: PageTreeNodeScope,
             reservedPaths: ["/events"],
         }),
-        RedirectsModule.register({ customTargets: { news: NewsLinkBlock } }),
+        RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
         BlobStorageModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (config: ConfigType<typeof configNS>) => ({
@@ -179,6 +193,8 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
         MenusModule,
         FooterModule,
         PredefinedPageModule,
+        ProductsModule,
     ],
+    providers: [{ provide: APP_GUARD, useClass: GlobalAuthGuard }],
 })
 export class AppModule {}
