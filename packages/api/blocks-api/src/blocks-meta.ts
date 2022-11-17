@@ -92,12 +92,14 @@ function extractFromBlockMeta(blockMeta: BlockMetaInterface): BlockMetaField[] {
 }
 
 export function getBlocksMeta(): BlockMeta[] {
-    return getRegisteredBlocks().map((block) => {
-        const meta: BlockMeta = {
-            name: block.name,
-            fields: extractFromBlockMeta(block.blockMeta),
-            inputFields: extractFromBlockMeta(block.blockInputMeta),
-        };
-        return meta;
-    });
+    return getRegisteredBlocks()
+        .sort((blockA, blockB) => blockA.name.localeCompare(blockB.name))
+        .map((block) => {
+            const meta: BlockMeta = {
+                name: block.name,
+                fields: extractFromBlockMeta(block.blockMeta),
+                inputFields: extractFromBlockMeta(block.blockInputMeta),
+            };
+            return meta;
+        });
 }
