@@ -20,8 +20,9 @@
         "access": "public"
     },
     "scripts": {
-        "build": "rimraf lib/ && tsc",
-        "dev": "rimraf lib/ && tsc --watch --preserveWatchOutput",
+        "clean": "rimraf lib",
+        "build": "yarn run clean && tsc",
+        "dev": "tsc --watch --preserveWatchOutput",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/",
         "lint:tsc": "tsc --noEmit",

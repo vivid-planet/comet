@@ -28,7 +28,8 @@
         "yarn-run-all": "^3.0.0"
     },
     "scripts": {
-        "build": "rimraf lib/ && tsc",
+        "clean": "rimraf lib",
+        "build": "yarn run clean && tsc",
         "dev": "tsc --watch",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/",
