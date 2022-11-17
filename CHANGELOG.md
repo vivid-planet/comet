@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Fix a bug where the pages query would query for a field `undefined` when no `additionalPageTreeNodeFragment` is set
 
+### @comet/cms-api
+
+-   Add default value `{}` for `RedirectScopeInput` when no explicit scope is set to make redirects scope support backwards compatible
+
 ## 3.1.0
 
 _Nov 15, 2022_

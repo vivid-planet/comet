@@ -177,9 +177,9 @@ type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   buildTemplates: [BuildTemplate!]!
-  redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection = ASC): [Redirect!]!
+  redirects(scope: RedirectScopeInput = {}, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection = ASC): [Redirect!]!
   redirect(id: ID!): Redirect!
-  redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
+  redirectSourceAvailable(scope: RedirectScopeInput = {}, source: String!): Boolean!
   damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
@@ -234,7 +234,7 @@ input DamItemFilterInput {
 
 type Mutation {
   createBuilds(input: CreateBuildsInput!): Boolean!
-  createRedirect(scope: RedirectScopeInput!, input: RedirectInput!): Redirect!
+  createRedirect(scope: RedirectScopeInput = {}, input: RedirectInput!): Redirect!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   deleteRedirect(id: ID!): Boolean!
