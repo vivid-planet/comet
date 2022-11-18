@@ -17,9 +17,10 @@ export type { ImageDimensions } from "./image/Image";
 export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
 export { Link } from "./link/Link";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
-export { PreviewPage } from "./preview/PreviewPage";
-export { SitePreviewProvider } from "./preview/SitePreviewProvider";
 export { usePreview } from "./preview/usePreview";
 export { parsePreviewState } from "./preview/utils";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { useRouter } from "./router/useRouter";
+export { SitePreviewPage } from "./sitePreview/SitePreviewPage";
+export { SitePreviewPage as PreviewPage } from "./sitePreview/SitePreviewPage"; //legacy
+export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";

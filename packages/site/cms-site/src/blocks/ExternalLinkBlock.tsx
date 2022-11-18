@@ -1,8 +1,9 @@
 import * as React from "react";
 
 import { ExternalLinkBlockData } from "../blocks.generated";
-import { IFrameMessageType } from "../iframebridge/IFrameMessage";
-import { useIFrameBridge } from "../iframebridge/useIFrameBridge";
+import { usePreview } from "../preview/usePreview";
+import { SitePreviewIFrameMessageType } from "../sitePreview/iframebridge/SitePreviewIFrameMessage";
+import { useSitePreviewIFrameBridge } from "../sitePreview/iframebridge/useSitePreviewIFrameBridge";
 import { PropsWithData } from "./PropsWithData";
 
 interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData> {
@@ -10,14 +11,15 @@ interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData> {
 }
 
 export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, children }: ExternalLinkBlockProps): React.ReactElement {
-    const iframe = useIFrameBridge();
+    const iframe = useSitePreviewIFrameBridge();
+    const preview = usePreview();
 
-    if (iframe.hasBridge) {
+    if (preview.previewType === "SitePreview" || preview.previewType === "BlockPreview") {
         // send link to admin to handle external link
         const onClick: React.MouseEventHandler = (event) => {
             event.preventDefault();
             iframe.sendMessage({
-                cometType: IFrameMessageType.OpenLink,
+                cometType: SitePreviewIFrameMessageType.OpenLink,
                 data: { link: { openInNewWindow, targetUrl } },
             });
         };

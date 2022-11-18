@@ -1,5 +1,4 @@
 import { CometColor } from "@comet/admin-icons";
-import { IFrameBridgeProvider, IFrameLocationMessage, IFrameMessageType } from "@comet/blocks-admin";
 import { Public, VpnLock } from "@mui/icons-material";
 import { Grid, Tooltip, Typography } from "@mui/material";
 import * as React from "react";
@@ -14,6 +13,8 @@ import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
 import { buildPreviewUrl } from "./buildPreviewUrl";
+import { SitePreviewIFrameBridge } from "./iframebridge/SitePreviewIFrameBridge";
+import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { OpenLinkDialog } from "./OpenLinkDialog";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
@@ -78,7 +79,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     // the site in the iframe notifies us about it's current location
     // we sync the location back to our admin-url, so we have it and can reload the page without loosing
     const handlePreviewLocationChange = React.useCallback(
-        (message: IFrameLocationMessage) => {
+        (message: SitePrevewIFrameLocationMessage) => {
             // the location in the iframe must start with /preview
             if (message.data.pathname.search("/preview") === 0) {
                 // this is the original-pathname of the site, we extract it and keep it in "our" url as get-param
@@ -104,13 +105,13 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     const siteLink = `${siteConfig.url}${resolvePath ? resolvePath(previewPath, scope) : previewPath}`;
 
     return (
-        <IFrameBridgeProvider
+        <SitePreviewIFrameBridge
             onReceiveMessage={(message) => {
                 switch (message.cometType) {
-                    case IFrameMessageType.OpenLink:
+                    case SitePreviewIFrameMessageType.OpenLink:
                         setLinkToOpen(message.data.link);
                         break;
-                    case IFrameMessageType.SitePreviewLocation:
+                    case SitePreviewIFrameMessageType.SitePreviewLocation:
                         handlePreviewLocationChange(message);
                         break;
                 }
@@ -163,7 +164,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                     link={linkToOpen}
                 />
             </Root>
-        </IFrameBridgeProvider>
+        </SitePreviewIFrameBridge>
     );
 }
 

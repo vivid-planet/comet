@@ -6,8 +6,8 @@ import * as React from "react";
 
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
-import { BlockPreviewApi } from "./useBlockPreview";
 import { VisibilityToggle } from "../common/VisibilityToggle";
+import { BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     previewApi: BlockPreviewApi;
