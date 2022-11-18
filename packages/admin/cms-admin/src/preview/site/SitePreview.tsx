@@ -6,16 +6,16 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory, useLocation } from "react-router";
 
-import { ExternalLinkBlockData } from "../blocks.generated";
-import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
-import { useSiteConfig } from "../sitesConfig/useSiteConfig";
+import { ExternalLinkBlockData } from "../../blocks.generated";
+import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
+import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
+import { Device } from "../common/Device";
+import { DeviceToggle } from "../common/DeviceToggle";
+import { IFrameViewer } from "../common/IFrameViewer";
+import { VisibilityToggle } from "../common/VisibilityToggle";
 import { buildPreviewUrl } from "./buildPreviewUrl";
-import { DeviceToggle } from "./DeviceToggle";
-import { IFrameViewer } from "./IFrameViewer";
 import { OpenLinkDialog } from "./OpenLinkDialog";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
-import { Device } from "./types";
-import { VisibilityToggle } from "./VisibilityToggle";
 
 interface SiteState {
     includeInvisibleBlocks: boolean;

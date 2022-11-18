@@ -5,10 +5,10 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import useDimensions from "react-cool-dimensions";
 
-import { DeviceFrameDesktop } from "./DeviceFrameDesktop";
-import { DeviceFrameMobile } from "./DeviceFrameMobile";
-import { DeviceFrameTablet } from "./DeviceFrameTablet";
-import { Device } from "./types";
+import { Device } from "./Device";
+import { DeviceFrameDesktop } from "./icons/DeviceFrameDesktop";
+import { DeviceFrameMobile } from "./icons/DeviceFrameMobile";
+import { DeviceFrameTablet } from "./icons/DeviceFrameTablet";
 
 interface DeviceConfig {
     deviceFrame: React.ReactNode;

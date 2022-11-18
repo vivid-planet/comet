@@ -4,10 +4,10 @@ import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
-import { DeviceToggle } from "./DeviceToggle";
-import { IFrameViewer } from "./IFrameViewer";
+import { DeviceToggle } from "../common/DeviceToggle";
+import { IFrameViewer } from "../common/IFrameViewer";
 import { BlockPreviewApi } from "./useBlockPreview";
-import { VisibilityToggle } from "./VisibilityToggle";
+import { VisibilityToggle } from "../common/VisibilityToggle";
 
 interface Props {
     previewApi: BlockPreviewApi;

@@ -1,7 +1,7 @@
-function openPreviewWindow(previewPath: string, rootPath?: string): void {
+function openSitePreviewWindow(previewPath: string, rootPath?: string): void {
     const queryParams = new URLSearchParams({ path: previewPath });
     const adminUrl = `${rootPath}/preview/?${queryParams.toString()}`;
     window.open(adminUrl);
 }
 
-export { openPreviewWindow };
+export { openSitePreviewWindow };

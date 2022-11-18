@@ -1,267 +1,5 @@
 [
     {
-        "name": "Columns",
-        "fields": [
-            {
-                "name": "layout",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "columns",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "Block",
-                            "block": "ColumnsContent",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "layout",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "columns",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "Block",
-                            "block": "ColumnsContent",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "ColumnsContent",
-        "fields": [
-            {
-                "name": "blocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "Space",
-                                "RichText",
-                                "Headline",
-                                "DamImage"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ],
-        "inputFields": []
-    },
-    {
-        "name": "DamImage",
-        "fields": [
-            {
-                "name": "attachedBlocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "PixelImage",
-                                "SvgImage"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            },
-            {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "block",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "PixelImage",
-                                "SvgImage"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "DamVideo",
-        "fields": [
-            {
-                "name": "autoplay",
-                "kind": "Boolean",
-                "nullable": true
-            },
-            {
-                "name": "showControls",
-                "kind": "Boolean",
-                "nullable": true
-            },
-            {
-                "name": "damFile",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "id",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "name",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "size",
-                            "kind": "Number",
-                            "nullable": false
-                        },
-                        {
-                            "name": "mimetype",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "contentHash",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "title",
-                            "kind": "String",
-                            "nullable": true
-                        },
-                        {
-                            "name": "altText",
-                            "kind": "String",
-                            "nullable": true
-                        },
-                        {
-                            "name": "archived",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "fileUrl",
-                            "kind": "String",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "damFileId",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "autoplay",
-                "kind": "Boolean",
-                "nullable": true
-            },
-            {
-                "name": "showControls",
-                "kind": "Boolean",
-                "nullable": true
-            }
-        ]
-    },
-    {
         "name": "ExternalLink",
         "fields": [
             {
@@ -289,600 +27,76 @@
         ]
     },
     {
-        "name": "FooterContent",
+        "name": "Space",
         "fields": [
             {
-                "name": "popularTopicsLinks",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            },
-            {
-                "name": "aboutLinks",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            },
-            {
-                "name": "bottomLinks",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            },
-            {
-                "name": "copyrightNotice",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "location",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "contactUs",
-                "kind": "String",
+                "name": "height",
+                "kind": "Number",
                 "nullable": false
             }
         ],
         "inputFields": [
             {
-                "name": "popularTopicsLinks",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            },
-            {
-                "name": "aboutLinks",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            },
-            {
-                "name": "bottomLinks",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            },
-            {
-                "name": "copyrightNotice",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "location",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "contactUs",
-                "kind": "String",
+                "name": "height",
+                "kind": "Number",
                 "nullable": false
             }
         ]
     },
     {
-        "name": "FooterLinkSection",
+        "name": "YouTubeVideo",
         "fields": [
             {
-                "name": "title",
+                "name": "youtubeIdentifier",
                 "kind": "String",
                 "nullable": false
             },
             {
-                "name": "links",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "title",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "links",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "FooterTopLinks",
-        "fields": [
-            {
-                "name": "blocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "Block",
-                            "block": "FooterLinkSection",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "blocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "Block",
-                            "block": "FooterLinkSection",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "FullWidthImage",
-        "fields": [
-            {
-                "name": "image",
-                "kind": "Block",
-                "block": "DamImage",
-                "nullable": false
-            },
-            {
-                "name": "content",
-                "kind": "Block",
-                "block": "OptionalRichText",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "image",
-                "kind": "Block",
-                "block": "DamImage",
-                "nullable": false
-            },
-            {
-                "name": "content",
-                "kind": "Block",
-                "block": "OptionalRichText",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "Headline",
-        "fields": [
-            {
-                "name": "eyebrow",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "headline",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": false
-            },
-            {
-                "name": "level",
+                "name": "aspectRatio",
                 "kind": "Enum",
                 "enum": [
-                    "header-one",
-                    "header-two",
-                    "header-three",
-                    "header-four",
-                    "header-five",
-                    "header-six"
+                    "16X9",
+                    "4X3"
                 ],
                 "nullable": false
+            },
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
             }
         ],
         "inputFields": [
             {
-                "name": "eyebrow",
+                "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "headline",
-                "kind": "Block",
-                "block": "RichText",
                 "nullable": false
             },
             {
-                "name": "level",
+                "name": "aspectRatio",
                 "kind": "Enum",
                 "enum": [
-                    "header-one",
-                    "header-two",
-                    "header-three",
-                    "header-four",
-                    "header-five",
-                    "header-six"
+                    "16X9",
+                    "4X3"
                 ],
                 "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "InternalLink",
-        "fields": [
-            {
-                "name": "targetPage",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "id",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "name",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "path",
-                            "kind": "String",
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "targetPageId",
-                "kind": "String",
-                "nullable": true
-            }
-        ]
-    },
-    {
-        "name": "Link",
-        "fields": [
-            {
-                "name": "attachedBlocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "InternalLink",
-                                "ExternalLink",
-                                "NewsLink"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
             },
             {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "block",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "InternalLink",
-                                "ExternalLink",
-                                "NewsLink"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "activeType",
-                "kind": "String",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "LinkList",
-        "fields": [
-            {
-                "name": "blocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "Block",
-                            "block": "TextLink",
-                            "nullable": false
-                        },
-                        {
-                            "name": "userGroup",
-                            "kind": "Enum",
-                            "enum": [
-                                "All",
-                                "Admin",
-                                "User"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "blocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "Block",
-                            "block": "TextLink",
-                            "nullable": false
-                        },
-                        {
-                            "name": "userGroup",
-                            "kind": "Enum",
-                            "enum": [
-                                "All",
-                                "Admin",
-                                "User"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "NewsContent",
-        "fields": [
-            {
-                "name": "blocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "Headline",
-                                "RichText",
-                                "DamImage",
-                                "TextImage"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ],
-        "inputFields": []
-    },
-    {
-        "name": "NewsLink",
-        "fields": [
-            {
-                "name": "id",
-                "kind": "String",
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "id",
-                "kind": "String",
-                "nullable": true
-            }
-        ]
-    },
-    {
-        "name": "OptionalPixelImage",
-        "fields": [
-            {
-                "name": "block",
-                "kind": "Block",
-                "block": "PixelImage",
-                "nullable": true
-            },
-            {
-                "name": "visible",
+                "name": "autoplay",
                 "kind": "Boolean",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "block",
-                "kind": "Block",
-                "block": "PixelImage",
                 "nullable": true
             },
             {
-                "name": "visible",
+                "name": "showControls",
                 "kind": "Boolean",
-                "nullable": false
+                "nullable": true
             }
         ]
-    },
-    {
-        "name": "OptionalRichText",
-        "fields": [
-            {
-                "name": "block",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": true
-            },
-            {
-                "name": "visible",
-                "kind": "Boolean",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "block",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": true
-            },
-            {
-                "name": "visible",
-                "kind": "Boolean",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "PageContent",
-        "fields": [
-            {
-                "name": "blocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "key",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "visible",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": [
-                                "Space",
-                                "RichText",
-                                "Headline",
-                                "DamImage",
-                                "TextImage",
-                                "DamVideo",
-                                "YouTubeVideo",
-                                "LinkList",
-                                "FullWidthImage",
-                                "Columns"
-                            ],
-                            "nullable": false
-                        },
-                        {
-                            "name": "userGroup",
-                            "kind": "Enum",
-                            "enum": [
-                                "All",
-                                "Admin",
-                                "User"
-                            ],
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            }
-        ],
-        "inputFields": []
     },
     {
         "name": "PixelImage",
@@ -1111,7 +325,205 @@
         ]
     },
     {
-        "name": "RedirectsLink",
+        "name": "DamVideo",
+        "fields": [
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "damFile",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "mimetype",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "contentHash",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "altText",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "archived",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "damPath",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "fileUrl",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "damFileId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "SvgImage",
+        "fields": [
+            {
+                "name": "damFile",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "mimetype",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "contentHash",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "altText",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "archived",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "damPath",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "fileUrl",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "damFileId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "InternalLink",
+        "fields": [
+            {
+                "name": "targetPage",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "path",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "targetPageId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "DamImage",
         "fields": [
             {
                 "name": "attachedBlocks",
@@ -1127,9 +539,8 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": [
-                                "InternalLink",
-                                "ExternalLink",
-                                "NewsLink"
+                                "PixelImage",
+                                "SvgImage"
                             ],
                             "nullable": false
                         }
@@ -1156,9 +567,8 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": [
-                                "InternalLink",
-                                "ExternalLink",
-                                "NewsLink"
+                                "PixelImage",
+                                "SvgImage"
                             ],
                             "nullable": false
                         }
@@ -1176,18 +586,30 @@
         ]
     },
     {
-        "name": "RichText",
+        "name": "OptionalPixelImage",
         "fields": [
             {
-                "name": "draftContent",
-                "kind": "Json",
+                "name": "block",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
                 "nullable": false
             }
         ],
         "inputFields": [
             {
-                "name": "draftContent",
-                "kind": "Json",
+                "name": "block",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
                 "nullable": false
             }
         ]
@@ -1356,78 +778,72 @@
         ]
     },
     {
-        "name": "Space",
+        "name": "NewsLink",
         "fields": [
             {
-                "name": "height",
-                "kind": "Number",
-                "nullable": false
+                "name": "id",
+                "kind": "String",
+                "nullable": true
             }
         ],
         "inputFields": [
             {
-                "name": "height",
-                "kind": "Number",
-                "nullable": false
+                "name": "id",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
     {
-        "name": "SvgImage",
+        "name": "Link",
         "fields": [
             {
-                "name": "damFile",
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "InternalLink",
+                                "ExternalLink",
+                                "NewsLink"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
                 "kind": "NestedObject",
                 "object": {
                     "fields": [
                         {
-                            "name": "id",
+                            "name": "type",
                             "kind": "String",
                             "nullable": false
                         },
                         {
-                            "name": "name",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "size",
-                            "kind": "Number",
-                            "nullable": false
-                        },
-                        {
-                            "name": "mimetype",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "contentHash",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "title",
-                            "kind": "String",
-                            "nullable": true
-                        },
-                        {
-                            "name": "altText",
-                            "kind": "String",
-                            "nullable": true
-                        },
-                        {
-                            "name": "archived",
-                            "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "fileUrl",
-                            "kind": "String",
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "InternalLink",
+                                "ExternalLink",
+                                "NewsLink"
+                            ],
                             "nullable": false
                         }
                     ]
@@ -1437,9 +853,355 @@
         ],
         "inputFields": [
             {
-                "name": "damFileId",
+                "name": "activeType",
+                "kind": "String",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TextLink",
+        "fields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "LinkList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "TextLink",
+                            "nullable": false
+                        },
+                        {
+                            "name": "userGroup",
+                            "kind": "Enum",
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "TextLink",
+                            "nullable": false
+                        },
+                        {
+                            "name": "userGroup",
+                            "kind": "Enum",
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "RichText",
+        "fields": [
+            {
+                "name": "draftContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "draftContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "Headline",
+        "fields": [
+            {
+                "name": "eyebrow",
                 "kind": "String",
                 "nullable": true
+            },
+            {
+                "name": "headline",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "level",
+                "kind": "Enum",
+                "enum": [
+                    "header-one",
+                    "header-two",
+                    "header-three",
+                    "header-four",
+                    "header-five",
+                    "header-six"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "eyebrow",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "headline",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "level",
+                "kind": "Enum",
+                "enum": [
+                    "header-one",
+                    "header-two",
+                    "header-three",
+                    "header-four",
+                    "header-five",
+                    "header-six"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "ColumnsContent",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "Space",
+                                "RichText",
+                                "Headline",
+                                "DamImage"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": []
+    },
+    {
+        "name": "Columns",
+        "fields": [
+            {
+                "name": "layout",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "ColumnsContent",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "layout",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "ColumnsContent",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "OptionalRichText",
+        "fields": [
+            {
+                "name": "block",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "block",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "FullWidthImage",
+        "fields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "content",
+                "kind": "Block",
+                "block": "OptionalRichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "content",
+                "kind": "Block",
+                "block": "OptionalRichText",
+                "nullable": false
             }
         ]
     },
@@ -1503,86 +1265,324 @@
         ]
     },
     {
-        "name": "TextLink",
+        "name": "PageContent",
         "fields": [
             {
-                "name": "text",
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "Space",
+                                "RichText",
+                                "Headline",
+                                "DamImage",
+                                "TextImage",
+                                "DamVideo",
+                                "YouTubeVideo",
+                                "LinkList",
+                                "FullWidthImage",
+                                "Columns"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "userGroup",
+                            "kind": "Enum",
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": []
+    },
+    {
+        "name": "FooterLinkSection",
+        "fields": [
+            {
+                "name": "title",
                 "kind": "String",
                 "nullable": false
             },
             {
-                "name": "link",
+                "name": "links",
                 "kind": "Block",
-                "block": "Link",
+                "block": "LinkList",
                 "nullable": false
             }
         ],
         "inputFields": [
             {
-                "name": "text",
+                "name": "title",
                 "kind": "String",
                 "nullable": false
             },
             {
-                "name": "link",
+                "name": "links",
                 "kind": "Block",
-                "block": "Link",
+                "block": "LinkList",
                 "nullable": false
             }
         ]
     },
     {
-        "name": "YouTubeVideo",
+        "name": "FooterTopLinks",
         "fields": [
             {
-                "name": "youtubeIdentifier",
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "FooterLinkSection",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "FooterLinkSection",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "FooterContent",
+        "fields": [
+            {
+                "name": "popularTopicsLinks",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
+            },
+            {
+                "name": "aboutLinks",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
+            },
+            {
+                "name": "bottomLinks",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
+            },
+            {
+                "name": "copyrightNotice",
                 "kind": "String",
                 "nullable": false
             },
             {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
+                "name": "location",
+                "kind": "String",
                 "nullable": false
             },
             {
-                "name": "autoplay",
-                "kind": "Boolean",
+                "name": "contactUs",
+                "kind": "String",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "popularTopicsLinks",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
+            },
+            {
+                "name": "aboutLinks",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
+            },
+            {
+                "name": "bottomLinks",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
+            },
+            {
+                "name": "copyrightNotice",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "location",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "contactUs",
+                "kind": "String",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "NewsContent",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "Headline",
+                                "RichText",
+                                "DamImage",
+                                "TextImage"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": []
+    },
+    {
+        "name": "RedirectsLink",
+        "fields": [
+            {
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "InternalLink",
+                                "ExternalLink",
+                                "NewsLink"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
                 "nullable": true
             },
             {
-                "name": "showControls",
-                "kind": "Boolean",
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "InternalLink",
+                                "ExternalLink",
+                                "NewsLink"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
                 "nullable": true
             }
         ],
         "inputFields": [
             {
-                "name": "youtubeIdentifier",
+                "name": "activeType",
                 "kind": "String",
                 "nullable": false
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
-            },
-            {
-                "name": "autoplay",
-                "kind": "Boolean",
-                "nullable": true
-            },
-            {
-                "name": "showControls",
-                "kind": "Boolean",
-                "nullable": true
             }
         ]
     }
