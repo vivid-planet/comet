@@ -50,9 +50,6 @@ interface Props {
 }
 
 const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initialPageUrl }, iFrameRef) => {
-    const iFrameUrl = new URL(initialPageUrl);
-    iFrameUrl.searchParams.append("authProvider", "vivid-planet-idp");
-
     const deviceConfig = resolveDeviceConfig(device);
 
     const { observe: containerRef, width, height } = useDimensions<HTMLDivElement | null>();
@@ -66,7 +63,7 @@ const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initi
                 style={{ transform: `scale(${scaleFactor})` }}
                 deviceConfig={deviceConfig}
             >
-                <IFrame ref={iFrameRef} src={iFrameUrl.toString()} deviceConfig={deviceConfig} />
+                <IFrame ref={iFrameRef} src={initialPageUrl} deviceConfig={deviceConfig} />
                 {deviceConfig && <DeviceFrameWrapper>{deviceConfig.deviceFrame}</DeviceFrameWrapper>}
             </OuterFrame>
         </Root>
