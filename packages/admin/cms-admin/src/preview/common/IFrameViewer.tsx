@@ -1,5 +1,3 @@
-import { useIFrameBridge } from "@comet/blocks-admin";
-import { useAuthorization } from "@comet/react-app-auth";
 import { css } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -52,29 +50,10 @@ interface Props {
 }
 
 const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initialPageUrl }, iFrameRef) => {
-    const authorization = useAuthorization();
-
     const iFrameUrl = new URL(initialPageUrl);
     iFrameUrl.searchParams.append("authProvider", "vivid-planet-idp");
 
     const deviceConfig = resolveDeviceConfig(device);
-    const iFrameBridge = useIFrameBridge();
-
-    React.useEffect(() => {
-        const subscription = authorization?.authorizationManager.onOAuthChange((oAuth) => {
-            if (!iFrameBridge.iFrameReady) {
-                return;
-            }
-
-            if (oAuth?.accessToken) {
-                iFrameBridge.sendAccessToken(oAuth.accessToken);
-            }
-        });
-
-        return () => {
-            subscription?.unsubscribe();
-        };
-    }, [iFrameBridge, authorization]);
 
     const { observe: containerRef, width, height } = useDimensions<HTMLDivElement | null>();
 

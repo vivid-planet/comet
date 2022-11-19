@@ -31,17 +31,17 @@ EditPage: previewApi, created with useBlockPreview: State containing showOnlyVis
                 - hoveredSiteRoute: used by block admin to highlight block
                 - sendSelectComponent: used by block admin
                 - sendHoverComponent: used by block admin
-                - sendAccessToken: sends the AccessToken, done by IFrameViewer (TODO do this in IFrameBridge and remove from context)
+                - sendAccessToken: sends the AccessToken, done by BlockPreview (not possible in IFrameBridgeProvider direclty because it's in block-admin)
          - has hoveredSiteRoute state
          - handles messages coming from iframe (SelectComponent, HoverComponent)
     SplitPreview (prop drilling: previewApi, previewState)
        BlockPreview (prop drilling: previewApi, previewState)
             - messages previewState to iframe (with useIFrameBridge)
+            - messages AccessToken (with useIFrameBridge)
             - has controls for managing previewApi (showOnlyVisible, device, minimized)
             - sets the iframe ref to inject it into IFrameBrdige (with useIFrameBridge)
          IFrameViewer[common] (prop drilling: device (from previewApi))
               - does scale the iframe according to device (+the device around the iframe)
-              - injects AccessToken (with useIFrameBridge) (TODO AccessToken should not be handled in common as it's block only)
               - renders the actual iframe
     RootBlockAdmin
         - highlights blocks with matching hoveredSiteRoute (with useIFrameBridge)
