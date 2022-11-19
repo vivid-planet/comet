@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import * as React from "react";
 
-import { previewParamsUrlParamName } from "../preview/constants";
 import { PreviewContext, Url } from "../preview/PreviewContext";
 import { createPathToPreviewPath, defaultPreviewPath, parsePreviewParams } from "../preview/utils";
 import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
@@ -17,7 +16,7 @@ export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, 
         function sendUpstreamMessage() {
             const url = new URL(router.asPath, window.location.origin);
             const { pathname, searchParams } = url;
-            searchParams.delete(previewParamsUrlParamName); // Remove __preview query parameter -> that's frontend preview internal
+            searchParams.delete("__preview"); // Remove __preview query parameter -> that's frontend preview internal
 
             const message: SitePreviewIFrameLocationMessage = {
                 cometType: SitePreviewIFrameMessageType.SitePreviewLocation,

@@ -1,15 +1,14 @@
 import { UrlObject } from "url";
 
-import { previewParamsUrlParamName } from "./constants";
 import { createPathToPreviewPath, defaultPreviewPath, parsePreviewParams } from "./utils";
 
 describe("Preview utils", () => {
-    const previewParams = parsePreviewParams({ [previewParamsUrlParamName]: JSON.stringify({ includeInvisibleBlocks: false }) });
+    const previewParams = parsePreviewParams({ __preview: JSON.stringify({ includeInvisibleBlocks: false }) });
     const previewPath = defaultPreviewPath;
 
     it("Should parse preview state", () => {
         const state = { includeInvisibleBlocks: true };
-        const parsedPreviewState = parsePreviewParams({ [previewParamsUrlParamName]: JSON.stringify(state) });
+        const parsedPreviewState = parsePreviewParams({ __preview: JSON.stringify(state) });
 
         expect(parsedPreviewState).toEqual(state);
     });
@@ -47,7 +46,7 @@ describe("Preview utils", () => {
             pathname: `${previewPath}${pathname}`,
             query: {
                 ...query,
-                [previewParamsUrlParamName]: JSON.stringify(previewParams),
+                __preview: JSON.stringify(previewParams),
             },
         });
     });

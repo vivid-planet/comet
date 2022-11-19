@@ -1,6 +1,5 @@
 import { ParsedUrlQuery } from "querystring";
 
-import { previewParamsUrlParamName } from "./constants";
 import { Url } from "./PreviewContext";
 
 export const defaultPreviewPath = "/preview";
@@ -15,7 +14,7 @@ const defaultParams: SitePreviewParams = {
 
 export function parsePreviewParams(query: ParsedUrlQuery): SitePreviewParams {
     let previewParams: SitePreviewParams = defaultParams;
-    const param = query[previewParamsUrlParamName];
+    const param = query.__preview;
 
     if (typeof param === "string") {
         try {
@@ -42,18 +41,18 @@ export function createPathToPreviewPath({
     if (typeof path === "string") {
         const { pathname, searchParams } = new URL(`${previewPath}${path}`, baseUrl);
 
-        searchParams.append(previewParamsUrlParamName, JSON.stringify(previewParams));
+        searchParams.append("__preview", JSON.stringify(previewParams));
 
         return `${pathname}?${searchParams.toString()}`;
     } else {
         let query = path.query;
 
         if (typeof query === "string") {
-            query += `&${previewParamsUrlParamName}=${JSON.stringify(previewParams)}`;
+            query += `&__preview=${JSON.stringify(previewParams)}`;
         } else if (typeof query === "object") {
             query = {
                 ...query,
-                [previewParamsUrlParamName]: JSON.stringify(previewParams),
+                __preview: JSON.stringify(previewParams),
             };
         }
 
