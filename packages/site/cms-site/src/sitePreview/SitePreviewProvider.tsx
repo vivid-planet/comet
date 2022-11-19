@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import * as React from "react";
 
-import { previewStateUrlParamName } from "../preview/constants";
+import { previewParamsUrlParamName } from "../preview/constants";
 import { PreviewContext, Url } from "../preview/PreviewContext";
-import { createPathToPreviewPath, defaultPreviewPath, parsePreviewState } from "../preview/utils";
+import { createPathToPreviewPath, defaultPreviewPath, parsePreviewParams } from "../preview/utils";
 import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
 interface Props {
@@ -17,7 +17,7 @@ export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, 
         function sendUpstreamMessage() {
             const url = new URL(router.asPath, window.location.origin);
             const { pathname, searchParams } = url;
-            searchParams.delete(previewStateUrlParamName); // Remove __preview query parameter -> that's frontend preview internal
+            searchParams.delete(previewParamsUrlParamName); // Remove __preview query parameter -> that's frontend preview internal
 
             const message: SitePreviewIFrameLocationMessage = {
                 cometType: SitePreviewIFrameMessageType.SitePreviewLocation,
@@ -32,14 +32,14 @@ export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, 
         };
     }, [router]);
 
-    const previewState = parsePreviewState(router.query);
+    const previewParams = parsePreviewParams(router.query);
 
     // maps the original-path to the preview-path
     const pathToPreviewPath = React.useCallback(
         (path: Url) => {
-            return createPathToPreviewPath({ path, previewPath, previewState, baseUrl: window.location.origin });
+            return createPathToPreviewPath({ path, previewPath, previewParams, baseUrl: window.location.origin });
         },
-        [previewPath, previewState],
+        [previewPath, previewParams],
     );
     const previewPathToPath = React.useCallback(
         (previewUrl: string) => {

@@ -1,59 +1,59 @@
 import { ParsedUrlQuery } from "querystring";
 
-import { previewStateUrlParamName } from "./constants";
+import { previewParamsUrlParamName } from "./constants";
 import { Url } from "./PreviewContext";
 
 export const defaultPreviewPath = "/preview";
 
-interface PreviewState {
+interface SitePreviewParams {
     includeInvisibleBlocks: boolean;
 }
 
-const defaultState: PreviewState = {
+const defaultParams: SitePreviewParams = {
     includeInvisibleBlocks: false,
 };
 
-export function parsePreviewState(query: ParsedUrlQuery): PreviewState {
-    let previewState: PreviewState = defaultState;
-    const param = query[previewStateUrlParamName];
+export function parsePreviewParams(query: ParsedUrlQuery): SitePreviewParams {
+    let previewParams: SitePreviewParams = defaultParams;
+    const param = query[previewParamsUrlParamName];
 
     if (typeof param === "string") {
         try {
-            previewState = JSON.parse(param);
+            previewParams = JSON.parse(param);
         } catch {
             // Ignore invalid preview state
         }
     }
 
-    return previewState;
+    return previewParams;
 }
 
 export function createPathToPreviewPath({
     path,
     previewPath,
-    previewState,
+    previewParams,
     baseUrl,
 }: {
     path: Url;
     previewPath: string;
-    previewState: PreviewState;
+    previewParams: SitePreviewParams;
     baseUrl: string;
 }): Url {
     if (typeof path === "string") {
         const { pathname, searchParams } = new URL(`${previewPath}${path}`, baseUrl);
 
-        searchParams.append(previewStateUrlParamName, JSON.stringify(previewState));
+        searchParams.append(previewParamsUrlParamName, JSON.stringify(previewParams));
 
         return `${pathname}?${searchParams.toString()}`;
     } else {
         let query = path.query;
 
         if (typeof query === "string") {
-            query += `&${previewStateUrlParamName}=${JSON.stringify(previewState)}`;
+            query += `&${previewParamsUrlParamName}=${JSON.stringify(previewParams)}`;
         } else if (typeof query === "object") {
             query = {
                 ...query,
-                [previewStateUrlParamName]: JSON.stringify(previewState),
+                [previewParamsUrlParamName]: JSON.stringify(previewParams),
             };
         }
 

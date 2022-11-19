@@ -1,1 +1,1 @@
-export const previewStateUrlParamName = "__preview";
+export const previewParamsUrlParamName = "__preview";

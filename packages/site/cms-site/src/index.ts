@@ -18,7 +18,7 @@ export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea
 export { Link } from "./link/Link";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { usePreview } from "./preview/usePreview";
-export { parsePreviewState } from "./preview/utils";
+export { parsePreviewParams as parsePreviewState } from "./preview/utils";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { useRouter } from "./router/useRouter";
 export { SitePreviewPage } from "./sitePreview/SitePreviewPage";

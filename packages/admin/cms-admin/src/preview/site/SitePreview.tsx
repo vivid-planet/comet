@@ -18,7 +18,7 @@ import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from ".
 import { OpenLinkDialog } from "./OpenLinkDialog";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
-interface SiteState {
+interface SitePreviewParams {
     includeInvisibleBlocks: boolean;
 }
 
@@ -58,21 +58,21 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     const [showOnlyVisible, setShowOnlyVisible] = useSearchState("showOnlyVisible", (v) => !v || v === "true");
 
     const [linkToOpen, setLinkToOpen] = React.useState<ExternalLinkBlockData | undefined>(undefined);
-    const siteState: SiteState = { includeInvisibleBlocks: !showOnlyVisible };
-    const formattedSiteState = JSON.stringify(siteState);
+    const sitePreviewParams: SitePreviewParams = { includeInvisibleBlocks: !showOnlyVisible };
+    const formattedSitePreviewParams = JSON.stringify(sitePreviewParams);
 
     const { scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
 
-    const [initialPageUrl, setInitialPageUrl] = React.useState(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSiteState));
+    const [initialPageUrl, setInitialPageUrl] = React.useState(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
 
-    // update the initialPreviewUrl when previewState changes
-    // the iframe is then force-rerendered with the new preViewUrl
+    // update the initialPreviewUrl when previewParams changes
+    // the iframe is then force-rerendered with the new previewUrl
     React.useEffect(() => {
         // react-hooks/exhaustive-deps is disabled because the src-prop of iframe is uncontrolled
         // the src-value is just the default value, the iframe keeps its own src-state (by clicking links inside the iframe)
-        setInitialPageUrl(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSiteState));
-    }, [formattedSiteState]); // eslint-disable-line react-hooks/exhaustive-deps
+        setInitialPageUrl(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
+    }, [formattedSitePreviewParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const intl = useIntl();
 
