@@ -360,7 +360,12 @@ export class PageTreeService {
     public async pathForParentAndSlug(parentId: null | string, slug: string): Promise<string> {
         const readApi = this.createReadApi({ visibility: "all" });
 
-        const parentPath = parentId ? await readApi.nodePathById(parentId) : "";
+        let parentPath = parentId ? await readApi.nodePathById(parentId) : "";
+
+        if (parentPath === "/") {
+            parentPath = "/home";
+        }
+
         return `${parentPath}/${slug}`;
     }
 
