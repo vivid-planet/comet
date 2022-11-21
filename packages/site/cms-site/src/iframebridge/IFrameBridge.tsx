@@ -101,11 +101,13 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
     }, [onReceiveMessage]);
 
     React.useEffect(() => {
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/access-token-service-worker.js", { scope: "/" });
-        } else {
-            // eslint-disable-next-line no-console
-            console.error("Service Worker is required.");
+        if (process.env.NEXTAUTH_URL) {
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("/access-token-service-worker.js", { scope: "/" });
+            } else {
+                // eslint-disable-next-line no-console
+                console.error("Service Worker is required.");
+            }
         }
     }, []);
 

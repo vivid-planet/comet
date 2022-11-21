@@ -6,8 +6,8 @@ import fetch from "node-fetch";
 import { Strategy } from "passport-http-bearer";
 import { URLSearchParams } from "url";
 
-import { AUTH_CONFIG, AUTH_CURRENT_USER_LOADER } from "../auth.constants";
-import { AuthConfig } from "../auth.module";
+import { AUTH_CURRENT_USER_LOADER, BEARER_TOKEN_CONFIG } from "../auth.constants";
+import { BearerTokenConfig } from "../auth.module";
 import { CurrentUser } from "../dto/current-user";
 import { CurrentUserLoaderInterface } from "../interfaces/current-user-loader.interface";
 
@@ -16,7 +16,7 @@ export class BearerTokenStrategy extends PassportStrategy(Strategy) {
     private validatedUserCache: NodeCache;
     private httpsAgent: Agent;
     constructor(
-        @Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig,
+        @Inject(forwardRef(() => BEARER_TOKEN_CONFIG)) private readonly config: BearerTokenConfig,
         @Inject(AUTH_CURRENT_USER_LOADER) private readonly currentUserLoader: CurrentUserLoaderInterface,
     ) {
         super();

@@ -38,12 +38,11 @@ export function createPreviewUrl({ damFile, cropArea }: ImageBlockState, apiUrl:
             : [imageCropArea.width, imageCropArea.height, imageCropArea.focalPoint, imageCropArea.x, imageCropArea.y];
     const filename = damFile.name.substr(0, damFile.name.lastIndexOf("."));
 
-    let urlTemplate = urlTemplateRoute;
+    let urlTemplate = apiUrl + urlTemplateRoute;
     if (resize) {
         urlTemplate = urlTemplate.replace("$resizeWidth", String(resize.width)).replace("$resizeHeight", String(resize.height));
     }
-
-    const url = new URL(urlTemplate.replace("$fileId", damFile.id).replace("$crop", crop.join(":")).replace("$fileName", filename), apiUrl);
+    const url = new URL(urlTemplate.replace("$fileId", damFile.id).replace("$crop", crop.join(":")).replace("$fileName", filename));
     return url.toString();
 }
 

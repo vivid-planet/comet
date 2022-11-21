@@ -6,6 +6,7 @@ import { printSchema } from "graphql";
 
 import {
     BuildsResolver,
+    createAuthResolver,
     createPageTreeResolver,
     createRedirectsResolver,
     DocumentInterface,
@@ -16,6 +17,7 @@ import {
     PageTreeNodeBase,
     PageTreeNodeCategory,
 } from "./src";
+import { CurrentUser } from "./src/auth/dto/current-user";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { DamItemsResolver } from "./src/dam/files/dam-items.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
@@ -55,6 +57,7 @@ async function generateSchema(): Promise<void> {
         PageTreeNode,
         Documents: [Page],
     }); // no scope
+    const AuthResolver = createAuthResolver(CurrentUser);
 
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,
@@ -65,6 +68,7 @@ async function generateSchema(): Promise<void> {
         FoldersResolver,
         pageTreeResolver,
         DamItemsResolver,
+        AuthResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

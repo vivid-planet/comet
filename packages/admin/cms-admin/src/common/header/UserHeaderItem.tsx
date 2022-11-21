@@ -1,49 +1,22 @@
 import { AppHeaderDropdown } from "@comet/admin";
-import { Account, Info, Logout } from "@comet/admin-icons";
+import { Account, Logout } from "@comet/admin-icons";
 import { useAuthorization, useUser } from "@comet/react-app-auth";
-import { Box, Button as MUIButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { AboutModal } from "./about/AboutModal";
-
-const DropdownContent = styled(Box)`
-    width: 250px;
-`;
-
-const Button = styled(MUIButton)`
-    justify-content: flex-start;
-`;
-
-const Separator = styled(Box)`
-    background-color: ${(props) => props.theme.palette.grey["100"]};
-    height: 1px;
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-`;
+import { HeaderAboutButton } from "./about/AboutButton";
+import { HeaderButton, HeaderDropdownContent, HeaderSeparator } from "./Header.sc";
 
 export function UserHeaderItem(): React.ReactElement {
-    const [showAboutModal, setShowAboutModal] = React.useState(false);
     const authorization = useAuthorization();
     const user = useUser();
 
     return (
         <AppHeaderDropdown buttonChildren={user?.name} startIcon={<Account />}>
-            <DropdownContent padding={4}>
-                <Button
-                    fullWidth={true}
-                    startIcon={<Info />}
-                    onClick={() => {
-                        setShowAboutModal(true);
-                    }}
-                    color="info"
-                >
-                    <FormattedMessage id="comet.about" defaultMessage="About" />
-                </Button>
-                <Separator />
-                <Button
+            <HeaderDropdownContent padding={4}>
+                <HeaderAboutButton />
+                <HeaderSeparator />
+                <HeaderButton
                     fullWidth
                     variant="contained"
                     color="primary"
@@ -58,14 +31,8 @@ export function UserHeaderItem(): React.ReactElement {
                     }}
                 >
                     <FormattedMessage id="comet.logout" defaultMessage="Logout" />
-                </Button>
-            </DropdownContent>
-            <AboutModal
-                open={showAboutModal}
-                onClose={() => {
-                    setShowAboutModal(false);
-                }}
-            />
+                </HeaderButton>
+            </HeaderDropdownContent>
         </AppHeaderDropdown>
     );
 }
