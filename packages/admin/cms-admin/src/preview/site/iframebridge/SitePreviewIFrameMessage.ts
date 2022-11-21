@@ -4,13 +4,8 @@
 import { ExternalLinkBlockData } from "../../../blocks.generated";
 
 export enum SitePreviewIFrameMessageType {
-    Ready = "Ready",
     OpenLink = "OpenLink",
     SitePreviewLocation = "SitePreviewLocation",
-}
-
-export interface SitePreviewIReadyIFrameMessage {
-    cometType: SitePreviewIFrameMessageType.Ready;
 }
 
 export interface SitePreviewIFrameOpenLinkMessage {
@@ -25,4 +20,4 @@ export interface SitePrevewIFrameLocationMessage {
     data: Pick<Location, "search" | "pathname">;
 }
 
-export type SitePreviewIFrameMessage = SitePreviewIReadyIFrameMessage | SitePreviewIFrameOpenLinkMessage | SitePrevewIFrameLocationMessage;
+export type SitePreviewIFrameMessage = SitePreviewIFrameOpenLinkMessage | SitePrevewIFrameLocationMessage;

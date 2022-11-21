@@ -87,7 +87,6 @@ Similar to real site but live rendered (SSR) and optionally with invisible block
 
 ### iframe messages: site -> admin
 
-    - Ready: preview is up and running
     - OpenLink: user clicked an external link and admin should ask the user if it should be opened in a new tab
     - SitePreviewLocation: user navigated in the page and the url changed, admin should update the current url
 
@@ -111,7 +110,6 @@ AuthenticatedPreviewPage (src/pages/preview/[...path]].tsx)
   SitePreviewPage
       - checks login and registers serviceworker
     SitePreviewIFrameBridgeProvider (TODO remove bridge, not needed when all messages are sent direclty)
-        - messages Ready (TODO remove this message, it is not used for anything)
         - creates context for iframe bridge api (TODO send message directly, eg. with a helper function)
       SitePreviewProvider
           - messages SitePreviewLocation on location change (does NOT use useSitePreviewIFrameBridge, sends message directly)

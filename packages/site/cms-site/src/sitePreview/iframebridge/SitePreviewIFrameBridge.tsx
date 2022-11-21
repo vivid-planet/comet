@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { SitePreviewIFrameMessage, SitePreviewIFrameMessageType } from "./SitePreviewIFrameMessage";
+import { SitePreviewIFrameMessage } from "./SitePreviewIFrameMessage";
 
 export interface SitePreviewIFrameBridgeContext {
     sendMessage: (message: SitePreviewIFrameMessage) => void;
@@ -17,14 +17,6 @@ export const SitePreviewIFrameBridgeProvider: React.FunctionComponent = ({ child
     const sendMessage = (message: SitePreviewIFrameMessage) => {
         window.parent.postMessage(JSON.stringify(message), "*");
     };
-
-    React.useEffect(() => {
-        if (typeof window === "undefined") {
-            return;
-        }
-
-        sendMessage({ cometType: SitePreviewIFrameMessageType.Ready });
-    }, []);
 
     return (
         <SitePreviewIFrameBridgeContext.Provider
