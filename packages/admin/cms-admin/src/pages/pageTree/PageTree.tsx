@@ -15,6 +15,7 @@ import {
     GQLMovePageTreeNodesByPosMutation,
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
+    GQLPageSlugPathFragment,
     GQLPagesQuery,
     GQLPagesQueryVariables,
     namedOperations,
@@ -42,6 +43,8 @@ const MOVE_PAGE_TREE_NODES_BY_POS = gql`
             id
             parentId
             pos
+            slug
+            path
         }
     }
 `;
@@ -52,6 +55,8 @@ const MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS = gql`
             id
             parentId
             pos
+            slug
+            path
         }
     }
 `;
@@ -145,11 +150,24 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 optimisticResponse: (variables) => {
                     const pageTreeNodes: GQLMovePageTreeNodesByPosMutation["movePageTreeNodesByPos"] = (variables.ids as string[]).map(
                         (id, index) => {
+                            const slugPathPage = client.cache.readFragment<GQLPageSlugPathFragment>({
+                                id: id,
+                                fragment: gql`
+                                    fragment PageSlugPath on PageTreeNode {
+                                        id
+                                        slug
+                                        path
+                                    }
+                                `,
+                            });
+
                             return {
                                 __typename: "PageTreeNode",
                                 id: id,
                                 parentId: parentId,
                                 pos: position + index,
+                                slug: slugPathPage?.slug ?? "",
+                                path: slugPathPage?.path ?? "",
                             };
                         },
                     );
