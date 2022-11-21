@@ -6,7 +6,7 @@ import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { RedirectsService } from "../redirects/redirects.service";
 import { AttachedDocumentStrictInput } from "./dto/attached-document.input";
-import { PageTreeNodeBaseCreateInput, PageTreeNodeUpdatePositionInput } from "./dto/page-tree-node.input";
+import { MovePageTreeNodesByPosInput, PageTreeNodeBaseCreateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
@@ -197,8 +197,9 @@ export class PageTreeService {
             .execute();
     }
 
-    async updateNodePosition(id: string, input: PageTreeNodeUpdatePositionInput): Promise<void> {
-        const existingNode = await this.createReadApi({ visibility: "all" }).getNodeOrFail(id);
+    async updateNodePosition(id: string, input: MovePageTreeNodesByPosInput): Promise<PageTreeNodeInterface> {
+        const readApi = this.createReadApi({ visibility: "all" });
+        const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
 
         const requestedPath = await this.pathForParentAndSlug(input.parentId, existingNode.slug);
@@ -238,6 +239,8 @@ export class PageTreeService {
             const nodesToIncrement = await qb.getResultList();
             await this.pageTreeRepository.persistAndFlush(nodesToIncrement.map((c) => c.assign({ pos: c.pos + 1 })));
         }
+
+        return await readApi.getNodeOrFail(existingNode.id);
     }
 
     async updateCategory(id: string, category: PageTreeNodeCategory): Promise<void> {
