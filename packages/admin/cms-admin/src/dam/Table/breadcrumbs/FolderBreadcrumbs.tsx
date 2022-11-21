@@ -1,6 +1,6 @@
 import { BreadcrumbItem } from "@comet/admin";
 import { ChevronRight, LevelUp } from "@comet/admin-icons";
-import { Breadcrumbs, IconButton, Link } from "@mui/material";
+import { Breadcrumbs, IconButton, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useDrop } from "react-dnd";
@@ -36,7 +36,6 @@ const FolderBreadcrumbsWrapper = styled("div")`
 `;
 
 const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$isHovered" })<{ $isHovered: boolean }>`
-    font-weight: 500;
     padding: 6px;
     outline: ${({ theme, $isHovered }) => ($isHovered ? `solid 1px ${theme.palette.primary.main}` : "none")};
     background-color: ${({ $isHovered }) => ($isHovered ? "rgba(41,182,246,0.1)" : "#fff")};
@@ -114,7 +113,9 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
     return (
         <FolderBreadcrumbWrapper ref={dropTarget} $isHovered={isOver}>
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
-                {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
+                <Typography component="span" variant="h6">
+                    {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
+                </Typography>
             </Link>
         </FolderBreadcrumbWrapper>
     );
