@@ -114,10 +114,9 @@ export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
 export { AttachedDocumentInput, AttachedDocumentStrictInput } from "./page-tree/dto/attached-document.input";
 export { EmptyPageTreeNodeScope } from "./page-tree/dto/empty-page-tree-node-scope";
 export {
-    MovePageTreeNodesByNeighbourInput,
-    MovePageTreeNodesByPosInput,
     PageTreeNodeBaseCreateInput,
     PageTreeNodeBaseUpdateInput,
+    PageTreeNodeUpdatePositionInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./page-tree/dto/page-tree-node.input";
 export { AttachedDocument } from "./page-tree/entities/attached-document.entity";

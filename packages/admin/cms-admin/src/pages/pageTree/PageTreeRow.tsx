@@ -36,7 +36,6 @@ interface PageTreeRowProps {
     siteUrl: string;
     virtualizedStyle?: React.CSSProperties;
     slideIn?: boolean;
-    selectedPages: PageTreePage[];
 }
 
 export interface PageTreeTableRowElement extends HTMLTableRowElement {
@@ -59,7 +58,6 @@ const PageTreeRow = ({
     siteUrl,
     virtualizedStyle,
     slideIn,
-    selectedPages,
 }: PageTreeRowProps): React.ReactElement => {
     const rowRef = React.useRef<PageTreeTableRowElement | null>(null);
     const [hover, setHover] = React.useState(false);
@@ -159,15 +157,7 @@ const PageTreeRow = ({
                 return false;
             }
 
-            const selectedPageIds = selectedPages.map((page) => page.id);
-            let pagesToMove: PageTreePage[] = [];
-            if (selectedPageIds.includes(dragObject.id)) {
-                pagesToMove = selectedPages;
-            } else {
-                pagesToMove = [dragObject];
-            }
-
-            return !!pageTreeService.dropAllowed(pagesToMove, dropTargetPage, dropInfo.dropTarget, dropInfo.targetLevel);
+            return !!pageTreeService.dropAllowed(dragObject, dropTargetPage, dropInfo.dropTarget, dropInfo.targetLevel);
         },
     });
 

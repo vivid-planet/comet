@@ -1,4 +1,4 @@
-import { ObservableQuery, useApolloClient } from "@apollo/client";
+import { ObservableQuery, useApolloClient, useMutation } from "@apollo/client";
 import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -12,11 +12,12 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { useContentScope } from "../../contentScope/Provider";
 import {
-    GQLMovePageTreeNodesByPosMutation,
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
     GQLPagesQuery,
     GQLPagesQueryVariables,
+    GQLUpdatePageTreeNodePositionMutation,
+    GQLUpdatePageTreeNodePositionMutationVariables,
     namedOperations,
 } from "../../graphql.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
@@ -24,7 +25,6 @@ import PageTreeRow, { DropTarget, PageTreeDragObject } from "./PageTreeRow";
 import PageTreeService, { DropInfo } from "./PageTreeService";
 import { useDndWindowScroll } from "./useDndWindowScroll/useDndWindowScroll";
 import { PageTreePage } from "./usePageTree";
-
 interface PageTreeProps {
     pages: PageTreePage[];
     editDialogApi: IEditDialogApi;
@@ -36,19 +36,9 @@ interface PageTreeProps {
 
 type PageTreeRefApi = { scrollToItem: List["scrollToItem"] };
 
-const MOVE_PAGE_TREE_NODES_BY_POS = gql`
-    mutation MovePageTreeNodesByPos($ids: [ID!]!, $input: MovePageTreeNodesByPosInput!) {
-        movePageTreeNodesByPos(ids: $ids, input: $input) {
-            id
-            parentId
-            pos
-        }
-    }
-`;
-
-const MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS = gql`
-    mutation MovePageTreeNodesByNeighbour($ids: [ID!]!, $input: MovePageTreeNodesByNeighbourInput!) {
-        movePageTreeNodesByNeighbour(ids: $ids, input: $input) {
+const UPDATE_PAGE_TREE_NODE_POSITION = gql`
+    mutation UpdatePageTreeNodePosition($id: ID!, $input: PageTreeNodeUpdatePositionInput!) {
+        updatePageTreeNodePosition(id: $id, input: $input) {
             id
             parentId
             pos
@@ -112,7 +102,9 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     const pageTreeService = React.useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
     const { scope } = useContentScope();
     const snackbarApi = useSnackbarApi();
-
+    const [updatePageTreeNodePosition] = useMutation<GQLUpdatePageTreeNodePositionMutation, GQLUpdatePageTreeNodePositionMutationVariables>(
+        UPDATE_PAGE_TREE_NODE_POSITION,
+    );
     const debouncedSetHoverState = useDebouncedCallback(
         (setHoverState: React.Dispatch<React.SetStateAction<DropInfo | undefined>>, newHoverState: DropInfo | undefined) => {
             setHoverState((prevState) => {
@@ -126,44 +118,30 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         5,
     );
 
-    const selectedPages = React.useMemo(() => {
-        return pages.filter((page) => page.selected);
-    }, [pages]);
-
-    const moveByPosRequest = React.useCallback(
+    const updateRequest = React.useCallback(
         // @TODO: handle path collisions when moving pages
-        async ({ ids, parentId, position }: { ids: string[]; parentId: string | null; position: number }) => {
-            await client.mutate({
-                mutation: MOVE_PAGE_TREE_NODES_BY_POS,
+        async ({ id, parentId, position }: { id: string; parentId: string | null; position: number }) => {
+            await updatePageTreeNodePosition({
                 variables: {
-                    ids: ids,
+                    id: id,
                     input: {
                         parentId: parentId,
                         pos: position,
                     },
                 },
-                optimisticResponse: (variables) => {
-                    const pageTreeNodes: GQLMovePageTreeNodesByPosMutation["movePageTreeNodesByPos"] = (variables.ids as string[]).map(
-                        (id, index) => {
-                            return {
-                                __typename: "PageTreeNode",
-                                id: id,
-                                parentId: parentId,
-                                pos: position + index,
-                            };
-                        },
-                    );
-
-                    return {
-                        movePageTreeNodesByPos: pageTreeNodes,
-                    };
+                optimisticResponse: {
+                    updatePageTreeNodePosition: {
+                        __typename: "PageTreeNode",
+                        id: id,
+                        parentId: parentId,
+                        pos: position,
+                    },
                 },
                 update: (proxy, { data }) => {
                     // The page positions of all other pagetree nodes are updated in the cache
                     // => realtime update
-                    const movedPageTreeNodes = data?.movePageTreeNodesByPos;
-                    const firstMovedPageTreeNode = movedPageTreeNodes?.[0];
-                    if (!movedPageTreeNodes || !firstMovedPageTreeNode) {
+                    const updatePageTreeNodePosition = data?.updatePageTreeNodePosition;
+                    if (!updatePageTreeNodePosition) {
                         return;
                     }
 
@@ -178,11 +156,11 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                     const updatedPages = pagesData.map((pageData) => {
                         const updatedPageData = { ...pageData };
                         if (
-                            !ids.includes(pageData.id) &&
-                            pageData.parentId === firstMovedPageTreeNode.parentId &&
-                            pageData.pos >= firstMovedPageTreeNode.pos
+                            pageData.id !== id &&
+                            pageData.parentId === updatePageTreeNodePosition.parentId &&
+                            pageData.pos >= updatePageTreeNodePosition.pos
                         ) {
-                            updatedPageData.pos = updatedPageData.pos + movedPageTreeNodes.length;
+                            updatedPageData.pos++;
                         }
 
                         return updatedPageData;
@@ -191,82 +169,38 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 },
             });
         },
-        [client, scope, category],
-    );
-
-    const moveByNeighbourRequest = React.useCallback(
-        async ({ ids, parentId, afterId, beforeId }: { ids: string[]; parentId: string | null; afterId: string | null; beforeId: string | null }) => {
-            await client.mutate({
-                mutation: MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS,
-                variables: {
-                    ids: ids,
-                    input: {
-                        parentId: parentId,
-                        afterId: afterId,
-                        beforeId: beforeId,
-                    },
-                },
-            });
-        },
-        [client],
+        [scope, updatePageTreeNodePosition, category],
     );
 
     const onDrop = React.useCallback(
         async (dragObject: PageTreeDragObject, dropTargetPage: PageTreePage, dropTarget: DropTarget, targetLevel: number) => {
-            const selectedPageIds = selectedPages.map((page) => page.id);
-            let pagesToMove: PageTreePage[];
-            let idsToMove: string[];
-
-            if (selectedPageIds.includes(dragObject.id)) {
-                // filter out subpages if their parent is selected => only the parent has to be moved
-                const filteredSelectedPages = selectedPages.filter((page) => {
-                    return page.parentId === null || !selectedPageIds.includes(page.parentId);
-                });
-                idsToMove = filteredSelectedPages.map((page) => page.id);
-
-                pagesToMove = filteredSelectedPages;
-            } else {
-                idsToMove = [dragObject.id];
-                pagesToMove = [dragObject];
-            }
-
-            const updateInfo = pageTreeService.dropAllowed(pagesToMove, dropTargetPage, dropTarget, targetLevel);
-            if (!updateInfo) {
+            const updateInfo = pageTreeService.dropAllowed(dragObject, dropTargetPage, dropTarget, targetLevel);
+            if (
+                !updateInfo ||
+                // Update is redundant because parent and list order stay the same
+                (updateInfo.parentId === dragObject.parentId &&
+                    (updateInfo.position === dragObject.pos || updateInfo.position === dragObject.pos + 1))
+            ) {
                 return;
             }
 
-            await moveByPosRequest({ ids: idsToMove, parentId: updateInfo.parentId, position: updateInfo.position });
+            await updateRequest({ id: dragObject.id, parentId: updateInfo.parentId, position: updateInfo.position });
 
             snackbarApi.showSnackbar(
                 <UndoSnackbar
                     message={<FormattedMessage id="comet.pagetree.pageMoved" defaultMessage="Page Moved" />}
-                    payload={{ previousPages: pages, pagesToMove }}
-                    onUndoClick={async (payload) => {
-                        if (payload) {
-                            const { previousPages, pagesToMove } = payload;
-
-                            let disallowedReferences = [...pagesToMove];
-
-                            for (const pageToMove of pagesToMove) {
-                                const updateInfo = pageTreeService.getUndoUpdateInfo(previousPages, pageToMove, disallowedReferences);
-
-                                await moveByNeighbourRequest({
-                                    ids: [pageToMove.id],
-                                    parentId: pageToMove.parentId,
-                                    afterId: updateInfo.afterId,
-                                    beforeId: updateInfo.beforeId,
-                                });
-
-                                disallowedReferences = disallowedReferences.filter((page) => page.id !== pageToMove.id);
-                            }
-
-                            client.refetchQueries({ include: [namedOperations.Query.Pages] });
+                    payload={dragObject}
+                    onUndoClick={(movedPage) => {
+                        if (movedPage) {
+                            const { id, parentId, pos: position } = movedPage;
+                            // Previous position may be occupied => Add at previous position + 1 => order stays correct
+                            updateRequest({ id, parentId, position: position + 1 });
                         }
                     }}
                 />,
             );
         },
-        [selectedPages, pageTreeService, pages, moveByPosRequest, snackbarApi, client, moveByNeighbourRequest],
+        [pageTreeService, snackbarApi, updateRequest],
     );
 
     const refList = useRef<List>(null);
@@ -281,7 +215,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
 
     return (
         <>
-            <PageTreeDragLayer numberSelectedPages={selectedPages.length} />
+            <PageTreeDragLayer />
             <Root>
                 <Divider />
                 <Table>
@@ -320,7 +254,6 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                                 pageTreeService={pageTreeService}
                                                 debouncedSetHoverState={debouncedSetHoverState}
                                                 siteUrl={siteUrl}
-                                                selectedPages={selectedPages}
                                             />
                                         );
                                     }}

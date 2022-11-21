@@ -79,7 +79,7 @@ export class PageTreeNodeUpdateVisibilityInput {
 }
 
 @InputType()
-export class MovePageTreeNodesByPosInput {
+export class PageTreeNodeUpdatePositionInput {
     @Field(() => String, { nullable: true })
     @IsOptional()
     @IsUUID()
@@ -88,22 +88,4 @@ export class MovePageTreeNodesByPosInput {
     @Field(() => Int)
     @IsInt()
     pos: number;
-}
-
-@InputType()
-export class MovePageTreeNodesByNeighbourInput {
-    @Field(() => String, { nullable: true })
-    @IsOptional()
-    @IsUUID()
-    parentId: string | null;
-
-    @Field(() => String, { nullable: true })
-    @IsOptional()
-    @IsUUID()
-    afterId: string | null;
-
-    @Field(() => String, { nullable: true })
-    @IsOptional()
-    @IsUUID()
-    beforeId: string | null;
 }

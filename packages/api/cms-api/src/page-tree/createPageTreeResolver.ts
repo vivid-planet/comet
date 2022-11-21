@@ -10,8 +10,7 @@ import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
     DefaultPageTreeNodeCreateInput,
     DefaultPageTreeNodeUpdateInput,
-    MovePageTreeNodesByNeighbourInput,
-    MovePageTreeNodesByPosInput,
+    PageTreeNodeUpdatePositionInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./dto/page-tree-node.input";
 import { SlugAvailability } from "./dto/slug-availability.enum";
@@ -204,92 +203,27 @@ export function createPageTreeResolver({
             return await readApi.getNodeOrFail(id);
         }
 
-        @Mutation(() => [PageTreeNode])
-        @SubjectEntity(PageTreeNode, { idArg: "ids" })
-        async movePageTreeNodesByPos(
-            @Args("ids", { type: () => [ID] }) ids: string[],
-            @Args("input", { type: () => MovePageTreeNodesByPosInput }) input: MovePageTreeNodesByPosInput,
-        ): Promise<PageTreeNodeInterface[]> {
+        @Mutation(() => PageTreeNode)
+        @SubjectEntity(PageTreeNode)
+        async updatePageTreeNodePosition(
+            @Args("id", { type: () => ID }) id: string,
+            @Args("input", { type: () => PageTreeNodeUpdatePositionInput }) input: PageTreeNodeUpdatePositionInput,
+        ): Promise<PageTreeNodeInterface> {
             // Archived pages cannot be updated
             const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
             });
-
-            if (input.parentId !== null) {
-                const newParentNode = await pageTreeReadApi.getNodeOrFail(input.parentId);
-
-                let parentId = newParentNode.parentId;
-                while (parentId !== null) {
-                    if (ids.includes(parentId)) {
-                        throw new GraphQLError("Cannot make a page its own child.");
-                    }
-
-                    const parentNode = await pageTreeReadApi.getNodeOrFail(parentId);
-                    parentId = parentNode.parentId;
-                }
+            const node = await pageTreeReadApi.getNodeOrFail(id);
+            if (node.visibility === Visibility.Archived) {
+                throw new GraphQLError("Can not update an archived page.");
             }
 
-            const nodes: PageTreeNodeInterface[] = [];
-            for (const id of ids) {
-                const node = await pageTreeReadApi.getNodeOrFail(id);
-                if (node.visibility === Visibility.Archived) {
-                    throw new GraphQLError("Cannot update an archived page.");
-                }
-
-                if (node.slug === "home" && input.parentId !== null) {
-                    throw new GraphQLError(`Page "home" cannot be moved to subtree.`);
-                }
-
-                nodes.push(node);
+            if (node.slug === "home" && input.parentId !== null) {
+                throw new GraphQLError(`Page "home" cannot be moved to subtree`);
             }
 
-            let pos = input.pos;
-            const modifiedPageTreeNodes: PageTreeNodeInterface[] = [];
-            for (const node of nodes) {
-                const modifiedPageTreeNode = await this.pageTreeService.updateNodePosition(node.id, { parentId: input.parentId, pos });
-                pos = modifiedPageTreeNode.pos + 1;
-
-                modifiedPageTreeNodes.push(modifiedPageTreeNode);
-            }
-
-            return modifiedPageTreeNodes;
-        }
-
-        @Mutation(() => [PageTreeNode])
-        @SubjectEntity(PageTreeNode, { idArg: "ids" })
-        async movePageTreeNodesByNeighbour(
-            @Args("ids", { type: () => [ID] }) ids: string[],
-            @Args("input", { type: () => MovePageTreeNodesByNeighbourInput }) input: MovePageTreeNodesByNeighbourInput,
-        ): Promise<PageTreeNodeInterface[]> {
-            // Archived pages cannot be updated
-            const pageTreeReadApi = this.pageTreeService.createReadApi({
-                visibility: "all",
-            });
-
-            let newPos: number;
-            if (input.afterId !== null && input.beforeId !== null) {
-                throw new GraphQLError("You must only send a beforeId OR an afterId");
-            } else if (input.afterId) {
-                const afterNode = await pageTreeReadApi.getNodeOrFail(input.afterId);
-
-                if (afterNode.parentId !== input.parentId) {
-                    throw new GraphQLError("The requested after page does not have the requested parentId.");
-                }
-
-                newPos = afterNode.pos + 1;
-            } else if (input.beforeId) {
-                const beforeNode = await pageTreeReadApi.getNodeOrFail(input.beforeId);
-
-                if (beforeNode.parentId !== input.parentId) {
-                    throw new GraphQLError("The requested after page does not have the requested parentId.");
-                }
-
-                newPos = beforeNode.pos;
-            } else {
-                newPos = 0;
-            }
-
-            return this.movePageTreeNodesByPos(ids, { parentId: input.parentId, pos: newPos });
+            await this.pageTreeService.updateNodePosition(id, input);
+            return await this.pageTreeNode(id);
         }
 
         @Mutation(() => PageTreeNode)
