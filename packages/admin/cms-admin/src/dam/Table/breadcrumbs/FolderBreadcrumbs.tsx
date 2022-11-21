@@ -26,16 +26,13 @@ interface FolderBreadcrumbsProps {
     loading?: boolean;
 }
 
+interface BackButtonProps {
+    damBreadcrumbs: DamBreadcrumbItem[];
+}
+
 const FolderBreadcrumbsWrapper = styled("div")`
     display: flex;
     align-items: center;
-`;
-
-const BackButtonSeparator = styled("div")`
-    height: 30px;
-    width: 1px;
-    background-color: ${({ theme }) => theme.palette.divider};
-    margin-right: 12px;
 `;
 
 const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$isHovered" })<{ $isHovered: boolean }>`
@@ -48,6 +45,41 @@ const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => pro
         color: ${({ theme }) => theme.palette.grey[900]};
     }
 `;
+
+const BackButtonWrapper = styled("div")`
+    display: flex;
+    align-items: center;
+`;
+
+const BackIconButton = styled(IconButton)`
+    padding: ${({ theme }) => theme.spacing(2)};
+    margin-right: ${({ theme }) => theme.spacing(1)};
+`;
+
+const BackButtonSeparator = styled("div")`
+    height: 30px;
+    width: 1px;
+    background-color: ${({ theme }) => theme.palette.divider};
+    margin-right: 12px;
+`;
+
+const BackButton = ({ damBreadcrumbs }: BackButtonProps): React.ReactElement => {
+    return (
+        <BackButtonWrapper>
+            <Link
+                color="inherit"
+                underline="none"
+                to={damBreadcrumbs.length >= 2 ? damBreadcrumbs[damBreadcrumbs.length - 2].url : "#"}
+                component={RouterLink}
+            >
+                <BackIconButton disabled={damBreadcrumbs.length < 2}>
+                    <LevelUp />
+                </BackIconButton>
+            </Link>
+            <BackButtonSeparator />
+        </BackButtonWrapper>
+    );
+};
 
 const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
     const { moveItem } = useDamDnD();
@@ -120,19 +152,7 @@ const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds, loading }
 
     return (
         <FolderBreadcrumbsWrapper>
-            <FolderBreadcrumbWrapper $isHovered={false}>
-                <Link
-                    color="inherit"
-                    underline="none"
-                    to={damBreadcrumbs.length >= 2 ? damBreadcrumbs[damBreadcrumbs.length - 2].url : "#"}
-                    component={RouterLink}
-                >
-                    <IconButton disabled={damBreadcrumbs.length < 2}>
-                        <LevelUp />
-                    </IconButton>
-                </Link>
-            </FolderBreadcrumbWrapper>
-            <BackButtonSeparator />
+            <BackButton damBreadcrumbs={damBreadcrumbs} />
             <Breadcrumbs separator={<ChevronRight fontSize="small" />}>
                 {!loading &&
                     damBreadcrumbs?.map((damBreadcrumb) => {
