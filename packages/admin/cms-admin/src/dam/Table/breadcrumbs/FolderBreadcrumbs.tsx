@@ -97,7 +97,7 @@ const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds, loading }
             });
         } else {
             const prevUrl = damBreadcrumbs[damBreadcrumbs.length - 1].url;
-            const url = `${prevUrl}/${folderId}/folder`;
+            const url = `${prevUrl.endsWith("/") ? prevUrl.slice(0, -1) : prevUrl}/${folderId}/folder`;
 
             damBreadcrumbs.push({
                 id: folderId,
