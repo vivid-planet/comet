@@ -208,16 +208,16 @@ export class PageTreeService {
             throw new CometValidationException("Reserved path");
         }
 
+        let newSlug;
         const nodeWithSamePath = await this.nodeWithSamePath(requestedPath, existingNode.scope);
         if (nodeWithSamePath && nodeWithSamePath.id !== existingNode.id) {
-            // @TODO: Or handle gracefully by incrementing the slug ?
-            throw new Error(`Path collision. The path ${requestedPath} is already used`);
+            newSlug = await this.findNextAvailableSlug(existingNode.slug, input.parentId, existingNode.scope);
         }
 
         const parentId = input.parentId;
 
         if (input.pos !== existingNode.pos || input.parentId !== existingNode.parentId) {
-            await this.pageTreeRepository.persistAndFlush(existingNode.assign({ parentId, pos: input.pos }));
+            await this.pageTreeRepository.persistAndFlush(existingNode.assign({ parentId, pos: input.pos, slug: newSlug ?? existingNode.slug }));
 
             const qb = this.pageTreeRepository
                 .createQueryBuilder()
@@ -584,5 +584,19 @@ export class PageTreeService {
         const parentPath = existingNodePath.split("/").slice(0, -1).join("/");
         const newPath = `${parentPath || ""}/${slug}`;
         return newPath;
+    }
+
+    private async findNextAvailableSlug(slug: string, parentId: string | null = null, scope?: ScopeInterface): Promise<string> {
+        let counter = 1;
+        let newSlug, newPath;
+
+        do {
+            newSlug = `${slug}-${counter}`;
+            newPath = await this.pathForParentAndSlug(parentId, newSlug);
+
+            counter++;
+        } while (await this.nodeWithSamePath(newPath, scope));
+
+        return newSlug;
     }
 }
