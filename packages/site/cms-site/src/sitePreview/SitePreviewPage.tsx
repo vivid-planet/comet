@@ -1,7 +1,6 @@
 import { signIn, useSession } from "next-auth/client";
 import * as React from "react";
 
-import { SitePreviewIFrameBridgeProvider } from "./iframebridge/SitePreviewIFrameBridge";
 import { SitePreviewProvider } from "./SitePreviewProvider";
 
 interface SitePreviewPageProps {
@@ -60,9 +59,5 @@ export const SitePreviewPage: React.FunctionComponent<SitePreviewPageProps> = ({
         return <>{initializeServiceWorker}</>;
     }
 
-    return (
-        <SitePreviewIFrameBridgeProvider>
-            <SitePreviewProvider previewPath="/preview">{children}</SitePreviewProvider>
-        </SitePreviewIFrameBridgeProvider>
-    );
+    return <SitePreviewProvider previewPath="/preview">{children}</SitePreviewProvider>;
 };

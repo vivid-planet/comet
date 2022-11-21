@@ -3,6 +3,7 @@ import * as React from "react";
 
 import { PreviewContext, Url } from "../preview/PreviewContext";
 import { createPathToPreviewPath, defaultPreviewPath, parsePreviewParams } from "../preview/utils";
+import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFrameMessage";
 import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
 interface Props {
@@ -22,7 +23,7 @@ export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, 
                 cometType: SitePreviewIFrameMessageType.SitePreviewLocation,
                 data: { search: searchParams.toString(), pathname },
             };
-            window.parent.postMessage(JSON.stringify(message), "*");
+            sendSitePreviewIFrameMessage(message);
         }
         sendUpstreamMessage();
         window.addEventListener("load", sendUpstreamMessage);

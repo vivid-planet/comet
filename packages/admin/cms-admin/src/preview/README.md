@@ -109,15 +109,13 @@ SitePreview: state from Url (get params): path, device, showOnlyVisible
 AuthenticatedPreviewPage (src/pages/preview/[...path]].tsx)
   SitePreviewPage
       - checks login and registers serviceworker
-    SitePreviewIFrameBridgeProvider (TODO remove bridge, not needed when all messages are sent direclty)
-        - creates context for iframe bridge api (TODO send message directly, eg. with a helper function)
-      SitePreviewProvider
-          - messages SitePreviewLocation on location change (does NOT use useSitePreviewIFrameBridge, sends message directly)
-          - creates PreviewContext containing
-              - previewType: "SitePreview",
-              - showPreviewSkeletons: false,
-              - pathToPreviewPath: implementation that adds baseUrl (/preview) and __preview params
-              - previewPathToPath: implementation that removes them
-        Page (src/pages/[...path]].tsx)
-            - ExternalLinkBlock messages OpenLink (with useSitePreviewIFrameBridge) (TODO send message directly, eg. with a helper function)
+    SitePreviewProvider
+        - messages SitePreviewLocation on location change (sends message directly using sendSitePreviewIFrameMessage helper)
+        - creates PreviewContext containing
+            - previewType: "SitePreview",
+            - showPreviewSkeletons: false,
+            - pathToPreviewPath: implementation that adds baseUrl (/preview) and __preview params
+            - previewPathToPath: implementation that removes them
+      Page (src/pages/[...path]].tsx)
+          - ExternalLinkBlock messages OpenLink (sends message directly using sendSitePreviewIFrameMessage helper)
 ```
