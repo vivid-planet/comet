@@ -18,9 +18,7 @@ interface DamBreadcrumbItem {
     url: string;
 }
 
-interface FolderBreadcrumbProps extends DamBreadcrumbItem {
-    overrideLabel?: React.ReactNode;
-}
+type FolderBreadcrumbProps = DamBreadcrumbItem;
 
 interface FolderBreadcrumbsProps {
     breadcrumbs: BreadcrumbItem[];
@@ -51,7 +49,7 @@ const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => pro
     }
 `;
 
-const FolderBreadcrumb = ({ id, url, overrideLabel }: FolderBreadcrumbProps): React.ReactElement => {
+const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
     const { moveItem } = useDamDnD();
 
     const { data } = useOptimisticQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
@@ -81,12 +79,10 @@ const FolderBreadcrumb = ({ id, url, overrideLabel }: FolderBreadcrumbProps): Re
         }),
     });
 
-    const label = id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name;
-
     return (
         <FolderBreadcrumbWrapper ref={dropTarget} $isHovered={isOver}>
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
-                {overrideLabel ? overrideLabel : label}
+                {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
             </Link>
         </FolderBreadcrumbWrapper>
     );
@@ -124,16 +120,18 @@ const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds, loading }
 
     return (
         <FolderBreadcrumbsWrapper>
-            <FolderBreadcrumb
-                key="backButton"
-                id={null}
-                url={damBreadcrumbs.length >= 2 ? damBreadcrumbs[damBreadcrumbs.length - 2].url : "#"}
-                overrideLabel={
+            <FolderBreadcrumbWrapper $isHovered={false}>
+                <Link
+                    color="inherit"
+                    underline="none"
+                    to={damBreadcrumbs.length >= 2 ? damBreadcrumbs[damBreadcrumbs.length - 2].url : "#"}
+                    component={RouterLink}
+                >
                     <IconButton disabled={damBreadcrumbs.length < 2}>
                         <LevelUp />
                     </IconButton>
-                }
-            />
+                </Link>
+            </FolderBreadcrumbWrapper>
             <BackButtonSeparator />
             <Breadcrumbs separator={<ChevronRight fontSize="small" />}>
                 {!loading &&
