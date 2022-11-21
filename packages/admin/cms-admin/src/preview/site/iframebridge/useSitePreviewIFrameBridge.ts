@@ -2,13 +2,10 @@ import * as React from "react";
 
 import { SitePreviewIFrameMessage } from "./SitePreviewIFrameMessage";
 
-interface SitePreviewIFrameBridgeProps {
-    onReceiveMessage?: (message: SitePreviewIFrameMessage) => void;
-}
-export const SitePreviewIFrameBridge: React.FunctionComponent<SitePreviewIFrameBridgeProps> = ({ children, onReceiveMessage }) => {
+export function useSitePreviewIFrameBridge(onReceiveMessage: (message: SitePreviewIFrameMessage) => void) {
     const _onReceiveMessage = React.useCallback(
         (message: SitePreviewIFrameMessage) => {
-            onReceiveMessage?.(message);
+            onReceiveMessage(message);
         },
         [onReceiveMessage],
     );
@@ -33,6 +30,4 @@ export const SitePreviewIFrameBridge: React.FunctionComponent<SitePreviewIFrameB
             window.removeEventListener("message", handleMessage, false);
         };
     }, [_onReceiveMessage]);
-
-    return <>{children}</>;
-};
+}

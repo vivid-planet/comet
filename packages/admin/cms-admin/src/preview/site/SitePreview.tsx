@@ -13,8 +13,8 @@ import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
 import { buildPreviewUrl } from "./buildPreviewUrl";
-import { SitePreviewIFrameBridge } from "./iframebridge/SitePreviewIFrameBridge";
 import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
+import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
@@ -106,67 +106,65 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
 
     const siteLink = `${siteConfig.url}${resolvePath ? resolvePath(previewPath, scope) : previewPath}`;
 
+    useSitePreviewIFrameBridge((message) => {
+        switch (message.cometType) {
+            case SitePreviewIFrameMessageType.OpenLink:
+                setLinkToOpen(message.data.link);
+                break;
+            case SitePreviewIFrameMessageType.SitePreviewLocation:
+                handlePreviewLocationChange(message);
+                break;
+        }
+    });
+
     return (
-        <SitePreviewIFrameBridge
-            onReceiveMessage={(message) => {
-                switch (message.cometType) {
-                    case SitePreviewIFrameMessageType.OpenLink:
-                        setLinkToOpen(message.data.link);
-                        break;
-                    case SitePreviewIFrameMessageType.SitePreviewLocation:
-                        handlePreviewLocationChange(message);
-                        break;
-                }
-            }}
-        >
-            <Root>
-                <IFrameViewer device={device} initialPageUrl={initialPageUrl} />
-                <ActionsContainer>
-                    <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap">
-                        <Grid item>
-                            <SiteInformation>
-                                <LogoWrapper>
-                                    {logo}
-                                    <Typography textTransform="uppercase" color="white">
-                                        <FormattedMessage defaultMessage="Preview" id="comet.sitePreview.preview" />
-                                    </Typography>
-                                </LogoWrapper>
-                                <SiteLinkWrapper>
-                                    {siteConfig.preloginEnabled ? (
-                                        <Tooltip
-                                            title={intl.formatMessage({
-                                                id: "comet.sitePreview.sitePreloginEnabledMessage",
-                                                defaultMessage: "Site is not yet publicly available",
-                                            })}
-                                        >
-                                            <VpnLock />
-                                        </Tooltip>
-                                    ) : (
-                                        <Public />
-                                    )}
-                                    <SiteLink variant="body1" href={siteLink} target="_blank">
-                                        {siteLink}
-                                    </SiteLink>
-                                </SiteLinkWrapper>
-                            </SiteInformation>
-                        </Grid>
-                        <Grid item>
-                            <DeviceToggle device={device} onChange={handleDeviceChange} />
-                        </Grid>
-                        <Grid item>
-                            <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
-                        </Grid>
+        <Root>
+            <IFrameViewer device={device} initialPageUrl={initialPageUrl} />
+            <ActionsContainer>
+                <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap">
+                    <Grid item>
+                        <SiteInformation>
+                            <LogoWrapper>
+                                {logo}
+                                <Typography textTransform="uppercase" color="white">
+                                    <FormattedMessage defaultMessage="Preview" id="comet.sitePreview.preview" />
+                                </Typography>
+                            </LogoWrapper>
+                            <SiteLinkWrapper>
+                                {siteConfig.preloginEnabled ? (
+                                    <Tooltip
+                                        title={intl.formatMessage({
+                                            id: "comet.sitePreview.sitePreloginEnabledMessage",
+                                            defaultMessage: "Site is not yet publicly available",
+                                        })}
+                                    >
+                                        <VpnLock />
+                                    </Tooltip>
+                                ) : (
+                                    <Public />
+                                )}
+                                <SiteLink variant="body1" href={siteLink} target="_blank">
+                                    {siteLink}
+                                </SiteLink>
+                            </SiteLinkWrapper>
+                        </SiteInformation>
                     </Grid>
-                </ActionsContainer>
-                <OpenLinkDialog
-                    open={linkToOpen != null}
-                    onClose={() => {
-                        setLinkToOpen(undefined);
-                    }}
-                    link={linkToOpen}
-                />
-            </Root>
-        </SitePreviewIFrameBridge>
+                    <Grid item>
+                        <DeviceToggle device={device} onChange={handleDeviceChange} />
+                    </Grid>
+                    <Grid item>
+                        <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
+                    </Grid>
+                </Grid>
+            </ActionsContainer>
+            <OpenLinkDialog
+                open={linkToOpen != null}
+                onClose={() => {
+                    setLinkToOpen(undefined);
+                }}
+                link={linkToOpen}
+            />
+        </Root>
     );
 }
 

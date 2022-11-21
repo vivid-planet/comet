@@ -99,7 +99,7 @@ SitePreview: state from Url (get params): path, device, showOnlyVisible
     - has controls for managing path, device, showOnlyVisible
     - handles messages coming from iframe (OpenLink, SitePreviewLocation)
     - appends authProvider to iframeUrl
-  SitePreviewIFrameBridge  (TODO not a really a bridge, could be converted into a hook)
+    - handles incoming messages (with useSitePreviewIFrameBridge)
   IFrameViewer[common] (prop drilling: device)
     - does scale the iframe according to device (+the device around the iframe)
     - renders the actual iframe
