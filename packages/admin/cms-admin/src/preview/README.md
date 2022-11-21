@@ -64,7 +64,6 @@ IFrameBridgePreviewPage (src/pages/preview/admin/page.tsx)
           - hoveredAdminRoute
           - sendSelectComponent
           - sendHoverComponent
-          - sendMessage (TODO remove, not used)
     BlockPreviewProvider
       - creates PreviewContext[common] containing:
           - previewType: "BlockPreview",

@@ -11,7 +11,6 @@ export interface IFrameBridgeContext {
     hoveredAdminRoute?: string;
     sendSelectComponent: (id: string) => void;
     sendHoverComponent: (route: string | null) => void;
-    sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
 }
 
@@ -23,10 +22,6 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     },
     sendHoverComponent: () => {
         // empty
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sendMessage: (message: IFrameMessage) => {
-        //empty
     },
 });
 
@@ -124,7 +119,6 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                 sendHoverComponent: (route: string | null) => {
                     sendMessage({ cometType: IFrameMessageType.HoverComponent, data: { route } });
                 },
-                sendMessage,
             }}
         >
             <div
