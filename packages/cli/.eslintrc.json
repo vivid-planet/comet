@@ -1,4 +1,4 @@
 {
     "extends": "@comet/eslint-config/core",
-    "ignorePatterns": ["bin/"]
+    "ignorePatterns": ["bin/", "lib/**"]
 }

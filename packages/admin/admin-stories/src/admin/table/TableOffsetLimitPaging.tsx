@@ -3,7 +3,7 @@ import { createOffsetLimitPagingAction, MainContent, Table, TableQuery, useTable
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 const query = gql`
     query Post($offset: Int, $limit: Int) {
@@ -69,7 +69,7 @@ function Story() {
 
 storiesOf("@comet/admin/table", module)
     .addDecorator(
-        apolloStoryDecorator({
+        apolloRestStoryDecorator({
             uri: "https://swapi.co/api/",
         }),
     )

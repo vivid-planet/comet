@@ -16,7 +16,7 @@ import { Button, FormControlLabel } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
 
 interface Option {
     value: string;
@@ -24,7 +24,7 @@ interface Option {
 }
 
 storiesOf("stories/form/FinalForm Fields", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("FinalFormInput", () => {
         return (
             <FinalForm

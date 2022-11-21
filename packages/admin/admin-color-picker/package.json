@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-color-picker",
-    "version": "2.0.0",
+    "version": "3.1.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -12,8 +12,8 @@
         "directory": "packages/admin/admin-color-picker"
     },
     "dependencies": {
-        "@comet/admin": "^2.0.0",
-        "@comet/admin-icons": "^2.0.0",
+        "@comet/admin": "^3.1.0",
+        "@comet/admin-icons": "^3.1.0",
         "clsx": "^1.1.1",
         "react-colorful": "^5.5.1",
         "tinycolor2": "^1.4.1",
@@ -21,8 +21,8 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^2.0.0",
-        "@comet/eslint-config": "^2.0.0",
+        "@comet/admin-babel-preset": "^3.1.0",
+        "@comet/eslint-config": "^3.1.0",
         "@types/tinycolor2": "^1.4.2",
         "eslint": "^8.0.0",
         "prettier": "^2.0.0",
@@ -40,10 +40,11 @@
         "react-intl": "^5.24.6"
     },
     "scripts": {
-        "build": "rimraf lib && run-p build:babel build:types",
+        "clean": "rimraf lib",
+        "build": "yarn run clean && run-p build:babel build:types",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "start": "rimraf lib && run-p start:babel start:types",
+        "start": "run-p start:babel start:types",
         "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "lint": "run-p lint:eslint lint:tsc",

@@ -18,15 +18,15 @@
         "mikro-orm:drop": "mikro-orm schema:drop -r",
         "mikro-orm:migration:generate": "mikro-orm migration:create",
         "db:migrate:prod": "yarn console:prod migrate --",
-        "db:migrate": "yarn console migrate --",
+        "db:migrate": "yarn api-generator && yarn console migrate --",
         "fixtures:prod": "yarn console:prod fixtures --",
         "fixtures": "yarn console fixtures --"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.47.0",
         "@azure/storage-blob": "^12.0.0",
-        "@comet/blocks-api": "^2.0.0",
-        "@comet/cms-api": "^2.0.0",
+        "@comet/blocks-api": "^3.0.0",
+        "@comet/cms-api": "^3.0.0",
         "@hapi/accept": "^5.0.0",
         "@mikro-orm/cli": "^5.0.4",
         "@mikro-orm/core": "^5.0.4",
@@ -72,11 +72,11 @@
         "rimraf": "^3.0.0",
         "rxjs": "^7.0.0",
         "slugify": "^1.0.0",
-        "uuid": "^8.0.0",
+        "uuid": "^9.0.0",
         "webpack": "^5.64.2"
     },
     "devDependencies": {
-        "@comet/eslint-config": "^2.0.0",
+        "@comet/eslint-config": "^3.0.0",
         "@nestjs/cli": "^9.0.0",
         "@nestjs/schematics": "^9.0.0",
         "@nestjs/testing": "^9.0.0",

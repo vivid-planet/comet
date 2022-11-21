@@ -3,7 +3,7 @@ import { createOffsetLimitPagingAction, Table, TableQuery, useTableQuery, useTab
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
-import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
 
 const query = gql`
     query Post($offset: Int, $limit: Int) {
@@ -30,7 +30,7 @@ interface QueryVariables {
 }
 
 storiesOf("stories/components/Table/Pagination Table", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Pagination Table", () => {
         // step 1
         const pagingApi = useTableQueryPaging(0);

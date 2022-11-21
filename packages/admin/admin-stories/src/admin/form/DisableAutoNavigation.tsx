@@ -18,7 +18,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Switch } from "react-router";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 const SampleTable: React.FunctionComponent = () => {
@@ -119,5 +119,5 @@ function Story() {
 
 storiesOf("@comet/admin/form", module)
     .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Disable Auto Navigation", () => <Story />);

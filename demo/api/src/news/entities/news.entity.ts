@@ -4,7 +4,7 @@ import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, 
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 import { GraphQLJSONObject } from "graphql-type-json";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { NewsComment } from "./news-comment.entity";
@@ -40,11 +40,11 @@ export class NewsContentScope {
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class News extends BaseEntity<News, "id"> implements DocumentInterface {
-    [OptionalProps]?: "createdAt" | "updatedAt";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "category"; // TODO remove "category" once CRUD generator supports enums
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @Embedded(() => NewsContentScope)
     @Field(() => NewsContentScope)
@@ -64,7 +64,7 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
 
     @Enum({ items: () => NewsCategory })
     @Field(() => NewsCategory)
-    category: NewsCategory;
+    category: NewsCategory = NewsCategory.Awards; // TODO remove default value once CRUD generator supports enums
 
     @Property({ default: false })
     @Field()

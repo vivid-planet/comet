@@ -20,7 +20,7 @@ import { storiesOf } from "@storybook/react";
 import * as qs from "qs";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 const gqlRest = gql;
 
@@ -181,7 +181,7 @@ interface IResponseLinks {
 }
 storiesOf("@comet/admin/table", module)
     .addDecorator(
-        apolloStoryDecorator({
+        apolloRestStoryDecorator({
             responseTransformer: async (response) => {
                 const links: IResponseLinks = {};
                 const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];

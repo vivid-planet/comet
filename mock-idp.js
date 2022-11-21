@@ -45,7 +45,10 @@ const users = [
 const getUserBySub = (sub) => {
     let user = users.find((user) => user.email === sub);
     if (!user) user = users[0];
-    return user;
+    return {
+        sub,
+        ...user,
+    };
 };
 
 const provider = new Provider(process.env.IDP_URL, {

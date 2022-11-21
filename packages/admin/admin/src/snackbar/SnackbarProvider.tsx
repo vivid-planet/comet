@@ -1,5 +1,6 @@
 import { SnackbarCloseReason, SnackbarProps } from "@mui/material";
 import * as React from "react";
+import { v4 as uuid } from "uuid";
 
 import { UndoSnackbarProps } from "./UndoSnackbar";
 
@@ -26,8 +27,10 @@ type HandleClose = (event: SnackbarCloseEvent, reason: SnackbarCloseReason, onCl
 export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
     const [open, setOpen] = React.useState<boolean>(false);
     const [snackbar, setSnackbar] = React.useState<React.ReactElement>();
+    const [key, setKey] = React.useState(uuid());
 
     const updateSnackbar = (newSnackbar: React.ReactElement) => {
+        setKey(uuid());
         setSnackbar(newSnackbar);
         if (newSnackbar !== undefined) {
             setOpen(true);
@@ -60,6 +63,7 @@ export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
             {children}
             {snackbar !== undefined &&
                 React.cloneElement<SnackbarProps>(snackbar, {
+                    key,
                     open: open,
                     onClose: (event, reason) => handleClose(event, reason, snackbar?.props.onClose),
                 })}

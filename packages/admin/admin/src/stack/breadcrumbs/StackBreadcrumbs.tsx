@@ -2,11 +2,10 @@ import { ChevronRight } from "@comet/admin-icons";
 import { ComponentsOverrides, Theme, useTheme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
-import useResizeAware from "react-resize-aware";
 
 import { useStackApi } from "../Api";
 import { StackBreadcrumbsClassKey, styles } from "./StackBreadcrumbs.styles";
-import { getElementOuterWidth, useItemsToRender } from "./utils";
+import { getElementOuterWidth, useItemsToRender, useObservedWidth } from "./utils";
 
 export interface StackBreadcrumbsProps {
     separator?: React.ReactNode;
@@ -20,15 +19,16 @@ const StackBreadcrumbsComponent = ({
 }: StackBreadcrumbsProps & WithStyles<typeof styles>): React.ReactElement | null => {
     const stackApi = useStackApi();
     const { palette } = useTheme();
-    const [breadcrumbsResizeListener, { width: containerWidth }] = useResizeAware();
     const breadcrumbsRef = React.useRef<HTMLDivElement>(null);
+    const containerWidth = useObservedWidth(breadcrumbsRef);
     const [itemWidths, setItemWidths] = React.useState<number[] | undefined>();
 
     const breadcrumbItems = React.useMemo(() => stackApi?.breadCrumbs ?? [], [stackApi]);
+    const combinedTitlesOfBreadcrumbs = breadcrumbItems.map(({ title }) => title).join("");
 
     React.useEffect(() => {
         setItemWidths(undefined);
-    }, [breadcrumbItems]);
+    }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs]);
 
     React.useEffect(() => {
         if (breadcrumbItems?.length && !itemWidths?.length) {
@@ -36,7 +36,7 @@ const StackBreadcrumbsComponent = ({
             const newItemWidths = listItems ? Object.values(listItems).map((listItem) => getElementOuterWidth(listItem)) : [];
             setItemWidths(newItemWidths);
         }
-    }, [breadcrumbItems, itemWidths, classes.listItem]);
+    }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs, itemWidths, classes.listItem]);
 
     const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
     const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, classes, itemWidths, overflowLinkText, backButtonUrl);
@@ -45,7 +45,6 @@ const StackBreadcrumbsComponent = ({
 
     return (
         <div className={classes.root}>
-            {breadcrumbsResizeListener}
             <div className={classes.breadcrumbs} ref={breadcrumbsRef}>
                 {itemsToRender.map((item, index) => (
                     <div className={classes.listItem} key={index}>

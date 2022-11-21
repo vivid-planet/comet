@@ -1,4 +1,4 @@
 {
     "extends": "@comet/eslint-config/nestjs",
-    "ignorePatterns": ["src/mikro-orm/migrations/**"]
+    "ignorePatterns": ["src/mikro-orm/migrations/**", "lib/**"]
 }

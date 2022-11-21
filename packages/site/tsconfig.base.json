@@ -5,6 +5,7 @@
         "noImplicitAny": true,
         "jsx": "react",
         "noEmitOnError": true,
-        "strict": true
+        "strict": true,
+        "declarationMap": true
     }
 }

@@ -4,7 +4,7 @@ import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { LinkBlock } from "@src/common/blocks/linkBlock/link.block";
 import { GraphQLJSONObject } from "graphql-type-json";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 @Entity()
 @ObjectType({
@@ -15,7 +15,7 @@ export class Link extends BaseEntity<Link, "id"> implements DocumentInterface {
 
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @Property({ customType: new RootBlockType(LinkBlock) })
     @Field(() => GraphQLJSONObject)

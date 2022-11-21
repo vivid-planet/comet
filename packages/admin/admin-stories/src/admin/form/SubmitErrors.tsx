@@ -4,7 +4,7 @@ import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
     const errors = [];
@@ -58,5 +58,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("SubmitErrors", () => <Story />);

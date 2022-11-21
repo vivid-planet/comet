@@ -20,11 +20,14 @@ const userGroupOptions = [
     },
 ];
 
-const additionalPageTreeNodeFieldsFragment = gql`
-    fragment PageTreeNodeAdditionalFields on PageTreeNode {
-        userGroup
-    }
-`;
+export const additionalPageTreeNodeFieldsFragment = {
+    fragment: gql`
+        fragment PageTreeNodeAdditionalFields on PageTreeNode {
+            userGroup
+        }
+    `,
+    name: "PageTreeNodeAdditionalFields",
+};
 
 export const EditPageNode = createEditPageNode({
     valuesToInput: ({ values }: { values: { userGroup: string } }) => {
@@ -32,10 +35,7 @@ export const EditPageNode = createEditPageNode({
             userGroup: values.userGroup,
         };
     },
-    nodeFragment: {
-        name: "PageTreeNodeAdditionalFields",
-        fragment: additionalPageTreeNodeFieldsFragment,
-    },
+    nodeFragment: additionalPageTreeNodeFieldsFragment,
     additionalFormFields: (
         <div>
             <Field label={<FormattedMessage id="cometDemo.pageTreeNode.fields.userGroup" defaultMessage="User-Group" />} name="userGroup" fullWidth>

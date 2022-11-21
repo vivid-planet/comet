@@ -79,6 +79,7 @@ const MasterMenu: React.FC = () => {
                 to={`${match.url}/component-demo`}
                 icon={<Snips />}
             />
+            <MenuItemRouterLink primary="Products" to={`${match.url}/products`} icon={<Snips />} />
         </Menu>
     );
 };

@@ -33,16 +33,17 @@ import {
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, redirectsQuery } from "./RedirectsTable.gql";
 
-interface Filter extends Omit<GQLRedirectsQueryVariables, "active" | "type"> {
+interface Filter extends Omit<GQLRedirectsQueryVariables, "active" | "type" | "scope"> {
     type?: "all" | GQLRedirectGenerationType;
     active?: "all" | "activated" | "deactivated";
 }
 
 interface Props {
     linkBlock: BlockInterface;
+    scope: Record<string, unknown>;
 }
 
-export function RedirectsTable({ linkBlock }: Props): JSX.Element {
+export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
     const intl = useIntl();
 
     const typeOptions = [
@@ -98,6 +99,7 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
 
     const { tableData, api, loading, error } = useTableQuery<GQLRedirectsQuery, GQLRedirectsQueryVariables>()(redirectsQuery, {
         variables: {
+            scope,
             type: filterApi.current.type !== "all" ? filterApi.current.type : undefined,
             active: filterApi.current.active !== "all" ? filterApi.current.active === "activated" : undefined,
             query: filterApi.current.query ?? undefined,
@@ -117,7 +119,15 @@ export function RedirectsTable({ linkBlock }: Props): JSX.Element {
         <TableFilterFinalForm filterApi={filterApi}>
             <Toolbar>
                 <ToolbarItem>
-                    <Field name="query" component={FinalFormSearchTextField} />
+                    <Field
+                        name="query"
+                        component={FinalFormSearchTextField}
+                        label={intl.formatMessage({
+                            id: "comet.redirects.redirect.search",
+                            defaultMessage: "Search",
+                        })}
+                        fullWidth
+                    />
                 </ToolbarItem>
                 <ToolbarItem>
                     <Field

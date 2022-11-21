@@ -7,10 +7,10 @@
         "packages/eslint-config"
     ],
     "useWorkspaces": true,
-    "version": "2.0.0",
+    "version": "3.1.0",
     "command": {
         "version": {
-            "message": "chore(release): publish %s"
+            "message": "Publish %s"
         },
         "publish": {
             "registry": "https://registry.npmjs.org",

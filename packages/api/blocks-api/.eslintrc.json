@@ -1,3 +1,4 @@
 {
-    "extends": "@comet/eslint-config/nestjs"
+    "extends": "@comet/eslint-config/nestjs",
+    "ignorePatterns": ["lib/**"]
 }

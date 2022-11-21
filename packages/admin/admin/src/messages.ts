@@ -44,4 +44,7 @@ export const messages = defineMessages({
     content: { id: "comet.generic.content", defaultMessage: "Content" },
     close: { id: "comet.generic.close", defaultMessage: "Close" },
     url: { id: "comet.generic.url", defaultMessage: "URL" },
+    filter: { id: "comet.generic.filter", defaultMessage: "Filter" },
+    copyUrl: { id: "comet.generic.copyUrl", defaultMessage: "Copy URL" },
+    deleteItem: { id: "comet.generic.deleteItem", defaultMessage: "Delete Item" },
 });

@@ -4,7 +4,7 @@ import { storiesOf } from "@storybook/react";
 import { FieldValidator } from "final-form";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 const validateWarning = (value: number | undefined) => {
     if (value === undefined) {
@@ -147,5 +147,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Two level validation (warning and error)", () => <Story />);

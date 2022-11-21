@@ -17,7 +17,7 @@ import { Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 const gqlRest = gql;
 
@@ -131,5 +131,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Export All Pages", () => <Story />);

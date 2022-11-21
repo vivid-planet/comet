@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-site",
-    "version": "2.0.0",
+    "version": "3.1.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -17,7 +17,8 @@
         "access": "public"
     },
     "scripts": {
-        "build": "rimraf lib/ && npm run generate-block-types && tsc",
+        "clean": "rimraf lib",
+        "build": "yarn run clean && npm run generate-block-types && tsc",
         "dev": "yarn generate-block-types && tsc --watch --preserveWatchOutput",
         "lint": "yarn generate-block-types && run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx,.json,.md src/",
@@ -40,8 +41,8 @@
         "styled-components": "^5.0.0"
     },
     "devDependencies": {
-        "@comet/cli": "^2.0.0",
-        "@comet/eslint-config": "^2.0.0",
+        "@comet/cli": "^3.1.0",
+        "@comet/eslint-config": "^3.1.0",
         "@gitbeaker/node": "^34.0.0",
         "@types/jest": "^27.0.0",
         "@types/styled-components": "^5.0.0",

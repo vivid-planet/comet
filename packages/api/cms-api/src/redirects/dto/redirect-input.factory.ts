@@ -22,7 +22,7 @@ export interface RedirectValidationArguments extends ValidationArguments {
 }
 
 export class RedirectInputFactory {
-    static create(linkBlock: Block): Type<RedirectInputInterface> {
+    static create({ linkBlock }: { linkBlock: Block }): Type<RedirectInputInterface> {
         @InputType()
         class RedirectInput implements RedirectInputInterface {
             @IsEnum(RedirectSourceTypeValues)

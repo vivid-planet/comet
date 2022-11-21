@@ -2,7 +2,7 @@ import { Field, FinalForm, FinalFormInput, ISelectionApi, Table, Toolbar, Toolba
 import { Button } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { editDialogDecorator } from "../editDialog.decorator";
 
@@ -23,7 +23,7 @@ const getUser = (id: string): User | undefined => {
 };
 const addUser = (name: string): User[] => {
     users.push({
-        id: v4(),
+        id: uuid(),
         name: name,
     });
     return users;

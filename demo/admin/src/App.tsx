@@ -30,7 +30,7 @@ import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
-import { EditPageNode } from "@src/common/EditPageNode";
+import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/EditPageNode";
 import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import config from "@src/config";
@@ -51,6 +51,7 @@ import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import News from "./news/News";
 import MainMenu from "./pages/mainMenu/MainMenu";
 import { Page } from "./pages/Page";
+import ProductsPage from "./products/ProductsPage";
 import { urlParamToCategory } from "./utils/pageTreeNodeCategoryMapping";
 
 const GlobalStyle = () => (
@@ -98,7 +99,7 @@ const pageTreeDocumentTypes = {
     PredefinedPage,
 };
 
-const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock } });
+const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
 class App extends React.Component {
     public static render(baseEl: Element): void {
@@ -134,6 +135,7 @@ class App extends React.Component {
                                                                 }}
                                                                 pageTreeCategories={categories}
                                                                 pageTreeDocumentTypes={pageTreeDocumentTypes}
+                                                                additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
                                                             >
                                                                 <React.Fragment>
                                                                     <GlobalStyle />
@@ -228,6 +230,11 @@ class App extends React.Component {
                                                                                                 <RouteWithErrorBoundary
                                                                                                     path={`${match.path}/component-demo`}
                                                                                                     component={ComponentDemo}
+                                                                                                />
+
+                                                                                                <RouteWithErrorBoundary
+                                                                                                    path={`${match.path}/products`}
+                                                                                                    component={ProductsPage}
                                                                                                 />
 
                                                                                                 <Redirect

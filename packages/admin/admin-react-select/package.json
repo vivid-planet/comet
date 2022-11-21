@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-react-select",
-    "version": "2.0.0",
+    "version": "3.1.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -12,13 +12,13 @@
         "directory": "packages/admin/admin-react-select"
     },
     "dependencies": {
-        "@comet/admin": "^2.0.0",
+        "@comet/admin": "^3.1.0",
         "classnames": "^2.2.6"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^2.0.0",
-        "@comet/eslint-config": "^2.0.0",
+        "@comet/admin-babel-preset": "^3.1.0",
+        "@comet/eslint-config": "^3.1.0",
         "@types/react-select": "^3.1.2",
         "eslint": "^8.0.0",
         "prettier": "^2.0.0",
@@ -37,10 +37,11 @@
         "react-select": "^3.0.4"
     },
     "scripts": {
-        "build": "rimraf lib && run-p build:babel build:types",
+        "clean": "rimraf lib",
+        "build": "yarn run clean && run-p build:babel build:types",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "start": "rimraf lib && run-p start:babel start:types",
+        "start": "run-p start:babel start:types",
         "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "lint": "run-p lint:eslint lint:tsc",

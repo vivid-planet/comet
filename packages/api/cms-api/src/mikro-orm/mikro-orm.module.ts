@@ -4,6 +4,14 @@ import { DynamicModule, Module } from "@nestjs/common";
 import fs from "fs";
 import path from "path";
 
+import { Migration20220127085859 } from "./migrations/Migration20220127085859";
+import { Migration20220127085946 } from "./migrations/Migration20220127085946";
+import { Migration20220127091538 } from "./migrations/Migration20220127091538";
+import { Migration20220127091751 } from "./migrations/Migration20220127091751";
+import { Migration20220127111301 } from "./migrations/Migration20220127111301";
+import { Migration20220127142112 } from "./migrations/Migration20220127142112";
+import { Migration20220620124134 } from "./migrations/Migration20220620124134";
+
 export const PG_UNIQUE_CONSTRAINT_VIOLATION = "23505";
 
 export interface MikroOrmModuleOptions {
@@ -43,7 +51,16 @@ export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptio
         namingStrategy: EntityCaseNamingStrategy,
         migrations: {
             ...migrations,
-            migrationsList: [...createMigrationsList(path.resolve(__dirname, "migrations")), ...(migrations?.migrationsList || [])],
+            migrationsList: [
+                { name: "Migration20220127085859", class: Migration20220127085859 },
+                { name: "Migration20220127085946", class: Migration20220127085946 },
+                { name: "Migration20220127091538", class: Migration20220127091538 },
+                { name: "Migration20220127091751", class: Migration20220127091751 },
+                { name: "Migration20220127111301", class: Migration20220127111301 },
+                { name: "Migration20220127142112", class: Migration20220127142112 },
+                { name: "Migration20220620124134", class: Migration20220620124134 },
+                ...(migrations?.migrationsList || []),
+            ],
         },
     };
 }

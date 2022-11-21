@@ -20,7 +20,6 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
 
     return (
         <Root onClick={onClick}>
-            {documentType.menuIcon}
             <PageTypeIcon page={page} disabled={disabled} />
             <LinkContent>
                 <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
@@ -45,8 +44,7 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
 export default PageLabel;
 
 const InfoPanel = styled(Chip)`
-    margin-left: auto;
-    margin-right: 10%;
+    margin-left: 20px;
 `;
 
 const Root = styled("div")`

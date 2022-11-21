@@ -20,7 +20,7 @@ import { Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloStoryDecorator } from "../../../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
 
 interface Person {
     id: number;
@@ -58,7 +58,7 @@ interface QueryVariables {
 }
 
 storiesOf("stories/components/Table/Excel Export Table", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("Basic Excel Export Table", () => {
         const data: Person[] = [
             { id: 1, firstname: "Kady", lastname: "Wood", job: { id: 1, name: "Project Manager" } },

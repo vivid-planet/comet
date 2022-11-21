@@ -1,6 +1,6 @@
 import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { PageTreeNodeCategory, PageTreeNodeVisibility } from "../types";
 
@@ -12,7 +12,7 @@ export abstract class PageTreeNodeBase extends BaseEntity<PageTreeNodeBase, "id"
 
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @Property({ columnType: "uuid", nullable: true })
     @Field(() => String, { nullable: true })

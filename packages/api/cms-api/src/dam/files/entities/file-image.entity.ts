@@ -1,7 +1,7 @@
 import { BaseEntity, Embedded, Entity, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { ImageCropArea } from "../../images/entities/image-crop-area.entity";
 import { File } from "./file.entity";
@@ -11,7 +11,7 @@ import { File } from "./file.entity";
 export class FileImage extends BaseEntity<FileImage, "id"> {
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
-    id: string = v4();
+    id: string = uuid();
 
     @Property({ columnType: "integer" })
     @Field(() => Int)

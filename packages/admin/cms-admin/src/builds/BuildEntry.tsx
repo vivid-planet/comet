@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { LocalErrorScopeApolloContext } from "@comet/admin";
+import { LocalErrorScopeApolloContext, useFocusAwarePolling } from "@comet/admin";
 import { SsgRunning, SsgStandby } from "@comet/admin-icons";
 import { List, ListItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -104,11 +104,18 @@ const BuildStatusPopperContent: React.FunctionComponent<{ data: GQLBuildStatusQu
 };
 
 export function BuildEntry(): React.ReactElement {
-    const { data, error } = useQuery<GQLBuildStatusQuery>(buildStatusQuery, {
-        pollInterval: process.env.NODE_ENV === "production" ? 10000 : undefined,
+    const { data, error, refetch, startPolling, stopPolling } = useQuery<GQLBuildStatusQuery>(buildStatusQuery, {
         skip: process.env.NODE_ENV === "development",
         fetchPolicy: "network-only",
         context: LocalErrorScopeApolloContext,
+    });
+
+    useFocusAwarePolling({
+        pollInterval: process.env.NODE_ENV === "production" ? 10000 : undefined,
+        skip: process.env.NODE_ENV === "development",
+        refetch,
+        startPolling,
+        stopPolling,
     });
 
     const running = data?.builds[0]?.status === "active" || data?.builds[0]?.status === "pending";

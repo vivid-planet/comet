@@ -3,6 +3,7 @@ module.exports = {
     rules: {
         "react/display-name": "off",
         "react/prop-types": "off",
+        "react/self-closing-comp": "error",
         "import/no-extraneous-dependencies": "error",
     },
 };

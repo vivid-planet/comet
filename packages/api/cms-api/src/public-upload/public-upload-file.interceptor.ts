@@ -6,7 +6,7 @@ import * as mimedb from "mime-db";
 import * as multer from "multer";
 import os from "os";
 import { Observable } from "rxjs";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PublicUploadConfig } from "./public-upload.config";
@@ -33,7 +33,7 @@ export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterce
                         });
                     },
                     filename: function (req, file, cb) {
-                        cb(null, `${uuidv4()}-${file.originalname}`);
+                        cb(null, `${uuid()}-${file.originalname}`);
                     },
                 }),
                 limits: {

@@ -88,8 +88,8 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 variables: pagesQuery.variables,
                 callback: (newPagesQuery, previousPagesQuery) => {
                     if (newPagesQuery && previousPagesQuery) {
-                        const existingPageIds = previousPagesQuery.result?.pages.map((page) => page.id) ?? [];
-                        newPageIds.current = newPagesQuery.result?.pages.map((page) => page.id).filter((id) => !existingPageIds.includes(id)) ?? [];
+                        const existingPageIds = previousPagesQuery.result?.pages?.map((page) => page.id) ?? [];
+                        newPageIds.current = newPagesQuery.result?.pages?.map((page) => page.id).filter((id) => !existingPageIds.includes(id)) ?? [];
 
                         setTimeout(() => {
                             // reset newPageIds to prevent slideIn on every rerender

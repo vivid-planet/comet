@@ -2,7 +2,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { FormattedDate, FormattedTime } from "react-intl";
 
-import { apolloStoryDecorator } from "../../apollo-story.decorator";
+import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 function Story() {
     const date = new Date();
@@ -14,5 +14,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/react-intl", module)
-    .addDecorator(apolloStoryDecorator())
+    .addDecorator(apolloRestStoryDecorator())
     .add("FormatLocalized", () => <Story />);

@@ -1,4 +1,5 @@
 import { ApolloClient, NormalizedCacheObject, useApolloClient } from "@apollo/client";
+import { DocumentNode } from "@apollo/client/core";
 import { BlockContextProvider } from "@comet/blocks-admin";
 import { useAuthorization } from "@comet/react-app-auth";
 import { AxiosInstance } from "axios";
@@ -17,6 +18,10 @@ export interface CmsBlockContext {
     };
     pageTreeCategories: AllCategories;
     pageTreeDocumentTypes: Record<DocumentType, DocumentInterface>;
+    additionalPageTreeNodeFragment?: {
+        name: string;
+        fragment: DocumentNode;
+    };
 }
 
 interface CmsBlockContextProviderProps extends Omit<CmsBlockContext, "apolloClient"> {
