@@ -1,6 +1,6 @@
 import { BreadcrumbItem } from "@comet/admin";
-import { ChevronRight } from "@comet/admin-icons";
-import { Breadcrumbs, Link } from "@mui/material";
+import { ChevronRight, LevelUp } from "@comet/admin-icons";
+import { Breadcrumbs, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useDrop } from "react-dnd";
@@ -18,13 +18,27 @@ interface DamBreadcrumbItem {
     url: string;
 }
 
-type FolderBreadcrumbProps = DamBreadcrumbItem;
+interface FolderBreadcrumbProps extends DamBreadcrumbItem {
+    overrideLabel?: React.ReactNode;
+}
 
 interface FolderBreadcrumbsProps {
     breadcrumbs: BreadcrumbItem[];
     folderIds: Array<string | null>;
     loading?: boolean;
 }
+
+const FolderBreadcrumbsWrapper = styled("div")`
+    display: flex;
+    align-items: center;
+`;
+
+const BackButtonSeparator = styled("div")`
+    height: 30px;
+    width: 1px;
+    background-color: ${({ theme }) => theme.palette.divider};
+    margin-right: 12px;
+`;
 
 const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$isHovered" })<{ $isHovered: boolean }>`
     font-weight: 500;
@@ -37,7 +51,7 @@ const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => pro
     }
 `;
 
-const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
+const FolderBreadcrumb = ({ id, url, overrideLabel }: FolderBreadcrumbProps): React.ReactElement => {
     const { moveItem } = useDamDnD();
 
     const { data } = useOptimisticQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
@@ -67,10 +81,12 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
         }),
     });
 
+    const label = id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name;
+
     return (
         <FolderBreadcrumbWrapper ref={dropTarget} $isHovered={isOver}>
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
-                {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
+                {overrideLabel ? overrideLabel : label}
             </Link>
         </FolderBreadcrumbWrapper>
     );
@@ -107,12 +123,25 @@ const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds, loading }
     }
 
     return (
-        <Breadcrumbs separator={<ChevronRight fontSize="small" />}>
-            {!loading &&
-                damBreadcrumbs?.map((damBreadcrumb) => {
-                    return <FolderBreadcrumb key={damBreadcrumb.id} id={damBreadcrumb.id} url={damBreadcrumb.url} />;
-                })}
-        </Breadcrumbs>
+        <FolderBreadcrumbsWrapper>
+            <FolderBreadcrumb
+                key="backButton"
+                id={null}
+                url={damBreadcrumbs.length >= 2 ? damBreadcrumbs[damBreadcrumbs.length - 2].url : "#"}
+                overrideLabel={
+                    <IconButton disabled={damBreadcrumbs.length < 2}>
+                        <LevelUp />
+                    </IconButton>
+                }
+            />
+            <BackButtonSeparator />
+            <Breadcrumbs separator={<ChevronRight fontSize="small" />}>
+                {!loading &&
+                    damBreadcrumbs?.map((damBreadcrumb) => {
+                        return <FolderBreadcrumb key={damBreadcrumb.id} id={damBreadcrumb.id} url={damBreadcrumb.url} />;
+                    })}
+            </Breadcrumbs>
+        </FolderBreadcrumbsWrapper>
     );
 };
 
