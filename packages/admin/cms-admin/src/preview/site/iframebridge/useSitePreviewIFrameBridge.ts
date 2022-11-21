@@ -3,13 +3,6 @@ import * as React from "react";
 import { SitePreviewIFrameMessage } from "./SitePreviewIFrameMessage";
 
 export function useSitePreviewIFrameBridge(onReceiveMessage: (message: SitePreviewIFrameMessage) => void) {
-    const _onReceiveMessage = React.useCallback(
-        (message: SitePreviewIFrameMessage) => {
-            onReceiveMessage(message);
-        },
-        [onReceiveMessage],
-    );
-
     React.useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
             try {
@@ -17,7 +10,7 @@ export function useSitePreviewIFrameBridge(onReceiveMessage: (message: SitePrevi
                 // Check if message is an iframe message from us -> there are more messaging from e.g webpack,etc.
                 // eslint-disable-next-line no-prototype-builtins
                 if (message.hasOwnProperty("cometType")) {
-                    _onReceiveMessage(message as SitePreviewIFrameMessage);
+                    onReceiveMessage(message as SitePreviewIFrameMessage);
                 }
             } catch (e) {
                 // empty
@@ -29,5 +22,5 @@ export function useSitePreviewIFrameBridge(onReceiveMessage: (message: SitePrevi
         return () => {
             window.removeEventListener("message", handleMessage, false);
         };
-    }, [_onReceiveMessage]);
+    }, [onReceiveMessage]);
 }
