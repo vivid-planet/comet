@@ -55,7 +55,7 @@ EditPage: previewApi, created with useBlockPreview: State containing showOnlyVis
 ```
 IFrameBridgePreviewPage (src/pages/preview/admin/page.tsx)
   IFrameBridgeProvider
-      - recives messages
+      - receives messages
       - creates context containing:
           - hasBridge: true
           - showOutlines: used for hovering
