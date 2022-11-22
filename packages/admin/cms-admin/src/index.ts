@@ -69,7 +69,7 @@ export { SplitPreview } from "./preview/block/SplitPreview";
 export type { BlockPreviewApi } from "./preview/block/useBlockPreview";
 export { useBlockPreview } from "./preview/block/useBlockPreview";
 export { openSitePreviewWindow } from "./preview/openSitePreviewWindow";
-export { openSitePreviewWindow as openPreviewWindow } from "./preview/openSitePreviewWindow"; //deprecated
+export { /** @deprecated use openSitePreviewWindow instead */ openSitePreviewWindow as openPreviewWindow } from "./preview/openSitePreviewWindow";
 export { SitePreview } from "./preview/site/SitePreview";
 export { createRedirectsPage } from "./redirects/createRedirectsPage";
 export { automaticRedirectsRefetchQueryDescription as automaticRedirectsRefetchQueryDescription__temporary__export } from "./redirects/RedirectsTable.gql";
