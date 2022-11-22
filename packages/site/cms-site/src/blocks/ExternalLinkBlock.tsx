@@ -14,13 +14,15 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
     const preview = usePreview();
 
     if (preview.previewType === "SitePreview" || preview.previewType === "BlockPreview") {
-        // send link to admin to handle external link
         const onClick: React.MouseEventHandler = (event) => {
             event.preventDefault();
-            sendSitePreviewIFrameMessage({
-                cometType: SitePreviewIFrameMessageType.OpenLink,
-                data: { link: { openInNewWindow, targetUrl } },
-            });
+            if (preview.previewType === "SitePreview") {
+                // send link to admin to handle external link
+                sendSitePreviewIFrameMessage({
+                    cometType: SitePreviewIFrameMessageType.OpenLink,
+                    data: { link: { openInNewWindow, targetUrl } },
+                });
+            }
         };
 
         return React.cloneElement(children, { href: "#", onClick });
