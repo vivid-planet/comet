@@ -3,7 +3,7 @@ import { Public, VpnLock } from "@mui/icons-material";
 import { Grid, Tooltip, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useHistory, useLocation } from "react-router";
+import { RouteComponentProps, useHistory, useLocation } from "react-router";
 
 import { ExternalLinkBlockData } from "../../blocks.generated";
 import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
@@ -22,7 +22,8 @@ interface SitePreviewParams {
     includeInvisibleBlocks: boolean;
 }
 
-interface Props {
+//TODO v4 remove RouteComponentProps
+interface Props extends RouteComponentProps {
     resolvePath?: (path: string, scope: ContentScopeInterface) => string;
     logo?: React.ReactNode;
 }
