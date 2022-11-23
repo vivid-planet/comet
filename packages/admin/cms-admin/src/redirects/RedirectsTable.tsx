@@ -113,6 +113,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             };
         },
         context: LocalErrorScopeApolloContext,
+        fetchPolicy: "cache-and-network",
     });
 
     return (
