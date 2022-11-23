@@ -125,6 +125,7 @@ function ProductsTable() {
 
 const productsFragment = gql`
     fragment ProductsList on Product {
+        id
         slug
         title
         description

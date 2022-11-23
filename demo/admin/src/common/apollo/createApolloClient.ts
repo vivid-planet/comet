@@ -1,4 +1,4 @@
-import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, PossibleTypesMap } from "@apollo/client";
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from "@apollo/client";
 import { createErrorDialogApolloLink } from "@comet/admin";
 import { includeInvisibleContentContext } from "@comet/cms-admin";
 import { AuthConfiguration, createAuthorizationLink, RefreshHandler } from "@comet/react-app-auth";
@@ -22,13 +22,8 @@ export const createApolloClient = ({ authorizationConfig, refreshHandler }: Crea
         httpLink,
     ]);
 
-    const possibleTypes: PossibleTypesMap = {};
-    for (const type of fragmentTypes.__schema.types) {
-        possibleTypes[type.name] = type.possibleTypes.map((possibleType) => possibleType.name);
-    }
-
     const cache = new InMemoryCache({
-        possibleTypes,
+        possibleTypes: fragmentTypes.possibleTypes,
         typePolicies: {},
     });
 
