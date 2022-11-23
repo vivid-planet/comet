@@ -262,7 +262,7 @@ export const createUsePage: CreateUsePage =
                     setSaveError(undefined);
 
                     const isValid = await parallelAsyncEvery(Object.entries(rootBlocks), async ([key, block]) => {
-                        return await block.isValid(pageState.document?.[key]);
+                        return block.isValid(pageState.document?.[key]);
                     });
 
                     if (!isValid) {
@@ -370,7 +370,7 @@ export const createUsePage: CreateUsePage =
                             ...a,
                             [key]: {
                                 adminUI: state ? React.createElement(UnboundComponent, { state, updateState: handleUpdateState }) : null,
-                                isValid: async () => await value.isValid(state),
+                                isValid: async () => value.isValid(state),
                             },
                         };
                     }, {} as BlockNodeApi<RootBlocks>),

@@ -102,7 +102,7 @@ export class PageTreeService {
             );
         }
 
-        return await readApi.getNodeOrFail(newNode.id);
+        return readApi.getNodeOrFail(newNode.id);
     }
 
     async updateNode(id: string, input: PageTreeNodeUpdateInputInterface): Promise<PageTreeNodeInterface> {
@@ -157,7 +157,7 @@ export class PageTreeService {
             }),
         );
 
-        return await readApi.getNodeOrFail(id); // refresh data
+        return readApi.getNodeOrFail(id); // refresh data
     }
 
     async updateNodeVisibility(id: string, newVisibility: Visibility): Promise<void> {
@@ -240,7 +240,7 @@ export class PageTreeService {
             await this.pageTreeRepository.persistAndFlush(nodesToIncrement.map((c) => c.assign({ pos: c.pos + 1 })));
         }
 
-        return await readApi.getNodeOrFail(existingNode.id);
+        return readApi.getNodeOrFail(existingNode.id);
     }
 
     async updateCategory(id: string, category: PageTreeNodeCategory): Promise<void> {
@@ -370,7 +370,7 @@ export class PageTreeService {
     }
 
     public async nodeWithSamePath(path: string, scope?: ScopeInterface): Promise<PageTreeNodeInterface | null> {
-        return await this.createReadApi({ visibility: [Visibility.Published, Visibility.Unpublished] }).getNodeByPath(path, {
+        return this.createReadApi({ visibility: [Visibility.Published, Visibility.Unpublished] }).getNodeByPath(path, {
             scope,
         }); // Slugs of archived pages can be reused
     }
@@ -395,7 +395,7 @@ export class PageTreeService {
         return {
             async nodePathById(id) {
                 const node = await this.getNodeOrFail(id);
-                return await this.nodePath(node);
+                return this.nodePath(node);
             },
 
             async nodePath(node) {

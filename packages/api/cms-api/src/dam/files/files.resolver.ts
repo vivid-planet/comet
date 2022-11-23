@@ -124,6 +124,6 @@ export class FilesResolver {
 
     @ResolveField(() => String)
     async damPath(@Parent() file: File): Promise<string> {
-        return await this.filesService.getDamPath(file);
+        return this.filesService.getDamPath(file);
     }
 }

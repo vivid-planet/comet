@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Add default value `{}` for `RedirectScopeInput` when no explicit scope is set to make redirects scope support backwards compatible
 
+### @comet/eslint-config
+
+-   Enable [no-return-await](https://eslint.org/docs/latest/rules/no-return-await)
+
 ## 3.1.0
 
 _Nov 15, 2022_

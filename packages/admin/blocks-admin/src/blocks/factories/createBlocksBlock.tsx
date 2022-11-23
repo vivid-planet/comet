@@ -188,12 +188,12 @@ export function createBlocksBlock({
             };
         },
         isValid: async (state) =>
-            await parallelAsyncEvery(state.blocks, async (c) => {
+            parallelAsyncEvery(state.blocks, async (c) => {
                 const block = blockForType(c.type);
                 if (!block) {
                     throw new Error(`No Block found for type ${c.type}`); // for TS
                 }
-                return await block.isValid(c.props);
+                return block.isValid(c.props);
             }),
         childBlockCount: (state) => state.blocks.length,
 
