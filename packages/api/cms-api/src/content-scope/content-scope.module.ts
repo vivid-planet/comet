@@ -2,17 +2,16 @@ import { DynamicModule, Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { ContentScope } from "src/common/decorators/content-scope.interface";
 
-import { CurrentUser } from "../auth/dto/current-user";
 import { CAN_ACCESS_SCOPE } from "./conent-scope.constants";
 import { ScopeGuard } from "./scope.guard";
 
-interface ContentScopeModuleOptions {
+interface ContentScopeModuleOptions<CurrentUser> {
     canAccessScope: (requestScope: ContentScope, user: CurrentUser) => boolean;
 }
 
 @Module({})
 export class ContentScopeModule {
-    static forRoot(options: ContentScopeModuleOptions): DynamicModule {
+    static forRoot<CurrentUser>(options: ContentScopeModuleOptions<CurrentUser>): DynamicModule {
         const { canAccessScope } = options;
         return {
             module: ContentScopeModule,

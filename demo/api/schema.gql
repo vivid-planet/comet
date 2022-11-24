@@ -197,6 +197,13 @@ type PredefinedPage implements DocumentInterface {
   type: String
 }
 
+type CurrentUser {
+  name: String!
+  role: String!
+  language: String!
+  domains: [String!]!
+}
+
 type FooterContentScope {
   domain: String!
   language: String!
@@ -324,6 +331,7 @@ input RedirectScopeInput {
 type Query {
   pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
   link(linkId: ID!): Link
+  me: CurrentUser!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -472,6 +480,7 @@ enum ProductSortField {
 type Mutation {
   savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
   saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
+  signOut: String!
   createBuilds(input: CreateBuildsInput!): Boolean!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!

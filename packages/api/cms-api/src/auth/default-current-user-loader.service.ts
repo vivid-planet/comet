@@ -6,11 +6,11 @@ import { CurrentUserLoaderInterface } from "./interfaces/current-user-loader.int
 @Injectable()
 export class DefaultCurrentUserLoaderService implements CurrentUserLoaderInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async load(token: string, data: any): Promise<CurrentUser> {
-        const user = {
+    async load(data: any): Promise<CurrentUser> {
+        return {
             id: data.sub,
+            name: data.name ? data.name : data.sub,
             role: data.ext?.role,
         };
-        return user;
     }
 }

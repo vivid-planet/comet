@@ -1,4 +1,18 @@
-export interface CurrentUser {
+import { Field, ObjectType } from "@nestjs/graphql";
+
+@ObjectType()
+export class CurrentUser implements CurrentUserInterface {
     id: string;
-    role: string | undefined;
+
+    @Field()
+    name: string;
+
+    @Field()
+    role: string;
+}
+
+export interface CurrentUserInterface {
+    id: string;
+    name: string;
+    role: string;
 }
