@@ -1,6 +1,8 @@
+import { gql, useQuery } from "@apollo/client";
 import { MainContent, messages, Stack } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
+import { GQLMeQuery } from "@comet/cms-admin/lib/graphql.generated";
 import { Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ScopeIndicatorContent, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
@@ -36,20 +38,28 @@ const Greeting = styled(Typography)`
     color: white;
 `;
 
+const meQuery = gql`
+    query Me {
+        me {
+            name
+        }
+    }
+`;
+
 const Dashboard: React.FC = () => {
     const intl = useIntl();
-    const user = { given_name: "TODO Auth" };
+    const { data } = useQuery<GQLMeQuery>(meQuery);
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "cometDemo.dashboard", defaultMessage: "Dashboard" })}>
             <Header>
                 <DateTime />
                 <Greeting variant="h1">
-                    {user ? (
+                    {data ? (
                         <FormattedMessage
                             id="cometDemo.pages.dashboard.helloUser"
                             defaultMessage="Hallo {givenName}!"
-                            values={{ givenName: user.given_name }}
+                            values={{ givenName: data.me.name }}
                         />
                     ) : (
                         <FormattedMessage id="cometDemo.pages.dashboard.hello" defaultMessage="Hallo!" />

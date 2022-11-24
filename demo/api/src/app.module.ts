@@ -1,4 +1,5 @@
 import {
+    AuthModule,
     BlobStorageConfig,
     BlobStorageModule,
     BlocksModule,
@@ -27,6 +28,7 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
+import { CurrentUser } from "./auth/current-user";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -62,8 +64,22 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
             }),
             inject: [configNS.KEY, BlocksTransformerService],
         }),
-        ContentScopeModule.forRoot({
-            canAccessScope(requestScope: ContentScope, user) {
+        AuthModule.register<CurrentUser>({
+            imports: [ConfigModule],
+            strategy: "authedUser",
+            useFactory: () => ({
+                authedUser: {
+                    id: "1",
+                    name: "Test Admin",
+                    language: "en",
+                    role: "admin",
+                    domains: ["main", "secondary"],
+                },
+            }),
+            currentUserDto: CurrentUser,
+        }),
+        ContentScopeModule.forRoot<CurrentUser>({
+            canAccessScope(requestScope: ContentScope, user: CurrentUser) {
                 if (!user.domains) return true; //all domains
                 return user.domains.includes(requestScope.domain);
             },

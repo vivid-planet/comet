@@ -1,50 +1,40 @@
-import { DynamicModule, Module, ModuleMetadata, Type } from "@nestjs/common";
+import { DynamicModule, Module, ModuleMetadata, Provider, Type } from "@nestjs/common";
 
-import { AUTH_CONFIG, AUTH_CURRENT_USER_LOADER, AUTH_MODULE_OPTIONS } from "./auth.constants";
-import { DefaultCurrentUserLoaderService } from "./default-current-user-loader.service";
-import { CurrentUserLoaderInterface } from "./interfaces/current-user-loader.interface";
+import { AUTH_CONFIG } from "./auth.constants";
+import { createAuthAuthedUserResolver } from "./auth.resolver";
+import { CurrentUserInterface } from "./dto/current-user";
+import { AuthedUserStrategy } from "./strategies/authed-user.strategy";
 
-//eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AuthConfig {}
-
-interface AuthModuleOptions {
-    config: AuthConfig;
+export interface AuthedUserConfig<CurrentUser> {
+    authedUser: CurrentUser;
 }
 
-interface AuthModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
+export interface AuthModuleAuthedUserOptions<CurrentUser extends CurrentUserInterface> extends Pick<ModuleMetadata, "imports"> {
+    readonly strategy: "authedUser";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => Promise<AuthModuleOptions> | AuthModuleOptions;
+    useFactory: (...args: any[]) => Promise<AuthedUserConfig<CurrentUser>> | AuthedUserConfig<CurrentUser>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
-    currentUserLoaderService?: Type<CurrentUserLoaderInterface>;
+    currentUserDto: Type<CurrentUser>;
 }
 
 @Module({})
 export class AuthModule {
-    static registerAsync(options: AuthModuleAsyncOptions): DynamicModule {
-        const optionsProvider = {
-            provide: AUTH_MODULE_OPTIONS,
-            ...options,
-        };
-
-        const authConfigProvider = {
-            provide: AUTH_CONFIG,
-            useFactory: async (options: AuthModuleOptions): Promise<AuthConfig> => {
-                return options.config;
+    static register<CurrentUser extends CurrentUserInterface>(options: AuthModuleAuthedUserOptions<CurrentUser>): DynamicModule {
+        const providers: Provider[] = [
+            {
+                provide: AUTH_CONFIG,
+                ...options,
             },
-            inject: [AUTH_MODULE_OPTIONS],
-        };
+        ];
+        if (options.strategy === "authedUser") {
+            providers.push(AuthedUserStrategy, createAuthAuthedUserResolver<CurrentUser>(options.currentUserDto));
+        }
+
         return {
             module: AuthModule,
             imports: options.imports ?? [],
-            providers: [
-                optionsProvider,
-                authConfigProvider,
-                {
-                    provide: AUTH_CURRENT_USER_LOADER,
-                    useClass: options.currentUserLoaderService ?? DefaultCurrentUserLoaderService,
-                },
-            ],
+            providers,
         };
     }
 }
