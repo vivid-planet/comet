@@ -62,3 +62,5 @@ function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
 }
 
 export class GlobalAuthedUserAuthGuard extends CometAuthGuard("authedUser") {}
+
+export class GlobalJwtAuthGuard extends CometAuthGuard("jwt") {}

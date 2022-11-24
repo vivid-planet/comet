@@ -26,10 +26,9 @@ export type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 export function createPreviewUrl({ damFile }: SvgImageBlockState, apiUrl: string): string {
     if (!damFile) return "";
     return new URL(
-        "/dam/files/preview/$fileId/$fileName"
+        `${apiUrl}/dam/files/preview/$fileId/$fileName`
             .replace("$fileId", damFile.id)
             .replace("$fileName", damFile.name.substr(0, damFile.name.lastIndexOf("."))),
-        apiUrl,
     ).toString();
 }
 

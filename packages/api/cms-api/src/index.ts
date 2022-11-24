@@ -7,7 +7,7 @@ export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
 export { PublicApi } from "./auth/decorators/public-api.decorator";
 export { CurrentUser } from "./auth/dto/current-user";
-export { GlobalAuthedUserAuthGuard } from "./auth/guards/global.guard";
+export { GlobalAuthedUserAuthGuard, GlobalJwtAuthGuard } from "./auth/guards/global.guard";
 export { CurrentUserLoaderInterface } from "./auth/interfaces/current-user-loader.interface";
 export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
 export { BlobStorageAzureStorage } from "./blob-storage/backends/azure/blob-storage-azure.storage";
