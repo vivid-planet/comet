@@ -8,27 +8,6 @@ The following tools need to be installed on your local machine.
 
 -   [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 -   [nvm](https://github.com/nvm-sh/nvm)
--   [mkcert](https://github.com/FiloSottile/mkcert)
-
-### Install certificates
-
-Install the custom certificate authority (CA).
-
-```bash
-mkcert -install
-```
-
-Create certificates for `*.comet-dxp.dev`.
-
-```bash
-mkcert -key-file certs/privkey.pem -cert-file certs/cert.pem "*.comet-dxp.dev"
-```
-
-Pass the CA file to Node.
-
-```bash
-echo NODE_EXTRA_CA_CERTS=$(mkcert -CAROOT)/rootCA.pem > .env.local
-```
 
 ### Setup workspace
 
@@ -68,9 +47,9 @@ yarn dev:demo
 
 Demo will be available at
 
--   Admin: [https://admin-demo.comet-dxp.dev:8443/](https://admin-demo.comet-dxp.dev:8443/)
--   API: [https://api-demo.comet-dxp.dev:8443/](https://api-demo.comet-dxp.dev:8443/)
--   Site: [https://site-demo.comet-dxp.dev:8443/](https://site-demo.comet-dxp.dev:8443/)
+-   Admin: [http://localhost:8001/](http://localhost:8001/)
+-   API: [http://localhost:4000/](http://localhost:4000/)
+-   Site: [http://localhost:3000/](http://localhost:3000/)
 
 It is also possbile to start specific microservices
 
