@@ -1,6 +1,8 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, ModuleMetadata } from "@nestjs/common";
 
+import { CurrentUser } from "../auth/dto/current-user";
+import { ContentScope } from "../common/decorators/content-scope.interface";
 import { BuildTemplatesResolver } from "./build-templates.resolver";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds.constants";
@@ -13,6 +15,8 @@ import { SkipBuildInterceptor } from "./skip-build.interceptor";
 
 export interface BuildsConfig {
     helmRelease: string;
+    /** This allows to restirct certain users from accessing BuilderCronJobs or BuildJobs. */
+    isContentScopeAllowed: (user: CurrentUser, contentScope?: ContentScope) => boolean;
 }
 
 interface BuildsModuleOptions {

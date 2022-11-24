@@ -1,4 +1,4 @@
-import { MikroORM, UseRequestContext } from "@mikro-orm/core";
+import { UseRequestContext } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
@@ -7,10 +7,7 @@ import { BuildsService } from "./builds.service";
 @Injectable()
 @Console()
 export class ChangesCheckerConsole {
-    constructor(
-        private readonly orm: MikroORM, // MikroORM is injected so we can use the request context
-        private readonly buildsService: BuildsService,
-    ) {}
+    constructor(private readonly buildsService: BuildsService) {}
 
     @Command({
         command: "check-changes",
@@ -22,7 +19,7 @@ export class ChangesCheckerConsole {
 
         if (await this.buildsService.hasChangesSinceLastBuild()) {
             console.log("Changes detected, starting build...");
-            await this.buildsService.createBuilds("changesDetected");
+            await this.buildsService.dangerouslyCreateBuildsWithoutUserCheck("changesDetected");
             console.log("Build successfully started, resetting changesSinceLastBuild...");
             await this.buildsService.deleteChangesSinceLastBuild();
             console.log("Resetting changesSinceLastBuild successful!");

@@ -3,7 +3,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
-import { BUILDS_CONFIG } from "./builds.constants";
+import { BUILDS_CONFIG, CONTENT_SCOPE_ANNOTATION } from "./builds.constants";
 import { BuildsConfig } from "./builds.module";
 import { JobStatus } from "./job-status.enum";
 
@@ -143,5 +143,10 @@ export class KubernetesService {
         const estimatedCompletionTime = addMinutes(jobStartTime, previousJobRuntime);
 
         return estimatedCompletionTime;
+    }
+
+    getContentScope(resource: V1Job | V1CronJob): Record<string, string> | undefined {
+        const contentScopeAnnotation = resource.metadata?.annotations?.[CONTENT_SCOPE_ANNOTATION];
+        return contentScopeAnnotation ? JSON.parse(contentScopeAnnotation) : contentScopeAnnotation;
     }
 }

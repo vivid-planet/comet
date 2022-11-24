@@ -2,6 +2,8 @@ import { V1CronJob } from "@kubernetes/client-node";
 import { Inject } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { CurrentUser } from "../auth/dto/current-user";
 import { BUILDS_CONFIG, INSTANCE_LABEL } from "./builds.constants";
 import { BuildsConfig } from "./builds.module";
 import { BuildsService } from "./builds.service";
@@ -25,25 +27,34 @@ export class BuildsResolver {
 
     @Mutation(() => Boolean)
     @SkipBuild()
-    async createBuilds(@Args("input", { type: () => CreateBuildsInput }) { names }: CreateBuildsInput): Promise<boolean> {
+    async createBuilds(
+        @GetCurrentUser() user: CurrentUser,
+        @Args("input", { type: () => CreateBuildsInput }) { names }: CreateBuildsInput,
+    ): Promise<boolean> {
         const cronJobs: V1CronJob[] = [];
         for (const name of names) {
             const cronJob = await this.kubernetesService.getCronJob(name);
+
             if (this.helmRelease !== cronJob.metadata?.labels?.[INSTANCE_LABEL]) {
                 throw new Error("Triggering build from different instance is not allowed");
             }
+
+            if (!this.config.isContentScopeAllowed(user, this.kubernetesService.getContentScope(cronJob))) {
+                throw new Error("Triggering build not allowed");
+            }
+
             cronJobs.push(cronJob);
         }
-        return this.buildsService.createBuilds("manual", cronJobs);
+        return this.buildsService.createBuildsWithUserCheck("manual", cronJobs);
     }
 
     @Query(() => [BuildObject])
-    async builds(@Args("limit", { nullable: true }) limit?: number): Promise<BuildObject[]> {
-        return this.buildsService.getBuilds({ limit: limit });
+    async builds(@GetCurrentUser() user: CurrentUser, @Args("limit", { nullable: true }) limit?: number): Promise<BuildObject[]> {
+        return this.buildsService.getBuilds(user, { limit: limit });
     }
 
     @Query(() => AutoBuildStatus)
-    async autoBuildStatus(): Promise<AutoBuildStatus> {
-        return this.buildsService.getAutoBuildStatus();
+    async autoBuildStatus(@GetCurrentUser() user: CurrentUser): Promise<AutoBuildStatus> {
+        return this.buildsService.getAutoBuildStatus(user);
     }
 }

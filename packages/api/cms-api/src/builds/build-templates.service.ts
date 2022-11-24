@@ -1,22 +1,22 @@
-import { Injectable } from "@nestjs/common";
+import { V1CronJob } from "@kubernetes/client-node";
+import { Inject, Injectable } from "@nestjs/common";
 
-import { BUILDER_LABEL, INSTANCE_LABEL } from "./builds.constants";
-import { BuildTemplateObject } from "./dto/build-template.object";
+import { CurrentUser } from "../auth/dto/current-user";
+import { BUILDER_LABEL, BUILDS_CONFIG, INSTANCE_LABEL } from "./builds.constants";
+import { BuildsConfig } from "./builds.module";
 import { KubernetesService } from "./kubernetes.service";
 
 @Injectable()
 export class BuildTemplatesService {
-    constructor(private readonly kubernetesService: KubernetesService) {}
+    constructor(@Inject(BUILDS_CONFIG) readonly config: BuildsConfig, private readonly kubernetesService: KubernetesService) {}
 
-    async getBuildTemplates(): Promise<BuildTemplateObject[]> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
-        const builderCronJobs = await this.kubernetesService.getAllCronJobs(
+    async getAllowedBuilderCronJobs(user: CurrentUser): Promise<V1CronJob[]> {
+        const allCronJobs = await this.kubernetesService.getAllCronJobs(
             `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
         );
 
-        return builderCronJobs.map((cronJob) => ({ id: cronJob.metadata?.uid as string, name: cronJob.metadata?.name as string }));
+        return allCronJobs.filter((cronJob) => {
+            return this.config.isContentScopeAllowed(user, this.kubernetesService.getContentScope(cronJob));
+        });
     }
 }

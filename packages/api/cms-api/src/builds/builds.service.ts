@@ -1,11 +1,14 @@
-import { V1CronJob } from "@kubernetes/client-node";
+import { V1CronJob, V1Job } from "@kubernetes/client-node";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
 
-import { BUILD_CHECKER_LABEL, BUILDER_LABEL, INSTANCE_LABEL, PARENT_CRON_JOB_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
+import { CurrentUser } from "../auth/dto/current-user";
+import { BuildTemplatesService } from "./build-templates.service";
+import { BUILDER_LABEL, BUILDS_CONFIG, INSTANCE_LABEL, PARENT_CRON_JOB_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
+import { BuildsConfig } from "./builds.module";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { BuildObject } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
@@ -17,22 +20,25 @@ const JOB_HISTORY_LIMIT = 20;
 @Injectable()
 export class BuildsService {
     constructor(
+        @Inject(BUILDS_CONFIG) readonly config: BuildsConfig,
         @InjectRepository(ChangesSinceLastBuild) private readonly changesRepository: EntityRepository<ChangesSinceLastBuild>,
+        private readonly buildTemplatesService: BuildTemplatesService,
         private readonly kubernetesService: KubernetesService,
     ) {}
 
-    async createBuilds(trigger: string, builderCronJobs?: V1CronJob[]): Promise<boolean> {
+    private async getAllowedBuildJobs(user: CurrentUser): Promise<V1Job[]> {
+        const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
+        return allJobs.filter((job) => {
+            return this.config.isContentScopeAllowed(user, this.kubernetesService.getContentScope(job));
+        });
+    }
+
+    private async createBuilds(trigger: string, builderCronJobs: V1CronJob[]): Promise<boolean> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
 
-        if (!builderCronJobs) {
-            // no CronJobs specified means a full rebuild
-            builderCronJobs = await this.kubernetesService.getAllCronJobs(
-                `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
-            );
-        }
-
+        // No ACL here, because this is only used for clean-up
         const builderJobs = await this.kubernetesService.getAllJobs(
             `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
         );
@@ -70,15 +76,26 @@ export class BuildsService {
         return true;
     }
 
-    async getBuilds(options?: { limit?: number | undefined }): Promise<BuildObject[]> {
+    /**
+     * Should only be used internally
+     */
+    async dangerouslyCreateBuildsWithoutUserCheck(trigger: string): Promise<boolean> {
+        const builderCronJobs = await this.kubernetesService.getAllCronJobs(
+            `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
+        );
+        return this.createBuilds(trigger, builderCronJobs);
+    }
+
+    async createBuildsWithUserCheck(trigger: string, builderCronJobs: V1CronJob[]): Promise<boolean> {
+        return this.createBuilds(trigger, builderCronJobs);
+    }
+
+    async getBuilds(user: CurrentUser, options?: { limit?: number | undefined }): Promise<BuildObject[]> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
 
-        const buildJobs = await this.kubernetesService.getAllJobs(
-            `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
-        );
-
+        const buildJobs = await this.getAllowedBuildJobs(user);
         return Promise.all(
             buildJobs.slice(0, options?.limit).map(async (job) => {
                 return {
@@ -97,7 +114,7 @@ export class BuildsService {
         );
     }
 
-    async getAutoBuildStatus(): Promise<AutoBuildStatus> {
+    async getAutoBuildStatus(user: CurrentUser): Promise<AutoBuildStatus> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
@@ -105,9 +122,7 @@ export class BuildsService {
         const autoBuildStatus = new AutoBuildStatus();
         autoBuildStatus.hasChangesSinceLastBuild = await this.hasChangesSinceLastBuild();
 
-        const cronJobs = await this.kubernetesService.getAllCronJobs(
-            `${BUILD_CHECKER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
-        );
+        const cronJobs = await this.buildTemplatesService.getAllowedBuilderCronJobs(user);
         const cronJob = cronJobs?.[0];
         if (!cronJob) {
             throw new Error("BuildChecker CronJob not found.");

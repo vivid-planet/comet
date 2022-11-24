@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This projec
 ### @comet/cms-api
 
 -   Add default value `{}` for `RedirectScopeInput` when no explicit scope is set to make redirects scope support backwards compatible
+-   Add option to restrict access to builds with `BuildConfig`
 
 ## 3.1.0
 
