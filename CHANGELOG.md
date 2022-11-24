@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This projec
 
 ## NEXT
 
+### @comet/admin-rte
+
+#### Changes
+
+-   Fix a bug where control buttons in the toolbar would trigger submission when used in a form
+
 ### @comet/cms-admin
 
 -   Fix a bug where the pages query would query for a field `undefined` when no `additionalPageTreeNodeFragment` is set
