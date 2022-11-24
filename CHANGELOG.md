@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This projec
 ### @comet/cms-api
 
 -   Add default value `{}` for `RedirectScopeInput` when no explicit scope is set to make redirects scope support backwards compatible
+-   Add `RootBlockDataScalar` and `RootBlockInputScalar` to type root blocks in the GraphQL schema. See [page.entity.ts](/demo/api/src/pages/entities/page.entity.ts), [schema.gql](/demo/api/schema.gql), and [codegen.ts](demo/admin/codegen.ts) for an example on how to use
 
 ## 3.1.0
 

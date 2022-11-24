@@ -30,6 +30,8 @@ export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlo
 export { DamVideoBlock } from "./blocks/dam-video.block";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { RootBlockType } from "./blocks/root-block-type";
+export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
+export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";
 export { BuildsModule } from "./builds/builds.module";
