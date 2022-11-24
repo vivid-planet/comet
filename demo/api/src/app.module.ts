@@ -105,9 +105,6 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
             useFactory: async (config: ConfigType<typeof configNS>) => ({
                 config: {
                     helmRelease: config.HELM_RELEASE,
-                    isContentScopeAllowed: () => {
-                        return true;
-                    },
                 },
             }),
             inject: [configNS.KEY],

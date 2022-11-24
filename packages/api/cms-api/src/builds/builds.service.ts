@@ -1,14 +1,14 @@
 import { V1CronJob, V1Job } from "@kubernetes/client-node";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
 
 import { CurrentUser } from "../auth/dto/current-user";
+import { ContentScopeService } from "../content-scope/content-scope.service";
 import { BuildTemplatesService } from "./build-templates.service";
-import { BUILDER_LABEL, BUILDS_CONFIG, INSTANCE_LABEL, PARENT_CRON_JOB_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
-import { BuildsConfig } from "./builds.module";
+import { BUILDER_LABEL, INSTANCE_LABEL, PARENT_CRON_JOB_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { BuildObject } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
@@ -20,20 +20,20 @@ const JOB_HISTORY_LIMIT = 20;
 @Injectable()
 export class BuildsService {
     constructor(
-        @Inject(BUILDS_CONFIG) readonly config: BuildsConfig,
         @InjectRepository(ChangesSinceLastBuild) private readonly changesRepository: EntityRepository<ChangesSinceLastBuild>,
         private readonly buildTemplatesService: BuildTemplatesService,
         private readonly kubernetesService: KubernetesService,
+        private readonly contentScopeService: ContentScopeService,
     ) {}
 
     private async getAllowedBuildJobs(user: CurrentUser): Promise<V1Job[]> {
         const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
         return allJobs.filter((job) => {
-            return this.config.isContentScopeAllowed(user, this.kubernetesService.getContentScope(job));
+            return this.contentScopeService.canAccessScope(this.kubernetesService.getContentScope(job), user);
         });
     }
 
-    private async createBuilds(trigger: string, builderCronJobs: V1CronJob[]): Promise<boolean> {
+    async createBuilds(trigger: string, builderCronJobs: V1CronJob[]): Promise<boolean> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
@@ -83,10 +83,6 @@ export class BuildsService {
         const builderCronJobs = await this.kubernetesService.getAllCronJobs(
             `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
         );
-        return this.createBuilds(trigger, builderCronJobs);
-    }
-
-    async createBuildsWithUserCheck(trigger: string, builderCronJobs: V1CronJob[]): Promise<boolean> {
         return this.createBuilds(trigger, builderCronJobs);
     }
 

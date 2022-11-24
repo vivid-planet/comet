@@ -4,6 +4,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { CurrentUser } from "../auth/dto/current-user";
+import { ContentScopeService } from "../content-scope/content-scope.service";
 import { BUILDS_CONFIG, INSTANCE_LABEL } from "./builds.constants";
 import { BuildsConfig } from "./builds.module";
 import { BuildsService } from "./builds.service";
@@ -21,6 +22,7 @@ export class BuildsResolver {
         @Inject(BUILDS_CONFIG) readonly config: BuildsConfig,
         private readonly kubernetesService: KubernetesService,
         private readonly buildsService: BuildsService,
+        private readonly contentScopeService: ContentScopeService,
     ) {
         this.helmRelease = config.helmRelease;
     }
@@ -39,13 +41,13 @@ export class BuildsResolver {
                 throw new Error("Triggering build from different instance is not allowed");
             }
 
-            if (!this.config.isContentScopeAllowed(user, this.kubernetesService.getContentScope(cronJob))) {
+            if (!this.contentScopeService.canAccessScope(this.kubernetesService.getContentScope(cronJob), user)) {
                 throw new Error("Triggering build not allowed");
             }
 
             cronJobs.push(cronJob);
         }
-        return this.buildsService.createBuildsWithUserCheck("manual", cronJobs);
+        return this.buildsService.createBuilds("manual", cronJobs);
     }
 
     @Query(() => [BuildObject])
