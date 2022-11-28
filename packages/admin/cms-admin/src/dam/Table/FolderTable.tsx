@@ -296,7 +296,7 @@ const FolderTable = ({
                         <InnerTableWrapper error={error} loading={tableLoading}>
                             <Table<GQLDamFolderTableFragment>
                                 hideTableHead
-                                totalCount={0} // value is only used for pagination, thus irrelevant in this table
+                                totalCount={tableData?.totalCount ?? 0}
                                 data={tableLoading || foldersTableData === undefined ? [] : foldersTableData}
                                 columns={tableColumns}
                                 renderTableRow={({ columns, row, rowProps }) => {
@@ -317,7 +317,7 @@ const FolderTable = ({
                             <sc.FilesTableWrapper className="CometFilesTableWrapper-root" {...fileRootProps}>
                                 <Table<GQLDamFileTableFragment>
                                     hideTableHead
-                                    totalCount={(filesTableData?.length ?? 0) + (foldersTableData?.length ?? 0)}
+                                    totalCount={tableData?.totalCount ?? 0}
                                     data={tableLoading || filesTableData === undefined ? [] : filesTableData}
                                     columns={tableColumns}
                                     pagingInfo={tableData?.pagingInfo}
