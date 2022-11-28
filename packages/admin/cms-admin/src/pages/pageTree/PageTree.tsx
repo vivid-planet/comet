@@ -269,19 +269,19 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
             snackbarApi.showSnackbar(
                 <UndoSnackbar
                     message={<FormattedMessage id="comet.pagetree.pageMoved" defaultMessage="Page Moved" />}
-                    payload={{ previousPages: pages, pagesToMove }}
+                    payload={{ previousPages: pages, pagesToUndo: pagesToMove }}
                     onUndoClick={async (payload) => {
                         if (payload) {
-                            const { previousPages, pagesToMove } = payload;
+                            const { previousPages, pagesToUndo } = payload;
 
-                            let disallowedReferences = [...pagesToMove];
+                            let disallowedReferences = [...pagesToUndo];
 
-                            for (const pageToMove of pagesToMove) {
-                                const updateInfo = pageTreeService.getUndoUpdateInfo(previousPages, pageToMove, disallowedReferences);
+                            for (const pageToUndo of pagesToUndo) {
+                                const updateInfo = pageTreeService.getUndoUpdateInfo(previousPages, pageToUndo, disallowedReferences);
 
                                 await moveByNeighbourRequest({
-                                    ids: [pageToMove.id],
-                                    parentId: pageToMove.parentId,
+                                    ids: [pageToUndo.id],
+                                    parentId: pageToUndo.parentId,
                                     afterId: updateInfo.afterId,
                                     beforeId: updateInfo.beforeId,
                                 });
@@ -289,12 +289,12 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                 await client.mutate<GQLResetSlugMutation, GQLResetSlugMutationVariables>({
                                     mutation: RESET_SLUG,
                                     variables: {
-                                        id: pageToMove.id,
-                                        slug: pageToMove.slug,
+                                        id: pageToUndo.id,
+                                        slug: pageToUndo.slug,
                                     },
                                 });
 
-                                disallowedReferences = disallowedReferences.filter((page) => page.id !== pageToMove.id);
+                                disallowedReferences = disallowedReferences.filter((page) => page.id !== pageToUndo.id);
                             }
 
                             client.refetchQueries({ include: [namedOperations.Query.Pages] });
