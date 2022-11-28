@@ -250,6 +250,7 @@ type Mutation {
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
+  updateSlug(id: ID!, slug: String!): PageTreeNode!
   movePageTreeNodesByPos(ids: [ID!]!, input: MovePageTreeNodesByPosInput!): [PageTreeNode!]!
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!

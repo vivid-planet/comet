@@ -18,6 +18,8 @@ import {
     GQLPageSlugPathFragment,
     GQLPagesQuery,
     GQLPagesQueryVariables,
+    GQLResetSlugMutation,
+    GQLResetSlugMutationVariables,
     namedOperations,
 } from "../../graphql.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
@@ -57,6 +59,15 @@ const MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS = gql`
             pos
             slug
             path
+        }
+    }
+`;
+
+const RESET_SLUG = gql`
+    mutation ResetSlug($id: ID!, $slug: String!) {
+        updateSlug(id: $id, slug: $slug) {
+            id
+            slug
         }
     }
 `;
@@ -273,6 +284,14 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                     parentId: pageToMove.parentId,
                                     afterId: updateInfo.afterId,
                                     beforeId: updateInfo.beforeId,
+                                });
+
+                                await client.mutate<GQLResetSlugMutation, GQLResetSlugMutationVariables>({
+                                    mutation: RESET_SLUG,
+                                    variables: {
+                                        id: pageToMove.id,
+                                        slug: pageToMove.slug,
+                                    },
                                 });
 
                                 disallowedReferences = disallowedReferences.filter((page) => page.id !== pageToMove.id);
