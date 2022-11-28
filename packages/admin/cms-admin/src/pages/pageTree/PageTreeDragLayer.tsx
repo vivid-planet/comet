@@ -1,5 +1,7 @@
+import { Box } from "@mui/material";
 import React from "react";
 import { useDragLayer, XYCoord } from "react-dnd";
+import { FormattedMessage } from "react-intl/lib";
 
 import PageLabel from "./PageLabel";
 import * as sc from "./PageTreeDragLayer.sc";
@@ -18,7 +20,11 @@ function getItemStyles(initialOffset: XYCoord | null, currentOffset: XYCoord | n
     };
 }
 
-const PageTreeDragLayer = (): React.ReactElement | null => {
+interface PageTreeDragLayerProps {
+    numberSelectedPages: number;
+}
+
+const PageTreeDragLayer: React.VoidFunctionComponent<PageTreeDragLayerProps> = ({ numberSelectedPages }): React.ReactElement | null => {
     const { item, isAcceptedItemType, initialOffset, currentOffset, isDragging } = useDragLayer((monitor) => ({
         item: monitor.getItem() as PageTreePage,
         isAcceptedItemType: monitor.getItemType() === "row",
@@ -33,7 +39,17 @@ const PageTreeDragLayer = (): React.ReactElement | null => {
     return (
         <sc.PageTreeDragLayerWrapper>
             <sc.PageTreeDragLayerInner style={getItemStyles(initialOffset, currentOffset)}>
-                <PageLabel page={item} />
+                {!item.selected || numberSelectedPages === 1 ? (
+                    <PageLabel page={item} />
+                ) : (
+                    <Box pl={4}>
+                        <FormattedMessage
+                            id="comet.pagetree.dragLayer.numberDraggedPages"
+                            defaultMessage="{numItems} pages"
+                            values={{ numItems: numberSelectedPages }}
+                        />
+                    </Box>
+                )}
             </sc.PageTreeDragLayerInner>
         </sc.PageTreeDragLayerWrapper>
     );
