@@ -6,7 +6,7 @@ import { Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ScopeIndicatorContent, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import DateTime from "@src/dashboard/DateTime";
-import { GQLCurrentUserQuery } from "@src/graphql.generated";
+import { GQLDashboardCurrentUserQuery } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -39,7 +39,7 @@ const Greeting = styled(Typography)`
 `;
 
 const currentUserQuery = gql`
-    query CurrentUser {
+    query DashboardCurrentUser {
         currentUser {
             name
         }
@@ -48,7 +48,7 @@ const currentUserQuery = gql`
 
 const Dashboard: React.FC = () => {
     const intl = useIntl();
-    const { data } = useQuery<GQLCurrentUserQuery>(currentUserQuery);
+    const { data } = useQuery<GQLDashboardCurrentUserQuery>(currentUserQuery);
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "cometDemo.dashboard", defaultMessage: "Dashboard" })}>
