@@ -246,7 +246,11 @@ export function createPageTreeResolver({
             let pos = input.pos;
             const modifiedPageTreeNodes: PageTreeNodeInterface[] = [];
             for (const node of nodes) {
-                const modifiedPageTreeNode = await this.pageTreeService.updateNodePosition(node.id, { parentId: input.parentId, pos });
+                const modifiedPageTreeNode = await this.pageTreeService.updateNodePosition(node.id, {
+                    parentId: input.parentId,
+                    pos,
+                    slug: input.slug,
+                });
                 pos = modifiedPageTreeNode.pos + 1;
 
                 modifiedPageTreeNodes.push(modifiedPageTreeNode);
@@ -289,7 +293,7 @@ export function createPageTreeResolver({
                 newPos = 0;
             }
 
-            return this.movePageTreeNodesByPos(ids, { parentId: input.parentId, pos: newPos });
+            return this.movePageTreeNodesByPos(ids, { parentId: input.parentId, pos: newPos, slug: input.slug });
         }
 
         @Mutation(() => PageTreeNode)
@@ -335,7 +339,7 @@ export function createPageTreeResolver({
                 return newNode;
             }
             // when a position is passed, update all concerened nodes
-            await this.pageTreeService.updateNodePosition(newNode.id, { pos: input.pos as number, parentId: newNode.parentId });
+            await this.pageTreeService.updateNodePosition(newNode.id, { pos: input.pos as number, parentId: newNode.parentId, slug: input.slug });
             return await this.pageTreeNode(newNode.id); // refetch new version
         }
     }

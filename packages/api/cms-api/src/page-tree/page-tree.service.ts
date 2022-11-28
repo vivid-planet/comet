@@ -202,7 +202,8 @@ export class PageTreeService {
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
 
-        const requestedPath = await this.pathForParentAndSlug(input.parentId, existingNode.slug);
+        const requestedSlug = input.slug ?? existingNode.slug;
+        const requestedPath = await this.pathForParentAndSlug(input.parentId, requestedSlug);
 
         if (this.config.reservedPaths.includes(requestedPath)) {
             throw new CometValidationException("Reserved path");
@@ -211,13 +212,13 @@ export class PageTreeService {
         let newSlug;
         const nodeWithSamePath = await this.nodeWithSamePath(requestedPath, existingNode.scope);
         if (nodeWithSamePath && nodeWithSamePath.id !== existingNode.id) {
-            newSlug = await this.findNextAvailableSlug(existingNode.slug, input.parentId, existingNode.scope);
+            newSlug = await this.findNextAvailableSlug(requestedSlug, input.parentId, existingNode.scope);
         }
 
         const parentId = input.parentId;
 
         if (input.pos !== existingNode.pos || input.parentId !== existingNode.parentId) {
-            await this.pageTreeRepository.persistAndFlush(existingNode.assign({ parentId, pos: input.pos, slug: newSlug ?? existingNode.slug }));
+            await this.pageTreeRepository.persistAndFlush(existingNode.assign({ parentId, pos: input.pos, slug: newSlug ?? requestedSlug }));
 
             const qb = this.pageTreeRepository
                 .createQueryBuilder()
