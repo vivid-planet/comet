@@ -13,7 +13,7 @@ import {
     useSitesConfig,
 } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
-import { GQLContentScopeQuery } from "@src/graphql.generated";
+import { GQLCurrentUserScopeQuery } from "@src/graphql.generated";
 import React from "react";
 
 type Domain = "main" | "secondary" | string;
@@ -46,9 +46,9 @@ export function useContentScopeConfig(p: ContentScopeConfigProps): void {
     return useContentScopeConfigLibrary(p);
 }
 
-const meQuery = gql`
-    query ContentScope {
-        me {
+const currentUserQuery = gql`
+    query CurrentUserScope {
+        currentUser {
             role
             domains
         }
@@ -57,11 +57,11 @@ const meQuery = gql`
 
 const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">> = ({ children }) => {
     const sitesConfig = useSitesConfig();
-    const { loading, data } = useQuery<GQLContentScopeQuery>(meQuery);
+    const { loading, data } = useQuery<GQLCurrentUserScopeQuery>(currentUserQuery);
 
     if (loading || !data) return <CircularProgress />;
 
-    const allowedUserDomains = data.me.domains;
+    const allowedUserDomains = data.currentUser.domains;
 
     const allowedSiteConfigs = Object.fromEntries(
         Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),
