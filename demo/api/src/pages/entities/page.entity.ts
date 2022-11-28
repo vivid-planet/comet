@@ -1,8 +1,7 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { DocumentInterface, RootBlockType } from "@comet/cms-api";
+import { DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 as uuid } from "uuid";
 
 import { PageContentBlock } from "../blocks/PageContentBlock";
@@ -22,11 +21,11 @@ export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
 
     @RootBlock(PageContentBlock)
     @Property({ customType: new RootBlockType(PageContentBlock) })
-    @Field(() => GraphQLJSONObject)
+    @Field(() => RootBlockDataScalar(PageContentBlock))
     content: BlockDataInterface;
 
     @Property({ customType: new RootBlockType(SeoBlock) })
-    @Field(() => GraphQLJSONObject)
+    @Field(() => RootBlockDataScalar(SeoBlock))
     seo: BlockDataInterface;
 
     @Property({

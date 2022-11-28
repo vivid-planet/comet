@@ -1,8 +1,7 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudSingleGenerator, DocumentInterface, RootBlockType } from "@comet/cms-api";
+import { CrudSingleGenerator, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Embedded, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 as uuid } from "uuid";
 
 import { FooterContentBlock } from "../blocks/footer-content.block";
@@ -23,7 +22,7 @@ export class Footer extends BaseEntity<Footer, "id"> implements DocumentInterfac
 
     @RootBlock(FooterContentBlock)
     @Property({ customType: new RootBlockType(FooterContentBlock) })
-    @Field(() => GraphQLJSONObject)
+    @Field(() => RootBlockDataScalar(FooterContentBlock))
     content: BlockDataInterface;
 
     @Embedded(() => FooterContentScope)
