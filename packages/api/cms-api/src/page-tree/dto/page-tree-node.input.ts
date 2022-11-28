@@ -88,11 +88,6 @@ export class MovePageTreeNodesByPosInput {
     @Field(() => Int)
     @IsInt()
     pos: number;
-
-    @Field(() => String, { nullable: true })
-    @IsOptional()
-    @IsSlug()
-    slug: string | null;
 }
 
 @InputType()
@@ -111,9 +106,4 @@ export class MovePageTreeNodesByNeighbourInput {
     @IsOptional()
     @IsUUID()
     beforeId: string | null;
-
-    @Field(() => String, { nullable: true })
-    @IsOptional()
-    @IsSlug()
-    slug: string | null;
 }

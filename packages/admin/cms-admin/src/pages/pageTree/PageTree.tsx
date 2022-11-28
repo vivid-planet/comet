@@ -213,19 +213,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     );
 
     const moveByNeighbourRequest = React.useCallback(
-        async ({
-            ids,
-            parentId,
-            afterId,
-            beforeId,
-            slug,
-        }: {
-            ids: string[];
-            parentId: string | null;
-            afterId: string | null;
-            beforeId: string | null;
-            slug: string | null;
-        }) => {
+        async ({ ids, parentId, afterId, beforeId }: { ids: string[]; parentId: string | null; afterId: string | null; beforeId: string | null }) => {
             await client.mutate({
                 mutation: MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS,
                 variables: {
@@ -234,7 +222,6 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                         parentId: parentId,
                         afterId: afterId,
                         beforeId: beforeId,
-                        slug: slug,
                     },
                 },
             });
@@ -286,7 +273,6 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                     parentId: pageToMove.parentId,
                                     afterId: updateInfo.afterId,
                                     beforeId: updateInfo.beforeId,
-                                    slug: pageToMove.slug,
                                 });
 
                                 disallowedReferences = disallowedReferences.filter((page) => page.id !== pageToMove.id);

@@ -323,14 +323,12 @@ input PageTreeNodeUpdateVisibilityInput {
 input MovePageTreeNodesByPosInput {
   parentId: String
   pos: Int!
-  slug: String
 }
 
 input MovePageTreeNodesByNeighbourInput {
   parentId: String
   afterId: String
   beforeId: String
-  slug: String
 }
 
 input PageTreeNodeCreateInput {
