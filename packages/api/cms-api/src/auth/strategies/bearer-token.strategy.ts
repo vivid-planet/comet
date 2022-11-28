@@ -1,6 +1,7 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import https, { Agent } from "https";
+import http, { Agent } from "http";
+import https from "https";
 import NodeCache from "node-cache";
 import fetch from "node-fetch";
 import { Strategy } from "passport-http-bearer";
@@ -14,14 +15,15 @@ import { CurrentUserLoaderInterface } from "../interfaces/current-user-loader.in
 @Injectable()
 export class BearerTokenStrategy extends PassportStrategy(Strategy) {
     private validatedUserCache: NodeCache;
-    private httpsAgent: Agent;
+    private httpAgent: Agent;
     constructor(
         @Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig,
         @Inject(AUTH_CURRENT_USER_LOADER) private readonly currentUserLoader: CurrentUserLoaderInterface,
     ) {
         super();
         this.validatedUserCache = new NodeCache();
-        this.httpsAgent = new https.Agent({
+        const Agent = this.config.idpConfig.url.startsWith("http:") ? http.Agent : https.Agent;
+        this.httpAgent = new Agent({
             keepAlive: true,
         });
     }
@@ -46,7 +48,7 @@ export class BearerTokenStrategy extends PassportStrategy(Strategy) {
         const response = await fetch(`${this.config.idpConfig.url}/oauth2/introspect`, {
             method: "POST",
             headers,
-            agent: this.httpsAgent,
+            agent: this.httpAgent,
             body: new URLSearchParams({ token, client_id: this.config.idpConfig.clientId }).toString(), // client_id should not be necessary but oidc-provider needs it
         });
 

@@ -28,7 +28,6 @@ import {
     namedOperations,
 } from "../graphql.generated";
 import { useLocale } from "../locale/useLocale";
-import { automaticRedirectsRefetchQueryDescription } from "../redirects/RedirectsTable.gql";
 
 type SerializedInitialValues = string;
 
@@ -228,7 +227,6 @@ export function createEditPageNode({
                                 context: {
                                     errorScope: ErrorScope.Local,
                                 },
-                                refetchQueries: [automaticRedirectsRefetchQueryDescription],
                             });
                         } else {
                             await apollo.mutate<GQLCreatePageNodeMutation, GQLCreatePageNodeMutationVariables>({

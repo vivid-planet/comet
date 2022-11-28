@@ -1,4 +1,4 @@
-import { gql, PureQueryOptions } from "@apollo/client";
+import { gql } from "@apollo/client";
 
 import { redirectActivenessFragment } from "./RedirectActiveness";
 
@@ -41,13 +41,6 @@ export const redirectsQuery = gql`
     }
     ${redirectTableFragment}
 `;
-
-export const automaticRedirectsRefetchQueryDescription: PureQueryOptions = {
-    query: redirectsQuery,
-    variables: {
-        type: "automatic",
-    },
-};
 
 export const deleteRedirectMutation = gql`
     mutation DeleteRedirect($id: ID!) {

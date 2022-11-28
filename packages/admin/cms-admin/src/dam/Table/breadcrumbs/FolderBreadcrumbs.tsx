@@ -1,6 +1,6 @@
 import { BreadcrumbItem } from "@comet/admin";
-import { ChevronRight } from "@comet/admin-icons";
-import { Breadcrumbs, Link } from "@mui/material";
+import { ChevronRight, LevelUp } from "@comet/admin-icons";
+import { Breadcrumbs, IconButton, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useDrop } from "react-dnd";
@@ -26,8 +26,16 @@ interface FolderBreadcrumbsProps {
     loading?: boolean;
 }
 
+interface BackButtonProps {
+    damBreadcrumbs: DamBreadcrumbItem[];
+}
+
+const FolderBreadcrumbsWrapper = styled("div")`
+    display: flex;
+    align-items: center;
+`;
+
 const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$isHovered" })<{ $isHovered: boolean }>`
-    font-weight: 500;
     padding: 6px;
     outline: ${({ theme, $isHovered }) => ($isHovered ? `solid 1px ${theme.palette.primary.main}` : "none")};
     background-color: ${({ $isHovered }) => ($isHovered ? "rgba(41,182,246,0.1)" : "#fff")};
@@ -36,6 +44,41 @@ const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => pro
         color: ${({ theme }) => theme.palette.grey[900]};
     }
 `;
+
+const BackButtonWrapper = styled("div")`
+    display: flex;
+    align-items: center;
+`;
+
+const BackIconButton = styled(IconButton)`
+    padding: ${({ theme }) => theme.spacing(2)};
+    margin-right: ${({ theme }) => theme.spacing(1)};
+`;
+
+const BackButtonSeparator = styled("div")`
+    height: 30px;
+    width: 1px;
+    background-color: ${({ theme }) => theme.palette.divider};
+    margin-right: 12px;
+`;
+
+const BackButton = ({ damBreadcrumbs }: BackButtonProps): React.ReactElement => {
+    return (
+        <BackButtonWrapper>
+            <Link
+                color="inherit"
+                underline="none"
+                to={damBreadcrumbs.length >= 2 ? damBreadcrumbs[damBreadcrumbs.length - 2].url : "#"}
+                component={RouterLink}
+            >
+                <BackIconButton disabled={damBreadcrumbs.length < 2}>
+                    <LevelUp />
+                </BackIconButton>
+            </Link>
+            <BackButtonSeparator />
+        </BackButtonWrapper>
+    );
+};
 
 const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
     const { moveItem } = useDamDnD();
@@ -70,7 +113,9 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
     return (
         <FolderBreadcrumbWrapper ref={dropTarget} $isHovered={isOver}>
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
-                {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
+                <Typography component="span" variant="h6">
+                    {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
+                </Typography>
             </Link>
         </FolderBreadcrumbWrapper>
     );
@@ -107,12 +152,15 @@ const FolderBreadcrumbs = ({ breadcrumbs: stackBreadcrumbs, folderIds, loading }
     }
 
     return (
-        <Breadcrumbs separator={<ChevronRight fontSize="small" />}>
-            {!loading &&
-                damBreadcrumbs?.map((damBreadcrumb) => {
-                    return <FolderBreadcrumb key={damBreadcrumb.id} id={damBreadcrumb.id} url={damBreadcrumb.url} />;
-                })}
-        </Breadcrumbs>
+        <FolderBreadcrumbsWrapper>
+            <BackButton damBreadcrumbs={damBreadcrumbs} />
+            <Breadcrumbs separator={<ChevronRight fontSize="small" />}>
+                {!loading &&
+                    damBreadcrumbs?.map((damBreadcrumb) => {
+                        return <FolderBreadcrumb key={damBreadcrumb.id} id={damBreadcrumb.id} url={damBreadcrumb.url} />;
+                    })}
+            </Breadcrumbs>
+        </FolderBreadcrumbsWrapper>
     );
 };
 

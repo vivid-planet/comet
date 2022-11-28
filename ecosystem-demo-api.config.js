@@ -20,12 +20,6 @@ module.exports = {
             autorestart: true,
         },
         {
-            name: "comet-demo-proxy",
-            script: "node proxy.js",
-            namespace: "comet-cms",
-            autorestart: true,
-        },
-        {
             name: "comet-demo-idp",
             script: "node mock-idp.js",
             namespace: "comet-cms",
