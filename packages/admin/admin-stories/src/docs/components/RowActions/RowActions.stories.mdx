@@ -1,0 +1,30 @@
+import { Meta, Canvas, Story } from "@storybook/addon-docs";
+
+<Meta title="Docs/Components/RowActions" />
+
+# RowActions System
+
+The RowActions system is a set of components used to create IconButtons with menus that can contain more menus & action items. <br />
+Common use cases include context menus and quick-action IconButtons in table rows and other listed items.
+
+The RowActions system consists of `RowActionsMenu` & `RowActionsItem`.
+
+-   `RowActionsMenu` is used to contain both `RowActionsItem` and more nested `RowActionsMenu` components.
+-   `RowActionsItem` is used as a button to trigger an action.
+
+Menus can be infinitely nested to create sub-menus.
+
+Menus & items inside the outermost menu are displayed as an IconButton. <br />
+When nested within multiple menus, they are rendered as a ListItem inside a Menu.
+
+## Edit & Context Menu Example
+
+<Canvas>
+    <Story id="stories-components-rowactions-rowactions--edit-context-menu-example" />
+</Canvas>
+
+## More Complex & Deeply Nested Example
+
+<Canvas>
+    <Story id="stories-components-rowactions-rowactions--more-complex-deeply-nested-example" />
+</Canvas>
