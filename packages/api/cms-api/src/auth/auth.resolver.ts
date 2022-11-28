@@ -7,12 +7,12 @@ export function createAuthAuthedUserResolver<CurrentUser>(CurrentUser: Type<Curr
     @Resolver(() => CurrentUser)
     class AuthedUserResolver {
         @Query(() => CurrentUser)
-        async me(@GetCurrentUser() user: typeof CurrentUser): Promise<typeof CurrentUser> {
+        async currentUser(@GetCurrentUser() user: typeof CurrentUser): Promise<typeof CurrentUser> {
             return user;
         }
 
         @Mutation(() => String)
-        signOut(): string {
+        currentUserSignOut(): string {
             return "/";
         }
     }

@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { GQLCurrentUserQuery, GQLSignOutMutation } from "../../graphql.generated";
 import { AboutModal } from "./about/AboutModal";
 
 const DropdownContent = styled(Box)`
@@ -25,11 +26,9 @@ const Separator = styled(Box)`
 
 import { gql, useMutation, useQuery } from "@apollo/client";
 
-import { GQLMeQuery, GQLSignOutMutation } from "../../graphql.generated";
-
-const meQuery = gql`
-    query Me {
-        me {
+const currentUserQuery = gql`
+    query CurrentUser {
+        currentUser {
             name
         }
     }
@@ -37,19 +36,19 @@ const meQuery = gql`
 
 const signOutMutation = gql`
     mutation SignOut {
-        signOut
+        currentUserSignOut
     }
 `;
 
 export function UserHeaderItem(): React.ReactElement {
     const [showAboutModal, setShowAboutModal] = React.useState(false);
-    const { loading, data } = useQuery<GQLMeQuery>(meQuery);
+    const { loading, data } = useQuery<GQLCurrentUserQuery>(currentUserQuery);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
     if (loading || !data) return <CircularProgress />;
 
     return (
-        <AppHeaderDropdown buttonChildren={data.me.name} startIcon={<Account />}>
+        <AppHeaderDropdown buttonChildren={data.currentUser.name} startIcon={<Account />}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
@@ -72,7 +71,7 @@ export function UserHeaderItem(): React.ReactElement {
                         onClick={async () => {
                             const result = await signOut();
                             if (result.data) {
-                                location.href = result.data.signOut;
+                                location.href = result.data.currentUserSignOut;
                             }
                         }}
                     >
