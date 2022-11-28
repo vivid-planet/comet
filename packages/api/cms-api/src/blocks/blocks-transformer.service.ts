@@ -18,7 +18,7 @@ export class BlocksTransformerService {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return async function traverse(jsonObj: any): Promise<any> {
             if (Array.isArray(jsonObj)) {
-                return await Promise.all(jsonObj.map(traverse));
+                return Promise.all(jsonObj.map(traverse));
             } else if (jsonObj !== null && typeof jsonObj === "object") {
                 const entries = Object.entries(
                     isTargetObject(jsonObj) && typeof jsonObj[methodName] === "function" ? await jsonObj[methodName](...argsArray) : jsonObj,

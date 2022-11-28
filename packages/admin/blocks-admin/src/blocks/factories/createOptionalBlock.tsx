@@ -61,7 +61,7 @@ export function createOptionalBlock<T extends BlockInterface>(
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },
-        isValid: async (state) => !state.block || (await decoratedBlock.isValid(state.block)),
+        isValid: async (state) => !state.block || decoratedBlock.isValid(state.block),
 
         definesOwnTitle: true,
 
