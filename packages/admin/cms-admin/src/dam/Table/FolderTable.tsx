@@ -1,5 +1,18 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, ITableColumn, MainContent, PrettyBytes, Table, TableColumns } from "@comet/admin";
+import {
+    BreadcrumbItem,
+    createOffsetLimitPagingAction,
+    EditDialog,
+    IFilterApi,
+    ISelectionApi,
+    ITableColumn,
+    MainContent,
+    PrettyBytes,
+    Table,
+    TableColumns,
+    useTableQuery,
+    useTableQueryPaging,
+} from "@comet/admin";
 import { StackLink } from "@comet/admin/lib/stack/StackLink";
 import { Link } from "@mui/material";
 import * as React from "react";
@@ -9,7 +22,14 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
-import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../../graphql.generated";
+import {
+    GQLDamFileTableFragment,
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamFolderTableFragment,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
+} from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
@@ -19,7 +39,7 @@ import DamContextMenu from "./DamContextMenu";
 import { DamDnDFooter, FooterType } from "./DamDnDFooter";
 import DamLabel from "./DamLabel";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { damFolderQuery } from "./FolderTable.gql";
+import { damFolderQuery, damItemsListQuery } from "./FolderTable.gql";
 import * as sc from "./FolderTable.sc";
 import FolderTableDragLayer from "./FolderTableDragLayer";
 import { FolderTableRow, isFile, isFolder } from "./FolderTableRow";
@@ -27,7 +47,8 @@ import { InnerTableWrapper } from "./InnerTableWrapper";
 import { DamMultiselectContext, useDamMultiselect } from "./multiselect/DamMultiselect";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
-import { useFolderTableQuery } from "./useFolderTableQuery";
+
+export const damItemsListLimit = 20;
 
 interface FolderTableProps extends DamConfig {
     id?: string;
@@ -103,7 +124,33 @@ const FolderTable = ({
         skip: id === undefined,
     });
 
-    const { tableData, loading: tableLoading, error } = useFolderTableQuery({ folderId: id, filterApi, allowedMimetypes: props.allowedMimetypes });
+    const pagingApi = useTableQueryPaging(0);
+
+    const {
+        tableData,
+        loading: tableLoading,
+        error,
+    } = useTableQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>()(damItemsListQuery, {
+        variables: {
+            folderId: id,
+            includeArchived: filterApi.current.archived,
+            filter: {
+                mimetypes: props.allowedMimetypes,
+                searchText: filterApi.current.searchText,
+            },
+            sortColumnName: filterApi.current.sort?.columnName,
+            sortDirection: filterApi.current.sort?.direction,
+            limit: damItemsListLimit,
+            offset: pagingApi.current,
+        },
+        resolveTableData: (data) => {
+            return {
+                data: data.damItemsList.nodes,
+                totalCount: data.damItemsList.totalCount,
+                pagingInfo: createOffsetLimitPagingAction(pagingApi, data.damItemsList, damItemsListLimit),
+            };
+        },
+    });
 
     const foldersTableData = tableData?.data?.filter(isFolder);
     const filesTableData = tableData?.data?.filter(isFile);
@@ -249,7 +296,7 @@ const FolderTable = ({
                         <InnerTableWrapper error={error} loading={tableLoading}>
                             <Table<GQLDamFolderTableFragment>
                                 hideTableHead
-                                totalCount={foldersTableData?.length ?? 0}
+                                totalCount={0} // value is only used for pagination, thus irrelevant in this table
                                 data={tableLoading || foldersTableData === undefined ? [] : foldersTableData}
                                 columns={tableColumns}
                                 renderTableRow={({ columns, row, rowProps }) => {
@@ -270,9 +317,10 @@ const FolderTable = ({
                             <sc.FilesTableWrapper className="CometFilesTableWrapper-root" {...fileRootProps}>
                                 <Table<GQLDamFileTableFragment>
                                     hideTableHead
-                                    totalCount={filesTableData?.length ?? 0}
+                                    totalCount={(filesTableData?.length ?? 0) + (foldersTableData?.length ?? 0)}
                                     data={tableLoading || filesTableData === undefined ? [] : filesTableData}
                                     columns={tableColumns}
+                                    pagingInfo={tableData?.pagingInfo}
                                     renderTableRow={({ columns, row, rowProps }) => {
                                         return (
                                             <FolderTableRow
