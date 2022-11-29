@@ -3,9 +3,9 @@ import { Inject, Injectable } from "@nestjs/common";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
-import { BUILDS_CONFIG } from "./builds.constants";
-import { BuildsConfig } from "./builds.module";
 import { JobStatus } from "./job-status.enum";
+import { KUBERNETES_CONFIG } from "./kubernetes.constants";
+import { KubernetesConfig } from "./kubernetes.module";
 
 @Injectable()
 export class KubernetesService {
@@ -16,7 +16,7 @@ export class KubernetesService {
 
     batchApi: BatchV1Api;
 
-    constructor(@Inject(BUILDS_CONFIG) readonly config: BuildsConfig) {
+    constructor(@Inject(KUBERNETES_CONFIG) readonly config: KubernetesConfig) {
         const path = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
         this.localMode = !fs.existsSync(path);
         this.helmRelease = config.helmRelease;
@@ -37,6 +37,10 @@ export class KubernetesService {
             this.batchApi = kc.makeApiClient(BatchV1Api);
             this.localMode = false;
         }*/
+    }
+
+    getHelmRelase(): string {
+        return this.config.helmRelease;
     }
 
     async getCronJob(name: string): Promise<V1CronJob> {

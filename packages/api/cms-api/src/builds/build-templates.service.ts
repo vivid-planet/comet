@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
+import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { BUILDER_LABEL, INSTANCE_LABEL } from "./builds.constants";
 import { BuildTemplateObject } from "./dto/build-template.object";
-import { KubernetesService } from "./kubernetes.service";
 
 @Injectable()
 export class BuildTemplatesService {
