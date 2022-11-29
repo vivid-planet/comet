@@ -206,11 +206,6 @@ module.exports = {
             waitOn: [...waitOnPackages("@comet/blocks-api", "@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
         {
-            name: "demo-proxy",
-            script: "node proxy.js",
-            group: ["demo-api", "demo"],
-        },
-        {
             name: "demo-idp",
             script: "node mock-idp.js",
             group: ["demo-api", "demo"],
