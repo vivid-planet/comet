@@ -61,4 +61,4 @@ function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
     return mixin(GlobalAuthGuard);
 }
 
-export class GlobalAuthGuard extends CometAuthGuard("jwt") {}
+export class GlobalAuthGuard extends CometAuthGuard(["jwt", "basic"]) {}

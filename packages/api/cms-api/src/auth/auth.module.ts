@@ -2,24 +2,25 @@ import { DynamicModule, Module, ModuleMetadata, Type } from "@nestjs/common";
 import jwt from "jsonwebtoken";
 import fetch from "node-fetch";
 
-import { AUTH_CONFIG, AUTH_OPTIONS } from "./auth.constants";
+import { AUTH_CONFIG, AUTH_MODULE_CONFIG } from "./auth.constants";
 import { createAuthResolver } from "./auth.resolver";
 import { CurrentUserInterface } from "./current-user/current-user";
 import { CurrentUserJwtLoader, CurrentUserLoaderInterface, CurrentUserStaticLoader } from "./current-user/current-user-loader";
+import { BasicAuthStrategy } from "./strategies/basic-auth.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
 export interface AuthConfig<CurrentUser> {
-    postLogoutRedirectUri?: string;
     jwksUri?: string;
     endSessionEndpoint?: string;
     staticUserJwt?: string;
     currentUserLoader: CurrentUserLoaderInterface<CurrentUser>;
 }
 
-interface AuthModuleConfig<CurrentUser> {
+export interface AuthModuleConfig<CurrentUser> {
     idpUrl?: string;
     postLogoutRedirectUri?: string;
     authedUser?: CurrentUser;
+    apiPassword: string;
 }
 
 export interface AuthModuleOptions<CurrentUser extends CurrentUserInterface> extends Pick<ModuleMetadata, "imports"> {
@@ -39,7 +40,7 @@ export class AuthModule {
             imports: options.imports ?? [],
             providers: [
                 {
-                    provide: AUTH_OPTIONS,
+                    provide: AUTH_MODULE_CONFIG,
                     ...options,
                 },
                 {
@@ -65,9 +66,10 @@ export class AuthModule {
                             };
                         }
                     },
-                    inject: [AUTH_OPTIONS],
+                    inject: [AUTH_MODULE_CONFIG],
                 },
                 JwtStrategy<CurrentUser>,
+                BasicAuthStrategy<CurrentUser>,
                 createAuthResolver<CurrentUser>(options.currentUserDto),
             ],
         };

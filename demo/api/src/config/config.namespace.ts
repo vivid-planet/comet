@@ -38,6 +38,9 @@ export class EnvironmentVariables {
     API_PORT: number;
 
     @IsString()
+    API_PASSWORD: string;
+
+    @IsString()
     CORS_ALLOWED_ORIGINS: string;
 
     @IsString()

@@ -4935,6 +4935,7 @@ __metadata:
     "@types/mime-db": ^1.0.0
     "@types/multer": ^1.4.4
     "@types/node": ^14.0.0
+    "@types/passport-http": ^0.3.9
     "@types/passport-jwt": ^3.0.7
     "@types/probe-image-size": ^7.0.0
     "@types/rimraf": ^3.0.0
@@ -4962,6 +4963,7 @@ __metadata:
     node-fetch: ^2.0.0
     npm-run-all: ^4.0.0
     passport-custom: ^1.1.1
+    passport-http: ^0.3.0
     passport-jwt: ^4.0.0
     prettier: ^2.0.0
     probe-image-size: ^7.0.0
@@ -11820,6 +11822,16 @@ __metadata:
   version: 5.0.3
   resolution: "@types/parse5@npm:5.0.3"
   checksum: d6b7495cb1850f9f2e9c5e103ede9f2d30a5320669707b105c403868adc9e4bf8d3a7ff314cc23f67826bbbbbc0e6147346ce9062ab429f099dba7a01f463919
+  languageName: node
+  linkType: hard
+
+"@types/passport-http@npm:^0.3.9":
+  version: 0.3.9
+  resolution: "@types/passport-http@npm:0.3.9"
+  dependencies:
+    "@types/express": "*"
+    "@types/passport": "*"
+  checksum: 67fff948deb337a7d6efef289309307bf79b9aad6867bf5f2d0c1e8e3bab14612b803727f2ebacdeb5d2e200aaa99d3b703fe4575b83a1737d931bbacea3a472
   languageName: node
   linkType: hard
 
@@ -28975,6 +28987,15 @@ __metadata:
   dependencies:
     passport-strategy: 1.x.x
   checksum: 245b265491c83186002a19db1c812565bb95fd2a7b842f8e8de58f3e22d669f680178b623db6a4be22aecacecd75097b96fa06f35c2b35fe3ef71e9ec77a538d
+  languageName: node
+  linkType: hard
+
+"passport-http@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "passport-http@npm:0.3.0"
+  dependencies:
+    passport-strategy: 1.x.x
+  checksum: 5ab3e45af37ffa26e28fbff49775eff4d41b4029e33c9680aa145867ff0f8080d2a3abc1cafa4e0176c69700da604ac5814f47a06720b57e816c2a3000974a35
   languageName: node
   linkType: hard
 

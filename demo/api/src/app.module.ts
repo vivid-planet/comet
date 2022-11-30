@@ -66,7 +66,7 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
         }),
         AuthModule.register<CurrentUser>({
             imports: [ConfigModule],
-            useFactory: () => ({
+            useFactory: (config: ConfigType<typeof configNS>) => ({
                 authedUser: {
                     id: "1",
                     name: "Test Admin",
@@ -76,8 +76,10 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
                     rights: {},
                     domains: ["main", "secondary"],
                 },
+                apiPassword: config.API_PASSWORD,
             }),
             currentUserDto: CurrentUser,
+            inject: [configNS.KEY],
         }),
         ContentScopeModule.forRoot<CurrentUser>({
             canAccessScope(requestScope: ContentScope, user: CurrentUser) {

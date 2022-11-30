@@ -13,7 +13,9 @@ const defaultOptions: GraphQLClientOptions = {
 export default function createGraphQLClient(options: Partial<GraphQLClientOptions> = {}): GraphQLClient {
     const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = { ...defaultOptions, ...options };
 
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = {
+        authorization: `Basic ${Buffer.from(`vivid:${process.env.API_PASSWORD}`).toString("base64")}`,
+    };
 
     const includeInvisibleContentHeaderEntries: string[] = [];
 
