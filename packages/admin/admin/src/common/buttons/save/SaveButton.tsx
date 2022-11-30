@@ -65,19 +65,25 @@ const SaveBtn = ({
         else if (displayState === "saving" && hasErrors === true) {
             timeoutId = window.setTimeout(() => {
                 setDisplayState("error");
-                timeoutId = window.setTimeout(() => {
-                    setDisplayState("idle");
-                }, 5000);
             }, 500);
         }
         // Display Success
         else if (displayState === "saving" && saving === false && hasErrors === false) {
             timeoutId = window.setTimeout(() => {
                 setDisplayState("success");
-                timeoutId = window.setTimeout(() => {
-                    setDisplayState("idle");
-                }, 2000);
             }, 500);
+        }
+        // Return to idle
+        else if (displayState === "error") {
+            timeoutId = window.setTimeout(() => {
+                setDisplayState("idle");
+            }, 5000);
+        }
+        // Return to idle
+        else if (displayState === "success") {
+            timeoutId = window.setTimeout(() => {
+                setDisplayState("idle");
+            }, 2000);
         }
 
         return () => {
