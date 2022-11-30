@@ -1,30 +1,36 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { passportJwtSecret } from "jwks-rsa";
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 
-import { AUTH_CURRENT_USER_LOADER, AUTH_JWT_CONFIG } from "../auth.constants";
-import { JwtConfig } from "../auth.module";
-import { CurrentUser } from "../dto/current-user";
-import { CurrentUserLoaderInterface } from "../interfaces/current-user-loader.interface";
+import { AUTH_CONFIG } from "../auth.constants";
+import { AuthConfig } from "../auth.module";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
-    constructor(
-        @Inject(forwardRef(() => AUTH_JWT_CONFIG)) config: JwtConfig,
-        @Inject(AUTH_CURRENT_USER_LOADER) private readonly currentUserLoader: CurrentUserLoaderInterface,
-    ) {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKeyProvider: passportJwtSecret({
-                jwksUri: config.jwksUri,
-            }),
-            ignoreExpiration: true, // https://github.com/oauth2-proxy/oauth2-proxy/issues/1836
-        });
+export class JwtStrategy<CurrentUser> extends PassportStrategy(Strategy, "jwt") {
+    constructor(@Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig<CurrentUser>) {
+        let strategyConfig: StrategyOptions;
+        if (config.staticUserJwt) {
+            strategyConfig = {
+                jwtFromRequest: ExtractJwt.fromExtractors([() => config.staticUserJwt as string]),
+                secretOrKey: "static",
+            };
+        } else if (config.jwksUri) {
+            strategyConfig = {
+                jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+                secretOrKeyProvider: passportJwtSecret({
+                    jwksUri: config.jwksUri,
+                }),
+                ignoreExpiration: true, // https://github.com/oauth2-proxy/oauth2-proxy/issues/1836
+            };
+        } else {
+            throw new Error("Can neither find a static jwt nor a jwksUri");
+        }
+        super(strategyConfig);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async validate(data: any): Promise<CurrentUser> {
-        return this.currentUserLoader.load(data);
+        return this.config.currentUserLoader.load(data);
     }
 }

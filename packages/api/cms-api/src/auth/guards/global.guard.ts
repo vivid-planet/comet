@@ -5,8 +5,8 @@ import { AuthGuard, IAuthGuard, Type } from "@nestjs/passport";
 import { Request } from "express";
 import { isObservable, lastValueFrom } from "rxjs";
 
+import { CurrentUser } from "../current-user/current-user";
 import { allowForRoleMetadataKey } from "../decorators/allow-for-role.decorator";
-import { CurrentUser } from "../dto/current-user";
 
 function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
     class GlobalAuthGuard extends AuthGuard(type) implements CanActivate {
@@ -61,6 +61,4 @@ function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
     return mixin(GlobalAuthGuard);
 }
 
-export class GlobalAuthedUserAuthGuard extends CometAuthGuard("authedUser") {}
-
-export class GlobalJwtAuthGuard extends CometAuthGuard("jwt") {}
+export class GlobalAuthGuard extends CometAuthGuard("jwt") {}

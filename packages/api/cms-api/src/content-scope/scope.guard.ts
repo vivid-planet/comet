@@ -4,7 +4,7 @@ import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
-import { CurrentUser } from "../auth/dto/current-user";
+import { CurrentUser } from "../auth/current-user/current-user";
 import { ContentScope } from "../common/decorators/content-scope.interface";
 import { ScopedEntityMeta } from "../common/decorators/scoped-entity.decorator";
 import { SubjectEntityMeta } from "../common/decorators/subject-entity.decorator";

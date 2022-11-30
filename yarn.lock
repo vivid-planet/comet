@@ -4929,6 +4929,7 @@ __metadata:
     "@nestjs/platform-express": ^9.0.0
     "@types/express": ^4.0.0
     "@types/get-image-colors": ^4.0.0
+    "@types/jsonwebtoken": ^8.5.9
     "@types/lodash.isequal": ^4.0.0
     "@types/mime": ^2.0.0
     "@types/mime-db": ^1.0.0
@@ -4952,6 +4953,7 @@ __metadata:
     hasha: ^5.2.2
     jest: ^29.0.3
     jest-junit: ^13.0.0
+    jsonwebtoken: ^8.5.1
     jwks-rsa: ^3.0.0
     lodash.isequal: ^4.0.0
     mime: ^3.0.0

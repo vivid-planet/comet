@@ -66,13 +66,14 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
         }),
         AuthModule.register<CurrentUser>({
             imports: [ConfigModule],
-            strategy: "authedUser",
             useFactory: () => ({
                 authedUser: {
                     id: "1",
                     name: "Test Admin",
+                    email: "demo@comet-dxp.com",
                     language: "en",
                     role: "admin",
+                    rights: {},
                     domains: ["main", "secondary"],
                 },
             }),

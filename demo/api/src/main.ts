@@ -14,7 +14,7 @@ require("elastic-apm-node").start({
     active: !!process.env.API_ENABLE_APM,
 });
 
-import { ExceptionInterceptor, GlobalAuthedUserAuthGuard, ValidationExceptionFactory } from "@comet/cms-api";
+import { ExceptionInterceptor, GlobalAuthGuard, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { NestFactory, Reflector } from "@nestjs/core";
@@ -48,7 +48,7 @@ async function bootstrap(): Promise<void> {
             whitelist: true,
         }),
     );
-    app.useGlobalGuards(new GlobalAuthedUserAuthGuard(app.get(Reflector)));
+    app.useGlobalGuards(new GlobalAuthGuard(app.get(Reflector)));
 
     app.use(compression());
     app.use(cookieParser());

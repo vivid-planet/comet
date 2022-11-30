@@ -1,93 +1,75 @@
-import { DynamicModule, Module, ModuleMetadata, Provider, Type } from "@nestjs/common";
+import { DynamicModule, Module, ModuleMetadata, Type } from "@nestjs/common";
+import jwt from "jsonwebtoken";
 import fetch from "node-fetch";
 
-import { AUTH_CONFIG, AUTH_CURRENT_USER_LOADER, AUTH_JWT_CONFIG } from "./auth.constants";
-import { createAuthAuthedUserResolver, createAuthJwtResolver } from "./auth.resolver";
-import { DefaultCurrentUserLoaderService } from "./default-current-user-loader.service";
-import { CurrentUserInterface } from "./dto/current-user";
-import { CurrentUserLoaderInterface } from "./interfaces/current-user-loader.interface";
-import { AuthedUserStrategy } from "./strategies/authed-user.strategy";
+import { AUTH_CONFIG, AUTH_OPTIONS } from "./auth.constants";
+import { createAuthResolver } from "./auth.resolver";
+import { CurrentUserInterface } from "./current-user/current-user";
+import { CurrentUserJwtLoader, CurrentUserLoaderInterface, CurrentUserStaticLoader } from "./current-user/current-user-loader";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
-export interface JwtConfig {
-    jwksUri: string;
+export interface AuthConfig<CurrentUser> {
+    postLogoutRedirectUri?: string;
+    jwksUri?: string;
     endSessionEndpoint?: string;
+    staticUserJwt?: string;
+    currentUserLoader: CurrentUserLoaderInterface<CurrentUser>;
+}
+
+interface AuthModuleConfig<CurrentUser> {
+    idpUrl?: string;
     postLogoutRedirectUri?: string;
+    authedUser?: CurrentUser;
 }
 
-interface AuthModuleJwtConfig {
-    idpUrl: string;
-    postLogoutRedirectUri?: string;
-}
-
-export interface AuthedUserConfig<CurrentUser> {
-    authedUser: CurrentUser;
-}
-
-export interface AuthModuleAuthedUserOptions<CurrentUser extends CurrentUserInterface> extends Pick<ModuleMetadata, "imports"> {
-    readonly strategy: "authedUser";
+export interface AuthModuleOptions<CurrentUser extends CurrentUserInterface> extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => Promise<AuthedUserConfig<CurrentUser>> | AuthedUserConfig<CurrentUser>;
+    useFactory: (...args: any[]) => Promise<AuthModuleConfig<CurrentUser>> | AuthModuleConfig<CurrentUser>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
-    currentUserDto: Type<CurrentUser>;
-}
-
-export interface AuthModuleJwtOptions<CurrentUser extends CurrentUserInterface> extends Pick<ModuleMetadata, "imports"> {
-    readonly strategy: "jwt";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => Promise<AuthModuleJwtConfig> | AuthModuleJwtConfig;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    inject?: any[];
-    currentUserLoaderService?: Type<CurrentUserLoaderInterface>;
+    currentUserLoader?: CurrentUserLoaderInterface<CurrentUser>;
     currentUserDto: Type<CurrentUser>;
 }
 
 @Module({})
 export class AuthModule {
-    static register<CurrentUser extends CurrentUserInterface>(
-        options: AuthModuleAuthedUserOptions<CurrentUser> | AuthModuleJwtOptions<CurrentUser>,
-    ): DynamicModule {
-        const providers: Provider[] = [
-            {
-                provide: AUTH_CONFIG,
-                ...options,
-            },
-        ];
-        if (options.strategy === "authedUser") {
-            providers.push(AuthedUserStrategy, createAuthAuthedUserResolver<CurrentUser>(options.currentUserDto));
-        } else if (options.strategy === "jwt") {
-            providers.push(
-                {
-                    provide: AUTH_CURRENT_USER_LOADER,
-                    useClass: options.currentUserLoaderService ?? DefaultCurrentUserLoaderService,
-                },
-                {
-                    provide: AUTH_JWT_CONFIG,
-                    useFactory: async (options: AuthModuleJwtConfig): Promise<JwtConfig> => {
-                        const uri = `${options.idpUrl}/.well-known/openid-configuration`;
-                        const result = await fetch(uri);
-                        const metadata = await result.json();
-                        if (!metadata.jwks_uri) {
-                            throw new Error(`Cannot get JWKS-URI from ${uri}`);
-                        }
-                        return {
-                            jwksUri: metadata.jwks_uri,
-                            endSessionEndpoint: metadata.end_session_endpoint,
-                            postLogoutRedirectUri: options.postLogoutRedirectUri,
-                        };
-                    },
-                    inject: [AUTH_CONFIG],
-                },
-                JwtStrategy,
-                createAuthJwtResolver<CurrentUser>(options.currentUserDto),
-            );
-        }
-
+    static register<CurrentUser extends CurrentUserInterface>(options: AuthModuleOptions<CurrentUser>): DynamicModule {
         return {
             module: AuthModule,
             imports: options.imports ?? [],
-            providers,
+            providers: [
+                {
+                    provide: AUTH_OPTIONS,
+                    ...options,
+                },
+                {
+                    provide: AUTH_CONFIG,
+                    useFactory: async (config: AuthModuleConfig<CurrentUser>): Promise<AuthConfig<CurrentUser>> => {
+                        if (config.authedUser) {
+                            return {
+                                staticUserJwt: jwt.sign(config.authedUser, "static"),
+                                currentUserLoader: options.currentUserLoader ?? new CurrentUserStaticLoader<CurrentUser>(),
+                            };
+                        } else {
+                            if (!config.idpUrl) throw new Error("idpUrl must be set");
+                            const uri = `${config.idpUrl}/.well-known/openid-configuration`;
+                            const result = await fetch(uri);
+                            const metadata = await result.json();
+                            if (!metadata.jwks_uri) {
+                                throw new Error(`Cannot get JWKS-URI from ${uri}`);
+                            }
+                            return {
+                                endSessionEndpoint: metadata.end_session_endpoint,
+                                jwksUri: metadata.jwks_uri,
+                                currentUserLoader: options.currentUserLoader ?? new CurrentUserJwtLoader<CurrentUser>(),
+                            };
+                        }
+                    },
+                    inject: [AUTH_OPTIONS],
+                },
+                JwtStrategy<CurrentUser>,
+                createAuthResolver<CurrentUser>(options.currentUserDto),
+            ],
         };
     }
 }

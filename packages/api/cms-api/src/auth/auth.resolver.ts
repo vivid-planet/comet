@@ -2,30 +2,14 @@ import { forwardRef, Inject, Type } from "@nestjs/common";
 import { Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
 
-import { AUTH_JWT_CONFIG } from "./auth.constants";
-import { JwtConfig } from "./auth.module";
+import { AUTH_CONFIG } from "./auth.constants";
+import { AuthConfig } from "./auth.module";
 import { GetCurrentUser } from "./decorators/get-current-user.decorator";
 
-export function createAuthAuthedUserResolver<CurrentUser>(CurrentUser: Type<CurrentUser>): Type<unknown> {
+export function createAuthResolver<CurrentUser>(CurrentUser: Type<CurrentUser>): Type<unknown> {
     @Resolver(() => CurrentUser)
-    class AuthedUserResolver {
-        @Query(() => CurrentUser)
-        async currentUser(@GetCurrentUser() user: typeof CurrentUser): Promise<typeof CurrentUser> {
-            return user;
-        }
-
-        @Mutation(() => String)
-        currentUserSignOut(): string {
-            return "/";
-        }
-    }
-    return AuthedUserResolver;
-}
-
-export function createAuthJwtResolver<CurrentUser>(CurrentUser: Type<CurrentUser>): Type<unknown> {
-    @Resolver(() => CurrentUser)
-    class JwtAuthResolver {
-        constructor(@Inject(forwardRef(() => AUTH_JWT_CONFIG)) private config: JwtConfig) {}
+    class AuthResolver {
+        constructor(@Inject(forwardRef(() => AUTH_CONFIG)) private config: AuthConfig<CurrentUser>) {}
 
         @Query(() => CurrentUser)
         async currentUser(@GetCurrentUser() user: typeof CurrentUser): Promise<typeof CurrentUser> {
@@ -44,9 +28,8 @@ export function createAuthJwtResolver<CurrentUser>(CurrentUser: Type<CurrentUser
                 }).toString();
                 redirectUri = url.toString();
             }
-
-            return `/oauth2/sign_out?rd=${encodeURIComponent("/")}`;
+            return `/oauth2/sign_out?rd=${encodeURIComponent(redirectUri)}`;
         }
     }
-    return JwtAuthResolver;
+    return AuthResolver;
 }
