@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This projec
 #### Changes
 
 -   Fix a bug where the slider thumbs are not visible when using FinalFormRangeInput.
+-   Fix a bug where `SaveButton` would not clear `error` and `success` display states after timeout
 
 ## 3.2.0
 
