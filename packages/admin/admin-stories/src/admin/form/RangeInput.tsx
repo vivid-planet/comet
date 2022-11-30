@@ -1,21 +1,21 @@
 import { Field, FinalFormRangeInput, Toolbar, ToolbarTitleItem } from "@comet/admin";
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, SliderThumb, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-const Thumb = styled("div")`
+const Thumb = styled(SliderThumb)`
     && {
-        margin-top: -9px;
-        height: 20px;
-        width: 20px;
-
-        &:hover {
+        &:hover,
+        &.Mui-focusVisible {
             box-shadow: none;
         }
 
         &:after {
+            width: auto;
+            height: auto;
+            border-radius: 0;
             border: solid white;
             border-width: 0 2px 2px 0;
             transform: rotate(-45deg);
@@ -27,11 +27,9 @@ const Thumb = styled("div")`
             top: 0;
         }
 
-        &[data-index="1"] {
-            &:after {
-                transform: rotate(135deg);
-                left: 1px;
-            }
+        &[data-index="1"]:after {
+            transform: rotate(135deg);
+            left: 1px;
         }
     }
 `;
@@ -64,7 +62,7 @@ function Story() {
                                             min={0}
                                             max={100}
                                             endAdornment={<span>€</span>}
-                                            sliderProps={{ ThumbComponent: Thumb }}
+                                            sliderProps={{ components: { Thumb } }}
                                         />
                                         <Button
                                             variant="contained"
@@ -101,7 +99,7 @@ function Story() {
                                             min={0}
                                             max={150}
                                             endAdornment={<span>€</span>}
-                                            sliderProps={{ ThumbComponent: Thumb }}
+                                            sliderProps={{ components: { Thumb } }}
                                         />
                                         <Button
                                             variant="contained"
@@ -138,7 +136,7 @@ function Story() {
                                             min={20}
                                             max={150}
                                             endAdornment={<span>€</span>}
-                                            sliderProps={{ ThumbComponent: Thumb }}
+                                            sliderProps={{ components: { Thumb } }}
                                         />
                                         <Button
                                             variant="contained"

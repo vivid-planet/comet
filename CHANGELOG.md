@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## NEXT
+
+### @comet/admin
+
+#### Changes
+
+-   Fix a bug where the slider thumbs are not visible when using FinalFormRangeInput.
+
 ## 3.2.0
 
 _Nov 29, 2022_
