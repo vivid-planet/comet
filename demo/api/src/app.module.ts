@@ -67,7 +67,7 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
         AuthModule.register<CurrentUser>({
             imports: [ConfigModule],
             useFactory: (config: ConfigType<typeof configNS>) => ({
-                authedUser: {
+                staticAuthedUser: {
                     id: "1",
                     name: "Test Admin",
                     email: "demo@comet-dxp.com",

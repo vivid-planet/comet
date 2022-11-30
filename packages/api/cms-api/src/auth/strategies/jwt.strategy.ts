@@ -10,9 +10,9 @@ import { AuthConfig } from "../auth.module";
 export class JwtStrategy<CurrentUser> extends PassportStrategy(Strategy, "jwt") {
     constructor(@Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig<CurrentUser>) {
         let strategyConfig: StrategyOptions;
-        if (config.staticUserJwt) {
+        if (config.staticAuthedUserJwt) {
             strategyConfig = {
-                jwtFromRequest: ExtractJwt.fromExtractors([() => config.staticUserJwt as string]),
+                jwtFromRequest: ExtractJwt.fromExtractors([() => config.staticAuthedUserJwt as string]),
                 secretOrKey: "static",
             };
         } else if (config.jwksUri) {

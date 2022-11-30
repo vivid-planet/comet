@@ -12,14 +12,14 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
 export interface AuthConfig<CurrentUser> {
     jwksUri?: string;
     endSessionEndpoint?: string;
-    staticUserJwt?: string;
+    staticAuthedUserJwt?: string;
     currentUserLoader: CurrentUserLoaderInterface<CurrentUser>;
 }
 
 export interface AuthModuleConfig<CurrentUser> {
     idpUrl?: string;
     postLogoutRedirectUri?: string;
-    authedUser?: CurrentUser;
+    staticAuthedUser?: CurrentUser;
     apiPassword: string;
 }
 
@@ -46,9 +46,9 @@ export class AuthModule {
                 {
                     provide: AUTH_CONFIG,
                     useFactory: async (config: AuthModuleConfig<CurrentUser>): Promise<AuthConfig<CurrentUser>> => {
-                        if (config.authedUser) {
+                        if (config.staticAuthedUser) {
                             return {
-                                staticUserJwt: jwt.sign(config.authedUser, "static"),
+                                staticAuthedUserJwt: jwt.sign(config.staticAuthedUser, "static"),
                                 currentUserLoader: options.currentUserLoader ?? new CurrentUserStaticLoader<CurrentUser>(),
                             };
                         } else {
