@@ -4,7 +4,7 @@ import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
-import { CurrentUser } from "../auth/dto/current-user";
+import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { ContentScope } from "../common/decorators/content-scope.interface";
 import { ScopedEntityMeta } from "../common/decorators/scoped-entity.decorator";
 import { SubjectEntityMeta } from "../common/decorators/subject-entity.decorator";
@@ -18,7 +18,7 @@ export class ScopeGuard implements CanActivate {
         private reflector: Reflector,
         private readonly orm: MikroORM,
         private readonly pageTreeService: PageTreeService,
-        @Inject(CAN_ACCESS_SCOPE) private canAccessScope: (requestScope: ContentScope, user: CurrentUser) => boolean,
+        @Inject(CAN_ACCESS_SCOPE) private canAccessScope: (requestScope: ContentScope, user: CurrentUserInterface) => boolean,
     ) {}
 
     async inferScopeFromRequest(context: ExecutionContext): Promise<ContentScope | undefined> {
@@ -92,7 +92,7 @@ export class ScopeGuard implements CanActivate {
 
         const request =
             context.getType().toString() === "graphql" ? GqlExecutionContext.create(context).getContext().req : context.switchToHttp().getRequest();
-        const user = request.user as CurrentUser | undefined;
+        const user = request.user as CurrentUserInterface | undefined;
         if (!user) return true;
 
         const requestScope = await this.inferScopeFromRequest(context);

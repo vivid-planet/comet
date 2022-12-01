@@ -152,6 +152,19 @@ interface DocumentInterface {
   updatedAt: DateTime!
 }
 
+type CurrentUserRight {
+  right: String!
+  values: [String!]!
+}
+
+type CurrentUser {
+  name: String!
+  email: String!
+  language: String!
+  role: String!
+  rights: [CurrentUserRight!]
+}
+
 type Redirect implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -192,6 +205,7 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  currentUser: CurrentUser!
 }
 
 input RedirectScopeInput {
@@ -254,6 +268,7 @@ type Mutation {
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
+  currentUserSignOut: String!
 }
 
 input CreateBuildsInput {
