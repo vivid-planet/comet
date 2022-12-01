@@ -1,5 +1,9 @@
 # Comet DXP
 
+## Docs
+
+Visit https://docs.comet-dxp.com/ to view the documentation.
+
 ## Getting started
 
 ### Prerequisites
