@@ -1,5 +1,4 @@
 import {
-    AuthModule,
     BlobStorageConfig,
     BlobStorageModule,
     BlocksModule,
@@ -10,7 +9,6 @@ import {
     ContentScopeModule,
     DamModule,
     FilesService,
-    GlobalAuthGuard,
     ImagesService,
     KubernetesModule,
     PageTreeModule,
@@ -21,7 +19,6 @@ import {
 import { ApolloDriver } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
-import { APP_GUARD } from "@nestjs/core";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ConfigModule } from "@src/config/config.module";
 import { configNS } from "@src/config/config.namespace";
@@ -31,7 +28,6 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
-import { CurrentUserLoaderService } from "./auth/current-user-loader.service";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -66,21 +62,6 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
                 },
             }),
             inject: [configNS.KEY, BlocksTransformerService],
-        }),
-        AuthModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: async (config: ConfigType<typeof configNS>) => ({
-                config: {
-                    apiPassword: config.API_PASSWORD,
-                    idpConfig: {
-                        url: config.IDP_API_URL,
-                        password: config.IDP_API_PASSWORD,
-                        clientId: config.IDP_CLIENT_ID,
-                    },
-                },
-            }),
-            inject: [configNS.KEY],
-            currentUserLoaderService: CurrentUserLoaderService,
         }),
         ContentScopeModule.forRoot({
             canAccessScope(requestScope: ContentScope, user) {
@@ -197,6 +178,5 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
         PredefinedPageModule,
         ProductsModule,
     ],
-    providers: [{ provide: APP_GUARD, useClass: GlobalAuthGuard }],
 })
 export class AppModule {}

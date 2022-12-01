@@ -4,8 +4,7 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
-        "lib/*",
-        "access-token-service-worker.ejs"
+        "lib/*"
     ],
     "repository": {
         "type": "git",
@@ -29,7 +28,6 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "next-auth": "^3.0.0",
         "rimraf": "^3.0.0",
         "scroll-into-view-if-needed": "^2.0.0",
         "use-debounce": "^6.0.0"

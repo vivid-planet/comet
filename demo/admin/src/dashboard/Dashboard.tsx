@@ -1,7 +1,6 @@
 import { MainContent, messages, Stack } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { useUser } from "@comet/react-app-auth";
 import { Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ScopeIndicatorContent, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
@@ -39,7 +38,7 @@ const Greeting = styled(Typography)`
 
 const Dashboard: React.FC = () => {
     const intl = useIntl();
-    const user = useUser();
+    const user = { given_name: "TODO Auth" };
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "cometDemo.dashboard", defaultMessage: "Dashboard" })}>

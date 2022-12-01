@@ -53,7 +53,6 @@ export enum AdminMessageType {
     Block = "Block",
     SelectComponent = "SelectComponent",
     HoverComponent = "HoverComponent",
-    AccessToken = "AccessToken",
 }
 export interface IAdminBlockMessage {
     cometType: AdminMessageType.Block;
@@ -77,9 +76,4 @@ export interface IAdminHoverComponentMessage {
     };
 }
 
-export interface IAdminAccessTokenMessage {
-    cometType: AdminMessageType.AccessToken;
-    accessToken: string;
-}
-
-export type AdminMessage = IAdminBlockMessage | IAdminSelectComponentMessage | IAdminHoverComponentMessage | IAdminAccessTokenMessage;
+export type AdminMessage = IAdminBlockMessage | IAdminSelectComponentMessage | IAdminHoverComponentMessage;

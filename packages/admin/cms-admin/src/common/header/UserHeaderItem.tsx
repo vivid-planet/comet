@@ -1,6 +1,5 @@
 import { AppHeaderDropdown } from "@comet/admin";
 import { Account, Info, Logout } from "@comet/admin-icons";
-import { useAuthorization, useUser } from "@comet/react-app-auth";
 import { Box, Button as MUIButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
@@ -26,8 +25,7 @@ const Separator = styled(Box)`
 
 export function UserHeaderItem(): React.ReactElement {
     const [showAboutModal, setShowAboutModal] = React.useState(false);
-    const authorization = useAuthorization();
-    const user = useUser();
+    const user = { name: "TODO Auth" };
 
     return (
         <AppHeaderDropdown buttonChildren={user?.name} startIcon={<Account />}>
@@ -49,12 +47,7 @@ export function UserHeaderItem(): React.ReactElement {
                     color="primary"
                     endIcon={<Logout />}
                     onClick={async () => {
-                        if (authorization) {
-                            await authorization?.authorizationManager.signOut();
-                        } else {
-                            // eslint-disable-next-line no-console
-                            console.error("Can not log out -> can not find authorizationManager");
-                        }
+                        // TODO Auth
                     }}
                 >
                     <FormattedMessage id="comet.logout" defaultMessage="Logout" />

@@ -9,7 +9,7 @@ import { allowForRoleMetadataKey } from "../decorators/allow-for-role.decorator"
 import { CurrentUser } from "../dto/current-user";
 
 @Injectable()
-export class GlobalAuthGuard extends AuthGuard(["bearer", "basic"]) implements CanActivate {
+export class GlobalAuthGuard extends AuthGuard() implements CanActivate {
     constructor(private reflector: Reflector) {
         super();
     }

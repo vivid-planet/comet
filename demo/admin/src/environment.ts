@@ -1,8 +1,6 @@
 export default [
     "API_URL",
     "ADMIN_URL",
-    "IDP_URL",
-    "IDP_CLIENT_ID",
     "DAM_UPLOADS_MAX_FILE_SIZE",
     "IMGPROXY_MAX_SRC_RESOLUTION",
     "SITES_CONFIG",
