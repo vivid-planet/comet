@@ -1,11 +1,10 @@
 import { useRouter } from "next/router";
 import * as React from "react";
 
-import { IFrameLocationMessage, IFrameMessageType } from "../iframebridge/IFrameMessage";
-import { useIFrameBridge } from "../iframebridge/useIFrameBridge";
-import { previewStateUrlParamName } from "./constants";
-import { PreviewContext, Url } from "./PreviewContext";
-import { createPathToPreviewPath, defaultPreviewPath, parsePreviewState } from "./utils";
+import { PreviewContext, Url } from "../preview/PreviewContext";
+import { createPathToPreviewPath, defaultPreviewPath, parsePreviewParams } from "../preview/utils";
+import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFrameMessage";
+import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
 interface Props {
     previewPath?: string;
@@ -14,35 +13,33 @@ interface Props {
 export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, previewPath = defaultPreviewPath }) => {
     const router = useRouter();
 
-    const iFrame = useIFrameBridge();
-
     React.useEffect(() => {
         function sendUpstreamMessage() {
             const url = new URL(router.asPath, window.location.origin);
             const { pathname, searchParams } = url;
-            searchParams.delete(previewStateUrlParamName); // Remove __preview query parameter -> that's frontend preview internal
+            searchParams.delete("__preview"); // Remove __preview query parameter -> that's frontend preview internal
 
-            const message: IFrameLocationMessage = {
-                cometType: IFrameMessageType.SitePreviewLocation,
+            const message: SitePreviewIFrameLocationMessage = {
+                cometType: SitePreviewIFrameMessageType.SitePreviewLocation,
                 data: { search: searchParams.toString(), pathname },
             };
-            window.parent.postMessage(JSON.stringify(message), "*");
+            sendSitePreviewIFrameMessage(message);
         }
         sendUpstreamMessage();
         window.addEventListener("load", sendUpstreamMessage);
         () => {
             window.removeEventListener("load", sendUpstreamMessage);
         };
-    }, [router, iFrame]);
+    }, [router]);
 
-    const previewState = parsePreviewState(router.query);
+    const previewParams = parsePreviewParams(router.query);
 
     // maps the original-path to the preview-path
     const pathToPreviewPath = React.useCallback(
         (path: Url) => {
-            return createPathToPreviewPath({ path, previewPath, previewState, baseUrl: window.location.origin });
+            return createPathToPreviewPath({ path, previewPath, previewParams, baseUrl: window.location.origin });
         },
-        [previewPath, previewState],
+        [previewPath, previewParams],
     );
     const previewPathToPath = React.useCallback(
         (previewUrl: string) => {

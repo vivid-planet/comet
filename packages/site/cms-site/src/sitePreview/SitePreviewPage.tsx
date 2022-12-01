@@ -1,16 +1,15 @@
 import { signIn, useSession } from "next-auth/client";
 import * as React from "react";
 
-import { IFrameBridgeProvider } from "../iframebridge/IFrameBridge";
 import { SitePreviewProvider } from "./SitePreviewProvider";
 
-interface PreviewPageProps {
+interface SitePreviewPageProps {
     validateLogin?: React.ReactNode;
     loggingIn?: React.ReactNode;
     initializeServiceWorker?: React.ReactNode;
     serviceWorkerNotSupported?: React.ReactNode;
 }
-export const PreviewPage: React.FunctionComponent<PreviewPageProps> = ({
+export const SitePreviewPage: React.FunctionComponent<SitePreviewPageProps> = ({
     children,
     validateLogin = <div>Checking login...</div>,
     loggingIn = <div>Logging in...</div>,
@@ -60,9 +59,5 @@ export const PreviewPage: React.FunctionComponent<PreviewPageProps> = ({
         return <>{initializeServiceWorker}</>;
     }
 
-    return (
-        <IFrameBridgeProvider>
-            <SitePreviewProvider previewPath="/preview">{children}</SitePreviewProvider>
-        </IFrameBridgeProvider>
-    );
+    return <SitePreviewProvider previewPath="/preview">{children}</SitePreviewProvider>;
 };

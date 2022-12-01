@@ -1,14 +1,12 @@
-import { useIFrameBridge } from "@comet/blocks-admin";
-import { useAuthorization } from "@comet/react-app-auth";
 import { css } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import useDimensions from "react-cool-dimensions";
 
-import { DeviceFrameDesktop } from "./DeviceFrameDesktop";
-import { DeviceFrameMobile } from "./DeviceFrameMobile";
-import { DeviceFrameTablet } from "./DeviceFrameTablet";
-import { Device } from "./types";
+import { Device } from "./Device";
+import { DeviceFrameDesktop } from "./icons/DeviceFrameDesktop";
+import { DeviceFrameMobile } from "./icons/DeviceFrameMobile";
+import { DeviceFrameTablet } from "./icons/DeviceFrameTablet";
 
 interface DeviceConfig {
     deviceFrame: React.ReactNode;
@@ -52,29 +50,7 @@ interface Props {
 }
 
 const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initialPageUrl }, iFrameRef) => {
-    const authorization = useAuthorization();
-
-    const iFrameUrl = new URL(initialPageUrl);
-    iFrameUrl.searchParams.append("authProvider", "vivid-planet-idp");
-
     const deviceConfig = resolveDeviceConfig(device);
-    const iFrameBridge = useIFrameBridge();
-
-    React.useEffect(() => {
-        const subscription = authorization?.authorizationManager.onOAuthChange((oAuth) => {
-            if (!iFrameBridge.iFrameReady) {
-                return;
-            }
-
-            if (oAuth?.accessToken) {
-                iFrameBridge.sendAccessToken(oAuth.accessToken);
-            }
-        });
-
-        return () => {
-            subscription?.unsubscribe();
-        };
-    }, [iFrameBridge, authorization]);
 
     const { observe: containerRef, width, height } = useDimensions<HTMLDivElement | null>();
 
@@ -87,7 +63,7 @@ const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initi
                 style={{ transform: `scale(${scaleFactor})` }}
                 deviceConfig={deviceConfig}
             >
-                <IFrame ref={iFrameRef} src={iFrameUrl.toString()} deviceConfig={deviceConfig} />
+                <IFrame ref={iFrameRef} src={initialPageUrl} deviceConfig={deviceConfig} />
                 {deviceConfig && <DeviceFrameWrapper>{deviceConfig.deviceFrame}</DeviceFrameWrapper>}
             </OuterFrame>
         </Root>

@@ -3,8 +3,8 @@ import { ToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
+import { Device } from "./Device";
 import { ToggleButton } from "./ToggleButton";
-import { Device } from "./types";
 
 interface Props {
     device: Device;
