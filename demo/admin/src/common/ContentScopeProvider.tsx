@@ -11,7 +11,6 @@ import {
     useContentScopeConfig as useContentScopeConfigLibrary,
     useSitesConfig,
 } from "@comet/cms-admin";
-import { useUser } from "@comet/react-app-auth";
 import React from "react";
 
 type Domain = "main" | "secondary" | string;
@@ -51,9 +50,9 @@ interface UserProfileRole {
 }
 const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">> = ({ children }) => {
     const sitesConfig = useSitesConfig();
-    const user = useUser();
+    const user: UserProfileRole = { role: "admin", rights: [], domain: ["main", "secondary"] }; // TODO Auth
 
-    const allowedUserDomains = (user?.role as UserProfileRole).domain;
+    const allowedUserDomains = user.domain;
 
     const allowedSiteConfigs = Object.fromEntries(
         Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),

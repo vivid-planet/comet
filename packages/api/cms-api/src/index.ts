@@ -9,8 +9,6 @@ export { PublicApi } from "./auth/decorators/public-api.decorator";
 export { CurrentUser } from "./auth/dto/current-user";
 export { GlobalAuthGuard } from "./auth/guards/global.guard";
 export { CurrentUserLoaderInterface } from "./auth/interfaces/current-user-loader.interface";
-export { BasicAuthStrategy } from "./auth/strategies/basic-auth.strategy";
-export { BearerTokenStrategy } from "./auth/strategies/bearer-token.strategy";
 export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
 export { BlobStorageAzureStorage } from "./blob-storage/backends/azure/blob-storage-azure.storage";
 export { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage/backends/blob-storage-backend.interface";
