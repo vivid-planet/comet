@@ -2,8 +2,8 @@ import { V1CronJob } from "@kubernetes/client-node";
 import { Inject } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
+import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { CurrentUser } from "../auth/dto/current-user";
 import { ContentScopeService } from "../content-scope/content-scope.service";
 import { BUILDS_CONFIG, INSTANCE_LABEL } from "./builds.constants";
 import { BuildsConfig } from "./builds.module";
@@ -30,7 +30,7 @@ export class BuildsResolver {
     @Mutation(() => Boolean)
     @SkipBuild()
     async createBuilds(
-        @GetCurrentUser() user: CurrentUser,
+        @GetCurrentUser() user: CurrentUserInterface,
         @Args("input", { type: () => CreateBuildsInput }) { names }: CreateBuildsInput,
     ): Promise<boolean> {
         const cronJobs: V1CronJob[] = [];
@@ -51,12 +51,12 @@ export class BuildsResolver {
     }
 
     @Query(() => [BuildObject])
-    async builds(@GetCurrentUser() user: CurrentUser, @Args("limit", { nullable: true }) limit?: number): Promise<BuildObject[]> {
+    async builds(@GetCurrentUser() user: CurrentUserInterface, @Args("limit", { nullable: true }) limit?: number): Promise<BuildObject[]> {
         return this.buildsService.getBuilds(user, { limit: limit });
     }
 
     @Query(() => AutoBuildStatus)
-    async autoBuildStatus(@GetCurrentUser() user: CurrentUser): Promise<AutoBuildStatus> {
+    async autoBuildStatus(@GetCurrentUser() user: CurrentUserInterface): Promise<AutoBuildStatus> {
         return this.buildsService.getAutoBuildStatus(user);
     }
 }

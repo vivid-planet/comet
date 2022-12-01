@@ -5,7 +5,7 @@ import { Injectable } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
 
-import { CurrentUser } from "../auth/dto/current-user";
+import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { ContentScopeService } from "../content-scope/content-scope.service";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BUILDER_LABEL, INSTANCE_LABEL, PARENT_CRON_JOB_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
@@ -26,7 +26,7 @@ export class BuildsService {
         private readonly contentScopeService: ContentScopeService,
     ) {}
 
-    private async getAllowedBuildJobs(user: CurrentUser): Promise<V1Job[]> {
+    private async getAllowedBuildJobs(user: CurrentUserInterface): Promise<V1Job[]> {
         const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
         return allJobs.filter((job) => {
             return this.contentScopeService.canAccessScope(this.kubernetesService.getContentScope(job), user);
@@ -86,7 +86,7 @@ export class BuildsService {
         return this.createBuilds(trigger, builderCronJobs);
     }
 
-    async getBuilds(user: CurrentUser, options?: { limit?: number | undefined }): Promise<BuildObject[]> {
+    async getBuilds(user: CurrentUserInterface, options?: { limit?: number | undefined }): Promise<BuildObject[]> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
@@ -110,7 +110,7 @@ export class BuildsService {
         );
     }
 
-    async getAutoBuildStatus(user: CurrentUser): Promise<AutoBuildStatus> {
+    async getAutoBuildStatus(user: CurrentUserInterface): Promise<AutoBuildStatus> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }

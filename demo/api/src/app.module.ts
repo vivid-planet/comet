@@ -1,4 +1,5 @@
 import {
+    AuthModule,
     BlobStorageConfig,
     BlobStorageModule,
     BlocksModule,
@@ -7,6 +8,7 @@ import {
     BuildsModule,
     ContentScope,
     ContentScopeModule,
+    CurrentUserInterface,
     DamModule,
     FilesService,
     ImagesService,
@@ -27,6 +29,7 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
+import { CurrentUser } from "./auth/current-user";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -62,8 +65,24 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
             }),
             inject: [configNS.KEY, BlocksTransformerService],
         }),
+        AuthModule.register({
+            imports: [ConfigModule],
+            useFactory: (config: ConfigType<typeof configNS>) => ({
+                staticAuthedUser: {
+                    id: "1",
+                    name: "Test Admin",
+                    email: "demo@comet-dxp.com",
+                    language: "en",
+                    role: "admin",
+                    domains: ["main", "secondary"],
+                },
+                apiPassword: config.API_PASSWORD,
+            }),
+            currentUser: CurrentUser,
+            inject: [configNS.KEY],
+        }),
         ContentScopeModule.forRoot({
-            canAccessScope(requestScope: ContentScope, user) {
+            canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
                 if (!user.domains) return true; //all domains
                 return user.domains.includes(requestScope.domain);
             },

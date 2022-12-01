@@ -1,10 +1,11 @@
 import { AppHeaderDropdown } from "@comet/admin";
 import { Account, Info, Logout } from "@comet/admin-icons";
-import { Box, Button as MUIButton } from "@mui/material";
+import { Box, Button as MUIButton, CircularProgress } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { GQLCurrentUserQuery, GQLSignOutMutation } from "../../graphql.generated";
 import { AboutModal } from "./about/AboutModal";
 
 const DropdownContent = styled(Box)`
@@ -23,12 +24,31 @@ const Separator = styled(Box)`
     margin-bottom: 20px;
 `;
 
+import { gql, useMutation, useQuery } from "@apollo/client";
+
+const currentUserQuery = gql`
+    query CurrentUser {
+        currentUser {
+            name
+        }
+    }
+`;
+
+const signOutMutation = gql`
+    mutation SignOut {
+        currentUserSignOut
+    }
+`;
+
 export function UserHeaderItem(): React.ReactElement {
     const [showAboutModal, setShowAboutModal] = React.useState(false);
-    const user = { name: "TODO Auth" };
+    const { loading, data } = useQuery<GQLCurrentUserQuery>(currentUserQuery);
+    const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
+
+    if (loading || !data) return <CircularProgress />;
 
     return (
-        <AppHeaderDropdown buttonChildren={user?.name} startIcon={<Account />}>
+        <AppHeaderDropdown buttonChildren={data.currentUser.name} startIcon={<Account />}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
@@ -41,17 +61,23 @@ export function UserHeaderItem(): React.ReactElement {
                     <FormattedMessage id="comet.about" defaultMessage="About" />
                 </Button>
                 <Separator />
-                <Button
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    endIcon={<Logout />}
-                    onClick={async () => {
-                        // TODO Auth
-                    }}
-                >
-                    <FormattedMessage id="comet.logout" defaultMessage="Logout" />
-                </Button>
+                {isSigningOut && <CircularProgress />}
+                {!isSigningOut && (
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        endIcon={<Logout />}
+                        onClick={async () => {
+                            const result = await signOut();
+                            if (result.data) {
+                                location.href = result.data.currentUserSignOut;
+                            }
+                        }}
+                    >
+                        <FormattedMessage id="comet.logout" defaultMessage="Logout" />
+                    </Button>
+                )}
             </DropdownContent>
             <AboutModal
                 open={showAboutModal}
