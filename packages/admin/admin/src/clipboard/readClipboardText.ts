@@ -7,11 +7,32 @@ export async function readClipboardText(): Promise<string | undefined> {
         return undefined;
     }
 
+    // Firefox does not support navigator.clipboard.readText() by default.
+    if (navigator.clipboard.readText === undefined) {
+        return window.localStorage.getItem("comet_clipboard") ?? undefined;
+    }
+
     if (canReadClipboard === true) {
         return navigator.clipboard.readText();
     }
 
-    const permissionStatus = await navigator.permissions.query({ name: "clipboard-read" as PermissionName });
+    let permissionStatus: PermissionStatus;
+
+    try {
+        permissionStatus = await navigator.permissions.query({ name: "clipboard-read" as PermissionName });
+    } catch (error) {
+        // Firefox with "dom.events.asyncClipboard.readText" enabled via about:config. navigator.clipboard.readText() is available, but permission
+        // 'clipboard-read' permission cannot be queried. We can still read the clipboard though.
+        if (
+            error instanceof TypeError &&
+            error.message === "'clipboard-read' (value of 'name' member of PermissionDescriptor) is not a valid value for enumeration PermissionName."
+        ) {
+            canReadClipboard = true;
+            return navigator.clipboard.readText();
+        }
+
+        throw error;
+    }
 
     if (permissionStatus.state === "granted") {
         canReadClipboard = true;
