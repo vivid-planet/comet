@@ -72,6 +72,7 @@ export function createPageTreeResolver({
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
         ) {
             const { includeInvisiblePages } = getRequestContextHeadersFromRequest(this.context.req);
+            //keeping readApi per request is fine
             this.pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: [Visibility.Published, ...(includeInvisiblePages || [])],
             });

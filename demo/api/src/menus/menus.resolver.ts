@@ -54,6 +54,7 @@ export class MenusResolver {
             .createReadApi({
                 visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
             })
+            .preloadNodes(scope)
             .pageTreeRootNodeList({ scope, category: PageTreeNodeCategory.TopMenu, excludeHiddenInMenu: true });
     }
 }

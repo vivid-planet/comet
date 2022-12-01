@@ -23,6 +23,13 @@ export interface PageTreeReadApi {
     pageTreeRootNodeList(options?: Options & { excludeHiddenInMenu?: boolean }): Promise<PageTreeNodeInterface[]>;
     getDescendants(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface[]>;
     getFirstNodeByAttachedPageId(pageId: string): Promise<PageTreeNodeInterface | null>;
+    preloadNodes(scope: ScopeInterface): Promise<void>;
+}
+
+// hash from scope object used as key for preloadedNodes Map
+function scopeHash(scope: ScopeInterface | undefined): string {
+    if (!scope) return "";
+    return JSON.stringify(scope);
 }
 
 export function createReadApi(
@@ -43,6 +50,68 @@ export function createReadApi(
 
     const pageTreeNodeRepository = pageTreeService.pageTreeRepository;
     const attachedDocumentsRepository = pageTreeService.attachedDocumentsRepository;
+    const preloadedNodes = new Map<string, PageTreeNodeInterface[]>();
+    const queryNodes = async (
+        scope: ScopeInterface | undefined,
+        where: {
+            parentId?: string | null;
+            excludeHiddenInMenu?: boolean;
+            category?: string;
+            documentType?: string;
+            slug?: string;
+        },
+    ): Promise<PageTreeNodeInterface[]> => {
+        if (scope && preloadedNodes.has(scopeHash(scope))) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            let nodes = preloadedNodes.get(scopeHash(scope))!;
+            if (where.parentId !== undefined) {
+                nodes = nodes.filter((node) => node.parentId === where.parentId);
+            }
+            if (where.excludeHiddenInMenu) {
+                nodes = nodes.filter((node) => node.hideInMenu === false);
+            }
+            if (where.category) {
+                nodes = nodes.filter((node) => node.category === where.category);
+            }
+            if (where.documentType) {
+                nodes = nodes.filter((node) => node.documentType === where.documentType);
+            }
+            if (where.slug) {
+                nodes = nodes.filter((node) => node.slug === where.slug);
+            }
+            return nodes;
+        } else {
+            const qb = pageTreeNodeRepository
+                .createQueryBuilder()
+                .where({
+                    visibility: visibilityFilter,
+                })
+                .orderBy({ pos: "ASC" });
+
+            if (scope) {
+                qb.andWhere({ scope });
+            }
+            if (where.parentId !== undefined) {
+                qb.andWhere({ parentId: where.parentId });
+            }
+
+            if (where.excludeHiddenInMenu) {
+                qb.andWhere({ hideInMenu: false });
+            }
+            if (where.category) {
+                qb.andWhere({ category: where.category });
+            }
+            if (where.documentType) {
+                qb.andWhere({ documentType: where.documentType });
+            }
+            if (where.slug) {
+                qb.andWhere({ slug: where.slug });
+            }
+            const nodes = await qb.getResultList();
+            return nodes;
+        }
+    };
+
     return {
         async nodePathById(id) {
             const node = await this.getNodeOrFail(id);
@@ -115,39 +184,16 @@ export function createReadApi(
         },
 
         async getNodes(options = {}): Promise<PageTreeNodeInterface[]> {
-            const qb = pageTreeNodeRepository
-                .createQueryBuilder()
-                .where({
-                    visibility: visibilityFilter,
-                })
-                .orderBy({ pos: "ASC" });
-
-            if (options.category) {
-                qb.andWhere({ category: options.category });
-            }
-
-            if (options.scope) {
-                qb.andWhere({ scope: options.scope });
-            }
-
-            if (options.documentType) {
-                qb.andWhere({ documentType: options.documentType });
-            }
-
-            return qb.getResultList();
+            return queryNodes(options.scope, {
+                category: options.category,
+                documentType: options.documentType,
+            });
         },
 
         async getChildNodes(node) {
-            const nodes = await pageTreeNodeRepository
-                .createQueryBuilder()
-                .where({
-                    parentId: node.id,
-                    visibility: visibilityFilter,
-                })
-                .orderBy({ pos: "ASC" })
-                .getResultList();
-
-            return nodes;
+            return queryNodes(node.scope, {
+                parentId: node.id,
+            });
         },
 
         async getNodeByPath(path, options = {}) {
@@ -158,25 +204,26 @@ export function createReadApi(
             }
 
             if (path === "/") {
-                where.slug = "home";
+                const nodes = await queryNodes(options.scope, {
+                    slug: "home",
+                });
 
-                const node = await pageTreeNodeRepository.findOne(where);
-
-                if (!node) {
+                if (!nodes.length) {
                     return null;
                 }
 
-                return node;
+                return nodes[0];
             }
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let node: any = null;
             let parentId = null;
             for (const slug of path.substr(1).split("/")) {
-                where.slug = slug;
-                where.parentId = parentId ?? null;
-
-                node = await pageTreeNodeRepository.findOne(where);
+                const nodes = await queryNodes(options.scope, {
+                    slug,
+                    parentId: parentId ?? null,
+                });
+                node = nodes[0];
 
                 if (!node) return null;
                 parentId = node.id;
@@ -184,25 +231,11 @@ export function createReadApi(
             return node;
         },
         async pageTreeRootNodeList(options = {}): Promise<PageTreeNodeInterface[]> {
-            const qb = pageTreeNodeRepository
-                .createQueryBuilder()
-                .where({
-                    parentId: null,
-                    visibility: visibilityFilter,
-                })
-                .orderBy({ pos: "ASC" });
-
-            if (options.scope) {
-                qb.andWhere({ scope: options.scope });
-            }
-            if (options.excludeHiddenInMenu) {
-                qb.andWhere({ hideInMenu: false });
-            }
-            if (options.category) {
-                qb.andWhere({ category: options.category });
-            }
-            const nodes = await qb.getResultList();
-            return nodes;
+            return queryNodes(options.scope, {
+                category: options.category,
+                excludeHiddenInMenu: options.excludeHiddenInMenu,
+                parentId: null,
+            });
         },
 
         async getDescendants(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface[]> {
@@ -227,6 +260,17 @@ export function createReadApi(
             }
 
             return null;
+        },
+
+        async preloadNodes(scope?: ScopeInterface) {
+            const qb = pageTreeNodeRepository
+                .createQueryBuilder()
+                .where({
+                    visibility: visibilityFilter,
+                })
+                .orderBy({ pos: "ASC" });
+            qb.andWhere({ scope });
+            preloadedNodes.set(scopeHash(scope), await qb.getResultList());
         },
     };
 }
