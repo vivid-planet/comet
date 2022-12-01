@@ -6,8 +6,9 @@ import parser from "cron-parser";
 import { format } from "date-fns";
 
 import { JobStatus } from "../kubernetes/job-status.enum";
+import { INSTANCE_LABEL, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { BUILD_CHECKER_LABEL, BUILDER_LABEL, INSTANCE_LABEL, PARENT_CRON_JOB_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
+import { BUILD_CHECKER_LABEL, BUILDER_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { BuildObject } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";

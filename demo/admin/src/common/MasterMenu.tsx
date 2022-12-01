@@ -70,6 +70,10 @@ const MasterMenu: React.FC = () => {
                     to={`${match.url}/system/publisher`}
                 />
                 <MenuItemRouterLink
+                    primary={intl.formatMessage({ id: "cometDemo.menu.cronJobs", defaultMessage: "Cron Jobs" })}
+                    to={`${match.url}/system/cron-jobs`}
+                />
+                <MenuItemRouterLink
                     primary={intl.formatMessage({ id: "cometDemo.menu.redirects", defaultMessage: "Redirects" })}
                     to={`${match.url}/system/redirects`}
                 />

@@ -98,6 +98,13 @@ enum JobStatus {
   failed
 }
 
+type CronJob {
+  id: ID!
+  name: String!
+  schedule: String!
+  lastScheduledAt: DateTime
+}
+
 type PaginatedDamItems {
   nodes: [DamItem!]!
   totalCount: Int!
@@ -351,6 +358,7 @@ type Query {
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  cronJobs: [CronJob!]!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
   products(offset: Int = 0, limit: Int = 20, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!

@@ -1,8 +1,8 @@
 import { V1CronJob } from "@kubernetes/client-node";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
+import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { INSTANCE_LABEL } from "./builds.constants";
 import { BuildsService } from "./builds.service";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { BuildObject } from "./dto/build.object";
