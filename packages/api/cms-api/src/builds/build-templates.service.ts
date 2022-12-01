@@ -1,19 +1,14 @@
 import { V1CronJob } from "@kubernetes/client-node";
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { ContentScopeService } from "../content-scope/content-scope.service";
-import { BUILDER_LABEL, BUILDS_CONFIG, INSTANCE_LABEL } from "./builds.constants";
-import { BuildsConfig } from "./builds.module";
-import { KubernetesService } from "./kubernetes.service";
+import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { BUILDER_LABEL, INSTANCE_LABEL } from "./builds.constants";
 
 @Injectable()
 export class BuildTemplatesService {
-    constructor(
-        @Inject(BUILDS_CONFIG) readonly config: BuildsConfig,
-        private readonly kubernetesService: KubernetesService,
-        private readonly contentScopeService: ContentScopeService,
-    ) {}
+    constructor(private readonly kubernetesService: KubernetesService, private readonly contentScopeService: ContentScopeService) {}
 
     async getAllowedBuilderCronJobs(user: CurrentUserInterface): Promise<V1CronJob[]> {
         const allCronJobs = await this.kubernetesService.getAllCronJobs(

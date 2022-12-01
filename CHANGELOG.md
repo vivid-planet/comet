@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Add default value `{}` for `RedirectScopeInput` when no explicit scope is set to make redirects scope support backwards compatible
 -   Restrict access to builds based on `ContentScopeModule`
+-   Decouple KubernetesModule from BuildsModule (Breaking: BuildsModuleConfig is now KubernetesModuleConfig)
 -   Breaking: AuthModule removes support for Bearer-Token
 
 ### @comet/cms-site

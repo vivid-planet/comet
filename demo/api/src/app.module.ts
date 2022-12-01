@@ -12,6 +12,7 @@ import {
     DamModule,
     FilesService,
     ImagesService,
+    KubernetesModule,
     PageTreeModule,
     PageTreeService,
     PublicUploadModule,
@@ -100,7 +101,7 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
             },
             inject: [PageTreeService, FilesService, ImagesService],
         }),
-        BuildsModule.registerAsync({
+        KubernetesModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (config: ConfigType<typeof configNS>) => ({
                 config: {
@@ -109,6 +110,7 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
             }),
             inject: [configNS.KEY],
         }),
+        BuildsModule,
         LinksModule,
         PagesModule,
         PageTreeModule.forRoot({

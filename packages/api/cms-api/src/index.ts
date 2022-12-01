@@ -35,7 +35,6 @@ export { BuildsService } from "./builds/builds.service";
 export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { BuildObject } from "./builds/dto/build.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
-export { JobStatus } from "./builds/job-status.enum";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
 export { SkipBuildInterceptor } from "./builds/skip-build.interceptor";
 export { ContentScope } from "./common/decorators/content-scope.interface";
@@ -105,6 +104,8 @@ export {
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
 } from "./generator/crud-generator.decorator";
+export { JobStatus } from "./kubernetes/job-status.enum";
+export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";

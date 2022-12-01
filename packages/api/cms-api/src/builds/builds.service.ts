@@ -7,13 +7,13 @@ import { format } from "date-fns";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { ContentScopeService } from "../content-scope/content-scope.service";
+import { JobStatus } from "../kubernetes/job-status.enum";
+import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BUILDER_LABEL, INSTANCE_LABEL, PARENT_CRON_JOB_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { BuildObject } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
-import { JobStatus } from "./job-status.enum";
-import { KubernetesService } from "./kubernetes.service";
 
 const JOB_HISTORY_LIMIT = 20;
 
