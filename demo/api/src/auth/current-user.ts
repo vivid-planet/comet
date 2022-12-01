@@ -1,8 +1,27 @@
-import { CurrentUser as CometCurrentUser } from "@comet/cms-api";
+import { CurrentUserInterface } from "@comet/cms-api";
 import { Field, ObjectType } from "@nestjs/graphql";
 
+declare module "@comet/cms-api" {
+    interface CurrentUserInterface {
+        domains: Array<"main" | "secondary">;
+    }
+}
+
 @ObjectType()
-export class CurrentUser extends CometCurrentUser {
+export class CurrentUser implements CurrentUserInterface {
+    id: string;
+    @Field()
+    name: string;
+
+    @Field()
+    email: string;
+
+    @Field()
+    language: string;
+
+    @Field()
+    role: string;
+
     @Field(() => [String])
-    domains: string[];
+    domains: Array<"main" | "secondary">;
 }

@@ -8,6 +8,7 @@ import {
     BuildsModule,
     ContentScope,
     ContentScopeModule,
+    CurrentUserInterface,
     DamModule,
     FilesService,
     ImagesService,
@@ -64,7 +65,7 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
             }),
             inject: [configNS.KEY, BlocksTransformerService],
         }),
-        AuthModule.register<CurrentUser>({
+        AuthModule.register({
             imports: [ConfigModule],
             useFactory: (config: ConfigType<typeof configNS>) => ({
                 staticAuthedUser: {
@@ -73,16 +74,15 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
                     email: "demo@comet-dxp.com",
                     language: "en",
                     role: "admin",
-                    rights: {},
                     domains: ["main", "secondary"],
                 },
                 apiPassword: config.API_PASSWORD,
             }),
-            currentUserDto: CurrentUser,
+            currentUser: CurrentUser,
             inject: [configNS.KEY],
         }),
-        ContentScopeModule.forRoot<CurrentUser>({
-            canAccessScope(requestScope: ContentScope, user: CurrentUser) {
+        ContentScopeModule.forRoot({
+            canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
                 if (!user.domains) return true; //all domains
                 return user.domains.includes(requestScope.domain);
             },

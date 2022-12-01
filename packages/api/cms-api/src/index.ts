@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 export { AuthModule } from "./auth/auth.module";
-export { CurrentUser } from "./auth/current-user/current-user";
+export { CurrentUserInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
 export { CurrentUserLoaderInterface } from "./auth/current-user/current-user-loader";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";

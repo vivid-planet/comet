@@ -4,14 +4,15 @@ import { IncomingMessage } from "http";
 
 import { AUTH_CONFIG, AUTH_MODULE_CONFIG } from "./auth.constants";
 import { AuthConfig, AuthModuleConfig } from "./auth.module";
+import { CurrentUserInterface } from "./current-user/current-user";
 import { GetCurrentUser } from "./decorators/get-current-user.decorator";
 
-export function createAuthResolver<CurrentUser>(CurrentUser: Type<CurrentUser>): Type<unknown> {
+export function createAuthResolver(CurrentUser: Type<CurrentUserInterface>): Type<unknown> {
     @Resolver(() => CurrentUser)
     class AuthResolver {
         constructor(
-            @Inject(forwardRef(() => AUTH_MODULE_CONFIG)) private readonly moduleConfig: AuthModuleConfig<CurrentUser>,
-            @Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig<CurrentUser>,
+            @Inject(forwardRef(() => AUTH_MODULE_CONFIG)) private readonly moduleConfig: AuthModuleConfig,
+            @Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig,
         ) {}
 
         @Query(() => CurrentUser)

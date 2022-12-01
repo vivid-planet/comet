@@ -5,7 +5,7 @@ import { AuthGuard, IAuthGuard, Type } from "@nestjs/passport";
 import { Request } from "express";
 import { isObservable, lastValueFrom } from "rxjs";
 
-import { CurrentUser } from "../current-user/current-user";
+import { CurrentUserInterface } from "../current-user/current-user";
 import { allowForRoleMetadataKey } from "../decorators/allow-for-role.decorator";
 
 function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
@@ -21,7 +21,7 @@ function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
         }
 
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-        handleRequest<CurrentUser>(err: unknown, user: any): CurrentUser {
+        handleRequest<CurrentUserInterface>(err: unknown, user: any): CurrentUserInterface {
             if (err) {
                 throw err;
             }
@@ -48,7 +48,7 @@ function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
 
             const roles = this.reflector.getAllAndOverride<string[]>(allowForRoleMetadataKey, [context.getHandler(), context.getClass()]) ?? [];
             if (isAllowed && roles.length > 0) {
-                const userRole = ((this.getRequest(context).user as CurrentUser) || undefined)?.role;
+                const userRole = ((this.getRequest(context).user as CurrentUserInterface) || undefined)?.role;
                 if (!userRole) return false;
 
                 const userRoleIsAllowed = roles.some((role) => role.toLowerCase() === userRole.toLowerCase());

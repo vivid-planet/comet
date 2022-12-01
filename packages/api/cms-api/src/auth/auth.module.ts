@@ -9,32 +9,32 @@ import { CurrentUserJwtLoader, CurrentUserLoaderInterface, CurrentUserStaticLoad
 import { BasicAuthStrategy } from "./strategies/basic-auth.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
-export interface AuthConfig<CurrentUser> {
+export interface AuthConfig {
     jwksUri?: string;
     endSessionEndpoint?: string;
     staticAuthedUserJwt?: string;
-    currentUserLoader: CurrentUserLoaderInterface<CurrentUser>;
+    currentUserLoader: CurrentUserLoaderInterface;
 }
 
-export interface AuthModuleConfig<CurrentUser> {
+export interface AuthModuleConfig {
     idpUrl?: string;
     postLogoutRedirectUri?: string;
-    staticAuthedUser?: CurrentUser;
+    staticAuthedUser?: CurrentUserInterface;
     apiPassword: string;
 }
 
-export interface AuthModuleOptions<CurrentUser extends CurrentUserInterface> extends Pick<ModuleMetadata, "imports"> {
+export interface AuthModuleOptions extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => Promise<AuthModuleConfig<CurrentUser>> | AuthModuleConfig<CurrentUser>;
+    useFactory: (...args: any[]) => Promise<AuthModuleConfig> | AuthModuleConfig;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
-    currentUserLoader?: CurrentUserLoaderInterface<CurrentUser>;
-    currentUserDto: Type<CurrentUser>;
+    currentUserLoader?: CurrentUserLoaderInterface;
+    currentUser: Type<CurrentUserInterface>;
 }
 
 @Module({})
 export class AuthModule {
-    static register<CurrentUser extends CurrentUserInterface>(options: AuthModuleOptions<CurrentUser>): DynamicModule {
+    static register(options: AuthModuleOptions): DynamicModule {
         return {
             module: AuthModule,
             imports: options.imports ?? [],
@@ -45,11 +45,11 @@ export class AuthModule {
                 },
                 {
                     provide: AUTH_CONFIG,
-                    useFactory: async (config: AuthModuleConfig<CurrentUser>): Promise<AuthConfig<CurrentUser>> => {
+                    useFactory: async (config: AuthModuleConfig): Promise<AuthConfig> => {
                         if (config.staticAuthedUser) {
                             return {
                                 staticAuthedUserJwt: jwt.sign(config.staticAuthedUser, "static"),
-                                currentUserLoader: options.currentUserLoader ?? new CurrentUserStaticLoader<CurrentUser>(),
+                                currentUserLoader: options.currentUserLoader ?? new CurrentUserStaticLoader(),
                             };
                         } else {
                             if (!config.idpUrl) throw new Error("idpUrl must be set");
@@ -62,15 +62,15 @@ export class AuthModule {
                             return {
                                 endSessionEndpoint: metadata.end_session_endpoint,
                                 jwksUri: metadata.jwks_uri,
-                                currentUserLoader: options.currentUserLoader ?? new CurrentUserJwtLoader<CurrentUser>(),
+                                currentUserLoader: options.currentUserLoader ?? new CurrentUserJwtLoader(),
                             };
                         }
                     },
                     inject: [AUTH_MODULE_CONFIG],
                 },
-                JwtStrategy<CurrentUser>,
-                BasicAuthStrategy<CurrentUser>,
-                createAuthResolver<CurrentUser>(options.currentUserDto),
+                JwtStrategy,
+                BasicAuthStrategy,
+                createAuthResolver(options.currentUser),
             ],
         };
     }

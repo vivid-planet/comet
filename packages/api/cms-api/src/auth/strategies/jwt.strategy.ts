@@ -5,10 +5,11 @@ import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 
 import { AUTH_CONFIG } from "../auth.constants";
 import { AuthConfig } from "../auth.module";
+import { CurrentUserInterface } from "../current-user/current-user";
 
 @Injectable()
-export class JwtStrategy<CurrentUser> extends PassportStrategy(Strategy, "jwt") {
-    constructor(@Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig<CurrentUser>) {
+export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
+    constructor(@Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig) {
         let strategyConfig: StrategyOptions;
         if (config.staticAuthedUserJwt) {
             strategyConfig = {
@@ -30,7 +31,7 @@ export class JwtStrategy<CurrentUser> extends PassportStrategy(Strategy, "jwt") 
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async validate(data: any): Promise<CurrentUser> {
+    async validate(data: any): Promise<CurrentUserInterface> {
         return this.config.currentUserLoader.load(data);
     }
 }

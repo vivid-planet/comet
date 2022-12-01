@@ -1,30 +1,31 @@
 import { Injectable } from "@nestjs/common";
 
+import { CurrentUserInterface } from "./current-user";
+
 @Injectable()
-export class CurrentUserJwtLoader<CurrentUser> implements CurrentUserLoaderInterface<CurrentUser> {
+export class CurrentUserJwtLoader implements CurrentUserLoaderInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async load(data: any): Promise<CurrentUser> {
-        const user = {
+    async load(data: any): Promise<CurrentUserInterface> {
+        return {
             id: data.sub,
             name: data.name,
             email: data.email,
-            language: data.email,
+            language: data.language,
             role: data.ext?.role,
             rights: data.ext?.rights,
         };
-        return user as unknown as CurrentUser;
     }
 }
 
 @Injectable()
-export class CurrentUserStaticLoader<CurrentUser> implements CurrentUserLoaderInterface<CurrentUser> {
+export class CurrentUserStaticLoader implements CurrentUserLoaderInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async load(data: any): Promise<CurrentUser> {
+    async load(data: any): Promise<CurrentUserInterface> {
         return data;
     }
 }
 
-export interface CurrentUserLoaderInterface<CurrentUser> {
+export interface CurrentUserLoaderInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    load: (data: any) => Promise<CurrentUser>;
+    load: (data: any) => Promise<CurrentUserInterface>;
 }

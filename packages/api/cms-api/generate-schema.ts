@@ -8,7 +8,8 @@ import {
     BuildsResolver,
     createPageTreeResolver,
     createRedirectsResolver,
-    CurrentUser,
+    CurrentUserInterface,
+    CurrentUserRightInterface,
     DocumentInterface,
     FileImagesResolver,
     FilesResolver,
@@ -37,6 +38,30 @@ class Page implements DocumentInterface {
     updatedAt: Date;
 }
 
+@ObjectType()
+class CurrentUserRight implements CurrentUserRightInterface {
+    @Field()
+    right: string;
+
+    @Field(() => [String])
+    values: string[];
+}
+
+@ObjectType()
+class CurrentUser implements CurrentUserInterface {
+    id: string;
+    @Field()
+    name: string;
+    @Field()
+    email: string;
+    @Field()
+    language: string;
+    @Field()
+    role: string;
+    @Field(() => [CurrentUserRight], { nullable: true })
+    rights: CurrentUserRightInterface[];
+}
+
 async function generateSchema(): Promise<void> {
     console.info("Generating schema.gql...");
 
@@ -57,7 +82,7 @@ async function generateSchema(): Promise<void> {
         PageTreeNode,
         Documents: [Page],
     }); // no scope
-    const AuthResolver = createAuthResolver<CurrentUser>(CurrentUser);
+    const AuthResolver = createAuthResolver(CurrentUser);
 
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,
