@@ -1,5 +1,3 @@
-import { useIFrameBridge } from "@comet/blocks-admin";
-import { useAuthorization } from "@comet/react-app-auth";
 import { css } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -52,29 +50,7 @@ interface Props {
 }
 
 const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initialPageUrl }, iFrameRef) => {
-    const authorization = useAuthorization();
-
-    const iFrameUrl = new URL(initialPageUrl);
-    iFrameUrl.searchParams.append("authProvider", "vivid-planet-idp");
-
     const deviceConfig = resolveDeviceConfig(device);
-    const iFrameBridge = useIFrameBridge();
-
-    React.useEffect(() => {
-        const subscription = authorization?.authorizationManager.onOAuthChange((oAuth) => {
-            if (!iFrameBridge.iFrameReady) {
-                return;
-            }
-
-            if (oAuth?.accessToken) {
-                iFrameBridge.sendAccessToken(oAuth.accessToken);
-            }
-        });
-
-        return () => {
-            subscription?.unsubscribe();
-        };
-    }, [iFrameBridge, authorization]);
 
     const { observe: containerRef, width, height } = useDimensions<HTMLDivElement | null>();
 
@@ -87,7 +63,7 @@ const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initi
                 style={{ transform: `scale(${scaleFactor})` }}
                 deviceConfig={deviceConfig}
             >
-                <IFrame ref={iFrameRef} src={iFrameUrl.toString()} deviceConfig={deviceConfig} />
+                <IFrame ref={iFrameRef} src={initialPageUrl} deviceConfig={deviceConfig} />
                 {deviceConfig && <DeviceFrameWrapper>{deviceConfig.deviceFrame}</DeviceFrameWrapper>}
             </OuterFrame>
         </Root>
@@ -149,6 +125,15 @@ const IFrame = styled("iframe", { shouldForwardProp: (prop) => prop !== "deviceC
     width: 100%;
     height: 100%;
     background-color: ${({ theme }) => theme.palette.common.white};
+
+    ${OuterFrame}:not(:hover):not(:active) & {
+        /**
+        * Remove iFrame pointer-events while not interacting with the parent to fix a chrome-bug that prevents
+        * drag-and-drop from working in a modal over the iFrame when using an external URL as the source.
+        * Source: https://medium.com/@marcmintel/most-weird-bug-or-security-feature-with-iframes-and-native-drag-and-drop-13ffbc26107a
+        */
+        pointer-events: none;
+    }
 `;
 
 const DeviceFrameWrapper = styled("div")`

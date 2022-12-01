@@ -2,7 +2,6 @@ import theme, { Theme } from "@src/theme";
 import { AppProps, NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
-import { Provider } from "next-auth/client";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
@@ -45,15 +44,14 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         // defaultLocale prevents missing message warning for locale defined in code,
         // see https://github.com/formatjs/formatjs/issues/251
         <IntlProvider locale="de" defaultLocale="de">
-            <Provider session={undefined}>
-                <Head>
-                    <meta name="viewport" content="width=device-width, initial-scale=1" />
-                    {process.env.NEXT_PUBLIC_GTM_ID && (
-                        <Script
-                            id="gtm-script"
-                            strategy="afterInteractive"
-                            dangerouslySetInnerHTML={{
-                                __html: `
+            <Head>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                {process.env.NEXT_PUBLIC_GTM_ID && (
+                    <Script
+                        id="gtm-script"
+                        strategy="afterInteractive"
+                        dangerouslySetInnerHTML={{
+                            __html: `
                             <!-- Google Tag Manager -->
                             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -61,15 +59,14 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
                             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
                             })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
                             <!-- End Google Tag Manager -->`,
-                            }}
-                        />
-                    )}
-                </Head>
-                <ThemeProvider theme={theme}>
-                    <GlobalStyle />
-                    <Component {...pageProps} />
-                </ThemeProvider>
-            </Provider>
+                        }}
+                    />
+                )}
+            </Head>
+            <ThemeProvider theme={theme}>
+                <GlobalStyle />
+                <Component {...pageProps} />
+            </ThemeProvider>
         </IntlProvider>
     );
 }

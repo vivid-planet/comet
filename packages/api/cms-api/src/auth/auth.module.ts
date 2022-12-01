@@ -3,19 +3,9 @@ import { DynamicModule, Module, ModuleMetadata, Type } from "@nestjs/common";
 import { AUTH_CONFIG, AUTH_CURRENT_USER_LOADER, AUTH_MODULE_OPTIONS } from "./auth.constants";
 import { DefaultCurrentUserLoaderService } from "./default-current-user-loader.service";
 import { CurrentUserLoaderInterface } from "./interfaces/current-user-loader.interface";
-import { BasicAuthStrategy } from "./strategies/basic-auth.strategy";
-import { BearerTokenStrategy } from "./strategies/bearer-token.strategy";
 
-interface IdpConfig {
-    url: string;
-    password: string;
-    clientId: string;
-}
-
-export interface AuthConfig {
-    apiPassword: string;
-    idpConfig: IdpConfig;
-}
+//eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AuthConfig {}
 
 interface AuthModuleOptions {
     config: AuthConfig;
@@ -54,8 +44,6 @@ export class AuthModule {
                     provide: AUTH_CURRENT_USER_LOADER,
                     useClass: options.currentUserLoaderService ?? DefaultCurrentUserLoaderService,
                 },
-                BearerTokenStrategy,
-                BasicAuthStrategy,
             ],
         };
     }

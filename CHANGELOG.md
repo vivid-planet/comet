@@ -7,11 +7,22 @@ All notable changes to this project will be documented in this file. This projec
 ### @comet/cms-admin
 
 -   Fix a bug where the pages query would query for a field `undefined` when no `additionalPageTreeNodeFragment` is set
+-   Breaking: Remove dependency @comet/react-app-auth and all occurences
 
 ### @comet/cms-api
 
 -   Add default value `{}` for `RedirectScopeInput` when no explicit scope is set to make redirects scope support backwards compatible
 -   Restrict access to builds based on `ContentScopeModule`
+-   Breaking: AuthModule removes support for Bearer-Token
+
+### @comet/cms-site
+
+-   Breaking: Remove dependency next-auth and all occurences
+-   access-token-service-worker.js in not supported anymore, can be removed
+
+### @comet/eslint-config
+
+-   Enable [no-return-await](https://eslint.org/docs/latest/rules/no-return-await)
 
 ## 3.1.0
 
