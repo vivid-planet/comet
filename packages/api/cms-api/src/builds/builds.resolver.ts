@@ -19,7 +19,7 @@ export class BuildsResolver {
         const cronJobs: V1CronJob[] = [];
         for (const name of names) {
             const cronJob = await this.kubernetesService.getCronJob(name);
-            if (this.kubernetesService.getHelmRelase() !== cronJob.metadata?.labels?.[INSTANCE_LABEL]) {
+            if (this.kubernetesService.helmRelease !== cronJob.metadata?.labels?.[INSTANCE_LABEL]) {
                 throw new Error("Triggering build from different instance is not allowed");
             }
             cronJobs.push(cronJob);

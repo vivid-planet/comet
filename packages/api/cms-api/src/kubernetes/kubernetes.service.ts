@@ -12,14 +12,12 @@ export class KubernetesService {
     localMode: boolean;
 
     namespace: string;
-    helmRelease: string;
 
     batchApi: BatchV1Api;
 
     constructor(@Inject(KUBERNETES_CONFIG) readonly config: KubernetesConfig) {
         const path = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
         this.localMode = !fs.existsSync(path);
-        this.helmRelease = config.helmRelease;
 
         const kc = new KubeConfig();
 
@@ -39,7 +37,7 @@ export class KubernetesService {
         }*/
     }
 
-    getHelmRelase(): string {
+    get helmRelease(): string {
         return this.config.helmRelease;
     }
 
