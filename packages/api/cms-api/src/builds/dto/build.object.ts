@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 
-import { JobStatus } from "../job-status.enum";
+import { JobStatus } from "../../kubernetes/job-status.enum";
 
 @ObjectType("Build")
 export class BuildObject {
