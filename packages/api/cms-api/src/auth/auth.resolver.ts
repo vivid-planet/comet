@@ -22,17 +22,20 @@ export function createAuthResolver(CurrentUser: Type<CurrentUserInterface>): Typ
 
         @Mutation(() => String)
         async currentUserSignOut(@Context("req") req: IncomingMessage): Promise<string | null> {
-            let redirectUri = this.moduleConfig.postLogoutRedirectUri || "/";
+            let signOutUrl = this.moduleConfig.postLogoutRedirectUri || "/";
 
             if (req.headers["authorization"] && this.config.endSessionEndpoint) {
                 const url = new URL(this.config.endSessionEndpoint);
                 url.search = new URLSearchParams({
                     id_token_hint: req.headers["authorization"].substring(7),
-                    post_logout_redirect_uri: redirectUri,
+                    post_logout_redirect_uri: signOutUrl,
                 }).toString();
-                redirectUri = url.toString();
+                signOutUrl = url.toString();
             }
-            return `/oauth2/sign_out?rd=${encodeURIComponent(redirectUri)}`;
+            if (this.moduleConfig.formatSignOutUrl) {
+                signOutUrl = this.moduleConfig.formatSignOutUrl(signOutUrl);
+            }
+            return signOutUrl;
         }
     }
     return AuthResolver;

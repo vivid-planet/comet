@@ -66,7 +66,7 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
             }),
             inject: [configNS.KEY, BlocksTransformerService],
         }),
-        AuthModule.register({
+        AuthModule.registerAsync({
             imports: [ConfigModule],
             useFactory: (config: ConfigType<typeof configNS>) => ({
                 staticAuthedUser: {
