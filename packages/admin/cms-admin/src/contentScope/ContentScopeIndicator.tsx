@@ -25,7 +25,7 @@ const ScopeIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "gl
     position: ${({ variant }) => (variant === "toolbar" ? "fixed" : "absolute")};
     top: -12px;
     left: 0;
-    z-index: 1201;
+    z-index: ${({ theme }) => theme.zIndex.drawer - 1};
     background: ${({ theme, global }) => (global ? theme.palette.primary.main : "#596980")};
     border-top-left-radius: 12px;
     border-bottom-right-radius: 12px;

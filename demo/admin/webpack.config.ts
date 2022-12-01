@@ -143,11 +143,6 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
             port: Number(process.env.ADMIN_PORT || 8001),
             allowedHosts: "all",
             compress: true,
-            client: {
-                webSocketURL: {
-                    port: Number(process.env.PROXY_PORT),
-                },
-            },
             historyApiFallback: true,
             headers: {
                 "Access-Control-Allow-Origin": "*",

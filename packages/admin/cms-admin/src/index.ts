@@ -72,7 +72,6 @@ export { openSitePreviewWindow } from "./preview/openSitePreviewWindow";
 export { /** @deprecated use openSitePreviewWindow instead */ openSitePreviewWindow as openPreviewWindow } from "./preview/openSitePreviewWindow";
 export { SitePreview } from "./preview/site/SitePreview";
 export { createRedirectsPage } from "./redirects/createRedirectsPage";
-export { automaticRedirectsRefetchQueryDescription as automaticRedirectsRefetchQueryDescription__temporary__export } from "./redirects/RedirectsTable.gql";
 export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
