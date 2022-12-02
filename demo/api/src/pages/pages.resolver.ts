@@ -39,7 +39,7 @@ export class PagesResolver {
 
     @ResolveField(() => PageTreeNode, { nullable: true })
     async pageTreeNode(@Parent() page: Page): Promise<PageTreeNodeInterface | null> {
-        return this.pageTreeService.createReadApi().getFirstNodeByAttachedPageId(page.id);
+        return this.pageTreeService.getReadApi().getFirstNodeByAttachedPageId(page.id);
     }
 
     @Mutation(() => Page)
@@ -52,7 +52,7 @@ export class PagesResolver {
     ): Promise<Page | null> {
         // all pageTypes need this is-archived-page-check
         // TODO: maybe implemented in a base-(document|page)-service which lives in @comet/cms-api
-        const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
+        const pageTreeNode = await this.pageTreeService.getReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
         if (pageTreeNode.visibility === PageTreeNodeVisibility.Archived) {
             throw new UnauthorizedException("Archived pages cannot be updated");
         }

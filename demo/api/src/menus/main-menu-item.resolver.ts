@@ -20,7 +20,7 @@ export class MainMenuItemResolver {
         @RequestContext() { includeInvisiblePages }: RequestContextInterface,
     ): Promise<MainMenuItem> {
         const node = await this.pageTreeService
-            .createReadApi({
+            .getReadApi({
                 visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
             })
             .getNodeOrFail(pageTreeNodeId);
@@ -42,7 +42,7 @@ export class MainMenuItemResolver {
         @Args("input", { type: () => MainMenuItemInput }) input: MainMenuItemInput,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<MainMenuItem> {
-        const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(pageTreeNodeId);
+        const node = await this.pageTreeService.getReadApi({ visibility: "all" }).getNodeOrFail(pageTreeNodeId);
 
         const existingItem = await this.mainMenuItemRepository.findOne({ node });
 

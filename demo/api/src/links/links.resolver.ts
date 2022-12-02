@@ -27,7 +27,7 @@ export class LinksResolver {
     ): Promise<Link | null> {
         // all pageTypes need this is-archived-page-check
         // TODO: maybe implemented in a base-(document|page)-service which lives in @comet/cms-api
-        const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
+        const pageTreeNode = await this.pageTreeService.getReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
         if (pageTreeNode.visibility === PageTreeNodeVisibility.Archived) {
             throw new UnauthorizedException("Archived Links cannot be updated");
         }

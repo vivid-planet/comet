@@ -21,7 +21,7 @@ export class PageExistsConstraint implements ValidatorConstraintInterface {
     constructor(private readonly pageTreeService: PageTreeService) {}
 
     async validate(id: string): Promise<boolean> {
-        const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNode(id);
+        const node = await this.pageTreeService.getReadApi({ visibility: "all" }).getNode(id);
 
         return node !== null;
     }

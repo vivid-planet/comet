@@ -58,7 +58,7 @@ export function createRedirectsResolver({
             @Inject(CONTEXT) private context: { req: Request },
         ) {
             const { includeInvisiblePages } = getRequestContextHeadersFromRequest(this.context.req);
-            this.pageTreeReadApi = this.pageTreeService.createReadApi({
+            this.pageTreeReadApi = this.pageTreeService.getReadApi({
                 visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
             });
         }

@@ -1,7 +1,7 @@
 import { EntityManager } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, Scope } from "@nestjs/common";
 
 import { CometValidationException } from "../common/errors/validation.exception";
 import { RedirectsService } from "../redirects/redirects.service";
@@ -21,8 +21,9 @@ import {
 } from "./types";
 export { PageTreeReadApi } from "./page-tree-read-api";
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class PageTreeService {
+    private readApi = new Map<string, PageTreeReadApi>();
     constructor(
         @Inject(forwardRef(() => PAGE_TREE_REPOSITORY)) public readonly pageTreeRepository: EntityRepository<PageTreeNodeInterface>,
         @InjectRepository(AttachedDocument) public readonly attachedDocumentsRepository: EntityRepository<AttachedDocument>,
@@ -34,7 +35,7 @@ export class PageTreeService {
     async createNode(input: PageTreeNodeBaseCreateInput, category: PageTreeNodeCategory, scope?: ScopeInterface): Promise<PageTreeNodeInterface> {
         // TODO: check for unique id
         // TODO: check ParentId
-        const readApi = this.createReadApi({ visibility: "all" });
+        const readApi = this.getReadApi({ visibility: "all" });
 
         const path = await this.pathForParentAndSlug(input.parentId || null, input.slug);
 
@@ -86,7 +87,7 @@ export class PageTreeService {
     }
 
     async updateNode(id: string, input: PageTreeNodeUpdateInputInterface): Promise<PageTreeNodeInterface> {
-        const readApi = this.createReadApi({ visibility: "all" });
+        const readApi = this.getReadApi({ visibility: "all" });
 
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
@@ -141,7 +142,7 @@ export class PageTreeService {
     }
 
     async updateNodeVisibility(id: string, newVisibility: Visibility): Promise<void> {
-        const node = await this.createReadApi({ visibility: "all" }).getNodeOrFail(id);
+        const node = await this.getReadApi({ visibility: "all" }).getNodeOrFail(id);
         if (!node) throw new Error("Can't find page-tree-node with id");
 
         if (node.slug === "home" && newVisibility !== PageTreeNodeVisibility.Published) {
@@ -150,7 +151,7 @@ export class PageTreeService {
 
         let changedSlug: string | undefined = undefined;
         if (node.visibility === PageTreeNodeVisibility.Archived && newVisibility !== PageTreeNodeVisibility.Archived) {
-            const readApi = this.createReadApi({ visibility: "all" });
+            const readApi = this.getReadApi({ visibility: "all" });
             const existingNodePath = await readApi.nodePath(node);
             const slug = node.slug;
 
@@ -178,7 +179,7 @@ export class PageTreeService {
     }
 
     async updateNodePosition(id: string, input: MovePageTreeNodesByPosInput): Promise<PageTreeNodeInterface> {
-        const readApi = this.createReadApi({ visibility: "all" });
+        const readApi = this.getReadApi({ visibility: "all" });
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
 
@@ -224,7 +225,7 @@ export class PageTreeService {
     }
 
     async updateCategory(id: string, category: PageTreeNodeCategory): Promise<void> {
-        const readApi = this.createReadApi({ visibility: "all" });
+        const readApi = this.getReadApi({ visibility: "all" });
 
         const node = await readApi.getNodeOrFail(id);
 
@@ -253,7 +254,7 @@ export class PageTreeService {
             throw new Error(`Page "home" cannot be deleted`);
         }
 
-        const readApi = this.createReadApi();
+        const readApi = this.getReadApi();
         const childNodes = await readApi.getChildNodes(pageTreeNode);
 
         // recursively delete all child nodes
@@ -338,7 +339,7 @@ export class PageTreeService {
     }
 
     public async pathForParentAndSlug(parentId: null | string, slug: string): Promise<string> {
-        const readApi = this.createReadApi({ visibility: "all" });
+        const readApi = this.getReadApi({ visibility: "all" });
 
         let parentPath = parentId ? await readApi.nodePathById(parentId) : "";
 
@@ -350,17 +351,33 @@ export class PageTreeService {
     }
 
     public async nodeWithSamePath(path: string, scope?: ScopeInterface): Promise<PageTreeNodeInterface | null> {
-        return this.createReadApi({ visibility: [Visibility.Published, Visibility.Unpublished] }).getNodeByPath(path, {
+        return this.getReadApi({ visibility: [Visibility.Published, Visibility.Unpublished] }).getNodeByPath(path, {
             scope,
         }); // Slugs of archived pages can be reused
     }
 
+    /**
+     * @deprecated use getReadApi instead
+     */
     createReadApi(
         options: {
             visibility?: Visibility | Visibility[] | "all";
         } = {},
     ): PageTreeReadApi {
-        return createReadApi(this, options);
+        return this.getReadApi(options);
+    }
+
+    getReadApi(
+        options: {
+            visibility?: Visibility | Visibility[] | "all";
+        } = {},
+    ): PageTreeReadApi {
+        const key = JSON.stringify(options);
+        if (!this.readApi.has(key)) {
+            this.readApi.set(key, createReadApi(this, options));
+        }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return this.readApi.get(key)!;
     }
 
     private newPathForSlug(existingNodePath: string, slug: string): string {

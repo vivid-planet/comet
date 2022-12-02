@@ -36,7 +36,7 @@ class InternalLinkBlockData extends BlockData {
             };
         }
 
-        const readApi = pageTreeService.createReadApi({ visibility: "all" });
+        const readApi = pageTreeService.getReadApi({ visibility: "all" });
 
         const node = await readApi.getNode(this.targetPageId);
 
