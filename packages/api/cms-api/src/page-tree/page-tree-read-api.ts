@@ -12,7 +12,7 @@ interface Options {
 
 export interface PageTreeReadApi {
     nodePathById(id: string): Promise<string>;
-    nodePath(node: Pick<PageTreeNodeInterface, "id" | "slug" | "parentId">): Promise<string>;
+    nodePath(node: Pick<PageTreeNodeInterface, "id" | "slug" | "parentId" | "scope">): Promise<string>;
     parentNodes(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface[]>;
     getNode(id: string): Promise<PageTreeNodeInterface | null>;
     getNodeOrFail(id: string): Promise<PageTreeNodeInterface>;
@@ -107,8 +107,17 @@ export function createReadApi(
             if (where.slug) {
                 qb.andWhere({ slug: where.slug });
             }
-            const nodes = await qb.getResultList();
-            return nodes;
+            return qb.getResultList();
+        }
+    };
+
+    const nodeById = async (scope: ScopeInterface | undefined, id: string): Promise<PageTreeNodeInterface | null> => {
+        if (scope && preloadedNodes.has(scopeHash(scope))) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const nodes = preloadedNodes.get(scopeHash(scope))!;
+            return nodes.find((n) => n.id == id) ?? null;
+        } else {
+            return pageTreeNodeRepository.findOne({ id });
         }
     };
 
@@ -128,7 +137,7 @@ export function createReadApi(
                     throw new Error("Loop limit reached");
                 }
 
-                const currentParentNode = await pageTreeNodeRepository.findOne({ id: parentNode.parentId });
+                const currentParentNode = await nodeById(node.scope, parentNode.parentId);
                 if (!currentParentNode) {
                     throw new Error("Could not find parent");
                 }
@@ -263,6 +272,8 @@ export function createReadApi(
         },
 
         async preloadNodes(scope?: ScopeInterface) {
+            const hash = scopeHash(scope);
+            if (preloadedNodes.has(hash)) return; //don't double-preload
             const qb = pageTreeNodeRepository
                 .createQueryBuilder()
                 .where({
@@ -270,7 +281,7 @@ export function createReadApi(
                 })
                 .orderBy({ pos: "ASC" });
             qb.andWhere({ scope });
-            preloadedNodes.set(scopeHash(scope), await qb.getResultList());
+            preloadedNodes.set(hash, await qb.getResultList());
         },
     };
 }

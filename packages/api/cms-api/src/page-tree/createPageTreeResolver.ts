@@ -1,5 +1,5 @@
 import { Inject, Type } from "@nestjs/common";
-import { Args, CONTEXT, Context, createUnionType, ID, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
+import { Args, CONTEXT, createUnionType, ID, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { Request } from "express";
 import { GraphQLError } from "graphql";
 
@@ -26,11 +26,6 @@ import {
     PageTreeNodeVisibility as Visibility,
     ScopeInterface,
 } from "./types";
-import { InMemoryPathResolver } from "./utils/in-memory-path-resolver";
-
-interface PageTreeGQLContext {
-    pathResolver?: InMemoryPathResolver;
-}
 
 export function createPageTreeResolver({
     PageTreeNode,
@@ -94,12 +89,9 @@ export function createPageTreeResolver({
         async pageTreeNodeList(
             @Args("scope", { type: () => Scope }) scope: ScopeInterface,
             @Args("category", { type: () => String, nullable: true }) category: PageTreeNodeCategory,
-            @Context() context: PageTreeGQLContext,
         ): Promise<PageTreeNodeInterface[]> {
-            const result = await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category });
-            const pathResolver = new InMemoryPathResolver(result);
-            context.pathResolver = pathResolver; // pass pathResolver to upcoming resolver
-            return result;
+            this.pageTreeReadApi.preloadNodes(scope);
+            return await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category });
         }
 
         @Query(() => SlugAvailability)
@@ -133,16 +125,8 @@ export function createPageTreeResolver({
         }
 
         @ResolveField(() => String)
-        async path(@Parent() node: PageTreeNodeInterface, @Context() context: PageTreeGQLContext): Promise<string> {
-            const pathFromMemory = context.pathResolver?.resolve(node.id);
-            return (
-                pathFromMemory ??
-                this.pageTreeService
-                    .getReadApi({
-                        visibility: "all", // @TODO: Test if "all" is necessary. Actually archived path-names should not be public, now they are.
-                    })
-                    .nodePath(node)
-            );
+        async path(@Parent() node: PageTreeNodeInterface): Promise<string> {
+            return this.pageTreeReadApi.nodePath(node);
         }
 
         @ResolveField(() => [PageTreeNode])
