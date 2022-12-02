@@ -1,7 +1,7 @@
 import { Inject, Type } from "@nestjs/common";
-import { Args, CONTEXT, createUnionType, ID, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
+import { Args, CONTEXT, createUnionType, ID, Info, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { Request } from "express";
-import { GraphQLError } from "graphql";
+import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
@@ -135,7 +135,46 @@ export function createPageTreeResolver({
         }
 
         @ResolveField(() => pageContentUnion, { nullable: true })
-        async document(@Parent() node: PageTreeNodeInterface): Promise<typeof pageContentUnion | undefined> {
+        async document(@Parent() node: PageTreeNodeInterface, @Info() info: GraphQLResolveInfo): Promise<typeof pageContentUnion | undefined> {
+            if (info.fieldNodes.length === 1) {
+                const fieldNode = info.fieldNodes[0];
+
+                if (fieldNode.selectionSet) {
+                    const ret = fieldNode.selectionSet.selections.reduce(
+                        (acc, selection) => {
+                            if (!acc) return acc;
+                            if (selection.kind == "Field" && selection.name.value === "__typename") {
+                                //__typename is already in acc
+                                return acc;
+                            } else if (
+                                selection.kind === "InlineFragment" &&
+                                selection.typeCondition &&
+                                selection.typeCondition.kind == "NamedType"
+                            ) {
+                                if (selection.typeCondition.name.value === node.documentType) {
+                                    //documentType is matching, return full document (fall thru)
+                                    return undefined;
+                                } else {
+                                    //documentType is not matching, return nothing more
+                                    return acc;
+                                }
+                            } else {
+                                // load full document (fall thru)
+                                return undefined;
+                            }
+                        },
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        { __typename: node.documentType } as any,
+                    );
+                    if (ret) {
+                        //we have all the information needed, return early
+                        return ret;
+                    } else {
+                        //fall thru to load full document
+                    }
+                }
+            }
+
             const activeDocument = await this.pageTreeService.getActiveAttachedDocument(node.id, node.documentType);
             if (!activeDocument) {
                 return null;
