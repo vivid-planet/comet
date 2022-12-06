@@ -1,3 +1,10 @@
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -94,9 +101,26 @@ enum JobStatus {
   failed
 }
 
+type DamItemCursor {
+  id: String!
+  type: String!
+}
+
+type DamItemPageInfo {
+  startCursor: DamItemCursor
+  endCursor: DamItemCursor
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
 type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
+  edges: [DamItemEdge!]
+  pageInfo: DamItemPageInfo!
+}
+
+type DamItemEdge {
+  cursor: DamItemCursor!
+  node: DamItem!
 }
 
 union DamItem = DamFile | DamFolder
@@ -108,13 +132,23 @@ type FilenameResponse {
 }
 
 type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
+  edges: [FileEdge!]
+  pageInfo: PageInfo
+}
+
+type FileEdge {
+  cursor: String!
+  node: DamFile!
 }
 
 type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
+  edges: [FolderEdge!]
+  pageInfo: PageInfo
+}
+
+type FolderEdge {
+  cursor: String!
+  node: DamFolder!
 }
 
 type PageTreeNode {
@@ -180,18 +214,18 @@ type Query {
   redirects(scope: RedirectScopeInput = {}, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection = ASC): [Redirect!]!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput = {}, source: String!): Boolean!
-  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
+  damFilesList(first: Int, after: ID, last: Int, before: ID, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
-  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
+  damFoldersList(first: Int, after: ID, last: Int, before: ID, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damItemsList(first: Int, after: DamItemCursorInput, last: Int, before: DamItemCursorInput, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
 }
 
 input RedirectScopeInput {
@@ -225,6 +259,11 @@ enum SlugAvailability {
   Available
   Taken
   Reserved
+}
+
+input DamItemCursorInput {
+  id: String!
+  type: String!
 }
 
 input DamItemFilterInput {

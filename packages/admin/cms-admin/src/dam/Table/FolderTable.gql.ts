@@ -42,6 +42,13 @@ export const damFolderTableFragment = gql`
     }
 `;
 
+export const damCursorFragment = gql`
+    fragment CompleteDamItemCursor on DamItemCursor {
+        id
+        type
+    }
+`;
+
 export const damFolderQuery = gql`
     query DamFolder($id: ID!) {
         damFolder(id: $id) {
@@ -58,8 +65,10 @@ export const damItemsListQuery = gql`
         $filter: DamItemFilterInput
         $sortColumnName: String
         $sortDirection: SortDirection
-        $offset: Int
-        $limit: Int
+        $first: Int
+        $after: DamItemCursorInput
+        $last: Int
+        $before: DamItemCursorInput
     ) {
         damItemsList(
             folderId: $folderId
@@ -67,20 +76,37 @@ export const damItemsListQuery = gql`
             filter: $filter
             sortColumnName: $sortColumnName
             sortDirection: $sortDirection
-            offset: $offset
-            limit: $limit
+            first: $first
+            after: $after
+            last: $last
+            before: $before
         ) {
-            nodes {
-                ... on DamFile {
-                    ...DamFileTable
+            edges {
+                cursor {
+                    ...CompleteDamItemCursor
                 }
-                ... on DamFolder {
-                    ...DamFolderTable
+                node {
+                    ... on DamFile {
+                        ...DamFileTable
+                    }
+                    ... on DamFolder {
+                        ...DamFolderTable
+                    }
                 }
             }
-            totalCount
+            pageInfo {
+                startCursor {
+                    ...CompleteDamItemCursor
+                }
+                endCursor {
+                    ...CompleteDamItemCursor
+                }
+                hasPreviousPage
+                hasNextPage
+            }
         }
     }
     ${damFileTableFragment}
     ${damFolderTableFragment}
+    ${damCursorFragment}
 `;

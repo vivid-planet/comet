@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 
-import { DamItem, DamItemEdge, PaginatedDamItems } from "./dam-items.resolver";
-import { DamItemsArgs } from "./dto/dam-items.args";
+import { DamItemEdge, DamItemsArgs, PaginatedDamItems } from "./dto/dam-items.args";
+import { PaginatedDamFiles } from "./files.resolver";
 import { FilesService } from "./files.service";
+import { PaginatedDamFolders } from "./folders.resolver";
 import { FoldersService } from "./folders.service";
 
 @Injectable()
@@ -20,54 +21,114 @@ export class DamItemsService {
         last,
         before,
     }: DamItemsArgs): Promise<PaginatedDamItems> {
-        const edges: DamItemEdge[] = [];
+        let folders: PaginatedDamFolders | undefined;
+        let files: PaginatedDamFiles | undefined;
+        if (first && (after === undefined || after.type === "folder")) {
+            folders = await this.foldersService.findPaginated({
+                parentId: folderId,
+                includeArchived,
+                filter: { searchText: filter?.searchText },
+                sortDirection,
+                sortColumnName,
+                first,
+                after: after?.id,
+            });
 
-        if (first) {
-        } else if (after) {
+            if (folders.edges.length < first) {
+                first = first - folders.edges.length;
+                after = undefined;
+
+                files = await this.filesService.findPaginated({
+                    folderId,
+                    includeArchived,
+                    filter: { searchText: filter?.searchText, mimetypes: filter?.mimetypes },
+                    sortColumnName,
+                    sortDirection,
+                    first,
+                    after,
+                });
+            }
+        } else if (first && after?.type === "file") {
+            files = await this.filesService.findPaginated({
+                folderId,
+                includeArchived,
+                filter: { searchText: filter?.searchText, mimetypes: filter?.mimetypes },
+                sortColumnName,
+                sortDirection,
+                first,
+                after: after.id,
+            });
+        } else if (last && before?.type === "folder") {
+            folders = await this.foldersService.findPaginated({
+                parentId: folderId,
+                includeArchived,
+                filter: { searchText: filter?.searchText },
+                sortDirection,
+                sortColumnName,
+                last,
+                before: before.id,
+            });
+        } else if (last && (before === undefined || before.type === "file")) {
+            files = await this.filesService.findPaginated({
+                folderId,
+                includeArchived,
+                filter: { searchText: filter?.searchText, mimetypes: filter?.mimetypes },
+                sortColumnName,
+                sortDirection,
+                last,
+                before: before?.id,
+            });
+
+            if (files.edges.length < last) {
+                last = last - files.edges.length;
+                before = undefined;
+
+                folders = await this.foldersService.findPaginated({
+                    parentId: folderId,
+                    includeArchived,
+                    filter: { searchText: filter?.searchText },
+                    sortDirection,
+                    sortColumnName,
+                    last,
+                    before: before,
+                });
+            }
         } else {
             throw new Error("No cursor provided");
         }
 
-        const folders = await this.foldersService.findPaginated({
-            parentId: folderId,
-            includeArchived,
-            filter: { searchText: filter?.searchText },
-            sortDirection,
-            sortColumnName,
-            first,
-            after,
-            last,
-            before,
-        });
+        const edges: DamItemEdge[] = [];
 
-        if ((first && after && folders.pageInfo.hasNextPage) || (last && before && folders.pageInfo.hasPreviousPage)) {
-            // TODO: fix typing
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            return folders;
+        if (folders) {
+            for (const folderEdge of folders.edges) {
+                edges.push({
+                    node: folderEdge.node,
+                    cursor: {
+                        type: "folder",
+                        id: folderEdge.cursor,
+                    },
+                });
+            }
         }
 
-        const remainingFirst = first && after ? first - folders.length : undefined;
-        const remainingLast = last && before ? last - folders.length : undefined;
-
-        const files = await this.filesService.findPaginated({
-            folderId,
-            includeArchived,
-            filter: { searchText: filter?.searchText, mimetypes: filter?.mimetypes },
-            sortColumnName,
-            sortDirection,
-            first: remainingFirst,
-            after,
-            last: remainingLast,
-            before,
-        });
-
-        const response: typeof DamItem[] = [...folders];
-
-        if (remainingLimit > 0) {
-            response.push(...files);
+        if (files) {
+            for (const fileEdge of files.edges) {
+                edges.push({
+                    node: fileEdge.node,
+                    cursor: {
+                        type: "file",
+                        id: fileEdge.cursor,
+                    },
+                });
+            }
         }
 
-        return [response, foldersTotalCount + filesTotalCount];
+        return new PaginatedDamItems(edges, {
+            startCursor: edges[0].cursor,
+            endCursor: edges[edges.length - 1].cursor,
+            // TODO: actual values
+            hasNextPage: true,
+            hasPreviousPage: true,
+        });
     }
 }

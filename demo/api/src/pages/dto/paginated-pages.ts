@@ -4,4 +4,4 @@ import { ObjectType } from "@nestjs/graphql";
 import { Page } from "../entities/page.entity";
 
 @ObjectType()
-export class PaginatedPages extends PaginatedResponseFactory.create(Page) {}
+export class PaginatedPages extends PaginatedResponseFactory.createOffsetLimit(Page) {}
