@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -98,9 +105,26 @@ enum JobStatus {
   failed
 }
 
+type DamItemCursor {
+  id: String!
+  type: String!
+}
+
+type DamItemPageInfo {
+  startCursor: DamItemCursor
+  endCursor: DamItemCursor
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
 type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
+  edges: [DamItemEdge!]
+  pageInfo: DamItemPageInfo!
+}
+
+type DamItemEdge {
+  cursor: DamItemCursor!
+  node: DamItem!
 }
 
 union DamItem = DamFile | DamFolder
@@ -112,13 +136,23 @@ type FilenameResponse {
 }
 
 type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
+  edges: [FileEdge!]
+  pageInfo: PageInfo
+}
+
+type FileEdge {
+  cursor: String!
+  node: DamFile!
 }
 
 type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
+  edges: [FolderEdge!]
+  pageInfo: PageInfo
+}
+
+type FolderEdge {
+  cursor: String!
+  node: DamFolder!
 }
 
 type Link implements DocumentInterface {
@@ -361,12 +395,12 @@ type Query {
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int = 0, limit: Int = 20): PaginatedRedirects!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
-  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
+  damItemsList(first: Int, after: DamItemCursorInput, last: Int, before: DamItemCursorInput, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damFilesList(first: Int, after: ID, last: Int, before: ID, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
-  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
+  damFoldersList(first: Int, after: ID, last: Int, before: ID, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
@@ -433,6 +467,11 @@ enum RedirectSortField {
   source
   createdAt
   updatedAt
+}
+
+input DamItemCursorInput {
+  id: String!
+  type: String!
 }
 
 input DamItemFilterInput {
