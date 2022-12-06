@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 
-@ObjectType("CronJob")
-export class CronJobObject {
+@ObjectType()
+export class CronJob {
     @Field(() => ID)
     id: string;
 

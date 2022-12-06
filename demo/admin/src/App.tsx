@@ -15,6 +15,7 @@ import {
     ContentScopeIndicator,
     createHttpClient,
     createRedirectsPage,
+    CronJobsPage,
     DamConfigProvider,
     DamPage,
     LocaleProvider,
@@ -187,6 +188,11 @@ class App extends React.Component {
                                                                                         <RouteWithErrorBoundary
                                                                                             path={`${match.path}/assets`}
                                                                                             component={DamPage}
+                                                                                        />
+
+                                                                                        <RouteWithErrorBoundary
+                                                                                            path={`${match.path}/system/cron-jobs`}
+                                                                                            component={CronJobsPage}
                                                                                         />
 
                                                                                         <RouteWithErrorBoundary

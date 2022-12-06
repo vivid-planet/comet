@@ -44,7 +44,7 @@ const cronJobsQuery = gql`
     }
 `;
 
-export function CronJobs(): React.ReactElement {
+export function CronJobsPage(): React.ReactElement {
     const intl = useIntl();
 
     const { tableData, api, loading, error } = useTableQuery<GQLCronJobsQuery, undefined>()(cronJobsQuery, {

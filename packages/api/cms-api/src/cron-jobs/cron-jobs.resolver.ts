@@ -3,14 +3,14 @@ import { Query, Resolver } from "@nestjs/graphql";
 import { BUILDER_LABEL } from "../builds/builds.constants";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { CronJobObject } from "./dto/cron-job.object";
+import { CronJob } from "./dto/cron-job.object";
 
-@Resolver(() => CronJobObject)
+@Resolver(() => CronJob)
 export class CronJobsResolver {
     constructor(private readonly kubernetesService: KubernetesService) {}
 
-    @Query(() => [CronJobObject])
-    async cronJobs(): Promise<CronJobObject[]> {
+    @Query(() => [CronJob])
+    async cronJobs(): Promise<CronJob[]> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
