@@ -1,4 +1,5 @@
 import { Stack, StackBreadcrumbs as CometAdminStackBreadcrumbs } from "@comet/admin";
+import { styled } from "@mui/material/styles";
 import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -25,9 +26,15 @@ function AdminComponentRoot(props: Props): React.ReactElement {
     return (
         <Stack topLevelTitle={title}>
             <StackBreadcrumbs />
-            {children}
+            <ChildrenContainer>{children}</ChildrenContainer>
         </Stack>
     );
 }
 
 export { AdminComponentRoot };
+
+const ChildrenContainer = styled("div")`
+    .CometAdminRteToolbar-root {
+        top: 70px;
+    }
+`;
