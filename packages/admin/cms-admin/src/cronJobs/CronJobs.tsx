@@ -85,7 +85,7 @@ export function CronJobsPage(): React.ReactElement {
                                     },
                                     {
                                         name: "schedule",
-                                        header: intl.formatMessage({ id: "comet.pages.cronJobs.name", defaultMessage: "Schedule" }),
+                                        header: intl.formatMessage({ id: "comet.pages.cronJobs.schedule", defaultMessage: "Schedule" }),
                                     },
                                     {
                                         name: "lastScheduledAt",
