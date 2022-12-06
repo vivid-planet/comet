@@ -97,8 +97,29 @@ export class DamItemsService {
             throw new Error("No cursor provided");
         }
 
-        const edges: DamItemEdge[] = [];
+        let hasNextPage: boolean;
+        let hasPreviousPage: boolean;
 
+        hasPreviousPage = !!(folders?.pageInfo.hasPreviousPage || files?.pageInfo.hasPreviousPage);
+        hasNextPage = !!(folders?.pageInfo.hasNextPage || files?.pageInfo.hasNextPage);
+
+        if (!folders && !hasPreviousPage) {
+            const [, folderCount] = await this.foldersService.findAndCount({
+                parentId: folderId,
+                includeArchived,
+                filter,
+                sortColumnName,
+                sortDirection,
+            });
+            hasPreviousPage = folderCount > 0;
+        }
+
+        if (!files && !hasNextPage) {
+            const [, fileCount] = await this.filesService.findAndCount({ folderId, includeArchived, filter, sortColumnName, sortDirection });
+            hasNextPage = fileCount > 0;
+        }
+
+        const edges: DamItemEdge[] = [];
         if (folders) {
             for (const folderEdge of folders.edges) {
                 edges.push({
@@ -110,7 +131,6 @@ export class DamItemsService {
                 });
             }
         }
-
         if (files) {
             for (const fileEdge of files.edges) {
                 edges.push({
@@ -124,11 +144,10 @@ export class DamItemsService {
         }
 
         return new PaginatedDamItems(edges, {
-            startCursor: edges[0].cursor,
-            endCursor: edges[edges.length - 1].cursor,
-            // TODO: actual values
-            hasNextPage: true,
-            hasPreviousPage: true,
+            startCursor: edges.length > 0 ? edges[0].cursor : null,
+            endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null,
+            hasNextPage: hasNextPage,
+            hasPreviousPage: hasPreviousPage,
         });
     }
 }
