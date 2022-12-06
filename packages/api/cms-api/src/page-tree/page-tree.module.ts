@@ -3,6 +3,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
 import { DocumentInterface } from "../document/dto/document-interface";
+import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { createPageTreeResolver } from "./createPageTreeResolver";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
@@ -60,6 +61,7 @@ export class PageTreeModule {
             providers: [
                 PageTreeService,
                 PageTreeReadApiService,
+                AttachedDocumentLoaderService,
                 pageTreeResolver,
                 repositoryProvider,
                 pageTreeConfigProvider,
@@ -71,7 +73,7 @@ export class PageTreeModule {
                     inject: [PageTreeService],
                 },
             ],
-            exports: [PageTreeService, PageTreeReadApiService],
+            exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService],
         };
     }
 }

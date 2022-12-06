@@ -4,6 +4,7 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { DocumentInterface } from "../document/dto/document-interface";
+import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
     DefaultPageTreeNodeCreateInput,
@@ -62,6 +63,7 @@ export function createPageTreeResolver({
             protected readonly pageTreeService: PageTreeService,
             protected readonly pageTreeReadApi: PageTreeReadApiService,
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
+            private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
         ) {}
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
@@ -166,11 +168,7 @@ export function createPageTreeResolver({
                 }
             }
 
-            const activeDocument = await this.pageTreeService.getActiveAttachedDocument(node.id, node.documentType);
-            if (!activeDocument) {
-                return null;
-            }
-            return this.pageTreeService.resolveDocument(activeDocument.type, activeDocument.documentId);
+            return this.attachedDocumentLoaderService.load(node);
         }
 
         @Mutation(() => PageTreeNode)
