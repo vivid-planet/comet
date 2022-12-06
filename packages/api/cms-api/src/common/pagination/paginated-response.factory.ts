@@ -4,6 +4,13 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { PageInfo } from "./cursor/page-info";
 
 export class PaginatedResponseFactory {
+    /**
+     * @deprecated Use {@link createOffsetLimit()} instead
+     */
+    static create<TNodeValue>(classRef: Type<TNodeValue>): Type {
+        return this.createOffsetLimit<TNodeValue>(classRef);
+    }
+
     static createOffsetLimit<TNodeValue>(classRef: Type<TNodeValue>): Type {
         @ObjectType()
         class PaginatedType {
