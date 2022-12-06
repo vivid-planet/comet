@@ -121,6 +121,16 @@ export function createReadApi(
         }
     };
 
+    let preloadRunning = false;
+    const waitForPreloadingResolvers: Array<() => void> = [];
+    const waitForPreloadDone = async (): Promise<void> => {
+        if (!preloadRunning) return;
+        console.log("waitForPreloadDone");
+        return new Promise((resolve, reject) => {
+            waitForPreloadingResolvers.push(resolve);
+        });
+    };
+
     return {
         async nodePathById(id) {
             const node = await this.getNodeOrFail(id);
@@ -128,6 +138,7 @@ export function createReadApi(
         },
 
         async nodePath(node) {
+            await waitForPreloadDone();
             let parentNode = node;
             const slugs = [node.slug];
             const loopLimit = 5000;
@@ -149,6 +160,7 @@ export function createReadApi(
             return pathBuilder(slugs);
         },
         async parentNodes(node) {
+            await waitForPreloadDone();
             let parentNode: PageTreeNodeInterface | null = node;
             const parentNodes: PageTreeNodeInterface[] = [];
             while (parentNode?.parentId) {
@@ -166,6 +178,7 @@ export function createReadApi(
         },
 
         async getNode(id) {
+            await waitForPreloadDone();
             if (nodesById.has(id)) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 return nodesById.get(id)!;
@@ -272,6 +285,7 @@ export function createReadApi(
             const start = new Date();
             const hash = scopeHash(scope);
             if (preloadedNodes.has(hash)) return; //don't double-preload
+            preloadRunning = true;
             const qb = pageTreeNodeRepository
                 .createQueryBuilder()
                 .where({
@@ -285,6 +299,11 @@ export function createReadApi(
                 nodesById.set(node.id, node);
             }
             console.log("preloaded", nodes.length, "nodes in", new Date().getTime() - start.getTime());
+            preloadRunning = false;
+            if (waitForPreloadingResolvers.length) {
+                console.log("calling waitForPreloadingResolve", waitForPreloadingResolvers.length);
+            }
+            waitForPreloadingResolvers.forEach((resolve) => resolve());
         },
     };
 }
