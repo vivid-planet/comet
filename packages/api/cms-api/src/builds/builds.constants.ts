@@ -16,3 +16,6 @@ export const INSTANCE_LABEL = "comet-dxp.com/instance";
  * k8s ownerReference is not set, if job is not created by CronJob Controller
  * */
 export const PARENT_CRON_JOB_LABEL = "comet-dxp.com/parent-cron-job";
+
+/** Annotation that includes the content scope used for the CronJob or Job */
+export const CONTENT_SCOPE_ANNOTATION = "comet-dxp.com/content-scope";

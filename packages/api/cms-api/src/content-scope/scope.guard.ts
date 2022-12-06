@@ -1,5 +1,5 @@
 import { EntityClass, MikroORM } from "@mikro-orm/core";
-import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
@@ -9,7 +9,7 @@ import { ContentScope } from "../common/decorators/content-scope.interface";
 import { ScopedEntityMeta } from "../common/decorators/scoped-entity.decorator";
 import { SubjectEntityMeta } from "../common/decorators/subject-entity.decorator";
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { CAN_ACCESS_SCOPE } from "./conent-scope.constants";
+import { ContentScopeService } from "./content-scope.service";
 import { SCOPE_GUARD_ACTIVE_METADATA_KEY, ScopeGuardActiveMetadataValue } from "./decorators/scope-guard-active.decorator";
 
 @Injectable()
@@ -18,7 +18,7 @@ export class ScopeGuard implements CanActivate {
         private reflector: Reflector,
         private readonly orm: MikroORM,
         private readonly pageTreeService: PageTreeService,
-        @Inject(CAN_ACCESS_SCOPE) private canAccessScope: (requestScope: ContentScope, user: CurrentUserInterface) => boolean,
+        private readonly contentScopeService: ContentScopeService,
     ) {}
 
     async inferScopeFromRequest(context: ExecutionContext): Promise<ContentScope | undefined> {
@@ -97,7 +97,7 @@ export class ScopeGuard implements CanActivate {
 
         const requestScope = await this.inferScopeFromRequest(context);
         if (requestScope) {
-            return this.canAccessScope(requestScope, user);
+            return this.contentScopeService.canAccessScope(requestScope, user);
         } else {
             //not a scoped request, open to anyone
         }
