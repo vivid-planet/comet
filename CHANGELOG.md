@@ -2,13 +2,15 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## NEXT
+## 3.2.1
+
+_Dec 6, 2022_
 
 ### @comet/admin
 
 #### Changes
 
--   Fix a bug where the slider thumbs are not visible when using FinalFormRangeInput.
+-   Fix a bug where the slider thumbs are not visible when using `FinalFormRangeInput`
 -   Fix a bug where `SaveButton` would not clear `error` and `success` display states after timeout
 
 ## 3.2.0
