@@ -208,25 +208,11 @@ export function createPageTreeResolver({
 
         @Mutation(() => PageTreeNode)
         @SubjectEntity(PageTreeNode)
-        async updateSlug(
+        async updatePageTreeNodeSlug(
             @Args("id", { type: () => ID }) id: string,
             @Args("slug", { type: () => String }) slug: string,
         ): Promise<PageTreeNodeInterface> {
-            const pageTreeReadApi = this.pageTreeService.createReadApi({
-                visibility: "all",
-            });
-
-            const node = await pageTreeReadApi.getNodeOrFail(id);
-
-            const requestedPath = await this.pageTreeService.pathForParentAndSlug(node.parentId, slug);
-            const nodeWithSamePath = await this.pageTreeService.nodeWithSamePath(requestedPath, node.scope);
-            if (nodeWithSamePath && nodeWithSamePath.id !== node.id) {
-                throw new Error("Requested slug is already taken");
-            }
-
-            await this.pageTreeRepository.persistAndFlush(node.assign({ slug: slug }));
-
-            return pageTreeReadApi.getNodeOrFail(id);
+            return this.pageTreeService.updateNodeSlug(id, slug);
         }
 
         @Mutation(() => [PageTreeNode])

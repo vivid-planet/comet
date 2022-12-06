@@ -65,7 +65,7 @@ const MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS = gql`
 
 const RESET_SLUG = gql`
     mutation ResetSlug($id: ID!, $slug: String!) {
-        updateSlug(id: $id, slug: $slug) {
+        updatePageTreeNodeSlug(id: $id, slug: $slug) {
             id
             slug
         }

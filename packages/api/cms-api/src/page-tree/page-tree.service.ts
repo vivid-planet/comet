@@ -243,6 +243,24 @@ export class PageTreeService {
         return await readApi.getNodeOrFail(existingNode.id);
     }
 
+    async updateNodeSlug(id: string, slug: string): Promise<PageTreeNodeInterface> {
+        const pageTreeReadApi = this.createReadApi({
+            visibility: "all",
+        });
+
+        const node = await pageTreeReadApi.getNodeOrFail(id);
+
+        const requestedPath = await this.pathForParentAndSlug(node.parentId, slug);
+        const nodeWithSamePath = await this.nodeWithSamePath(requestedPath, node.scope);
+        if (nodeWithSamePath && nodeWithSamePath.id !== node.id) {
+            throw new Error("Requested slug is already taken");
+        }
+
+        await this.pageTreeRepository.persistAndFlush(node.assign({ slug: slug }));
+
+        return pageTreeReadApi.getNodeOrFail(id);
+    }
+
     async updateCategory(id: string, category: PageTreeNodeCategory): Promise<void> {
         const readApi = this.createReadApi({ visibility: "all" });
 
