@@ -2,17 +2,28 @@ import { isBlockDataInterface } from "@comet/blocks-api";
 import { FieldMiddleware, MiddlewareContext, NextFn } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
-import { BlocksTransformerService } from "./blocks-transformer.service";
+import { PageTreeService } from "../page-tree/page-tree.service";
+import { PageTreeNodeVisibility } from "../page-tree/types";
+import { transformToPlain } from "./blocks-transformer";
 
 export class BlocksTransformerMiddlewareFactory {
-    static create(blocksTransformerService: BlocksTransformerService): FieldMiddleware {
+    static create(dependencies: Record<string, unknown>): FieldMiddleware {
         return async ({ context }: MiddlewareContext, next: NextFn) => {
             const fieldValue = await next();
 
             if (isBlockDataInterface(fieldValue)) {
-                const { includeInvisibleBlocks, previewDamUrls } = getRequestContextHeadersFromRequest(context.req);
-
-                return blocksTransformerService.transformToPlain(fieldValue, { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls });
+                const { includeInvisibleBlocks, previewDamUrls, includeInvisiblePages } = getRequestContextHeadersFromRequest(context.req);
+                console.log("block transformer per middleware", fieldValue);
+                return transformToPlain(
+                    fieldValue,
+                    {
+                        ...dependencies,
+                        pageTreeReadApi: (dependencies.pageTreeService as PageTreeService).createReadApi({
+                            visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
+                        }),
+                    },
+                    { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls },
+                );
             } else {
                 return fieldValue;
             }

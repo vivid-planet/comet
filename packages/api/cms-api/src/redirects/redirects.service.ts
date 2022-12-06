@@ -52,7 +52,7 @@ export class RedirectsService {
     }
 
     async createAutomaticRedirects(node: PageTreeNodeInterface): Promise<void> {
-        const readApi = this.pageTreeService.getReadApi({ visibility: "all" });
+        const readApi = this.pageTreeService.createReadApi({ visibility: "all" });
         const path = await readApi.nodePath(node);
         await this.repository.persistAndFlush(
             this.repository.create({

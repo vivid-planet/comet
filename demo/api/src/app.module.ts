@@ -2,9 +2,9 @@ import {
     AuthModule,
     BlobStorageConfig,
     BlobStorageModule,
+    BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
-    BlocksTransformerService,
     BuildsModule,
     ContentScope,
     ContentScopeModule,
@@ -51,7 +51,7 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
         GraphQLModule.forRootAsync({
             driver: ApolloDriver,
             imports: [ConfigModule, BlocksModule],
-            useFactory: async (config: ConfigType<typeof configNS>, blocksTransformerService: BlocksTransformerService) => ({
+            useFactory: async (config: ConfigType<typeof configNS>, dependencies: Record<string, unknown>) => ({
                 debug: config.debug,
                 playground: config.debug,
                 autoSchemaFile: "schema.gql",
@@ -61,10 +61,10 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
                     origin: config.CORS_ALLOWED_ORIGINS.split(",").map((val: string) => new RegExp(val)),
                 },
                 buildSchemaOptions: {
-                    fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(blocksTransformerService)],
+                    fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
                 },
             }),
-            inject: [configNS.KEY, BlocksTransformerService],
+            inject: [configNS.KEY, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
         }),
         AuthModule.registerAsync({
             imports: [ConfigModule],

@@ -1,10 +1,11 @@
 import { FilterQuery, NotFoundError } from "@mikro-orm/core";
-import { PageTreeService } from "src";
+import { EntityRepository } from "@mikro-orm/postgresql";
 
+import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, ScopeInterface } from "./types";
 import pathBuilder from "./utils/path-builder";
 
-interface Options {
+export interface PageTreeReadApiOptions {
     category?: PageTreeNodeCategory;
     scope?: ScopeInterface;
     documentType?: string;
@@ -17,10 +18,10 @@ export interface PageTreeReadApi {
     getNode(id: string): Promise<PageTreeNodeInterface | null>;
     getNodeOrFail(id: string): Promise<PageTreeNodeInterface>;
     getParentNode(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface | null>;
-    getNodes(options?: Options): Promise<PageTreeNodeInterface[]>;
+    getNodes(options?: PageTreeReadApiOptions): Promise<PageTreeNodeInterface[]>;
     getChildNodes(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface[]>;
-    getNodeByPath(path: string, options?: Options): Promise<PageTreeNodeInterface | null>;
-    pageTreeRootNodeList(options?: Options & { excludeHiddenInMenu?: boolean }): Promise<PageTreeNodeInterface[]>;
+    getNodeByPath(path: string, options?: PageTreeReadApiOptions): Promise<PageTreeNodeInterface | null>;
+    pageTreeRootNodeList(options?: PageTreeReadApiOptions & { excludeHiddenInMenu?: boolean }): Promise<PageTreeNodeInterface[]>;
     getDescendants(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface[]>;
     getFirstNodeByAttachedPageId(pageId: string): Promise<PageTreeNodeInterface | null>;
     preloadNodes(scope: ScopeInterface): Promise<void>;
@@ -33,7 +34,13 @@ function scopeHash(scope: ScopeInterface | undefined): string {
 }
 
 export function createReadApi(
-    pageTreeService: PageTreeService,
+    {
+        pageTreeNodeRepository,
+        attachedDocumentsRepository,
+    }: {
+        pageTreeNodeRepository: EntityRepository<PageTreeNodeInterface>;
+        attachedDocumentsRepository: EntityRepository<AttachedDocument>;
+    },
     options: {
         visibility?: Visibility | Visibility[] | "all";
     } = {},
@@ -48,9 +55,8 @@ export function createReadApi(
             ? [Visibility.Published]
             : [...visibility];
 
-    const pageTreeNodeRepository = pageTreeService.pageTreeRepository;
-    const attachedDocumentsRepository = pageTreeService.attachedDocumentsRepository;
     const preloadedNodes = new Map<string, PageTreeNodeInterface[]>();
+    const nodesById = new Map<string, PageTreeNodeInterface>();
     const queryNodes = async (
         scope: ScopeInterface | undefined,
         where: {
@@ -107,17 +113,11 @@ export function createReadApi(
             if (where.slug) {
                 qb.andWhere({ slug: where.slug });
             }
-            return qb.getResultList();
-        }
-    };
-
-    const nodeById = async (scope: ScopeInterface | undefined, id: string): Promise<PageTreeNodeInterface | null> => {
-        if (scope && preloadedNodes.has(scopeHash(scope))) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const nodes = preloadedNodes.get(scopeHash(scope))!;
-            return nodes.find((n) => n.id == id) ?? null;
-        } else {
-            return pageTreeNodeRepository.findOne({ id });
+            const nodes = await qb.getResultList();
+            for (const node of nodes) {
+                nodesById.set(node.id, node);
+            }
+            return nodes;
         }
     };
 
@@ -137,7 +137,7 @@ export function createReadApi(
                     throw new Error("Loop limit reached");
                 }
 
-                const currentParentNode = await nodeById(node.scope, parentNode.parentId);
+                const currentParentNode = await this.getNode(parentNode.parentId);
                 if (!currentParentNode) {
                     throw new Error("Could not find parent");
                 }
@@ -166,20 +166,21 @@ export function createReadApi(
         },
 
         async getNode(id) {
-            const queryFilter = { id, visibility: { $in: visibilityFilter } };
-            const node = await pageTreeNodeRepository.findOne(queryFilter);
-            return node ?? null;
+            if (nodesById.has(id)) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                return nodesById.get(id)!;
+            } else {
+                const queryFilter = { id, visibility: { $in: visibilityFilter } };
+                const node = await pageTreeNodeRepository.findOne(queryFilter);
+                if (node) {
+                    nodesById.set(id, node);
+                }
+                return node ?? null;
+            }
         },
 
         async getNodeOrFail(id) {
-            const node = await pageTreeNodeRepository
-                .createQueryBuilder()
-                .where({
-                    id,
-                    visibility: visibilityFilter,
-                })
-                .getSingleResult();
-
+            const node = await this.getNode(id);
             if (!node) {
                 throw new NotFoundError("foo");
             }
@@ -263,15 +264,12 @@ export function createReadApi(
 
         async getFirstNodeByAttachedPageId(pageId: string): Promise<PageTreeNodeInterface | null> {
             const attachedDocument = await attachedDocumentsRepository.findOne({ documentId: pageId });
-            const pageTreeNode = await pageTreeNodeRepository.findOne({ id: attachedDocument?.pageTreeNodeId });
-            if (pageTreeNode) {
-                return pageTreeNode;
-            }
-
-            return null;
+            if (!attachedDocument) return null;
+            return this.getNode(attachedDocument.pageTreeNodeId);
         },
 
         async preloadNodes(scope?: ScopeInterface) {
+            const start = new Date();
             const hash = scopeHash(scope);
             if (preloadedNodes.has(hash)) return; //don't double-preload
             const qb = pageTreeNodeRepository
@@ -281,7 +279,12 @@ export function createReadApi(
                 })
                 .orderBy({ pos: "ASC" });
             qb.andWhere({ scope });
-            preloadedNodes.set(hash, await qb.getResultList());
+            const nodes = await qb.getResultList();
+            preloadedNodes.set(hash, nodes);
+            for (const node of nodes) {
+                nodesById.set(node.id, node);
+            }
+            console.log("preloaded", nodes.length, "nodes in", new Date().getTime() - start.getTime());
         },
     };
 }

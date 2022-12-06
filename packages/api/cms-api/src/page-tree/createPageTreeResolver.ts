@@ -1,9 +1,7 @@
 import { Inject, Type } from "@nestjs/common";
-import { Args, CONTEXT, createUnionType, ID, Info, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
-import { Request } from "express";
+import { Args, createUnionType, ID, Info, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
-import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
@@ -17,7 +15,8 @@ import {
 import { SlugAvailability } from "./dto/slug-availability.enum";
 import { PAGE_TREE_CONFIG } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
-import { PageTreeReadApi, PageTreeService } from "./page-tree.service";
+import { PageTreeService } from "./page-tree.service";
+import { PageTreeReadApiService } from "./page-tree-read-api.service";
 import {
     PageTreeNodeCategory,
     PageTreeNodeCreateInputInterface,
@@ -59,19 +58,11 @@ export function createPageTreeResolver({
 
     @Resolver(() => PageTreeNode)
     class PageTreeResolver {
-        protected pageTreeReadApi: PageTreeReadApi;
-
         constructor(
             protected readonly pageTreeService: PageTreeService,
-            @Inject(CONTEXT) private context: { req: Request },
+            protected readonly pageTreeReadApi: PageTreeReadApiService,
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
-        ) {
-            const { includeInvisiblePages } = getRequestContextHeadersFromRequest(this.context.req);
-            this.pageTreeReadApi = this.pageTreeService.getReadApi({
-                visibility: [Visibility.Published, ...(includeInvisiblePages || [])],
-            });
-        }
-
+        ) {}
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
         async pageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<PageTreeNodeInterface> {
@@ -90,8 +81,8 @@ export function createPageTreeResolver({
             @Args("scope", { type: () => Scope }) scope: ScopeInterface,
             @Args("category", { type: () => String, nullable: true }) category: PageTreeNodeCategory,
         ): Promise<PageTreeNodeInterface[]> {
-            this.pageTreeReadApi.preloadNodes(scope);
-            return await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category });
+            await this.pageTreeReadApi.preloadNodes(scope);
+            return this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category });
         }
 
         @Query(() => SlugAvailability)
@@ -189,7 +180,7 @@ export function createPageTreeResolver({
             @Args("input", { type: () => PageTreeNodeUpdateInput }) input: PageTreeNodeUpdateInputInterface,
         ): Promise<PageTreeNodeInterface> {
             // Archived pages cannot be updated
-            const pageTreeReadApi = this.pageTreeService.getReadApi({
+            const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
             });
             const node = await pageTreeReadApi.getNodeOrFail(id);
@@ -203,7 +194,7 @@ export function createPageTreeResolver({
         @Mutation(() => Boolean)
         @SubjectEntity(PageTreeNode)
         async deletePageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
-            const pageTreeReadApi = this.pageTreeService.getReadApi({
+            const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
             });
             const pageTreeNode = await pageTreeReadApi.getNodeOrFail(id);
@@ -217,7 +208,7 @@ export function createPageTreeResolver({
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => PageTreeNodeUpdateVisibilityInput }) input: PageTreeNodeUpdateVisibilityInput,
         ): Promise<PageTreeNodeInterface> {
-            const readApi = this.pageTreeService.getReadApi({ visibility: "all" });
+            const readApi = this.pageTreeService.createReadApi({ visibility: "all" });
 
             const existingNode = await readApi.getNodeOrFail(id);
             if (!existingNode) throw new GraphQLError("Can't find page-tree-node with id");
@@ -234,7 +225,7 @@ export function createPageTreeResolver({
             @Args("input", { type: () => MovePageTreeNodesByPosInput }) input: MovePageTreeNodesByPosInput,
         ): Promise<PageTreeNodeInterface[]> {
             // Archived pages cannot be updated
-            const pageTreeReadApi = this.pageTreeService.getReadApi({
+            const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
             });
 
@@ -285,7 +276,7 @@ export function createPageTreeResolver({
             @Args("input", { type: () => MovePageTreeNodesByNeighbourInput }) input: MovePageTreeNodesByNeighbourInput,
         ): Promise<PageTreeNodeInterface[]> {
             // Archived pages cannot be updated
-            const pageTreeReadApi = this.pageTreeService.getReadApi({
+            const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
             });
 
@@ -322,7 +313,7 @@ export function createPageTreeResolver({
             @Args("category", { type: () => String }) category: PageTreeNodeCategory,
         ): Promise<PageTreeNodeInterface> {
             // Archived pages cannot be updated
-            const pageTreeReadApi = this.pageTreeService.getReadApi({
+            const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
             });
             const node = await pageTreeReadApi.getNodeOrFail(id);
@@ -342,7 +333,7 @@ export function createPageTreeResolver({
         ): Promise<PageTreeNodeInterface> {
             // Can not add a subpage under an archived page
             if (input.parentId) {
-                const pageTreeReadApi = this.pageTreeService.getReadApi({
+                const pageTreeReadApi = this.pageTreeService.createReadApi({
                     visibility: "all",
                 });
                 const parentNode = await pageTreeReadApi.getNodeOrFail(input.parentId);

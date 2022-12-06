@@ -20,7 +20,7 @@ export class MenusResolver {
     @PublicApi()
     async mainMenu(@Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope): Promise<MainMenuObject> {
         const rootNodes = await this.pageTreeService
-            .getReadApi({
+            .createReadApi({
                 visibility: [PageTreeNodeVisibility.Published],
             })
             .pageTreeRootNodeList({ scope, excludeHiddenInMenu: true, category: PageTreeNodeCategory.MainNavigation });
@@ -50,11 +50,13 @@ export class MenusResolver {
         @Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope,
         @RequestContext() { includeInvisiblePages }: RequestContextInterface,
     ): Promise<PageTreeNodeInterface[]> {
-        return this.pageTreeService
-            .getReadApi({
-                visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
-            })
-            .preloadNodes(scope)
-            .pageTreeRootNodeList({ scope, category: PageTreeNodeCategory.TopMenu, excludeHiddenInMenu: true });
+        return (
+            this.pageTreeService
+                .createReadApi({
+                    visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
+                })
+                //.preloadNodes(scope)
+                .pageTreeRootNodeList({ scope, category: PageTreeNodeCategory.TopMenu, excludeHiddenInMenu: true })
+        );
     }
 }

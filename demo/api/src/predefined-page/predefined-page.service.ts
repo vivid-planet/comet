@@ -19,7 +19,7 @@ export class PredefinedPageService {
         includeInvisiblePages?: Array<PageTreeNodeVisibility.Archived | PageTreeNodeVisibility.Unpublished>,
     ): Promise<PageTreeNodeInterface | null> {
         const predefinedPageNodes = await this.pageTreeService
-            .getReadApi({
+            .createReadApi({
                 visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
             })
             .getNodes({ scope, documentType: "PredefinedPage" });

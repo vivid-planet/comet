@@ -50,7 +50,9 @@ export class ScopeGuard implements CanActivate {
                     if (!args[subjectEntity.options.pageTreeNodeIdArg]) {
                         throw new Error(`${subjectEntity.options.pageTreeNodeIdArg} arg not found`);
                     }
-                    const node = await this.pageTreeService.getReadApi({ visibility: "all" }).getNode(args[subjectEntity.options.pageTreeNodeIdArg]);
+                    const node = await this.pageTreeService
+                        .createReadApi({ visibility: "all" })
+                        .getNode(args[subjectEntity.options.pageTreeNodeIdArg]);
                     if (!node) throw new Error("Can't find pageTreeNode");
                     subjectScope = node.scope;
                 } else {
