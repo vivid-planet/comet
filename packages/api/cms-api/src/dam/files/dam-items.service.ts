@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { DamItem } from "./dam-items.resolver";
+import { DamItem, DamItemEdge, PaginatedDamItems } from "./dam-items.resolver";
 import { DamItemsArgs } from "./dto/dam-items.args";
 import { FilesService } from "./files.service";
 import { FoldersService } from "./folders.service";
@@ -9,36 +9,57 @@ import { FoldersService } from "./folders.service";
 export class DamItemsService {
     constructor(private readonly foldersService: FoldersService, private readonly filesService: FilesService) {}
 
-    async findAndCount({
+    async findPaginated({
         folderId,
         includeArchived,
         filter,
         sortColumnName,
         sortDirection,
-        offset,
-        limit,
-    }: DamItemsArgs): Promise<[typeof DamItem[], number]> {
-        const [folders, foldersTotalCount] = await this.foldersService.findAndCount({
+        first,
+        after,
+        last,
+        before,
+    }: DamItemsArgs): Promise<PaginatedDamItems> {
+        const edges: DamItemEdge[] = [];
+
+        if (first) {
+        } else if (after) {
+        } else {
+            throw new Error("No cursor provided");
+        }
+
+        const folders = await this.foldersService.findPaginated({
             parentId: folderId,
             includeArchived,
             filter: { searchText: filter?.searchText },
             sortDirection,
             sortColumnName,
-            offset,
-            limit,
+            first,
+            after,
+            last,
+            before,
         });
 
-        const remainingLimit = limit - folders.length;
-        const filesOffset = offset - foldersTotalCount > 0 ? offset - foldersTotalCount : 0;
+        if ((first && after && folders.pageInfo.hasNextPage) || (last && before && folders.pageInfo.hasPreviousPage)) {
+            // TODO: fix typing
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            return folders;
+        }
 
-        const [files, filesTotalCount] = await this.filesService.findAndCount({
+        const remainingFirst = first && after ? first - folders.length : undefined;
+        const remainingLast = last && before ? last - folders.length : undefined;
+
+        const files = await this.filesService.findPaginated({
             folderId,
             includeArchived,
             filter: { searchText: filter?.searchText, mimetypes: filter?.mimetypes },
             sortColumnName,
             sortDirection,
-            offset: filesOffset,
-            limit: remainingLimit,
+            first: remainingFirst,
+            after,
+            last: remainingLast,
+            before,
         });
 
         const response: typeof DamItem[] = [...folders];
