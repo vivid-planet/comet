@@ -41,16 +41,6 @@ export class EnvironmentVariables {
     API_PASSWORD: string;
 
     @IsString()
-    IDP_API_URL: string;
-
-    @IsString()
-    @ValidateIf(() => process.env.NODE_ENV === "production")
-    IDP_API_PASSWORD: string;
-
-    @IsString()
-    IDP_CLIENT_ID: string;
-
-    @IsString()
     CORS_ALLOWED_ORIGINS: string;
 
     @IsString()

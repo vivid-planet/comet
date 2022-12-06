@@ -9,9 +9,9 @@ import {
     ContentScope,
     ContentScopeModule,
     CronJobsModule,
+    CurrentUserInterface,
     DamModule,
     FilesService,
-    GlobalAuthGuard,
     ImagesService,
     KubernetesModule,
     PageTreeModule,
@@ -22,7 +22,6 @@ import {
 import { ApolloDriver } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
-import { APP_GUARD } from "@nestjs/core";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ConfigModule } from "@src/config/config.module";
 import { configNS } from "@src/config/config.namespace";
@@ -32,7 +31,7 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
-import { CurrentUserLoaderService } from "./auth/current-user-loader.service";
+import { CurrentUser } from "./auth/current-user";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -68,23 +67,24 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
             }),
             inject: [configNS.KEY, BlocksTransformerService],
         }),
-        AuthModule.registerAsync({
+        AuthModule.register({
             imports: [ConfigModule],
-            useFactory: async (config: ConfigType<typeof configNS>) => ({
-                config: {
-                    apiPassword: config.API_PASSWORD,
-                    idpConfig: {
-                        url: config.IDP_API_URL,
-                        password: config.IDP_API_PASSWORD,
-                        clientId: config.IDP_CLIENT_ID,
-                    },
+            useFactory: (config: ConfigType<typeof configNS>) => ({
+                staticAuthedUser: {
+                    id: "1",
+                    name: "Test Admin",
+                    email: "demo@comet-dxp.com",
+                    language: "en",
+                    role: "admin",
+                    domains: ["main", "secondary"],
                 },
+                apiPassword: config.API_PASSWORD,
             }),
+            currentUser: CurrentUser,
             inject: [configNS.KEY],
-            currentUserLoaderService: CurrentUserLoaderService,
         }),
         ContentScopeModule.forRoot({
-            canAccessScope(requestScope: ContentScope, user) {
+            canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
                 if (!user.domains) return true; //all domains
                 return user.domains.includes(requestScope.domain);
             },
@@ -199,6 +199,5 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
         CronJobsModule,
         ProductsModule,
     ],
-    providers: [{ provide: APP_GUARD, useClass: GlobalAuthGuard }],
 })
 export class AppModule {}

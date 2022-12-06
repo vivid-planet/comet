@@ -62,12 +62,6 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                     setShowOutlines(true);
                     debounceDeactivateOutlines();
                     break;
-                case AdminMessageType.AccessToken:
-                    navigator.serviceWorker.ready.then((registration) => {
-                        if (registration.active) {
-                            registration.active.postMessage(message.accessToken);
-                        }
-                    });
             }
         },
         [debounceDeactivateOutlines],
@@ -99,15 +93,6 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
             window.removeEventListener("message", handleMessage, false);
         };
     }, [onReceiveMessage]);
-
-    React.useEffect(() => {
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/access-token-service-worker.js", { scope: "/" });
-        } else {
-            // eslint-disable-next-line no-console
-            console.error("Service Worker is required.");
-        }
-    }, []);
 
     return (
         <IFrameBridgeContext.Provider

@@ -4,7 +4,6 @@ import { Route, useHistory } from "react-router";
 import {
     AdminMessage,
     AdminMessageType,
-    IAdminAccessTokenMessage,
     IAdminBlockMessage,
     IAdminHoverComponentMessage,
     IAdminSelectComponentMessage,
@@ -20,7 +19,6 @@ export interface IFrameBridgeContext {
     hoveredSiteRoute: string | null;
     sendSelectComponent: (adminRoute: string) => void;
     sendHoverComponent: (adminRoute: string | null) => void;
-    sendAccessToken: (token: string) => void;
 }
 
 export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
@@ -34,9 +32,6 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
         // empty
     },
     sendHoverComponent: () => {
-        // empty
-    },
-    sendAccessToken: () => {
         // empty
     },
 });
@@ -132,13 +127,6 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
                             hoveredSiteRoute: hoveredSiteRoute,
                             sendHoverComponent: (adminRoute) => {
                                 const message: IAdminHoverComponentMessage = { cometType: AdminMessageType.HoverComponent, data: { adminRoute } };
-                                sendMessage(message);
-                            },
-                            sendAccessToken: (token) => {
-                                const message: IAdminAccessTokenMessage = {
-                                    cometType: AdminMessageType.AccessToken,
-                                    accessToken: token,
-                                };
                                 sendMessage(message);
                             },
                         }}

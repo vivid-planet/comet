@@ -16,7 +16,7 @@ export class CronJobsResolver {
         }
 
         const cronJobs = await this.kubernetesService.getAllCronJobs(
-            `${INSTANCE_LABEL} = ${this.kubernetesService.getHelmRelase()}, ${BUILDER_LABEL} != true`,
+            `${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}, ${BUILDER_LABEL} != true`,
         );
         return cronJobs.map((cronJob) => {
             return {
