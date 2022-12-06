@@ -1,5 +1,6 @@
-import { Args, createUnionType, Field, Int, ObjectType, Query, Resolver } from "@nestjs/graphql";
+import { Args, createUnionType, Field, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
+import { PageInfo } from "../../common/pagination/cursor/page-info";
 import { DamItemsService } from "./dam-items.service";
 import { DamItemsArgs } from "./dto/dam-items.args";
 import { File } from "./entities/file.entity";
@@ -10,17 +11,26 @@ export const DamItem = createUnionType({
     types: () => [File, Folder] as const,
 });
 
+@ObjectType({ isAbstract: true })
+export abstract class DamItemEdge {
+    @Field(() => String)
+    cursor: string;
+
+    @Field(() => DamItem)
+    node: typeof DamItem;
+}
+
 @ObjectType()
-class PaginatedDamItems {
-    @Field(() => [DamItem])
-    nodes: typeof DamItem[];
+export class PaginatedDamItems {
+    @Field(() => [DamItemEdge], { nullable: true })
+    edges: DamItemEdge[];
 
-    @Field(() => Int)
-    totalCount: number;
+    @Field(() => PageInfo, { nullable: true })
+    pageInfo: PageInfo;
 
-    constructor(nodes: typeof DamItem[], totalCount: number) {
-        this.nodes = nodes;
-        this.totalCount = totalCount;
+    constructor(edges: DamItemEdge[], pageInfo: PageInfo) {
+        this.edges = edges;
+        this.pageInfo = pageInfo;
     }
 }
 
@@ -30,7 +40,6 @@ export class DamItemsResolver {
 
     @Query(() => PaginatedDamItems)
     async damItemsList(@Args() args: DamItemsArgs): Promise<PaginatedDamItems> {
-        const [damItems, totalCount] = await this.damItemsService.findAndCount(args);
-        return new PaginatedDamItems(damItems, totalCount);
+        return this.damItemsService.findPaginated(args);
     }
 }
