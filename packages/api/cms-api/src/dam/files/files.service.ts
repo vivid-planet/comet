@@ -14,8 +14,6 @@ import * as rimraf from "rimraf";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
-import { paginate } from "../../common/pagination/cursor/paginate";
-import { SortArgs } from "../../common/sorting/sort.args";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
@@ -23,13 +21,12 @@ import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
-import { FileArgs, FileSortColumn } from "./dto/file.args";
+import { FileArgs } from "./dto/file.args";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { File } from "./entities/file.entity";
 import { FileImage } from "./entities/file-image.entity";
-import { PaginatedDamFiles } from "./files.resolver";
 import { createHashedPath, slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
@@ -123,7 +120,7 @@ export class FilesService {
         }).getResult();
     }
 
-    async findAndCount({ folderId, includeArchived, filter, sortColumnName, sortDirection }: FileArgs): Promise<[File[], number]> {
+    async findAndCount({ folderId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: FileArgs): Promise<[File[], number]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
 
         const files = await withFilesSelect(this.selectQueryBuilder(), {
@@ -133,6 +130,8 @@ export class FilesService {
             query: filter?.searchText,
             sortColumnName,
             sortDirection,
+            offset,
+            limit,
         }).getResult();
 
         const totalCount = await withFilesSelect(this.selectQueryBuilder(), {
@@ -142,44 +141,11 @@ export class FilesService {
             query: filter?.searchText,
             sortColumnName,
             sortDirection,
+            offset,
+            limit,
         }).getCount();
 
         return [files, totalCount];
-    }
-
-    async findPaginated({
-        folderId,
-        includeArchived,
-        filter,
-        sortColumnName,
-        sortDirection,
-        first,
-        after,
-        last,
-        before,
-    }: FileArgs): Promise<PaginatedDamFiles> {
-        const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
-
-        const args = {
-            archived: !includeArchived ? false : undefined,
-            folderId: !isSearching ? folderId || null : undefined,
-            mimetypes: filter?.mimetypes,
-            query: filter?.searchText,
-        };
-        const sortArgs = {
-            sortColumnName,
-            sortDirection,
-        };
-        const paginationArgs = {
-            first,
-            after,
-            last,
-            before,
-        };
-
-        const qb = withFilesSelect(this.selectQueryBuilder(), args);
-        const validatedSortColumnName = this.getSortColumn(sortArgs);
-        return paginate(qb, paginationArgs, validatedSortColumnName);
     }
 
     async findAllByHash(contentHash: string): Promise<File[]> {
@@ -411,16 +377,5 @@ export class FilesService {
     createHash(params: FileParams): string {
         const fileHash = `file:${params.fileId}:${params.filename}`;
         return createHmac("sha1", this.config.secret).update(fileHash).digest("hex");
-    }
-
-    getSortColumn(sort: SortArgs | undefined): FileSortColumn {
-        const sortColumn = sort?.sortColumnName ? sort?.sortColumnName : "name";
-        const sectionSortOptions = ["name", "createdAt", "updatedAt"];
-
-        if (!sectionSortOptions.includes(sortColumn)) {
-            throw new Error("Unsupported sort column (supported are createdAt, updatedAt, name).");
-        }
-
-        return sortColumn as FileSortColumn;
     }
 }

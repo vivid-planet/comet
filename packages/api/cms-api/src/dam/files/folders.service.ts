@@ -3,14 +3,11 @@ import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
-import { paginate } from "../../common/pagination/cursor/paginate";
-import { SortArgs } from "../../common/sorting/sort.args";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { FolderArgs, FolderSortColumn } from "./dto/folder.args";
+import { FolderArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { Folder } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
-import { PaginatedDamFolders } from "./folders.resolver";
 
 export const withFoldersSelect = (
     qb: QueryBuilder<Folder>,
@@ -20,6 +17,8 @@ export const withFoldersSelect = (
         query?: string;
         sortColumnName?: string;
         sortDirection?: SortDirection;
+        offset?: number;
+        limit?: number;
     },
 ): QueryBuilder<Folder> => {
     if (!args.includeArchived) {
@@ -41,6 +40,13 @@ export const withFoldersSelect = (
 
     if (args.sortColumnName && args.sortDirection) {
         qb.orderBy({ [`folder.${args.sortColumnName}`]: args.sortDirection });
+    }
+
+    if (args.offset) {
+        qb.offset(args.offset);
+    }
+    if (args.limit) {
+        qb.limit(args.limit);
     }
 
     return qb;
@@ -75,13 +81,15 @@ export class FoldersService {
         return qb.getResult();
     }
 
-    async findAndCount({ parentId, includeArchived, filter, sortColumnName, sortDirection }: FolderArgs): Promise<[Folder[], number]> {
+    async findAndCount({ parentId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: FolderArgs): Promise<[Folder[], number]> {
         const args = {
             includeArchived,
             parentId,
             query: filter?.searchText,
             sortColumnName,
             sortDirection,
+            offset,
+            limit,
         };
 
         const qb = withFoldersSelect(this.selectQueryBuilder(), args);
@@ -91,38 +99,6 @@ export class FoldersService {
         const totalCount = await countQb.getCount();
 
         return [folders, totalCount];
-    }
-
-    async findPaginated({
-        parentId,
-        includeArchived,
-        filter,
-        sortColumnName,
-        sortDirection,
-        first,
-        after,
-        last,
-        before,
-    }: FolderArgs): Promise<PaginatedDamFolders> {
-        const args = {
-            includeArchived,
-            parentId,
-            query: filter?.searchText,
-        };
-        const sortArgs = {
-            sortColumnName,
-            sortDirection,
-        };
-        const paginationArgs = {
-            first,
-            after,
-            last,
-            before,
-        };
-
-        const qb = withFoldersSelect(this.selectQueryBuilder(), args);
-        const validatedSortColumnName = this.getSortColumn(sortArgs);
-        return paginate(qb, paginationArgs, validatedSortColumnName);
     }
 
     async findAllByIds(ids: string[]): Promise<Folder[]> {
@@ -247,16 +223,5 @@ export class FoldersService {
 
     private countQueryBuilder(): QueryBuilder<Folder> {
         return this.foldersRepository.createQueryBuilder("folder").select("*");
-    }
-
-    getSortColumn(sort: SortArgs | undefined): FolderSortColumn {
-        const sortColumn = sort?.sortColumnName ? sort?.sortColumnName : "name";
-        const sectionSortOptions = ["name", "createdAt", "updatedAt"];
-
-        if (!sectionSortOptions.includes(sortColumn)) {
-            throw new Error("Unsupported sort column (supported are createdAt, updatedAt, name).");
-        }
-
-        return sortColumn as FolderSortColumn;
     }
 }

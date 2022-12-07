@@ -2,10 +2,8 @@ import { ArgsType, Field, ID, InputType, IntersectionType } from "@nestjs/graphq
 import { Type } from "class-transformer";
 import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { CursorBasedPaginationArgs } from "../../../common/pagination/cursor/cursor-based.args";
+import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
 import { SortArgs } from "../../../common/sorting/sort.args";
-
-export type FolderSortColumn = "createdAt" | "updatedAt" | "name";
 
 @InputType()
 export class FolderFilterInput {
@@ -16,7 +14,7 @@ export class FolderFilterInput {
 }
 
 @ArgsType()
-export class FolderArgs extends IntersectionType(CursorBasedPaginationArgs, SortArgs) {
+export class FolderArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()
