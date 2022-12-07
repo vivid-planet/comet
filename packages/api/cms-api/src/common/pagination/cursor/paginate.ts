@@ -19,7 +19,7 @@ export async function paginate<T extends { id: string; createdAt: Date }>(
     }[];
     pageInfo: PageInfo;
 }> {
-    const order = paginationArgs.first ? SortDirection.ASC : SortDirection.DESC;
+    const order = paginationArgs.first ? SortDirection.DESC : SortDirection.ASC;
     query.orderBy({ [`${query.alias}.${String(cursorColumn)}`]: order });
 
     const cursorQuery = query.clone();
@@ -31,7 +31,7 @@ export async function paginate<T extends { id: string; createdAt: Date }>(
         if (paginationArgs.after) {
             const entity = await cursorQuery.where({ id: paginationArgs.after }).getSingleResult();
 
-            query.andWhere(`${query.alias}."${String(cursorColumn)}" > ?`, [entity?.[cursorColumn]]);
+            query.andWhere(`${query.alias}."${String(cursorColumn)}" < ?`, [entity?.[cursorColumn]]);
         }
 
         const limit = paginationArgs.first ?? defaultLimit;
@@ -46,14 +46,14 @@ export async function paginate<T extends { id: string; createdAt: Date }>(
         const limit = paginationArgs.last ?? defaultLimit;
 
         query
-            .andWhere(`${query.alias}."${String(cursorColumn)}" < ?`, [entity?.[cursorColumn]])
+            .andWhere(`${query.alias}."${String(cursorColumn)}" > ?`, [entity?.[cursorColumn]])
             .andWhere(`${query.alias}.id != ?`, [entity?.id])
             .limit(limit);
     }
 
     let result = await query.getResult();
 
-    if (paginationArgs.last) {
+    if (paginationArgs.last && paginationArgs.before) {
         result = result.reverse();
     }
 
@@ -66,14 +66,14 @@ export async function paginate<T extends { id: string; createdAt: Date }>(
     if (startCursor) {
         countBefore = await beforeQuery
             .andWhere(`${query.alias}.id != ?`, [startCursor.id])
-            .andWhere(`${query.alias}."${String(cursorColumn)}" < ?`, [startCursor[cursorColumn]])
+            .andWhere(`${query.alias}."${String(cursorColumn)}" > ?`, [startCursor[cursorColumn]])
             .getCount();
     }
 
     if (endCursor) {
         countAfter = await afterQuery
             .andWhere(`${query.alias}.id != ?`, [endCursor.id])
-            .andWhere(`${query.alias}."${String(cursorColumn)}" > ?`, [endCursor[cursorColumn]])
+            .andWhere(`${query.alias}."${String(cursorColumn)}" < ?`, [endCursor[cursorColumn]])
             .getCount();
     }
 
