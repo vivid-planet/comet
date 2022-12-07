@@ -4983,7 +4983,6 @@ __metadata:
     "@mikro-orm/migrations": ^5.0.4
     "@mikro-orm/nestjs": ^5.1.0
     "@mikro-orm/postgresql": ^5.0.4
-    "@nestjs/apollo": ^10.0.0
     "@nestjs/common": ^9.0.0
     "@nestjs/core": ^9.0.0
     "@nestjs/graphql": ^10.0.0
