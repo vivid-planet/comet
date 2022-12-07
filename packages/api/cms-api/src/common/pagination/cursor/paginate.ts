@@ -30,6 +30,7 @@ export async function paginate<T extends { id: string; createdAt: Date }>(
     if (paginationArgs.first) {
         if (paginationArgs.after) {
             const entity = await cursorQuery.where({ id: paginationArgs.after }).getSingleResult();
+
             query.andWhere(`${query.alias}."${String(cursorColumn)}" > ?`, [entity?.[cursorColumn]]);
         }
 
@@ -39,15 +40,15 @@ export async function paginate<T extends { id: string; createdAt: Date }>(
     }
 
     // REVERSE pagination
-    else if (paginationArgs.last) {
-        if (paginationArgs.before) {
-            const entity = await cursorQuery.where({ id: paginationArgs.before }).getSingleResult();
-            query.andWhere(`${query.alias}."${String(cursorColumn)}" < ?`, [entity?.[cursorColumn]]).andWhere(`${query.alias}.id != ?`, [entity?.id]);
-        }
+    else if (paginationArgs.last && paginationArgs.before) {
+        const entity = await cursorQuery.where({ id: paginationArgs.before }).getSingleResult();
 
         const limit = paginationArgs.last ?? defaultLimit;
 
-        query.limit(limit);
+        query
+            .andWhere(`${query.alias}."${String(cursorColumn)}" < ?`, [entity?.[cursorColumn]])
+            .andWhere(`${query.alias}.id != ?`, [entity?.id])
+            .limit(limit);
     }
 
     let result = await query.getResult();
