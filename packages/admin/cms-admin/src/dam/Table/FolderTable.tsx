@@ -161,7 +161,7 @@ const FolderTable = ({
         resolveTableData: (data) => {
             return {
                 data: data.damItemsList.edges?.map((edge) => edge.node),
-                totalCount: data.damItemsList.edges?.length ?? 0,
+                totalCount: 0,
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 pagingInfo: createRelayPagingActions<GQLPaginatedDamItems, GQLDamItemCursor | null>(pagingApi, data.damItemsList),
