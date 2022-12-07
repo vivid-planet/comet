@@ -1,36 +1,9 @@
-import { ArgsType, Field, ID, InputType, Int, IntersectionType } from "@nestjs/graphql";
+import { ArgsType, Field, ID, InputType, IntersectionType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsBoolean, IsOptional, IsPositive, IsString, IsUUID, ValidateIf, ValidateNested } from "class-validator";
+import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { CursorBasedPaginationArgs } from "../../../common/pagination/cursor/cursor-based.args";
+import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
 import { SortArgs } from "../../../common/sorting/sort.args";
-
-@ArgsType()
-export class CursorBasedPaginationArgs {
-    @Field(() => Int, { nullable: true })
-    @ValidateIf(({ after, first }) => first || after)
-    // TODO: readd
-    // @IsPropertyNotDefined("last", { message })
-    @IsPositive()
-    first?: number;
-
-    @Field(() => ID, { nullable: true })
-    @IsOptional()
-    @IsString()
-    after?: string;
-
-    @Field(() => Int, { nullable: true })
-    @ValidateIf(({ before, last }) => last || before)
-    // TODO: readd
-    // @IsPropertyNotDefined("first", { message })
-    @IsPositive()
-    last?: number;
-
-    @Field(() => ID, { nullable: true })
-    @ValidateIf(({ last }) => last)
-    @IsString()
-    before?: string;
-}
 
 @InputType()
 export class DamItemFilterInput {
@@ -46,7 +19,7 @@ export class DamItemFilterInput {
 }
 
 @ArgsType()
-export class DamItemsArgs extends IntersectionType(CursorBasedPaginationArgs, SortArgs) {
+export class DamItemsArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()
