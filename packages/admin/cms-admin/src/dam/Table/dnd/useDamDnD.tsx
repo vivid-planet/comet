@@ -82,19 +82,16 @@ export const useDamDnD = (): DamDnDApi => {
                             const movedFileIds = result.data?.moveDamFiles.map((file) => file.id) ?? [];
 
                             cache.updateQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>({ ...damItemsListQuery.options }, (data) => {
-                                const filteredItemEdges = data?.damItemsList.edges?.filter(
-                                    (item) => isFolder(item.node) || !movedFileIds.includes(item.node.id),
+                                const filteredItemsList = data?.damItemsList.nodes.filter(
+                                    (item) => isFolder(item) || !movedFileIds.includes(item.id),
                                 );
+
+                                const newTotalCount = data?.damItemsList.totalCount ? data?.damItemsList.totalCount - movedFileIds.length : 0;
 
                                 return {
                                     damItemsList: {
-                                        edges: filteredItemEdges ?? [],
-                                        pageInfo: {
-                                            hasNextPage: data?.damItemsList.pageInfo.hasNextPage ?? false,
-                                            hasPreviousPage: data?.damItemsList.pageInfo.hasPreviousPage ?? false,
-                                            startCursor: filteredItemEdges?.[0]?.cursor ?? null,
-                                            endCursor: filteredItemEdges?.[filteredItemEdges.length - 1]?.cursor ?? null,
-                                        },
+                                        nodes: filteredItemsList ?? [],
+                                        totalCount: newTotalCount,
                                     },
                                 };
                             });
@@ -130,19 +127,16 @@ export const useDamDnD = (): DamDnDApi => {
                             const movedFolderIds = result.data?.moveDamFolders.map((folder) => folder.id) ?? [];
 
                             cache.updateQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>({ ...damItemsListQuery.options }, (data) => {
-                                const filteredItemEdges = data?.damItemsList?.edges?.filter(
-                                    (item) => isFile(item.node) || !movedFolderIds.includes(item.node.id),
+                                const filteredItemsList = data?.damItemsList?.nodes.filter(
+                                    (item) => isFile(item) || !movedFolderIds.includes(item.id),
                                 );
+
+                                const newTotalCount = data?.damItemsList.totalCount ? data?.damItemsList.totalCount - movedFolderIds.length : 0;
 
                                 return {
                                     damItemsList: {
-                                        edges: filteredItemEdges ?? [],
-                                        pageInfo: {
-                                            hasNextPage: data?.damItemsList.pageInfo.hasNextPage ?? false,
-                                            hasPreviousPage: data?.damItemsList.pageInfo.hasPreviousPage ?? false,
-                                            startCursor: filteredItemEdges?.[0]?.cursor ?? null,
-                                            endCursor: filteredItemEdges?.[filteredItemEdges.length - 1]?.cursor ?? null,
-                                        },
+                                        nodes: filteredItemsList ?? [],
+                                        totalCount: newTotalCount,
                                     },
                                 };
                             });
