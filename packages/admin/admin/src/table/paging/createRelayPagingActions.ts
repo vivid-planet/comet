@@ -1,22 +1,19 @@
 import { IPagingApi } from "../useTableQueryPaging";
 import { IPagingInfo } from "./IPagingInfo";
 
-interface IRelayPagingData<Cursor> {
+interface IRelayPagingData {
     pageInfo: {
         hasNextPage: boolean;
         hasPreviousPage: boolean;
-        startCursor: Cursor;
-        endCursor: Cursor;
+        startCursor: string;
+        endCursor: string;
     };
 }
-export interface IRelayPagingVariables<Cursor> {
-    after?: Cursor;
-    before?: Cursor;
+interface IRelayPagingVariables {
+    after?: string;
+    before?: string;
 }
-export function createRelayPagingActions<TData extends IRelayPagingData<Cursor>, Cursor = string>(
-    pagingApi: IPagingApi<IRelayPagingVariables<Cursor>>,
-    data: TData,
-): IPagingInfo {
+export function createRelayPagingActions<TData extends IRelayPagingData>(pagingApi: IPagingApi<IRelayPagingVariables>, data: TData): IPagingInfo {
     return {
         fetchNextPage:
             data.pageInfo && data.pageInfo.hasNextPage

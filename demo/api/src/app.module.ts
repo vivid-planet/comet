@@ -198,5 +198,3 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
     providers: [{ provide: APP_GUARD, useClass: GlobalAuthGuard }],
 })
 export class AppModule {}
-
-// kjkjdddffrtrdewrereretdderfdttrerrdererererererererer
