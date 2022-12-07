@@ -1,36 +1,12 @@
-import { ArgsType, Field, ID, InputType, Int, IntersectionType, ObjectType } from "@nestjs/graphql";
+import { ArgsType, Field, ID, InputType, Int, IntersectionType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsBoolean, IsOptional, IsPositive, IsString, IsUUID, ValidateIf, ValidateNested } from "class-validator";
 
+import { CursorBasedPaginationArgs } from "../../../common/pagination/cursor/cursor-based.args";
 import { SortArgs } from "../../../common/sorting/sort.args";
-import { DamItem } from "../dam-items.resolver";
-
-// const DamItemCursorType = new GraphQLScalarType({
-//     name: "DamItemCursorType",
-// });
-
-@ObjectType()
-export class DamItemCursor {
-    @Field(() => String)
-    id: string;
-
-    @Field(() => String)
-    type: "file" | "folder";
-}
-
-@InputType()
-export class DamItemCursorInput {
-    @Field(() => String)
-    @IsString()
-    id: string;
-
-    @Field(() => String)
-    @IsString()
-    type: "file" | "folder";
-}
 
 @ArgsType()
-class DamItemCursorBasedPaginationArgs {
+export class CursorBasedPaginationArgs {
     @Field(() => Int, { nullable: true })
     @ValidateIf(({ after, first }) => first || after)
     // TODO: readd
@@ -38,11 +14,10 @@ class DamItemCursorBasedPaginationArgs {
     @IsPositive()
     first?: number;
 
-    @Field(() => DamItemCursorInput, { nullable: true })
-    @Type(() => DamItemCursorInput)
-    @ValidateIf(({ first }) => first)
-    @ValidateNested()
-    after?: DamItemCursorInput;
+    @Field(() => ID, { nullable: true })
+    @IsOptional()
+    @IsString()
+    after?: string;
 
     @Field(() => Int, { nullable: true })
     @ValidateIf(({ before, last }) => last || before)
@@ -51,11 +26,10 @@ class DamItemCursorBasedPaginationArgs {
     @IsPositive()
     last?: number;
 
-    @Field(() => DamItemCursorInput, { nullable: true })
-    @Type(() => DamItemCursorInput)
+    @Field(() => ID, { nullable: true })
     @ValidateIf(({ last }) => last)
-    @ValidateNested()
-    before?: DamItemCursorInput;
+    @IsString()
+    before?: string;
 }
 
 @InputType()
@@ -72,7 +46,7 @@ export class DamItemFilterInput {
 }
 
 @ArgsType()
-export class DamItemsArgs extends IntersectionType(DamItemCursorBasedPaginationArgs, SortArgs) {
+export class DamItemsArgs extends IntersectionType(CursorBasedPaginationArgs, SortArgs) {
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()
@@ -88,42 +62,4 @@ export class DamItemsArgs extends IntersectionType(DamItemCursorBasedPaginationA
     @IsOptional()
     @ValidateNested()
     filter?: DamItemFilterInput;
-}
-
-@ObjectType({ isAbstract: true })
-export abstract class DamItemEdge {
-    @Field(() => DamItemCursor)
-    cursor: DamItemCursor;
-
-    @Field(() => DamItem)
-    node: typeof DamItem;
-}
-
-@ObjectType()
-class DamItemPageInfo {
-    @Field(() => DamItemCursor, { nullable: true })
-    startCursor: DamItemCursor | null;
-
-    @Field(() => DamItemCursor, { nullable: true })
-    endCursor: DamItemCursor | null;
-
-    @Field(() => Boolean)
-    hasPreviousPage: boolean;
-
-    @Field(() => Boolean)
-    hasNextPage: boolean;
-}
-
-@ObjectType()
-export class PaginatedDamItems {
-    @Field(() => [DamItemEdge], { nullable: true })
-    edges: DamItemEdge[];
-
-    @Field(() => DamItemPageInfo)
-    pageInfo: DamItemPageInfo;
-
-    constructor(edges: DamItemEdge[], pageInfo: DamItemPageInfo) {
-        this.edges = edges;
-        this.pageInfo = pageInfo;
-    }
 }

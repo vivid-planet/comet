@@ -1,10 +1,9 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     BreadcrumbItem,
-    createRelayPagingActions,
+    createOffsetLimitPagingAction,
     EditDialog,
     IFilterApi,
-    IRelayPagingVariables,
     ISelectionApi,
     ITableColumn,
     MainContent,
@@ -28,10 +27,8 @@ import {
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,
     GQLDamFolderTableFragment,
-    GQLDamItemCursor,
     GQLDamItemsListQuery,
     GQLDamItemsListQueryVariables,
-    GQLPaginatedDamItems,
 } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
@@ -127,7 +124,7 @@ const FolderTable = ({
         skip: id === undefined,
     });
 
-    const pagingApi = useTableQueryPaging<IRelayPagingVariables<GQLDamItemCursor | null>>({});
+    const pagingApi = useTableQueryPaging(0);
 
     const {
         tableData,
@@ -143,28 +140,14 @@ const FolderTable = ({
             },
             sortColumnName: filterApi.current.sort?.columnName,
             sortDirection: filterApi.current.sort?.direction,
-            first: !pagingApi.current?.before ? damItemsListLimit : undefined,
-            after: pagingApi.current?.after
-                ? {
-                      id: pagingApi.current.after.id,
-                      type: pagingApi.current.after.type,
-                  }
-                : undefined,
-            last: pagingApi.current?.before ? damItemsListLimit : undefined,
-            before: pagingApi.current?.before
-                ? {
-                      id: pagingApi.current.before.id,
-                      type: pagingApi.current.before.type,
-                  }
-                : undefined,
+            limit: damItemsListLimit,
+            offset: pagingApi.current,
         },
         resolveTableData: (data) => {
             return {
-                data: data.damItemsList.edges?.map((edge) => edge.node),
-                totalCount: 0,
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                pagingInfo: createRelayPagingActions<GQLPaginatedDamItems, GQLDamItemCursor | null>(pagingApi, data.damItemsList),
+                data: data.damItemsList.nodes,
+                totalCount: data.damItemsList.totalCount,
+                pagingInfo: createOffsetLimitPagingAction(pagingApi, data.damItemsList, damItemsListLimit),
             };
         },
     });

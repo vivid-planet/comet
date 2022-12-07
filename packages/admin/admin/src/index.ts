@@ -143,7 +143,7 @@ export { TableLocalChangesToolbar } from "./table/LocalChangesToolbar";
 export { TablePagination } from "./table/Pagination";
 export { createOffsetLimitPagingAction } from "./table/paging/createOffsetLimitPagingAction";
 export { createPagePagingActions } from "./table/paging/createPagePagingActions";
-export { createRelayPagingActions, IRelayPagingVariables } from "./table/paging/createRelayPagingActions";
+export { createRelayPagingActions } from "./table/paging/createRelayPagingActions";
 export { createRestPagingActions } from "./table/paging/createRestPagingActions";
 export { createRestStartLimitPagingActions } from "./table/paging/createRestStartLimitPagingActions";
 export { IPagingInfo } from "./table/paging/IPagingInfo";
