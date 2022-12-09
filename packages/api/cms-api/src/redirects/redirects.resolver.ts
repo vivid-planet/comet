@@ -1,19 +1,15 @@
 import { FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Type } from "@nestjs/common";
-import { Args, ArgsType, CONTEXT, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Type } from "@nestjs/common";
+import { Args, ArgsType, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-import { Request } from "express";
 
-import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
 import { validateNotModified } from "../document/validateNotModified";
-import { PageTreeReadApi, PageTreeService } from "../page-tree/page-tree.service";
-import { PageTreeNodeVisibility } from "../page-tree/types";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { RedirectInputInterface } from "./dto/redirect-input.factory";
 import { RedirectUpdateActivenessInput } from "./dto/redirect-update-activeness.input";
@@ -49,19 +45,10 @@ export function createRedirectsResolver({
     @Resolver(() => Redirect)
     @ScopeGuardActive(hasNonEmptyScope)
     class RedirectsResolver {
-        protected pageTreeReadApi: PageTreeReadApi;
-
         constructor(
             private readonly redirectService: RedirectsService,
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
-            @Inject(forwardRef(() => PageTreeService)) private readonly pageTreeService: PageTreeService,
-            @Inject(CONTEXT) private context: { req: Request },
-        ) {
-            const { includeInvisiblePages } = getRequestContextHeadersFromRequest(this.context.req);
-            this.pageTreeReadApi = this.pageTreeService.createReadApi({
-                visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
-            });
-        }
+        ) {}
 
         @Query(() => [Redirect])
         async redirects(@Args() { scope, query, type, active, sortColumnName, sortDirection }: RedirectsArgs): Promise<RedirectInterface[]> {
