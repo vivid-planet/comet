@@ -109,6 +109,7 @@ export {
 export { JobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
+export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
 export { AttachedDocumentInput, AttachedDocumentStrictInput } from "./page-tree/dto/attached-document.input";
