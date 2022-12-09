@@ -125,7 +125,6 @@ export function createReadApi(
     const waitForPreloadingResolvers: Array<() => void> = [];
     const waitForPreloadDone = async (): Promise<void> => {
         if (!preloadRunning) return;
-        console.log("waitForPreloadDone");
         return new Promise((resolve, reject) => {
             waitForPreloadingResolvers.push(resolve);
         });
