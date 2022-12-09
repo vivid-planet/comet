@@ -160,20 +160,15 @@ export function createReadApi(
             return pathBuilder(slugs);
         },
         async parentNodes(node) {
-            await waitForPreloadDone();
             let parentNode: PageTreeNodeInterface | null = node;
             const parentNodes: PageTreeNodeInterface[] = [];
             while (parentNode?.parentId) {
-                parentNode = await pageTreeNodeRepository
-                    .createQueryBuilder()
-                    .where({ id: parentNode.parentId, visibility: visibilityFilter })
-                    .getSingleResult();
+                parentNode = await this.getNode(parentNode.parentId);
 
                 if (parentNode) {
                     parentNodes.push(parentNode);
                 }
             }
-
             return parentNodes.reverse();
         },
 
