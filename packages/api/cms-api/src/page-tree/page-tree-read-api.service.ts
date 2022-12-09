@@ -2,7 +2,6 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CONTEXT } from "@nestjs/graphql";
-import { Request } from "express";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { AttachedDocument } from "./entities/attached-document.entity";
@@ -16,11 +15,20 @@ export class PageTreeReadApiService {
     constructor(
         @Inject(forwardRef(() => PAGE_TREE_REPOSITORY)) public readonly pageTreeRepository: EntityRepository<PageTreeNodeInterface>,
         @InjectRepository(AttachedDocument) public readonly attachedDocumentsRepository: EntityRepository<AttachedDocument>,
-        @Inject(CONTEXT) private context: { req: Request } | undefined,
+        @Inject(CONTEXT) private context: any,
     ) {
         let includeInvisiblePages: Visibility[] = [];
         if (this.context) {
-            const ctx = getRequestContextHeadersFromRequest(this.context.req);
+            let headers;
+            if (this.context.req) {
+                headers = this.context.req.headers;
+            } else if (this.context.headers) {
+                headers = this.context.headers;
+            } else {
+                throw new Error("Can't extract request headers from context");
+            }
+            const ctx = getRequestContextHeadersFromRequest({ headers });
+
             includeInvisiblePages = ctx.includeInvisiblePages || [];
         }
         this.api = createReadApi(

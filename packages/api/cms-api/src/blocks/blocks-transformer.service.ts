@@ -1,7 +1,6 @@
 import { BlockContext, BlockDataInterface } from "@comet/blocks-api";
 import { Inject, Injectable } from "@nestjs/common";
 import { CONTEXT } from "@nestjs/graphql";
-import { Request } from "express";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { PageTreeReadApiService } from "../page-tree/page-tree-read-api.service";
@@ -15,12 +14,21 @@ export class BlocksTransformerService {
     constructor(
         @Inject(BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES) dependencies: Record<string, unknown>,
         pageTreeReadApi: PageTreeReadApiService,
-        @Inject(CONTEXT) context: { req: Request } | undefined,
+        @Inject(CONTEXT) context: any,
     ) {
         let includeInvisibleBlocks: boolean | undefined = false;
         let previewDamUrls = false;
         if (context) {
-            const ctx = getRequestContextHeadersFromRequest(context.req);
+            let headers;
+            if (context.req) {
+                headers = context.req.headers;
+            } else if (context.headers) {
+                headers = context.headers;
+            } else {
+                throw new Error("Can't extract request headers from context");
+            }
+            const ctx = getRequestContextHeadersFromRequest({ headers });
+
             includeInvisibleBlocks = ctx.includeInvisibleBlocks;
             previewDamUrls = ctx.previewDamUrls;
         }
