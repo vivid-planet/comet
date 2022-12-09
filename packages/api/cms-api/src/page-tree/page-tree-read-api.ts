@@ -149,7 +149,8 @@ export function createReadApi(
 
                 const currentParentNode = await this.getNode(parentNode.parentId);
                 if (!currentParentNode) {
-                    throw new Error("Could not find parent");
+                    console.error(`Could not find parent with id ${parentNode.parentId}`);
+                    return "";
                 }
                 parentNode = currentParentNode;
                 slugs.push(parentNode.slug);
@@ -292,16 +293,31 @@ export function createReadApi(
                 })
                 .orderBy({ pos: "ASC" });
             qb.andWhere({ scope });
-            const nodes = await qb.getResultList();
+            const allNodes = await qb.getResultList();
+            const allNodesById = new Map<string, PageTreeNodeInterface>();
+            for (const node of allNodes) {
+                allNodesById.set(node.id, node);
+            }
+
+            //filter nodes without parent (happens when parent is not visible)
+            //TODO this is not done for live queries
+            const nodes = allNodes.filter((node) => {
+                let n = node;
+                while (n.parentId) {
+                    if (!allNodesById.has(n.parentId)) {
+                        return false;
+                    }
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    n = allNodesById.get(n.parentId)!;
+                }
+                return true;
+            });
+
             preloadedNodes.set(hash, nodes);
             for (const node of nodes) {
                 nodesById.set(node.id, node);
             }
-            console.log("preloaded", nodes.length, "nodes in", new Date().getTime() - start.getTime());
             preloadRunning = false;
-            if (waitForPreloadingResolvers.length) {
-                console.log("calling waitForPreloadingResolve", waitForPreloadingResolvers.length);
-            }
             waitForPreloadingResolvers.forEach((resolve) => resolve());
         },
     };
