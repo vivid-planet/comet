@@ -7,7 +7,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { ExternalLinkBlockData } from "../blocks.generated";
+import { ExternalLinkBlockData } from "../../blocks.generated";
 
 interface OpenLinkDialogProps {
     onClose?: () => void;

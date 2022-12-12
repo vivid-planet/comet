@@ -82,7 +82,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
                     .replace(/\.ts$/, "")}";`;
             }
 
-            decorators.push(`@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""})`);
+            decorators.push(`@Field(() => RootBlockInputScalar(${blockExportName})${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push(
                 `@Transform(({ value }) => (isBlockInputInterface(value) ? value : ${blockExportName}.blockInputFactory(value)), { toClassOnly: true })`,
             );
@@ -100,7 +100,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
     const inputOut = `import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate } from "class-validator";
-import { IsSlug } from "@comet/cms-api";
+import { IsSlug, RootBlockInputScalar } from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 ${importsOut}

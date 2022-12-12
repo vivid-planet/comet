@@ -56,27 +56,41 @@ const SaveBtn = ({
     };
 
     React.useEffect(() => {
+        let timeoutId: number | undefined;
+
         if (displayState === "idle" && saving) {
             setDisplayState("saving");
         }
         // Display Error
         else if (displayState === "saving" && hasErrors === true) {
-            setTimeout(() => {
+            timeoutId = window.setTimeout(() => {
                 setDisplayState("error");
-                setTimeout(() => {
-                    setDisplayState("idle");
-                }, 5000);
             }, 500);
         }
         // Display Success
         else if (displayState === "saving" && saving === false && hasErrors === false) {
-            setTimeout(() => {
+            timeoutId = window.setTimeout(() => {
                 setDisplayState("success");
-                setTimeout(() => {
-                    setDisplayState("idle");
-                }, 2000);
             }, 500);
         }
+        // Return to idle
+        else if (displayState === "error") {
+            timeoutId = window.setTimeout(() => {
+                setDisplayState("idle");
+            }, 5000);
+        }
+        // Return to idle
+        else if (displayState === "success") {
+            timeoutId = window.setTimeout(() => {
+                setDisplayState("idle");
+            }, 2000);
+        }
+
+        return () => {
+            if (timeoutId !== undefined) {
+                window.clearTimeout(timeoutId);
+            }
+        };
     }, [displayState, saving, hasErrors]);
 
     React.useEffect(() => {

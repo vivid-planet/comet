@@ -134,7 +134,6 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                     min={min}
                     max={max}
                     value={[fieldValue.min ? fieldValue.min : min, fieldValue.max ? fieldValue.max : max]}
-                    components={{ Thumb: sliderProps?.components?.Thumb ? sliderProps.components.Thumb : "span" }}
                     onChange={handleSliderChange}
                     {...sliderProps}
                 />
