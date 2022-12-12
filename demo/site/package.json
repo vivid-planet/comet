@@ -49,6 +49,7 @@
     "devDependencies": {
         "@babel/core": "^7.16.0",
         "@comet/eslint-config": "^3.0.0",
+        "@graphql-codegen/add": "^3.0.0",
         "@graphql-codegen/cli": "^2.0.0",
         "@graphql-codegen/named-operations-object": "^2.0.0",
         "@graphql-codegen/typescript": "^2.0.0",

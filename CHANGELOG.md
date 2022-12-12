@@ -6,12 +6,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ### @comet/cms-admin
 
--   Fix a bug where the pages query would query for a field `undefined` when no `additionalPageTreeNodeFragment` is set
 -   Breaking: Remove dependency @comet/react-app-auth and all occurences
 
 ### @comet/cms-api
 
--   Add default value `{}` for `RedirectScopeInput` when no explicit scope is set to make redirects scope support backwards compatible
 -   Restrict access to builds based on `ContentScopeModule`
 -   Decouple KubernetesModule from BuildsModule (Breaking: BuildsModuleConfig is now KubernetesModuleConfig)
 -   Breaking: AuthModule removes support for Bearer-Token
@@ -24,6 +22,44 @@ All notable changes to this project will be documented in this file. This projec
 ### @comet/eslint-config
 
 -   Enable [no-return-await](https://eslint.org/docs/latest/rules/no-return-await)
+
+## 3.2.1
+
+_Dec 6, 2022_
+
+### @comet/admin
+
+#### Changes
+
+-   Fix a bug where the slider thumbs are not visible when using `FinalFormRangeInput`
+-   Fix a bug where `SaveButton` would not clear `error` and `success` display states after timeout
+
+## 3.2.0
+
+_Nov 29, 2022_
+
+### Highlights
+
+-   Add support to type root blocks in the GraphQL schema using `RootBlockDataScalar` and `RootBlockInputScalar`. See [page.entity.ts](/demo/api/src/pages/entities/page.entity.ts), [schema.gql](/demo/api/schema.gql), and [codegen.ts](demo/admin/codegen.ts) for an example on how to use
+
+### @comet/admin-rte
+
+#### Changes
+
+-   Fix a bug where control buttons in the toolbar would trigger submission when used in a form
+
+### @comet/cms-admin
+
+#### Changes
+
+-   Fix a bug where the pages query would query for a field `undefined` when no `additionalPageTreeNodeFragment` is set
+
+### @comet/cms-api
+
+#### Changes
+
+-   Add default value `{}` for `RedirectScopeInput` when no explicit scope is set to make redirects scope support backwards compatible
+-   Add `RootBlockDataScalar` and `RootBlockInputScalar` scalars to type root blocks in the GraphQL schema
 
 ## 3.1.0
 
