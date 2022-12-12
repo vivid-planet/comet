@@ -145,7 +145,7 @@ class App extends React.Component {
                                                                                 {/* @TODO: add preview to contentScope once site is capable of contentScope */}
                                                                                 <Route
                                                                                     path={`${match.path}/preview`}
-                                                                                    render={(props) => <SitePreview />}
+                                                                                    render={(props) => <SitePreview {...props} />}
                                                                                 />
                                                                                 <Route
                                                                                     render={(props) => (
