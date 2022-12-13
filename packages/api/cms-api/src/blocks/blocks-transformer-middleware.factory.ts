@@ -13,7 +13,6 @@ export class BlocksTransformerMiddlewareFactory {
 
             if (isBlockDataInterface(fieldValue)) {
                 const { includeInvisibleBlocks, previewDamUrls, includeInvisiblePages } = getRequestContextHeadersFromRequest(context.req);
-                console.log("block transformer per middleware", fieldValue);
                 return transformToPlain(
                     fieldValue,
                     {

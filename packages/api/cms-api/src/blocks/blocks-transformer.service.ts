@@ -43,9 +43,6 @@ export class BlocksTransformerService {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async transformToPlain(block: BlockDataInterface): Promise<any> {
-        const start = new Date();
-        const ret = transformToPlain(block, this.dependencies, this.blockContext);
-        console.log("transformToPlain per service in", new Date().getTime() - start.getTime());
-        return ret;
+        return transformToPlain(block, this.dependencies, this.blockContext);
     }
 }
