@@ -26,17 +26,31 @@ export const redirectTableFragment = gql`
     ${redirectActivenessFragment}
 `;
 
-export const redirectsQuery = gql`
-    query Redirects(
+export const paginatedRedirectsQuery = gql`
+    query PaginatedRedirects(
         $scope: RedirectScopeInput!
         $type: RedirectGenerationType
         $active: Boolean
         $query: String
         $sortDirection: SortDirection
         $sortColumnName: String
+        $offset: Int
+        $limit: Int
     ) {
-        redirects(scope: $scope, type: $type, active: $active, query: $query, sortDirection: $sortDirection, sortColumnName: $sortColumnName) {
-            ...RedirectTable
+        paginatedRedirects(
+            scope: $scope
+            type: $type
+            active: $active
+            query: $query
+            sortDirection: $sortDirection
+            sortColumnName: $sortColumnName
+            offset: $offset
+            limit: $limit
+        ) {
+            nodes {
+                ...RedirectTable
+            }
+            totalCount
         }
     }
     ${redirectTableFragment}

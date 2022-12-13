@@ -24,16 +24,16 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
+    GQLPaginatedRedirectsQuery,
+    GQLPaginatedRedirectsQueryVariables,
     GQLRedirectGenerationType,
-    GQLRedirectsQuery,
-    GQLRedirectsQueryVariables,
     GQLRedirectTableFragment,
     namedOperations,
 } from "../graphql.generated";
 import RedirectActiveness from "./RedirectActiveness";
-import { deleteRedirectMutation, redirectsQuery } from "./RedirectsTable.gql";
+import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsTable.gql";
 
-interface Filter extends Omit<GQLRedirectsQueryVariables, "active" | "type" | "scope"> {
+interface Filter extends Omit<GQLPaginatedRedirectsQueryVariables, "active" | "type" | "scope"> {
     type?: "all" | GQLRedirectGenerationType;
     active?: "all" | "activated" | "deactivated";
 }
@@ -97,24 +97,27 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
     const filterApi = useTableQueryFilter<Filter>({ type: "manual", active: "all" });
     const stackApi = React.useContext(StackSwitchApiContext);
 
-    const { tableData, api, loading, error } = useTableQuery<GQLRedirectsQuery, GQLRedirectsQueryVariables>()(redirectsQuery, {
-        variables: {
-            scope,
-            type: filterApi.current.type !== "all" ? filterApi.current.type : undefined,
-            active: filterApi.current.active !== "all" ? filterApi.current.active === "activated" : undefined,
-            query: filterApi.current.query ?? undefined,
-            sortDirection: "ASC",
-            sortColumnName: "source",
+    const { tableData, api, loading, error } = useTableQuery<GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables>()(
+        paginatedRedirectsQuery,
+        {
+            variables: {
+                scope,
+                type: filterApi.current.type !== "all" ? filterApi.current.type : undefined,
+                active: filterApi.current.active !== "all" ? filterApi.current.active === "activated" : undefined,
+                query: filterApi.current.query ?? undefined,
+                sortDirection: "ASC",
+                sortColumnName: "source",
+            },
+            resolveTableData: ({ paginatedRedirects }) => {
+                return {
+                    data: paginatedRedirects.nodes,
+                    totalCount: paginatedRedirects.totalCount,
+                };
+            },
+            context: LocalErrorScopeApolloContext,
+            fetchPolicy: "cache-and-network",
         },
-        resolveTableData: ({ redirects }) => {
-            return {
-                data: redirects,
-                totalCount: redirects.length,
-            };
-        },
-        context: LocalErrorScopeApolloContext,
-        fetchPolicy: "cache-and-network",
-    });
+    );
 
     return (
         <TableFilterFinalForm filterApi={filterApi}>
@@ -260,7 +263,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                                             <TableDeleteButton
                                                 icon={<DeleteIcon />}
                                                 mutation={deleteRedirectMutation}
-                                                refetchQueries={[namedOperations.Query.Redirects]}
+                                                refetchQueries={[namedOperations.Query.PaginatedRedirects]}
                                                 selectedId={row.id}
                                                 text=""
                                             />
