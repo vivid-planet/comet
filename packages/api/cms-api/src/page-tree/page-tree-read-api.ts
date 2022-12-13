@@ -277,7 +277,6 @@ export function createReadApi(
         },
 
         async preloadNodes(scope?: ScopeInterface) {
-            const start = new Date();
             const hash = scopeHash(scope);
             if (preloadedNodes.has(hash)) return; //don't double-preload
             preloadRunning = true;

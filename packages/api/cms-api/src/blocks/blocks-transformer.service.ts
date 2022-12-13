@@ -14,6 +14,7 @@ export class BlocksTransformerService {
     constructor(
         @Inject(BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES) dependencies: Record<string, unknown>,
         pageTreeReadApi: PageTreeReadApiService,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         @Inject(CONTEXT) context: any,
     ) {
         let includeInvisibleBlocks: boolean | undefined = false;

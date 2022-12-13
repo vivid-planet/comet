@@ -15,6 +15,7 @@ export class PageTreeReadApiService {
     constructor(
         @Inject(forwardRef(() => PAGE_TREE_REPOSITORY)) public readonly pageTreeRepository: EntityRepository<PageTreeNodeInterface>,
         @InjectRepository(AttachedDocument) public readonly attachedDocumentsRepository: EntityRepository<AttachedDocument>,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         @Inject(CONTEXT) private context: any,
     ) {
         let includeInvisiblePages: Visibility[] = [];
