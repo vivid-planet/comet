@@ -2,7 +2,7 @@ import { FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Type } from "@nestjs/common";
-import { Args, ArgsType, CONTEXT, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, ArgsType, CONTEXT, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Request } from "express";
@@ -10,11 +10,13 @@ import { Request } from "express";
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
+import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
 import { validateNotModified } from "../document/validateNotModified";
 import { PageTreeReadApi, PageTreeService } from "../page-tree/page-tree.service";
 import { PageTreeNodeVisibility } from "../page-tree/types";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
+import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
 import { RedirectInputInterface } from "./dto/redirect-input.factory";
 import { RedirectUpdateActivenessInput } from "./dto/redirect-update-activeness.input";
 import { RedirectsArgsFactory } from "./dto/redirects-args.factory";
@@ -43,8 +45,14 @@ export function createRedirectsResolver({
         return hasNonEmptyScope ? { ...scope } : undefined;
     }
 
+    @ObjectType()
+    class PaginatedRedirects extends PaginatedResponseFactory.create(Redirect) {}
+
     @ArgsType()
     class RedirectsArgs extends RedirectsArgsFactory.create({ Scope }) {}
+
+    @ArgsType()
+    class PaginatedRedirectsArgs extends PaginatedRedirectsArgsFactory.create({ Scope }) {}
 
     @Resolver(() => Redirect)
     @ScopeGuardActive(hasNonEmptyScope)
@@ -77,6 +85,26 @@ export function createRedirectsResolver({
             }
 
             return this.repository.find(where, options);
+        }
+
+        @Query(() => PaginatedRedirects)
+        async paginatedRedirects(
+            @Args() { scope, query, type, active, sortColumnName, sortDirection, offset, limit }: PaginatedRedirectsArgs,
+        ): Promise<PaginatedRedirects> {
+            const where = this.redirectService.getFindCondition({ query, type, active });
+            if (hasNonEmptyScope) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (where as any).scope = scope;
+            }
+
+            const options: FindOptions<RedirectInterface> = { offset, limit };
+
+            if (sortColumnName) {
+                options.orderBy = { [sortColumnName]: sortDirection };
+            }
+
+            const [entities, totalCount] = await this.repository.findAndCount(where, options);
+            return new PaginatedRedirects(entities, totalCount);
         }
 
         @Query(() => Redirect)
