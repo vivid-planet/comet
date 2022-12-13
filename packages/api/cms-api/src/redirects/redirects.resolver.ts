@@ -71,7 +71,7 @@ export function createRedirectsResolver({
             });
         }
 
-        @Query(() => [Redirect])
+        @Query(() => [Redirect], { deprecationReason: "Use paginatedRedirects instead. Will be removed in the next version." })
         async redirects(@Args() { scope, query, type, active, sortColumnName, sortDirection }: RedirectsArgs): Promise<RedirectInterface[]> {
             const where = this.redirectService.getFindCondition({ query, type, active });
             if (hasNonEmptyScope) {
