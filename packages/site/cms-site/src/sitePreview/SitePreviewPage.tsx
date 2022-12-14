@@ -1,6 +1,7 @@
 import { signIn, useSession } from "next-auth/client";
 import * as React from "react";
 
+import { IFrameBridgeContext } from "../iframebridge/IFrameBridge";
 import { SitePreviewProvider } from "./SitePreviewProvider";
 
 interface SitePreviewPageProps {
@@ -59,5 +60,24 @@ export const SitePreviewPage: React.FunctionComponent<SitePreviewPageProps> = ({
         return <>{initializeServiceWorker}</>;
     }
 
-    return <SitePreviewProvider previewPath="/preview">{children}</SitePreviewProvider>;
+    return (
+        // Legacy context for deprecated IFrameBridge.sendMessage method. Remove in a future version.
+        <IFrameBridgeContext.Provider
+            value={{
+                hasBridge: true,
+                showOutlines: false,
+                sendSelectComponent: () => {
+                    // noop
+                },
+                sendHoverComponent: () => {
+                    // noop
+                },
+                sendMessage: (message) => {
+                    window.parent.postMessage(JSON.stringify(message), "*");
+                },
+            }}
+        >
+            <SitePreviewProvider previewPath="/preview">{children}</SitePreviewProvider>
+        </IFrameBridgeContext.Provider>
+    );
 };
