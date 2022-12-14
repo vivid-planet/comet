@@ -13,7 +13,7 @@ export async function readClipboardText(): Promise<string | undefined> {
         const data = await navigator.clipboard.readText();
         return data;
     } catch {
-        // Clipboard access denied, fallback to local storage.
+        console.warn("Clipboard access denied, fallback to local storage.");
         return window.localStorage.getItem("comet_clipboard") ?? undefined;
     }
 }
