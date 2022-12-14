@@ -5,7 +5,6 @@ import {
     FinalFormSelect,
     LocalErrorScopeApolloContext,
     MainContent,
-    muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
     TableDeleteButton,
@@ -99,7 +98,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
         {
             field: "source",
             headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" }),
-            sortable: false,
+            sortable: true,
             flex: 1,
         },
         {
@@ -187,7 +186,6 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
 
     const { data, loading, error } = useQuery<GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables>(paginatedRedirectsQuery, {
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             scope,
             type: filterApi.current.type !== "all" ? filterApi.current.type : undefined,
             active: filterApi.current.active !== "all" ? filterApi.current.active === "activated" : undefined,
@@ -273,19 +271,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             </Toolbar>
             <MainContent>
                 <DataGridContainer>
-                    <DataGrid
-                        {...dataGridProps}
-                        rows={rows}
-                        rowCount={rowCount}
-                        columns={columns}
-                        loading={loading}
-                        error={error}
-                        initialState={{
-                            sorting: {
-                                sortModel: [{ field: "source", sort: "asc" }],
-                            },
-                        }}
-                    />
+                    <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
                 </DataGridContainer>
             </MainContent>
         </TableFilterFinalForm>
