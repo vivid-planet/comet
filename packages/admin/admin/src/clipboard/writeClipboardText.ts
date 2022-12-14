@@ -1,13 +1,8 @@
 export async function writeClipboardText(data: string): Promise<void> {
-    if (!("clipboard" in navigator)) {
-        // eslint-disable-next-line no-console
-        console.warn("Browser doesn't support navigator.clipboard");
-        return;
-    }
+    // Always write to local storage, which is used as a fallback when reading from the clipboard is not supported/allowed.
+    window.localStorage.setItem("comet_clipboard", data);
 
-    // Firefox does not support navigator.clipboard.readText() by default.
-    if (navigator.clipboard.readText === undefined) {
-        window.localStorage.setItem("comet_clipboard", data);
+    if (!("clipboard" in navigator)) {
         return;
     }
 
