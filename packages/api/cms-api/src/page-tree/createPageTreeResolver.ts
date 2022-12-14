@@ -130,6 +130,20 @@ export function createPageTreeResolver({
         @ResolveField(() => pageContentUnion, { nullable: true })
         async document(@Parent() node: PageTreeNodeInterface, @Info() info: GraphQLResolveInfo): Promise<typeof pageContentUnion | undefined> {
             if (info.fieldNodes.length === 1) {
+                /*
+                try to avoid loading document for queries such as
+                  document {
+                    __typename
+                     ... on Link {
+                       content
+                     }
+                  }
+
+                  - loads __typename without loading document
+                  - detects ... on Link and loads document only if type matches
+                  - and only if required passes on to DataLoader (which then loads in batch)
+                */
+
                 const fieldNode = info.fieldNodes[0];
 
                 if (fieldNode.selectionSet) {
@@ -168,6 +182,7 @@ export function createPageTreeResolver({
                 }
             }
 
+            //if document needs to be loaded use DataLoader for batch loading
             return this.attachedDocumentLoaderService.load(node);
         }
 
