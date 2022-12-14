@@ -5,10 +5,6 @@ import { GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component) => ({
     ...component,
-    defaultProps: {
-        disableElevation: true,
-        ...component?.defaultProps,
-    },
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
         root: {
             backgroundColor: "white",
