@@ -1,4 +1,5 @@
-import { Inject, Type } from "@nestjs/common";
+import { EntityRepository } from "@mikro-orm/postgresql";
+import { forwardRef, Inject, Type } from "@nestjs/common";
 import { Args, CONTEXT, Context, createUnionType, ID, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { Request } from "express";
 import { GraphQLError } from "graphql";
@@ -15,7 +16,7 @@ import {
     PageTreeNodeUpdateVisibilityInput,
 } from "./dto/page-tree-node.input";
 import { SlugAvailability } from "./dto/slug-availability.enum";
-import { PAGE_TREE_CONFIG } from "./page-tree.constants";
+import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
 import { PageTreeReadApi, PageTreeService } from "./page-tree.service";
 import {
@@ -68,6 +69,7 @@ export function createPageTreeResolver({
 
         constructor(
             protected readonly pageTreeService: PageTreeService,
+            @Inject(forwardRef(() => PAGE_TREE_REPOSITORY)) public readonly pageTreeRepository: EntityRepository<PageTreeNodeInterface>,
             @Inject(CONTEXT) private context: { req: Request },
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
         ) {
@@ -202,6 +204,15 @@ export function createPageTreeResolver({
             await this.pageTreeService.updateNodeVisibility(id, input.visibility);
 
             return await readApi.getNodeOrFail(id);
+        }
+
+        @Mutation(() => PageTreeNode)
+        @SubjectEntity(PageTreeNode)
+        async updatePageTreeNodeSlug(
+            @Args("id", { type: () => ID }) id: string,
+            @Args("slug", { type: () => String }) slug: string,
+        ): Promise<PageTreeNodeInterface> {
+            return this.pageTreeService.updateNodeSlug(id, slug);
         }
 
         @Mutation(() => [PageTreeNode])
