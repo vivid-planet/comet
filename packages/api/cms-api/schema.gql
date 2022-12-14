@@ -183,7 +183,7 @@ type Query {
   autoBuildStatus: AutoBuildStatus!
   buildTemplates: [BuildTemplate!]!
   redirects(scope: RedirectScopeInput = {}, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
-  paginatedRedirects(scope: RedirectScopeInput = {}, query: String, type: RedirectGenerationType, active: Boolean, offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedRedirects!
+  paginatedRedirects(scope: RedirectScopeInput = {}, query: String, type: RedirectGenerationType, active: Boolean, sort: [RedirectSort!], offset: Int = 0, limit: Int = 20): PaginatedRedirects!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput = {}, source: String!): Boolean!
   damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
@@ -207,6 +207,17 @@ input RedirectScopeInput {
 enum SortDirection {
   ASC
   DESC
+}
+
+input RedirectSort {
+  field: RedirectSortField!
+  direction: SortDirection = ASC
+}
+
+enum RedirectSortField {
+  source
+  createdAt
+  updatedAt
 }
 
 input FileFilterInput {

@@ -88,9 +88,7 @@ export function createRedirectsResolver({
         }
 
         @Query(() => PaginatedRedirects)
-        async paginatedRedirects(
-            @Args() { scope, query, type, active, sortColumnName, sortDirection, offset, limit }: PaginatedRedirectsArgs,
-        ): Promise<PaginatedRedirects> {
+        async paginatedRedirects(@Args() { scope, query, type, active, sort, offset, limit }: PaginatedRedirectsArgs): Promise<PaginatedRedirects> {
             const where = this.redirectService.getFindCondition({ query, type, active });
             if (hasNonEmptyScope) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -99,8 +97,12 @@ export function createRedirectsResolver({
 
             const options: FindOptions<RedirectInterface> = { offset, limit };
 
-            if (sortColumnName) {
-                options.orderBy = { [sortColumnName]: sortDirection };
+            if (sort) {
+                options.orderBy = sort.map((sortItem) => {
+                    return {
+                        [sortItem.field]: sortItem.direction,
+                    };
+                });
             }
 
             const [entities, totalCount] = await this.repository.findAndCount(where, options);

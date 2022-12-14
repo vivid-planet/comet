@@ -1,35 +1,33 @@
+import { useQuery } from "@apollo/client";
 import {
     Field,
     FinalFormSearchTextField,
     FinalFormSelect,
     LocalErrorScopeApolloContext,
     MainContent,
+    muiGridFilterToGql,
+    muiGridSortToGql,
     StackSwitchApiContext,
-    Table,
     TableDeleteButton,
     TableFilterFinalForm,
-    TableQuery,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
-    useTableQuery,
+    useBufferedRowCount,
+    useDataGridRemote,
+    usePersistentColumnState,
     useTableQueryFilter,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
 import { BlockInterface, BlockPreview } from "@comet/blocks-admin";
 import { Button, IconButton, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import {
-    GQLPaginatedRedirectsQuery,
-    GQLPaginatedRedirectsQueryVariables,
-    GQLRedirectGenerationType,
-    GQLRedirectTableFragment,
-    namedOperations,
-} from "../graphql.generated";
+import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, GQLRedirectGenerationType, namedOperations } from "../graphql.generated";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsTable.gql";
 
@@ -97,27 +95,113 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
     const filterApi = useTableQueryFilter<Filter>({ type: "manual", active: "all" });
     const stackApi = React.useContext(StackSwitchApiContext);
 
-    const { tableData, api, loading, error } = useTableQuery<GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables>()(
-        paginatedRedirectsQuery,
+    const columns: GridColDef[] = [
         {
-            variables: {
-                scope,
-                type: filterApi.current.type !== "all" ? filterApi.current.type : undefined,
-                active: filterApi.current.active !== "all" ? filterApi.current.active === "activated" : undefined,
-                query: filterApi.current.query ?? undefined,
-                sortDirection: "ASC",
-                sortColumnName: "source",
-            },
-            resolveTableData: ({ paginatedRedirects }) => {
-                return {
-                    data: paginatedRedirects.nodes,
-                    totalCount: paginatedRedirects.totalCount,
-                };
-            },
-            context: LocalErrorScopeApolloContext,
-            fetchPolicy: "cache-and-network",
+            field: "source",
+            headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" }),
+            sortable: false,
+            flex: 1,
         },
-    );
+        {
+            field: "target",
+            headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.target", defaultMessage: "Target" }),
+            renderCell: (params) => {
+                const state = linkBlock.input2State(params.value);
+
+                return (
+                    <TargetWrapper>
+                        <BlockPreview
+                            title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
+                            content={linkBlock.previewContent(state)}
+                        />
+                    </TargetWrapper>
+                );
+            },
+            sortable: false,
+            flex: 1,
+        },
+        {
+            field: "comment",
+            headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" }),
+            renderCell: (params) => <div>{params.value}</div>,
+            sortable: false,
+            flex: 1,
+        },
+        {
+            field: "generationType",
+            headerName: intl.formatMessage({
+                id: "comet.pages.redirects.redirect.generationType",
+                defaultMessage: "GenerationType",
+            }),
+            renderCell: (params) => (
+                <Typography>
+                    {params.value === "manual" ? (
+                        <FormattedMessage id="comet.redirects.redirect.generationType.manual" defaultMessage="Manual" />
+                    ) : (
+                        <FormattedMessage id="comet.redirects.redirect.generationType.automatic" defaultMessage="Automatic" />
+                    )}
+                </Typography>
+            ),
+            sortable: false,
+            flex: 1,
+        },
+        {
+            field: "activeness",
+            headerName: intl.formatMessage({
+                id: "comet.pages.redirects.redirect.activation",
+                defaultMessage: "Activation",
+            }),
+            renderCell: (params) => <RedirectActiveness redirect={params.row} />,
+            sortable: false,
+            flex: 1,
+        },
+        {
+            field: "actions",
+            headerName: "",
+            renderCell: (params) => (
+                <IconWrapper>
+                    <IconButton
+                        onClick={() => {
+                            stackApi.activatePage("edit", params.id.toString());
+                        }}
+                    >
+                        <Edit color="primary" />
+                    </IconButton>
+                    <TableDeleteButton
+                        icon={<DeleteIcon />}
+                        mutation={deleteRedirectMutation}
+                        refetchQueries={[namedOperations.Query.PaginatedRedirects]}
+                        selectedId={params.id.toString()}
+                        text=""
+                    />
+                </IconWrapper>
+            ),
+            sortable: false,
+            flex: 1,
+            disableColumnMenu: true,
+        },
+    ];
+
+    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("RedirectsGrid") };
+    const sortModel = dataGridProps.sortModel;
+
+    const { data, loading, error } = useQuery<GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables>(paginatedRedirectsQuery, {
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            scope,
+            type: filterApi.current.type !== "all" ? filterApi.current.type : undefined,
+            active: filterApi.current.active !== "all" ? filterApi.current.active === "activated" : undefined,
+            query: filterApi.current.query ?? undefined,
+            limit: dataGridProps.pageSize,
+            offset: dataGridProps.page * dataGridProps.pageSize,
+            sort: muiGridSortToGql(sortModel),
+        },
+        context: LocalErrorScopeApolloContext,
+        fetchPolicy: "cache-and-network",
+    });
+
+    const rows = data?.paginatedRedirects.nodes ?? [];
+    const rowCount = useBufferedRowCount(data?.paginatedRedirects.totalCount);
 
     return (
         <TableFilterFinalForm filterApi={filterApi}>
@@ -188,92 +272,21 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                 </ToolbarActions>
             </Toolbar>
             <MainContent>
-                <TableQuery api={api} loading={loading} error={error}>
-                    {tableData?.data && (
-                        <Table
-                            {...tableData}
-                            columns={[
-                                {
-                                    name: "source",
-                                    header: intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" }),
-                                },
-                                {
-                                    name: "target",
-                                    header: intl.formatMessage({ id: "comet.pages.redirects.redirect.target", defaultMessage: "Target" }),
-                                    render: (row: GQLRedirectTableFragment) => {
-                                        const state = linkBlock.input2State(row.target);
-                                        return (
-                                            <TargetWrapper>
-                                                <BlockPreview
-                                                    title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
-                                                    content={linkBlock.previewContent(state)}
-                                                />
-                                            </TargetWrapper>
-                                        );
-                                    },
-                                },
-                                {
-                                    name: "comment",
-                                    header: intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" }),
-                                    render: ({ comment }) => {
-                                        return <div>{comment}</div>;
-                                    },
-                                },
-                                {
-                                    name: "generationType",
-                                    header: intl.formatMessage({
-                                        id: "comet.pages.redirects.redirect.generationType",
-                                        defaultMessage: "GenerationType",
-                                    }),
-                                    render: (row: GQLRedirectTableFragment) => {
-                                        return (
-                                            <Typography>
-                                                {row.generationType === "manual" ? (
-                                                    <FormattedMessage id="comet.redirects.redirect.generationType.manual" defaultMessage="Manual" />
-                                                ) : (
-                                                    <FormattedMessage
-                                                        id="comet.redirects.redirect.generationType.automatic"
-                                                        defaultMessage="Automatic"
-                                                    />
-                                                )}
-                                            </Typography>
-                                        );
-                                    },
-                                },
-                                {
-                                    name: "activeness",
-                                    header: intl.formatMessage({
-                                        id: "comet.pages.redirects.redirect.activation",
-                                        defaultMessage: "Activation",
-                                    }),
-                                    render: (row: GQLRedirectTableFragment) => <RedirectActiveness redirect={row} />,
-                                },
-                                {
-                                    name: "actions",
-                                    header: "",
-                                    render: (row: GQLRedirectTableFragment) => (
-                                        <IconWrapper>
-                                            <IconButton
-                                                onClick={() => {
-                                                    stackApi.activatePage("edit", row.id);
-                                                }}
-                                            >
-                                                <Edit color="primary" />
-                                            </IconButton>
-                                            <TableDeleteButton
-                                                icon={<DeleteIcon />}
-                                                mutation={deleteRedirectMutation}
-                                                refetchQueries={[namedOperations.Query.PaginatedRedirects]}
-                                                selectedId={row.id}
-                                                text=""
-                                            />
-                                        </IconWrapper>
-                                    ),
-                                },
-                            ]}
-                        />
-                    )}
-                </TableQuery>
+                <DataGridContainer>
+                    <DataGrid
+                        {...dataGridProps}
+                        rows={rows}
+                        rowCount={rowCount}
+                        columns={columns}
+                        loading={loading}
+                        error={error}
+                        initialState={{
+                            sorting: {
+                                sortModel: [{ field: "source", sort: "asc" }],
+                            },
+                        }}
+                    />
+                </DataGridContainer>
             </MainContent>
         </TableFilterFinalForm>
     );
@@ -287,3 +300,8 @@ const IconWrapper = styled("div")`
     display: flex;
     flex-direction: row;
 `;
+
+const DataGridContainer = styled("div")(() => ({
+    height: window.innerHeight - 200,
+    width: "100%",
+}));
