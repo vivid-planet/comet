@@ -287,7 +287,7 @@ const IconWrapper = styled("div")`
     flex-direction: row;
 `;
 
-const DataGridContainer = styled("div")(() => ({
-    height: window.innerHeight - 200,
-    width: "100%",
-}));
+const DataGridContainer = styled("div")`
+    height: calc(100vh - 200px);
+    width: 100%;
+`;
