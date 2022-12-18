@@ -27,6 +27,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     state2Output: (state) => ({
         damFileId: state.damFile?.id,
         autoplay: state.autoplay,
+        loop: state.loop,
         showControls: state.showControls,
     }),
 
@@ -59,12 +60,13 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         // TODO fix typing: generated GraphQL files use null, we use undefined, e.g. title: string | null vs title?: string
         const damFile = data.damFile as unknown as DamVideoBlockData["damFile"];
 
-        return { damFile, autoplay: output.autoplay, showControls: output.showControls };
+        return { damFile, autoplay: output.autoplay, loop: output.loop, showControls: output.showControls };
     },
 
     createPreviewState: (state, previewContext) => ({
         ...state,
         autoplay: false,
+        loop: false,
         adminMeta: { route: previewContext.parentUrl },
     }),
 
@@ -114,6 +116,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                     type="checkbox"
                     name="autoplay"
                     label={<FormattedMessage id="comet.blocks.video.autoplay" defaultMessage="Autoplay" />}
+                    component={FinalFormSwitch}
+                />
+                <Field
+                    type="checkbox"
+                    name="loop"
+                    label={<FormattedMessage id="comet.blocks.video.loop" defaultMessage="Loop" />}
                     component={FinalFormSwitch}
                 />
                 <Field
