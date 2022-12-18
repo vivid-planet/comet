@@ -4,7 +4,7 @@ import { Delete, Video } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentPaper, BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { FileField } from "../form/file/FileField";
@@ -73,6 +73,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
+        const intl = useIntl();
         return (
             <BlocksFinalForm
                 onSubmit={(values) => {
@@ -129,10 +130,20 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                     name="showControls"
                     label={<FormattedMessage id="comet.blocks.video.showControls" defaultMessage="Show controls" />}
                     component={FinalFormSwitch}
+                    validate={(v) => {
+                        if (!(state.autoplay || state.showControls)) {
+                            return intl.formatMessage({
+                                id: "comet.blocks.video.validationError",
+                                defaultMessage: "Either 'Autoplay' or 'Show controls' must be enabled",
+                            });
+                        }
+                    }}
                 />
             </BlocksFinalForm>
         );
     },
+
+    isValid: (state) => !!state.autoplay || !!state.showControls,
 
     previewContent: (state) => (state.damFile ? [{ type: "text", content: state.damFile.name }] : []),
 };
