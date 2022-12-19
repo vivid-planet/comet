@@ -77,7 +77,6 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
                     role: "admin",
                     domains: ["main", "secondary"],
                 },
-                apiPassword: config.API_PASSWORD,
             }),
             currentUser: CurrentUser,
             inject: [configNS.KEY],
