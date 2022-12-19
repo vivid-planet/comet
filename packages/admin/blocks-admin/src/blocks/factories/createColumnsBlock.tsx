@@ -174,6 +174,12 @@ export function createColumnsBlock<T extends BlockInterface>({
 
         isValid: (state) => parallelAsyncEvery(state.columns, (column) => contentBlock.isValid(column.props)),
 
+        getAnchors: (state) => {
+            return state.columns.reduce<string[]>((anchors, column) => {
+                return [...anchors, ...(contentBlock.getAnchors?.(column.props) ?? [])];
+            }, []);
+        },
+
         AdminComponent: ({ state, updateState }) => {
             const intl = useIntl();
             const groupLayoutsByColumnsApi = createGroupLayoutsByColumnsApi(layouts);

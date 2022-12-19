@@ -197,6 +197,16 @@ export function createBlocksBlock({
             }),
         childBlockCount: (state) => state.blocks.length,
 
+        getAnchors: (state) => {
+            return state.blocks.reduce<string[]>((anchors, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+                return [...anchors, ...(block.getAnchors?.(child.props) ?? [])];
+            }, []);
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {

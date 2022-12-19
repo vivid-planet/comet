@@ -1,13 +1,24 @@
-import { gql } from "@apollo/client";
-import { Field } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
+import { gql, useApolloClient } from "@apollo/client";
+import { Field, FinalFormSelect } from "@comet/admin";
+import {
+    AdminComponentPaper,
+    BlockCategory,
+    BlockInterface,
+    BlocksFinalForm,
+    createBlockSkeleton,
+    LinkBlockInterface,
+    SelectPreviewComponent,
+} from "@comet/blocks-admin";
+import { Box, Divider, MenuItem } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generated";
+import { GQLPageQuery, GQLPageQueryVariables } from "../documents/types";
 import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "../graphql.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { useCmsBlockContext } from "./useCmsBlockContext";
 
 type State = InternalLinkBlockData;
 
@@ -29,6 +40,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
     state2Output: (state) => {
         return {
             targetPageId: state.targetPage?.id,
+            targetPageAnchor: state.targetPageAnchor,
         };
     },
 
@@ -44,6 +56,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
                         id
                         name
                         path
+                        documentType
                     }
                 }
             `,
@@ -51,7 +64,7 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
         });
 
         // TODO consider throwing an error
-        return { targetPage: data.pageTreeNode ?? undefined };
+        return { targetPage: data.pageTreeNode ?? undefined, targetPageAnchor: output.targetPageAnchor };
     },
 
     isValid: () => {
@@ -62,19 +75,131 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
+        const anchors = useTargetPageAnchors(state.targetPage);
+        const anchorsLoading = anchors === undefined;
+
         return (
             <SelectPreviewComponent>
-                <BlocksFinalForm
-                    onSubmit={(newState) => {
-                        updateState((prevState) => ({ ...prevState, ...newState }));
-                    }}
-                    initialValues={state}
-                >
-                    <Field name="targetPage" component={FinalFormPageTreeSelect} fullWidth />
-                </BlocksFinalForm>
+                <AdminComponentPaper disablePadding>
+                    <BlocksFinalForm
+                        onSubmit={(newState) => {
+                            updateState((previousState) => {
+                                if (newState.targetPage == null) {
+                                    return {
+                                        targetPage: undefined,
+                                        targetPageAnchor: undefined,
+                                    };
+                                } else if (newState.targetPage.id !== previousState.targetPage?.id) {
+                                    return {
+                                        targetPage: newState.targetPage,
+                                        targetPageAnchor: undefined,
+                                    };
+                                } else {
+                                    return {
+                                        targetPage: newState.targetPage,
+                                        targetPageAnchor:
+                                            newState.targetPageAnchor === "none" || newState.targetPageAnchor === ""
+                                                ? undefined
+                                                : newState.targetPageAnchor,
+                                    };
+                                }
+                            });
+                        }}
+                        initialValues={{
+                            targetPage: state.targetPage,
+                            targetPageAnchor: anchorsLoading ? "" : state.targetPageAnchor ?? "none",
+                        }}
+                    >
+                        <Field name="targetPage" component={FinalFormPageTreeSelect} fullWidth fieldContainerProps={{ fieldMargin: "never" }} />
+                        <Divider />
+                        <Box padding={3}>
+                            <Field
+                                name="targetPageAnchor"
+                                label={<FormattedMessage id="comet.blocks.internalLink.anchor.label" defaultMessage="Anchor" />}
+                                fullWidth
+                                disabled={state.targetPage == null || anchorsLoading}
+                            >
+                                {(props) => (
+                                    <FinalFormSelect {...props} disabled={state.targetPage == null || anchorsLoading}>
+                                        <MenuItem value="none">
+                                            <FormattedMessage id="comet.blocks.internalLink.anchor.none" defaultMessage="None" />
+                                        </MenuItem>
+                                        {anchors?.map((anchor) => (
+                                            <MenuItem key={anchor} value={anchor}>
+                                                {anchor}
+                                            </MenuItem>
+                                        ))}
+                                    </FinalFormSelect>
+                                )}
+                            </Field>
+                        </Box>
+                    </BlocksFinalForm>
+                </AdminComponentPaper>
             </SelectPreviewComponent>
         );
     },
 
-    previewContent: (state) => (state.targetPage?.name ? [{ type: "text", content: state.targetPage.name }] : []),
+    previewContent: (state) => {
+        if (state.targetPage == null) {
+            return [];
+        }
+
+        return [
+            {
+                type: "text",
+                content: state.targetPageAnchor === undefined ? state.targetPage.name : `${state.targetPage.name}#${state.targetPageAnchor}`,
+            },
+        ];
+    },
 };
+
+function useTargetPageAnchors(targetPage: { id: string; documentType: string } | null | undefined): string[] | undefined {
+    const [anchors, setAnchors] = React.useState<string[]>();
+    const client = useApolloClient();
+    const { pageTreeDocumentTypes: documentTypes } = useCmsBlockContext();
+
+    React.useEffect(() => {
+        async function updateAnchors() {
+            if (targetPage == null) {
+                setAnchors([]);
+                return;
+            }
+
+            const documentType = documentTypes[targetPage.documentType];
+
+            if (documentType === undefined) {
+                throw new Error(`Unknown document type "${targetPage.documentType}"`);
+            }
+
+            if (documentType.getQuery === undefined || documentType.getAnchors === undefined) {
+                console.warn(`Document type "${targetPage.documentType}" doesn't support anchors`);
+                setAnchors([]);
+                return;
+            }
+
+            const { data } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
+                query: documentType.getQuery,
+                variables: { id: targetPage.id },
+            });
+
+            if (data.page?.document == null) {
+                setAnchors([]);
+                return;
+            }
+
+            const newAnchors: string[] = [];
+
+            for (const anchor of documentType.getAnchors(data.page.document)) {
+                if (!newAnchors.includes(anchor)) {
+                    newAnchors.push(anchor);
+                }
+            }
+
+            setAnchors(newAnchors);
+        }
+
+        updateAnchors();
+    }, [targetPage, client, documentTypes]);
+
+    return anchors;
+}

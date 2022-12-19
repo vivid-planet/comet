@@ -28,6 +28,7 @@ export const selectedPageFragment = gql`
         id
         name
         path
+        documentType
     }
 `;
 
@@ -161,7 +162,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
     const handleSelect = React.useCallback(
         (page: PageTreePage) => {
-            onChange({ id: page.id, name: page.name, path: page.path });
+            onChange({ id: page.id, name: page.name, path: page.path, documentType: page.documentType });
             onClose();
         },
         [onChange, onClose],

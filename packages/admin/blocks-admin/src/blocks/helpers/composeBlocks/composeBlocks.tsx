@@ -149,6 +149,13 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return isValidResults.every((c) => c === true);
             },
+            getAnchors: (state) => {
+                const anchorsPerBlock: Record<keyof C, string[]> = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
+                    const extractedState = extractData([block, options], attr, state);
+                    return block.getAnchors?.(extractedState) ?? [];
+                });
+                return Object.values(anchorsPerBlock).reduce((anchors, blockAnchors) => [...anchors, ...blockAnchors]);
+            },
             previewContent: (state, ctx) => {
                 const previewContents = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
                     const extractedData = extractData([block, options], attr, state);

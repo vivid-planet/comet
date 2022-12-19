@@ -173,6 +173,12 @@ export function createListBlock<T extends BlockInterface>({
 
         childBlockCount: (state) => state.blocks.length,
 
+        getAnchors: (state) => {
+            return state.blocks.reduce<string[]>((anchors, child) => {
+                return [...anchors, ...(block.getAnchors?.(child.props) ?? [])];
+            }, []);
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {
