@@ -33,7 +33,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component) =
             },
         },
         iconSeparator: {
-            backgroundColor: "#D9D9D9",
+            backgroundColor: palette.grey[100],
             width: "2px",
             height: "20px",
             marginRight: "10px",
