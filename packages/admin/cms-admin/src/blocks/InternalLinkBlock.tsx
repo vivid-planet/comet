@@ -17,6 +17,7 @@ import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generat
 import { GQLPageQuery, GQLPageQueryVariables } from "../documents/types";
 import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "../graphql.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
+import { updateRemotePageTreeNodeDocumentAnchors, usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
@@ -75,7 +76,44 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const anchors = useTargetPageAnchors(state.targetPage);
+        const anchors = usePageTreeNodeDocumentAnchors(state.targetPage?.id);
+        const client = useApolloClient();
+        const { pageTreeDocumentTypes: documentTypes } = useCmsBlockContext();
+
+        React.useEffect(() => {
+            async function fetchTargetPageAnchors() {
+                if (state.targetPage == null) {
+                    return;
+                }
+
+                const documentType = documentTypes[state.targetPage.documentType];
+
+                if (documentType === undefined) {
+                    throw new Error(`Unknown document type "${state.targetPage.documentType}"`);
+                }
+
+                if (documentType.getQuery === undefined || documentType.anchors === undefined) {
+                    console.warn(`Document type "${state.targetPage.documentType}" doesn't support anchors`);
+                    updateRemotePageTreeNodeDocumentAnchors(state.targetPage.id, []);
+                    return;
+                }
+
+                const { data } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
+                    query: documentType.getQuery,
+                    variables: { id: state.targetPage.id },
+                });
+
+                if (data.page?.document == null) {
+                    updateRemotePageTreeNodeDocumentAnchors(state.targetPage.id, []);
+                    return;
+                }
+
+                updateRemotePageTreeNodeDocumentAnchors(state.targetPage.id, documentType.anchors(data.page.document));
+            }
+
+            fetchTargetPageAnchors();
+        }, [state.targetPage, client, documentTypes]);
+
         const anchorsLoading = anchors === undefined;
 
         return (
@@ -152,54 +190,3 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
         ];
     },
 };
-
-function useTargetPageAnchors(targetPage: { id: string; documentType: string } | null | undefined): string[] | undefined {
-    const [anchors, setAnchors] = React.useState<string[]>();
-    const client = useApolloClient();
-    const { pageTreeDocumentTypes: documentTypes } = useCmsBlockContext();
-
-    React.useEffect(() => {
-        async function updateAnchors() {
-            if (targetPage == null) {
-                setAnchors([]);
-                return;
-            }
-
-            const documentType = documentTypes[targetPage.documentType];
-
-            if (documentType === undefined) {
-                throw new Error(`Unknown document type "${targetPage.documentType}"`);
-            }
-
-            if (documentType.getQuery === undefined || documentType.anchors === undefined) {
-                console.warn(`Document type "${targetPage.documentType}" doesn't support anchors`);
-                setAnchors([]);
-                return;
-            }
-
-            const { data } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
-                query: documentType.getQuery,
-                variables: { id: targetPage.id },
-            });
-
-            if (data.page?.document == null) {
-                setAnchors([]);
-                return;
-            }
-
-            const newAnchors: string[] = [];
-
-            for (const anchor of documentType.anchors(data.page.document)) {
-                if (!newAnchors.includes(anchor)) {
-                    newAnchors.push(anchor);
-                }
-            }
-
-            setAnchors(newAnchors);
-        }
-
-        updateAnchors();
-    }, [targetPage, client, documentTypes]);
-
-    return anchors;
-}

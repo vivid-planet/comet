@@ -15,6 +15,7 @@ import { v4 as uuid } from "uuid";
 
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
+import { updateLocalPageTreeNodeDocumentAnchors } from "./usePageTreeDocumentAnchors";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";
 
 type Output = Record<string, unknown>;
@@ -254,6 +255,17 @@ export const createUsePage: CreateUsePage =
                     setReferenceOutput(generateOutput(page));
                 }
             }, [data, pageId]);
+
+            React.useEffect(() => {
+                if (pageState?.document) {
+                    const anchors = Object.entries(rootBlocks).reduce(
+                        (anchors, [key, block]) => [...anchors, ...(block.anchors?.(pageState?.document?.[key]) ?? [])],
+                        [] as string[],
+                    );
+
+                    updateLocalPageTreeNodeDocumentAnchors(pageId, anchors);
+                }
+            }, [pageState, pageId]);
 
             const handleSavePage = React.useCallback(async () => {
                 // TODO show progress and error handling
