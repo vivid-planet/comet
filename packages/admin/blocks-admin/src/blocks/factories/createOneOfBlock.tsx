@@ -208,14 +208,14 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
                 return block.isValid(c.props);
             }),
 
-        getAnchors: (state) => {
+        anchors: (state) => {
             const { state: blockState, block } = getActiveBlock(state);
 
             if (blockState === undefined) {
                 return [];
             }
 
-            return block?.getAnchors?.(blockState.props) ?? [];
+            return block?.anchors?.(blockState.props) ?? [];
         },
 
         definesOwnPadding: true,

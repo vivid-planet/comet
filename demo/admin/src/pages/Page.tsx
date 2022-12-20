@@ -54,5 +54,5 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     },
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
-    getAnchors: (input) => PageContentBlock.getAnchors?.(PageContentBlock.input2State(input.content)) ?? [],
+    anchors: (input) => PageContentBlock.anchors?.(PageContentBlock.input2State(input.content)) ?? [],
 };

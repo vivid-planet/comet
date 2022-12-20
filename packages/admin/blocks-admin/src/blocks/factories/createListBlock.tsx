@@ -173,9 +173,9 @@ export function createListBlock<T extends BlockInterface>({
 
         childBlockCount: (state) => state.blocks.length,
 
-        getAnchors: (state) => {
+        anchors: (state) => {
             return state.blocks.reduce<string[]>((anchors, child) => {
-                return [...anchors, ...(block.getAnchors?.(child.props) ?? [])];
+                return [...anchors, ...(block.anchors?.(child.props) ?? [])];
             }, []);
         },
 

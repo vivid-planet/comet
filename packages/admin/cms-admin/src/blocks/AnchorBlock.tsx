@@ -31,7 +31,7 @@ const AnchorBlock: BlockInterface<AnchorBlockData, AnchorBlockData, AnchorBlockI
         );
     },
 
-    getAnchors: (state) => {
+    anchors: (state) => {
         return state.name !== undefined ? [state.name] : [];
     },
 

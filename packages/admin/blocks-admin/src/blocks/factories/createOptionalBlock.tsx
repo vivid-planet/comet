@@ -63,12 +63,12 @@ export function createOptionalBlock<T extends BlockInterface>(
         },
         isValid: async (state) => !state.block || decoratedBlock.isValid(state.block),
 
-        getAnchors: (state) => {
+        anchors: (state) => {
             if (state.block === undefined) {
                 return [];
             }
 
-            return decoratedBlock.getAnchors?.(state.block) ?? [];
+            return decoratedBlock.anchors?.(state.block) ?? [];
         },
 
         definesOwnTitle: true,

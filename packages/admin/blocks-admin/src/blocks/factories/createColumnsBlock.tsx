@@ -174,9 +174,9 @@ export function createColumnsBlock<T extends BlockInterface>({
 
         isValid: (state) => parallelAsyncEvery(state.columns, (column) => contentBlock.isValid(column.props)),
 
-        getAnchors: (state) => {
+        anchors: (state) => {
             return state.columns.reduce<string[]>((anchors, column) => {
-                return [...anchors, ...(contentBlock.getAnchors?.(column.props) ?? [])];
+                return [...anchors, ...(contentBlock.anchors?.(column.props) ?? [])];
             }, []);
         },
 

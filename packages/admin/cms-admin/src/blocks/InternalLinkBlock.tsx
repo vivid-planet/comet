@@ -171,7 +171,7 @@ function useTargetPageAnchors(targetPage: { id: string; documentType: string } |
                 throw new Error(`Unknown document type "${targetPage.documentType}"`);
             }
 
-            if (documentType.getQuery === undefined || documentType.getAnchors === undefined) {
+            if (documentType.getQuery === undefined || documentType.anchors === undefined) {
                 console.warn(`Document type "${targetPage.documentType}" doesn't support anchors`);
                 setAnchors([]);
                 return;
@@ -189,7 +189,7 @@ function useTargetPageAnchors(targetPage: { id: string; documentType: string } |
 
             const newAnchors: string[] = [];
 
-            for (const anchor of documentType.getAnchors(data.page.document)) {
+            for (const anchor of documentType.anchors(data.page.document)) {
                 if (!newAnchors.includes(anchor)) {
                     newAnchors.push(anchor);
                 }
