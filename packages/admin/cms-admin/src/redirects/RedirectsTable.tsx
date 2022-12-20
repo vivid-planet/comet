@@ -195,6 +195,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                 columns={columns}
                 loading={loading}
                 error={error}
+                disableSelectionOnClick
                 components={{ Toolbar: RedirectsTableToolbar }}
             />
         </DataGridContainer>
