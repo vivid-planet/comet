@@ -65,7 +65,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component) =
             marginRight: 20,
         },
         paper: {
-            boxShadow: "0 0 8px 0 rgb(0 0 0 / 10%)",
+            boxShadow: shadows[1],
         },
     }),
 });
