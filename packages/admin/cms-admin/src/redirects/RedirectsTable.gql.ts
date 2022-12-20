@@ -29,14 +29,13 @@ export const redirectTableFragment = gql`
 export const paginatedRedirectsQuery = gql`
     query PaginatedRedirects(
         $scope: RedirectScopeInput!
-        $type: RedirectGenerationType
-        $active: Boolean
-        $query: String
+        $filter: RedirectFilter
+        $search: String
         $sort: [RedirectSort!]
         $offset: Int
         $limit: Int
     ) {
-        paginatedRedirects(scope: $scope, type: $type, active: $active, query: $query, sort: $sort, offset: $offset, limit: $limit) {
+        paginatedRedirects(scope: $scope, filter: $filter, search: $search, sort: $sort, offset: $offset, limit: $limit) {
             nodes {
                 ...RedirectTable
             }

@@ -88,8 +88,8 @@ export function createRedirectsResolver({
         }
 
         @Query(() => PaginatedRedirects)
-        async paginatedRedirects(@Args() { scope, query, type, active, sort, offset, limit }: PaginatedRedirectsArgs): Promise<PaginatedRedirects> {
-            const where = this.redirectService.getFindCondition({ query, type, active });
+        async paginatedRedirects(@Args() { scope, search, filter, sort, offset, limit }: PaginatedRedirectsArgs): Promise<PaginatedRedirects> {
+            const where = this.redirectService.getFindConditionPaginatedRedirects({ search, filter });
             if (hasNonEmptyScope) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (where as any).scope = scope;

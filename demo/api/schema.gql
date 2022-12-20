@@ -358,7 +358,7 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
-  paginatedRedirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sort: [RedirectSort!], offset: Int = 0, limit: Int = 20): PaginatedRedirects!
+  paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int = 0, limit: Int = 20): PaginatedRedirects!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
@@ -392,6 +392,36 @@ enum SlugAvailability {
   Available
   Taken
   Reserved
+}
+
+input RedirectFilter {
+  generationType: StringFilter
+  active: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [RedirectFilter!]
+  or: [RedirectFilter!]
+}
+
+input StringFilter {
+  contains: String
+  startsWith: String
+  endsWith: String
+  equal: String
+  notEqual: String
+}
+
+input BooleanFilter {
+  equal: Boolean
+}
+
+input DateFilter {
+  equal: DateTime
+  lowerThan: DateTime
+  greaterThan: DateTime
+  lowerThanEqual: DateTime
+  greaterThanEqual: DateTime
+  notEqual: DateTime
 }
 
 input RedirectSort {
@@ -433,27 +463,6 @@ input NewsFilter {
   updatedAt: DateFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
-}
-
-input StringFilter {
-  contains: String
-  startsWith: String
-  endsWith: String
-  equal: String
-  notEqual: String
-}
-
-input DateFilter {
-  equal: DateTime
-  lowerThan: DateTime
-  greaterThan: DateTime
-  lowerThanEqual: DateTime
-  greaterThanEqual: DateTime
-  notEqual: DateTime
-}
-
-input BooleanFilter {
-  equal: Boolean
 }
 
 input NewsSort {

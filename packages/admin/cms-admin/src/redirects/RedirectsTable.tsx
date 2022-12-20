@@ -1,56 +1,61 @@
 import { useQuery } from "@apollo/client";
 import {
-    Field,
-    FinalFormSearchTextField,
-    FinalFormSelect,
+    GridFilterButton,
     LocalErrorScopeApolloContext,
-    MainContent,
+    muiGridFilterToGql,
     muiGridSortToGql,
+    StackLink,
     StackSwitchApiContext,
     TableDeleteButton,
-    TableFilterFinalForm,
     Toolbar,
-    ToolbarActions,
+    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
-    useTableQueryFilter,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
 import { BlockInterface, BlockPreview } from "@comet/blocks-admin";
-import { Button, IconButton, MenuItem, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, getGridSingleSelectOperators, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, GQLRedirectGenerationType, namedOperations } from "../graphql.generated";
+import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "../graphql.generated";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsTable.gql";
-
-interface Filter extends Omit<GQLPaginatedRedirectsQueryVariables, "active" | "type" | "scope"> {
-    type?: "all" | GQLRedirectGenerationType;
-    active?: "all" | "activated" | "deactivated";
-}
 
 interface Props {
     linkBlock: BlockInterface;
     scope: Record<string, unknown>;
 }
 
+function RedirectsTableToolbar() {
+    return (
+        <Toolbar>
+            <ToolbarAutomaticTitleItem />
+            <ToolbarItem>
+                <GridToolbarQuickFilter />
+            </ToolbarItem>
+            <ToolbarFillSpace />
+            <ToolbarItem>
+                <GridFilterButton />
+            </ToolbarItem>
+            <ToolbarItem>
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                    <FormattedMessage id="comet.pages.redirects.add" defaultMessage="Add" />
+                </Button>
+            </ToolbarItem>
+        </Toolbar>
+    );
+}
+
 export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
     const intl = useIntl();
 
     const typeOptions = [
-        {
-            label: intl.formatMessage({
-                id: "comet.redirects.redirect.generationType.all",
-                defaultMessage: "All",
-            }),
-            value: "all",
-        },
         {
             label: intl.formatMessage({
                 id: "comet.redirects.redirect.generationType.manual",
@@ -67,31 +72,6 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
         },
     ];
 
-    const activeOptions = [
-        {
-            label: intl.formatMessage({
-                id: "comet.redirects.redirect.active.all",
-                defaultMessage: "All",
-            }),
-            value: "all",
-        },
-        {
-            label: intl.formatMessage({
-                id: "comet.redirects.redirect.active.activated",
-                defaultMessage: "activated",
-            }),
-            value: "activated",
-        },
-        {
-            label: intl.formatMessage({
-                id: "comet.redirects.redirect.active.deactivated",
-                defaultMessage: "deactivated",
-            }),
-            value: "deactivated",
-        },
-    ];
-
-    const filterApi = useTableQueryFilter<Filter>({ type: "manual", active: "all" });
     const stackApi = React.useContext(StackSwitchApiContext);
 
     const columns: GridColDef[] = [
@@ -118,6 +98,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             },
             sortable: false,
             flex: 1,
+            filterable: false,
         },
         {
             field: "comment",
@@ -125,6 +106,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             renderCell: (params) => <div>{params.value}</div>,
             sortable: false,
             flex: 1,
+            filterable: false,
         },
         {
             field: "generationType",
@@ -143,9 +125,12 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             ),
             sortable: false,
             flex: 1,
+            filterOperators: getGridSingleSelectOperators(),
+            type: "singleSelect",
+            valueOptions: typeOptions,
         },
         {
-            field: "activeness",
+            field: "active",
             headerName: intl.formatMessage({
                 id: "comet.pages.redirects.redirect.activation",
                 defaultMessage: "Activation",
@@ -153,6 +138,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             renderCell: (params) => <RedirectActiveness redirect={params.row} />,
             sortable: false,
             flex: 1,
+            type: "boolean",
         },
         {
             field: "actions",
@@ -178,6 +164,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             sortable: false,
             flex: 1,
             disableColumnMenu: true,
+            filterable: false,
         },
     ];
 
@@ -187,9 +174,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
     const { data, loading, error } = useQuery<GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables>(paginatedRedirectsQuery, {
         variables: {
             scope,
-            type: filterApi.current.type !== "all" ? filterApi.current.type : undefined,
-            active: filterApi.current.active !== "all" ? filterApi.current.active === "activated" : undefined,
-            query: filterApi.current.query ?? undefined,
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             limit: dataGridProps.pageSize,
             offset: dataGridProps.page * dataGridProps.pageSize,
             sort: muiGridSortToGql(sortModel),
@@ -202,79 +187,17 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
     const rowCount = useBufferedRowCount(data?.paginatedRedirects.totalCount);
 
     return (
-        <TableFilterFinalForm filterApi={filterApi}>
-            <Toolbar>
-                <ToolbarItem>
-                    <Field
-                        name="query"
-                        component={FinalFormSearchTextField}
-                        label={intl.formatMessage({
-                            id: "comet.redirects.redirect.search",
-                            defaultMessage: "Search",
-                        })}
-                        fullWidth
-                    />
-                </ToolbarItem>
-                <ToolbarItem>
-                    <Field
-                        name="type"
-                        label={intl.formatMessage({
-                            id: "comet.redirects.redirect.generationType.type",
-                            defaultMessage: "Redirect Type",
-                        })}
-                        fullWidth
-                    >
-                        {(props) => (
-                            <FinalFormSelect {...props} fullWidth>
-                                {typeOptions.map((option) => (
-                                    <MenuItem value={option.value} key={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </FinalFormSelect>
-                        )}
-                    </Field>
-                </ToolbarItem>
-                <ToolbarItem>
-                    <Field
-                        name="active"
-                        label={intl.formatMessage({
-                            id: "comet.redirects.redirect.activation.title",
-                            defaultMessage: "Activation",
-                        })}
-                        fullWidth
-                    >
-                        {(props) => (
-                            <FinalFormSelect {...props} fullWidth>
-                                {activeOptions.map((option) => (
-                                    <MenuItem value={option.value} key={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </FinalFormSelect>
-                        )}
-                    </Field>
-                </ToolbarItem>
-                <ToolbarFillSpace />
-                <ToolbarActions>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AddIcon />}
-                        onClick={() => {
-                            stackApi.activatePage("add", "new");
-                        }}
-                    >
-                        <FormattedMessage id="comet.pages.redirects.add" defaultMessage="Add" />
-                    </Button>
-                </ToolbarActions>
-            </Toolbar>
-            <MainContent>
-                <DataGridContainer>
-                    <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
-                </DataGridContainer>
-            </MainContent>
-        </TableFilterFinalForm>
+        <DataGridContainer>
+            <DataGrid
+                {...dataGridProps}
+                rows={rows}
+                rowCount={rowCount}
+                columns={columns}
+                loading={loading}
+                error={error}
+                components={{ Toolbar: RedirectsTableToolbar }}
+            />
+        </DataGridContainer>
     );
 }
 
@@ -288,6 +211,6 @@ const IconWrapper = styled("div")`
 `;
 
 const DataGridContainer = styled("div")`
-    height: calc(100vh - 200px);
     width: 100%;
+    height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
 `;
