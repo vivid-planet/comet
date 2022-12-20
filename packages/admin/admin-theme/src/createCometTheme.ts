@@ -42,7 +42,7 @@ export const createCometTheme = ({
         },
         shadows,
         zIndex,
-        components: getComponentsTheme(passedComponentsOptions, { palette, typography, spacing, zIndex }),
+        components: getComponentsTheme(passedComponentsOptions, { palette, typography, spacing, zIndex, shadows }),
     };
 
     const themeOptions = deepmerge<ThemeOptions>(cometThemeOptions, restPassedOptions);

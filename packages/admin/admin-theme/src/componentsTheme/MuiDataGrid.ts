@@ -3,7 +3,7 @@ import type {} from "@mui/x-data-grid/themeAugmentation";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component) => ({
+export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing }) => ({
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
         root: {
@@ -18,10 +18,10 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component) =
             },
         },
         columnHeadersInner: {
-            padding: "0 10px",
+            padding: spacing(0, 2),
         },
         row: {
-            padding: "0 10px",
+            padding: spacing(0, 2),
         },
         cell: {
             borderTop: `1px solid ${palette.grey[100]}`,
@@ -39,7 +39,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component) =
             marginRight: "10px",
         },
         filterForm: {
-            padding: 20,
+            padding: spacing(4),
             "& .MuiInputLabel-root": {
                 display: "none",
             },
@@ -47,7 +47,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component) =
                 marginTop: 0,
             },
             "& .MuiInputAdornment-root": {
-                paddingRight: 5,
+                padding: spacing(0, 1, 0, 0),
             },
         },
         filterFormDeleteIcon: {
@@ -58,11 +58,10 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component) =
             },
         },
         filterFormColumnInput: {
-            marginRight: 20,
-            marginLeft: 20,
+            margin: spacing(0, 4),
         },
         filterFormOperatorInput: {
-            marginRight: 20,
+            margin: spacing(0, 4, 0, 0),
         },
         paper: {
             boxShadow: shadows[1],
