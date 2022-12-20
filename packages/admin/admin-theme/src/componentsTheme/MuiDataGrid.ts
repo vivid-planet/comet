@@ -24,7 +24,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component) =
             padding: "0 10px",
         },
         cell: {
-            borderTop: "1px solid #D9D9D9",
+            borderTop: `1px solid ${palette.grey[100]}`,
             "&:focus": {
                 outline: "none",
             },
