@@ -111,6 +111,10 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             if (extensions) {
                 acceptObj[mimetype] = extensions.map((extension) => `.${extension}`);
             }
+
+            if (mimetype === "application/x-zip-compressed") {
+                acceptObj[mimetype] = [".zip"];
+            }
         });
 
         return acceptObj;

@@ -50,7 +50,10 @@ export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterce
                     }
 
                     const supportedExtensions = mimedb[file.mimetype]?.extensions;
-                    if (supportedExtensions === undefined || !supportedExtensions.includes(extension)) {
+                    if (
+                        (supportedExtensions === undefined || !supportedExtensions.includes(extension)) &&
+                        !(file.mimetype === "application/x-zip-compressed" && extension === "zip")
+                    ) {
                         return cb(
                             new CometValidationException(`File type and extension mismatch: .${extension} and ${file.mimetype} are incompatible`),
                             false,
