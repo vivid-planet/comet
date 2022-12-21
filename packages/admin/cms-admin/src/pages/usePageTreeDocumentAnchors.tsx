@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { useCmsBlockContext } from "../blocks/useCmsBlockContext";
 import { GQLPageQuery, GQLPageQueryVariables } from "../documents/types";
-import { uniqueAnchors, useLocalPageTreeNodeAnchors } from "./LocalPageTreeNodeDocumentAnchors";
+import { useLocalPageTreeNodeAnchors } from "./LocalPageTreeNodeDocumentAnchors";
 
 function usePageTreeNodeDocumentAnchors(pageTreeNode: { id: string; documentType: string } | undefined): string[] | undefined {
     const client = useApolloClient();
@@ -46,7 +46,7 @@ function usePageTreeNodeDocumentAnchors(pageTreeNode: { id: string; documentType
             const documentAnchors = documentType.anchors(data.page.document);
 
             setRemoteAnchors((previousRemoteAnchors) => {
-                return { ...previousRemoteAnchors, [pageTreeNode.id]: uniqueAnchors(documentAnchors) };
+                return { ...previousRemoteAnchors, [pageTreeNode.id]: Array.from(new Set(documentAnchors)) };
             });
         }
 

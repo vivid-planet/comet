@@ -17,7 +17,7 @@ function LocalPageTreeNodeDocumentAnchorsProvider({ children }: { children: Reac
 
     const updateLocalAnchors = React.useCallback((pageTreeNodeId: string, anchors: string[] | undefined) => {
         setLocalAnchors((previousLocalAnchors) => {
-            return { ...previousLocalAnchors, [pageTreeNodeId]: uniqueAnchors(anchors) };
+            return { ...previousLocalAnchors, [pageTreeNodeId]: anchors === undefined ? undefined : Array.from(new Set(anchors)) };
         });
     }, []);
 
@@ -32,20 +32,4 @@ function useLocalPageTreeNodeAnchors(): LocalPageTreeNodeDocumentAnchorsApi {
     return React.useContext(LocalPageTreeNodeDocumentAnchorsContext);
 }
 
-function uniqueAnchors(anchors: string[] | undefined): string[] | undefined {
-    if (anchors === undefined) {
-        return undefined;
-    }
-
-    const uniqueAnchors: string[] = [];
-
-    for (const anchor of anchors) {
-        if (!uniqueAnchors.includes(anchor)) {
-            uniqueAnchors.push(anchor);
-        }
-    }
-
-    return uniqueAnchors;
-}
-
-export { LocalPageTreeNodeDocumentAnchorsProvider, uniqueAnchors, useLocalPageTreeNodeAnchors };
+export { LocalPageTreeNodeDocumentAnchorsProvider, useLocalPageTreeNodeAnchors };
