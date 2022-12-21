@@ -1,42 +1,63 @@
-import { makeVar, useReactiveVar } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
+import * as React from "react";
 
-const localAnchorsVar = makeVar<Record<string, string[] | undefined>>({});
+import { useCmsBlockContext } from "../blocks/useCmsBlockContext";
+import { GQLPageQuery, GQLPageQueryVariables } from "../documents/types";
+import { uniqueAnchors, useLocalPageTreeNodeAnchors } from "./LocalPageTreeNodeDocumentAnchors";
 
-const remoteAnchorsVar = makeVar<Record<string, string[] | undefined>>({});
+function usePageTreeNodeDocumentAnchors(pageTreeNode: { id: string; documentType: string } | undefined): string[] | undefined {
+    const client = useApolloClient();
+    const { pageTreeDocumentTypes: documentTypes } = useCmsBlockContext();
+    const { localAnchors } = useLocalPageTreeNodeAnchors();
+    const [remoteAnchors, setRemoteAnchors] = React.useState<Record<string, string[] | undefined>>({});
 
-function unique(anchors: string[] | undefined): string[] | undefined {
-    if (anchors === undefined) {
-        return undefined;
-    }
+    React.useEffect(() => {
+        async function fetchRemoteAnchors() {
+            if (pageTreeNode == null) {
+                return;
+            }
 
-    const uniqueAnchors: string[] = [];
+            const documentType = documentTypes[pageTreeNode.documentType];
 
-    for (const anchor of anchors) {
-        if (!uniqueAnchors.includes(anchor)) {
-            uniqueAnchors.push(anchor);
+            if (documentType === undefined) {
+                throw new Error(`Unknown document type "${pageTreeNode.documentType}"`);
+            }
+
+            if (documentType.getQuery === undefined || documentType.anchors === undefined) {
+                console.warn(`Document type "${pageTreeNode.documentType}" doesn't support anchors`);
+                setRemoteAnchors((previousRemoteAnchors) => {
+                    return { ...previousRemoteAnchors, [pageTreeNode.id]: [] };
+                });
+                return;
+            }
+
+            const { data } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
+                query: documentType.getQuery,
+                variables: { id: pageTreeNode.id },
+            });
+
+            if (data.page?.document == null) {
+                setRemoteAnchors((previousRemoteAnchors) => {
+                    return { ...previousRemoteAnchors, [pageTreeNode.id]: [] };
+                });
+                return;
+            }
+
+            const documentAnchors = documentType.anchors(data.page.document);
+
+            setRemoteAnchors((previousRemoteAnchors) => {
+                return { ...previousRemoteAnchors, [pageTreeNode.id]: uniqueAnchors(documentAnchors) };
+            });
         }
-    }
 
-    return uniqueAnchors;
-}
+        fetchRemoteAnchors();
+    }, [pageTreeNode, client, documentTypes]);
 
-function updateLocalPageTreeNodeDocumentAnchors(pageTreeNodeId: string, anchors: string[] | undefined) {
-    localAnchorsVar({ ...localAnchorsVar(), [pageTreeNodeId]: unique(anchors) });
-}
-
-function updateRemotePageTreeNodeDocumentAnchors(pageTreeNodeId: string, anchors: string[] | undefined) {
-    remoteAnchorsVar({ ...remoteAnchorsVar(), [pageTreeNodeId]: unique(anchors) });
-}
-
-function usePageTreeNodeDocumentAnchors(pageTreeNodeId: string | undefined): string[] | undefined {
-    const localAnchors = useReactiveVar(localAnchorsVar);
-    const remoteAnchors = useReactiveVar(remoteAnchorsVar);
-
-    if (pageTreeNodeId === undefined) {
+    if (pageTreeNode === undefined) {
         return undefined;
     }
 
-    return localAnchors[pageTreeNodeId] ?? remoteAnchors[pageTreeNodeId];
+    return localAnchors[pageTreeNode.id] ?? remoteAnchors[pageTreeNode.id];
 }
 
-export { updateLocalPageTreeNodeDocumentAnchors, updateRemotePageTreeNodeDocumentAnchors, usePageTreeNodeDocumentAnchors };
+export { usePageTreeNodeDocumentAnchors };

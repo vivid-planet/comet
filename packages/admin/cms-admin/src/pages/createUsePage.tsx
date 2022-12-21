@@ -14,8 +14,8 @@ import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
+import { useLocalPageTreeNodeAnchors } from "./LocalPageTreeNodeDocumentAnchors";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
-import { updateLocalPageTreeNodeDocumentAnchors } from "./usePageTreeDocumentAnchors";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";
 
 type Output = Record<string, unknown>;
@@ -171,6 +171,7 @@ export const createUsePage: CreateUsePage =
             const [referenceOutput, setReferenceOutput] = React.useState<undefined | Output>(undefined);
             const [saving, setSaving] = React.useState(false);
             const [saveError, setSaveError] = React.useState<"invalid" | "conflict" | "error" | undefined>();
+            const { updateLocalAnchors } = useLocalPageTreeNodeAnchors();
 
             const generateOutput = (ps: PS): Output => {
                 return {
@@ -258,14 +259,14 @@ export const createUsePage: CreateUsePage =
 
             React.useEffect(() => {
                 if (pageState?.document) {
-                    const anchors = Object.entries(rootBlocks).reduce(
+                    const documentAnchors = Object.entries(rootBlocks).reduce(
                         (anchors, [key, block]) => [...anchors, ...(block.anchors?.(pageState?.document?.[key]) ?? [])],
                         [] as string[],
                     );
 
-                    updateLocalPageTreeNodeDocumentAnchors(pageId, anchors);
+                    updateLocalAnchors(pageId, documentAnchors);
                 }
-            }, [pageState, pageId]);
+            }, [pageState, pageId, updateLocalAnchors]);
 
             const handleSavePage = React.useCallback(async () => {
                 // TODO show progress and error handling
