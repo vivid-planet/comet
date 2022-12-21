@@ -8,7 +8,7 @@ import { useLocalPageTreeNodeAnchors } from "./LocalPageTreeNodeDocumentAnchors"
 function usePageTreeNodeDocumentAnchors(pageTreeNode: { id: string; documentType: string } | undefined): string[] | undefined {
     const client = useApolloClient();
     const { pageTreeDocumentTypes: documentTypes } = useCmsBlockContext();
-    const { localAnchors } = useLocalPageTreeNodeAnchors();
+    const localAnchors = useLocalPageTreeNodeAnchors();
     const [remoteAnchors, setRemoteAnchors] = React.useState<Record<string, string[] | undefined>>({});
 
     React.useEffect(() => {

@@ -1,34 +1,22 @@
 import * as React from "react";
 
-interface LocalPageTreeNodeDocumentAnchorsApi {
-    localAnchors: Record<string, string[] | undefined>;
-    updateLocalAnchors: (pageTreeNodeId: string, anchors: string[] | undefined) => void;
+type PageTreeNodeId = string;
+
+type LocalPageTreeNodeDocumentAnchors = Record<PageTreeNodeId, string[] | undefined>;
+
+const LocalPageTreeNodeDocumentAnchorsContext = React.createContext<LocalPageTreeNodeDocumentAnchors>({});
+
+function LocalPageTreeNodeDocumentAnchorsProvider({
+    children,
+    localAnchors,
+}: {
+    children: React.ReactNode;
+    localAnchors: LocalPageTreeNodeDocumentAnchors;
+}): JSX.Element {
+    return <LocalPageTreeNodeDocumentAnchorsContext.Provider value={localAnchors}>{children}</LocalPageTreeNodeDocumentAnchorsContext.Provider>;
 }
 
-const LocalPageTreeNodeDocumentAnchorsContext = React.createContext<LocalPageTreeNodeDocumentAnchorsApi>({
-    localAnchors: {},
-    updateLocalAnchors: () => {
-        // noop
-    },
-});
-
-function LocalPageTreeNodeDocumentAnchorsProvider({ children }: { children: React.ReactNode }): JSX.Element {
-    const [localAnchors, setLocalAnchors] = React.useState<Record<string, string[] | undefined>>({});
-
-    const updateLocalAnchors = React.useCallback((pageTreeNodeId: string, anchors: string[] | undefined) => {
-        setLocalAnchors((previousLocalAnchors) => {
-            return { ...previousLocalAnchors, [pageTreeNodeId]: anchors === undefined ? undefined : Array.from(new Set(anchors)) };
-        });
-    }, []);
-
-    return (
-        <LocalPageTreeNodeDocumentAnchorsContext.Provider value={{ localAnchors, updateLocalAnchors }}>
-            {children}
-        </LocalPageTreeNodeDocumentAnchorsContext.Provider>
-    );
-}
-
-function useLocalPageTreeNodeAnchors(): LocalPageTreeNodeDocumentAnchorsApi {
+function useLocalPageTreeNodeAnchors(): LocalPageTreeNodeDocumentAnchors {
     return React.useContext(LocalPageTreeNodeDocumentAnchorsContext);
 }
 

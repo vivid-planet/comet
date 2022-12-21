@@ -24,7 +24,6 @@ import { DocumentInterface, DocumentType } from "../../documents/types";
 import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../../graphql.generated";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
 import { EditPageNodeProps } from "../createEditPageNode";
-import { LocalPageTreeNodeDocumentAnchorsProvider } from "../LocalPageTreeNodeDocumentAnchors";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
@@ -203,11 +202,7 @@ export function PagesPage({
 
                         const EditComponent = documentType.editComponent;
 
-                        return EditComponent ? (
-                            <LocalPageTreeNodeDocumentAnchorsProvider>
-                                <EditComponent id={selectedId} category={category} />
-                            </LocalPageTreeNodeDocumentAnchorsProvider>
-                        ) : null;
+                        return EditComponent ? <EditComponent id={selectedId} category={category} /> : null;
                     }}
                 </StackPage>
             </StackSwitch>

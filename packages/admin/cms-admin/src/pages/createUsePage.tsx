@@ -14,7 +14,7 @@ import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
-import { useLocalPageTreeNodeAnchors } from "./LocalPageTreeNodeDocumentAnchors";
+import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";
 
@@ -171,7 +171,6 @@ export const createUsePage: CreateUsePage =
             const [referenceOutput, setReferenceOutput] = React.useState<undefined | Output>(undefined);
             const [saving, setSaving] = React.useState(false);
             const [saveError, setSaveError] = React.useState<"invalid" | "conflict" | "error" | undefined>();
-            const { updateLocalAnchors } = useLocalPageTreeNodeAnchors();
 
             const generateOutput = (ps: PS): Output => {
                 return {
@@ -256,17 +255,6 @@ export const createUsePage: CreateUsePage =
                     setReferenceOutput(generateOutput(page));
                 }
             }, [data, pageId]);
-
-            React.useEffect(() => {
-                if (pageState?.document) {
-                    const documentAnchors = Object.entries(rootBlocks).reduce(
-                        (anchors, [key, block]) => [...anchors, ...(block.anchors?.(pageState?.document?.[key]) ?? [])],
-                        [] as string[],
-                    );
-
-                    updateLocalAnchors(pageId, documentAnchors);
-                }
-            }, [pageState, pageId, updateLocalAnchors]);
 
             const handleSavePage = React.useCallback(async () => {
                 // TODO show progress and error handling
@@ -372,23 +360,38 @@ export const createUsePage: CreateUsePage =
 
             // create block-api
             // - bind state, updatehandler to admin-component
-            const rootBlocksApi: BlockNodeApi<RootBlocks> = React.useMemo(
-                () =>
-                    Object.entries(rootBlocks).reduce((a, [key, value]) => {
-                        const UnboundComponent = value.AdminComponent;
-                        const state = pageState && pageState.document ? pageState.document[key] : null;
-                        const handleUpdateState = createHandleUpdate(key);
+            const rootBlocksApi: BlockNodeApi<RootBlocks> = React.useMemo(() => {
+                const localAnchors =
+                    pageState?.document === undefined
+                        ? {}
+                        : {
+                              [pageId]: Array.from(
+                                  new Set(
+                                      Object.entries(rootBlocks).reduce(
+                                          (anchors, [key, block]) => [...anchors, ...(block.anchors?.(pageState?.document?.[key]) ?? [])],
+                                          [] as string[],
+                                      ),
+                                  ),
+                              ),
+                          };
+                return Object.entries(rootBlocks).reduce((a, [key, value]) => {
+                    const UnboundComponent = value.AdminComponent;
+                    const state = pageState && pageState.document ? pageState.document[key] : null;
+                    const handleUpdateState = createHandleUpdate(key);
 
-                        return {
-                            ...a,
-                            [key]: {
-                                adminUI: state ? React.createElement(UnboundComponent, { state, updateState: handleUpdateState }) : null,
-                                isValid: async () => value.isValid(state),
-                            },
-                        };
-                    }, {} as BlockNodeApi<RootBlocks>),
-                [pageState, createHandleUpdate],
-            );
+                    return {
+                        ...a,
+                        [key]: {
+                            adminUI: state ? (
+                                <LocalPageTreeNodeDocumentAnchorsProvider localAnchors={localAnchors}>
+                                    {React.createElement(UnboundComponent, { state, updateState: handleUpdateState })}
+                                </LocalPageTreeNodeDocumentAnchorsProvider>
+                            ) : null,
+                            isValid: async () => value.isValid(state),
+                        },
+                    };
+                }, {} as BlockNodeApi<RootBlocks>);
+            }, [pageState, createHandleUpdate, pageId]);
 
             const pageSaveButton = React.useMemo<JSX.Element>(
                 () => <PageSaveButton hasChanges={hasChanges} handleSavePage={handleSavePage} saveError={saveError} saving={saving} />,
