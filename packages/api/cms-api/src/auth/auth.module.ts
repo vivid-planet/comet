@@ -20,7 +20,7 @@ export interface AuthModuleConfig {
     idpUrl?: string;
     postLogoutRedirectUri?: string;
     staticAuthedUser?: CurrentUserInterface;
-    apiPassword: string;
+    apiPassword?: string;
     formatSignOutUrl?: (url: string) => string;
     currentUserLoader?: CurrentUserLoaderInterface;
 }
@@ -54,6 +54,7 @@ export class AuthModule {
                             };
                         } else {
                             if (!config.idpUrl) throw new Error("idpUrl must be set");
+                            if (!config.apiPassword) throw new Error("apiPassword must be set");
                             const uri = `${config.idpUrl}/.well-known/openid-configuration`;
                             const result = await fetch(uri);
                             const metadata = await result.json();
