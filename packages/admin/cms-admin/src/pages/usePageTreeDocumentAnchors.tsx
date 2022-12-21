@@ -1,63 +1,61 @@
-import { useApolloClient } from "@apollo/client";
-import * as React from "react";
+import { gql, useQuery } from "@apollo/client";
 
 import { useCmsBlockContext } from "../blocks/useCmsBlockContext";
 import { GQLPageQuery, GQLPageQueryVariables } from "../documents/types";
 import { useLocalPageTreeNodeAnchors } from "./LocalPageTreeNodeDocumentAnchors";
 
-function usePageTreeNodeDocumentAnchors(pageTreeNode: { id: string; documentType: string } | undefined): string[] | undefined {
-    const client = useApolloClient();
+// Noop query to prevent useQuery from crashing, will never be queries
+const noopQuery = gql`
+    query PageTreeNodeDocumentAnchorsNoop($id: ID!) {
+        pageTreeNode(id: $id) {
+            id
+        }
+    }
+`;
+
+function usePageTreeNodeDocumentAnchors(pageTreeNode: { id: string; documentType: string } | null | undefined): string[] | undefined {
     const { pageTreeDocumentTypes: documentTypes } = useCmsBlockContext();
     const localAnchors = useLocalPageTreeNodeAnchors();
-    const [remoteAnchors, setRemoteAnchors] = React.useState<Record<string, string[] | undefined>>({});
 
-    React.useEffect(() => {
-        async function fetchRemoteAnchors() {
-            if (pageTreeNode == null) {
-                return;
-            }
+    const shouldFetchRemoteAnchors =
+        pageTreeNode != null &&
+        documentTypes[pageTreeNode.documentType]?.getQuery !== undefined &&
+        documentTypes[pageTreeNode.documentType]?.anchors !== undefined &&
+        localAnchors[pageTreeNode.id] === undefined;
 
-            const documentType = documentTypes[pageTreeNode.documentType];
+    const { data } = useQuery<GQLPageQuery, GQLPageQueryVariables>(
+        shouldFetchRemoteAnchors
+            ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              documentTypes[pageTreeNode.documentType].getQuery!
+            : noopQuery,
+        shouldFetchRemoteAnchors ? { variables: { id: pageTreeNode.id } } : { skip: true },
+    );
 
-            if (documentType === undefined) {
-                throw new Error(`Unknown document type "${pageTreeNode.documentType}"`);
-            }
-
-            if (documentType.getQuery === undefined || documentType.anchors === undefined) {
-                console.warn(`Document type "${pageTreeNode.documentType}" doesn't support anchors`);
-                setRemoteAnchors((previousRemoteAnchors) => {
-                    return { ...previousRemoteAnchors, [pageTreeNode.id]: [] };
-                });
-                return;
-            }
-
-            const { data } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
-                query: documentType.getQuery,
-                variables: { id: pageTreeNode.id },
-            });
-
-            if (data.page?.document == null) {
-                setRemoteAnchors((previousRemoteAnchors) => {
-                    return { ...previousRemoteAnchors, [pageTreeNode.id]: [] };
-                });
-                return;
-            }
-
-            const documentAnchors = documentType.anchors(data.page.document);
-
-            setRemoteAnchors((previousRemoteAnchors) => {
-                return { ...previousRemoteAnchors, [pageTreeNode.id]: Array.from(new Set(documentAnchors)) };
-            });
-        }
-
-        fetchRemoteAnchors();
-    }, [pageTreeNode, client, documentTypes]);
-
-    if (pageTreeNode === undefined) {
+    if (pageTreeNode == null) {
         return undefined;
     }
 
-    return localAnchors[pageTreeNode.id] ?? remoteAnchors[pageTreeNode.id];
+    if (localAnchors[pageTreeNode.id] !== undefined) {
+        return localAnchors[pageTreeNode.id];
+    }
+
+    const document = documentTypes[pageTreeNode.documentType];
+
+    if (document === undefined) {
+        console.error(`Unknown document type "${pageTreeNode.documentType}"`);
+        return undefined;
+    }
+
+    if (document.anchors === undefined) {
+        console.warn(`Document type "${pageTreeNode.documentType}" doesn't support anchors`);
+        return [];
+    }
+
+    if (data?.page?.document == null) {
+        return undefined;
+    }
+
+    return Array.from(new Set(document.anchors(data.page.document)));
 }
 
 export { usePageTreeNodeDocumentAnchors };
