@@ -15,8 +15,11 @@ import {
     GQLMovePageTreeNodesByPosMutation,
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
+    GQLPageSlugPathFragment,
     GQLPagesQuery,
     GQLPagesQueryVariables,
+    GQLResetSlugMutation,
+    GQLResetSlugMutationVariables,
     namedOperations,
 } from "../../graphql.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
@@ -42,6 +45,8 @@ const MOVE_PAGE_TREE_NODES_BY_POS = gql`
             id
             parentId
             pos
+            slug
+            path
         }
     }
 `;
@@ -52,6 +57,17 @@ const MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS = gql`
             id
             parentId
             pos
+            slug
+            path
+        }
+    }
+`;
+
+const RESET_SLUG = gql`
+    mutation ResetSlug($id: ID!, $slug: String!) {
+        updatePageTreeNodeSlug(id: $id, slug: $slug) {
+            id
+            slug
         }
     }
 `;
@@ -145,11 +161,24 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                 optimisticResponse: (variables) => {
                     const pageTreeNodes: GQLMovePageTreeNodesByPosMutation["movePageTreeNodesByPos"] = (variables.ids as string[]).map(
                         (id, index) => {
+                            const slugPathPage = client.cache.readFragment<GQLPageSlugPathFragment>({
+                                id: id,
+                                fragment: gql`
+                                    fragment PageSlugPath on PageTreeNode {
+                                        id
+                                        slug
+                                        path
+                                    }
+                                `,
+                            });
+
                             return {
                                 __typename: "PageTreeNode",
                                 id: id,
                                 parentId: parentId,
                                 pos: position + index,
+                                slug: slugPathPage?.slug ?? "",
+                                path: slugPathPage?.path ?? "",
                             };
                         },
                     );
@@ -240,24 +269,32 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
             snackbarApi.showSnackbar(
                 <UndoSnackbar
                     message={<FormattedMessage id="comet.pagetree.pageMoved" defaultMessage="Page Moved" />}
-                    payload={{ previousPages: pages, pagesToMove }}
+                    payload={{ previousPages: pages, pagesToUndo: pagesToMove }}
                     onUndoClick={async (payload) => {
                         if (payload) {
-                            const { previousPages, pagesToMove } = payload;
+                            const { previousPages, pagesToUndo } = payload;
 
-                            let disallowedReferences = [...pagesToMove];
+                            let disallowedReferences = [...pagesToUndo];
 
-                            for (const pageToMove of pagesToMove) {
-                                const updateInfo = pageTreeService.getUndoUpdateInfo(previousPages, pageToMove, disallowedReferences);
+                            for (const pageToUndo of pagesToUndo) {
+                                const updateInfo = pageTreeService.getUndoUpdateInfo(previousPages, pageToUndo, disallowedReferences);
 
                                 await moveByNeighbourRequest({
-                                    ids: [pageToMove.id],
-                                    parentId: pageToMove.parentId,
+                                    ids: [pageToUndo.id],
+                                    parentId: pageToUndo.parentId,
                                     afterId: updateInfo.afterId,
                                     beforeId: updateInfo.beforeId,
                                 });
 
-                                disallowedReferences = disallowedReferences.filter((page) => page.id !== pageToMove.id);
+                                await client.mutate<GQLResetSlugMutation, GQLResetSlugMutationVariables>({
+                                    mutation: RESET_SLUG,
+                                    variables: {
+                                        id: pageToUndo.id,
+                                        slug: pageToUndo.slug,
+                                    },
+                                });
+
+                                disallowedReferences = disallowedReferences.filter((page) => page.id !== pageToUndo.id);
                             }
 
                             client.refetchQueries({ include: [namedOperations.Query.Pages] });

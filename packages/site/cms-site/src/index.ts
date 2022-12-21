@@ -23,6 +23,8 @@ export { /** @deprecated use parsePreviewState instead */ parsePreviewParams as 
 export { parsePreviewParams } from "./preview/utils";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { useRouter } from "./router/useRouter";
+export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
+export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { SitePreviewPage } from "./sitePreview/SitePreviewPage";
 export {
     /** @deprecated use SitePreviewPage instead */

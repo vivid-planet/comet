@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## NEXT
+## Next major
 
 ### @comet/cms-admin
 
@@ -22,6 +22,14 @@ All notable changes to this project will be documented in this file. This projec
 ### @comet/eslint-config
 
 -   Enable [no-return-await](https://eslint.org/docs/latest/rules/no-return-await)
+
+## Next minor
+
+### @comet/admin
+
+#### Changes
+
+-   Fix `readClipboardText()` not working in Firefox by using local storage as a fallback
 
 ## 3.2.1
 
