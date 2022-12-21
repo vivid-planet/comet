@@ -23,6 +23,9 @@ class DamVideoBlockData extends BlockData {
     autoplay?: boolean;
 
     @BlockField({ nullable: true })
+    loop?: boolean;
+
+    @BlockField({ nullable: true })
     showControls?: boolean;
 
     async transformToPlain(
@@ -49,6 +52,7 @@ class DamVideoBlockData extends BlockData {
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
             autoplay: this.autoplay,
+            loop: this.loop,
             showControls: this.showControls,
         };
     }
@@ -70,6 +74,11 @@ class DamVideoBlockInput extends BlockInput {
     @IsOptional()
     @BlockField({ nullable: true })
     autoplay?: boolean;
+
+    @IsBoolean()
+    @IsOptional()
+    @BlockField({ nullable: true })
+    loop?: boolean;
 
     @IsBoolean()
     @IsOptional()

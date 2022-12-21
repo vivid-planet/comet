@@ -20,13 +20,16 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     displayName: <FormattedMessage id="comet.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
 
-    defaultValues: () => ({}),
+    defaultValues: () => ({
+        showControls: true,
+    }),
 
     category: BlockCategory.Media,
 
     state2Output: (state) => ({
         damFileId: state.damFile?.id,
         autoplay: state.autoplay,
+        loop: state.loop,
         showControls: state.showControls,
     }),
 
@@ -59,12 +62,13 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         // TODO fix typing: generated GraphQL files use null, we use undefined, e.g. title: string | null vs title?: string
         const damFile = data.damFile as unknown as DamVideoBlockData["damFile"];
 
-        return { damFile, autoplay: output.autoplay, showControls: output.showControls };
+        return { damFile, autoplay: output.autoplay, loop: output.loop, showControls: output.showControls };
     },
 
     createPreviewState: (state, previewContext) => ({
         ...state,
         autoplay: false,
+        loop: false,
         adminMeta: { route: previewContext.parentUrl },
     }),
 
@@ -74,7 +78,16 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         return (
             <BlocksFinalForm
                 onSubmit={(values) => {
-                    updateState((prevState) => ({ ...prevState, ...values }));
+                    updateState((prevState) => {
+                        // case: autoplay = false and showControls = false is not allowed
+                        if (!values.autoplay && prevState.autoplay) {
+                            return { ...prevState, ...values, showControls: true };
+                        }
+                        if (!values.showControls && prevState.showControls) {
+                            return { ...prevState, ...values, autoplay: true };
+                        }
+                        return { ...prevState, ...values };
+                    });
                 }}
                 initialValues={state}
             >
@@ -114,6 +127,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                     type="checkbox"
                     name="autoplay"
                     label={<FormattedMessage id="comet.blocks.video.autoplay" defaultMessage="Autoplay" />}
+                    component={FinalFormSwitch}
+                />
+                <Field
+                    type="checkbox"
+                    name="loop"
+                    label={<FormattedMessage id="comet.blocks.video.loop" defaultMessage="Loop" />}
                     component={FinalFormSwitch}
                 />
                 <Field
