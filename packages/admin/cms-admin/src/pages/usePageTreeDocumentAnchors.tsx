@@ -18,10 +18,7 @@ function usePageTreeNodeDocumentAnchors(pageTreeNode: { id: string; documentType
     const localAnchors = useLocalPageTreeNodeAnchors();
 
     const shouldFetchRemoteAnchors =
-        pageTreeNode != null &&
-        documentTypes[pageTreeNode.documentType]?.getQuery !== undefined &&
-        documentTypes[pageTreeNode.documentType]?.anchors !== undefined &&
-        localAnchors[pageTreeNode.id] === undefined;
+        pageTreeNode != null && documentTypes[pageTreeNode.documentType]?.getQuery !== undefined && localAnchors[pageTreeNode.id] === undefined;
 
     const { data } = useQuery<GQLPageQuery, GQLPageQueryVariables>(
         shouldFetchRemoteAnchors
@@ -44,11 +41,6 @@ function usePageTreeNodeDocumentAnchors(pageTreeNode: { id: string; documentType
     if (document === undefined) {
         console.error(`Unknown document type "${pageTreeNode.documentType}"`);
         return undefined;
-    }
-
-    if (document.anchors === undefined) {
-        console.warn(`Document type "${pageTreeNode.documentType}" doesn't support anchors`);
-        return [];
     }
 
     if (data?.page?.document == null) {

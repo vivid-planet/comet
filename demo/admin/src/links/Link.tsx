@@ -51,4 +51,5 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
         return <>{page.userGroup}</>;
     },
     menuIcon: LinkIcon,
+    anchors: () => [],
 };
