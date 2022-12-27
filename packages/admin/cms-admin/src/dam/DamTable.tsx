@@ -32,7 +32,6 @@ import { FileUploadContextProvider } from "./Table/fileUpload/FileUploadContext"
 import { UploadSplitButton } from "./Table/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./Table/filter/DamTableFilter";
 import FolderDataGrid from "./Table/FolderDataGrid";
-import FolderTable from "./Table/FolderTable";
 import { damFolderQuery } from "./Table/FolderTable.gql";
 import { RedirectToPersistedDamLocation } from "./Table/RedirectToPersistedDamLocation";
 
@@ -117,7 +116,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         </ToolbarActions>
                     </Toolbar>
                     <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
-                    <FolderTable id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
+                    {/*<FolderTable id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />*/}
                 </EditDialogApiContext.Provider>
             </StackPage>
             <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>

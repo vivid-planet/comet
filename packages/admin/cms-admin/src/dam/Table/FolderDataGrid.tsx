@@ -1,10 +1,12 @@
 import {
     BreadcrumbItem,
     createOffsetLimitPagingAction,
+    EditDialog,
     IFilterApi,
     ISelectionApi,
     PrettyBytes,
     StackLink,
+    useStoredState,
     useTableQuery,
     useTableQueryPaging,
 } from "@comet/admin";
@@ -15,6 +17,8 @@ import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-i
 
 import { GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
 import { DamConfig, DamFilter } from "../DamTable";
+import AddFolder from "../FolderForm/AddFolder";
+import EditFolder from "../FolderForm/EditFolder";
 import DamContextMenu from "./DamContextMenu";
 import DamLabel from "./DamLabel";
 import { damItemsListQuery } from "./FolderTable.gql";
@@ -41,9 +45,8 @@ const FolderDataGrid = ({
 }: FolderDataGridProps): React.ReactElement => {
     const intl = useIntl();
 
-    const [pageSize, setPageSize] = React.useState(20);
-
-    const pagingApi = useTableQueryPaging(0);
+    const [pageSize, setPageSize] = useStoredState<number>("FolderDataGrid-pageSize", 20);
+    const pagingApi = useTableQueryPaging(0, { persistedStateId: "FolderDataGrid-pagingApi" });
 
     const {
         tableData,
@@ -66,7 +69,7 @@ const FolderDataGrid = ({
             return {
                 data: data.damItemsList.nodes,
                 totalCount: data.damItemsList.totalCount,
-                pagingInfo: createOffsetLimitPagingAction(pagingApi, data.damItemsList, pageSize),
+                pagingInfo: createOffsetLimitPagingAction(pagingApi, { totalCount: data.damItemsList.totalCount }, pageSize),
             };
         },
     });
@@ -182,6 +185,7 @@ const FolderDataGrid = ({
                     {
                         field: "contextMenu",
                         headerName: "",
+                        align: "center",
                         renderCell: ({ row }) => {
                             return isFile(row) ? <DamContextMenu file={row} /> : <DamContextMenu folder={row} />;
                         },
@@ -195,6 +199,21 @@ const FolderDataGrid = ({
                 disableSelectionOnClick
                 autoHeight={true}
             />
+            <EditDialog
+                title={{
+                    edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,
+                    add: <FormattedMessage id="comet.dam.folderEditDialog.addFolder" defaultMessage="Add folder" />,
+                }}
+            >
+                {({ selectedId, selectionMode }) => {
+                    return (
+                        <>
+                            {selectionMode === "add" && <AddFolder parentId={selectedId} selectionApi={selectionApi} />}
+                            {selectionMode === "edit" && <EditFolder id={selectedId as string} selectionApi={selectionApi} />}
+                        </>
+                    );
+                }}
+            </EditDialog>
         </div>
     );
 };

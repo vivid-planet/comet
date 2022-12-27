@@ -22,9 +22,10 @@ export function createOffsetLimitPagingAction<TData extends OffsetLimitPagingDat
     };
     const createFetchPreviousPage = () => {
         const previousPage = currentPage - 1;
+        const newOffset = pagingApi.current - limit >= 0 ? pagingApi.current - limit : 0;
 
         if (previousPage > 0) {
-            return () => pagingApi.changePage(pagingApi.current - limit, previousPage);
+            return () => pagingApi.changePage(newOffset, previousPage);
         }
     };
 

@@ -85,6 +85,7 @@ const FolderTable = ({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
+            client.cache.evict({ id: "ROOT_QUERY", fieldName: "damItemsList" });
         },
     });
 

@@ -116,6 +116,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
         acceptedMimetypes: allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
+            client.cache.evict({ id: "ROOT_QUERY", fieldName: "damItemsList" });
         },
     });
 

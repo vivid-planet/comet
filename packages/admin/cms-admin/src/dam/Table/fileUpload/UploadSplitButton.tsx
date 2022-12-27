@@ -31,6 +31,7 @@ export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps):
         acceptedMimetypes: filter?.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
+            client.cache.evict({ id: "ROOT_QUERY", fieldName: "damItemsList" });
         },
     });
 

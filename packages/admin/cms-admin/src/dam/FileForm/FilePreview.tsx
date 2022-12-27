@@ -132,6 +132,9 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
                             mutation: deleteDamFileMutation,
                             variables: { id: file.id },
                             refetchQueries: [namedOperations.Query.DamItemsList],
+                            update: (cache) => {
+                                cache.evict({ id: "ROOT_QUERY", fieldName: "damItemsList" });
+                            },
                         });
 
                         stackApi?.goBack();
