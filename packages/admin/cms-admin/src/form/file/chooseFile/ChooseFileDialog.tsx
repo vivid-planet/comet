@@ -46,13 +46,20 @@ const renderDamLabel = (
     { matches }: { matches?: TextMatch[] },
 ) => {
     return isFile(row) ? (
-        <div>
-            <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
-                <DamLabel asset={row} matches={matches} />
-            </TableRowButton>
-        </div>
+        <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
+            <DamLabel asset={row} matches={matches} />
+        </TableRowButton>
     ) : (
-        <Link underline="none" component={StackLink} pageName="folder" payload={row.id}>
+        <Link
+            underline="none"
+            component={StackLink}
+            pageName="folder"
+            payload={row.id}
+            sx={{
+                width: "100%",
+                height: "100%",
+            }}
+        >
             <DamLabel asset={row} matches={matches} />
         </Link>
     );
