@@ -14,7 +14,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
-import { useDebouncedCallback } from "use-debounce";
+import { useThrottledCallback } from "use-debounce";
 
 import { GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
@@ -26,9 +26,18 @@ import { useFileUpload } from "./fileUpload/useFileUpload";
 import * as sc from "./FolderDataGrid.sc";
 import { damFolderQuery, damItemsListQuery } from "./FolderTable.gql";
 import { isFile, isFolder } from "./FolderTableRow";
+import { Footer } from "./Footer";
 import { NameColumn } from "./NameColumn";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
+
+export type FooterType = "upload" | "selection";
+interface FooterInfo {
+    type: FooterType;
+
+    folderName?: string;
+    numSelectedItems?: number;
+}
 
 type SelectionMap = Map<string, "file" | "folder">;
 
@@ -54,6 +63,46 @@ const FolderDataGrid = ({
     const apolloClient = useApolloClient();
 
     const [selectionMap, setSelectionMap] = React.useState<SelectionMap>(new Map());
+    const [footerInfo, setFooterInfo] = React.useState<FooterInfo | null>(null);
+
+    const showFooter = useThrottledCallback(
+        (type: FooterType, { folderName, numSelectedItems }: { folderName?: string; numSelectedItems?: number }) => {
+            setFooterInfo({
+                type,
+                folderName,
+                numSelectedItems,
+            });
+        },
+        500,
+    );
+
+    const hideFooter = React.useCallback(() => {
+        if (showFooter.isPending()) {
+            showFooter.cancel();
+        }
+
+        if (footerInfo?.type === "upload" && selectionMap.size > 0) {
+            showFooter("selection", {
+                numSelectedItems: selectionMap.size,
+            });
+            return;
+        }
+
+        setFooterInfo(null);
+    }, [footerInfo?.type, selectionMap.size, showFooter]);
+
+    React.useEffect(() => {
+        if (selectionMap.size > 0) {
+            showFooter("selection", {
+                numSelectedItems: selectionMap.size,
+            });
+        } else {
+            hideFooter();
+        }
+
+        // useEffect should only be executed if the selection changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectionMap]);
 
     const [pageSize, setPageSize] = useStoredState<number>("FolderDataGrid-pageSize", 20);
     const pagingApi = useTableQueryPaging(0, { persistedStateId: "FolderDataGrid-pagingApi" });
@@ -110,38 +159,27 @@ const FolderDataGrid = ({
 
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
 
-    const showHoverStyles = useDebouncedCallback(
-        () => {
-            setIsHovered(true);
-        },
-        500,
-        { leading: true },
-    );
-
-    const hideHoverStyles = () => {
-        if (showHoverStyles.isPending()) {
-            showHoverStyles.cancel();
-        }
-        setIsHovered(false);
-    };
-
     // handles upload of native file (e.g. file from desktop) to current folder:
     // If the native file is dropped on a file row in the table, it is uploaded
     // to the current folder
     const { getRootProps: getFileRootProps } = useDropzone({
         ...fileUploadApi.dropzoneConfig,
         noClick: true,
-        onDragEnter: (event) => {
-            showHoverStyles();
-            // showFooter("upload", data?.damFolder.name);
+        onDragEnter: () => {
+            setIsHovered(true);
+        },
+        onDragOver: () => {
+            showFooter("upload", {
+                folderName: data?.damFolder.name,
+            });
         },
         onDragLeave: () => {
-            hideHoverStyles();
-            // hideFooter();
+            setIsHovered(false);
+            hideFooter();
         },
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            hideHoverStyles();
-            // hideFooter();
+            setIsHovered(false);
+            hideFooter();
             await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, data?.damFolder.id);
         },
     });
@@ -188,6 +226,10 @@ const FolderDataGrid = ({
                                         filterApi={filterApi}
                                         isSearching={isSearching}
                                         fileUploadApi={fileUploadApi}
+                                        footerApi={{
+                                            show: showFooter,
+                                            hide: hideFooter,
+                                        }}
                                     />
                                 );
                             },
@@ -291,6 +333,12 @@ const FolderDataGrid = ({
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
+            <Footer
+                open={!!footerInfo?.type}
+                type={footerInfo?.type}
+                folderName={footerInfo?.folderName}
+                numSelectedItems={footerInfo?.numSelectedItems}
+            />
             <EditDialog
                 title={{
                     edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,

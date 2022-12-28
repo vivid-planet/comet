@@ -9,6 +9,7 @@ import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphq
 import { DamFilter } from "../DamTable";
 import DamLabel from "./DamLabel";
 import { FileUploadApi } from "./fileUpload/useFileUpload";
+import { FooterType } from "./FolderDataGrid";
 import { isFile, isFolder } from "./FolderTableRow";
 import { DamItemMatches } from "./useDamSearchHighlighting";
 
@@ -34,6 +35,10 @@ interface NameColumnProps {
     isSearching: boolean;
     filterApi: IFilterApi<DamFilter>;
     fileUploadApi: FileUploadApi;
+    footerApi: {
+        show: (type: FooterType, { folderName, numSelectedItems }: { folderName?: string; numSelectedItems?: number }) => void;
+        hide: () => void;
+    };
 }
 
 export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
@@ -43,6 +48,7 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
     isSearching,
     filterApi,
     fileUploadApi,
+    footerApi,
 }) => {
     const [isFolderHovered, setIsFolderHovered] = React.useState<boolean>(false);
 
@@ -53,16 +59,20 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
         ...fileUploadApi.dropzoneConfig,
         noClick: true,
         noDragEventsBubbling: true,
-        onDragOver: (event) => {
+        onDragEnter: () => {
             setIsFolderHovered(true);
-            // footerApi.show("upload", dropTargetItem.name);
+        },
+        onDragOver: () => {
+            footerApi.show("upload", { folderName: item.name });
         },
         onDragLeave: () => {
             setIsFolderHovered(false);
+            footerApi.hide();
         },
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             setIsFolderHovered(false);
-            // footerApi.hide();
+            footerApi.hide();
+
             await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, item.id);
         },
     });
