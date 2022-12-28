@@ -1,17 +1,24 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
+import { Injectable } from "@nestjs/common";
+import { PassportStrategy, Type } from "@nestjs/passport";
 import { BasicStrategy } from "passport-http";
 
-import { AUTH_MODULE_CONFIG } from "../auth.constants";
-import { AuthModuleConfig } from "../auth.module";
+export interface AuthBasicAuthStrategyConfig {
+    username?: string;
+    password: string;
+}
 
-@Injectable()
-export class BasicAuthStrategy extends PassportStrategy(BasicStrategy, "basic") {
-    constructor(@Inject(forwardRef(() => AUTH_MODULE_CONFIG)) private readonly config: AuthModuleConfig) {
-        super();
-    }
+export function createBasicAuthStrategy(config: AuthBasicAuthStrategyConfig): Type {
+    @Injectable()
+    class BasicAuthStrategy extends PassportStrategy(BasicStrategy, "basic") {
+        constructor() {
+            super();
+        }
 
-    async validate(username: string, password: string): Promise<boolean> {
-        return username === "vivid" && password === this.config.apiPassword && this.config.apiPassword !== "";
+        async validate(username: string, password: string): Promise<boolean> {
+            if (config.password === "") throw new Error("password for BasicAuthStrategy must no be empty");
+            const expectedUsername = config.username ? config.username : "vivid";
+            return username === expectedUsername && password === config.password;
+        }
     }
+    return BasicAuthStrategy;
 }

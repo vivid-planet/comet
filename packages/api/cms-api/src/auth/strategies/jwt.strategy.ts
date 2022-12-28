@@ -1,37 +1,47 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
+import { Injectable } from "@nestjs/common";
+import { PassportStrategy, Type } from "@nestjs/passport";
 import { passportJwtSecret } from "jwks-rsa";
-import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
+import { ExtractJwt, Strategy } from "passport-jwt";
 
-import { AUTH_CONFIG } from "../auth.constants";
-import { AuthConfig } from "../auth.module";
-import { CurrentUserInterface } from "../current-user/current-user";
+import { CurrentUserInterface, CurrentUserLoaderInterface } from "../current-user/current-user";
 
-@Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
-    constructor(@Inject(forwardRef(() => AUTH_CONFIG)) private readonly config: AuthConfig) {
-        let strategyConfig: StrategyOptions;
-        if (config.staticAuthedUserJwt) {
-            strategyConfig = {
-                jwtFromRequest: ExtractJwt.fromExtractors([() => config.staticAuthedUserJwt as string]),
-                secretOrKey: "static",
-            };
-        } else if (config.jwksUri) {
-            strategyConfig = {
+export interface AuthJwtStrategyConfig {
+    jwksUri: string;
+    currentUserLoader?: CurrentUserLoaderInterface;
+}
+
+class CurrentUserLoader implements CurrentUserLoaderInterface {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async load(data: any): Promise<CurrentUserInterface> {
+        return {
+            id: data.sub,
+            name: data.name,
+            email: data.email,
+            language: data.language,
+            role: data.ext?.role,
+            rights: data.ext?.rights,
+        };
+    }
+}
+
+export function createJwtStrategy(config: AuthJwtStrategyConfig): Type {
+    @Injectable()
+    class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
+        constructor() {
+            super({
                 jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
                 secretOrKeyProvider: passportJwtSecret({
                     jwksUri: config.jwksUri,
                 }),
                 ignoreExpiration: true, // https://github.com/oauth2-proxy/oauth2-proxy/issues/1836
-            };
-        } else {
-            throw new Error("Can neither find a static jwt nor a jwksUri");
+            });
         }
-        super(strategyConfig);
-    }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async validate(data: any): Promise<CurrentUserInterface> {
-        return this.config.currentUserLoader.load(data);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async validate(data: any): Promise<CurrentUserInterface> {
+            const userLoader = config.currentUserLoader ? config.currentUserLoader : new CurrentUserLoader();
+            return userLoader.load(data);
+        }
     }
+    return JwtStrategy;
 }
