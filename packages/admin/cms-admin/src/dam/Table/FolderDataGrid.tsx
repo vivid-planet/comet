@@ -25,10 +25,12 @@ import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import * as sc from "./FolderDataGrid.sc";
 import { damFolderQuery, damItemsListQuery } from "./FolderTable.gql";
-import { isFile } from "./FolderTableRow";
+import { isFile, isFolder } from "./FolderTableRow";
 import { NameColumn } from "./NameColumn";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
+
+type SelectionMap = Map<string, "file" | "folder">;
 
 interface FolderDataGridProps extends DamConfig {
     id?: string;
@@ -50,6 +52,8 @@ const FolderDataGrid = ({
 }: FolderDataGridProps): React.ReactElement => {
     const intl = useIntl();
     const apolloClient = useApolloClient();
+
+    const [selectionMap, setSelectionMap] = React.useState<SelectionMap>(new Map());
 
     const [pageSize, setPageSize] = useStoredState<number>("FolderDataGrid-pageSize", 20);
     const pagingApi = useTableQueryPaging(0, { persistedStateId: "FolderDataGrid-pagingApi" });
@@ -250,10 +254,40 @@ const FolderDataGrid = ({
                             sortable: false,
                             hideSortIcons: true,
                             disableColumnMenu: true,
+                            hide: hideContextMenu,
                         },
                     ]}
                     checkboxSelection
                     disableSelectionOnClick
+                    selectionModel={Array.from(selectionMap.keys())}
+                    onSelectionModelChange={(newSelectionModel) => {
+                        const newMap: SelectionMap = new Map();
+
+                        newSelectionModel.forEach((selectedId) => {
+                            const typedId = selectedId as string;
+
+                            if (selectionMap.has(typedId)) {
+                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                newMap.set(typedId, selectionMap.get(typedId)!);
+                            } else {
+                                const item = tableData?.data.find((item) => item.id === typedId);
+
+                                if (!item) {
+                                    throw new Error("Selected item does not exist");
+                                }
+
+                                let type: "file" | "folder";
+                                if (item && isFolder(item)) {
+                                    type = "folder";
+                                } else {
+                                    type = "file";
+                                }
+                                newMap.set(typedId, type);
+                            }
+                        });
+
+                        setSelectionMap(newMap);
+                    }}
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
