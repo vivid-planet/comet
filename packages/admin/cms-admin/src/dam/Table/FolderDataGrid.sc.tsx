@@ -14,23 +14,7 @@ export const FolderOuterHoverHighlight = styled("div", { shouldForwardProp: (pro
 
     outline: ${({ theme, isHovered }) => (isHovered ? `solid 1px ${theme.palette.primary.main}` : "none")};
 
-    & .CometFolderDataGridInnerWrapper-root {
-        display: ${({ isHovered }) => (isHovered ? "block" : "none")};
+    & .MuiDataGrid-root {
+        background-color: ${({ isHovered }) => (isHovered ? "rgba(41, 182, 246, 0.1)" : "#fff")};
     }
-`;
-
-export const FolderInnerHoverHighlight = styled("div")`
-    display: none;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-
-    width: 100%;
-    height: 100%;
-
-    background-color: rgba(41, 182, 246, 0.1);
 `;

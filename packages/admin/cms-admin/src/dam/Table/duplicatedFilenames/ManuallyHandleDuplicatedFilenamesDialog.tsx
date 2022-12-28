@@ -63,13 +63,13 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                 <StyledList>
                     {filenameData.map((data, index) => {
                         return (
-                            <>
+                            <React.Fragment key={data.name}>
                                 {index === 0 && <Divider component="li" />}
                                 <StyledListItem key={data.name}>
                                     <ListItemText primary={<Typography variant="body1">{data.name}</Typography>} />
                                 </StyledListItem>
                                 <Divider component="li" />
-                            </>
+                            </React.Fragment>
                         );
                     })}
                 </StyledList>

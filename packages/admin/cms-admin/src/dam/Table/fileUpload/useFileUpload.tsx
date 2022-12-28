@@ -45,7 +45,7 @@ interface Files {
     fileRejections: FileRejection[];
 }
 
-interface FileUploadApi {
+export interface FileUploadApi {
     uploadFiles: ({ acceptedFiles, fileRejections }: Files, folderId?: string) => void;
     validationErrors?: FileUploadValidationError[];
     maxFileSizeInBytes: number;

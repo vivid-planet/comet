@@ -6,12 +6,10 @@ import {
     IFilterApi,
     ISelectionApi,
     PrettyBytes,
-    StackLink,
     useStoredState,
     useTableQuery,
     useTableQueryPaging,
 } from "@comet/admin";
-import { Box, Link } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
@@ -24,11 +22,11 @@ import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
 import DamContextMenu from "./DamContextMenu";
-import DamLabel from "./DamLabel";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import * as sc from "./FolderDataGrid.sc";
 import { damFolderQuery, damItemsListQuery } from "./FolderTable.gql";
-import { isFile, isFolder } from "./FolderTableRow";
+import { isFile } from "./FolderTableRow";
+import { NameColumn } from "./NameColumn";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
@@ -98,11 +96,7 @@ const FolderDataGrid = ({
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    const {
-        uploadFiles,
-        dialogs: fileUploadDialogs,
-        dropzoneConfig,
-    } = useFileUpload({
+    const fileUploadApi = useFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             apolloClient.reFetchObservableQueries();
@@ -131,8 +125,10 @@ const FolderDataGrid = ({
     // If the native file is dropped on a file row in the table, it is uploaded
     // to the current folder
     const { getRootProps: getFileRootProps } = useDropzone({
-        ...dropzoneConfig,
-        onDragEnter: () => {
+        ...fileUploadApi.dropzoneConfig,
+        noClick: true,
+        onDragEnter: (event) => {
+            console.log("outer onDragOver ", event);
             showHoverStyles();
             // showFooter("upload", data?.damFolder.name);
         },
@@ -143,22 +139,14 @@ const FolderDataGrid = ({
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             hideHoverStyles();
             // hideFooter();
-            await uploadFiles({ acceptedFiles, fileRejections }, data?.damFolder.id);
-        },
-    });
-
-    const fileRootProps = getFileRootProps({
-        onClick: (event) => {
-            // prevents file dialog from opening when clicking on a folder
-            event.stopPropagation();
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, data?.damFolder.id);
         },
     });
 
     return (
         <div style={{ padding: "20px" }}>
             <TableHead isSearching={isSearching} numberItems={tableData?.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
-            <sc.FolderOuterHoverHighlight isHovered={isHovered} {...fileRootProps}>
-                <sc.FolderInnerHoverHighlight className="CometFolderDataGridInnerWrapper-root" />
+            <sc.FolderOuterHoverHighlight isHovered={isHovered} {...getFileRootProps()}>
                 <DataGrid
                     rowHeight={58}
                     rows={tableData?.data ?? []}
@@ -190,37 +178,14 @@ const FolderDataGrid = ({
                             flex: 1,
                             renderCell: ({ row }) => {
                                 return (
-                                    <Box
-                                        sx={{
-                                            width: "100%",
-                                            height: "100%",
-                                            display: "flex",
-                                            alignItems: "center",
-                                        }}
-                                        // dkdjdddd
-                                    >
-                                        {renderDamLabel ? (
-                                            renderDamLabel(row, { matches: matches.get(row.id) })
-                                        ) : (
-                                            <Link
-                                                underline="none"
-                                                component={StackLink}
-                                                pageName={isFile(row) ? "edit" : "folder"}
-                                                payload={row.id}
-                                                onClick={() => {
-                                                    if (isFolder(row)) {
-                                                        filterApi.formApi.change("searchText", undefined);
-                                                    }
-                                                }}
-                                                sx={{
-                                                    width: "100%",
-                                                    height: "100%",
-                                                }}
-                                            >
-                                                <DamLabel asset={row} showPath={isSearching} matches={matches.get(row.id)} />
-                                            </Link>
-                                        )}
-                                    </Box>
+                                    <NameColumn
+                                        item={row}
+                                        renderDamLabel={renderDamLabel}
+                                        matches={matches}
+                                        filterApi={filterApi}
+                                        isSearching={isSearching}
+                                        fileUploadApi={fileUploadApi}
+                                    />
                                 );
                             },
                             sortable: false,
@@ -308,7 +273,7 @@ const FolderDataGrid = ({
                     );
                 }}
             </EditDialog>
-            {fileUploadDialogs}
+            {fileUploadApi.dialogs}
         </div>
     );
 };
