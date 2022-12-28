@@ -23,6 +23,7 @@ import DamContextMenu from "./DamContextMenu";
 import DamLabel from "./DamLabel";
 import { damItemsListQuery } from "./FolderTable.gql";
 import { isFile, isFolder } from "./FolderTableRow";
+import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
 interface FolderDataGridProps extends DamConfig {
@@ -82,6 +83,7 @@ const FolderDataGrid = ({
 
     return (
         <div style={{ padding: "20px" }}>
+            <TableHead isSearching={isSearching} numberItems={tableData?.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
             <DataGrid
                 rowHeight={58}
                 rows={tableData?.data ?? []}
