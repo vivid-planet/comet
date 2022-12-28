@@ -128,7 +128,6 @@ const FolderDataGrid = ({
         ...fileUploadApi.dropzoneConfig,
         noClick: true,
         onDragEnter: (event) => {
-            console.log("outer onDragOver ", event);
             showHoverStyles();
             // showFooter("upload", data?.damFolder.name);
         },

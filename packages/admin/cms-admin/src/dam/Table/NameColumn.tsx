@@ -1,5 +1,6 @@
 import { IFilterApi, StackLink } from "@comet/admin";
 import { Box, Link } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 
@@ -10,6 +11,21 @@ import DamLabel from "./DamLabel";
 import { FileUploadApi } from "./fileUpload/useFileUpload";
 import { isFile, isFolder } from "./FolderTableRow";
 import { DamItemMatches } from "./useDamSearchHighlighting";
+
+interface DamLabelWrapperProps {
+    isHovered?: boolean;
+}
+
+const DamLabelWrapper = styled(Box, { shouldForwardProp: (prop) => prop !== "isHovered" })<DamLabelWrapperProps>`
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    border: ${({ theme, isHovered }) => (isHovered ? `solid 1px ${theme.palette.primary.main}` : "none")};
+    background-color: ${({ isHovered }) => (isHovered ? "rgba(41, 182, 246, 0.1)" : "transparent")};
+`;
 
 interface NameColumnProps {
     item: GQLDamFileTableFragment | GQLDamFolderTableFragment;
@@ -38,7 +54,6 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
         noClick: true,
         noDragEventsBubbling: true,
         onDragOver: (event) => {
-            console.log("inner onDragOver ", event);
             setIsFolderHovered(true);
             // footerApi.show("upload", dropTargetItem.name);
         },
@@ -53,15 +68,7 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
     });
 
     return (
-        <Box
-            {...(isFolder(item) && getFolderRootProps())}
-            sx={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-            }}
-        >
+        <DamLabelWrapper isHovered={isFolderHovered} {...(isFolder(item) && getFolderRootProps())}>
             {renderDamLabel ? (
                 renderDamLabel(item, { matches: matches.get(item.id) })
             ) : (
@@ -83,6 +90,6 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
                     <DamLabel asset={item} showPath={isSearching} matches={matches.get(item.id)} />
                 </Link>
             )}
-        </Box>
+        </DamLabelWrapper>
     );
 };
