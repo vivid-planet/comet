@@ -42,7 +42,7 @@ const cronJobsQuery = gql`
 export function CronJobsPage(): React.ReactElement {
     const intl = useIntl();
 
-    const { tableData, loading } = useTableQuery<GQLCronJobsQuery, undefined>()(cronJobsQuery, {
+    const { tableData, loading, error } = useTableQuery<GQLCronJobsQuery, undefined>()(cronJobsQuery, {
         resolveTableData: (data) => ({
             data: data.cronJobs,
             totalCount: data.cronJobs.length,
@@ -72,6 +72,7 @@ export function CronJobsPage(): React.ReactElement {
                 <DataGrid
                     rows={rows}
                     loading={loading}
+                    error={error}
                     columns={[
                         {
                             field: "name",
