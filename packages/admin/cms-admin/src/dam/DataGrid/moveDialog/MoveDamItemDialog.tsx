@@ -37,13 +37,19 @@ const ButtonWrapper = styled("div")`
     gap: 5px;
 `;
 
+const FileWrapper = styled("div")`
+    color: rgba(0, 0, 0, 0.5);
+`;
+
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFolder: (folderId: string) => void,
     { matches, numSelectedItems }: { matches?: TextMatch[]; numSelectedItems: number },
 ) => {
     return isFile(row) ? (
-        <DamItemLabel asset={row} matches={matches} />
+        <FileWrapper>
+            <DamItemLabel asset={row} matches={matches} />
+        </FileWrapper>
     ) : (
         <>
             <Link
