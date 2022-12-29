@@ -39,6 +39,11 @@ interface NameColumnProps {
         show: (type: FooterType, { folderName, numSelectedItems }: { folderName?: string; numSelectedItems?: number }) => void;
         hide: () => void;
     };
+    hoverApi: {
+        showHoverStyles: (id?: string) => void;
+        hideHoverStyles: () => void;
+        isHovered: boolean;
+    };
 }
 
 export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
@@ -49,9 +54,8 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
     filterApi,
     fileUploadApi,
     footerApi,
+    hoverApi,
 }) => {
-    const [isFolderHovered, setIsFolderHovered] = React.useState<boolean>(false);
-
     // handles upload of native file or folder (e.g. file from desktop) to subfolder
     // If the native file is dropped on a folder row in the table, it is uploaded
     // to said folder
@@ -59,18 +63,18 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
         ...fileUploadApi.dropzoneConfig,
         noClick: true,
         noDragEventsBubbling: true,
-        onDragEnter: () => {
-            setIsFolderHovered(true);
-        },
         onDragOver: () => {
+            hoverApi.showHoverStyles(item.id);
             footerApi.show("upload", { folderName: item.name });
         },
         onDragLeave: () => {
-            setIsFolderHovered(false);
+            hoverApi.hideHoverStyles();
+            // setIsHovered(false);
             footerApi.hide();
         },
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            setIsFolderHovered(false);
+            hoverApi.hideHoverStyles();
+            // setIsHovered(false);
             footerApi.hide();
 
             await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, item.id);
@@ -78,7 +82,7 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
     });
 
     return (
-        <DamLabelWrapper isHovered={isFolderHovered} {...(isFolder(item) && getFolderRootProps())}>
+        <DamLabelWrapper isHovered={hoverApi.isHovered} {...(isFolder(item) && getFolderRootProps())}>
             {renderDamLabel ? (
                 renderDamLabel(item, { matches: matches.get(item.id) })
             ) : (

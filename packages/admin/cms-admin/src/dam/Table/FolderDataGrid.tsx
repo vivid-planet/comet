@@ -14,7 +14,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
-import { useThrottledCallback } from "use-debounce";
+import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
 import { GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
@@ -157,7 +157,22 @@ const FolderDataGrid = ({
         },
     });
 
-    const [isHovered, setIsHovered] = React.useState<boolean>(false);
+    const [hoveredId, setHoveredId] = React.useState<string | null>(null);
+
+    const showHoverStyles = useDebouncedCallback(
+        (id = "root") => {
+            setHoveredId(id);
+        },
+        500,
+        { leading: true },
+    );
+
+    const hideHoverStyles = () => {
+        if (showHoverStyles.isPending()) {
+            showHoverStyles.cancel();
+        }
+        setHoveredId(null);
+    };
 
     // handles upload of native file (e.g. file from desktop) to current folder:
     // If the native file is dropped on a file row in the table, it is uploaded
@@ -165,20 +180,18 @@ const FolderDataGrid = ({
     const { getRootProps: getFileRootProps } = useDropzone({
         ...fileUploadApi.dropzoneConfig,
         noClick: true,
-        onDragEnter: () => {
-            setIsHovered(true);
-        },
         onDragOver: () => {
+            showHoverStyles();
             showFooter("upload", {
                 folderName: data?.damFolder.name,
             });
         },
         onDragLeave: () => {
-            setIsHovered(false);
+            hideHoverStyles();
             hideFooter();
         },
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            setIsHovered(false);
+            hideHoverStyles();
             hideFooter();
             await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, data?.damFolder.id);
         },
@@ -187,7 +200,7 @@ const FolderDataGrid = ({
     return (
         <div style={{ padding: "20px" }}>
             <TableHead isSearching={isSearching} numberItems={tableData?.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
-            <sc.FolderOuterHoverHighlight isHovered={isHovered} {...getFileRootProps()}>
+            <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     rowHeight={58}
                     rows={tableData?.data ?? []}
@@ -229,6 +242,11 @@ const FolderDataGrid = ({
                                         footerApi={{
                                             show: showFooter,
                                             hide: hideFooter,
+                                        }}
+                                        hoverApi={{
+                                            showHoverStyles,
+                                            hideHoverStyles,
+                                            isHovered: hoveredId === row.id,
                                         }}
                                     />
                                 );
