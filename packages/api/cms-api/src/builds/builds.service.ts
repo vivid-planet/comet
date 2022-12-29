@@ -12,7 +12,7 @@ import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BUILDER_LABEL, INSTANCE_LABEL, PARENT_CRON_JOB_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
-import { BuildObject } from "./dto/build.object";
+import { Build } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
 
 const JOB_HISTORY_LIMIT = 20;
@@ -86,7 +86,7 @@ export class BuildsService {
         return this.createBuilds(trigger, builderCronJobs);
     }
 
-    async getBuilds(user: CurrentUserInterface, options?: { limit?: number | undefined }): Promise<BuildObject[]> {
+    async getBuilds(user: CurrentUserInterface, options?: { limit?: number | undefined }): Promise<Build[]> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }

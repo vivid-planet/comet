@@ -50,7 +50,7 @@ const buildsQuery = gql`
     }
 `;
 
-export function Publisher(): React.ReactElement {
+export function PublisherPage(): React.ReactElement {
     const intl = useIntl();
 
     const { tableData, api, loading, error } = useTableQuery<GQLBuildsQuery, undefined>()(buildsQuery, {

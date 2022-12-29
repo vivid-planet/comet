@@ -19,7 +19,7 @@ import {
     DamPage,
     LocaleProvider,
     PagesPage,
-    Publisher,
+    PublisherPage,
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
@@ -191,7 +191,7 @@ class App extends React.Component {
 
                                                                                         <RouteWithErrorBoundary
                                                                                             path={`${match.path}/system/publisher`}
-                                                                                            component={Publisher}
+                                                                                            component={PublisherPage}
                                                                                         />
 
                                                                                         <RouteWithErrorBoundary
