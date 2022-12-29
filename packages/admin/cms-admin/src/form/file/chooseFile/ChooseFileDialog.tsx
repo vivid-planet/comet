@@ -90,7 +90,6 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     hideContextMenu={true}
                     disableScopeIndicator={true}
                     hideMultiselect={true}
-                    hideDamActions={true}
                     hideArchiveFilter={true}
                 />
             </MemoryRouter>

@@ -56,6 +56,7 @@ const FolderDataGrid = ({
     selectionApi,
     hideContextMenu,
     hideArchiveFilter,
+    hideMultiselect,
     renderDamLabel,
     TableContainer: ConfigTableContainer,
     ...props
@@ -310,7 +311,7 @@ const FolderDataGrid = ({
                             hide: hideContextMenu,
                         },
                     ]}
-                    checkboxSelection
+                    checkboxSelection={!hideMultiselect}
                     disableSelectionOnClick
                     selectionModel={Array.from(selectionMap.keys())}
                     onSelectionModelChange={(newSelectionModel) => {
