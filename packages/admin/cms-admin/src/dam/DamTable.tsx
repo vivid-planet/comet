@@ -26,14 +26,14 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { TextMatch } from "../common/MarkedMatches";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../graphql.generated";
+import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
+import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
+import { UploadSplitButton } from "./DataGrid/fileUpload/UploadSplitButton";
+import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
+import FolderDataGrid from "./DataGrid/FolderDataGrid";
+import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
+import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
 import EditFile from "./FileForm/EditFile";
-import { ManualDuplicatedFilenamesHandlerContextProvider } from "./Table/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
-import { FileUploadContextProvider } from "./Table/fileUpload/FileUploadContext";
-import { UploadSplitButton } from "./Table/fileUpload/UploadSplitButton";
-import { DamTableFilter } from "./Table/filter/DamTableFilter";
-import FolderDataGrid from "./Table/FolderDataGrid";
-import { damFolderQuery } from "./Table/FolderDataGrid.gql";
-import { RedirectToPersistedDamLocation } from "./Table/RedirectToPersistedDamLocation";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
     && {
