@@ -1,21 +1,11 @@
 import { gql } from "@apollo/client";
-import {
-    LocalErrorScopeApolloContext,
-    MainContent,
-    messages,
-    Stack,
-    Table,
-    TableQuery,
-    Toolbar,
-    ToolbarFillSpace,
-    ToolbarTitleItem,
-    useTableQuery,
-} from "@comet/admin";
+import { LocalErrorScopeApolloContext, MainContent, messages, Stack, Toolbar, ToolbarFillSpace, ToolbarTitleItem, useTableQuery } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLCronJobsQuery } from "../graphql.generated";
@@ -33,6 +23,11 @@ const ScopeIndicatorContent = styled("div")`
     align-items: center;
 `;
 
+const DataGridContainer = styled("div")`
+    width: 100%;
+    height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
+`;
+
 const cronJobsQuery = gql`
     query CronJobs {
         cronJobs {
@@ -47,13 +42,15 @@ const cronJobsQuery = gql`
 export function CronJobsPage(): React.ReactElement {
     const intl = useIntl();
 
-    const { tableData, api, loading, error } = useTableQuery<GQLCronJobsQuery, undefined>()(cronJobsQuery, {
+    const { tableData, loading } = useTableQuery<GQLCronJobsQuery, undefined>()(cronJobsQuery, {
         resolveTableData: (data) => ({
             data: data.cronJobs,
             totalCount: data.cronJobs.length,
         }),
         context: LocalErrorScopeApolloContext,
     });
+
+    const rows = tableData?.data ?? [];
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.cronJobs", defaultMessage: "Cron Jobs" })}>
@@ -71,42 +68,24 @@ export function CronJobsPage(): React.ReactElement {
                 </ToolbarTitleItem>
                 <ToolbarFillSpace />
             </Toolbar>
-
             <MainContent>
-                <TableQuery api={api} loading={loading} error={error}>
-                    {tableData && (
-                        <>
-                            <Table
-                                {...tableData}
-                                columns={[
-                                    {
-                                        name: "name",
-                                        header: intl.formatMessage({ id: "comet.pages.cronJobs.name", defaultMessage: "Name" }),
-                                    },
-                                    {
-                                        name: "schedule",
-                                        header: intl.formatMessage({ id: "comet.pages.cronJobs.schedule", defaultMessage: "Schedule" }),
-                                    },
-                                    {
-                                        name: "lastScheduledAt",
-                                        header: intl.formatMessage({
-                                            id: "comet.pages.cronJobs.lastScheduledAt",
-                                            defaultMessage: "Last Scheduled At",
-                                        }),
-                                        render: (row) =>
-                                            row.lastScheduledAt && (
-                                                <div>
-                                                    <FormattedDate value={row.lastScheduledAt} day="2-digit" month="2-digit" year="numeric" />
-                                                    {", "}
-                                                    <FormattedTime value={row.lastScheduledAt} />
-                                                </div>
-                                            ),
-                                    },
-                                ]}
-                            />
-                        </>
-                    )}
-                </TableQuery>
+                <DataGridContainer>
+                    <DataGrid
+                        rows={rows}
+                        loading={loading}
+                        columns={[
+                            {
+                                field: "name",
+                                headerName: intl.formatMessage({ id: "comet.pages.cronJobs.name", defaultMessage: "Name" }),
+                            },
+                            {
+                                field: "schedule",
+                                headerName: intl.formatMessage({ id: "comet.pages.cronJobs.schedule", defaultMessage: "Schedule" }),
+                            },
+                        ]}
+                        disableColumnSelector
+                    />
+                </DataGridContainer>
             </MainContent>
         </Stack>
     );
