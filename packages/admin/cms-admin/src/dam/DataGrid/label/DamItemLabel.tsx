@@ -4,6 +4,8 @@ import * as React from "react";
 
 import { MarkedMatches, TextMatch } from "../../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
+import { getFilePath } from "../../helpers/getFilePath";
+import { getFolderPath } from "../../helpers/getFolderPath";
 import { isFile } from "../../helpers/isFile";
 import { ArchivedTag } from "../tags/ArchivedTag";
 import { DamThumbnail } from "../thumbnail/DamThumbnail";
@@ -39,25 +41,6 @@ interface DamItemLabelProps {
     showPath?: boolean;
     matches?: TextMatch[];
 }
-
-const getFilePath = (file: GQLDamFileTableFragment) => {
-    const pathArr = [];
-
-    if (file.folder) {
-        const parentFolderNames = file.folder.parents.map((parentFolder) => parentFolder.name);
-
-        pathArr.push(...parentFolderNames);
-        pathArr.push(file.folder.name);
-    }
-
-    return `/${pathArr.join("/")}`;
-};
-
-const getFolderPath = (folder: GQLDamFolderTableFragment) => {
-    const pathArr = folder.parents.map((parentFolder) => parentFolder.name) ?? [];
-
-    return `/${pathArr.join("/")}`;
-};
 
 const DamItemLabel = ({ asset, showPath = false, matches }: DamItemLabelProps): React.ReactElement => {
     return (
