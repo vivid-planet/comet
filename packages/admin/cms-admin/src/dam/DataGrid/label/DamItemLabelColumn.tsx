@@ -4,21 +4,21 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 
-import { TextMatch } from "../../common/MarkedMatches";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
-import { DamFilter } from "../DamTable";
-import { isFile } from "../helpers/isFile";
-import { isFolder } from "../helpers/isFolder";
-import DamLabel from "./DamLabel";
-import { FileUploadApi } from "./fileUpload/useFileUpload";
-import { FooterType } from "./FolderDataGrid";
-import { DamItemMatches } from "./useDamSearchHighlighting";
+import { TextMatch } from "../../../common/MarkedMatches";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
+import { DamFilter } from "../../DamTable";
+import { isFile } from "../../helpers/isFile";
+import { isFolder } from "../../helpers/isFolder";
+import { FileUploadApi } from "../fileUpload/useFileUpload";
+import { FooterType } from "../FolderDataGrid";
+import { DamItemMatches } from "../useDamSearchHighlighting";
+import DamItemLabel from "./DamItemLabel";
 
 interface DamLabelWrapperProps {
     isHovered?: boolean;
 }
 
-const DamLabelWrapper = styled(Box, { shouldForwardProp: (prop) => prop !== "isHovered" })<DamLabelWrapperProps>`
+const DamItemLabelWrapper = styled(Box, { shouldForwardProp: (prop) => prop !== "isHovered" })<DamLabelWrapperProps>`
     width: 100%;
     height: 100%;
 
@@ -29,7 +29,7 @@ const DamLabelWrapper = styled(Box, { shouldForwardProp: (prop) => prop !== "isH
     background-color: ${({ isHovered }) => (isHovered ? "rgba(41, 182, 246, 0.1)" : "transparent")};
 `;
 
-interface NameColumnProps {
+interface DamItemLabelColumnProps {
     item: GQLDamFileTableFragment | GQLDamFolderTableFragment;
     renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: { matches?: TextMatch[] }) => React.ReactNode;
     matches: DamItemMatches;
@@ -47,7 +47,7 @@ interface NameColumnProps {
     };
 }
 
-export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
+export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnProps> = ({
     item,
     renderDamLabel,
     matches,
@@ -83,7 +83,7 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
     });
 
     return (
-        <DamLabelWrapper isHovered={hoverApi.isHovered} {...(isFolder(item) && getFolderRootProps())}>
+        <DamItemLabelWrapper isHovered={hoverApi.isHovered} {...(isFolder(item) && getFolderRootProps())}>
             {renderDamLabel ? (
                 renderDamLabel(item, { matches: matches.get(item.id) })
             ) : (
@@ -102,9 +102,9 @@ export const NameColumn: React.VoidFunctionComponent<NameColumnProps> = ({
                         height: "100%",
                     }}
                 >
-                    <DamLabel asset={item} showPath={isSearching} matches={matches.get(item.id)} />
+                    <DamItemLabel asset={item} showPath={isSearching} matches={matches.get(item.id)} />
                 </Link>
             )}
-        </DamLabelWrapper>
+        </DamItemLabelWrapper>
     );
 };

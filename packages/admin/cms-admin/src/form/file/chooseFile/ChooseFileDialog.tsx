@@ -8,7 +8,7 @@ import { MemoryRouter } from "react-router";
 
 import { TextMatch } from "../../../common/MarkedMatches";
 import { DamTable } from "../../../dam/DamTable";
-import DamLabel from "../../../dam/DataGrid/DamLabel";
+import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import { isFile } from "../../../dam/helpers/isFile";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 
@@ -47,7 +47,7 @@ const renderDamLabel = (
 ) => {
     return isFile(row) ? (
         <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
-            <DamLabel asset={row} matches={matches} />
+            <DamItemLabel asset={row} matches={matches} />
         </TableRowButton>
     ) : (
         <Link
@@ -60,7 +60,7 @@ const renderDamLabel = (
                 height: "100%",
             }}
         >
-            <DamLabel asset={row} matches={matches} />
+            <DamItemLabel asset={row} matches={matches} />
         </Link>
     );
 };

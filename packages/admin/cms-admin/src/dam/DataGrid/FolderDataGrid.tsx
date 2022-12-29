@@ -29,7 +29,7 @@ import { useFileUpload } from "./fileUpload/useFileUpload";
 import { damFolderQuery, damItemsListQuery } from "./FolderDataGrid.gql";
 import * as sc from "./FolderDataGrid.sc";
 import { Footer } from "./footer/Footer";
-import { NameColumn } from "./NameColumn";
+import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
@@ -225,7 +225,7 @@ const FolderDataGrid = ({
                             flex: 1,
                             renderCell: ({ row }) => {
                                 return (
-                                    <NameColumn
+                                    <DamItemLabelColumn
                                         item={row}
                                         renderDamLabel={renderDamLabel}
                                         matches={matches}
