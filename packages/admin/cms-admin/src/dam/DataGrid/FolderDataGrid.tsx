@@ -33,7 +33,7 @@ interface FolderDataGridProps extends DamConfig {
     selectionApi: ISelectionApi;
 }
 
-const FolderDataGrid = ({
+export const FolderDataGrid = ({
     id,
     filterApi,
     breadcrumbs,
@@ -310,5 +310,3 @@ const FolderDataGrid = ({
         </div>
     );
 };
-
-export default FolderDataGrid;

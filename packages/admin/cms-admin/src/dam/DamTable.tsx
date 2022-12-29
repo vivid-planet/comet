@@ -30,7 +30,7 @@ import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/dupl
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import { UploadSplitButton } from "./DataGrid/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
-import FolderDataGrid from "./DataGrid/FolderDataGrid";
+import { FolderDataGrid } from "./DataGrid/FolderDataGrid";
 import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
 import EditFile from "./FileForm/EditFile";
