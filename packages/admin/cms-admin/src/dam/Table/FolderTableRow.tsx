@@ -10,6 +10,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig } from "../DamTable";
+import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { FooterType } from "./DamDnDFooter";
 import { useDamDnD } from "./dnd/useDamDnD";
 import { useFileUpload } from "./fileUpload/useFileUpload";
@@ -116,7 +117,7 @@ export const FolderTableRow: React.FunctionComponent<FolderTableRowProps> = ({
         acceptedMimetypes: allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
-            client.cache.evict({ id: "ROOT_QUERY", fieldName: "damItemsList" });
+            clearDamItemCache(client.cache);
         },
     });
 

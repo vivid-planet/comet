@@ -18,6 +18,7 @@ import {
     namedOperations,
 } from "../../graphql.generated";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
+import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
 import { AudioPreview } from "./previews/AudioPreview";
 import { DefaultFilePreview } from "./previews/DefaultFilePreview";
@@ -133,7 +134,7 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
                             variables: { id: file.id },
                             refetchQueries: [namedOperations.Query.DamItemsList],
                             update: (cache) => {
-                                cache.evict({ id: "ROOT_QUERY", fieldName: "damItemsList" });
+                                clearDamItemCache(cache);
                             },
                         });
 

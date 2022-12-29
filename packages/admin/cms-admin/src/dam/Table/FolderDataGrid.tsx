@@ -21,12 +21,13 @@ import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
+import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import * as sc from "./FolderDataGrid.sc";
 import { damFolderQuery, damItemsListQuery } from "./FolderTable.gql";
 import { isFile, isFolder } from "./FolderTableRow";
-import { Footer } from "./Footer";
+import { Footer } from "./footer/Footer";
 import { NameColumn } from "./NameColumn";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
@@ -36,10 +37,9 @@ interface FooterInfo {
     type: FooterType;
 
     folderName?: string;
-    numSelectedItems?: number;
 }
 
-type SelectionMap = Map<string, "file" | "folder">;
+export type DamItemSelectionMap = Map<string, "file" | "folder">;
 
 interface FolderDataGridProps extends DamConfig {
     id?: string;
@@ -62,19 +62,15 @@ const FolderDataGrid = ({
     const intl = useIntl();
     const apolloClient = useApolloClient();
 
-    const [selectionMap, setSelectionMap] = React.useState<SelectionMap>(new Map());
+    const [selectionMap, setSelectionMap] = React.useState<DamItemSelectionMap>(new Map());
     const [footerInfo, setFooterInfo] = React.useState<FooterInfo | null>(null);
 
-    const showFooter = useThrottledCallback(
-        (type: FooterType, { folderName, numSelectedItems }: { folderName?: string; numSelectedItems?: number }) => {
-            setFooterInfo({
-                type,
-                folderName,
-                numSelectedItems,
-            });
-        },
-        500,
-    );
+    const showFooter = useThrottledCallback((type: FooterType, specificInfo?: { folderName?: string }) => {
+        setFooterInfo({
+            type,
+            folderName: specificInfo?.folderName,
+        });
+    }, 500);
 
     const hideFooter = React.useCallback(() => {
         if (showFooter.isPending()) {
@@ -82,9 +78,7 @@ const FolderDataGrid = ({
         }
 
         if (footerInfo?.type === "upload" && selectionMap.size > 0) {
-            showFooter("selection", {
-                numSelectedItems: selectionMap.size,
-            });
+            showFooter("selection");
             return;
         }
 
@@ -93,9 +87,7 @@ const FolderDataGrid = ({
 
     React.useEffect(() => {
         if (selectionMap.size > 0) {
-            showFooter("selection", {
-                numSelectedItems: selectionMap.size,
-            });
+            showFooter("selection");
         } else {
             hideFooter();
         }
@@ -153,7 +145,7 @@ const FolderDataGrid = ({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             apolloClient.reFetchObservableQueries();
-            apolloClient.cache.evict({ id: "ROOT_QUERY", fieldName: "damItemsList" });
+            clearDamItemCache(apolloClient.cache);
         },
     });
 
@@ -321,7 +313,7 @@ const FolderDataGrid = ({
                     disableSelectionOnClick
                     selectionModel={Array.from(selectionMap.keys())}
                     onSelectionModelChange={(newSelectionModel) => {
-                        const newMap: SelectionMap = new Map();
+                        const newMap: DamItemSelectionMap = new Map();
 
                         newSelectionModel.forEach((selectedId) => {
                             const typedId = selectedId as string;
@@ -351,12 +343,7 @@ const FolderDataGrid = ({
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
-            <Footer
-                open={!!footerInfo?.type}
-                type={footerInfo?.type}
-                folderName={footerInfo?.folderName}
-                numSelectedItems={footerInfo?.numSelectedItems}
-            />
+            <Footer open={!!footerInfo?.type} type={footerInfo?.type} folderName={footerInfo?.folderName} selectedItemsMap={selectionMap} />
             <EditDialog
                 title={{
                     edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,

@@ -34,6 +34,7 @@ import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
+import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { DamActions } from "./damActions/DamActions";
 import DamContextMenu from "./DamContextMenu";
 import { DamDnDFooter, FooterType } from "./DamDnDFooter";
@@ -85,7 +86,7 @@ const FolderTable = ({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
-            client.cache.evict({ id: "ROOT_QUERY", fieldName: "damItemsList" });
+            clearDamItemCache(client.cache);
         },
     });
 
