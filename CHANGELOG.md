@@ -57,6 +57,7 @@ All notable changes to this project will be documented in this file. This projec
 -   Breaking: AuthModule removes support for Bearer-Token
 -   Breaking: Remove export for BuildObject (should not be needed in application land)
 -   Breaking: changed DamModule damConfig.allowedImageSizes/allowedAspectRatios to number[]/string[] (was string previously)
+-   Breaking: Make @kubernetes/client-node a peer dependency
 
 #### Changes
 

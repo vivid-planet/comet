@@ -28,6 +28,7 @@
         "@comet/blocks-api": "^3.0.0",
         "@comet/cms-api": "^3.0.0",
         "@hapi/accept": "^5.0.0",
+        "@kubernetes/client-node": "^0.18.0",
         "@mikro-orm/cli": "^5.0.4",
         "@mikro-orm/core": "^5.0.4",
         "@mikro-orm/migrations": "^5.0.4",

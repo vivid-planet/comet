@@ -37,6 +37,7 @@
     "peerDependencies": {
         "@aws-sdk/client-s3": "^3.47.0",
         "@azure/storage-blob": "^12.0.0",
+        "@kubernetes/client-node": ">=0.18.0",
         "@mikro-orm/cli": "^5.0.4",
         "@mikro-orm/core": "^5.0.4",
         "@mikro-orm/migrations": "^5.0.4",
@@ -56,7 +57,6 @@
     "dependencies": {
         "@comet/blocks-api": "^3.2.2",
         "@hapi/accept": "^5.0.2",
-        "@kubernetes/client-node": "^0.16.0",
         "@nestjs/jwt": "^9.0.0",
         "@nestjs/passport": "^9.0.0",
         "@nestjs/platform-express": "^9.0.0",
