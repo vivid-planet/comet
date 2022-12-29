@@ -1,10 +1,9 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { DocumentInterface, RootBlockType } from "@comet/cms-api";
+import { DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Entity, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
-import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 as uuid } from "uuid";
 
 @Entity()
@@ -23,7 +22,7 @@ export class MainMenuItem extends BaseEntity<MainMenuItem, "id"> implements Docu
 
     @Property({ customType: new RootBlockType(RichTextBlock), nullable: true })
     @RootBlock(RichTextBlock)
-    @Field(() => GraphQLJSONObject, { nullable: true })
+    @Field(() => RootBlockDataScalar(RichTextBlock), { nullable: true })
     content: BlockDataInterface | null;
 
     @Property({

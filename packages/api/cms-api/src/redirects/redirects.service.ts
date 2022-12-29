@@ -2,8 +2,10 @@ import { EntityRepository, FilterQuery } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
+import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { PageTreeNodeInterface } from "../page-tree/types";
+import { RedirectFilter } from "./dto/redirects.filter";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
 import { REDIRECTS_LINK_BLOCK, RedirectsLinkBlock } from "./redirects.module";
@@ -49,6 +51,20 @@ export class RedirectsService {
         } else {
             return filterConditions;
         }
+    }
+
+    getFindConditionPaginatedRedirects(options: { search?: string; filter?: RedirectFilter }): FilterQuery<RedirectInterface> {
+        const andFilters = [];
+
+        if (options.search) {
+            andFilters.push(searchToMikroOrmQuery(options.search, ["source"]));
+        }
+
+        if (options.filter) {
+            andFilters.push(filtersToMikroOrmQuery(options.filter));
+        }
+
+        return andFilters.length > 0 ? { $and: andFilters } : {};
     }
 
     async createAutomaticRedirects(node: PageTreeNodeInterface): Promise<void> {

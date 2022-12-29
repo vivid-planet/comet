@@ -1,9 +1,8 @@
 import { BlockDataInterface } from "@comet/blocks-api";
-import { DocumentInterface, RootBlockType } from "@comet/cms-api";
+import { DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { LinkBlock } from "@src/common/blocks/linkBlock/link.block";
-import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 as uuid } from "uuid";
 
 @Entity()
@@ -18,7 +17,7 @@ export class Link extends BaseEntity<Link, "id"> implements DocumentInterface {
     id: string = uuid();
 
     @Property({ customType: new RootBlockType(LinkBlock) })
-    @Field(() => GraphQLJSONObject)
+    @Field(() => RootBlockDataScalar(LinkBlock))
     content: BlockDataInterface;
 
     @Property({

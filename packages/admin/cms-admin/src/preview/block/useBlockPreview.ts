@@ -1,7 +1,7 @@
 import { useStoredState } from "@comet/admin";
 import * as React from "react";
 
-import { Device } from "./types";
+import { Device } from "../common/Device";
 
 interface BlockPreviewApi {
     device: Device;

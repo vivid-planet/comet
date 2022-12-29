@@ -11,6 +11,9 @@ export interface IFrameBridgeContext {
     hoveredAdminRoute?: string;
     sendSelectComponent: (id: string) => void;
     sendHoverComponent: (route: string | null) => void;
+    /**
+     * @deprecated Use sendSitePreviewIFrameMessage instead
+     */
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
 }
@@ -24,8 +27,7 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     sendHoverComponent: () => {
         // empty
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sendMessage: (message: IFrameMessage) => {
+    sendMessage: () => {
         //empty
     },
 });

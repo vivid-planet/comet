@@ -71,6 +71,11 @@
                 "nullable": true
             },
             {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
                 "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
@@ -143,6 +148,11 @@
             },
             {
                 "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
                 "kind": "Boolean",
                 "nullable": true
             },

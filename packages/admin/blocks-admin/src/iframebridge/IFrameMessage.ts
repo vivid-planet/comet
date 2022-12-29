@@ -7,7 +7,13 @@ export enum IFrameMessageType {
     Ready = "Ready",
     SelectComponent = "SelectComponent",
     HoverComponent = "HoverComponent",
+    /**
+     * @deprecated Use SitePreviewIFrameMessageType.OpenLink instead
+     */
     OpenLink = "OpenLink",
+    /**
+     * @deprecated Use SitePreviewIFrameMessageType.SitePreviewLocation instead
+     */
     SitePreviewLocation = "SitePreviewLocation",
 }
 
@@ -22,6 +28,9 @@ export interface IFrameSelectComponentMessage {
     };
 }
 
+/**
+ * @deprecated Use SitePreviewIFrameOpenLinkMessage instead
+ */
 export interface IFrameOpenLinkMessage {
     cometType: IFrameMessageType.OpenLink;
     data: {
@@ -29,6 +38,9 @@ export interface IFrameOpenLinkMessage {
     };
 }
 
+/**
+ * @deprecated Use SitePreviewIFrameLocationMessage instead
+ */
 export interface IFrameLocationMessage {
     cometType: IFrameMessageType.SitePreviewLocation;
     data: Pick<Location, "search" | "pathname">;

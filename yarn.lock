@@ -4494,7 +4494,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@comet/admin-babel-preset@^3.0.0, @comet/admin-babel-preset@^3.1.0, @comet/admin-babel-preset@workspace:packages/admin/admin-babel-preset":
+"@comet/admin-babel-preset@^3.0.0, @comet/admin-babel-preset@^3.2.1, @comet/admin-babel-preset@workspace:packages/admin/admin-babel-preset":
   version: 0.0.0-use.local
   resolution: "@comet/admin-babel-preset@workspace:packages/admin/admin-babel-preset"
   dependencies:
@@ -4515,10 +4515,10 @@ __metadata:
   resolution: "@comet/admin-color-picker@workspace:packages/admin/admin-color-picker"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin": ^3.1.0
-    "@comet/admin-babel-preset": ^3.1.0
-    "@comet/admin-icons": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/admin": ^3.2.1
+    "@comet/admin-babel-preset": ^3.2.1
+    "@comet/admin-icons": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@types/tinycolor2": ^1.4.2
     clsx: ^1.1.1
     eslint: ^8.0.0
@@ -4545,10 +4545,10 @@ __metadata:
   resolution: "@comet/admin-date-time@workspace:packages/admin/admin-date-time"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin": ^3.1.0
-    "@comet/admin-babel-preset": ^3.1.0
-    "@comet/admin-icons": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/admin": ^3.2.1
+    "@comet/admin-babel-preset": ^3.2.1
+    "@comet/admin-icons": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@mui/utils": ^5.4.1
     "@types/react": ^17.0
     "@types/react-date-range": ^1.4.3
@@ -4570,13 +4570,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/admin-icons@^3.0.0, @comet/admin-icons@^3.1.0, @comet/admin-icons@workspace:packages/admin/admin-icons":
+"@comet/admin-icons@^3.0.0, @comet/admin-icons@^3.2.1, @comet/admin-icons@workspace:packages/admin/admin-icons":
   version: 0.0.0-use.local
   resolution: "@comet/admin-icons@workspace:packages/admin/admin-icons"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin-babel-preset": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/admin-babel-preset": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@types/cli-progress": ^3.8.0
     cli-progress: ^3.8.2
     eslint: ^8.0.0
@@ -4594,14 +4594,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/admin-react-select@^3.0.0, @comet/admin-react-select@^3.1.0, @comet/admin-react-select@workspace:packages/admin/admin-react-select":
+"@comet/admin-react-select@^3.0.0, @comet/admin-react-select@^3.2.1, @comet/admin-react-select@workspace:packages/admin/admin-react-select":
   version: 0.0.0-use.local
   resolution: "@comet/admin-react-select@workspace:packages/admin/admin-react-select"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin": ^3.1.0
-    "@comet/admin-babel-preset": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/admin": ^3.2.1
+    "@comet/admin-babel-preset": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@types/react-select": ^3.1.2
     classnames: ^2.2.6
     eslint: ^8.0.0
@@ -4621,13 +4621,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/admin-rte@^3.0.0, @comet/admin-rte@^3.1.0, @comet/admin-rte@workspace:packages/admin/admin-rte":
+"@comet/admin-rte@^3.0.0, @comet/admin-rte@^3.2.1, @comet/admin-rte@workspace:packages/admin/admin-rte":
   version: 0.0.0-use.local
   resolution: "@comet/admin-rte@workspace:packages/admin/admin-rte"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin-babel-preset": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/admin-babel-preset": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@types/draft-js": ^0.10.38
     "@types/immutable": ^3.8.7
     detect-browser: ^5.2.1
@@ -4651,14 +4651,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/admin-theme@^3.0.0, @comet/admin-theme@^3.1.0, @comet/admin-theme@workspace:packages/admin/admin-theme":
+"@comet/admin-theme@^3.0.0, @comet/admin-theme@^3.2.1, @comet/admin-theme@workspace:packages/admin/admin-theme":
   version: 0.0.0-use.local
   resolution: "@comet/admin-theme@workspace:packages/admin/admin-theme"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin-babel-preset": ^3.1.0
-    "@comet/admin-icons": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/admin-babel-preset": ^3.2.1
+    "@comet/admin-icons": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@mui/utils": ^5.4.1
     eslint: ^8.0.0
     prettier: ^2.0.0
@@ -4673,14 +4673,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/admin@^3.0.0, @comet/admin@^3.1.0, @comet/admin@workspace:packages/admin/admin":
+"@comet/admin@^3.0.0, @comet/admin@^3.2.1, @comet/admin@workspace:packages/admin/admin":
   version: 0.0.0-use.local
   resolution: "@comet/admin@workspace:packages/admin/admin"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin-babel-preset": ^3.1.0
-    "@comet/admin-icons": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/admin-babel-preset": ^3.2.1
+    "@comet/admin-icons": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@formatjs/ecma402-abstract": ^1.0.0
     "@mui/private-theming": ^5.0.0
     "@types/debounce": ^1.2.0
@@ -4730,16 +4730,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/blocks-admin@^3.0.0, @comet/blocks-admin@^3.1.0, @comet/blocks-admin@workspace:packages/admin/blocks-admin":
+"@comet/blocks-admin@^3.0.0, @comet/blocks-admin@^3.2.1, @comet/blocks-admin@workspace:packages/admin/blocks-admin":
   version: 0.0.0-use.local
   resolution: "@comet/blocks-admin@workspace:packages/admin/blocks-admin"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin": ^3.1.0
-    "@comet/admin-babel-preset": ^3.1.0
-    "@comet/admin-icons": ^3.1.0
-    "@comet/cli": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/admin": ^3.2.1
+    "@comet/admin-babel-preset": ^3.2.1
+    "@comet/admin-icons": ^3.2.1
+    "@comet/cli": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@types/jest": ^27.0.0
     "@types/lodash.isequal": ^4.0.0
     "@types/react-router": ^5.0.0
@@ -4776,11 +4776,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/blocks-api@^3.0.0, @comet/blocks-api@^3.1.0, @comet/blocks-api@workspace:packages/api/blocks-api":
+"@comet/blocks-api@^3.0.0, @comet/blocks-api@^3.2.1, @comet/blocks-api@workspace:packages/api/blocks-api":
   version: 0.0.0-use.local
   resolution: "@comet/blocks-api@workspace:packages/api/blocks-api"
   dependencies:
-    "@comet/eslint-config": ^3.1.0
+    "@comet/eslint-config": ^3.2.1
     "@types/draft-js": ^0.10.0
     "@types/jest": ^27.0.0
     "@types/node": ^14.0.0
@@ -4802,11 +4802,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/cli@^3.1.0, @comet/cli@workspace:packages/cli":
+"@comet/cli@^3.2.1, @comet/cli@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@comet/cli@workspace:packages/cli"
   dependencies:
-    "@comet/eslint-config": ^3.1.0
+    "@comet/eslint-config": ^3.2.1
     "@types/node": ^14.0.0
     commander: ^9.2.0
     eslint: ^8.0.0
@@ -4824,15 +4824,15 @@ __metadata:
   resolution: "@comet/cms-admin@workspace:packages/admin/cms-admin"
   dependencies:
     "@babel/cli": ^7.17.6
-    "@comet/admin": ^3.1.0
-    "@comet/admin-babel-preset": ^3.1.0
-    "@comet/admin-icons": ^3.1.0
-    "@comet/admin-react-select": ^3.1.0
-    "@comet/admin-rte": ^3.1.0
-    "@comet/admin-theme": ^3.1.0
-    "@comet/blocks-admin": ^3.1.0
-    "@comet/cli": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/admin": ^3.2.1
+    "@comet/admin-babel-preset": ^3.2.1
+    "@comet/admin-icons": ^3.2.1
+    "@comet/admin-react-select": ^3.2.1
+    "@comet/admin-rte": ^3.2.1
+    "@comet/admin-theme": ^3.2.1
+    "@comet/blocks-admin": ^3.2.1
+    "@comet/cli": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@graphql-codegen/cli": ^2.0.0
     "@graphql-codegen/named-operations-object": ^2.0.0
     "@graphql-codegen/typescript": ^2.0.0
@@ -4919,8 +4919,8 @@ __metadata:
   resolution: "@comet/cms-api@workspace:packages/api/cms-api"
   dependencies:
     "@aws-sdk/types": ^3.47.0
-    "@comet/blocks-api": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/blocks-api": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@hapi/accept": ^5.0.2
     "@kubernetes/client-node": ^0.16.0
     "@mikro-orm/sqlite": ^5.0.0
@@ -4983,7 +4983,6 @@ __metadata:
     "@mikro-orm/migrations": ^5.0.4
     "@mikro-orm/nestjs": ^5.1.0
     "@mikro-orm/postgresql": ^5.0.4
-    "@nestjs/apollo": ^10.0.0
     "@nestjs/common": ^9.0.0
     "@nestjs/core": ^9.0.0
     "@nestjs/graphql": ^10.0.0
@@ -5003,8 +5002,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@comet/cms-site@workspace:packages/site/cms-site"
   dependencies:
-    "@comet/cli": ^3.1.0
-    "@comet/eslint-config": ^3.1.0
+    "@comet/cli": ^3.2.1
+    "@comet/eslint-config": ^3.2.1
     "@gitbeaker/node": ^34.0.0
     "@types/jest": ^27.0.0
     "@types/jsonwebtoken": ^8.5.9
@@ -5031,7 +5030,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@comet/eslint-config@^3.0.0, @comet/eslint-config@^3.1.0, @comet/eslint-config@workspace:packages/eslint-config":
+"@comet/dev-process-manager@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@comet/dev-process-manager@npm:2.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40comet%2Fdev-process-manager%2F-%2Fdev-process-manager-2.0.0.tgz"
+  dependencies:
+    cli-table3: ^0.6.1
+    colors: ^1.4.0
+    commander: ^9.0.0
+    log-update: ^4.0.0
+    pidusage: ^3.0.2
+    pretty-bytes: ^5.6.0
+    ts-node: ^10.4.0
+    wait-on: ^6.0.1
+  bin:
+    dev-pm: lib/index.js
+  checksum: 948f315f206b0261462c9b238134826fd1f004e43fd290008cc4ea195d4461b583913888a8496e058ece19ee70480fd8e967fd9cc1dbc75234e2fdd6ea5b21c8
+  languageName: node
+  linkType: hard
+
+"@comet/eslint-config@^3.0.0, @comet/eslint-config@^3.2.1, @comet/eslint-config@workspace:packages/eslint-config":
   version: 0.0.0-use.local
   resolution: "@comet/eslint-config@workspace:packages/eslint-config"
   dependencies:
@@ -5790,6 +5807,18 @@ __metadata:
   version: 1.2.10
   resolution: "@googlemaps/markerclustererplus@npm:1.2.10"
   checksum: 14e882db8cffbae057abc58a4db0467172e74b96b09cf564b295911f8406c336780b2628311d58d736e59e11fe9a17d8a5ce5660a445bf8d76015bf18cdfc732
+  languageName: node
+  linkType: hard
+
+"@graphql-codegen/add@npm:^3.0.0":
+  version: 3.2.1
+  resolution: "@graphql-codegen/add@npm:3.2.1"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": ^2.6.2
+    tslib: ~2.4.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 4f9c645a3cf4b6e64c8ea5cbaba95075df2f485e3fea5b2c369bcf898272d0a6665b3eb0b541dc57d3d8400b23610848c8348a469e472db1a1c558d61580dca0
   languageName: node
   linkType: hard
 
@@ -14350,6 +14379,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "axios@npm:0.25.0"
+  dependencies:
+    follow-redirects: ^1.14.7
+  checksum: 2a8a3787c05f2a0c9c3878f49782357e2a9f38945b93018fb0c4fd788171c43dceefbb577988628e09fea53952744d1ecebde234b561f1e703aa43e0a598a3ad
+  languageName: node
+  linkType: hard
+
 "axobject-query@npm:^2.2.0":
   version: 2.2.0
   resolution: "axobject-query@npm:2.2.0"
@@ -16350,6 +16388,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"colors@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "colors@npm:1.4.0"
+  checksum: 98aa2c2418ad87dedf25d781be69dc5fc5908e279d9d30c34d8b702e586a0474605b3a189511482b9d5ed0d20c867515d22749537f7bc546256c6014f3ebdcec
+  languageName: node
+  linkType: hard
+
 "colors@npm:~1.2.1":
   version: 1.2.5
   resolution: "colors@npm:1.2.5"
@@ -16466,6 +16511,7 @@ __metadata:
     "@fontsource/roboto": ^4.5.5
     "@formatjs/cli": ^2.0.0
     "@gitbeaker/node": ^25.0.0
+    "@graphql-codegen/add": ^3.0.0
     "@graphql-codegen/cli": ^2.0.0
     "@graphql-codegen/fragment-matcher": ^2.0.0
     "@graphql-codegen/introspection": ^2.0.0
@@ -16656,6 +16702,7 @@ __metadata:
     "@comet/eslint-config": ^3.0.0
     "@googlemaps/js-api-loader": ^1.0.0
     "@googlemaps/markerclustererplus": ^1.0.0
+    "@graphql-codegen/add": ^3.0.0
     "@graphql-codegen/cli": ^2.0.0
     "@graphql-codegen/named-operations-object": ^2.0.0
     "@graphql-codegen/typescript": ^2.0.0
@@ -16743,6 +16790,13 @@ __metadata:
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
   checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
+  languageName: node
+  linkType: hard
+
+"commander@npm:^9.0.0":
+  version: 9.4.1
+  resolution: "commander@npm:9.4.1"
+  checksum: bfb18e325a5bdf772763c2213d5c7d9e77144d944124e988bcd8e5e65fb6d45d5d4e86b09155d0f2556c9a59c31e428720e57968bcd050b2306e910a0bf3cf13
   languageName: node
   linkType: hard
 
@@ -20606,6 +20660,16 @@ __metadata:
     debug:
       optional: true
   checksum: 6aa4e3e3cdfa3b9314801a1cd192ba756a53479d9d8cca65bf4db3a3e8834e62139245cd2f9566147c8dfe2efff1700d3e6aefd103de4004a7b99985e71dd533
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.14.7":
+  version: 1.15.2
+  resolution: "follow-redirects@npm:1.15.2"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: faa66059b66358ba65c234c2f2a37fcec029dc22775f35d9ad6abac56003268baf41e55f9ee645957b32c7d9f62baf1f0b906e68267276f54ec4b4c597c2b190
   languageName: node
   linkType: hard
 
@@ -24751,6 +24815,19 @@ __metadata:
     "@sideway/formula": ^3.0.0
     "@sideway/pinpoint": ^2.0.0
   checksum: eaf62f6c02f2edb1042f1ab04fc23a5918a2cb8f54bec84c6e1033624d8a462c10ae9518af55a3ba84f1793960450d58094eda308e7ef93c17edd4e3c8ef31d5
+  languageName: node
+  linkType: hard
+
+"joi@npm:^17.6.0":
+  version: 17.7.0
+  resolution: "joi@npm:17.7.0"
+  dependencies:
+    "@hapi/hoek": ^9.0.0
+    "@hapi/topo": ^5.0.0
+    "@sideway/address": ^4.1.3
+    "@sideway/formula": ^3.0.0
+    "@sideway/pinpoint": ^2.0.0
+  checksum: 767a847936cb66787256c4351ff86e1b9e8d7383cbe81a5c827064032c2a8e8b6e938baef5ad32c4035fe4c56e537bd90aa2a952be8a0658601c920cdeb4fb3c
   languageName: node
   linkType: hard
 
@@ -29373,6 +29450,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pidusage@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "pidusage@npm:3.0.2"
+  dependencies:
+    safe-buffer: ^5.2.1
+  checksum: 4939ce5a5efa1238986ea631ad22588104779c8a48e5c8949e0e38662cbaf80cef6d57c699c15f87b7ae129091401a3f140f82d1d3ff7809a9217620f1d6e5da
+  languageName: node
+  linkType: hard
+
 "pidusage@npm:~3.0":
   version: 3.0.0
   resolution: "pidusage@npm:3.0.0"
@@ -29885,6 +29971,13 @@ __metadata:
   bin:
     prettier: bin-prettier.js
   checksum: 55a4409182260866ab31284d929b3cb961e5fdb91fe0d2e099dac92eaecec890f36e524b4c19e6ceae839c99c6d7195817579cdffc8e2c80da0cb794463a748b
+  languageName: node
+  linkType: hard
+
+"pretty-bytes@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "pretty-bytes@npm:5.6.0"
+  checksum: 9c082500d1e93434b5b291bd651662936b8bd6204ec9fa17d563116a192d6d86b98f6d328526b4e8d783c07d5499e2614a807520249692da9ec81564b2f439cd
   languageName: node
   linkType: hard
 
@@ -31902,6 +31995,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-s3": ^3.47.0
     "@azure/storage-blob": ^12.0.0
+    "@comet/dev-process-manager": ^2.0.0
     "@formatjs/cli": ^4.8.3
     "@mikro-orm/cli": ^5.2.1
     "@mikro-orm/core": ^5.2.1
@@ -32003,6 +32097,15 @@ __metadata:
   dependencies:
     tslib: ^2.1.0
   checksum: e034f60805210cce756dd2f49664a8108780b117cf5d0e2281506e9e6387f7b4f1532d974a8c8b09314fa7a16dd2f6cff3462072a5789672b5dcb45c4173f3c6
+  languageName: node
+  linkType: hard
+
+"rxjs@npm:^7.5.4":
+  version: 7.6.0
+  resolution: "rxjs@npm:7.6.0"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: b3abbbfe1ddfd06fca9314b83cbd13bcddc3320429218136f75c79a4802ac430dd13873364aac1ded54fd457f8c77df332d205a92d8a1c61656565bb718c50af
   languageName: node
   linkType: hard
 
@@ -34634,7 +34737,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.8.1":
+"ts-node@npm:^10.4.0, ts-node@npm:^10.8.1":
   version: 10.9.1
   resolution: "ts-node@npm:10.9.1"
   dependencies:
@@ -35808,6 +35911,21 @@ __metadata:
   bin:
     wait-on: bin/wait-on
   checksum: b7099104b7900ff6349f1196edff759076ab557a2053c017a587819f7a59f146ec9e35c99579acd31dcda371bfa72241ef28b8ccda902f0bf3fbf2d780a00ebf
+  languageName: node
+  linkType: hard
+
+"wait-on@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "wait-on@npm:6.0.1"
+  dependencies:
+    axios: ^0.25.0
+    joi: ^17.6.0
+    lodash: ^4.17.21
+    minimist: ^1.2.5
+    rxjs: ^7.5.4
+  bin:
+    wait-on: bin/wait-on
+  checksum: e4d62aa4145d99fe34747ccf7506d4b4d6e60dd677c0eb18a51e316d38116ace2d194e4b22a9eb7b767b0282f39878ddcc4ae9440dcb0c005c9150668747cf5b
   languageName: node
   linkType: hard
 

@@ -4,7 +4,7 @@ import { IconButton } from "@mui/material";
 import React from "react";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { openPreviewWindow } from "../../preview/openPreviewWindow";
+import { openSitePreviewWindow } from "../../preview/openSitePreviewWindow";
 import PageContextMenu from "./PageContextMenu";
 import { PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
@@ -42,7 +42,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     </StackSwitchApiContext.Consumer>
                     <IconButton
                         onClick={() => {
-                            openPreviewWindow(page.path, contentScopeMatch.url);
+                            openSitePreviewWindow(page.path, contentScopeMatch.url);
                         }}
                         size="large"
                     >

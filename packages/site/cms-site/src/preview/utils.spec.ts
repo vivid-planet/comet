@@ -1,15 +1,14 @@
 import { UrlObject } from "url";
 
-import { previewStateUrlParamName } from "./constants";
-import { createPathToPreviewPath, defaultPreviewPath, parsePreviewState } from "./utils";
+import { createPathToPreviewPath, defaultPreviewPath, parsePreviewParams } from "./utils";
 
 describe("Preview utils", () => {
-    const previewState = parsePreviewState({ [previewStateUrlParamName]: JSON.stringify({ includeInvisibleBlocks: false }) });
+    const previewParams = parsePreviewParams({ __preview: JSON.stringify({ includeInvisibleBlocks: false }) });
     const previewPath = defaultPreviewPath;
 
     it("Should parse preview state", () => {
         const state = { includeInvisibleBlocks: true };
-        const parsedPreviewState = parsePreviewState({ [previewStateUrlParamName]: JSON.stringify(state) });
+        const parsedPreviewState = parsePreviewParams({ __preview: JSON.stringify(state) });
 
         expect(parsedPreviewState).toEqual(state);
     });
@@ -17,7 +16,7 @@ describe("Preview utils", () => {
     it("Should create preview path for string path", () => {
         const path = "/main";
 
-        const result = createPathToPreviewPath({ path, previewPath, previewState, baseUrl: "https://admin.com" });
+        const result = createPathToPreviewPath({ path, previewPath, previewParams });
 
         expect(result).toEqual(`${previewPath}${path}?__preview=%7B%22includeInvisibleBlocks%22%3Afalse%7D`);
     });
@@ -25,7 +24,7 @@ describe("Preview utils", () => {
     it("Should create preview path for string path with query params", () => {
         const path = "/main?query=foo";
 
-        const result = createPathToPreviewPath({ path, previewPath, previewState, baseUrl: "https://admin.com" });
+        const result = createPathToPreviewPath({ path, previewPath, previewParams });
 
         expect(result).toEqual(`${previewPath}${path}&__preview=%7B%22includeInvisibleBlocks%22%3Afalse%7D`);
     });
@@ -40,14 +39,14 @@ describe("Preview utils", () => {
             query,
         };
 
-        const result = createPathToPreviewPath({ path, previewPath, previewState, baseUrl: "https://admin.com" });
+        const result = createPathToPreviewPath({ path, previewPath, previewParams });
 
         expect(result).toEqual({
             ...path,
             pathname: `${previewPath}${pathname}`,
             query: {
                 ...query,
-                [previewStateUrlParamName]: JSON.stringify(previewState),
+                __preview: JSON.stringify(previewParams),
             },
         });
     });

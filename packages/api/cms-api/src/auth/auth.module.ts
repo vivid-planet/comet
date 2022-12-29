@@ -20,7 +20,9 @@ export interface AuthModuleConfig {
     idpUrl?: string;
     postLogoutRedirectUri?: string;
     staticAuthedUser?: CurrentUserInterface;
-    apiPassword: string;
+    apiPassword?: string;
+    formatSignOutUrl?: (url: string) => string;
+    currentUserLoader?: CurrentUserLoaderInterface;
 }
 
 export interface AuthModuleOptions extends Pick<ModuleMetadata, "imports"> {
@@ -28,13 +30,12 @@ export interface AuthModuleOptions extends Pick<ModuleMetadata, "imports"> {
     useFactory: (...args: any[]) => Promise<AuthModuleConfig> | AuthModuleConfig;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
-    currentUserLoader?: CurrentUserLoaderInterface;
     currentUser: Type<CurrentUserInterface>;
 }
 
 @Module({})
 export class AuthModule {
-    static register(options: AuthModuleOptions): DynamicModule {
+    static registerAsync(options: AuthModuleOptions): DynamicModule {
         return {
             module: AuthModule,
             imports: options.imports ?? [],
@@ -49,10 +50,11 @@ export class AuthModule {
                         if (config.staticAuthedUser) {
                             return {
                                 staticAuthedUserJwt: jwt.sign(config.staticAuthedUser, "static"),
-                                currentUserLoader: options.currentUserLoader ?? new CurrentUserStaticLoader(),
+                                currentUserLoader: config.currentUserLoader ?? new CurrentUserStaticLoader(),
                             };
                         } else {
                             if (!config.idpUrl) throw new Error("idpUrl must be set");
+                            if (!config.apiPassword) throw new Error("apiPassword must be set");
                             const uri = `${config.idpUrl}/.well-known/openid-configuration`;
                             const result = await fetch(uri);
                             const metadata = await result.json();
@@ -62,7 +64,7 @@ export class AuthModule {
                             return {
                                 endSessionEndpoint: metadata.end_session_endpoint,
                                 jwksUri: metadata.jwks_uri,
-                                currentUserLoader: options.currentUserLoader ?? new CurrentUserJwtLoader(),
+                                currentUserLoader: config.currentUserLoader ?? new CurrentUserJwtLoader(),
                             };
                         }
                     },

@@ -131,7 +131,7 @@ type PaginatedDamFolders {
 type Link implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-  content: JSONObject!
+  content: LinkBlockData!
   createdAt: DateTime!
 }
 
@@ -140,14 +140,23 @@ interface DocumentInterface {
   updatedAt: DateTime!
 }
 
+"""Link root block data"""
+scalar LinkBlockData
+
 type Page implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-  content: JSONObject!
-  seo: JSONObject!
+  content: PageContentBlockData!
+  seo: SeoBlockData!
   createdAt: DateTime!
   pageTreeNode: PageTreeNode
 }
+
+"""PageContent root block data"""
+scalar PageContentBlockData
+
+"""Seo root block data"""
+scalar SeoBlockData
 
 type PageTreeNodeScope {
   domain: String!
@@ -220,18 +229,24 @@ type FooterContentScope {
 type Footer implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-  content: JSONObject!
+  content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
 }
 
+"""FooterContent root block data"""
+scalar FooterContentBlockData
+
 type MainMenuItem {
   id: ID!
   node: PageTreeNode!
-  content: JSONObject
+  content: RichTextBlockData
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
+"""RichText root block data"""
+scalar RichTextBlockData
 
 type MainMenu {
   items: [MainMenuItem!]!
@@ -258,8 +273,8 @@ type News implements DocumentInterface {
   date: DateTime!
   category: NewsCategory!
   visible: Boolean!
-  image: JSONObject!
-  content: JSONObject!
+  image: DamImageBlockData!
+  content: NewsContentBlockData!
   createdAt: DateTime!
   comments: [NewsComment!]!
 }
@@ -269,6 +284,12 @@ enum NewsCategory {
   Company
   Awards
 }
+
+"""DamImage root block data"""
+scalar DamImageBlockData
+
+"""NewsContent root block data"""
+scalar NewsContentBlockData
 
 type PaginatedNews {
   nodes: [News!]!
@@ -317,6 +338,11 @@ enum RedirectGenerationType {
   automatic
 }
 
+type PaginatedRedirects {
+  nodes: [Redirect!]!
+  totalCount: Int!
+}
+
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
@@ -347,7 +373,8 @@ type Query {
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection = ASC): [Redirect!]!
+  redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
+  paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int = 0, limit: Int = 20): PaginatedRedirects!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
@@ -384,6 +411,47 @@ enum SlugAvailability {
   Reserved
 }
 
+input RedirectFilter {
+  generationType: StringFilter
+  active: BooleanFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [RedirectFilter!]
+  or: [RedirectFilter!]
+}
+
+input StringFilter {
+  contains: String
+  startsWith: String
+  endsWith: String
+  equal: String
+  notEqual: String
+}
+
+input BooleanFilter {
+  equal: Boolean
+}
+
+input DateFilter {
+  equal: DateTime
+  lowerThan: DateTime
+  greaterThan: DateTime
+  lowerThanEqual: DateTime
+  greaterThanEqual: DateTime
+  notEqual: DateTime
+}
+
+input RedirectSort {
+  field: RedirectSortField!
+  direction: SortDirection = ASC
+}
+
+enum RedirectSortField {
+  source
+  createdAt
+  updatedAt
+}
+
 input DamItemFilterInput {
   searchText: String
   mimetypes: [String!]
@@ -412,27 +480,6 @@ input NewsFilter {
   updatedAt: DateFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
-}
-
-input StringFilter {
-  contains: String
-  startsWith: String
-  endsWith: String
-  equal: String
-  notEqual: String
-}
-
-input DateFilter {
-  equal: DateTime
-  lowerThan: DateTime
-  greaterThan: DateTime
-  lowerThanEqual: DateTime
-  greaterThanEqual: DateTime
-  notEqual: DateTime
-}
-
-input BooleanFilter {
-  equal: Boolean
 }
 
 input NewsSort {
@@ -494,6 +541,7 @@ type Mutation {
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
+  updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
   movePageTreeNodesByPos(ids: [ID!]!, input: MovePageTreeNodesByPosInput!): [PageTreeNode!]!
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
@@ -527,13 +575,22 @@ type Mutation {
 }
 
 input PageInput {
-  content: JSONObject!
-  seo: JSONObject!
+  content: PageContentBlockInput!
+  seo: SeoBlockInput!
 }
 
+"""PageContent root block input"""
+scalar PageContentBlockInput
+
+"""Seo root block input"""
+scalar SeoBlockInput
+
 input LinkInput {
-  content: JSONObject!
+  content: LinkBlockInput!
 }
+
+"""Link root block input"""
+scalar LinkBlockInput
 
 input CreateBuildsInput {
   names: [String!]!
@@ -627,21 +684,33 @@ input NewsInput {
   title: String!
   date: DateTime!
   visible: Boolean!
-  image: JSONObject!
-  content: JSONObject!
+  image: DamImageBlockInput!
+  content: NewsContentBlockInput!
 }
+
+"""DamImage root block input"""
+scalar DamImageBlockInput
+
+"""NewsContent root block input"""
+scalar NewsContentBlockInput
 
 input NewsCommentInput {
   comment: String!
 }
 
 input MainMenuItemInput {
-  content: JSONObject
+  content: RichTextBlockInput
 }
 
+"""RichText root block input"""
+scalar RichTextBlockInput
+
 input FooterInput {
-  content: JSONObject!
+  content: FooterContentBlockInput!
 }
+
+"""FooterContent root block input"""
+scalar FooterContentBlockInput
 
 input PredefinedPageInput {
   type: String
