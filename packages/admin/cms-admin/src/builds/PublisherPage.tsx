@@ -1,11 +1,8 @@
 import { gql } from "@apollo/client";
 import {
     LocalErrorScopeApolloContext,
-    MainContent,
     messages,
     Stack,
-    Table,
-    TableQuery,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -15,6 +12,7 @@ import {
 import { Domain } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -50,16 +48,23 @@ const buildsQuery = gql`
     }
 `;
 
+const DataGridContainer = styled("div")`
+    width: 100%;
+    height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
+`;
+
 export function PublisherPage(): React.ReactElement {
     const intl = useIntl();
 
-    const { tableData, api, loading, error } = useTableQuery<GQLBuildsQuery, undefined>()(buildsQuery, {
+    const { tableData, loading, error } = useTableQuery<GQLBuildsQuery, undefined>()(buildsQuery, {
         resolveTableData: (data) => ({
             data: data.builds,
             totalCount: data.builds.length,
         }),
         context: LocalErrorScopeApolloContext,
     });
+
+    const rows = tableData?.data ?? [];
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.publisher", defaultMessage: "Publisher" })}>
@@ -81,41 +86,50 @@ export function PublisherPage(): React.ReactElement {
                 </ToolbarActions>
             </Toolbar>
 
-            <MainContent>
-                <TableQuery api={api} loading={loading} error={error}>
-                    {tableData && (
-                        <>
-                            <Table
-                                {...tableData}
-                                columns={[
-                                    {
-                                        name: "name",
-                                        header: intl.formatMessage({ id: "comet.pages.publisher.name", defaultMessage: "Name" }),
-                                    },
-                                    {
-                                        name: "runtime",
-                                        header: intl.formatMessage({ id: "comet.pages.publisher.runtime", defaultMessage: "Runtime" }),
-                                        render: (row) => (
-                                            <BuildRuntime
-                                                startTime={row.startTime ? parseISO(row.startTime) : undefined}
-                                                completionTime={row.completionTime ? parseISO(row.completionTime) : undefined}
-                                            />
-                                        ),
-                                    },
-                                    {
-                                        name: "trigger",
-                                        header: intl.formatMessage({ id: "comet.pages.publisher.trigger", defaultMessage: "Trigger" }),
-                                    },
-                                    {
-                                        name: "status",
-                                        header: intl.formatMessage({ id: "comet.pages.publisher.status", defaultMessage: "Status" }),
-                                    },
-                                ]}
-                            />
-                        </>
-                    )}
-                </TableQuery>
-            </MainContent>
+            <DataGridContainer>
+                <DataGrid
+                    rows={rows}
+                    loading={loading}
+                    error={error}
+                    columns={[
+                        {
+                            field: "name",
+                            headerName: intl.formatMessage({ id: "comet.pages.publisher.name", defaultMessage: "Name" }),
+                            flex: 2,
+                        },
+                        {
+                            field: "runtime",
+                            headerName: intl.formatMessage({ id: "comet.pages.publisher.runtime", defaultMessage: "Runtime" }),
+                            valueGetter: (params) => {
+                                return {
+                                    startTime: params.row.startTime,
+                                    completionTime: params.row.completionTime,
+                                };
+                            },
+                            renderCell: (params) => {
+                                return (
+                                    <BuildRuntime
+                                        startTime={params.value.startTime ? parseISO(params.value.startTime) : undefined}
+                                        completionTime={params.value.completionTime ? parseISO(params.value.completionTime) : undefined}
+                                    />
+                                );
+                            },
+                            flex: 2,
+                        },
+                        {
+                            field: "trigger",
+                            headerName: intl.formatMessage({ id: "comet.pages.publisher.trigger", defaultMessage: "Trigger" }),
+                            flex: 1,
+                        },
+                        {
+                            field: "status",
+                            headerName: intl.formatMessage({ id: "comet.pages.publisher.status", defaultMessage: "Status" }),
+                            flex: 1,
+                        },
+                    ]}
+                    disableColumnSelector
+                />
+            </DataGridContainer>
         </Stack>
     );
 }
