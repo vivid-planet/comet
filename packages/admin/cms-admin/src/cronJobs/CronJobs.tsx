@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { LocalErrorScopeApolloContext, MainContent, messages, Stack, Toolbar, ToolbarFillSpace, ToolbarTitleItem, useTableQuery } from "@comet/admin";
+import { LocalErrorScopeApolloContext, messages, Stack, Toolbar, ToolbarFillSpace, ToolbarTitleItem, useTableQuery } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -68,25 +68,25 @@ export function CronJobsPage(): React.ReactElement {
                 </ToolbarTitleItem>
                 <ToolbarFillSpace />
             </Toolbar>
-            <MainContent>
-                <DataGridContainer>
-                    <DataGrid
-                        rows={rows}
-                        loading={loading}
-                        columns={[
-                            {
-                                field: "name",
-                                headerName: intl.formatMessage({ id: "comet.pages.cronJobs.name", defaultMessage: "Name" }),
-                            },
-                            {
-                                field: "schedule",
-                                headerName: intl.formatMessage({ id: "comet.pages.cronJobs.schedule", defaultMessage: "Schedule" }),
-                            },
-                        ]}
-                        disableColumnSelector
-                    />
-                </DataGridContainer>
-            </MainContent>
+            <DataGridContainer>
+                <DataGrid
+                    rows={rows}
+                    loading={loading}
+                    columns={[
+                        {
+                            field: "name",
+                            headerName: intl.formatMessage({ id: "comet.pages.cronJobs.name", defaultMessage: "Name" }),
+                            flex: 1,
+                        },
+                        {
+                            field: "schedule",
+                            headerName: intl.formatMessage({ id: "comet.pages.cronJobs.schedule", defaultMessage: "Schedule" }),
+                            flex: 1,
+                        },
+                    ]}
+                    disableColumnSelector
+                />
+            </DataGridContainer>
         </Stack>
     );
 }
