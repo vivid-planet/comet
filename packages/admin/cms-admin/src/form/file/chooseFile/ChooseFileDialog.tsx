@@ -1,6 +1,6 @@
 import { StackLink } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-import { Button, Dialog, DialogContent, DialogTitle, IconButton, Link } from "@mui/material";
+import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -84,7 +84,6 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
             <MemoryRouter>
                 <DamTable
                     renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
-                    TableContainer={DialogContent}
                     allowedMimetypes={allowedMimetypes}
                     damLocationStorageKey="choose-file-dam-location"
                     hideContextMenu={true}

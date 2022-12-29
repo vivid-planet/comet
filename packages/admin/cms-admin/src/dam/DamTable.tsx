@@ -30,7 +30,7 @@ import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/dupl
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import { UploadSplitButton } from "./DataGrid/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
-import FolderDataGrid from "./DataGrid/FolderDataGrid";
+import { FolderDataGrid } from "./DataGrid/FolderDataGrid";
 import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
 import EditFile from "./FileForm/EditFile";
@@ -116,7 +116,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         </ToolbarActions>
                     </Toolbar>
                     <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
-                    {/*<FolderTable id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />*/}
                 </EditDialogApiContext.Provider>
             </StackPage>
             <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
@@ -136,7 +135,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
 
 export interface DamConfig {
     renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: { matches?: TextMatch[] }) => React.ReactNode;
-    TableContainer?: ({ children }: { children: React.ReactNode }) => React.ReactElement;
     hideArchiveFilter?: boolean;
     hideContextMenu?: boolean;
     allowedMimetypes?: string[];

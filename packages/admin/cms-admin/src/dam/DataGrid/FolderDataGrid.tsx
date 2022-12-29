@@ -49,7 +49,7 @@ interface FolderDataGridProps extends DamConfig {
     selectionApi: ISelectionApi;
 }
 
-const FolderDataGrid = ({
+export const FolderDataGrid = ({
     id,
     filterApi,
     breadcrumbs,
@@ -58,7 +58,6 @@ const FolderDataGrid = ({
     hideArchiveFilter,
     hideMultiselect,
     renderDamLabel,
-    TableContainer: ConfigTableContainer,
     ...props
 }: FolderDataGridProps): React.ReactElement => {
     const intl = useIntl();
@@ -365,5 +364,3 @@ const FolderDataGrid = ({
         </div>
     );
 };
-
-export default FolderDataGrid;
