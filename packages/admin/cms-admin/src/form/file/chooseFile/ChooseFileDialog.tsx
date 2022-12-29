@@ -8,8 +8,8 @@ import { MemoryRouter } from "react-router";
 
 import { TextMatch } from "../../../common/MarkedMatches";
 import { DamTable } from "../../../dam/DamTable";
+import { isFile } from "../../../dam/helpers/isFile";
 import DamLabel from "../../../dam/Table/DamLabel";
-import { isFile } from "../../../dam/Table/FolderTableRow";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 
 const FixedHeightDialog = styled(Dialog)`

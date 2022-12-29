@@ -3,14 +3,11 @@ import { ChevronRight, LevelUp } from "@comet/admin-icons";
 import { Breadcrumbs, IconButton, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { useDrop } from "react-dnd";
 import { FormattedMessage } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 
 import { useOptimisticQuery } from "../../../common/useOptimisticQuery";
 import { GQLDamFolderBreadcrumbFragment, GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables } from "../../../graphql.generated";
-import { useDamDnD } from "../dnd/useDamDnD";
-import { DamDragObject } from "../FolderTableRow";
 import { damFolderBreadcrumbFragment, damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
 
 interface DamBreadcrumbItem {
@@ -35,10 +32,8 @@ const FolderBreadcrumbsWrapper = styled("div")`
     align-items: center;
 `;
 
-const FolderBreadcrumbWrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$isHovered" })<{ $isHovered: boolean }>`
+const FolderBreadcrumbWrapper = styled("div")`
     padding: 6px;
-    outline: ${({ theme, $isHovered }) => ($isHovered ? `solid 1px ${theme.palette.primary.main}` : "none")};
-    background-color: ${({ $isHovered }) => ($isHovered ? "rgba(41,182,246,0.1)" : "#fff")};
 
     & .MuiLink-root {
         color: ${({ theme }) => theme.palette.grey[900]};
@@ -81,8 +76,6 @@ const BackButton = ({ damBreadcrumbs }: BackButtonProps): React.ReactElement => 
 };
 
 const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
-    const { moveItem } = useDamDnD();
-
     const { data } = useOptimisticQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
         variables: {
             // Cannot be null because of skip
@@ -100,18 +93,8 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
         },
     });
 
-    const [{ isOver }, dropTarget] = useDrop({
-        accept: ["folder", "asset"],
-        drop: (dragObject: DamDragObject) => {
-            moveItem({ dropTargetItem: { id }, dragItem: dragObject.item });
-        },
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-        }),
-    });
-
     return (
-        <FolderBreadcrumbWrapper ref={dropTarget} $isHovered={isOver}>
+        <FolderBreadcrumbWrapper>
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
                 <Typography component="span" variant="h6">
                     {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}

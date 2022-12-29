@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
-import { isFile } from "./FolderTableRow";
+import { isFile } from "../helpers/isFile";
 import { ArchivedTag } from "./tags/ArchivedTag";
 import { DamThumbnail } from "./thumbnail/DamThumbnail";
 

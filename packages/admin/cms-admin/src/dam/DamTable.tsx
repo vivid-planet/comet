@@ -32,7 +32,7 @@ import { FileUploadContextProvider } from "./Table/fileUpload/FileUploadContext"
 import { UploadSplitButton } from "./Table/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./Table/filter/DamTableFilter";
 import FolderDataGrid from "./Table/FolderDataGrid";
-import { damFolderQuery } from "./Table/FolderTable.gql";
+import { damFolderQuery } from "./Table/FolderDataGrid.gql";
 import { RedirectToPersistedDamLocation } from "./Table/RedirectToPersistedDamLocation";
 
 const ScopeIndicatorLabelBold = styled(Typography)`

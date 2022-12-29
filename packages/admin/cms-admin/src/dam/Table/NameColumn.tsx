@@ -7,10 +7,11 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { TextMatch } from "../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { DamFilter } from "../DamTable";
+import { isFile } from "../helpers/isFile";
+import { isFolder } from "../helpers/isFolder";
 import DamLabel from "./DamLabel";
 import { FileUploadApi } from "./fileUpload/useFileUpload";
 import { FooterType } from "./FolderDataGrid";
-import { isFile, isFolder } from "./FolderTableRow";
 import { DamItemMatches } from "./useDamSearchHighlighting";
 
 interface DamLabelWrapperProps {
