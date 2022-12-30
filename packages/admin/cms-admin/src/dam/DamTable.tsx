@@ -134,7 +134,10 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
 };
 
 export interface DamConfig {
-    renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: { matches?: TextMatch[] }) => React.ReactNode;
+    renderDamLabel?: (
+        row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
+        options: { matches?: TextMatch[]; isSearching: boolean },
+    ) => React.ReactNode;
     hideArchiveFilter?: boolean;
     hideContextMenu?: boolean;
     allowedMimetypes?: string[];
