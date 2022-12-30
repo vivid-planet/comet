@@ -138,6 +138,7 @@ export interface DamConfig {
         row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
         options: { matches?: TextMatch[]; isSearching: boolean },
     ) => React.ReactNode;
+    TableHeadActionButton?: React.ComponentType<{ folderId?: string; folderName?: React.ReactNode }>;
     hideArchiveFilter?: boolean;
     hideContextMenu?: boolean;
     allowedMimetypes?: string[];

@@ -70,6 +70,7 @@ export const FolderDataGrid = ({
     hideArchiveFilter,
     hideMultiselect,
     renderDamLabel,
+    TableHeadActionButton,
     ...props
 }: FolderDataGridProps): React.ReactElement => {
     const intl = useIntl();
@@ -212,7 +213,16 @@ export const FolderDataGrid = ({
 
     return (
         <div style={{ padding: "20px" }}>
-            <TableHead isSearching={isSearching} numberItems={tableData?.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
+            <TableHead
+                isSearching={isSearching}
+                numberItems={tableData?.totalCount ?? 0}
+                breadcrumbs={breadcrumbs}
+                folderId={id}
+                folderName={
+                    id === undefined ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name
+                }
+                TableHeadActionButton={TableHeadActionButton}
+            />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     rowHeight={58}
