@@ -1,4 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
+import { FetchResult } from "@apollo/client/link/core";
 import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, PrettyBytes, useDataGridRemote } from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
@@ -6,7 +7,16 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import { GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
+import {
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
+    GQLMoveDamFilesMutation,
+    GQLMoveDamFilesMutationVariables,
+    GQLMoveDamFoldersMutation,
+    GQLMoveDamFoldersMutationVariables,
+} from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
@@ -22,6 +32,8 @@ import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
+import { MoveDamItemDialog } from "./moveDialog/MoveDamItemDialog";
+import { moveDamFilesMutation, moveDamFoldersMutation } from "./moveDialog/MoveDamItemDialog.gql";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
 export type DamItemSelectionMap = Map<string, "file" | "folder">;
@@ -148,6 +160,14 @@ export const FolderDataGrid = ({
         },
     });
 
+    const [moveDamItemDialogState, setMoveDamItemDialogState] = React.useState<"selection" | "single" | null>(null);
+    const [moveSingleDamItem, setMoveSingleDamItem] = React.useState<{ id: string; type: "file" | "folder" } | null>(null);
+
+    const onMoveSingleDamItem = (id: string, type: "file" | "folder") => {
+        setMoveSingleDamItem({ id, type });
+        setMoveDamItemDialogState("single");
+    };
+
     return (
         <div style={{ padding: "20px" }}>
             <FolderHead isSearching={isSearching} numberItems={dataGridData?.damItemsList.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
@@ -246,7 +266,11 @@ export const FolderDataGrid = ({
                             headerName: "",
                             align: "center",
                             renderCell: ({ row }) => {
-                                return isFile(row) ? <DamContextMenu file={row} /> : <DamContextMenu folder={row} />;
+                                return isFile(row) ? (
+                                    <DamContextMenu file={row} onMove={onMoveSingleDamItem} />
+                                ) : (
+                                    <DamContextMenu folder={row} onMove={onMoveSingleDamItem} />
+                                );
                             },
                             renderHeader: () => null,
                             sortable: false,
@@ -289,7 +313,13 @@ export const FolderDataGrid = ({
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
-            <DamSelectionFooter open={selectionMap.size > 0} selectedItemsMap={selectionMap} />
+            <DamSelectionFooter
+                open={selectionMap.size > 0}
+                selectedItemsMap={selectionMap}
+                onOpenMoveDialog={() => {
+                    setMoveDamItemDialogState("selection");
+                }}
+            />
             <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />
             <EditDialog
                 title={{
@@ -306,6 +336,66 @@ export const FolderDataGrid = ({
                     );
                 }}
             </EditDialog>
+            <MoveDamItemDialog
+                open={moveDamItemDialogState !== null}
+                onClose={() => {
+                    setMoveDamItemDialogState(null);
+                }}
+                onChooseFolder={async (targetFolderId) => {
+                    setMoveDamItemDialogState(null);
+
+                    let fileIds: string[] = [];
+                    let folderIds: string[] = [];
+
+                    if (moveDamItemDialogState === "selection") {
+                        fileIds = Array.from(selectionMap.entries())
+                            .filter(([, type]) => type === "file")
+                            .map(([id]) => id);
+
+                        folderIds = Array.from(selectionMap.entries())
+                            .filter(([, type]) => type === "folder")
+                            .map(([id]) => id);
+                    } else if (moveDamItemDialogState === "single" && moveSingleDamItem) {
+                        if (moveSingleDamItem.type == "file") {
+                            fileIds.push(moveSingleDamItem.id);
+                        } else {
+                            folderIds.push(moveSingleDamItem.id);
+                        }
+                    }
+
+                    const mutations: Array<Promise<FetchResult>> = [];
+
+                    if (fileIds.length > 0) {
+                        mutations.push(
+                            apolloClient.mutate<GQLMoveDamFilesMutation, GQLMoveDamFilesMutationVariables>({
+                                mutation: moveDamFilesMutation,
+                                variables: {
+                                    fileIds,
+                                    targetFolderId: targetFolderId,
+                                },
+                            }),
+                        );
+                    }
+
+                    if (folderIds.length > 0) {
+                        mutations.push(
+                            apolloClient.mutate<GQLMoveDamFoldersMutation, GQLMoveDamFoldersMutationVariables>({
+                                mutation: moveDamFoldersMutation,
+                                variables: {
+                                    folderIds,
+                                    targetFolderId: targetFolderId,
+                                },
+                            }),
+                        );
+                    }
+
+                    await Promise.all(mutations);
+
+                    // await apolloClient.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
+                    clearDamItemCache(apolloClient.cache);
+                }}
+                numSelectedItems={moveDamItemDialogState === "selection" ? selectionMap.size : 1}
+            />
             {fileUploadApi.dialogs}
         </div>
     );

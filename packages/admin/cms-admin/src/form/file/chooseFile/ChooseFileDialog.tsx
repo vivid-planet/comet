@@ -43,11 +43,11 @@ const TableRowButton = styled(Button)`
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
-    { matches }: { matches?: TextMatch[] },
+    { matches, isSearching }: { matches?: TextMatch[]; isSearching: boolean },
 ) => {
     return isFile(row) ? (
         <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
-            <DamItemLabel asset={row} matches={matches} />
+            <DamItemLabel asset={row} matches={matches} showPath={isSearching} />
         </TableRowButton>
     ) : (
         <Link
@@ -60,7 +60,7 @@ const renderDamLabel = (
                 height: "100%",
             }}
         >
-            <DamItemLabel asset={row} matches={matches} />
+            <DamItemLabel asset={row} matches={matches} showPath={isSearching} />
         </Link>
     );
 };
@@ -83,7 +83,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
             </StyledDialogTitle>
             <MemoryRouter>
                 <DamTable
-                    renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
+                    renderDamLabel={(row, { matches, isSearching }) => renderDamLabel(row, onChooseFile, { matches, isSearching })}
                     allowedMimetypes={allowedMimetypes}
                     damLocationStorageKey="choose-file-dam-location"
                     hideContextMenu={true}

@@ -44,11 +44,11 @@ const FileWrapper = styled("div")`
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFolder: (folderId: string) => void,
-    { matches, numSelectedItems }: { matches?: TextMatch[]; numSelectedItems: number },
+    { matches, numSelectedItems, isSearching }: { matches?: TextMatch[]; numSelectedItems: number; isSearching: boolean },
 ) => {
     return isFile(row) ? (
         <FileWrapper>
-            <DamItemLabel asset={row} matches={matches} />
+            <DamItemLabel asset={row} matches={matches} showPath={isSearching} />
         </FileWrapper>
     ) : (
         <>
@@ -62,7 +62,7 @@ const renderDamLabel = (
                     height: "100%",
                 }}
             >
-                <DamItemLabel asset={row} matches={matches} />
+                <DamItemLabel asset={row} matches={matches} showPath={isSearching} />
             </Link>
             <ButtonWrapper>
                 <Button
@@ -103,7 +103,9 @@ export const MoveDamItemDialog = ({ open, onClose, onChooseFolder, numSelectedIt
             </StyledDialogTitle>
             <MemoryRouter>
                 <DamTable
-                    renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFolder, { matches, numSelectedItems })}
+                    renderDamLabel={(row, { matches, isSearching }) =>
+                        renderDamLabel(row, onChooseFolder, { matches, numSelectedItems, isSearching })
+                    }
                     damLocationStorageKey="move-items-dam-location"
                     hideContextMenu={true}
                     disableScopeIndicator={true}

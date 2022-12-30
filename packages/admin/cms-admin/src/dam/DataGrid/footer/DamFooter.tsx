@@ -30,16 +30,14 @@ interface DamFooterProps {
     open: boolean;
 }
 
-export const DamFooter: React.FunctionComponent<DamFooterProps> = ({ children }) => {
+export const DamFooter: React.FunctionComponent<DamFooterProps> = ({ open, children }) => {
     if (!open) {
         return null;
     }
 
     return (
-        <>
-            <FooterBar>
-                <AlignTextAndImage>{children}</AlignTextAndImage>
-            </FooterBar>
-        </>
+        <FooterBar>
+            <AlignTextAndImage>{children}</AlignTextAndImage>
+        </FooterBar>
     );
 };
