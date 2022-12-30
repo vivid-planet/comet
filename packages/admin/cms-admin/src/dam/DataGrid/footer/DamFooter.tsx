@@ -55,12 +55,12 @@ const ButtonGroup = styled("div")`
 interface DamFooterProps {
     open: boolean;
     type?: "selection" | "upload";
-
     folderName?: string;
     selectedItemsMap?: DamItemSelectionMap;
+    onOpenMoveDialog: () => void;
 }
 
-export const DamFooter: React.VoidFunctionComponent<DamFooterProps> = ({ open, type, folderName, selectedItemsMap }) => {
+export const DamFooter: React.VoidFunctionComponent<DamFooterProps> = ({ open, type, folderName, selectedItemsMap, onOpenMoveDialog }) => {
     const intl = useIntl();
     const apolloClient = useApolloClient();
 
@@ -173,7 +173,14 @@ export const DamFooter: React.VoidFunctionComponent<DamFooterProps> = ({ open, t
                                     }}
                                 />
                             </SaveButton>
-                            <Button color="secondary" variant="contained" startIcon={<Move />}>
+                            <Button
+                                color="secondary"
+                                variant="contained"
+                                startIcon={<Move />}
+                                onClick={() => {
+                                    onOpenMoveDialog();
+                                }}
+                            >
                                 <FormattedMessage
                                     id="comet.dam.footer.move"
                                     defaultMessage="Move {num, plural, one {one item} other {# items}}"
