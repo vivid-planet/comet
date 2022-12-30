@@ -1,6 +1,6 @@
 import { StackLink } from "@comet/admin";
-import { Close, Move } from "@comet/admin-icons";
-import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
+import { Close, Move, ThreeDotSaving } from "@comet/admin-icons";
+import { Button, Dialog, DialogContent, DialogTitle, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -23,6 +23,18 @@ const StyledDialogTitle = styled(DialogTitle)`
     justify-content: space-between;
     align-items: center;
     width: 100%;
+`;
+
+const StyledDialogContent = styled(DialogContent)`
+    padding: 0;
+
+    &.MuiDialogContent-root {
+        padding-top: 0;
+    }
+
+    & .CometAdminToolbar-root {
+        top: 0;
+    }
 `;
 
 const CloseButton = styled(IconButton)`
@@ -85,10 +97,39 @@ const renderDamLabel = (
     );
 };
 
+const generateTableHeadActionButton = ({ onChooseFolder }: { onChooseFolder: (folderId: string | null) => void }) => {
+    return ({ folderId, folderName }: { folderId?: string; folderName?: React.ReactNode }) => {
+        return (
+            <Button
+                variant="contained"
+                startIcon={<Move />}
+                onClick={() => {
+                    onChooseFolder(folderId ?? null);
+                }}
+            >
+                <FormattedMessage
+                    id="comet.dam.customFolderLabel.moveItemsToThisFolder"
+                    defaultMessage="Move {num, plural, one {item} other {items}} to {folderName}"
+                    values={{
+                        // TODO: correct number
+                        num: 1,
+                        folderName: folderName ?? (
+                            <>
+                                &nbsp;
+                                <ThreeDotSaving />
+                            </>
+                        ),
+                    }}
+                />
+            </Button>
+        );
+    };
+};
+
 interface MoveDamItemDialogProps {
     open: boolean;
     onClose: (event: React.SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
-    onChooseFolder: (folderId: string) => void;
+    onChooseFolder: (folderId: string | null) => void;
     numSelectedItems: number;
 }
 
@@ -101,18 +142,21 @@ export const MoveDamItemDialog = ({ open, onClose, onChooseFolder, numSelectedIt
                     <Close />
                 </CloseButton>
             </StyledDialogTitle>
-            <MemoryRouter>
-                <DamTable
-                    renderDamLabel={(row, { matches, isSearching }) =>
-                        renderDamLabel(row, onChooseFolder, { matches, numSelectedItems, isSearching })
-                    }
-                    damLocationStorageKey="move-items-dam-location"
-                    hideContextMenu={true}
-                    disableScopeIndicator={true}
-                    hideMultiselect={true}
-                    hideArchiveFilter={true}
-                />
-            </MemoryRouter>
+            <StyledDialogContent>
+                <MemoryRouter>
+                    <DamTable
+                        renderDamLabel={(row, { matches, isSearching }) =>
+                            renderDamLabel(row, onChooseFolder, { matches, numSelectedItems, isSearching })
+                        }
+                        TableHeadActionButton={generateTableHeadActionButton({ onChooseFolder })}
+                        damLocationStorageKey="move-items-dam-location"
+                        hideContextMenu={true}
+                        disableScopeIndicator={true}
+                        hideMultiselect={true}
+                        hideArchiveFilter={true}
+                    />
+                </MemoryRouter>
+            </StyledDialogContent>
         </FixedHeightDialog>
     );
 };

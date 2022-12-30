@@ -9,11 +9,13 @@ import { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQue
 import FolderBreadcrumbs from "./breadcrumbs/FolderBreadcrumbs";
 import { damFolderMPathFragment, damFolderMPathQuery } from "./TableHead.gql";
 
-interface TableHeadProps {
+interface FolderHeadProps {
     isSearching: boolean;
     numberItems?: number;
     breadcrumbs?: BreadcrumbItem[];
     folderId?: string;
+    folderName?: React.ReactNode;
+    TableHeadActionButton?: React.ComponentType<{ folderId?: string; folderName?: React.ReactNode }>;
 }
 
 const TableHeadWrapper = styled("div")`
@@ -22,13 +24,23 @@ const TableHeadWrapper = styled("div")`
     background-color: white;
     border-top: 1px solid ${({ theme }) => theme.palette.grey[100]};
     border-bottom: 1px solid ${({ theme }) => theme.palette.grey[100]};
+
+    display: flex;
+    justify-content: space-between;
 `;
 
 const BoldTypography = styled(Typography)`
     font-weight: 500;
 `;
 
-export const FolderHead = ({ isSearching, numberItems, breadcrumbs, folderId }: TableHeadProps): React.ReactElement => {
+export const FolderHead = ({
+    isSearching,
+    numberItems,
+    breadcrumbs,
+    folderId,
+    folderName,
+    TableHeadActionButton,
+}: FolderHeadProps): React.ReactElement => {
     let content: React.ReactNode = null;
 
     const { data, loading } = useOptimisticQuery<GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables>(damFolderMPathQuery, {
@@ -70,5 +82,10 @@ export const FolderHead = ({ isSearching, numberItems, breadcrumbs, folderId }: 
         content = <FolderBreadcrumbs breadcrumbs={breadcrumbs} folderIds={folderIds} loading={loading && !data?.damFolder} />;
     }
 
-    return <TableHeadWrapper>{content}</TableHeadWrapper>;
+    return (
+        <TableHeadWrapper>
+            {content}
+            {TableHeadActionButton && <TableHeadActionButton folderId={folderId} folderName={folderName} />}
+        </TableHeadWrapper>
+    );
 };
