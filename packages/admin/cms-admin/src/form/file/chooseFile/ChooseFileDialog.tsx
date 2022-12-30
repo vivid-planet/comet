@@ -1,14 +1,14 @@
 import { StackLink } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
-import { TextMatch } from "../../../common/MarkedMatches";
 import { DamTable } from "../../../dam/DamTable";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
+import { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 
@@ -32,7 +32,7 @@ const CloseButton = styled(IconButton)`
 
 const TableRowButton = styled(Button)`
     padding: 0;
-    justify-content: left;
+    text-align: left;
     color: ${({ theme }) => theme.palette.grey[600]};
 
     &:hover {
@@ -40,10 +40,22 @@ const TableRowButton = styled(Button)`
     }
 `;
 
+const StyledDialogContent = styled(DialogContent)`
+    padding: 0;
+
+    &.MuiDialogContent-root {
+        padding-top: 0;
+    }
+
+    & .CometAdminToolbar-root {
+        top: 0;
+    }
+`;
+
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
-    { matches, isSearching }: { matches?: TextMatch[]; isSearching: boolean },
+    { matches, isSearching, filterApi }: RenderDamLabelOptions,
 ) => {
     return isFile(row) ? (
         <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
@@ -58,6 +70,9 @@ const renderDamLabel = (
             sx={{
                 width: "100%",
                 height: "100%",
+            }}
+            onClick={() => {
+                filterApi.formApi.change("searchText", undefined);
             }}
         >
             <DamItemLabel asset={row} matches={matches} showPath={isSearching} />
@@ -81,17 +96,19 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     <Close />
                 </CloseButton>
             </StyledDialogTitle>
-            <MemoryRouter>
-                <DamTable
-                    renderDamLabel={(row, { matches, isSearching }) => renderDamLabel(row, onChooseFile, { matches, isSearching })}
-                    allowedMimetypes={allowedMimetypes}
-                    damLocationStorageKey="choose-file-dam-location"
-                    hideContextMenu={true}
-                    disableScopeIndicator={true}
-                    hideMultiselect={true}
-                    hideArchiveFilter={true}
-                />
-            </MemoryRouter>
+            <StyledDialogContent>
+                <MemoryRouter>
+                    <DamTable
+                        renderDamLabel={(row, options) => renderDamLabel(row, onChooseFile, options)}
+                        allowedMimetypes={allowedMimetypes}
+                        damLocationStorageKey="choose-file-dam-location"
+                        hideContextMenu={true}
+                        disableScopeIndicator={true}
+                        hideMultiselect={true}
+                        hideArchiveFilter={true}
+                    />
+                </MemoryRouter>
+            </StyledDialogContent>
         </FixedHeightDialog>
     );
 };
