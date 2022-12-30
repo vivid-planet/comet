@@ -29,12 +29,15 @@ const DamItemLabelWrapper = styled(Box, { shouldForwardProp: (prop) => prop !== 
     background-color: ${({ isHovered }) => (isHovered ? "rgba(41, 182, 246, 0.1)" : "transparent")};
 `;
 
+export interface RenderDamLabelOptions {
+    matches?: TextMatch[];
+    isSearching: boolean;
+    filterApi: IFilterApi<DamFilter>;
+}
+
 interface DamItemLabelColumnProps {
     item: GQLDamFileTableFragment | GQLDamFolderTableFragment;
-    renderDamLabel?: (
-        row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
-        options: { matches?: TextMatch[]; isSearching: boolean },
-    ) => React.ReactNode;
+    renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: RenderDamLabelOptions) => React.ReactNode;
     matches: DamItemMatches;
     isSearching: boolean;
     filterApi: IFilterApi<DamFilter>;
@@ -88,7 +91,7 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
     return (
         <DamItemLabelWrapper isHovered={hoverApi.isHovered} {...(isFolder(item) && getFolderRootProps())}>
             {renderDamLabel ? (
-                renderDamLabel(item, { matches: matches.get(item.id), isSearching })
+                renderDamLabel(item, { matches: matches.get(item.id), isSearching, filterApi })
             ) : (
                 <Link
                     underline="none"

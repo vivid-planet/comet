@@ -6,11 +6,11 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
-import { TextMatch } from "../../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 import { DamTable } from "../../DamTable";
 import { isFile } from "../../helpers/isFile";
 import DamItemLabel from "../label/DamItemLabel";
+import { RenderDamLabelOptions } from "../label/DamItemLabelColumn";
 
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
@@ -56,7 +56,7 @@ const FileWrapper = styled("div")`
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFolder: (folderId: string) => void,
-    { matches, numSelectedItems, isSearching }: { matches?: TextMatch[]; numSelectedItems: number; isSearching: boolean },
+    { matches, numSelectedItems, isSearching, filterApi }: RenderDamLabelOptions & { numSelectedItems: number },
 ) => {
     return isFile(row) ? (
         <FileWrapper>
@@ -72,6 +72,9 @@ const renderDamLabel = (
                 sx={{
                     width: "100%",
                     height: "100%",
+                }}
+                onClick={() => {
+                    filterApi.formApi.change("searchText", undefined);
                 }}
             >
                 <DamItemLabel asset={row} matches={matches} showPath={isSearching} />
@@ -145,9 +148,7 @@ export const MoveDamItemDialog = ({ open, onClose, onChooseFolder, numSelectedIt
             <StyledDialogContent>
                 <MemoryRouter>
                     <DamTable
-                        renderDamLabel={(row, { matches, isSearching }) =>
-                            renderDamLabel(row, onChooseFolder, { matches, numSelectedItems, isSearching })
-                        }
+                        renderDamLabel={(row, options) => renderDamLabel(row, onChooseFolder, { ...options, numSelectedItems })}
                         TableHeadActionButton={generateTableHeadActionButton({ onChooseFolder })}
                         damLocationStorageKey="move-items-dam-location"
                         hideContextMenu={true}

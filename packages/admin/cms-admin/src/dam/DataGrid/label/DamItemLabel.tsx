@@ -33,7 +33,6 @@ const TagWrapper = styled("div")`
 `;
 
 const Path = styled(Typography)`
-    text-align: left;
     color: ${({ theme }) => theme.palette.grey[300]};
 `;
 
