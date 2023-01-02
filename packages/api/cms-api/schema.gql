@@ -188,6 +188,7 @@ type Query {
   redirectSourceAvailable(scope: RedirectScopeInput = {}, source: String!): Boolean!
   damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
+  damFileListPosition(id: ID!, args: DamListPositionInput!): Float!
   damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
   damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
@@ -253,6 +254,16 @@ enum RedirectSortField {
 input FileFilterInput {
   searchText: String
   mimetypes: [String!]
+}
+
+input DamListPositionInput {
+  offset: Int = 0
+  limit: Int = 20
+  sortColumnName: String
+  sortDirection: SortDirection = ASC
+  folderId: ID
+  includeArchived: Boolean = false
+  filter: FileFilterInput
 }
 
 input FilenameInput {

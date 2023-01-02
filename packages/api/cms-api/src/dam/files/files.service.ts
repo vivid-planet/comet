@@ -309,6 +309,45 @@ export class FilesService {
         return result;
     }
 
+    async getFilePosition(fileId: string, args: Omit<FileArgs, "offset" | "limit">): Promise<number> {
+        const isSearching = args.filter?.searchText !== undefined && args.filter.searchText.length > 0;
+
+        const subQb = withFilesSelect(
+            this.filesRepository
+                .createQueryBuilder("file")
+                .select("file.id, ROW_NUMBER() OVER( ORDER BY file.name ) AS row_number")
+                .leftJoinAndSelect("file.folder", "folder"),
+            {
+                archived: !args.includeArchived ? false : undefined,
+                folderId: !isSearching ? args.folderId || null : undefined,
+                mimetypes: args.filter?.mimetypes,
+                query: args.filter?.searchText,
+                sortColumnName: args.sortColumnName,
+                sortDirection: args.sortDirection,
+            },
+        );
+
+        const connection = this.orm.em.getConnection();
+        const metadata = this.orm.em.getMetadata();
+
+        const fileTableName = metadata.get(File.name).tableName;
+
+        const result: Array<{ row_number: number }> = await connection.execute(
+            `select "file_with_row_number".row_number
+                from "${fileTableName}" as "file"
+                join (${subQb.getFormattedQuery()}) as "file_with_row_number" ON file_with_row_number.id = file.id
+                where "file"."id" = ?
+            `,
+            [fileId],
+        );
+
+        if (result.length === 0) {
+            throw new Error("File ID does not exist.");
+        }
+
+        return result[0].row_number;
+    }
+
     async findNextAvailableFilename(filePath: string, folderId: string | null = null): Promise<string> {
         const extension = extname(filePath);
         const filename = basename(filePath, extension);

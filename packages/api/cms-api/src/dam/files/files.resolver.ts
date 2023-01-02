@@ -6,7 +6,7 @@ import { basename, extname } from "path";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { FileArgs } from "./dto/file.args";
+import { DamListPositionInput, FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { File } from "./entities/file.entity";
@@ -33,6 +33,14 @@ export class FilesResolver {
             throw new NotFoundException(id);
         }
         return file;
+    }
+
+    @Query(() => Number)
+    async damFileListPosition(
+        @Args("id", { type: () => ID }) id: string,
+        @Args("args", { type: () => DamListPositionInput }) args: DamListPositionInput,
+    ): Promise<number> {
+        return this.filesService.getFilePosition(id, args);
     }
 
     @Mutation(() => File)
