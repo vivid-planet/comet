@@ -5,11 +5,11 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 
 import { CurrentUserInterface } from "../current-user/current-user";
 
-export interface AuthStaticAuthedUserStrategyConfig {
+interface StaticAuthedUserStrategyConfig {
     staticAuthedUser: CurrentUserInterface;
 }
 
-export function createStaticAuthedUserStrategy(config: AuthStaticAuthedUserStrategyConfig): Type {
+export function createStaticAuthedUserStrategy(config: StaticAuthedUserStrategyConfig): Type {
     @Injectable()
     class StaticAuthedUserStrategy extends PassportStrategy(Strategy, "static-authed-user") {
         constructor() {

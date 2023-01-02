@@ -5,7 +5,7 @@ import { IncomingMessage } from "http";
 import { CurrentUserInterface } from "../current-user/current-user";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 
-export interface AuthResolverConfig {
+interface AuthResolverConfig {
     currentUser: Type<CurrentUserInterface>;
     endSessionEndpoint?: string;
     postLogoutRedirectUri?: string;

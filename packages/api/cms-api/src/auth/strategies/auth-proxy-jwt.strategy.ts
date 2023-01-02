@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 
 import { CurrentUserInterface, CurrentUserLoaderInterface } from "../current-user/current-user";
 
-export interface AuthJwtStrategyConfig {
+interface AuthProxyJwtStrategyConfig {
     jwksUri: string;
     currentUserLoader?: CurrentUserLoaderInterface;
 }
@@ -24,9 +24,9 @@ class CurrentUserLoader implements CurrentUserLoaderInterface {
     }
 }
 
-export function createJwtStrategy(config: AuthJwtStrategyConfig): Type {
+export function createAuthProxyJwtStrategy(config: AuthProxyJwtStrategyConfig): Type {
     @Injectable()
-    class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
+    class AuthProxyJwtStrategy extends PassportStrategy(Strategy, "auth-proxy-jwt") {
         constructor() {
             super({
                 jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -43,5 +43,5 @@ export function createJwtStrategy(config: AuthJwtStrategyConfig): Type {
             return userLoader.load(data);
         }
     }
-    return JwtStrategy;
+    return AuthProxyJwtStrategy;
 }

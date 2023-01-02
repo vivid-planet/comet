@@ -10,7 +10,7 @@ import { allowForRoleMetadataKey } from "../decorators/allow-for-role.decorator"
 
 export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
     @Injectable()
-    class GlobalAuthGuard extends AuthGuard(type) implements CanActivate {
+    class CometAuthGuard extends AuthGuard(type) implements CanActivate {
         constructor(private reflector: Reflector) {
             super();
         }
@@ -59,5 +59,5 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
             return isAllowed;
         }
     }
-    return mixin(GlobalAuthGuard);
+    return mixin(CometAuthGuard);
 }
