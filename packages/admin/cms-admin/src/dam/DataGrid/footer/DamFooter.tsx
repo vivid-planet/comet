@@ -52,7 +52,7 @@ const ButtonGroup = styled("div")`
     gap: 10px;
 `;
 
-interface FooterProps {
+interface DamFooterProps {
     open: boolean;
     type?: "selection" | "upload";
 
@@ -60,7 +60,7 @@ interface FooterProps {
     selectedItemsMap?: DamItemSelectionMap;
 }
 
-export const Footer: React.VoidFunctionComponent<FooterProps> = ({ open, type, folderName, selectedItemsMap }) => {
+export const DamFooter: React.VoidFunctionComponent<DamFooterProps> = ({ open, type, folderName, selectedItemsMap }) => {
     const intl = useIntl();
     const apolloClient = useApolloClient();
 

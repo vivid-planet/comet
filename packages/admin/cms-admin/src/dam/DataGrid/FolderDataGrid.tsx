@@ -28,7 +28,7 @@ import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { damFolderQuery, damItemsListQuery } from "./FolderDataGrid.gql";
 import * as sc from "./FolderDataGrid.sc";
-import { Footer } from "./footer/Footer";
+import { DamFooter } from "./footer/DamFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
@@ -345,7 +345,7 @@ const FolderDataGrid = ({
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
-            <Footer open={!!footerInfo?.type} type={footerInfo?.type} folderName={footerInfo?.folderName} selectedItemsMap={selectionMap} />
+            <DamFooter open={!!footerInfo?.type} type={footerInfo?.type} folderName={footerInfo?.folderName} selectedItemsMap={selectionMap} />
             <EditDialog
                 title={{
                     edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,
