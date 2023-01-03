@@ -315,7 +315,7 @@ export class FilesService {
         const subQb = withFilesSelect(
             this.filesRepository
                 .createQueryBuilder("file")
-                .select("file.id, ROW_NUMBER() OVER( ORDER BY file.name ) AS row_number")
+                .select(`file.id, ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`)
                 .leftJoinAndSelect("file.folder", "folder"),
             {
                 archived: !args.includeArchived ? false : undefined,
