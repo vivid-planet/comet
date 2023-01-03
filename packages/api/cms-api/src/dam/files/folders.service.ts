@@ -197,7 +197,9 @@ export class FoldersService {
 
     async getFolderPosition(folderId: string, args: DamFolderListPositionInput): Promise<number> {
         const subQb = withFoldersSelect(
-            this.foldersRepository.createQueryBuilder("folder").select("folder.id, ROW_NUMBER() OVER( ORDER BY folder.name ) AS row_number"),
+            this.foldersRepository
+                .createQueryBuilder("folder")
+                .select(`folder.id, ROW_NUMBER() OVER( ORDER BY folder."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`),
             {
                 includeArchived: args.includeArchived,
                 parentId: args.parentId,
