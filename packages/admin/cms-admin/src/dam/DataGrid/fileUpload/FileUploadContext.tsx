@@ -1,14 +1,14 @@
 import React from "react";
 
 interface FileUploadContextApi {
-    newlyUploadedFileIds: string[];
-    addNewlyUploadedFileIds: (newlyUploadedFileIds: string[]) => void;
+    newlyUploadedItemIds: Array<{ id: string; type: "file" | "folder" }>;
+    addNewlyUploadedItemIds: (newlyUploadedItemIds: Array<{ id: string; type: "file" | "folder" }>) => void;
 }
 
 const FileUploadContext = React.createContext<FileUploadContextApi>({
-    newlyUploadedFileIds: [],
-    addNewlyUploadedFileIds: () => {
-        console.warn("If you want to track newlyUploadedFileIds, FileUploadContextProvider has to be defined higher up in the tree");
+    newlyUploadedItemIds: [],
+    addNewlyUploadedItemIds: () => {
+        console.warn("If you want to track newlyUploadedItemIds, FileUploadContextProvider has to be defined higher up in the tree");
     },
 });
 
@@ -16,23 +16,23 @@ export const useFileUploadContext = () => React.useContext(FileUploadContext);
 
 export const FileUploadContextProvider: React.FunctionComponent = ({ children }) => {
     const timeouts = React.useRef<NodeJS.Timeout[]>([]);
-    const [newlyUploadedFileIds, setNewlyUploadedFileIds] = React.useState<string[]>([]);
+    const [newlyUploadedItemIds, setNewlyUploadedItemIds] = React.useState<Array<{ id: string; type: "file" | "folder" }>>([]);
 
     React.useEffect(() => {
         return () => {
             for (const timeout of timeouts.current) {
                 clearTimeout(timeout);
             }
-            setNewlyUploadedFileIds([]);
+            setNewlyUploadedItemIds([]);
         };
     }, []);
 
-    const addNewlyUploadedFileIds = (fileIds: string[]) => {
-        setNewlyUploadedFileIds((newlyUploadedFileIds) => [...newlyUploadedFileIds, ...fileIds]);
+    const addNewlyUploadedItemIds = (itemIds: Array<{ id: string; type: "file" | "folder" }>) => {
+        setNewlyUploadedItemIds((newlyUploadedItemIds) => [...newlyUploadedItemIds, ...itemIds]);
 
         const timeout = setTimeout(() => {
-            // remove uploaded files automatically after 5 seconds
-            setNewlyUploadedFileIds((newlyUploadedFileIds) => newlyUploadedFileIds.filter((fileId) => !fileIds.includes(fileId)));
+            // remove uploaded items automatically after 5 seconds
+            setNewlyUploadedItemIds((newlyUploadedItemIds) => newlyUploadedItemIds.filter((itemId) => !itemIds.includes(itemId)));
 
             timeouts.current = timeouts.current.filter((t) => t !== timeout);
         }, 5000);
@@ -40,5 +40,5 @@ export const FileUploadContextProvider: React.FunctionComponent = ({ children })
         timeouts.current.push(timeout);
     };
 
-    return <FileUploadContext.Provider value={{ newlyUploadedFileIds, addNewlyUploadedFileIds }}>{children}</FileUploadContext.Provider>;
+    return <FileUploadContext.Provider value={{ newlyUploadedItemIds, addNewlyUploadedItemIds }}>{children}</FileUploadContext.Provider>;
 };

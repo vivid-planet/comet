@@ -7,6 +7,7 @@ import {
     IFilterApi,
     ISelectionApi,
     PrettyBytes,
+    useStackSwitchApi,
     useStoredState,
     useTableQuery,
     useTableQueryPaging,
@@ -20,6 +21,8 @@ import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 import {
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,
+    GQLDamItemListPositionQuery,
+    GQLDamItemListPositionQueryVariables,
     GQLDamItemsListQuery,
     GQLDamItemsListQueryVariables,
     GQLMoveDamFilesMutation,
@@ -36,7 +39,7 @@ import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { damFolderQuery, damItemsListQuery } from "./FolderDataGrid.gql";
+import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import * as sc from "./FolderDataGrid.sc";
 import { Footer } from "./footer/Footer";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
@@ -75,6 +78,7 @@ export const FolderDataGrid = ({
 }: FolderDataGridProps): React.ReactElement => {
     const intl = useIntl();
     const apolloClient = useApolloClient();
+    const switchApi = useStackSwitchApi();
 
     const [selectionMap, setSelectionMap] = React.useState<DamItemSelectionMap>(new Map());
     const [footerInfo, setFooterInfo] = React.useState<FooterInfo | null>(null);
@@ -163,6 +167,107 @@ export const FolderDataGrid = ({
         },
     });
 
+    React.useEffect(() => {
+        async function getPosition() {
+            if (fileUploadApi.newlyUploadedItemIds.length === 0) {
+                return;
+            }
+
+            if (fileUploadApi.newlyUploadedItemIds.find((item) => item.type === "folder")) {
+                // only look at folders
+
+                const folders = fileUploadApi.newlyUploadedItemIds.filter((item) => item.type === "folder");
+                const firstFolder = folders[0];
+
+                if (firstFolder.parentId === data?.damFolder.id) {
+                    // current folder + new folders
+
+                    const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
+                        query: damItemListPosition,
+                        variables: {
+                            id: firstFolder.id,
+                            type: "Folder",
+                            folderId: data?.damFolder.id,
+                            includeArchived: filterApi.current.archived,
+                            filter: {
+                                mimetypes: props.allowedMimetypes,
+                                searchText: filterApi.current.searchText,
+                            },
+                            sortColumnName: filterApi.current.sort?.columnName,
+                            sortDirection: filterApi.current.sort?.direction,
+                        },
+                    });
+
+                    const position = result.data.damItemListPosition;
+                    const targetPage = Math.floor(position / pageSize);
+
+                    pagingApi.changePage(targetPage * pageSize, targetPage + 1);
+                }
+            } else {
+                const files = fileUploadApi.newlyUploadedItemIds;
+                const firstFile = files[0];
+
+                if (firstFile.parentId === data?.damFolder.id) {
+                    // current folder + no new folders (only new files)
+
+                    const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
+                        query: damItemListPosition,
+                        variables: {
+                            id: firstFile.id,
+                            type: "File",
+                            folderId: data?.damFolder.id,
+                            includeArchived: filterApi.current.archived,
+                            filter: {
+                                mimetypes: props.allowedMimetypes,
+                                searchText: filterApi.current.searchText,
+                            },
+                            sortColumnName: filterApi.current.sort?.columnName,
+                            sortDirection: filterApi.current.sort?.direction,
+                        },
+                    });
+
+                    const position = result.data.damItemListPosition;
+                    const targetPage = Math.floor(position / pageSize);
+
+                    pagingApi.changePage(targetPage * pageSize, targetPage + 1);
+                } else {
+                    // subfolder + no new folders (only new files)
+
+                    const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
+                        query: damItemListPosition,
+                        variables: {
+                            id: firstFile.id,
+                            type: "File",
+                            folderId: firstFile.parentId,
+                            includeArchived: filterApi.current.archived,
+                            filter: {
+                                mimetypes: props.allowedMimetypes,
+                                searchText: filterApi.current.searchText,
+                            },
+                            sortColumnName: filterApi.current.sort?.columnName,
+                            sortDirection: filterApi.current.sort?.direction,
+                        },
+                    });
+
+                    console.log("switch id", switchApi.id);
+                    console.log("firstFile.parentId", firstFile.parentId);
+
+                    switchApi.activatePage("folder", firstFile.parentId);
+
+                    const position = result.data.damItemListPosition;
+                    const targetPage = Math.floor(position / pageSize);
+
+                    pagingApi.changePage(targetPage * pageSize, targetPage + 1);
+                }
+
+                // only files
+            }
+        }
+
+        console.log(fileUploadApi.newlyUploadedItemIds);
+        getPosition();
+    }, [fileUploadApi.newlyUploadedItemIds]);
+
     const [hoveredId, setHoveredId] = React.useState<string | null>(null);
 
     const showHoverStyles = useDebouncedCallback(
@@ -244,7 +349,16 @@ export const FolderDataGrid = ({
                             tableData?.pagingInfo.fetchPreviousPage?.();
                         }
                     }}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    getRowClassName={({ row }) => {
+                        if (fileUploadApi.newlyUploadedItemIds.find((newItem) => newItem.id === row.id)) {
+                            return "CometDataGridRow--highlighted";
+                        }
+
+                        return "";
+                    }}
+                    onPageSizeChange={(newPageSize) => {
+                        setPageSize(newPageSize);
+                    }}
                     columns={[
                         {
                             field: "name",

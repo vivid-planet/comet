@@ -84,3 +84,27 @@ export const damItemsListQuery = gql`
     ${damFileTableFragment}
     ${damFolderTableFragment}
 `;
+
+export const damItemListPosition = gql`
+    query DamItemListPosition(
+        $id: ID!
+        $type: DamItemTypeLiteral!
+        $folderId: ID
+        $includeArchived: Boolean
+        $filter: DamItemFilterInput
+        $sortColumnName: String
+        $sortDirection: SortDirection
+    ) {
+        damItemListPosition(
+            id: $id
+            type: $type
+            args: {
+                folderId: $folderId
+                includeArchived: $includeArchived
+                filter: $filter
+                sortColumnName: $sortColumnName
+                sortDirection: $sortDirection
+            }
+        )
+    }
+`;

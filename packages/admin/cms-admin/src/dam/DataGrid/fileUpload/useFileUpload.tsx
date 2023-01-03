@@ -55,7 +55,7 @@ export interface FileUploadApi {
         multiple: boolean;
         maxSize: number;
     };
-    newlyUploadedFileIds: string[];
+    newlyUploadedItemIds: Array<{ id: string; parentId?: string; type: "file" | "folder" }>;
 }
 
 export interface FileUploadValidationError {
@@ -116,7 +116,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         return acceptObj;
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
 
-    const { newlyUploadedFileIds, addNewlyUploadedFileIds } = useFileUploadContext();
+    const { newlyUploadedItemIds, addNewlyUploadedItemIds } = useFileUploadContext();
 
     const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
@@ -247,10 +247,11 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
     const createFoldersIfNecessary = React.useCallback(
         async (externalFolderIdMap: Map<string, string>, file: FileWithFolderPath, currFolderId?: string) => {
+            const newlyCreatedFolderIds: Array<{ id: string; parentId?: string }> = [];
             const folderIdMap = new Map(externalFolderIdMap);
 
             if (file.folderPath === undefined) {
-                return folderIdMap;
+                return { folderIdMap, newlyCreatedFolderIds };
             }
             const pathArr = file.folderPath.split("/");
 
@@ -268,10 +269,11 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 const parentId = folderIdMap.has(parentPath) ? folderIdMap.get(parentPath) : currFolderId;
 
                 const id = await createDamFolder(folderName, parentId);
+                newlyCreatedFolderIds.push({ id, parentId });
                 folderIdMap.set(completePath, id);
             }
 
-            return folderIdMap;
+            return { folderIdMap, newlyCreatedFolderIds };
         },
         [createDamFolder],
     );
@@ -338,7 +340,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
 
-        const uploadedFileIds: string[] = [];
+        const uploadedItems: Array<{ id: string; parentId?: string; type: "file" | "folder" }> = [];
 
         let errorOccurred = false;
         if (fileRejections.length > 0) {
@@ -358,7 +360,16 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
             cancelUpload.current = axios.CancelToken.source();
             for (const file of filesToUpload) {
-                folderIdMap = await createFoldersIfNecessary(folderIdMap, file, folderId);
+                const createFoldersValues = await createFoldersIfNecessary(folderIdMap, file, folderId);
+                folderIdMap = createFoldersValues.folderIdMap;
+                uploadedItems.push(
+                    ...createFoldersValues.newlyCreatedFolderIds.map((folder): { id: string; parentId?: string; type: "folder" } => ({
+                        id: folder.id,
+                        parentId: folder.parentId,
+                        type: "folder",
+                    })),
+                );
+
                 const targetFolderId = file.folderPath && folderIdMap.has(file.folderPath) ? folderIdMap.get(file.folderPath) : folderId;
 
                 try {
@@ -376,7 +387,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                         },
                     );
 
-                    uploadedFileIds.push(response.data.id);
+                    uploadedItems.push({ id: response.data.id, parentId: targetFolderId, type: "file" });
                 } catch (err) {
                     errorOccurred = true;
                     const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
@@ -413,7 +424,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setLoadedSizes({});
         options.onAfterUpload?.(errorOccurred);
 
-        addNewlyUploadedFileIds(uploadedFileIds);
+        addNewlyUploadedItemIds(uploadedItems);
     };
 
     return {
@@ -438,6 +449,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             multiple: true,
             maxSize: maxFileSizeInBytes,
         },
-        newlyUploadedFileIds,
+        newlyUploadedItemIds,
     };
 };
