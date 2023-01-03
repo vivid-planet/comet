@@ -3,7 +3,7 @@ import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver }
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { FolderArgs, FolderByNameAndParentIdArgs } from "./dto/folder.args";
+import { DamFolderListPositionInput, FolderArgs, FolderByNameAndParentIdArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { Folder } from "./entities/folder.entity";
 import { FoldersService } from "./folders.service";
@@ -33,6 +33,14 @@ export class FoldersResolver {
     @Query(() => Folder, { nullable: true })
     async damFolderByNameAndParentId(@Args() args: FolderByNameAndParentIdArgs): Promise<Folder | null> {
         return this.foldersService.findOneByNameAndParentId(args.name, args.parentId);
+    }
+
+    @Query(() => Number)
+    async damFolderListPosition(
+        @Args("id", { type: () => ID }) id: string,
+        @Args("args", { type: () => DamFolderListPositionInput }) args: DamFolderListPositionInput,
+    ): Promise<number> {
+        return this.foldersService.getFolderPosition(id, args);
     }
 
     @Mutation(() => Folder)

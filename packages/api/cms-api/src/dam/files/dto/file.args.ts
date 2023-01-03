@@ -2,7 +2,7 @@ import { ArgsType, Field, ID, InputType, IntersectionType } from "@nestjs/graphq
 import { Type } from "class-transformer";
 import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { OffsetBasedPaginationArgs, OffsetBasedPaginationInput } from "../../../common/pagination/offset-based.args";
+import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
 import { SortArgs, SortInput } from "../../../common/sorting/sort.args";
 
 @InputType()
@@ -38,7 +38,7 @@ export class FileArgs extends IntersectionType(OffsetBasedPaginationArgs, SortAr
 }
 
 @InputType()
-export class DamListPositionInput extends IntersectionType(OffsetBasedPaginationInput, SortInput) {
+export class DamFileListPositionInput extends SortInput {
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()

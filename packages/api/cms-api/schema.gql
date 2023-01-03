@@ -188,12 +188,13 @@ type Query {
   redirectSourceAvailable(scope: RedirectScopeInput = {}, source: String!): Boolean!
   damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
-  damFileListPosition(id: ID!, args: DamListPositionInput!): Float!
+  damFileListPosition(id: ID!, args: DamFileListPositionInput!): Float!
   damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
   damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
+  damFolderListPosition(id: ID!, args: DamFolderListPositionInput!): Float!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
@@ -256,9 +257,7 @@ input FileFilterInput {
   mimetypes: [String!]
 }
 
-input DamListPositionInput {
-  offset: Int = 0
-  limit: Int = 20
+input DamFileListPositionInput {
   sortColumnName: String
   sortDirection: SortDirection = ASC
   folderId: ID
@@ -273,6 +272,14 @@ input FilenameInput {
 
 input FolderFilterInput {
   searchText: String
+}
+
+input DamFolderListPositionInput {
+  sortColumnName: String
+  sortDirection: SortDirection = ASC
+  parentId: ID
+  includeArchived: Boolean
+  filter: FolderFilterInput
 }
 
 input PageTreeNodeScopeInput {
