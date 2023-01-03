@@ -1,5 +1,22 @@
 [
     {
+        "name": "Anchor",
+        "fields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "DamImage",
         "fields": [
             {
@@ -194,6 +211,11 @@
         "name": "InternalLink",
         "fields": [
             {
+                "name": "targetPageAnchor",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "targetPage",
                 "kind": "NestedObject",
                 "object": {
@@ -212,6 +234,11 @@
                             "name": "path",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "documentType",
+                            "kind": "String",
+                            "nullable": false
                         }
                     ]
                 },
@@ -221,6 +248,11 @@
         "inputFields": [
             {
                 "name": "targetPageId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "targetPageAnchor",
                 "kind": "String",
                 "nullable": true
             }
