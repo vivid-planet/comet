@@ -214,7 +214,7 @@ export class FoldersService {
 
         const folderTableName = metadata.get(Folder.name).tableName;
 
-        const result: Array<{ row_number: number }> = await connection.execute(
+        const result: Array<{ row_number: string }> = await connection.execute(
             `select "folder_with_row_number".row_number
                 from "${folderTableName}" as "folder"
                 join (${subQb.getFormattedQuery()}) as "folder_with_row_number" ON folder_with_row_number.id = folder.id
@@ -227,7 +227,7 @@ export class FoldersService {
             throw new Error("Folder ID does not exist.");
         }
 
-        return result[0].row_number;
+        return Number(result[0].row_number);
     }
 
     async findAncestorsByParentId(parentId: string | null): Promise<Folder[]> {

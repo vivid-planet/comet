@@ -332,7 +332,7 @@ export class FilesService {
 
         const fileTableName = metadata.get(File.name).tableName;
 
-        const result: Array<{ row_number: number }> = await connection.execute(
+        const result: Array<{ row_number: string }> = await connection.execute(
             `select "file_with_row_number".row_number
                 from "${fileTableName}" as "file"
                 join (${subQb.getFormattedQuery()}) as "file_with_row_number" ON file_with_row_number.id = file.id
@@ -345,7 +345,7 @@ export class FilesService {
             throw new Error("File ID does not exist.");
         }
 
-        return result[0].row_number;
+        return Number(result[0].row_number);
     }
 
     async findNextAvailableFilename(filePath: string, folderId: string | null = null): Promise<string> {

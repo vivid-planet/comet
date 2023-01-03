@@ -200,6 +200,7 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damItemListPosition(id: ID!, type: DamItemTypeLiteral!, args: DamItemPositionInput!): Float!
 }
 
 input RedirectScopeInput {
@@ -295,6 +296,19 @@ enum SlugAvailability {
 input DamItemFilterInput {
   searchText: String
   mimetypes: [String!]
+}
+
+enum DamItemTypeLiteral {
+  File
+  Folder
+}
+
+input DamItemPositionInput {
+  sortColumnName: String
+  sortDirection: SortDirection = ASC
+  folderId: ID
+  includeArchived: Boolean
+  filter: DamItemFilterInput
 }
 
 type Mutation {
