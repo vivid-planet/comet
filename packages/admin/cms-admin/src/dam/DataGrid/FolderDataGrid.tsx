@@ -18,10 +18,10 @@ import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { damFolderQuery, damItemsListQuery } from "./FolderDataGrid.gql";
 import * as sc from "./FolderDataGrid.sc";
+import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
-import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
 export type DamItemSelectionMap = Map<string, "file" | "folder">;
@@ -42,7 +42,6 @@ const FolderDataGrid = ({
     hideArchiveFilter,
     hideMultiselect,
     renderDamLabel,
-    TableContainer: ConfigTableContainer,
     ...props
 }: FolderDataGridProps): React.ReactElement => {
     const intl = useIntl();
@@ -158,7 +157,7 @@ const FolderDataGrid = ({
     };
 
     // handles upload of native file (e.g. file from desktop) to current folder:
-    // If the native file is dropped on a file row in the table, it is uploaded
+    // If the native file is dropped on a file row in the DataGrid, it is uploaded
     // to the current folder
     const { getRootProps: getFileRootProps } = useDropzone({
         ...fileUploadApi.dropzoneConfig,
@@ -182,7 +181,7 @@ const FolderDataGrid = ({
 
     return (
         <div style={{ padding: "20px" }}>
-            <TableHead isSearching={isSearching} numberItems={dataGridData?.damItemsList.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
+            <FolderHead isSearching={isSearching} numberItems={dataGridData?.damItemsList.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     {...dataGridProps}

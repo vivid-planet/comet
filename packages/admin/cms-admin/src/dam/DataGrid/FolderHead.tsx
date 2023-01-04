@@ -28,7 +28,7 @@ const BoldTypography = styled(Typography)`
     font-weight: 500;
 `;
 
-export const TableHead = ({ isSearching, numberItems, breadcrumbs, folderId }: TableHeadProps): React.ReactElement => {
+export const FolderHead = ({ isSearching, numberItems, breadcrumbs, folderId }: TableHeadProps): React.ReactElement => {
     let content: React.ReactNode = null;
 
     const { data, loading } = useOptimisticQuery<GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables>(damFolderMPathQuery, {
