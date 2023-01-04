@@ -222,7 +222,10 @@ const FolderDataGrid = ({
                             tableData?.pagingInfo.fetchPreviousPage?.();
                         }
                     }}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                    onPageSizeChange={(newPageSize) => {
+                        pagingApi.changePage(newPageSize * ((pagingApi.currentPage ?? 1) - 1));
+                        setPageSize(newPageSize);
+                    }}
                     columns={[
                         {
                             field: "name",
