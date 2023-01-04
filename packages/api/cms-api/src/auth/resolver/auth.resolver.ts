@@ -1,30 +1,33 @@
-import { Type } from "@nestjs/common";
+import { Inject, Type } from "@nestjs/common";
 import { Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
 
 import { CurrentUserInterface } from "../current-user/current-user";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 
-interface AuthResolverConfig {
-    currentUser: Type<CurrentUserInterface>;
+export interface AuthResolverConfig {
     endSessionEndpoint?: string;
     postLogoutRedirectUri?: string;
 }
 
-export function createAuthResolver(config: AuthResolverConfig): Type<unknown> {
-    @Resolver(() => config.currentUser)
+export const AUTH_RESOLVER_CONFIG = "auth-resolver-config";
+
+export function createAuthResolver(currentUser: Type<CurrentUserInterface>): Type<unknown> {
+    @Resolver(() => currentUser)
     class AuthResolver {
-        @Query(() => config.currentUser)
-        async currentUser(@GetCurrentUser() user: typeof config.currentUser): Promise<typeof config.currentUser> {
+        constructor(@Inject(AUTH_RESOLVER_CONFIG) private readonly config: AuthResolverConfig) {}
+
+        @Query(() => currentUser)
+        async currentUser(@GetCurrentUser() user: typeof currentUser): Promise<typeof currentUser> {
             return user;
         }
 
         @Mutation(() => String)
         async currentUserSignOut(@Context("req") req: IncomingMessage): Promise<string | null> {
-            let signOutUrl = config.postLogoutRedirectUri || "/";
+            let signOutUrl = (this.config && this.config.postLogoutRedirectUri) || "/";
 
-            if (req.headers["authorization"] && config.endSessionEndpoint) {
-                const url = new URL(config.endSessionEndpoint);
+            if (req.headers["authorization"] && this.config && this.config.endSessionEndpoint) {
+                const url = new URL(this.config.endSessionEndpoint);
                 url.search = new URLSearchParams({
                     id_token_hint: req.headers["authorization"].substring(7),
                     post_logout_redirect_uri: signOutUrl,

@@ -8,7 +8,7 @@ import { isObservable, lastValueFrom } from "rxjs";
 import { CurrentUserInterface } from "../current-user/current-user";
 import { allowForRoleMetadataKey } from "../decorators/allow-for-role.decorator";
 
-export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
+export function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
     @Injectable()
     class CometAuthGuard extends AuthGuard(type) implements CanActivate {
         constructor(private reflector: Reflector) {
