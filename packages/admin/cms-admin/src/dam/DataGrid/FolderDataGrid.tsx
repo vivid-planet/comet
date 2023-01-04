@@ -1,15 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import {
-    BreadcrumbItem,
-    createOffsetLimitPagingAction,
-    EditDialog,
-    IFilterApi,
-    ISelectionApi,
-    PrettyBytes,
-    useStoredState,
-    useTableQuery,
-    useTableQueryPaging,
-} from "@comet/admin";
+import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, PrettyBytes, useDataGridRemote } from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
@@ -105,10 +95,9 @@ const FolderDataGrid = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectionMap]);
 
-    const [pageSize, setPageSize] = useStoredState<number>("FolderDataGrid-pageSize", 20);
-    const pagingApi = useTableQueryPaging(0, { persistedStateId: "FolderDataGrid-pagingApi" });
+    const dataGridProps = useDataGridRemote({ pageSize: 20 });
 
-    const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
+    const { data: currentFolderData } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             id: id!,
@@ -117,10 +106,10 @@ const FolderDataGrid = ({
     });
 
     const {
-        tableData,
-        loading: tableLoading,
+        data: dataGridData,
+        loading,
         error,
-    } = useTableQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>()(damItemsListQuery, {
+    } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
             folderId: id,
             includeArchived: filterApi.current.archived,
@@ -130,20 +119,13 @@ const FolderDataGrid = ({
             },
             sortColumnName: filterApi.current.sort?.columnName,
             sortDirection: filterApi.current.sort?.direction,
-            limit: pageSize,
-            offset: pagingApi.current,
-        },
-        resolveTableData: (data) => {
-            return {
-                data: data.damItemsList.nodes,
-                totalCount: data.damItemsList.totalCount,
-                pagingInfo: createOffsetLimitPagingAction(pagingApi, { totalCount: data.damItemsList.totalCount }, pageSize),
-            };
+            limit: dataGridProps.pageSize,
+            offset: dataGridProps.page * dataGridProps.pageSize,
         },
     });
 
     const { matches } = useDamSearchHighlighting({
-        items: tableData?.data ?? [],
+        items: dataGridData?.damItemsList.nodes ?? [],
         query: filterApi.current.searchText ?? "",
     });
     const isSearching = !!(filterApi.current.searchText && filterApi.current.searchText.length > 0);
@@ -184,7 +166,7 @@ const FolderDataGrid = ({
         onDragOver: () => {
             showHoverStyles();
             throttledShowUploadFooter({
-                folderName: data?.damFolder.name,
+                folderName: currentFolderData?.damFolder.name,
             });
         },
         onDragLeave: () => {
@@ -194,38 +176,22 @@ const FolderDataGrid = ({
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             hideHoverStyles();
             hideUploadFooter();
-            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, data?.damFolder.id);
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, currentFolderData?.damFolder.id);
         },
     });
 
     return (
         <div style={{ padding: "20px" }}>
-            <TableHead isSearching={isSearching} numberItems={tableData?.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
+            <TableHead isSearching={isSearching} numberItems={dataGridData?.damItemsList.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
+                    {...dataGridProps}
                     rowHeight={58}
-                    rows={tableData?.data ?? []}
-                    rowCount={tableData?.totalCount ?? 0}
-                    loading={tableLoading}
+                    rows={dataGridData?.damItemsList.nodes ?? []}
+                    rowCount={dataGridData?.damItemsList.totalCount ?? 0}
+                    loading={loading}
                     error={error}
                     rowsPerPageOptions={[10, 20, 50]}
-                    pagination
-                    page={pagingApi.currentPage ? pagingApi.currentPage - 1 : 0}
-                    pageSize={pageSize}
-                    paginationMode="server"
-                    onPageChange={(newPage) => {
-                        const currentPage = pagingApi.currentPage ? pagingApi.currentPage - 1 : 0;
-
-                        if (newPage > currentPage) {
-                            tableData?.pagingInfo.fetchNextPage?.();
-                        } else {
-                            tableData?.pagingInfo.fetchPreviousPage?.();
-                        }
-                    }}
-                    onPageSizeChange={(newPageSize) => {
-                        pagingApi.changePage(newPageSize * ((pagingApi.currentPage ?? 1) - 1));
-                        setPageSize(newPageSize);
-                    }}
                     columns={[
                         {
                             field: "name",
@@ -334,7 +300,7 @@ const FolderDataGrid = ({
                                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 newMap.set(typedId, selectionMap.get(typedId)!);
                             } else {
-                                const item = tableData?.data.find((item) => item.id === typedId);
+                                const item = dataGridData?.damItemsList.nodes.find((item) => item.id === typedId);
 
                                 if (!item) {
                                     throw new Error("Selected item does not exist");
