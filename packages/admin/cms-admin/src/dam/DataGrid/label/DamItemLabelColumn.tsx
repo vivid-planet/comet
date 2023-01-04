@@ -10,7 +10,6 @@ import { DamFilter } from "../../DamTable";
 import { isFile } from "../../helpers/isFile";
 import { isFolder } from "../../helpers/isFolder";
 import { FileUploadApi } from "../fileUpload/useFileUpload";
-import { FooterType } from "../FolderDataGrid";
 import { DamItemMatches } from "../useDamSearchHighlighting";
 import DamItemLabel from "./DamItemLabel";
 
@@ -37,7 +36,7 @@ interface DamItemLabelColumnProps {
     filterApi: IFilterApi<DamFilter>;
     fileUploadApi: FileUploadApi;
     footerApi: {
-        show: (type: FooterType, { folderName, numSelectedItems }: { folderName?: string; numSelectedItems?: number }) => void;
+        show: ({ folderName }: { folderName?: string }) => void;
         hide: () => void;
     };
     hoverApi: {
@@ -66,7 +65,7 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
         noDragEventsBubbling: true,
         onDragOver: () => {
             hoverApi.showHoverStyles(item.id);
-            footerApi.show("upload", { folderName: item.name });
+            footerApi.show({ folderName: item.name });
         },
         onDragLeave: () => {
             hoverApi.hideHoverStyles();
