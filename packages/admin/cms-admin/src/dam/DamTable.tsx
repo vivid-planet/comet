@@ -116,7 +116,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         </ToolbarActions>
                     </Toolbar>
                     <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
-                    {/*<FolderTable id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />*/}
                 </EditDialogApiContext.Provider>
             </StackPage>
             <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
