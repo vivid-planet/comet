@@ -121,7 +121,7 @@ export const FolderDataGrid = ({
     });
 
     React.useEffect(() => {
-        async function getPosition() {
+        async function navigateToNewlyUploadedItems() {
             if (fileUploadApi.newlyUploadedItemIds.length === 0) {
                 return;
             }
@@ -191,7 +191,7 @@ export const FolderDataGrid = ({
             }
         }
 
-        getPosition();
+        navigateToNewlyUploadedItems();
 
         // useEffect dependencies must only include `newlyUploadedItemIds`, because the function should only be called once after new items are added.
         // eslint-disable-next-line react-hooks/exhaustive-deps
