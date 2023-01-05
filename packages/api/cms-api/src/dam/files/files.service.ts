@@ -345,7 +345,8 @@ export class FilesService {
             throw new Error("File ID does not exist.");
         }
 
-        return Number(result[0].row_number);
+        // make the positions start with 0
+        return Number(result[0].row_number) - 1;
     }
 
     async findNextAvailableFilename(filePath: string, folderId: string | null = null): Promise<string> {

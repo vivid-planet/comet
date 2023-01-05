@@ -242,7 +242,8 @@ export class FoldersService {
             throw new Error("Folder ID does not exist.");
         }
 
-        return Number(result[0].row_number);
+        // make the positions start with 0
+        return Number(result[0].row_number) - 1;
     }
 
     async isValidParentForFolder(folderId: string, parentId: string | null): Promise<boolean> {

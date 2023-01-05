@@ -1,6 +1,15 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { FetchResult } from "@apollo/client/link/core";
-import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, PrettyBytes, useDataGridRemote, useStackSwitchApi } from "@comet/admin";
+import {
+    BreadcrumbItem,
+    EditDialog,
+    IFilterApi,
+    ISelectionApi,
+    PrettyBytes,
+    useDataGridRemote,
+    useStackSwitchApi,
+    useStoredState,
+} from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
@@ -63,6 +72,8 @@ export const FolderDataGrid = ({
     const intl = useIntl();
     const apolloClient = useApolloClient();
     const switchApi = useStackSwitchApi();
+
+    const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
     const [selectionMap, setSelectionMap] = React.useState<DamItemSelectionMap>(new Map());
     const [uploadTargetFolderName, setUploadTargetFolderName] = React.useState<string | undefined>();
@@ -165,6 +176,12 @@ export const FolderDataGrid = ({
                 }
             }
 
+            if (id === redirectedToId) {
+                // otherwise it's not possible to navigate to another folder while the new item is in newlyUploadedItemIds
+                // because it always automatically redirects to the new item
+                return;
+            }
+
             const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
                 query: damItemListPosition,
                 variables: {
@@ -184,11 +201,13 @@ export const FolderDataGrid = ({
             const position = result.data.damItemListPosition;
             const targetPage = Math.floor(position / dataGridProps.pageSize);
 
-            if (redirectToSubfolder && parentId) {
+            if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
                 switchApi.activatePage("folder", parentId);
             } else {
                 dataGridProps.onPageChange?.(targetPage, {});
             }
+
+            setRedirectedToId(id);
         }
 
         navigateToNewlyUploadedItems();
@@ -308,6 +327,7 @@ export const FolderDataGrid = ({
                                             hideHoverStyles,
                                             isHovered: hoveredId === row.id,
                                         }}
+                                        scrollIntoView={fileUploadApi.newlyUploadedItemIds[0]?.id === row.id}
                                     />
                                 );
                             },
