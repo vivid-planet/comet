@@ -1,21 +1,11 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { FetchResult } from "@apollo/client/link/core";
-import {
-    BreadcrumbItem,
-    createOffsetLimitPagingAction,
-    EditDialog,
-    IFilterApi,
-    ISelectionApi,
-    PrettyBytes,
-    useStoredState,
-    useTableQuery,
-    useTableQueryPaging,
-} from "@comet/admin";
+import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, PrettyBytes, useDataGridRemote } from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
-import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 import {
     GQLDamFolderQuery,
@@ -38,19 +28,13 @@ import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { damFolderQuery, damItemsListQuery } from "./FolderDataGrid.gql";
 import * as sc from "./FolderDataGrid.sc";
-import { DamFooter } from "./footer/DamFooter";
+import { FolderHead } from "./FolderHead";
+import { DamSelectionFooter } from "./footer/SelectionFooter";
+import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { MoveDamItemDialog } from "./moveDialog/MoveDamItemDialog";
 import { moveDamFilesMutation, moveDamFoldersMutation } from "./moveDialog/MoveDamItemDialog.gql";
-import { TableHead } from "./TableHead";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
-
-export type FooterType = "upload" | "selection";
-interface FooterInfo {
-    type: FooterType;
-
-    folderName?: string;
-}
 
 export type DamItemSelectionMap = Map<string, "file" | "folder">;
 
@@ -77,43 +61,19 @@ export const FolderDataGrid = ({
     const apolloClient = useApolloClient();
 
     const [selectionMap, setSelectionMap] = React.useState<DamItemSelectionMap>(new Map());
-    const [footerInfo, setFooterInfo] = React.useState<FooterInfo | null>(null);
+    const [uploadTargetFolderName, setUploadTargetFolderName] = React.useState<string | undefined>();
 
-    const showFooter = useThrottledCallback((type: FooterType, specificInfo?: { folderName?: string }) => {
-        setFooterInfo({
-            type,
-            folderName: specificInfo?.folderName,
-        });
-    }, 500);
+    const showUploadFooter = ({ folderName }: { folderName?: string }) => {
+        setUploadTargetFolderName(folderName);
+    };
 
-    const hideFooter = React.useCallback(() => {
-        if (showFooter.isPending()) {
-            showFooter.cancel();
-        }
+    const hideUploadFooter = () => {
+        setUploadTargetFolderName(undefined);
+    };
 
-        if (footerInfo?.type === "upload" && selectionMap.size > 0) {
-            showFooter("selection");
-            return;
-        }
+    const dataGridProps = useDataGridRemote({ pageSize: 20 });
 
-        setFooterInfo(null);
-    }, [footerInfo?.type, selectionMap.size, showFooter]);
-
-    React.useEffect(() => {
-        if (selectionMap.size > 0) {
-            showFooter("selection");
-        } else {
-            hideFooter();
-        }
-
-        // useEffect should only be executed if the selection changes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectionMap]);
-
-    const [pageSize, setPageSize] = useStoredState<number>("FolderDataGrid-pageSize", 20);
-    const pagingApi = useTableQueryPaging(0, { persistedStateId: "FolderDataGrid-pagingApi" });
-
-    const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
+    const { data: currentFolderData } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             id: id!,
@@ -122,10 +82,10 @@ export const FolderDataGrid = ({
     });
 
     const {
-        tableData,
-        loading: tableLoading,
+        data: dataGridData,
+        loading,
         error,
-    } = useTableQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>()(damItemsListQuery, {
+    } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
             folderId: id,
             includeArchived: filterApi.current.archived,
@@ -135,20 +95,13 @@ export const FolderDataGrid = ({
             },
             sortColumnName: filterApi.current.sort?.columnName,
             sortDirection: filterApi.current.sort?.direction,
-            limit: pageSize,
-            offset: pagingApi.current,
-        },
-        resolveTableData: (data) => {
-            return {
-                data: data.damItemsList.nodes,
-                totalCount: data.damItemsList.totalCount,
-                pagingInfo: createOffsetLimitPagingAction(pagingApi, { totalCount: data.damItemsList.totalCount }, pageSize),
-            };
+            limit: dataGridProps.pageSize,
+            offset: dataGridProps.page * dataGridProps.pageSize,
         },
     });
 
     const { matches } = useDamSearchHighlighting({
-        items: tableData?.data ?? [],
+        items: dataGridData?.damItemsList.nodes ?? [],
         query: filterApi.current.searchText ?? "",
     });
     const isSearching = !!(filterApi.current.searchText && filterApi.current.searchText.length > 0);
@@ -181,25 +134,30 @@ export const FolderDataGrid = ({
     };
 
     // handles upload of native file (e.g. file from desktop) to current folder:
-    // If the native file is dropped on a file row in the table, it is uploaded
+    // If the native file is dropped on a file row in the DataGrid, it is uploaded
     // to the current folder
     const { getRootProps: getFileRootProps } = useDropzone({
         ...fileUploadApi.dropzoneConfig,
         noClick: true,
         onDragOver: () => {
             showHoverStyles();
-            showFooter("upload", {
-                folderName: data?.damFolder.name,
+            showUploadFooter({
+                folderName:
+                    currentFolderData?.damFolder.name ??
+                    intl.formatMessage({
+                        id: "comet.dam.footer.assetManager",
+                        defaultMessage: "Asset Manager",
+                    }),
             });
         },
         onDragLeave: () => {
             hideHoverStyles();
-            hideFooter();
+            hideUploadFooter();
         },
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             hideHoverStyles();
-            hideFooter();
-            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, data?.damFolder.id);
+            hideUploadFooter();
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, currentFolderData?.damFolder.id);
         },
     });
 
@@ -213,38 +171,29 @@ export const FolderDataGrid = ({
 
     return (
         <div style={{ padding: "20px" }}>
-            <TableHead
+            <FolderHead
                 isSearching={isSearching}
-                numberItems={tableData?.totalCount ?? 0}
+                numberItems={dataGridData?.damItemsList.totalCount ?? 0}
                 breadcrumbs={breadcrumbs}
                 folderId={id}
                 folderName={
-                    id === undefined ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name
+                    id === undefined ? (
+                        <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" />
+                    ) : (
+                        currentFolderData?.damFolder.name
+                    )
                 }
                 TableHeadActionButton={TableHeadActionButton}
             />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
+                    {...dataGridProps}
                     rowHeight={58}
-                    rows={tableData?.data ?? []}
-                    rowCount={tableData?.totalCount ?? 0}
-                    loading={tableLoading}
+                    rows={dataGridData?.damItemsList.nodes ?? []}
+                    rowCount={dataGridData?.damItemsList.totalCount ?? 0}
+                    loading={loading}
                     error={error}
                     rowsPerPageOptions={[10, 20, 50]}
-                    pagination
-                    page={pagingApi.currentPage ? pagingApi.currentPage - 1 : 0}
-                    pageSize={pageSize}
-                    paginationMode="server"
-                    onPageChange={(newPage) => {
-                        const currentPage = pagingApi.currentPage ? pagingApi.currentPage - 1 : 0;
-
-                        if (newPage > currentPage) {
-                            tableData?.pagingInfo.fetchNextPage?.();
-                        } else {
-                            tableData?.pagingInfo.fetchPreviousPage?.();
-                        }
-                    }}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                     columns={[
                         {
                             field: "name",
@@ -263,8 +212,8 @@ export const FolderDataGrid = ({
                                         isSearching={isSearching}
                                         fileUploadApi={fileUploadApi}
                                         footerApi={{
-                                            show: showFooter,
-                                            hide: hideFooter,
+                                            show: showUploadFooter,
+                                            hide: hideUploadFooter,
                                         }}
                                         hoverApi={{
                                             showHoverStyles,
@@ -357,7 +306,7 @@ export const FolderDataGrid = ({
                                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 newMap.set(typedId, selectionMap.get(typedId)!);
                             } else {
-                                const item = tableData?.data.find((item) => item.id === typedId);
+                                const item = dataGridData?.damItemsList.nodes.find((item) => item.id === typedId);
 
                                 if (!item) {
                                     throw new Error("Selected item does not exist");
@@ -378,15 +327,14 @@ export const FolderDataGrid = ({
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
-            <DamFooter
-                open={!!footerInfo?.type}
-                type={footerInfo?.type}
-                folderName={footerInfo?.folderName}
+            <DamSelectionFooter
+                open={selectionMap.size > 0}
                 selectedItemsMap={selectionMap}
                 onOpenMoveDialog={() => {
                     setMoveDamItemDialogState("selection");
                 }}
             />
+            <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />
             <EditDialog
                 title={{
                     edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,

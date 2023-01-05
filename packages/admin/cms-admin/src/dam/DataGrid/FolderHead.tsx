@@ -9,7 +9,7 @@ import { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQue
 import FolderBreadcrumbs from "./breadcrumbs/FolderBreadcrumbs";
 import { damFolderMPathFragment, damFolderMPathQuery } from "./TableHead.gql";
 
-interface TableHeadProps {
+interface FolderHeadProps {
     isSearching: boolean;
     numberItems?: number;
     breadcrumbs?: BreadcrumbItem[];
@@ -33,14 +33,14 @@ const BoldTypography = styled(Typography)`
     font-weight: 500;
 `;
 
-export const TableHead = ({
+export const FolderHead = ({
     isSearching,
     numberItems,
     breadcrumbs,
     folderId,
     folderName,
     TableHeadActionButton,
-}: TableHeadProps): React.ReactElement => {
+}: FolderHeadProps): React.ReactElement => {
     let content: React.ReactNode = null;
 
     const { data, loading } = useOptimisticQuery<GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables>(damFolderMPathQuery, {
