@@ -144,6 +144,10 @@ export class FoldersService {
     }
 
     async updateByEntity(entity: Folder, { parentId, ...input }: UpdateFolderInput): Promise<Folder> {
+        if (!(await this.isValidParentForFolder(entity.id, parentId ?? null))) {
+            throw new Error("Cannot make a folder its own child.");
+        }
+
         const parentIsDirty = parentId !== undefined && entity.parent?.id !== parentId;
         const parent = parentId ? await this.findOneById(parentId) : null;
 
@@ -170,6 +174,17 @@ export class FoldersService {
     }
 
     async moveBatch(folderIds: string[], targetFolderId?: string): Promise<Folder[]> {
+        let isValidParentId = true;
+        for (const folderId of folderIds) {
+            if (!(await this.isValidParentForFolder(folderId, targetFolderId ?? null))) {
+                isValidParentId = false;
+            }
+        }
+
+        if (!isValidParentId) {
+            throw new Error("Cannot make a folder its own child.");
+        }
+
         const folders = [];
 
         for (const id of folderIds) {
@@ -228,6 +243,18 @@ export class FoldersService {
         }
 
         return Number(result[0].row_number);
+    }
+
+    async isValidParentForFolder(folderId: string, parentId: string | null): Promise<boolean> {
+        console.log("checkIfParentIsValidForFolder");
+        const ancestors = await this.findAncestorsByParentId(parentId);
+        console.log("ancestors ", ancestors);
+        const ancestorIds = ancestors.map((ancestor) => ancestor.id);
+        console.log("ancestorIds ", ancestorIds);
+
+        console.log("!ancestorIds.includes(folderId) ", !ancestorIds.includes(folderId));
+
+        return !ancestorIds.includes(folderId);
     }
 
     async findAncestorsByParentId(parentId: string | null): Promise<Folder[]> {
