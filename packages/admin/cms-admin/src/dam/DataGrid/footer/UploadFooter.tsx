@@ -1,7 +1,7 @@
 import { Upload } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { DamFooter } from "./DamFooter";
 
@@ -16,8 +16,6 @@ interface DamFooterProps {
 }
 
 export const DamUploadFooter: React.VoidFunctionComponent<DamFooterProps> = ({ open, folderName }) => {
-    const intl = useIntl();
-
     if (!open) {
         return null;
     }
@@ -37,12 +35,7 @@ export const DamUploadFooter: React.VoidFunctionComponent<DamFooterProps> = ({ o
                                 {chunks}
                             </strong>
                         ),
-                        folderName:
-                            folderName ||
-                            intl.formatMessage({
-                                id: "comet.dam.footer.assetManager",
-                                defaultMessage: "Asset Manager",
-                            }),
+                        folderName: folderName,
                     }}
                 />
             </DamFooter>

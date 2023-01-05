@@ -4,7 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
-import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 import { GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
@@ -48,51 +48,15 @@ const FolderDataGrid = ({
     const apolloClient = useApolloClient();
 
     const [selectionMap, setSelectionMap] = React.useState<DamItemSelectionMap>(new Map());
-    const [showSelectionFooter, setShowSelectionFooter] = React.useState<boolean>(false);
-    const [showUploadFooter, setShowUploadFooter] = React.useState<boolean>(false);
-    const [uploadTargetFolderName, setUploadTargetFolderName] = React.useState<string>();
+    const [uploadTargetFolderName, setUploadTargetFolderName] = React.useState<string | undefined>();
 
-    const throttledShowSelectionFooter = useThrottledCallback(() => {
-        hideUploadFooter();
-        setShowSelectionFooter(true);
-    }, 500);
-
-    const hideSelectionFooter = React.useCallback(() => {
-        if (throttledShowSelectionFooter.isPending()) {
-            throttledShowSelectionFooter.cancel();
-        }
-
-        setShowSelectionFooter(false);
-    }, [throttledShowSelectionFooter]);
-
-    const throttledShowUploadFooter = useThrottledCallback(({ folderName }: { folderName?: string }) => {
-        hideSelectionFooter();
-        setShowUploadFooter(true);
+    const showUploadFooter = ({ folderName }: { folderName?: string }) => {
         setUploadTargetFolderName(folderName);
-    }, 500);
+    };
 
-    const hideUploadFooter = React.useCallback(() => {
-        if (throttledShowUploadFooter.isPending()) {
-            throttledShowUploadFooter.cancel();
-        }
-
-        if (selectionMap.size > 0) {
-            throttledShowSelectionFooter();
-        }
-
-        setShowUploadFooter(false);
-    }, [selectionMap.size, throttledShowSelectionFooter, throttledShowUploadFooter]);
-
-    React.useEffect(() => {
-        if (selectionMap.size > 0) {
-            throttledShowSelectionFooter();
-        } else {
-            hideSelectionFooter();
-        }
-
-        // useEffect should only be executed if the selection changes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectionMap]);
+    const hideUploadFooter = () => {
+        setUploadTargetFolderName(undefined);
+    };
 
     const dataGridProps = useDataGridRemote({ pageSize: 20 });
 
@@ -164,8 +128,13 @@ const FolderDataGrid = ({
         noClick: true,
         onDragOver: () => {
             showHoverStyles();
-            throttledShowUploadFooter({
-                folderName: currentFolderData?.damFolder.name,
+            showUploadFooter({
+                folderName:
+                    currentFolderData?.damFolder.name ??
+                    intl.formatMessage({
+                        id: "comet.dam.footer.assetManager",
+                        defaultMessage: "Asset Manager",
+                    }),
             });
         },
         onDragLeave: () => {
@@ -209,7 +178,7 @@ const FolderDataGrid = ({
                                         isSearching={isSearching}
                                         fileUploadApi={fileUploadApi}
                                         footerApi={{
-                                            show: throttledShowUploadFooter,
+                                            show: showUploadFooter,
                                             hide: hideUploadFooter,
                                         }}
                                         hoverApi={{
@@ -320,8 +289,8 @@ const FolderDataGrid = ({
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
-            <DamSelectionFooter open={showSelectionFooter} selectedItemsMap={selectionMap} />
-            <DamUploadFooter open={showUploadFooter} folderName={uploadTargetFolderName} />
+            <DamSelectionFooter open={selectionMap.size > 0} selectedItemsMap={selectionMap} />
+            <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />
             <EditDialog
                 title={{
                     edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,
