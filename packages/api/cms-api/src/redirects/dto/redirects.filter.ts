@@ -13,6 +13,11 @@ export class RedirectFilter {
     @Type(() => StringFilter)
     generationType?: StringFilter;
 
+    @Field(() => StringFilter, { nullable: true })
+    @IsOptional()
+    @Type(() => StringFilter)
+    source?: StringFilter;
+
     @Field(() => BooleanFilter, { nullable: true })
     @ValidateNested()
     @Type(() => BooleanFilter)
