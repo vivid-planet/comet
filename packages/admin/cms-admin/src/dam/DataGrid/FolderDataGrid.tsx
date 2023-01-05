@@ -14,6 +14,7 @@ import {
     GQLDamItemListPositionQueryVariables,
     GQLDamItemsListQuery,
     GQLDamItemsListQueryVariables,
+    GQLDamItemTypeLiteral,
     GQLMoveDamFilesMutation,
     GQLMoveDamFilesMutationVariables,
     GQLMoveDamFoldersMutation,
@@ -48,7 +49,7 @@ interface FolderDataGridProps extends DamConfig {
 }
 
 export const FolderDataGrid = ({
-    id,
+    id: currentFolderId,
     filterApi,
     breadcrumbs,
     selectionApi,
@@ -79,9 +80,9 @@ export const FolderDataGrid = ({
     const { data: currentFolderData } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            id: id!,
+            id: currentFolderId!,
         },
-        skip: id === undefined,
+        skip: currentFolderId === undefined,
     });
 
     const {
@@ -90,7 +91,7 @@ export const FolderDataGrid = ({
         error,
     } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
-            folderId: id,
+            folderId: currentFolderId,
             includeArchived: filterApi.current.archived,
             filter: {
                 mimetypes: props.allowedMimetypes,
@@ -125,98 +126,71 @@ export const FolderDataGrid = ({
                 return;
             }
 
-            if (fileUploadApi.newlyUploadedItemIds.find((item) => item.type === "folder")) {
-                // only look at folders
+            let type: GQLDamItemTypeLiteral | undefined;
+            let id: string | undefined;
+            let parentId: string | undefined;
+            let redirectToSubfolder;
 
+            if (fileUploadApi.newlyUploadedItemIds.find((item) => item.type === "folder")) {
                 const folders = fileUploadApi.newlyUploadedItemIds.filter((item) => item.type === "folder");
                 const firstFolder = folders[0];
 
-                if (firstFolder.parentId === currentFolderData?.damFolder.id) {
-                    // current folder + new folders
+                type = "Folder";
+                id = firstFolder.id;
 
-                    const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
-                        query: damItemListPosition,
-                        variables: {
-                            id: firstFolder.id,
-                            type: "Folder",
-                            folderId: currentFolderData?.damFolder.id,
-                            includeArchived: filterApi.current.archived,
-                            filter: {
-                                mimetypes: props.allowedMimetypes,
-                                searchText: filterApi.current.searchText,
-                            },
-                            sortColumnName: filterApi.current.sort?.columnName,
-                            sortDirection: filterApi.current.sort?.direction,
-                        },
-                    });
-
-                    const position = result.data.damItemListPosition;
-                    const targetPage = Math.floor(position / dataGridProps.pageSize);
-
-                    dataGridProps.onPageChange?.(targetPage, {});
+                if (firstFolder.parentId === currentFolderId) {
+                    // upload to current folder / creates new folders
+                    parentId = currentFolderId;
+                    redirectToSubfolder = false;
+                } else {
+                    // upload to subfolder / creates new folders
+                    parentId = firstFolder.parentId;
+                    redirectToSubfolder = true;
                 }
             } else {
                 const files = fileUploadApi.newlyUploadedItemIds;
                 const firstFile = files[0];
 
-                if (firstFile.parentId === currentFolderData?.damFolder.id) {
-                    // current folder + no new folders (only new files)
+                type = "File";
+                id = firstFile.id;
 
-                    const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
-                        query: damItemListPosition,
-                        variables: {
-                            id: firstFile.id,
-                            type: "File",
-                            folderId: currentFolderData?.damFolder.id,
-                            includeArchived: filterApi.current.archived,
-                            filter: {
-                                mimetypes: props.allowedMimetypes,
-                                searchText: filterApi.current.searchText,
-                            },
-                            sortColumnName: filterApi.current.sort?.columnName,
-                            sortDirection: filterApi.current.sort?.direction,
-                        },
-                    });
-
-                    const position = result.data.damItemListPosition;
-                    const targetPage = Math.floor(position / dataGridProps.pageSize);
-
-                    dataGridProps.onPageChange?.(targetPage, {});
+                if (firstFile.parentId === currentFolderId) {
+                    // upload to current folder / creates NO new folders (only files)
+                    parentId = currentFolderId;
+                    redirectToSubfolder = false;
                 } else {
-                    // subfolder + no new folders (only new files)
-
-                    const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
-                        query: damItemListPosition,
-                        variables: {
-                            id: firstFile.id,
-                            type: "File",
-                            folderId: firstFile.parentId,
-                            includeArchived: filterApi.current.archived,
-                            filter: {
-                                mimetypes: props.allowedMimetypes,
-                                searchText: filterApi.current.searchText,
-                            },
-                            sortColumnName: filterApi.current.sort?.columnName,
-                            sortDirection: filterApi.current.sort?.direction,
-                        },
-                    });
-
-                    console.log("switch id", switchApi.id);
-                    console.log("firstFile.parentId", firstFile.parentId);
-
-                    // switchApi.activatePage("folder", firstFile.parentId);
-
-                    const position = result.data.damItemListPosition;
-                    const targetPage = Math.floor(position / dataGridProps.pageSize);
-
-                    dataGridProps.onPageChange?.(targetPage, {});
+                    // upload to subfolder / creates NO new folders (only files)
+                    parentId = firstFile.parentId;
+                    redirectToSubfolder = true;
                 }
+            }
 
-                // only files
+            const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
+                query: damItemListPosition,
+                variables: {
+                    id: id,
+                    type: type,
+                    folderId: parentId,
+                    includeArchived: filterApi.current.archived,
+                    filter: {
+                        mimetypes: props.allowedMimetypes,
+                        searchText: filterApi.current.searchText,
+                    },
+                    sortColumnName: filterApi.current.sort?.columnName,
+                    sortDirection: filterApi.current.sort?.direction,
+                },
+            });
+
+            const position = result.data.damItemListPosition;
+            const targetPage = Math.floor(position / dataGridProps.pageSize);
+
+            if (redirectToSubfolder && parentId) {
+                switchApi.activatePage("folder", parentId);
+            } else {
+                dataGridProps.onPageChange?.(targetPage, {});
             }
         }
 
-        console.log(fileUploadApi.newlyUploadedItemIds);
         getPosition();
 
         // useEffect dependencies must only include `newlyUploadedItemIds`, because the function should only be called once after new items are added.
@@ -264,7 +238,7 @@ export const FolderDataGrid = ({
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             hideHoverStyles();
             hideUploadFooter();
-            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, currentFolderData?.damFolder.id);
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, currentFolderId);
         },
     });
 
@@ -282,9 +256,9 @@ export const FolderDataGrid = ({
                 isSearching={isSearching}
                 numberItems={dataGridData?.damItemsList.totalCount ?? 0}
                 breadcrumbs={breadcrumbs}
-                folderId={id}
+                folderId={currentFolderId}
                 folderName={
-                    id === undefined ? (
+                    currentFolderId === undefined ? (
                         <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" />
                     ) : (
                         currentFolderData?.damFolder.name

@@ -35,7 +35,7 @@ export const FileUploadContextProvider: React.FunctionComponent = ({ children })
             setNewlyUploadedItemIds((newlyUploadedItemIds) => newlyUploadedItemIds.filter((itemId) => !itemIds.includes(itemId)));
 
             timeouts.current = timeouts.current.filter((t) => t !== timeout);
-        }, 5000);
+        }, 10000);
 
         timeouts.current.push(timeout);
     };
