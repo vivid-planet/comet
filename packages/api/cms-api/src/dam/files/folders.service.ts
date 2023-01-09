@@ -151,20 +151,29 @@ export class FoldersService {
         });
 
         if (parentIsDirty) {
-            folder.mpath = folder.parent ? (await this.findAncestorsByParentId(folder.parent.id)).map((f) => f.id) : [];
+            await this.updateMPath(folder);
 
-            await this.foldersRepository
-                .createQueryBuilder()
-                .update({
-                    // TODO is this an attack vector?
-                    mpath: folder.mpath || `mpath[(array_position(mpath, ${folder.id})):array_length(mpath,1)]`,
-                })
-                .where("? = ANY(mpath)", [folder.id])
-                .execute();
+            const childFolders = await this.findAllChildFoldersRecursively(folder.id);
+            for (const childFolder of childFolders) {
+                await this.updateMPath(childFolder);
+            }
         }
 
         await this.foldersRepository.persistAndFlush(folder);
         return folder;
+    }
+
+    async updateMPath(entity: Folder): Promise<void> {
+        entity.mpath = entity.parent ? (await this.findAncestorsByParentId(entity.parent.id)).map((f) => f.id) : [];
+
+        await this.foldersRepository
+            .createQueryBuilder()
+            .update({
+                // TODO is this an attack vector?
+                mpath: entity.mpath || `mpath[(array_position(mpath, ${entity.id})):array_length(mpath,1)]`,
+            })
+            .where("? = ANY(mpath)", [entity.id])
+            .execute();
     }
 
     async moveBatch(folderIds: string[], targetFolderId?: string): Promise<Folder[]> {
@@ -208,6 +217,20 @@ export class FoldersService {
             .where({ id: { $in: mpath } })
             .getResult();
         return mpath.map((id) => folders.find((folder) => folder.id === id) as Folder);
+    }
+
+    async findAllChildFoldersRecursively(folderId: string): Promise<Folder[]> {
+        const folders = await this.selectQueryBuilder()
+            .where({ parent: { id: folderId } })
+            .getResult();
+
+        let childFolders: Folder[] = [];
+        for (const folder of folders) {
+            const folders = await this.findAllChildFoldersRecursively(folder.id);
+            childFolders = [...childFolders, ...folders];
+        }
+
+        return [...folders, ...childFolders];
     }
 
     private selectQueryBuilder(): QueryBuilder<Folder> {
