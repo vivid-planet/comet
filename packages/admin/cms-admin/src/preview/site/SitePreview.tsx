@@ -72,9 +72,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     React.useEffect(() => {
         // react-hooks/exhaustive-deps is disabled because the src-prop of iframe is uncontrolled
         // the src-value is just the default value, the iframe keeps its own src-state (by clicking links inside the iframe)
-        const url = new URL(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
-        url.searchParams.append("authProvider", "vivid-planet-idp");
-        setInitialPageUrl(url.toString());
+        setInitialPageUrl(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
     }, [formattedSitePreviewParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const intl = useIntl();
