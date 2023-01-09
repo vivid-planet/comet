@@ -1,3 +1,4 @@
+import { MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
@@ -67,6 +68,7 @@ export class FoldersService {
     constructor(
         @InjectRepository(Folder) private readonly foldersRepository: EntityRepository<Folder>,
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
+        private readonly orm: MikroORM,
     ) {}
 
     async findAll({ parentId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FolderArgs, "offset" | "limit">): Promise<Folder[]> {
@@ -151,29 +153,17 @@ export class FoldersService {
         });
 
         if (parentIsDirty) {
-            await this.updateMPath(folder);
+            folder.mpath = folder.parent ? (await this.findAncestorsByParentId(folder.parent.id)).map((f) => f.id) : [];
 
-            const childFolders = await this.findAllChildFoldersRecursively(folder.id);
-            for (const childFolder of childFolders) {
-                await this.updateMPath(childFolder);
-            }
+            const connection = this.orm.em.getConnection();
+            connection.execute(
+                'update "DamFolder" set "mpath" = array_cat(ARRAY[?]::uuid[] , mpath[(array_position(mpath, ? )):array_length(mpath,1)]) where ( ? = ANY(mpath))',
+                [folder.mpath, folder.id, folder.id],
+            );
         }
 
         await this.foldersRepository.persistAndFlush(folder);
         return folder;
-    }
-
-    async updateMPath(entity: Folder): Promise<void> {
-        entity.mpath = entity.parent ? (await this.findAncestorsByParentId(entity.parent.id)).map((f) => f.id) : [];
-
-        await this.foldersRepository
-            .createQueryBuilder()
-            .update({
-                // TODO is this an attack vector?
-                mpath: entity.mpath || `mpath[(array_position(mpath, ${entity.id})):array_length(mpath,1)]`,
-            })
-            .where("? = ANY(mpath)", [entity.id])
-            .execute();
     }
 
     async moveBatch(folderIds: string[], targetFolderId?: string): Promise<Folder[]> {
@@ -217,20 +207,6 @@ export class FoldersService {
             .where({ id: { $in: mpath } })
             .getResult();
         return mpath.map((id) => folders.find((folder) => folder.id === id) as Folder);
-    }
-
-    async findAllChildFoldersRecursively(folderId: string): Promise<Folder[]> {
-        const folders = await this.selectQueryBuilder()
-            .where({ parent: { id: folderId } })
-            .getResult();
-
-        let childFolders: Folder[] = [];
-        for (const folder of folders) {
-            const folders = await this.findAllChildFoldersRecursively(folder.id);
-            childFolders = [...childFolders, ...folders];
-        }
-
-        return [...folders, ...childFolders];
     }
 
     private selectQueryBuilder(): QueryBuilder<Folder> {
