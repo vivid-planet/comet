@@ -5,20 +5,11 @@ export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
 export { PublicApi } from "./auth/decorators/public-api.decorator";
-export { CometAuthGuard } from "./auth/guards/comet.guard";
-export { AUTH_RESOLVER_CONFIG, AuthResolverConfig, createAuthResolver } from "./auth/resolver/auth.resolver";
-export { AUTH_AUTH_PROXY_JWT_STRATEGY_CONFIG, AuthProxyJwtStrategy, AuthProxyJwtStrategyConfig } from "./auth/strategies/auth-proxy-jwt.strategy";
-export {
-    AUTH_STATIC_AUTHED_USER_STRATEGY_CONFIG,
-    createStaticAuthedUserProvider,
-    StaticAuthedUserStrategy,
-    StaticAuthedUserStrategyConfig,
-} from "./auth/strategies/static-authed-user.strategy";
-export {
-    AUTH_STATIC_CREDENTIALS_BASIC_STRATEGY_CONFIG,
-    StaticCredentialsBasicStrategy,
-    StaticCredentialsBasicStrategyConfig,
-} from "./auth/strategies/static-credentials-basic.strategy";
+export { createCometAuthGuard } from "./auth/guards/comet.guard";
+export { createAuthResolver } from "./auth/resolver/auth.resolver";
+export { createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";
+export { createStaticAuthedUserStrategy } from "./auth/strategies/static-authed-user.strategy";
+export { createStaticCredentialsBasicStrategy } from "./auth/strategies/static-credentials-basic.strategy";
 export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
 export { BlobStorageAzureStorage } from "./blob-storage/backends/azure/blob-storage-azure.storage";
 export { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage/backends/blob-storage-backend.interface";
