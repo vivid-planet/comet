@@ -67,6 +67,29 @@ type DamFile {
   dependents: String!
 }
 
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
+
+type FilenameResponse {
+  name: String!
+  folderId: ID
+  isOccupied: Boolean!
+}
+
+type PaginatedDamFiles {
+  nodes: [DamFile!]!
+  totalCount: Int!
+}
+
+type PaginatedDamFolders {
+  nodes: [DamFolder!]!
+  totalCount: Int!
+}
+
 type BuildTemplate {
   id: ID!
   name: String!
@@ -100,29 +123,6 @@ type CronJob {
   name: String!
   schedule: String!
   lastScheduledAt: DateTime
-}
-
-type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
-}
-
-union DamItem = DamFile | DamFolder
-
-type FilenameResponse {
-  name: String!
-  folderId: ID
-  isOccupied: Boolean!
-}
-
-type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
-}
-
-type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
 }
 
 type PageTreeNode {

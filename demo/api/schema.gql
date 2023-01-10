@@ -71,6 +71,29 @@ type DamFile {
   dependents: String!
 }
 
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
+
+type FilenameResponse {
+  name: String!
+  folderId: ID
+  isOccupied: Boolean!
+}
+
+type PaginatedDamFiles {
+  nodes: [DamFile!]!
+  totalCount: Int!
+}
+
+type PaginatedDamFolders {
+  nodes: [DamFolder!]!
+  totalCount: Int!
+}
+
 type BuildTemplate {
   id: ID!
   name: String!
@@ -104,29 +127,6 @@ type CronJob {
   name: String!
   schedule: String!
   lastScheduledAt: DateTime
-}
-
-type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
-}
-
-union DamItem = DamFile | DamFolder
-
-type FilenameResponse {
-  name: String!
-  folderId: ID
-  isOccupied: Boolean!
-}
-
-type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
-}
-
-type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
 }
 
 type NewsComment implements DocumentInterface {
@@ -248,6 +248,17 @@ type PaginatedPages {
   totalCount: Int!
 }
 
+type MainMenuItem {
+  id: ID!
+  node: PageTreeNode!
+  content: RichTextBlockData
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""RichText root block data"""
+scalar RichTextBlockData
+
 type PredefinedPage implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -278,17 +289,6 @@ type Footer implements DocumentInterface {
 
 """FooterContent root block data"""
 scalar FooterContentBlockData
-
-type MainMenuItem {
-  id: ID!
-  node: PageTreeNode!
-  content: RichTextBlockData
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-"""RichText root block data"""
-scalar RichTextBlockData
 
 type MainMenu {
   items: [MainMenuItem!]!
