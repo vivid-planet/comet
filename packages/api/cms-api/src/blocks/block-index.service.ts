@@ -73,14 +73,14 @@ export class BlockIndexService {
         console.timeEnd("refresh materialized block dependency");
     }
 
-    async getDependentsByTargetIdentifier(targetIdentifier: string, id: string): Promise<BlockIndexDependency[]> {
+    async getDependentsByTargetIdentifierAndTargetId(targetIdentifier: string, id: string): Promise<BlockIndexDependency[]> {
         return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetIdentifier" = ? AND idx."targetId" = ?`, [
             targetIdentifier,
             id,
         ]);
     }
 
-    async getDependenciesByTargetIdentifier(targetIdentifier: string, id: string): Promise<BlockIndexDependency[]> {
+    async getDependenciesByTargetIdentifierAndRootId(targetIdentifier: string, id: string): Promise<BlockIndexDependency[]> {
         return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetIdentifier" = ? AND idx."id" = ?`, [
             targetIdentifier,
             id,
