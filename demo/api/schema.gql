@@ -71,6 +71,29 @@ type DamFile {
   dependents: String!
 }
 
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
+
+type FilenameResponse {
+  name: String!
+  folderId: ID
+  isOccupied: Boolean!
+}
+
+type PaginatedDamFiles {
+  nodes: [DamFile!]!
+  totalCount: Int!
+}
+
+type PaginatedDamFolders {
+  nodes: [DamFolder!]!
+  totalCount: Int!
+}
+
 type BuildTemplate {
   id: ID!
   name: String!
@@ -97,29 +120,6 @@ enum JobStatus {
   active
   succeeded
   failed
-}
-
-type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
-}
-
-union DamItem = DamFile | DamFolder
-
-type FilenameResponse {
-  name: String!
-  folderId: ID
-  isOccupied: Boolean!
-}
-
-type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
-}
-
-type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
 }
 
 type NewsComment implements DocumentInterface {
@@ -241,6 +241,17 @@ type PaginatedPages {
   totalCount: Int!
 }
 
+type MainMenuItem {
+  id: ID!
+  node: PageTreeNode!
+  content: RichTextBlockData
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""RichText root block data"""
+scalar RichTextBlockData
+
 type PredefinedPage implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -263,17 +274,6 @@ type Footer implements DocumentInterface {
 
 """FooterContent root block data"""
 scalar FooterContentBlockData
-
-type MainMenuItem {
-  id: ID!
-  node: PageTreeNode!
-  content: RichTextBlockData
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-"""RichText root block data"""
-scalar RichTextBlockData
 
 type MainMenu {
   items: [MainMenuItem!]!
@@ -353,6 +353,9 @@ input RedirectScopeInput {
 type Query {
   pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
   link(linkId: ID!): Link
+  mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
+  topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
+  mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -375,9 +378,6 @@ type Query {
   news(id: ID!): News!
   newsBySlug(slug: String!): News
   newsList(offset: Int = 0, limit: Int = 20, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
-  mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
-  topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
-  mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
@@ -523,6 +523,7 @@ enum ProductSortField {
 type Mutation {
   savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
   saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
+  updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
   createBuilds(input: CreateBuildsInput!): Boolean!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
@@ -552,7 +553,6 @@ type Mutation {
   createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
   updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
-  updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
   saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
   createProduct(input: ProductInput!): Product!
@@ -577,6 +577,13 @@ input LinkInput {
 
 """Link root block input"""
 scalar LinkBlockInput
+
+input MainMenuItemInput {
+  content: RichTextBlockInput
+}
+
+"""RichText root block input"""
+scalar RichTextBlockInput
 
 input CreateBuildsInput {
   names: [String!]!
@@ -683,13 +690,6 @@ scalar NewsContentBlockInput
 input NewsCommentInput {
   comment: String!
 }
-
-input MainMenuItemInput {
-  content: RichTextBlockInput
-}
-
-"""RichText root block input"""
-scalar RichTextBlockInput
 
 input FooterInput {
   content: FooterContentBlockInput!
