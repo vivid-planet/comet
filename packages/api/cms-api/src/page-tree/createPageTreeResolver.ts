@@ -166,7 +166,10 @@ export function createPageTreeResolver({
 
         @ResolveField(() => String)
         async dependents(@Parent() node: PageTreeNodeInterface): Promise<string> {
-            const dependents = await this.blockIndexService.getDependentsByTargetIdentifier(PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER, node.id);
+            const dependents = await this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(
+                PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER,
+                node.id,
+            );
             console.log(dependents);
             // return dependents;
             return "dependents";
@@ -174,7 +177,10 @@ export function createPageTreeResolver({
 
         @ResolveField(() => String)
         async dependencies(@Parent() node: PageTreeNodeInterface): Promise<string> {
-            const dependencies = await this.blockIndexService.getDependenciesByTargetIdentifier(PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER, node.id);
+            const dependencies = await this.blockIndexService.getDependenciesByTargetIdentifierAndRootId(
+                PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER,
+                node.id,
+            );
             console.log(dependencies);
             // return dependencies;
             return "dependencies";
