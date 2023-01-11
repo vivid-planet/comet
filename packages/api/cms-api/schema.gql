@@ -67,29 +67,6 @@ type DamFile {
   dependents: String!
 }
 
-type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
-}
-
-union DamItem = DamFile | DamFolder
-
-type FilenameResponse {
-  name: String!
-  folderId: ID
-  isOccupied: Boolean!
-}
-
-type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
-}
-
-type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
-}
-
 type BuildTemplate {
   id: ID!
   name: String!
@@ -116,6 +93,29 @@ enum JobStatus {
   active
   succeeded
   failed
+}
+
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
+
+type FilenameResponse {
+  name: String!
+  folderId: ID
+  isOccupied: Boolean!
+}
+
+type PaginatedDamFiles {
+  nodes: [DamFile!]!
+  totalCount: Int!
+}
+
+type PaginatedDamFolders {
+  nodes: [DamFolder!]!
+  totalCount: Int!
 }
 
 type PageTreeNode {

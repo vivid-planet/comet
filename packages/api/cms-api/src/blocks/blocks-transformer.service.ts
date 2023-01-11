@@ -1,11 +1,11 @@
 import { BlockContext, BlockDataInterface, isBlockDataInterface } from "@comet/blocks-api";
 import { Inject, Injectable } from "@nestjs/common";
 
-import { BLOCKS_MODULE_DEPENDENCY_TRANSFORMERS } from "./blocks.constants";
+import { BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks.constants";
 
 @Injectable()
 export class BlocksTransformerService {
-    constructor(@Inject(BLOCKS_MODULE_DEPENDENCY_TRANSFORMERS) private dependencies: Record<string, unknown>) {}
+    constructor(@Inject(BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES) private dependencies: Record<string, unknown>) {}
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async transformToPlain(block: BlockDataInterface, ctx: BlockContext): Promise<any> {
