@@ -31,11 +31,11 @@ export class BlockIndexService {
         }, {});
 
         for (const rootBlockEntity of this.discoverEntitiesService.discoverRootBlocks()) {
-            const { metadata, column, graphqlMetadata } = rootBlockEntity;
+            const { metadata, column, graphqlMetadata, blockIndexRootIdentifier } = rootBlockEntity;
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
-                            targetObj->>'targetIdentifier'        "targetIdentifier",
+                            '${blockIndexRootIdentifier}'         "rootIdentifier",
                             "${metadata.tableName}"."${primary}"  "id",
                             '${metadata.name}'                    "entityName",
                             '${graphqlMetadata.objectType}'       "graphqlObjectType",
@@ -45,6 +45,7 @@ export class BlockIndexService {
                             indexObj->>'blockname'                "blockname",
                             indexObj->>'jsonPath'                 "jsonPath",
                             (indexObj->>'visible')::boolean       "visible",
+                            targetObj->>'targetIdentifier'        "targetIdentifier",
                             targetTableData->>'entityName'        "targetEntityName",
                             targetTableData->>'graphqlObjectType' "targetGraphqlObjectType",
                             targetTableData->>'tableName'         "targetTableName",
@@ -83,9 +84,9 @@ export class BlockIndexService {
         ]);
     }
 
-    async getDependenciesByTargetIdentifierAndRootId(targetIdentifier: string, rootId: string): Promise<BlockIndexDependency[]> {
-        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetIdentifier" = ? AND idx."id" = ?`, [
-            targetIdentifier,
+    async getDependenciesByRootIdentifierAndRootId(rootIdentifier: string, rootId: string): Promise<BlockIndexDependency[]> {
+        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."rootIdentifier" = ? AND idx."id" = ?`, [
+            rootIdentifier,
             rootId,
         ]);
     }
