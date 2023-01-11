@@ -137,12 +137,6 @@ export class FilesResolver {
     async dependents(@Parent() file: File): Promise<string> {
         const dependents = await this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(DAM_FILE_BLOCK_INDEX_IDENTIFIER, file.id);
         console.log(dependents);
-
-        console.log(
-            "transformedDependent ",
-            await this.blockIndexService.transformBlockIndexDependencyToEntity<File>(dependents[0].entityName, dependents[0].id),
-        );
-
         // return dependents;
         return "test";
     }
