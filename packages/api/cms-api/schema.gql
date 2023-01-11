@@ -64,7 +64,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  dependents: String!
+  dependents: [BlockIndexDependency!]!
 }
 
 type BuildTemplate {
@@ -108,6 +108,19 @@ type PaginatedDamItems {
 }
 
 union DamItem = DamFile | DamFolder
+
+type BlockIndexDependency {
+  targetIdentifier: String!
+  id: String!
+  entityName: String!
+  graphqlObjectType: String!
+  blockname: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetEntityName: String!
+  targetGraphqlObjectType: String!
+  targetId: String!
+}
 
 type FilenameResponse {
   name: String!
