@@ -5,6 +5,7 @@ import { Request } from "express";
 import { GraphQLError } from "graphql";
 
 import { BlockIndexService } from "../blocks/block-index.service";
+import { BlockIndexDependency } from "../blocks/block-index-dependency";
 import { PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER } from "../blocks/block-index-identifiers";
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
@@ -164,26 +165,9 @@ export function createPageTreeResolver({
             return this.pageTreeService.resolveDocument(activeDocument.type, activeDocument.documentId);
         }
 
-        @ResolveField(() => String)
-        async dependents(@Parent() node: PageTreeNodeInterface): Promise<string> {
-            const dependents = await this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(
-                PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER,
-                node.id,
-            );
-            console.log(dependents);
-            // return dependents;
-            return "dependents";
-        }
-
-        @ResolveField(() => String)
-        async dependencies(@Parent() node: PageTreeNodeInterface): Promise<string> {
-            const dependencies = await this.blockIndexService.getDependenciesByTargetIdentifierAndRootId(
-                PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER,
-                node.id,
-            );
-            console.log(dependencies);
-            // return dependencies;
-            return "dependencies";
+        @ResolveField(() => [BlockIndexDependency])
+        async dependents(@Parent() node: PageTreeNodeInterface): Promise<BlockIndexDependency[]> {
+            return this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER, node.id);
         }
 
         @Mutation(() => PageTreeNode)
