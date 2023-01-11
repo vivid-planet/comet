@@ -5,6 +5,7 @@ import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver }
 import { basename, extname } from "path";
 
 import { BlockIndexService } from "../../blocks/block-index.service";
+import { BlockIndexDependency } from "../../blocks/block-index-dependency";
 import { DAM_FILE_BLOCK_INDEX_IDENTIFIER } from "../../blocks/block-index-identifiers";
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
@@ -133,11 +134,10 @@ export class FilesResolver {
         return this.filesService.getDamPath(file);
     }
 
-    @ResolveField(() => String)
-    async dependents(@Parent() file: File): Promise<string> {
+    @ResolveField(() => [BlockIndexDependency])
+    async dependents(@Parent() file: File): Promise<BlockIndexDependency[]> {
         const dependents = await this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(DAM_FILE_BLOCK_INDEX_IDENTIFIER, file.id);
-        console.log(dependents);
-        // return dependents;
-        return "test";
+        console.log("dependents ", dependents);
+        return dependents;
     }
 }

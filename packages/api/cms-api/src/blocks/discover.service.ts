@@ -2,12 +2,17 @@ import { Block, RootBlockEntityOptions } from "@comet/blocks-api";
 import { EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/core";
 import { EntityClass } from "@mikro-orm/core/typings";
 import { Injectable } from "@nestjs/common";
+import { TypeMetadataStorage } from "@nestjs/graphql";
+import { ObjectTypeMetadata } from "@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata";
 
 interface DiscoverRootBlocksResult {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repository: EntityRepository<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>;
+    graphqlMetadata: {
+        objectType: string;
+    };
     options: RootBlockEntityOptions;
     column: string;
     block: Block;
@@ -20,11 +25,18 @@ interface DiscoverTargetEntitiesResult {
     repository: EntityRepository<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>;
+    graphqlMetadata: {
+        objectType: string;
+    };
 }
 
 @Injectable()
 export class DiscoverService {
-    constructor(private readonly orm: MikroORM) {}
+    objectTypesMetadata: ObjectTypeMetadata[];
+
+    constructor(private readonly orm: MikroORM) {
+        this.objectTypesMetadata = TypeMetadataStorage.getObjectTypesMetadata();
+    }
 
     discoverRootBlocks(): DiscoverRootBlocksResult[] {
         const ret: DiscoverRootBlocksResult[] = [];
@@ -44,6 +56,10 @@ export class DiscoverService {
                     ret.push({
                         repository: this.orm.em.getRepository(entity),
                         metadata: metadataStorage.get(entity.name),
+                        graphqlMetadata: {
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                            objectType: this.objectTypesMetadata.find((item) => item.target.name === entity.name)!.name,
+                        },
                         options: rootBlockEntityOptions,
                         column: key,
                         block,
@@ -69,6 +85,10 @@ export class DiscoverService {
                     entityName: entity.name,
                     repository: this.orm.em.getRepository(entity.name),
                     metadata: metadataStorage.get(entity.name),
+                    graphqlMetadata: {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        objectType: this.objectTypesMetadata.find((item) => item.target.name === entity.name)!.name,
+                    },
                 });
             }
         });
