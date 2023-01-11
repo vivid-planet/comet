@@ -25,27 +25,30 @@ export class BlockIndexService {
                     entityName: entity.entityName,
                     tableName: entity.metadata.tableName,
                     primary: entity.metadata.primaryKeys[0],
+                    graphqlObjectType: entity.graphqlMetadata.objectType,
                 },
             };
         }, {});
 
         for (const rootBlockEntity of this.discoverEntitiesService.discoverRootBlocks()) {
-            const { metadata, column } = rootBlockEntity;
+            const { metadata, column, graphqlMetadata } = rootBlockEntity;
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
-                            targetObj->>'targetIdentifier' "targetIdentifier",
-                            "${metadata.tableName}"."${primary}" "id",
-                            '${metadata.name}' "entityName",
-                            '${metadata.tableName}' "tableName",
-                            '${column}' "columnName",
-                            '${primary}' "primaryKey",
-                            indexObj->>'blockname' "blockname",
-                            indexObj->>'jsonPath' "jsonPath",
-                            (indexObj->>'visible')::boolean "visible",
-                            targetTableData->>'entityName' "targetEntityName",
-                            targetTableData->>'tableName' "targetTableName",
-                            targetTableData->>'primary' "targetPrimaryKey",
+                            targetObj->>'targetIdentifier'        "targetIdentifier",
+                            "${metadata.tableName}"."${primary}"  "id",
+                            '${metadata.name}'                    "entityName",
+                            '${graphqlMetadata.objectType}'       "graphqlObjectType",
+                            '${metadata.tableName}'               "tableName",
+                            '${column}'                           "columnName",
+                            '${primary}'                          "primaryKey",
+                            indexObj->>'blockname'                "blockname",
+                            indexObj->>'jsonPath'                 "jsonPath",
+                            (indexObj->>'visible')::boolean       "visible",
+                            targetTableData->>'entityName'        "targetEntityName",
+                            targetTableData->>'graphqlObjectType' "targetGraphqlObjectType",
+                            targetTableData->>'tableName'         "targetTableName",
+                            targetTableData->>'primary'           "targetPrimaryKey",
                             targetObj->>'id' "targetId"
                         FROM "${metadata.tableName}",
                             json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
@@ -73,17 +76,17 @@ export class BlockIndexService {
         console.timeEnd("refresh materialized block dependency");
     }
 
-    async getDependentsByTargetIdentifierAndTargetId(targetIdentifier: string, id: string): Promise<BlockIndexDependency[]> {
+    async getDependentsByTargetIdentifierAndTargetId(targetIdentifier: string, targetId: string): Promise<BlockIndexDependency[]> {
         return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetIdentifier" = ? AND idx."targetId" = ?`, [
             targetIdentifier,
-            id,
+            targetId,
         ]);
     }
 
-    async getDependenciesByTargetIdentifierAndRootId(targetIdentifier: string, id: string): Promise<BlockIndexDependency[]> {
+    async getDependenciesByTargetIdentifierAndRootId(targetIdentifier: string, rootId: string): Promise<BlockIndexDependency[]> {
         return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetIdentifier" = ? AND idx."id" = ?`, [
             targetIdentifier,
-            id,
+            rootId,
         ]);
     }
 }
