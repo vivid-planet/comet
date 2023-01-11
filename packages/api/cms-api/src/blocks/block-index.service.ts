@@ -1,9 +1,7 @@
-import { BaseEntity, Connection, EntityManager } from "@mikro-orm/core";
-import { Inject, Injectable } from "@nestjs/common";
+import { Connection, EntityManager } from "@mikro-orm/core";
+import { Injectable } from "@nestjs/common";
 
 import { BlockIndexDependency } from "./block-index-dependency";
-import { BLOCKS_MODULE_DEPENDENCY_TRANSFORMERS } from "./blocks.constants";
-import { DependencyTransformers } from "./blocks.module";
 import { DiscoverService } from "./discover.service";
 
 @Injectable()
@@ -11,11 +9,7 @@ export class BlockIndexService {
     private entityManager: EntityManager;
     private connection: Connection;
 
-    constructor(
-        entityManager: EntityManager,
-        private readonly discoverEntitiesService: DiscoverService,
-        @Inject(BLOCKS_MODULE_DEPENDENCY_TRANSFORMERS) private readonly transformerDependencies: DependencyTransformers,
-    ) {
+    constructor(entityManager: EntityManager, private readonly discoverEntitiesService: DiscoverService) {
         this.entityManager = entityManager;
         this.connection = entityManager.getConnection();
     }
@@ -91,18 +85,5 @@ export class BlockIndexService {
             targetIdentifier,
             id,
         ]);
-    }
-
-    async transformBlockIndexDependencyToEntity<Entity = BaseEntity<{ id: string }, "id">>(entityName: string, id: string): Promise<Entity | null> {
-        const getEntity = this.transformerDependencies[entityName];
-
-        console.log("getEntity ", getEntity(id));
-
-        if (getEntity === undefined) {
-            console.error(`Cannot transform BlockIndexDependency to entity: There is no transformer defined for the entity ${entityName}.`);
-            return null;
-        }
-
-        return getEntity(id) as Promise<Entity | null>;
     }
 }

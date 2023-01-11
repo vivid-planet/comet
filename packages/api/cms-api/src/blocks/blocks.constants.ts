@@ -1,2 +1,2 @@
 export const BLOCKS_MODULE_OPTIONS = "blocks-module-options";
-export const BLOCKS_MODULE_DEPENDENCY_TRANSFORMERS = "blocks-module-transformer-dependencies";
+export const BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES = "blocks-module-transformer-dependencies";

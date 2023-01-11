@@ -9,6 +9,8 @@ import {
     ContentScopeModule,
     CurrentUserInterface,
     DamModule,
+    FilesService,
+    ImagesService,
     KubernetesModule,
     PageTreeModule,
     PageTreeService,
@@ -23,8 +25,6 @@ import { ConfigModule } from "@src/config/config.module";
 import { configNS } from "@src/config/config.namespace";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
-import { MainMenuItem } from "@src/menus/entities/main-menu-item.entity";
-import { MainMenuItemService } from "@src/menus/main-menu-item.service";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
@@ -73,20 +73,17 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
             },
         }),
         BlocksModule.forRootAsync({
-            imports: [PagesModule, MenusModule],
-            useFactory: (pageTreeService: PageTreeService, mainMenuItemService: MainMenuItemService) => {
+            imports: [PagesModule],
+            useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
                 return {
-                    dependencyTransformers: {
-                        [PageTreeNode.name]: (id: string) => {
-                            return pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(id);
-                        },
-                        [MainMenuItem.name]: (id: string) => {
-                            return mainMenuItemService.findOneById(id);
-                        },
+                    transformerDependencies: {
+                        pageTreeService,
+                        filesService,
+                        imagesService,
                     },
                 };
             },
-            inject: [PageTreeService],
+            inject: [PageTreeService, FilesService, ImagesService],
         }),
         KubernetesModule.registerAsync({
             imports: [ConfigModule],
