@@ -103,13 +103,14 @@ type PaginatedDamItems {
 union DamItem = DamFile | DamFolder
 
 type BlockIndexDependency {
-  targetIdentifier: String!
+  rootIdentifier: String!
   id: String!
   entityName: String!
   graphqlObjectType: String!
   blockname: String!
   jsonPath: String!
   visible: Boolean!
+  targetIdentifier: String!
   targetEntityName: String!
   targetGraphqlObjectType: String!
   targetId: String!
@@ -146,8 +147,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents: String!
-  dependencies: String!
+  dependents: [BlockIndexDependency!]!
 }
 
 enum PageTreeNodeVisibility {

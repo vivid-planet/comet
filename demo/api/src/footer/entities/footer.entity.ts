@@ -7,11 +7,13 @@ import { v4 as uuid } from "uuid";
 import { FooterContentBlock } from "../blocks/footer-content.block";
 import { FooterContentScope } from "./footer-content-scope.entity";
 
+export const FOOTER_BLOCK_INDEX_IDENTIFIER = "Footer_BlockIndex";
+
 @Entity()
 @ObjectType({
     implements: () => [DocumentInterface],
 })
-@RootBlockEntity()
+@RootBlockEntity(FOOTER_BLOCK_INDEX_IDENTIFIER)
 @CrudSingleGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class Footer extends BaseEntity<Footer, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
@@ -19,7 +21,6 @@ export class Footer extends BaseEntity<Footer, "id"> implements DocumentInterfac
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();
-
     @RootBlock(FooterContentBlock)
     @Property({ customType: new RootBlockType(FooterContentBlock) })
     @Field(() => RootBlockDataScalar(FooterContentBlock))

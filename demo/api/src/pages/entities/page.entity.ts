@@ -7,11 +7,13 @@ import { v4 as uuid } from "uuid";
 import { PageContentBlock } from "../blocks/PageContentBlock";
 import { SeoBlock } from "../blocks/seo.block";
 
+export const PAGE_BLOCK_INDEX_IDENTIFIER = "Page_BlockIndex";
+
 @Entity()
 @ObjectType({
     implements: () => [DocumentInterface],
 })
-@RootBlockEntity()
+@RootBlockEntity(PAGE_BLOCK_INDEX_IDENTIFIER)
 export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
