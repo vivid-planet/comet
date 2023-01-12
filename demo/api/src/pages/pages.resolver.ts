@@ -1,4 +1,6 @@
 import {
+    BlockIndexDependency,
+    BlockIndexService,
     OffsetBasedPaginationArgs,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
@@ -16,14 +18,18 @@ import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
 import { PageInput } from "./dto/page.input";
 import { PaginatedPages } from "./dto/paginated-pages";
-import { Page } from "./entities/page.entity";
+import { Page, PAGE_BLOCK_INDEX_IDENTIFIER } from "./entities/page.entity";
 
 @ArgsType()
 export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {}
 
 @Resolver(() => Page)
 export class PagesResolver {
-    constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
+    constructor(
+        @InjectRepository(Page) private readonly repository: EntityRepository<Page>,
+        private readonly pageTreeService: PageTreeService,
+        private readonly blockIndexService: BlockIndexService,
+    ) {}
 
     // TODO add scope argument (who uses this anyway? probably dashboard)
     @Query(() => PaginatedPages)
@@ -35,6 +41,11 @@ export class PagesResolver {
         const [pages, totalCount] = await this.repository.findAndCount({}, options);
 
         return new PaginatedPages(pages, totalCount);
+    }
+
+    @ResolveField(() => [BlockIndexDependency])
+    async dependencies(@Parent() page: Page): Promise<BlockIndexDependency[]> {
+        return this.blockIndexService.getDependenciesByRootIdentifierAndRootId(PAGE_BLOCK_INDEX_IDENTIFIER, page.id);
     }
 
     @ResolveField(() => PageTreeNode, { nullable: true })

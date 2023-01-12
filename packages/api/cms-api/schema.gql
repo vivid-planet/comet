@@ -67,6 +67,20 @@ type DamFile {
   dependents: [BlockIndexDependency!]!
 }
 
+type BlockIndexDependency {
+  rootIdentifier: String!
+  id: String!
+  entityName: String!
+  graphqlObjectType: String!
+  blockname: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetIdentifier: String!
+  targetEntityName: String!
+  targetGraphqlObjectType: String!
+  targetId: String!
+}
+
 type BuildTemplate {
   id: ID!
   name: String!
@@ -101,20 +115,6 @@ type PaginatedDamItems {
 }
 
 union DamItem = DamFile | DamFolder
-
-type BlockIndexDependency {
-  rootIdentifier: String!
-  id: String!
-  entityName: String!
-  graphqlObjectType: String!
-  blockname: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetIdentifier: String!
-  targetEntityName: String!
-  targetGraphqlObjectType: String!
-  targetId: String!
-}
 
 type FilenameResponse {
   name: String!
@@ -178,6 +178,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
+  dependencies: [BlockIndexDependency!]!
 }
 
 enum RedirectSourceTypeValues {
