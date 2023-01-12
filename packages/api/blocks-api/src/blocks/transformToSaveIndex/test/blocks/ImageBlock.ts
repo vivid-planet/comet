@@ -3,6 +3,8 @@ import { IsOptional, IsString } from "class-validator";
 import { BlockData, BlockIndexDataArray, BlockInput, createBlock, inputToData } from "../../../block";
 import { BlockField } from "../../../decorators/field";
 
+export const DAM_FILE_BLOCK_INDEX_IDENTIFIER = "DamFile_BlockIndex";
+
 class ImageBlockData extends BlockData {
     @BlockField()
     damFileId?: string;
@@ -10,7 +12,7 @@ class ImageBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                targetIdentifier: "DamFile_BlockIndex",
+                targetIdentifier: DAM_FILE_BLOCK_INDEX_IDENTIFIER,
                 id: this.damFileId,
             },
         ];
