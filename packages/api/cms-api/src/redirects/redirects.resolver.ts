@@ -2,11 +2,14 @@ import { FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Type } from "@nestjs/common";
-import { Args, ArgsType, CONTEXT, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
+import { Args, ArgsType, CONTEXT, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Request } from "express";
 
+import { BlockIndexService } from "../blocks/block-index.service";
+import { BlockIndexDependency } from "../blocks/block-index-dependency";
+import { REDIRECT_BLOCK_INDEX_IDENTIFIER } from "../blocks/block-index-identifiers";
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
@@ -64,6 +67,7 @@ export function createRedirectsResolver({
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
             @Inject(forwardRef(() => PageTreeService)) private readonly pageTreeService: PageTreeService,
             @Inject(CONTEXT) private context: { req: Request },
+            private readonly blockIndexService: BlockIndexService,
         ) {
             const { includeInvisiblePages } = getRequestContextHeadersFromRequest(this.context.req);
             this.pageTreeReadApi = this.pageTreeService.createReadApi({
@@ -192,6 +196,11 @@ export function createRedirectsResolver({
             const entity = await this.repository.findOneOrFail(id);
             await this.repository.removeAndFlush(entity);
             return true;
+        }
+
+        @ResolveField(() => [BlockIndexDependency])
+        async dependencies(@Parent() redirect: RedirectInterface): Promise<BlockIndexDependency[]> {
+            return this.blockIndexService.getDependenciesByRootIdentifierAndRootId(REDIRECT_BLOCK_INDEX_IDENTIFIER, redirect.id);
         }
     }
 
