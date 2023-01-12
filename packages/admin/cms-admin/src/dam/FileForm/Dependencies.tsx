@@ -6,44 +6,18 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLDamFileDependentsQuery, GQLDamFileDependentsQueryVariables } from "../../graphql.generated";
-
-const damFilePageDependencyQuery = gql`
-    query PageDependency($id: ID!) {
-        page(id: $id) {
-            id
-            pageTreeNode {
-                id
-                name
-                path
-            }
-        }
-    }
-`;
-
-const getPageInfo = async (id: string, apolloClient: ApolloClient<unknown>) => {
-    const { data } = await apolloClient.query({
-        query: damFilePageDependencyQuery,
-        variables: {
-            id,
-        },
-    });
-
-    return {
-        type: <FormattedMessage id="comet.dam.dependencies.Page" defaultMessage="Page" />,
-        name: data.page.pageTreeNode.name,
-        secondaryInfo: data.page.pageTreeNode.path,
-    };
-};
+import { DamDependencyRenderInfo } from "../config/DamConfigContext";
+import { useDamConfig } from "../config/useDamConfig";
 
 interface DependencyProps {
     id: string;
-    getRenderInfo: (id: string, apolloClient: ApolloClient<unknown>) => Promise<RenderInfo> | RenderInfo;
-    renderCustomContent?: (renderInfo: RenderInfo) => React.ReactNode;
+    getRenderInfo: (id: string, apolloClient: ApolloClient<unknown>) => Promise<DamDependencyRenderInfo> | DamDependencyRenderInfo;
+    renderCustomContent?: (renderInfo: DamDependencyRenderInfo) => React.ReactNode;
 }
 
 const Dependency = ({ id, getRenderInfo, renderCustomContent }: DependencyProps) => {
     const apolloClient = useApolloClient();
-    const [data, setData] = React.useState<RenderInfo>();
+    const [data, setData] = React.useState<DamDependencyRenderInfo>();
 
     React.useEffect(() => {
         const loadData = async () => {
@@ -52,7 +26,7 @@ const Dependency = ({ id, getRenderInfo, renderCustomContent }: DependencyProps)
         };
 
         loadData();
-    });
+    }, [apolloClient, getRenderInfo, id]);
 
     if (data === undefined) {
         // TODO: Loading state
@@ -117,23 +91,10 @@ interface DependenciesProps {
     fileId: string;
 }
 
-interface RenderInfo {
-    type: React.ReactNode;
-    name: React.ReactNode;
-    secondaryInfo: React.ReactNode;
-}
-
-const renderInfoObj: {
-    [key: string]: {
-        getRenderInfo: (id: string, apolloClient: ApolloClient<unknown>) => Promise<RenderInfo> | RenderInfo;
-        renderCustomContent?: (renderInfo: RenderInfo) => React.ReactNode;
-    };
-} = {
-    Page: { getRenderInfo: getPageInfo },
-};
-
 export const Dependencies = ({ fileId }: DependenciesProps) => {
     const classes = useStyles();
+    const damConfig = useDamConfig();
+
     const { data, loading, refetch } = useQuery<GQLDamFileDependentsQuery, GQLDamFileDependentsQueryVariables>(damFileDependentsQuery, {
         variables: {
             id: fileId,
@@ -148,7 +109,7 @@ export const Dependencies = ({ fileId }: DependenciesProps) => {
                 </Button>
             </ListItem>
             {data?.damFile.dependents.map((dependent) => {
-                if (!renderInfoObj[dependent.graphqlObjectType]) {
+                if (!damConfig.dependencyRenderInfoProvider?.[dependent.graphqlObjectType]) {
                     return (
                         <FormattedMessage
                             id="comet.dam.dependencies.CannotResolveError"
@@ -162,7 +123,7 @@ export const Dependencies = ({ fileId }: DependenciesProps) => {
 
                 return (
                     <ListItem key={dependent.id} divider>
-                        <Dependency id={dependent.id} {...renderInfoObj[dependent.graphqlObjectType]} />
+                        <Dependency id={dependent.id} {...damConfig.dependencyRenderInfoProvider[dependent.graphqlObjectType]} />
                     </ListItem>
                 );
             })}
