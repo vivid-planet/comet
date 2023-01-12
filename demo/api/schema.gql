@@ -370,6 +370,7 @@ input RedirectScopeInput {
 
 type Query {
   pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
+  page(id: ID!): Page!
   link(linkId: ID!): Link
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!

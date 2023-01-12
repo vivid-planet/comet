@@ -35,6 +35,7 @@ import {
     GQLUpdateFileMutationVariables,
 } from "../../graphql.generated";
 import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation";
+import { Dependencies } from "./Dependencies";
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { FilePreview } from "./FilePreview";
@@ -258,14 +259,13 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                {/*<RouterTab*/}
-                                {/*    key="dependencies"*/}
-                                {/*    label={intl.formatMessage({ id: "comet.dam.file.dependencies", defaultMessage: "Dependencies" })}*/}
-                                {/*    path="/dependencies"*/}
-                                {/*>*/}
-                                {/*    /!*@TODO: Add Dependencies*!/*/}
-                                {/*    <div />*/}
-                                {/*</RouterTab>*/}
+                                <RouterTab
+                                    key="dependencies"
+                                    label={intl.formatMessage({ id: "comet.dam.file.dependencies", defaultMessage: "Dependencies" })}
+                                    path="/dependencies"
+                                >
+                                    <Dependencies fileId={file.id} />
+                                </RouterTab>
                             </RouterTabs>
                         </ReactSplit>
                     </MainContent>

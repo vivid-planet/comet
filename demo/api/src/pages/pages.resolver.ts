@@ -43,6 +43,11 @@ export class PagesResolver {
         return new PaginatedPages(pages, totalCount);
     }
 
+    @Query(() => Page)
+    async page(@Args("id", { type: () => ID }) id: string): Promise<Page> {
+        return this.repository.findOneOrFail({ id });
+    }
+
     @ResolveField(() => [BlockIndexDependency])
     async dependencies(@Parent() page: Page): Promise<BlockIndexDependency[]> {
         return this.blockIndexService.getDependenciesByRootIdentifierAndRootId(PAGE_BLOCK_INDEX_IDENTIFIER, page.id);
