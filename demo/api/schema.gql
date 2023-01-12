@@ -71,6 +71,20 @@ type DamFile {
   dependents: [BlockIndexDependency!]!
 }
 
+type BlockIndexDependency {
+  rootIdentifier: String!
+  id: String!
+  entityName: String!
+  graphqlObjectType: String!
+  blockname: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetIdentifier: String!
+  targetEntityName: String!
+  targetGraphqlObjectType: String!
+  targetId: String!
+}
+
 type BuildTemplate {
   id: ID!
   name: String!
@@ -105,20 +119,6 @@ type PaginatedDamItems {
 }
 
 union DamItem = DamFile | DamFolder
-
-type BlockIndexDependency {
-  rootIdentifier: String!
-  id: String!
-  entityName: String!
-  graphqlObjectType: String!
-  blockname: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetIdentifier: String!
-  targetEntityName: String!
-  targetGraphqlObjectType: String!
-  targetId: String!
-}
 
 type FilenameResponse {
   name: String!
@@ -166,6 +166,8 @@ type News implements DocumentInterface {
   content: NewsContentBlockData!
   createdAt: DateTime!
   comments: [NewsComment!]!
+  dependents: [BlockIndexDependency!]!
+  dependencies: [BlockIndexDependency!]!
 }
 
 enum NewsCategory {
@@ -196,6 +198,7 @@ type Page implements DocumentInterface {
   content: PageContentBlockData!
   seo: SeoBlockData!
   createdAt: DateTime!
+  dependencies: [BlockIndexDependency!]!
   pageTreeNode: PageTreeNode
 }
 
@@ -291,6 +294,7 @@ type MainMenuItem {
   content: RichTextBlockData
   createdAt: DateTime!
   updatedAt: DateTime!
+  dependencies: [BlockIndexDependency!]!
 }
 
 """RichText root block data"""
@@ -336,6 +340,7 @@ type Redirect implements DocumentInterface {
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   scope: RedirectScope!
+  dependencies: [BlockIndexDependency!]!
 }
 
 enum RedirectSourceTypeValues {

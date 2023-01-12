@@ -136,8 +136,6 @@ export class FilesResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependents(@Parent() file: File): Promise<BlockIndexDependency[]> {
-        const dependents = await this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(DAM_FILE_BLOCK_INDEX_IDENTIFIER, file.id);
-        console.log("dependents ", dependents);
-        return dependents;
+        return this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(DAM_FILE_BLOCK_INDEX_IDENTIFIER, file.id);
     }
 }

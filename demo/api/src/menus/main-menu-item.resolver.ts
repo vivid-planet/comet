@@ -1,17 +1,26 @@
-import { PageTreeNodeVisibility, PageTreeService, RequestContext, RequestContextInterface, validateNotModified } from "@comet/cms-api";
+import {
+    BlockIndexDependency,
+    BlockIndexService,
+    PageTreeNodeVisibility,
+    PageTreeService,
+    RequestContext,
+    RequestContextInterface,
+    validateNotModified,
+} from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
 import { MainMenuItemInput } from "./dto/main-menu-item.input";
-import { MainMenuItem } from "./entities/main-menu-item.entity";
+import { MAIN_MENU_ITEM_BLOCK_INDEX_IDENTIFIER, MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuItem)
 export class MainMenuItemResolver {
     constructor(
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
         private readonly pageTreeService: PageTreeService,
+        private readonly blockIndexService: BlockIndexService,
     ) {}
 
     @Query(() => MainMenuItem)
@@ -63,5 +72,10 @@ export class MainMenuItemResolver {
         }
 
         return this.mainMenuItemRepository.findOneOrFail({ node });
+    }
+
+    @ResolveField(() => [BlockIndexDependency])
+    async dependencies(@Parent() mainMenuItem: MainMenuItem): Promise<BlockIndexDependency[]> {
+        return this.blockIndexService.getDependenciesByRootIdentifierAndRootId(MAIN_MENU_ITEM_BLOCK_INDEX_IDENTIFIER, mainMenuItem.id);
     }
 }
