@@ -379,16 +379,7 @@ input RedirectScopeInput {
 type Query {
   pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
   link(linkId: ID!): Link
-<<<<<<< HEAD
-<<<<<<< HEAD
   currentUser: CurrentUser!
-=======
-  mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
-  topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
-  mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
->>>>>>> WIP: feat(BlockIndexService): get dependencies, dependents and transform dependency to entity
-=======
->>>>>>> Revert "WIP: feat(BlockIndexService): get dependencies, dependents and transform dependency to entity"
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -559,14 +550,7 @@ enum ProductSortField {
 type Mutation {
   savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
   saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
-<<<<<<< HEAD
-<<<<<<< HEAD
   currentUserSignOut: String!
-=======
-  updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
->>>>>>> WIP: feat(BlockIndexService): get dependencies, dependents and transform dependency to entity
-=======
->>>>>>> Revert "WIP: feat(BlockIndexService): get dependencies, dependents and transform dependency to entity"
   createBuilds(input: CreateBuildsInput!): Boolean!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
