@@ -107,7 +107,15 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         const acceptedMimetypes = options.acceptedMimetypes ?? allAcceptedMimeTypes;
 
         acceptedMimetypes.forEach((mimetype) => {
-            const extensions = mimedb[mimetype]?.extensions;
+            let extensions: readonly string[] | undefined;
+            if (mimetype === "application/x-zip-compressed") {
+                // zip files in Windows, not supported by mime-db
+                // see https://github.com/jshttp/mime-db/issues/245
+                extensions = ["zip"];
+            } else {
+                extensions = mimedb[mimetype]?.extensions;
+            }
+
             if (extensions) {
                 acceptObj[mimetype] = extensions.map((extension) => `.${extension}`);
             }
