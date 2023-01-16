@@ -1,11 +1,12 @@
+import { gql, useQuery } from "@apollo/client";
 import { MainContent, messages, Stack } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { useUser } from "@comet/react-app-auth";
 import { Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ScopeIndicatorContent, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import DateTime from "@src/dashboard/DateTime";
+import { GQLDashboardCurrentUserQuery } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -37,20 +38,28 @@ const Greeting = styled(Typography)`
     color: white;
 `;
 
+const currentUserQuery = gql`
+    query DashboardCurrentUser {
+        currentUser {
+            name
+        }
+    }
+`;
+
 const Dashboard: React.FC = () => {
     const intl = useIntl();
-    const user = useUser();
+    const { data } = useQuery<GQLDashboardCurrentUserQuery>(currentUserQuery);
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "cometDemo.dashboard", defaultMessage: "Dashboard" })}>
             <Header>
                 <DateTime />
                 <Greeting variant="h1">
-                    {user ? (
+                    {data ? (
                         <FormattedMessage
                             id="cometDemo.pages.dashboard.helloUser"
                             defaultMessage="Hallo {givenName}!"
-                            values={{ givenName: user.given_name }}
+                            values={{ givenName: data.currentUser.name }}
                         />
                     ) : (
                         <FormattedMessage id="cometDemo.pages.dashboard.hello" defaultMessage="Hallo!" />

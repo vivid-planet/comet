@@ -1,15 +1,14 @@
 import "reflect-metadata";
-export { AUTH_CONFIG, AUTH_CURRENT_USER_LOADER, AUTH_MODULE_OPTIONS } from "./auth/auth.constants";
-export { AuthModule } from "./auth/auth.module";
+export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
 export { PublicApi } from "./auth/decorators/public-api.decorator";
-export { CurrentUser } from "./auth/dto/current-user";
-export { GlobalAuthGuard } from "./auth/guards/global.guard";
-export { CurrentUserLoaderInterface } from "./auth/interfaces/current-user-loader.interface";
-export { BasicAuthStrategy } from "./auth/strategies/basic-auth.strategy";
-export { BearerTokenStrategy } from "./auth/strategies/bearer-token.strategy";
+export { createCometAuthGuard } from "./auth/guards/comet.guard";
+export { createAuthResolver } from "./auth/resolver/auth.resolver";
+export { createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";
+export { createStaticAuthedUserStrategy } from "./auth/strategies/static-authed-user.strategy";
+export { createStaticCredentialsBasicStrategy } from "./auth/strategies/static-credentials-basic.strategy";
 export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
 export { BlobStorageAzureStorage } from "./blob-storage/backends/azure/blob-storage-azure.storage";
 export { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage/backends/blob-storage-backend.interface";
@@ -45,7 +44,6 @@ export { BuildsService } from "./builds/builds.service";
 export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { BuildObject } from "./builds/dto/build.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
-export { JobStatus } from "./builds/job-status.enum";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
 export { SkipBuildInterceptor } from "./builds/skip-build.interceptor";
 export { ContentScope } from "./common/decorators/content-scope.interface";
@@ -115,7 +113,10 @@ export {
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
 } from "./generator/crud-generator.decorator";
+export { JobStatus } from "./kubernetes/job-status.enum";
+export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
+export { AnchorBlock } from "./page-tree/blocks/anchor.block";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
 export { AttachedDocumentInput, AttachedDocumentStrictInput } from "./page-tree/dto/attached-document.input";

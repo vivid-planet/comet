@@ -6,7 +6,7 @@
         "express": "^4.18.2"
     },
     "scripts": {
-        "preserve": "envsubst < \"../build/index.html\" > \"/tmp/index.html\" && mv /tmp/index.html ../build/index.html && envsubst < \"../build/access-token-service-worker.js\" > \"/tmp/access-token-service-worker.js\" && mv /tmp/access-token-service-worker.js ../build/access-token-service-worker.js",
+        "preserve": "envsubst < \"../build/index.html\" > \"/tmp/index.html\" && mv /tmp/index.html ../build/index.html",
         "serve": "node server.js"
     },
     "engines": {

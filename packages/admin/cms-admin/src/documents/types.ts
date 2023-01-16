@@ -45,4 +45,5 @@ export interface DocumentInterface<
     menuIcon: (props: SvgIconProps<"svg">) => JSX.Element;
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element;
     InfoTag?: React.ComponentType<{ page: PageTreePage }>;
+    anchors: (input: DocumentInput) => string[];
 }

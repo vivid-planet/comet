@@ -93,7 +93,7 @@ export function createPageTreeResolver({
             @Args("path") path: string,
             @Args("scope", { type: () => Scope }) scope: ScopeInterface,
         ): Promise<PageTreeNodeInterface | null> {
-            return await this.pageTreeReadApi.getNodeByPath(path, { scope: nonEmptyScopeOrNothing(scope) });
+            return this.pageTreeReadApi.getNodeByPath(path, { scope: nonEmptyScopeOrNothing(scope) });
         }
 
         @Query(() => [PageTreeNode])
@@ -212,7 +212,7 @@ export function createPageTreeResolver({
 
             await this.pageTreeService.updateNodeVisibility(id, input.visibility);
 
-            return await readApi.getNodeOrFail(id);
+            return readApi.getNodeOrFail(id);
         }
 
         @Mutation(() => PageTreeNode)
@@ -328,7 +328,7 @@ export function createPageTreeResolver({
             }
             await this.pageTreeService.updateCategory(id, category);
 
-            return await this.pageTreeNode(id);
+            return this.pageTreeNode(id);
         }
 
         @Mutation(() => PageTreeNode)
@@ -356,7 +356,7 @@ export function createPageTreeResolver({
             }
             // when a position is passed, update all concerened nodes
             await this.pageTreeService.updateNodePosition(newNode.id, { pos: input.pos as number, parentId: newNode.parentId });
-            return await this.pageTreeNode(newNode.id); // refetch new version
+            return this.pageTreeNode(newNode.id); // refetch new version
         }
     }
 

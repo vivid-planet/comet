@@ -29,7 +29,6 @@
         "@comet/admin-theme": "^3.0.0",
         "@comet/blocks-admin": "^3.0.0",
         "@comet/cms-admin": "^3.0.0",
-        "@comet/react-app-auth": "^1.0.0",
         "@emotion/react": "^11.9.3",
         "@emotion/styled": "^11.9.3",
         "@fontsource/roboto": "^4.5.5",

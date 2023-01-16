@@ -10,7 +10,7 @@ import {
     inputToData,
     TransformResponse,
 } from "@comet/blocks-api";
-import { IsOptional, IsUUID } from "class-validator";
+import { IsOptional, IsString, IsUUID } from "class-validator";
 
 import { PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER } from "../../blocks/block-index-identifiers";
 import { PageTreeService } from "../page-tree.service";
@@ -21,11 +21,16 @@ interface InternalLinkBlockTransformResponse extends TransformResponse {
         id: string;
         name: string;
         path: string;
+        documentType: string;
     } | null;
+    targetPageAnchor?: string;
 }
 
 class InternalLinkBlockData extends BlockData {
     targetPageId?: string;
+
+    @BlockField({ nullable: true })
+    targetPageAnchor?: string;
 
     async transformToPlain({ pageTreeService }: { pageTreeService: PageTreeService }): Promise<InternalLinkBlockTransformResponse> {
         if (pageTreeService === undefined) {
@@ -51,7 +56,9 @@ class InternalLinkBlockData extends BlockData {
                 id: node.id,
                 name: node.name,
                 path: await readApi.nodePath(node),
+                documentType: node.documentType,
             },
+            targetPageAnchor: this.targetPageAnchor,
         };
     }
 
@@ -71,6 +78,11 @@ class InternalLinkBlockInput extends BlockInput {
     @IsUUID()
     @PageExists()
     targetPageId?: string;
+
+    @BlockField({ nullable: true })
+    @IsOptional()
+    @IsString()
+    targetPageAnchor?: string;
 
     transformToBlockData(): InternalLinkBlockData {
         return inputToData(InternalLinkBlockData, this);
@@ -99,6 +111,11 @@ class Meta extends AnnotationBlockMeta {
                         },
                         {
                             name: "path",
+                            kind: BlockMetaFieldKind.String,
+                            nullable: false,
+                        },
+                        {
+                            name: "documentType",
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
                         },

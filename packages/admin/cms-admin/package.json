@@ -4,8 +4,7 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
-        "lib/*",
-        "access-token-service-worker.ejs"
+        "lib/*"
     ],
     "repository": {
         "type": "git",
@@ -74,7 +73,6 @@
     },
     "peerDependencies": {
         "@apollo/client": "^3.7.0",
-        "@comet/react-app-auth": "^1.0.0",
         "@emotion/react": "^11.0.0",
         "@emotion/styled": "^11.0.0",
         "@mui/icons-material": "^5.0.0",
@@ -103,7 +101,6 @@
         "@comet/admin-babel-preset": "^3.2.1",
         "@comet/cli": "^3.2.1",
         "@comet/eslint-config": "^3.2.1",
-        "@comet/react-app-auth": "^1.0.0",
         "@graphql-codegen/cli": "^2.0.0",
         "@graphql-codegen/named-operations-object": "^2.0.0",
         "@graphql-codegen/typescript": "^2.0.0",
