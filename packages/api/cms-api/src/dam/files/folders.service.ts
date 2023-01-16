@@ -1,4 +1,3 @@
-import { MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
@@ -68,7 +67,6 @@ export class FoldersService {
     constructor(
         @InjectRepository(Folder) private readonly foldersRepository: EntityRepository<Folder>,
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
-        private readonly orm: MikroORM,
     ) {}
 
     async findAll({ parentId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FolderArgs, "offset" | "limit">): Promise<Folder[]> {
@@ -155,11 +153,13 @@ export class FoldersService {
         if (parentIsDirty) {
             folder.mpath = folder.parent ? (await this.findAncestorsByParentId(folder.parent.id)).map((f) => f.id) : [];
 
-            const connection = this.orm.em.getConnection();
-            connection.execute(
-                'update "DamFolder" set "mpath" = array_cat(ARRAY[?]::uuid[] , mpath[(array_position(mpath, ? )):array_length(mpath,1)]) where ( ? = ANY(mpath))',
-                [folder.mpath, folder.id, folder.id],
-            );
+            const qb = this.foldersRepository.createQueryBuilder();
+            await qb
+                .update({
+                    mpath: qb.raw("array_cat(ARRAY[?]::uuid[], mpath[(array_position(mpath, ?)):array_length(mpath,1)])", [folder.mpath, folder.id]),
+                })
+                .where("? = ANY(mpath)", [folder.id])
+                .execute();
         }
 
         await this.foldersRepository.persistAndFlush(folder);
