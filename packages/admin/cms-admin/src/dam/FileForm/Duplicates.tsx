@@ -6,6 +6,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { useContentScope } from "../../contentScope/Provider";
 import { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "../../graphql.generated";
 
 export const damFileDuplicatesQuery = gql`
@@ -54,6 +55,8 @@ const Duplicates: React.FC<{ fileId: string }> = ({ fileId }) => {
         },
         notifyOnNetworkStatusChange: true,
     });
+
+    useContentScope();
 
     return (
         <FormSection

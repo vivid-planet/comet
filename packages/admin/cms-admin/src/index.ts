@@ -39,6 +39,7 @@ export { ContentScopeProvider, useContentScope } from "./contentScope/Provider";
 export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConfig";
 export { useContentScopeConfig } from "./contentScope/useContentScopeConfig";
 export { DamImageBlock } from "./dam/blocks/DamImageBlock";
+export { DamConfig, DamDependencyRenderInfo, GetRenderInfo } from "./dam/config/DamConfigContext";
 export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";
 export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";

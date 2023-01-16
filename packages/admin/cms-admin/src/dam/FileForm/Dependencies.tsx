@@ -1,32 +1,47 @@
-import { ApolloClient, gql, useApolloClient, useQuery } from "@apollo/client";
-import { BallTriangle as BallTriangleIcon, Reload as ReloadIcon } from "@comet/admin-icons";
-import { Button, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { BallTriangle as BallTriangleIcon, Link as LinkIcon, OpenNewTab as OpenNewTabIcon, Reload as ReloadIcon } from "@comet/admin-icons";
+import { Button, IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+import { Link } from "react-router-dom";
 
+import { useContentScope } from "../../contentScope/Provider";
 import { GQLDamFileDependentsQuery, GQLDamFileDependentsQueryVariables } from "../../graphql.generated";
-import { DamDependencyRenderInfo } from "../config/DamConfigContext";
+import { DamDependencyRenderInfo, GetRenderInfo } from "../config/DamConfigContext";
 import { useDamConfig } from "../config/useDamConfig";
 
 interface DependencyProps {
     id: string;
-    getRenderInfo: (id: string, apolloClient: ApolloClient<unknown>) => Promise<DamDependencyRenderInfo> | DamDependencyRenderInfo;
+    getRenderInfo: GetRenderInfo;
     renderCustomContent?: (renderInfo: DamDependencyRenderInfo) => React.ReactNode;
 }
 
 const Dependency = ({ id, getRenderInfo, renderCustomContent }: DependencyProps) => {
     const apolloClient = useApolloClient();
+    const contentScope = useContentScope();
+
     const [data, setData] = React.useState<DamDependencyRenderInfo>();
+    const [error, setError] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         const loadData = async () => {
-            const renderInfo = await getRenderInfo(id, apolloClient);
-            setData(renderInfo);
+            try {
+                const renderInfo = await getRenderInfo(id, { apolloClient, contentScope });
+                setData(renderInfo);
+            } catch {
+                setError(true);
+            }
         };
 
         loadData();
-    }, [apolloClient, getRenderInfo, id]);
+        // should only be executed when id changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]);
+
+    if (error) {
+        return <FormattedMessage id="comet.dam.dependency.cannotResolveDependencyError" defaultMessage="Cannot resolve this dependency." />;
+    }
 
     if (data === undefined) {
         // TODO: Loading state
@@ -41,14 +56,16 @@ const Dependency = ({ id, getRenderInfo, renderCustomContent }: DependencyProps)
                 <>
                     <ListItemText primary={data?.type} />
                     <ListItemText primary={data?.name} secondary={data?.secondaryInfo} />
-                    <ListItemSecondaryAction>
-                        {/*<IconButton component={Link} underline="none" href={href} size="large">*/}
-                        {/*    <LinkIcon />*/}
-                        {/*</IconButton>*/}
-                        {/*<IconButton component={Link} underline="none" href={href} target="_blank" size="large">*/}
-                        {/*    <OpenNewTabIcon />*/}
-                        {/*</IconButton>*/}
-                    </ListItemSecondaryAction>
+                    {!!data.url && (
+                        <ListItemSecondaryAction>
+                            <IconButton component={Link} to={data.url}>
+                                <LinkIcon />
+                            </IconButton>
+                            <IconButton component={Link} to={data.url} target="_blank">
+                                <OpenNewTabIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                    )}
                 </>
             )}
         </>
@@ -112,8 +129,8 @@ export const Dependencies = ({ fileId }: DependenciesProps) => {
                 if (!damConfig.dependencyRenderInfoProvider?.[dependent.graphqlObjectType]) {
                     return (
                         <FormattedMessage
-                            id="comet.dam.dependencies.CannotResolveError"
-                            defaultMessage="Missing render function for type {graphqlObjectType}"
+                            id="comet.dam.dependencies.MissingRenderInfo"
+                            defaultMessage="Missing render info provider for type {graphqlObjectType}."
                             values={{
                                 graphqlObjectType: dependent.graphqlObjectType,
                             }}
