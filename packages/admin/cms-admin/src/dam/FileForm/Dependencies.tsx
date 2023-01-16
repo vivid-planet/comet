@@ -40,7 +40,7 @@ const Dependency = ({ id, getRenderInfo, renderCustomContent }: DependencyProps)
     }, [id]);
 
     if (error) {
-        return <FormattedMessage id="comet.dam.dependency.cannotResolveDependencyError" defaultMessage="Cannot resolve this dependency." />;
+        return <FormattedMessage id="comet.dam.dependency.cannotResolveDependencyError" defaultMessage="Error: Cannot resolve this dependency." />;
     }
 
     if (data === undefined) {
@@ -90,6 +90,9 @@ const useStyles = makeStyles((theme) => ({
     list: {
         backgroundColor: theme.palette.background.paper,
     },
+    listItem: {
+        minHeight: 61,
+    },
     listItemHeader: {
         display: "flex",
         justifyContent: "flex-end",
@@ -130,7 +133,7 @@ export const Dependencies = ({ fileId }: DependenciesProps) => {
                     return (
                         <FormattedMessage
                             id="comet.dam.dependencies.MissingRenderInfo"
-                            defaultMessage="Missing render info provider for type {graphqlObjectType}."
+                            defaultMessage="Error: Missing render info provider for type {graphqlObjectType}."
                             values={{
                                 graphqlObjectType: dependent.graphqlObjectType,
                             }}
@@ -139,7 +142,7 @@ export const Dependencies = ({ fileId }: DependenciesProps) => {
                 }
 
                 return (
-                    <ListItem key={dependent.id} divider>
+                    <ListItem className={classes.listItem} key={dependent.id} divider>
                         <Dependency id={dependent.id} {...damConfig.dependencyRenderInfoProvider[dependent.graphqlObjectType]} />
                     </ListItem>
                 );
