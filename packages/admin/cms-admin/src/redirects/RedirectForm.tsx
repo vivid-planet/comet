@@ -108,7 +108,10 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
     const validateSource = async (value: string, allValues: GQLRedirectDetailFragment) => {
         if (allValues.sourceType === "path") {
             if (!value.startsWith("/")) {
-                return intl.formatMessage({ id: "comet.pages.redirects.validate.path.error", defaultMessage: "Needs to start with /" });
+                return <FormattedMessage id="comet.pages.redirects.validate.path.error" defaultMessage="Needs to start with /" />;
+            }
+            if (value.includes("?")) {
+                return <FormattedMessage id="comet.pages.redirects.validate.path.queryStringError" defaultMessage="Must not contain ?" />;
             }
 
             const { data } = await client.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
@@ -121,6 +124,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                     scope,
                     source: value,
                 },
+                fetchPolicy: "network-only",
             });
 
             if (!data.redirectSourceAvailable && initialValues?.source !== undefined && initialValues.source !== value) {
