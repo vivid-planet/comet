@@ -16,6 +16,7 @@
         "strictPropertyInitialization": false,
         "strictNullChecks": true,
         "skipLibCheck": true,
+        "resolveJsonModule": true,
         "paths": {
             "@src/*": ["src/*"]
         }

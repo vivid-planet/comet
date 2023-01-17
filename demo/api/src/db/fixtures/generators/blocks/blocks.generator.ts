@@ -1,7 +1,6 @@
 import { BlocksBlockFixturesGeneratorMap, ExtractBlockInput, ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { File } from "@comet/cms-api";
-import { ConfigType } from "@nestjs/config";
-import { configNS } from "@src/config/config.namespace";
+import { Config } from "@src/config/config";
 import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
 import faker from "faker";
 
@@ -12,7 +11,7 @@ import { generateTextImageBlock } from "./text-image.generator";
 
 export const generateBlocksBlock = (
     imageFiles: File[],
-    config: ConfigType<typeof configNS>,
+    config: Config,
     blockCfg: Partial<BlocksBlockFixturesGeneratorMap<typeof PageContentBlock>> = {
         space: generateSpaceBlock,
         richtext: generateRichtextBlock,
