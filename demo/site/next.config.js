@@ -1,13 +1,19 @@
 /* eslint-disable */
 
+// @ts-check
+
+const cometConfig = require("./comet-config.json");
+
+/**
+ * @type {import('next').NextConfig}
+ **/
 module.exports = {
     redirects: async () => {
         var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
         return redirects;
     },
     images: {
-        deviceSizes: process.env.DAM_ALLOWED_IMAGE_SIZES.split(",").map(Number),
-        imageSizes: [],
+        deviceSizes: cometConfig.dam.allowedImageSizes,
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
         var path = require("path");

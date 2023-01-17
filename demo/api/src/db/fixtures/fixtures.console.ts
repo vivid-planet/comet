@@ -3,8 +3,8 @@ import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
-import { ConfigType } from "@nestjs/config";
-import { configNS } from "@src/config/config.namespace";
+import { Config } from "@src/config/config";
+import { CONFIG } from "@src/config/config.module";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
 import { Link } from "@src/links/entities/link.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
@@ -39,7 +39,7 @@ const getDefaultPageInput = (): PageInput => {
 @Console()
 export class FixturesConsole {
     constructor(
-        @Inject(configNS.KEY) private readonly config: ConfigType<typeof configNS>,
+        @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly pageTreeService: PageTreeService,
         private readonly filesService: FilesService,
@@ -58,7 +58,7 @@ export class FixturesConsole {
         // ensure repeatable runs
         faker.seed(123456);
 
-        const damFilesDirectory = `${this.config.BLOB_STORAGE_DIRECTORY_PREFIX}-files`;
+        const damFilesDirectory = `${this.config.blob.storageDirectoryPrefix}-files`;
         if (await this.blobStorageBackendService.folderExists(damFilesDirectory)) {
             await this.blobStorageBackendService.removeFolder(damFilesDirectory);
         }

@@ -16,27 +16,28 @@ require("elastic-apm-node").start({
 
 import { ExceptionInterceptor, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";
-import { ConfigType } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "@src/app.module";
-import { configNS } from "@src/config/config.namespace";
 import { useContainer } from "class-validator";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 
+import { createConfig } from "./config/config";
+
 async function bootstrap(): Promise<void> {
-    const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    const config = createConfig(process.env);
+    const appModule = AppModule.forRoot(config);
+    const app = await NestFactory.create<NestExpressApplication>(appModule);
 
     // class-validator should use Nest for dependency injection.
     // See https://github.com/nestjs/nest/issues/528,
     //     https://github.com/typestack/class-validator#using-service-container.
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-    const config = app.get(configNS.KEY) as ConfigType<typeof configNS>;
     app.enableCors({
         credentials: true,
-        origin: config.CORS_ALLOWED_ORIGINS.split(",").map((val: string) => new RegExp(val)),
+        origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
     });
 
     app.useGlobalInterceptors(new ExceptionInterceptor(config.debug));
@@ -52,7 +53,7 @@ async function bootstrap(): Promise<void> {
     app.use(compression());
     app.use(cookieParser());
 
-    const port = config.API_PORT;
+    const port = config.apiPort;
     await app.listen(port);
     console.log(`Application is running on: http://localhost:${port}/`);
 }
