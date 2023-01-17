@@ -29,7 +29,7 @@ export class IsValidImageAspectRatioConstraint implements ValidatorConstraintInt
     async validate(value: number, validationArguments: ValidationArguments): Promise<boolean> {
         const params = validationArguments.object as ImageParams;
 
-        for (const allowedAspectRatioString of this.config.allowedAspectRatios.split(",")) {
+        for (const allowedAspectRatioString of this.config.allowedAspectRatios) {
             const [width, height] = allowedAspectRatioString.split("x").map(Number);
             const allowedAspectRatio = width / height;
             const expectedResizeHeight = Math.ceil(params.resizeWidth / allowedAspectRatio);

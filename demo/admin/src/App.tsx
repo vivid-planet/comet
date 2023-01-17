@@ -108,8 +108,8 @@ class App extends React.Component {
                                                     damConfig={{
                                                         apiUrl: config.apiUrl,
                                                         apiClient,
-                                                        maxFileSize: String(config.dam.uploadsMaxFileSize), //TODO should not be string
-                                                        maxSrcResolution: String(config.imgproxy.maxSrcResolution), //TODO should not be string
+                                                        maxFileSize: config.dam.uploadsMaxFileSize,
+                                                        maxSrcResolution: config.imgproxy.maxSrcResolution,
                                                         allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
                                                     }}
                                                     pageTreeCategories={categories}
