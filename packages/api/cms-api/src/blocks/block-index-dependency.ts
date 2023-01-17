@@ -5,20 +5,20 @@ export class BlockIndexDependency {
     @Field()
     rootIdentifier: string;
 
-    @Field()
-    id: string;
+    @Field(() => String)
+    rootId: string;
 
     @Field()
-    entityName: string;
+    rootEntityName: string;
 
     @Field()
-    graphqlObjectType: string;
+    rootGraphqlObjectType: string;
 
-    tableName: string;
+    rootTableName: string;
 
-    columnName: string;
+    rootColumnName: string;
 
-    primaryKey: string;
+    rootPrimaryKey: string;
 
     @Field()
     blockname: string;

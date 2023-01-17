@@ -13,11 +13,12 @@ import { useDamConfig } from "../config/useDamConfig";
 
 interface DependencyProps {
     id: string;
+    graphqlObjectType: string;
     getRenderInfo: GetRenderInfo;
     renderCustomContent?: (renderInfo: DamDependencyRenderInfo) => React.ReactNode;
 }
 
-const Dependency = ({ id, getRenderInfo, renderCustomContent }: DependencyProps) => {
+const Dependency = ({ id, graphqlObjectType, getRenderInfo, renderCustomContent }: DependencyProps) => {
     const apolloClient = useApolloClient();
     const contentScope = useContentScope();
 
@@ -40,7 +41,16 @@ const Dependency = ({ id, getRenderInfo, renderCustomContent }: DependencyProps)
     }, [id]);
 
     if (error) {
-        return <FormattedMessage id="comet.dam.dependency.cannotResolveDependencyError" defaultMessage="Error: Cannot resolve this dependency." />;
+        return (
+            <FormattedMessage
+                id="comet.dam.dependency.cannotResolveDependencyError"
+                defaultMessage="Error: Cannot resolve this dependency. Type: {graphqlObjectType}, ID: {id}."
+                values={{
+                    graphqlObjectType: graphqlObjectType,
+                    id: id,
+                }}
+            />
+        );
     }
 
     if (data === undefined) {
@@ -77,8 +87,8 @@ const damFileDependentsQuery = gql`
         damFile(id: $id) {
             id
             dependents {
-                graphqlObjectType
-                id
+                rootGraphqlObjectType
+                rootId
                 blockname
                 jsonPath
             }
@@ -129,21 +139,28 @@ export const Dependencies = ({ fileId }: DependenciesProps) => {
                 </Button>
             </ListItem>
             {data?.damFile.dependents.map((dependent) => {
-                if (!damConfig.dependencyRenderInfoProvider?.[dependent.graphqlObjectType]) {
+                // console.log("jsonPath ", dependent.jsonPath);
+
+                if (!damConfig.dependencyRenderInfoProvider?.[dependent.rootGraphqlObjectType]) {
                     return (
                         <FormattedMessage
+                            key={`${dependent.rootId}|${dependent.jsonPath}`}
                             id="comet.dam.dependencies.MissingRenderInfo"
                             defaultMessage="Error: Missing render info provider for type {graphqlObjectType}."
                             values={{
-                                graphqlObjectType: dependent.graphqlObjectType,
+                                graphqlObjectType: dependent.rootGraphqlObjectType,
                             }}
                         />
                     );
                 }
 
                 return (
-                    <ListItem className={classes.listItem} key={dependent.id} divider>
-                        <Dependency id={dependent.id} {...damConfig.dependencyRenderInfoProvider[dependent.graphqlObjectType]} />
+                    <ListItem key={`${dependent.rootId}|${dependent.jsonPath}`} className={classes.listItem} divider>
+                        <Dependency
+                            id={dependent.rootId}
+                            graphqlObjectType={dependent.rootGraphqlObjectType}
+                            {...damConfig.dependencyRenderInfoProvider[dependent.rootGraphqlObjectType]}
+                        />
                     </ListItem>
                 );
             })}

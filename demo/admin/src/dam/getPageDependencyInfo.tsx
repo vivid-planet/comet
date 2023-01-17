@@ -9,6 +9,7 @@ const damFilePageDependencyQuery = gql`
     query PageDependency($id: ID!) {
         page(id: $id) {
             id
+            content
             pageTreeNode {
                 id
                 name
@@ -26,6 +27,8 @@ export const getPageDependencyInfo: GetRenderInfo = async (id: string, { apolloC
             id,
         },
     });
+
+    // console.log("content ", data.page.content);
 
     if (data.page.pageTreeNode === null) {
         throw new Error(`Could not find a PageTreeNode for Page with id ${id}`);
