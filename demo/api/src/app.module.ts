@@ -115,29 +115,9 @@ export class AppModule {
                         blobStorageConfig: {
                             backend: {
                                 driver: config.blob.storageDriver,
-                                file:
-                                    config.blob.storageDriver === "file"
-                                        ? {
-                                              path: config.fileStorage.path,
-                                          }
-                                        : undefined,
-                                azure:
-                                    config.blob.storageDriver === "azure"
-                                        ? {
-                                              accountName: config.azure.accountName,
-                                              accountKey: config.azure.accountKey,
-                                          }
-                                        : undefined,
-                                s3:
-                                    config.blob.storageDriver === "s3"
-                                        ? {
-                                              accessKeyId: config.s3.accessKeyId,
-                                              secretAccessKey: config.s3.secretAccessKey,
-                                              endpoint: config.s3.endpoint,
-                                              region: config.s3.region,
-                                              bucket: config.s3.bucket,
-                                          }
-                                        : undefined,
+                                file: config.blob.storageDriver === "file" ? config.fileStorage : undefined,
+                                azure: config.blob.storageDriver === "azure" ? config.azure : undefined,
+                                s3: config.blob.storageDriver === "s3" ? config.s3 : undefined,
                             } as BlobStorageConfig["backend"],
                         },
                     }),
@@ -156,13 +136,7 @@ export class AppModule {
                             cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                             maxFileSize: config.dam.uploadsMaxFileSize,
                         },
-                        imgproxyConfig: {
-                            url: config.imgproxy.url,
-                            salt: config.imgproxy.salt,
-                            key: config.imgproxy.key,
-                            quality: config.imgproxy.quality,
-                            maxSrcResolution: config.imgproxy.maxSrcResolution,
-                        },
+                        imgproxyConfig: config.imgproxy,
                     }),
                 }),
                 PublicUploadModule.registerAsync({
