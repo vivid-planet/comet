@@ -11,8 +11,8 @@ export interface CmsBlockContext {
     damConfig: {
         apiUrl: string;
         apiClient: AxiosInstance;
-        maxFileSize: string;
-        maxSrcResolution: string;
+        maxFileSize: number;
+        maxSrcResolution: number;
         allowedImageAspectRatios: string[];
     };
     pageTreeCategories: AllCategories;

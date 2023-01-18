@@ -153,11 +153,10 @@ export class FoldersService {
         if (parentIsDirty) {
             folder.mpath = folder.parent ? (await this.findAncestorsByParentId(folder.parent.id)).map((f) => f.id) : [];
 
-            await this.foldersRepository
-                .createQueryBuilder()
+            const qb = this.foldersRepository.createQueryBuilder();
+            await qb
                 .update({
-                    // TODO is this an attack vector?
-                    mpath: folder.mpath || `mpath[(array_position(mpath, ${folder.id})):array_length(mpath,1)]`,
+                    mpath: qb.raw("array_cat(ARRAY[?]::uuid[], mpath[(array_position(mpath, ?)):array_length(mpath,1)])", [folder.mpath, folder.id]),
                 })
                 .where("? = ANY(mpath)", [folder.id])
                 .execute();

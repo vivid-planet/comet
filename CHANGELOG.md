@@ -4,20 +4,48 @@ All notable changes to this project will be documented in this file. This projec
 
 ## Next major
 
+### Highlights
+
+-   Add `AnchorBlock` to support linking to anchors
+
+### @comet/blocks-admin
+
+#### Changes
+
+-   Add `anchors` method to `BlockInterface` for a block to specify its anchors
+
 ### @comet/cms-admin
 
 -   Breaking: Remove dependency @comet/react-app-auth and all occurences
+-   Breaking: changed CmsBlockContext.damConfig.maxFileSize/maxSrcResolution to number (was string previously)
+
+#### Changes
+
+-   Add `AnchorBlock`
+-   Add support for anchors to `InternalLinkBlock`
+-   Add `anchors` method to `DocumentInterface` for a document to specify its anchors
 
 ### @comet/cms-api
 
 -   Restrict access to builds based on `ContentScopeModule`
 -   Decouple KubernetesModule from BuildsModule (Breaking: BuildsModuleConfig is now KubernetesModuleConfig)
 -   Breaking: AuthModule removes support for Bearer-Token
+-   Breaking: changed DamModule damConfig.allowedImageSizes/allowedAspectRatios to number[]/string[] (was string previously)
+
+#### Changes
+
+-   Add `AnchorBlock`
+-   Add support for anchors to `InternalLinkBlock`
 
 ### @comet/cms-site
 
 -   Breaking: Remove dependency next-auth and all occurences
 -   access-token-service-worker.js in not supported anymore, can be removed
+
+#### Changes
+
+-   Add `AnchorBlock`
+-   Add support for anchors to `InternalLinkBlock`
 
 ### @comet/eslint-config
 

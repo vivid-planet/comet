@@ -51,7 +51,7 @@ yarn dev:demo
 
 Demo will be available at
 
--   Admin: [http://localhost:8001/](http://localhost:8001/)
+-   Admin: [http://localhost:8000/](http://localhost:8000/)
 -   API: [http://localhost:4000/](http://localhost:4000/)
 -   Site: [http://localhost:3000/](http://localhost:3000/)
 

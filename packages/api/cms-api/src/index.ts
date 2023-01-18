@@ -1,13 +1,15 @@
 import "reflect-metadata";
 
-export { AuthModule } from "./auth/auth.module";
-export { CurrentUserInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
-export { CurrentUserLoaderInterface } from "./auth/current-user/current-user-loader";
+export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
 export { PublicApi } from "./auth/decorators/public-api.decorator";
-export { GlobalAuthGuard } from "./auth/guards/global.guard";
+export { createCometAuthGuard } from "./auth/guards/comet.guard";
+export { createAuthResolver } from "./auth/resolver/auth.resolver";
+export { createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";
+export { createStaticAuthedUserStrategy } from "./auth/strategies/static-authed-user.strategy";
+export { createStaticCredentialsBasicStrategy } from "./auth/strategies/static-credentials-basic.strategy";
 export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
 export { BlobStorageAzureStorage } from "./blob-storage/backends/azure/blob-storage-azure.storage";
 export { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage/backends/blob-storage-backend.interface";
@@ -110,6 +112,7 @@ export {
 export { JobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
+export { AnchorBlock } from "./page-tree/blocks/anchor.block";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
 export { AttachedDocumentInput, AttachedDocumentStrictInput } from "./page-tree/dto/attached-document.input";

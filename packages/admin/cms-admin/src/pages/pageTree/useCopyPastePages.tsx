@@ -205,25 +205,12 @@ function useCopyPastePages(): UseCopyPastePagesApi {
             const idsMap = createIdsMap(pages);
 
             const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
-                // 1a. Create new document
-                const newDocumentId = uuid();
                 const documentType = documentTypes[node.documentType];
                 if (!documentType) {
                     throw new Error(`Unknown document type "${documentType}"`);
                 }
 
-                if (node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
-                    await client.mutate<unknown, GQLUpdatePageMutationVariables>({
-                        mutation: documentType.updateMutation,
-                        variables: {
-                            pageId: newDocumentId,
-                            input: documentType.inputToOutput(node.document, { idsMap }),
-                        },
-                        context: LocalErrorScopeApolloContext,
-                    });
-                }
-
-                // 1b. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
+                // 1a. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
                 let slug: string = node.slug;
                 let name: string = node.name;
                 let duplicateNumber = 1;
@@ -249,7 +236,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     }
                 } while (!slugAvailable);
 
-                // 1c. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
+                // 1b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
                 const { data } = await client.mutate<GQLCreatePageNodeMutation, GQLCreatePageNodeMutationVariables>({
                     mutation: createPageNodeMutation,
                     variables: {
@@ -259,7 +246,6 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                             slug,
                             hideInMenu: node.hideInMenu,
                             attachedDocument: {
-                                id: newDocumentId,
                                 type: node.documentType,
                             },
                             parentId: newParentId,
@@ -273,6 +259,21 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 if (!data?.createPageTreeNode.id) {
                     throw Error("Did not receive new uuid for page tree node");
                 }
+
+                // 1c. Create new document
+                const newDocumentId = uuid();
+                if (node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
+                    await client.mutate<unknown, GQLUpdatePageMutationVariables>({
+                        mutation: documentType.updateMutation,
+                        variables: {
+                            pageId: newDocumentId,
+                            input: documentType.inputToOutput(node.document, { idsMap }),
+                            attachedPageTreeNodeId: data.createPageTreeNode.id,
+                        },
+                        context: LocalErrorScopeApolloContext,
+                    });
+                }
+
                 return data.createPageTreeNode.id;
             };
 

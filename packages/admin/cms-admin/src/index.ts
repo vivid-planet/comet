@@ -1,3 +1,4 @@
+export { AnchorBlock } from "./blocks/AnchorBlock";
 export { CmsBlockContext, CmsBlockContextProvider } from "./blocks/CmsBlockContextProvider";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
