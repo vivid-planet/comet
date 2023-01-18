@@ -1,5 +1,5 @@
-import { gql } from "@apollo/client";
-import { LocalErrorScopeApolloContext, messages, Stack, Toolbar, ToolbarFillSpace, ToolbarTitleItem, useTableQuery } from "@comet/admin";
+import { gql, useQuery } from "@apollo/client";
+import { messages, Stack, Toolbar, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -42,15 +42,9 @@ const cronJobsQuery = gql`
 export function CronJobsPage(): React.ReactElement {
     const intl = useIntl();
 
-    const { tableData, loading, error } = useTableQuery<GQLCronJobsQuery, undefined>()(cronJobsQuery, {
-        resolveTableData: (data) => ({
-            data: data.cronJobs,
-            totalCount: data.cronJobs.length,
-        }),
-        context: LocalErrorScopeApolloContext,
-    });
+    const { data, loading, error } = useQuery<GQLCronJobsQuery, undefined>(cronJobsQuery);
 
-    const rows = tableData?.data ?? [];
+    const rows = data?.cronJobs ?? [];
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.cronJobs", defaultMessage: "Cron Jobs" })}>
