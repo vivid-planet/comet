@@ -109,9 +109,10 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
         if (allValues.sourceType === "path") {
             if (!value.startsWith("/")) {
                 return <FormattedMessage id="comet.pages.redirects.validate.path.error" defaultMessage="Needs to start with /" />;
-            }
-            if (value.includes("?")) {
+            } else if (value.includes("?")) {
                 return <FormattedMessage id="comet.pages.redirects.validate.path.queryStringError" defaultMessage="Must not contain ?" />;
+            } else if (!/^\/([a-zA-Z0-9-._~/]|%[0-9a-fA-F]{2})+$/.test(value)) {
+                return <FormattedMessage id="comet.pages.redirects.validate.path.invalidPathError" defaultMessage="Invalid path" />;
             }
 
             const { data } = await client.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
