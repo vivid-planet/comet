@@ -5,28 +5,28 @@
     "scripts": {
         "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
         "build": "yarn api-generator && rimraf dist && nest build",
-        "start": "yarn api-generator && rimraf dist && dotenv -c -- nest start",
-        "start:dev": "yarn api-generator && rimraf dist && dotenv -c -- nest start --watch --preserveWatchOutput",
-        "start:debug": "yarn api-generator && rimraf dist && dotenv -c -- nest start --debug --watch --preserveWatchOutput",
-        "start:prod": "node dist/main",
+        "console": "dotenv -c -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts",
+        "console:prod": "node dist/console.js",
+        "db:migrate": "yarn api-generator && yarn console migrate --",
+        "db:migrate:prod": "yarn console:prod migrate --",
+        "fixtures": "yarn console fixtures --",
+        "fixtures:prod": "yarn console:prod fixtures --",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0  --ext .ts,.tsx,.js,.jsx,.json,.md src/",
         "lint:tsc": "yarn api-generator && tsc --project ./tsconfig.lint.json",
-        "console": "dotenv -c -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts",
-        "console:prod": "node dist/console.js",
         "mikro-orm": "mikro-orm",
         "mikro-orm:drop": "mikro-orm schema:drop -r",
         "mikro-orm:migration:generate": "mikro-orm migration:create",
-        "db:migrate:prod": "yarn console:prod migrate --",
-        "db:migrate": "yarn api-generator && yarn console migrate --",
-        "fixtures:prod": "yarn console:prod fixtures --",
-        "fixtures": "yarn console fixtures --"
+        "start": "yarn api-generator && rimraf dist && dotenv -c -- nest start",
+        "start:debug": "yarn api-generator && rimraf dist && dotenv -c -- nest start --debug --watch --preserveWatchOutput",
+        "start:dev": "yarn api-generator && rimraf dist && dotenv -c -- nest start --watch --preserveWatchOutput",
+        "start:prod": "node dist/main"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.47.0",
         "@azure/storage-blob": "^12.0.0",
-        "@comet/blocks-api": "^4.0.0",
-        "@comet/cms-api": "^4.0.0",
+        "@comet/blocks-api": "workspace:^4.0.0",
+        "@comet/cms-api": "workspace:^4.0.0",
         "@hapi/accept": "^5.0.0",
         "@kubernetes/client-node": "^0.18.0",
         "@mikro-orm/cli": "^5.0.4",
@@ -70,7 +70,7 @@
         "passport": "^0.4.0",
         "pg": "^8.0.0",
         "pg-error-constants": "^1.0.0",
-        "reflect-metadata": "^0.1.0",
+        "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.0",
         "rxjs": "^7.0.0",
         "slugify": "^1.0.0",
@@ -78,7 +78,7 @@
         "webpack": "^5.64.2"
     },
     "devDependencies": {
-        "@comet/eslint-config": "^4.0.0",
+        "@comet/eslint-config": "workspace:^4.0.0",
         "@nestjs/cli": "^9.0.0",
         "@nestjs/schematics": "^9.0.0",
         "@nestjs/testing": "^9.0.0",
@@ -102,7 +102,7 @@
         "ts-node": "^10.0.0",
         "tsconfig-paths": "^3.0.0",
         "typescript": "^4.0.0",
-        "yarn-run-all": "^3.0.0"
+        "npm-run-all": "^4.1.5"
     },
     "mikro-orm": {
         "useTsNode": true,
