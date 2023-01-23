@@ -72,12 +72,17 @@ type BlockIndexDependency {
   rootId: String!
   rootEntityName: String!
   rootGraphqlObjectType: String!
+  rootTableName: String!
+  rootColumnName: String!
+  rootPrimaryKey: String!
   blockname: String!
   jsonPath: String!
   visible: Boolean!
   targetIdentifier: String!
   targetEntityName: String!
   targetGraphqlObjectType: String!
+  targetTableName: String!
+  targetPrimaryKey: String!
   targetId: String!
 }
 

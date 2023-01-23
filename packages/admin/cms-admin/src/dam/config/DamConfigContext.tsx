@@ -2,8 +2,10 @@ import { ApolloClient } from "@apollo/client";
 import * as React from "react";
 
 import { UseContentScopeApi } from "../../contentScope/Provider";
+import { GQLDamFileDependentsQuery } from "../../graphql.generated";
 
 export interface DamDependencyRenderInfoOptions {
+    data: GQLDamFileDependentsQuery["damFile"]["dependents"][0];
     apolloClient: ApolloClient<unknown>;
     contentScope: UseContentScopeApi;
 }

@@ -76,6 +76,7 @@ export interface BlockMethods<
     previewContent: (state: State, context?: BlockContext) => PreviewContent[];
     dynamicDisplayName?: (state: State) => React.ReactNode;
     anchors?: (state: State) => string[];
+    resolveDependencyRoute: (state: State, jsonPath: string) => string;
 }
 
 export interface AnonymousBlockInterface<

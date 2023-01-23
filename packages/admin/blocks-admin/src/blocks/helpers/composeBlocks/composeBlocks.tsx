@@ -166,6 +166,16 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return result;
             },
+            resolveDependencyRoute: (state, jsonPath) => {
+                const dependencyRoutes = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
+                    const extractedData = extractData([block, options], attr, state);
+
+                    return block.resolveDependencyRoute(extractedData, jsonPath);
+                });
+
+                const pathArr = jsonPath.split(".");
+                return dependencyRoutes[pathArr[0]];
+            },
         },
         api: {
             adminComponentProps,

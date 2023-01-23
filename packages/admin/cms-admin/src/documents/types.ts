@@ -46,4 +46,5 @@ export interface DocumentInterface<
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element;
     InfoTag?: React.ComponentType<{ page: PageTreePage }>;
     anchors: (input: DocumentInput) => string[];
+    resolveDependencyRoute: (input: DocumentInput, { rootColumn, jsonPath }: { rootColumn: string; jsonPath: string }) => string;
 }

@@ -13,12 +13,13 @@ import { useDamConfig } from "../config/useDamConfig";
 
 interface DependencyProps {
     id: string;
+    dependent: GQLDamFileDependentsQuery["damFile"]["dependents"][0];
     graphqlObjectType: string;
     getRenderInfo: GetRenderInfo;
     renderCustomContent?: (renderInfo: DamDependencyRenderInfo) => React.ReactNode;
 }
 
-const Dependency = ({ id, graphqlObjectType, getRenderInfo, renderCustomContent }: DependencyProps) => {
+const Dependency = ({ id, dependent, graphqlObjectType, getRenderInfo, renderCustomContent }: DependencyProps) => {
     const apolloClient = useApolloClient();
     const contentScope = useContentScope();
 
@@ -28,7 +29,7 @@ const Dependency = ({ id, graphqlObjectType, getRenderInfo, renderCustomContent 
     React.useEffect(() => {
         const loadData = async () => {
             try {
-                const renderInfo = await getRenderInfo(id, { apolloClient, contentScope });
+                const renderInfo = await getRenderInfo(id, { apolloClient, contentScope, data: dependent });
                 setData(renderInfo);
             } catch {
                 setError(true);
@@ -89,6 +90,7 @@ const damFileDependentsQuery = gql`
             dependents {
                 rootGraphqlObjectType
                 rootId
+                rootColumnName
                 blockname
                 jsonPath
             }
@@ -139,8 +141,6 @@ export const Dependencies = ({ fileId }: DependenciesProps) => {
                 </Button>
             </ListItem>
             {data?.damFile.dependents.map((dependent) => {
-                // console.log("jsonPath ", dependent.jsonPath);
-
                 if (!damConfig.dependencyRenderInfoProvider?.[dependent.rootGraphqlObjectType]) {
                     return (
                         <FormattedMessage
@@ -158,6 +158,7 @@ export const Dependencies = ({ fileId }: DependenciesProps) => {
                     <ListItem key={`${dependent.rootId}|${dependent.jsonPath}`} className={classes.listItem} divider>
                         <Dependency
                             id={dependent.rootId}
+                            dependent={dependent}
                             graphqlObjectType={dependent.rootGraphqlObjectType}
                             {...damConfig.dependencyRenderInfoProvider[dependent.rootGraphqlObjectType]}
                         />

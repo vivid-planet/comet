@@ -14,10 +14,13 @@ export class BlockIndexDependency {
     @Field()
     rootGraphqlObjectType: string;
 
+    @Field()
     rootTableName: string;
 
+    @Field()
     rootColumnName: string;
 
+    @Field()
     rootPrimaryKey: string;
 
     @Field()
@@ -38,8 +41,10 @@ export class BlockIndexDependency {
     @Field()
     targetGraphqlObjectType: string;
 
+    @Field()
     targetTableName: string;
 
+    @Field()
     targetPrimaryKey: string;
 
     @Field()
