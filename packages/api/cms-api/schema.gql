@@ -69,7 +69,7 @@ type DamFile {
 
 type BlockIndexDependency {
   rootIdentifier: String!
-  rootId: String!
+  rootId: String
   rootEntityName: String!
   rootGraphqlObjectType: String!
   rootTableName: String!
@@ -83,7 +83,7 @@ type BlockIndexDependency {
   targetGraphqlObjectType: String!
   targetTableName: String!
   targetPrimaryKey: String!
-  targetId: String!
+  targetId: String
 }
 
 type BuildTemplate {

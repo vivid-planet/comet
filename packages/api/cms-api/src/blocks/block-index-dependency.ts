@@ -5,8 +5,8 @@ export class BlockIndexDependency {
     @Field()
     rootIdentifier: string;
 
-    @Field(() => String)
-    rootId: string;
+    @Field(() => String, { nullable: true })
+    rootId: string | null;
 
     @Field()
     rootEntityName: string;
@@ -47,6 +47,6 @@ export class BlockIndexDependency {
     @Field()
     targetPrimaryKey: string;
 
-    @Field()
-    targetId: string;
+    @Field(() => String, { nullable: true })
+    targetId: string | null;
 }
