@@ -174,7 +174,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                     name: folderName,
                     parentId: parentId,
                 },
-                fetchPolicy: "no-cache",
+                fetchPolicy: "network-only",
             });
 
             return data.damFolder?.id;
