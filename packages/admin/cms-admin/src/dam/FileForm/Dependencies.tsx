@@ -160,7 +160,8 @@ export const Dependencies = ({ fileId }: DependenciesProps) => {
                             id={dependent.rootId}
                             dependent={dependent}
                             graphqlObjectType={dependent.rootGraphqlObjectType}
-                            {...damConfig.dependencyRenderInfoProvider[dependent.rootGraphqlObjectType]}
+                            getRenderInfo={damConfig.dependencyRenderInfoProvider[dependent.rootGraphqlObjectType].getRenderInfo}
+                            renderCustomContent={damConfig.dependencyRenderInfoProvider[dependent.rootGraphqlObjectType].renderCustomContent}
                         />
                     </ListItem>
                 );
