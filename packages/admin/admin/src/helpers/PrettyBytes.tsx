@@ -1,11 +1,10 @@
-import { NumberFormatOptions } from "@formatjs/ecma402-abstract";
 import * as React from "react";
-import { CustomFormatConfig, FormattedNumber } from "react-intl";
+import { FormattedNumber } from "react-intl";
 
 type AvailableUnits = "byte" | "kilobyte" | "megabyte" | "gigabyte" | "terabyte" | "petabyte";
 const availableUnits: AvailableUnits[] = ["byte", "kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte"];
 
-interface PrettyBytesProps extends Omit<NumberFormatOptions & CustomFormatConfig, "style"> {
+interface PrettyBytesProps extends Omit<React.ComponentProps<typeof FormattedNumber>, "style"> {
     value: number;
     unit?: AvailableUnits;
 }
