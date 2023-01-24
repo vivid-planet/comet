@@ -30,11 +30,7 @@ export const getPageDependencyInfo: GetRenderInfo = async (id: string, { apolloC
         },
     });
 
-    console.log("dependencyData ", dependencyData);
-    console.log("my output");
-
     const dependencyRoute = Page.resolveDependencyRoute(data.page, { rootColumn: dependencyData.rootColumnName, jsonPath: dependencyData.jsonPath });
-    console.log("dependencyRoute ", dependencyRoute);
 
     if (data.page.pageTreeNode === null) {
         throw new Error(`Could not find a PageTreeNode for Page with id ${id}`);
