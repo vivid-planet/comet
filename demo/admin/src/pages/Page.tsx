@@ -56,6 +56,10 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     hideInMenuIcon: FileNotMenu,
     anchors: (input) => PageContentBlock.anchors?.(PageContentBlock.input2State(input.content)) ?? [],
     resolveDependencyRoute: (input, { rootColumn, jsonPath }) => {
-        return PageContentBlock.resolveDependencyRoute(PageContentBlock.input2State(input[rootColumn]), jsonPath.substring("root.".length));
+        if (rootColumn === "content") {
+            return PageContentBlock.resolveDependencyRoute(PageContentBlock.input2State(input["content"]), jsonPath.substring("root.".length));
+        } else {
+            return SeoBlock.resolveDependencyRoute(SeoBlock.input2State(input["seo"]), jsonPath.substring("root.".length));
+        }
     },
 };
