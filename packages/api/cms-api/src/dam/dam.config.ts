@@ -7,6 +7,7 @@ export interface DamConfig {
     cdnEnabled?: boolean;
     cdnDomain?: string;
     cdnOriginHeader?: string;
+    disableCdnOriginHeaderCheck?: boolean;
     filesDirectory: string;
     cacheDirectory: string;
     additionalMimeTypes?: string[];
