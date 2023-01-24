@@ -48,7 +48,7 @@ export class AppModule {
         return {
             module: AppModule,
             imports: [
-                ConfigModule,
+                ConfigModule.forRoot(config),
                 DbModule,
                 GraphQLModule.forRootAsync({
                     driver: ApolloDriver,
