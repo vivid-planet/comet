@@ -22,7 +22,7 @@ export class IsAllowedImageAspectRatioConstraint implements ValidatorConstraintI
     constructor(@Inject(DAM_CONFIG) private readonly config: DamConfig) {}
 
     validate(value: string): boolean {
-        return this.config.allowedAspectRatios.split(",").includes(value);
+        return this.config.allowedAspectRatios.includes(value);
     }
 
     defaultMessage(): string {
