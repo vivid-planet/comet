@@ -1,12 +1,11 @@
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from "@apollo/client";
 import { createErrorDialogApolloLink } from "@comet/admin";
 import { includeInvisibleContentContext } from "@comet/cms-admin";
-import config from "@src/config";
 import fragmentTypes from "@src/fragmentTypes.json";
 
-export const createApolloClient = () => {
+export const createApolloClient = (apiUrl: string) => {
     const httpLink = new HttpLink({
-        uri: `${config.API_URL}/graphql`,
+        uri: `${apiUrl}/graphql`,
     });
 
     const link = ApolloLink.from([createErrorDialogApolloLink(), includeInvisibleContentContext, httpLink]);
