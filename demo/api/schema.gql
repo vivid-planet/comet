@@ -356,12 +356,12 @@ input RedirectScopeInput {
 }
 
 type Query {
-  pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
-  link(linkId: ID!): Link
   currentUser: CurrentUser!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
+  link(linkId: ID!): Link
+  pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
@@ -527,10 +527,10 @@ enum ProductSortField {
 }
 
 type Mutation {
-  savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
-  saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
   currentUserSignOut: String!
   createBuilds(input: CreateBuildsInput!): Boolean!
+  saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
+  savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
@@ -567,6 +567,17 @@ type Mutation {
   deleteProduct(id: ID!): Boolean!
 }
 
+input CreateBuildsInput {
+  names: [String!]!
+}
+
+input LinkInput {
+  content: LinkBlockInput!
+}
+
+"""Link root block input"""
+scalar LinkBlockInput
+
 input PageInput {
   content: PageContentBlockInput!
   seo: SeoBlockInput!
@@ -577,17 +588,6 @@ scalar PageContentBlockInput
 
 """Seo root block input"""
 scalar SeoBlockInput
-
-input LinkInput {
-  content: LinkBlockInput!
-}
-
-"""Link root block input"""
-scalar LinkBlockInput
-
-input CreateBuildsInput {
-  names: [String!]!
-}
 
 input PageTreeNodeUpdateInput {
   name: String!
