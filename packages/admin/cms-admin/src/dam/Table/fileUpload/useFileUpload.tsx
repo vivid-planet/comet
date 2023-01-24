@@ -228,11 +228,13 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                     const parentId = folderIdMap.has(parentPath) ? folderIdMap.get(parentPath) : currFolderId;
 
                     if (!noLookup) {
-                        const id = lookupCache.has(`${folderName}:${parentId}`)
-                            ? lookupCache.get(`${folderName}:${parentId}`)
-                            : await lookupDamFolder(folderName, parentId);
-
-                        lookupCache.set(`${folderName}:${parentId}`, id);
+                        let id: string | undefined;
+                        if (lookupCache.has(`${folderName}:${parentId}`)) {
+                            id = lookupCache.get(`${folderName}:${parentId}`);
+                        } else {
+                            id = await lookupDamFolder(folderName, parentId);
+                            lookupCache.set(`${folderName}:${parentId}`, id);
+                        }
 
                         if (id === undefined) {
                             // paths are looked up hierarchically starting with the first folder e.g.
