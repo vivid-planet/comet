@@ -1157,10 +1157,8 @@ importers:
       '@comet/admin-babel-preset': link:../admin-babel-preset
       '@comet/cli': link:../../cli
       '@comet/eslint-config': link:../../eslint-config
-      '@emotion/react': 11.9.3_mk6db2egckiugg7v365a42dwcm
-      '@emotion/styled': 11.10.5_ky6f5epj2ggtkuvppn454j62re
-      '@mui/lab': 5.0.0-alpha.117_5xfhpfmpn6hscde7xomhids7u4
-      '@mui/material': 5.11.6_6bbsiiklroihy7ocrpuylyl7sa
+      '@mui/lab': 5.0.0-alpha.117_5xiv4pi7mh4xv7fm6fhbatalwu
+      '@mui/material': 5.11.6_zsjcj4gvi24ks76nprapl4hsmq
       '@mui/styles': 5.11.2_h7fc2el62uaa77gho3xhys6ola
       '@types/jest': 27.5.2
       '@types/lodash.isequal': 4.5.6
@@ -8086,6 +8084,38 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-is: 18.2.0
+
+  /@mui/lab/5.0.0-alpha.117_5xiv4pi7mh4xv7fm6fhbatalwu:
+    resolution: {integrity: sha512-g+EN4jnoy6bwf3U/4q+L9gAVXoOky+T+VEDWzOP3BZLVghO63X0oaBx12TPOCnGDJKm0crFsIiyQQmYQkaGJqA==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
+      '@mui/material': ^5.0.0
+      '@types/react': ^17.0.0 || ^18.0.0
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@mui/base': 5.0.0-alpha.115_zsjcj4gvi24ks76nprapl4hsmq
+      '@mui/material': 5.11.6_zsjcj4gvi24ks76nprapl4hsmq
+      '@mui/system': 5.11.5_h7fc2el62uaa77gho3xhys6ola
+      '@mui/types': 7.2.3_@types+react@17.0.53
+      '@mui/utils': 5.11.2_react@17.0.2
+      '@types/react': 17.0.53
+      clsx: 1.2.1
+      prop-types: 15.8.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-is: 18.2.0
+    dev: true
 
   /@mui/material/5.11.6_6bbsiiklroihy7ocrpuylyl7sa:
     resolution: {integrity: sha512-MzkkL5KC2PCkFiv8cLpkzgLUPXSrAtnvJBR0emV7mLVWbkwV3n5832vjBx154B6R032fHjFTziTh7YEb50nK6Q==}
