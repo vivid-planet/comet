@@ -101,7 +101,11 @@ export class RedirectsService {
     }
 
     async isRedirectSourceAvailable(source: string, scope: RedirectScopeInterface | undefined, options?: { excludedId?: string }): Promise<boolean> {
-        const redirect = await this.repository.findOne({ source, scope, id: { $ne: options?.excludedId } });
+        const where: FilterQuery<RedirectInterface> = { source, id: { $ne: options?.excludedId } };
+        if (scope !== undefined) {
+            where.scope = scope;
+        }
+        const redirect = await this.repository.findOne(where);
         return redirect === null;
     }
 }
