@@ -25,6 +25,10 @@ const styles = ({ spacing }: Theme) => {
         sizeSmall: {},
         sizeMedium: {},
         sizeLarge: {},
+        colorError: {},
+        colorInfo: {},
+        colorSuccess: {},
+        colorWarning: {},
     });
 };
 
