@@ -42,8 +42,8 @@ export interface DocumentInterface<
     editComponent?: React.ComponentType<{ id: string; category: string }>;
     updateMutation?: TypedDocumentNode<GQLUpdatePageMutation, GQLUpdatePageMutationVariables<DocumentInput>>;
     inputToOutput?: (input: DocumentInput, context: { idsMap: IdsMap }) => DocumentOutput;
-    menuIcon: (props: SvgIconProps<"svg">) => JSX.Element;
-    hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element;
+    menuIcon: (props: SvgIconProps<"svg">) => JSX.Element | null;
+    hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element | null;
     InfoTag?: React.ComponentType<{ page: PageTreePage }>;
     anchors: (input: DocumentInput) => string[];
     resolveDependencyRoute: (input: DocumentInput, { rootColumn, jsonPath }: { rootColumn: string; jsonPath: string }) => string;

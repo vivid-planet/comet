@@ -14,7 +14,7 @@ export function PageTypeIcon({ page, disabled }: PageTypeIconProps): JSX.Element
     let iconColor: SvgIconProps["color"] = "primary";
     const { documentTypes } = usePageTreeContext();
     const documentType = documentTypes[page.documentType];
-    let Icon: (props: SvgIconProps<"svg">) => JSX.Element;
+    let Icon: (props: SvgIconProps<"svg">) => JSX.Element | null;
 
     if (page.slug === "home") {
         Icon = Home;
