@@ -68,6 +68,7 @@ export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps):
                 </Button>
             </SplitButton>
             <input type="file" hidden {...getInputProps()} ref={fileInputRef} />
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <input type="file" hidden {...getInputProps()} webkitdirectory="webkitdirectory" directory="directory" ref={folderInputRef} />
             {fileUploadDialogs}
         </>

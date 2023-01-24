@@ -30,7 +30,7 @@ import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProv
 import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/EditPageNode";
 import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
-import { config } from "@src/config";
+import { createConfig } from "@src/config";
 import Dashboard from "@src/dashboard/Dashboard";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import theme from "@src/theme";
@@ -61,7 +61,8 @@ const GlobalStyle = () => (
     />
 );
 
-const apolloClient = createApolloClient();
+const config = createConfig();
+const apolloClient = createApolloClient(config.apiUrl);
 const apiClient = createHttpClient(config.apiUrl);
 
 const categories: AllCategories = [
