@@ -33,7 +33,7 @@ async function bootstrap(): Promise<void> {
     // class-validator should use Nest for dependency injection.
     // See https://github.com/nestjs/nest/issues/528,
     //     https://github.com/typestack/class-validator#using-service-container.
-    useContainer(app.select(AppModule), { fallbackOnErrors: true });
+    useContainer(app.select(appModule), { fallbackOnErrors: true });
 
     app.enableCors({
         credentials: true,
