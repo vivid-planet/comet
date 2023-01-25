@@ -36,14 +36,18 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
                 )}
             </LinkContent>
 
-            {documentType.InfoTag !== undefined && <InfoPanel size="small" label={<documentType.InfoTag page={page} />} />}
+            {documentType.InfoTag !== undefined && (
+                <InfoPanel>
+                    <documentType.InfoTag page={page} />
+                </InfoPanel>
+            )}
         </Root>
     );
 };
 
 export default PageLabel;
 
-const InfoPanel = styled(Chip)`
+const InfoPanel = styled("div")`
     margin-left: 20px;
 `;
 
