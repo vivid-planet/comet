@@ -42,7 +42,7 @@
         "@comet/admin-theme": "^3.2.2",
         "@comet/blocks-admin": "^3.2.2",
         "@graphql-typed-document-node/core": "^3.1.1",
-        "class-validator": "^0.14.0",
+        "class-validator": "0.13.2",
         "clsx": "^1.1.1",
         "date-fns": "^2.0.0",
         "draft-js": "^0.11.7",
