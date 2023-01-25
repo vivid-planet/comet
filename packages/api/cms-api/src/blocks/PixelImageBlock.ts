@@ -86,7 +86,7 @@ class PixelImageBlockData extends BlockData {
     }
 }
 
-class PixelImageBlockInput extends BlockInput {
+export class PixelImageBlockInput extends BlockInput {
     @IsOptional()
     @IsNotEmpty()
     @IsString()

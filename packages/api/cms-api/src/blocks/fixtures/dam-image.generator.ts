@@ -1,17 +1,23 @@
 import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { DamImageBlock, File, FocalPoint, ImageCropAreaInput } from "@comet/cms-api";
 import faker from "faker";
 
-export const generateImageBlock = (imageFiles: File[] | File, cropArea?: ImageCropAreaInput): ExtractBlockInputFactoryProps<typeof DamImageBlock> => {
+import { DamImageBlock } from "../../dam/blocks/dam-image.block";
+import { FocalPoint } from "../../dam/common/enums/focal-point.enum";
+import { File } from "../../dam/files/entities/file.entity";
+import { ImageCropAreaInput } from "../../dam/images/dto/image-crop-area.input";
+
+export const generateDamImageBlock = (
+    imageFiles: File[] | File,
+    cropArea?: ImageCropAreaInput,
+): ExtractBlockInputFactoryProps<typeof DamImageBlock> => {
     const imageFile = Array.isArray(imageFiles) ? faker.random.arrayElement(imageFiles) : imageFiles;
     const type = imageFile.mimetype == "image/svg+xml" ? "svgImage" : "pixelImage";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const props: any = {
+
+    const props = {
         damFileId: imageFile.id,
+        cropArea: type === "pixelImage" ? cropArea ?? calculateDefaultCropInput() : undefined,
     };
-    if (type == "pixelImage") {
-        props.cropArea = cropArea ?? calculateDefaultCropInput(imageFile);
-    }
+
     return {
         attachedBlocks: [
             {
@@ -23,16 +29,8 @@ export const generateImageBlock = (imageFiles: File[] | File, cropArea?: ImageCr
     };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const calculateDefaultCropInput = ({ image }: File): ImageCropAreaInput => {
-    const focalPoint = faker.random.arrayElement([
-        FocalPoint.SMART,
-        FocalPoint.CENTER,
-        FocalPoint.NORTHEAST,
-        FocalPoint.NORTHWEST,
-        FocalPoint.SOUTHEAST,
-        FocalPoint.SOUTHWEST,
-    ]);
+const calculateDefaultCropInput = (): ImageCropAreaInput => {
+    const focalPoint = faker.random.arrayElement(Object.values(FocalPoint));
 
     return {
         focalPoint,

@@ -33,7 +33,7 @@ interface RawDraftInlineStyleRange {
     length: number;
 }
 // Copied from draft-js types, only RawDraftInlineStyleRange is replaced
-interface RawDraftContentBlock {
+export interface RawDraftContentBlock {
     key: string;
     type: DraftBlockType;
     text: string;
@@ -45,7 +45,7 @@ interface RawDraftContentBlock {
 }
 
 // Replaces draft-js' RawDraftContentState
-interface DraftJsFactoryProps<LinkBlockInput extends BlockInputInterface> {
+export interface DraftJsFactoryProps<LinkBlockInput extends BlockInputInterface> {
     blocks: Array<RawDraftContentBlock>;
     entityMap: {
         [key: string]: { type: "LINK"; mutability: DraftEntityMutability; data: ReturnType<LinkBlockInput["toPlain"]> }; // extend this once more draftJS entities are supported
@@ -59,7 +59,7 @@ interface DraftJsInput<LinkBlockInput extends BlockInputInterface> {
     };
 }
 
-interface RichTextBlockDataInterface extends BlockDataInterface {
+export interface RichTextBlockDataInterface extends BlockDataInterface {
     draftContent: RawDraftContentState;
 }
 

@@ -1,11 +1,17 @@
-import { BlobStorageBackendService, FilesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import {
+    BlobStorageBackendService,
+    FilesService,
+    generateSeoBlock,
+    PageTreeNodeInterface,
+    PageTreeNodeVisibility,
+    PageTreeService,
+} from "@comet/cms-api";
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { configNS } from "@src/config/config.namespace";
-import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
 import { DocumentGeneratorService } from "@src/db/fixtures/generators/document-generator.service";
 import { ImageGeneratorService } from "@src/db/fixtures/generators/image-generator.service";
 import { generateLinks } from "@src/db/fixtures/generators/links.generator";

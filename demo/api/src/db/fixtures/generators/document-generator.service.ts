@@ -1,11 +1,10 @@
-import { File, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { File, generateSeoBlock, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { configNS } from "@src/config/config.namespace";
 import { generateBlocksBlock } from "@src/db/fixtures/generators/blocks/blocks.generator";
-import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { Page } from "@src/pages/entities/page.entity";

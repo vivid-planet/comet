@@ -49,6 +49,9 @@ export {
 export { BaseListBlockItemData, BaseListBlockItemInput, createListBlock } from "./blocks/factories/createListBlock";
 export { createOneOfBlock, OneOfBlock } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
+export { generateRichtextBlock } from "./blocks/fixtures/richtext.generator";
+export { generateSpaceBlock } from "./blocks/fixtures/space.generator";
+export { generateYoutubeVideoBlock } from "./blocks/fixtures/youtube-video.generator";
 export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates } from "./blocks/get-preview-image-url-templates";
 export { composeBlocks } from "./blocks/helpers/composeBlocks";
 export { strictBlockDataFactoryDecorator } from "./blocks/helpers/strictBlockDataFactoryDecorator";

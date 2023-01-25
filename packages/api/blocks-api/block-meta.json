@@ -27,6 +27,23 @@
         ]
     },
     {
+        "name": "RichText",
+        "fields": [
+            {
+                "name": "draftContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "draftContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Space",
         "fields": [
             {

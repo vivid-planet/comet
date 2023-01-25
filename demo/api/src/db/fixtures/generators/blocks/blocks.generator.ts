@@ -1,14 +1,17 @@
-import { BlocksBlockFixturesGeneratorMap, ExtractBlockInput, ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { File } from "@comet/cms-api";
+import {
+    BlocksBlockFixturesGeneratorMap,
+    ExtractBlockInput,
+    ExtractBlockInputFactoryProps,
+    generateRichtextBlock,
+    generateSpaceBlock,
+    generateYoutubeVideoBlock,
+} from "@comet/blocks-api";
+import { File, generateDamImageBlock } from "@comet/cms-api";
 import { ConfigType } from "@nestjs/config";
 import { configNS } from "@src/config/config.namespace";
-import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
+import { generateTextImageBlock } from "@src/db/fixtures/generators/blocks/text-image.generator";
+import { PageContentBlock } from "@src/pages/blocks/page-content.block";
 import faker from "faker";
-
-import { generateImageBlock } from "./image.generator";
-import { generateRichtextBlock } from "./richtext.generator";
-import { generateSpaceBlock } from "./space.generator";
-import { generateTextImageBlock } from "./text-image.generator";
 
 export const generateBlocksBlock = (
     imageFiles: File[],
@@ -16,8 +19,9 @@ export const generateBlocksBlock = (
     blockCfg: Partial<BlocksBlockFixturesGeneratorMap<typeof PageContentBlock>> = {
         space: generateSpaceBlock,
         richtext: generateRichtextBlock,
-        image: () => generateImageBlock(imageFiles),
+        image: () => generateDamImageBlock(imageFiles),
         textImage: () => generateTextImageBlock(imageFiles, config),
+        youTubeVideo: () => generateYoutubeVideoBlock(["FG4KsatjFeI&t", "F_oOtaxb0L8", "Sklc_fQBmcs", "Xoz31I1FuiY", "bMknfKXIFA8"]),
     },
 ): ExtractBlockInput<typeof PageContentBlock> => {
     const blocks: ExtractBlockInputFactoryProps<typeof PageContentBlock>["blocks"] = [];

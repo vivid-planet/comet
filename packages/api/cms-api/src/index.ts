@@ -28,6 +28,8 @@ export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
 export { DamVideoBlock } from "./blocks/dam-video.block";
+export { generateDamImageBlock } from "./blocks/fixtures/dam-image.generator";
+export { generateSeoBlock } from "./blocks/fixtures/seo.generator";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
