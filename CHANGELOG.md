@@ -12,6 +12,12 @@ _tbd_
 
 -   Fix `createRedirect` mutation when no scoping is used
 
+### @comet/blocks-admin
+
+#### Changes
+
+-   Fix `createCompositeSetting` not working when using an array value
+
 ## 3.2.2
 
 _Jan 25, 2023_
