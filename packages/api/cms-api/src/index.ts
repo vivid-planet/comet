@@ -37,7 +37,6 @@ export { BuildsModule } from "./builds/builds.module";
 export { BuildsResolver } from "./builds/builds.resolver";
 export { BuildsService } from "./builds/builds.service";
 export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
-export { Build } from "./builds/dto/build.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
 export { SkipBuildInterceptor } from "./builds/skip-build.interceptor";

@@ -1,14 +1,5 @@
-import { gql } from "@apollo/client";
-import {
-    LocalErrorScopeApolloContext,
-    messages,
-    Stack,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarTitleItem,
-    useTableQuery,
-} from "@comet/admin";
+import { gql, useQuery } from "@apollo/client";
+import { messages, Stack, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -56,15 +47,9 @@ const DataGridContainer = styled("div")`
 export function PublisherPage(): React.ReactElement {
     const intl = useIntl();
 
-    const { tableData, loading, error } = useTableQuery<GQLBuildsQuery, undefined>()(buildsQuery, {
-        resolveTableData: (data) => ({
-            data: data.builds,
-            totalCount: data.builds.length,
-        }),
-        context: LocalErrorScopeApolloContext,
-    });
+    const { data, loading, error } = useQuery<GQLBuildsQuery, undefined>(buildsQuery);
 
-    const rows = tableData?.data ?? [];
+    const rows = data?.builds ?? [];
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.publisher", defaultMessage: "Publisher" })}>

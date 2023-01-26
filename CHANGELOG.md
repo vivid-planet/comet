@@ -32,7 +32,7 @@ All notable changes to this project will be documented in this file. This projec
 -   Restrict access to builds based on `ContentScopeModule`
 -   Decouple KubernetesModule from BuildsModule (Breaking: BuildsModuleConfig is now KubernetesModuleConfig)
 -   Breaking: AuthModule removes support for Bearer-Token
--   Breaking: Rename BuildObject to Build
+-   Breaking: Remove export for BuildObject (should not be needed in application land)
 -   Breaking: changed DamModule damConfig.allowedImageSizes/allowedAspectRatios to number[]/string[] (was string previously)
 
 #### Changes
