@@ -68,7 +68,7 @@ importers:
       '@mui/x-data-grid': ^5.15.2
       '@mui/x-data-grid-pro': ^5.15.2
       '@ory/hydra-client': ^1.0.0
-      '@types/draft-js': ^0.10.0
+      '@types/draft-js': ^0.11.10
       '@types/final-form-set-field-touched': ^1.0.0
       '@types/lodash.escaperegexp': ^4.0.0
       '@types/lodash.isequal': ^4.0.0
@@ -230,7 +230,7 @@ importers:
       '@graphql-codegen/typescript': 2.8.7_graphql@15.8.0
       '@graphql-codegen/typescript-operations': 2.5.12_graphql@15.8.0
       '@ory/hydra-client': 1.11.8
-      '@types/draft-js': 0.10.45
+      '@types/draft-js': 0.11.10
       '@types/final-form-set-field-touched': 1.0.0
       '@types/lodash.escaperegexp': 4.1.7
       '@types/lodash.isequal': 4.5.6
@@ -296,7 +296,7 @@ importers:
       '@types/async': ^3.0.0
       '@types/compression': ^1.0.0
       '@types/cookie-parser': ^1.0.0
-      '@types/draft-js': ^0.10.0
+      '@types/draft-js': ^0.11.10
       '@types/express': ^4.0.0
       '@types/faker': ^5.0.0
       '@types/mime': ^2.0.0
@@ -402,7 +402,7 @@ importers:
       '@types/async': 3.2.16
       '@types/compression': 1.7.2
       '@types/cookie-parser': 1.4.3
-      '@types/draft-js': 0.10.45
+      '@types/draft-js': 0.11.10
       '@types/express': 4.17.16
       '@types/faker': 5.5.9
       '@types/mime': 2.0.3
@@ -709,7 +709,7 @@ importers:
       '@mui/material': ^5.0.0
       '@mui/styles': ^5.0.0
       '@mui/utils': ^5.4.1
-      '@types/react': ^17.0.0
+      '@types/react': ^17.0
       '@types/react-date-range': ^1.4.3
       '@types/react-dom': ^17.0.0
       clsx: ^1.1.1
@@ -855,7 +855,7 @@ importers:
       '@mui/icons-material': ^5.0.0
       '@mui/material': ^5.0.0
       '@mui/styles': ^5.0.0
-      '@types/draft-js': ^0.10.38
+      '@types/draft-js': ^0.11.10
       '@types/immutable': ^3.8.7
       '@types/react': ^17.0.0
       '@types/react-dom': ^17.0.0
@@ -885,7 +885,7 @@ importers:
       '@mui/icons-material': 5.11.0_5emkynjj2o4zfuscl2264aopiq
       '@mui/material': 5.11.6_zsjcj4gvi24ks76nprapl4hsmq
       '@mui/styles': 5.11.2_h7fc2el62uaa77gho3xhys6ola
-      '@types/draft-js': 0.10.45
+      '@types/draft-js': 0.11.10
       '@types/immutable': 3.8.7
       '@types/react': 17.0.53
       '@types/react-dom': 17.0.18
@@ -933,7 +933,7 @@ importers:
       '@storybook/core-events': ^6.4.0
       '@storybook/react': ^6.2.7
       '@storybook/theming': ^6.4.0
-      '@types/draft-js': ^0.10.38
+      '@types/draft-js': ^0.11.10
       '@types/faker': ^5.5.8
       '@types/file-saver': ^2.0.1
       '@types/node': ^14.0.0
@@ -1028,7 +1028,7 @@ importers:
       '@babel/core': 7.20.12
       '@comet/admin-babel-preset': link:../admin-babel-preset
       '@comet/eslint-config': link:../../eslint-config
-      '@types/draft-js': 0.10.45
+      '@types/draft-js': 0.11.10
       '@types/faker': 5.5.9
       '@types/file-saver': 2.0.5
       '@types/qs': 6.9.7
@@ -1210,6 +1210,7 @@ importers:
       '@mui/styles': ^5.0.0
       '@mui/system': ^5.0.0
       '@mui/x-data-grid': ^5.0.0
+      '@types/draft-js': ^0.11.10
       '@types/file-saver': ^2.0.0
       '@types/final-form-set-field-touched': ^1.0.0
       '@types/jest': ^27.0.0
@@ -1287,7 +1288,6 @@ importers:
       class-validator: 0.13.2
       clsx: 1.2.1
       date-fns: 2.29.3
-      draft-js: 0.11.7_sfoxds7t5ydpegc3knd667wn6m
       file-saver: 2.0.5
       final-form-arrays: 3.1.0_final-form@4.20.9
       final-form-set-field-touched: 1.0.1_final-form@4.20.9
@@ -1329,11 +1329,11 @@ importers:
       '@graphql-codegen/typescript': 2.8.7_graphql@16.6.0
       '@graphql-codegen/typescript-operations': 2.5.12_graphql@16.6.0
       '@mui/icons-material': 5.11.0_5emkynjj2o4zfuscl2264aopiq
-      '@mui/lab': 5.0.0-alpha.117_5xfhpfmpn6hscde7xomhids7u4
       '@mui/material': 5.11.6_6bbsiiklroihy7ocrpuylyl7sa
       '@mui/styles': 5.11.2_h7fc2el62uaa77gho3xhys6ola
       '@mui/system': 5.11.5_72vrb6ezpy44he4eqbgqkjz6be
       '@mui/x-data-grid': 5.17.20_4ibgmbmzghieftdq7ihfdhu5vu
+      '@types/draft-js': 0.11.10
       '@types/file-saver': 2.0.5
       '@types/final-form-set-field-touched': 1.0.0
       '@types/jest': 27.5.2
@@ -1342,16 +1342,21 @@ importers:
       '@types/lodash.get': 4.4.7
       '@types/lodash.isequal': 4.5.6
       '@types/lodash.set': 4.3.7
+      '@types/mime-db': 1.43.1
       '@types/node': 14.18.36
       '@types/react': 17.0.53
       '@types/react-dom': 17.0.18
       '@types/react-final-form-listeners': 1.0.0
       '@types/react-image-crop': 8.1.3
       '@types/react-router': 5.1.20
+      '@types/react-router-dom': 5.3.3
       '@types/react-virtualized-auto-sizer': 1.0.1
       '@types/react-window': 1.8.5
+      '@types/uuid': 9.0.0
       axios: 0.21.4
       cosmiconfig-toml-loader: 1.0.0
+      csstype: 3.1.1
+      draft-js: 0.11.7_sfoxds7t5ydpegc3knd667wn6m
       eslint: 8.32.0
       final-form: 4.20.9
       graphql: 16.6.0
@@ -1375,7 +1380,7 @@ importers:
     specifiers:
       '@comet/eslint-config': workspace:^3.2.1
       '@nestjs/common': ^9.0.0
-      '@types/draft-js': ^0.10.0
+      '@types/draft-js': ^0.11.10
       '@types/jest': ^27.0.0
       '@types/node': ^14.0.0
       chokidar-cli: ^2.0.0
@@ -1397,7 +1402,7 @@ importers:
     devDependencies:
       '@comet/eslint-config': link:../../eslint-config
       '@nestjs/common': 9.2.1_ufuujcqbszwis444rmt5m3dshy
-      '@types/draft-js': 0.10.45
+      '@types/draft-js': 0.11.10
       '@types/jest': 27.5.2
       '@types/node': 14.18.36
       chokidar-cli: 2.1.0
@@ -10540,8 +10545,8 @@ packages:
     resolution: {integrity: sha512-epMsEE85fi4lfmJUH/89/iV/LI+F5CvNIvmgs5g5jYFPfhO2S/ae8WSsLOKWdwtoaZw9Q2IhJ4tQ5tFCcS/4HA==}
     dev: true
 
-  /@types/draft-js/0.10.45:
-    resolution: {integrity: sha512-ozmVQEI088kGQfY2XPB0b+YRNbkv1mxdxcLieBLCc2F4IkVWMs6mnIaEbBRExmM3H/Amm9CvhlmIYmDL4CjBvA==}
+  /@types/draft-js/0.11.10:
+    resolution: {integrity: sha512-o/DST8x0wNerwhRiaE577UHFIXb6HCywaZOZfj9TF2vU3CONvsCGoQmdOsKqERdXp+3ZNlSvFUH0B8lEEYOT4A==}
     dependencies:
       '@types/react': 17.0.53
       immutable: 3.7.6
