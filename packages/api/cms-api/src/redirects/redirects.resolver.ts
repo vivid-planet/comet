@@ -121,8 +121,7 @@ export function createRedirectsResolver({
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("source", { type: () => String }) source: string,
         ): Promise<boolean> {
-            const redirect = await this.repository.findOne({ source, ...(hasNonEmptyScope ? { scope: nonEmptyScopeOrNothing(scope) } : {}) });
-            return redirect === null;
+            return this.redirectService.isRedirectSourceAvailable(source, nonEmptyScopeOrNothing(scope));
         }
 
         @Mutation(() => Redirect)
@@ -130,6 +129,10 @@ export function createRedirectsResolver({
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
         ): Promise<RedirectInterface> {
+            if (!(await this.redirectService.isRedirectSourceAvailable(input.source, scope))) {
+                throw new CometValidationException("Validation failed");
+            }
+
             const tranformedInput = plainToInstance(RedirectInput, input);
 
             const errors = await validate(tranformedInput, { whitelist: true, forbidNonWhitelisted: true });
@@ -165,6 +168,10 @@ export function createRedirectsResolver({
             const redirect = await this.repository.findOneOrFail(id);
             if (redirect != null && lastUpdatedAt) {
                 validateNotModified(redirect, lastUpdatedAt);
+            }
+
+            if (!(await this.redirectService.isRedirectSourceAvailable(input.source, redirect.scope, { excludedId: redirect.id }))) {
+                throw new CometValidationException("Validation failed");
             }
 
             wrap(redirect).assign({ ...tranformedInput, target: tranformedInput.target.transformToBlockData() });
