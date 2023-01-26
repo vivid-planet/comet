@@ -9,6 +9,7 @@ import { RedirectFilter } from "./dto/redirects.filter";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
 import { REDIRECTS_LINK_BLOCK, RedirectsLinkBlock } from "./redirects.module";
+import { RedirectScopeInterface } from "./types";
 
 @Injectable()
 export class RedirectsService {
@@ -97,5 +98,10 @@ export class RedirectsService {
         for (const childNode of childNodes) {
             await this.createAutomaticRedirects(childNode);
         }
+    }
+
+    async isRedirectSourceAvailable(source: string, scope: RedirectScopeInterface | undefined, options?: { excludedId?: string }): Promise<boolean> {
+        const redirect = await this.repository.findOne({ source, scope, id: { $ne: options?.excludedId } });
+        return redirect === null;
     }
 }

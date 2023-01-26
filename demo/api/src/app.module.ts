@@ -1,5 +1,4 @@
 import {
-    AuthModule,
     BlobStorageConfig,
     BlobStorageModule,
     BlocksModule,
@@ -19,18 +18,17 @@ import {
     RedirectsModule,
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
-import { Module } from "@nestjs/common";
-import { ConfigType } from "@nestjs/config";
+import { DynamicModule, Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
+import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
-import { configNS } from "@src/config/config.namespace";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
-import { CurrentUser } from "./auth/current-user";
+import { AuthModule } from "./auth/auth.module";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -44,157 +42,119 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 
-@Module({
-    imports: [
-        ConfigModule,
-        DbModule,
-        GraphQLModule.forRootAsync({
-            driver: ApolloDriver,
-            imports: [ConfigModule, BlocksModule],
-            useFactory: async (config: ConfigType<typeof configNS>, blocksTransformerService: BlocksTransformerService) => ({
-                debug: config.debug,
-                playground: config.debug,
-                autoSchemaFile: "schema.gql",
-                context: ({ req }: { req: Request }) => ({ ...req }),
-                cors: {
-                    credentials: true,
-                    origin: config.CORS_ALLOWED_ORIGINS.split(",").map((val: string) => new RegExp(val)),
-                },
-                buildSchemaOptions: {
-                    fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(blocksTransformerService)],
-                },
-            }),
-            inject: [configNS.KEY, BlocksTransformerService],
-        }),
-        AuthModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: (config: ConfigType<typeof configNS>) => ({
-                staticAuthedUser: {
-                    id: "1",
-                    name: "Test Admin",
-                    email: "demo@comet-dxp.com",
-                    language: "en",
-                    role: "admin",
-                    domains: ["main", "secondary"],
-                },
-            }),
-            currentUser: CurrentUser,
-            inject: [configNS.KEY],
-        }),
-        ContentScopeModule.forRoot({
-            canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
-                if (!user.domains) return true; //all domains
-                return user.domains.includes(requestScope.domain);
-            },
-        }),
-        BlocksModule.forRootAsync({
-            imports: [PagesModule],
-            useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
-                return {
-                    transformerDependencies: {
-                        pageTreeService,
-                        filesService,
-                        imagesService,
+@Module({})
+export class AppModule {
+    static forRoot(config: Config): DynamicModule {
+        return {
+            module: AppModule,
+            imports: [
+                ConfigModule.forRoot(config),
+                DbModule,
+                GraphQLModule.forRootAsync({
+                    driver: ApolloDriver,
+                    imports: [ConfigModule, BlocksModule],
+                    useFactory: async (blocksTransformerService: BlocksTransformerService) => ({
+                        debug: config.debug,
+                        playground: config.debug,
+                        autoSchemaFile: "schema.gql",
+                        context: ({ req }: { req: Request }) => ({ ...req }),
+                        cors: {
+                            credentials: true,
+                            origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
+                        },
+                        buildSchemaOptions: {
+                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(blocksTransformerService)],
+                        },
+                    }),
+                    inject: [BlocksTransformerService],
+                }),
+                AuthModule,
+                ContentScopeModule.forRoot({
+                    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
+                        if (!user.domains) return true; //all domains
+                        return user.domains.includes(requestScope.domain);
                     },
-                };
-            },
-            inject: [PageTreeService, FilesService, ImagesService],
-        }),
-        KubernetesModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: async (config: ConfigType<typeof configNS>) => ({
-                config: {
-                    helmRelease: config.HELM_RELEASE,
-                },
-            }),
-            inject: [configNS.KEY],
-        }),
-        BuildsModule,
-        LinksModule,
-        PagesModule,
-        PageTreeModule.forRoot({
-            PageTreeNode: PageTreeNode,
-            PageTreeNodeCreateInput: PageTreeNodeCreateInput,
-            PageTreeNodeUpdateInput: PageTreeNodeUpdateInput,
-            Documents: [Page, Link, PredefinedPage],
-            Scope: PageTreeNodeScope,
-            reservedPaths: ["/events"],
-        }),
-        RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
-        BlobStorageModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: async (config: ConfigType<typeof configNS>) => ({
-                blobStorageConfig: {
-                    backend: {
-                        driver: config.BLOB_STORAGE_DRIVER,
-                        file:
-                            config.BLOB_STORAGE_DRIVER === "file"
-                                ? {
-                                      path: config.FILE_STORAGE_PATH,
-                                  }
-                                : undefined,
-                        azure:
-                            config.BLOB_STORAGE_DRIVER === "azure"
-                                ? {
-                                      accountName: config.AZURE_ACCOUNT_NAME,
-                                      accountKey: config.AZURE_ACCOUNT_KEY,
-                                  }
-                                : undefined,
-                        s3:
-                            config.BLOB_STORAGE_DRIVER === "s3"
-                                ? {
-                                      accessKeyId: config.S3_ACCESS_KEY_ID,
-                                      secretAccessKey: config.S3_SECRET_ACCESS_KEY,
-                                      endpoint: config.S3_ENDPOINT,
-                                      region: config.S3_REGION,
-                                      bucket: config.S3_BUCKET,
-                                  }
-                                : undefined,
-                    } as BlobStorageConfig["backend"],
-                },
-            }),
-            inject: [configNS.KEY],
-        }),
-        DamModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: async (config: ConfigType<typeof configNS>) => ({
-                damConfig: {
-                    filesBaseUrl: `${config.API_URL}/dam/files`,
-                    imagesBaseUrl: `${config.API_URL}/dam/images`,
-                    secret: config.DAM_SECRET,
-                    additionalMimeTypes: [],
-                    allowedImageSizes: config.DAM_ALLOWED_IMAGE_SIZES,
-                    allowedAspectRatios: config.DAM_ALLOWED_IMAGE_ASPECT_RATIOS,
-                    filesDirectory: `${config.BLOB_STORAGE_DIRECTORY_PREFIX}-files`,
-                    cacheDirectory: `${config.BLOB_STORAGE_DIRECTORY_PREFIX}-cache`,
-                    maxFileSize: config.DAM_UPLOADS_MAX_FILE_SIZE,
-                },
-                imgproxyConfig: {
-                    url: config.IMGPROXY_URL,
-                    salt: config.IMGPROXY_SALT,
-                    key: config.IMGPROXY_KEY,
-                    quality: config.IMGPROXY_QUALITY,
-                    maxSrcResolution: config.IMGPROXY_MAX_SRC_RESOLUTION,
-                },
-            }),
-            inject: [configNS.KEY],
-        }),
-        PublicUploadModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: async (config: ConfigType<typeof configNS>) => ({
-                publicUploadConfig: {
-                    maxFileSize: config.PUBLIC_UPLOADS_MAX_FILE_SIZE,
-                    directory: `${config.BLOB_STORAGE_DIRECTORY_PREFIX}-public-uploads`,
-                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
-                },
-            }),
-            inject: [configNS.KEY],
-        }),
-        NewsModule,
-        MenusModule,
-        FooterModule,
-        PredefinedPageModule,
-        ProductsModule,
-    ],
-})
-export class AppModule {}
+                }),
+                BlocksModule.forRootAsync({
+                    imports: [PagesModule],
+                    useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
+                        return {
+                            transformerDependencies: {
+                                pageTreeService,
+                                filesService,
+                                imagesService,
+                            },
+                        };
+                    },
+                    inject: [PageTreeService, FilesService, ImagesService],
+                }),
+                KubernetesModule.registerAsync({
+                    imports: [ConfigModule],
+                    useFactory: async () => ({
+                        config: {
+                            helmRelease: config.helmRelease,
+                        },
+                    }),
+                    inject: [],
+                }),
+                BuildsModule,
+                LinksModule,
+                PagesModule,
+                PageTreeModule.forRoot({
+                    PageTreeNode: PageTreeNode,
+                    PageTreeNodeCreateInput: PageTreeNodeCreateInput,
+                    PageTreeNodeUpdateInput: PageTreeNodeUpdateInput,
+                    Documents: [Page, Link, PredefinedPage],
+                    Scope: PageTreeNodeScope,
+                    reservedPaths: ["/events"],
+                }),
+                RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
+                BlobStorageModule.registerAsync({
+                    imports: [ConfigModule],
+                    useFactory: async () => ({
+                        blobStorageConfig: {
+                            backend: {
+                                driver: config.blob.storageDriver,
+                                file: config.blob.storageDriver === "file" ? config.fileStorage : undefined,
+                                azure: config.blob.storageDriver === "azure" ? config.azure : undefined,
+                                s3: config.blob.storageDriver === "s3" ? config.s3 : undefined,
+                            } as BlobStorageConfig["backend"],
+                        },
+                    }),
+                }),
+                DamModule.registerAsync({
+                    imports: [ConfigModule],
+                    useFactory: async () => ({
+                        damConfig: {
+                            filesBaseUrl: `${config.apiUrl}/dam/files`,
+                            imagesBaseUrl: `${config.apiUrl}/dam/images`,
+                            secret: config.dam.secret,
+                            allowedImageSizes: config.dam.allowedImageSizes,
+                            allowedAspectRatios: config.dam.allowedImageAspectRatios,
+                            additionalMimeTypes: config.dam.additionalMimetypes,
+                            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+                            cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+                            maxFileSize: config.dam.uploadsMaxFileSize,
+                        },
+                        imgproxyConfig: config.imgproxy,
+                    }),
+                }),
+                PublicUploadModule.registerAsync({
+                    imports: [ConfigModule],
+                    useFactory: async () => ({
+                        publicUploadConfig: {
+                            maxFileSize: config.publicUploads.maxFileSize,
+                            directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
+                            acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
+                        },
+                    }),
+                }),
+                NewsModule,
+                MenusModule,
+                FooterModule,
+                PredefinedPageModule,
+                ProductsModule,
+            ],
+        };
+    }
+}

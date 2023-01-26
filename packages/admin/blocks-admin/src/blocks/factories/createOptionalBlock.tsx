@@ -63,6 +63,14 @@ export function createOptionalBlock<T extends BlockInterface>(
         },
         isValid: async (state) => !state.block || decoratedBlock.isValid(state.block),
 
+        anchors: (state) => {
+            if (state.block === undefined) {
+                return [];
+            }
+
+            return decoratedBlock.anchors?.(state.block) ?? [];
+        },
+
         definesOwnTitle: true,
 
         AdminComponent: ({ state, updateState }) => {

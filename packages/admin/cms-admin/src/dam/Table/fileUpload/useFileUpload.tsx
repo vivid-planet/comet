@@ -107,7 +107,15 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         const acceptedMimetypes = options.acceptedMimetypes ?? allAcceptedMimeTypes;
 
         acceptedMimetypes.forEach((mimetype) => {
-            const extensions = mimedb[mimetype]?.extensions;
+            let extensions: readonly string[] | undefined;
+            if (mimetype === "application/x-zip-compressed") {
+                // zip files in Windows, not supported by mime-db
+                // see https://github.com/jshttp/mime-db/issues/245
+                extensions = ["zip"];
+            } else {
+                extensions = mimedb[mimetype]?.extensions;
+            }
+
             if (extensions) {
                 acceptObj[mimetype] = extensions.map((extension) => `.${extension}`);
             }
@@ -127,7 +135,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const totalSize = Object.values(totalSizes).length > 0 ? Object.values(totalSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
     const loadedSize = Object.values(loadedSizes).length > 0 ? Object.values(loadedSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
 
-    const maxFileSizeInMegabytes = parseInt(context.damConfig.maxFileSize);
+    const maxFileSizeInMegabytes = context.damConfig.maxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
     const cancelUpload = React.useRef<CancelTokenSource>();
 
@@ -382,7 +390,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                     const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
 
                     if (typedErr.response?.data.error === "CometImageResolutionException") {
-                        addValidationError(file, <MaxResolutionError maxResolution={Number(context.damConfig.maxSrcResolution)} />);
+                        addValidationError(file, <MaxResolutionError maxResolution={context.damConfig.maxSrcResolution} />);
                     } else if (typedErr.response?.data.error === "CometValidationException") {
                         const message = typedErr.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;

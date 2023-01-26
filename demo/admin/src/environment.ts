@@ -1,12 +1,1 @@
-export default [
-    "API_URL",
-    "ADMIN_URL",
-    "DAM_UPLOADS_MAX_FILE_SIZE",
-    "IMGPROXY_MAX_SRC_RESOLUTION",
-    "SITES_CONFIG",
-    "DAM_ALLOWED_IMAGE_ASPECT_RATIOS",
-    "COMET_DEMO_API_URL",
-    "BUILD_DATE",
-    "BUILD_NUMBER",
-    "COMMIT_SHA",
-] as const;
+export default ["API_URL", "ADMIN_URL", "SITES_CONFIG", "COMET_DEMO_API_URL", "BUILD_DATE", "BUILD_NUMBER", "COMMIT_SHA"] as const;

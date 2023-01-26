@@ -8,13 +8,13 @@ interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
     children: React.ReactElement;
 }
 
-export function InternalLinkBlock({ data: { targetPage }, children }: InternalLinkBlockProps): React.ReactElement {
+export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children }: InternalLinkBlockProps): React.ReactElement {
     if (!targetPage) {
         return children;
     }
 
     return (
-        <Link href={targetPage.path} passHref>
+        <Link href={targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path} passHref>
             {children}
         </Link>
     );
