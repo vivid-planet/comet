@@ -1,10 +1,5 @@
 lockfileVersion: 5.4
 
-overrides:
-  '@emotion/react': 11.9.3
-  '@typescript-eslint/parser': ^5.0.0
-  '@types/react': ^17.0.0
-
 importers:
 
   .:
@@ -48,7 +43,7 @@ importers:
       '@comet/cms-admin': workspace:^3.0.0
       '@comet/eslint-config': workspace:^3.0.0
       '@emotion/babel-plugin': ^11.0.0
-      '@emotion/react': 11.9.3
+      '@emotion/react': ^11.9.3
       '@emotion/styled': ^11.9.3
       '@fontsource/roboto': ^4.5.5
       '@formatjs/cli': ^2.0.0
@@ -526,8 +521,8 @@ importers:
       '@comet/admin-babel-preset': workspace:^3.2.1
       '@comet/admin-icons': workspace:^3.2.1
       '@comet/eslint-config': workspace:^3.2.1
-      '@emotion/react': 11.9.3
-      '@emotion/styled': ^11.0.0
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
       '@mui/icons-material': ^5.0.0
       '@mui/material': ^5.0.0
       '@mui/private-theming': ^5.0.0
@@ -915,8 +910,8 @@ importers:
       '@comet/admin-rte': workspace:^3.0.0
       '@comet/admin-theme': workspace:^3.0.0
       '@comet/eslint-config': workspace:^3.0.0
-      '@emotion/react': 11.9.3
-      '@emotion/styled': ^11.9.3
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
       '@fontsource/roboto': ^4.2.3
       '@mui/icons-material': ^5.0.0
       '@mui/material': ^5.0.0
@@ -1108,11 +1103,12 @@ importers:
       '@comet/admin-icons': workspace:^3.2.1
       '@comet/cli': workspace:^3.2.1
       '@comet/eslint-config': workspace:^3.2.1
-      '@emotion/react': 11.9.3
-      '@emotion/styled': ^11.0.0
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
       '@mui/lab': ^5.0.0-alpha.76
       '@mui/material': ^5.0.0
       '@mui/styles': ^5.0.0
+      '@mui/system': ^5.0.0
       '@types/jest': ^27.0.0
       '@types/lodash.isequal': ^4.0.0
       '@types/react': ^17.0.0
@@ -1145,6 +1141,7 @@ importers:
     dependencies:
       '@comet/admin': link:../admin
       '@comet/admin-icons': link:../admin-icons
+      '@mui/lab': 5.0.0-alpha.117_5xfhpfmpn6hscde7xomhids7u4
       clipboard-copy: 4.0.1
       clsx: 1.2.1
       lodash.isequal: 4.5.0
@@ -1157,9 +1154,11 @@ importers:
       '@comet/admin-babel-preset': link:../admin-babel-preset
       '@comet/cli': link:../../cli
       '@comet/eslint-config': link:../../eslint-config
-      '@mui/lab': 5.0.0-alpha.117_5xiv4pi7mh4xv7fm6fhbatalwu
-      '@mui/material': 5.11.6_zsjcj4gvi24ks76nprapl4hsmq
+      '@emotion/react': 11.9.3_mk6db2egckiugg7v365a42dwcm
+      '@emotion/styled': 11.10.5_ky6f5epj2ggtkuvppn454j62re
+      '@mui/material': 5.11.6_6bbsiiklroihy7ocrpuylyl7sa
       '@mui/styles': 5.11.2_h7fc2el62uaa77gho3xhys6ola
+      '@mui/system': 5.11.5_72vrb6ezpy44he4eqbgqkjz6be
       '@types/jest': 27.5.2
       '@types/lodash.isequal': 4.5.6
       '@types/react': 17.0.53
@@ -1197,8 +1196,8 @@ importers:
       '@comet/blocks-admin': workspace:^3.2.1
       '@comet/cli': workspace:^3.2.1
       '@comet/eslint-config': workspace:^3.2.1
-      '@emotion/react': 11.9.3
-      '@emotion/styled': ^11.0.0
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
       '@graphql-codegen/cli': ^2.0.0
       '@graphql-codegen/named-operations-object': ^2.0.0
       '@graphql-codegen/typescript': ^2.0.0
@@ -1219,18 +1218,22 @@ importers:
       '@types/lodash.get': ^4.4.6
       '@types/lodash.isequal': ^4.0.0
       '@types/lodash.set': ^4.3.6
+      '@types/mime-db': ^1.43.1
       '@types/node': ^14.0.0
       '@types/react': ^17.0.0
       '@types/react-dom': ^17.0.0
       '@types/react-final-form-listeners': ^1.0.0
       '@types/react-image-crop': ^8.0.0
       '@types/react-router': ^5.0.0
+      '@types/react-router-dom': ^5.0.0
       '@types/react-virtualized-auto-sizer': ^1.0.0
       '@types/react-window': ^1.0.0
+      '@types/uuid': ^9.0.0
       axios: ^0.21.0
       class-validator: ^0.13.0
       clsx: ^1.1.1
       cosmiconfig-toml-loader: ^1.0.0
+      csstype: ^3.1.1
       date-fns: ^2.0.0
       draft-js: ^0.11.7
       eslint: ^8.0.0
@@ -1285,6 +1288,7 @@ importers:
       '@comet/admin-theme': link:../admin-theme
       '@comet/blocks-admin': link:../blocks-admin
       '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
+      '@mui/lab': 5.0.0-alpha.117_5xfhpfmpn6hscde7xomhids7u4
       class-validator: 0.13.2
       clsx: 1.2.1
       date-fns: 2.29.3
@@ -1442,12 +1446,14 @@ importers:
       '@nestjs/platform-express': ^9.0.0
       '@types/express': ^4.0.0
       '@types/get-image-colors': ^4.0.0
+      '@types/jest': ^29.0.0
       '@types/jsonwebtoken': ^8.5.9
       '@types/lodash.isequal': ^4.0.0
       '@types/mime': ^2.0.0
       '@types/mime-db': ^1.0.0
       '@types/multer': ^1.4.4
       '@types/node': ^14.0.0
+      '@types/node-fetch': ^2.6.2
       '@types/passport-http': ^0.3.9
       '@types/passport-jwt': ^3.0.7
       '@types/probe-image-size': ^7.0.0
@@ -1547,12 +1553,14 @@ importers:
       '@nestjs/graphql': 10.1.7_3dmnsucsicl4np65t7cadmauuq
       '@nestjs/platform-express': 9.2.1_hjcqpoaebdr7gdo5hgc22hthbe
       '@types/express': 4.17.16
+      '@types/jest': 29.4.0
       '@types/jsonwebtoken': 8.5.9
       '@types/lodash.isequal': 4.5.6
       '@types/mime': 2.0.3
       '@types/mime-db': 1.43.1
       '@types/multer': 1.4.7
       '@types/node': 14.18.36
+      '@types/node-fetch': 2.6.2
       '@types/passport-http': 0.3.9
       '@types/passport-jwt': 3.0.8
       '@types/probe-image-size': 7.2.0
@@ -1602,7 +1610,7 @@ importers:
       '@calm/eslint-plugin-react-intl': ^1.4.1
       '@next/eslint-plugin-next': ^12.0.0
       '@typescript-eslint/eslint-plugin': ^5.48.2
-      '@typescript-eslint/parser': ^5.0.0
+      '@typescript-eslint/parser': ^5.48.2
       eslint: ^8.32.0
       eslint-config-next: ^13.1.3
       eslint-config-prettier: ^8.6.0
@@ -1641,6 +1649,8 @@ importers:
       '@gitbeaker/node': ^34.0.0
       '@types/jest': ^27.0.0
       '@types/jsonwebtoken': ^8.5.9
+      '@types/react': ^17.0.0
+      '@types/react-dom': ^17.0.0
       '@types/styled-components': ^5.0.0
       chokidar-cli: ^2.0.0
       eslint: ^8.0.0
@@ -1672,6 +1682,8 @@ importers:
       '@comet/eslint-config': link:../../eslint-config
       '@gitbeaker/node': 34.7.0
       '@types/jest': 27.5.2
+      '@types/react': 17.0.53
+      '@types/react-dom': 17.0.18
       '@types/styled-components': 5.1.26
       chokidar-cli: 2.1.0
       eslint: 8.32.0
@@ -8089,38 +8101,7 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-is: 18.2.0
-
-  /@mui/lab/5.0.0-alpha.117_5xiv4pi7mh4xv7fm6fhbatalwu:
-    resolution: {integrity: sha512-g+EN4jnoy6bwf3U/4q+L9gAVXoOky+T+VEDWzOP3BZLVghO63X0oaBx12TPOCnGDJKm0crFsIiyQQmYQkaGJqA==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      '@emotion/react': ^11.5.0
-      '@emotion/styled': ^11.3.0
-      '@mui/material': ^5.0.0
-      '@types/react': ^17.0.0 || ^18.0.0
-      react: ^17.0.0 || ^18.0.0
-      react-dom: ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      '@emotion/react':
-        optional: true
-      '@emotion/styled':
-        optional: true
-      '@types/react':
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.20.13
-      '@mui/base': 5.0.0-alpha.115_zsjcj4gvi24ks76nprapl4hsmq
-      '@mui/material': 5.11.6_zsjcj4gvi24ks76nprapl4hsmq
-      '@mui/system': 5.11.5_h7fc2el62uaa77gho3xhys6ola
-      '@mui/types': 7.2.3_@types+react@17.0.53
-      '@mui/utils': 5.11.2_react@17.0.2
-      '@types/react': 17.0.53
-      clsx: 1.2.1
-      prop-types: 15.8.1
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      react-is: 18.2.0
-    dev: true
+    dev: false
 
   /@mui/material/5.11.6_6bbsiiklroihy7ocrpuylyl7sa:
     resolution: {integrity: sha512-MzkkL5KC2PCkFiv8cLpkzgLUPXSrAtnvJBR0emV7mLVWbkwV3n5832vjBx154B6R032fHjFTziTh7YEb50nK6Q==}
@@ -10497,7 +10478,7 @@ packages:
     dependencies:
       '@types/http-cache-semantics': 4.0.1
       '@types/keyv': 3.1.4
-      '@types/node': 14.18.36
+      '@types/node': 17.0.45
       '@types/responselike': 1.0.0
 
   /@types/caseless/0.12.2:
@@ -10735,6 +10716,13 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
+  /@types/jest/29.4.0:
+    resolution: {integrity: sha512-VaywcGQ9tPorCX/Jkkni7RWGFfI11whqzs8dvxF41P17Z+z872thvEvlIbznjPJ02kl1HMX3LmLOonsj2n7HeQ==}
+    dependencies:
+      expect: 29.4.0
+      pretty-format: 29.4.0
+    dev: true
+
   /@types/js-yaml/4.0.5:
     resolution: {integrity: sha512-FhpRzf927MNQdRZP0J5DLIdTXhjLYzeUTmLAu69mnVksLH9CJY3IuSeEgbKUki7GQZm0WqDkGzyxju2EZGD2wA==}
 
@@ -10766,7 +10754,7 @@ packages:
   /@types/keyv/3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 14.18.36
+      '@types/node': 17.0.45
 
   /@types/lodash.clonedeep/4.5.7:
     resolution: {integrity: sha512-ccNqkPptFIXrpVqUECi60/DFxjNKsfoQxSQsgcBJCX/fuX1wgyQieojkcWH/KpE3xzLoWN/2k+ZeGqIN3paSvw==}
@@ -10868,7 +10856,7 @@ packages:
   /@types/needle/3.2.0:
     resolution: {integrity: sha512-6XzvzEyJ2ozFNfPajFmqH9JOt0Hp+9TawaYpJT59iIP/zR0U37cfWCRwosyIeEBBZBi021Osq4jGAD3AOju5fg==}
     dependencies:
-      '@types/node': 14.18.36
+      '@types/node': 17.0.45
     dev: true
 
   /@types/node-fetch/2.6.2:
@@ -11077,7 +11065,7 @@ packages:
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 14.18.36
+      '@types/node': 17.0.45
 
   /@types/retry/0.12.0:
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}

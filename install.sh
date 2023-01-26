@@ -7,7 +7,7 @@ cd $(dirname $0)
 # use correct npm and install dependencies
 nvm install
 nvm use
-npm i -g npm@7.19 pnpm
+npm i -g pnpm@7
 pnpm install
 
 # admin Blocks

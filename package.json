@@ -44,11 +44,6 @@
         "test:lib": "lerna run test --concurrency=1 --stream --no-private",
         "version": "$npm_execpath install && git stage pnpm-lock.yamllock"
     },
-    "resolutions": {
-        "@emotion/react": "11.9.3",
-        "@types/react": "^17.0.0",
-        "@typescript-eslint/parser": "^5.0.0"
-    },
     "devDependencies": {
         "@comet/dev-process-manager": "^2.3.0",
         "@formatjs/cli": "^4.8.3",
