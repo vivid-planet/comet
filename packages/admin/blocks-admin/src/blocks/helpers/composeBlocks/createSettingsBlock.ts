@@ -25,7 +25,9 @@ export function createSettingsAnonymousBlock<State>({
 
         output2State: async (output) => Promise.resolve(copy(output)),
 
-        createPreviewState: (state) => copy(state),
+        createPreviewState: (state) => {
+            return { adminMeta: undefined, ...copy(state) };
+        },
 
         definesOwnPadding,
 
