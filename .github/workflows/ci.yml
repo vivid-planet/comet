@@ -58,7 +58,7 @@ jobs:
               run: yarn copy-schema-files
 
             - name: Build
-              run: yarn build:lib
+              run: yarn build
 
             - name: Lint
               run: |
@@ -68,7 +68,7 @@ jobs:
                   yarn intl:extract
 
             - name: Test
-              run: yarn test:lib
+              run: yarn test
 
             - name: Test Report
               uses: dorny/test-reporter@v1

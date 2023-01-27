@@ -42,4 +42,4 @@ ln -sf ../api/block-meta.json ./demo/site/block-meta.json
 ln -sf ../api/comet-config.json ./demo/site/comet-config.json
 
 # Build CLI package to be used for dev startup
-npx yarn workspace @comet/cli build
+cd packages/cli && pnpm run build
