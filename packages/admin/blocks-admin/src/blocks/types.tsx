@@ -64,7 +64,8 @@ export interface BlockMethods<
     State = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OutputApi = any,
-    PreviewState = InputApi & PreviewStateInterface,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    PreviewState = any,
 > {
     defaultValues: () => State;
     input2State: (v: InputApi) => State;
