@@ -20,6 +20,29 @@ All notable changes to this project will be documented in this file. This projec
 -   Breaking: Rename Publisher to PublisherPage
 -   Use data grid instead of table for PublisherPage
 -   Breaking: changed CmsBlockContext.damConfig.maxFileSize/maxSrcResolution to number (was string previously)
+-   Breaking: removed the `<Chip />`-Component from the `infoTag` in the `DocumentInterface`.
+
+    **Before**
+
+    ```tsx
+    export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> = {
+        ...
+        InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
+            return <>{page.userGroup}</>;
+        },
+    };
+    ```
+
+    **After**
+
+    ```tsx
+    export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> = {
+        ...
+        InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
+            return <Chip size="small" label={page.userGroup} />;
+        },
+    };
+    ```
 
 #### Changes
 

@@ -1,6 +1,7 @@
 import { File, FileNotMenu } from "@comet/admin-icons";
 import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
+import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { GQLPage, GQLPageInput, GQLPageTreeNodeAdditionalFieldsFragment } from "@src/graphql.generated";
 import gql from "graphql-tag";
@@ -50,7 +51,10 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
         };
     },
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
-        return <>{page.userGroup}</>;
+        if (page.userGroup !== "All") {
+            return <Chip size="small" label={page.userGroup} />;
+        }
+        return null;
     },
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
