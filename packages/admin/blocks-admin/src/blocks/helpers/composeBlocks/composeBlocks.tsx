@@ -154,7 +154,7 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                     const extractedState = extractData([block, options], attr, state);
                     return block.anchors?.(extractedState) ?? [];
                 });
-                return Object.values(anchorsPerBlock).reduce((anchors, blockAnchors) => [...anchors, ...blockAnchors]);
+                return Object.values(anchorsPerBlock).reduce((anchors, blockAnchors) => [...anchors, ...blockAnchors], []);
             },
             previewContent: (state, ctx) => {
                 const previewContents = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
