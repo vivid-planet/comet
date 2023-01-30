@@ -7,6 +7,7 @@ import {
     BuildsModule,
     ContentScope,
     ContentScopeModule,
+    CronJobsModule,
     CurrentUserInterface,
     DamModule,
     FilesService,
@@ -153,6 +154,7 @@ export class AppModule {
                 MenusModule,
                 FooterModule,
                 PredefinedPageModule,
+                CronJobsModule,
                 ProductsModule,
             ],
         };

@@ -94,6 +94,13 @@ enum JobStatus {
   failed
 }
 
+type CronJob {
+  id: ID!
+  name: String!
+  schedule: String!
+  lastScheduledAt: DateTime
+}
+
 type PaginatedDamItems {
   nodes: [DamItem!]!
   totalCount: Int!
@@ -211,6 +218,7 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  cronJobs: [CronJob!]!
   currentUser: CurrentUser!
 }
 

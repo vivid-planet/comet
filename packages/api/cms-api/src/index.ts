@@ -62,6 +62,7 @@ export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsSlug } from "./common/validators/is-slug";
 export { ContentScopeModule } from "./content-scope/content-scope.module";
+export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";

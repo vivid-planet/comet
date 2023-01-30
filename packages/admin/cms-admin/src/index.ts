@@ -38,6 +38,7 @@ export type { ContentScopeInterface, ContentScopeProviderProps, ContentScopeValu
 export { ContentScopeProvider, useContentScope } from "./contentScope/Provider";
 export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConfig";
 export { useContentScopeConfig } from "./contentScope/useContentScopeConfig";
+export { CronJobsPage } from "./cronJobs/CronJobsPage";
 export { DamImageBlock } from "./dam/blocks/DamImageBlock";
 export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";
