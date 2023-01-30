@@ -17,7 +17,7 @@ export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { useCmsBlockContext } from "./blocks/useCmsBlockContext";
 export { BuildEntry } from "./builds/BuildEntry";
 export { BuildRuntime } from "./builds/BuildRuntime";
-export { Publisher } from "./builds/Publisher";
+export { PublisherPage } from "./builds/PublisherPage";
 export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";
 export { DropdownMenuItem } from "./common/DropdownMenuItem";
 export { BuildInformationProvider } from "./common/header/about/build-information/BuildInformationProvider";

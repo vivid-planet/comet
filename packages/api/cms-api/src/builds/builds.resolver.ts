@@ -8,11 +8,11 @@ import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { BuildsService } from "./builds.service";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
-import { BuildObject } from "./dto/build.object";
+import { Build } from "./dto/build.object";
 import { CreateBuildsInput } from "./dto/create-builds.input";
 import { SkipBuild } from "./skip-build.decorator";
 
-@Resolver(() => BuildObject)
+@Resolver(() => Build)
 export class BuildsResolver {
     constructor(
         private readonly kubernetesService: KubernetesService,
@@ -42,8 +42,8 @@ export class BuildsResolver {
         return this.buildsService.createBuilds("manual", cronJobs);
     }
 
-    @Query(() => [BuildObject])
-    async builds(@GetCurrentUser() user: CurrentUserInterface, @Args("limit", { nullable: true }) limit?: number): Promise<BuildObject[]> {
+    @Query(() => [Build])
+    async builds(@GetCurrentUser() user: CurrentUserInterface, @Args("limit", { nullable: true }) limit?: number): Promise<Build[]> {
         return this.buildsService.getBuilds(user, { limit: limit });
     }
 
