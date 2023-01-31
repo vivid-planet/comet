@@ -164,7 +164,7 @@ interface DocumentInterface {
 }
 
 """Link root block data"""
-scalar LinkBlockData
+scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type Page implements DocumentInterface {
   id: ID!
@@ -176,10 +176,10 @@ type Page implements DocumentInterface {
 }
 
 """PageContent root block data"""
-scalar PageContentBlockData
+scalar PageContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 """Seo root block data"""
-scalar SeoBlockData
+scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type PageTreeNodeScope {
   domain: String!
@@ -258,7 +258,7 @@ type Footer implements DocumentInterface {
 }
 
 """FooterContent root block data"""
-scalar FooterContentBlockData
+scalar FooterContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type MainMenuItem {
   id: ID!
@@ -269,7 +269,7 @@ type MainMenuItem {
 }
 
 """RichText root block data"""
-scalar RichTextBlockData
+scalar RichTextBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type MainMenu {
   items: [MainMenuItem!]!
@@ -391,13 +391,13 @@ type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   link(linkId: ID!): Link
-  pages(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC): PaginatedPages!
+  pages(offset: Int! = 0, limit: Int! = 20, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
-  paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int = 0, limit: Int = 20): PaginatedRedirects!
+  redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
+  paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 20): PaginatedRedirects!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
@@ -410,7 +410,7 @@ type Query {
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!): News
-  newsList(offset: Int = 0, limit: Int = 20, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int! = 0, limit: Int! = 20, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -420,7 +420,7 @@ type Query {
   cronJobs: [CronJob!]!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
-  products(offset: Int = 0, limit: Int = 20, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+  products(offset: Int! = 0, limit: Int! = 20, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
 }
 
 enum SortDirection {
@@ -467,7 +467,7 @@ input DateFilter {
 
 input RedirectSort {
   field: RedirectSortField!
-  direction: SortDirection = ASC
+  direction: SortDirection! = ASC
 }
 
 enum RedirectSortField {
@@ -508,7 +508,7 @@ input NewsFilter {
 
 input NewsSort {
   field: NewsSortField!
-  direction: SortDirection = ASC
+  direction: SortDirection! = ASC
 }
 
 enum NewsSortField {
@@ -544,7 +544,7 @@ input NumberFilter {
 
 input ProductSort {
   field: ProductSortField!
-  direction: SortDirection = ASC
+  direction: SortDirection! = ASC
 }
 
 enum ProductSortField {
@@ -609,7 +609,7 @@ input LinkInput {
 }
 
 """Link root block input"""
-scalar LinkBlockInput
+scalar LinkBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input PageInput {
   content: PageContentBlockInput!
@@ -617,17 +617,17 @@ input PageInput {
 }
 
 """PageContent root block input"""
-scalar PageContentBlockInput
+scalar PageContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 """Seo root block input"""
-scalar SeoBlockInput
+scalar SeoBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input PageTreeNodeUpdateInput {
   name: String!
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  userGroup: UserGroup = All
+  userGroup: UserGroup! = All
 }
 
 input AttachedDocumentInput {
@@ -658,7 +658,7 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  userGroup: UserGroup = All
+  userGroup: UserGroup! = All
 }
 
 input RedirectInput {
@@ -724,10 +724,10 @@ input NewsInput {
 }
 
 """DamImage root block input"""
-scalar DamImageBlockInput
+scalar DamImageBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 """NewsContent root block input"""
-scalar NewsContentBlockInput
+scalar NewsContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input NewsCommentInput {
   comment: String!
@@ -738,14 +738,14 @@ input MainMenuItemInput {
 }
 
 """RichText root block input"""
-scalar RichTextBlockInput
+scalar RichTextBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input FooterInput {
   content: FooterContentBlockInput!
 }
 
 """FooterContent root block input"""
-scalar FooterContentBlockInput
+scalar FooterContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input PredefinedPageInput {
   type: String

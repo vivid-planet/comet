@@ -34,6 +34,7 @@
         "@mikro-orm/migrations": "^5.0.4",
         "@mikro-orm/nestjs": "^5.1.0",
         "@mikro-orm/postgresql": "^5.0.4",
+        "@mikro-orm/sqlite": "^5.0.0",
         "@nestjs/apollo": "^10.0.0",
         "@nestjs/common": "^9.0.0",
         "@nestjs/config": "^2.0.0",
@@ -59,7 +60,7 @@
         "express": "^4.17.1",
         "faker": "^5.0.0",
         "file-type": "^16.0.0",
-        "graphql": "^15.7.2",
+        "graphql": "^15.0.0",
         "graphql-type-json": "^0.3.0",
         "hasha": "^5.0.0",
         "image-size": "^0.9.0",
@@ -74,6 +75,7 @@
         "rimraf": "^3.0.0",
         "rxjs": "^7.0.0",
         "slugify": "^1.0.0",
+        "ts-morph": "^16.0.0",
         "uuid": "^9.0.0",
         "webpack": "^5.64.2"
     },
@@ -97,12 +99,12 @@
         "@types/uuid": "^8.0.0",
         "dotenv-cli": "^4.0.0",
         "eslint": "^8.0.0",
+        "npm-run-all": "^4.1.5",
         "prettier": "^2.0.0",
         "ts-loader": "^8.0.0",
         "ts-node": "^10.0.0",
         "tsconfig-paths": "^3.0.0",
-        "typescript": "^4.0.0",
-        "npm-run-all": "^4.1.5"
+        "typescript": "^4.0.0"
     },
     "mikro-orm": {
         "useTsNode": true,
