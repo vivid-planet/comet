@@ -1,6 +1,7 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { DamScopeInterface } from "src/dam/types";
 
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
 
@@ -48,6 +49,10 @@ export class CreateFileInput {
     @IsOptional()
     @IsUUID()
     folderId?: string;
+
+    // TODO is this validation even used?
+    @IsObject()
+    scope?: DamScopeInterface;
 }
 
 @InputType({ isAbstract: true })

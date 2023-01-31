@@ -22,6 +22,7 @@ import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { FileArgs } from "./dto/file.args";
+import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
@@ -245,7 +246,7 @@ export class FilesService {
         return entity;
     }
 
-    async upload(file: FileUploadInterface, folderId?: string): Promise<FileInterface> {
+    async upload(file: FileUploadInterface, { folderId, scope }: UploadFileBodyInterface = {}): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
             const contentHash = await hasha.fromFile(file.path, { algorithm: "md5" });
@@ -299,6 +300,7 @@ export class FilesService {
                           }
                         : undefined,
                 contentHash,
+                scope,
             });
 
             if (result.image) {

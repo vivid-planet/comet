@@ -1,9 +1,10 @@
 import { download, FileInterface, FilesService } from "@comet/cms-api";
+import { DamScope } from "@src/dam/dto/dam-scope";
 import faker from "faker";
 
 export class UnsplashImageFileFixture {
     constructor(private filesService: FilesService) {}
-    async generateImage(): Promise<FileInterface> {
+    async generateImage(scope: DamScope): Promise<FileInterface> {
         const width = faker.datatype.number({
             min: 1000,
             max: 3000,
@@ -18,7 +19,7 @@ export class UnsplashImageFileFixture {
         const downloadedImage = await download(imageUrl);
         console.log(`Downloading ${imageUrl} done.`);
         console.log(`Uploading ${downloadedImage.originalname}.`);
-        const file = await this.filesService.upload(downloadedImage);
+        const file = await this.filesService.upload(downloadedImage, { scope });
         console.log(`Uploading ${downloadedImage.originalname} done.`);
         return file;
     }

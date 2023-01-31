@@ -9,18 +9,23 @@ import {
     Param,
     Post,
     Res,
+    Type,
     UploadedFile,
     UseInterceptors,
 } from "@nestjs/common";
+import { plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
 
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { CometValidationException } from "../../common/errors/validation.exception";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
+import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
-import { UploadFileBody } from "./dto/file.body";
+import { createUploadFileBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { FileInterface } from "./entities/file.entity";
@@ -29,116 +34,129 @@ import { calculatePartialRanges, createHashedPath } from "./files.utils";
 
 const fileUrl = `:fileId/:filename`;
 
-@Controller("dam/files")
-export class FilesController {
-    constructor(
-        @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
-        private readonly filesService: FilesService,
-        private readonly blobStorageBackendService: BlobStorageBackendService,
-    ) {}
+export function createFilesController({ Scope }: { Scope?: Type<DamScopeInterface> }): Type<unknown> {
+    const UploadFileBody = createUploadFileBody({ Scope });
 
-    @Post("upload")
-    @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
-    async upload(@UploadedFile() file: FileUploadInterface, @Body() { folderId }: UploadFileBody): Promise<FileInterface> {
-        const uploadedFile = await this.filesService.upload(file, folderId);
-        return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
-    }
+    @Controller("dam/files")
+    class FilesController {
+        constructor(
+            @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
+            private readonly filesService: FilesService,
+            private readonly blobStorageBackendService: BlobStorageBackendService,
+        ) {}
 
-    @Get(`/preview/${fileUrl}`)
-    async previewFileUrl(@Param() params: FileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
-        return this.streamFile(params, res, { range, overrideHeaders: { "Cache-control": "private" } });
-    }
+        @Post("upload")
+        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        async upload(@UploadedFile() file: FileUploadInterface, @Body() body: UploadFileBodyInterface): Promise<FileInterface> {
+            const transformedBody = plainToInstance(UploadFileBody, body);
+            const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
-    @DisableGlobalGuard()
-    @Get(`/:hash/${fileUrl}`)
-    async hashedFileUrl(
-        @Param() { hash, ...params }: HashFileParams,
-        @Res() res: Response,
-        @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
-        @Headers("range") range?: string,
-    ): Promise<void> {
-        this.checkCdnOrigin(cdnOriginCheck);
+            if (errors.length > 0) {
+                throw new CometValidationException("Validation failed", errors);
+            }
 
-        if (!this.isValidHash(hash, params)) {
-            throw new NotFoundException();
+            const uploadedFile = await this.filesService.upload(file, transformedBody);
+            return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
         }
 
-        return this.streamFile(params, res, { range });
-    }
+        @Get(`/preview/${fileUrl}`)
+        async previewFileUrl(@Param() params: FileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+            return this.streamFile(params, res, { range, overrideHeaders: { "Cache-control": "private" } });
+        }
 
-    private checkCdnOrigin(incomingCdnOriginHeader: string): void {
-        if (this.damConfig.cdnEnabled) {
-            if (incomingCdnOriginHeader !== this.damConfig.cdnOriginHeader) {
-                throw new ForbiddenException();
+        @DisableGlobalGuard()
+        @Get(`/:hash/${fileUrl}`)
+        async hashedFileUrl(
+            @Param() { hash, ...params }: HashFileParams,
+            @Res() res: Response,
+            @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
+            @Headers("range") range?: string,
+        ): Promise<void> {
+            this.checkCdnOrigin(cdnOriginCheck);
+
+            if (!this.isValidHash(hash, params)) {
+                throw new NotFoundException();
+            }
+
+            return this.streamFile(params, res, { range });
+        }
+
+        private checkCdnOrigin(incomingCdnOriginHeader: string): void {
+            if (this.damConfig.cdnEnabled) {
+                if (incomingCdnOriginHeader !== this.damConfig.cdnOriginHeader) {
+                    throw new ForbiddenException();
+                }
             }
         }
-    }
 
-    private isValidHash(hash: string, fileParams: FileParams): boolean {
-        return hash === this.filesService.createHash(fileParams);
-    }
+        private isValidHash(hash: string, fileParams: FileParams): boolean {
+            return hash === this.filesService.createHash(fileParams);
+        }
 
-    private async streamFile(
-        { fileId }: FileParams,
-        res: Response,
-        options?: {
-            range?: string;
-            overrideHeaders?: OutgoingHttpHeaders;
-        },
-    ): Promise<void> {
-        const file = await this.filesService.findOneById(fileId);
-        if (!file) throw new NotFoundException();
+        private async streamFile(
+            { fileId }: FileParams,
+            res: Response,
+            options?: {
+                range?: string;
+                overrideHeaders?: OutgoingHttpHeaders;
+            },
+        ): Promise<void> {
+            const file = await this.filesService.findOneById(fileId);
+            if (!file) throw new NotFoundException();
 
-        const headers = {
-            "content-type": file.mimetype,
-            "last-modified": file.updatedAt?.toUTCString(),
-            "content-length": file.size,
-        };
+            const headers = {
+                "content-type": file.mimetype,
+                "last-modified": file.updatedAt?.toUTCString(),
+                "content-length": file.size,
+            };
 
-        // https://medium.com/@vishal1909/how-to-handle-partial-content-in-node-js-8b0a5aea216
-        let response: NodeJS.ReadableStream;
-        if (options?.range) {
-            const { start, end, contentLength } = calculatePartialRanges(file.size, options.range);
+            // https://medium.com/@vishal1909/how-to-handle-partial-content-in-node-js-8b0a5aea216
+            let response: NodeJS.ReadableStream;
+            if (options?.range) {
+                const { start, end, contentLength } = calculatePartialRanges(file.size, options.range);
 
-            if (start >= file.size || end >= file.size) {
-                res.writeHead(416, {
-                    "content-range": `bytes */${file.size}`,
+                if (start >= file.size || end >= file.size) {
+                    res.writeHead(416, {
+                        "content-range": `bytes */${file.size}`,
+                    });
+                    res.end();
+                    return;
+                }
+
+                try {
+                    response = await this.blobStorageBackendService.getPartialFile(
+                        this.damConfig.filesDirectory,
+                        createHashedPath(file.contentHash),
+                        start,
+                        contentLength,
+                    );
+                } catch (err) {
+                    throw new Error(`File-Stream error: (storage.getPartialFile) - ${(err as Error).message}`);
+                }
+
+                res.writeHead(206, {
+                    ...headers,
+                    ...options?.overrideHeaders,
+                    "accept-ranges": "bytes",
+                    "content-range": `bytes ${start}-${end}/${file.size}`,
+                    "content-length": contentLength,
                 });
-                res.end();
-                return;
+            } else {
+                try {
+                    response = await this.blobStorageBackendService.getFile(this.damConfig.filesDirectory, createHashedPath(file.contentHash));
+                } catch (err) {
+                    throw new Error(`File-Stream error: (storage.getFile) - ${(err as Error).message}`);
+                }
+
+                res.writeHead(200, {
+                    ...headers,
+                    ...options?.overrideHeaders,
+                });
             }
 
-            try {
-                response = await this.blobStorageBackendService.getPartialFile(
-                    this.damConfig.filesDirectory,
-                    createHashedPath(file.contentHash),
-                    start,
-                    contentLength,
-                );
-            } catch (err) {
-                throw new Error(`File-Stream error: (storage.getPartialFile) - ${(err as Error).message}`);
-            }
-
-            res.writeHead(206, {
-                ...headers,
-                ...options?.overrideHeaders,
-                "accept-ranges": "bytes",
-                "content-range": `bytes ${start}-${end}/${file.size}`,
-                "content-length": contentLength,
-            });
-        } else {
-            try {
-                response = await this.blobStorageBackendService.getFile(this.damConfig.filesDirectory, createHashedPath(file.contentHash));
-            } catch (err) {
-                throw new Error(`File-Stream error: (storage.getFile) - ${(err as Error).message}`);
-            }
-
-            res.writeHead(200, {
-                ...headers,
-                ...options?.overrideHeaders,
-            });
+            response.pipe(res);
         }
-
-        response.pipe(res);
     }
+
+    return FilesController;
 }
