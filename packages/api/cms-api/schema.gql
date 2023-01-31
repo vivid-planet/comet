@@ -30,42 +30,6 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-type DamFolder {
-  id: ID!
-  name: String!
-  parent: DamFolder
-  numberOfChildFolders: Int!
-  numberOfFiles: Int!
-  mpath: [ID!]!
-  archived: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  parents: [DamFolder!]!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type DamFile {
-  id: ID!
-  folder: DamFolder
-  name: String!
-  size: Int!
-  mimetype: String!
-  contentHash: String!
-  title: String
-  altText: String
-  archived: Boolean!
-  image: DamFileImage
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  fileUrl: String!
-  duplicates: [DamFile!]!
-  damPath: String!
-}
-
 type BuildTemplate {
   id: ID!
   name: String!
@@ -76,6 +40,11 @@ type AutoBuildStatus {
   lastCheck: DateTime
   nextCheck: DateTime!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Build {
   id: ID!
@@ -101,27 +70,10 @@ type CronJob {
   lastScheduledAt: DateTime
 }
 
-type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
-}
-
-union DamItem = DamFile | DamFolder
-
 type FilenameResponse {
   name: String!
   folderId: ID
   isOccupied: Boolean!
-}
-
-type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
-}
-
-type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
 }
 
 type PageTreeNode {
@@ -197,6 +149,54 @@ type PaginatedRedirects {
   nodes: [Redirect!]!
   totalCount: Int!
 }
+
+type DamFolder {
+  id: ID!
+  name: String!
+  numberOfChildFolders: Int!
+  numberOfFiles: Int!
+  mpath: [ID!]!
+  archived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  parent: DamFolder
+  parents: [DamFolder!]!
+}
+
+type DamFile {
+  id: ID!
+  folder: DamFolder
+  name: String!
+  size: Int!
+  mimetype: String!
+  contentHash: String!
+  title: String
+  altText: String
+  archived: Boolean!
+  image: DamFileImage
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  fileUrl: String!
+  duplicates: [DamFile!]!
+  damPath: String!
+}
+
+type PaginatedDamFiles {
+  nodes: [DamFile!]!
+  totalCount: Int!
+}
+
+type PaginatedDamFolders {
+  nodes: [DamFolder!]!
+  totalCount: Int!
+}
+
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
 
 type Query {
   builds(limit: Float): [Build!]!

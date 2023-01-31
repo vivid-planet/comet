@@ -1,20 +1,20 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Module, ModuleMetadata } from "@nestjs/common";
+import { DynamicModule, Global, Module, ModuleMetadata, Type } from "@nestjs/common";
 
 import { BlobStorageModule } from "..";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_MODULE_OPTIONS, IMGPROXY_CONFIG } from "./dam.constants";
-import { DamItemsResolver } from "./files/dam-items.resolver";
+import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
-import { File } from "./files/entities/file.entity";
+import { createFileEntity } from "./files/entities/file.entity";
 import { FileImage } from "./files/entities/file-image.entity";
-import { Folder } from "./files/entities/folder.entity";
+import { createFolderEntity } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FilesController } from "./files/files.controller";
-import { FilesResolver } from "./files/files.resolver";
+import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
-import { FoldersResolver } from "./files/folders.resolver";
+import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
 import { CalculateDominantImageColor } from "./images/calculateDominantImageColor.console";
 import { ImageCropArea } from "./images/entities/image-crop-area.entity";
@@ -24,6 +24,7 @@ import { IsAllowedImageAspectRatioConstraint } from "./images/validators/is-allo
 import { IsAllowedImageSizeConstraint } from "./images/validators/is-allowed-image-size.validator";
 import { IsValidImageAspectRatioConstraint } from "./images/validators/is-valid-aspect-ratio.validator";
 import { ImgproxyConfig, ImgproxyService } from "./imgproxy/imgproxy.service";
+import { DamScopeInterface } from "./types";
 
 interface DamModuleOptions {
     damConfig: DamConfig;
@@ -40,7 +41,7 @@ interface DamModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
 @Global()
 @Module({})
 export class DamModule {
-    static registerAsync(options: DamModuleAsyncOptions): DynamicModule {
+    static registerAsync(options: DamModuleAsyncOptions, Scope?: Type<DamScopeInterface>): DynamicModule {
         const optionsProvider = {
             provide: DAM_MODULE_OPTIONS,
             ...options,
@@ -62,20 +63,23 @@ export class DamModule {
             inject: [DAM_MODULE_OPTIONS],
         };
 
+        const Folder = createFolderEntity({ Scope });
+        const File = createFileEntity({ Scope, Folder });
+
         return {
             module: DamModule,
             imports: [...(options.imports ?? []), MikroOrmModule.forFeature([File, Folder, FileImage, ImageCropArea]), BlobStorageModule],
             providers: [
                 optionsProvider,
                 damConfigProvider,
-                DamItemsResolver,
+                createDamItemsResolver({ File, Folder }),
                 DamItemsService,
                 imgproxyConfigProvider,
                 ScaledImagesCacheService,
                 ImgproxyService,
-                FilesResolver,
+                createFilesResolver({ File }),
                 FilesService,
-                FoldersResolver,
+                createFoldersResolver({ Folder }),
                 FoldersService,
                 ImagesService,
                 IsAllowedImageSizeConstraint,

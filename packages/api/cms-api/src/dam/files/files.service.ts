@@ -25,7 +25,7 @@ import { FileArgs } from "./dto/file.args";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
-import { File } from "./entities/file.entity";
+import { FileInterface } from "./entities/file.entity";
 import { FileImage } from "./entities/file-image.entity";
 import { createHashedPath, slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
@@ -33,7 +33,7 @@ import { FoldersService } from "./folders.service";
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
 
 export const withFilesSelect = (
-    qb: QueryBuilder<File>,
+    qb: QueryBuilder<FileInterface>,
     args: {
         query?: string;
         id?: string;
@@ -48,7 +48,7 @@ export const withFilesSelect = (
         offset?: number;
         limit?: number;
     },
-): QueryBuilder<File> => {
+): QueryBuilder<FileInterface> => {
     if (args.query) {
         qb.andWhere("file.name ILIKE ANY (ARRAY[?])", [args.query.split(" ").map((term) => `%${term}%`)]);
     }
@@ -89,7 +89,7 @@ export class FilesService {
     static readonly UPLOAD_FIELD = "file";
 
     constructor(
-        @InjectRepository(File) private readonly filesRepository: EntityRepository<File>,
+        @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
         @InjectRepository(FileImage) private readonly fileImagesRepository: EntityRepository<FileImage>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
@@ -99,7 +99,7 @@ export class FilesService {
         private readonly orm: MikroORM,
     ) {}
 
-    private selectQueryBuilder(): QueryBuilder<File> {
+    private selectQueryBuilder(): QueryBuilder<FileInterface> {
         return this.filesRepository
             .createQueryBuilder("file")
             .select("*")
@@ -107,7 +107,13 @@ export class FilesService {
             .leftJoinAndSelect("file.folder", "folder");
     }
 
-    async findAll({ folderId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FileArgs, "offset" | "limit">): Promise<File[]> {
+    async findAll({
+        folderId,
+        includeArchived,
+        filter,
+        sortColumnName,
+        sortDirection,
+    }: Omit<FileArgs, "offset" | "limit">): Promise<FileInterface[]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
 
         return withFilesSelect(this.selectQueryBuilder(), {
@@ -120,7 +126,15 @@ export class FilesService {
         }).getResult();
     }
 
-    async findAndCount({ folderId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: FileArgs): Promise<[File[], number]> {
+    async findAndCount({
+        folderId,
+        includeArchived,
+        filter,
+        sortColumnName,
+        sortDirection,
+        offset,
+        limit,
+    }: FileArgs): Promise<[FileInterface[], number]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
 
         const files = await withFilesSelect(this.selectQueryBuilder(), {
@@ -148,43 +162,43 @@ export class FilesService {
         return [files, totalCount];
     }
 
-    async findAllByHash(contentHash: string): Promise<File[]> {
+    async findAllByHash(contentHash: string): Promise<FileInterface[]> {
         return withFilesSelect(this.selectQueryBuilder(), { contentHash }).getResult();
     }
 
-    async findOneById(id: string): Promise<File | null> {
+    async findOneById(id: string): Promise<FileInterface | null> {
         return withFilesSelect(this.selectQueryBuilder(), { id }).getSingleResult();
     }
 
-    async getDamPath(file: File): Promise<string> {
+    async getDamPath(file: FileInterface): Promise<string> {
         const folderNames = file.folder ? (await this.foldersService.findAncestorsByParentId(file.folder.id)).map((folder) => folder.name) : [];
         return `/${folderNames.join("/")}`;
     }
 
-    async findOneByHash(contentHash: string): Promise<File | null> {
+    async findOneByHash(contentHash: string): Promise<FileInterface | null> {
         return withFilesSelect(this.selectQueryBuilder(), { contentHash }).getSingleResult();
     }
 
-    async findOneByFilenameAndFolder(filename: string, folderId: string | null = null): Promise<File | null> {
+    async findOneByFilenameAndFolder(filename: string, folderId: string | null = null): Promise<FileInterface | null> {
         return withFilesSelect(this.selectQueryBuilder(), { folderId: folderId || null, filename }).getSingleResult();
     }
 
-    async findOneByImageId(imageId: string): Promise<File | null> {
+    async findOneByImageId(imageId: string): Promise<FileInterface | null> {
         return withFilesSelect(this.selectQueryBuilder(), { imageId }).getSingleResult();
     }
 
-    async create({ folderId, ...data }: CreateFileInput): Promise<File> {
+    async create({ folderId, ...data }: CreateFileInput): Promise<FileInterface> {
         const folder = folderId ? await this.foldersService.findOneById(folderId) : undefined;
         return this.save(this.filesRepository.create({ ...data, folder: folder?.id }));
     }
 
-    async updateById(id: string, data: UpdateFileInput): Promise<File> {
+    async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {
         const file = await this.findOneById(id);
         if (!file) throw new CometEntityNotFoundException();
         return this.updateByEntity(file, data);
     }
 
-    async updateByEntity(entity: File, { folderId, image, ...input }: UpdateFileInput): Promise<File> {
+    async updateByEntity(entity: FileInterface, { folderId, image, ...input }: UpdateFileInput): Promise<FileInterface> {
         const folder = folderId ? await this.foldersService.findOneById(folderId) : null;
 
         if (entity.image && image?.cropArea) {
@@ -198,7 +212,7 @@ export class FilesService {
         return this.save(file);
     }
 
-    async moveBatch(fileIds: string[], targetFolderId?: string): Promise<File[]> {
+    async moveBatch(fileIds: string[], targetFolderId?: string): Promise<FileInterface[]> {
         const files = [];
 
         for (const id of fileIds) {
@@ -226,13 +240,13 @@ export class FilesService {
         return deleted;
     }
 
-    async save(entity: File): Promise<File> {
+    async save(entity: FileInterface): Promise<FileInterface> {
         await this.filesRepository.persistAndFlush(entity);
         return entity;
     }
 
-    async upload(file: FileUploadInterface, folderId?: string): Promise<File> {
-        let result: File | undefined = undefined;
+    async upload(file: FileUploadInterface, folderId?: string): Promise<FileInterface> {
+        let result: FileInterface | undefined = undefined;
         try {
             const contentHash = await hasha.fromFile(file.path, { algorithm: "md5" });
             let image: probe.ProbeResult | undefined;
@@ -354,7 +368,7 @@ export class FilesService {
         }
     }
 
-    async createFileUrl(file: File, previewDamUrls?: boolean): Promise<string> {
+    async createFileUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
         const filename = parse(file.name).name;
 
         // Use CDN url only if available and not in preview as preview requires auth

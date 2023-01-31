@@ -1,9 +1,9 @@
-import { download, File, FilesService } from "@comet/cms-api";
+import { download, FileInterface, FilesService } from "@comet/cms-api";
 import faker from "faker";
 
 export class UnsplashImageFileFixture {
     constructor(private filesService: FilesService) {}
-    async generateImage(): Promise<File> {
+    async generateImage(): Promise<FileInterface> {
         const width = faker.datatype.number({
             min: 1000,
             max: 3000,

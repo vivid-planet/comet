@@ -1,36 +1,43 @@
+import { Type } from "@nestjs/common";
 import { Args, createUnionType, Field, Int, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
 import { DamItemsService } from "./dam-items.service";
 import { DamItemsArgs } from "./dto/dam-items.args";
-import { File } from "./entities/file.entity";
-import { Folder } from "./entities/folder.entity";
+import { FileInterface } from "./entities/file.entity";
+import { FolderInterface } from "./entities/folder.entity";
 
-export const DamItem = createUnionType({
-    name: "DamItem",
-    types: () => [File, Folder] as const,
-});
+export type DamItemInterface = FileInterface | FolderInterface;
 
-@ObjectType()
-class PaginatedDamItems {
-    @Field(() => [DamItem])
-    nodes: typeof DamItem[];
+export function createDamItemsResolver({ File, Folder }: { File: Type<FileInterface>; Folder: Type<FolderInterface> }): Type<unknown> {
+    const DamItem = createUnionType({
+        name: "DamItem",
+        types: () => [File, Folder] as const,
+    });
 
-    @Field(() => Int)
-    totalCount: number;
+    @ObjectType()
+    class PaginatedDamItems {
+        @Field(() => [DamItem])
+        nodes: DamItemInterface[];
 
-    constructor(nodes: typeof DamItem[], totalCount: number) {
-        this.nodes = nodes;
-        this.totalCount = totalCount;
+        @Field(() => Int)
+        totalCount: number;
+
+        constructor(nodes: DamItemInterface[], totalCount: number) {
+            this.nodes = nodes;
+            this.totalCount = totalCount;
+        }
     }
-}
 
-@Resolver(() => DamItem)
-export class DamItemsResolver {
-    constructor(private readonly damItemsService: DamItemsService) {}
+    @Resolver(() => DamItem)
+    class DamItemsResolver {
+        constructor(private readonly damItemsService: DamItemsService) {}
 
-    @Query(() => PaginatedDamItems)
-    async damItemsList(@Args() args: DamItemsArgs): Promise<PaginatedDamItems> {
-        const [damItems, totalCount] = await this.damItemsService.findAndCount(args);
-        return new PaginatedDamItems(damItems, totalCount);
+        @Query(() => PaginatedDamItems)
+        async damItemsList(@Args() args: DamItemsArgs): Promise<PaginatedDamItems> {
+            const [damItems, totalCount] = await this.damItemsService.findAndCount(args);
+            return new PaginatedDamItems(damItems, totalCount);
+        }
     }
+
+    return DamItemsResolver;
 }

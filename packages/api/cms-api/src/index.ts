@@ -75,15 +75,13 @@ export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dt
 export { FileUploadInterface } from "./dam/files/dto/file-upload.interface";
 export { FolderArgs } from "./dam/files/dto/folder.args";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
-export { File } from "./dam/files/entities/file.entity";
+export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
 export { FileImage } from "./dam/files/entities/file-image.entity";
-export { Folder } from "./dam/files/entities/folder.entity";
+export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
 export { FileImagesResolver } from "./dam/files/file-image.resolver";
 export { FilesController } from "./dam/files/files.controller";
-export { FilesResolver } from "./dam/files/files.resolver";
 export { FilesService } from "./dam/files/files.service";
 export { download, slugifyFilename } from "./dam/files/files.utils";
-export { FoldersResolver } from "./dam/files/folders.resolver";
 export { FoldersService } from "./dam/files/folders.service";
 export { ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";

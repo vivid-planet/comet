@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { DamItem } from "./dam-items.resolver";
+import { DamItemInterface } from "./dam-items.resolver";
 import { DamItemsArgs } from "./dto/dam-items.args";
 import { FilesService } from "./files.service";
 import { FoldersService } from "./folders.service";
@@ -17,7 +17,7 @@ export class DamItemsService {
         sortDirection,
         offset,
         limit,
-    }: DamItemsArgs): Promise<[typeof DamItem[], number]> {
+    }: DamItemsArgs): Promise<[DamItemInterface[], number]> {
         const [folders, foldersTotalCount] = await this.foldersService.findAndCount({
             parentId: folderId,
             includeArchived,
@@ -41,7 +41,7 @@ export class DamItemsService {
             limit: remainingLimit,
         });
 
-        const response: typeof DamItem[] = [...folders];
+        const response: DamItemInterface[] = [...folders];
 
         if (remainingLimit > 0) {
             response.push(...files);

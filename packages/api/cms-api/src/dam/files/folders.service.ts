@@ -6,11 +6,11 @@ import { CometEntityNotFoundException } from "../../common/errors/entity-not-fou
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { FolderArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
-import { Folder } from "./entities/folder.entity";
+import { FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 
 export const withFoldersSelect = (
-    qb: QueryBuilder<Folder>,
+    qb: QueryBuilder<FolderInterface>,
     args: {
         includeArchived?: boolean;
         parentId?: string | null;
@@ -20,7 +20,7 @@ export const withFoldersSelect = (
         offset?: number;
         limit?: number;
     },
-): QueryBuilder<Folder> => {
+): QueryBuilder<FolderInterface> => {
     if (!args.includeArchived) {
         qb.where({ archived: false });
     }
@@ -52,7 +52,7 @@ export const withFoldersSelect = (
     return qb;
 };
 
-const addSearchTermFiltertoQueryBuilder = (qb: QueryBuilder<Folder>, searchText: string): QueryBuilder<Folder> => {
+const addSearchTermFiltertoQueryBuilder = (qb: QueryBuilder<FolderInterface>, searchText: string): QueryBuilder<FolderInterface> => {
     const terms = searchText.split(" ");
     for (const term of terms) {
         qb.andWhere({ name: { $ilike: `%${term}%` } });
@@ -65,11 +65,17 @@ export class FoldersService {
     protected readonly logger = new Logger(FoldersService.name);
 
     constructor(
-        @InjectRepository(Folder) private readonly foldersRepository: EntityRepository<Folder>,
+        @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
     ) {}
 
-    async findAll({ parentId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FolderArgs, "offset" | "limit">): Promise<Folder[]> {
+    async findAll({
+        parentId,
+        includeArchived,
+        filter,
+        sortColumnName,
+        sortDirection,
+    }: Omit<FolderArgs, "offset" | "limit">): Promise<FolderInterface[]> {
         const qb = withFoldersSelect(this.selectQueryBuilder(), {
             includeArchived,
             parentId,
@@ -81,7 +87,15 @@ export class FoldersService {
         return qb.getResult();
     }
 
-    async findAndCount({ parentId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: FolderArgs): Promise<[Folder[], number]> {
+    async findAndCount({
+        parentId,
+        includeArchived,
+        filter,
+        sortColumnName,
+        sortDirection,
+        offset,
+        limit,
+    }: FolderArgs): Promise<[FolderInterface[], number]> {
         const args = {
             includeArchived,
             parentId,
@@ -101,19 +115,19 @@ export class FoldersService {
         return [folders, totalCount];
     }
 
-    async findAllByIds(ids: string[]): Promise<Folder[]> {
+    async findAllByIds(ids: string[]): Promise<FolderInterface[]> {
         return this.selectQueryBuilder()
             .where({ id: { $in: ids } })
             .getResult();
     }
 
-    async findOneById(id: string): Promise<Folder | null> {
+    async findOneById(id: string): Promise<FolderInterface | null> {
         const qb = this.selectQueryBuilder().where({ id });
 
         return qb.getSingleResult();
     }
 
-    async findOneByNameAndParentId(name: string, parentId?: string): Promise<Folder | null> {
+    async findOneByNameAndParentId(name: string, parentId?: string): Promise<FolderInterface | null> {
         const qb = this.selectQueryBuilder().andWhere({ name });
         if (parentId) {
             qb.andWhere({ parent: { id: parentId } });
@@ -123,7 +137,7 @@ export class FoldersService {
         return qb.getSingleResult();
     }
 
-    async create({ parentId, ...data }: CreateFolderInput): Promise<Folder> {
+    async create({ parentId, ...data }: CreateFolderInput): Promise<FolderInterface> {
         let parent = undefined;
         let mpath: string[] = [];
         if (parentId) {
@@ -135,13 +149,13 @@ export class FoldersService {
         return folder;
     }
 
-    async updateById(id: string, data: UpdateFolderInput): Promise<Folder> {
+    async updateById(id: string, data: UpdateFolderInput): Promise<FolderInterface> {
         const folder = await this.findOneById(id);
         if (!folder) throw new CometEntityNotFoundException();
         return this.updateByEntity(folder, data);
     }
 
-    async updateByEntity(entity: Folder, { parentId, ...input }: UpdateFolderInput): Promise<Folder> {
+    async updateByEntity(entity: FolderInterface, { parentId, ...input }: UpdateFolderInput): Promise<FolderInterface> {
         const parentIsDirty = parentId !== undefined && entity.parent?.id !== parentId;
         const parent = parentId ? await this.findOneById(parentId) : null;
 
@@ -166,7 +180,7 @@ export class FoldersService {
         return folder;
     }
 
-    async moveBatch(folderIds: string[], targetFolderId?: string): Promise<Folder[]> {
+    async moveBatch(folderIds: string[], targetFolderId?: string): Promise<FolderInterface[]> {
         const folders = [];
 
         for (const id of folderIds) {
@@ -192,24 +206,24 @@ export class FoldersService {
         return result === 1;
     }
 
-    async findAncestorsByParentId(parentId: string | null): Promise<Folder[]> {
-        const parents: Folder[] = [];
+    async findAncestorsByParentId(parentId: string | null): Promise<FolderInterface[]> {
+        const parents: FolderInterface[] = [];
         while (parentId !== null) {
-            const folder = (await this.findOneById(parentId)) as Folder;
+            const folder = (await this.findOneById(parentId)) as FolderInterface;
             parents.push(folder);
             parentId = folder.parent?.id ?? null;
         }
         return parents.reverse();
     }
 
-    async findAncestorsByMaterializedPath(mpath: string[]): Promise<Folder[]> {
+    async findAncestorsByMaterializedPath(mpath: string[]): Promise<FolderInterface[]> {
         const folders = await this.selectQueryBuilder()
             .where({ id: { $in: mpath } })
             .getResult();
-        return mpath.map((id) => folders.find((folder) => folder.id === id) as Folder);
+        return mpath.map((id) => folders.find((folder) => folder.id === id) as FolderInterface);
     }
 
-    private selectQueryBuilder(): QueryBuilder<Folder> {
+    private selectQueryBuilder(): QueryBuilder<FolderInterface> {
         return this.foldersRepository
             .createQueryBuilder("folder")
             .select("*")
@@ -221,7 +235,7 @@ export class FoldersService {
             .groupBy(["folder.id", "parent.id"]);
     }
 
-    private countQueryBuilder(): QueryBuilder<Folder> {
+    private countQueryBuilder(): QueryBuilder<FolderInterface> {
         return this.foldersRepository.createQueryBuilder("folder").select("*");
     }
 }

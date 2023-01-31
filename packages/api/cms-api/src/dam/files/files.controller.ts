@@ -23,7 +23,7 @@ import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { UploadFileBody } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
-import { File } from "./entities/file.entity";
+import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 import { calculatePartialRanges, createHashedPath } from "./files.utils";
 
@@ -39,7 +39,7 @@ export class FilesController {
 
     @Post("upload")
     @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
-    async upload(@UploadedFile() file: FileUploadInterface, @Body() { folderId }: UploadFileBody): Promise<File> {
+    async upload(@UploadedFile() file: FileUploadInterface, @Body() { folderId }: UploadFileBody): Promise<FileInterface> {
         const uploadedFile = await this.filesService.upload(file, folderId);
         return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
     }

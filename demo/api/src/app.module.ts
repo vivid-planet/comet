@@ -30,6 +30,7 @@ import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.en
 import { Request } from "express";
 
 import { AuthModule } from "./auth/auth.module";
+import { DamScope } from "./dam/dto/dam-scope";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -123,23 +124,26 @@ export class AppModule {
                         },
                     }),
                 }),
-                DamModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
-                        damConfig: {
-                            filesBaseUrl: `${config.apiUrl}/dam/files`,
-                            imagesBaseUrl: `${config.apiUrl}/dam/images`,
-                            secret: config.dam.secret,
-                            allowedImageSizes: config.dam.allowedImageSizes,
-                            allowedAspectRatios: config.dam.allowedImageAspectRatios,
-                            additionalMimeTypes: config.dam.additionalMimetypes,
-                            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
-                            cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
-                            maxFileSize: config.dam.uploadsMaxFileSize,
-                        },
-                        imgproxyConfig: config.imgproxy,
-                    }),
-                }),
+                DamModule.registerAsync(
+                    {
+                        imports: [ConfigModule],
+                        useFactory: async () => ({
+                            damConfig: {
+                                filesBaseUrl: `${config.apiUrl}/dam/files`,
+                                imagesBaseUrl: `${config.apiUrl}/dam/images`,
+                                secret: config.dam.secret,
+                                allowedImageSizes: config.dam.allowedImageSizes,
+                                allowedAspectRatios: config.dam.allowedImageAspectRatios,
+                                additionalMimeTypes: config.dam.additionalMimetypes,
+                                filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+                                cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+                                maxFileSize: config.dam.uploadsMaxFileSize,
+                            },
+                            imgproxyConfig: config.imgproxy,
+                        }),
+                    },
+                    DamScope,
+                ),
                 PublicUploadModule.registerAsync({
                     imports: [ConfigModule],
                     useFactory: async () => ({
