@@ -21,6 +21,7 @@ import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
+import { DamScopeInterface } from "../types";
 import { FileArgs } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
@@ -48,6 +49,7 @@ export const withFilesSelect = (
         sortDirection?: SortDirection;
         offset?: number;
         limit?: number;
+        scope?: DamScopeInterface;
     },
 ): QueryBuilder<FileInterface> => {
     if (args.query) {
@@ -63,6 +65,9 @@ export const withFilesSelect = (
         } else {
             qb.andWhere({ folder: { id: null } });
         }
+    }
+    if (args.scope !== undefined) {
+        qb.andWhere({ scope: args.scope });
     }
     if (args.mimetypes !== undefined) {
         qb.andWhere({ mimetype: { $in: args.mimetypes } });
@@ -180,8 +185,16 @@ export class FilesService {
         return withFilesSelect(this.selectQueryBuilder(), { contentHash }).getSingleResult();
     }
 
-    async findOneByFilenameAndFolder(filename: string, folderId: string | null = null): Promise<FileInterface | null> {
-        return withFilesSelect(this.selectQueryBuilder(), { folderId: folderId || null, filename }).getSingleResult();
+    async findOneByFilenameAndFolder({
+        filename,
+        folderId = null,
+        scope,
+    }: {
+        filename: string;
+        folderId?: string | null;
+        scope?: DamScopeInterface;
+    }): Promise<FileInterface | null> {
+        return withFilesSelect(this.selectQueryBuilder(), { folderId, filename, scope }).getSingleResult();
     }
 
     async findOneByImageId(imageId: string): Promise<FileInterface | null> {
@@ -276,7 +289,7 @@ export class FilesService {
 
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
-            const name = await this.findNextAvailableFilename(file.originalname, folderId);
+            const name = await this.findNextAvailableFilename({ filePath: file.originalname, folderId, scope });
 
             let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
             if (exifrSupportedMimetypes.includes(file.mimetype)) {
@@ -325,14 +338,22 @@ export class FilesService {
         return result;
     }
 
-    async findNextAvailableFilename(filePath: string, folderId: string | null = null): Promise<string> {
+    async findNextAvailableFilename({
+        filePath,
+        folderId = null,
+        scope,
+    }: {
+        filePath: string;
+        folderId?: string | null;
+        scope?: DamScopeInterface;
+    }): Promise<string> {
         const extension = extname(filePath);
         const filename = basename(filePath, extension);
 
         let i = 1;
         let name = slugifyFilename(filename, extension);
 
-        while ((await this.findOneByFilenameAndFolder(name, folderId)) !== null) {
+        while ((await this.findOneByFilenameAndFolder({ filename: name, folderId, scope })) !== null) {
             name = slugifyFilename(`${filename}-copy${i}`, extension);
             i++;
         }

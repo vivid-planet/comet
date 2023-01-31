@@ -88,7 +88,7 @@ export function createFilesResolver({ File }: { File: Type<FileInterface> }): Ty
             const name = basename(filename, extension);
             const slugifiedName = slugifyFilename(name, extension);
 
-            return (await this.filesService.findOneByFilenameAndFolder(slugifiedName, folderId)) !== null;
+            return (await this.filesService.findOneByFilenameAndFolder({ filename: slugifiedName, folderId })) !== null;
         }
 
         @Query(() => [FilenameResponse])
@@ -102,7 +102,7 @@ export function createFilesResolver({ File }: { File: Type<FileInterface> }): Ty
                 const filename = basename(name, extension);
                 const slugifiedName = slugifyFilename(filename, extension);
 
-                const existingFile = await this.filesService.findOneByFilenameAndFolder(slugifiedName, folderId);
+                const existingFile = await this.filesService.findOneByFilenameAndFolder({ filename: slugifiedName, folderId });
                 const isOccupied = existingFile !== null;
 
                 response.push({
