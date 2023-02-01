@@ -94,11 +94,11 @@ async function generateSchema(): Promise<void> {
         BuildsResolver,
         BuildTemplatesResolver,
         redirectsResolver,
+        createDamItemsResolver({ File, Folder }),
         createFilesResolver({ File }),
         FileImagesResolver,
         createFoldersResolver({ Folder }),
         pageTreeResolver,
-        createDamItemsResolver({ File, Folder }),
         CronJobsResolver,
         AuthResolver,
     ]);

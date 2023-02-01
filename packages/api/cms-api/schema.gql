@@ -181,6 +181,13 @@ type DamFile {
   damPath: String!
 }
 
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
+
 type PaginatedDamFiles {
   nodes: [DamFile!]!
   totalCount: Int!
@@ -191,13 +198,6 @@ type PaginatedDamFolders {
   totalCount: Int!
 }
 
-type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
-}
-
-union DamItem = DamFile | DamFolder
-
 type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -206,18 +206,18 @@ type Query {
   paginatedRedirects(scope: RedirectScopeInput = {}, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int = 0, limit: Int = 20): PaginatedRedirects!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput = {}, source: String!): Boolean!
-  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
+  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput = {}, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
-  damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
-  damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
-  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
+  damIsFilenameOccupied(filename: String!, scope: DamScopeInput = {}, folderId: String): Boolean!
+  damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput = {}): [FilenameResponse!]!
+  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput = {}, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
-  damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
+  damFolderByNameAndParentId(scope: DamScopeInput = {}, name: String!, parentId: ID): DamFolder
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
 }
@@ -273,6 +273,15 @@ enum RedirectSortField {
   updatedAt
 }
 
+input DamScopeInput {
+  thisScopeHasNoFields____: String
+}
+
+input DamItemFilterInput {
+  searchText: String
+  mimetypes: [String!]
+}
+
 input FileFilterInput {
   searchText: String
   mimetypes: [String!]
@@ -297,11 +306,6 @@ enum SlugAvailability {
   Reserved
 }
 
-input DamItemFilterInput {
-  searchText: String
-  mimetypes: [String!]
-}
-
 type Mutation {
   createBuilds(input: CreateBuildsInput!): Boolean!
   createRedirect(scope: RedirectScopeInput = {}, input: RedirectInput!): Redirect!
@@ -313,7 +317,7 @@ type Mutation {
   archiveDamFile(id: ID!): DamFile!
   restoreDamFile(id: ID!): DamFile!
   deleteDamFile(id: ID!): Boolean!
-  createDamFolder(input: CreateDamFolderInput!): DamFolder!
+  createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput = {}): DamFolder!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!

@@ -6,17 +6,34 @@ import { basename, extname } from "path";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { FileArgs } from "./dto/file.args";
+import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
+import { DamScopeInterface } from "../types";
+import { EmptyDamScope } from "./dto/empty-dam-scope";
+import { createFileArgs, FileArgsInterface } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 import { slugifyFilename } from "./files.utils";
 
-export function createFilesResolver({ File }: { File: Type<FileInterface> }): Type<unknown> {
+export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<FileInterface>; Scope?: Type<DamScopeInterface> }): Type<unknown> {
+    const Scope = PassedScope ?? EmptyDamScope;
+    const hasNonEmptyScope = PassedScope != null;
+
+    function nonEmptyScopeOrNothing(scope: DamScopeInterface): DamScopeInterface | undefined {
+        // GraphQL sends the scope object with a null prototype ([Object: null prototype] { <key>: <value> }), but MikroORM uses the
+        // object's hasOwnProperty method internally, resulting in a "object.hasOwnProperty is not a function" error. To fix this, we
+        // create a "real" JavaScript object by using the spread operator.
+        // See https://github.com/mikro-orm/mikro-orm/issues/2846 for more information.
+        return hasNonEmptyScope ? { ...scope } : undefined;
+    }
+
+    const FileArgs = createFileArgs({ Scope });
+
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
 
+    @ScopeGuardActive(false) // TODO guard operations
     @Resolver(() => File)
     class FilesResolver {
         constructor(
@@ -25,8 +42,8 @@ export function createFilesResolver({ File }: { File: Type<FileInterface> }): Ty
         ) {}
 
         @Query(() => PaginatedDamFiles)
-        async damFilesList(@Args() args: FileArgs): Promise<PaginatedDamFiles> {
-            const [files, totalCount] = await this.filesService.findAndCount(args);
+        async damFilesList(@Args({ type: () => FileArgs }) args: FileArgsInterface): Promise<PaginatedDamFiles> {
+            const [files, totalCount] = await this.filesService.findAndCount(args, nonEmptyScopeOrNothing(args.scope));
             return new PaginatedDamFiles(files, totalCount);
         }
 
@@ -83,17 +100,24 @@ export function createFilesResolver({ File }: { File: Type<FileInterface> }): Ty
         }
 
         @Query(() => Boolean)
-        async damIsFilenameOccupied(@Args("filename") filename: string, @Args("folderId", { nullable: true }) folderId?: string): Promise<boolean> {
+        async damIsFilenameOccupied(
+            @Args("filename") filename: string,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+            @Args("folderId", { nullable: true }) folderId?: string,
+        ): Promise<boolean> {
             const extension = extname(filename);
             const name = basename(filename, extension);
             const slugifiedName = slugifyFilename(name, extension);
 
-            return (await this.filesService.findOneByFilenameAndFolder({ filename: slugifiedName, folderId })) !== null;
+            return (
+                (await this.filesService.findOneByFilenameAndFolder({ filename: slugifiedName, folderId }, nonEmptyScopeOrNothing(scope))) !== null
+            );
         }
 
         @Query(() => [FilenameResponse])
         async damAreFilenamesOccupied(
             @Args("filenames", { type: () => [FilenameInput] }) filenames: Array<FilenameInput>,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
         ): Promise<Array<FilenameResponse>> {
             const response: Array<FilenameResponse> = [];
 
@@ -102,7 +126,10 @@ export function createFilesResolver({ File }: { File: Type<FileInterface> }): Ty
                 const filename = basename(name, extension);
                 const slugifiedName = slugifyFilename(filename, extension);
 
-                const existingFile = await this.filesService.findOneByFilenameAndFolder({ filename: slugifiedName, folderId });
+                const existingFile = await this.filesService.findOneByFilenameAndFolder(
+                    { filename: slugifiedName, folderId },
+                    nonEmptyScopeOrNothing(scope),
+                );
                 const isOccupied = existingFile !== null;
 
                 response.push({

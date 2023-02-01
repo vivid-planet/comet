@@ -22,7 +22,7 @@ import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
-import { FileArgs } from "./dto/file.args";
+import { FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
@@ -113,13 +113,10 @@ export class FilesService {
             .leftJoinAndSelect("file.folder", "folder");
     }
 
-    async findAll({
-        folderId,
-        includeArchived,
-        filter,
-        sortColumnName,
-        sortDirection,
-    }: Omit<FileArgs, "offset" | "limit">): Promise<FileInterface[]> {
+    async findAll(
+        { folderId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FileArgsInterface, "offset" | "limit" | "scope">,
+        scope?: DamScopeInterface,
+    ): Promise<FileInterface[]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
 
         return withFilesSelect(this.selectQueryBuilder(), {
@@ -129,18 +126,14 @@ export class FilesService {
             query: filter?.searchText,
             sortColumnName,
             sortDirection,
+            scope,
         }).getResult();
     }
 
-    async findAndCount({
-        folderId,
-        includeArchived,
-        filter,
-        sortColumnName,
-        sortDirection,
-        offset,
-        limit,
-    }: FileArgs): Promise<[FileInterface[], number]> {
+    async findAndCount(
+        { folderId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: Omit<FileArgsInterface, "scope">,
+        scope?: DamScopeInterface,
+    ): Promise<[FileInterface[], number]> {
         const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
 
         const files = await withFilesSelect(this.selectQueryBuilder(), {
@@ -152,6 +145,7 @@ export class FilesService {
             sortDirection,
             offset,
             limit,
+            scope,
         }).getResult();
 
         const totalCount = await withFilesSelect(this.selectQueryBuilder(), {
@@ -163,6 +157,7 @@ export class FilesService {
             sortDirection,
             offset,
             limit,
+            scope,
         }).getCount();
 
         return [files, totalCount];
@@ -185,15 +180,16 @@ export class FilesService {
         return withFilesSelect(this.selectQueryBuilder(), { contentHash }).getSingleResult();
     }
 
-    async findOneByFilenameAndFolder({
-        filename,
-        folderId = null,
-        scope,
-    }: {
-        filename: string;
-        folderId?: string | null;
-        scope?: DamScopeInterface;
-    }): Promise<FileInterface | null> {
+    async findOneByFilenameAndFolder(
+        {
+            filename,
+            folderId = null,
+        }: {
+            filename: string;
+            folderId?: string | null;
+        },
+        scope?: DamScopeInterface,
+    ): Promise<FileInterface | null> {
         return withFilesSelect(this.selectQueryBuilder(), { folderId, filename, scope }).getSingleResult();
     }
 
@@ -353,7 +349,7 @@ export class FilesService {
         let i = 1;
         let name = slugifyFilename(filename, extension);
 
-        while ((await this.findOneByFilenameAndFolder({ filename: name, folderId, scope })) !== null) {
+        while ((await this.findOneByFilenameAndFolder({ filename: name, folderId }), scope) !== null) {
             name = slugifyFilename(`${filename}-copy${i}`, extension);
             i++;
         }

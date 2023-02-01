@@ -70,10 +70,9 @@ export { defaultDamAcceptedMimetypes } from "./dam/common/mimeTypes/default-dam-
 export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG, DAM_MODULE_OPTIONS, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
-export { FileArgs } from "./dam/files/dto/file.args";
+export { DamScopeType } from "./dam/files/decorators/dam-scope-type.decorator";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { FileUploadInterface } from "./dam/files/dto/file-upload.interface";
-export { FolderArgs } from "./dam/files/dto/folder.args";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
 export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
 export { FileImage } from "./dam/files/entities/file-image.entity";

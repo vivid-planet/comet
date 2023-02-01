@@ -4,7 +4,8 @@ import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { FolderArgs } from "./dto/folder.args";
+import { DamScopeInterface } from "../types";
+import { FolderArgsInterface } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
@@ -19,6 +20,7 @@ export const withFoldersSelect = (
         sortDirection?: SortDirection;
         offset?: number;
         limit?: number;
+        scope?: DamScopeInterface;
     },
 ): QueryBuilder<FolderInterface> => {
     if (!args.includeArchived) {
@@ -32,6 +34,10 @@ export const withFoldersSelect = (
         } else {
             qb.where({ parent: { id: null } });
         }
+    }
+
+    if (args.scope !== undefined) {
+        qb.andWhere({ scope: args.scope });
     }
 
     if (args.query) {
@@ -69,33 +75,26 @@ export class FoldersService {
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
     ) {}
 
-    async findAll({
-        parentId,
-        includeArchived,
-        filter,
-        sortColumnName,
-        sortDirection,
-    }: Omit<FolderArgs, "offset" | "limit">): Promise<FolderInterface[]> {
+    async findAll(
+        { parentId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FolderArgsInterface, "offset" | "limit" | "scope">,
+        scope?: DamScopeInterface,
+    ): Promise<FolderInterface[]> {
         const qb = withFoldersSelect(this.selectQueryBuilder(), {
             includeArchived,
             parentId,
             query: filter?.searchText,
             sortColumnName,
             sortDirection,
+            scope,
         });
 
         return qb.getResult();
     }
 
-    async findAndCount({
-        parentId,
-        includeArchived,
-        filter,
-        sortColumnName,
-        sortDirection,
-        offset,
-        limit,
-    }: FolderArgs): Promise<[FolderInterface[], number]> {
+    async findAndCount(
+        { parentId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: Omit<FolderArgsInterface, "scope">,
+        scope?: DamScopeInterface,
+    ): Promise<[FolderInterface[], number]> {
         const args = {
             includeArchived,
             parentId,
@@ -104,6 +103,7 @@ export class FoldersService {
             sortDirection,
             offset,
             limit,
+            scope,
         };
 
         const qb = withFoldersSelect(this.selectQueryBuilder(), args);
@@ -127,8 +127,11 @@ export class FoldersService {
         return qb.getSingleResult();
     }
 
-    async findOneByNameAndParentId(name: string, parentId?: string): Promise<FolderInterface | null> {
-        const qb = this.selectQueryBuilder().andWhere({ name });
+    async findOneByNameAndParentId(
+        { name, parentId }: { name: string; parentId?: string },
+        scope?: DamScopeInterface,
+    ): Promise<FolderInterface | null> {
+        const qb = this.selectQueryBuilder().andWhere({ name, scope });
         if (parentId) {
             qb.andWhere({ parent: { id: parentId } });
         } else {
@@ -137,14 +140,14 @@ export class FoldersService {
         return qb.getSingleResult();
     }
 
-    async create({ parentId, ...data }: CreateFolderInput): Promise<FolderInterface> {
+    async create({ parentId, ...data }: CreateFolderInput, scope?: DamScopeInterface): Promise<FolderInterface> {
         let parent = undefined;
         let mpath: string[] = [];
         if (parentId) {
             parent = await this.findOneById(parentId);
             mpath = (await this.findAncestorsByParentId(parentId)).map((folder) => folder.id);
         }
-        const folder = this.foldersRepository.create({ ...data, parent, mpath });
+        const folder = this.foldersRepository.create({ ...data, parent, mpath, scope });
         await this.foldersRepository.persistAndFlush(folder);
         return folder;
     }
