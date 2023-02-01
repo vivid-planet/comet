@@ -55,6 +55,7 @@
         "@types/final-form-set-field-data": "^1.0.0",
         "@types/lodash.debounce": "^4.0.6",
         "@types/lodash.isequal": "^4.5.5",
+        "@types/node": "^14.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.11",
         "@types/react-router": "^5.1.12",
