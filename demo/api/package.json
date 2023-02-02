@@ -13,7 +13,7 @@
         "fixtures:prod": "$npm_execpath console:prod fixtures --",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0  --ext .ts,.tsx,.js,.jsx,.json,.md src/",
-        "lint:tsc": "yarn api-generator && tsc --project ./tsconfig.lint.json",
+        "lint:tsc": "$npm_execpath api-generator && tsc --project ./tsconfig.lint.json",
         "mikro-orm": "mikro-orm",
         "mikro-orm:drop": "mikro-orm schema:drop -r",
         "mikro-orm:migration:generate": "mikro-orm migration:create",
