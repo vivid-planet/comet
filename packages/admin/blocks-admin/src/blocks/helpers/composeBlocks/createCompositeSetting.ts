@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AnonymousBlockInterface, BlockAdminComponent, PreviewStateInterface } from "../../types";
+import { AnonymousBlockInterface, BlockAdminComponent } from "../../types";
 import { createSettingsAnonymousBlock } from "./createSettingsBlock";
 
 interface Options<State> {
@@ -12,7 +12,7 @@ export function createCompositeSetting<State>({
     defaultValue,
     AdminComponent,
     definesOwnPadding,
-}: Options<State>): [AnonymousBlockInterface<State, State, State, State & PreviewStateInterface>, { flatten: false }] {
+}: Options<State>): [AnonymousBlockInterface<State, State, State, State>, { flatten: false }] {
     return [
         createSettingsAnonymousBlock<State>({
             defaultValues: defaultValue,

@@ -13,8 +13,8 @@ export function createSettingsAnonymousBlock<State>({
     AdminComponent,
     isValid,
     definesOwnPadding,
-}: Options<State>): AnonymousBlockInterface<State, State, State> {
-    const AnonymousSettingsBlock: AnonymousBlockInterface<State, State, State> = {
+}: Options<State>): AnonymousBlockInterface<State, State, State, State> {
+    const AnonymousSettingsBlock: AnonymousBlockInterface<State, State, State, State> = {
         ...createBlockSkeleton(),
 
         defaultValues: () => defaultValues,
@@ -25,9 +25,7 @@ export function createSettingsAnonymousBlock<State>({
 
         output2State: async (output) => Promise.resolve(copy(output)),
 
-        createPreviewState: (state) => {
-            return { adminMeta: undefined, ...copy(state) };
-        },
+        createPreviewState: (state) => copy(state),
 
         definesOwnPadding,
 

@@ -86,7 +86,7 @@ export interface AnonymousBlockInterface<
     State = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OutputApi = any,
-    PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface,
+    PreviewState = InputApi & PreviewStateInterface,
 > extends BlockMethods<InputApi, State, OutputApi, PreviewState> {
     AdminComponent: BlockAdminComponent<State>;
     definesOwnPadding?: boolean;
