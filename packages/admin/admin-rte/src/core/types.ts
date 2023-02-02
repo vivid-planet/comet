@@ -70,7 +70,7 @@ export interface ICustomBlockTypeMap_Deprecated {
 export interface CustomInlineStyles {
     [name: string]: {
         label: React.ReactNode;
-        icon?: (props: SvgIconProps) => JSX.Element;
+        icon?: (props: SvgIconProps) => JSX.Element | null;
         tooltipText?: React.ReactNode;
         style: React.CSSProperties;
     };
