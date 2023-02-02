@@ -549,7 +549,7 @@ importers:
       file-saver: ^2.0.2
       final-form: ^4.16.1
       final-form-set-field-data: ^1.0.2
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+      graphql: ^15.0.0
       history: ^4.10.1
       jss: ^10.6.0
       lodash.debounce: ^4.0.8
@@ -581,7 +581,7 @@ importers:
       use-constant: 1.1.1_react@17.0.2
       uuid: 9.0.0
     devDependencies:
-      '@apollo/client': 3.7.4_4acpsgwrblrf7yma4ztoevvkgq
+      '@apollo/client': 3.7.4_icdo4vrl6lcspfwvmbmur66vjy
       '@babel/cli': 7.20.7_@babel+core@7.20.12
       '@babel/core': 7.20.12
       '@comet/admin-babel-preset': link:../admin-babel-preset
@@ -607,7 +607,7 @@ importers:
       '@types/uuid': 9.0.0
       eslint: 8.32.0
       final-form: 4.20.9
-      graphql: 16.6.0
+      graphql: 15.8.0
       history: 4.10.1
       jss: 10.9.2
       npm-run-all: 4.1.5
@@ -1786,42 +1786,6 @@ packages:
       rxjs: 6.6.7
     transitivePeerDependencies:
       - chokidar
-    dev: true
-
-  /@apollo/client/3.7.4_4acpsgwrblrf7yma4ztoevvkgq:
-    resolution: {integrity: sha512-bgiCKRmLSBImX4JRrw8NjqGo0AQE/mowCdHX1PJp2r5zIXrJx0UeaAYmx1qJY69Oz/KR7SKlLt4xK+bOP1jx7A==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-      graphql-ws: ^5.5.5
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      subscriptions-transport-ws: ^0.9.0 || ^0.11.0
-    peerDependenciesMeta:
-      graphql-ws:
-        optional: true
-      react:
-        optional: true
-      react-dom:
-        optional: true
-      subscriptions-transport-ws:
-        optional: true
-    dependencies:
-      '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
-      '@wry/context': 0.7.0
-      '@wry/equality': 0.5.3
-      '@wry/trie': 0.3.2
-      graphql: 16.6.0
-      graphql-tag: 2.12.6_graphql@16.6.0
-      hoist-non-react-statics: 3.3.2
-      optimism: 0.16.2
-      prop-types: 15.8.1
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      response-iterator: 0.2.6
-      symbol-observable: 4.0.0
-      ts-invariant: 0.10.3
-      tslib: 2.4.1
-      zen-observable-ts: 1.2.5
     dev: true
 
   /@apollo/client/3.7.4_icdo4vrl6lcspfwvmbmur66vjy:
@@ -5616,14 +5580,6 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 15.8.0
-
-  /@graphql-typed-document-node/core/3.1.1_graphql@16.6.0:
-    resolution: {integrity: sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==}
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      graphql: 16.6.0
-    dev: true
 
   /@hapi/accept/5.0.2:
     resolution: {integrity: sha512-CmzBx/bXUR8451fnZRuZAJRlzgm0Jgu5dltTX/bszmR2lheb9BpyN47Q1RbaGTsvFzn0PXAEs+lXDKfshccYZw==}
@@ -15578,16 +15534,6 @@ packages:
       graphql: 15.8.0
       tslib: 2.4.1
 
-  /graphql-tag/2.12.6_graphql@16.6.0:
-    resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      graphql: 16.6.0
-      tslib: 2.4.1
-    dev: true
-
   /graphql-type-json/0.3.2_graphql@15.8.0:
     resolution: {integrity: sha512-J+vjof74oMlCWXSvt0DOf2APEdZOCdubEvGDUAlqH//VBYcOYsGgRW7Xzorr44LvkjiuvecWc8fChxuZZbChtg==}
     peerDependencies:
@@ -15616,11 +15562,6 @@ packages:
   /graphql/15.8.0:
     resolution: {integrity: sha512-5gghUc24tP9HRznNpV2+FIoq3xKkj5dTQqf4v0CpdPbFVwFkWoxOM+o+2OC9ZSvjEMTjfmG9QT+gcvggTwW1zw==}
     engines: {node: '>= 10.x'}
-
-  /graphql/16.6.0:
-    resolution: {integrity: sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==}
-    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-    dev: true
 
   /handle-thing/2.0.1:
     resolution: {integrity: sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==}
