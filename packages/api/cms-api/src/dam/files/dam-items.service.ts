@@ -17,7 +17,7 @@ export class DamItemsService {
         sortDirection,
         offset,
         limit,
-    }: DamItemsArgs): Promise<[typeof DamItem[], number]> {
+    }: DamItemsArgs): Promise<[(typeof DamItem)[], number]> {
         const [folders, foldersTotalCount] = await this.foldersService.findAndCount({
             parentId: folderId,
             includeArchived,
@@ -41,7 +41,7 @@ export class DamItemsService {
             limit: remainingLimit,
         });
 
-        const response: typeof DamItem[] = [...folders];
+        const response: (typeof DamItem)[] = [...folders];
 
         if (remainingLimit > 0) {
             response.push(...files);
