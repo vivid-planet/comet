@@ -54,7 +54,7 @@ jobs:
               run: pnpm run copy-schema-files
 
             - name: Build
-              run: pnpm run build
+              run: pnpm run build:lib
 
             - name: Lint
               run: |
