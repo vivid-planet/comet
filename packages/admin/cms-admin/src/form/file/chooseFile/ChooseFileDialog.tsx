@@ -81,7 +81,6 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     allowedMimetypes={allowedMimetypes}
                     damLocationStorageKey="choose-file-dam-location"
                     hideContextMenu={true}
-                    disableScopeIndicator={true}
                     hideMultiselect={true}
                     hideDamActions={true}
                     hideArchiveFilter={true}

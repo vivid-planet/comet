@@ -182,7 +182,21 @@ class App extends React.Component {
                                                                                     />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/assets`}
-                                                                                        render={() => <DamPage path="/assets" />}
+                                                                                        render={() => (
+                                                                                            <DamPage
+                                                                                                path="/assets"
+                                                                                                renderContentScopeIndicator={(scope) => (
+                                                                                                    <ContentScopeIndicator variant="toolbar">
+                                                                                                        <ScopeIndicatorContent>
+                                                                                                            <Domain fontSize="small" />
+                                                                                                            <ScopeIndicatorLabelBold variant="body2">
+                                                                                                                {scope.domain}
+                                                                                                            </ScopeIndicatorLabelBold>
+                                                                                                        </ScopeIndicatorContent>
+                                                                                                    </ContentScopeIndicator>
+                                                                                                )}
+                                                                                            />
+                                                                                        )}
                                                                                     />
 
                                                                                     <RouteWithErrorBoundary

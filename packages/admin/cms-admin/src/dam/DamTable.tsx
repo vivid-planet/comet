@@ -3,7 +3,6 @@ import {
     EditDialogApiContext,
     IFilterApi,
     ISortInformation,
-    messages,
     SortDirection,
     Stack,
     StackPage,
@@ -17,14 +16,12 @@ import {
     useStoredState,
     useTableQueryFilter,
 } from "@comet/admin";
-import { AddFolder as AddFolderIcon, Domain } from "@comet/admin-icons";
-import { Button, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { AddFolder as AddFolderIcon } from "@comet/admin-icons";
+import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { TextMatch } from "../common/MarkedMatches";
-import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../graphql.generated";
 import EditFile from "./FileForm/EditFile";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./Table/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
@@ -34,19 +31,6 @@ import { DamTableFilter } from "./Table/filter/DamTableFilter";
 import FolderTable from "./Table/FolderTable";
 import { damFolderQuery } from "./Table/FolderTable.gql";
 import { RedirectToPersistedDamLocation } from "./Table/RedirectToPersistedDamLocation";
-
-const ScopeIndicatorLabelBold = styled(Typography)`
-    && {
-        font-weight: 400;
-        padding: 0 8px 0 4px;
-        text-transform: uppercase;
-    }
-`;
-
-const ScopeIndicatorContent = styled("div")`
-    display: flex;
-    align-items: center;
-`;
 
 interface FolderProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
@@ -80,17 +64,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
         <StackSwitch initialPage="table">
             <StackPage name="table">
                 <EditDialogApiContext.Provider value={editDialogApi}>
-                    {!props.disableScopeIndicator && (
-                        <ContentScopeIndicator variant="toolbar" global>
-                            <ScopeIndicatorContent>
-                                <Domain fontSize="small" />
-                                <ScopeIndicatorLabelBold variant="body2">
-                                    <FormattedMessage {...messages.globalContentScope} />
-                                </ScopeIndicatorLabelBold>
-                            </ScopeIndicatorContent>
-                        </ContentScopeIndicator>
-                    )}
-
+                    {props.contentScopeIndicator}
                     <Toolbar>
                         <ToolbarItem>
                             <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
@@ -139,7 +113,7 @@ export interface DamConfig {
     hideArchiveFilter?: boolean;
     hideContextMenu?: boolean;
     allowedMimetypes?: string[];
-    disableScopeIndicator?: boolean;
+    contentScopeIndicator?: React.ReactNode;
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
 }
@@ -156,7 +130,6 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
     });
 
     const propsWithDefaultValues = {
-        disableScopeIndicator: false,
         hideContextMenu: false,
         hideMultiselect: false,
         hideDamActions: false,
