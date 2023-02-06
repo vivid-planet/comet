@@ -184,7 +184,6 @@ class App extends React.Component {
                                                                                         path={`${match.path}/assets`}
                                                                                         render={() => (
                                                                                             <DamPage
-                                                                                                path="/assets"
                                                                                                 renderContentScopeIndicator={(scope) => (
                                                                                                     <ContentScopeIndicator variant="toolbar">
                                                                                                         <ScopeIndicatorContent>

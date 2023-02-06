@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+import { useRouteMatch } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
@@ -12,7 +13,6 @@ import { DamScopeProvider } from "./config/DamScopeProvider";
 import { DamTable } from "./DamTable";
 
 type Props = {
-    path: string;
     renderContentScopeIndicator?: (scope: ContentScopeInterface) => React.ReactNode;
 };
 
@@ -40,9 +40,11 @@ const ScopeIndicatorContent = styled("div")`
     align-items: center;
 `;
 
-function DamPage({ path, renderContentScopeIndicator = defaultRenderContentScopeIndicator }: Props): React.ReactElement {
-    const { scope } = useContentScope();
-    useContentScopeConfig({ redirectPathAfterChange: path });
+function DamPage({ renderContentScopeIndicator = defaultRenderContentScopeIndicator }: Props): React.ReactElement {
+    const { scope, match } = useContentScope();
+    const routeMatch = useRouteMatch();
+    const damRouteLocation = routeMatch.url.replace(match.url, "");
+    useContentScopeConfig({ redirectPathAfterChange: damRouteLocation });
 
     return (
         <DamScopeProvider>
