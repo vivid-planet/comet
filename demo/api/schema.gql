@@ -562,13 +562,13 @@ type Mutation {
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
-  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
+  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
   restoreDamFile(id: ID!): DamFile!
   deleteDamFile(id: ID!): Boolean!
   createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput!): DamFolder!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
-  moveDamFolders(folderIds: [ID!]!, targetFolderId: ID): [DamFolder!]!
+  moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!

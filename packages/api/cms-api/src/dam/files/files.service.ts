@@ -7,6 +7,7 @@ import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
 import * as hasha from "hasha";
+import isEqual from "lodash.isequal";
 import fetch from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
@@ -222,11 +223,38 @@ export class FilesService {
         return this.save(file);
     }
 
-    async moveBatch(fileIds: string[], targetFolderId?: string): Promise<FileInterface[]> {
+    async moveBatch(
+        { fileIds, targetFolderId }: { fileIds: string[]; targetFolderId?: string },
+        scope?: DamScopeInterface,
+    ): Promise<FileInterface[]> {
+        if (targetFolderId) {
+            const targetFolder = await this.foldersService.findOneById(targetFolderId);
+
+            if (!targetFolder) {
+                throw new Error("Target folder doesn't exist");
+            }
+
+            // Convert to JS object because deep-comparing classes and objects doesn't work
+            if (scope && targetFolder.scope && !isEqual({ ...targetFolder.scope }, scope)) {
+                throw new Error("Scope arg doesn't match folder scope");
+            }
+        }
+
         const files = [];
 
         for (const id of fileIds) {
-            const file = await this.updateById(id, { folderId: targetFolderId });
+            let file = await this.findOneById(id);
+
+            if (!file) {
+                throw new Error("File doesn't exist");
+            }
+
+            // Convert to JS object because deep-comparing classes and objects doesn't work
+            if (scope && file.scope && !isEqual({ ...file.scope }, scope)) {
+                throw new Error("Scope arg doesn't match file scope");
+            }
+
+            file = await this.updateByEntity(file, { folderId: targetFolderId });
             files.push(file);
         }
 

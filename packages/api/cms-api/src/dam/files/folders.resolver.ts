@@ -84,13 +84,13 @@ export function createFoldersResolver({
         }
 
         @Mutation(() => [Folder])
-        // TODO add scope guard for multiple folders
         @SkipBuild()
         async moveDamFolders(
             @Args("folderIds", { type: () => [ID] }) folderIds: string[],
             @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
         ): Promise<FolderInterface[]> {
-            return this.foldersService.moveBatch(folderIds, targetFolderId);
+            return this.foldersService.moveBatch({ folderIds, targetFolderId }, nonEmptyScopeOrNothing(scope));
         }
 
         @Mutation(() => Boolean)

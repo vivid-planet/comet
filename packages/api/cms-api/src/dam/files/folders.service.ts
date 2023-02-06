@@ -1,6 +1,7 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import isEqual from "lodash.isequal";
 
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
@@ -183,11 +184,44 @@ export class FoldersService {
         return folder;
     }
 
-    async moveBatch(folderIds: string[], targetFolderId?: string): Promise<FolderInterface[]> {
+    async moveBatch(
+        {
+            folderIds,
+            targetFolderId,
+        }: {
+            folderIds: string[];
+            targetFolderId?: string;
+        },
+        scope?: DamScopeInterface,
+    ): Promise<FolderInterface[]> {
         const folders = [];
 
+        if (targetFolderId) {
+            const targetFolder = await this.findOneById(targetFolderId);
+
+            if (!targetFolder) {
+                throw new Error("Target folder doesn't exist");
+            }
+
+            // Convert to JS object because deep-comparing classes and objects doesn't work
+            if (scope && targetFolder.scope && !isEqual({ ...targetFolder.scope }, scope)) {
+                throw new Error("Scope arg doesn't match folder scope");
+            }
+        }
+
         for (const id of folderIds) {
-            const folder = await this.updateById(id, { parentId: targetFolderId });
+            let folder = await this.findOneById(id);
+
+            if (!folder) {
+                throw new Error("Folder doesn't exist");
+            }
+
+            // Convert to JS object because deep-comparing classes and objects doesn't work
+            if (scope && folder.scope && !isEqual({ ...folder.scope }, scope)) {
+                throw new Error("Scope arg doesn't match folder scope");
+            }
+
+            folder = await this.updateByEntity(folder, { parentId: targetFolderId });
             folders.push(folder);
         }
 
