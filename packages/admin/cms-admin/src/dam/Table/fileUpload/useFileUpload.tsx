@@ -379,6 +379,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                         {
                             file,
                             folderId: targetFolderId,
+                            scope,
                         },
                         cancelUpload.current.token,
                         {
