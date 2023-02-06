@@ -60,6 +60,7 @@ export const damItemsListQuery = gql`
         $sortDirection: SortDirection
         $offset: Int
         $limit: Int
+        $scope: DamScopeInput!
     ) {
         damItemsList(
             folderId: $folderId
@@ -69,6 +70,7 @@ export const damItemsListQuery = gql`
             sortDirection: $sortDirection
             offset: $offset
             limit: $limit
+            scope: $scope
         ) {
             nodes {
                 ... on DamFile {

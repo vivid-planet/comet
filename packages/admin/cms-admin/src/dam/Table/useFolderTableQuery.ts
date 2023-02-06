@@ -2,6 +2,7 @@ import { QueryResult, useQuery } from "@apollo/client";
 import { IFilterApi } from "@comet/admin";
 
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment, GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
+import { useDamScope } from "../config/useDamScope";
 import { DamFilter } from "../DamTable";
 import { damItemsListQuery } from "./FolderTable.gql";
 
@@ -45,6 +46,7 @@ export interface FolderTableQueryApi extends QueryResult<GQLDamItemsListQuery, G
 }
 
 export const useFolderTableQuery = ({ folderId, filterApi, allowedMimetypes }: FolderTableQueryProps): FolderTableQueryApi => {
+    const scope = useDamScope();
     const { data, fetchMore, ...rest } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
             folderId: folderId,
@@ -57,6 +59,7 @@ export const useFolderTableQuery = ({ folderId, filterApi, allowedMimetypes }: F
             sortDirection: filterApi.current.sort?.direction,
             limit: damItemsListLimit,
             offset: 0,
+            scope,
         },
         fetchPolicy: "cache-and-network",
         onCompleted: async (data) => {

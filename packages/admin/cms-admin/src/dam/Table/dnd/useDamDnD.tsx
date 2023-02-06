@@ -1,4 +1,4 @@
-import { useApolloClient } from "@apollo/client";
+import { ObservableQuery, useApolloClient } from "@apollo/client";
 import { FetchResult } from "@apollo/client/link/core";
 
 import {
@@ -56,7 +56,9 @@ export const useDamDnD = (): DamDnDApi => {
         }
 
         const queries = client.getObservableQueries();
-        const damItemsListQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.DamItemsList);
+        const damItemsListQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.DamItemsList) as
+            | ObservableQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>
+            | undefined;
 
         const mutations: Array<Promise<FetchResult>> = [];
 

@@ -14,6 +14,7 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
+import { useDamScope } from "../../config/useDamScope";
 import { FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
 import { useFileUploadContext } from "./FileUploadContext";
@@ -100,6 +101,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const context = useCmsBlockContext(); // TODO create separate CmsContext?
     const client = useApolloClient();
     const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
+    const scope = useDamScope();
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const accept: Accept = React.useMemo(() => {
@@ -177,13 +179,14 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 variables: {
                     name: folderName,
                     parentId: parentId,
+                    scope,
                 },
                 fetchPolicy: "no-cache",
             });
 
             return data.damFolder?.id;
         },
-        [client],
+        [client, scope],
     );
 
     const createDamFolder = React.useCallback(
@@ -193,6 +196,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 variables: {
                     name: folderName,
                     parentId: parentId,
+                    scope,
                 },
             });
 
@@ -202,7 +206,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
             return data.createDamFolder.id;
         },
-        [client],
+        [client, scope],
     );
 
     const createInitialFolderIdMap = React.useCallback(

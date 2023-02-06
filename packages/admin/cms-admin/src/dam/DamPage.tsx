@@ -1,7 +1,15 @@
 import * as React from "react";
 
+import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { DamTable } from "./DamTable";
-function DamPage(): React.ReactElement {
+
+type Props = {
+    path: string;
+};
+
+function DamPage({ path }: Props): React.ReactElement {
+    useContentScopeConfig({ redirectPathAfterChange: path });
+
     return <DamTable />;
 }
 

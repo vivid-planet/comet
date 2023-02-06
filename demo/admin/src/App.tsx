@@ -99,7 +99,7 @@ class App extends React.Component {
                         resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
                     }}
                 >
-                    <DamConfigProvider value={{}}>
+                    <DamConfigProvider value={{ scopeParts: ["domain"] }}>
                         <IntlProvider locale="en" messages={getMessages()}>
                             <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                 <MuiThemeProvider theme={theme}>
@@ -182,7 +182,7 @@ class App extends React.Component {
                                                                                     />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/assets`}
-                                                                                        component={DamPage}
+                                                                                        render={() => <DamPage path="/assets" />}
                                                                                     />
 
                                                                                     <RouteWithErrorBoundary
