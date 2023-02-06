@@ -8,6 +8,7 @@ import { FormattedMessage } from "react-intl";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
+import { DamScopeProvider } from "./config/DamScopeProvider";
 import { DamTable } from "./DamTable";
 
 type Props = {
@@ -43,7 +44,11 @@ function DamPage({ path, renderContentScopeIndicator = defaultRenderContentScope
     const { scope } = useContentScope();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
-    return <DamTable contentScopeIndicator={renderContentScopeIndicator(scope)} />;
+    return (
+        <DamScopeProvider>
+            <DamTable contentScopeIndicator={renderContentScopeIndicator(scope)} />
+        </DamScopeProvider>
+    );
 }
 
 export { DamPage };

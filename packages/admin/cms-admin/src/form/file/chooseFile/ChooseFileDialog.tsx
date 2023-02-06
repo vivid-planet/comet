@@ -7,8 +7,7 @@ import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
 import { TextMatch } from "../../../common/MarkedMatches";
-import { DamScopeContext } from "../../../dam/config/DamScopeContext";
-import { useDamScope } from "../../../dam/config/useDamScope";
+import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
 import { DamTable } from "../../../dam/DamTable";
 import DamLabel from "../../../dam/Table/DamLabel";
 import { isFile } from "../../../dam/Table/FolderTableRow";
@@ -68,7 +67,6 @@ interface ChooseFileDialogProps {
 }
 
 export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
-    const scope = useDamScope();
     return (
         <FixedHeightDialog open={open} onClose={onClose} fullWidth maxWidth="xl">
             <StyledDialogTitle>
@@ -77,7 +75,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     <Close />
                 </CloseButton>
             </StyledDialogTitle>
-            <DamScopeContext.Provider value={scope}>
+            <DamScopeProvider>
                 <MemoryRouter>
                     <DamTable
                         renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
@@ -90,7 +88,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                         hideArchiveFilter={true}
                     />
                 </MemoryRouter>
-            </DamScopeContext.Provider>
+            </DamScopeProvider>
         </FixedHeightDialog>
     );
 };
