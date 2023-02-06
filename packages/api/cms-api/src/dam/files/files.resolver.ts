@@ -5,6 +5,7 @@ import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver }
 import { basename, extname } from "path";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
+import { SubjectEntity } from "../../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DamScopeInterface } from "../types";
@@ -33,7 +34,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
 
-    @ScopeGuardActive(false) // TODO guard operations
+    @ScopeGuardActive(hasNonEmptyScope)
     @Resolver(() => File)
     class FilesResolver {
         constructor(
@@ -48,6 +49,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Query(() => File)
+        @SubjectEntity(File)
         async damFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
             const file = await this.filesService.findOneById(id);
             if (!file) {
@@ -57,6 +59,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => File)
+        @SubjectEntity(File)
         async updateDamFile(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => UpdateFileInput }) input: UpdateFileInput,
@@ -65,6 +68,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => [File])
+        // TODO add scope guard for multiple files
         @SkipBuild()
         async moveDamFiles(
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
@@ -74,6 +78,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => File)
+        @SubjectEntity(File)
         @SkipBuild()
         async archiveDamFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
             const entity = await this.filesRepository.findOneOrFail(id);
@@ -84,6 +89,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => File)
+        @SubjectEntity(File)
         @SkipBuild()
         async restoreDamFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
             const entity = await this.filesRepository.findOneOrFail(id);
@@ -94,6 +100,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => Boolean)
+        @SubjectEntity(File)
         @SkipBuild()
         async deleteDamFile(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             return this.filesService.delete(id);

@@ -2,6 +2,7 @@ import { NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
+import { SubjectEntity } from "../../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DamScopeInterface } from "../types";
@@ -35,7 +36,7 @@ export function createFoldersResolver({
     @ObjectType()
     class PaginatedDamFolders extends PaginatedResponseFactory.create(Folder) {}
 
-    @ScopeGuardActive(false) // TODO guard operations
+    @ScopeGuardActive(hasNonEmptyScope)
     @Resolver(() => Folder)
     class FoldersResolver {
         constructor(private readonly foldersService: FoldersService) {}
@@ -47,6 +48,7 @@ export function createFoldersResolver({
         }
 
         @Query(() => Folder)
+        @SubjectEntity(Folder)
         async damFolder(@Args("id", { type: () => ID }) id: string): Promise<FolderInterface> {
             const folder = await this.foldersService.findOneById(id);
             if (!folder) {
@@ -72,6 +74,7 @@ export function createFoldersResolver({
         }
 
         @Mutation(() => Folder)
+        @SubjectEntity(Folder)
         @SkipBuild()
         async updateDamFolder(
             @Args("id", { type: () => ID }) id: string,
@@ -81,6 +84,7 @@ export function createFoldersResolver({
         }
 
         @Mutation(() => [Folder])
+        // TODO add scope guard for multiple folders
         @SkipBuild()
         async moveDamFolders(
             @Args("folderIds", { type: () => [ID] }) folderIds: string[],
@@ -90,6 +94,7 @@ export function createFoldersResolver({
         }
 
         @Mutation(() => Boolean)
+        @SubjectEntity(Folder)
         @SkipBuild()
         async deleteDamFolder(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             return this.foldersService.delete(id);

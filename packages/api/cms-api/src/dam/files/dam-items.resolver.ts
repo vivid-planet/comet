@@ -52,7 +52,7 @@ export function createDamItemsResolver({
         }
     }
 
-    @ScopeGuardActive(false) // TODO guard operations
+    @ScopeGuardActive(hasNonEmptyScope)
     @Resolver(() => DamItem)
     class DamItemsResolver {
         constructor(private readonly damItemsService: DamItemsService) {}
