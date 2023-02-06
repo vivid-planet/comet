@@ -285,7 +285,11 @@ export class FilesService {
 
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
+            console.log("after upload to blob");
+
             const name = await this.findNextAvailableFilename({ filePath: file.originalname, folderId, scope });
+
+            console.log("name", name);
 
             let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
             if (exifrSupportedMimetypes.includes(file.mimetype)) {
@@ -349,7 +353,7 @@ export class FilesService {
         let i = 1;
         let name = slugifyFilename(filename, extension);
 
-        while ((await this.findOneByFilenameAndFolder({ filename: name, folderId }), scope) !== null) {
+        while ((await this.findOneByFilenameAndFolder({ filename: name, folderId }, scope)) !== null) {
             name = slugifyFilename(`${filename}-copy${i}`, extension);
             i++;
         }
