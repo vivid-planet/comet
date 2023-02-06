@@ -7,6 +7,8 @@ import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
 import { TextMatch } from "../../../common/MarkedMatches";
+import { DamScopeContext } from "../../../dam/config/DamScopeContext";
+import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
 import DamLabel from "../../../dam/Table/DamLabel";
 import { isFile } from "../../../dam/Table/FolderTableRow";
@@ -66,6 +68,7 @@ interface ChooseFileDialogProps {
 }
 
 export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
+    const scope = useDamScope();
     return (
         <FixedHeightDialog open={open} onClose={onClose} fullWidth maxWidth="xl">
             <StyledDialogTitle>
@@ -74,18 +77,20 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     <Close />
                 </CloseButton>
             </StyledDialogTitle>
-            <MemoryRouter>
-                <DamTable
-                    renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
-                    TableContainer={DialogContent}
-                    allowedMimetypes={allowedMimetypes}
-                    damLocationStorageKey="choose-file-dam-location"
-                    hideContextMenu={true}
-                    hideMultiselect={true}
-                    hideDamActions={true}
-                    hideArchiveFilter={true}
-                />
-            </MemoryRouter>
+            <DamScopeContext.Provider value={scope}>
+                <MemoryRouter>
+                    <DamTable
+                        renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
+                        TableContainer={DialogContent}
+                        allowedMimetypes={allowedMimetypes}
+                        damLocationStorageKey="choose-file-dam-location"
+                        hideContextMenu={true}
+                        hideMultiselect={true}
+                        hideDamActions={true}
+                        hideArchiveFilter={true}
+                    />
+                </MemoryRouter>
+            </DamScopeContext.Provider>
         </FixedHeightDialog>
     );
 };
