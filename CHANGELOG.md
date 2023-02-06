@@ -79,6 +79,24 @@ All notable changes to this project will be documented in this file. This projec
 
 ## Next minor
 
+_tbd_
+
+### @comet/cms-api
+
+#### Changes
+
+-   Fix `createRedirect` mutation when no scoping is used
+
+### @comet/blocks-admin
+
+#### Changes
+
+-   Fix `createCompositeSetting` not working when using an array value
+
+## 3.2.2
+
+_Jan 25, 2023_
+
 ### @comet/admin
 
 #### Changes
