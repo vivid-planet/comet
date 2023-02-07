@@ -142,6 +142,10 @@ export class FoldersService {
     }
 
     async updateByEntity(entity: Folder, { parentId, ...input }: UpdateFolderInput): Promise<Folder> {
+        if (!(await this.isValidParentForFolder(entity.id, parentId ?? null))) {
+            throw new Error("Cannot make a folder its own child.");
+        }
+
         const parentIsDirty = parentId !== undefined && entity.parent?.id !== parentId;
         const parent = parentId ? await this.findOneById(parentId) : null;
 
@@ -167,6 +171,17 @@ export class FoldersService {
     }
 
     async moveBatch(folderIds: string[], targetFolderId?: string): Promise<Folder[]> {
+        let isValidParentId = true;
+        for (const folderId of folderIds) {
+            if (!(await this.isValidParentForFolder(folderId, targetFolderId ?? null))) {
+                isValidParentId = false;
+            }
+        }
+
+        if (!isValidParentId) {
+            throw new Error("Cannot make a folder its own child.");
+        }
+
         const folders = [];
 
         for (const id of folderIds) {
@@ -190,6 +205,13 @@ export class FoldersService {
 
         const result = await this.foldersRepository.nativeDelete(id);
         return result === 1;
+    }
+
+    async isValidParentForFolder(folderId: string, parentId: string | null): Promise<boolean> {
+        const ancestors = await this.findAncestorsByParentId(parentId);
+        const ancestorIds = ancestors.map((ancestor) => ancestor.id);
+
+        return !ancestorIds.includes(folderId);
     }
 
     async findAncestorsByParentId(parentId: string | null): Promise<Folder[]> {
