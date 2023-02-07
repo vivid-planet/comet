@@ -3,7 +3,7 @@ import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver }
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { FolderArgs, FolderByNameAndParentIdArgs } from "./dto/folder.args";
+import { AllFoldersArgs, FolderArgs, FolderByNameAndParentIdArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { Folder } from "./entities/folder.entity";
 import { FoldersService } from "./folders.service";
@@ -14,6 +14,11 @@ export class PaginatedDamFolders extends PaginatedResponseFactory.create(Folder)
 @Resolver(() => Folder)
 export class FoldersResolver {
     constructor(private readonly foldersService: FoldersService) {}
+
+    @Query(() => [Folder])
+    async damFolders(@Args() args: AllFoldersArgs): Promise<Folder[]> {
+        return this.foldersService.findAll(args);
+    }
 
     @Query(() => PaginatedDamFolders)
     async damFoldersList(@Args() args: FolderArgs): Promise<PaginatedDamFolders> {
