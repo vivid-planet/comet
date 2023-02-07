@@ -98,7 +98,6 @@ enum JobStatus {
   failed
 }
 
-<<<<<<< HEAD
 type CronJob {
   id: ID!
   name: String!
@@ -106,20 +105,6 @@ type CronJob {
   lastScheduledAt: DateTime
 }
 
-type DamItemCursor {
-  id: String!
-  type: String!
-}
-
-type DamItemPageInfo {
-  startCursor: DamItemCursor
-  endCursor: DamItemCursor
-  hasPreviousPage: Boolean!
-  hasNextPage: Boolean!
-}
-
-=======
->>>>>>> Revert "feat(DamItemsResolver): make cursor based pagination work"
 type PaginatedDamItems {
   nodes: [DamItem!]!
   totalCount: Int!
@@ -466,11 +451,6 @@ enum RedirectSortField {
   source
   createdAt
   updatedAt
-}
-
-input DamItemCursorInput {
-  id: String!
-  type: String!
 }
 
 input DamItemFilterInput {
