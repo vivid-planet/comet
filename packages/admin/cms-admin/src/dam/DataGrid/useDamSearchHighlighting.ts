@@ -4,10 +4,10 @@ import * as React from "react";
 import { TextMatch } from "../../common/MarkedMatches";
 
 type DamItems = Array<{ id: string; name: string }>;
-type Matches = Map<string, TextMatch[]>;
+export type DamItemMatches = Map<string, TextMatch[]>;
 
 export interface DamSearchHighlightingApi {
-    matches: Matches;
+    matches: DamItemMatches;
 }
 
 interface UseDamSearchHighlightingParams {

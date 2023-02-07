@@ -21,6 +21,7 @@ import {
     namedOperations,
 } from "../../graphql.generated";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
+import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamContextMenu.gql";
 
 interface DamContextMenuProps {
@@ -55,6 +56,9 @@ const FolderInnerMenu = ({ folder, handleClose }: FolderInnerMenuProps): React.R
             `,
             variables: { id: folder.id },
             refetchQueries: [namedOperations.Query.DamItemsList],
+            update: (cache) => {
+                clearDamItemCache(cache);
+            },
         });
 
         if (!data?.deleteSuccessful) {
@@ -180,6 +184,9 @@ const FileInnerMenu = ({ file, handleClose }: FileInnerMenuProps): React.ReactEl
                                 mutation: deleteDamFileMutation,
                                 variables: { id: file.id },
                                 refetchQueries: [namedOperations.Query.DamItemsList],
+                                update: (cache) => {
+                                    clearDamItemCache(cache);
+                                },
                             });
                         }
 

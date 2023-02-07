@@ -7,6 +7,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
+import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { useFileUpload } from "./useFileUpload";
 
 interface UploadSplitButtonProps {
@@ -31,6 +32,7 @@ export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps):
         acceptedMimetypes: filter?.allowedMimetypes ?? allAcceptedMimeTypes,
         onAfterUpload: () => {
             client.reFetchObservableQueries();
+            clearDamItemCache(client.cache);
         },
     });
 

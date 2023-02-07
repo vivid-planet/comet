@@ -1,6 +1,6 @@
 import { StackLink } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-import { Button, Dialog, DialogContent, DialogTitle, IconButton, Link } from "@mui/material";
+import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -8,8 +8,8 @@ import { MemoryRouter } from "react-router";
 
 import { TextMatch } from "../../../common/MarkedMatches";
 import { DamTable } from "../../../dam/DamTable";
-import DamLabel from "../../../dam/Table/DamLabel";
-import { isFile } from "../../../dam/Table/FolderTableRow";
+import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
+import { isFile } from "../../../dam/helpers/isFile";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 
 const FixedHeightDialog = styled(Dialog)`
@@ -46,14 +46,21 @@ const renderDamLabel = (
     { matches }: { matches?: TextMatch[] },
 ) => {
     return isFile(row) ? (
-        <div>
-            <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
-                <DamLabel asset={row} matches={matches} />
-            </TableRowButton>
-        </div>
+        <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
+            <DamItemLabel asset={row} matches={matches} />
+        </TableRowButton>
     ) : (
-        <Link underline="none" component={StackLink} pageName="folder" payload={row.id}>
-            <DamLabel asset={row} matches={matches} />
+        <Link
+            underline="none"
+            component={StackLink}
+            pageName="folder"
+            payload={row.id}
+            sx={{
+                width: "100%",
+                height: "100%",
+            }}
+        >
+            <DamItemLabel asset={row} matches={matches} />
         </Link>
     );
 };
@@ -77,13 +84,11 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
             <MemoryRouter>
                 <DamTable
                     renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
-                    TableContainer={DialogContent}
                     allowedMimetypes={allowedMimetypes}
                     damLocationStorageKey="choose-file-dam-location"
                     hideContextMenu={true}
                     disableScopeIndicator={true}
                     hideMultiselect={true}
-                    hideDamActions={true}
                     hideArchiveFilter={true}
                 />
             </MemoryRouter>
