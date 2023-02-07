@@ -129,7 +129,7 @@ export function createRedirectsResolver({
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
         ): Promise<RedirectInterface> {
-            if (!(await this.redirectService.isRedirectSourceAvailable(input.source, scope))) {
+            if (!(await this.redirectService.isRedirectSourceAvailable(input.source, nonEmptyScopeOrNothing(scope)))) {
                 throw new CometValidationException("Validation failed");
             }
 
