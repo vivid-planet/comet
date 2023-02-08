@@ -1,24 +1,32 @@
 import { BaseEntity, DateType, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
-import { ESLint } from "eslint";
+import { spawnSync } from "child_process";
 import { Project, SourceFile } from "ts-morph";
 import { v4 as uuid } from "uuid";
 
 import { generateCrudInput } from "./generate-crud-input";
 
 async function lint(sourceCode: string): Promise<string> {
+    /*
+    for some reason this doesn't work but eslint cli works
     const eslint = new ESLint({
-        cwd: process.cwd(),
+        cwd: `${process.cwd()}/src`,
         fix: true,
     });
     const lintResults = await eslint.lintText(sourceCode, {
         filePath: "test.ts",
     });
+    */
+    const proc = spawnSync("pnpm", ["exec", "eslint", "--stdin", "--fix-dry-run", "--format", "json"], { input: sourceCode });
+    if (proc.status !== 0) {
+        console.log(proc.stdout.toString());
+    }
+    expect(proc.status).toBe(0);
+    const lintResults = JSON.parse(proc.stdout.toString());
+    expect(lintResults.length).toBe(1);
     for (const lintResult of lintResults) {
         // must not have parse or lint errors
         expect(lintResult.errorCount).toBe(0);
     }
-    expect(lintResults.length).toBe(1);
-
     const ret = lintResults[0].output ? lintResults[0].output : lintResults[0].source;
     expect(ret).not.toBeUndefined();
     if (ret === undefined) throw new Error();
