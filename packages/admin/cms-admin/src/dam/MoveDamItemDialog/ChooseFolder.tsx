@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { PageTree, TreeCollapse, TreeExpand } from "@comet/admin-icons";
+import { ArrowRight, PageTree, TreeCollapse, TreeExpand } from "@comet/admin-icons";
 import { List, ListItem, SvgIconProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
@@ -117,10 +117,27 @@ export const ChooseFolder = () => {
 };
 
 const StyledListItem = styled(ListItem)<{ offset: number }>`
+    display: flex;
+    justify-content: space-between;
+
     height: 56px;
     background: white;
-    border-bottom: solid 1px ${({ theme }) => theme.palette.grey[100]};
+    cursor: pointer;
     padding-left: ${({ offset }) => offset}px;
+
+    border-left: solid 2px transparent;
+    border-right: solid 2px transparent;
+    border-bottom: solid 1px ${({ theme }) => theme.palette.grey[100]};
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        border-left: solid 2px ${({ theme }) => theme.palette.primary.main};
+        border-right: solid 2px ${({ theme }) => theme.palette.primary.main};
+        background: ${({ theme }) => theme.palette.grey[50]};
+    }
 `;
 
 interface ChooseFolderItemProps {
@@ -132,7 +149,10 @@ interface ChooseFolderItemProps {
 const ChooseFolderItem = ({ Icon, onIconClick, message, offset }: ChooseFolderItemProps) => {
     return (
         <StyledListItem offset={Icon ? offset : offset + 20 + 16}>
-            {Icon && <Icon sx={{ marginRight: "20px" }} onClick={onIconClick} />} {message}
+            <div>
+                {Icon && <Icon sx={{ marginRight: "20px" }} onClick={onIconClick} />} {message}
+            </div>
+            <ArrowRight />
         </StyledListItem>
     );
 };
