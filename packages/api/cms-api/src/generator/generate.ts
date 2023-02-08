@@ -12,6 +12,9 @@ const generate = new Command("generate").action(async (options) => {
 
     for (const name in entities) {
         const entity = entities[name];
+        if (!entity.class) {
+            continue;
+        }
         {
             const generatorOptions = Reflect.getMetadata(`data:crudGeneratorOptions`, entity.class) as CrudGeneratorOptions | undefined;
             if (generatorOptions) {
