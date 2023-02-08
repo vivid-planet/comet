@@ -12,6 +12,7 @@ import {
     GQLMoveDamFoldersMutationVariables,
     namedOperations,
 } from "../../../graphql.generated";
+import { useDamScope } from "../../config/useDamScope";
 import { isFile, isFolder } from "../FolderTableRow";
 import { DamMultiselectItem, useDamMultiselectApi } from "../multiselect/DamMultiselect";
 import { moveDamFilesMutation, moveDamFoldersMutation } from "./useDamDnD.gql";
@@ -28,6 +29,7 @@ interface DamDnDApi {
 export const useDamDnD = (): DamDnDApi => {
     const client = useApolloClient();
     const damMultiselectApi = useDamMultiselectApi();
+    const scope = useDamScope();
 
     const moveItem = async ({ dropTargetItem, dragItem }: MoveItemParams) => {
         const itemsToUpdate: DamMultiselectItem[] = damMultiselectApi.isSelected(dragItem.id)
@@ -69,6 +71,7 @@ export const useDamDnD = (): DamDnDApi => {
                     variables: {
                         fileIds,
                         targetFolderId: dropTargetItem.id,
+                        scope,
                     },
                     optimisticResponse: ({ fileIds }) => {
                         return {
@@ -110,6 +113,7 @@ export const useDamDnD = (): DamDnDApi => {
                     variables: {
                         folderIds,
                         targetFolderId: dropTargetItem.id,
+                        scope,
                     },
                     optimisticResponse: ({ folderIds, targetFolderId }) => {
                         return {
