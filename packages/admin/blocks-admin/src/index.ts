@@ -71,6 +71,7 @@ export type {
     IAdminBlockMessage,
     IAdminHoverComponentMessage,
     IAdminSelectComponentMessage,
+    IFrameLocationMessage,
     IFrameMessage,
     IFrameSelectComponentMessage,
     IReadyIFrameMessage,

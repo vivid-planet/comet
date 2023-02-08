@@ -1,3 +1,4 @@
+import { Injectable } from "@nestjs/common";
 import { isURL, registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 
 import { RedirectValidationArguments } from "../dto/redirect-input.factory";
@@ -15,13 +16,14 @@ export const IsValidRedirectSource = (validationOptions?: ValidationOptions) => 
     };
 };
 
+@Injectable()
 @ValidatorConstraint({ name: "IsValidRedirectSource", async: true })
 export class IsValidRedirectSourceConstraint implements ValidatorConstraintInterface {
     async validate(value: string, validationArguments: RedirectValidationArguments): Promise<boolean> {
         const sourceType = validationArguments.object.sourceType;
 
         if (sourceType === RedirectSourceTypeValues.path) {
-            return value.startsWith("/");
+            return /^\/([a-zA-Z0-9-._~/]|%[0-9a-fA-F]{2})+$/.test(value);
         } else {
             return isURL(value);
         }

@@ -2,15 +2,17 @@ import { FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
-import { Args, ArgsType, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, ArgsType, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
+import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
 import { validateNotModified } from "../document/validateNotModified";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
+import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
 import { RedirectInputInterface } from "./dto/redirect-input.factory";
 import { RedirectUpdateActivenessInput } from "./dto/redirect-update-activeness.input";
 import { RedirectsArgsFactory } from "./dto/redirects-args.factory";
@@ -39,8 +41,14 @@ export function createRedirectsResolver({
         return hasNonEmptyScope ? { ...scope } : undefined;
     }
 
+    @ObjectType()
+    class PaginatedRedirects extends PaginatedResponseFactory.create(Redirect) {}
+
     @ArgsType()
     class RedirectsArgs extends RedirectsArgsFactory.create({ Scope }) {}
+
+    @ArgsType()
+    class PaginatedRedirectsArgs extends PaginatedRedirectsArgsFactory.create({ Scope }) {}
 
     @Resolver(() => Redirect)
     @ScopeGuardActive(hasNonEmptyScope)
@@ -50,7 +58,7 @@ export function createRedirectsResolver({
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
         ) {}
 
-        @Query(() => [Redirect])
+        @Query(() => [Redirect], { deprecationReason: "Use paginatedRedirects instead. Will be removed in the next version." })
         async redirects(@Args() { scope, query, type, active, sortColumnName, sortDirection }: RedirectsArgs): Promise<RedirectInterface[]> {
             const where = this.redirectService.getFindCondition({ query, type, active });
             if (hasNonEmptyScope) {
@@ -66,6 +74,28 @@ export function createRedirectsResolver({
             return this.repository.find(where, options);
         }
 
+        @Query(() => PaginatedRedirects)
+        async paginatedRedirects(@Args() { scope, search, filter, sort, offset, limit }: PaginatedRedirectsArgs): Promise<PaginatedRedirects> {
+            const where = this.redirectService.getFindConditionPaginatedRedirects({ search, filter });
+            if (hasNonEmptyScope) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (where as any).scope = scope;
+            }
+
+            const options: FindOptions<RedirectInterface> = { offset, limit };
+
+            if (sort) {
+                options.orderBy = sort.map((sortItem) => {
+                    return {
+                        [sortItem.field]: sortItem.direction,
+                    };
+                });
+            }
+
+            const [entities, totalCount] = await this.repository.findAndCount(where, options);
+            return new PaginatedRedirects(entities, totalCount);
+        }
+
         @Query(() => Redirect)
         @SubjectEntity(Redirect)
         async redirect(@Args("id", { type: () => ID }) id: string): Promise<RedirectInterface | null> {
@@ -78,8 +108,7 @@ export function createRedirectsResolver({
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("source", { type: () => String }) source: string,
         ): Promise<boolean> {
-            const redirect = await this.repository.findOne({ source, ...(hasNonEmptyScope ? { scope: nonEmptyScopeOrNothing(scope) } : {}) });
-            return redirect === null;
+            return this.redirectService.isRedirectSourceAvailable(source, nonEmptyScopeOrNothing(scope));
         }
 
         @Mutation(() => Redirect)
@@ -87,6 +116,10 @@ export function createRedirectsResolver({
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
         ): Promise<RedirectInterface> {
+            if (!(await this.redirectService.isRedirectSourceAvailable(input.source, nonEmptyScopeOrNothing(scope)))) {
+                throw new CometValidationException("Validation failed");
+            }
+
             const tranformedInput = plainToInstance(RedirectInput, input);
 
             const errors = await validate(tranformedInput, { whitelist: true, forbidNonWhitelisted: true });
@@ -122,6 +155,10 @@ export function createRedirectsResolver({
             const redirect = await this.repository.findOneOrFail(id);
             if (redirect != null && lastUpdatedAt) {
                 validateNotModified(redirect, lastUpdatedAt);
+            }
+
+            if (!(await this.redirectService.isRedirectSourceAvailable(input.source, redirect.scope, { excludedId: redirect.id }))) {
+                throw new CometValidationException("Validation failed");
             }
 
             wrap(redirect).assign({ ...tranformedInput, target: tranformedInput.target.transformToBlockData() });

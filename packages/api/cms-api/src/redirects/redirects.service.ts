@@ -2,11 +2,14 @@ import { EntityRepository, FilterQuery } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
+import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { PageTreeNodeInterface } from "../page-tree/types";
+import { RedirectFilter } from "./dto/redirects.filter";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
 import { REDIRECTS_LINK_BLOCK, RedirectsLinkBlock } from "./redirects.module";
+import { RedirectScopeInterface } from "./types";
 
 @Injectable()
 export class RedirectsService {
@@ -51,6 +54,20 @@ export class RedirectsService {
         }
     }
 
+    getFindConditionPaginatedRedirects(options: { search?: string; filter?: RedirectFilter }): FilterQuery<RedirectInterface> {
+        const andFilters = [];
+
+        if (options.search) {
+            andFilters.push(searchToMikroOrmQuery(options.search, ["source"]));
+        }
+
+        if (options.filter) {
+            andFilters.push(filtersToMikroOrmQuery(options.filter));
+        }
+
+        return andFilters.length > 0 ? { $and: andFilters } : {};
+    }
+
     async createAutomaticRedirects(node: PageTreeNodeInterface): Promise<void> {
         const readApi = this.pageTreeService.createReadApi({ visibility: "all" });
         const path = await readApi.nodePath(node);
@@ -81,5 +98,14 @@ export class RedirectsService {
         for (const childNode of childNodes) {
             await this.createAutomaticRedirects(childNode);
         }
+    }
+
+    async isRedirectSourceAvailable(source: string, scope: RedirectScopeInterface | undefined, options?: { excludedId?: string }): Promise<boolean> {
+        const where: FilterQuery<RedirectInterface> = { source, id: { $ne: options?.excludedId } };
+        if (scope !== undefined) {
+            where.scope = scope;
+        }
+        const redirect = await this.repository.findOne(where);
+        return redirect === null;
     }
 }

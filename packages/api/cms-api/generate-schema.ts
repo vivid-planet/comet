@@ -6,6 +6,7 @@ import { printSchema } from "graphql";
 
 import {
     BuildsResolver,
+    createAuthResolver,
     createPageTreeResolver,
     createRedirectsResolver,
     CurrentUserInterface,
@@ -18,8 +19,8 @@ import {
     PageTreeNodeBase,
     PageTreeNodeCategory,
 } from "./src";
-import { createAuthResolver } from "./src/auth/auth.resolver";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
+import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { DamItemsResolver } from "./src/dam/files/dam-items.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
@@ -82,7 +83,7 @@ async function generateSchema(): Promise<void> {
         PageTreeNode,
         Documents: [Page],
     }); // no scope
-    const AuthResolver = createAuthResolver(CurrentUser);
+    const AuthResolver = createAuthResolver({ currentUser: CurrentUser });
 
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,
@@ -93,6 +94,7 @@ async function generateSchema(): Promise<void> {
         FoldersResolver,
         pageTreeResolver,
         DamItemsResolver,
+        CronJobsResolver,
         AuthResolver,
     ]);
 

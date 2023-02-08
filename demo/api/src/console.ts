@@ -1,10 +1,14 @@
 import { AppModule } from "@src/app.module";
 import { BootstrapConsole } from "nestjs-console";
 
+import { createConfig } from "./config/config";
+
+const config = createConfig(process.env);
 const bootstrap = new BootstrapConsole({
-    module: AppModule,
+    module: AppModule.forRoot(config),
     useDecorators: true,
 });
+
 bootstrap.init().then(async (app) => {
     try {
         // init your app

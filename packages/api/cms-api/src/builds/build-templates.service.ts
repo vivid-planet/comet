@@ -3,8 +3,9 @@ import { Injectable } from "@nestjs/common";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { ContentScopeService } from "../content-scope/content-scope.service";
+import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { BUILDER_LABEL, INSTANCE_LABEL } from "./builds.constants";
+import { BUILDER_LABEL } from "./builds.constants";
 
 @Injectable()
 export class BuildTemplatesService {

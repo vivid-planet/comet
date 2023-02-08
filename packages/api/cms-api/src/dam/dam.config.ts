@@ -2,11 +2,12 @@ export interface DamConfig {
     filesBaseUrl: string;
     imagesBaseUrl: string;
     secret: string;
-    allowedImageSizes: string;
-    allowedAspectRatios: string;
+    allowedImageSizes: number[];
+    allowedAspectRatios: string[];
     cdnEnabled?: boolean;
     cdnDomain?: string;
     cdnOriginHeader?: string;
+    disableCdnOriginHeaderCheck?: boolean;
     filesDirectory: string;
     cacheDirectory: string;
     additionalMimeTypes?: string[];

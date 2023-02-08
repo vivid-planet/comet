@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "3.2.1",
+    "version": "3.2.2",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "bin": {
@@ -54,7 +54,7 @@
         "rxjs": "^7.0.0"
     },
     "dependencies": {
-        "@comet/blocks-api": "^3.2.1",
+        "@comet/blocks-api": "^3.2.2",
         "@hapi/accept": "^5.0.2",
         "@kubernetes/client-node": "^0.16.0",
         "@nestjs/jwt": "^9.0.0",
@@ -62,7 +62,7 @@
         "@nestjs/platform-express": "^9.0.0",
         "@types/get-image-colors": "^4.0.0",
         "base64url": "^3.0.0",
-        "class-validator": "^0.13.0",
+        "class-validator": "0.13.2",
         "commander": "^9.3.0",
         "cron-parser": "^3.0.0",
         "dataloader": "^2.1.0",
@@ -91,7 +91,7 @@
     },
     "devDependencies": {
         "@aws-sdk/types": "^3.47.0",
-        "@comet/eslint-config": "^3.2.1",
+        "@comet/eslint-config": "^3.2.2",
         "@mikro-orm/sqlite": "^5.0.0",
         "@types/express": "^4.0.0",
         "@types/jsonwebtoken": "^8.5.9",

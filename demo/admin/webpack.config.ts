@@ -131,7 +131,7 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
                 directory: path.join(__dirname, "public"),
             },
             host: "0.0.0.0",
-            port: Number(process.env.ADMIN_PORT || 8001),
+            port: Number(process.env.ADMIN_PORT || 8000),
             allowedHosts: "all",
             compress: true,
             historyApiFallback: true,

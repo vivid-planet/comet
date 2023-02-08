@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, HttpException, mixin } from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpException, Injectable, mixin } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard, IAuthGuard, Type } from "@nestjs/passport";
@@ -8,8 +8,9 @@ import { isObservable, lastValueFrom } from "rxjs";
 import { CurrentUserInterface } from "../current-user/current-user";
 import { allowForRoleMetadataKey } from "../decorators/allow-for-role.decorator";
 
-function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
-    class GlobalAuthGuard extends AuthGuard(type) implements CanActivate {
+export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
+    @Injectable()
+    class CometAuthGuard extends AuthGuard(type) implements CanActivate {
         constructor(private reflector: Reflector) {
             super();
         }
@@ -58,7 +59,5 @@ function CometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
             return isAllowed;
         }
     }
-    return mixin(GlobalAuthGuard);
+    return mixin(CometAuthGuard);
 }
-
-export class GlobalAuthGuard extends CometAuthGuard(["jwt", "basic"]) {}

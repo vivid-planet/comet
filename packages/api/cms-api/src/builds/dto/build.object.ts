@@ -2,8 +2,8 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 
 import { JobStatus } from "../../kubernetes/job-status.enum";
 
-@ObjectType("Build")
-export class BuildObject {
+@ObjectType()
+export class Build {
     @Field(() => ID)
     id: string;
 

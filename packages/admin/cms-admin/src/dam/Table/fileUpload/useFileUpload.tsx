@@ -107,7 +107,15 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         const acceptedMimetypes = options.acceptedMimetypes ?? allAcceptedMimeTypes;
 
         acceptedMimetypes.forEach((mimetype) => {
-            const extensions = mimedb[mimetype]?.extensions;
+            let extensions: readonly string[] | undefined;
+            if (mimetype === "application/x-zip-compressed") {
+                // zip files in Windows, not supported by mime-db
+                // see https://github.com/jshttp/mime-db/issues/245
+                extensions = ["zip"];
+            } else {
+                extensions = mimedb[mimetype]?.extensions;
+            }
+
             if (extensions) {
                 acceptObj[mimetype] = extensions.map((extension) => `.${extension}`);
             }
@@ -122,12 +130,12 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
     const [errorDialogOpen, setErrorDialogOpen] = React.useState<boolean>(false);
     const [totalSizes, setTotalSizes] = React.useState<{ [key: string]: number }>({});
-    const [loadedSizes, setLoadedSizes] = React.useState<{ [key: string]: number }>({});
+    const [uploadedSizes, setUploadedSizes] = React.useState<{ [key: string]: number }>({});
 
     const totalSize = Object.values(totalSizes).length > 0 ? Object.values(totalSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
-    const loadedSize = Object.values(loadedSizes).length > 0 ? Object.values(loadedSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
+    const uploadedSize = Object.values(uploadedSizes).length > 0 ? Object.values(uploadedSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
 
-    const maxFileSizeInMegabytes = parseInt(context.damConfig.maxFileSize);
+    const maxFileSizeInMegabytes = context.damConfig.maxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
     const cancelUpload = React.useRef<CancelTokenSource>();
 
@@ -138,12 +146,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         });
     };
 
-    const addTotalSize = (path: string, value: number) => {
-        setTotalSizes((prev) => ({ ...prev, [path]: value }));
-    };
-
     const updateLoadedSize = (path: string, value: number) => {
-        setLoadedSizes((prev) => ({ ...prev, [path]: value }));
+        setUploadedSizes((prev) => ({ ...prev, [path]: value }));
     };
 
     const generateValidationErrorsForRejectedFiles = React.useCallback(
@@ -170,7 +174,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                     name: folderName,
                     parentId: parentId,
                 },
-                fetchPolicy: "no-cache",
+                fetchPolicy: "network-only",
             });
 
             return data.damFolder?.id;
@@ -200,6 +204,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const createInitialFolderIdMap = React.useCallback(
         async (files: FileWithFolderPath[], currFolderId?: string) => {
             const folderIdMap = new Map<string, string>();
+            const lookupCache = new Map<string, string | undefined>();
 
             for (const file of files) {
                 let noLookup = false;
@@ -223,8 +228,13 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                     const parentId = folderIdMap.has(parentPath) ? folderIdMap.get(parentPath) : currFolderId;
 
                     if (!noLookup) {
-                        // parentId cannot be null because then noLookup would be true
-                        const id = await lookupDamFolder(folderName, parentId);
+                        let id: string | undefined;
+                        if (lookupCache.has(`${folderName}:${parentId}`)) {
+                            id = lookupCache.get(`${folderName}:${parentId}`);
+                        } else {
+                            id = await lookupDamFolder(folderName, parentId);
+                            lookupCache.set(`${folderName}:${parentId}`, id);
+                        }
 
                         if (id === undefined) {
                             // paths are looked up hierarchically starting with the first folder e.g.
@@ -350,9 +360,11 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             const filesWithFolderPaths = await addFolderPathToFiles(acceptedFiles);
             let folderIdMap = await createInitialFolderIdMap(filesWithFolderPaths, folderId);
 
+            const fileSizes: { [key: string]: number } = {};
             for (const file of filesWithFolderPaths) {
-                addTotalSize(file.path ?? "", file.size);
+                fileSizes[file.path ?? ""] = file.size;
             }
+            setTotalSizes(fileSizes);
 
             const filesToUpload = await handleDuplicatedFilenames(filesWithFolderPaths, folderId, folderIdMap);
 
@@ -382,7 +394,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                     const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
 
                     if (typedErr.response?.data.error === "CometImageResolutionException") {
-                        addValidationError(file, <MaxResolutionError maxResolution={Number(context.damConfig.maxSrcResolution)} />);
+                        addValidationError(file, <MaxResolutionError maxResolution={context.damConfig.maxSrcResolution} />);
                     } else if (typedErr.response?.data.error === "CometValidationException") {
                         const message = typedErr.response.data.message;
                         const extension = `.${file.name.split(".").pop()}`;
@@ -410,7 +422,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             setErrorDialogOpen(true);
         }
         setTotalSizes({});
-        setLoadedSizes({});
+        setUploadedSizes({});
         options.onAfterUpload?.(errorOccurred);
 
         addNewlyUploadedFileIds(uploadedFileIds);
@@ -430,7 +442,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                         setErrorDialogOpen(false);
                     }}
                 />
-                <ProgressDialog open={progressDialogOpen} totalSize={totalSize} loadedSize={loadedSize} />
+                <ProgressDialog open={progressDialogOpen} totalSize={totalSize} loadedSize={uploadedSize} />
             </>
         ),
         dropzoneConfig: {

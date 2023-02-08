@@ -1,5 +1,22 @@
 [
     {
+        "name": "Anchor",
+        "fields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "DamImage",
         "fields": [
             {
@@ -67,6 +84,11 @@
         "fields": [
             {
                 "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
                 "kind": "Boolean",
                 "nullable": true
             },
@@ -147,6 +169,11 @@
                 "nullable": true
             },
             {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
                 "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
@@ -184,6 +211,11 @@
         "name": "InternalLink",
         "fields": [
             {
+                "name": "targetPageAnchor",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "targetPage",
                 "kind": "NestedObject",
                 "object": {
@@ -202,6 +234,11 @@
                             "name": "path",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "documentType",
+                            "kind": "String",
+                            "nullable": false
                         }
                     ]
                 },
@@ -211,6 +248,11 @@
         "inputFields": [
             {
                 "name": "targetPageId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "targetPageAnchor",
                 "kind": "String",
                 "nullable": true
             }

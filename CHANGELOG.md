@@ -2,11 +2,53 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## NEXT
+## Next major
+
+### Highlights
+
+-   Add `AnchorBlock` to support linking to anchors
+
+### @comet/blocks-admin
+
+#### Changes
+
+-   Add `anchors` method to `BlockInterface` for a block to specify its anchors
 
 ### @comet/cms-admin
 
 -   Breaking: Remove dependency @comet/react-app-auth and all occurences
+-   Breaking: Rename Publisher to PublisherPage
+-   Use data grid instead of table for PublisherPage
+-   Breaking: changed CmsBlockContext.damConfig.maxFileSize/maxSrcResolution to number (was string previously)
+-   Breaking: removed the `<Chip />`-Component from the `infoTag` in the `DocumentInterface`.
+
+    **Before**
+
+    ```tsx
+    export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> = {
+        ...
+        InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
+            return <>{page.userGroup}</>;
+        },
+    };
+    ```
+
+    **After**
+
+    ```tsx
+    export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> = {
+        ...
+        InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
+            return <Chip size="small" label={page.userGroup} />;
+        },
+    };
+    ```
+
+#### Changes
+
+-   Add `AnchorBlock`
+-   Add support for anchors to `InternalLinkBlock`
+-   Add `anchors` method to `DocumentInterface` for a document to specify its anchors
 
 ### @comet/cms-api
 
@@ -18,15 +60,53 @@ All notable changes to this project will be documented in this file. This projec
     -   Breaking: BlocksTransformerMiddlewareFactory now needs BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES injected (change required in AppModule)
     -   New BlockTransformerService (request scoped) that can be used instead in FieldTransformer for improved performance (instead of relying on BlocksTransformerMiddlewareFactory)
     -   Optional: if all transforms are done using FieldTransformer, BlocksTransformerMiddlewareFactory and fieldResolverEnhancers can be removed for improved performance
+-   Breaking: Remove export for BuildObject (should not be needed in application land)
+-   Breaking: changed DamModule damConfig.allowedImageSizes/allowedAspectRatios to number[]/string[] (was string previously)
+
+#### Changes
+
+-   Add `AnchorBlock`
+-   Add support for anchors to `InternalLinkBlock`
 
 ### @comet/cms-site
 
 -   Breaking: Remove dependency next-auth and all occurences
 -   access-token-service-worker.js in not supported anymore, can be removed
 
+#### Changes
+
+-   Add `AnchorBlock`
+-   Add support for anchors to `InternalLinkBlock`
+
 ### @comet/eslint-config
 
 -   Enable [no-return-await](https://eslint.org/docs/latest/rules/no-return-await)
+
+## Next minor
+
+_tbd_
+
+### @comet/cms-api
+
+#### Changes
+
+-   Fix `createRedirect` mutation when no scoping is used
+
+### @comet/blocks-admin
+
+#### Changes
+
+-   Fix `createCompositeSetting` not working when using an array value
+
+## 3.2.2
+
+_Jan 25, 2023_
+
+### @comet/admin
+
+#### Changes
+
+-   Fix `readClipboardText()` not working in Firefox by using local storage as a fallback
 
 ## 3.2.1
 

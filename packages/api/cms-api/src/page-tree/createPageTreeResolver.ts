@@ -231,6 +231,15 @@ export function createPageTreeResolver({
             return readApi.getNodeOrFail(id);
         }
 
+        @Mutation(() => PageTreeNode)
+        @SubjectEntity(PageTreeNode)
+        async updatePageTreeNodeSlug(
+            @Args("id", { type: () => ID }) id: string,
+            @Args("slug", { type: () => String }) slug: string,
+        ): Promise<PageTreeNodeInterface> {
+            return this.pageTreeService.updateNodeSlug(id, slug);
+        }
+
         @Mutation(() => [PageTreeNode])
         @SubjectEntity(PageTreeNode, { idArg: "ids" })
         async movePageTreeNodesByPos(
