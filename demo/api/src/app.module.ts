@@ -124,26 +124,21 @@ export class AppModule {
                         },
                     }),
                 }),
-                DamModule.registerAsync(
-                    {
-                        imports: [ConfigModule],
-                        useFactory: async () => ({
-                            damConfig: {
-                                filesBaseUrl: `${config.apiUrl}/dam/files`,
-                                imagesBaseUrl: `${config.apiUrl}/dam/images`,
-                                secret: config.dam.secret,
-                                allowedImageSizes: config.dam.allowedImageSizes,
-                                allowedAspectRatios: config.dam.allowedImageAspectRatios,
-                                additionalMimeTypes: config.dam.additionalMimetypes,
-                                filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
-                                cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
-                                maxFileSize: config.dam.uploadsMaxFileSize,
-                            },
-                            imgproxyConfig: config.imgproxy,
-                        }),
+                DamModule.register({
+                    damConfig: {
+                        filesBaseUrl: `${config.apiUrl}/dam/files`,
+                        imagesBaseUrl: `${config.apiUrl}/dam/images`,
+                        secret: config.dam.secret,
+                        allowedImageSizes: config.dam.allowedImageSizes,
+                        allowedAspectRatios: config.dam.allowedImageAspectRatios,
+                        additionalMimeTypes: config.dam.additionalMimetypes,
+                        filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+                        cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+                        maxFileSize: config.dam.uploadsMaxFileSize,
                     },
-                    DamScope,
-                ),
+                    imgproxyConfig: config.imgproxy,
+                    Scope: DamScope,
+                }),
                 PublicUploadModule.registerAsync({
                     imports: [ConfigModule],
                     useFactory: async () => ({

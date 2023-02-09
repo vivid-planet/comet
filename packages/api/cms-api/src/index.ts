@@ -68,7 +68,7 @@ export { FocalPoint } from "./dam/common/enums/focal-point.enum";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";
 export { defaultDamAcceptedMimetypes } from "./dam/common/mimeTypes/default-dam-accepted-mimetypes";
 export { DamConfig } from "./dam/dam.config";
-export { DAM_CONFIG, DAM_MODULE_OPTIONS, IMGPROXY_CONFIG } from "./dam/dam.constants";
+export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
 export { DamScopeType } from "./dam/files/decorators/dam-scope-type.decorator";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
