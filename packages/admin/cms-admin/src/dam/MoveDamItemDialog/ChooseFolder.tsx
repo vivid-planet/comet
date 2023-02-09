@@ -16,15 +16,19 @@ interface Folder {
     hasChildren: boolean;
 }
 
-export const ChooseFolder = () => {
+interface ChooseFolderProps {
+    selectedId?: string | null;
+
+    onFolderClick: (id: string | null) => void;
+}
+
+export const ChooseFolder = ({ selectedId, onFolderClick }: ChooseFolderProps) => {
     const apolloClient = useApolloClient();
 
     const [folderTree, setFolderTree] = React.useState<TreeMap<Folder>>(new TreeMap<Folder>());
     const [expandedIds, setExpandedIds] = React.useState<string[]>([]);
     const [visibleNodes, setVisibleNodes] = React.useState<Array<{ element: Folder; level: number }>>([]);
     const [loadingChildrenOfIds, setLoadingChildrenOfIds] = React.useState<string[]>([]);
-
-    const [chosenId, setChosenId] = React.useState<string | null>();
 
     const loadChildFolder = async (id: string | null) => {
         setLoadingChildrenOfIds((ids) => {
@@ -84,9 +88,9 @@ export const ChooseFolder = () => {
                 Icon={PageTree}
                 message={<FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" />}
                 offset={20}
-                isChosen={chosenId === null}
+                isChosen={selectedId === null}
                 onClick={() => {
-                    setChosenId(null);
+                    onFolderClick(null);
                 }}
             />
             {visibleNodes.map(({ element: folder, level }) => {
@@ -108,9 +112,9 @@ export const ChooseFolder = () => {
                             }}
                             message={folder.name}
                             offset={20 + 36 * level}
-                            isChosen={chosenId === folder.id}
+                            isChosen={selectedId === folder.id}
                             onClick={() => {
-                                setChosenId(folder.id);
+                                onFolderClick(folder.id);
                             }}
                         />
                         {loadingChildrenOfIds.includes(folder.id) && (
