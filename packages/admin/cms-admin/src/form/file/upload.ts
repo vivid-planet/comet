@@ -2,8 +2,8 @@ import { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from "a
 
 interface UploadFileData {
     file: File;
+    scope: Record<string, unknown>;
     folderId?: string;
-    scope?: Record<string, unknown>;
 }
 
 export function upload<ResponseData>(
@@ -14,11 +14,9 @@ export function upload<ResponseData>(
 ): Promise<AxiosResponse<ResponseData>> {
     const formData = new FormData();
     formData.append("file", data.file);
+    formData.append("scope", JSON.stringify(data.scope));
     if (data.folderId !== undefined) {
         formData.append("folderId", data.folderId);
-    }
-    if (data.scope !== undefined && Object.keys(data.scope).length > 0) {
-        formData.append("scope", JSON.stringify(data.scope));
     }
     return apiClient.post<ResponseData>(`/dam/files/upload`, formData, {
         ...options,

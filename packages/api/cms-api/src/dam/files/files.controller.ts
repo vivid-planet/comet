@@ -25,6 +25,7 @@ import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
+import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createUploadFileBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
@@ -34,7 +35,14 @@ import { calculatePartialRanges, createHashedPath } from "./files.utils";
 
 const fileUrl = `:fileId/:filename`;
 
-export function createFilesController({ Scope }: { Scope?: Type<DamScopeInterface> }): Type<unknown> {
+export function createFilesController({ Scope: PassedScope }: { Scope?: Type<DamScopeInterface> }): Type<unknown> {
+    const Scope = PassedScope ?? EmptyDamScope;
+    const hasNonEmptyScope = PassedScope != null;
+
+    function nonEmptyScopeOrNothing(scope: DamScopeInterface): DamScopeInterface | undefined {
+        return hasNonEmptyScope ? scope : undefined;
+    }
+
     const UploadFileBody = createUploadFileBody({ Scope });
 
     @Controller("dam/files")
@@ -55,7 +63,8 @@ export function createFilesController({ Scope }: { Scope?: Type<DamScopeInterfac
                 throw new CometValidationException("Validation failed", errors);
             }
 
-            const uploadedFile = await this.filesService.upload(file, transformedBody);
+            const { scope, folderId } = transformedBody;
+            const uploadedFile = await this.filesService.upload({ file, folderId }, nonEmptyScopeOrNothing(scope));
             return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
         }
 
