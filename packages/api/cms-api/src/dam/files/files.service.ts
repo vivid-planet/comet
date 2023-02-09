@@ -215,6 +215,12 @@ export class FilesService {
             entity.image.cropArea = image.cropArea;
         }
 
+        const entityWithSameName = await this.findOneByFilenameAndFolder({ filename: entity.name, folderId }, entity.scope);
+
+        if (entityWithSameName !== null && entityWithSameName.id !== entity.id) {
+            throw new Error(`Entity with name '${entity.name}' already exists in ${folder ? `folder '${folder.name}'` : "root folder"}`);
+        }
+
         const file = Object.assign(entity, {
             ...input,
             folder: folderId !== undefined ? folder : entity.folder,

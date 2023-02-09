@@ -7,9 +7,6 @@ import { DamScopeInterface } from "../../types";
 import { FileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 
-export const UniqueNameInFolderIndex = "IDX_unique_name_in_folder";
-export const UniqueNameInRootFolderIndex = "IDX_unique_name_in_root_folder";
-
 export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt" | "archived";
     id: string;
@@ -30,9 +27,6 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
     @Entity({ abstract: true })
     @ObjectType({ isAbstract: true })
-    // MikroORM doesn't support conditional indices (yet): https://github.com/mikro-orm/mikro-orm/issues/1029
-    // @Index({ name: UniqueNameInFolderIndex, properties: ["folder", "name"], options: { where: '"folderId" IS NOT NULL' }, unique: true })
-    // @Index({ name: UniqueNameInRootFolderIndex, properties: ["name"], where: '"folderId" IS NULL', unique: true })
     class FileBase extends BaseEntity<FileBase, "id"> implements FileInterface {
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
