@@ -24,6 +24,8 @@ export const ChooseFolder = () => {
     const [visibleNodes, setVisibleNodes] = React.useState<Array<{ element: Folder; level: number }>>([]);
     const [loadingChildrenOfIds, setLoadingChildrenOfIds] = React.useState<string[]>([]);
 
+    const [chosenId, setChosenId] = React.useState<string | null>();
+
     const loadChildFolder = async (id: string | null) => {
         setLoadingChildrenOfIds((ids) => {
             if (id !== null) {
@@ -82,6 +84,10 @@ export const ChooseFolder = () => {
                 Icon={PageTree}
                 message={<FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" />}
                 offset={20}
+                isChosen={chosenId === null}
+                onClick={() => {
+                    setChosenId(null);
+                }}
             />
             {visibleNodes.map(({ element: folder, level }) => {
                 return (
@@ -102,6 +108,10 @@ export const ChooseFolder = () => {
                             }}
                             message={folder.name}
                             offset={20 + 36 * level}
+                            isChosen={chosenId === folder.id}
+                            onClick={() => {
+                                setChosenId(folder.id);
+                            }}
                         />
                         {loadingChildrenOfIds.includes(folder.id) && (
                             <ChooseFolderItem
@@ -116,7 +126,7 @@ export const ChooseFolder = () => {
     );
 };
 
-const StyledListItem = styled(ListItem)<{ offset: number }>`
+const StyledListItem = styled(ListItem)<{ offset: number; isChosen: boolean }>`
     display: flex;
     justify-content: space-between;
 
@@ -138,19 +148,45 @@ const StyledListItem = styled(ListItem)<{ offset: number }>`
         border-right: solid 2px ${({ theme }) => theme.palette.primary.main};
         background: ${({ theme }) => theme.palette.grey[50]};
     }
+
+    ${({ isChosen, theme }) => {
+        return isChosen
+            ? `
+                border-top: solid 2px ${theme.palette.primary.main};
+                border-bottom: solid 2px ${theme.palette.primary.main};
+                border-left: solid 2px ${theme.palette.primary.main};
+                border-right: solid 2px ${theme.palette.primary.main};
+                
+                &:last-child {
+                    border-bottom: solid 2px ${theme.palette.primary.main};
+                }
+            `
+            : null;
+    }}
 `;
 
 interface ChooseFolderItemProps {
     Icon?: React.ComponentType<SvgIconProps>;
     onIconClick?: () => void;
+    onClick?: () => void;
     message: React.ReactNode;
     offset: number;
+    isChosen?: boolean;
 }
-const ChooseFolderItem = ({ Icon, onIconClick, message, offset }: ChooseFolderItemProps) => {
+const ChooseFolderItem = ({ Icon, onIconClick, onClick, message, offset, isChosen = false }: ChooseFolderItemProps) => {
     return (
-        <StyledListItem offset={Icon ? offset : offset + 20 + 16}>
+        <StyledListItem offset={Icon ? offset : offset + 20 + 16} isChosen={isChosen} onClick={onClick}>
             <div>
-                {Icon && <Icon sx={{ marginRight: "20px" }} onClick={onIconClick} />} {message}
+                {Icon && (
+                    <Icon
+                        sx={{ marginRight: "20px" }}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            onIconClick?.();
+                        }}
+                    />
+                )}{" "}
+                {message}
             </div>
             <ArrowRight />
         </StyledListItem>
