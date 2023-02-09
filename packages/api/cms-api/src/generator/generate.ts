@@ -13,6 +13,7 @@ const generate = new Command("generate").action(async (options) => {
     for (const name in entities) {
         const entity = entities[name];
         if (!entity.class) {
+            // Ignore e.g. relation entities that don't have a class
             continue;
         }
         {
