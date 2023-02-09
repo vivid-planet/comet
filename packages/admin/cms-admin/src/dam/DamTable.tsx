@@ -34,7 +34,6 @@ import FolderDataGrid from "./DataGrid/FolderDataGrid";
 import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
 import EditFile from "./FileForm/EditFile";
-import { MoveDamItemDialog } from "./MoveDamItemDialog/MoveDamItemDialog";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
     && {
@@ -116,9 +115,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             />
                         </ToolbarActions>
                     </Toolbar>
-
-                    <MoveDamItemDialog />
-
                     <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
                 </EditDialogApiContext.Provider>
             </StackPage>

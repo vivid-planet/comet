@@ -41,7 +41,7 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
                     startIcon={<Move />}
                     variant="contained"
                     onClick={() => {
-                        if (selectedId) {
+                        if (selectedId !== undefined) {
                             onChooseFolder(selectedId);
                         }
                     }}

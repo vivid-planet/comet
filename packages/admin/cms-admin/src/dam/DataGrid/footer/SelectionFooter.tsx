@@ -27,9 +27,10 @@ const ButtonGroup = styled("div")`
 interface DamSelectionFooterProps {
     open: boolean;
     selectedItemsMap?: DamItemSelectionMap;
+    onOpenMoveDialog: () => void;
 }
 
-export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterProps> = ({ open, selectedItemsMap }) => {
+export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterProps> = ({ open, selectedItemsMap, onOpenMoveDialog }) => {
     const apolloClient = useApolloClient();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
@@ -114,7 +115,14 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                             }}
                         />
                     </SaveButton>
-                    <Button color="secondary" variant="contained" startIcon={<Move />}>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        startIcon={<Move />}
+                        onClick={() => {
+                            onOpenMoveDialog();
+                        }}
+                    >
                         <FormattedMessage
                             id="comet.dam.footer.move"
                             defaultMessage="Move {num, plural, one {one item} other {# items}}"
