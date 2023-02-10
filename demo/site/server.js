@@ -17,6 +17,9 @@ const handle = app.getRequestHandler();
 
 app.prepare()
     .then(() => {
+        if (process.env.TRACING_ENABLED) {
+            require("./tracing");
+        }
         createServer(async (req, res) => {
             try {
                 // Be sure to pass `true` as the second argument to `url.parse`.
