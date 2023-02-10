@@ -1,17 +1,20 @@
-import { useApolloClient } from "@apollo/client";
-import { ArrowRight, PageTree, TreeCollapse, TreeExpand } from "@comet/admin-icons";
+import { useQuery } from "@apollo/client";
+import { ArrowRight, BallTriangle, PageTree, TreeCollapse, TreeExpand } from "@comet/admin-icons";
 import { List, ListItem, SvgIconProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import escapeRegExp from "lodash.escaperegexp";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLChooseFolderFoldersQuery, GQLChooseFolderFoldersQueryVariables } from "../../graphql.generated";
+import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
+import { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "../../graphql.generated";
 import { traversePreOrder, TreeMap } from "../../pages/pageTree/treemap/TreeMapUtils";
-import { foldersQuery } from "./ChooseFolder.gql";
+import { allFoldersQuery } from "./ChooseFolder.gql";
 
 interface Folder {
     id: string;
     name: string;
+    mpath: string[];
     parentId: string | null;
     hasChildren: boolean;
 }
@@ -20,67 +23,112 @@ interface ChooseFolderProps {
     selectedId?: string | null;
 
     onFolderClick: (id: string | null) => void;
+
+    searchQuery?: string;
 }
 
-export const ChooseFolder = ({ selectedId, onFolderClick }: ChooseFolderProps) => {
-    const apolloClient = useApolloClient();
-
+export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseFolderProps) => {
     const [folderTree, setFolderTree] = React.useState<TreeMap<Folder>>(new TreeMap<Folder>());
-    const [expandedIds, setExpandedIds] = React.useState<string[]>([]);
+    const [expandedIds, setExpandedIds] = React.useState<Set<string>>(new Set());
     const [visibleNodes, setVisibleNodes] = React.useState<Array<{ element: Folder; level: number }>>([]);
-    const [loadingChildrenOfIds, setLoadingChildrenOfIds] = React.useState<string[]>([]);
+    const [matches, setMatches] = React.useState<Map<string, TextMatch[]>>();
 
-    const loadChildFolder = async (id: string | null) => {
-        setLoadingChildrenOfIds((ids) => {
-            if (id !== null) {
-                return [...ids, id];
-            }
-            return ids;
-        });
-
-        const { data } = await apolloClient.query<GQLChooseFolderFoldersQuery, GQLChooseFolderFoldersQueryVariables>({
-            query: foldersQuery,
-            variables: {
-                parentId: id,
-            },
-        });
-
-        setLoadingChildrenOfIds((ids) => ids.filter((loadingId) => loadingId !== id));
-
-        const folders = data.damFolders.map((folder) => {
-            return { id: folder.id, name: folder.name, parentId: folder.parent?.id ?? null, hasChildren: folder.numberOfChildFolders > 0 };
-        });
-
-        setFolderTree((existingTreeMap) => {
-            const newTreeMap = new TreeMap(existingTreeMap);
-            newTreeMap.set(id ?? "root", folders);
-
-            return newTreeMap;
-        });
-    };
+    const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
+        fetchPolicy: "network-only",
+    });
 
     React.useEffect(() => {
-        loadChildFolder(null);
+        if (data === undefined) {
+            return;
+        }
 
-        // This useEffect is for initially loading all folders on level 1
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        const internalFolderTree = new TreeMap<Folder>();
+
+        for (const folder of data.damFoldersWithoutFilters) {
+            const parentId = folder.parent?.id ?? "root";
+
+            let existingSiblingFolders: Folder[] = [];
+            if (internalFolderTree.has(parentId)) {
+                existingSiblingFolders = internalFolderTree.get(parentId) as Folder[];
+            }
+
+            internalFolderTree.set(parentId, [
+                ...existingSiblingFolders,
+                {
+                    id: folder.id,
+                    name: folder.name,
+                    mpath: folder.mpath,
+                    parentId: folder.parent?.id ?? null,
+                    hasChildren: folder.numberOfChildFolders > 0,
+                },
+            ]);
+        }
+
+        setFolderTree(internalFolderTree);
+    }, [data]);
 
     React.useEffect(() => {
         const internalVisibleNodes: Array<{ element: Folder; level: number }> = [];
 
         traversePreOrder(folderTree, (element, level) => {
-            const parentIsVisible =
-                element.parentId !== null ? internalVisibleNodes.find((otherNode) => otherNode.element.id === element.parentId) : true;
-            const parentIsExpanded = element.parentId !== null ? expandedIds.includes(element.parentId) : true;
+            const isParentVisible = element.parentId !== null ? internalVisibleNodes.find((node) => node.element.id === element.parentId) : true;
+            const isParentExpanded = element.parentId !== null ? expandedIds.has(element.parentId) : true;
 
-            if (parentIsVisible && parentIsExpanded) {
+            if (isParentVisible && isParentExpanded) {
                 internalVisibleNodes.push({ element, level });
             }
         });
 
         setVisibleNodes(internalVisibleNodes);
     }, [expandedIds, folderTree]);
+
+    React.useEffect(() => {
+        if (searchQuery === undefined || searchQuery.length === 0) {
+            setMatches(new Map());
+            return;
+        }
+
+        const matches = new Map<string, TextMatch[]>();
+        const regex = new RegExp(`(${escapeRegExp(searchQuery)})`, "gi");
+
+        setExpandedIds((expandedIds) => {
+            const newExpandedIds = new Set(expandedIds);
+
+            traversePreOrder(folderTree, (element) => {
+                let hasMatch = false;
+
+                let match: RegExpExecArray | null;
+                while ((match = regex.exec(element.name)) !== null) {
+                    hasMatch = true;
+
+                    const existingMatches = matches.get(element.id);
+
+                    matches.set(element.id, [
+                        ...(existingMatches || []),
+                        {
+                            start: match.index,
+                            end: match.index + searchQuery.length - 1,
+                            focused: matches.size === 0,
+                        },
+                    ]);
+                }
+
+                if (hasMatch) {
+                    newExpandedIds.add(element.id);
+                    for (const ancestorId of element.mpath) {
+                        newExpandedIds.add(ancestorId);
+                    }
+                }
+            });
+
+            setMatches(matches);
+
+            return newExpandedIds;
+        });
+
+        // This should only be executed if the searchQuery changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchQuery]);
 
     return (
         <List>
@@ -93,36 +141,41 @@ export const ChooseFolder = ({ selectedId, onFolderClick }: ChooseFolderProps) =
                     onFolderClick(null);
                 }}
             />
+            {loading && <LoadingListItem />}
             {visibleNodes.map(({ element: folder, level }) => {
                 return (
                     <>
                         <ChooseFolderItem
                             key={folder.id}
-                            Icon={folder.hasChildren ? (expandedIds.includes(folder.id) ? TreeCollapse : TreeExpand) : undefined}
+                            Icon={folder.hasChildren ? (expandedIds.has(folder.id) ? TreeCollapse : TreeExpand) : undefined}
                             onIconClick={() => {
-                                if (expandedIds.includes(folder.id)) {
-                                    setExpandedIds((expandedIds) => expandedIds.filter((id) => id !== folder.id));
+                                if (expandedIds.has(folder.id)) {
+                                    setExpandedIds((expandedIds) => {
+                                        const newExpandedIds = new Set(expandedIds);
+                                        newExpandedIds.delete(folder.id);
+                                        return newExpandedIds;
+                                    });
                                 } else {
-                                    setExpandedIds((expandedIds) => [...expandedIds, folder.id]);
-
-                                    if (!folderTree.has(folder.id)) {
-                                        loadChildFolder(folder.id);
-                                    }
+                                    setExpandedIds((expandedIds) => {
+                                        const newExpandedIds = new Set(expandedIds);
+                                        newExpandedIds.add(folder.id);
+                                        return newExpandedIds;
+                                    });
                                 }
                             }}
-                            message={folder.name}
+                            message={
+                                matches?.has(folder.id) ? (
+                                    <MarkedMatches text={folder.name} matches={matches.get(folder.id) as TextMatch[]} />
+                                ) : (
+                                    folder.name
+                                )
+                            }
                             offset={20 + 36 * level}
                             isChosen={selectedId === folder.id}
                             onClick={() => {
                                 onFolderClick(folder.id);
                             }}
                         />
-                        {loadingChildrenOfIds.includes(folder.id) && (
-                            <ChooseFolderItem
-                                message={<FormattedMessage id="comet.dam.chooseFolder.loading" defaultMessage="Loading ..." />}
-                                offset={20 + 36 * (level + 1)}
-                            />
-                        )}
                     </>
                 );
             })}
@@ -130,7 +183,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick }: ChooseFolderProps) =
     );
 };
 
-const StyledListItem = styled(ListItem)<{ offset: number; isChosen: boolean }>`
+const StyledListItem = styled(ListItem)<{ offset: number; isChosen?: boolean }>`
     display: flex;
     justify-content: space-between;
 
@@ -193,6 +246,17 @@ const ChooseFolderItem = ({ Icon, onIconClick, onClick, message, offset, isChose
                 {message}
             </div>
             <ArrowRight />
+        </StyledListItem>
+    );
+};
+
+const LoadingListItem = () => {
+    return (
+        <StyledListItem offset={20 + 36}>
+            <div>
+                <BallTriangle sx={{ marginRight: "20px" }} />
+                <FormattedMessage id="comet.dam.moveDamItemDialog.loading" defaultMessage="Loading ..." />
+            </div>
         </StyledListItem>
     );
 };

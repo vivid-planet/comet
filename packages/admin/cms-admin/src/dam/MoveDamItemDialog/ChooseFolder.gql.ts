@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
 
-export const foldersQuery = gql`
-    query ChooseFolderFolders($parentId: ID, $searchText: String) {
-        damFolders(parentId: $parentId, filter: { searchText: $searchText }, sortColumnName: "name") {
+export const allFoldersQuery = gql`
+    query AllFoldersWithoutFilters {
+        damFoldersWithoutFilters {
             id
             name
+            mpath
             numberOfChildFolders
             parent {
                 id
