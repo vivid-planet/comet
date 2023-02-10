@@ -14,25 +14,6 @@ export class FolderFilterInput {
 }
 
 @ArgsType()
-export class AllFoldersArgs extends SortArgs {
-    @Field(() => ID, { nullable: true })
-    @IsOptional()
-    @IsUUID()
-    parentId?: string;
-
-    @Field({ nullable: true })
-    @IsOptional()
-    @IsBoolean()
-    includeArchived?: boolean;
-
-    @Field(() => FolderFilterInput, { nullable: true })
-    @Type(() => FolderFilterInput)
-    @IsOptional()
-    @ValidateNested()
-    filter?: FolderFilterInput;
-}
-
-@ArgsType()
 export class FolderArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {
     @Field(() => ID, { nullable: true })
     @IsOptional()

@@ -69,7 +69,13 @@ export class FoldersService {
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
     ) {}
 
-    async findAll({ parentId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FolderArgs, "offset" | "limit">): Promise<Folder[]> {
+    async findAllByParentId({
+        parentId,
+        includeArchived,
+        filter,
+        sortColumnName,
+        sortDirection,
+    }: Omit<FolderArgs, "offset" | "limit">): Promise<Folder[]> {
         const qb = withFoldersSelect(this.selectQueryBuilder(), {
             includeArchived,
             parentId,
@@ -79,6 +85,10 @@ export class FoldersService {
         });
 
         return qb.getResult();
+    }
+
+    async findAllWithoutFilters(): Promise<Folder[]> {
+        return this.selectQueryBuilder().getResult();
     }
 
     async findAndCount({ parentId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: FolderArgs): Promise<[Folder[], number]> {
@@ -198,7 +208,7 @@ export class FoldersService {
             await this.filesService.delete(file.id);
         }
 
-        const subFolders = await this.findAll({ parentId: id });
+        const subFolders = await this.findAllByParentId({ parentId: id });
         for (const subFolder of subFolders) {
             await this.delete(subFolder.id);
         }
