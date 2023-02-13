@@ -29,6 +29,7 @@ import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { FileInterface } from "./entities/file.entity";
 import { FileImage } from "./entities/file-image.entity";
+import { FolderInterface } from "./entities/folder.entity";
 import { createHashedPath, slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
@@ -228,38 +229,19 @@ export class FilesService {
         return this.save(file);
     }
 
-    async moveBatch({ fileIds, targetFolderId }: { fileIds: string[]; targetFolderId?: string }): Promise<FileInterface[]> {
-        let targetFolderScope: DamScopeInterface | undefined;
+    async moveBatch(files: FileInterface[], targetFolder?: FolderInterface): Promise<FileInterface[]> {
+        const updatedFiles = [];
 
-        if (targetFolderId) {
-            const targetFolder = await this.foldersService.findOneById(targetFolderId);
-
-            if (!targetFolder) {
-                throw new Error("Target folder doesn't exist");
-            }
-
-            targetFolderScope = targetFolder.scope;
-        }
-
-        const files = [];
-
-        for (const id of fileIds) {
-            let file = await this.findOneById(id);
-
-            if (!file) {
-                throw new Error("File doesn't exist");
-            }
-
+        for (const file of files) {
             // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (targetFolderScope && !isEqual({ ...file.scope }, { ...targetFolderScope })) {
+            if (targetFolder?.scope !== undefined && !isEqual({ ...file.scope }, { ...targetFolder.scope })) {
                 throw new Error("Target folder scope doesn't match file scope");
             }
 
-            file = await this.updateByEntity(file, { folderId: targetFolderId });
-            files.push(file);
+            updatedFiles.push(await this.updateByEntity(file, { folderId: targetFolder?.id }));
         }
 
-        return files;
+        return updatedFiles;
     }
 
     async delete(id: string): Promise<boolean> {

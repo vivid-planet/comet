@@ -4,9 +4,12 @@ import { NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { basename, extname } from "path";
 
+import { CurrentUserInterface } from "../../auth/current-user/current-user";
+import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { SubjectEntity } from "../../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
+import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
@@ -14,6 +17,7 @@ import { createFileArgs, FileArgsInterface } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { FileInterface } from "./entities/file.entity";
+import { FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 import { slugifyFilename } from "./files.utils";
 
@@ -40,6 +44,8 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         constructor(
             private readonly filesService: FilesService,
             @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
+            @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
+            private readonly contentScopeService: ContentScopeService,
         ) {}
 
         @Query(() => PaginatedDamFiles)
@@ -68,13 +74,35 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => [File])
-        // TODO add scope validation for all files
         @SkipBuild()
         async moveDamFiles(
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
-            @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
+            @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string | null | undefined,
+            @GetCurrentUser() user: CurrentUserInterface,
         ): Promise<FileInterface[]> {
-            return this.filesService.moveBatch({ fileIds, targetFolderId });
+            let targetFolder;
+
+            if (targetFolderId != null) {
+                targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
+
+                if (targetFolder.scope !== undefined && !this.contentScopeService.canAccessScope(targetFolder.scope, user)) {
+                    throw new Error("Can't access parent folder");
+                }
+            }
+
+            const files = [];
+
+            for (const id of fileIds) {
+                const file = await this.filesRepository.findOneOrFail(id);
+
+                if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
+                    throw new Error("Can't access file");
+                }
+
+                files.push(file);
+            }
+
+            return this.filesService.moveBatch(files, targetFolder);
         }
 
         @Mutation(() => File)
