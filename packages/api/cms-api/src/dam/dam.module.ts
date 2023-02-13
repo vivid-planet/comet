@@ -1,5 +1,6 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
+import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule } from "..";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
@@ -48,20 +49,42 @@ export class DamModule {
 
         const Folder = createFolderEntity({ Scope });
         const File = createFileEntity({ Scope, Folder });
+        const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
+        const FilesResolver = createFilesResolver({ File, Scope });
+        const FoldersResolver = createFoldersResolver({ Folder, Scope });
+
+        if (Scope) {
+            // Scope validation needs to happen after resolver generation. Otherwise the input type metadata has not been defined yet.
+            const scopeObjectType = TypeMetadataStorage.getObjectTypeMetadataByTarget(Scope);
+
+            if (scopeObjectType?.name !== "DamScope") {
+                throw new Error(
+                    `Invalid object type name for provided DAM scope class. Make sure to decorate the class with @ObjectType("DamScope")`,
+                );
+            }
+
+            const scopeInputType = TypeMetadataStorage.getInputTypeMetadataByTarget(Scope);
+
+            if (scopeInputType?.name !== "DamScopeInput") {
+                throw new Error(
+                    `Invalid input type name for provided DAM scope class. Make sure to decorate the class with @InputType("DamScopeInput")`,
+                );
+            }
+        }
 
         return {
             module: DamModule,
             imports: [MikroOrmModule.forFeature([File, Folder, FileImage, ImageCropArea]), BlobStorageModule],
             providers: [
                 damConfigProvider,
-                createDamItemsResolver({ File, Folder, Scope }),
+                DamItemsResolver,
                 DamItemsService,
                 imgproxyConfigProvider,
                 ScaledImagesCacheService,
                 ImgproxyService,
-                createFilesResolver({ File, Scope }),
+                FilesResolver,
                 FilesService,
-                createFoldersResolver({ Folder, Scope }),
+                FoldersResolver,
                 FoldersService,
                 ImagesService,
                 IsAllowedImageSizeConstraint,

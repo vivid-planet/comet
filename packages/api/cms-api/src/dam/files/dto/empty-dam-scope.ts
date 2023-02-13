@@ -1,9 +1,9 @@
-import { Field } from "@nestjs/graphql";
+import { Field, InputType, ObjectType } from "@nestjs/graphql";
 
 import { DamScopeInterface } from "../../types";
-import { DamScopeType } from "../decorators/dam-scope-type.decorator";
 
-@DamScopeType()
+@ObjectType("DamScope")
+@InputType("DamScopeInput")
 export class EmptyDamScope implements DamScopeInterface {
     [key: string]: unknown;
     // empty scope
