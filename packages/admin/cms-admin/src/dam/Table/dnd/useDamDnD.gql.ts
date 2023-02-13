@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const moveDamFilesMutation = gql`
-    mutation MoveDamFiles($fileIds: [ID!]!, $targetFolderId: ID, $scope: DamScopeInput!) {
-        moveDamFiles(fileIds: $fileIds, targetFolderId: $targetFolderId, scope: $scope) {
+    mutation MoveDamFiles($fileIds: [ID!]!, $targetFolderId: ID) {
+        moveDamFiles(fileIds: $fileIds, targetFolderId: $targetFolderId) {
             id
         }
     }

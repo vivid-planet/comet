@@ -228,10 +228,9 @@ export class FilesService {
         return this.save(file);
     }
 
-    async moveBatch(
-        { fileIds, targetFolderId }: { fileIds: string[]; targetFolderId?: string },
-        scope?: DamScopeInterface,
-    ): Promise<FileInterface[]> {
+    async moveBatch({ fileIds, targetFolderId }: { fileIds: string[]; targetFolderId?: string }): Promise<FileInterface[]> {
+        let targetFolderScope: DamScopeInterface | undefined;
+
         if (targetFolderId) {
             const targetFolder = await this.foldersService.findOneById(targetFolderId);
 
@@ -239,10 +238,7 @@ export class FilesService {
                 throw new Error("Target folder doesn't exist");
             }
 
-            // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (scope && targetFolder.scope && !isEqual({ ...targetFolder.scope }, scope)) {
-                throw new Error("Scope arg doesn't match folder scope");
-            }
+            targetFolderScope = targetFolder.scope;
         }
 
         const files = [];
@@ -255,8 +251,8 @@ export class FilesService {
             }
 
             // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (scope && file.scope && !isEqual({ ...file.scope }, scope)) {
-                throw new Error("Scope arg doesn't match file scope");
+            if (targetFolderScope && !isEqual({ ...file.scope }, { ...targetFolderScope })) {
+                throw new Error("Target folder scope doesn't match file scope");
             }
 
             file = await this.updateByEntity(file, { folderId: targetFolderId });

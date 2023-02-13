@@ -313,7 +313,7 @@ type Mutation {
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
-  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput = {}): [DamFile!]!
+  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
   restoreDamFile(id: ID!): DamFile!
   deleteDamFile(id: ID!): Boolean!

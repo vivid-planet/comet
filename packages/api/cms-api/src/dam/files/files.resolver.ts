@@ -68,13 +68,13 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => [File])
+        // TODO add scope validation for all files
         @SkipBuild()
         async moveDamFiles(
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
             @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
-            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
         ): Promise<FileInterface[]> {
-            return this.filesService.moveBatch({ fileIds, targetFolderId }, nonEmptyScopeOrNothing(scope));
+            return this.filesService.moveBatch({ fileIds, targetFolderId });
         }
 
         @Mutation(() => File)

@@ -71,7 +71,6 @@ export const useDamDnD = (): DamDnDApi => {
                     variables: {
                         fileIds,
                         targetFolderId: dropTargetItem.id,
-                        scope,
                     },
                     optimisticResponse: ({ fileIds }) => {
                         return {
