@@ -32,7 +32,7 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
             <DialogTitle>
                 <FormattedMessage id="comet.dam.moveDamItemDialog.selectTargetFolder" defaultMessage="Select target folder" />
             </DialogTitle>
-            <DialogContent>
+            <DialogContent sx={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
                 <div
                     style={{
                         width: "100%",
@@ -42,13 +42,15 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
                 >
                     <input onChange={debouncedOnChange} />
                 </div>
-                <ChooseFolder
-                    selectedId={selectedId}
-                    onFolderClick={(id: string | null) => {
-                        setSelectedId(id);
-                    }}
-                    searchQuery={searchQuery}
-                />
+                <div style={{ flexGrow: 1 }}>
+                    <ChooseFolder
+                        selectedId={selectedId}
+                        onFolderClick={(id: string | null) => {
+                            setSelectedId(id);
+                        }}
+                        searchQuery={searchQuery}
+                    />
+                </div>
             </DialogContent>
             <DialogActions>
                 <Button

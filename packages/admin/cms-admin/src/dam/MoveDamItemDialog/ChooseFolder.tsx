@@ -1,10 +1,12 @@
 import { useQuery } from "@apollo/client";
 import { ArrowRight, BallTriangle, PageTree, TreeCollapse, TreeExpand } from "@comet/admin-icons";
-import { List, ListItem, SvgIconProps } from "@mui/material";
+import { ListItem, SvgIconProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import escapeRegExp from "lodash.escaperegexp";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 
 import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
 import { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "../../graphql.generated";
@@ -20,9 +22,7 @@ interface Folder {
 
 interface ChooseFolderProps {
     selectedId?: string | null;
-
     onFolderClick: (id: string | null) => void;
-
     searchQuery?: string;
 }
 
@@ -129,55 +129,87 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseF
     }, [searchQuery]);
 
     return (
-        <List>
-            <ChooseFolderItem
-                Icon={PageTree}
-                message={<FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" />}
-                offset={20}
-                isChosen={selectedId === null}
-                onClick={() => {
-                    onFolderClick(null);
-                }}
-            />
-            {loading && <LoadingListItem />}
-            {visibleNodes.map(({ element: folder, level }) => {
+        <AutoSizer>
+            {({ height, width }) => {
                 return (
-                    <>
-                        <ChooseFolderItem
-                            key={folder.id}
-                            Icon={folderTree.has(folder.id) ? (expandedIds.has(folder.id) ? TreeCollapse : TreeExpand) : undefined}
-                            onIconClick={() => {
-                                if (expandedIds.has(folder.id)) {
-                                    setExpandedIds((expandedIds) => {
-                                        const newExpandedIds = new Set(expandedIds);
-                                        newExpandedIds.delete(folder.id);
-                                        return newExpandedIds;
-                                    });
-                                } else {
-                                    setExpandedIds((expandedIds) => {
-                                        const newExpandedIds = new Set(expandedIds);
-                                        newExpandedIds.add(folder.id);
-                                        return newExpandedIds;
-                                    });
-                                }
-                            }}
-                            message={
-                                matches?.has(folder.id) ? (
-                                    <MarkedMatches text={folder.name} matches={matches.get(folder.id) as TextMatch[]} />
-                                ) : (
-                                    folder.name
-                                )
+                    <List
+                        height={height}
+                        width={width}
+                        itemCount={visibleNodes.length + 1}
+                        itemSize={56}
+                        overscanCount={1} // do not increase this for performance reasons
+                        style={{ scrollBehavior: "smooth" }}
+                    >
+                        {({ index, style }) => {
+                            if (loading) {
+                                return (
+                                    <StyledListItem offset={20 + 36} style={style}>
+                                        <div>
+                                            <BallTriangle sx={{ marginRight: "20px" }} />
+                                            <FormattedMessage id="comet.dam.moveDamItemDialog.loading" defaultMessage="Loading ..." />
+                                        </div>
+                                    </StyledListItem>
+                                );
                             }
-                            offset={20 + 36 * level}
-                            isChosen={selectedId === folder.id}
-                            onClick={() => {
-                                onFolderClick(folder.id);
-                            }}
-                        />
-                    </>
+
+                            if (index === 0) {
+                                return (
+                                    <ChooseFolderItem
+                                        Icon={PageTree}
+                                        message={<FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" />}
+                                        offset={20}
+                                        isChosen={selectedId === null}
+                                        onClick={() => {
+                                            onFolderClick(null);
+                                        }}
+                                        style={style}
+                                    />
+                                );
+                            }
+
+                            const node = visibleNodes[index - 1];
+                            const folder = node.element;
+                            const level = node.level;
+
+                            return (
+                                <ChooseFolderItem
+                                    key={folder.id}
+                                    Icon={folderTree.has(folder.id) ? (expandedIds.has(folder.id) ? TreeCollapse : TreeExpand) : undefined}
+                                    onIconClick={() => {
+                                        if (expandedIds.has(folder.id)) {
+                                            setExpandedIds((expandedIds) => {
+                                                const newExpandedIds = new Set(expandedIds);
+                                                newExpandedIds.delete(folder.id);
+                                                return newExpandedIds;
+                                            });
+                                        } else {
+                                            setExpandedIds((expandedIds) => {
+                                                const newExpandedIds = new Set(expandedIds);
+                                                newExpandedIds.add(folder.id);
+                                                return newExpandedIds;
+                                            });
+                                        }
+                                    }}
+                                    message={
+                                        matches?.has(folder.id) ? (
+                                            <MarkedMatches text={folder.name} matches={matches.get(folder.id) as TextMatch[]} />
+                                        ) : (
+                                            folder.name
+                                        )
+                                    }
+                                    offset={20 + 36 * level}
+                                    isChosen={selectedId === folder.id}
+                                    onClick={() => {
+                                        onFolderClick(folder.id);
+                                    }}
+                                    style={style}
+                                />
+                            );
+                        }}
+                    </List>
                 );
-            })}
-        </List>
+            }}
+        </AutoSizer>
     );
 };
 
@@ -227,10 +259,11 @@ interface ChooseFolderItemProps {
     message: React.ReactNode;
     offset: number;
     isChosen?: boolean;
+    style: React.CSSProperties;
 }
-const ChooseFolderItem = ({ Icon, onIconClick, onClick, message, offset, isChosen = false }: ChooseFolderItemProps) => {
+const ChooseFolderItem = ({ Icon, onIconClick, onClick, message, offset, isChosen = false, style }: ChooseFolderItemProps) => {
     return (
-        <StyledListItem offset={Icon ? offset : offset + 20 + 16} isChosen={isChosen} onClick={onClick}>
+        <StyledListItem style={style} offset={Icon ? offset : offset + 20 + 16} isChosen={isChosen} onClick={onClick}>
             <div>
                 {Icon && (
                     <Icon
@@ -244,17 +277,6 @@ const ChooseFolderItem = ({ Icon, onIconClick, onClick, message, offset, isChose
                 {message}
             </div>
             <ArrowRight />
-        </StyledListItem>
-    );
-};
-
-const LoadingListItem = () => {
-    return (
-        <StyledListItem offset={20 + 36}>
-            <div>
-                <BallTriangle sx={{ marginRight: "20px" }} />
-                <FormattedMessage id="comet.dam.moveDamItemDialog.loading" defaultMessage="Loading ..." />
-            </div>
         </StyledListItem>
     );
 };
