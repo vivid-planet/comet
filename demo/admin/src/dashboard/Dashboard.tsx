@@ -1,10 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import { MainContent, messages, Stack } from "@comet/admin";
-import { Domain } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+import { MainContent, Stack } from "@comet/admin";
 import { Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ScopeIndicatorContent, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
+import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import DateTime from "@src/dashboard/DateTime";
 import { GQLDashboardCurrentUserQuery } from "@src/graphql.generated";
 import * as React from "react";
@@ -67,14 +65,7 @@ const Dashboard: React.FC = () => {
                 </Greeting>
             </Header>
             <MainContent>
-                <ContentScopeIndicator global>
-                    <ScopeIndicatorContent>
-                        <Domain fontSize="small" />
-                        <ScopeIndicatorLabelBold variant="body2">
-                            <FormattedMessage {...messages.globalContentScope} />
-                        </ScopeIndicatorLabelBold>
-                    </ScopeIndicatorContent>
-                </ContentScopeIndicator>
+                <ContentScopeIndicator global />
                 <Grid container direction="row" spacing={4}>
                     <DashboardWidgetContainer
                         header={<FormattedMessage id="cometDemo.pages.dashboard.latestContentUpdates" defaultMessage="Latest Content Updates" />}

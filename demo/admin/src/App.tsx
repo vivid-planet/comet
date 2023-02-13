@@ -7,11 +7,9 @@ import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
-import { Domain } from "@comet/admin-icons";
 import {
     AllCategories,
     CmsBlockContextProvider,
-    ContentScopeIndicator,
     createHttpClient,
     createRedirectsPage,
     CronJobsPage,
@@ -26,7 +24,6 @@ import {
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
-import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/EditPageNode";
 import MasterHeader from "@src/common/MasterHeader";
@@ -43,6 +40,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import { ComponentDemo } from "./common/ComponentDemo";
+import { ContentScopeIndicator } from "./common/ContentScopeIndicator";
 import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
@@ -156,22 +154,12 @@ class App extends React.Component {
                                                                                                     documentTypes={pageTreeDocumentTypes}
                                                                                                     editPageNode={EditPageNode}
                                                                                                     category={category}
-                                                                                                    renderContentScopeIndicator={(scope) => {
-                                                                                                        return (
-                                                                                                            <ContentScopeIndicator variant="toolbar">
-                                                                                                                <ScopeIndicatorContent>
-                                                                                                                    <Domain fontSize="small" />
-                                                                                                                    <ScopeIndicatorLabelBold variant="body2">
-                                                                                                                        {scope.domain}
-                                                                                                                    </ScopeIndicatorLabelBold>
-                                                                                                                </ScopeIndicatorContent>
-                                                                                                                {` | `}
-                                                                                                                <ScopeIndicatorLabel variant="body2">
-                                                                                                                    {scope.language}
-                                                                                                                </ScopeIndicatorLabel>
-                                                                                                            </ContentScopeIndicator>
-                                                                                                        );
-                                                                                                    }}
+                                                                                                    renderContentScopeIndicator={(scope) => (
+                                                                                                        <ContentScopeIndicator
+                                                                                                            scope={scope}
+                                                                                                            variant="toolbar"
+                                                                                                        />
+                                                                                                    )}
                                                                                                 />
                                                                                             );
                                                                                         }}
@@ -185,14 +173,11 @@ class App extends React.Component {
                                                                                         render={() => (
                                                                                             <DamPage
                                                                                                 renderContentScopeIndicator={(scope) => (
-                                                                                                    <ContentScopeIndicator variant="toolbar">
-                                                                                                        <ScopeIndicatorContent>
-                                                                                                            <Domain fontSize="small" />
-                                                                                                            <ScopeIndicatorLabelBold variant="body2">
-                                                                                                                {scope.domain}
-                                                                                                            </ScopeIndicatorLabelBold>
-                                                                                                        </ScopeIndicatorContent>
-                                                                                                    </ContentScopeIndicator>
+                                                                                                    <ContentScopeIndicator
+                                                                                                        scope={scope}
+                                                                                                        domainOnly
+                                                                                                        variant="toolbar"
+                                                                                                    />
                                                                                                 )}
                                                                                             />
                                                                                         )}
