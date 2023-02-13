@@ -1,6 +1,7 @@
 import { defaultLanguage, domain } from "@src/config";
 import { GQLPage, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
+import { createPagePath } from "@src/pages/preview/[[...path]]";
 import PageTypePage, { pageQuery as PageTypePageQuery } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
@@ -35,7 +36,7 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
     return <Component {...props} />;
 }
 
-const pageTypeQuery = gql`
+export const pageTypeQuery = gql`
     query PageType($path: String!, $contentScope: PageTreeNodeScopeInput!) {
         pageTreeNodeByPath(path: $path, scope: $contentScope) {
             id
@@ -74,7 +75,7 @@ export function createGetUniversalProps({
     }: Context): Promise<
         Context extends GetStaticPropsContext ? GetStaticPropsResult<PageUniversalProps> : GetServerSidePropsResult<PageUniversalProps>
     > {
-        const path = params?.path ?? "";
+        const path = createPagePath(params?.path);
         const contentScope = { domain, language: locale };
 
         //fetch pageType
@@ -82,7 +83,7 @@ export function createGetUniversalProps({
             GQLPageTypeQuery,
             GQLPageTypeQueryVariables
         >(pageTypeQuery, {
-            path: `/${Array.isArray(path) ? path.join("/") : path}`,
+            path,
             contentScope,
         });
         if (!data.pageTreeNodeByPath?.documentType) {

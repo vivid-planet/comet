@@ -2,12 +2,15 @@ import { gql } from "graphql-request";
 import { Redirect } from "next/dist/lib/load-custom-routes";
 
 import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "../../src/blocks.generated";
-import { domain } from "../../src/config";
-import { GQLRedirectsQuery, GQLRedirectsQueryVariables } from "../../src/graphql.generated";
+import { domain, languages } from "../../src/config";
+import { GQLLinkRedirectsQuery, GQLLinkRedirectsQueryVariables, GQLRedirectsQuery, GQLRedirectsQueryVariables } from "../../src/graphql.generated";
 import createGraphQLClient from "../../src/util/createGraphQLClient";
+import { createLinkRedirectDestination } from "./createLinkRedirectDestination";
+
+const graphqQLCLient = createGraphQLClient();
 
 const createRedirects = async () => {
-    return [...(await createApiRedirects()), ...(await createInternalRedirects())];
+    return [...(await createApiRedirects()), ...(await createInternalRedirects()), ...(await createLinkRedirects())];
 };
 
 const createInternalRedirects = async (): Promise<Redirect[]> => {
@@ -40,7 +43,7 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
         return [];
     }
 
-    const response = await createGraphQLClient().request<GQLRedirectsQuery, GQLRedirectsQueryVariables>(query, { scope: { domain } });
+    const response = await graphqQLCLient.request<GQLRedirectsQuery, GQLRedirectsQueryVariables>(query, { scope: { domain } });
 
     const redirects: Redirect[] = [];
 
@@ -79,6 +82,44 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
 
         if (source && destination) {
             redirects.push({ source, destination, permanent: true });
+        }
+    }
+
+    return redirects;
+};
+
+const createLinkRedirects = async (): Promise<Redirect[]> => {
+    const redirects: Redirect[] = [];
+
+    for (const language of languages) {
+        const { pageTreeNodeList } = await graphqQLCLient.request<GQLLinkRedirectsQuery, GQLLinkRedirectsQueryVariables>(
+            gql`
+                query LinkRedirects($scope: PageTreeNodeScopeInput!) {
+                    pageTreeNodeList(scope: $scope) {
+                        documentType
+                        path
+                        document {
+                            __typename
+                            ... on Link {
+                                content
+                            }
+                        }
+                    }
+                }
+            `,
+            {
+                scope: { domain, language },
+            },
+        );
+
+        for (const pageTreeNode of pageTreeNodeList) {
+            if (pageTreeNode.document?.__typename === "Link") {
+                const destination = createLinkRedirectDestination(pageTreeNode.document.content);
+
+                if (destination) {
+                    redirects.push({ source: pageTreeNode.path, destination, permanent: false });
+                }
+            }
         }
     }
 
