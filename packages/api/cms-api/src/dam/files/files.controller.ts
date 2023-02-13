@@ -18,9 +18,12 @@ import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
 
+import { CurrentUserInterface } from "../../auth/current-user/current-user";
+import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
+import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
@@ -51,6 +54,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
             private readonly filesService: FilesService,
             private readonly blobStorageBackendService: BlobStorageBackendService,
+            private readonly contentScopeService: ContentScopeService,
         ) {}
 
         @Post("upload")
@@ -69,8 +73,23 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @Get(`/preview/${fileUrl}`)
-        async previewFileUrl(@Param() params: FileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
-            return this.streamFile(params, res, { range, overrideHeaders: { "Cache-control": "private" } });
+        async previewFileUrl(
+            @Param() { fileId }: FileParams,
+            @Res() res: Response,
+            @GetCurrentUser() user: CurrentUserInterface,
+            @Headers("range") range?: string,
+        ): Promise<void> {
+            const file = await this.filesService.findOneById(fileId);
+
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
+                throw new ForbiddenException();
+            }
+
+            return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
         @DisableGlobalGuard()
@@ -87,7 +106,13 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new NotFoundException();
             }
 
-            return this.streamFile(params, res, { range });
+            const file = await this.filesService.findOneById(params.fileId);
+
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            return this.streamFile(file, res, { range });
         }
 
         private checkCdnOrigin(incomingCdnOriginHeader: string): void {
@@ -103,16 +128,13 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         private async streamFile(
-            { fileId }: FileParams,
+            file: FileInterface,
             res: Response,
             options?: {
                 range?: string;
                 overrideHeaders?: OutgoingHttpHeaders;
             },
         ): Promise<void> {
-            const file = await this.filesService.findOneById(fileId);
-            if (!file) throw new NotFoundException();
-
             const headers = {
                 "content-type": file.mimetype,
                 "last-modified": file.updatedAt?.toUTCString(),
