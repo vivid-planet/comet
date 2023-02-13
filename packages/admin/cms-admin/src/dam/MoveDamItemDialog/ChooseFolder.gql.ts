@@ -6,7 +6,6 @@ export const allFoldersQuery = gql`
             id
             name
             mpath
-            numberOfChildFolders
             parent {
                 id
             }

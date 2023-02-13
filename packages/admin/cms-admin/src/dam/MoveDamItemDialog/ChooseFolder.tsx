@@ -16,7 +16,6 @@ interface Folder {
     name: string;
     mpath: string[];
     parentId: string | null;
-    hasChildren: boolean;
 }
 
 interface ChooseFolderProps {
@@ -59,7 +58,6 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseF
                     name: folder.name,
                     mpath: folder.mpath,
                     parentId: folder.parent?.id ?? null,
-                    hasChildren: folder.numberOfChildFolders > 0,
                 },
             ]);
         }
@@ -147,7 +145,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseF
                     <>
                         <ChooseFolderItem
                             key={folder.id}
-                            Icon={folder.hasChildren ? (expandedIds.has(folder.id) ? TreeCollapse : TreeExpand) : undefined}
+                            Icon={folderTree.has(folder.id) ? (expandedIds.has(folder.id) ? TreeCollapse : TreeExpand) : undefined}
                             onIconClick={() => {
                                 if (expandedIds.has(folder.id)) {
                                     setExpandedIds((expandedIds) => {
