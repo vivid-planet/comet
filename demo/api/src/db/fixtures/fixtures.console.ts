@@ -1,4 +1,11 @@
-import { BlobStorageBackendService, FilesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import {
+    BlobStorageBackendService,
+    FilesService,
+    FoldersService,
+    PageTreeNodeInterface,
+    PageTreeNodeVisibility,
+    PageTreeService,
+} from "@comet/cms-api";
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -12,6 +19,7 @@ import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
 import { PageInput } from "@src/pages/dto/page.input";
 import { Page } from "@src/pages/entities/page.entity";
+import * as console from "console";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
@@ -43,6 +51,7 @@ export class FixturesConsole {
         private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly pageTreeService: PageTreeService,
         private readonly filesService: FilesService,
+        private readonly foldersService: FoldersService,
         private readonly orm: MikroORM,
         @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
