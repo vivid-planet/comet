@@ -158,7 +158,7 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
         };
 
         return {
-            currentMatch: currentMatchIndex + 1,
+            currentMatch: currentMatchIndex,
             totalMatches: matches.length,
             jumpToNextMatch,
             jumpToPreviousMatch,
