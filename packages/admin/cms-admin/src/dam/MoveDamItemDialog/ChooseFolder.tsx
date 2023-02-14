@@ -8,10 +8,11 @@ import { FormattedMessage } from "react-intl";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 
-import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
+import { MarkedMatches } from "../../common/MarkedMatches";
 import { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "../../graphql.generated";
 import { traversePreOrder, TreeMap } from "../../pages/pageTree/treemap/TreeMapUtils";
 import { allFoldersQuery } from "./ChooseFolder.gql";
+import { PageSearchMatch } from "./MoveDamItemDialog";
 
 interface Folder {
     id: string;
@@ -24,13 +25,15 @@ interface ChooseFolderProps {
     selectedId?: string | null;
     onFolderClick: (id: string | null) => void;
     searchQuery?: string;
+    matches: PageSearchMatch[];
+    onMatchesChange: (matches: PageSearchMatch[]) => void;
 }
 
-export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseFolderProps) => {
+export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, onMatchesChange }: ChooseFolderProps) => {
     const [folderTree, setFolderTree] = React.useState<TreeMap<Folder>>(new TreeMap<Folder>());
     const [expandedIds, setExpandedIds] = React.useState<Set<string>>(new Set());
     const [visibleNodes, setVisibleNodes] = React.useState<Array<{ element: Folder; level: number }>>([]);
-    const [matches, setMatches] = React.useState<Map<string, TextMatch[]>>();
+    const [matchesIndexMap, setMatchesIndexMap] = React.useState<Map<string, number[]>>(new Map());
 
     const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
         fetchPolicy: "network-only",
@@ -82,11 +85,12 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseF
 
     React.useEffect(() => {
         if (searchQuery === undefined || searchQuery.length === 0) {
-            setMatches(new Map());
+            onMatchesChange([]);
             return;
         }
 
-        const matches = new Map<string, TextMatch[]>();
+        const matches: PageSearchMatch[] = [];
+        const matchesIndexMap = new Map<string, number[]>();
         const regex = new RegExp(`(${escapeRegExp(searchQuery)})`, "gi");
 
         setExpandedIds((expandedIds) => {
@@ -99,16 +103,17 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseF
                 while ((match = regex.exec(element.name)) !== null) {
                     hasMatch = true;
 
-                    const existingMatches = matches.get(element.id);
-
-                    matches.set(element.id, [
-                        ...(existingMatches || []),
-                        {
-                            start: match.index,
-                            end: match.index + searchQuery.length - 1,
-                            focused: matches.size === 0,
+                    matches.push({
+                        start: match.index,
+                        end: match.index + searchQuery.length - 1,
+                        focused: matches.length === 0,
+                        folder: {
+                            id: element.id,
                         },
-                    ]);
+                    });
+
+                    const existingMatches = matchesIndexMap.get(element.id) ?? [];
+                    matchesIndexMap.set(element.id, [...existingMatches, matches.length - 1]);
                 }
 
                 if (hasMatch) {
@@ -119,7 +124,8 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseF
                 }
             });
 
-            setMatches(matches);
+            onMatchesChange(matches);
+            setMatchesIndexMap(matchesIndexMap);
 
             return newExpandedIds;
         });
@@ -171,6 +177,9 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseF
                             const folder = node.element;
                             const level = node.level;
 
+                            const matchIndexes = matchesIndexMap.get(folder.id);
+                            const folderMatches = matchIndexes?.map((index) => matches[index]) ?? [];
+
                             return (
                                 <ChooseFolderItem
                                     key={folder.id}
@@ -191,11 +200,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery }: ChooseF
                                         }
                                     }}
                                     message={
-                                        matches?.has(folder.id) ? (
-                                            <MarkedMatches text={folder.name} matches={matches.get(folder.id) as TextMatch[]} />
-                                        ) : (
-                                            folder.name
-                                        )
+                                        matchesIndexMap?.has(folder.id) ? <MarkedMatches text={folder.name} matches={folderMatches} /> : folder.name
                                     }
                                     offset={20 + 36 * level}
                                     isChosen={selectedId === folder.id}

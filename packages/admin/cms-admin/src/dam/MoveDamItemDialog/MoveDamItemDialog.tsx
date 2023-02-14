@@ -3,8 +3,9 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
-import { useDebouncedCallback } from "use-debounce";
 
+import { TextMatch } from "../../common/MarkedMatches";
+import { SearchInput } from "../../common/SearchInput";
 import { ChooseFolder } from "./ChooseFolder";
 
 const FixedHeightDialog = styled(Dialog)`
@@ -12,6 +13,8 @@ const FixedHeightDialog = styled(Dialog)`
         height: 80vh;
     }
 `;
+
+export type PageSearchMatch = TextMatch & { folder: { id: string } };
 
 interface MoveDamItemDialogProps {
     isOpen: boolean;
@@ -22,10 +25,24 @@ interface MoveDamItemDialogProps {
 export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamItemDialogProps) => {
     const [selectedId, setSelectedId] = React.useState<string | null>();
     const [searchQuery, setSearchQuery] = React.useState<string>("");
+    const [matches, setMatches] = React.useState<PageSearchMatch[]>([]);
+    const [currentMatchIndex, setCurrentMatchIndex] = React.useState<number>(0);
 
-    const debouncedOnChange = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value);
-    }, 500);
+    const updateCurrentMatchIndex = React.useCallback(
+        (nextCurrentMatchIndex: number) => {
+            setMatches(matches.map((match, index) => ({ ...match, focused: index === nextCurrentMatchIndex })));
+            setCurrentMatchIndex(nextCurrentMatchIndex);
+        },
+        [matches],
+    );
+
+    const jumpToNextMatch = React.useCallback(() => {
+        updateCurrentMatchIndex(currentMatchIndex === matches.length - 1 ? 0 : currentMatchIndex + 1);
+    }, [currentMatchIndex, matches.length, updateCurrentMatchIndex]);
+
+    const jumpToPreviousMatch = React.useCallback(() => {
+        updateCurrentMatchIndex(currentMatchIndex === 0 ? matches.length - 1 : currentMatchIndex - 1);
+    }, [currentMatchIndex, matches.length, updateCurrentMatchIndex]);
 
     return (
         <FixedHeightDialog open={isOpen} onClose={onClose} fullWidth maxWidth="xl">
@@ -40,7 +57,16 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
                         marginBottom: "40px",
                     }}
                 >
-                    <input onChange={debouncedOnChange} />
+                    <SearchInput
+                        query={searchQuery}
+                        onQueryChange={(query) => {
+                            setSearchQuery(query);
+                        }}
+                        totalMatches={matches.length}
+                        currentMatch={currentMatchIndex}
+                        jumpToNextMatch={jumpToNextMatch}
+                        jumpToPreviousMatch={jumpToPreviousMatch}
+                    />
                 </div>
                 <div style={{ flexGrow: 1 }}>
                     <ChooseFolder
@@ -49,6 +75,10 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
                             setSelectedId(id);
                         }}
                         searchQuery={searchQuery}
+                        matches={matches}
+                        onMatchesChange={(matches) => {
+                            setMatches(matches);
+                        }}
                     />
                 </div>
             </DialogContent>
