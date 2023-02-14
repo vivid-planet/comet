@@ -110,24 +110,6 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
     }, [data]);
 
     React.useEffect(() => {
-        if (searchQuery === undefined || searchQuery.length === 0) {
-            onMatchesChange([]);
-            return;
-        }
-
-        const { matches: newMatches, expandedIds: newExpandedIds } = findMatchesAndExpandedIdsBasedOnSearchQuery(searchQuery, {
-            folderTree,
-            expandedIds,
-        });
-
-        setExpandedIds(newExpandedIds);
-        onMatchesChange(newMatches);
-
-        // This should only be executed if the searchQuery changes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchQuery]);
-
-    React.useEffect(() => {
         const newVisibleFolders: Array<{ element: Folder; level: number }> = [];
 
         traversePreOrder(folderTree, (element, level) => {
@@ -144,6 +126,24 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
         // This should only be executed if the searchQuery changes
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [expandedIds, folderTree]);
+
+    React.useEffect(() => {
+        if (searchQuery === undefined || searchQuery.length === 0) {
+            onMatchesChange([]);
+            return;
+        }
+
+        const { matches: newMatches, expandedIds: newExpandedIds } = findMatchesAndExpandedIdsBasedOnSearchQuery(searchQuery, {
+            folderTree,
+            expandedIds,
+        });
+
+        setExpandedIds(newExpandedIds);
+        onMatchesChange(newMatches);
+
+        // This should only be executed if the searchQuery changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchQuery]);
 
     React.useEffect(() => {
         if (currentMatchIndex === undefined) {
