@@ -1,6 +1,5 @@
 import { ChevronDown, ChevronUp, Clear, Search } from "@comet/admin-icons";
 import { IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import React from "react";
 import { useHotkeys, useIsHotkeyPressed } from "react-hotkeys-hook";
 import { useDebouncedCallback } from "use-debounce";
@@ -69,47 +68,36 @@ export const SearchInput = ({ query, onQueryChange, currentMatch, totalMatches, 
     };
 
     return (
-        <Root>
-            <InputBase
-                inputRef={inputRef}
-                value={internalQuery || ""}
-                onChange={handleInputChange}
-                onKeyUp={handleKeyUp}
-                placeholder="Search"
-                fullWidth
-                startAdornment={
-                    <InputAdornment position="start">
-                        <Search />
+        <InputBase
+            inputRef={inputRef}
+            value={internalQuery || ""}
+            onChange={handleInputChange}
+            onKeyUp={handleKeyUp}
+            placeholder="Search"
+            fullWidth
+            startAdornment={
+                <InputAdornment position="start">
+                    <Search />
+                </InputAdornment>
+            }
+            endAdornment={
+                internalQuery ? (
+                    <InputAdornment position="end">
+                        <Typography>
+                            {currentMatch !== undefined && totalMatches !== undefined ? `${currentMatch + 1}/${totalMatches}` : "..."}
+                        </Typography>
+                        <IconButton onClick={jumpToPreviousMatch} disabled={!jumpToPreviousMatch} size="large">
+                            <ChevronUp />
+                        </IconButton>
+                        <IconButton onClick={jumpToNextMatch} disabled={!jumpToNextMatch} size="large">
+                            <ChevronDown />
+                        </IconButton>
+                        <IconButton onClick={handleClearClick} size="large">
+                            <Clear />
+                        </IconButton>
                     </InputAdornment>
-                }
-                endAdornment={
-                    internalQuery ? (
-                        <InputAdornment position="end">
-                            <Typography>
-                                {currentMatch !== undefined && totalMatches !== undefined ? `${currentMatch + 1}/${totalMatches}` : "..."}
-                            </Typography>
-                            <IconButton onClick={jumpToPreviousMatch} disabled={!jumpToPreviousMatch} size="large">
-                                <ChevronUp />
-                            </IconButton>
-                            <IconButton onClick={jumpToNextMatch} disabled={!jumpToNextMatch} size="large">
-                                <ChevronDown />
-                            </IconButton>
-                            <IconButton onClick={handleClearClick} size="large">
-                                <Clear />
-                            </IconButton>
-                        </InputAdornment>
-                    ) : null
-                }
-            />
-        </Root>
+                ) : null
+            }
+        />
     );
 };
-
-const Root = styled("div")`
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    margin-left: 10px;
-    margin-right: 10px;
-`;

@@ -65,8 +65,7 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
                 <div
                     style={{
                         width: "100%",
-                        padding: "10px",
-                        marginBottom: "40px",
+                        marginBottom: "20px",
                     }}
                 >
                     <SearchInput
