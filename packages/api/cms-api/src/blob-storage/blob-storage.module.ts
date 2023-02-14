@@ -1,41 +1,21 @@
-import { DynamicModule, Global, Module, ModuleMetadata } from "@nestjs/common";
+import { DynamicModule, Global, Module } from "@nestjs/common";
 
 import { BlobStorageBackendService } from "./backends/blob-storage-backend.service";
 import { BlobStorageConfig } from "./blob-storage.config";
-import { BLOB_STORAGE_CONFIG, BLOB_STORAGE_MODULE_OPTIONS } from "./blob-storage.constants";
-
-interface BlobStorageModuleOptions {
-    blobStorageConfig: BlobStorageConfig;
-}
-
-interface BlobStorageModuleOptions extends Pick<ModuleMetadata, "imports"> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => BlobStorageModuleOptions;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    inject?: any[];
-}
+import { BLOB_STORAGE_CONFIG } from "./blob-storage.constants";
 
 @Global()
 @Module({})
 export class BlobStorageModule {
-    static register(options: BlobStorageModuleOptions): DynamicModule {
-        const optionsProvider = {
-            provide: BLOB_STORAGE_MODULE_OPTIONS,
-            ...options,
-        };
-
+    static register(options: BlobStorageConfig): DynamicModule {
         const blobStorageConfigProvider = {
             provide: BLOB_STORAGE_CONFIG,
-            useFactory: (options: BlobStorageModuleOptions): BlobStorageConfig => {
-                return options.blobStorageConfig;
-            },
-            inject: [BLOB_STORAGE_MODULE_OPTIONS],
+            useValue: options,
         };
 
         return {
             module: BlobStorageModule,
-            imports: [...(options.imports ?? [])],
-            providers: [optionsProvider, blobStorageConfigProvider, BlobStorageBackendService],
+            providers: [blobStorageConfigProvider, BlobStorageBackendService],
             exports: [BlobStorageBackendService, blobStorageConfigProvider],
         };
     }
