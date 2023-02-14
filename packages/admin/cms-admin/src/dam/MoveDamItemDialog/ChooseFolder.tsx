@@ -21,6 +21,67 @@ interface Folder {
     parentId: string | null;
 }
 
+const createFolderTreeMap = (data: GQLAllFoldersWithoutFiltersQuery) => {
+    const folderTreeMap = new TreeMap<Folder>();
+
+    for (const folder of data.damFoldersWithoutFilters) {
+        const parentId = folder.parent?.id ?? "root";
+
+        let existingSiblingFolders: Folder[] = [];
+        if (folderTreeMap.has(parentId)) {
+            existingSiblingFolders = folderTreeMap.get(parentId) as Folder[];
+        }
+
+        folderTreeMap.set(parentId, [
+            ...existingSiblingFolders,
+            {
+                id: folder.id,
+                name: folder.name,
+                mpath: folder.mpath,
+                parentId: folder.parent?.id ?? null,
+            },
+        ]);
+    }
+
+    return folderTreeMap;
+};
+
+const findMatchesAndExpandedIdsBasedOnSearchQuery = (
+    searchQuery: string,
+    { folderTree, expandedIds }: { folderTree: TreeMap<Folder>; expandedIds: Set<string> },
+) => {
+    const internalExpandedIds = new Set(expandedIds);
+    const newMatches: PageSearchMatch[] = [];
+    const regex = new RegExp(`(${escapeRegExp(searchQuery)})`, "gi");
+
+    traversePreOrder(folderTree, (element) => {
+        let hasMatch = false;
+
+        let match: RegExpExecArray | null;
+        while ((match = regex.exec(element.name)) !== null) {
+            hasMatch = true;
+
+            newMatches.push({
+                start: match.index,
+                end: match.index + searchQuery.length - 1,
+                focused: newMatches.length === 0,
+                folder: {
+                    id: element.id,
+                },
+            });
+        }
+
+        if (hasMatch) {
+            internalExpandedIds.add(element.id);
+            for (const ancestorId of element.mpath) {
+                internalExpandedIds.add(ancestorId);
+            }
+        }
+    });
+
+    return { matches: newMatches, expandedIds: internalExpandedIds };
+};
+
 interface ChooseFolderProps {
     selectedId?: string | null;
     onFolderClick: (id: string | null) => void;
@@ -34,7 +95,7 @@ interface ChooseFolderProps {
 export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, onMatchesChange, currentMatchIndex }: ChooseFolderProps) => {
     const [folderTree, setFolderTree] = React.useState<TreeMap<Folder>>(new TreeMap<Folder>());
     const [expandedIds, setExpandedIds] = React.useState<Set<string>>(new Set());
-    const [visibleNodes, setVisibleNodes] = React.useState<Array<{ element: Folder; level: number }>>([]);
+    const [visibleFolders, setVisibleFolders] = React.useState<Array<{ element: Folder; level: number }>>([]);
 
     const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
         fetchPolicy: "network-only",
@@ -45,44 +106,9 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
             return;
         }
 
-        const internalFolderTree = new TreeMap<Folder>();
-
-        for (const folder of data.damFoldersWithoutFilters) {
-            const parentId = folder.parent?.id ?? "root";
-
-            let existingSiblingFolders: Folder[] = [];
-            if (internalFolderTree.has(parentId)) {
-                existingSiblingFolders = internalFolderTree.get(parentId) as Folder[];
-            }
-
-            internalFolderTree.set(parentId, [
-                ...existingSiblingFolders,
-                {
-                    id: folder.id,
-                    name: folder.name,
-                    mpath: folder.mpath,
-                    parentId: folder.parent?.id ?? null,
-                },
-            ]);
-        }
-
-        setFolderTree(internalFolderTree);
+        const folderTree = createFolderTreeMap(data);
+        setFolderTree(folderTree);
     }, [data]);
-
-    React.useEffect(() => {
-        const internalVisibleNodes: Array<{ element: Folder; level: number }> = [];
-
-        traversePreOrder(folderTree, (element, level) => {
-            const isParentVisible = element.parentId !== null ? internalVisibleNodes.find((node) => node.element.id === element.parentId) : true;
-            const isParentExpanded = element.parentId !== null ? expandedIds.has(element.parentId) : true;
-
-            if (isParentVisible && isParentExpanded) {
-                internalVisibleNodes.push({ element, level });
-            }
-        });
-
-        setVisibleNodes(internalVisibleNodes);
-    }, [expandedIds, folderTree]);
 
     React.useEffect(() => {
         if (searchQuery === undefined || searchQuery.length === 0) {
@@ -90,45 +116,35 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
             return;
         }
 
-        const matches: PageSearchMatch[] = [];
-        const regex = new RegExp(`(${escapeRegExp(searchQuery)})`, "gi");
-
-        setExpandedIds((expandedIds) => {
-            const newExpandedIds = new Set(expandedIds);
-
-            traversePreOrder(folderTree, (element) => {
-                let hasMatch = false;
-
-                let match: RegExpExecArray | null;
-                while ((match = regex.exec(element.name)) !== null) {
-                    hasMatch = true;
-
-                    matches.push({
-                        start: match.index,
-                        end: match.index + searchQuery.length - 1,
-                        focused: matches.length === 0,
-                        folder: {
-                            id: element.id,
-                        },
-                    });
-                }
-
-                if (hasMatch) {
-                    newExpandedIds.add(element.id);
-                    for (const ancestorId of element.mpath) {
-                        newExpandedIds.add(ancestorId);
-                    }
-                }
-            });
-
-            onMatchesChange(matches);
-
-            return newExpandedIds;
+        const { matches: newMatches, expandedIds: newExpandedIds } = findMatchesAndExpandedIdsBasedOnSearchQuery(searchQuery, {
+            folderTree,
+            expandedIds,
         });
+
+        setExpandedIds(newExpandedIds);
+        onMatchesChange(newMatches);
 
         // This should only be executed if the searchQuery changes
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchQuery]);
+
+    React.useEffect(() => {
+        const newVisibleFolders: Array<{ element: Folder; level: number }> = [];
+
+        traversePreOrder(folderTree, (element, level) => {
+            const isParentVisible = element.parentId !== null ? newVisibleFolders.find((node) => node.element.id === element.parentId) : true;
+            const isParentExpanded = element.parentId !== null ? expandedIds.has(element.parentId) : true;
+
+            if (isParentVisible && isParentExpanded) {
+                newVisibleFolders.push({ element, level });
+            }
+        });
+
+        setVisibleFolders(newVisibleFolders);
+
+        // This should only be executed if the searchQuery changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [expandedIds, folderTree]);
 
     React.useEffect(() => {
         if (currentMatchIndex === undefined) {
@@ -136,13 +152,13 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
         }
 
         const folderId = matches?.[currentMatchIndex]?.folder?.id;
-        const index = visibleNodes.findIndex((node) => node.element.id === folderId) + 1; // + 1 is necessary because we artificially add the "Asset Manager" as the first item
+        const index = visibleFolders.findIndex((node) => node.element.id === folderId) + 1; // + 1 is necessary because we artificially add the "Asset Manager" as the first item
 
         refList.current?.scrollToItem(index, "smart");
 
-        // This should only be executed if the currentMatchIndex changes
+        // This should only be executed if the currentMatchIndex or the visibleFolders change
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentMatchIndex, visibleNodes]);
+    }, [currentMatchIndex]);
 
     const refList = useRef<List>(null);
 
@@ -154,7 +170,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
                         ref={refList}
                         height={height}
                         width={width}
-                        itemCount={visibleNodes.length + 1}
+                        itemCount={visibleFolders.length + 1}
                         itemSize={56}
                         overscanCount={1} // do not increase this for performance reasons
                         style={{ scrollBehavior: "smooth" }}
@@ -186,7 +202,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
                                 );
                             }
 
-                            const node = visibleNodes[index - 1];
+                            const node = visibleFolders[index - 1];
                             const folder = node.element;
                             const level = node.level;
 
