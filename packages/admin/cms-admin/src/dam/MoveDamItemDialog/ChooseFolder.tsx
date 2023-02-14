@@ -89,7 +89,6 @@ interface ChooseFolderProps {
     matches: PageSearchMatch[] | null;
     onMatchesChange: (matches: PageSearchMatch[]) => void;
     currentMatchIndex?: number;
-    // onCurrentMatchIndexChange: (index: number | undefined) => void;
 }
 
 export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, onMatchesChange, currentMatchIndex }: ChooseFolderProps) => {
