@@ -57,7 +57,7 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
     }, [currentMatchIndex, matches, updateCurrentMatchIndex]);
 
     return (
-        <FixedHeightDialog open={isOpen} onClose={onClose} fullWidth maxWidth="xl">
+        <FixedHeightDialog open={isOpen} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle>
                 <FormattedMessage id="comet.dam.moveDamItemDialog.selectTargetFolder" defaultMessage="Select target folder" />
             </DialogTitle>

@@ -136,16 +136,13 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
         }
 
         const folderId = matches?.[currentMatchIndex]?.folder?.id;
+        const index = visibleNodes.findIndex((node) => node.element.id === folderId) + 1; // + 1 is necessary because we artificially add the "Asset Manager" as the first item
 
-        refList.current?.scrollToItem(
-            // + 1 is necessary because we artificially add the "Asset Manager" as the first item
-            visibleNodes.findIndex((node) => node.element.id === folderId) + 1,
-            "smart",
-        );
+        refList.current?.scrollToItem(index, "smart");
 
         // This should only be executed if the currentMatchIndex changes
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentMatchIndex]);
+    }, [currentMatchIndex, visibleNodes]);
 
     const refList = useRef<List>(null);
 
