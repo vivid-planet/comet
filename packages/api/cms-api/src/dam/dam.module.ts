@@ -30,7 +30,7 @@ interface DamModuleOptions {
     imgproxyConfig: ImgproxyConfig;
 }
 
-interface DamModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
+interface DamModuleOptions extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useFactory: (...args: any[]) => Promise<DamModuleOptions> | DamModuleOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,7 +40,7 @@ interface DamModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
 @Global()
 @Module({})
 export class DamModule {
-    static registerAsync(options: DamModuleAsyncOptions): DynamicModule {
+    static register(options: DamModuleOptions): DynamicModule {
         const optionsProvider = {
             provide: DAM_MODULE_OPTIONS,
             ...options,
@@ -48,7 +48,7 @@ export class DamModule {
 
         const damConfigProvider = {
             provide: DAM_CONFIG,
-            useFactory: async (options: DamModuleOptions): Promise<DamConfig> => {
+            useFactory: (options: DamModuleOptions): DamConfig => {
                 return options.damConfig;
             },
             inject: [DAM_MODULE_OPTIONS],
@@ -56,7 +56,7 @@ export class DamModule {
 
         const imgproxyConfigProvider = {
             provide: IMGPROXY_CONFIG,
-            useFactory: async (options: DamModuleOptions): Promise<ImgproxyConfig> => {
+            useFactory: (options: DamModuleOptions): ImgproxyConfig => {
                 return options.imgproxyConfig;
             },
             inject: [DAM_MODULE_OPTIONS],

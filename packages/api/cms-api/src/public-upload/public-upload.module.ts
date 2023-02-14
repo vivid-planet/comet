@@ -12,9 +12,9 @@ interface PublicUploadModuleOptions {
     publicUploadConfig: PublicUploadConfig;
 }
 
-interface PublicUploadModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
+interface PublicUploadModuleOptions extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => Promise<PublicUploadModuleOptions> | PublicUploadModuleOptions;
+    useFactory: (...args: any[]) => PublicUploadModuleOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
 }
@@ -22,7 +22,7 @@ interface PublicUploadModuleAsyncOptions extends Pick<ModuleMetadata, "imports">
 @Global()
 @Module({})
 export class PublicUploadModule {
-    static registerAsync(options: PublicUploadModuleAsyncOptions): DynamicModule {
+    static register(options: PublicUploadModuleOptions): DynamicModule {
         const optionsProvider = {
             provide: PUBLIC_UPLOAD_MODULE_OPTIONS,
             ...options,
@@ -30,7 +30,7 @@ export class PublicUploadModule {
 
         const publicUploadConfigProvider = {
             provide: PUBLIC_UPLOAD_CONFIG,
-            useFactory: async (options: PublicUploadModuleOptions): Promise<PublicUploadConfig> => {
+            useFactory: (options: PublicUploadModuleOptions): PublicUploadConfig => {
                 return options.publicUploadConfig;
             },
             inject: [PUBLIC_UPLOAD_MODULE_OPTIONS],

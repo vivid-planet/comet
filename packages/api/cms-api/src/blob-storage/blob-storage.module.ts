@@ -8,9 +8,9 @@ interface BlobStorageModuleOptions {
     blobStorageConfig: BlobStorageConfig;
 }
 
-interface BlobStorageModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
+interface BlobStorageModuleOptions extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => Promise<BlobStorageModuleOptions> | BlobStorageModuleOptions;
+    useFactory: (...args: any[]) => BlobStorageModuleOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
 }
@@ -18,7 +18,7 @@ interface BlobStorageModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> 
 @Global()
 @Module({})
 export class BlobStorageModule {
-    static registerAsync(options: BlobStorageModuleAsyncOptions): DynamicModule {
+    static register(options: BlobStorageModuleOptions): DynamicModule {
         const optionsProvider = {
             provide: BLOB_STORAGE_MODULE_OPTIONS,
             ...options,
@@ -26,7 +26,7 @@ export class BlobStorageModule {
 
         const blobStorageConfigProvider = {
             provide: BLOB_STORAGE_CONFIG,
-            useFactory: async (options: BlobStorageModuleOptions): Promise<BlobStorageConfig> => {
+            useFactory: (options: BlobStorageModuleOptions): BlobStorageConfig => {
                 return options.blobStorageConfig;
             },
             inject: [BLOB_STORAGE_MODULE_OPTIONS],

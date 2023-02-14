@@ -11,9 +11,9 @@ interface KubernetesModuleOptions {
     config: KubernetesConfig;
 }
 
-interface KubernetesModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
+interface KubernetesModuleOptions extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => Promise<KubernetesModuleOptions> | KubernetesModuleOptions;
+    useFactory: (...args: any[]) => KubernetesModuleOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
 }
@@ -21,7 +21,7 @@ interface KubernetesModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
 @Module({})
 @Global()
 export class KubernetesModule {
-    static registerAsync(options: KubernetesModuleAsyncOptions): DynamicModule {
+    static register(options: KubernetesModuleOptions): DynamicModule {
         const optionsProvider = {
             provide: KUBERNETES_MODULE_OPTIONS,
             ...options,
@@ -29,7 +29,7 @@ export class KubernetesModule {
 
         const kubernetesConfigProvider = {
             provide: KUBERNETES_CONFIG,
-            useFactory: async (options: KubernetesModuleOptions): Promise<KubernetesConfig> => {
+            useFactory: (options: KubernetesModuleOptions): KubernetesConfig => {
                 return options.config;
             },
             inject: [KUBERNETES_MODULE_OPTIONS],

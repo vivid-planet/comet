@@ -51,10 +51,10 @@ export class AppModule {
             imports: [
                 ConfigModule.forRoot(config),
                 DbModule,
-                GraphQLModule.forRootAsync({
+                GraphQLModule.forRoot({
                     driver: ApolloDriver,
-                    imports: [ConfigModule, BlocksModule],
-                    useFactory: async (blocksTransformerService: BlocksTransformerService) => ({
+                    imports: [BlocksModule],
+                    useFactory: (blocksTransformerService: BlocksTransformerService) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
@@ -76,7 +76,7 @@ export class AppModule {
                         return user.domains.includes(requestScope.domain);
                     },
                 }),
-                BlocksModule.forRootAsync({
+                BlocksModule.forRoot({
                     imports: [PagesModule],
                     useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
                         return {
@@ -89,9 +89,9 @@ export class AppModule {
                     },
                     inject: [PageTreeService, FilesService, ImagesService],
                 }),
-                KubernetesModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
+                KubernetesModule.register({
+                    imports: [],
+                    useFactory: () => ({
                         config: {
                             helmRelease: config.helmRelease,
                         },
@@ -110,9 +110,9 @@ export class AppModule {
                     reservedPaths: ["/events"],
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
-                BlobStorageModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
+                BlobStorageModule.register({
+                    imports: [],
+                    useFactory: () => ({
                         blobStorageConfig: {
                             backend: {
                                 driver: config.blob.storageDriver,
@@ -123,9 +123,9 @@ export class AppModule {
                         },
                     }),
                 }),
-                DamModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
+                DamModule.register({
+                    imports: [],
+                    useFactory: () => ({
                         damConfig: {
                             filesBaseUrl: `${config.apiUrl}/dam/files`,
                             imagesBaseUrl: `${config.apiUrl}/dam/images`,
@@ -140,9 +140,9 @@ export class AppModule {
                         imgproxyConfig: config.imgproxy,
                     }),
                 }),
-                PublicUploadModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
+                PublicUploadModule.register({
+                    imports: [],
+                    useFactory: () => ({
                         publicUploadConfig: {
                             maxFileSize: config.publicUploads.maxFileSize,
                             directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
