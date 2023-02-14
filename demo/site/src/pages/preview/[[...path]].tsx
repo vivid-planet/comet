@@ -1,7 +1,7 @@
 import { SitePreviewPage } from "@comet/cms-site";
 import { defaultLanguage, domain } from "@src/config";
 import { GQLPageTypeQuery, GQLPageTypeQueryVariables, GQLPreviewLinkQuery, GQLPreviewLinkQueryVariables } from "@src/graphql.generated";
-import Page, { createGetUniversalProps, pageTypeQuery, PageUniversalProps } from "@src/pages/[[...path]]";
+import Page, { createGetUniversalProps, createPagePath, pageTypeQuery, PageUniversalProps } from "@src/pages/[[...path]]";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
@@ -30,16 +30,6 @@ export default function AuthenticatedPreviewPage(props: InferGetServerSidePropsT
         </SitePreviewPage>
     );
 }
-
-export const createPagePath = (path: string | string[] | undefined) => {
-    if (!path) {
-        return "/";
-    }
-    if (Array.isArray(path)) {
-        return `/${path.join("/")}`;
-    }
-    return `/${path}`;
-};
 
 export const getServerSideProps: GetServerSideProps<PageUniversalProps> = async (context: GetServerSidePropsContext) => {
     const { includeInvisibleBlocks } = parsePreviewParams(context.query);

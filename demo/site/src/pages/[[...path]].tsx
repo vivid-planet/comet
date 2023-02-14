@@ -1,7 +1,6 @@
 import { defaultLanguage, domain } from "@src/config";
 import { GQLPage, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
-import { createPagePath } from "@src/pages/preview/[[...path]]";
 import PageTypePage, { pageQuery as PageTypePageQuery } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
@@ -113,6 +112,16 @@ export function createGetUniversalProps({
         };
     };
 }
+
+export const createPagePath = (path: string | string[] | undefined) => {
+    if (!path) {
+        return "/";
+    }
+    if (Array.isArray(path)) {
+        return `/${path.join("/")}`;
+    }
+    return `/${path}`;
+};
 
 const pagesQuery = gql`
     query Pages($contentScope: PageTreeNodeScopeInput!) {
