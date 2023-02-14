@@ -25,11 +25,15 @@ interface MoveDamItemDialogProps {
 export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamItemDialogProps) => {
     const [selectedId, setSelectedId] = React.useState<string | null>();
     const [searchQuery, setSearchQuery] = React.useState<string>("");
-    const [matches, setMatches] = React.useState<PageSearchMatch[]>([]);
-    const [currentMatchIndex, setCurrentMatchIndex] = React.useState<number>(0);
+    const [matches, setMatches] = React.useState<PageSearchMatch[] | null>(null);
+    const [currentMatchIndex, setCurrentMatchIndex] = React.useState<number | undefined>(undefined);
 
     const updateCurrentMatchIndex = React.useCallback(
         (nextCurrentMatchIndex: number) => {
+            if (matches === null) {
+                return;
+            }
+
             setMatches(matches.map((match, index) => ({ ...match, focused: index === nextCurrentMatchIndex })));
             setCurrentMatchIndex(nextCurrentMatchIndex);
         },
@@ -37,12 +41,20 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
     );
 
     const jumpToNextMatch = React.useCallback(() => {
+        if (matches === null || currentMatchIndex === undefined) {
+            return;
+        }
+
         updateCurrentMatchIndex(currentMatchIndex === matches.length - 1 ? 0 : currentMatchIndex + 1);
-    }, [currentMatchIndex, matches.length, updateCurrentMatchIndex]);
+    }, [currentMatchIndex, matches, updateCurrentMatchIndex]);
 
     const jumpToPreviousMatch = React.useCallback(() => {
+        if (matches === null || currentMatchIndex === undefined) {
+            return;
+        }
+
         updateCurrentMatchIndex(currentMatchIndex === 0 ? matches.length - 1 : currentMatchIndex - 1);
-    }, [currentMatchIndex, matches.length, updateCurrentMatchIndex]);
+    }, [currentMatchIndex, matches, updateCurrentMatchIndex]);
 
     return (
         <FixedHeightDialog open={isOpen} onClose={onClose} fullWidth maxWidth="xl">
@@ -59,10 +71,18 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
                 >
                     <SearchInput
                         query={searchQuery}
-                        onQueryChange={(query) => {
-                            setSearchQuery(query);
+                        onQueryChange={(newQuery) => {
+                            setSearchQuery((prevQuery) => {
+                                if (prevQuery === "") {
+                                    setCurrentMatchIndex(0);
+                                } else if (newQuery === "") {
+                                    setCurrentMatchIndex(undefined);
+                                }
+
+                                return newQuery;
+                            });
                         }}
-                        totalMatches={matches.length}
+                        totalMatches={matches?.length ?? 0}
                         currentMatch={currentMatchIndex}
                         jumpToNextMatch={jumpToNextMatch}
                         jumpToPreviousMatch={jumpToPreviousMatch}
@@ -79,6 +99,7 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
                         onMatchesChange={(matches) => {
                             setMatches(matches);
                         }}
+                        currentMatchIndex={currentMatchIndex}
                     />
                 </div>
             </DialogContent>
