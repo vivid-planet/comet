@@ -336,64 +336,65 @@ const FolderDataGrid = ({
                 }}
             </EditDialog>
             {fileUploadApi.dialogs}
-            <MoveDamItemDialog
-                isOpen={moveDamItemDialogState !== null}
-                onClose={() => {
-                    setMoveDamItemDialogState(null);
-                }}
-                onChooseFolder={async (targetFolderId: string | null) => {
-                    setMoveDamItemDialogState(null);
+            {moveDamItemDialogState !== null && (
+                <MoveDamItemDialog
+                    onClose={() => {
+                        setMoveDamItemDialogState(null);
+                    }}
+                    onChooseFolder={async (targetFolderId: string | null) => {
+                        setMoveDamItemDialogState(null);
 
-                    let fileIds: string[] = [];
-                    let folderIds: string[] = [];
+                        let fileIds: string[] = [];
+                        let folderIds: string[] = [];
 
-                    if (moveDamItemDialogState === "selection") {
-                        fileIds = Array.from(selectionMap.entries())
-                            .filter(([, type]) => type === "file")
-                            .map(([id]) => id);
+                        if (moveDamItemDialogState === "selection") {
+                            fileIds = Array.from(selectionMap.entries())
+                                .filter(([, type]) => type === "file")
+                                .map(([id]) => id);
 
-                        folderIds = Array.from(selectionMap.entries())
-                            .filter(([, type]) => type === "folder")
-                            .map(([id]) => id);
-                    } else if (moveDamItemDialogState === "single" && moveSingleDamItem) {
-                        if (moveSingleDamItem.type == "file") {
-                            fileIds.push(moveSingleDamItem.id);
-                        } else {
-                            folderIds.push(moveSingleDamItem.id);
+                            folderIds = Array.from(selectionMap.entries())
+                                .filter(([, type]) => type === "folder")
+                                .map(([id]) => id);
+                        } else if (moveDamItemDialogState === "single" && moveSingleDamItem) {
+                            if (moveSingleDamItem.type == "file") {
+                                fileIds.push(moveSingleDamItem.id);
+                            } else {
+                                folderIds.push(moveSingleDamItem.id);
+                            }
                         }
-                    }
 
-                    const mutations: Array<Promise<FetchResult>> = [];
+                        const mutations: Array<Promise<FetchResult>> = [];
 
-                    if (fileIds.length > 0) {
-                        mutations.push(
-                            apolloClient.mutate<GQLMoveDamFilesMutation, GQLMoveDamFilesMutationVariables>({
-                                mutation: moveDamFilesMutation,
-                                variables: {
-                                    fileIds,
-                                    targetFolderId: targetFolderId,
-                                },
-                            }),
-                        );
-                    }
+                        if (fileIds.length > 0) {
+                            mutations.push(
+                                apolloClient.mutate<GQLMoveDamFilesMutation, GQLMoveDamFilesMutationVariables>({
+                                    mutation: moveDamFilesMutation,
+                                    variables: {
+                                        fileIds,
+                                        targetFolderId: targetFolderId,
+                                    },
+                                }),
+                            );
+                        }
 
-                    if (folderIds.length > 0) {
-                        mutations.push(
-                            apolloClient.mutate<GQLMoveDamFoldersMutation, GQLMoveDamFoldersMutationVariables>({
-                                mutation: moveDamFoldersMutation,
-                                variables: {
-                                    folderIds,
-                                    targetFolderId: targetFolderId,
-                                },
-                            }),
-                        );
-                    }
+                        if (folderIds.length > 0) {
+                            mutations.push(
+                                apolloClient.mutate<GQLMoveDamFoldersMutation, GQLMoveDamFoldersMutationVariables>({
+                                    mutation: moveDamFoldersMutation,
+                                    variables: {
+                                        folderIds,
+                                        targetFolderId: targetFolderId,
+                                    },
+                                }),
+                            );
+                        }
 
-                    await Promise.all(mutations);
+                        await Promise.all(mutations);
 
-                    clearDamItemCache(apolloClient.cache);
-                }}
-            />
+                        clearDamItemCache(apolloClient.cache);
+                    }}
+                />
+            )}
         </div>
     );
 };

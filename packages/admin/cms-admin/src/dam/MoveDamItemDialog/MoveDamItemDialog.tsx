@@ -17,12 +17,11 @@ const FixedHeightDialog = styled(Dialog)`
 export type PageSearchMatch = TextMatch & { folder: { id: string } };
 
 interface MoveDamItemDialogProps {
-    isOpen: boolean;
     onClose: (event: React.SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
     onChooseFolder: (folderId: string | null) => void;
 }
 
-export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamItemDialogProps) => {
+export const MoveDamItemDialog = ({ onClose, onChooseFolder }: MoveDamItemDialogProps) => {
     const [selectedId, setSelectedId] = React.useState<string | null>();
     const [searchQuery, setSearchQuery] = React.useState<string>("");
     const [matches, setMatches] = React.useState<PageSearchMatch[] | null>(null);
@@ -57,7 +56,7 @@ export const MoveDamItemDialog = ({ isOpen, onClose, onChooseFolder }: MoveDamIt
     }, [currentMatchIndex, matches, updateCurrentMatchIndex]);
 
     return (
-        <FixedHeightDialog open={isOpen} onClose={onClose} fullWidth maxWidth="lg">
+        <FixedHeightDialog open={true} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle>
                 <FormattedMessage id="comet.dam.moveDamItemDialog.selectTargetFolder" defaultMessage="Select target folder" />
             </DialogTitle>
