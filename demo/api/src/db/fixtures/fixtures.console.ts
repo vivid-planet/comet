@@ -19,7 +19,6 @@ import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
 import { PageInput } from "@src/pages/dto/page.input";
 import { Page } from "@src/pages/entities/page.entity";
-import * as console from "console";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
