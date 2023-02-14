@@ -1,10 +1,7 @@
-import { ChevronDown, ChevronUp, Clear, Search } from "@comet/admin-icons";
-import { IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
-import { useHotkeys, useIsHotkeyPressed } from "react-hotkeys-hook";
-import { useDebouncedCallback } from "use-debounce";
 
+import { SearchInput } from "../../common/SearchInput";
 import { PageSearchApi } from "./usePageSearch";
 
 interface PageSearchProps {
@@ -14,93 +11,15 @@ interface PageSearchProps {
 }
 
 export function PageSearch({ query, onQueryChange, pageSearchApi }: PageSearchProps): React.ReactElement {
-    const inputRef = React.useRef<HTMLInputElement | null>(null);
-    const [internalQuery, setInternalQuery] = React.useState(query);
-    const isPressed = useIsHotkeyPressed();
-
-    const debouncedOnQueryChange = useDebouncedCallback(onQueryChange, 250);
-
-    React.useEffect(() => {
-        setInternalQuery(query);
-    }, [query]);
-
-    const updateQuery = (newQuery: string) => {
-        setInternalQuery(newQuery);
-
-        debouncedOnQueryChange(newQuery);
-
-        if (newQuery === "") {
-            debouncedOnQueryChange.flush();
-        }
-    };
-
-    useHotkeys("ctrl+f, command+f", (event) => {
-        event.preventDefault();
-        inputRef.current?.focus();
-    });
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        updateQuery(event.target.value);
-    };
-
-    const handleClearClick = () => {
-        updateQuery("");
-        inputRef.current?.focus();
-    };
-
-    const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        switch (event.key) {
-            case "Enter":
-                if (isPressed("shift")) {
-                    pageSearchApi?.jumpToPreviousMatch?.();
-                } else {
-                    pageSearchApi?.jumpToNextMatch?.();
-                }
-
-                break;
-
-            case "Escape":
-                updateQuery("");
-                inputRef.current?.blur();
-
-                break;
-        }
-    };
-
     return (
         <Root>
-            <InputBase
-                inputRef={inputRef}
-                value={internalQuery || ""}
-                onChange={handleInputChange}
-                onKeyUp={handleKeyUp}
-                placeholder="Search"
-                fullWidth
-                startAdornment={
-                    <InputAdornment position="start">
-                        <Search />
-                    </InputAdornment>
-                }
-                endAdornment={
-                    internalQuery ? (
-                        <InputAdornment position="end">
-                            <Typography>
-                                {pageSearchApi.currentMatch !== undefined && pageSearchApi.totalMatches !== undefined
-                                    ? `${pageSearchApi.currentMatch}/${pageSearchApi.totalMatches}`
-                                    : "..."}
-                            </Typography>
-                            <IconButton onClick={pageSearchApi?.jumpToPreviousMatch} disabled={!pageSearchApi?.jumpToPreviousMatch} size="large">
-                                <ChevronUp />
-                            </IconButton>
-                            <IconButton onClick={pageSearchApi?.jumpToNextMatch} disabled={!pageSearchApi?.jumpToNextMatch} size="large">
-                                <ChevronDown />
-                            </IconButton>
-                            <IconButton onClick={handleClearClick} size="large">
-                                <Clear />
-                            </IconButton>
-                        </InputAdornment>
-                    ) : null
-                }
+            <SearchInput
+                query={query}
+                onQueryChange={onQueryChange}
+                currentMatch={pageSearchApi.currentMatch}
+                totalMatches={pageSearchApi.totalMatches}
+                jumpToPreviousMatch={pageSearchApi.jumpToPreviousMatch}
+                jumpToNextMatch={pageSearchApi.jumpToNextMatch}
             />
         </Root>
     );
