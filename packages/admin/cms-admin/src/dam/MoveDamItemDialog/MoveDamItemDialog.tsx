@@ -68,6 +68,7 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder }: MoveDamItemDialog
                     }}
                 >
                     <SearchInput
+                        autoFocus={true}
                         query={searchQuery}
                         onQueryChange={(newQuery) => {
                             setSearchQuery((prevQuery) => {

@@ -11,9 +11,18 @@ interface SearchInputProps {
     totalMatches?: number;
     jumpToNextMatch?: () => void;
     jumpToPreviousMatch?: () => void;
+    autoFocus?: boolean;
 }
 
-export const SearchInput = ({ query, onQueryChange, currentMatch, totalMatches, jumpToNextMatch, jumpToPreviousMatch }: SearchInputProps) => {
+export const SearchInput = ({
+    query,
+    onQueryChange,
+    currentMatch,
+    totalMatches,
+    jumpToNextMatch,
+    jumpToPreviousMatch,
+    autoFocus = false,
+}: SearchInputProps) => {
     const inputRef = React.useRef<HTMLInputElement | null>(null);
     const [internalQuery, setInternalQuery] = React.useState(query);
     const isPressed = useIsHotkeyPressed();
@@ -69,6 +78,7 @@ export const SearchInput = ({ query, onQueryChange, currentMatch, totalMatches, 
 
     return (
         <InputBase
+            autoFocus={autoFocus}
             inputRef={inputRef}
             value={internalQuery || ""}
             onChange={handleInputChange}
