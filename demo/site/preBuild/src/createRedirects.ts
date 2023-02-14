@@ -5,7 +5,7 @@ import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, Redire
 import { domain, languages } from "../../src/config";
 import { GQLLinkRedirectsQuery, GQLLinkRedirectsQueryVariables, GQLRedirectsQuery, GQLRedirectsQueryVariables } from "../../src/graphql.generated";
 import createGraphQLClient from "../../src/util/createGraphQLClient";
-import { createLinkRedirectDestination } from "./createLinkRedirectDestination";
+import { createLinkRedirectDestination } from "../../src/util/createLinkRedirectDestination";
 
 const graphqQLCLient = createGraphQLClient();
 

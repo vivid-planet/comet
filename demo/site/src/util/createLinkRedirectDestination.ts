@@ -1,4 +1,4 @@
-import { ExternalLinkBlockData, InternalLinkBlockData, LinkBlockData, NewsLinkBlockData } from "../../src/blocks.generated";
+import { ExternalLinkBlockData, InternalLinkBlockData, LinkBlockData, NewsLinkBlockData } from "../blocks.generated";
 
 export function createLinkRedirectDestination(content: LinkBlockData) {
     switch (content.block?.type) {

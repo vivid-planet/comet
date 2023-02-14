@@ -1,4 +1,4 @@
-import { SitePreviewPage } from "@comet/cms-site";
+import { parsePreviewParams, SitePreviewPage } from "@comet/cms-site";
 import { defaultLanguage, domain } from "@src/config";
 import { GQLPageTypeQuery, GQLPageTypeQueryVariables, GQLPreviewLinkQuery, GQLPreviewLinkQueryVariables } from "@src/graphql.generated";
 import Page, { createGetUniversalProps, createPagePath, pageTypeQuery, PageUniversalProps } from "@src/pages/[[...path]]";
@@ -7,8 +7,7 @@ import { gql } from "graphql-request";
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import React from "react";
 
-import { parsePreviewParams } from "../../../../../packages/site/cms-site/src/preview/utils";
-import { createLinkRedirectDestination } from "../../../preBuild/src/createLinkRedirectDestination";
+import { createLinkRedirectDestination } from "../../util/createLinkRedirectDestination";
 
 const previewLinkQuery = gql`
     query PreviewLink($id: ID!) {
