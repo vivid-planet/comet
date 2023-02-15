@@ -1,9 +1,9 @@
 import {
     BlobStorageConfig,
     BlobStorageModule,
+    BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
-    BlocksTransformerService,
     BuildsModule,
     ContentScope,
     ContentScopeModule,
@@ -54,7 +54,7 @@ export class AppModule {
                 GraphQLModule.forRootAsync({
                     driver: ApolloDriver,
                     imports: [ConfigModule, BlocksModule],
-                    useFactory: async (blocksTransformerService: BlocksTransformerService) => ({
+                    useFactory: async (dependencies: Record<string, unknown>) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
@@ -64,10 +64,10 @@ export class AppModule {
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
                         buildSchemaOptions: {
-                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(blocksTransformerService)],
+                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
                         },
                     }),
-                    inject: [BlocksTransformerService],
+                    inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
                 ContentScopeModule.forRoot({

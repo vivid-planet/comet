@@ -47,7 +47,7 @@ export class BlocksModule {
                 BlocksMetaService,
                 ...(!options.withoutIndex ? [DiscoverService, BlockIndexService, CommandsService, BlockMigrateService] : []),
             ],
-            exports: [BlocksTransformerService, ...(!options.withoutIndex ? [BlockIndexService] : [])],
+            exports: [BlocksTransformerService, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES, ...(!options.withoutIndex ? [BlockIndexService] : [])],
         };
     }
 }
