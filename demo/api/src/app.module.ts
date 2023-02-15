@@ -1,5 +1,4 @@
 import {
-    BlobStorageConfig,
     BlobStorageModule,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
@@ -110,7 +109,7 @@ export class AppModule {
                         file: config.blob.storageDriver === "file" ? config.fileStorage : undefined,
                         azure: config.blob.storageDriver === "azure" ? config.azure : undefined,
                         s3: config.blob.storageDriver === "s3" ? config.s3 : undefined,
-                    } as BlobStorageConfig["backend"],
+                    },
                 }),
                 DamModule.register({
                     damConfig: {
