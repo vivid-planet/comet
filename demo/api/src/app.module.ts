@@ -1,5 +1,4 @@
 import {
-    BlobStorageConfig,
     BlobStorageModule,
     BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
@@ -51,9 +50,9 @@ export class AppModule {
             imports: [
                 ConfigModule.forRoot(config),
                 DbModule,
-                GraphQLModule.forRootAsync({
+                GraphQLModule.forRoot({
                     driver: ApolloDriver,
-                    imports: [ConfigModule, BlocksModule],
+                    imports: [BlocksModule],
                     useFactory: async (dependencies: Record<string, unknown>) => ({
                         debug: config.debug,
                         playground: config.debug,
@@ -76,7 +75,7 @@ export class AppModule {
                         return user.domains.includes(requestScope.domain);
                     },
                 }),
-                BlocksModule.forRootAsync({
+                BlocksModule.forRoot({
                     imports: [PagesModule],
                     useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
                         return {
@@ -89,14 +88,8 @@ export class AppModule {
                     },
                     inject: [PageTreeService, FilesService, ImagesService],
                 }),
-                KubernetesModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
-                        config: {
-                            helmRelease: config.helmRelease,
-                        },
-                    }),
-                    inject: [],
+                KubernetesModule.register({
+                    helmRelease: config.helmRelease,
                 }),
                 BuildsModule,
                 LinksModule,
@@ -110,45 +103,32 @@ export class AppModule {
                     reservedPaths: ["/events"],
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
-                BlobStorageModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
-                        blobStorageConfig: {
-                            backend: {
-                                driver: config.blob.storageDriver,
-                                file: config.blob.storageDriver === "file" ? config.fileStorage : undefined,
-                                azure: config.blob.storageDriver === "azure" ? config.azure : undefined,
-                                s3: config.blob.storageDriver === "s3" ? config.s3 : undefined,
-                            } as BlobStorageConfig["backend"],
-                        },
-                    }),
+                BlobStorageModule.register({
+                    backend: {
+                        driver: config.blob.storageDriver,
+                        file: config.blob.storageDriver === "file" ? config.fileStorage : undefined,
+                        azure: config.blob.storageDriver === "azure" ? config.azure : undefined,
+                        s3: config.blob.storageDriver === "s3" ? config.s3 : undefined,
+                    },
                 }),
-                DamModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
-                        damConfig: {
-                            filesBaseUrl: `${config.apiUrl}/dam/files`,
-                            imagesBaseUrl: `${config.apiUrl}/dam/images`,
-                            secret: config.dam.secret,
-                            allowedImageSizes: config.dam.allowedImageSizes,
-                            allowedAspectRatios: config.dam.allowedImageAspectRatios,
-                            additionalMimeTypes: config.dam.additionalMimetypes,
-                            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
-                            cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
-                            maxFileSize: config.dam.uploadsMaxFileSize,
-                        },
-                        imgproxyConfig: config.imgproxy,
-                    }),
+                DamModule.register({
+                    damConfig: {
+                        filesBaseUrl: `${config.apiUrl}/dam/files`,
+                        imagesBaseUrl: `${config.apiUrl}/dam/images`,
+                        secret: config.dam.secret,
+                        allowedImageSizes: config.dam.allowedImageSizes,
+                        allowedAspectRatios: config.dam.allowedImageAspectRatios,
+                        additionalMimeTypes: config.dam.additionalMimetypes,
+                        filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+                        cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+                        maxFileSize: config.dam.uploadsMaxFileSize,
+                    },
+                    imgproxyConfig: config.imgproxy,
                 }),
-                PublicUploadModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
-                        publicUploadConfig: {
-                            maxFileSize: config.publicUploads.maxFileSize,
-                            directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
-                            acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
-                        },
-                    }),
+                PublicUploadModule.register({
+                    maxFileSize: config.publicUploads.maxFileSize,
+                    directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
+                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 }),
                 NewsModule,
                 MenusModule,
