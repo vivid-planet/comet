@@ -1,4 +1,4 @@
-import { PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService, PublicApi, RequestContext, RequestContextInterface } from "@comet/cms-api";
+import { PageTreeNodeInterface, PageTreeReadApiService, PublicApi } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Args, Query, Resolver } from "@nestjs/graphql";
@@ -12,18 +12,19 @@ import { MainMenuItem } from "./entities/main-menu-item.entity";
 @Resolver(() => MainMenuObject)
 export class MenusResolver {
     constructor(
-        private pageTreeService: PageTreeService,
+        private readonly pageTreeReadApi: PageTreeReadApiService,
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
     ) {}
 
     @Query(() => MainMenuObject)
     @PublicApi()
     async mainMenu(@Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope): Promise<MainMenuObject> {
-        const rootNodes = await this.pageTreeService
-            .createReadApi({
-                visibility: [PageTreeNodeVisibility.Published],
-            })
-            .pageTreeRootNodeList({ scope, excludeHiddenInMenu: true, category: PageTreeNodeCategory.MainNavigation });
+        this.pageTreeReadApi.preloadNodes(scope);
+        const rootNodes = await this.pageTreeReadApi.pageTreeRootNodeList({
+            scope,
+            excludeHiddenInMenu: true,
+            category: PageTreeNodeCategory.MainNavigation,
+        });
 
         const items = await Promise.all(
             rootNodes.map<Promise<MainMenuItem>>(async (node) => {
@@ -46,14 +47,8 @@ export class MenusResolver {
     }
 
     @Query(() => [PageTreeNode])
-    async topMenu(
-        @Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope,
-        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
-    ): Promise<PageTreeNodeInterface[]> {
-        return this.pageTreeService
-            .createReadApi({
-                visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
-            })
-            .pageTreeRootNodeList({ scope, category: PageTreeNodeCategory.TopMenu, excludeHiddenInMenu: true });
+    async topMenu(@Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope): Promise<PageTreeNodeInterface[]> {
+        //don't preloadNodes for topMenu as that consists only of a few nodes (and preloading would be more expensive than doing live queries)
+        return this.pageTreeReadApi.pageTreeRootNodeList({ scope, category: PageTreeNodeCategory.TopMenu, excludeHiddenInMenu: true });
     }
 }
