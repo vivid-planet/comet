@@ -1,5 +1,5 @@
+import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable, Scope } from "@nestjs/common";
 import DataLoader from "dataloader";
 
