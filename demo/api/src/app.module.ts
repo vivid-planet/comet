@@ -50,10 +50,10 @@ export class AppModule {
             imports: [
                 ConfigModule.forRoot(config),
                 DbModule,
-                GraphQLModule.forRoot({
+                GraphQLModule.forRootAsync({
                     driver: ApolloDriver,
                     imports: [BlocksModule],
-                    useFactory: async (dependencies: Record<string, unknown>) => ({
+                    useFactory: (dependencies: Record<string, unknown>) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
