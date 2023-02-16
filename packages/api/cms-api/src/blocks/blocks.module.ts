@@ -8,13 +8,13 @@ import { BlocksTransformerService } from "./blocks-transformer.service";
 import { CommandsService } from "./commands.service";
 import { DiscoverService } from "./discover.service";
 
-export interface BlocksModuleOptions {
+export interface BlocksModuleFactoryOptions {
     transformerDependencies: Record<string, unknown>;
 }
 
 export interface BlocksModuleOptions extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => BlocksModuleOptions;
+    useFactory: (...args: any[]) => BlocksModuleFactoryOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
     withoutIndex?: boolean;
@@ -31,7 +31,7 @@ export class BlocksModule {
 
         const transformerDependenciesProvider = {
             provide: BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
-            useFactory: (options: BlocksModuleOptions): Record<string, unknown> => {
+            useFactory: (options: BlocksModuleFactoryOptions): Record<string, unknown> => {
                 return options.transformerDependencies;
             },
             inject: [BLOCKS_MODULE_OPTIONS],
