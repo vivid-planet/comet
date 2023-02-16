@@ -12,7 +12,7 @@ export interface BlocksModuleOptions {
     transformerDependencies: Record<string, unknown>;
 }
 
-export interface BlocksModuleOptions extends Pick<ModuleMetadata, "imports"> {
+export interface BlocksModuleSyncOptions extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useFactory: (...args: any[]) => BlocksModuleOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,7 +23,7 @@ export interface BlocksModuleOptions extends Pick<ModuleMetadata, "imports"> {
 @Global()
 @Module({})
 export class BlocksModule {
-    static forRoot(options: BlocksModuleOptions): DynamicModule {
+    static forRoot(options: BlocksModuleSyncOptions): DynamicModule {
         const optionsProvider = {
             provide: BLOCKS_MODULE_OPTIONS,
             ...options,

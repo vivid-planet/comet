@@ -50,10 +50,10 @@ export class AppModule {
             imports: [
                 ConfigModule.forRoot(config),
                 DbModule,
-                GraphQLModule.forRoot({
+                GraphQLModule.forRootAsync({
                     driver: ApolloDriver,
                     imports: [BlocksModule],
-                    useFactory: async (dependencies: Record<string, unknown>) => ({
+                    useFactory: (dependencies: Record<string, unknown>) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
@@ -104,12 +104,7 @@ export class AppModule {
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({
-                    backend: {
-                        driver: config.blob.storageDriver,
-                        file: config.blob.storageDriver === "file" ? config.fileStorage : undefined,
-                        azure: config.blob.storageDriver === "azure" ? config.azure : undefined,
-                        s3: config.blob.storageDriver === "s3" ? config.s3 : undefined,
-                    },
+                    backend: config.blob.storage,
                 }),
                 DamModule.register({
                     damConfig: {
