@@ -70,6 +70,7 @@ export function createReadApi(
             slug?: string;
         },
     ): Promise<PageTreeNodeInterface[]> => {
+        await waitForPreloadDone();
         if (scope && preloadedNodes.has(scopeHash(scope))) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             let nodes = preloadedNodes.get(scopeHash(scope))!;
