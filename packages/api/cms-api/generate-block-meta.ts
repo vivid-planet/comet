@@ -25,9 +25,9 @@ async function generateBlockMeta(): Promise<void> {
     createSeoBlock();
 
     const app = await NestFactory.create(
-        BlocksModule.forRootAsync({
+        BlocksModule.forRoot({
             withoutIndex: true,
-            useFactory: async () => ({ transformerDependencies: {} }),
+            useFactory: () => ({ transformerDependencies: {} }),
         }),
     );
     await app.init();
