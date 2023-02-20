@@ -35,7 +35,7 @@ services:
             AWS_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
 
     jaeger:
-        image: jaegertracing/all-in-one:1.42
+        image: jaegertracing/all-in-one:1
         ports:
             - ${JAEGER_UI_PORT}:16686
             - ${JAEGER_OLTP_PORT}:4318 #OLTP over HTTP
