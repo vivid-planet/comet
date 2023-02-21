@@ -1,9 +1,16 @@
 import { BlockContext, BlockDataInterface, isBlockDataInterface } from "@comet/blocks-api";
+import opentelemetry from "@opentelemetry/api";
+
+const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function transformToPlain(block: BlockDataInterface, dependencies: any, ctx: BlockContext): Promise<any> {
-    const traverse = createAsyncTraverse("transformToPlain", [dependencies, ctx], isBlockDataInterface);
-    return traverse(block);
+    return tracer.startActiveSpan("BlockTransformer", (span) => {
+        const traverse = createAsyncTraverse("transformToPlain", [dependencies, ctx], isBlockDataInterface);
+        const ret = traverse(block);
+        span.end();
+        return ret;
+    });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

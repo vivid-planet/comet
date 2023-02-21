@@ -19,7 +19,7 @@ export class MenusResolver {
     @Query(() => MainMenuObject)
     @PublicApi()
     async mainMenu(@Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope): Promise<MainMenuObject> {
-        this.pageTreeReadApi.preloadNodes(scope);
+        await this.pageTreeReadApi.preloadNodes(scope);
         const rootNodes = await this.pageTreeReadApi.pageTreeRootNodeList({
             scope,
             excludeHiddenInMenu: true,
