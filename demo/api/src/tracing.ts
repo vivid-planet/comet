@@ -22,9 +22,6 @@ const sdk = new opentelemetry.NodeSDK({
             "@opentelemetry/instrumentation-graphql": {
                 mergeItems: true,
             },
-            "@opentelemetry/instrumentation-nestjs-core": {
-                enabled: true,
-            },
         }),
     ],
     serviceName: "demo-api",
