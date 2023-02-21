@@ -7,6 +7,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
+import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "../graphql.generated";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
@@ -50,7 +51,6 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                         title
                         altText
                         archived
-                        damPath
                         fileUrl
                     }
                 }
@@ -103,7 +103,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                                     <Grid item xs>
                                         <Typography variant="subtitle1">{state.damFile.name}</Typography>
                                         <Typography variant="body1" color="textSecondary">
-                                            {state.damFile.damPath}
+                                            <DamPathLazy fileId={state.damFile.id} />
                                         </Typography>
                                     </Grid>
                                 </Grid>
