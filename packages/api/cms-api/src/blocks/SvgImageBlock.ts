@@ -39,7 +39,6 @@ class SvgImageBlockData extends BlockData {
             damFile: {
                 ...data,
                 image: {},
-                damPath: await filesService.getDamPath(file),
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
         };
@@ -110,11 +109,6 @@ class Meta extends AnnotationBlockMeta {
                     {
                         name: "archived",
                         kind: BlockMetaFieldKind.Boolean,
-                        nullable: false,
-                    },
-                    {
-                        name: "damPath",
-                        kind: BlockMetaFieldKind.String,
                         nullable: false,
                     },
                     {
