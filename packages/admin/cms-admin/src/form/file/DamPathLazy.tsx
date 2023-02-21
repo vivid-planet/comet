@@ -3,7 +3,7 @@ import React from "react";
 
 import { GQLDamPathLazyQuery, GQLDamPathLazyQueryVariables } from "../../graphql.generated";
 
-export const damPathLazyQuery = gql`
+const damPathLazyQuery = gql`
     query DamPathLazy($id: ID!) {
         damFile(id: $id) {
             damPath
