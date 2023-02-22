@@ -14,7 +14,7 @@ const FixedHeightDialog = styled(Dialog)`
     }
 `;
 
-export type PageSearchMatch = TextMatch & { folder: { id: string } };
+export type FolderSearchMatch = TextMatch & { folder: { id: string } };
 
 interface MoveDamItemDialogProps {
     onClose: (event: React.SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
@@ -24,7 +24,7 @@ interface MoveDamItemDialogProps {
 export const MoveDamItemDialog = ({ onClose, onChooseFolder }: MoveDamItemDialogProps) => {
     const [selectedId, setSelectedId] = React.useState<string | null>();
     const [searchQuery, setSearchQuery] = React.useState<string>("");
-    const [matches, setMatches] = React.useState<PageSearchMatch[] | null>(null);
+    const [matches, setMatches] = React.useState<FolderSearchMatch[] | null>(null);
     const [currentMatchIndex, setCurrentMatchIndex] = React.useState<number | undefined>(undefined);
 
     const updateCurrentMatchIndex = React.useCallback(

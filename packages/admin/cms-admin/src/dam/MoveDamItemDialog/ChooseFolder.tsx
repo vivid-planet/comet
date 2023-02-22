@@ -12,7 +12,7 @@ import { MarkedMatches } from "../../common/MarkedMatches";
 import { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "../../graphql.generated";
 import { traversePreOrder, TreeMap } from "../../pages/pageTree/treemap/TreeMapUtils";
 import { allFoldersQuery } from "./ChooseFolder.gql";
-import { PageSearchMatch } from "./MoveDamItemDialog";
+import { FolderSearchMatch } from "./MoveDamItemDialog";
 
 interface Folder {
     id: string;
@@ -51,7 +51,7 @@ const findMatchesAndExpandedIdsBasedOnSearchQuery = (
     { folderTree, expandedIds }: { folderTree: TreeMap<Folder>; expandedIds: Set<string> },
 ) => {
     const internalExpandedIds = new Set(expandedIds);
-    const newMatches: PageSearchMatch[] = [];
+    const newMatches: FolderSearchMatch[] = [];
     const regex = new RegExp(`(${escapeRegExp(searchQuery)})`, "gi");
 
     traversePreOrder(folderTree, (element) => {
@@ -86,8 +86,8 @@ interface ChooseFolderProps {
     selectedId?: string | null;
     onFolderClick: (id: string | null) => void;
     searchQuery?: string;
-    matches: PageSearchMatch[] | null;
-    onMatchesChange: (matches: PageSearchMatch[]) => void;
+    matches: FolderSearchMatch[] | null;
+    onMatchesChange: (matches: FolderSearchMatch[]) => void;
     currentMatchIndex?: number;
 }
 
