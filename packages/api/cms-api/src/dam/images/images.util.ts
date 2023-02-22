@@ -23,8 +23,8 @@ export function getMaxDimensionsFromArea(area: ImageDimensions, aspectRatio: num
     }
 
     return {
-        width: Math.ceil(width),
-        height: Math.ceil(height),
+        width,
+        height,
     };
 }
 
