@@ -17,6 +17,7 @@ import { ChildBlockInput } from "./decorators/child-block-input";
 import { BlockField } from "./decorators/field";
 
 interface CreateTextLinkBlockOptions<LinkBlock extends Block> {
+    name: string;
     link: LinkBlock;
 }
 
@@ -26,6 +27,7 @@ interface TextImageBlockInputInterface<LinkBlockInput extends BlockInputInterfac
 }
 
 export function createTextLinkBlock<LinkBlock extends Block>({
+    name,
     link: LinkBlock,
 }: CreateTextLinkBlockOptions<LinkBlock>): Block<BlockDataInterface, TextImageBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
     class TextLinkBlockData extends BlockData {
@@ -54,5 +56,5 @@ export function createTextLinkBlock<LinkBlock extends Block>({
         }
     }
 
-    return createBlock(TextLinkBlockData, TextLinkBlockInput, "TextLink");
+    return createBlock(TextLinkBlockData, TextLinkBlockInput, name);
 }
