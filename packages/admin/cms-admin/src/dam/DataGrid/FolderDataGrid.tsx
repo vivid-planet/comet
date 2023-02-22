@@ -378,6 +378,7 @@ const FolderDataGrid = ({
 
                         clearDamItemCache(apolloClient.cache);
                     }}
+                    numberOfItems={damItemsToMove.length}
                 />
             )}
         </div>

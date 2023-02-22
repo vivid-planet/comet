@@ -19,9 +19,10 @@ export type FolderSearchMatch = TextMatch & { folder: { id: string } };
 interface MoveDamItemDialogProps {
     onClose: (event: React.SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
     onChooseFolder: (folderId: string | null) => void;
+    numberOfItems: number;
 }
 
-export const MoveDamItemDialog = ({ onClose, onChooseFolder }: MoveDamItemDialogProps) => {
+export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: MoveDamItemDialogProps) => {
     const [selectedId, setSelectedId] = React.useState<string | null>();
     const [searchQuery, setSearchQuery] = React.useState<string>("");
     const [matches, setMatches] = React.useState<FolderSearchMatch[] | null>(null);
@@ -122,7 +123,13 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder }: MoveDamItemDialog
                     }}
                     disabled={selectedId === undefined}
                 >
-                    <FormattedMessage id="comet.dam.moveDamItemDialog.moveItems" defaultMessage="Move item(s)" />
+                    <FormattedMessage
+                        id="comet.dam.moveDamItemDialog.moveItems"
+                        defaultMessage="Move {num, plural, one {item} other {items}}"
+                        values={{
+                            num: numberOfItems,
+                        }}
+                    />
                 </Button>
             </DialogActions>
         </FixedHeightDialog>
