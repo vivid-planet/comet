@@ -110,7 +110,7 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder }: MoveDamItemDialog
                     }}
                     disabled={selectedId === undefined}
                 >
-                    <FormattedMessage id="comet.dam.moveDamItemDialog.startOver" defaultMessage="Start over" />{" "}
+                    <FormattedMessage id="comet.dam.moveDamItemDialog.startOver" defaultMessage="Start over" />
                 </Button>
                 <Button
                     startIcon={<Move />}
