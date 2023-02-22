@@ -6,18 +6,18 @@ export const deleteDamFileMutation = gql`
     }
 `;
 
-export const archiveDamFileMutation = gql`
-    mutation ArchiveFile($id: ID!) {
-        archiveDamFile(id: $id) {
+export const archiveDamFilesMutation = gql`
+    mutation ArchiveFiles($ids: [ID!]!) {
+        archiveDamFiles(ids: $ids) {
             id
             archived
         }
     }
 `;
 
-export const restoreDamFileMutation = gql`
-    mutation RestoreFile($id: ID!) {
-        restoreDamFile(id: $id) {
+export const restoreDamFilesMutation = gql`
+    mutation RestoreFiles($ids: [ID!]!) {
+        restoreDamFiles(ids: $ids) {
             id
             archived
         }

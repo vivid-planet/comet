@@ -6,22 +6,22 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLArchiveFileMutation,
-    GQLArchiveFileMutationVariables,
+    GQLArchiveFilesMutation,
+    GQLArchiveFilesMutationVariables,
     GQLDamFileTableFragment,
     GQLDamFolderTableFragment,
     GQLDeleteDamFileMutation,
     GQLDeleteDamFileMutationVariables,
     GQLDeleteDamFolderMutation,
     GQLDeleteDamFolderMutationVariables,
-    GQLRestoreFileMutation,
-    GQLRestoreFileMutationVariables,
+    GQLRestoreFilesMutation,
+    GQLRestoreFilesMutationVariables,
     namedOperations,
 } from "../../../graphql.generated";
 import { Separator } from "../../../pages/pagesPage/PagesPageActionToolbar.sc";
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { useDamMultiselectApi } from "../multiselect/DamMultiselect";
-import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamActions.gql";
+import { archiveDamFilesMutation, deleteDamFileMutation, restoreDamFilesMutation } from "./DamActions.gql";
 
 const GridContainer = styled(Grid)`
     padding: 2px 29px;
@@ -59,16 +59,16 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
     const archiveSelected = async () => {
         setArchiving(true);
 
-        for (const selectedItem of damMultiselectApi.selectedItems) {
-            if (selectedItem.type === "file") {
-                await client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
-                    mutation: archiveDamFileMutation,
-                    variables: { id: selectedItem.id },
-                });
-            }
-        }
+        const fileIds = damMultiselectApi.selectedItems.filter((item) => item.type === "file").map((item) => item.id);
 
-        await client.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
+        await client.mutate<GQLArchiveFilesMutation, GQLArchiveFilesMutationVariables>({
+            mutation: archiveDamFilesMutation,
+            variables: {
+                ids: fileIds,
+            },
+            refetchQueries: [namedOperations.Query.DamItemsList],
+        });
+
         damMultiselectApi.unselectAll();
         setArchiving(false);
     };
@@ -76,16 +76,16 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
     const restoreSelected = async () => {
         setRestoring(true);
 
-        for (const selectedItem of damMultiselectApi.selectedItems) {
-            if (selectedItem.type === "file") {
-                await client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
-                    mutation: restoreDamFileMutation,
-                    variables: { id: selectedItem.id },
-                });
-            }
-        }
+        const fileIds = damMultiselectApi.selectedItems.filter((item) => item.type === "file").map((item) => item.id);
 
-        await client.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
+        await client.mutate<GQLRestoreFilesMutation, GQLRestoreFilesMutationVariables>({
+            mutation: restoreDamFilesMutation,
+            variables: {
+                ids: fileIds,
+            },
+            refetchQueries: [namedOperations.Query.DamItemsList],
+        });
+
         damMultiselectApi.unselectAll();
         setRestoring(false);
     };
