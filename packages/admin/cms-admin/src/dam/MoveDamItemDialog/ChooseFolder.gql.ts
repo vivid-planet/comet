@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const allFoldersQuery = gql`
     query AllFoldersWithoutFilters {
-        damFoldersWithoutFilters {
+        damFoldersFlat {
             id
             name
             mpath

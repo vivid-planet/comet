@@ -87,7 +87,7 @@ export class FoldersService {
         return qb.getResult();
     }
 
-    async findAllWithoutFilters(): Promise<Folder[]> {
+    async findAllFlat(): Promise<Folder[]> {
         return this.selectQueryBuilder().getResult();
     }
 

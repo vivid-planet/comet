@@ -16,8 +16,8 @@ export class FoldersResolver {
     constructor(private readonly foldersService: FoldersService) {}
 
     @Query(() => [Folder])
-    async damFoldersWithoutFilters(): Promise<Folder[]> {
-        return this.foldersService.findAllWithoutFilters();
+    async damFoldersFlat(): Promise<Folder[]> {
+        return this.foldersService.findAllFlat();
     }
 
     @Query(() => PaginatedDamFolders)

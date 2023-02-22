@@ -210,7 +210,7 @@ type Query {
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
-  damFoldersWithoutFilters: [DamFolder!]!
+  damFoldersFlat: [DamFolder!]!
   damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder

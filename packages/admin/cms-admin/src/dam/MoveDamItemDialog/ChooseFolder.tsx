@@ -24,7 +24,7 @@ interface Folder {
 const createFolderTreeMap = (data: GQLAllFoldersWithoutFiltersQuery) => {
     const folderTreeMap = new TreeMap<Folder>();
 
-    for (const folder of data.damFoldersWithoutFilters) {
+    for (const folder of data.damFoldersFlat) {
         const parentId = folder.parent?.id ?? "root";
 
         let existingSiblingFolders: Folder[] = [];
