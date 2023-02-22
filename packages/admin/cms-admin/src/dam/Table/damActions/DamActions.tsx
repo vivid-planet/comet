@@ -36,11 +36,11 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
     const client = useApolloClient();
     const damMultiselectApi = useDamMultiselectApi();
 
-    const [archiveLoading, setArchiveLoading] = React.useState<boolean>(false);
-    const [restoreLoading, setRestoreLoading] = React.useState<boolean>(false);
+    const [archiving, setArchiving] = React.useState<boolean>(false);
+    const [restoring, setRestoring] = React.useState<boolean>(false);
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
-    const [deleteLoading, setDeleteLoading] = React.useState(false);
+    const [deleting, setDeleting] = React.useState(false);
 
     const onSelectAllPressed = () => {
         if (damMultiselectApi.selectedState === "all_selected") {
@@ -57,7 +57,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
     };
 
     const archiveSelected = async () => {
-        setArchiveLoading(true);
+        setArchiving(true);
 
         for (const selectedItem of damMultiselectApi.selectedItems) {
             if (selectedItem.type === "file") {
@@ -70,11 +70,11 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
 
         await client.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
         damMultiselectApi.unselectAll();
-        setArchiveLoading(false);
+        setArchiving(false);
     };
 
     const restoreSelected = async () => {
-        setRestoreLoading(true);
+        setRestoring(true);
 
         for (const selectedItem of damMultiselectApi.selectedItems) {
             if (selectedItem.type === "file") {
@@ -87,11 +87,11 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
 
         await client.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
         damMultiselectApi.unselectAll();
-        setRestoreLoading(false);
+        setRestoring(false);
     };
 
     const deleteSelected = async () => {
-        setDeleteLoading(true);
+        setDeleting(true);
         for (const selectedItem of damMultiselectApi.selectedItems) {
             if (selectedItem.type === "file") {
                 await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
@@ -112,7 +112,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
 
         await client.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
         damMultiselectApi.unselectAll();
-        setDeleteLoading(false);
+        setDeleting(false);
     };
 
     return (
@@ -140,7 +140,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                                 }}
                                 size="large"
                             >
-                                {restoreLoading ? <ThreeDotSaving /> : <Restore />}
+                                {restoring ? <ThreeDotSaving /> : <Restore />}
                             </IconButton>
                         </span>
                     </Tooltip>
@@ -153,7 +153,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                                 }}
                                 size="large"
                             >
-                                {archiveLoading ? <ThreeDotSaving /> : <Archive />}
+                                {archiving ? <ThreeDotSaving /> : <Archive />}
                             </IconButton>
                         </span>
                     </Tooltip>
@@ -166,7 +166,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                                     setDeleteDialogOpen(true);
                                 }}
                             >
-                                {deleteLoading ? <ThreeDotSaving /> : <Delete />}
+                                {deleting ? <ThreeDotSaving /> : <Delete />}
                             </IconButton>
                         </span>
                     </Tooltip>
