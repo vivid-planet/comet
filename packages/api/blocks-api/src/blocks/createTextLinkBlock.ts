@@ -27,7 +27,7 @@ interface TextImageBlockInputInterface<LinkBlockInput extends BlockInputInterfac
 }
 
 export function createTextLinkBlock<LinkBlock extends Block>({
-    name,
+    name = "TextLink",
     link: LinkBlock,
 }: CreateTextLinkBlockOptions<LinkBlock>): Block<BlockDataInterface, TextImageBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
     class TextLinkBlockData extends BlockData {

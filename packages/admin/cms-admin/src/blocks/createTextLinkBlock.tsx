@@ -21,7 +21,7 @@ interface CreateTextLinkBlockOptions {
     link: BlockInterface;
 }
 
-export function createTextLinkBlock({ link: LinkBlock, name }: CreateTextLinkBlockOptions): BlockInterface {
+export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: CreateTextLinkBlockOptions): BlockInterface {
     const { api: composedApi, block: composedBlock } = composeBlocks({ link: LinkBlock });
 
     const block = withAdditionalBlockAttributes<Pick<TextLinkBlockData, "text">>({
