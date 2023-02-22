@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file. This projec
 -   Breaking: Rename Publisher to PublisherPage
 -   Use data grid instead of table for PublisherPage
 -   Breaking: changed CmsBlockContext.damConfig.maxFileSize/maxSrcResolution to number (was string previously)
+-   Breaking: added required field name for TextLinkBlocks. Allows to implement multiple TextLink versions
 -   Breaking: removed the `<Chip />`-Component from the `infoTag` in the `DocumentInterface`.
 
     **Before**
