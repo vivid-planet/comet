@@ -269,10 +269,7 @@ const StyledListItem = styled(ListItem)<{ offset: number; isChosen?: boolean }>`
     ${({ isChosen, theme }) => {
         return isChosen
             ? `
-                border-top: solid 2px ${theme.palette.primary.main};
-                border-bottom: solid 2px ${theme.palette.primary.main};
-                border-left: solid 2px ${theme.palette.primary.main};
-                border-right: solid 2px ${theme.palette.primary.main};
+                border: solid 2px ${theme.palette.primary.main};
                 
                 &:last-child {
                     border-bottom: solid 2px ${theme.palette.primary.main};
