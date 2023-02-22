@@ -159,12 +159,10 @@ const FolderDataGrid = ({
         },
     });
 
-    const [moveDamItemDialogState, setMoveDamItemDialogState] = React.useState<"selection" | "single" | null>(null);
-    const [moveSingleDamItem, setMoveSingleDamItem] = React.useState<{ id: string; type: "file" | "folder" } | null>(null);
+    const [damItemsToMove, setDamItemsToMove] = React.useState<Array<{ id: string; type: "file" | "folder" }>>([]);
 
     const onMoveSingleDamItem = (id: string, type: "file" | "folder") => {
-        setMoveSingleDamItem({ id, type });
-        setMoveDamItemDialogState("single");
+        setDamItemsToMove([{ id, type }]);
     };
 
     return (
@@ -316,7 +314,10 @@ const FolderDataGrid = ({
                 open={selectionMap.size > 0}
                 selectedItemsMap={selectionMap}
                 onOpenMoveDialog={() => {
-                    setMoveDamItemDialogState("selection");
+                    const selectedItems = Array.from(selectionMap, ([id, type]) => {
+                        return { id, type };
+                    });
+                    setDamItemsToMove(selectedItems);
                 }}
             />
             <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />
@@ -336,32 +337,16 @@ const FolderDataGrid = ({
                 }}
             </EditDialog>
             {fileUploadApi.dialogs}
-            {moveDamItemDialogState !== null && (
+            {damItemsToMove.length > 0 && (
                 <MoveDamItemDialog
                     onClose={() => {
-                        setMoveDamItemDialogState(null);
+                        setDamItemsToMove([]);
                     }}
                     onChooseFolder={async (targetFolderId: string | null) => {
-                        setMoveDamItemDialogState(null);
+                        setDamItemsToMove([]);
 
-                        let fileIds: string[] = [];
-                        let folderIds: string[] = [];
-
-                        if (moveDamItemDialogState === "selection") {
-                            fileIds = Array.from(selectionMap.entries())
-                                .filter(([, type]) => type === "file")
-                                .map(([id]) => id);
-
-                            folderIds = Array.from(selectionMap.entries())
-                                .filter(([, type]) => type === "folder")
-                                .map(([id]) => id);
-                        } else if (moveDamItemDialogState === "single" && moveSingleDamItem) {
-                            if (moveSingleDamItem.type == "file") {
-                                fileIds.push(moveSingleDamItem.id);
-                            } else {
-                                folderIds.push(moveSingleDamItem.id);
-                            }
-                        }
+                        const fileIds = damItemsToMove.filter((item) => item.type === "file").map((item) => item.id);
+                        const folderIds = damItemsToMove.filter((item) => item.type === "folder").map((item) => item.id);
 
                         const mutations: Array<Promise<FetchResult>> = [];
 
