@@ -300,7 +300,7 @@ const ChooseFolderItem = ({ Icon, onIconClick, onClick, message, offset, isChose
                             onIconClick?.();
                         }}
                     />
-                )}{" "}
+                )}
                 {message}
             </div>
             <ArrowRight />
