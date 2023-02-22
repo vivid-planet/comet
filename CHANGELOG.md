@@ -83,9 +83,9 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Enable [no-return-await](https://eslint.org/docs/latest/rules/no-return-await)
 
-## Next minor
+## 3.2.3
 
-_tbd_
+_Feb 7, 2023_
 
 ### @comet/cms-api
 
