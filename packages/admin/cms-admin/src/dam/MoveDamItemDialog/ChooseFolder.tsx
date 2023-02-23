@@ -10,45 +10,14 @@ import { FixedSizeList as List } from "react-window";
 
 import { MarkedMatches } from "../../common/MarkedMatches";
 import { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "../../graphql.generated";
-import { traversePreOrder, TreeMap } from "../../pages/pageTree/treemap/TreeMapUtils";
+import { traversePreOrder } from "../../pages/pageTree/treemap/TreeMapUtils";
 import { allFoldersQuery } from "./ChooseFolder.gql";
 import { FolderSearchMatch } from "./MoveDamItemDialog";
-
-interface Folder {
-    id: string;
-    name: string;
-    mpath: string[];
-    parentId: string | null;
-}
-
-const createFolderTreeMap = (data: GQLAllFoldersWithoutFiltersQuery) => {
-    const folderTreeMap = new TreeMap<Folder>();
-
-    for (const folder of data.damFoldersFlat) {
-        const parentId = folder.parent?.id ?? "root";
-
-        let existingSiblingFolders: Folder[] = [];
-        if (folderTreeMap.has(parentId)) {
-            existingSiblingFolders = folderTreeMap.get(parentId) as Folder[];
-        }
-
-        folderTreeMap.set(parentId, [
-            ...existingSiblingFolders,
-            {
-                id: folder.id,
-                name: folder.name,
-                mpath: folder.mpath,
-                parentId: folder.parent?.id ?? null,
-            },
-        ]);
-    }
-
-    return folderTreeMap;
-};
+import { FolderTreeMap, useFolderTree } from "./useFolderTree";
 
 const findMatchesAndExpandedIdsBasedOnSearchQuery = (
     searchQuery: string,
-    { folderTree, expandedIds }: { folderTree: TreeMap<Folder>; expandedIds: Set<string> },
+    { folderTree, expandedIds }: { folderTree: FolderTreeMap; expandedIds: Set<string> },
 ) => {
     const internalExpandedIds = new Set(expandedIds);
     const newMatches: FolderSearchMatch[] = [];
@@ -92,40 +61,11 @@ interface ChooseFolderProps {
 }
 
 export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, onMatchesChange, currentMatchIndex }: ChooseFolderProps) => {
-    const [folderTree, setFolderTree] = React.useState<TreeMap<Folder>>(new TreeMap<Folder>());
-    const [expandedIds, setExpandedIds] = React.useState<Set<string>>(new Set());
-    const [visibleFolders, setVisibleFolders] = React.useState<Array<{ element: Folder; level: number }>>([]);
-
     const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
         fetchPolicy: "network-only",
     });
 
-    React.useEffect(() => {
-        if (data === undefined) {
-            return;
-        }
-
-        const folderTree = createFolderTreeMap(data);
-        setFolderTree(folderTree);
-    }, [data]);
-
-    React.useEffect(() => {
-        const newVisibleFolders: Array<{ element: Folder; level: number }> = [];
-
-        traversePreOrder(folderTree, (element, level) => {
-            const isParentVisible = element.parentId !== null ? newVisibleFolders.find((node) => node.element.id === element.parentId) : true;
-            const isParentExpanded = element.parentId !== null ? expandedIds.has(element.parentId) : true;
-
-            if (isParentVisible && isParentExpanded) {
-                newVisibleFolders.push({ element, level });
-            }
-        });
-
-        setVisibleFolders(newVisibleFolders);
-
-        // This should only be executed if the searchQuery changes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [expandedIds, folderTree]);
+    const { tree: folderTree, foldersToRender, expandedIds, setExpandedIds, toggleExpand } = useFolderTree({ damFoldersFlat: data?.damFoldersFlat });
 
     React.useEffect(() => {
         if (searchQuery === undefined || searchQuery.length === 0) {
@@ -151,7 +91,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
         }
 
         const folderId = matches?.[currentMatchIndex]?.folder?.id;
-        const index = visibleFolders.findIndex((node) => node.element.id === folderId) + 1; // + 1 is necessary because we artificially add the "Asset Manager" as the first item
+        const index = foldersToRender.findIndex((node) => node.element.id === folderId) + 1; // + 1 is necessary because we artificially add the "Asset Manager" as the first item
 
         refList.current?.scrollToItem(index, "smart");
 
@@ -169,7 +109,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
                         ref={refList}
                         height={height}
                         width={width}
-                        itemCount={visibleFolders.length + 1}
+                        itemCount={foldersToRender.length + 1}
                         itemSize={56}
                         overscanCount={1} // do not increase this for performance reasons
                         style={{ scrollBehavior: "smooth" }}
@@ -201,7 +141,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
                                 );
                             }
 
-                            const node = visibleFolders[index - 1];
+                            const node = foldersToRender[index - 1];
                             const folder = node.element;
                             const level = node.level;
 
@@ -212,19 +152,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
                                     key={folder.id}
                                     Icon={folderTree.has(folder.id) ? (expandedIds.has(folder.id) ? TreeCollapse : TreeExpand) : undefined}
                                     onIconClick={() => {
-                                        if (expandedIds.has(folder.id)) {
-                                            setExpandedIds((expandedIds) => {
-                                                const newExpandedIds = new Set(expandedIds);
-                                                newExpandedIds.delete(folder.id);
-                                                return newExpandedIds;
-                                            });
-                                        } else {
-                                            setExpandedIds((expandedIds) => {
-                                                const newExpandedIds = new Set(expandedIds);
-                                                newExpandedIds.add(folder.id);
-                                                return newExpandedIds;
-                                            });
-                                        }
+                                        toggleExpand(folder.id);
                                     }}
                                     message={folderMatches ? <MarkedMatches text={folder.name} matches={folderMatches} /> : folder.name}
                                     offset={20 + 36 * level}
