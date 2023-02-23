@@ -3,6 +3,7 @@ import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection } f
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Calendar } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -133,42 +134,44 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                     fullWidth
                                     disabled={value === "NO_LICENSE"}
                                 >
-                                    <Field
-                                        name="license.durationFrom"
-                                        placeholder="from"
-                                        component={FinalFormDatePicker}
-                                        clearable
-                                        startAdornment={null}
-                                        endAdornment={
-                                            <InputAdornment position="start">
-                                                <Calendar />
-                                            </InputAdornment>
-                                        }
-                                        disabled={value === "NO_LICENSE"}
-                                    />
-                                    <Field
-                                        name="license.durationTo"
-                                        placeholder="to"
-                                        component={FinalFormDatePicker}
-                                        clearable
-                                        startAdornment={null}
-                                        endAdornment={
-                                            <InputAdornment position="start">
-                                                <Calendar />
-                                            </InputAdornment>
-                                        }
-                                        validate={(value: Date | undefined, allValues) => {
-                                            if (value && allValues && value < (allValues as EditFileFormValues).license.durationFrom) {
-                                                return (
-                                                    <FormattedMessage
-                                                        id="comet.dam.file.error.durationTo"
-                                                        defaultMessage="The end date of the license must be after the start date"
-                                                    />
-                                                );
+                                    <DurationFieldWrapper>
+                                        <Field
+                                            name="license.durationFrom"
+                                            placeholder="from"
+                                            component={FinalFormDatePicker}
+                                            clearable
+                                            startAdornment={null}
+                                            endAdornment={
+                                                <InputAdornment position="start">
+                                                    <Calendar />
+                                                </InputAdornment>
                                             }
-                                        }}
-                                        disabled={value === "NO_LICENSE"}
-                                    />
+                                            disabled={value === "NO_LICENSE"}
+                                        />
+                                        <Field
+                                            name="license.durationTo"
+                                            placeholder="to"
+                                            component={FinalFormDatePicker}
+                                            clearable
+                                            startAdornment={null}
+                                            endAdornment={
+                                                <InputAdornment position="start">
+                                                    <Calendar />
+                                                </InputAdornment>
+                                            }
+                                            validate={(value: Date | undefined, allValues) => {
+                                                if (value && allValues && value < (allValues as EditFileFormValues).license.durationFrom) {
+                                                    return (
+                                                        <FormattedMessage
+                                                            id="comet.dam.file.error.durationTo"
+                                                            defaultMessage="The end date of the license must be after the start date"
+                                                        />
+                                                    );
+                                                }
+                                            }}
+                                            disabled={value === "NO_LICENSE"}
+                                        />
+                                    </DurationFieldWrapper>
                                 </FieldContainer>
                             </>
                         );
@@ -178,3 +181,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
         </div>
     );
 };
+
+const DurationFieldWrapper = styled("div")`
+    display: flex;
+`;
