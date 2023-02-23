@@ -5,6 +5,7 @@ import {
     FinalFormCheckbox,
     FinalFormInput,
     FinalFormSaveSplitButton,
+    FinalFormSubmitEvent,
     MainContent,
     Toolbar,
     ToolbarActions,
@@ -30,6 +31,7 @@ import {
     GQLProductQuery,
     GQLProductQueryVariables,
 } from "@src/graphql.generated";
+import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -56,7 +58,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormState>();
     const stackSwitchApi = useStackSwitchApi();
-    const createMutationResponseRef = React.useRef<GQLProductFormCreateProductMutation>();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
         productQuery,
@@ -89,9 +90,8 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async (formState: FormState) => {
+    const handleSubmit = async (formState: FormState, form: FormApi<FormState>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        createMutationResponseRef.current = undefined;
         const output = {
             ...formState,
             price: parseFloat(formState.price),
@@ -108,8 +108,13 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                 mutation: createProductMutation,
                 variables: { input: output },
             });
-            if (mutationReponse) {
-                createMutationResponseRef.current = mutationReponse;
+            if (!event.navigatingBack) {
+                const id = mutationReponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        stackSwitchApi.activatePage(`edit`, id);
+                    });
+                }
             }
         }
     };
@@ -130,7 +135,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
             onAfterSubmit={(values, form) => {
-                //don't go back automatically
+                //don't go back automatically TODO remove this automatismn
             }}
         >
             {({ values }) => (
@@ -147,14 +152,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FinalFormSaveSplitButton
-                                onNavigateToEditPage={() => {
-                                    const id = createMutationResponseRef.current?.createProduct.id;
-                                    if (mode == "add" && id) {
-                                        stackSwitchApi.activatePage(`edit`, id);
-                                    }
-                                }}
-                            />
+                            <FinalFormSaveSplitButton />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
