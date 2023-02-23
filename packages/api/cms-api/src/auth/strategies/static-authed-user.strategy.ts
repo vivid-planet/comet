@@ -6,23 +6,29 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { CurrentUserInterface } from "../current-user/current-user";
 
 interface StaticAuthedUserStrategyConfig {
-    staticAuthedUser: CurrentUserInterface;
+    userIdentifier: string;
 }
 
-export function createStaticAuthedUserStrategy(config: StaticAuthedUserStrategyConfig): Type {
-    @Injectable()
-    class StaticAuthedUserStrategy extends PassportStrategy(Strategy, "static-authed-user") {
-        constructor() {
-            const secretOrKey = "static";
-            super({
-                jwtFromRequest: ExtractJwt.fromExtractors([() => jwt.sign(config.staticAuthedUser, secretOrKey)]),
-                secretOrKey,
-            });
-        }
+@Injectable()
+export class StaticAuthedUserStrategy extends PassportStrategy(Strategy, "static-authed-user") {
+    constructor(config: StaticAuthedUserStrategyConfig) {
+        const secretOrKey = "static";
+        super({
+            jwtFromRequest: ExtractJwt.fromExtractors([() => jwt.sign(config.userIdentifier, secretOrKey)]),
+            secretOrKey,
+        });
+    }
+}
 
+export function createStaticAuthedUserStrategy(config: { staticAuthedUser: CurrentUserInterface }): Type {
+    @Injectable()
+    class Strategy extends StaticAuthedUserStrategy {
+        constructor() {
+            super({ userIdentifier: config.staticAuthedUser.id });
+        }
         validate(data: CurrentUserInterface): CurrentUserInterface {
-            return data;
+            return config.staticAuthedUser;
         }
     }
-    return StaticAuthedUserStrategy;
+    return Strategy;
 }
