@@ -12,9 +12,9 @@ registerEnumType(LicenseType, { name: "LicenseType" });
 @ObjectType("DamFileLicense")
 @Embeddable()
 export class License {
-    @Enum({ items: () => LicenseType, default: LicenseType.ROYALTY_FREE })
-    @Field(() => LicenseType)
-    type?: LicenseType = LicenseType.ROYALTY_FREE;
+    @Enum({ items: () => LicenseType, nullable: true })
+    @Field(() => LicenseType, { nullable: true })
+    type?: LicenseType;
 
     @Property({
         columnType: "text",
