@@ -108,54 +108,72 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                     label={<FormattedMessage id="comet.dam.file.type" defaultMessage="Type" />}
                     fullWidth
                 />
-                <Field
-                    label={<FormattedMessage id="comet.dam.file.licenseDetails" defaultMessage="License details" />}
-                    name="license.details"
-                    component={FinalFormInput}
-                    multiline
-                    minRows={3}
-                    fullWidth
-                />
-                <Field
-                    label={<FormattedMessage id="comet.dam.file.creatorOrAuthor" defaultMessage="Creator/Author" />}
-                    name="license.author"
-                    component={FinalFormInput}
-                    fullWidth
-                />
-                <FieldContainer label={<FormattedMessage id="comet.dam.file.licenseDuration" defaultMessage="License duration" />} fullWidth>
-                    <Field
-                        name="license.durationFrom"
-                        label={<FormattedMessage id="comet.dam.file.from" defaultMessage="from" />}
-                        component={FinalFormDatePicker}
-                        clearable
-                        startAdornment={
-                            <InputAdornment position="start">
-                                <Calendar />
-                            </InputAdornment>
-                        }
-                    />
-                    <Field
-                        name="license.durationTo"
-                        label={<FormattedMessage id="comet.dam.file.to" defaultMessage="to" />}
-                        component={FinalFormDatePicker}
-                        clearable
-                        startAdornment={
-                            <InputAdornment position="start">
-                                <Calendar />
-                            </InputAdornment>
-                        }
-                        validate={(value: Date | undefined, allValues) => {
-                            if (value && allValues && value < (allValues as EditFileFormValues).license.durationFrom) {
-                                return (
-                                    <FormattedMessage
-                                        id="comet.dam.file.error.durationTo"
-                                        defaultMessage="The end date of the license must be after the start date"
+                <Field name="license.type">
+                    {({ input: { value } }) => {
+                        return (
+                            <>
+                                <Field
+                                    label={<FormattedMessage id="comet.dam.file.licenseDetails" defaultMessage="License details" />}
+                                    name="license.details"
+                                    component={FinalFormInput}
+                                    multiline
+                                    minRows={3}
+                                    fullWidth
+                                    disabled={value === "NO_LICENSE"}
+                                />
+                                <Field
+                                    label={<FormattedMessage id="comet.dam.file.creatorOrAuthor" defaultMessage="Creator/Author" />}
+                                    name="license.author"
+                                    component={FinalFormInput}
+                                    fullWidth
+                                    disabled={value === "NO_LICENSE"}
+                                />
+                                <FieldContainer
+                                    label={<FormattedMessage id="comet.dam.file.licenseDuration" defaultMessage="License duration" />}
+                                    fullWidth
+                                    disabled={value === "NO_LICENSE"}
+                                >
+                                    <Field
+                                        name="license.durationFrom"
+                                        placeholder="from"
+                                        component={FinalFormDatePicker}
+                                        clearable
+                                        startAdornment={null}
+                                        endAdornment={
+                                            <InputAdornment position="start">
+                                                <Calendar />
+                                            </InputAdornment>
+                                        }
+                                        disabled={value === "NO_LICENSE"}
                                     />
-                                );
-                            }
-                        }}
-                    />
-                </FieldContainer>
+                                    <Field
+                                        name="license.durationTo"
+                                        placeholder="to"
+                                        component={FinalFormDatePicker}
+                                        clearable
+                                        startAdornment={null}
+                                        endAdornment={
+                                            <InputAdornment position="start">
+                                                <Calendar />
+                                            </InputAdornment>
+                                        }
+                                        validate={(value: Date | undefined, allValues) => {
+                                            if (value && allValues && value < (allValues as EditFileFormValues).license.durationFrom) {
+                                                return (
+                                                    <FormattedMessage
+                                                        id="comet.dam.file.error.durationTo"
+                                                        defaultMessage="The end date of the license must be after the start date"
+                                                    />
+                                                );
+                                            }
+                                        }}
+                                        disabled={value === "NO_LICENSE"}
+                                    />
+                                </FieldContainer>
+                            </>
+                        );
+                    }}
+                </Field>
             </FormSection>
         </div>
     );
