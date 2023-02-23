@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/client";
 import { Move, Reset } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -6,7 +7,11 @@ import { FormattedMessage } from "react-intl";
 
 import { TextMatch } from "../../common/MarkedMatches";
 import { SearchInput } from "../../common/SearchInput";
+import { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "../../graphql.generated";
 import { ChooseFolder } from "./ChooseFolder";
+import { allFoldersQuery } from "./ChooseFolder.gql";
+import { useFolderTree } from "./useFolderTree";
+import { useFolderTreeSearch } from "./useFolderTreeSearch";
 
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
@@ -23,38 +28,34 @@ interface MoveDamItemDialogProps {
 }
 
 export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: MoveDamItemDialogProps) => {
-    const [selectedId, setSelectedId] = React.useState<string | null>();
-    const [searchQuery, setSearchQuery] = React.useState<string>("");
-    const [matches, setMatches] = React.useState<FolderSearchMatch[] | null>(null);
-    const [currentMatchIndex, setCurrentMatchIndex] = React.useState<number | undefined>(undefined);
+    const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
+        fetchPolicy: "network-only",
+    });
 
-    const updateCurrentMatchIndex = React.useCallback(
-        (nextCurrentMatchIndex: number) => {
-            if (matches === null) {
-                return;
-            }
+    const {
+        tree: folderTree,
+        foldersToRender,
+        setExpandedIds,
+        toggleExpand,
+        selectedId,
+        setSelectedId,
+    } = useFolderTree({ damFoldersFlat: data?.damFoldersFlat });
 
-            setMatches(matches.map((match, index) => ({ ...match, focused: index === nextCurrentMatchIndex })));
-            setCurrentMatchIndex(nextCurrentMatchIndex);
-        },
-        [matches],
-    );
-
-    const jumpToNextMatch = React.useCallback(() => {
-        if (matches === null || currentMatchIndex === undefined) {
-            return;
-        }
-
-        updateCurrentMatchIndex(currentMatchIndex === matches.length - 1 ? 0 : currentMatchIndex + 1);
-    }, [currentMatchIndex, matches, updateCurrentMatchIndex]);
-
-    const jumpToPreviousMatch = React.useCallback(() => {
-        if (matches === null || currentMatchIndex === undefined) {
-            return;
-        }
-
-        updateCurrentMatchIndex(currentMatchIndex === 0 ? matches.length - 1 : currentMatchIndex - 1);
-    }, [currentMatchIndex, matches, updateCurrentMatchIndex]);
+    const {
+        foldersToRenderWithMatches,
+        query,
+        setQuery,
+        currentMatchIndex,
+        focusedFolderId,
+        totalMatches,
+        updateCurrentMatchIndex,
+        jumpToNextMatch,
+        jumpToPreviousMatch,
+    } = useFolderTreeSearch({
+        folderTree,
+        foldersToRender,
+        setExpandedIds,
+    });
 
     return (
         <FixedHeightDialog open={true} onClose={onClose} fullWidth maxWidth="lg">
@@ -70,19 +71,19 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: Mo
                 >
                     <SearchInput
                         autoFocus={true}
-                        query={searchQuery}
+                        query={query}
                         onQueryChange={(newQuery) => {
-                            setSearchQuery((prevQuery) => {
+                            setQuery((prevQuery) => {
                                 if (prevQuery === "") {
-                                    setCurrentMatchIndex(0);
+                                    updateCurrentMatchIndex(0);
                                 } else if (newQuery === "") {
-                                    setCurrentMatchIndex(undefined);
+                                    updateCurrentMatchIndex(undefined);
                                 }
 
                                 return newQuery;
                             });
                         }}
-                        totalMatches={matches?.length ?? 0}
+                        totalMatches={totalMatches ?? 0}
                         currentMatch={currentMatchIndex}
                         jumpToNextMatch={jumpToNextMatch}
                         jumpToPreviousMatch={jumpToPreviousMatch}
@@ -90,16 +91,15 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: Mo
                 </div>
                 <div style={{ flexGrow: 1 }}>
                     <ChooseFolder
+                        folderTree={folderTree}
+                        foldersToRenderWithMatches={foldersToRenderWithMatches}
+                        loading={loading}
+                        toggleExpand={toggleExpand}
                         selectedId={selectedId}
                         onFolderClick={(id: string | null) => {
                             setSelectedId(id);
                         }}
-                        searchQuery={searchQuery}
-                        matches={matches}
-                        onMatchesChange={(matches) => {
-                            setMatches(matches);
-                        }}
-                        currentMatchIndex={currentMatchIndex}
+                        focusedFolderId={focusedFolderId}
                     />
                 </div>
             </DialogContent>

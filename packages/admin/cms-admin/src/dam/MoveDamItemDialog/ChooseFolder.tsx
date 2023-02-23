@@ -1,103 +1,46 @@
-import { useQuery } from "@apollo/client";
 import { ArrowRight, BallTriangle, PageTree, TreeCollapse, TreeExpand } from "@comet/admin-icons";
 import { ListItem, SvgIconProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import escapeRegExp from "lodash.escaperegexp";
 import React, { useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 
 import { MarkedMatches } from "../../common/MarkedMatches";
-import { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "../../graphql.generated";
-import { traversePreOrder } from "../../pages/pageTree/treemap/TreeMapUtils";
-import { allFoldersQuery } from "./ChooseFolder.gql";
-import { FolderSearchMatch } from "./MoveDamItemDialog";
-import { FolderTreeMap, useFolderTree } from "./useFolderTree";
-
-const findMatchesAndExpandedIdsBasedOnSearchQuery = (
-    searchQuery: string,
-    { folderTree, expandedIds }: { folderTree: FolderTreeMap; expandedIds: Set<string> },
-) => {
-    const internalExpandedIds = new Set(expandedIds);
-    const newMatches: FolderSearchMatch[] = [];
-    const regex = new RegExp(`(${escapeRegExp(searchQuery)})`, "gi");
-
-    traversePreOrder(folderTree, (element) => {
-        let hasMatch = false;
-
-        let match: RegExpExecArray | null;
-        while ((match = regex.exec(element.name)) !== null) {
-            hasMatch = true;
-
-            newMatches.push({
-                start: match.index,
-                end: match.index + searchQuery.length - 1,
-                focused: newMatches.length === 0,
-                folder: {
-                    id: element.id,
-                },
-            });
-        }
-
-        if (hasMatch) {
-            internalExpandedIds.add(element.id);
-            for (const ancestorId of element.mpath) {
-                internalExpandedIds.add(ancestorId);
-            }
-        }
-    });
-
-    return { matches: newMatches, expandedIds: internalExpandedIds };
-};
+import { FolderTreeMap } from "./useFolderTree";
+import { FolderWithMatches } from "./useFolderTreeSearch";
 
 interface ChooseFolderProps {
+    folderTree: FolderTreeMap;
+    foldersToRenderWithMatches: Array<FolderWithMatches>;
+    loading: boolean;
+    toggleExpand: (id: string) => void;
     selectedId?: string | null;
     onFolderClick: (id: string | null) => void;
-    searchQuery?: string;
-    matches: FolderSearchMatch[] | null;
-    onMatchesChange: (matches: FolderSearchMatch[]) => void;
-    currentMatchIndex?: number;
+    focusedFolderId?: string;
 }
 
-export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, onMatchesChange, currentMatchIndex }: ChooseFolderProps) => {
-    const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
-        fetchPolicy: "network-only",
-    });
-
-    const { tree: folderTree, foldersToRender, expandedIds, setExpandedIds, toggleExpand } = useFolderTree({ damFoldersFlat: data?.damFoldersFlat });
-
+export const ChooseFolder = ({
+    folderTree,
+    foldersToRenderWithMatches,
+    loading,
+    toggleExpand,
+    selectedId,
+    onFolderClick,
+    focusedFolderId,
+}: ChooseFolderProps) => {
     React.useEffect(() => {
-        if (searchQuery === undefined || searchQuery.length === 0) {
-            onMatchesChange([]);
+        if (focusedFolderId === undefined) {
             return;
         }
 
-        const { matches: newMatches, expandedIds: newExpandedIds } = findMatchesAndExpandedIdsBasedOnSearchQuery(searchQuery, {
-            folderTree,
-            expandedIds,
-        });
-
-        setExpandedIds(newExpandedIds);
-        onMatchesChange(newMatches);
-
-        // This should only be executed if the searchQuery changes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchQuery]);
-
-    React.useEffect(() => {
-        if (currentMatchIndex === undefined) {
-            return;
-        }
-
-        const folderId = matches?.[currentMatchIndex]?.folder?.id;
-        const index = foldersToRender.findIndex((node) => node.element.id === folderId) + 1; // + 1 is necessary because we artificially add the "Asset Manager" as the first item
+        const index = foldersToRenderWithMatches.findIndex((folder) => folder.id === focusedFolderId) + 1; // + 1 is necessary because we artificially add the "Asset Manager" as the first item
 
         refList.current?.scrollToItem(index, "smart");
 
-        // This should only be executed if the currentMatchIndex or the visibleFolders change
+        // This should only be executed if the focusedFolderId changes
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentMatchIndex]);
+    }, [focusedFolderId]);
 
     const refList = useRef<List>(null);
 
@@ -109,7 +52,7 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
                         ref={refList}
                         height={height}
                         width={width}
-                        itemCount={foldersToRender.length + 1}
+                        itemCount={foldersToRenderWithMatches.length + 1}
                         itemSize={56}
                         overscanCount={1} // do not increase this for performance reasons
                         style={{ scrollBehavior: "smooth" }}
@@ -141,21 +84,17 @@ export const ChooseFolder = ({ selectedId, onFolderClick, searchQuery, matches, 
                                 );
                             }
 
-                            const node = foldersToRender[index - 1];
-                            const folder = node.element;
-                            const level = node.level;
-
-                            const folderMatches = matches?.filter((match) => match.folder.id === folder.id);
+                            const folder = foldersToRenderWithMatches[index - 1];
 
                             return (
                                 <ChooseFolderItem
                                     key={folder.id}
-                                    Icon={folderTree.has(folder.id) ? (expandedIds.has(folder.id) ? TreeCollapse : TreeExpand) : undefined}
+                                    Icon={folderTree.has(folder.id) ? (folder.expanded ? TreeCollapse : TreeExpand) : undefined}
                                     onIconClick={() => {
                                         toggleExpand(folder.id);
                                     }}
-                                    message={folderMatches ? <MarkedMatches text={folder.name} matches={folderMatches} /> : folder.name}
-                                    offset={20 + 36 * level}
+                                    message={folder.matches ? <MarkedMatches text={folder.name} matches={folder.matches} /> : folder.name}
+                                    offset={20 + 36 * folder.level}
                                     isChosen={selectedId === folder.id}
                                     onClick={() => {
                                         onFolderClick(folder.id);
