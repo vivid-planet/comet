@@ -385,7 +385,7 @@ input ImageCropAreaInput {
 }
 
 input LicenseInput {
-  type: LicenseType!
+  type: LicenseType
   details: String
   author: String
   durationFrom: DateTime

@@ -39,7 +39,7 @@ import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { FilePreview } from "./FilePreview";
-import { FileSettingsFields } from "./FileSettingsFields";
+import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
 
 export interface EditImageFormValues {
@@ -56,7 +56,9 @@ export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
-    license: GQLLicenseInput;
+    license: Omit<GQLLicenseInput, "type"> & {
+        type: LicenseType;
+    };
 }
 
 interface EditFormProps {
@@ -153,7 +155,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                         image: {
                             cropArea,
                         },
-                        license: values.license,
+                        license: { ...values.license, type: values.license.type === "NO_LICENSE" ? null : values.license.type },
                     },
                 },
             });
@@ -180,7 +182,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 altText: file.altText,
                 title: file.title,
                 license: {
-                    type: file.license.type,
+                    type: file.license.type ?? "NO_LICENSE",
                     details: file.license.details,
                     author: file.license.author,
                     durationFrom: file.license.durationFrom ? Date.parse(file.license.durationFrom) : undefined,

@@ -21,9 +21,12 @@ const damIsFilenameOccupiedQuery = gql`
     }
 `;
 
-const licenseTypeArray: readonly GQLLicenseType[] = ["ROYALTY_FREE", "RIGHTS_MANAGED", "SUBSCRIPTION", "MICRO"];
+export type LicenseType = GQLLicenseType | "NO_LICENSE";
 
-const licenseTypeLabels: { [key in GQLLicenseType]: React.ReactNode } = {
+const licenseTypeArray: readonly LicenseType[] = ["NO_LICENSE", "ROYALTY_FREE", "RIGHTS_MANAGED", "SUBSCRIPTION", "MICRO"];
+
+const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
+    NO_LICENSE: "-",
     ROYALTY_FREE: <FormattedMessage id="comet.dam.file.licenseType.royaltyFree" defaultMessage="Royalty free" />,
     RIGHTS_MANAGED: <FormattedMessage id="comet.dam.file.licenseType.rightsManaged" defaultMessage="Rights managed" />,
     SUBSCRIPTION: <FormattedMessage id="comet.dam.file.licenseType.subscription" defaultMessage="Subscription" />,
@@ -96,11 +99,11 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
             <FormSection title={<FormattedMessage id="comet.dam.file.licenseInformation" defaultMessage="License information" />}>
                 <Field
                     component={FinalFormSelect}
-                    getOptionLabel={(option: GQLLicenseType) => licenseTypeLabels[option]}
-                    getOptionSelected={(option: GQLLicenseType, selectedOption: GQLLicenseType) => {
+                    options={licenseTypeArray}
+                    getOptionLabel={(option: LicenseType) => licenseTypeLabels[option]}
+                    getOptionSelected={(option: LicenseType, selectedOption: LicenseType) => {
                         return option === selectedOption;
                     }}
-                    options={licenseTypeArray}
                     name="license.type"
                     label={<FormattedMessage id="comet.dam.file.type" defaultMessage="Type" />}
                     fullWidth

@@ -26,9 +26,10 @@ export class ImageFileInput {
 
 @InputType()
 export class LicenseInput {
-    @Field(() => LicenseType)
+    @Field(() => LicenseType, { nullable: true })
+    @IsOptional()
     @IsEnum(LicenseType)
-    type: LicenseType;
+    type?: LicenseType;
 
     @Field({ nullable: true })
     @IsOptional()
