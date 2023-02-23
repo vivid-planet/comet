@@ -88,7 +88,7 @@ export class FoldersService {
     }
 
     async findAllFlat(): Promise<Folder[]> {
-        return this.selectQueryBuilder().getResult();
+        return this.selectQueryBuilder().orderBy({ name: "ASC" }).getResult();
     }
 
     async findAndCount({ parentId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: FolderArgs): Promise<[Folder[], number]> {
