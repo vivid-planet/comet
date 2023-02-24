@@ -3,7 +3,7 @@ import { Field, ObjectType } from "@nestjs/graphql";
 
 declare module "@comet/cms-api" {
     interface CurrentUserInterface {
-        domains: Array<"main" | "secondary">;
+        domains: string[];
     }
 }
 
@@ -23,5 +23,5 @@ export class CurrentUser implements CurrentUserInterface {
     role: string;
 
     @Field(() => [String])
-    domains: Array<"main" | "secondary">;
+    domains: string[];
 }

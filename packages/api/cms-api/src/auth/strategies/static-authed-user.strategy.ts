@@ -24,9 +24,9 @@ export function createStaticAuthedUserStrategy(config: { staticAuthedUser: Curre
     @Injectable()
     class Strategy extends StaticAuthedUserStrategy {
         constructor() {
-            super({ userIdentifier: config.staticAuthedUser.id });
+            super({ userIdentifier: "notUsed" });
         }
-        validate(data: CurrentUserInterface): CurrentUserInterface {
+        validate(): CurrentUserInterface {
             return config.staticAuthedUser;
         }
     }
