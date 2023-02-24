@@ -7,18 +7,26 @@ interface StaticCredentialsBasicStrategyConfig {
     password: string;
 }
 
+@Injectable()
+export class StaticCredentialsBasicStrategy extends PassportStrategy(BasicStrategy, "static-credentials-basic") {
+    static strategyName = "static-credentials-basic";
+    constructor(private readonly config: StaticCredentialsBasicStrategyConfig) {
+        super();
+    }
+
+    async validate(username: string, password: string): Promise<boolean> {
+        if (this.config.username === "") throw new Error("username for StaticCredentialsBasicStrategy must no be empty");
+        if (this.config.password === "") throw new Error("password for StaticCredentialsBasicStrategy must no be empty");
+        return username === this.config.username && password === this.config.password;
+    }
+}
+
 export function createStaticCredentialsBasicStrategy(config: StaticCredentialsBasicStrategyConfig): Type {
     @Injectable()
-    class StaticCredentialsBasicStrategy extends PassportStrategy(BasicStrategy, "static-credentials-basic") {
+    class Strategy extends StaticCredentialsBasicStrategy {
         constructor() {
-            super();
-        }
-
-        async validate(username: string, password: string): Promise<boolean> {
-            if (config.username === "") throw new Error("username for StaticCredentialsBasicStrategy must no be empty");
-            if (config.password === "") throw new Error("password for StaticCredentialsBasicStrategy must no be empty");
-            return username === config.username && password === config.password;
+            super(config);
         }
     }
-    return StaticCredentialsBasicStrategy;
+    return Strategy;
 }
