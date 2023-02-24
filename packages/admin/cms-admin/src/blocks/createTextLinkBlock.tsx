@@ -17,7 +17,7 @@ import { FormattedMessage } from "react-intl";
 import { TextLinkBlockData, TextLinkBlockInput } from "../blocks.generated";
 
 interface CreateTextLinkBlockOptions {
-    name: string;
+    name?: string;
     link: BlockInterface;
 }
 
