@@ -8,7 +8,7 @@ interface StaticCredentialsBasicStrategyConfig {
 }
 
 @Injectable()
-export class StaticCredentialsBasicStrategy extends PassportStrategy(BasicStrategy, "static-credentials-basic") {
+export abstract class StaticCredentialsBasicStrategy extends PassportStrategy(BasicStrategy, "static-credentials-basic") {
     static strategyName = "static-credentials-basic";
     constructor(private readonly config: StaticCredentialsBasicStrategyConfig) {
         super();

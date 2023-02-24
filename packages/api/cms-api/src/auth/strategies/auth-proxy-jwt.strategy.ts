@@ -10,7 +10,7 @@ interface AuthProxyJwtStrategyConfig {
 }
 
 @Injectable()
-export class AuthProxyJwtStrategy extends PassportStrategy(Strategy, "auth-proxy-jwt") {
+export abstract class AuthProxyJwtStrategy extends PassportStrategy(Strategy, "auth-proxy-jwt") {
     constructor(config: AuthProxyJwtStrategyConfig) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

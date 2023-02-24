@@ -10,7 +10,7 @@ interface StaticAuthedUserStrategyConfig {
 }
 
 @Injectable()
-export class StaticAuthedUserStrategy extends PassportStrategy(Strategy, "static-authed-user") {
+export abstract class StaticAuthedUserStrategy extends PassportStrategy(Strategy, "static-authed-user") {
     constructor(config: StaticAuthedUserStrategyConfig) {
         const secretOrKey = "static";
         super({
