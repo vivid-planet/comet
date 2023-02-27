@@ -7,9 +7,9 @@ export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decor
 export { PublicApi } from "./auth/decorators/public-api.decorator";
 export { createCometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
-export { AuthProxyJwtStrategy, createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";
-export { createStaticAuthedUserStrategy, StaticAuthedUserStrategy } from "./auth/strategies/static-authed-user.strategy";
-export { createStaticCredentialsBasicStrategy, StaticCredentialsBasicStrategy } from "./auth/strategies/static-credentials-basic.strategy";
+export { createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";
+export { createStaticAuthedUserStrategy } from "./auth/strategies/static-authed-user.strategy";
+export { createStaticCredentialsBasicStrategy } from "./auth/strategies/static-credentials-basic.strategy";
 export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
 export { BlobStorageAzureStorage } from "./blob-storage/backends/azure/blob-storage-azure.storage";
 export { BlobStorageBackendInterface, CreateFileOptions, StorageMetaData } from "./blob-storage/backends/blob-storage-backend.interface";

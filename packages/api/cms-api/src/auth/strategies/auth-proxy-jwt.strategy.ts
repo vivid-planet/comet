@@ -7,19 +7,7 @@ import { CurrentUserInterface, CurrentUserLoaderInterface } from "../current-use
 
 interface AuthProxyJwtStrategyConfig {
     jwksUri: string;
-}
-
-@Injectable()
-export abstract class AuthProxyJwtStrategy extends PassportStrategy(Strategy, "auth-proxy-jwt") {
-    constructor(config: AuthProxyJwtStrategyConfig) {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKeyProvider: passportJwtSecret({
-                jwksUri: config.jwksUri,
-            }),
-            ignoreExpiration: true, // https://github.com/oauth2-proxy/oauth2-proxy/issues/1836
-        });
-    }
+    currentUserLoader?: CurrentUserLoaderInterface;
 }
 
 class CurrentUserLoader implements CurrentUserLoaderInterface {
@@ -36,11 +24,17 @@ class CurrentUserLoader implements CurrentUserLoaderInterface {
     }
 }
 
-export function createAuthProxyJwtStrategy(config: AuthProxyJwtStrategyConfig & { currentUserLoader?: CurrentUserLoaderInterface }): Type {
+export function createAuthProxyJwtStrategy(config: AuthProxyJwtStrategyConfig): Type {
     @Injectable()
-    class Strategy extends AuthProxyJwtStrategy {
+    class AuthProxyJwtStrategy extends PassportStrategy(Strategy, "auth-proxy-jwt") {
         constructor() {
-            super({ jwksUri: config.jwksUri });
+            super({
+                jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+                secretOrKeyProvider: passportJwtSecret({
+                    jwksUri: config.jwksUri,
+                }),
+                ignoreExpiration: true, // https://github.com/oauth2-proxy/oauth2-proxy/issues/1836
+            });
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,5 +43,5 @@ export function createAuthProxyJwtStrategy(config: AuthProxyJwtStrategyConfig & 
             return userLoader.load(data);
         }
     }
-    return Strategy;
+    return AuthProxyJwtStrategy;
 }

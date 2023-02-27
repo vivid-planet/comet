@@ -1,13 +1,11 @@
-import { CurrentUserInterface, StaticAuthedUserStrategy } from "@comet/cms-api";
+import { createStaticAuthedUserStrategy, CurrentUserInterface } from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class AuthStrategy extends StaticAuthedUserStrategy {
+export class AuthStrategy extends createStaticAuthedUserStrategy({ staticAuthedUser: "admin" }) {
     // You can use Dependency Injection here (e.g. injecting a repository from which the user will be loaded in validate())
     constructor() {
-        super({
-            userIdentifier: "admin", // Change this to switch user
-        });
+        super();
     }
 
     validate(userIdentifier: string): CurrentUserInterface | undefined {
