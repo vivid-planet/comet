@@ -1,4 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
+import { FetchResult } from "@apollo/client/link/core";
 import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, PrettyBytes, useDataGridRemote } from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
@@ -6,7 +7,16 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import { GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
+import {
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
+    GQLMoveDamFilesMutation,
+    GQLMoveDamFilesMutationVariables,
+    GQLMoveDamFoldersMutation,
+    GQLMoveDamFoldersMutationVariables,
+} from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
@@ -14,9 +24,10 @@ import EditFolder from "../FolderForm/EditFolder";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
+import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { damFolderQuery, damItemsListQuery } from "./FolderDataGrid.gql";
+import { damFolderQuery, damItemsListQuery, moveDamFilesMutation, moveDamFoldersMutation } from "./FolderDataGrid.gql";
 import * as sc from "./FolderDataGrid.sc";
 import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
@@ -148,6 +159,12 @@ const FolderDataGrid = ({
         },
     });
 
+    const [damItemsToMove, setDamItemsToMove] = React.useState<Array<{ id: string; type: "file" | "folder" }>>([]);
+
+    const onMoveSingleDamItem = (id: string, type: "file" | "folder") => {
+        setDamItemsToMove([{ id, type }]);
+    };
+
     return (
         <div style={{ padding: "20px" }}>
             <FolderHead isSearching={isSearching} numberItems={dataGridData?.damItemsList.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
@@ -246,7 +263,11 @@ const FolderDataGrid = ({
                             headerName: "",
                             align: "center",
                             renderCell: ({ row }) => {
-                                return isFile(row) ? <DamContextMenu file={row} /> : <DamContextMenu folder={row} />;
+                                return isFile(row) ? (
+                                    <DamContextMenu file={row} onMove={onMoveSingleDamItem} />
+                                ) : (
+                                    <DamContextMenu folder={row} onMove={onMoveSingleDamItem} />
+                                );
                             },
                             renderHeader: () => null,
                             sortable: false,
@@ -289,7 +310,16 @@ const FolderDataGrid = ({
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
-            <DamSelectionFooter open={selectionMap.size > 0} selectedItemsMap={selectionMap} />
+            <DamSelectionFooter
+                open={selectionMap.size > 0}
+                selectedItemsMap={selectionMap}
+                onOpenMoveDialog={() => {
+                    const selectedItems = Array.from(selectionMap, ([id, type]) => {
+                        return { id, type };
+                    });
+                    setDamItemsToMove(selectedItems);
+                }}
+            />
             <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />
             <EditDialog
                 title={{
@@ -307,6 +337,50 @@ const FolderDataGrid = ({
                 }}
             </EditDialog>
             {fileUploadApi.dialogs}
+            {damItemsToMove.length > 0 && (
+                <MoveDamItemDialog
+                    onClose={() => {
+                        setDamItemsToMove([]);
+                    }}
+                    onChooseFolder={async (targetFolderId: string | null) => {
+                        setDamItemsToMove([]);
+
+                        const fileIds = damItemsToMove.filter((item) => item.type === "file").map((item) => item.id);
+                        const folderIds = damItemsToMove.filter((item) => item.type === "folder").map((item) => item.id);
+
+                        const mutations: Array<Promise<FetchResult>> = [];
+
+                        if (fileIds.length > 0) {
+                            mutations.push(
+                                apolloClient.mutate<GQLMoveDamFilesMutation, GQLMoveDamFilesMutationVariables>({
+                                    mutation: moveDamFilesMutation,
+                                    variables: {
+                                        fileIds,
+                                        targetFolderId: targetFolderId,
+                                    },
+                                }),
+                            );
+                        }
+
+                        if (folderIds.length > 0) {
+                            mutations.push(
+                                apolloClient.mutate<GQLMoveDamFoldersMutation, GQLMoveDamFoldersMutationVariables>({
+                                    mutation: moveDamFoldersMutation,
+                                    variables: {
+                                        folderIds,
+                                        targetFolderId: targetFolderId,
+                                    },
+                                }),
+                            );
+                        }
+
+                        await Promise.all(mutations);
+
+                        clearDamItemCache(apolloClient.cache);
+                    }}
+                    numberOfItems={damItemsToMove.length}
+                />
+            )}
         </div>
     );
 };

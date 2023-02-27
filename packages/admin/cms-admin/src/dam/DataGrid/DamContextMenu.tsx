@@ -1,6 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { useEditDialogApi, useErrorDialog, useStackSwitchApi } from "@comet/admin";
-import { Archive, Delete, Download, Edit, MoreVertical, Restore } from "@comet/admin-icons";
+import { Archive, Delete, Download, Edit, MoreVertical, Move, Restore } from "@comet/admin-icons";
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from "@mui/material";
 import saveAs from "file-saver";
 import * as React from "react";
@@ -27,19 +27,22 @@ import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation }
 interface DamContextMenuProps {
     file?: Pick<GQLDamFile, "id" | "name" | "fileUrl" | "archived">;
     folder?: Pick<GQLDamFolder, "id" | "name">;
+    onMove: (id: string, type: "file" | "folder") => void;
 }
 
 interface FolderInnerMenuProps {
     folder: Pick<GQLDamFile, "id" | "name">;
     handleClose: () => void;
+    onMove: (id: string, type: "file" | "folder") => void;
 }
 
 interface FileInnerMenuProps {
     file: Pick<GQLDamFile, "id" | "name" | "fileUrl" | "archived">;
     handleClose: () => void;
+    onMove: (id: string, type: "file" | "folder") => void;
 }
 
-const FolderInnerMenu = ({ folder, handleClose }: FolderInnerMenuProps): React.ReactElement => {
+const FolderInnerMenu = ({ folder, handleClose, onMove }: FolderInnerMenuProps): React.ReactElement => {
     const intl = useIntl();
     const editDialogApi = useEditDialogApi();
     const errorDialog = useErrorDialog();
@@ -87,6 +90,17 @@ const FolderInnerMenu = ({ folder, handleClose }: FolderInnerMenuProps): React.R
             </MenuItem>
             <MenuItem
                 onClick={() => {
+                    handleClose();
+                    onMove(folder.id, "folder");
+                }}
+            >
+                <ListItemIcon>
+                    <Move />
+                </ListItemIcon>
+                <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.move", defaultMessage: "Move" })} />
+            </MenuItem>
+            <MenuItem
+                onClick={() => {
                     setDeleteDialogOpen(true);
                 }}
             >
@@ -111,7 +125,7 @@ const FolderInnerMenu = ({ folder, handleClose }: FolderInnerMenuProps): React.R
     );
 };
 
-const FileInnerMenu = ({ file, handleClose }: FileInnerMenuProps): React.ReactElement => {
+const FileInnerMenu = ({ file, handleClose, onMove }: FileInnerMenuProps): React.ReactElement => {
     const client = useApolloClient();
     const intl = useIntl();
     const stackApi = useStackSwitchApi();
@@ -130,6 +144,17 @@ const FileInnerMenu = ({ file, handleClose }: FileInnerMenuProps): React.ReactEl
                     <Edit />
                 </ListItemIcon>
                 <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.showEdit", defaultMessage: "Show/edit" })} />
+            </MenuItem>
+            <MenuItem
+                onClick={() => {
+                    handleClose();
+                    onMove(file.id, "file");
+                }}
+            >
+                <ListItemIcon>
+                    <Move />
+                </ListItemIcon>
+                <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.moveFile", defaultMessage: "Move file" })} />
             </MenuItem>
             <MenuItem
                 onClick={() => {
@@ -201,7 +226,7 @@ const FileInnerMenu = ({ file, handleClose }: FileInnerMenuProps): React.ReactEl
     );
 };
 
-const DamContextMenu = ({ file, folder }: DamContextMenuProps): React.ReactElement => {
+const DamContextMenu = ({ file, folder, onMove }: DamContextMenuProps): React.ReactElement => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -215,9 +240,9 @@ const DamContextMenu = ({ file, folder }: DamContextMenuProps): React.ReactEleme
     let innerMenu = null;
 
     if (folder !== undefined) {
-        innerMenu = <FolderInnerMenu folder={folder} handleClose={handleClose} />;
+        innerMenu = <FolderInnerMenu folder={folder} handleClose={handleClose} onMove={onMove} />;
     } else if (file !== undefined) {
-        innerMenu = <FileInnerMenu file={file} handleClose={handleClose} />;
+        innerMenu = <FileInnerMenu file={file} handleClose={handleClose} onMove={onMove} />;
     }
 
     return (

@@ -15,6 +15,11 @@ export class PaginatedDamFolders extends PaginatedResponseFactory.create(Folder)
 export class FoldersResolver {
     constructor(private readonly foldersService: FoldersService) {}
 
+    @Query(() => [Folder])
+    async damFoldersFlat(): Promise<Folder[]> {
+        return this.foldersService.findAllFlat();
+    }
+
     @Query(() => PaginatedDamFolders)
     async damFoldersList(@Args() args: FolderArgs): Promise<PaginatedDamFolders> {
         const [folders, totalCount] = await this.foldersService.findAndCount(args);
