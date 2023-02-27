@@ -1,7 +1,6 @@
 import "reflect-metadata";
 
 export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
-export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
 export { PublicApi } from "./auth/decorators/public-api.decorator";

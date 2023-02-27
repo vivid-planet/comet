@@ -10,7 +10,6 @@ import {
     createPageTreeResolver,
     createRedirectsResolver,
     CurrentUserInterface,
-    CurrentUserRightInterface,
     DocumentInterface,
     FileImagesResolver,
     FilesResolver,
@@ -40,15 +39,6 @@ class Page implements DocumentInterface {
 }
 
 @ObjectType()
-class CurrentUserRight implements CurrentUserRightInterface {
-    @Field()
-    right: string;
-
-    @Field(() => [String])
-    values: string[];
-}
-
-@ObjectType()
 class CurrentUser implements CurrentUserInterface {
     id: string;
     @Field()
@@ -57,10 +47,6 @@ class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
-    @Field()
-    role: string;
-    @Field(() => [CurrentUserRight], { nullable: true })
-    rights: CurrentUserRightInterface[];
 }
 
 async function generateSchema(): Promise<void> {

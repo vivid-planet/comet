@@ -159,17 +159,10 @@ interface DocumentInterface {
   updatedAt: DateTime!
 }
 
-type CurrentUserRight {
-  right: String!
-  values: [String!]!
-}
-
 type CurrentUser {
   name: String!
   email: String!
   language: String!
-  role: String!
-  rights: [CurrentUserRight!]
 }
 
 type Redirect implements DocumentInterface {

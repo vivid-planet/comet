@@ -18,8 +18,6 @@ class CurrentUserLoader implements CurrentUserLoaderInterface {
             name: data.name,
             email: data.email,
             language: data.language,
-            role: data.ext?.role,
-            rights: data.ext?.rights,
         };
     }
 }
