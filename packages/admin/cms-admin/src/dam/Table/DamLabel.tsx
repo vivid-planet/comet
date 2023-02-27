@@ -1,11 +1,13 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { add, compareAsc, getUnixTime } from "date-fns";
 import * as React from "react";
 
 import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { isFile } from "./FolderTableRow";
 import { ArchivedTag } from "./tags/ArchivedTag";
+import { LicenseExpiredTag, LicenseExpiresSoonTag, LicenseNotValidYetTag } from "./tags/LicenseWarningTags";
 import { DamThumbnail } from "./thumbnail/DamThumbnail";
 
 const LabelWrapper = styled("div")`
@@ -20,13 +22,6 @@ const NameWrapper = styled("div")`
     justify-content: space-between;
 `;
 
-const TagWrapper = styled("div")`
-    margin-left: 10px;
-    display: flex;
-    justify-content: space-between;
-    gap: 5px;
-`;
-
 const Path = styled(Typography)`
     color: ${({ theme }) => theme.palette.grey[300]};
 `;
@@ -35,6 +30,7 @@ interface DamLabelProps {
     asset: GQLDamFolderTableFragment | GQLDamFileTableFragment;
     showPath?: boolean;
     matches?: TextMatch[];
+    showLicenseWarnings?: boolean;
 }
 
 const getFilePath = (file: GQLDamFileTableFragment) => {
@@ -56,7 +52,25 @@ const getFolderPath = (folder: GQLDamFolderTableFragment) => {
     return `/${pathArr.join("/")}`;
 };
 
-const DamLabel = ({ asset, showPath = false, matches }: DamLabelProps): React.ReactElement => {
+const currentDate = new Date();
+const thirtyDaysInSeconds = 60 * 60 * 24 * 30;
+
+const DamLabel = ({ asset, showPath = false, matches, showLicenseWarnings = true }: DamLabelProps): React.ReactElement => {
+    const durationTo =
+        isFile(asset) && asset.license.durationTo !== null
+            ? add(new Date(asset.license.durationTo), {
+                  days: 1,
+              })
+            : null;
+    const durationFrom =
+        isFile(asset) && asset.license.durationFrom !== null
+            ? add(new Date(asset.license.durationFrom), {
+                  days: 1,
+              })
+            : null;
+
+    const differenceBetweenExpirationDateAndNow = durationTo ? getUnixTime(durationTo) - getUnixTime(currentDate) : null;
+
     return (
         <LabelWrapper>
             <DamThumbnail asset={asset} />
@@ -64,11 +78,14 @@ const DamLabel = ({ asset, showPath = false, matches }: DamLabelProps): React.Re
                 <Typography>{matches ? <MarkedMatches text={asset.name} matches={matches} /> : asset.name}</Typography>
                 {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
             </NameWrapper>
-            {isFile(asset) && asset.archived && (
-                <TagWrapper>
-                    <ArchivedTag />
-                </TagWrapper>
-            )}
+            {isFile(asset) && asset.archived && <ArchivedTag />}
+            {showLicenseWarnings && durationFrom !== null && compareAsc(currentDate, durationFrom) === -1 && <LicenseNotValidYetTag />}
+            {showLicenseWarnings && durationTo !== null && compareAsc(currentDate, durationTo) === 1 && <LicenseExpiredTag />}
+            {showLicenseWarnings &&
+                durationTo !== null &&
+                differenceBetweenExpirationDateAndNow !== null &&
+                differenceBetweenExpirationDateAndNow > 0 &&
+                differenceBetweenExpirationDateAndNow <= thirtyDaysInSeconds && <LicenseExpiresSoonTag expirationDate={durationTo} />}
         </LabelWrapper>
     );
 };

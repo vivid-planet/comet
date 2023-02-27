@@ -11,6 +11,10 @@ export const damFileTableFragment = gql`
         size
         mimetype
         contentHash
+        license {
+            durationFrom
+            durationTo
+        }
         folder {
             id
             name
