@@ -4,10 +4,8 @@ import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
 import { CometValidationException } from "../common/errors/validation.exception";
-import { filtersToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { RedirectsService } from "../redirects/redirects.service";
 import { AttachedDocumentStrictInput } from "./dto/attached-document.input";
-import { PageTreeNodeFilter } from "./dto/pag-tree-nodes.filter";
 import { MovePageTreeNodesByPosInput, PageTreeNodeBaseCreateInput } from "./dto/page-tree-node.input";
 import { PageTreeNodeSort } from "./dto/page-tree-node.sort";
 import { AttachedDocument } from "./entities/attached-document.entity";
@@ -408,16 +406,6 @@ export class PageTreeService {
         return await this.createReadApi({ visibility: [Visibility.Published, Visibility.Unpublished] }).getNodeByPath(path, {
             scope,
         }); // Slugs of archived pages can be reused
-    }
-
-    public getFindConditionPaginatedRedirects(options: { filter?: PageTreeNodeFilter }): FilterQuery<PageTreeNodeFilter> {
-        const andFilters = [];
-
-        if (options.filter) {
-            andFilters.push(filtersToMikroOrmQuery(options.filter));
-        }
-
-        return andFilters.length > 0 ? { $and: andFilters } : {};
     }
 
     createReadApi(
