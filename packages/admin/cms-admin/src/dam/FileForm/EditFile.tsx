@@ -155,7 +155,16 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                         image: {
                             cropArea,
                         },
-                        license: { ...values.license, type: values.license.type === "NO_LICENSE" ? null : values.license.type },
+                        license:
+                            values.license.type === "NO_LICENSE"
+                                ? {
+                                      type: null,
+                                      details: null,
+                                      author: null,
+                                      durationTo: null,
+                                      durationFrom: null,
+                                  }
+                                : { ...values.license, type: values.license.type },
                     },
                 },
             });
