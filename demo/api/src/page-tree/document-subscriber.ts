@@ -2,7 +2,6 @@ import { PageTreeService } from "@comet/cms-api";
 import { EntityManager, EntityName, EventArgs, EventSubscriber, MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { Page } from "@src/pages/entities/page.entity";
-import { v4 } from "uuid";
 
 @Injectable()
 export class DocumentSubscriber implements EventSubscriber<Page> {
@@ -24,11 +23,8 @@ export class DocumentSubscriber implements EventSubscriber<Page> {
         const pageTreeReadApi = this.pageTreeService.createReadApi();
         const pageTreeNode = await pageTreeReadApi.getFirstNodeByAttachedPageId(page.id);
 
-        console.log(pageTreeNode?.id);
-
         if (pageTreeNode) {
-            // TODO use something different to update updatedAt property of pageTreeNode
-            await this.pageTreeService.updateNodeSlug(pageTreeNode.id, v4());
+            await this.pageTreeService.updateNodeUpdateTime(pageTreeNode.id);
         }
     }
 }

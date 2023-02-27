@@ -165,10 +165,10 @@ type PageTreeNode {
   visibility: PageTreeNodeVisibility!
   documentType: String!
   hideInMenu: Boolean!
+  updatedAt: DateTime!
   scope: PageTreeNodeScope!
   category: PageTreeNodeCategory!
   userGroup: UserGroup!
-  updatedAt: DateTime!
   childNodes: [PageTreeNode!]!
   parentNode: PageTreeNode
   path: String!

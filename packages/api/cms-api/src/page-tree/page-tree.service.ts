@@ -268,6 +268,16 @@ export class PageTreeService {
         return pageTreeReadApi.getNodeOrFail(id);
     }
 
+    async updateNodeUpdateTime(id: string): Promise<void> {
+        const pageTreeReadApi = this.createReadApi({
+            visibility: "all",
+        });
+
+        const node = await pageTreeReadApi.getNodeOrFail(id);
+
+        await this.pageTreeRepository.persistAndFlush(node.assign({ updatedAt: new Date() }));
+    }
+
     async updateCategory(id: string, category: PageTreeNodeCategory): Promise<void> {
         const readApi = this.createReadApi({ visibility: "all" });
 

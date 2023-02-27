@@ -126,6 +126,7 @@ type PageTreeNode {
   visibility: PageTreeNodeVisibility!
   documentType: String!
   hideInMenu: Boolean!
+  updatedAt: DateTime!
   category: String!
   childNodes: [PageTreeNode!]!
   parentNode: PageTreeNode
