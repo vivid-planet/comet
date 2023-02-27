@@ -1,5 +1,5 @@
 import { PageTreeNodeBase } from "@comet/cms-api";
-import { Embedded, Entity, Enum, Index, ManyToOne } from "@mikro-orm/core";
+import { Embedded, Entity, Enum, Index, ManyToOne, Property } from "@mikro-orm/core";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { UserGroup } from "@src/user-groups/user-group";
 
@@ -26,4 +26,11 @@ export class PageTreeNode extends PageTreeNodeBase {
     @Enum({ items: () => UserGroup, default: UserGroup.All })
     @Field(() => UserGroup, { defaultValue: UserGroup.All })
     userGroup: UserGroup;
+
+    @Property({
+        columnType: "timestamp with time zone",
+        onUpdate: () => new Date(),
+    })
+    @Field()
+    updatedAt: Date = new Date();
 }

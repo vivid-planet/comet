@@ -1,11 +1,26 @@
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Type } from "@nestjs/common";
-import { Args, CONTEXT, Context, createUnionType, ID, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
+import {
+    Args,
+    ArgsType,
+    CONTEXT,
+    Context,
+    createUnionType,
+    ID,
+    Mutation,
+    ObjectType,
+    Parent,
+    Query,
+    ResolveField,
+    Resolver,
+    Union,
+} from "@nestjs/graphql";
 import { Request } from "express";
 import { GraphQLError } from "graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
+import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
@@ -15,6 +30,7 @@ import {
     MovePageTreeNodesByPosInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./dto/page-tree-node.input";
+import { PaginatedPageTreeNodesArgsFactory } from "./dto/paginated-page-tree-nodes-args.factory";
 import { SlugAvailability } from "./dto/slug-availability.enum";
 import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
@@ -47,6 +63,12 @@ export function createPageTreeResolver({
     Scope?: Type<ScopeInterface>;
 }): Type<unknown> {
     const Scope = PassedScope || EmptyPageTreeNodeScope;
+
+    @ObjectType()
+    class PaginatedPageTreeNodes extends PaginatedResponseFactory.create(PageTreeNode) {}
+
+    @ArgsType()
+    class PaginatedPageTreeNodesArgs extends PaginatedPageTreeNodesArgsFactory.create({ Scope }) {}
 
     const hasNonEmptyScope = !!PassedScope;
 
@@ -102,6 +124,25 @@ export function createPageTreeResolver({
             const pathResolver = new InMemoryPathResolver(result);
             context.pathResolver = pathResolver; // pass pathResolver to upcoming resolver
             return result;
+        }
+
+        @Query(() => PaginatedPageTreeNodes)
+        async paginatedPageTreeNodes(
+            @Args() { scope, category, sort, offset, limit }: PaginatedPageTreeNodesArgs,
+            @Context() context: PageTreeGQLContext,
+        ): Promise<PaginatedPageTreeNodes> {
+            const [entities, count] = await this.pageTreeReadApi.getPaginatedNodes({
+                scope: nonEmptyScopeOrNothing(scope),
+                category,
+                sort,
+                offset,
+                limit,
+            });
+
+            const pathResolver = new InMemoryPathResolver(entities);
+            context.pathResolver = pathResolver; // pass pathResolver to upcoming resolver
+
+            return new PaginatedPageTreeNodes(entities, count);
         }
 
         @Query(() => SlugAvailability)

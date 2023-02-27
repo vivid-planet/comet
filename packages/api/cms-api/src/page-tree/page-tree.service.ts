@@ -4,9 +4,12 @@ import { EntityRepository } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
 import { CometValidationException } from "../common/errors/validation.exception";
+import { filtersToMikroOrmQuery } from "../common/filter/mikro-orm";
 import { RedirectsService } from "../redirects/redirects.service";
 import { AttachedDocumentStrictInput } from "./dto/attached-document.input";
+import { PageTreeNodeFilter } from "./dto/pag-tree-nodes.filter";
 import { MovePageTreeNodesByPosInput, PageTreeNodeBaseCreateInput } from "./dto/page-tree-node.input";
+import { PageTreeNodeSort } from "./dto/page-tree-node.sort";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
@@ -24,6 +27,9 @@ interface Options {
     category?: PageTreeNodeCategory;
     scope?: ScopeInterface;
     documentType?: string;
+    sort?: PageTreeNodeSort[];
+    offset?: number;
+    limit?: number;
 }
 
 export interface PageTreeReadApi {
@@ -34,6 +40,7 @@ export interface PageTreeReadApi {
     getNodeOrFail(id: string): Promise<PageTreeNodeInterface>;
     getParentNode(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface | null>;
     getNodes(options?: Options): Promise<PageTreeNodeInterface[]>;
+    getPaginatedNodes(options?: Options): Promise<[PageTreeNodeInterface[], number]>;
     getChildNodes(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface[]>;
     getNodeByPath(path: string, options?: Options): Promise<PageTreeNodeInterface | null>;
     pageTreeRootNodeList(options?: Options & { excludeHiddenInMenu?: boolean }): Promise<PageTreeNodeInterface[]>;
@@ -393,6 +400,16 @@ export class PageTreeService {
         }); // Slugs of archived pages can be reused
     }
 
+    public getFindConditionPaginatedRedirects(options: { filter?: PageTreeNodeFilter }): FilterQuery<PageTreeNodeFilter> {
+        const andFilters = [];
+
+        if (options.filter) {
+            andFilters.push(filtersToMikroOrmQuery(options.filter));
+        }
+
+        return andFilters.length > 0 ? { $and: andFilters } : {};
+    }
+
     createReadApi(
         options: {
             visibility?: Visibility | Visibility[] | "all";
@@ -502,6 +519,37 @@ export class PageTreeService {
                 }
 
                 return qb.getResultList();
+            },
+
+            async getPaginatedNodes(options = {}, where = {}): Promise<[PageTreeNodeInterface[], number]> {
+                const qb = pageTreeNodeRepository.createQueryBuilder().where({
+                    visibility: visibilityFilter,
+                    ...where,
+                });
+
+                if (options.category) {
+                    qb.andWhere({ category: options.category });
+                }
+
+                if (options.scope) {
+                    qb.andWhere({ scope: options.scope });
+                }
+
+                if (options.documentType) {
+                    qb.andWhere({ documentType: options.documentType });
+                }
+
+                if (options.sort) {
+                    options.sort.map((sortItem) => {
+                        qb.orderBy({ [`${sortItem.field}`]: sortItem.direction });
+                    });
+                }
+
+                if (options.limit !== undefined && options.offset !== undefined) {
+                    qb.limit(options.limit, options.offset);
+                }
+
+                return [await qb.getResultList(), await qb.getCount()];
             },
 
             async getChildNodes(node) {

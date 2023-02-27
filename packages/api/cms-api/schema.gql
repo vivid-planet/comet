@@ -178,6 +178,11 @@ type PaginatedRedirects {
   totalCount: Int!
 }
 
+type PaginatedPageTreeNodes {
+  nodes: [PageTreeNode!]!
+  totalCount: Int!
+}
+
 type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -196,6 +201,7 @@ type Query {
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
+  paginatedPageTreeNodes(scope: PageTreeNodeScopeInput = {}, category: String, sort: [PageTreeNodeSort!], offset: Int = 0, limit: Int = 20): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
 }
@@ -267,6 +273,15 @@ input FolderFilterInput {
 
 input PageTreeNodeScopeInput {
   thisScopeHasNoFields____: String
+}
+
+input PageTreeNodeSort {
+  field: PageTreeNodeSortField!
+  direction: SortDirection = ASC
+}
+
+enum PageTreeNodeSortField {
+  updatedAt
 }
 
 enum SlugAvailability {
