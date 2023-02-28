@@ -15,7 +15,6 @@ import {
     GQLDeleteDamFolderMutationVariables,
     GQLRestoreFilesMutation,
     GQLRestoreFilesMutationVariables,
-    namedOperations,
 } from "../../../graphql.generated";
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
@@ -90,7 +89,6 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                 setHasDeletionErrors(false);
             }, 3000);
         } else {
-            await apolloClient.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
             clearDamItemCache(apolloClient.cache);
         }
 
@@ -254,7 +252,6 @@ const IconButton = ({ title, onClick, executeMutation, icon, loading: externalLo
                     setInternalHasErrors(false);
                 }, 3000);
             } else {
-                await apolloClient.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
                 clearDamItemCache(apolloClient.cache);
             }
         }
