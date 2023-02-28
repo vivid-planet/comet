@@ -1,6 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Archive, Delete, Error, Move, Restore, ThreeDotSaving } from "@comet/admin-icons";
-import { IconButton, Tooltip, Typography } from "@mui/material";
+import { Archive, Delete, Error as ErrorIcon, Move, Restore, ThreeDotSaving } from "@comet/admin-icons";
+import { IconButton as CometAdminIconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { GraphQLError } from "graphql";
 import * as React from "react";
@@ -27,7 +27,7 @@ const ButtonGroup = styled("div")`
     gap: 10px;
 `;
 
-const ErrorIcon = styled(Error)`
+const StyledErrorIcon = styled(ErrorIcon)`
     color: ${({ theme }) => theme.palette.error.main};
 `;
 
@@ -43,12 +43,6 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
     const [deleting, setDeleting] = React.useState(false);
     const [hasDeletionErrors, setHasDeletionErrors] = React.useState(false);
-
-    const [archiving, setArchiving] = React.useState<boolean>(false);
-    const [hasArchivingErrors, setHasArchivingErrors] = React.useState(false);
-
-    const [restoring, setRestoring] = React.useState<boolean>(false);
-    const [hasRestoringErrors, setHasRestoringErrors] = React.useState(false);
 
     const deleteSelected = async () => {
         if (selectedItemsMap === undefined) {
@@ -108,8 +102,6 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
             return;
         }
 
-        setArchiving(true);
-
         const fileIds = Array.from(selectedItemsMap.entries())
             .filter(([, type]) => type === "file")
             .map(([id]) => {
@@ -131,25 +123,13 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
             errorPolicy: "all",
         });
 
-        if (errors) {
-            setHasArchivingErrors(true);
-            setTimeout(() => {
-                setHasArchivingErrors(false);
-            }, 3000);
-        } else {
-            await apolloClient.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
-            clearDamItemCache(apolloClient.cache);
-        }
-
-        setArchiving(false);
+        return { errors };
     };
 
     const restoreSelected = async () => {
         if (selectedItemsMap === undefined) {
             return;
         }
-
-        setRestoring(true);
 
         const fileIds = Array.from(selectedItemsMap.entries())
             .filter(([, type]) => type === "file")
@@ -172,17 +152,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
             errorPolicy: "all",
         });
 
-        if (errors) {
-            setHasRestoringErrors(true);
-            setTimeout(() => {
-                setHasRestoringErrors(false);
-            }, 3000);
-        } else {
-            await apolloClient.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
-            clearDamItemCache(apolloClient.cache);
-        }
-
-        setRestoring(false);
+        return { errors };
     };
 
     if (!open) {
@@ -202,66 +172,32 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                     />
                 </Typography>
                 <ButtonGroup>
-                    <Tooltip title={<FormattedMessage id="comet.dam.footer.move" defaultMessage="Move" />}>
-                        <IconButton
-                            onClick={() => {
-                                onOpenMoveDialog();
-                            }}
-                            size="large"
-                            sx={{
-                                color: (theme) => theme.palette.grey.A100,
-                                paddingLeft: "4px",
-                                paddingRight: "4px",
-                            }}
-                        >
-                            <Move />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id="comet.dam.footer.archive" defaultMessage="Archive" />}>
-                        <IconButton
-                            onClick={() => {
-                                archiveSelected();
-                            }}
-                            size="large"
-                            sx={{
-                                color: (theme) => theme.palette.grey.A100,
-                                paddingLeft: "4px",
-                                paddingRight: "4px",
-                            }}
-                        >
-                            {archiving ? <ThreeDotSaving /> : hasArchivingErrors ? <ErrorIcon /> : <Archive />}
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id="comet.dam.footer.restore" defaultMessage="Restore" />}>
-                        <IconButton
-                            onClick={() => {
-                                restoreSelected();
-                            }}
-                            size="large"
-                            sx={{
-                                color: (theme) => theme.palette.grey.A100,
-                                paddingLeft: "4px",
-                                paddingRight: "4px",
-                            }}
-                        >
-                            {restoring ? <ThreeDotSaving /> : hasRestoringErrors ? <ErrorIcon /> : <Restore />}
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id="comet.dam.footer.delete" defaultMessage="Delete" />}>
-                        <IconButton
-                            onClick={() => {
-                                setDeleteDialogOpen(true);
-                            }}
-                            size="large"
-                            sx={{
-                                color: (theme) => theme.palette.grey.A100,
-                                paddingLeft: "4px",
-                                paddingRight: "4px",
-                            }}
-                        >
-                            {deleting ? <ThreeDotSaving /> : hasDeletionErrors ? <ErrorIcon /> : <Delete />}
-                        </IconButton>
-                    </Tooltip>
+                    <IconButton
+                        title={<FormattedMessage id="comet.dam.footer.move" defaultMessage="Move" />}
+                        onClick={() => {
+                            onOpenMoveDialog();
+                        }}
+                        icon={<Move />}
+                    />
+                    <IconButton
+                        title={<FormattedMessage id="comet.dam.footer.archive" defaultMessage="Archive" />}
+                        executeMutation={archiveSelected}
+                        icon={<Archive />}
+                    />
+                    <IconButton
+                        title={<FormattedMessage id="comet.dam.footer.restore" defaultMessage="Restore" />}
+                        executeMutation={restoreSelected}
+                        icon={<Restore />}
+                    />
+                    <IconButton
+                        title={<FormattedMessage id="comet.dam.footer.delete" defaultMessage="Delete" />}
+                        onClick={() => {
+                            setDeleteDialogOpen(true);
+                        }}
+                        icon={<Delete />}
+                        loading={deleting}
+                        hasErrors={hasDeletionErrors}
+                    />
                 </ButtonGroup>
             </DamFooter>
             <ConfirmDeleteDialog
@@ -275,5 +211,62 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                 itemType="selected_items"
             />
         </>
+    );
+};
+
+const StyledCometAdminIconButton = styled(CometAdminIconButton)`
+    color: ${({ theme }) => theme.palette.grey.A100};
+    padding-left: 4px;
+    padding-right: 4px;
+`;
+
+interface IconButtonProps {
+    title: NonNullable<React.ReactNode>;
+    onClick?: () => void;
+    executeMutation?: () => Promise<{ errors: readonly GraphQLError[] | undefined } | undefined>;
+    icon: React.ReactNode;
+    loading?: boolean;
+    hasErrors?: boolean;
+}
+
+const IconButton = ({ title, onClick, executeMutation, icon, loading: externalLoading, hasErrors: externalHasErrors }: IconButtonProps) => {
+    const apolloClient = useApolloClient();
+
+    const [internalLoading, setInternalLoading] = React.useState<boolean>(false);
+    const [internalHasErrors, setInternalHasErrors] = React.useState<boolean>(false);
+
+    const loading = externalLoading ?? internalLoading;
+    const hasErrors = externalHasErrors ?? internalHasErrors;
+
+    const handleClick = async () => {
+        if (executeMutation === undefined) {
+            throw new Error("IconButton: You must either set onClick or executeMutation");
+        }
+
+        setInternalLoading(true);
+
+        const result = await executeMutation();
+
+        if (result) {
+            if (result.errors) {
+                setInternalHasErrors(true);
+                setTimeout(() => {
+                    setInternalHasErrors(false);
+                }, 3000);
+            } else {
+                await apolloClient.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
+                clearDamItemCache(apolloClient.cache);
+            }
+        }
+
+        setInternalLoading(false);
+    };
+
+    return (
+        <Tooltip title={title}>
+            <StyledCometAdminIconButton onClick={onClick ?? handleClick} size="large">
+                {loading ? <ThreeDotSaving /> : hasErrors ? <StyledErrorIcon /> : icon}
+            </StyledCometAdminIconButton>
+        </Tooltip>
     );
 };
