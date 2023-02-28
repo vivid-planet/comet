@@ -27,6 +27,10 @@ const ButtonGroup = styled("div")`
     gap: 10px;
 `;
 
+const ErrorIcon = styled(Error)`
+    color: ${({ theme }) => theme.palette.error.main};
+`;
+
 interface DamSelectionFooterProps {
     open: boolean;
     selectedItemsMap?: DamItemSelectionMap;
@@ -273,7 +277,3 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
         </>
     );
 };
-
-const ErrorIcon = styled(Error)`
-    color: ${({ theme }) => theme.palette.error.main};
-`;
