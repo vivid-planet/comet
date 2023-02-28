@@ -39,11 +39,7 @@ class SvgImageBlockData extends BlockData {
             damFile: {
                 ...data,
                 image: {},
-                license: {
-                    ...file.license,
-                    durationFrom: file.license.durationFrom?.toISOString(),
-                    durationTo: file.license.durationTo?.toISOString(),
-                },
+                license: {},
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
         };
