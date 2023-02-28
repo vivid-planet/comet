@@ -12,6 +12,7 @@ import {
     ToolbarActions,
     ToolbarBackButton,
     ToolbarFillSpace,
+    ToolbarItem,
     ToolbarTitleItem,
     useStackApi,
 } from "@comet/admin";
@@ -35,7 +36,9 @@ import {
     GQLUpdateFileMutation,
     GQLUpdateFileMutationVariables,
 } from "../../graphql.generated";
+import { useLicenseValidityInformation } from "../Table/license/useLicenseValidityInformation";
 import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation";
+import { LicenseExpiredTag, LicenseExpiresSoonTag, LicenseNotValidYetTag } from "../Table/tags/LicenseWarningTags";
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { FilePreview } from "./FilePreview";
@@ -118,6 +121,10 @@ interface EditFileInnerProps {
 const EditFileInner = ({ file, id }: EditFileInnerProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
+    const validityInformation = useLicenseValidityInformation({
+        durationFrom: file.license.durationFrom ? new Date(file.license.durationFrom) : undefined,
+        durationTo: file.license.durationTo ? new Date(file.license.durationTo) : undefined,
+    });
 
     const [updateDamFile, { loading: saving, error: hasSaveErrors }] = useMutation<GQLUpdateFileMutation, GQLUpdateFileMutationVariables>(
         updateDamFileMutation,
@@ -209,6 +216,13 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                     <Toolbar>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
+                        <ToolbarItem>
+                            {validityInformation.isNotValidYet && <LicenseNotValidYetTag />}
+                            {validityInformation.expirationDate && validityInformation.expiresSoon && (
+                                <LicenseExpiresSoonTag expirationDate={validityInformation.expirationDate} />
+                            )}
+                            {validityInformation.isExpired && <LicenseExpiredTag />}
+                        </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editFileSave">
