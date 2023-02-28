@@ -55,8 +55,14 @@ All notable changes to this project will be documented in this file. This projec
 -   Restrict access to builds based on `ContentScopeModule`
 -   Decouple KubernetesModule from BuildsModule (Breaking: BuildsModuleConfig is now KubernetesModuleConfig)
 -   Breaking: AuthModule removes support for Bearer-Token
+-   Performance Improvements for requests accessing the page tree and documents:
+    -   Added PageTreeReadApiService (request scoped) with preloadNodes method to preload pages when reading large parts of the page tree
+    -   Breaking: BlocksTransformerMiddlewareFactory now needs BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES injected (change required in AppModule)
+    -   New BlockTransformerService (request scoped) that can be used instead in FieldTransformer for improved performance (instead of relying on BlocksTransformerMiddlewareFactory)
+    -   Optional: if all transforms are done using FieldTransformer, BlocksTransformerMiddlewareFactory and fieldResolverEnhancers can be removed for improved performance
 -   Breaking: Remove export for BuildObject (should not be needed in application land)
 -   Breaking: changed DamModule damConfig.allowedImageSizes/allowedAspectRatios to number[]/string[] (was string previously)
+-   Breaking: Make @kubernetes/client-node a peer dependency
 
 #### Changes
 
@@ -77,9 +83,9 @@ All notable changes to this project will be documented in this file. This projec
 
 -   Enable [no-return-await](https://eslint.org/docs/latest/rules/no-return-await)
 
-## Next minor
+## 3.2.3
 
-_tbd_
+_Feb 7, 2023_
 
 ### @comet/cms-api
 

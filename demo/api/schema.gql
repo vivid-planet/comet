@@ -304,6 +304,7 @@ type Product implements DocumentInterface {
   description: String!
   price: Float
   inStock: Boolean!
+  image: DamImageBlockData!
   createdAt: DateTime!
 }
 
@@ -555,7 +556,9 @@ type Mutation {
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
+  archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
+  restoreDamFiles(ids: [ID!]!): [DamFile!]!
   deleteDamFile(id: ID!): Boolean!
   createDamFolder(input: CreateDamFolderInput!): DamFolder!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
@@ -724,4 +727,5 @@ input ProductInput {
   description: String!
   price: Float
   inStock: Boolean!
+  image: DamImageBlockInput!
 }

@@ -174,11 +174,13 @@ const FileInnerMenu = ({ file, handleClose, onMove }: FileInnerMenuProps): React
                         client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
                             mutation: restoreDamFileMutation,
                             variables: { id: file.id },
+                            refetchQueries: [namedOperations.Query.DamItemsList],
                         });
                     } else {
                         client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
                             mutation: archiveDamFileMutation,
                             variables: { id: file.id },
+                            refetchQueries: [namedOperations.Query.DamItemsList],
                         });
                     }
                 }}

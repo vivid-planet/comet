@@ -1,9 +1,8 @@
 import {
-    BlobStorageConfig,
     BlobStorageModule,
+    BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
-    BlocksTransformerService,
     BuildsModule,
     ContentScope,
     ContentScopeModule,
@@ -53,8 +52,8 @@ export class AppModule {
                 DbModule,
                 GraphQLModule.forRootAsync({
                     driver: ApolloDriver,
-                    imports: [ConfigModule, BlocksModule],
-                    useFactory: async (blocksTransformerService: BlocksTransformerService) => ({
+                    imports: [BlocksModule],
+                    useFactory: (dependencies: Record<string, unknown>) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
@@ -64,10 +63,10 @@ export class AppModule {
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
                         buildSchemaOptions: {
-                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(blocksTransformerService)],
+                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
                         },
                     }),
-                    inject: [BlocksTransformerService],
+                    inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
                 ContentScopeModule.forRoot({
@@ -76,7 +75,7 @@ export class AppModule {
                         return user.domains.includes(requestScope.domain);
                     },
                 }),
-                BlocksModule.forRootAsync({
+                BlocksModule.forRoot({
                     imports: [PagesModule],
                     useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
                         return {
@@ -89,14 +88,8 @@ export class AppModule {
                     },
                     inject: [PageTreeService, FilesService, ImagesService],
                 }),
-                KubernetesModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
-                        config: {
-                            helmRelease: config.helmRelease,
-                        },
-                    }),
-                    inject: [],
+                KubernetesModule.register({
+                    helmRelease: config.helmRelease,
                 }),
                 BuildsModule,
                 LinksModule,
@@ -110,45 +103,27 @@ export class AppModule {
                     reservedPaths: ["/events"],
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
-                BlobStorageModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
-                        blobStorageConfig: {
-                            backend: {
-                                driver: config.blob.storageDriver,
-                                file: config.blob.storageDriver === "file" ? config.fileStorage : undefined,
-                                azure: config.blob.storageDriver === "azure" ? config.azure : undefined,
-                                s3: config.blob.storageDriver === "s3" ? config.s3 : undefined,
-                            } as BlobStorageConfig["backend"],
-                        },
-                    }),
+                BlobStorageModule.register({
+                    backend: config.blob.storage,
                 }),
-                DamModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
-                        damConfig: {
-                            filesBaseUrl: `${config.apiUrl}/dam/files`,
-                            imagesBaseUrl: `${config.apiUrl}/dam/images`,
-                            secret: config.dam.secret,
-                            allowedImageSizes: config.dam.allowedImageSizes,
-                            allowedAspectRatios: config.dam.allowedImageAspectRatios,
-                            additionalMimeTypes: config.dam.additionalMimetypes,
-                            filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
-                            cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
-                            maxFileSize: config.dam.uploadsMaxFileSize,
-                        },
-                        imgproxyConfig: config.imgproxy,
-                    }),
+                DamModule.register({
+                    damConfig: {
+                        filesBaseUrl: `${config.apiUrl}/dam/files`,
+                        imagesBaseUrl: `${config.apiUrl}/dam/images`,
+                        secret: config.dam.secret,
+                        allowedImageSizes: config.dam.allowedImageSizes,
+                        allowedAspectRatios: config.dam.allowedImageAspectRatios,
+                        additionalMimeTypes: config.dam.additionalMimetypes,
+                        filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
+                        cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
+                        maxFileSize: config.dam.uploadsMaxFileSize,
+                    },
+                    imgproxyConfig: config.imgproxy,
                 }),
-                PublicUploadModule.registerAsync({
-                    imports: [ConfigModule],
-                    useFactory: async () => ({
-                        publicUploadConfig: {
-                            maxFileSize: config.publicUploads.maxFileSize,
-                            directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
-                            acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
-                        },
-                    }),
+                PublicUploadModule.register({
+                    maxFileSize: config.publicUploads.maxFileSize,
+                    directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
+                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 }),
                 NewsModule,
                 MenusModule,

@@ -205,11 +205,6 @@ module.exports = {
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/blocks-api", "@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
-        {
-            name: "demo-idp",
-            script: "node mock-idp.js",
-            group: ["demo-api", "demo"],
-        },
 
         //group demo site
         {

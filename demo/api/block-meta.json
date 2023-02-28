@@ -251,11 +251,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
@@ -285,6 +280,35 @@
                 "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "DemoTextLink",
+        "fields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
             }
         ]
     },
@@ -697,7 +721,7 @@
                         {
                             "name": "props",
                             "kind": "Block",
-                            "block": "TextLink",
+                            "block": "DemoTextLink",
                             "nullable": false
                         },
                         {
@@ -734,7 +758,7 @@
                         {
                             "name": "props",
                             "kind": "Block",
-                            "block": "TextLink",
+                            "block": "DemoTextLink",
                             "nullable": false
                         },
                         {
@@ -1040,11 +1064,6 @@
                                 ]
                             },
                             "nullable": true
-                        },
-                        {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
                         },
                         {
                             "name": "fileUrl",
@@ -1464,11 +1483,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
@@ -1541,35 +1555,6 @@
             {
                 "name": "imageAspectRatio",
                 "kind": "String",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "TextLink",
-        "fields": [
-            {
-                "name": "text",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "link",
-                "kind": "Block",
-                "block": "Link",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "text",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "link",
-                "kind": "Block",
-                "block": "Link",
                 "nullable": false
             }
         ]

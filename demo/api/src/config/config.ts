@@ -29,22 +29,24 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             secret: envVars.DAM_SECRET,
         },
         blob: {
-            storageDriver: envVars.BLOB_STORAGE_DRIVER,
+            storage: {
+                driver: envVars.BLOB_STORAGE_DRIVER,
+                file: {
+                    path: envVars.FILE_STORAGE_PATH,
+                },
+                azure: {
+                    accountName: envVars.AZURE_ACCOUNT_NAME,
+                    accountKey: envVars.AZURE_ACCOUNT_KEY,
+                },
+                s3: {
+                    region: envVars.S3_REGION,
+                    endpoint: envVars.S3_ENDPOINT,
+                    bucket: envVars.S3_BUCKET,
+                    accessKeyId: envVars.S3_ACCESS_KEY_ID,
+                    secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
+                },
+            },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
-        },
-        fileStorage: {
-            path: envVars.FILE_STORAGE_PATH,
-        },
-        azure: {
-            accountName: envVars.AZURE_ACCOUNT_NAME,
-            accountKey: envVars.AZURE_ACCOUNT_KEY,
-        },
-        s3: {
-            region: envVars.S3_REGION,
-            endpoint: envVars.S3_ENDPOINT,
-            bucket: envVars.S3_BUCKET,
-            accessKeyId: envVars.S3_ACCESS_KEY_ID,
-            secretAccessKey: envVars.S3_SECRET_ACCESS_KEY,
         },
     };
 }

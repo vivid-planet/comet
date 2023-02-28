@@ -20,6 +20,7 @@ import { FormattedMessage } from "react-intl";
 import { FileField } from "..";
 import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
+import { DamPathLazy } from "../form/file/DamPathLazy";
 import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "../graphql.generated";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { EditImageDialog } from "./image/EditImageDialog";
@@ -106,7 +107,6 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                 y
                             }
                         }
-                        damPath
                         fileUrl
                     }
                 }
@@ -159,7 +159,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                     <Grid item xs>
                                         <Typography variant="subtitle1">{state.damFile.name}</Typography>
                                         <Typography variant="body1" color="textSecondary">
-                                            {state.damFile.damPath}
+                                            <DamPathLazy fileId={state.damFile.id} />
                                         </Typography>
                                     </Grid>
                                     <Grid item>
