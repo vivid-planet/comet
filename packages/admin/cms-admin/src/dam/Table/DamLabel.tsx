@@ -5,7 +5,7 @@ import * as React from "react";
 import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { isFile } from "./FolderTableRow";
-import { useLicenseValidityInformation } from "./license/useLicenseValidityInformation";
+import { getLicenseValidityInformation } from "./license/getLicenseValidityInformation";
 import { ArchivedTag } from "./tags/ArchivedTag";
 import { LicenseExpiredTag, LicenseExpiresSoonTag, LicenseNotValidYetTag } from "./tags/LicenseWarningTags";
 import { DamThumbnail } from "./thumbnail/DamThumbnail";
@@ -70,7 +70,7 @@ interface ValidityTagsProps {
     file: GQLDamFileTableFragment;
 }
 const ValidityTags = ({ file }: ValidityTagsProps) => {
-    const validityInformation = useLicenseValidityInformation({
+    const validityInformation = getLicenseValidityInformation({
         durationFrom: file.license.durationFrom ? new Date(file.license.durationFrom) : undefined,
         durationTo: file.license.durationTo ? new Date(file.license.durationTo) : undefined,
     });

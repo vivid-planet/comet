@@ -3,7 +3,7 @@ import { add, compareAsc, getUnixTime } from "date-fns";
 const currentDate = new Date();
 const thirtyDaysInSeconds = 60 * 60 * 24 * 30;
 
-interface UseLicenseValidityInformationProps {
+interface GetLicenseValidityInformationParams {
     durationFrom?: Date;
     durationTo?: Date;
 }
@@ -17,7 +17,7 @@ interface LicenseValidityInformation {
     expirationDate?: Date;
 }
 
-export const useLicenseValidityInformation = ({ durationFrom, durationTo }: UseLicenseValidityInformationProps): LicenseValidityInformation => {
+export const getLicenseValidityInformation = ({ durationFrom, durationTo }: GetLicenseValidityInformationParams): LicenseValidityInformation => {
     const startDate = durationFrom;
     // if durationTo = '2023-02-27T00:00:00.000Z' then the license is still valid on 27.03.2023
     // and expires at '2023-02-28T00:00:00.000Z'

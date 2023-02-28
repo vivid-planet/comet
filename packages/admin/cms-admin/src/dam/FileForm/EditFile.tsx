@@ -36,7 +36,7 @@ import {
     GQLUpdateFileMutation,
     GQLUpdateFileMutationVariables,
 } from "../../graphql.generated";
-import { useLicenseValidityInformation } from "../Table/license/useLicenseValidityInformation";
+import { getLicenseValidityInformation } from "../Table/license/getLicenseValidityInformation";
 import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation";
 import { LicenseExpiredTag, LicenseExpiresSoonTag, LicenseNotValidYetTag } from "../Table/tags/LicenseWarningTags";
 import Duplicates from "./Duplicates";
@@ -121,7 +121,7 @@ interface EditFileInnerProps {
 const EditFileInner = ({ file, id }: EditFileInnerProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
-    const validityInformation = useLicenseValidityInformation({
+    const validityInformation = getLicenseValidityInformation({
         durationFrom: file.license.durationFrom ? new Date(file.license.durationFrom) : undefined,
         durationTo: file.license.durationTo ? new Date(file.license.durationTo) : undefined,
     });
