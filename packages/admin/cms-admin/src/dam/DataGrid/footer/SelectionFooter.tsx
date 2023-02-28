@@ -170,24 +170,24 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                     />
                 </Typography>
                 <ButtonGroup>
-                    <IconButton
+                    <FooterActionButton
                         title={<FormattedMessage id="comet.dam.footer.move" defaultMessage="Move" />}
                         onClick={() => {
                             onOpenMoveDialog();
                         }}
                         icon={<Move />}
                     />
-                    <IconButton
+                    <FooterActionButton
                         title={<FormattedMessage id="comet.dam.footer.archive" defaultMessage="Archive" />}
                         executeMutation={archiveSelected}
                         icon={<Archive />}
                     />
-                    <IconButton
+                    <FooterActionButton
                         title={<FormattedMessage id="comet.dam.footer.restore" defaultMessage="Restore" />}
                         executeMutation={restoreSelected}
                         icon={<Restore />}
                     />
-                    <IconButton
+                    <FooterActionButton
                         title={<FormattedMessage id="comet.dam.footer.delete" defaultMessage="Delete" />}
                         onClick={() => {
                             setDeleteDialogOpen(true);
@@ -227,7 +227,7 @@ interface IconButtonProps {
     hasErrors?: boolean;
 }
 
-const IconButton = ({ title, onClick, executeMutation, icon, loading: externalLoading, hasErrors: externalHasErrors }: IconButtonProps) => {
+const FooterActionButton = ({ title, onClick, executeMutation, icon, loading: externalLoading, hasErrors: externalHasErrors }: IconButtonProps) => {
     const apolloClient = useApolloClient();
 
     const [internalLoading, setInternalLoading] = React.useState<boolean>(false);
@@ -238,7 +238,7 @@ const IconButton = ({ title, onClick, executeMutation, icon, loading: externalLo
 
     const handleClick = async () => {
         if (executeMutation === undefined) {
-            throw new Error("IconButton: You must either set onClick or executeMutation");
+            throw new Error("FooterActionButton: You must either set onClick or executeMutation");
         }
 
         setInternalLoading(true);
