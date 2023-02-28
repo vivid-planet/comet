@@ -34,9 +34,5 @@ export const DamFooter: React.FunctionComponent<DamFooterProps> = ({ children })
         return null;
     }
 
-    return (
-        <>
-            <FooterBar>{children}</FooterBar>
-        </>
-    );
+    return <FooterBar>{children}</FooterBar>;
 };
