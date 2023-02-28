@@ -9,7 +9,6 @@ const FooterBar = styled(Paper)`
     left: 50%;
     transform: translateX(-50%);
 
-    min-width: 321px;
     min-height: 60px;
     border-radius: 4px;
 
@@ -19,7 +18,7 @@ const FooterBar = styled(Paper)`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 30px;
 
     padding-left: 20px;
     padding-right: 20px;
