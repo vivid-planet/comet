@@ -6,9 +6,9 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
-import { TextMatch } from "../../../common/MarkedMatches";
 import { DamTable } from "../../../dam/DamTable";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
+import { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 
@@ -43,7 +43,7 @@ const TableRowButton = styled(Button)`
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
-    { matches }: { matches?: TextMatch[] },
+    { matches, filterApi }: RenderDamLabelOptions,
 ) => {
     return isFile(row) ? (
         <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
@@ -58,6 +58,9 @@ const renderDamLabel = (
             sx={{
                 width: "100%",
                 height: "100%",
+            }}
+            onClick={() => {
+                filterApi.formApi.change("searchText", undefined);
             }}
         >
             <DamItemLabel asset={row} matches={matches} />
@@ -83,7 +86,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
             </StyledDialogTitle>
             <MemoryRouter>
                 <DamTable
-                    renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
+                    renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) => renderDamLabel(row, onChooseFile, { matches, filterApi })}
                     allowedMimetypes={allowedMimetypes}
                     damLocationStorageKey="choose-file-dam-location"
                     hideContextMenu={true}

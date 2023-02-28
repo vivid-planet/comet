@@ -23,7 +23,6 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { TextMatch } from "../common/MarkedMatches";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../graphql.generated";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
@@ -32,6 +31,7 @@ import { UploadSplitButton } from "./DataGrid/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
 import FolderDataGrid from "./DataGrid/FolderDataGrid";
 import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
+import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
 import EditFile from "./FileForm/EditFile";
 
@@ -134,7 +134,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
 };
 
 export interface DamConfig {
-    renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: { matches?: TextMatch[] }) => React.ReactNode;
+    renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: RenderDamLabelOptions) => React.ReactNode;
     hideArchiveFilter?: boolean;
     hideContextMenu?: boolean;
     allowedMimetypes?: string[];
