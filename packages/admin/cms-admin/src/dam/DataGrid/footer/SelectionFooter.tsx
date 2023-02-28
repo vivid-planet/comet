@@ -229,7 +229,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                                 paddingRight: "4px",
                             }}
                         >
-                            {archiving || hasArchivingErrors ? archiving ? <ThreeDotSaving /> : <ErrorIcon /> : <Archive />}
+                            {archiving ? <ThreeDotSaving /> : hasArchivingErrors ? <ErrorIcon /> : <Archive />}
                         </IconButton>
                     </Tooltip>
                     <Tooltip title={<FormattedMessage id="comet.dam.footer.restore" defaultMessage="Restore" />}>
@@ -244,7 +244,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                                 paddingRight: "4px",
                             }}
                         >
-                            {restoring || hasRestoringErrors ? restoring ? <ThreeDotSaving /> : <ErrorIcon /> : <Restore />}
+                            {restoring ? <ThreeDotSaving /> : hasRestoringErrors ? <ErrorIcon /> : <Restore />}
                         </IconButton>
                     </Tooltip>
                     <Tooltip title={<FormattedMessage id="comet.dam.footer.delete" defaultMessage="Delete" />}>
@@ -259,7 +259,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                                 paddingRight: "4px",
                             }}
                         >
-                            {deleting || hasDeletionErrors ? deleting ? <ThreeDotSaving /> : <ErrorIcon /> : <Delete />}
+                            {deleting ? <ThreeDotSaving /> : hasDeletionErrors ? <ErrorIcon /> : <Delete />}
                         </IconButton>
                     </Tooltip>
                 </ButtonGroup>
