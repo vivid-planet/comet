@@ -13,6 +13,8 @@ interface LicenseValidityInformation {
     expiresSoon: boolean;
     isExpired: boolean;
     isValid: boolean;
+    startDate?: Date;
+    expirationDate?: Date;
 }
 
 export const useLicenseValidityInformation = ({ durationFrom, durationTo }: UseLicenseValidityInformationProps): LicenseValidityInformation => {
@@ -30,6 +32,8 @@ export const useLicenseValidityInformation = ({ durationFrom, durationTo }: UseL
         expiresSoon: false,
         isExpired: false,
         isValid: true,
+        startDate,
+        expirationDate,
     };
 
     if (startDate && compareAsc(currentDate, startDate) === -1) {

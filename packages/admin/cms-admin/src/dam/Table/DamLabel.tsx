@@ -1,11 +1,11 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { add, compareAsc, getUnixTime } from "date-fns";
 import * as React from "react";
 
 import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { isFile } from "./FolderTableRow";
+import { useLicenseValidityInformation } from "./license/useLicenseValidityInformation";
 import { ArchivedTag } from "./tags/ArchivedTag";
 import { LicenseExpiredTag, LicenseExpiresSoonTag, LicenseNotValidYetTag } from "./tags/LicenseWarningTags";
 import { DamThumbnail } from "./thumbnail/DamThumbnail";
@@ -52,25 +52,7 @@ const getFolderPath = (folder: GQLDamFolderTableFragment) => {
     return `/${pathArr.join("/")}`;
 };
 
-const currentDate = new Date();
-const thirtyDaysInSeconds = 60 * 60 * 24 * 30;
-
 const DamLabel = ({ asset, showPath = false, matches, showLicenseWarnings = true }: DamLabelProps): React.ReactElement => {
-    const durationTo =
-        isFile(asset) && asset.license.durationTo !== null
-            ? add(new Date(asset.license.durationTo), {
-                  days: 1,
-              })
-            : null;
-    const durationFrom =
-        isFile(asset) && asset.license.durationFrom !== null
-            ? add(new Date(asset.license.durationFrom), {
-                  days: 1,
-              })
-            : null;
-
-    const differenceBetweenExpirationDateAndNow = durationTo ? getUnixTime(durationTo) - getUnixTime(currentDate) : null;
-
     return (
         <LabelWrapper>
             <DamThumbnail asset={asset} />
@@ -79,14 +61,28 @@ const DamLabel = ({ asset, showPath = false, matches, showLicenseWarnings = true
                 {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
             </NameWrapper>
             {isFile(asset) && asset.archived && <ArchivedTag />}
-            {showLicenseWarnings && durationFrom !== null && compareAsc(currentDate, durationFrom) === -1 && <LicenseNotValidYetTag />}
-            {showLicenseWarnings && durationTo !== null && compareAsc(currentDate, durationTo) === 1 && <LicenseExpiredTag />}
-            {showLicenseWarnings &&
-                durationTo !== null &&
-                differenceBetweenExpirationDateAndNow !== null &&
-                differenceBetweenExpirationDateAndNow > 0 &&
-                differenceBetweenExpirationDateAndNow <= thirtyDaysInSeconds && <LicenseExpiresSoonTag expirationDate={durationTo} />}
+            {isFile(asset) && <ValidityTags file={asset} />}
         </LabelWrapper>
+    );
+};
+
+interface ValidityTagsProps {
+    file: GQLDamFileTableFragment;
+}
+const ValidityTags = ({ file }: ValidityTagsProps) => {
+    const validityInformation = useLicenseValidityInformation({
+        durationFrom: file.license.durationFrom ? new Date(file.license.durationFrom) : undefined,
+        durationTo: file.license.durationTo ? new Date(file.license.durationTo) : undefined,
+    });
+
+    return (
+        <>
+            {validityInformation.isNotValidYet && <LicenseNotValidYetTag />}
+            {validityInformation.expirationDate && validityInformation.expiresSoon && (
+                <LicenseExpiresSoonTag expirationDate={validityInformation.expirationDate} />
+            )}
+            {validityInformation.isExpired && <LicenseExpiredTag />}
+        </>
     );
 };
 
