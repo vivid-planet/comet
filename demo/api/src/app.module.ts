@@ -36,7 +36,6 @@ import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
 import { NewsModule } from "./news/news.module";
-import { DocumentSubscriberModule } from "./page-tree/document-subscriber.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
@@ -195,7 +194,6 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
         FooterModule,
         PredefinedPageModule,
         ProductsModule,
-        DocumentSubscriberModule,
     ],
     providers: [{ provide: APP_GUARD, useClass: GlobalAuthGuard }],
 })

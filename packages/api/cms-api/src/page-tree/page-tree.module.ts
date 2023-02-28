@@ -4,6 +4,7 @@ import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/comm
 
 import { DocumentInterface } from "../document/dto/document-interface";
 import { createPageTreeResolver } from "./createPageTreeResolver";
+import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
@@ -53,6 +54,8 @@ export class PageTreeModule {
             },
         };
 
+        const documentSubscriber = DocumentSubscriberFactory.create({ Documents });
+
         return {
             module: PageTreeModule,
             imports: [MikroOrmModule.forFeature([AttachedDocument, PageTreeNode, ...(Scope ? [Scope] : [])])],
@@ -68,6 +71,7 @@ export class PageTreeModule {
                     },
                     inject: [PageTreeService],
                 },
+                documentSubscriber,
             ],
             exports: [PageTreeService],
         };
