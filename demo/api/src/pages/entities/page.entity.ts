@@ -13,7 +13,7 @@ export const PAGE_BLOCK_INDEX_IDENTIFIER = "Page_BlockIndex";
 @ObjectType({
     implements: () => [DocumentInterface],
 })
-@RootBlockEntity(PAGE_BLOCK_INDEX_IDENTIFIER)
+@RootBlockEntity()
 export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 

@@ -6,7 +6,6 @@ import { GraphQLError } from "graphql";
 
 import { BlockIndexService } from "../blocks/block-index.service";
 import { BlockIndexDependency } from "../blocks/block-index-dependency";
-import { PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER } from "../blocks/block-index-identifiers";
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { DocumentInterface } from "../document/dto/document-interface";
@@ -167,7 +166,7 @@ export function createPageTreeResolver({
 
         @ResolveField(() => [BlockIndexDependency])
         async dependents(@Parent() node: PageTreeNodeInterface): Promise<BlockIndexDependency[]> {
-            return this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER, node.id);
+            return this.blockIndexService.getDependentsByTargetEntityNameAndTargetId(PageTreeNode.name, node.id);
         }
 
         @Mutation(() => PageTreeNode)

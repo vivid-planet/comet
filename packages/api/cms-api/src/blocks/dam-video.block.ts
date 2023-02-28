@@ -14,8 +14,8 @@ import {
 } from "@comet/blocks-api";
 import { IsBoolean, IsOptional, IsUUID } from "class-validator";
 
+import { File } from "../dam/files/entities/file.entity";
 import { FilesService } from "../dam/files/files.service";
-import { DAM_FILE_BLOCK_INDEX_IDENTIFIER } from "./block-index-identifiers";
 
 class DamVideoBlockData extends BlockData {
     damFileId?: string;
@@ -61,7 +61,7 @@ class DamVideoBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                targetIdentifier: DAM_FILE_BLOCK_INDEX_IDENTIFIER,
+                targetEntityName: File.name,
                 id: this.damFileId,
             },
         ];

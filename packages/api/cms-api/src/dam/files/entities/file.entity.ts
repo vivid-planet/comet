@@ -3,14 +3,13 @@ import { BaseEntity, BigIntType, Cascade, Entity, Index, ManyToOne, OneToOne, Op
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { DAM_FILE_BLOCK_INDEX_IDENTIFIER } from "../../../blocks/block-index-identifiers";
 import { FileImage } from "./file-image.entity";
 import { Folder } from "./folder.entity";
 
 export const UniqueNameInFolderIndex = "IDX_unique_name_in_folder";
 export const UniqueNameInRootFolderIndex = "IDX_unique_name_in_root_folder";
 
-@BlockIndexTarget(DAM_FILE_BLOCK_INDEX_IDENTIFIER)
+@BlockIndexTarget()
 @ObjectType("DamFile")
 @Entity({ tableName: "DamFile" })
 // MikroORM doesn't support conditional indices (yet): https://github.com/mikro-orm/mikro-orm/issues/1029

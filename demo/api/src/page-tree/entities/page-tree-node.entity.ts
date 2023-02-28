@@ -1,4 +1,4 @@
-import { BlockIndexTarget, PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER, PageTreeNodeBase } from "@comet/cms-api";
+import { BlockIndexTarget, PageTreeNodeBase } from "@comet/cms-api";
 import { Embedded, Entity, Enum, Index, ManyToOne } from "@mikro-orm/core";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { UserGroup } from "@src/user-groups/user-group";
@@ -6,7 +6,7 @@ import { UserGroup } from "@src/user-groups/user-group";
 import { PageTreeNodeScope } from "../dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "../page-tree-node-category";
 
-@BlockIndexTarget(PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER)
+@BlockIndexTarget()
 @Entity({ tableName: PageTreeNodeBase.tableName })
 @ObjectType("PageTreeNode") // name MUST NOT be changed in the app or gql-api in cms-api breaks
 // @TODO: disguise @ObjectType("PageTreeNode") decorator under a custom decorator: f.i. @PageTreeNode

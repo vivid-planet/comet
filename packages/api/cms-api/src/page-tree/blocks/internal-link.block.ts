@@ -12,7 +12,6 @@ import {
 } from "@comet/blocks-api";
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
-import { PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER } from "../../blocks/block-index-identifiers";
 import { PageTreeService } from "../page-tree.service";
 import { PageExists } from "../validators/page-exists.validator";
 
@@ -65,7 +64,7 @@ class InternalLinkBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                targetIdentifier: PAGE_TREE_NODE_BLOCK_INDEX_IDENTIFIER,
+                targetEntityName: "PageTreeNode",
                 id: this.targetPageId,
             },
         ];

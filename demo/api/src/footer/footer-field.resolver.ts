@@ -1,6 +1,6 @@
 import { BlockIndexDependency, BlockIndexService } from "@comet/cms-api";
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
-import { Footer, FOOTER_BLOCK_INDEX_IDENTIFIER } from "@src/footer/entities/footer.entity";
+import { Footer } from "@src/footer/entities/footer.entity";
 
 @Resolver(() => Footer)
 export class FooterFieldResolver {
@@ -8,6 +8,6 @@ export class FooterFieldResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependencies(@Parent() footer: Footer): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependenciesByRootIdentifierAndRootId(FOOTER_BLOCK_INDEX_IDENTIFIER, footer.id);
+        return this.blockIndexService.getDependenciesByRootEntityNameAndRootId(Footer.name, footer.id);
     }
 }

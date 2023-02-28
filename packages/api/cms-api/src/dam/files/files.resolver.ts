@@ -6,7 +6,6 @@ import { basename, extname } from "path";
 
 import { BlockIndexService } from "../../blocks/block-index.service";
 import { BlockIndexDependency } from "../../blocks/block-index-dependency";
-import { DAM_FILE_BLOCK_INDEX_IDENTIFIER } from "../../blocks/block-index-identifiers";
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { FileArgs } from "./dto/file.args";
@@ -136,6 +135,6 @@ export class FilesResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependents(@Parent() file: File): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(DAM_FILE_BLOCK_INDEX_IDENTIFIER, file.id);
+        return this.blockIndexService.getDependentsByTargetEntityNameAndTargetId(File.name, file.id);
     }
 }

@@ -9,7 +9,6 @@ import { Request } from "express";
 
 import { BlockIndexService } from "../blocks/block-index.service";
 import { BlockIndexDependency } from "../blocks/block-index-dependency";
-import { REDIRECT_BLOCK_INDEX_IDENTIFIER } from "../blocks/block-index-identifiers";
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
@@ -207,7 +206,7 @@ export function createRedirectsResolver({
 
         @ResolveField(() => [BlockIndexDependency])
         async dependencies(@Parent() redirect: RedirectInterface): Promise<BlockIndexDependency[]> {
-            return this.blockIndexService.getDependenciesByRootIdentifierAndRootId(REDIRECT_BLOCK_INDEX_IDENTIFIER, redirect.id);
+            return this.blockIndexService.getDependenciesByRootEntityNameAndRootId(Redirect.name, redirect.id);
         }
     }
 

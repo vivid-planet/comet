@@ -1,5 +1,6 @@
 import { Connection, EntityManager } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
+import * as console from "console";
 
 import { BlockIndexDependency } from "./block-index-dependency";
 import { DiscoverService } from "./discover.service";
@@ -21,7 +22,7 @@ export class BlockIndexService {
         const targetEntitiesNameData = targetEntities.reduce((obj, entity) => {
             return {
                 ...obj,
-                [entity.targetIdentifier]: {
+                [entity.entityName]: {
                     entityName: entity.entityName,
                     tableName: entity.metadata.tableName,
                     primary: entity.metadata.primaryKeys[0],
@@ -31,11 +32,10 @@ export class BlockIndexService {
         }, {});
 
         for (const rootBlockEntity of this.discoverEntitiesService.discoverRootBlocks()) {
-            const { metadata, column, graphqlMetadata, blockIndexRootIdentifier } = rootBlockEntity;
+            const { metadata, column, graphqlMetadata } = rootBlockEntity;
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
-                            '${blockIndexRootIdentifier}'         "rootIdentifier",
                             "${metadata.tableName}"."${primary}"  "id",
                             '${metadata.name}'                    "entityName",
                             '${graphqlMetadata.objectType}'       "graphqlObjectType",
@@ -45,7 +45,6 @@ export class BlockIndexService {
                             indexObj->>'blockname'                "blockname",
                             indexObj->>'jsonPath'                 "jsonPath",
                             (indexObj->>'visible')::boolean       "visible",
-                            targetObj->>'targetIdentifier'        "targetIdentifier",
                             targetTableData->>'entityName'        "targetEntityName",
                             targetTableData->>'graphqlObjectType' "targetGraphqlObjectType",
                             targetTableData->>'tableName'         "targetTableName",
@@ -54,7 +53,7 @@ export class BlockIndexService {
                         FROM "${metadata.tableName}",
                             json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
                             json_array_elements(indexObj->'target') targetObj,
-                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', targetObj->>'targetIdentifier') targetTableData`;
+                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', targetObj->>'targetEntityName') targetTableData`;
 
             indexSelects.push(select);
         }
@@ -77,16 +76,16 @@ export class BlockIndexService {
         console.timeEnd("refresh materialized block dependency");
     }
 
-    async getDependentsByTargetIdentifierAndTargetId(targetIdentifier: string, targetId: string): Promise<BlockIndexDependency[]> {
-        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetIdentifier" = ? AND idx."targetId" = ?`, [
-            targetIdentifier,
+    async getDependentsByTargetEntityNameAndTargetId(targetEntityName: string, targetId: string): Promise<BlockIndexDependency[]> {
+        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetEntityName" = ? AND idx."targetId" = ?`, [
+            targetEntityName,
             targetId,
         ]);
     }
 
-    async getDependenciesByRootIdentifierAndRootId(rootIdentifier: string, rootId: string): Promise<BlockIndexDependency[]> {
-        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."rootIdentifier" = ? AND idx."id" = ?`, [
-            rootIdentifier,
+    async getDependenciesByRootEntityNameAndRootId(rootEntityName: string, rootId: string): Promise<BlockIndexDependency[]> {
+        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."rootEntityName" = ? AND idx."rootId" = ?`, [
+            rootEntityName,
             rootId,
         ]);
     }

@@ -13,13 +13,11 @@ interface DiscoverRootBlocksResult {
     graphqlMetadata: {
         objectType: string;
     };
-    blockIndexRootIdentifier: string;
     column: string;
     block: Block;
 }
 
 interface DiscoverTargetEntitiesResult {
-    targetIdentifier: string;
     entityName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repository: EntityRepository<any>;
@@ -46,8 +44,8 @@ export class DiscoverService {
         const metadataStorage = this.orm.em.getMetadata();
 
         entities.forEach((entity) => {
-            const blockIndexRootIdentifier = Reflect.getMetadata(`data:blockIndexRootIdentifier`, entity);
-            if (blockIndexRootIdentifier) {
+            const blockIndexRootEntityName = Reflect.getMetadata(`data:blockIndexRootEntityName`, entity);
+            if (blockIndexRootEntityName) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const keys = Reflect.getMetadata(`keys:rootBlock`, (entity as any).prototype) || [];
                 for (const key of keys) {
@@ -60,7 +58,6 @@ export class DiscoverService {
                             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             objectType: this.objectTypesMetadata.find((item) => item.target.name === entity.name)!.name,
                         },
-                        blockIndexRootIdentifier,
                         column: key,
                         block,
                     });
@@ -78,10 +75,9 @@ export class DiscoverService {
         const metadataStorage = this.orm.em.getMetadata();
 
         entities.forEach((entity) => {
-            const targetIdentifier = Reflect.getMetadata(`data:blockIndexTargetIdentifier`, entity) as string;
-            if (targetIdentifier) {
+            const targetEntityName = Reflect.getMetadata(`data:blockIndexTargetEntityName`, entity) as string;
+            if (targetEntityName) {
                 ret.push({
-                    targetIdentifier: targetIdentifier,
                     entityName: entity.name,
                     repository: this.orm.em.getRepository(entity.name),
                     metadata: metadataStorage.get(entity.name),

@@ -5,7 +5,6 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 as uuid } from "uuid";
 
-import { REDIRECT_BLOCK_INDEX_IDENTIFIER } from "../../blocks/block-index-identifiers";
 import { RootBlockType } from "../../blocks/root-block-type";
 import { DocumentInterface } from "../../document/dto/document-interface";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
@@ -88,7 +87,7 @@ export class RedirectEntityFactory {
             @ObjectType({
                 implements: () => [DocumentInterface],
             })
-            @RootBlockEntity(REDIRECT_BLOCK_INDEX_IDENTIFIER)
+            @RootBlockEntity()
             class Redirect extends RedirectBase {
                 @Embedded(() => RedirectScope)
                 @Field(() => RedirectScope)
@@ -100,7 +99,7 @@ export class RedirectEntityFactory {
             @ObjectType({
                 implements: () => [DocumentInterface],
             })
-            @RootBlockEntity(REDIRECT_BLOCK_INDEX_IDENTIFIER)
+            @RootBlockEntity()
             class Redirect extends RedirectBase {}
             return Redirect;
         }

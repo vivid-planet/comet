@@ -14,11 +14,11 @@ import { Type } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { FocalPoint } from "../dam/common/enums/focal-point.enum";
+import { File } from "../dam/files/entities/file.entity";
 import { FilesService } from "../dam/files/files.service";
 import { ImageCropAreaInput } from "../dam/images/dto/image-crop-area.input";
 import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
 import { ImagesService } from "../dam/images/images.service";
-import { DAM_FILE_BLOCK_INDEX_IDENTIFIER } from "./block-index-identifiers";
 
 // @TODO: make factory to support flexible validation
 class PixelImageBlockData extends BlockData {
@@ -83,7 +83,7 @@ class PixelImageBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                targetIdentifier: DAM_FILE_BLOCK_INDEX_IDENTIFIER,
+                targetEntityName: File.name,
                 id: this.damFileId,
             },
         ];

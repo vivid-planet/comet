@@ -5,7 +5,7 @@ import { composeBlocks } from "../helpers/composeBlocks";
 import { ABlock } from "./test/blocks/ABlock";
 import { BBlock } from "./test/blocks/BBlock";
 import { CBlock } from "./test/blocks/CBlock";
-import { DAM_FILE_BLOCK_INDEX_IDENTIFIER, ImageBlock } from "./test/blocks/ImageBlock";
+import { ImageBlock } from "./test/blocks/ImageBlock";
 import { transformToSaveIndex } from "./transformToSaveIndex";
 
 describe("transform to save index", () => {
@@ -257,7 +257,7 @@ describe("transform to save index", () => {
                 visible: true,
                 target: [
                     {
-                        targetIdentifier: DAM_FILE_BLOCK_INDEX_IDENTIFIER,
+                        targetEntityName: "File",
                         id: "abc",
                     },
                 ],

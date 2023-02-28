@@ -3,9 +3,6 @@ import { Field, ObjectType } from "@nestjs/graphql";
 @ObjectType()
 export class BlockIndexDependency {
     @Field()
-    rootIdentifier: string;
-
-    @Field()
     id: string;
 
     @Field()
@@ -28,9 +25,6 @@ export class BlockIndexDependency {
 
     @Field(() => Boolean)
     visible: boolean;
-
-    @Field()
-    targetIdentifier: string;
 
     @Field()
     targetEntityName: string;

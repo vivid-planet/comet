@@ -34,8 +34,8 @@ export class NewsContentScope {
 
 export const NEWS_BLOCK_INDEX_IDENTIFIER = "News_BlockIndex";
 
-@BlockIndexTarget(NEWS_BLOCK_INDEX_IDENTIFIER)
-@RootBlockEntity(NEWS_BLOCK_INDEX_IDENTIFIER)
+@BlockIndexTarget()
+@RootBlockEntity()
 @ObjectType({
     implements: () => [DocumentInterface],
 })

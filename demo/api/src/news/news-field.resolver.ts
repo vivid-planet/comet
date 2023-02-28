@@ -1,7 +1,7 @@
 import { BlockIndexDependency, BlockIndexService } from "@comet/cms-api";
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
-import { News, NEWS_BLOCK_INDEX_IDENTIFIER } from "./entities/news.entity";
+import { News } from "./entities/news.entity";
 import { NewsComment } from "./entities/news-comment.entity";
 
 @Resolver(() => News)
@@ -15,11 +15,11 @@ export class NewsFieldResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependents(@Parent() news: News): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependentsByTargetIdentifierAndTargetId(NEWS_BLOCK_INDEX_IDENTIFIER, news.id);
+        return this.blockIndexService.getDependentsByTargetEntityNameAndTargetId(News.name, news.id);
     }
 
     @ResolveField(() => [BlockIndexDependency])
     async dependencies(@Parent() news: News): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependenciesByRootIdentifierAndRootId(NEWS_BLOCK_INDEX_IDENTIFIER, news.id);
+        return this.blockIndexService.getDependenciesByRootEntityNameAndRootId(News.name, news.id);
     }
 }

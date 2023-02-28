@@ -1,5 +1,5 @@
 import { BlockData, BlockField, BlockIndexDataArray, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
-import { NEWS_BLOCK_INDEX_IDENTIFIER } from "@src/news/entities/news.entity";
+import { News } from "@src/news/entities/news.entity";
 import { IsOptional, IsUUID } from "class-validator";
 
 class NewsLinkBlockData extends BlockData {
@@ -9,7 +9,7 @@ class NewsLinkBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
-                targetIdentifier: NEWS_BLOCK_INDEX_IDENTIFIER,
+                targetEntityName: News.name,
                 id: this.id,
             },
         ];

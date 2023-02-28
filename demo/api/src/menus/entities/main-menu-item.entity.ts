@@ -10,7 +10,7 @@ export const MAIN_MENU_ITEM_BLOCK_INDEX_IDENTIFIER = "MainMenuItem_BlockIndex";
 
 @Entity()
 @ObjectType()
-@RootBlockEntity(MAIN_MENU_ITEM_BLOCK_INDEX_IDENTIFIER)
+@RootBlockEntity()
 export class MainMenuItem extends BaseEntity<MainMenuItem, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 

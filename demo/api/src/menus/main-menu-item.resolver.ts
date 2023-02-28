@@ -13,7 +13,7 @@ import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nest
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
 import { MainMenuItemInput } from "./dto/main-menu-item.input";
-import { MAIN_MENU_ITEM_BLOCK_INDEX_IDENTIFIER, MainMenuItem } from "./entities/main-menu-item.entity";
+import { MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuItem)
 export class MainMenuItemResolver {
@@ -76,6 +76,6 @@ export class MainMenuItemResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependencies(@Parent() mainMenuItem: MainMenuItem): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependenciesByRootIdentifierAndRootId(MAIN_MENU_ITEM_BLOCK_INDEX_IDENTIFIER, mainMenuItem.id);
+        return this.blockIndexService.getDependenciesByRootEntityNameAndRootId(MainMenuItem.name, mainMenuItem.id);
     }
 }

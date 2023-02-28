@@ -38,7 +38,7 @@ export interface ChildBlockInfo {
 }
 export type BlockIndexDataArray = Array<BlockIndexData>;
 export interface BlockIndexData {
-    targetIdentifier: string;
+    targetEntityName: string;
     id?: string;
 }
 export declare type BlockIndex = Array<{

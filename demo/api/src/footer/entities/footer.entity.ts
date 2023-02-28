@@ -13,7 +13,7 @@ export const FOOTER_BLOCK_INDEX_IDENTIFIER = "Footer_BlockIndex";
 @ObjectType({
     implements: () => [DocumentInterface],
 })
-@RootBlockEntity(FOOTER_BLOCK_INDEX_IDENTIFIER)
+@RootBlockEntity()
 @CrudSingleGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class Footer extends BaseEntity<Footer, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
