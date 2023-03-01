@@ -17,7 +17,6 @@ export interface BlocksModuleSyncOptions extends Pick<ModuleMetadata, "imports">
     useFactory: (...args: any[]) => BlocksModuleOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
-    withoutIndex?: boolean;
 }
 
 @Global()
@@ -45,9 +44,12 @@ export class BlocksModule {
                 transformerDependenciesProvider,
                 BlocksTransformerService,
                 BlocksMetaService,
-                ...(!options.withoutIndex ? [DiscoverService, BlockIndexService, CommandsService, BlockMigrateService] : []),
+                DiscoverService,
+                BlockIndexService,
+                CommandsService,
+                BlockMigrateService,
             ],
-            exports: [BlocksTransformerService, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES, ...(!options.withoutIndex ? [BlockIndexService] : [])],
+            exports: [BlocksTransformerService, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES, BlockIndexService],
         };
     }
 }
