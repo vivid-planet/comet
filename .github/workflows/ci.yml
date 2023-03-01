@@ -49,7 +49,7 @@ jobs:
             - name: Lint
               run: |
                   yarn exec prettier --check "./*.{js,json,md,yml}"
-                  yarn lint:lib
+                  yarn lint
                   # check for duplicate ids of formatted messages
                   yarn intl:extract
 
