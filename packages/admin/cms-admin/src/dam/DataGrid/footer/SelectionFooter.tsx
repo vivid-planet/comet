@@ -1,18 +1,20 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { SaveButton } from "@comet/admin";
-import { Delete, Move } from "@comet/admin-icons";
-import { Button } from "@mui/material";
+import { Archive, Delete, Error as ErrorIcon, Move, Restore, ThreeDotSaving } from "@comet/admin-icons";
+import { IconButton as CometAdminIconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { GraphQLError } from "graphql";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
+    GQLArchiveFilesMutation,
+    GQLArchiveFilesMutationVariables,
     GQLDeleteDamFileMutation,
     GQLDeleteDamFileMutationVariables,
     GQLDeleteDamFolderMutation,
     GQLDeleteDamFolderMutationVariables,
-    namedOperations,
+    GQLRestoreFilesMutation,
+    GQLRestoreFilesMutationVariables,
 } from "../../../graphql.generated";
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
@@ -22,6 +24,10 @@ import { DamFooter } from "./DamFooter";
 const ButtonGroup = styled("div")`
     display: flex;
     gap: 10px;
+`;
+
+const StyledErrorIcon = styled(ErrorIcon)`
+    color: ${({ theme }) => theme.palette.error.main};
 `;
 
 interface DamSelectionFooterProps {
@@ -58,6 +64,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                         }
                     `,
                     variables: { id: selectedItem.id },
+                    errorPolicy: "all",
                 });
 
                 errors = result.errors;
@@ -69,6 +76,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                         }
                     `,
                     variables: { id: selectedItem.id },
+                    errorPolicy: "all",
                 });
 
                 errors = result.errors;
@@ -79,12 +87,70 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
             setHasDeletionErrors(true);
             setTimeout(() => {
                 setHasDeletionErrors(false);
-            }, 2000);
+            }, 3000);
+        } else {
+            clearDamItemCache(apolloClient.cache);
         }
 
-        await apolloClient.refetchQueries({ include: [namedOperations.Query.DamItemsList] });
-        clearDamItemCache(apolloClient.cache);
         setDeleting(false);
+    };
+
+    const archiveSelected = async () => {
+        if (selectedItemsMap === undefined) {
+            return;
+        }
+
+        const fileIds = Array.from(selectedItemsMap.entries())
+            .filter(([, type]) => type === "file")
+            .map(([id]) => {
+                return id;
+            });
+
+        const { errors } = await apolloClient.mutate<GQLArchiveFilesMutation, GQLArchiveFilesMutationVariables>({
+            mutation: gql`
+                mutation ArchiveFiles($ids: [ID!]!) {
+                    archiveDamFiles(ids: $ids) {
+                        id
+                        archived
+                    }
+                }
+            `,
+            variables: {
+                ids: fileIds,
+            },
+            errorPolicy: "all",
+        });
+
+        return { errors };
+    };
+
+    const restoreSelected = async () => {
+        if (selectedItemsMap === undefined) {
+            return;
+        }
+
+        const fileIds = Array.from(selectedItemsMap.entries())
+            .filter(([, type]) => type === "file")
+            .map(([id]) => {
+                return id;
+            });
+
+        const { errors } = await apolloClient.mutate<GQLRestoreFilesMutation, GQLRestoreFilesMutationVariables>({
+            mutation: gql`
+                mutation RestoreFiles($ids: [ID!]!) {
+                    restoreDamFiles(ids: $ids) {
+                        id
+                        archived
+                    }
+                }
+            `,
+            variables: {
+                ids: fileIds,
+            },
+            errorPolicy: "all",
+        });
+
+        return { errors };
     };
 
     if (!open) {
@@ -94,43 +160,42 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
     return (
         <>
             <DamFooter open={open}>
-                <ButtonGroup>
-                    <SaveButton
-                        saving={deleting}
-                        hasErrors={hasDeletionErrors}
-                        color="secondary"
-                        onClick={() => {
-                            setDeleteDialogOpen(true);
+                <Typography>
+                    <FormattedMessage
+                        id="comet.dam.footer.selected"
+                        defaultMessage="{count, plural, one {# item} other {# items}} selected"
+                        values={{
+                            count: selectedItemsMap?.size,
                         }}
-                        saveIcon={<Delete />}
-                        savingItem={<FormattedMessage id="comet.dam.footer.deleting" defaultMessage="Deleting" />}
-                        successItem={<FormattedMessage id="comet.dam.footer.successfullyDeleted" defaultMessage="Successfully deleted" />}
-                        errorItem={<FormattedMessage id="comet.dam.footer.errorWhileDeleting" defaultMessage="Error while deleting" />}
-                    >
-                        <FormattedMessage
-                            id="comet.dam.footer.delete"
-                            defaultMessage="Delete {num, plural, one {one item} other {# items}}"
-                            values={{
-                                num: selectedItemsMap?.size,
-                            }}
-                        />
-                    </SaveButton>
-                    <Button
-                        color="secondary"
-                        variant="contained"
-                        startIcon={<Move />}
+                    />
+                </Typography>
+                <ButtonGroup>
+                    <FooterActionButton
+                        title={<FormattedMessage id="comet.dam.footer.move" defaultMessage="Move" />}
                         onClick={() => {
                             onOpenMoveDialog();
                         }}
-                    >
-                        <FormattedMessage
-                            id="comet.dam.footer.move"
-                            defaultMessage="Move {num, plural, one {one item} other {# items}}"
-                            values={{
-                                num: selectedItemsMap?.size,
-                            }}
-                        />
-                    </Button>
+                        icon={<Move />}
+                    />
+                    <FooterActionButton
+                        title={<FormattedMessage id="comet.dam.footer.archive" defaultMessage="Archive" />}
+                        executeMutation={archiveSelected}
+                        icon={<Archive />}
+                    />
+                    <FooterActionButton
+                        title={<FormattedMessage id="comet.dam.footer.restore" defaultMessage="Restore" />}
+                        executeMutation={restoreSelected}
+                        icon={<Restore />}
+                    />
+                    <FooterActionButton
+                        title={<FormattedMessage id="comet.dam.footer.delete" defaultMessage="Delete" />}
+                        onClick={() => {
+                            setDeleteDialogOpen(true);
+                        }}
+                        icon={<Delete />}
+                        loading={deleting}
+                        hasErrors={hasDeletionErrors}
+                    />
                 </ButtonGroup>
             </DamFooter>
             <ConfirmDeleteDialog
@@ -144,5 +209,61 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                 itemType="selected_items"
             />
         </>
+    );
+};
+
+const StyledCometAdminIconButton = styled(CometAdminIconButton)`
+    color: ${({ theme }) => theme.palette.grey.A100};
+    padding-left: 4px;
+    padding-right: 4px;
+`;
+
+interface IconButtonProps {
+    title: NonNullable<React.ReactNode>;
+    onClick?: () => void;
+    executeMutation?: () => Promise<{ errors: readonly GraphQLError[] | undefined } | undefined>;
+    icon: React.ReactNode;
+    loading?: boolean;
+    hasErrors?: boolean;
+}
+
+const FooterActionButton = ({ title, onClick, executeMutation, icon, loading: externalLoading, hasErrors: externalHasErrors }: IconButtonProps) => {
+    const apolloClient = useApolloClient();
+
+    const [internalLoading, setInternalLoading] = React.useState<boolean>(false);
+    const [internalHasErrors, setInternalHasErrors] = React.useState<boolean>(false);
+
+    const loading = externalLoading ?? internalLoading;
+    const hasErrors = externalHasErrors ?? internalHasErrors;
+
+    const handleClick = async () => {
+        if (executeMutation === undefined) {
+            throw new Error("FooterActionButton: You must either set onClick or executeMutation");
+        }
+
+        setInternalLoading(true);
+
+        const result = await executeMutation();
+
+        if (result) {
+            if (result.errors) {
+                setInternalHasErrors(true);
+                setTimeout(() => {
+                    setInternalHasErrors(false);
+                }, 3000);
+            } else {
+                clearDamItemCache(apolloClient.cache);
+            }
+        }
+
+        setInternalLoading(false);
+    };
+
+    return (
+        <Tooltip title={title}>
+            <StyledCometAdminIconButton onClick={onClick ?? handleClick} size="large">
+                {loading ? <ThreeDotSaving /> : hasErrors ? <StyledErrorIcon /> : icon}
+            </StyledCometAdminIconButton>
+        </Tooltip>
     );
 };

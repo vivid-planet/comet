@@ -1,4 +1,4 @@
-import { Paper, Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
@@ -9,21 +9,19 @@ const FooterBar = styled(Paper)`
     left: 50%;
     transform: translateX(-50%);
 
-    min-width: 1280px;
     min-height: 60px;
     border-radius: 4px;
 
-    background-color: ${({ theme }) => theme.palette.primary.dark};
-    color: ${({ theme }) => theme.palette.primary.contrastText};
+    background-color: ${({ theme }) => theme.palette.grey.A400};
+    color: ${({ theme }) => theme.palette.grey.A100};
 
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-`;
+    gap: 30px;
 
-const AlignTextAndImage = styled(Typography)`
-    display: flex;
-    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
 `;
 
 interface DamFooterProps {
@@ -35,11 +33,5 @@ export const DamFooter: React.FunctionComponent<DamFooterProps> = ({ children })
         return null;
     }
 
-    return (
-        <>
-            <FooterBar>
-                <AlignTextAndImage>{children}</AlignTextAndImage>
-            </FooterBar>
-        </>
-    );
+    return <FooterBar>{children}</FooterBar>;
 };
