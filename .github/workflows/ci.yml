@@ -46,6 +46,11 @@ jobs:
             - name: Build
               run: yarn build:lib
 
+            - name: Generate API
+              run: |
+                  cd demo/api
+                  yarn api-generator
+
             - name: Lint
               run: |
                   yarn exec prettier --check "./*.{js,json,md,yml}"
