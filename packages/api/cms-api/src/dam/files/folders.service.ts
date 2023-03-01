@@ -1,10 +1,11 @@
+import { MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { FolderArgs } from "./dto/folder.args";
+import { DamFolderListPositionInput, FolderArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { Folder } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
@@ -67,6 +68,7 @@ export class FoldersService {
     constructor(
         @InjectRepository(Folder) private readonly foldersRepository: EntityRepository<Folder>,
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
+        private readonly orm: MikroORM,
     ) {}
 
     async findAllByParentId({
@@ -215,6 +217,42 @@ export class FoldersService {
 
         const result = await this.foldersRepository.nativeDelete(id);
         return result === 1;
+    }
+
+    async getFolderPosition(folderId: string, args: DamFolderListPositionInput): Promise<number> {
+        const subQb = withFoldersSelect(
+            this.foldersRepository
+                .createQueryBuilder("folder")
+                .select(`folder.id, ROW_NUMBER() OVER( ORDER BY folder."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`),
+            {
+                includeArchived: args.includeArchived,
+                parentId: args.parentId,
+                query: args.filter?.searchText,
+                sortColumnName: args.sortColumnName,
+                sortDirection: args.sortDirection,
+            },
+        );
+
+        const connection = this.orm.em.getConnection();
+        const metadata = this.orm.em.getMetadata();
+
+        const folderTableName = metadata.get(Folder.name).tableName;
+
+        const result: Array<{ row_number: string }> = await connection.execute(
+            `select "folder_with_row_number".row_number
+                from "${folderTableName}" as "folder"
+                join (${subQb.getFormattedQuery()}) as "folder_with_row_number" ON folder_with_row_number.id = folder.id
+                where "folder"."id" = ?
+            `,
+            [folderId],
+        );
+
+        if (result.length === 0) {
+            throw new Error("Folder ID does not exist.");
+        }
+
+        // make the positions start with 0
+        return Number(result[0].row_number) - 1;
     }
 
     async isValidParentForFolder(folderId: string, parentId: string | null): Promise<boolean> {
