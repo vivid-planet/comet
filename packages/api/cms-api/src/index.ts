@@ -8,6 +8,7 @@ export { PublicApi } from "./auth/decorators/public-api.decorator";
 export { createCometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
 export { createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";
+export { createStaticAuthedLoadedUserStrategy } from "./auth/strategies/static-authed-loaded-user.strategy";
 export { createStaticAuthedUserStrategy } from "./auth/strategies/static-authed-user.strategy";
 export { createStaticCredentialsBasicStrategy } from "./auth/strategies/static-credentials-basic.strategy";
 export { BlobStorageAzureConfig } from "./blob-storage/backends/azure/blob-storage-azure.config";
