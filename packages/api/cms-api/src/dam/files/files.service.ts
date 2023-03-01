@@ -21,7 +21,7 @@ import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
-import { FileArgs } from "./dto/file.args";
+import { DamFileListPositionInput, FileArgs } from "./dto/file.args";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
@@ -307,6 +307,46 @@ export class FilesService {
         }
 
         return result;
+    }
+
+    async getFilePosition(fileId: string, args: DamFileListPositionInput): Promise<number> {
+        const isSearching = args.filter?.searchText !== undefined && args.filter.searchText.length > 0;
+
+        const subQb = withFilesSelect(
+            this.filesRepository
+                .createQueryBuilder("file")
+                .select(`file.id, ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`)
+                .leftJoinAndSelect("file.folder", "folder"),
+            {
+                archived: !args.includeArchived ? false : undefined,
+                folderId: !isSearching ? args.folderId || null : undefined,
+                mimetypes: args.filter?.mimetypes,
+                query: args.filter?.searchText,
+                sortColumnName: args.sortColumnName,
+                sortDirection: args.sortDirection,
+            },
+        );
+
+        const connection = this.orm.em.getConnection();
+        const metadata = this.orm.em.getMetadata();
+
+        const fileTableName = metadata.get(File.name).tableName;
+
+        const result: Array<{ row_number: string }> = await connection.execute(
+            `select "file_with_row_number".row_number
+                from "${fileTableName}" as "file"
+                join (${subQb.getFormattedQuery()}) as "file_with_row_number" ON file_with_row_number.id = file.id
+                where "file"."id" = ?
+            `,
+            [fileId],
+        );
+
+        if (result.length === 0) {
+            throw new Error("File ID does not exist.");
+        }
+
+        // make the positions start with 0
+        return Number(result[0].row_number) - 1;
     }
 
     async findNextAvailableFilename(filePath: string, folderId: string | null = null): Promise<string> {
