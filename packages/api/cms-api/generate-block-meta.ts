@@ -1,7 +1,7 @@
-import { createOneOfBlock, createRichTextBlock, createTextLinkBlock, ExternalLinkBlock } from "@comet/blocks-api";
-import { NestFactory } from "@nestjs/core";
+import { createOneOfBlock, createRichTextBlock, createTextLinkBlock, ExternalLinkBlock, getBlocksMeta } from "@comet/blocks-api";
+import { promises as fs } from "fs";
 
-import { BlocksModule, createSeoBlock, createTextImageBlock, InternalLinkBlock } from "./src";
+import { createSeoBlock, createTextImageBlock, InternalLinkBlock } from "./src";
 
 async function generateBlockMeta(): Promise<void> {
     console.info("Generating block-meta.json...");
@@ -24,13 +24,8 @@ async function generateBlockMeta(): Promise<void> {
     // Create SeoBlock for block types generation in client libraries
     createSeoBlock();
 
-    const app = await NestFactory.create(
-        BlocksModule.forRoot({
-            withoutIndex: true,
-            useFactory: () => ({ transformerDependencies: {} }),
-        }),
-    );
-    await app.init();
+    const metaJson = getBlocksMeta();
+    await fs.writeFile("block-meta.json", JSON.stringify(metaJson, null, 4));
 
     console.info("Done!");
 }
