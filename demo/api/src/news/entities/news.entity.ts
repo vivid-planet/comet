@@ -32,8 +32,6 @@ export class NewsContentScope {
     language: string;
 }
 
-export const NEWS_BLOCK_INDEX_IDENTIFIER = "News_BlockIndex";
-
 @BlockIndexTarget()
 @RootBlockEntity()
 @ObjectType({

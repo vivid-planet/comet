@@ -6,8 +6,6 @@ import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 import { v4 as uuid } from "uuid";
 
-export const MAIN_MENU_ITEM_BLOCK_INDEX_IDENTIFIER = "MainMenuItem_BlockIndex";
-
 @Entity()
 @ObjectType()
 @RootBlockEntity()

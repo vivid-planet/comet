@@ -64,6 +64,7 @@ class InternalLinkBlockData extends BlockData {
     indexData(): BlockIndexDataArray {
         return [
             {
+                // TODO: dont hardcode targetEntityName, make a factory instead
                 targetEntityName: "PageTreeNode",
                 id: this.targetPageId,
             },

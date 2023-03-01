@@ -7,8 +7,6 @@ import { v4 as uuid } from "uuid";
 import { FooterContentBlock } from "../blocks/footer-content.block";
 import { FooterContentScope } from "./footer-content-scope.entity";
 
-export const FOOTER_BLOCK_INDEX_IDENTIFIER = "Footer_BlockIndex";
-
 @Entity()
 @ObjectType({
     implements: () => [DocumentInterface],
