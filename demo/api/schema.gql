@@ -741,5 +741,4 @@ input ProductInput {
   description: String!
   price: Float
   inStock: Boolean!
-  image: DamImageBlockInput!
 }

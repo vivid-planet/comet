@@ -49,6 +49,7 @@ interface DamItemLabelColumnProps {
         hideHoverStyles: () => void;
         isHovered: boolean;
     };
+    scrollIntoView?: boolean;
 }
 
 export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnProps> = ({
@@ -60,7 +61,18 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
     fileUploadApi,
     footerApi,
     hoverApi,
+    scrollIntoView = false,
 }) => {
+    const columnRef = React.useRef<HTMLDivElement>();
+
+    React.useEffect(() => {
+        if (scrollIntoView) {
+            setTimeout(() => {
+                columnRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 500);
+        }
+    }, [columnRef, scrollIntoView]);
+
     // handles upload of native file or folder (e.g. file from desktop) to subfolder
     // If the native file is dropped on a folder row in the table, it is uploaded
     // to said folder
@@ -74,12 +86,10 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
         },
         onDragLeave: () => {
             hoverApi.hideHoverStyles();
-            // setIsHovered(false);
             footerApi.hide();
         },
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             hoverApi.hideHoverStyles();
-            // setIsHovered(false);
             footerApi.hide();
 
             await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, item.id);
@@ -87,7 +97,7 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
     });
 
     return (
-        <DamItemLabelWrapper isHovered={hoverApi.isHovered} {...(isFolder(item) && getFolderRootProps())}>
+        <DamItemLabelWrapper ref={columnRef} isHovered={hoverApi.isHovered} {...(isFolder(item) && getFolderRootProps())}>
             {renderDamLabel ? (
                 renderDamLabel(item, { matches: matches.get(item.id), filterApi })
             ) : (

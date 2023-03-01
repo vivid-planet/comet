@@ -1,12 +1,29 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, PrettyBytes, useDataGridRemote } from "@comet/admin";
+import {
+    BreadcrumbItem,
+    EditDialog,
+    IFilterApi,
+    ISelectionApi,
+    PrettyBytes,
+    useDataGridRemote,
+    useStackSwitchApi,
+    useStoredState,
+} from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import { GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
+import {
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamItemListPositionQuery,
+    GQLDamItemListPositionQueryVariables,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
+    GQLDamItemTypeLiteral,
+} from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
@@ -17,7 +34,7 @@ import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { damFolderQuery, damItemsListQuery } from "./FolderDataGrid.gql";
+import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import * as sc from "./FolderDataGrid.sc";
 import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
@@ -36,7 +53,7 @@ interface FolderDataGridProps extends DamConfig {
 }
 
 const FolderDataGrid = ({
-    id,
+    id: currentFolderId,
     filterApi,
     breadcrumbs,
     selectionApi,
@@ -48,7 +65,10 @@ const FolderDataGrid = ({
 }: FolderDataGridProps): React.ReactElement => {
     const intl = useIntl();
     const apolloClient = useApolloClient();
+    const switchApi = useStackSwitchApi();
     const damSelectionActionsApi = useDamSelectionApi();
+
+    const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
     const [uploadTargetFolderName, setUploadTargetFolderName] = React.useState<string | undefined>();
 
@@ -65,9 +85,9 @@ const FolderDataGrid = ({
     const { data: currentFolderData } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            id: id!,
+            id: currentFolderId!,
         },
-        skip: id === undefined,
+        skip: currentFolderId === undefined,
     });
 
     const {
@@ -76,7 +96,7 @@ const FolderDataGrid = ({
         error,
     } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
         variables: {
-            folderId: id,
+            folderId: currentFolderId,
             includeArchived: filterApi.current.archived,
             filter: {
                 mimetypes: props.allowedMimetypes,
@@ -104,6 +124,91 @@ const FolderDataGrid = ({
             clearDamItemCache(apolloClient.cache);
         },
     });
+
+    React.useEffect(() => {
+        async function navigateToNewlyUploadedItems() {
+            if (fileUploadApi.newlyUploadedItemIds.length === 0) {
+                return;
+            }
+
+            let type: GQLDamItemTypeLiteral | undefined;
+            let id: string | undefined;
+            let parentId: string | undefined;
+            let redirectToSubfolder;
+
+            if (fileUploadApi.newlyUploadedItemIds.find((item) => item.type === "folder")) {
+                const folders = fileUploadApi.newlyUploadedItemIds.filter((item) => item.type === "folder");
+                const firstFolder = folders[0];
+
+                type = "Folder";
+                id = firstFolder.id;
+
+                if (firstFolder.parentId === currentFolderId) {
+                    // upload to current folder / creates new folders
+                    parentId = currentFolderId;
+                    redirectToSubfolder = false;
+                } else {
+                    // upload to subfolder / creates new folders
+                    parentId = firstFolder.parentId;
+                    redirectToSubfolder = true;
+                }
+            } else {
+                const files = fileUploadApi.newlyUploadedItemIds;
+                const firstFile = files[0];
+
+                type = "File";
+                id = firstFile.id;
+
+                if (firstFile.parentId === currentFolderId) {
+                    // upload to current folder / creates NO new folders (only files)
+                    parentId = currentFolderId;
+                    redirectToSubfolder = false;
+                } else {
+                    // upload to subfolder / creates NO new folders (only files)
+                    parentId = firstFile.parentId;
+                    redirectToSubfolder = true;
+                }
+            }
+
+            if (id === redirectedToId) {
+                // otherwise it's not possible to navigate to another folder while the new item is in newlyUploadedItemIds
+                // because it always automatically redirects to the new item
+                return;
+            }
+
+            const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
+                query: damItemListPosition,
+                variables: {
+                    id: id,
+                    type: type,
+                    folderId: parentId,
+                    includeArchived: filterApi.current.archived,
+                    filter: {
+                        mimetypes: props.allowedMimetypes,
+                        searchText: filterApi.current.searchText,
+                    },
+                    sortColumnName: filterApi.current.sort?.columnName,
+                    sortDirection: filterApi.current.sort?.direction,
+                },
+            });
+
+            const position = result.data.damItemListPosition;
+            const targetPage = Math.floor(position / dataGridProps.pageSize);
+
+            if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
+                switchApi.activatePage("folder", parentId);
+            } else {
+                dataGridProps.onPageChange?.(targetPage, {});
+            }
+
+            setRedirectedToId(id);
+        }
+
+        navigateToNewlyUploadedItems();
+
+        // useEffect dependencies must only include `newlyUploadedItemIds`, because the function should only be called once after new items are added.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fileUploadApi.newlyUploadedItemIds]);
 
     const [hoveredId, setHoveredId] = React.useState<string | null>(null);
 
@@ -146,7 +251,7 @@ const FolderDataGrid = ({
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             hideHoverStyles();
             hideUploadFooter();
-            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, currentFolderData?.damFolder.id);
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, currentFolderId);
         },
     });
 
@@ -163,7 +268,12 @@ const FolderDataGrid = ({
 
     return (
         <div style={{ padding: "20px" }}>
-            <FolderHead isSearching={isSearching} numberItems={dataGridData?.damItemsList.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
+            <FolderHead
+                isSearching={isSearching}
+                numberItems={dataGridData?.damItemsList.totalCount ?? 0}
+                breadcrumbs={breadcrumbs}
+                folderId={currentFolderId}
+            />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     {...dataGridProps}
@@ -173,6 +283,13 @@ const FolderDataGrid = ({
                     loading={loading}
                     error={error}
                     rowsPerPageOptions={[10, 20, 50]}
+                    getRowClassName={({ row }) => {
+                        if (fileUploadApi.newlyUploadedItemIds.find((newItem) => newItem.id === row.id)) {
+                            return "CometDataGridRow--highlighted";
+                        }
+
+                        return "";
+                    }}
                     columns={[
                         {
                             field: "name",
@@ -199,6 +316,7 @@ const FolderDataGrid = ({
                                             hideHoverStyles,
                                             isHovered: hoveredId === row.id,
                                         }}
+                                        scrollIntoView={fileUploadApi.newlyUploadedItemIds[0]?.id === row.id}
                                     />
                                 );
                             },

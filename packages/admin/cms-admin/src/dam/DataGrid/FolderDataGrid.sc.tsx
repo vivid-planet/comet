@@ -1,3 +1,4 @@
+import { alpha } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 interface TableHoverHighlightProps {
@@ -15,6 +16,12 @@ export const FolderOuterHoverHighlight = styled("div", { shouldForwardProp: (pro
     outline: ${({ theme, isHovered }) => (isHovered ? `solid 1px ${theme.palette.primary.main}` : "none")};
 
     & .MuiDataGrid-root {
-        background-color: ${({ isHovered }) => (isHovered ? "rgba(41, 182, 246, 0.1)" : "#fff")};
+        background-color: ${({ theme, isHovered }) => (isHovered ? alpha(theme.palette.primary.main, 0.1) : "#fff")};
+    }
+    & .MuiDataGrid-row {
+        transition: background-color 1s ease-in-out;
+        &.CometDataGridRow--highlighted {
+            background-color: ${({ theme }) => alpha(theme.palette.primary.dark, 0.4)};
+        }
     }
 `;
