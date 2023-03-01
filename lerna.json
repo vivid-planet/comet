@@ -7,7 +7,7 @@
         "packages/eslint-config"
     ],
     "useWorkspaces": true,
-    "version": "3.2.2",
+    "version": "3.2.3",
     "command": {
         "version": {
             "message": "Publish %s"

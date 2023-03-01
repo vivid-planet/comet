@@ -1,18 +1,6 @@
-// Add this to the VERY top of the first file loaded in your app
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require("elastic-apm-node").start({
-    // Override service name from package.json
-    // Allowed characters: a-z, A-Z, 0-9, -, _, and space
-    serviceName: `comet-api-${process.env.APP_ENV}`,
-
-    // Use if APM Server requires a token
-    secretToken: "",
-
-    // Set custom APM Server URL (default: http://localhost:8200)
-    serverUrl: process.env.APM_URL,
-
-    active: !!process.env.API_ENABLE_APM,
-});
+if (process.env.TRACING_ENABLED) {
+    require("./tracing");
+}
 
 import { ExceptionInterceptor, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";

@@ -55,7 +55,6 @@ class PixelImageBlockData extends BlockData {
                           dominantColor: file.image.dominantColor,
                       }
                     : undefined,
-                damPath: await filesService.getDamPath(file),
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
             cropArea: this.cropArea ? { ...this.cropArea } : undefined,
@@ -180,11 +179,6 @@ class Meta extends AnnotationBlockMeta {
                                 ],
                             },
                             nullable: true,
-                        },
-                        {
-                            name: "damPath",
-                            kind: BlockMetaFieldKind.String,
-                            nullable: false,
                         },
                         {
                             name: "fileUrl",

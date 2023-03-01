@@ -26,7 +26,7 @@ export {
     REDIRECT_BLOCK_INDEX_IDENTIFIER,
 } from "./blocks/block-index-identifiers";
 export { BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
-export { BlocksModule, BlocksModuleAsyncOptions, BlocksModuleOptions } from "./blocks/blocks.module";
+export { BlocksModule, BlocksModuleOptions } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
@@ -74,7 +74,7 @@ export { FocalPoint } from "./dam/common/enums/focal-point.enum";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";
 export { defaultDamAcceptedMimetypes } from "./dam/common/mimeTypes/default-dam-accepted-mimetypes";
 export { DamConfig } from "./dam/dam.config";
-export { DAM_CONFIG, DAM_MODULE_OPTIONS, IMGPROXY_CONFIG } from "./dam/dam.constants";
+export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
 export { FileArgs } from "./dam/files/dto/file.args";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
@@ -117,6 +117,7 @@ export {
 export { JobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
+export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
@@ -134,6 +135,7 @@ export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entit
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
+export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
 export { PublicUpload } from "./public-upload/entities/public-upload.entity";

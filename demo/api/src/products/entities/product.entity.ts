@@ -1,4 +1,5 @@
-import { CrudField, CrudGenerator, DocumentInterface } from "@comet/cms-api";
+import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
+import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property, types } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -7,6 +8,7 @@ import { v4 as uuid } from "uuid";
     implements: () => [DocumentInterface],
 })
 @Entity()
+@RootBlockEntity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
@@ -41,6 +43,11 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Property({ type: types.boolean })
     @Field()
     inStock: boolean = true;
+
+    @Property({ customType: new RootBlockType(DamImageBlock) })
+    @Field(() => RootBlockDataScalar(DamImageBlock))
+    @RootBlock(DamImageBlock)
+    image: BlockDataInterface;
 
     @Property()
     @Field()

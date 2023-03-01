@@ -68,6 +68,19 @@ export class FilesResolver {
         return entity;
     }
 
+    @Mutation(() => [File])
+    @SkipBuild()
+    async archiveDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<File[]> {
+        const entities = await this.filesRepository.find({ id: { $in: ids } });
+
+        for (const entity of entities) {
+            entity.archived = true;
+        }
+
+        await this.filesRepository.flush();
+        return entities;
+    }
+
     @Mutation(() => File)
     @SkipBuild()
     async restoreDamFile(@Args("id", { type: () => ID }) id: string): Promise<File> {
@@ -76,6 +89,19 @@ export class FilesResolver {
 
         await this.filesRepository.persistAndFlush(entity);
         return entity;
+    }
+
+    @Mutation(() => [File])
+    @SkipBuild()
+    async restoreDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<File[]> {
+        const entities = await this.filesRepository.find({ id: { $in: ids } });
+
+        for (const entity of entities) {
+            entity.archived = false;
+        }
+
+        await this.filesRepository.flush();
+        return entities;
     }
 
     @Mutation(() => Boolean)

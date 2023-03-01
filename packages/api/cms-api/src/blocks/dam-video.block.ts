@@ -49,7 +49,6 @@ class DamVideoBlockData extends BlockData {
         return {
             damFile: {
                 ...data,
-                damPath: await filesService.getDamPath(file),
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
             autoplay: this.autoplay,
@@ -142,11 +141,6 @@ class Meta extends AnnotationBlockMeta {
                         {
                             name: "archived",
                             kind: BlockMetaFieldKind.Boolean,
-                            nullable: false,
-                        },
-                        {
-                            name: "damPath",
-                            kind: BlockMetaFieldKind.String,
                             nullable: false,
                         },
                         {
