@@ -161,7 +161,10 @@ export function createPageTreeResolver({
                                 selection.typeCondition &&
                                 selection.typeCondition.kind == "NamedType"
                             ) {
-                                if (selection.typeCondition.name.value === node.documentType) {
+                                if (
+                                    selection.typeCondition.name.value === node.documentType ||
+                                    selection.typeCondition.name.value === DocumentInterface.name
+                                ) {
                                     //documentType is matching, return full document (fall thru)
                                     return undefined;
                                 } else {
