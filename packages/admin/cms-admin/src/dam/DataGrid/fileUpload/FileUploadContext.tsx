@@ -28,7 +28,7 @@ export const FileUploadContextProvider: React.FunctionComponent = ({ children })
     }, []);
 
     const addNewlyUploadedItemIds = (itemIds: Array<{ id: string; type: "file" | "folder" }>) => {
-        setNewlyUploadedItemIds((newlyUploadedItemIds) => [...newlyUploadedItemIds, ...itemIds]);
+        setNewlyUploadedItemIds((newlyUploadedItemIds) => [...itemIds, ...newlyUploadedItemIds]);
 
         const timeout = setTimeout(() => {
             // remove uploaded items automatically after 5 seconds
