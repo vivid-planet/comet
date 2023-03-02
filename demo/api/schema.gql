@@ -72,13 +72,12 @@ type DamFile {
 }
 
 type BlockIndexDependency {
-  id: String!
-  entityName: String!
-  graphqlObjectType: String!
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
   blockname: String!
   jsonPath: String!
   visible: Boolean!
-  targetEntityName: String!
   targetGraphqlObjectType: String!
   targetId: String!
 }

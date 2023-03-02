@@ -36,12 +36,12 @@ export class BlockIndexService {
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
-                            "${metadata.tableName}"."${primary}"  "id",
-                            '${metadata.name}'                    "entityName",
-                            '${graphqlMetadata.objectType}'       "graphqlObjectType",
-                            '${metadata.tableName}'               "tableName",
-                            '${column}'                           "columnName",
-                            '${primary}'                          "primaryKey",
+                            "${metadata.tableName}"."${primary}"  "rootId",
+                            '${metadata.name}'                    "rootEntityName",
+                            '${graphqlMetadata.objectType}'       "rootGraphqlObjectType",
+                            '${metadata.tableName}'               "rootTableName",
+                            '${column}'                           "rootColumnName",
+                            '${primary}'                          "rootPrimaryKey",
                             indexObj->>'blockname'                "blockname",
                             indexObj->>'jsonPath'                 "jsonPath",
                             (indexObj->>'visible')::boolean       "visible",
