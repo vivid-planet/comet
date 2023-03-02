@@ -46,11 +46,6 @@ jobs:
             - name: Build
               run: yarn build:lib
 
-            - name: Generate API
-              run: |
-                  cd demo/api
-                  yarn api-generator
-
             - name: "Library: Clone translations"
               uses: actions/checkout@v3
               with:
