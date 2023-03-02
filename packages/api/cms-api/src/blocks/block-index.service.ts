@@ -49,11 +49,11 @@ export class BlockIndexService {
                             targetTableData->>'graphqlObjectType' "targetGraphqlObjectType",
                             targetTableData->>'tableName'         "targetTableName",
                             targetTableData->>'primary'           "targetPrimaryKey",
-                            targetObj->>'id' "targetId"
+                            dependenciesObj->>'id' "targetId"
                         FROM "${metadata.tableName}",
                             json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
-                            json_array_elements(indexObj->'target') targetObj,
-                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', targetObj->>'targetEntityName') targetTableData`;
+                            json_array_elements(indexObj->'target'->'dependencies') dependenciesObj,
+                            json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData`;
 
             indexSelects.push(select);
         }
