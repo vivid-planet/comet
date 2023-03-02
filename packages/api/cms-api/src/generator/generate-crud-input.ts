@@ -29,6 +29,8 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
         const decorators = [] as Array<string>;
         if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
+        } else {
+            decorators.push("@IsOptional()");
         }
         if (prop.name === "id" || prop.name == "createdAt" || prop.name == "updatedAt") {
             //skip those (TODO find a non-magic solution?)
@@ -93,13 +95,13 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             continue;
         }
         fieldsOut += `${decorators.join("\n")}
-    ${prop.name}: ${type};
+    ${prop.name}${prop.nullable ? "?" : ""}: ${type};
     
     `;
     }
     const inputOut = `import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional } from "class-validator";
 import { IsSlug, RootBlockInputScalar } from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
