@@ -93,150 +93,126 @@ describe("transform to save index", () => {
         const result = transformToSaveIndex(TestBlock, testBlock);
 
         expect(result).toStrictEqual([
-            { blockname: "TestBlock", jsonPath: "root", visible: true, target: [] },
+            { blockname: "TestBlock", jsonPath: "root", visible: true },
             {
                 blockname: "ATestBlock",
                 jsonPath: "root.blocks.0.props",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "BTestBlock",
                 jsonPath: "root.blocks.0.props.b",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.0.props.b.c1",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.0.props.b.c2",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.0.props.c",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "BTestBlock",
                 jsonPath: "root.blocks.1.props",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.1.props.c1",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.1.props.c2",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "OneOf",
                 jsonPath: "root.blocks.2.props",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "ATestBlock",
                 jsonPath: "root.blocks.2.props.attachedBlocks.0.props",
                 visible: false,
-                target: [],
             },
             {
                 blockname: "BTestBlock",
                 jsonPath: "root.blocks.2.props.attachedBlocks.0.props.b",
                 visible: false,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.2.props.attachedBlocks.0.props.b.c1",
                 visible: false,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.2.props.attachedBlocks.0.props.b.c2",
                 visible: false,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.2.props.attachedBlocks.0.props.c",
                 visible: false,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.2.props.attachedBlocks.1.props",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "OptionalBTestBlock",
                 jsonPath: "root.blocks.3.props",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "BTestBlock",
                 jsonPath: "root.blocks.3.props.block",
                 visible: false,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.3.props.block.c1",
                 visible: false,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.3.props.block.c2",
                 visible: false,
-                target: [],
             },
             {
                 blockname: "Composed",
                 jsonPath: "root.blocks.4.props",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "BTestBlock",
                 jsonPath: "root.blocks.4.props.b",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.4.props.b.c1",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.4.props.b.c2",
                 visible: true,
-                target: [],
             },
             {
                 blockname: "CTestBlock",
                 jsonPath: "root.blocks.4.props.c",
                 visible: true,
-                target: [],
             },
         ]);
     });
@@ -250,17 +226,19 @@ describe("transform to save index", () => {
         const result = transformToSaveIndex(TestBlock, testBlock);
 
         expect(result).toStrictEqual([
-            { blockname: "TestBlock", jsonPath: "root", visible: true, target: [] },
+            { blockname: "TestBlock", jsonPath: "root", visible: true },
             {
                 blockname: "ImageBlock",
                 jsonPath: "root.blocks.0.props",
                 visible: true,
-                target: [
-                    {
-                        targetEntityName: "File",
-                        id: "abc",
-                    },
-                ],
+                target: {
+                    dependencies: [
+                        {
+                            targetEntityName: "File",
+                            id: "abc",
+                        },
+                    ],
+                },
             },
         ]);
     });
