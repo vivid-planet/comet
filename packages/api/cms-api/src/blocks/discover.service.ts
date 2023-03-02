@@ -1,4 +1,5 @@
 import { Block } from "@comet/blocks-api";
+import { RootBlockEntityOptions } from "@comet/blocks-api/lib/blocks/decorators/root-block-entity";
 import { EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/core";
 import { EntityClass } from "@mikro-orm/core/typings";
 import { Injectable } from "@nestjs/common";
@@ -15,6 +16,7 @@ interface DiscoverRootBlocksResult {
     };
     column: string;
     block: Block;
+    options: RootBlockEntityOptions;
 }
 
 interface DiscoverTargetEntitiesResult {
@@ -44,8 +46,9 @@ export class DiscoverService {
         const metadataStorage = this.orm.em.getMetadata();
 
         entities.forEach((entity) => {
-            const blockIndexRootEntityName = Reflect.getMetadata(`data:blockIndexRootEntityName`, entity);
-            if (blockIndexRootEntityName) {
+            const rootBlockEntityOptions = Reflect.getMetadata(`data:rootBlockEntityOptions`, entity);
+
+            if (rootBlockEntityOptions) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const keys = Reflect.getMetadata(`keys:rootBlock`, (entity as any).prototype) || [];
                 for (const key of keys) {
@@ -58,6 +61,7 @@ export class DiscoverService {
                             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                             objectType: this.objectTypesMetadata.find((item) => item.target.name === entity.name)!.name,
                         },
+                        options: rootBlockEntityOptions,
                         column: key,
                         block,
                     });
