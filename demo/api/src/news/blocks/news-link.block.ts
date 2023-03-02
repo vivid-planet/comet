@@ -1,4 +1,4 @@
-import { BlockData, BlockField, BlockIndexDataArray, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
+import { BlockData, BlockField, BlockIndexData, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
 import { News } from "@src/news/entities/news.entity";
 import { IsOptional, IsUUID } from "class-validator";
 
@@ -6,13 +6,15 @@ class NewsLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
     id?: string;
 
-    indexData(): BlockIndexDataArray {
-        return [
-            {
-                targetEntityName: News.name,
-                id: this.id,
-            },
-        ];
+    indexData(): BlockIndexData {
+        return {
+            dependencies: [
+                {
+                    targetEntityName: News.name,
+                    id: this.id,
+                },
+            ],
+        };
     }
 }
 

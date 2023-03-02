@@ -2,7 +2,7 @@ import {
     AnnotationBlockMeta,
     BlockContext,
     BlockData,
-    BlockIndexDataArray,
+    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -79,13 +79,15 @@ class PixelImageBlockData extends BlockData {
         return imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, previewDamUrls);
     }
 
-    indexData(): BlockIndexDataArray {
-        return [
-            {
-                targetEntityName: File.name,
-                id: this.damFileId,
-            },
-        ];
+    indexData(): BlockIndexData {
+        return {
+            dependencies: [
+                {
+                    targetEntityName: File.name,
+                    id: this.damFileId,
+                },
+            ],
+        };
     }
 }
 

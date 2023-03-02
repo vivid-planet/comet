@@ -2,7 +2,7 @@ import {
     AnnotationBlockMeta,
     BlockContext,
     BlockData,
-    BlockIndexDataArray,
+    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -45,13 +45,15 @@ class SvgImageBlockData extends BlockData {
         };
     }
 
-    indexData(): BlockIndexDataArray {
-        return [
-            {
-                targetEntityName: File.name,
-                id: this.damFileId,
-            },
-        ];
+    indexData(): BlockIndexData {
+        return {
+            dependencies: [
+                {
+                    targetEntityName: File.name,
+                    id: this.damFileId,
+                },
+            ],
+        };
     }
 }
 

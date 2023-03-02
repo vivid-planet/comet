@@ -36,23 +36,24 @@ export interface ChildBlockInfo {
     block: BlockDataInterface;
     name: string;
 }
-export type BlockIndexDataArray = Array<BlockIndexData>;
 export interface BlockIndexData {
-    targetEntityName: string;
-    id?: string;
+    dependencies: Array<{
+        targetEntityName: string;
+        id?: string;
+    }>;
 }
 export declare type BlockIndex = Array<{
     [key: string]: any; // For compatibility with TraversableTransformResponse
     blockname: string;
     jsonPath: string;
     visible: boolean;
-    target: BlockIndexDataArray;
+    target: BlockIndexData;
 }>;
 
 export interface BlockDataInterface {
     transformToPlain(deps: TransformDependencies, ctx: BlockContext): Promise<TraversableTransformResponse>;
     transformToSave(): TraversableTransformResponse;
-    indexData(): BlockIndexDataArray;
+    indexData(): BlockIndexData;
     searchText(): SearchText[];
     childBlocksInfo(): ChildBlockInfo[]; // @TODO: better name for method and Type, maybe ReflectChildBlocks ?
     previewImageUrlTemplate(dependencies: Record<string, any>, context: BlockContext): Promise<string | undefined>;
@@ -68,8 +69,8 @@ export abstract class BlockData implements BlockDataInterface {
         return this as any; // MUST NOT transform it's child blocks (these handle transforming themselves)
     }
 
-    indexData(): BlockIndexDataArray {
-        return [];
+    indexData(): BlockIndexData {
+        return { dependencies: [] };
     }
     childBlocksInfo(): ChildBlockInfo[] {
         const ret: ChildBlockInfo[] = [];

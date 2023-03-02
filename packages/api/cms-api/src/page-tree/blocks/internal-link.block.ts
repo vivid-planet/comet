@@ -2,7 +2,7 @@ import {
     AnnotationBlockMeta,
     BlockData,
     BlockField,
-    BlockIndexDataArray,
+    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -61,14 +61,16 @@ class InternalLinkBlockData extends BlockData {
         };
     }
 
-    indexData(): BlockIndexDataArray {
-        return [
-            {
-                // TODO: dont hardcode targetEntityName, make a factory instead
-                targetEntityName: "PageTreeNode",
-                id: this.targetPageId,
-            },
-        ];
+    indexData(): BlockIndexData {
+        return {
+            dependencies: [
+                {
+                    // TODO: dont hardcode targetEntityName, make a factory instead
+                    targetEntityName: "PageTreeNode",
+                    id: this.targetPageId,
+                },
+            ],
+        };
     }
 }
 

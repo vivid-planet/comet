@@ -1,19 +1,21 @@
 import { IsOptional, IsString } from "class-validator";
 
-import { BlockData, BlockIndexDataArray, BlockInput, createBlock, inputToData } from "../../../block";
+import { BlockData, BlockIndexData, BlockInput, createBlock, inputToData } from "../../../block";
 import { BlockField } from "../../../decorators/field";
 
 class ImageBlockData extends BlockData {
     @BlockField()
     damFileId?: string;
 
-    indexData(): BlockIndexDataArray {
-        return [
-            {
-                targetEntityName: "File",
-                id: this.damFileId,
-            },
-        ];
+    indexData(): BlockIndexData {
+        return {
+            dependencies: [
+                {
+                    targetEntityName: "File",
+                    id: this.damFileId,
+                },
+            ],
+        };
     }
 }
 
