@@ -28,6 +28,20 @@ jobs:
                   git config user.name github-actions
                   git config user.email github-actions@github.com
 
+            - name: "Library: Clone translations"
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-lang
+                  token: ${{ secrets.GH_TOKEN }}
+                  path: "demo/admin/lang/comet-lang"
+
+            - name: "Demo: Clone translations"
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GH_TOKEN }}
+                  path: "demo/admin/lang/comet-demo-lang"
+
             - name: Use Node.js 14.x
               uses: actions/setup-node@v3
               with:
@@ -45,20 +59,6 @@ jobs:
 
             - name: Build
               run: yarn build:lib
-
-            - name: "Library: Clone translations"
-              uses: actions/checkout@v3
-              with:
-                  repository: vivid-planet/comet-lang
-                  token: ${{ secrets.GH_TOKEN }}
-                  path: "demo/admin/lang/comet-lang"
-
-            - name: "Demo: Clone translations"
-              uses: actions/checkout@v3
-              with:
-                  repository: vivid-planet/comet-demo-lang
-                  token: ${{ secrets.GH_TOKEN }}
-                  path: "demo/admin/lang/comet-demo-lang"
 
             - name: Lint
               run: |
