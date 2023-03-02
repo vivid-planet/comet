@@ -1,5 +1,22 @@
 [
     {
+        "name": "Anchor",
+        "fields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "Columns",
         "fields": [
             {
@@ -234,11 +251,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
@@ -268,6 +280,35 @@
                 "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "DemoTextLink",
+        "fields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
             }
         ]
     },
@@ -547,6 +588,11 @@
         "name": "InternalLink",
         "fields": [
             {
+                "name": "targetPageAnchor",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "targetPage",
                 "kind": "NestedObject",
                 "object": {
@@ -565,6 +611,11 @@
                             "name": "path",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "documentType",
+                            "kind": "String",
+                            "nullable": false
                         }
                     ]
                 },
@@ -574,6 +625,11 @@
         "inputFields": [
             {
                 "name": "targetPageId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "targetPageAnchor",
                 "kind": "String",
                 "nullable": true
             }
@@ -665,7 +721,7 @@
                         {
                             "name": "props",
                             "kind": "Block",
-                            "block": "TextLink",
+                            "block": "DemoTextLink",
                             "nullable": false
                         },
                         {
@@ -702,7 +758,7 @@
                         {
                             "name": "props",
                             "kind": "Block",
-                            "block": "TextLink",
+                            "block": "DemoTextLink",
                             "nullable": false
                         },
                         {
@@ -873,7 +929,8 @@
                                 "YouTubeVideo",
                                 "LinkList",
                                 "FullWidthImage",
-                                "Columns"
+                                "Columns",
+                                "Anchor"
                             ],
                             "nullable": false
                         },
@@ -1007,11 +1064,6 @@
                                 ]
                             },
                             "nullable": true
-                        },
-                        {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
                         },
                         {
                             "name": "fileUrl",
@@ -1431,11 +1483,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
@@ -1508,35 +1555,6 @@
             {
                 "name": "imageAspectRatio",
                 "kind": "String",
-                "nullable": false
-            }
-        ]
-    },
-    {
-        "name": "TextLink",
-        "fields": [
-            {
-                "name": "text",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "link",
-                "kind": "Block",
-                "block": "Link",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "text",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "link",
-                "kind": "Block",
-                "block": "Link",
                 "nullable": false
             }
         ]

@@ -72,9 +72,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     React.useEffect(() => {
         // react-hooks/exhaustive-deps is disabled because the src-prop of iframe is uncontrolled
         // the src-value is just the default value, the iframe keeps its own src-state (by clicking links inside the iframe)
-        const url = new URL(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
-        url.searchParams.append("authProvider", "vivid-planet-idp");
-        setInitialPageUrl(url.toString());
+        setInitialPageUrl(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
     }, [formattedSitePreviewParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const intl = useIntl();
@@ -83,17 +81,17 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     // we sync the location back to our admin-url, so we have it and can reload the page without loosing
     const handlePreviewLocationChange = React.useCallback(
         (message: SitePrevewIFrameLocationMessage) => {
-            // the location in the iframe must start with /preview
-            if (message.data.pathname.search("/preview") === 0) {
+            const pathPrefix = new URL(siteConfig.previewUrl).pathname;
+            if (message.data.pathname.search(pathPrefix) === 0) {
                 // this is the original-pathname of the site, we extract it and keep it in "our" url as get-param
-                let normalizedPathname = message.data.pathname.substr("/preview".length);
+                let normalizedPathname = message.data.pathname.substr(pathPrefix.length);
                 if (normalizedPathname == "") normalizedPathname = "/";
                 if (previewPath !== normalizedPathname) {
                     setPreviewPath(normalizedPathname);
                 }
             }
         },
-        [setPreviewPath, previewPath],
+        [previewPath, setPreviewPath, siteConfig.previewUrl],
     );
 
     const handleDeviceChange = (newDevice: Device) => {

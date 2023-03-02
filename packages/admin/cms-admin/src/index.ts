@@ -1,3 +1,4 @@
+export { AnchorBlock } from "./blocks/AnchorBlock";
 export { CmsBlockContext, CmsBlockContextProvider } from "./blocks/CmsBlockContextProvider";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
@@ -16,10 +17,9 @@ export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { useCmsBlockContext } from "./blocks/useCmsBlockContext";
 export { BuildEntry } from "./builds/BuildEntry";
 export { BuildRuntime } from "./builds/BuildRuntime";
-export { Publisher } from "./builds/Publisher";
+export { PublisherPage } from "./builds/PublisherPage";
 export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";
 export { DropdownMenuItem } from "./common/DropdownMenuItem";
-export { AuthorizationErrorPage } from "./common/errors/AuthorizationErrorPage";
 export { BuildInformationProvider } from "./common/header/about/build-information/BuildInformationProvider";
 export { useBuildInformation } from "./common/header/about/build-information/useBuildInformation";
 export { Header } from "./common/header/Header";
@@ -38,6 +38,7 @@ export type { ContentScopeInterface, ContentScopeProviderProps, ContentScopeValu
 export { ContentScopeProvider, useContentScope } from "./contentScope/Provider";
 export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConfig";
 export { useContentScopeConfig } from "./contentScope/useContentScopeConfig";
+export { CronJobsPage } from "./cronJobs/CronJobsPage";
 export { DamImageBlock } from "./dam/blocks/DamImageBlock";
 export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";

@@ -21,15 +21,6 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
             },
             hash: true,
         }),
-        new HtmlWebpackPlugin({
-            template: require.resolve("@comet/cms-admin/access-token-service-worker.ejs"),
-            templateParameters: {
-                API_URL: production ? "$API_URL" : process.env.API_URL,
-            },
-            filename: "access-token-service-worker.js",
-            inject: false,
-            minify: false,
-        }),
     ];
     if (production) {
         plugins.push(
@@ -140,7 +131,7 @@ const config = ({ production }: IEnvironment): webpack.Configuration => {
                 directory: path.join(__dirname, "public"),
             },
             host: "0.0.0.0",
-            port: Number(process.env.ADMIN_PORT || 8001),
+            port: Number(process.env.ADMIN_PORT || 8000),
             allowedHosts: "all",
             compress: true,
             historyApiFallback: true,

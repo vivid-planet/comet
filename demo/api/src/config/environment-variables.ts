@@ -1,7 +1,6 @@
 import { BlobStorageConfig } from "@comet/cms-api";
-import { registerAs } from "@nestjs/config";
 import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, MinLength, ValidateIf } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, IsString, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -38,19 +37,6 @@ export class EnvironmentVariables {
     API_PORT: number;
 
     @IsString()
-    API_PASSWORD: string;
-
-    @IsString()
-    IDP_API_URL: string;
-
-    @IsString()
-    @ValidateIf(() => process.env.NODE_ENV === "production")
-    IDP_API_PASSWORD: string;
-
-    @IsString()
-    IDP_CLIENT_ID: string;
-
-    @IsString()
     CORS_ALLOWED_ORIGINS: string;
 
     @IsString()
@@ -65,23 +51,9 @@ export class EnvironmentVariables {
     @IsInt()
     IMGPROXY_QUALITY = 80;
 
-    @Type(() => Number)
-    @IsNumber()
-    IMGPROXY_MAX_SRC_RESOLUTION: number;
-
     @IsString()
     @MinLength(16)
     DAM_SECRET: string;
-
-    @IsString()
-    DAM_ALLOWED_IMAGE_SIZES: string;
-
-    @IsString()
-    DAM_ALLOWED_IMAGE_ASPECT_RATIOS: string;
-
-    @Type(() => Number)
-    @IsInt()
-    DAM_UPLOADS_MAX_FILE_SIZE: number;
 
     @IsString()
     BLOB_STORAGE_DRIVER: BlobStorageConfig["backend"]["driver"];
@@ -101,10 +73,6 @@ export class EnvironmentVariables {
     @IsString()
     BLOB_STORAGE_DIRECTORY_PREFIX: string;
 
-    @Type(() => Number)
-    @IsInt()
-    PUBLIC_UPLOADS_MAX_FILE_SIZE: number;
-
     @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
     @IsString()
     S3_REGION: string;
@@ -121,17 +89,7 @@ export class EnvironmentVariables {
     @IsString()
     S3_SECRET_ACCESS_KEY: string;
 
-    @IsOptional()
     @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
     @IsString()
-    S3_BUCKET?: string;
+    S3_BUCKET: string;
 }
-
-export function env<K extends keyof EnvironmentVariables>(name: K): EnvironmentVariables[K] {
-    return (process.env as unknown as EnvironmentVariables)[name];
-}
-
-export const configNS = registerAs("config", () => ({
-    ...(process.env as unknown as EnvironmentVariables),
-    debug: process.env.NODE_ENV !== "production",
-}));

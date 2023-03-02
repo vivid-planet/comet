@@ -14,6 +14,7 @@ import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
+import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";
 
@@ -262,7 +263,7 @@ export const createUsePage: CreateUsePage =
                     setSaveError(undefined);
 
                     const isValid = await parallelAsyncEvery(Object.entries(rootBlocks), async ([key, block]) => {
-                        return await block.isValid(pageState.document?.[key]);
+                        return block.isValid(pageState.document?.[key]);
                     });
 
                     if (!isValid) {
@@ -359,23 +360,38 @@ export const createUsePage: CreateUsePage =
 
             // create block-api
             // - bind state, updatehandler to admin-component
-            const rootBlocksApi: BlockNodeApi<RootBlocks> = React.useMemo(
-                () =>
-                    Object.entries(rootBlocks).reduce((a, [key, value]) => {
-                        const UnboundComponent = value.AdminComponent;
-                        const state = pageState && pageState.document ? pageState.document[key] : null;
-                        const handleUpdateState = createHandleUpdate(key);
+            const rootBlocksApi: BlockNodeApi<RootBlocks> = React.useMemo(() => {
+                const localAnchors =
+                    pageState?.document === undefined
+                        ? {}
+                        : {
+                              [pageId]: Array.from(
+                                  new Set(
+                                      Object.entries(rootBlocks).reduce(
+                                          (anchors, [key, block]) => [...anchors, ...(block.anchors?.(pageState?.document?.[key]) ?? [])],
+                                          [] as string[],
+                                      ),
+                                  ),
+                              ),
+                          };
+                return Object.entries(rootBlocks).reduce((a, [key, value]) => {
+                    const UnboundComponent = value.AdminComponent;
+                    const state = pageState && pageState.document ? pageState.document[key] : null;
+                    const handleUpdateState = createHandleUpdate(key);
 
-                        return {
-                            ...a,
-                            [key]: {
-                                adminUI: state ? React.createElement(UnboundComponent, { state, updateState: handleUpdateState }) : null,
-                                isValid: async () => await value.isValid(state),
-                            },
-                        };
-                    }, {} as BlockNodeApi<RootBlocks>),
-                [pageState, createHandleUpdate],
-            );
+                    return {
+                        ...a,
+                        [key]: {
+                            adminUI: state ? (
+                                <LocalPageTreeNodeDocumentAnchorsProvider localAnchors={localAnchors}>
+                                    {React.createElement(UnboundComponent, { state, updateState: handleUpdateState })}
+                                </LocalPageTreeNodeDocumentAnchorsProvider>
+                            ) : null,
+                            isValid: async () => value.isValid(state),
+                        },
+                    };
+                }, {} as BlockNodeApi<RootBlocks>);
+            }, [pageState, createHandleUpdate, pageId]);
 
             const pageSaveButton = React.useMemo<JSX.Element>(
                 () => <PageSaveButton hasChanges={hasChanges} handleSavePage={handleSavePage} saveError={saveError} saving={saving} />,

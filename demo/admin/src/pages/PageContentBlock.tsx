@@ -1,5 +1,5 @@
 import { createBlocksBlock, SpaceBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
-import { DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
+import { AnchorBlock, DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
@@ -25,6 +25,7 @@ export const PageContentBlock = createBlocksBlock({
         linkList: LinkListBlock,
         fullWidthImage: FullWidthImageBlock,
         columns: ColumnsBlock,
+        anchor: AnchorBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

@@ -37,30 +37,24 @@ export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children, 
     // maps the original-path to the preview-path
     const pathToPreviewPath = React.useCallback(
         (path: Url) => {
-            return createPathToPreviewPath({ path, previewPath, previewParams, baseUrl: window.location.origin });
+            return createPathToPreviewPath({ path, previewPath, previewParams });
         },
         [previewPath, previewParams],
     );
     const previewPathToPath = React.useCallback(
         (previewUrl: string) => {
             // Parse url
-            const { pathname, searchParams } = new URL(previewUrl, window.location.origin);
+            const [pathname, search] = previewUrl.split("?");
 
             // remove previewPath Prefix e.g. '/preview' from path
-            const replaceRegex = new RegExp(`^${previewPath}`);
+            const newPathname = pathname.replace(new RegExp(`^${previewPath}`), "");
 
             // remove __preview query parameter from searchParams
-            searchParams.delete("__preview");
+            const newSearchParams = new URLSearchParams(search);
+            newSearchParams.delete("__preview");
+            const newSearch = newSearchParams.toString();
 
-            // Create new Url
-            const newUrl = new URL(pathname.replace(replaceRegex, ""), window.location.origin);
-
-            // copy search params to newUrl
-            searchParams.forEach((value, key) => {
-                newUrl.searchParams.set(key, value);
-            });
-
-            return `${newUrl.pathname}${newUrl.search}`;
+            return `${newPathname.length === 0 ? "/" : newPathname}${newSearch.length === 0 ? "" : `?${newSearch}`}`;
         },
         [previewPath],
     );

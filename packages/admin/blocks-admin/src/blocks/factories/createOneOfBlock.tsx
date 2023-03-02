@@ -200,13 +200,23 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
         },
 
         isValid: async (state) =>
-            await parallelAsyncEvery(state.attachedBlocks, async (c) => {
+            parallelAsyncEvery(state.attachedBlocks, async (c) => {
                 const block = blockForType(c.type);
                 if (!block) {
                     throw new Error(`No Block found for type ${c.type}`); // for TS
                 }
-                return await block.isValid(c.props);
+                return block.isValid(c.props);
             }),
+
+        anchors: (state) => {
+            const { state: blockState, block } = getActiveBlock(state);
+
+            if (blockState === undefined) {
+                return [];
+            }
+
+            return block?.anchors?.(blockState.props) ?? [];
+        },
 
         definesOwnPadding: true,
 
