@@ -37,18 +37,19 @@ export interface ChildBlockInfo {
     name: string;
 }
 export interface BlockIndexData {
-    dependencies: Array<{
+    dependencies?: Array<{
         targetEntityName: string;
         id?: string;
     }>;
 }
-export declare type BlockIndex = Array<{
+export declare type BlockIndexItem = {
     [key: string]: any; // For compatibility with TraversableTransformResponse
     blockname: string;
     jsonPath: string;
     visible: boolean;
-    target: BlockIndexData;
-}>;
+    target?: BlockIndexData;
+};
+export declare type BlockIndex = Array<BlockIndexItem>;
 
 export interface BlockDataInterface {
     transformToPlain(deps: TransformDependencies, ctx: BlockContext): Promise<TraversableTransformResponse>;
