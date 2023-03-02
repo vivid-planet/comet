@@ -2,7 +2,7 @@ import { Block, createOneOfBlock, ExternalLinkBlock, OneOfBlock } from "@comet/b
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
-import { InternalLinkBlock } from "../page-tree/blocks/internal-link.block";
+import { InternalLinkBlockDataInterface, InternalLinkBlockInputInterface } from "../page-tree/blocks/internal-link.block";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
 import { createRedirectsResolver } from "./redirects.resolver";
@@ -11,18 +11,21 @@ import { RedirectScopeInterface } from "./types";
 
 type CustomTargets = Record<string, Block>;
 
-export type RedirectsLinkBlock = OneOfBlock<CustomTargets & { internal: typeof InternalLinkBlock; external: typeof ExternalLinkBlock }>;
+export type RedirectsLinkBlock = OneOfBlock<
+    CustomTargets & { internal: Block<InternalLinkBlockDataInterface, InternalLinkBlockInputInterface>; external: typeof ExternalLinkBlock }
+>;
 
 export const REDIRECTS_LINK_BLOCK = "REDIRECTS_LINK_BLOCK";
 
 interface Config {
     customTargets?: CustomTargets;
     Scope?: Type<RedirectScopeInterface>;
+    InternalLinkBlock: Block<InternalLinkBlockDataInterface, InternalLinkBlockInputInterface>;
 }
 @Global()
 @Module({})
 export class RedirectsModule {
-    static register({ customTargets, Scope }: Config = {}): DynamicModule {
+    static register({ customTargets, Scope, InternalLinkBlock }: Config): DynamicModule {
         const linkBlock = createOneOfBlock(
             { supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets }, allowEmpty: false },
             "RedirectsLink",
