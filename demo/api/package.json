@@ -11,7 +11,7 @@
         "start:prod": "node dist/main",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0  --ext .ts,.tsx,.js,.jsx,.json,.md src/",
-        "lint:tsc": "tsc --project ./tsconfig.lint.json",
+        "lint:tsc": "yarn api-generator && tsc --project ./tsconfig.lint.json",
         "console": "dotenv -c -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts",
         "console:prod": "node dist/console.js",
         "mikro-orm": "mikro-orm",

@@ -28,6 +28,20 @@ jobs:
                   git config user.name github-actions
                   git config user.email github-actions@github.com
 
+            - name: "Library: Clone translations"
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-lang
+                  token: ${{ secrets.GH_TOKEN }}
+                  path: "demo/admin/lang/comet-lang"
+
+            - name: "Demo: Clone translations"
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GH_TOKEN }}
+                  path: "demo/admin/lang/comet-demo-lang"
+
             - name: Use Node.js 14.x
               uses: actions/setup-node@v3
               with:
@@ -49,7 +63,7 @@ jobs:
             - name: Lint
               run: |
                   yarn exec prettier --check "./*.{js,json,md,yml}"
-                  yarn lint:lib
+                  yarn lint
                   # check for duplicate ids of formatted messages
                   yarn intl:extract
 
@@ -64,46 +78,30 @@ jobs:
                   path: packages/**/junit.xml
                   reporter: jest-junit
 
-            - name: "Library: Clone translations"
-              if: ${{ github.ref_name == 'main' }}
-              uses: actions/checkout@v3
-              with:
-                  repository: vivid-planet/comet-lang
-                  token: ${{ secrets.GH_TOKEN }}
-                  path: "comet-lang"
-
             - name: "Library: Extract i18n strings"
               if: ${{ github.ref_name == 'main' }}
               run: |
                   yarn intl:extract
-                  cp -r lang/* comet-lang/
+                  cp -r lang/* demo/admin/lang/comet-lang/
 
             - name: "Library: Update translateable strings"
               if: ${{ github.ref_name == 'main' }}
               uses: EndBug/add-and-commit@v9
               with:
-                  cwd: "./comet-lang"
-
-            - name: "Demo: Clone translations"
-              if: ${{ github.ref_name == 'main' }}
-              uses: actions/checkout@v3
-              with:
-                  repository: vivid-planet/comet-demo-lang
-                  token: ${{ secrets.GH_TOKEN }}
-                  path: "demo/admin/comet-demo-lang"
+                  cwd: "./demo/admin/lang/comet-lang"
 
             - name: "Demo: Extract i18n strings"
               if: ${{ github.ref_name == 'main' }}
               run: |
                   cd demo/admin
                   yarn intl:extract
-                  cp -r lang-extracted/* comet-demo-lang/
+                  cp -r lang-extracted/* lang/comet-demo-lang
 
             - name: "Demo: Update translateable strings"
               if: ${{ github.ref_name == 'main' }}
               uses: EndBug/add-and-commit@v9
               with:
-                  cwd: "./demo/admin/comet-demo-lang"
+                  cwd: "./demo/admin/lang/comet-demo-lang"
 
             - name: Publish premajor canary release
               if: |
