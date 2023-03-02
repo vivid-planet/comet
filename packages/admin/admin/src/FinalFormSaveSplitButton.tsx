@@ -10,10 +10,9 @@ import { useStackApi } from "./stack/Api";
 
 export interface FormSaveButtonProps {
     localStorageKey?: string;
-    onNavigateToEditPage?: () => void;
 }
 
-export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", onNavigateToEditPage }: PropsWithChildren<FormSaveButtonProps>) => {
+export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }: PropsWithChildren<FormSaveButtonProps>) => {
     const stackApi = useStackApi();
     const form = useForm();
     const { pristine, hasValidationErrors, submitting, hasSubmitErrors } = useFormState();
@@ -25,14 +24,8 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
                 variant="contained"
                 saving={submitting}
                 hasErrors={hasSubmitErrors}
-                onClick={async () => {
-                    const submitReturn = await form.submit();
-                    const successful = submitReturn === undefined || Object.keys(submitReturn).length == 0;
-                    if (successful && onNavigateToEditPage) {
-                        setTimeout(() => {
-                            onNavigateToEditPage();
-                        });
-                    }
+                onClick={() => {
+                    form.submit();
                 }}
             >
                 <FormattedMessage {...messages.save} />
@@ -43,9 +36,9 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
                 saving={submitting}
                 hasErrors={hasSubmitErrors}
                 onClick={async () => {
-                    const submitReturn = await form.submit();
-                    const successful = submitReturn === undefined || Object.keys(submitReturn).length == 0;
-                    if (successful) {
+                    const submitResult = await form.submit();
+                    const error = submitResult !== undefined;
+                    if (!error) {
                         stackApi?.goBack();
                     }
                 }}
