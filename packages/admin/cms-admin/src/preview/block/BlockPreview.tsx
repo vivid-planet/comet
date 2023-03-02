@@ -1,6 +1,5 @@
 import { Minimize } from "@comet/admin-icons";
 import { useIFrameBridge } from "@comet/blocks-admin";
-import { useAuthorization } from "@comet/react-app-auth";
 import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -28,24 +27,6 @@ function BlockPreview({
             iFrameBridge.sendBlockState(previewState);
         }
     }, [iFrameBridge, previewState]);
-
-    const authorization = useAuthorization();
-
-    React.useEffect(() => {
-        const subscription = authorization?.authorizationManager.onOAuthChange((oAuth) => {
-            if (!iFrameBridge.iFrameReady) {
-                return;
-            }
-
-            if (oAuth?.accessToken) {
-                iFrameBridge.sendAccessToken(oAuth.accessToken);
-            }
-        });
-
-        return () => {
-            subscription?.unsubscribe();
-        };
-    }, [iFrameBridge, authorization]);
 
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);

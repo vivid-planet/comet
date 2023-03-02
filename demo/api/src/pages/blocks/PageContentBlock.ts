@@ -1,5 +1,5 @@
 import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock, SpaceBlock, YouTubeVideoBlock } from "@comet/blocks-api";
-import { DamImageBlock, DamVideoBlock } from "@comet/cms-api";
+import { AnchorBlock, DamImageBlock, DamVideoBlock } from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { UserGroup } from "@src/user-groups/user-group";
@@ -21,6 +21,7 @@ const supportedBlocks = {
     linkList: LinkListBlock,
     fullWidthImage: FullWidthImageBlock,
     columns: ColumnsBlock,
+    anchor: AnchorBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {

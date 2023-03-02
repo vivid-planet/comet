@@ -1,5 +1,22 @@
 [
     {
+        "name": "Anchor",
+        "fields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "DamImage",
         "fields": [
             {
@@ -126,11 +143,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
@@ -194,6 +206,11 @@
         "name": "InternalLink",
         "fields": [
             {
+                "name": "targetPageAnchor",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "targetPage",
                 "kind": "NestedObject",
                 "object": {
@@ -212,6 +229,11 @@
                             "name": "path",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "documentType",
+                            "kind": "String",
+                            "nullable": false
                         }
                     ]
                 },
@@ -221,6 +243,11 @@
         "inputFields": [
             {
                 "name": "targetPageId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "targetPageAnchor",
                 "kind": "String",
                 "nullable": true
             }
@@ -431,11 +458,6 @@
                                 ]
                             },
                             "nullable": true
-                        },
-                        {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
                         },
                         {
                             "name": "fileUrl",
@@ -787,11 +809,6 @@
                         {
                             "name": "archived",
                             "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "damPath",
-                            "kind": "String",
                             "nullable": false
                         },
                         {

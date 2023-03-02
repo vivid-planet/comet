@@ -31,15 +31,14 @@ export function createPathToPreviewPath({
     path,
     previewPath,
     previewParams,
-    baseUrl,
 }: {
     path: Url;
     previewPath: string;
     previewParams: SitePreviewParams;
-    baseUrl: string;
 }): Url {
     if (typeof path === "string") {
-        const { pathname, searchParams } = new URL(`${previewPath}${path}`, baseUrl);
+        const [pathname, search] = `${previewPath}${path}`.split("?");
+        const searchParams = new URLSearchParams(search);
 
         searchParams.append("__preview", JSON.stringify(previewParams));
 

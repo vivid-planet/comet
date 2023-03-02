@@ -1,22 +1,27 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Delete, ThreeDotSaving } from "@comet/admin-icons";
+import { Archive, Delete, Restore, ThreeDotSaving } from "@comet/admin-icons";
 import { Checkbox, FormControlLabel, Grid, IconButton, Tooltip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
+    GQLArchiveFilesMutation,
+    GQLArchiveFilesMutationVariables,
     GQLDamFileTableFragment,
     GQLDamFolderTableFragment,
     GQLDeleteDamFileMutation,
     GQLDeleteDamFileMutationVariables,
     GQLDeleteDamFolderMutation,
     GQLDeleteDamFolderMutationVariables,
+    GQLRestoreFilesMutation,
+    GQLRestoreFilesMutationVariables,
     namedOperations,
 } from "../../../graphql.generated";
+import { Separator } from "../../../pages/pagesPage/PagesPageActionToolbar.sc";
 import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { useDamMultiselectApi } from "../multiselect/DamMultiselect";
-import { deleteDamFileMutation } from "./DamActions.gql";
+import { archiveDamFilesMutation, deleteDamFileMutation, restoreDamFilesMutation } from "./DamActions.gql";
 
 const GridContainer = styled(Grid)`
     padding: 2px 29px;
@@ -30,6 +35,9 @@ interface DamActionsProps {
 export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files, folders }) => {
     const client = useApolloClient();
     const damMultiselectApi = useDamMultiselectApi();
+
+    const [archiving, setArchiving] = React.useState<boolean>(false);
+    const [restoring, setRestoring] = React.useState<boolean>(false);
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
     const [deleting, setDeleting] = React.useState(false);
@@ -46,6 +54,40 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                 damMultiselectApi.select({ id: folder.id, type: "folder" });
             }
         }
+    };
+
+    const archiveSelected = async () => {
+        setArchiving(true);
+
+        const fileIds = damMultiselectApi.selectedItems.filter((item) => item.type === "file").map((item) => item.id);
+
+        await client.mutate<GQLArchiveFilesMutation, GQLArchiveFilesMutationVariables>({
+            mutation: archiveDamFilesMutation,
+            variables: {
+                ids: fileIds,
+            },
+            refetchQueries: [namedOperations.Query.DamItemsList],
+        });
+
+        damMultiselectApi.unselectAll();
+        setArchiving(false);
+    };
+
+    const restoreSelected = async () => {
+        setRestoring(true);
+
+        const fileIds = damMultiselectApi.selectedItems.filter((item) => item.type === "file").map((item) => item.id);
+
+        await client.mutate<GQLRestoreFilesMutation, GQLRestoreFilesMutationVariables>({
+            mutation: restoreDamFilesMutation,
+            variables: {
+                ids: fileIds,
+            },
+            refetchQueries: [namedOperations.Query.DamItemsList],
+        });
+
+        damMultiselectApi.unselectAll();
+        setRestoring(false);
     };
 
     const deleteSelected = async () => {
@@ -88,7 +130,34 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                         label={<FormattedMessage id="comet.dam.actions.selectAll" defaultMessage="Select all" />}
                     />
                 </Grid>
-                <Grid item>
+                <Grid item display="flex" alignItems="center">
+                    <Tooltip title={<FormattedMessage id="comet.dam.actions.tooltip.restore" defaultMessage="Restore" />}>
+                        <span>
+                            <IconButton
+                                disabled={damMultiselectApi.selectedItems.length === 0}
+                                onClick={async () => {
+                                    await restoreSelected();
+                                }}
+                                size="large"
+                            >
+                                {restoring ? <ThreeDotSaving /> : <Restore />}
+                            </IconButton>
+                        </span>
+                    </Tooltip>
+                    <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.archive" defaultMessage="Archive" />}>
+                        <span>
+                            <IconButton
+                                disabled={damMultiselectApi.selectedItems.length === 0}
+                                onClick={async () => {
+                                    await archiveSelected();
+                                }}
+                                size="large"
+                            >
+                                {archiving ? <ThreeDotSaving /> : <Archive />}
+                            </IconButton>
+                        </span>
+                    </Tooltip>
+                    <Separator />
                     <Tooltip title={<FormattedMessage id="comet.dam.actions.tooltip.delete" defaultMessage="Delete" />}>
                         <span>
                             <IconButton
@@ -97,7 +166,7 @@ export const DamActions: React.VoidFunctionComponent<DamActionsProps> = ({ files
                                     setDeleteDialogOpen(true);
                                 }}
                             >
-                                {!deleting ? <Delete /> : <ThreeDotSaving />}
+                                {deleting ? <ThreeDotSaving /> : <Delete />}
                             </IconButton>
                         </span>
                     </Tooltip>

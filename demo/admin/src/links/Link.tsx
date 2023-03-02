@@ -2,6 +2,7 @@ import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
 import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
+import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { GQLLink, GQLLinkInput, GQLPageTreeNodeAdditionalFieldsFragment } from "@src/graphql.generated";
 import { EditLink } from "@src/links/EditLink";
@@ -48,7 +49,11 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
         };
     },
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
-        return <>{page.userGroup}</>;
+        if (page.userGroup !== "All") {
+            return <Chip size="small" label={page.userGroup} />;
+        }
+        return null;
     },
     menuIcon: LinkIcon,
+    anchors: () => [],
 };

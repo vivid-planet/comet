@@ -17,6 +17,9 @@ const handle = app.getRequestHandler();
 
 app.prepare()
     .then(() => {
+        if (process.env.TRACING_ENABLED) {
+            require("./tracing");
+        }
         createServer(async (req, res) => {
             try {
                 // Be sure to pass `true` as the second argument to `url.parse`.
@@ -31,17 +34,7 @@ app.prepare()
                         return;
                     }
                 }
-                if (parsedUrl.pathname === "/access-token-service-worker.js") {
-                    const filename = require.resolve("@comet/cms-site/access-token-service-worker.ejs");
-                    const { mtime } = fs.statSync(filename);
-                    res.setHeader("Cache-Control", "public, max-age=0");
-                    res.setHeader("Content-Type", "application/javascript; charset=UTF-8");
-                    res.setHeader("Last-Modified", mtime.toUTCString());
-                    const str = fs.readFileSync(filename).toString();
-                    res.end(str.replace(/<%= API_URL %>/g, process.env.API_URL));
-                } else {
-                    await handle(req, res, parsedUrl);
-                }
+                await handle(req, res, parsedUrl);
             } catch (err) {
                 console.error("Error occurred handling", req.url, err);
                 res.statusCode = 500;

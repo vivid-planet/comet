@@ -9,9 +9,9 @@ import {
     inputToData,
     TransformResponse,
 } from "@comet/blocks-api";
-import { IsOptional, IsUUID } from "class-validator";
+import { IsOptional, IsString, IsUUID } from "class-validator";
 
-import { PageTreeService } from "../page-tree.service";
+import { PageTreeReadApi } from "../page-tree-read-api";
 import { PageExists } from "../validators/page-exists.validator";
 
 interface InternalLinkBlockTransformResponse extends TransformResponse {
@@ -19,14 +19,19 @@ interface InternalLinkBlockTransformResponse extends TransformResponse {
         id: string;
         name: string;
         path: string;
+        documentType: string;
     } | null;
+    targetPageAnchor?: string;
 }
 
 class InternalLinkBlockData extends BlockData {
     targetPageId?: string;
 
-    async transformToPlain({ pageTreeService }: { pageTreeService: PageTreeService }): Promise<InternalLinkBlockTransformResponse> {
-        if (pageTreeService === undefined) {
+    @BlockField({ nullable: true })
+    targetPageAnchor?: string;
+
+    async transformToPlain({ pageTreeReadApi }: { pageTreeReadApi: PageTreeReadApi }): Promise<InternalLinkBlockTransformResponse> {
+        if (pageTreeReadApi === undefined) {
             throw new Error("Missing transform dependency pageTreeService!");
         }
 
@@ -36,9 +41,9 @@ class InternalLinkBlockData extends BlockData {
             };
         }
 
-        const readApi = pageTreeService.createReadApi({ visibility: "all" });
+        //TODO do we need createReadApi({ visibility: "all" });?
 
-        const node = await readApi.getNode(this.targetPageId);
+        const node = await pageTreeReadApi.getNode(this.targetPageId);
 
         if (!node) {
             return { targetPage: null };
@@ -48,8 +53,10 @@ class InternalLinkBlockData extends BlockData {
             targetPage: {
                 id: node.id,
                 name: node.name,
-                path: await readApi.nodePath(node),
+                path: await pageTreeReadApi.nodePath(node),
+                documentType: node.documentType,
             },
+            targetPageAnchor: this.targetPageAnchor,
         };
     }
 }
@@ -60,6 +67,11 @@ class InternalLinkBlockInput extends BlockInput {
     @IsUUID()
     @PageExists()
     targetPageId?: string;
+
+    @BlockField({ nullable: true })
+    @IsOptional()
+    @IsString()
+    targetPageAnchor?: string;
 
     transformToBlockData(): InternalLinkBlockData {
         return inputToData(InternalLinkBlockData, this);
@@ -88,6 +100,11 @@ class Meta extends AnnotationBlockMeta {
                         },
                         {
                             name: "path",
+                            kind: BlockMetaFieldKind.String,
+                            nullable: false,
+                        },
+                        {
+                            name: "documentType",
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
                         },

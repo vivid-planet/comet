@@ -12,18 +12,17 @@ export interface BlocksModuleOptions {
     transformerDependencies: Record<string, unknown>;
 }
 
-export interface BlocksModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
+export interface BlocksModuleSyncOptions extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => Promise<BlocksModuleOptions> | BlocksModuleOptions;
+    useFactory: (...args: any[]) => BlocksModuleOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
-    withoutIndex?: boolean;
 }
 
 @Global()
 @Module({})
 export class BlocksModule {
-    static forRootAsync(options: BlocksModuleAsyncOptions): DynamicModule {
+    static forRoot(options: BlocksModuleSyncOptions): DynamicModule {
         const optionsProvider = {
             provide: BLOCKS_MODULE_OPTIONS,
             ...options,
@@ -31,7 +30,7 @@ export class BlocksModule {
 
         const transformerDependenciesProvider = {
             provide: BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
-            useFactory: async (options: BlocksModuleOptions): Promise<Record<string, unknown>> => {
+            useFactory: (options: BlocksModuleOptions): Record<string, unknown> => {
                 return options.transformerDependencies;
             },
             inject: [BLOCKS_MODULE_OPTIONS],
@@ -45,9 +44,12 @@ export class BlocksModule {
                 transformerDependenciesProvider,
                 BlocksTransformerService,
                 BlocksMetaService,
-                ...(!options.withoutIndex ? [DiscoverService, BlockIndexService, CommandsService, BlockMigrateService] : []),
+                DiscoverService,
+                BlockIndexService,
+                CommandsService,
+                BlockMigrateService,
             ],
-            exports: [BlocksTransformerService, ...(!options.withoutIndex ? [BlockIndexService] : [])],
+            exports: [BlocksTransformerService, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES, BlockIndexService],
         };
     }
 }

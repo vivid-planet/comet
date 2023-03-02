@@ -94,6 +94,13 @@ enum JobStatus {
   failed
 }
 
+type CronJob {
+  id: ID!
+  name: String!
+  schedule: String!
+  lastScheduledAt: DateTime
+}
+
 type PaginatedDamItems {
   nodes: [DamItem!]!
   totalCount: Int!
@@ -153,6 +160,19 @@ interface DocumentInterface {
   updatedAt: DateTime!
 }
 
+type CurrentUserRight {
+  right: String!
+  values: [String!]!
+}
+
+type CurrentUser {
+  name: String!
+  email: String!
+  language: String!
+  role: String!
+  rights: [CurrentUserRight!]
+}
+
 type Redirect implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -205,6 +225,8 @@ type Query {
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput = {}, category: String, sort: [PageTreeNodeSort!], offset: Int = 0, limit: Int = 20): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  cronJobs: [CronJob!]!
+  currentUser: CurrentUser!
 }
 
 input RedirectScopeInput {
@@ -305,7 +327,9 @@ type Mutation {
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
+  archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
+  restoreDamFiles(ids: [ID!]!): [DamFile!]!
   deleteDamFile(id: ID!): Boolean!
   createDamFolder(input: CreateDamFolderInput!): DamFolder!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
@@ -319,6 +343,7 @@ type Mutation {
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
+  currentUserSignOut: String!
 }
 
 input CreateBuildsInput {

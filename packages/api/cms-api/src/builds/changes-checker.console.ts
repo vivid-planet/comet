@@ -22,7 +22,7 @@ export class ChangesCheckerConsole {
 
         if (await this.buildsService.hasChangesSinceLastBuild()) {
             console.log("Changes detected, starting build...");
-            await this.buildsService.createBuilds("changesDetected");
+            await this.buildsService.createBuildsForAllScopes("changesDetected");
             console.log("Build successfully started, resetting changesSinceLastBuild...");
             await this.buildsService.deleteChangesSinceLastBuild();
             console.log("Resetting changesSinceLastBuild successful!");

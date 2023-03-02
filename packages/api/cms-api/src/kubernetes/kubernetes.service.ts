@@ -3,23 +3,23 @@ import { Inject, Injectable } from "@nestjs/common";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
-import { BUILDS_CONFIG } from "./builds.constants";
-import { BuildsConfig } from "./builds.module";
+import { CONTENT_SCOPE_ANNOTATION } from "../builds/builds.constants";
+import { ContentScope } from "../common/decorators/content-scope.interface";
 import { JobStatus } from "./job-status.enum";
+import { KUBERNETES_CONFIG } from "./kubernetes.constants";
+import { KubernetesConfig } from "./kubernetes.module";
 
 @Injectable()
 export class KubernetesService {
     localMode: boolean;
 
     namespace: string;
-    helmRelease: string;
 
     batchApi: BatchV1Api;
 
-    constructor(@Inject(BUILDS_CONFIG) readonly config: BuildsConfig) {
+    constructor(@Inject(KUBERNETES_CONFIG) readonly config: KubernetesConfig) {
         const path = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
         this.localMode = !fs.existsSync(path);
-        this.helmRelease = config.helmRelease;
 
         const kc = new KubeConfig();
 
@@ -37,6 +37,10 @@ export class KubernetesService {
             this.batchApi = kc.makeApiClient(BatchV1Api);
             this.localMode = false;
         }*/
+    }
+
+    get helmRelease(): string {
+        return this.config.helmRelease;
     }
 
     async getCronJob(name: string): Promise<V1CronJob> {
@@ -143,5 +147,10 @@ export class KubernetesService {
         const estimatedCompletionTime = addMinutes(jobStartTime, previousJobRuntime);
 
         return estimatedCompletionTime;
+    }
+
+    getContentScope(resource: V1Job | V1CronJob): ContentScope {
+        const contentScopeAnnotation = resource.metadata?.annotations?.[CONTENT_SCOPE_ANNOTATION];
+        return contentScopeAnnotation ? JSON.parse(contentScopeAnnotation) : {};
     }
 }

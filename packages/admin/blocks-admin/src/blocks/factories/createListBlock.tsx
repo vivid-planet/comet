@@ -169,9 +169,15 @@ export function createListBlock<T extends BlockInterface>({
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },
-        isValid: async (state) => await parallelAsyncEvery(state.blocks, async (c) => await block.isValid(c.props)),
+        isValid: async (state) => parallelAsyncEvery(state.blocks, async (c) => block.isValid(c.props)),
 
         childBlockCount: (state) => state.blocks.length,
+
+        anchors: (state) => {
+            return state.blocks.reduce<string[]>((anchors, child) => {
+                return [...anchors, ...(block.anchors?.(child.props) ?? [])];
+            }, []);
+        },
 
         definesOwnPadding: true,
 

@@ -23,7 +23,7 @@ export class IsAllowedImageSizeConstraint implements ValidatorConstraintInterfac
     constructor(@Inject(DAM_CONFIG) private readonly config: DamConfig) {}
 
     validate(value: number): boolean {
-        return this.config.allowedImageSizes.split(",").map(Number).includes(value);
+        return this.config.allowedImageSizes.includes(value);
     }
 
     defaultMessage(validationArguments: ValidationArguments): string {

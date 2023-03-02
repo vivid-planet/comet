@@ -21,7 +21,6 @@ export const damFileFieldFragment = gql`
                 y
             }
         }
-        damPath
         fileUrl
     }
 `;

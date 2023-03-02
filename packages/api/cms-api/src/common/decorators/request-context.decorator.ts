@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { Request } from "express";
+import { IncomingHttpHeaders } from "http";
 
 import { BlockVisibility } from "../../blocks/types";
 import { PageTreeNodeVisibility } from "../../page-tree/types";
@@ -11,7 +11,7 @@ export interface RequestContextInterface {
     previewDamUrls: boolean;
 }
 
-export const getRequestContextHeadersFromRequest = (request: Request): RequestContextInterface => {
+export const getRequestContextHeadersFromRequest = (request: { headers: IncomingHttpHeaders }): RequestContextInterface => {
     const { includeInvisiblePages, includeInvisibleBlocks } = parseIncludeInvisibleHeader(request.headers["x-include-invisible-content"]);
 
     return {

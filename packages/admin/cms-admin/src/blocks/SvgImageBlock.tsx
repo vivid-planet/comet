@@ -17,6 +17,7 @@ import { FormattedMessage } from "react-intl";
 
 import { FileField, useDamAcceptedMimeTypes } from "..";
 import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
+import { DamPathLazy } from "../form/file/DamPathLazy";
 import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "../graphql.generated";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { useCmsBlockContext } from "./useCmsBlockContext";
@@ -26,10 +27,9 @@ export type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 export function createPreviewUrl({ damFile }: SvgImageBlockState, apiUrl: string): string {
     if (!damFile) return "";
     return new URL(
-        "/dam/files/preview/$fileId/$fileName"
+        `${apiUrl}/dam/files/preview/$fileId/$fileName`
             .replace("$fileId", damFile.id)
             .replace("$fileName", damFile.name.substr(0, damFile.name.lastIndexOf("."))),
-        apiUrl,
     ).toString();
 }
 
@@ -76,7 +76,6 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                         title
                         altText
                         archived
-                        damPath
                         fileUrl
                     }
                 }
@@ -110,7 +109,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
                                     <Grid item xs>
                                         <Typography variant="subtitle1">{state.damFile.name}</Typography>
                                         <Typography variant="body1" color="textSecondary">
-                                            {state.damFile.damPath}
+                                            <DamPathLazy fileId={state.damFile.id} />
                                         </Typography>
                                     </Grid>
                                 </Grid>
