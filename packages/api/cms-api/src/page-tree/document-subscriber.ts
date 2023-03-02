@@ -23,7 +23,7 @@ export class DocumentSubscriberFactory {
 
             @UseRequestContext()
             private async updatePageTreeNode(document: DocumentInterface): Promise<void> {
-                const pageTreeReadApi = this.pageTreeService.createReadApi();
+                const pageTreeReadApi = this.pageTreeService.createReadApi({ visibility: "all" });
                 const pageTreeNode = await pageTreeReadApi.getFirstNodeByAttachedPageId(document.id);
 
                 if (pageTreeNode) {
