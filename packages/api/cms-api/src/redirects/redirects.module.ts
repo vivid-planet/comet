@@ -2,7 +2,7 @@ import { Block, createOneOfBlock, ExternalLinkBlock, OneOfBlock } from "@comet/b
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
-import { InternalLinkBlockDataInterface, InternalLinkBlockInputInterface } from "../page-tree/blocks/internal-link.block";
+import { InternalLinkBlockDataInterface, InternalLinkBlockInputInterface } from "../page-tree/blocks/createInternalLinkBlock";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
 import { createRedirectsResolver } from "./redirects.resolver";

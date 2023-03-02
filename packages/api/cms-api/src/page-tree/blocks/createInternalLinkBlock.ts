@@ -41,7 +41,7 @@ interface CreateInternalLinkBlockOptions {
     pageTreeNodeEntityName: string;
 }
 
-export function internalLinkBlock({
+export function createInternalLinkBlock({
     pageTreeNodeEntityName,
 }: CreateInternalLinkBlockOptions): Block<InternalLinkBlockDataInterface, InternalLinkBlockInputInterface> {
     class InternalLinkBlockData extends BlockData {
