@@ -8,7 +8,7 @@ export class DocumentSubscriberFactory {
     static create({ Documents }: { Documents: Type<DocumentInterface>[] }): Type<EventSubscriber> {
         @Injectable()
         class DocumentSubscriber implements EventSubscriber<DocumentInterface> {
-            constructor(em: EntityManager, private readonly pageTreeService: PageTreeService, private readonly orm: MikroORM) {
+            constructor(readonly em: EntityManager, private readonly pageTreeService: PageTreeService, private readonly orm: MikroORM) {
                 em.getEventManager().registerSubscriber(this);
             }
             getSubscribedEntities(): EntityName<DocumentInterface>[] {
@@ -27,7 +27,8 @@ export class DocumentSubscriberFactory {
                 const pageTreeNode = await pageTreeReadApi.getFirstNodeByAttachedPageId(document.id);
 
                 if (pageTreeNode) {
-                    await this.pageTreeService.updateNodeUpdateTime(pageTreeNode.id);
+                    await pageTreeNode.assign({ ...pageTreeNode, updatedAt: new Date() });
+                    await this.em.flush();
                 }
             }
         }
