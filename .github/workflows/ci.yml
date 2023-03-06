@@ -115,6 +115,7 @@ jobs:
             - name: Publish preminor canary release
               if: |
                   !contains( github.event.pull_request.labels.*.name, 'skip-release') &&
+                  github.ref_name != 'next' &&
                   github.base_ref == 'main' &&
                   github.event.pull_request.merged == true
               run: yarn publish:release preminor --no-push --no-git-tag-version --canary --preid=alpha.${{ github.run_number }} --dist-tag=alpha --yes
