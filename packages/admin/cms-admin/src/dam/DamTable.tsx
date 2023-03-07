@@ -33,6 +33,7 @@ import FolderDataGrid from "./DataGrid/FolderDataGrid";
 import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
+import { DamSelectionActionsProvider } from "./DataGrid/selectionActions/DamSelectionActionsContext";
 import EditFile from "./FileForm/EditFile";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
@@ -178,7 +179,9 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
             <RedirectToPersistedDamLocation stateKey={damLocationStorageKey ?? "dam-location"}>
                 <FileUploadContextProvider>
                     <ManualDuplicatedFilenamesHandlerContextProvider>
-                        <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                        <DamSelectionActionsProvider>
+                            <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                        </DamSelectionActionsProvider>
                     </ManualDuplicatedFilenamesHandlerContextProvider>
                 </FileUploadContextProvider>
             </RedirectToPersistedDamLocation>
