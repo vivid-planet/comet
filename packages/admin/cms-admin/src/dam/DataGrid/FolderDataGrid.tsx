@@ -14,6 +14,7 @@ import EditFolder from "../FolderForm/EditFolder";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
+import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { damFolderQuery, damItemsListQuery } from "./FolderDataGrid.gql";
@@ -150,10 +151,15 @@ const FolderDataGrid = ({
         },
     });
 
-    const [damItemsToMove, setDamItemsToMove] = React.useState<Array<{ id: string; type: "file" | "folder" }>>([]);
+    const [damItemToMove, setDamItemToMove] = React.useState<{ id: string; type: "file" | "folder" }>();
+    const moveDialogOpen = damItemToMove !== undefined;
 
-    const onMoveSingleDamItem = (id: string, type: "file" | "folder") => {
-        setDamItemsToMove([{ id, type }]);
+    const openMoveDialog = (itemToMove: { id: string; type: "file" | "folder" }) => {
+        setDamItemToMove(itemToMove);
+    };
+
+    const closeMoveDialog = () => {
+        setDamItemToMove(undefined);
     };
 
     return (
@@ -256,9 +262,9 @@ const FolderDataGrid = ({
                             align: "center",
                             renderCell: ({ row }) => {
                                 return isFile(row) ? (
-                                    <DamContextMenu file={row} onMove={onMoveSingleDamItem} />
+                                    <DamContextMenu file={row} openMoveDialog={openMoveDialog} />
                                 ) : (
-                                    <DamContextMenu folder={row} onMove={onMoveSingleDamItem} />
+                                    <DamContextMenu folder={row} openMoveDialog={openMoveDialog} />
                                 );
                             },
                             renderHeader: () => null,
@@ -302,15 +308,7 @@ const FolderDataGrid = ({
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
-            <DamSelectionFooter
-                open={damSelectionActionsApi.selectionMap.size > 0}
-                onOpenMoveDialog={() => {
-                    const selectedItems = Array.from(damSelectionActionsApi.selectionMap, ([id, type]) => {
-                        return { id, type };
-                    });
-                    setDamItemsToMove(selectedItems);
-                }}
-            />
+            <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />
             <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />
             <EditDialog
                 title={{
@@ -328,49 +326,13 @@ const FolderDataGrid = ({
                 }}
             </EditDialog>
             {fileUploadApi.dialogs}
-            {/*<MoveDamItemDialog*/}
-            {/*    open={damItemsToMove.length > 0}*/}
-            {/*    onClose={() => {*/}
-            {/*        setDamItemsToMove([]);*/}
-            {/*    }}*/}
-            {/*    onChooseFolder={async (targetFolderId: string | null) => {*/}
-            {/*        setDamItemsToMove([]);*/}
-
-            {/*        const fileIds = damItemsToMove.filter((item) => item.type === "file").map((item) => item.id);*/}
-            {/*        const folderIds = damItemsToMove.filter((item) => item.type === "folder").map((item) => item.id);*/}
-
-            {/*        const mutations: Array<Promise<FetchResult>> = [];*/}
-
-            {/*        if (fileIds.length > 0) {*/}
-            {/*            mutations.push(*/}
-            {/*                apolloClient.mutate<GQLMoveDamFilesMutation, GQLMoveDamFilesMutationVariables>({*/}
-            {/*                    mutation: moveDamFilesMutation,*/}
-            {/*                    variables: {*/}
-            {/*                        fileIds,*/}
-            {/*                        targetFolderId: targetFolderId,*/}
-            {/*                    },*/}
-            {/*                }),*/}
-            {/*            );*/}
-            {/*        }*/}
-
-            {/*        if (folderIds.length > 0) {*/}
-            {/*            mutations.push(*/}
-            {/*                apolloClient.mutate<GQLMoveDamFoldersMutation, GQLMoveDamFoldersMutationVariables>({*/}
-            {/*                    mutation: moveDamFoldersMutation,*/}
-            {/*                    variables: {*/}
-            {/*                        folderIds,*/}
-            {/*                        targetFolderId: targetFolderId,*/}
-            {/*                    },*/}
-            {/*                }),*/}
-            {/*            );*/}
-            {/*        }*/}
-
-            {/*        await Promise.all(mutations);*/}
-
-            {/*        clearDamItemCache(apolloClient.cache);*/}
-            {/*    }}*/}
-            {/*    numberOfItems={damItemsToMove.length}*/}
-            {/*/>*/}
+            <MoveDamItemDialog
+                damItemsToMove={damItemToMove ? [damItemToMove] : []}
+                open={moveDialogOpen}
+                onClose={() => {
+                    closeMoveDialog();
+                }}
+            />
         </div>
     );
 };

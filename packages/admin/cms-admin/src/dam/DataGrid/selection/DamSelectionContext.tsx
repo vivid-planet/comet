@@ -1,5 +1,4 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { FetchResult } from "@apollo/client/link/core";
 import { GraphQLError } from "graphql";
 import React from "react";
 
@@ -10,10 +9,6 @@ import {
     GQLDeleteDamFileMutationVariables,
     GQLDeleteDamFolderMutation,
     GQLDeleteDamFolderMutationVariables,
-    GQLMoveDamFilesMutation,
-    GQLMoveDamFilesMutationVariables,
-    GQLMoveDamFoldersMutation,
-    GQLMoveDamFoldersMutationVariables,
     GQLRestoreFilesMutation,
     GQLRestoreFilesMutationVariables,
 } from "../../../graphql.generated";
@@ -21,7 +16,6 @@ import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { MoveDamItemDialog } from "../../MoveDamItemDialog/MoveDamItemDialog";
 import { DamItemSelectionMap } from "../FolderDataGrid";
-import { moveDamFilesMutation, moveDamFoldersMutation } from "../FolderDataGrid.gql";
 
 interface DamSelectionApi {
     selectionMap: DamItemSelectionMap;
@@ -231,59 +225,6 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
         setMoveDialogOpen(true);
     }, []);
 
-    const moveSelected = React.useCallback(
-        async (targetFolderId: string | null) => {
-            setMoving(true);
-
-            const damItemsToMove = Array.from(selectionMap, ([id, type]) => {
-                return { id, type };
-            });
-
-            const fileIds = damItemsToMove.filter((item) => item.type === "file").map((item) => item.id);
-            const folderIds = damItemsToMove.filter((item) => item.type === "folder").map((item) => item.id);
-
-            const mutations: Array<Promise<FetchResult>> = [];
-
-            if (fileIds.length > 0) {
-                mutations.push(
-                    apolloClient.mutate<GQLMoveDamFilesMutation, GQLMoveDamFilesMutationVariables>({
-                        mutation: moveDamFilesMutation,
-                        variables: {
-                            fileIds,
-                            targetFolderId: targetFolderId,
-                        },
-                        errorPolicy: "all",
-                    }),
-                );
-            }
-
-            if (folderIds.length > 0) {
-                mutations.push(
-                    apolloClient.mutate<GQLMoveDamFoldersMutation, GQLMoveDamFoldersMutationVariables>({
-                        mutation: moveDamFoldersMutation,
-                        variables: {
-                            folderIds,
-                            targetFolderId: targetFolderId,
-                        },
-                        errorPolicy: "all",
-                    }),
-                );
-            }
-
-            const promiseResults = await Promise.all(mutations);
-            const hasError = promiseResults.filter((result) => result.errors !== undefined).length > 0;
-
-            if (hasError) {
-                showError(setHasMoveErrors);
-            } else {
-                clearDamItemCache(apolloClient.cache);
-            }
-
-            setMoving(false);
-        },
-        [apolloClient, selectionMap],
-    );
-
     return (
         <DamSelectionContext.Provider
             value={{
@@ -319,15 +260,19 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
                 itemType="selected_items"
             />
             <MoveDamItemDialog
+                damItemsToMove={Array.from(selectionMap.entries()).map((item) => {
+                    return { id: item[0], type: item[1] };
+                })}
+                setMoving={setMoving}
+                handleHasErrors={(hasErrors) => {
+                    if (hasErrors) {
+                        showError(setHasMoveErrors);
+                    }
+                }}
                 open={moveDialogOpen}
                 onClose={() => {
                     setMoveDialogOpen(false);
                 }}
-                onChooseFolder={async (folderId) => {
-                    await moveSelected(folderId);
-                    setMoveDialogOpen(false);
-                }}
-                numberOfItems={selectionMap.size}
                 moving={moving}
                 hasErrors={hasMoveErrors}
             />

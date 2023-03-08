@@ -21,10 +21,9 @@ const StyledErrorIcon = styled(ErrorIcon)`
 
 interface DamSelectionFooterProps {
     open: boolean;
-    onOpenMoveDialog: () => void;
 }
 
-export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterProps> = ({ open, onOpenMoveDialog }) => {
+export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterProps> = ({ open }) => {
     const damSelectionActionsApi = useDamSelectionApi();
 
     if (!open) {
