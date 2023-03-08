@@ -26,7 +26,12 @@ export const DamMoreActions = (): React.ReactElement => {
             </IconButton>
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                 <MenuList>
-                    <MenuItem>
+                    <MenuItem
+                        onClick={() => {
+                            damSelectionActionsApi.downloadSelected();
+                            handleClose();
+                        }}
+                    >
                         <ListItemIcon>
                             <Download />
                         </ListItemIcon>

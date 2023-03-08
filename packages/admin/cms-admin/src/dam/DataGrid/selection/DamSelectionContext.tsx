@@ -1,10 +1,12 @@
 import { gql, useApolloClient } from "@apollo/client";
+import { saveAs } from "file-saver";
 import { GraphQLError } from "graphql";
 import React from "react";
 
 import {
     GQLArchiveFilesMutation,
     GQLArchiveFilesMutationVariables,
+    GQLDamFileDownloadInfoFragment,
     GQLDeleteDamFileMutation,
     GQLDeleteDamFileMutationVariables,
     GQLDeleteDamFolderMutation,
@@ -16,6 +18,14 @@ import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { MoveDamItemDialog } from "../../MoveDamItemDialog/MoveDamItemDialog";
 import { DamItemSelectionMap } from "../FolderDataGrid";
+
+export const damFileDownloadInfoFragment = gql`
+    fragment DamFileDownloadInfo on DamFile {
+        id
+        fileUrl
+        name
+    }
+`;
 
 interface DamSelectionApi {
     selectionMap: DamItemSelectionMap;
@@ -40,6 +50,11 @@ interface DamSelectionApi {
     moveSelected: () => void;
     moving: boolean;
     hasMoveErrors: boolean;
+
+    // download
+    downloadSelected: () => void;
+    downloading: boolean;
+    hasDownloadErrors: boolean;
 }
 
 export const DamSelectionContext = React.createContext<DamSelectionApi>({
@@ -71,6 +86,12 @@ export const DamSelectionContext = React.createContext<DamSelectionApi>({
     },
     moving: false,
     hasMoveErrors: false,
+
+    downloadSelected: () => {
+        throw new Error("Missing DamSelectionContext. Please add a <DamSelectionProvider /> somewhere up in the tree.");
+    },
+    downloading: false,
+    hasDownloadErrors: false,
 });
 
 export const useDamSelectionApi = () => {
@@ -225,6 +246,35 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
         setMoveDialogOpen(true);
     }, []);
 
+    // download
+    const [downloading, setDownloading] = React.useState(false);
+    const [hasDownloadErrors, setHasDownloadErrors] = React.useState(false);
+
+    const downloadSelected = async () => {
+        setDownloading(true);
+
+        const fileIds = Array.from(selectionMap.entries())
+            .filter(([, type]) => type === "file")
+            .map(([id]) => {
+                return id;
+            });
+
+        for (const id of fileIds) {
+            const downloadInfo = apolloClient.cache.readFragment<GQLDamFileDownloadInfoFragment>({
+                id: apolloClient.cache.identify({ __typename: "DamFile", id: id }),
+                fragment: damFileDownloadInfoFragment,
+            });
+
+            if (downloadInfo === null) {
+                showError(setHasDownloadErrors);
+            } else {
+                saveAs(downloadInfo.fileUrl, downloadInfo.name);
+            }
+        }
+
+        setDownloading(false);
+    };
+
     return (
         <DamSelectionContext.Provider
             value={{
@@ -246,6 +296,10 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
                 moveSelected: openMoveDialog,
                 moving,
                 hasMoveErrors,
+
+                downloadSelected,
+                downloading,
+                hasDownloadErrors,
             }}
         >
             {children}

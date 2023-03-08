@@ -2,7 +2,7 @@ import { gql, useApolloClient } from "@apollo/client";
 import { useEditDialogApi, useErrorDialog, useStackSwitchApi } from "@comet/admin";
 import { Archive, Delete, Download, Edit, MoreVertical, Move, Restore } from "@comet/admin-icons";
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from "@mui/material";
-import saveAs from "file-saver";
+import { saveAs } from "file-saver";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
