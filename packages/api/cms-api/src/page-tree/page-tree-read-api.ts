@@ -250,11 +250,9 @@ export function createReadApi(
                 });
             }
 
-            if (options.limit !== undefined && options.offset !== undefined) {
-                qb.limit(options.limit, options.offset);
-            }
+            qb.limit(options.limit, options.offset);
 
-            return [await qb.getResultList(), await qb.getCount()];
+            return Promise.all([qb.getResultList(), qb.getCount()]);
         },
 
         async getChildNodes(node) {

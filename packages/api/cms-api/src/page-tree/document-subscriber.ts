@@ -27,8 +27,7 @@ export class DocumentSubscriberFactory {
                 const pageTreeNode = await pageTreeReadApi.getFirstNodeByAttachedPageId(document.id);
 
                 if (pageTreeNode) {
-                    await pageTreeNode.assign({ ...pageTreeNode, updatedAt: new Date() });
-                    await this.em.flush();
+                    pageTreeNode.updatedAt = new Date();
                 }
             }
         }
