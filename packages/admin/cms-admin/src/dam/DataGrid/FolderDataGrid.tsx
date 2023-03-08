@@ -1,5 +1,4 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { FetchResult } from "@apollo/client/link/core";
 import { BreadcrumbItem, EditDialog, IFilterApi, ISelectionApi, PrettyBytes, useDataGridRemote } from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
@@ -7,16 +6,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import {
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamItemsListQuery,
-    GQLDamItemsListQueryVariables,
-    GQLMoveDamFilesMutation,
-    GQLMoveDamFilesMutationVariables,
-    GQLMoveDamFoldersMutation,
-    GQLMoveDamFoldersMutationVariables,
-} from "../../graphql.generated";
+import { GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamItemsListQuery, GQLDamItemsListQueryVariables } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
@@ -24,15 +14,16 @@ import EditFolder from "../FolderForm/EditFolder";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
-import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
-import { damFolderQuery, damItemsListQuery, moveDamFilesMutation, moveDamFoldersMutation } from "./FolderDataGrid.gql";
+import { damFolderQuery, damItemsListQuery } from "./FolderDataGrid.gql";
 import * as sc from "./FolderDataGrid.sc";
 import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
+import { DamMoreActions } from "./selection/DamMoreActions";
+import { useDamSelectionApi } from "./selection/DamSelectionContext";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
 export type DamItemSelectionMap = Map<string, "file" | "folder">;
@@ -57,8 +48,8 @@ const FolderDataGrid = ({
 }: FolderDataGridProps): React.ReactElement => {
     const intl = useIntl();
     const apolloClient = useApolloClient();
+    const damSelectionActionsApi = useDamSelectionApi();
 
-    const [selectionMap, setSelectionMap] = React.useState<DamItemSelectionMap>(new Map());
     const [uploadTargetFolderName, setUploadTargetFolderName] = React.useState<string | undefined>();
 
     const showUploadFooter = ({ folderName }: { folderName?: string }) => {
@@ -169,6 +160,7 @@ const FolderDataGrid = ({
         <div style={{ padding: "20px" }}>
             <FolderHead isSearching={isSearching} numberItems={dataGridData?.damItemsList.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
+                <DamMoreActions />
                 <DataGrid
                     {...dataGridProps}
                     rowHeight={58}
@@ -278,16 +270,16 @@ const FolderDataGrid = ({
                     ]}
                     checkboxSelection={!hideMultiselect}
                     disableSelectionOnClick
-                    selectionModel={Array.from(selectionMap.keys())}
+                    selectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onSelectionModelChange={(newSelectionModel) => {
                         const newMap: DamItemSelectionMap = new Map();
 
                         newSelectionModel.forEach((selectedId) => {
                             const typedId = selectedId as string;
 
-                            if (selectionMap.has(typedId)) {
+                            if (damSelectionActionsApi.selectionMap.has(typedId)) {
                                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                newMap.set(typedId, selectionMap.get(typedId)!);
+                                newMap.set(typedId, damSelectionActionsApi.selectionMap.get(typedId)!);
                             } else {
                                 const item = dataGridData?.damItemsList.nodes.find((item) => item.id === typedId);
 
@@ -305,16 +297,15 @@ const FolderDataGrid = ({
                             }
                         });
 
-                        setSelectionMap(newMap);
+                        damSelectionActionsApi.setSelectionMap(newMap);
                     }}
                     autoHeight={true}
                 />
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter
-                open={selectionMap.size > 0}
-                selectedItemsMap={selectionMap}
+                open={damSelectionActionsApi.selectionMap.size > 0}
                 onOpenMoveDialog={() => {
-                    const selectedItems = Array.from(selectionMap, ([id, type]) => {
+                    const selectedItems = Array.from(damSelectionActionsApi.selectionMap, ([id, type]) => {
                         return { id, type };
                     });
                     setDamItemsToMove(selectedItems);
@@ -337,50 +328,49 @@ const FolderDataGrid = ({
                 }}
             </EditDialog>
             {fileUploadApi.dialogs}
-            {damItemsToMove.length > 0 && (
-                <MoveDamItemDialog
-                    onClose={() => {
-                        setDamItemsToMove([]);
-                    }}
-                    onChooseFolder={async (targetFolderId: string | null) => {
-                        setDamItemsToMove([]);
+            {/*<MoveDamItemDialog*/}
+            {/*    open={damItemsToMove.length > 0}*/}
+            {/*    onClose={() => {*/}
+            {/*        setDamItemsToMove([]);*/}
+            {/*    }}*/}
+            {/*    onChooseFolder={async (targetFolderId: string | null) => {*/}
+            {/*        setDamItemsToMove([]);*/}
 
-                        const fileIds = damItemsToMove.filter((item) => item.type === "file").map((item) => item.id);
-                        const folderIds = damItemsToMove.filter((item) => item.type === "folder").map((item) => item.id);
+            {/*        const fileIds = damItemsToMove.filter((item) => item.type === "file").map((item) => item.id);*/}
+            {/*        const folderIds = damItemsToMove.filter((item) => item.type === "folder").map((item) => item.id);*/}
 
-                        const mutations: Array<Promise<FetchResult>> = [];
+            {/*        const mutations: Array<Promise<FetchResult>> = [];*/}
 
-                        if (fileIds.length > 0) {
-                            mutations.push(
-                                apolloClient.mutate<GQLMoveDamFilesMutation, GQLMoveDamFilesMutationVariables>({
-                                    mutation: moveDamFilesMutation,
-                                    variables: {
-                                        fileIds,
-                                        targetFolderId: targetFolderId,
-                                    },
-                                }),
-                            );
-                        }
+            {/*        if (fileIds.length > 0) {*/}
+            {/*            mutations.push(*/}
+            {/*                apolloClient.mutate<GQLMoveDamFilesMutation, GQLMoveDamFilesMutationVariables>({*/}
+            {/*                    mutation: moveDamFilesMutation,*/}
+            {/*                    variables: {*/}
+            {/*                        fileIds,*/}
+            {/*                        targetFolderId: targetFolderId,*/}
+            {/*                    },*/}
+            {/*                }),*/}
+            {/*            );*/}
+            {/*        }*/}
 
-                        if (folderIds.length > 0) {
-                            mutations.push(
-                                apolloClient.mutate<GQLMoveDamFoldersMutation, GQLMoveDamFoldersMutationVariables>({
-                                    mutation: moveDamFoldersMutation,
-                                    variables: {
-                                        folderIds,
-                                        targetFolderId: targetFolderId,
-                                    },
-                                }),
-                            );
-                        }
+            {/*        if (folderIds.length > 0) {*/}
+            {/*            mutations.push(*/}
+            {/*                apolloClient.mutate<GQLMoveDamFoldersMutation, GQLMoveDamFoldersMutationVariables>({*/}
+            {/*                    mutation: moveDamFoldersMutation,*/}
+            {/*                    variables: {*/}
+            {/*                        folderIds,*/}
+            {/*                        targetFolderId: targetFolderId,*/}
+            {/*                    },*/}
+            {/*                }),*/}
+            {/*            );*/}
+            {/*        }*/}
 
-                        await Promise.all(mutations);
+            {/*        await Promise.all(mutations);*/}
 
-                        clearDamItemCache(apolloClient.cache);
-                    }}
-                    numberOfItems={damItemsToMove.length}
-                />
-            )}
+            {/*        clearDamItemCache(apolloClient.cache);*/}
+            {/*    }}*/}
+            {/*    numberOfItems={damItemsToMove.length}*/}
+            {/*/>*/}
         </div>
     );
 };

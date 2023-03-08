@@ -7,8 +7,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
-import { DamItemSelectionMap } from "../FolderDataGrid";
-import { useDamSelectionActionsApi } from "../selectionActions/DamSelectionActionsContext";
+import { useDamSelectionApi } from "../selection/DamSelectionContext";
 import { DamFooter } from "./DamFooter";
 
 const ButtonGroup = styled("div")`
@@ -22,12 +21,11 @@ const StyledErrorIcon = styled(ErrorIcon)`
 
 interface DamSelectionFooterProps {
     open: boolean;
-    selectedItemsMap?: DamItemSelectionMap;
     onOpenMoveDialog: () => void;
 }
 
-export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterProps> = ({ open, selectedItemsMap, onOpenMoveDialog }) => {
-    const damSelectionActionsApi = useDamSelectionActionsApi();
+export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterProps> = ({ open, onOpenMoveDialog }) => {
+    const damSelectionActionsApi = useDamSelectionApi();
 
     if (!open) {
         return null;
@@ -40,7 +38,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                     id="comet.dam.footer.selected"
                     defaultMessage="{count, plural, one {# item} other {# items}} selected"
                     values={{
-                        count: selectedItemsMap?.size,
+                        count: damSelectionActionsApi.selectionMap.size,
                     }}
                 />
             </Typography>
@@ -48,16 +46,16 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                 <FooterActionButton
                     title={<FormattedMessage id="comet.dam.footer.move" defaultMessage="Move" />}
                     onClick={() => {
-                        onOpenMoveDialog();
+                        damSelectionActionsApi.moveSelected();
                     }}
                     icon={<Move />}
+                    loading={damSelectionActionsApi.moving}
+                    hasErrors={damSelectionActionsApi.hasMoveErrors}
                 />
                 <FooterActionButton
                     title={<FormattedMessage id="comet.dam.footer.archive" defaultMessage="Archive" />}
                     onClick={() => {
-                        if (selectedItemsMap) {
-                            damSelectionActionsApi.archiveSelected(selectedItemsMap);
-                        }
+                        damSelectionActionsApi.archiveSelected();
                     }}
                     icon={<Archive />}
                     loading={damSelectionActionsApi.archiving}
@@ -66,9 +64,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                 <FooterActionButton
                     title={<FormattedMessage id="comet.dam.footer.restore" defaultMessage="Restore" />}
                     onClick={() => {
-                        if (selectedItemsMap) {
-                            damSelectionActionsApi.restoreSelected(selectedItemsMap);
-                        }
+                        damSelectionActionsApi.restoreSelected();
                     }}
                     icon={<Restore />}
                     loading={damSelectionActionsApi.restoring}
@@ -77,9 +73,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                 <FooterActionButton
                     title={<FormattedMessage id="comet.dam.footer.delete" defaultMessage="Delete" />}
                     onClick={() => {
-                        if (selectedItemsMap) {
-                            damSelectionActionsApi.deleteSelected(selectedItemsMap);
-                        }
+                        damSelectionActionsApi.deleteSelected();
                     }}
                     icon={<Delete />}
                     loading={damSelectionActionsApi.deleting}

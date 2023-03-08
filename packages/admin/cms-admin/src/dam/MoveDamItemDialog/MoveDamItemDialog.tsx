@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { SaveButton } from "@comet/admin";
 import { Move, Reset } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -22,12 +23,15 @@ const FixedHeightDialog = styled(Dialog)`
 export type FolderSearchMatch = TextMatch & { folder: { id: string } };
 
 interface MoveDamItemDialogProps {
+    open: boolean;
     onClose: (event: React.SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
     onChooseFolder: (folderId: string | null) => void;
     numberOfItems: number;
+    moving?: boolean;
+    hasErrors?: boolean;
 }
 
-export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: MoveDamItemDialogProps) => {
+const MoveDamItemDialogInner = ({ open, onClose, onChooseFolder, numberOfItems, moving = false, hasErrors = false }: MoveDamItemDialogProps) => {
     const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
         fetchPolicy: "network-only",
     });
@@ -58,7 +62,15 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: Mo
     });
 
     return (
-        <FixedHeightDialog open={true} onClose={onClose} fullWidth maxWidth="lg">
+        <FixedHeightDialog
+            open={open}
+            onClose={(event: React.SyntheticEvent<Element, Event>, reason) => {
+                setSelectedId(undefined);
+                onClose(event, reason);
+            }}
+            fullWidth
+            maxWidth="lg"
+        >
             <DialogTitle>
                 <FormattedMessage id="comet.dam.moveDamItemDialog.selectTargetFolder" defaultMessage="Select target folder" />
             </DialogTitle>
@@ -113,7 +125,7 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: Mo
                 >
                     <FormattedMessage id="comet.dam.moveDamItemDialog.startOver" defaultMessage="Start over" />
                 </Button>
-                <Button
+                <SaveButton
                     startIcon={<Move />}
                     variant="contained"
                     onClick={() => {
@@ -122,6 +134,8 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: Mo
                         }
                     }}
                     disabled={selectedId === undefined}
+                    saving={moving}
+                    hasErrors={hasErrors}
                 >
                     <FormattedMessage
                         id="comet.dam.moveDamItemDialog.moveItems"
@@ -130,8 +144,16 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: Mo
                             num: numberOfItems,
                         }}
                     />
-                </Button>
+                </SaveButton>
             </DialogActions>
         </FixedHeightDialog>
     );
+};
+
+export const MoveDamItemDialog = (props: MoveDamItemDialogProps) => {
+    if (!props.open) {
+        return null;
+    }
+
+    return <MoveDamItemDialogInner {...props} />;
 };
