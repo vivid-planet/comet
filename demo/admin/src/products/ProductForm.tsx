@@ -69,7 +69,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
 
     const { data, error, loading } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, id ? { variables: { id } } : { skip: true });
 
-    const initialValues = data?.product ? filter(productFormFragment, data.product) : {};
+    const initialValues = data?.product ? filter(productFormFragment, data.product) : { inStock: false };
 
     if (error) {
         return <FormattedMessage id="demo.common.error" defaultMessage="Ein Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal." />;
