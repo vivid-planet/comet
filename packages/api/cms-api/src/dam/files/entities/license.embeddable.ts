@@ -2,10 +2,10 @@ import { Embeddable, Enum, Property } from "@mikro-orm/core";
 import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 
 export enum LicenseType {
-    ROYALTY_FREE = "royalty_free",
-    RIGHTS_MANAGED = "rights_managed",
-    SUBSCRIPTION = "subscription",
-    MICRO = "micro",
+    ROYALTY_FREE = "ROYALTY_FREE",
+    RIGHTS_MANAGED = "RIGHTS_MANAGED",
+    SUBSCRIPTION = "SUBSCRIPTION",
+    MICRO = "MICRO",
 }
 registerEnumType(LicenseType, { name: "LicenseType" });
 
