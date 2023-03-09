@@ -17,7 +17,7 @@ export const Tag = styled("div")<{ type?: "warning" | "error" | "info" | "neutra
             case "error":
                 return theme.palette.error.contrastText;
             default:
-                return "#242424";
+                return theme.palette.grey[800];
         }
     }};
     background-color: ${({ theme, type }) => {
