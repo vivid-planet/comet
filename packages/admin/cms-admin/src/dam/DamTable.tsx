@@ -105,6 +105,14 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                                         <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
                                     </Button>
                                 }
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "left",
+                                }}
                             />
                         </ToolbarItem>
                         <ToolbarActions>

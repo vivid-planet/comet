@@ -1,5 +1,6 @@
 import { Archive, Delete, Download, Move, Restore } from "@comet/admin-icons";
 import { Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from "@mui/material";
+import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -7,10 +8,12 @@ import { FormattedMessage } from "react-intl";
 import { useDamSelectionApi } from "./DamSelectionContext";
 
 interface DamMoreActionsProps {
+    transformOrigin?: PopoverOrigin;
+    anchorOrigin?: PopoverOrigin;
     button: React.ReactElement;
 }
 
-export const DamMoreActions = ({ button }: DamMoreActionsProps): React.ReactElement => {
+export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMoreActionsProps): React.ReactElement => {
     const damSelectionActionsApi = useDamSelectionApi();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -26,7 +29,14 @@ export const DamMoreActions = ({ button }: DamMoreActionsProps): React.ReactElem
     return (
         <>
             {React.cloneElement(button, { onClick: handleClick })}
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} keepMounted={false}>
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                keepMounted={false}
+                transformOrigin={transformOrigin}
+                anchorOrigin={anchorOrigin}
+            >
                 <MenuList>
                     <MenuItem
                         onClick={() => {

@@ -1,12 +1,9 @@
-import { useApolloClient } from "@apollo/client";
 import { Archive, Delete, Error as ErrorIcon, MoreVertical, Move, Restore, ThreeDotSaving } from "@comet/admin-icons";
-import { Divider, IconButton as CometAdminIconButton, IconButton, Tooltip, Typography } from "@mui/material";
+import { Divider, IconButton as CometAdminIconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { GraphQLError } from "graphql";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { DamMoreActions } from "../selection/DamMoreActions";
 import { useDamSelectionApi } from "../selection/DamSelectionContext";
 import { DamFooter } from "./DamFooter";
@@ -42,7 +39,7 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                     }}
                 />
             </Typography>
-            <ButtonGroup>
+            <ButtonGroup sx={{ alignSelf: "stretch" }}>
                 <FooterActionButton
                     title={<FormattedMessage id="comet.dam.footer.move" defaultMessage="Move" />}
                     onClick={() => {
@@ -82,26 +79,19 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                 <Divider orientation="vertical" sx={{ borderColor: (theme) => theme.palette.grey.A200 }} flexItem={true} />
                 <DamMoreActions
                     button={
-                        <IconButton
-                            sx={{
-                                color: (theme) => theme.palette.grey.A100,
-                            }}
-                        >
-                            <MoreVertical />
-                        </IconButton>
+                        <FooterActionButton
+                            title={<FormattedMessage id="comet.dam.footer.moreActions" defaultMessage="More actions" />}
+                            icon={<MoreVertical />}
+                        />
                     }
-                    // Button={({ onClick }) => {
-                    //     return (
-                    //         <IconButton
-                    //             sx={{
-                    //                 color: (theme) => theme.palette.grey.A100,
-                    //             }}
-                    //             onClick={onClick}
-                    //         >
-                    //             <MoreVertical />
-                    //         </IconButton>
-                    //     );
-                    // }}
+                    anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                    }}
+                    transformOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
                 />
             </ButtonGroup>
         </DamFooter>
@@ -117,47 +107,15 @@ const StyledCometAdminIconButton = styled(CometAdminIconButton)`
 interface IconButtonProps {
     title: NonNullable<React.ReactNode>;
     onClick?: () => void;
-    executeMutation?: () => Promise<{ errors: readonly GraphQLError[] | undefined } | undefined>;
     icon: React.ReactNode;
     loading?: boolean;
     hasErrors?: boolean;
 }
 
-const FooterActionButton = ({ title, onClick, executeMutation, icon, loading: externalLoading, hasErrors: externalHasErrors }: IconButtonProps) => {
-    const apolloClient = useApolloClient();
-
-    const [internalLoading, setInternalLoading] = React.useState<boolean>(false);
-    const [internalHasErrors, setInternalHasErrors] = React.useState<boolean>(false);
-
-    const loading = externalLoading ?? internalLoading;
-    const hasErrors = externalHasErrors ?? internalHasErrors;
-
-    const handleClick = async () => {
-        if (executeMutation === undefined) {
-            throw new Error("FooterActionButton: You must either set onClick or executeMutation");
-        }
-
-        setInternalLoading(true);
-
-        const result = await executeMutation();
-
-        if (result) {
-            if (result.errors) {
-                setInternalHasErrors(true);
-                setTimeout(() => {
-                    setInternalHasErrors(false);
-                }, 3000);
-            } else {
-                clearDamItemCache(apolloClient.cache);
-            }
-        }
-
-        setInternalLoading(false);
-    };
-
+const FooterActionButton = ({ title, onClick, icon, loading, hasErrors }: IconButtonProps) => {
     return (
         <Tooltip title={title}>
-            <StyledCometAdminIconButton onClick={onClick ?? handleClick} size="large">
+            <StyledCometAdminIconButton onClick={onClick} size="large">
                 {loading ? <ThreeDotSaving /> : hasErrors ? <StyledErrorIcon /> : icon}
             </StyledCometAdminIconButton>
         </Tooltip>
