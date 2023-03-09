@@ -1,12 +1,13 @@
 import { useApolloClient } from "@apollo/client";
-import { Archive, Delete, Error as ErrorIcon, Move, Restore, ThreeDotSaving } from "@comet/admin-icons";
-import { IconButton as CometAdminIconButton, Tooltip, Typography } from "@mui/material";
+import { Archive, Delete, Error as ErrorIcon, MoreVertical, Move, Restore, ThreeDotSaving } from "@comet/admin-icons";
+import { Divider, IconButton as CometAdminIconButton, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { GraphQLError } from "graphql";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
+import { DamMoreActions } from "../selection/DamMoreActions";
 import { useDamSelectionApi } from "../selection/DamSelectionContext";
 import { DamFooter } from "./DamFooter";
 
@@ -77,6 +78,30 @@ export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterP
                     icon={<Delete />}
                     loading={damSelectionActionsApi.deleting}
                     hasErrors={damSelectionActionsApi.hasDeletionErrors}
+                />
+                <Divider orientation="vertical" sx={{ borderColor: (theme) => theme.palette.grey.A200 }} flexItem={true} />
+                <DamMoreActions
+                    button={
+                        <IconButton
+                            sx={{
+                                color: (theme) => theme.palette.grey.A100,
+                            }}
+                        >
+                            <MoreVertical />
+                        </IconButton>
+                    }
+                    // Button={({ onClick }) => {
+                    //     return (
+                    //         <IconButton
+                    //             sx={{
+                    //                 color: (theme) => theme.palette.grey.A100,
+                    //             }}
+                    //             onClick={onClick}
+                    //         >
+                    //             <MoreVertical />
+                    //         </IconButton>
+                    //     );
+                    // }}
                 />
             </ButtonGroup>
         </DamFooter>

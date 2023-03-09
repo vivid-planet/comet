@@ -17,7 +17,7 @@ import {
     useStoredState,
     useTableQueryFilter,
 } from "@comet/admin";
-import { AddFolder as AddFolderIcon, Domain } from "@comet/admin-icons";
+import { AddFolder as AddFolderIcon, ChevronDown, Domain } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -33,6 +33,7 @@ import FolderDataGrid from "./DataGrid/FolderDataGrid";
 import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
+import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
 import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 
@@ -97,6 +98,15 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
                         </ToolbarItem>
                         <ToolbarFillSpace />
+                        <ToolbarItem>
+                            <DamMoreActions
+                                button={
+                                    <Button variant="text" color="inherit" endIcon={<ChevronDown />}>
+                                        <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
+                                    </Button>
+                                }
+                            />
+                        </ToolbarItem>
                         <ToolbarActions>
                             <Button
                                 variant="text"

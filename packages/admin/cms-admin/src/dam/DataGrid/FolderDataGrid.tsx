@@ -23,7 +23,6 @@ import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
-import { DamMoreActions } from "./selection/DamMoreActions";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
 
@@ -166,7 +165,6 @@ const FolderDataGrid = ({
         <div style={{ padding: "20px" }}>
             <FolderHead isSearching={isSearching} numberItems={dataGridData?.damItemsList.totalCount ?? 0} breadcrumbs={breadcrumbs} folderId={id} />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
-                <DamMoreActions />
                 <DataGrid
                     {...dataGridProps}
                     rowHeight={58}
