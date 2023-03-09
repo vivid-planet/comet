@@ -52,6 +52,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         const input = {
             ...formState,
             price: parseFloat(formState.price),
+            id: undefined,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -103,7 +104,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editInspirationSave">
-                                <SaveButton color="primary" variant="contained" hasErrors={hasSubmitErrors} type="submit">
+                                <SaveButton color="primary" variant="contained" saving={submitting} hasErrors={hasSubmitErrors} type="submit">
                                     <FormattedMessage {...messages.save} />
                                 </SaveButton>
                                 <SaveButton

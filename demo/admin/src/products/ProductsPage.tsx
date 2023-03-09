@@ -1,4 +1,5 @@
 import { Stack, StackPage, StackSwitch } from "@comet/admin";
+import ProductHookForm from "@src/products/ProductHookForm";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -17,8 +18,14 @@ const ProductsPage: React.FC = () => {
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedId) => <ProductForm id={selectedId} />}
                 </StackPage>
+                <StackPage name="edit-hook-form" title={intl.formatMessage({ id: "comet.products.editProduct", defaultMessage: "Edit product" })}>
+                    {(selectedId) => <ProductHookForm id={selectedId} />}
+                </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "comet.products.addProduct", defaultMessage: "Add product" })}>
                     <ProductForm />
+                </StackPage>
+                <StackPage name="add-hook-form" title={intl.formatMessage({ id: "comet.products.addProduct", defaultMessage: "Add product" })}>
+                    <ProductHookForm />
                 </StackPage>
             </StackSwitch>
         </Stack>

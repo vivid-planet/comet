@@ -45,6 +45,17 @@ function ProductsTableToolbar() {
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="cometDemo.products.newProduct" defaultMessage="New Product" />
                 </Button>
+                <Button
+                    startIcon={<AddIcon />}
+                    component={StackLink}
+                    pageName="add-hook-form"
+                    payload="add"
+                    variant="contained"
+                    color="primary"
+                    sx={{ ml: 2 }}
+                >
+                    <FormattedMessage id="cometDemo.products.newProduct.hookForm" defaultMessage="New Product (Hook Form)" />
+                </Button>
             </ToolbarItem>
         </Toolbar>
     );
@@ -60,12 +71,16 @@ const columns: GridColDef<GQLProductsListFragment>[] = [
         headerName: "",
         sortable: false,
         filterable: false,
+        width: 300,
         renderCell: (params) => {
             return (
                 <>
                     <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                         <Edit color="primary" />
                     </IconButton>
+                    <Button component={StackLink} pageName="edit-hook-form" payload={params.row.id}>
+                        HookForm
+                    </Button>
                     <CrudContextMenu
                         onPaste={async ({ input, client }) => {
                             await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({

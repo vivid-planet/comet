@@ -70,6 +70,7 @@
         "react-dropzone": "^14.0.0",
         "react-final-form": "^6.0.0",
         "react-final-form-listeners": "^1.0.0",
+        "react-hook-form": "^7.43.5",
         "react-hotkeys-hook": "^3.0.0",
         "react-image-crop": "^8.0.0",
         "react-intl": "^5.0.0",
