@@ -4,20 +4,20 @@ import {
     FinalFormInput,
     SaveButton,
     Stack,
-    StackBackButton,
     StackLink,
     StackPage,
     StackSwitch,
     Toolbar,
     ToolbarActions,
+    ToolbarBackButton,
     ToolbarFillSpace,
-    ToolbarItem,
+    ToolbarTitleItem,
     useEditDialog,
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Button, Link, Typography } from "@mui/material";
+import { Button, Link } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -28,8 +28,8 @@ import { storyRouterDecorator } from "../../story-router.decorator";
 
 interface ExampleRow {
     id: string;
-    foo: string;
-    bar: string;
+    name: string;
+    description: string;
 }
 type NewExampleInput = Omit<ExampleRow, "id">;
 
@@ -67,8 +67,8 @@ function EditForm(props: EditFormProps) {
             {({ handleSubmit }) => {
                 return (
                     <>
-                        <Field name="foo" component={FinalFormInput} type="text" label="Foo" fullWidth />
-                        <Field name="bar" component={FinalFormInput} type="text" label="Bar" fullWidth />
+                        <Field name="name" component={FinalFormInput} type="text" label="Name" fullWidth />
+                        <Field name="description" component={FinalFormInput} type="text" label="Description" fullWidth />
                         {props.mode === "edit" && <SaveButton type="submit" onClick={handleSubmit} />}
                     </>
                 );
@@ -79,8 +79,8 @@ function EditForm(props: EditFormProps) {
 
 function Story() {
     const [data, setData] = React.useState<ExampleRow[]>([
-        { id: v4(), foo: "blub", bar: "blub" },
-        { id: v4(), foo: "blub", bar: "blub" },
+        { id: v4(), name: "Item 1", description: "blub" },
+        { id: v4(), name: "Item 2", description: "foo" },
     ]);
 
     const addRow = (input: NewExampleInput) => {
@@ -111,9 +111,7 @@ function Story() {
             <StackSwitch>
                 <StackPage name="table">
                     <Toolbar>
-                        <ToolbarItem>
-                            <Typography variant="h3">Table Stack Edit Dialog</Typography>
-                        </ToolbarItem>
+                        <ToolbarTitleItem>Table Stack Edit Dialog</ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <Button
@@ -133,8 +131,8 @@ function Story() {
                         <DataGrid
                             columns={[
                                 { field: "id", headerName: "ID" },
-                                { field: "foo", headerName: "Foo" },
-                                { field: "bar", headerName: "Bar" },
+                                { field: "name", headerName: "Name" },
+                                { field: "description", headerName: "Description" },
                                 {
                                     field: "edit",
                                     headerName: "",
@@ -161,7 +159,10 @@ function Story() {
                         }
                         return (
                             <>
-                                <StackBackButton />
+                                <Toolbar>
+                                    <ToolbarBackButton />
+                                    <ToolbarTitleItem>{row.name}</ToolbarTitleItem>
+                                </Toolbar>
                                 <EditForm row={row} mode="edit" onSubmit={updateRow} />
                             </>
                         );
