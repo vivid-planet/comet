@@ -93,7 +93,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({
     selectionApi,
     api,
     title: maybeTitle,
-    onAfterSave: maybeOnAfterSave,
+    onAfterSave: passedOnAfterSave,
     children,
 }) => {
     const intl = useIntl();
@@ -107,7 +107,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            const onAfterSave = maybeOnAfterSave ?? (() => api.closeDialog({ delay: true }));
+            const onAfterSave = passedOnAfterSave ?? (() => api.closeDialog({ delay: true }));
 
             dirtyHandlerApi.submitBindings().then((submitResults: Array<SubmitResult>) => {
                 const failed = submitResults.some((submitResult) => !!submitResult.error);
