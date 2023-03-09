@@ -41,7 +41,7 @@ class PixelImageBlockData extends BlockData {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { createdAt, updatedAt, folder, ...data } = file;
+        const { createdAt, updatedAt, folder, license, ...data } = file;
 
         return {
             damFile: {
@@ -54,7 +54,6 @@ class PixelImageBlockData extends BlockData {
                           dominantColor: file.image.dominantColor,
                       }
                     : undefined,
-                license: {},
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
             cropArea: this.cropArea ? { ...this.cropArea } : undefined,
