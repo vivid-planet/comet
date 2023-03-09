@@ -14,6 +14,10 @@ export const damFileTableFragment = gql`
         license {
             durationFrom
             durationTo
+            expirationDate
+            isNotValidYet
+            expiresWithinThirtyDays
+            hasExpired
         }
         folder {
             id

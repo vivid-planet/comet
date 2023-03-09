@@ -31,6 +31,10 @@ export const damFileDetailFragment = gql`
             author
             durationFrom
             durationTo
+            expirationDate
+            isNotValidYet
+            expiresWithinThirtyDays
+            hasExpired
         }
         fileUrl
     }

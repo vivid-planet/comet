@@ -5,7 +5,6 @@ import * as React from "react";
 import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { isFile } from "./FolderTableRow";
-import { getLicenseValidityInformation } from "./license/getLicenseValidityInformation";
 import { ArchivedTag } from "./tags/ArchivedTag";
 import { LicenseExpiredTag, LicenseExpiresSoonTag, LicenseNotValidYetTag } from "./tags/LicenseWarningTags";
 import { DamThumbnail } from "./thumbnail/DamThumbnail";
@@ -61,7 +60,7 @@ const DamLabel = ({ asset, showPath = false, matches, showLicenseWarnings = true
                 {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
             </NameWrapper>
             {isFile(asset) && asset.archived && <ArchivedTag />}
-            {isFile(asset) && <ValidityTags file={asset} />}
+            {isFile(asset) && showLicenseWarnings && <ValidityTags file={asset} />}
         </LabelWrapper>
     );
 };
@@ -70,18 +69,13 @@ interface ValidityTagsProps {
     file: GQLDamFileTableFragment;
 }
 const ValidityTags = ({ file }: ValidityTagsProps) => {
-    const validityInformation = getLicenseValidityInformation({
-        durationFrom: file.license?.durationFrom ? new Date(file.license.durationFrom) : undefined,
-        durationTo: file.license?.durationTo ? new Date(file.license.durationTo) : undefined,
-    });
-
     return (
         <>
-            {validityInformation.isNotValidYet && <LicenseNotValidYetTag />}
-            {validityInformation.expirationDate && validityInformation.expiresSoon && (
-                <LicenseExpiresSoonTag expirationDate={validityInformation.expirationDate} />
+            {file.license?.isNotValidYet && <LicenseNotValidYetTag />}
+            {file.license?.expirationDate && file.license?.expiresWithinThirtyDays && (
+                <LicenseExpiresSoonTag expirationDate={file.license?.expirationDate} />
             )}
-            {validityInformation.isExpired && <LicenseExpiredTag />}
+            {file.license?.hasExpired && <LicenseExpiredTag />}
         </>
     );
 };

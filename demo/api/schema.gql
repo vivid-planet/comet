@@ -58,6 +58,13 @@ type DamFileLicense {
   author: String
   durationFrom: DateTime
   durationTo: DateTime
+
+  """The expirationDate is the durationTo + 1 day"""
+  expirationDate: DateTime
+  isNotValidYet: Boolean!
+  expiresWithinThirtyDays: Boolean!
+  hasExpired: Boolean!
+  isValid: Boolean!
 }
 
 enum LicenseType {

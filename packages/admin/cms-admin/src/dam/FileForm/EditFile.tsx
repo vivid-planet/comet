@@ -36,7 +36,6 @@ import {
     GQLUpdateFileMutation,
     GQLUpdateFileMutationVariables,
 } from "../../graphql.generated";
-import { getLicenseValidityInformation } from "../Table/license/getLicenseValidityInformation";
 import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation";
 import { LicenseExpiredTag, LicenseExpiresSoonTag, LicenseNotValidYetTag } from "../Table/tags/LicenseWarningTags";
 import Duplicates from "./Duplicates";
@@ -122,10 +121,6 @@ interface EditFileInnerProps {
 const EditFileInner = ({ file, id }: EditFileInnerProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
-    const validityInformation = getLicenseValidityInformation({
-        durationFrom: file.license?.durationFrom ? new Date(file.license.durationFrom) : undefined,
-        durationTo: file.license?.durationTo ? new Date(file.license.durationTo) : undefined,
-    });
 
     const [updateDamFile, { loading: saving, error: hasSaveErrors }] = useMutation<GQLUpdateFileMutation, GQLUpdateFileMutationVariables>(
         updateDamFileMutation,
@@ -211,11 +206,11 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
                         <ToolbarItem>
-                            {validityInformation.isNotValidYet && <LicenseNotValidYetTag />}
-                            {validityInformation.expirationDate && validityInformation.expiresSoon && (
-                                <LicenseExpiresSoonTag expirationDate={validityInformation.expirationDate} />
+                            {file.license?.isNotValidYet && <LicenseNotValidYetTag />}
+                            {file.license?.expirationDate && file.license?.expiresWithinThirtyDays && (
+                                <LicenseExpiresSoonTag expirationDate={file.license.expirationDate} />
                             )}
-                            {validityInformation.isExpired && <LicenseExpiredTag />}
+                            {file.license?.hasExpired && <LicenseExpiredTag />}
                         </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
