@@ -160,7 +160,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                                 </InputAdornment>
                                             }
                                             validate={(value: Date | undefined, allValues) => {
-                                                if (value && allValues && value < (allValues as EditFileFormValues).license.durationFrom) {
+                                                if (value && allValues && value < (allValues as EditFileFormValues).license?.durationFrom) {
                                                     return (
                                                         <FormattedMessage
                                                             id="comet.dam.file.error.durationTo"

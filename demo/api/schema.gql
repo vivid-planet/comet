@@ -78,7 +78,7 @@ type DamFile {
   altText: String
   archived: Boolean!
   image: DamFileImage
-  license: DamFileLicense!
+  license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
   fileUrl: String!

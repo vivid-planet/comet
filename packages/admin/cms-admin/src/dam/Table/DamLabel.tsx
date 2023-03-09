@@ -71,8 +71,8 @@ interface ValidityTagsProps {
 }
 const ValidityTags = ({ file }: ValidityTagsProps) => {
     const validityInformation = getLicenseValidityInformation({
-        durationFrom: file.license.durationFrom ? new Date(file.license.durationFrom) : undefined,
-        durationTo: file.license.durationTo ? new Date(file.license.durationTo) : undefined,
+        durationFrom: file.license?.durationFrom ? new Date(file.license.durationFrom) : undefined,
+        durationTo: file.license?.durationTo ? new Date(file.license.durationTo) : undefined,
     });
 
     return (

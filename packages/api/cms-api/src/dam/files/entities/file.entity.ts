@@ -79,9 +79,9 @@ export class File extends BaseEntity<File, "id"> {
     })
     image?: FileImage;
 
-    @Field(() => License)
-    @Embedded(() => License)
-    license: License = new License();
+    @Field(() => License, { nullable: true })
+    @Embedded(() => License, { nullable: true })
+    license?: License;
 
     @Property({
         columnType: "timestamp with time zone",

@@ -59,9 +59,10 @@ export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
-    license: Omit<GQLLicenseInput, "type"> & {
-        type: LicenseType;
-    };
+    license?:
+        | Omit<GQLLicenseInput, "type"> & {
+              type: LicenseType;
+          };
 }
 
 interface EditFormProps {
@@ -122,8 +123,8 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const validityInformation = getLicenseValidityInformation({
-        durationFrom: file.license.durationFrom ? new Date(file.license.durationFrom) : undefined,
-        durationTo: file.license.durationTo ? new Date(file.license.durationTo) : undefined,
+        durationFrom: file.license?.durationFrom ? new Date(file.license.durationFrom) : undefined,
+        durationTo: file.license?.durationTo ? new Date(file.license.durationTo) : undefined,
     });
 
     const [updateDamFile, { loading: saving, error: hasSaveErrors }] = useMutation<GQLUpdateFileMutation, GQLUpdateFileMutationVariables>(
@@ -162,16 +163,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                         image: {
                             cropArea,
                         },
-                        license:
-                            values.license.type === "NO_LICENSE"
-                                ? {
-                                      type: null,
-                                      details: null,
-                                      author: null,
-                                      durationTo: null,
-                                      durationFrom: null,
-                                  }
-                                : { ...values.license, type: values.license.type },
+                        license: values.license?.type === "NO_LICENSE" ? null : { ...values.license, type: values.license?.type },
                     },
                 },
             });
@@ -197,13 +189,15 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 },
                 altText: file.altText,
                 title: file.title,
-                license: {
-                    type: file.license.type ?? "NO_LICENSE",
-                    details: file.license.details,
-                    author: file.license.author,
-                    durationFrom: file.license.durationFrom ? Date.parse(file.license.durationFrom) : undefined,
-                    durationTo: file.license.durationTo ? Date.parse(file.license.durationTo) : undefined,
-                },
+                license: file.license
+                    ? {
+                          type: file.license.type ?? "NO_LICENSE",
+                          details: file.license.details,
+                          author: file.license.author,
+                          durationFrom: file.license.durationFrom ? Date.parse(file.license.durationFrom) : undefined,
+                          durationTo: file.license.durationTo ? Date.parse(file.license.durationTo) : undefined,
+                      }
+                    : undefined,
             }}
             initialValuesEqual={(prevValues, newValues) => isEqual(prevValues, newValues)}
             onAfterSubmit={() => {
