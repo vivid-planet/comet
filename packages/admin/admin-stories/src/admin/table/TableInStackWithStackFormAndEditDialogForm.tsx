@@ -150,13 +150,7 @@ function Story() {
                             rows={data}
                         />
                     </div>
-                    <EditDialog
-                        onAfterSave={() => {
-                            //noop
-                        }}
-                    >
-                        {selection.mode === "add" && <EditForm mode="add" onSubmit={addRow} />}
-                    </EditDialog>
+                    <EditDialog disableCloseAfterSave>{selection.mode === "add" && <EditForm mode="add" onSubmit={addRow} />}</EditDialog>
                 </StackPage>
                 <StackPage name="edit">
                     {(selectedId) => {

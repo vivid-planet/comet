@@ -20,6 +20,7 @@ interface ITitle {
 
 interface IProps {
     title?: ITitle | string;
+    disableCloseAfterSave?: boolean;
     onAfterSave?: () => void;
 }
 
@@ -93,6 +94,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({
     selectionApi,
     api,
     title: maybeTitle,
+    disableCloseAfterSave = false,
     onAfterSave: passedOnAfterSave,
     children,
 }) => {
@@ -107,15 +109,17 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({
     let dirtyHandlerApi: IDirtyHandlerApi | undefined;
     const handleSaveClick = () => {
         if (dirtyHandlerApi) {
-            const onAfterSave = passedOnAfterSave ?? (() => api.closeDialog({ delay: true }));
-
             dirtyHandlerApi.submitBindings().then((submitResults: Array<SubmitResult>) => {
                 const failed = submitResults.some((submitResult) => !!submitResult.error);
 
                 if (!failed) {
                     setTimeout(() => {
                         if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
-                        onAfterSave();
+
+                        if (!disableCloseAfterSave) {
+                            api.closeDialog({ delay: true });
+                        }
+                        passedOnAfterSave?.();
                     });
                 }
             });
