@@ -6,7 +6,7 @@ import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { isFile } from "./FolderTableRow";
 import { ArchivedTag } from "./tags/ArchivedTag";
-import { LicenseExpiredTag, LicenseExpiresSoonTag, LicenseNotValidYetTag } from "./tags/LicenseWarningTags";
+import { LicenseValidityTags } from "./tags/LicenseValidityTags";
 import { DamThumbnail } from "./thumbnail/DamThumbnail";
 
 const LabelWrapper = styled("div")`
@@ -60,23 +60,15 @@ const DamLabel = ({ asset, showPath = false, matches, showLicenseWarnings = true
                 {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
             </NameWrapper>
             {isFile(asset) && asset.archived && <ArchivedTag />}
-            {isFile(asset) && showLicenseWarnings && <ValidityTags file={asset} />}
-        </LabelWrapper>
-    );
-};
-
-interface ValidityTagsProps {
-    file: GQLDamFileTableFragment;
-}
-const ValidityTags = ({ file }: ValidityTagsProps) => {
-    return (
-        <>
-            {file.license?.isNotValidYet && <LicenseNotValidYetTag />}
-            {file.license?.expirationDate && file.license?.expiresWithinThirtyDays && (
-                <LicenseExpiresSoonTag expirationDate={file.license?.expirationDate} />
+            {isFile(asset) && showLicenseWarnings && (
+                <LicenseValidityTags
+                    expirationDate={asset.license?.expirationDate}
+                    isNotValidYet={asset.license?.isNotValidYet}
+                    expiresWithinThirtyDays={asset.license?.expiresWithinThirtyDays}
+                    hasExpired={asset.license?.hasExpired}
+                />
             )}
-            {file.license?.hasExpired && <LicenseExpiredTag />}
-        </>
+        </LabelWrapper>
     );
 };
 

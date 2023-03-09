@@ -40,3 +40,20 @@ export const LicenseExpiresSoonTag = ({ expirationDate }: LicenseExpiresSoonTagP
         </Tag>
     );
 };
+
+interface LicenseValidityTagsProps {
+    expirationDate?: Date;
+    isNotValidYet?: boolean;
+    expiresWithinThirtyDays?: boolean;
+    hasExpired?: boolean;
+}
+
+export const LicenseValidityTags = ({ expirationDate, isNotValidYet, expiresWithinThirtyDays, hasExpired }: LicenseValidityTagsProps) => {
+    return (
+        <>
+            {isNotValidYet && <LicenseNotValidYetTag />}
+            {expirationDate && expiresWithinThirtyDays && <LicenseExpiresSoonTag expirationDate={expirationDate} />}
+            {hasExpired && <LicenseExpiredTag />}
+        </>
+    );
+};

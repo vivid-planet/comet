@@ -37,7 +37,7 @@ import {
     GQLUpdateFileMutationVariables,
 } from "../../graphql.generated";
 import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation";
-import { LicenseExpiredTag, LicenseExpiresSoonTag, LicenseNotValidYetTag } from "../Table/tags/LicenseWarningTags";
+import { LicenseValidityTags } from "../Table/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { FilePreview } from "./FilePreview";
@@ -206,11 +206,12 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
                         <ToolbarItem>
-                            {file.license?.isNotValidYet && <LicenseNotValidYetTag />}
-                            {file.license?.expirationDate && file.license?.expiresWithinThirtyDays && (
-                                <LicenseExpiresSoonTag expirationDate={file.license.expirationDate} />
-                            )}
-                            {file.license?.hasExpired && <LicenseExpiredTag />}
+                            <LicenseValidityTags
+                                expirationDate={file.license?.expirationDate}
+                                isNotValidYet={file.license?.isNotValidYet}
+                                expiresWithinThirtyDays={file.license?.expiresWithinThirtyDays}
+                                hasExpired={file.license?.hasExpired}
+                            />
                         </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
