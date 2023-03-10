@@ -95,7 +95,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({
     api,
     title: maybeTitle,
     disableCloseAfterSave = false,
-    onAfterSave: passedOnAfterSave,
+    onAfterSave,
     children,
 }) => {
     const intl = useIntl();
@@ -119,7 +119,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({
                         if (!disableCloseAfterSave) {
                             api.closeDialog({ delay: true });
                         }
-                        passedOnAfterSave?.();
+                        onAfterSave?.();
                     });
                 }
             });
