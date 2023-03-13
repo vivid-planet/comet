@@ -7,6 +7,10 @@ class NewsLinkBlockData extends BlockData {
     id?: string;
 
     indexData(): BlockIndexData {
+        if (this.id === undefined) {
+            return {};
+        }
+
         return {
             dependencies: [
                 {

@@ -231,14 +231,12 @@ describe("transform to save index", () => {
                 blockname: "ImageBlock",
                 jsonPath: "root.blocks.0.props",
                 visible: true,
-                target: {
-                    dependencies: [
-                        {
-                            targetEntityName: "File",
-                            id: "abc",
-                        },
-                    ],
-                },
+                dependencies: [
+                    {
+                        targetEntityName: "File",
+                        id: "abc",
+                    },
+                ],
             },
         ]);
     });

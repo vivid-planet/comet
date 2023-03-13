@@ -58,6 +58,10 @@ class DamVideoBlockData extends BlockData {
     }
 
     indexData(): BlockIndexData {
+        if (this.damFileId === undefined) {
+            return {};
+        }
+
         return {
             dependencies: [
                 {

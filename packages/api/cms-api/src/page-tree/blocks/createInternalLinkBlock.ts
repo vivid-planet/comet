@@ -81,6 +81,10 @@ export function createInternalLinkBlock({
         }
 
         indexData(): BlockIndexData {
+            if (this.targetPageId === undefined) {
+                return {};
+            }
+
             return {
                 dependencies: [
                     {

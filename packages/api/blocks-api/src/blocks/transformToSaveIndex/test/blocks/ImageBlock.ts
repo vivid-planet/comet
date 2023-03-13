@@ -8,6 +8,10 @@ class ImageBlockData extends BlockData {
     damFileId?: string;
 
     indexData(): BlockIndexData {
+        if (this.damFileId === undefined) {
+            return {};
+        }
+
         return {
             dependencies: [
                 {

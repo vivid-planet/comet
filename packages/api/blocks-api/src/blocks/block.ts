@@ -39,7 +39,7 @@ export interface ChildBlockInfo {
 export interface BlockIndexData {
     dependencies?: Array<{
         targetEntityName: string;
-        id?: string;
+        id: string;
     }>;
 }
 export declare type BlockIndexItem = {

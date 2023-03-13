@@ -46,6 +46,10 @@ class SvgImageBlockData extends BlockData {
     }
 
     indexData(): BlockIndexData {
+        if (this.damFileId === undefined) {
+            return {};
+        }
+
         return {
             dependencies: [
                 {
