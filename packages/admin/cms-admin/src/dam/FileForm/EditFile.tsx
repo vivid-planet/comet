@@ -184,15 +184,13 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 },
                 altText: file.altText,
                 title: file.title,
-                license: file.license
-                    ? {
-                          type: file.license.type ?? "NO_LICENSE",
-                          details: file.license.details,
-                          author: file.license.author,
-                          durationFrom: file.license.durationFrom ? Date.parse(file.license.durationFrom) : undefined,
-                          durationTo: file.license.durationTo ? Date.parse(file.license.durationTo) : undefined,
-                      }
-                    : undefined,
+                license: {
+                    type: file.license?.type ?? "NO_LICENSE",
+                    details: file.license?.details,
+                    author: file.license?.author,
+                    durationFrom: file.license?.durationFrom ? Date.parse(file.license?.durationFrom) : undefined,
+                    durationTo: file.license?.durationTo ? Date.parse(file.license?.durationTo) : undefined,
+                },
             }}
             initialValuesEqual={(prevValues, newValues) => isEqual(prevValues, newValues)}
             onAfterSubmit={() => {
@@ -205,14 +203,16 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                     <Toolbar>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
-                        <ToolbarItem>
-                            <LicenseValidityTags
-                                expirationDate={file.license?.expirationDate}
-                                isNotValidYet={file.license?.isNotValidYet}
-                                expiresWithinThirtyDays={file.license?.expiresWithinThirtyDays}
-                                hasExpired={file.license?.hasExpired}
-                            />
-                        </ToolbarItem>
+                        {(file.license?.isNotValidYet || file.license?.expiresWithinThirtyDays || file.license?.hasExpired) && (
+                            <ToolbarItem>
+                                <LicenseValidityTags
+                                    expirationDate={file.license?.expirationDate ? new Date(file.license.expirationDate) : undefined}
+                                    isNotValidYet={file.license?.isNotValidYet}
+                                    expiresWithinThirtyDays={file.license?.expiresWithinThirtyDays}
+                                    hasExpired={file.license?.hasExpired}
+                                />
+                            </ToolbarItem>
+                        )}
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editFileSave">

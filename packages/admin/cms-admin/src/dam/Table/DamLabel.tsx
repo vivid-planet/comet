@@ -62,7 +62,7 @@ const DamLabel = ({ asset, showPath = false, matches, showLicenseWarnings = true
             {isFile(asset) && asset.archived && <ArchivedTag />}
             {isFile(asset) && showLicenseWarnings && (
                 <LicenseValidityTags
-                    expirationDate={asset.license?.expirationDate}
+                    expirationDate={asset.license?.expirationDate ? new Date(asset.license.expirationDate) : undefined}
                     isNotValidYet={asset.license?.isNotValidYet}
                     expiresWithinThirtyDays={asset.license?.expiresWithinThirtyDays}
                     hasExpired={asset.license?.hasExpired}

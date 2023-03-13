@@ -3,7 +3,7 @@ import { Migration } from '@mikro-orm/migrations';
 export class Migration20220905145606 extends Migration {
 
   async up(): Promise<void> {
-    this.addSql('alter table "DamFile" add column "license_type" text check ("license_type" in (\'royalty_free\', \'rights_managed\', \'subscription\', \'micro\')) null, add column "license_details" text null, add column "license_author" text null, add column "license_durationFrom" timestamp with time zone null, add column "license_durationTo" timestamp with time zone null;');
+    this.addSql('alter table "DamFile" add column "license_type" text check ("license_type" in (\'ROYALTY_FREE\', \'RIGHTS_MANAGED\', \'SUBSCRIPTION\', \'MICRO\')) null, add column "license_details" text null, add column "license_author" text null, add column "license_durationFrom" timestamp with time zone null, add column "license_durationTo" timestamp with time zone null;');
   }
 
   async down(): Promise<void> {
