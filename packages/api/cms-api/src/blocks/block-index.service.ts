@@ -52,7 +52,7 @@ export class BlockIndexService {
                             dependenciesObj->>'id' "targetId"
                         FROM "${metadata.tableName}",
                             json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
-                            json_array_elements(indexObj->'target'->'dependencies') dependenciesObj,
+                            json_array_elements(indexObj->'dependencies') dependenciesObj,
                             json_extract_path('${JSON.stringify(targetEntitiesNameData)}', dependenciesObj->>'targetEntityName') targetTableData`;
 
             indexSelects.push(select);
