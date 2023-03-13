@@ -10,7 +10,7 @@
         "serve": "node server.js"
     },
     "engines": {
-        "node": "14",
-        "npm": "7"
+        "node": "18",
+        "npm": "9"
     }
 }
