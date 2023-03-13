@@ -12,7 +12,7 @@ export function transformToSaveIndex(block: Block, blockData: BlockDataInterface
         };
 
         const indexData = c.block.indexData();
-        if (indexData.dependencies && indexData.dependencies?.length > 0) {
+        if (Object.keys(indexData).length > 0) {
             blockIndexItem = { ...blockIndexItem, ...indexData };
         }
 
