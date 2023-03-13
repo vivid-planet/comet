@@ -42,7 +42,7 @@ interface MoveDamItemDialogProps {
     hasErrors?: boolean;
 }
 
-const MoveDamItemDialogInner = ({
+export const MoveDamItemDialog = ({
     open,
     damItemsToMove,
     setMoving,
@@ -131,12 +131,18 @@ const MoveDamItemDialogInner = ({
         setMoving?.(false);
     }, [apolloClient, damItemsToMove, handleHasErrors, selectedId, setMoving]);
 
+    const handleClose = () => {
+        setSelectedId(undefined);
+        setExpandedIds(new Set());
+        setQuery("");
+        onClose();
+    };
+
     return (
         <FixedHeightDialog
             open={open}
             onClose={() => {
-                setSelectedId(undefined);
-                onClose();
+                handleClose();
             }}
             fullWidth
             maxWidth="lg"
@@ -200,7 +206,7 @@ const MoveDamItemDialogInner = ({
                     variant="contained"
                     onClick={async () => {
                         await moveSelected();
-                        onClose();
+                        handleClose();
                     }}
                     disabled={selectedId === undefined}
                     saving={moving}
@@ -217,12 +223,4 @@ const MoveDamItemDialogInner = ({
             </DialogActions>
         </FixedHeightDialog>
     );
-};
-
-export const MoveDamItemDialog = (props: MoveDamItemDialogProps) => {
-    if (!props.open) {
-        return null;
-    }
-
-    return <MoveDamItemDialogInner {...props} />;
 };
