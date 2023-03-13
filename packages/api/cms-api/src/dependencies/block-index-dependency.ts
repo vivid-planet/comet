@@ -17,7 +17,6 @@ export class BlockIndexDependency {
     @Field()
     rootColumnName: string;
 
-    @Field()
     blockname: string;
 
     @Field()

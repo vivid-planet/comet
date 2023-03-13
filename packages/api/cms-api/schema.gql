@@ -99,7 +99,6 @@ type BlockIndexDependency {
   rootId: String!
   rootGraphqlObjectType: String!
   rootColumnName: String!
-  blockname: String!
   jsonPath: String!
   visible: Boolean!
   targetGraphqlObjectType: String!
