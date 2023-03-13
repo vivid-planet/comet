@@ -1,5 +1,5 @@
 import { Archive, Delete, Download, Move, Restore } from "@comet/admin-icons";
-import { Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from "@mui/material";
+import { Chip, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -48,6 +48,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMor
                             <Download />
                         </ListItemIcon>
                         <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download selected" />} />
+                        <NumberSelectedChip num={damSelectionActionsApi.selectionMap.size} />
                     </MenuItem>
                     <StyledDivider />
                     <MenuItem
@@ -60,6 +61,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMor
                             <Move />
                         </ListItemIcon>
                         <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move items" />} />
+                        <NumberSelectedChip num={damSelectionActionsApi.selectionMap.size} />
                     </MenuItem>
                     <MenuItem
                         onClick={() => {
@@ -71,6 +73,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMor
                             <Archive />
                         </ListItemIcon>
                         <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive items" />} />
+                        <NumberSelectedChip num={damSelectionActionsApi.selectionMap.size} />
                     </MenuItem>
                     <MenuItem
                         onClick={() => {
@@ -82,6 +85,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMor
                             <Restore />
                         </ListItemIcon>
                         <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore items" />} />
+                        <NumberSelectedChip num={damSelectionActionsApi.selectionMap.size} />
                     </MenuItem>
                     <MenuItem
                         onClick={() => {
@@ -93,6 +97,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMor
                             <Delete />
                         </ListItemIcon>
                         <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete items" />} />
+                        <NumberSelectedChip num={damSelectionActionsApi.selectionMap.size} />
                     </MenuItem>
                 </MenuList>
             </Menu>
@@ -104,5 +109,25 @@ const StyledDivider = styled(Divider)`
     &.MuiDivider-root {
         border-color: ${({ theme }) => theme.palette.grey["50"]};
         margin: 8px 10px;
+    }
+`;
+
+interface NumberSelectedChipProps {
+    num: number;
+}
+
+const NumberSelectedChip = ({ num }: NumberSelectedChipProps) => {
+    return <StyledChip label={num} />;
+};
+
+const StyledChip = styled(Chip)`
+    height: 24px;
+    margin-left: 10px;
+    border-radius: 12px;
+    padding: 0 10px;
+    background-color: ${({ theme }) => theme.palette.primary.main};
+
+    & .MuiChip-label {
+        padding: 0;
     }
 `;
