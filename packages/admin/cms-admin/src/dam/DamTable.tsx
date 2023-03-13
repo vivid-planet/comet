@@ -34,7 +34,7 @@ import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
 import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
-import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
+import { DamSelectionProvider, useDamSelectionApi } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
@@ -66,6 +66,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const [, , editDialogApi, selectionApi] = useEditDialog();
+    const damSelectionActionsApi = useDamSelectionApi();
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
@@ -101,7 +102,12 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         <ToolbarItem>
                             <DamMoreActions
                                 button={
-                                    <Button variant="text" color="inherit" endIcon={<ChevronDown />}>
+                                    <Button
+                                        variant="text"
+                                        color="inherit"
+                                        endIcon={<ChevronDown />}
+                                        disabled={damSelectionActionsApi.selectionMap.size === 0}
+                                    >
                                         <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
                                     </Button>
                                 }
