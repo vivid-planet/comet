@@ -6,12 +6,12 @@ import { Args, ArgsType, ID, Mutation, ObjectType, Parent, Query, ResolveField, 
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
-import { BlockIndexService } from "../blocks/block-index.service";
-import { BlockIndexDependency } from "../blocks/block-index-dependency";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
+import { BlockIndexService } from "../dependencies/block-index.service";
+import { BlockIndexDependency } from "../dependencies/block-index-dependency";
 import { validateNotModified } from "../document/validateNotModified";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";

@@ -2,8 +2,8 @@ import { Connection, EntityManager } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import * as console from "console";
 
+import { DiscoverService } from "../dependencies/discover.service";
 import { BlockIndexDependency } from "./block-index-dependency";
-import { DiscoverService } from "./discover.service";
 
 @Injectable()
 export class BlockIndexService {

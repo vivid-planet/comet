@@ -4,10 +4,10 @@ import { NotFoundException } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { basename, extname } from "path";
 
-import { BlockIndexService } from "../../blocks/block-index.service";
-import { BlockIndexDependency } from "../../blocks/block-index-dependency";
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
+import { BlockIndexService } from "../../dependencies/block-index.service";
+import { BlockIndexDependency } from "../../dependencies/block-index-dependency";
 import { FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";

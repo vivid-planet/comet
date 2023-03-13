@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
-import { BlockIndexService } from "./block-index.service";
+import { BlockIndexService } from "../dependencies/block-index.service";
 import { BlockMigrateService } from "./block-migrate.service";
 
 @Injectable()

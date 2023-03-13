@@ -1,7 +1,7 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module } from "@nestjs/common";
 
-import { BlobStorageModule, BlocksModule } from "..";
+import { BlobStorageModule } from "..";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam.constants";
@@ -46,7 +46,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, FileImage, ImageCropArea]), BlobStorageModule, BlocksModule],
+            imports: [MikroOrmModule.forFeature([File, Folder, FileImage, ImageCropArea]), BlobStorageModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,

@@ -2,9 +2,9 @@ import { Inject, Type } from "@nestjs/common";
 import { Args, createUnionType, ID, Info, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
-import { BlockIndexService } from "../blocks/block-index.service";
-import { BlockIndexDependency } from "../blocks/block-index-dependency";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
+import { BlockIndexService } from "../dependencies/block-index.service";
+import { BlockIndexDependency } from "../dependencies/block-index-dependency";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
