@@ -26,19 +26,19 @@ export class BlockIndexService {
                     entityName: entity.entityName,
                     tableName: entity.metadata.tableName,
                     primary: entity.metadata.primaryKeys[0],
-                    graphqlObjectType: entity.graphqlMetadata.objectType,
+                    graphqlObjectType: entity.graphqlObjectType,
                 },
             };
         }, {});
 
         for (const rootBlockEntity of this.discoverEntitiesService.discoverRootBlocks()) {
-            const { metadata, column, graphqlMetadata } = rootBlockEntity;
+            const { metadata, column, graphqlObjectType } = rootBlockEntity;
             const primary = metadata.primaryKeys[0];
 
             const select = `SELECT
                             "${metadata.tableName}"."${primary}"  "rootId",
                             '${metadata.name}'                    "rootEntityName",
-                            '${graphqlMetadata.objectType}'       "rootGraphqlObjectType",
+                            '${graphqlObjectType}'                "rootGraphqlObjectType",
                             '${metadata.tableName}'               "rootTableName",
                             '${column}'                           "rootColumnName",
                             '${primary}'                          "rootPrimaryKey",

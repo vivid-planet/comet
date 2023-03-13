@@ -11,9 +11,7 @@ interface DiscoverRootBlocksResult {
     repository: EntityRepository<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>;
-    graphqlMetadata: {
-        objectType: string;
-    };
+    graphqlObjectType?: string;
     column: string;
     block: Block;
     options: RootBlockEntityOptions;
@@ -25,9 +23,7 @@ interface DiscoverTargetEntitiesResult {
     repository: EntityRepository<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>;
-    graphqlMetadata: {
-        objectType: string;
-    };
+    graphqlObjectType?: string;
 }
 
 @Injectable()
@@ -57,10 +53,7 @@ export class DiscoverService {
                     ret.push({
                         repository: this.orm.em.getRepository(entity),
                         metadata: metadataStorage.get(entity.name),
-                        graphqlMetadata: {
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            objectType: this.objectTypesMetadata.find((item) => item.target.name === entity.name)!.name,
-                        },
+                        graphqlObjectType: this.objectTypesMetadata.find((item) => item.target.name === entity.name)?.name,
                         options: rootBlockEntityOptions,
                         column: key,
                         block,
@@ -79,18 +72,12 @@ export class DiscoverService {
         const metadataStorage = this.orm.em.getMetadata();
 
         entities.forEach((entity) => {
-            const targetEntityName = Reflect.getMetadata(`data:blockIndexTargetEntityName`, entity) as string;
-            if (targetEntityName) {
-                ret.push({
-                    entityName: entity.name,
-                    repository: this.orm.em.getRepository(entity.name),
-                    metadata: metadataStorage.get(entity.name),
-                    graphqlMetadata: {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        objectType: this.objectTypesMetadata.find((item) => item.target.name === entity.name)!.name,
-                    },
-                });
-            }
+            ret.push({
+                entityName: entity.name,
+                repository: this.orm.em.getRepository(entity.name),
+                metadata: metadataStorage.get(entity.name),
+                graphqlObjectType: this.objectTypesMetadata.find((item) => item.target.name === entity.name)?.name,
+            });
         });
 
         return ret;
