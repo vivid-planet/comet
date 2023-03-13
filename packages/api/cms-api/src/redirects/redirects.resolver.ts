@@ -193,7 +193,7 @@ export function createRedirectsResolver({
 
         @ResolveField(() => [BlockIndexDependency])
         async dependencies(@Parent() redirect: RedirectInterface): Promise<BlockIndexDependency[]> {
-            return this.blockIndexService.getDependenciesByRootEntityNameAndRootId(Redirect.name, redirect.id);
+            return this.blockIndexService.getDependenciesByRootEntityName(Redirect.name, redirect.id);
         }
     }
 

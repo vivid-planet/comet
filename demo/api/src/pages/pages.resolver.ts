@@ -45,7 +45,7 @@ export class PagesResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependencies(@Parent() page: Page): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependenciesByRootEntityNameAndRootId(Page.name, page.id);
+        return this.blockIndexService.getDependenciesByRootEntityName(Page.name, page.id);
     }
 
     @ResolveField(() => PageTreeNode, { nullable: true })
