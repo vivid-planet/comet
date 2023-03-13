@@ -114,7 +114,7 @@ export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
-export { createInternalLinkBlock } from "./page-tree/blocks/createInternalLinkBlock";
+export { createInternalLinkBlock, InternalLinkBlock } from "./page-tree/blocks/createInternalLinkBlock";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
 export { AttachedDocumentInput, AttachedDocumentStrictInput } from "./page-tree/dto/attached-document.input";
 export { EmptyPageTreeNodeScope } from "./page-tree/dto/empty-page-tree-node-scope";

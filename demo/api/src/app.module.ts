@@ -24,7 +24,6 @@ import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
-import { InternalLinkBlock } from "@src/pages/blocks/InternalLinkBlock";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
@@ -103,7 +102,7 @@ export class AppModule {
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
                 }),
-                RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope, InternalLinkBlock }),
+                RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,
                 }),

@@ -186,6 +186,32 @@ scalar DamImageBlockData
 """NewsContent root block data"""
 scalar NewsContentBlockData
 
+type Link implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: LinkBlockData!
+  createdAt: DateTime!
+}
+
+"""Link root block data"""
+scalar LinkBlockData
+
+type Page implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: PageContentBlockData!
+  seo: SeoBlockData!
+  createdAt: DateTime!
+  dependencies: [BlockIndexDependency!]!
+  pageTreeNode: PageTreeNode
+}
+
+"""PageContent root block data"""
+scalar PageContentBlockData
+
+"""Seo root block data"""
+scalar SeoBlockData
+
 type PageTreeNodeScope {
   domain: String!
   language: String!
@@ -229,32 +255,6 @@ enum UserGroup {
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
-
-type Link implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  content: LinkBlockData!
-  createdAt: DateTime!
-}
-
-"""Link root block data"""
-scalar LinkBlockData
-
-type Page implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  content: PageContentBlockData!
-  seo: SeoBlockData!
-  createdAt: DateTime!
-  dependencies: [BlockIndexDependency!]!
-  pageTreeNode: PageTreeNode
-}
-
-"""PageContent root block data"""
-scalar PageContentBlockData
-
-"""Seo root block data"""
-scalar SeoBlockData
 
 type PaginatedPages {
   nodes: [Page!]!

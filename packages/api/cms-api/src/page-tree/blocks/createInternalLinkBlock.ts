@@ -156,4 +156,6 @@ export function createInternalLinkBlock({
     });
 }
 
-export { InternalLinkBlockDataInterface, InternalLinkBlockInputInterface };
+const DefaultInternalLinkBlock = createInternalLinkBlock({ pageTreeNodeEntityName: "PageTreeNode" });
+
+export { DefaultInternalLinkBlock as InternalLinkBlock, InternalLinkBlockDataInterface, InternalLinkBlockInputInterface };

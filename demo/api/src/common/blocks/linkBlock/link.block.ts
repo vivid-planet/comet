@@ -1,6 +1,6 @@
 import { createOneOfBlock, ExternalLinkBlock, typesafeMigrationPipe } from "@comet/blocks-api";
+import { InternalLinkBlock } from "@comet/cms-api";
 import { NewsLinkBlock } from "@src/news/blocks/news-link.block";
-import { InternalLinkBlock } from "@src/pages/blocks/InternalLinkBlock";
 
 import { RemoveEmptyOptionMigration } from "./migrations/1-remove-empy-option.migration";
 
