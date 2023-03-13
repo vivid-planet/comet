@@ -5,7 +5,7 @@ export function transformToSaveIndex(block: Block, blockData: BlockDataInterface
     const flatBlocks = new FlatBlocks(blockData, { name: block.name, visible: true, rootPath: "root" }); // breadthFirst or depthFirst is equally ok for the app, but the tests for original version are written for depth first traversal
 
     return flatBlocks.depthFirst().map((c) => {
-        const blockIndexItem: BlockIndexItem = {
+        let blockIndexItem: BlockIndexItem = {
             blockname: c.name,
             jsonPath: c.pathToString(),
             visible: c.visible,
@@ -13,7 +13,7 @@ export function transformToSaveIndex(block: Block, blockData: BlockDataInterface
 
         const indexData = c.block.indexData();
         if (indexData.dependencies && indexData.dependencies?.length > 0) {
-            blockIndexItem.target = indexData;
+            blockIndexItem = { ...blockIndexItem, ...indexData };
         }
 
         return blockIndexItem;

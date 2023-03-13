@@ -47,8 +47,7 @@ export declare type BlockIndexItem = {
     blockname: string;
     jsonPath: string;
     visible: boolean;
-    target?: BlockIndexData;
-};
+} & BlockIndexData;
 export declare type BlockIndex = Array<BlockIndexItem>;
 
 export interface BlockDataInterface {
@@ -71,7 +70,7 @@ export abstract class BlockData implements BlockDataInterface {
     }
 
     indexData(): BlockIndexData {
-        return { dependencies: [] };
+        return {};
     }
     childBlocksInfo(): ChildBlockInfo[] {
         const ret: ChildBlockInfo[] = [];
