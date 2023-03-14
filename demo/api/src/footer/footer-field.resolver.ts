@@ -8,6 +8,6 @@ export class FooterFieldResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependencies(@Parent() footer: Footer): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependenciesByRootEntityName(Footer.name, footer.id);
+        return this.blockIndexService.getDependencies({ entityName: Footer.name, id: footer.id });
     }
 }

@@ -76,6 +76,6 @@ export class MainMenuItemResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependencies(@Parent() mainMenuItem: MainMenuItem): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependenciesByRootEntityName(MainMenuItem.name, mainMenuItem.id);
+        return this.blockIndexService.getDependencies({ entityName: MainMenuItem.name, id: mainMenuItem.id });
     }
 }

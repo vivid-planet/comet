@@ -194,7 +194,7 @@ export function createPageTreeResolver({
 
         @ResolveField(() => [BlockIndexDependency])
         async dependents(@Parent() node: PageTreeNodeInterface): Promise<BlockIndexDependency[]> {
-            return this.blockIndexService.getDependentsByTargetEntityName(PageTreeNode.name, node.id);
+            return this.blockIndexService.getDependents({ entityName: PageTreeNode.name, id: node.id });
         }
 
         @Mutation(() => PageTreeNode)

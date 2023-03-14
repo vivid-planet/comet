@@ -77,19 +77,19 @@ export class BlockIndexService {
         console.timeEnd("refresh materialized block dependency");
     }
 
-    async getDependentsByTargetEntityName(targetEntityName: EntityName<unknown>, targetId: string): Promise<BlockIndexDependency[]> {
-        const entityName = Utils.className(targetEntityName);
+    async getDependents(target: { entityName: EntityName<unknown>; id: string }): Promise<BlockIndexDependency[]> {
+        const entityName = Utils.className(target.entityName);
         return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetEntityName" = ? AND idx."targetId" = ?`, [
             entityName,
-            targetId,
+            target.id,
         ]);
     }
 
-    async getDependenciesByRootEntityName(rootEntityName: EntityName<unknown>, rootId: string): Promise<BlockIndexDependency[]> {
-        const entityName = Utils.className(rootEntityName);
+    async getDependencies(root: { entityName: EntityName<unknown>; id: string }): Promise<BlockIndexDependency[]> {
+        const entityName = Utils.className(root.entityName);
         return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."rootEntityName" = ? AND idx."rootId" = ?`, [
             entityName,
-            rootId,
+            root.id,
         ]);
     }
 }
