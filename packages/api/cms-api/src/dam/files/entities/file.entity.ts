@@ -1,9 +1,10 @@
-import { BaseEntity, BigIntType, Cascade, Entity, Index, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, BigIntType, Cascade, Embedded, Entity, Index, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { FileImage } from "./file-image.entity";
 import { Folder } from "./folder.entity";
+import { License } from "./license.embeddable";
 
 export const UniqueNameInFolderIndex = "IDX_unique_name_in_folder";
 export const UniqueNameInRootFolderIndex = "IDX_unique_name_in_root_folder";
@@ -77,6 +78,10 @@ export class File extends BaseEntity<File, "id"> {
         eager: true,
     })
     image?: FileImage;
+
+    @Field(() => License, { nullable: true })
+    @Embedded(() => License, { nullable: true })
+    license?: License;
 
     @Property({
         columnType: "timestamp with time zone",

@@ -1,6 +1,6 @@
 import { PaletteOptions } from "@mui/material/styles";
 
-import { bluePalette, errorPalette, greenPalette, infoPalette, neutrals, successPalette } from "./colors";
+import { bluePalette, errorPalette, greenPalette, infoPalette, neutrals, successPalette, warningPalette } from "./colors";
 
 export const paletteOptions: PaletteOptions = {
     primary: bluePalette,
@@ -22,4 +22,5 @@ export const paletteOptions: PaletteOptions = {
         active: neutrals[400],
         disabled: neutrals[200],
     },
+    warning: warningPalette,
 };

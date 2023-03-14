@@ -12,6 +12,7 @@ import {
     ToolbarActions,
     ToolbarBackButton,
     ToolbarFillSpace,
+    ToolbarItem,
     ToolbarTitleItem,
     useStackApi,
 } from "@comet/admin";
@@ -31,14 +32,16 @@ import {
     GQLDamFileDetailQueryVariables,
     GQLFocalPoint,
     GQLImageCropAreaInput,
+    GQLLicenseInput,
     GQLUpdateFileMutation,
     GQLUpdateFileMutationVariables,
 } from "../../graphql.generated";
 import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation";
+import { LicenseValidityTags } from "../Table/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { FilePreview } from "./FilePreview";
-import { FileSettingsFields } from "./FileSettingsFields";
+import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
 
 export interface EditImageFormValues {
@@ -51,10 +54,14 @@ export interface EditImageFormValues {
     };
 }
 
-interface EditFileFormValues extends EditImageFormValues {
+export interface EditFileFormValues extends EditImageFormValues {
     name: string;
     altText?: string | null;
     title?: string | null;
+    license?:
+        | Omit<GQLLicenseInput, "type"> & {
+              type: LicenseType;
+          };
 }
 
 interface EditFormProps {
@@ -151,6 +158,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                         image: {
                             cropArea,
                         },
+                        license: values.license?.type === "NO_LICENSE" ? null : { ...values.license, type: values.license?.type },
                     },
                 },
             });
@@ -176,6 +184,13 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 },
                 altText: file.altText,
                 title: file.title,
+                license: {
+                    type: file.license?.type ?? "NO_LICENSE",
+                    details: file.license?.details,
+                    author: file.license?.author,
+                    durationFrom: file.license?.durationFrom ? Date.parse(file.license?.durationFrom) : undefined,
+                    durationTo: file.license?.durationTo ? Date.parse(file.license?.durationTo) : undefined,
+                },
             }}
             initialValuesEqual={(prevValues, newValues) => isEqual(prevValues, newValues)}
             onAfterSubmit={() => {
@@ -188,6 +203,16 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                     <Toolbar>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
+                        {(file.license?.isNotValidYet || file.license?.expiresWithinThirtyDays || file.license?.hasExpired) && (
+                            <ToolbarItem>
+                                <LicenseValidityTags
+                                    expirationDate={file.license?.expirationDate ? new Date(file.license.expirationDate) : undefined}
+                                    isNotValidYet={file.license?.isNotValidYet}
+                                    expiresWithinThirtyDays={file.license?.expiresWithinThirtyDays}
+                                    hasExpired={file.license?.hasExpired}
+                                />
+                            </ToolbarItem>
+                        )}
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editFileSave">

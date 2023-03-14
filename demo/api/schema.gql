@@ -52,6 +52,28 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type DamFileLicense {
+  type: LicenseType
+  details: String
+  author: String
+  durationFrom: DateTime
+  durationTo: DateTime
+
+  """The expirationDate is the durationTo + 1 day"""
+  expirationDate: DateTime
+  isNotValidYet: Boolean!
+  expiresWithinThirtyDays: Boolean!
+  hasExpired: Boolean!
+  isValid: Boolean!
+}
+
+enum LicenseType {
+  ROYALTY_FREE
+  RIGHTS_MANAGED
+  SUBSCRIPTION
+  MICRO
+}
+
 type DamFile {
   id: ID!
   folder: DamFolder
@@ -63,6 +85,7 @@ type DamFile {
   altText: String
   archived: Boolean!
   image: DamFileImage
+  license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
   fileUrl: String!
@@ -657,6 +680,7 @@ input UpdateDamFileInput {
   altText: String
   image: UpdateImageFileInput
   folderId: ID
+  license: LicenseInput
 }
 
 input UpdateImageFileInput {
@@ -669,6 +693,14 @@ input ImageCropAreaInput {
   height: Float
   x: Float
   y: Float
+}
+
+input LicenseInput {
+  type: LicenseType
+  details: String
+  author: String
+  durationFrom: DateTime
+  durationTo: DateTime
 }
 
 input CreateDamFolderInput {

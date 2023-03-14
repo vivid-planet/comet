@@ -22,6 +22,7 @@ import {
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { DamItemsResolver } from "./src/dam/files/dam-items.resolver";
+import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
 
@@ -90,6 +91,7 @@ async function generateSchema(): Promise<void> {
         BuildTemplatesResolver,
         redirectsResolver,
         FilesResolver,
+        FileLicensesResolver,
         FileImagesResolver,
         FoldersResolver,
         pageTreeResolver,
