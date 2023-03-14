@@ -350,7 +350,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
 
-        const uploadedItems: Array<{ id: string; parentId?: string; type: "file" | "folder" }> = [];
+        const uploadedFolders: Array<{ id: string; parentId?: string; type: "folder" }> = [];
+        const uploadedFiles: Array<{ id: string; parentId?: string; type: "file" }> = [];
 
         let errorOccurred = false;
         if (fileRejections.length > 0) {
@@ -372,10 +373,10 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
 
             cancelUpload.current = axios.CancelToken.source();
             for (const file of filesToUpload) {
-                const createFoldersValues = await createFoldersIfNecessary(folderIdMap, file, folderId);
-                folderIdMap = createFoldersValues.folderIdMap;
-                uploadedItems.push(
-                    ...createFoldersValues.newlyCreatedFolderIds.map((folder): { id: string; parentId?: string; type: "folder" } => ({
+                const { folderIdMap: newFolderIdMap, newlyCreatedFolderIds } = await createFoldersIfNecessary(folderIdMap, file, folderId);
+                folderIdMap = newFolderIdMap;
+                uploadedFolders.push(
+                    ...newlyCreatedFolderIds.map((folder): { id: string; parentId?: string; type: "folder" } => ({
                         id: folder.id,
                         parentId: folder.parentId,
                         type: "folder",
@@ -399,7 +400,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                         },
                     );
 
-                    uploadedItems.push({ id: response.data.id, parentId: targetFolderId, type: "file" });
+                    uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file" });
                 } catch (err) {
                     errorOccurred = true;
                     const typedErr = err as AxiosError<{ error: string; message: string; statusCode: number }>;
@@ -436,7 +437,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setUploadedSizes({});
         options.onAfterUpload?.(errorOccurred);
 
-        addNewlyUploadedItemIds(uploadedItems);
+        addNewlyUploadedItemIds([...uploadedFolders, ...uploadedFiles]);
     };
 
     return {
