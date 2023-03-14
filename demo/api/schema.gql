@@ -379,7 +379,7 @@ type Query {
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damItemListPosition(id: ID!, type: DamItemTypeLiteral!, args: DamItemPositionInput!): Float!
+  damItemListPosition(id: ID!, type: DamItemType!, args: DamItemPositionInput!): Float!
   damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
@@ -461,7 +461,7 @@ input DamItemFilterInput {
   mimetypes: [String!]
 }
 
-enum DamItemTypeLiteral {
+enum DamItemType {
   File
   Folder
 }
@@ -741,4 +741,5 @@ input ProductInput {
   description: String!
   price: Float
   inStock: Boolean!
+  image: DamImageBlockInput!
 }

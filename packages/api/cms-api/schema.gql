@@ -219,7 +219,7 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damItemListPosition(id: ID!, type: DamItemTypeLiteral!, args: DamItemPositionInput!): Float!
+  damItemListPosition(id: ID!, type: DamItemType!, args: DamItemPositionInput!): Float!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
 }
@@ -304,7 +304,7 @@ input DamItemFilterInput {
   mimetypes: [String!]
 }
 
-enum DamItemTypeLiteral {
+enum DamItemType {
   File
   Folder
 }

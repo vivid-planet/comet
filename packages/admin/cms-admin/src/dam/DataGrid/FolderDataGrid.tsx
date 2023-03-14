@@ -22,7 +22,7 @@ import {
     GQLDamItemListPositionQueryVariables,
     GQLDamItemsListQuery,
     GQLDamItemsListQueryVariables,
-    GQLDamItemTypeLiteral,
+    GQLDamItemType,
 } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { DamConfig, DamFilter } from "../DamTable";
@@ -131,7 +131,7 @@ const FolderDataGrid = ({
                 return;
             }
 
-            let type: GQLDamItemTypeLiteral | undefined;
+            let type: GQLDamItemType | undefined;
             let id: string | undefined;
             let parentId: string | undefined;
             let redirectToSubfolder;

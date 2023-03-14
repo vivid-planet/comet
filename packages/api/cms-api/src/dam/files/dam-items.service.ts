@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { DamItem, DamItemTypeLiteral } from "./dam-items.resolver";
+import { DamItem, DamItemType } from "./dam-items.resolver";
 import { DamItemPositionInput, DamItemsArgs } from "./dto/dam-items.args";
 import { FilesService } from "./files.service";
 import { FoldersService } from "./folders.service";
@@ -50,8 +50,8 @@ export class DamItemsService {
         return [response, foldersTotalCount + filesTotalCount];
     }
 
-    async getDamItemPosition(id: string, type: DamItemTypeLiteral, args: DamItemPositionInput): Promise<number> {
-        if (type === DamItemTypeLiteral.Folder) {
+    async getDamItemPosition(id: string, type: DamItemType, args: DamItemPositionInput): Promise<number> {
+        if (type === DamItemType.Folder) {
             const folderPosition = await this.foldersService.getFolderPosition(id, {
                 parentId: args.folderId,
                 includeArchived: args.includeArchived,

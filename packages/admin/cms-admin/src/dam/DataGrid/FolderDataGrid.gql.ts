@@ -105,7 +105,7 @@ export const moveDamFoldersMutation = gql`
 export const damItemListPosition = gql`
     query DamItemListPosition(
         $id: ID!
-        $type: DamItemTypeLiteral!
+        $type: DamItemType!
         $folderId: ID
         $includeArchived: Boolean
         $filter: DamItemFilterInput

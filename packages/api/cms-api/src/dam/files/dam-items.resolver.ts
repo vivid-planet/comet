@@ -10,12 +10,12 @@ export const DamItem = createUnionType({
     types: () => [File, Folder] as const,
 });
 
-export enum DamItemTypeLiteral {
+export enum DamItemType {
     File = "file",
     Folder = "folder",
 }
-registerEnumType(DamItemTypeLiteral, {
-    name: "DamItemTypeLiteral",
+registerEnumType(DamItemType, {
+    name: "DamItemType",
 });
 
 @ObjectType()
@@ -45,7 +45,7 @@ export class DamItemsResolver {
     @Query(() => Number)
     async damItemListPosition(
         @Args("id", { type: () => ID }) id: string,
-        @Args("type", { type: () => DamItemTypeLiteral }) type: DamItemTypeLiteral,
+        @Args("type", { type: () => DamItemType }) type: DamItemType,
         @Args("args", { type: () => DamItemPositionInput }) args: DamItemPositionInput,
     ): Promise<number> {
         return this.damItemsService.getDamItemPosition(id, type, args);
