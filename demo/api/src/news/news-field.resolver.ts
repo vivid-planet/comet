@@ -15,11 +15,11 @@ export class NewsFieldResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependents(@Parent() news: News): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependents({ entityName: News.name, id: news.id });
+        return this.blockIndexService.getDependents({ entityName: News, id: news.id });
     }
 
     @ResolveField(() => [BlockIndexDependency])
     async dependencies(@Parent() news: News): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependencies({ entityName: News.name, id: news.id });
+        return this.blockIndexService.getDependencies({ entityName: News, id: news.id });
     }
 }
