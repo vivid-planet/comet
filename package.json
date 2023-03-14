@@ -6,6 +6,7 @@
         "packages/api/*",
         "packages/site/*",
         "packages/eslint-config",
+        "packages/eslint-plugin-react",
         "packages/cli",
         "demo/*"
     ],
