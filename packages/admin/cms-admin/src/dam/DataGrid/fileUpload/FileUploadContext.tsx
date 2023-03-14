@@ -1,8 +1,14 @@
 import React from "react";
 
+export interface NewlyUploadedItem {
+    id: string;
+    parentId?: string;
+    type: "file" | "folder";
+}
+
 interface FileUploadContextApi {
-    newlyUploadedItemIds: Array<{ id: string; type: "file" | "folder" }>;
-    addNewlyUploadedItemIds: (newlyUploadedItemIds: Array<{ id: string; type: "file" | "folder" }>) => void;
+    newlyUploadedItemIds: NewlyUploadedItem[];
+    addNewlyUploadedItemIds: (newlyUploadedItemIds: NewlyUploadedItem[]) => void;
 }
 
 const FileUploadContext = React.createContext<FileUploadContextApi>({
@@ -16,7 +22,7 @@ export const useFileUploadContext = () => React.useContext(FileUploadContext);
 
 export const FileUploadContextProvider: React.FunctionComponent = ({ children }) => {
     const timeouts = React.useRef<NodeJS.Timeout[]>([]);
-    const [newlyUploadedItemIds, setNewlyUploadedItemIds] = React.useState<Array<{ id: string; type: "file" | "folder" }>>([]);
+    const [newlyUploadedItemIds, setNewlyUploadedItemIds] = React.useState<NewlyUploadedItem[]>([]);
 
     React.useEffect(() => {
         return () => {
@@ -27,7 +33,7 @@ export const FileUploadContextProvider: React.FunctionComponent = ({ children })
         };
     }, []);
 
-    const addNewlyUploadedItemIds = (itemIds: Array<{ id: string; type: "file" | "folder" }>) => {
+    const addNewlyUploadedItemIds = (itemIds: NewlyUploadedItem[]) => {
         setNewlyUploadedItemIds((newlyUploadedItemIds) => [...itemIds, ...newlyUploadedItemIds]);
 
         const timeout = setTimeout(() => {

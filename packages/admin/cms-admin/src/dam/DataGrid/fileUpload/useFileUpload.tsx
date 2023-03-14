@@ -16,7 +16,7 @@ import {
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
-import { useFileUploadContext } from "./FileUploadContext";
+import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
@@ -55,7 +55,7 @@ export interface FileUploadApi {
         multiple: boolean;
         maxSize: number;
     };
-    newlyUploadedItemIds: Array<{ id: string; parentId?: string; type: "file" | "folder" }>;
+    newlyUploadedItemIds: NewlyUploadedItem[];
 }
 
 export interface FileUploadValidationError {
@@ -350,8 +350,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
 
-        const uploadedFolders: Array<{ id: string; parentId?: string; type: "folder" }> = [];
-        const uploadedFiles: Array<{ id: string; parentId?: string; type: "file" }> = [];
+        const uploadedFolders: Array<NewlyUploadedItem & { type: "folder" }> = [];
+        const uploadedFiles: Array<NewlyUploadedItem & { type: "file" }> = [];
 
         let errorOccurred = false;
         if (fileRejections.length > 0) {
@@ -376,7 +376,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                 const { folderIdMap: newFolderIdMap, newlyCreatedFolderIds } = await createFoldersIfNecessary(folderIdMap, file, folderId);
                 folderIdMap = newFolderIdMap;
                 uploadedFolders.push(
-                    ...newlyCreatedFolderIds.map((folder): { id: string; parentId?: string; type: "folder" } => ({
+                    ...newlyCreatedFolderIds.map((folder): NewlyUploadedItem & { type: "folder" } => ({
                         id: folder.id,
                         parentId: folder.parentId,
                         type: "folder",
