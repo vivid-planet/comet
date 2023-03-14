@@ -1,6 +1,6 @@
 import {
-    BlockIndexDependency,
-    BlockIndexService,
+    DependenciesService,
+    Dependency,
     OffsetBasedPaginationArgs,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
@@ -28,7 +28,7 @@ export class PagesResolver {
     constructor(
         @InjectRepository(Page) private readonly repository: EntityRepository<Page>,
         private readonly pageTreeService: PageTreeService,
-        private readonly blockIndexService: BlockIndexService,
+        private readonly dependenciesService: DependenciesService,
     ) {}
 
     // TODO add scope argument (who uses this anyway? probably dashboard)
@@ -43,9 +43,9 @@ export class PagesResolver {
         return new PaginatedPages(pages, totalCount);
     }
 
-    @ResolveField(() => [BlockIndexDependency])
-    async dependencies(@Parent() page: Page): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependencies(page);
+    @ResolveField(() => [Dependency])
+    async dependencies(@Parent() page: Page): Promise<Dependency[]> {
+        return this.dependenciesService.getDependencies(page);
     }
 
     @ResolveField(() => PageTreeNode, { nullable: true })

@@ -6,8 +6,8 @@ import { basename, extname } from "path";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { BlockIndexService } from "../../dependencies/block-index.service";
-import { BlockIndexDependency } from "../../dependencies/block-index-dependency";
+import { DependenciesService } from "../../dependencies/dependencies.service";
+import { Dependency } from "../../dependencies/dependency";
 import { FileArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
@@ -23,7 +23,7 @@ export class FilesResolver {
     constructor(
         private readonly filesService: FilesService,
         @InjectRepository(File) private readonly filesRepository: EntityRepository<File>,
-        private readonly blockIndexService: BlockIndexService,
+        private readonly dependenciesService: DependenciesService,
     ) {}
 
     @Query(() => PaginatedDamFiles)
@@ -159,8 +159,8 @@ export class FilesResolver {
         return this.filesService.getDamPath(file);
     }
 
-    @ResolveField(() => [BlockIndexDependency])
-    async dependents(@Parent() file: File): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependents(file);
+    @ResolveField(() => [Dependency])
+    async dependents(@Parent() file: File): Promise<Dependency[]> {
+        return this.dependenciesService.getDependents(file);
     }
 }

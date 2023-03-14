@@ -10,8 +10,8 @@ import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
-import { BlockIndexService } from "../dependencies/block-index.service";
-import { BlockIndexDependency } from "../dependencies/block-index-dependency";
+import { DependenciesService } from "../dependencies/dependencies.service";
+import { Dependency } from "../dependencies/dependency";
 import { validateNotModified } from "../document/validateNotModified";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
@@ -58,7 +58,7 @@ export function createRedirectsResolver({
         constructor(
             private readonly redirectService: RedirectsService,
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
-            private readonly blockIndexService: BlockIndexService,
+            private readonly dependenciesService: DependenciesService,
         ) {}
 
         @Query(() => [Redirect], { deprecationReason: "Use paginatedRedirects instead. Will be removed in the next version." })
@@ -191,9 +191,9 @@ export function createRedirectsResolver({
             return true;
         }
 
-        @ResolveField(() => [BlockIndexDependency])
-        async dependencies(@Parent() redirect: RedirectInterface): Promise<BlockIndexDependency[]> {
-            return this.blockIndexService.getDependencies(redirect);
+        @ResolveField(() => [Dependency])
+        async dependencies(@Parent() redirect: RedirectInterface): Promise<Dependency[]> {
+            return this.dependenciesService.getDependencies(redirect);
         }
     }
 

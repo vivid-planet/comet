@@ -96,9 +96,9 @@ export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/v
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
 export { Extension, Gravity, ResizingType } from "./dam/imgproxy/imgproxy.enum";
 export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service";
-export { BlockIndexService } from "./dependencies/block-index.service";
-export { BlockIndexDependency } from "./dependencies/block-index-dependency";
 export { DependenciesModule } from "./dependencies/dependencies.module";
+export { DependenciesService } from "./dependencies/dependencies.service";
+export { Dependency } from "./dependencies/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";

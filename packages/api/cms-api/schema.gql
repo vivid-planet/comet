@@ -64,7 +64,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  dependents: [BlockIndexDependency!]!
+  dependents: [Dependency!]!
 }
 
 type BuildTemplate {
@@ -95,7 +95,7 @@ enum JobStatus {
   failed
 }
 
-type BlockIndexDependency {
+type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
   rootColumnName: String!
@@ -150,7 +150,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents: [BlockIndexDependency!]!
+  dependents: [Dependency!]!
 }
 
 enum PageTreeNodeVisibility {
@@ -194,7 +194,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
-  dependencies: [BlockIndexDependency!]!
+  dependencies: [Dependency!]!
 }
 
 enum RedirectSourceTypeValues {

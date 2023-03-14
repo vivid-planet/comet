@@ -1,7 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
-export class BlockIndexDependency {
+export class Dependency {
     @Field()
     rootId: string;
 

@@ -3,8 +3,8 @@ import { Args, createUnionType, ID, Info, Mutation, Parent, Query, ResolveField,
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
-import { BlockIndexService } from "../dependencies/block-index.service";
-import { BlockIndexDependency } from "../dependencies/block-index-dependency";
+import { DependenciesService } from "../dependencies/dependencies.service";
+import { Dependency } from "../dependencies/dependency";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
@@ -66,7 +66,7 @@ export function createPageTreeResolver({
             protected readonly pageTreeReadApi: PageTreeReadApiService,
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
             private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
-            protected readonly blockIndexService: BlockIndexService,
+            protected readonly dependenciesService: DependenciesService,
         ) {}
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
@@ -192,9 +192,9 @@ export function createPageTreeResolver({
             return this.attachedDocumentLoaderService.load(node);
         }
 
-        @ResolveField(() => [BlockIndexDependency])
-        async dependents(@Parent() node: PageTreeNodeInterface): Promise<BlockIndexDependency[]> {
-            return this.blockIndexService.getDependents(node);
+        @ResolveField(() => [Dependency])
+        async dependents(@Parent() node: PageTreeNodeInterface): Promise<Dependency[]> {
+            return this.dependenciesService.getDependents(node);
         }
 
         @Mutation(() => PageTreeNode)

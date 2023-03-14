@@ -1,6 +1,6 @@
 import {
-    BlockIndexDependency,
-    BlockIndexService,
+    DependenciesService,
+    Dependency,
     PageTreeNodeVisibility,
     PageTreeService,
     RequestContext,
@@ -20,7 +20,7 @@ export class MainMenuItemResolver {
     constructor(
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
         private readonly pageTreeService: PageTreeService,
-        private readonly blockIndexService: BlockIndexService,
+        private readonly dependenciesService: DependenciesService,
     ) {}
 
     @Query(() => MainMenuItem)
@@ -74,8 +74,8 @@ export class MainMenuItemResolver {
         return this.mainMenuItemRepository.findOneOrFail({ node });
     }
 
-    @ResolveField(() => [BlockIndexDependency])
-    async dependencies(@Parent() mainMenuItem: MainMenuItem): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependencies(mainMenuItem);
+    @ResolveField(() => [Dependency])
+    async dependencies(@Parent() mainMenuItem: MainMenuItem): Promise<Dependency[]> {
+        return this.dependenciesService.getDependencies(mainMenuItem);
     }
 }
