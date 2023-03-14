@@ -286,6 +286,7 @@ type Footer implements DocumentInterface {
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
+  dependencies: [BlockIndexDependency!]!
 }
 
 """FooterContent root block data"""

@@ -1,5 +1,4 @@
-import { Connection, EntityManager, Utils } from "@mikro-orm/core";
-import { EntityName } from "@mikro-orm/core/typings";
+import { AnyEntity, Connection, EntityManager } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import * as console from "console";
 
@@ -77,16 +76,16 @@ export class BlockIndexService {
         console.timeEnd("refresh materialized block dependency");
     }
 
-    async getDependents(target: { entityName: EntityName<unknown>; id: string }): Promise<BlockIndexDependency[]> {
-        const entityName = Utils.className(target.entityName);
+    async getDependents(target: AnyEntity<{ id: string }>): Promise<BlockIndexDependency[]> {
+        const entityName = target.constructor.name;
         return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetEntityName" = ? AND idx."targetId" = ?`, [
             entityName,
             target.id,
         ]);
     }
 
-    async getDependencies(root: { entityName: EntityName<unknown>; id: string }): Promise<BlockIndexDependency[]> {
-        const entityName = Utils.className(root.entityName);
+    async getDependencies(root: AnyEntity<{ id: string }>): Promise<BlockIndexDependency[]> {
+        const entityName = root.constructor.name;
         return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."rootEntityName" = ? AND idx."rootId" = ?`, [
             entityName,
             root.id,

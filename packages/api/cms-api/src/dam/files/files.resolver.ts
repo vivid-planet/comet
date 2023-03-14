@@ -161,6 +161,6 @@ export class FilesResolver {
 
     @ResolveField(() => [BlockIndexDependency])
     async dependents(@Parent() file: File): Promise<BlockIndexDependency[]> {
-        return this.blockIndexService.getDependents({ entityName: File, id: file.id });
+        return this.blockIndexService.getDependents(file);
     }
 }
