@@ -17,7 +17,7 @@ import {
     useStoredState,
     useTableQueryFilter,
 } from "@comet/admin";
-import { AddFolder as AddFolderIcon, Domain } from "@comet/admin-icons";
+import { AddFolder as AddFolderIcon, ChevronDown, Domain } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -33,6 +33,8 @@ import FolderDataGrid from "./DataGrid/FolderDataGrid";
 import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
+import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
+import { DamSelectionProvider, useDamSelectionApi } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
@@ -64,6 +66,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const [, , editDialogApi, selectionApi] = useEditDialog();
+    const damSelectionActionsApi = useDamSelectionApi();
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
@@ -96,6 +99,28 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
                         </ToolbarItem>
                         <ToolbarFillSpace />
+                        <ToolbarItem>
+                            <DamMoreActions
+                                button={
+                                    <Button
+                                        variant="text"
+                                        color="inherit"
+                                        endIcon={<ChevronDown />}
+                                        disabled={damSelectionActionsApi.selectionMap.size === 0}
+                                    >
+                                        <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
+                                    </Button>
+                                }
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "left",
+                                }}
+                            />
+                        </ToolbarItem>
                         <ToolbarActions>
                             <Button
                                 variant="text"
@@ -178,7 +203,9 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
             <RedirectToPersistedDamLocation stateKey={damLocationStorageKey ?? "dam-location"}>
                 <FileUploadContextProvider>
                     <ManualDuplicatedFilenamesHandlerContextProvider>
-                        <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                        <DamSelectionProvider>
+                            <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                        </DamSelectionProvider>
                     </ManualDuplicatedFilenamesHandlerContextProvider>
                 </FileUploadContextProvider>
             </RedirectToPersistedDamLocation>

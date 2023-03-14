@@ -1,4 +1,6 @@
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
+import { FetchResult } from "@apollo/client/link/core";
+import { SaveButton } from "@comet/admin";
 import { Move, Reset } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -7,7 +9,16 @@ import { FormattedMessage } from "react-intl";
 
 import { TextMatch } from "../../common/MarkedMatches";
 import { SearchInput } from "../../common/SearchInput";
-import { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "../../graphql.generated";
+import {
+    GQLAllFoldersWithoutFiltersQuery,
+    GQLAllFoldersWithoutFiltersQueryVariables,
+    GQLMoveDamFilesMutation,
+    GQLMoveDamFilesMutationVariables,
+    GQLMoveDamFoldersMutation,
+    GQLMoveDamFoldersMutationVariables,
+} from "../../graphql.generated";
+import { moveDamFilesMutation, moveDamFoldersMutation } from "../DataGrid/FolderDataGrid.gql";
+import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { ChooseFolder } from "./ChooseFolder";
 import { allFoldersQuery } from "./ChooseFolder.gql";
 import { useFolderTree } from "./useFolderTree";
@@ -22,12 +33,25 @@ const FixedHeightDialog = styled(Dialog)`
 export type FolderSearchMatch = TextMatch & { folder: { id: string } };
 
 interface MoveDamItemDialogProps {
-    onClose: (event: React.SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
-    onChooseFolder: (folderId: string | null) => void;
-    numberOfItems: number;
+    damItemsToMove: Array<{ id: string; type: "file" | "folder" }>;
+    setMoving?: (moving: boolean) => void;
+    handleHasErrors?: (hasErrors: boolean) => void;
+    open: boolean;
+    onClose: () => void;
+    moving?: boolean;
+    hasErrors?: boolean;
 }
 
-export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: MoveDamItemDialogProps) => {
+export const MoveDamItemDialog = ({
+    open,
+    damItemsToMove,
+    setMoving,
+    handleHasErrors,
+    onClose,
+    moving = false,
+    hasErrors = false,
+}: MoveDamItemDialogProps) => {
+    const apolloClient = useApolloClient();
     const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
         fetchPolicy: "network-only",
     });
@@ -57,8 +81,72 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: Mo
         setExpandedIds,
     });
 
+    const moveSelected = React.useCallback(async () => {
+        if (selectedId === undefined) {
+            return;
+        }
+
+        setMoving?.(true);
+
+        const fileIds = damItemsToMove.filter((item) => item.type === "file").map((item) => item.id);
+        const folderIds = damItemsToMove.filter((item) => item.type === "folder").map((item) => item.id);
+
+        const mutations: Array<Promise<FetchResult>> = [];
+
+        if (fileIds.length > 0) {
+            mutations.push(
+                apolloClient.mutate<GQLMoveDamFilesMutation, GQLMoveDamFilesMutationVariables>({
+                    mutation: moveDamFilesMutation,
+                    variables: {
+                        fileIds,
+                        targetFolderId: selectedId,
+                    },
+                    errorPolicy: "all",
+                }),
+            );
+        }
+
+        if (folderIds.length > 0) {
+            mutations.push(
+                apolloClient.mutate<GQLMoveDamFoldersMutation, GQLMoveDamFoldersMutationVariables>({
+                    mutation: moveDamFoldersMutation,
+                    variables: {
+                        folderIds,
+                        targetFolderId: selectedId,
+                    },
+                    errorPolicy: "all",
+                }),
+            );
+        }
+
+        const promiseResults = await Promise.all(mutations);
+        const hasErrors = promiseResults.filter((result) => result.errors !== undefined).length > 0;
+
+        if (hasErrors) {
+            handleHasErrors?.(hasErrors);
+        } else {
+            clearDamItemCache(apolloClient.cache);
+        }
+
+        setMoving?.(false);
+    }, [apolloClient, damItemsToMove, handleHasErrors, selectedId, setMoving]);
+
+    const handleClose = () => {
+        setSelectedId(undefined);
+        setExpandedIds(new Set());
+        setQuery("");
+        onClose();
+    };
+
     return (
-        <FixedHeightDialog open={true} onClose={onClose} fullWidth maxWidth="lg">
+        <FixedHeightDialog
+            open={open}
+            onClose={() => {
+                handleClose();
+            }}
+            fullWidth
+            maxWidth="lg"
+        >
             <DialogTitle>
                 <FormattedMessage id="comet.dam.moveDamItemDialog.selectTargetFolder" defaultMessage="Select target folder" />
             </DialogTitle>
@@ -113,24 +201,25 @@ export const MoveDamItemDialog = ({ onClose, onChooseFolder, numberOfItems }: Mo
                 >
                     <FormattedMessage id="comet.dam.moveDamItemDialog.startOver" defaultMessage="Start over" />
                 </Button>
-                <Button
+                <SaveButton
                     startIcon={<Move />}
                     variant="contained"
-                    onClick={() => {
-                        if (selectedId !== undefined) {
-                            onChooseFolder(selectedId);
-                        }
+                    onClick={async () => {
+                        await moveSelected();
+                        handleClose();
                     }}
                     disabled={selectedId === undefined}
+                    saving={moving}
+                    hasErrors={hasErrors}
                 >
                     <FormattedMessage
                         id="comet.dam.moveDamItemDialog.moveItems"
                         defaultMessage="Move {num, plural, one {item} other {items}}"
                         values={{
-                            num: numberOfItems,
+                            num: damItemsToMove.length,
                         }}
                     />
-                </Button>
+                </SaveButton>
             </DialogActions>
         </FixedHeightDialog>
     );
