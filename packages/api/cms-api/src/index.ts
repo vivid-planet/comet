@@ -115,7 +115,7 @@ export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
-export { createInternalLinkBlock, InternalLinkBlock } from "./page-tree/blocks/createInternalLinkBlock";
+export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
 export { AttachedDocumentInput, AttachedDocumentStrictInput } from "./page-tree/dto/attached-document.input";
 export { EmptyPageTreeNodeScope } from "./page-tree/dto/empty-page-tree-node-scope";
@@ -128,7 +128,7 @@ export {
 } from "./page-tree/dto/page-tree-node.input";
 export { AttachedDocument } from "./page-tree/entities/attached-document.entity";
 export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entity";
-export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
+export { PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";

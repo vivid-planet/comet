@@ -2,7 +2,7 @@ import { Block, createOneOfBlock, ExternalLinkBlock, OneOfBlock } from "@comet/b
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
-import { InternalLinkBlock, InternalLinkBlockDataInterface, InternalLinkBlockInputInterface } from "../page-tree/blocks/createInternalLinkBlock";
+import { InternalLinkBlock, InternalLinkBlockData, InternalLinkBlockInput } from "../page-tree/blocks/internal-link.block";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
 import { createRedirectsResolver } from "./redirects.resolver";
@@ -12,7 +12,7 @@ import { RedirectScopeInterface } from "./types";
 type CustomTargets = Record<string, Block>;
 
 export type RedirectsLinkBlock = OneOfBlock<
-    CustomTargets & { internal: Block<InternalLinkBlockDataInterface, InternalLinkBlockInputInterface>; external: typeof ExternalLinkBlock }
+    CustomTargets & { internal: Block<InternalLinkBlockData, InternalLinkBlockInput>; external: typeof ExternalLinkBlock }
 >;
 
 export const REDIRECTS_LINK_BLOCK = "REDIRECTS_LINK_BLOCK";
@@ -20,15 +20,14 @@ export const REDIRECTS_LINK_BLOCK = "REDIRECTS_LINK_BLOCK";
 interface Config {
     customTargets?: CustomTargets;
     Scope?: Type<RedirectScopeInterface>;
-    InternalLinkBlock?: Block<InternalLinkBlockDataInterface, InternalLinkBlockInputInterface>;
 }
 @Global()
 @Module({})
 export class RedirectsModule {
-    static register({ customTargets, Scope, InternalLinkBlock: CustomInternalLinkBlock }: Config): DynamicModule {
+    static register({ customTargets, Scope }: Config): DynamicModule {
         const linkBlock = createOneOfBlock(
             {
-                supportedBlocks: { internal: CustomInternalLinkBlock ?? InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
+                supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
                 allowEmpty: false,
             },
             "RedirectsLink",
