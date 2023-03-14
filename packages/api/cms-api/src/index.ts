@@ -128,7 +128,7 @@ export {
 } from "./page-tree/dto/page-tree-node.input";
 export { AttachedDocument } from "./page-tree/entities/attached-document.entity";
 export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entity";
-export { PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
+export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
