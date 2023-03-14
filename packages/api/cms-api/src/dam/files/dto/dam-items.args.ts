@@ -1,9 +1,24 @@
-import { ArgsType, Field, ID, InputType, IntersectionType } from "@nestjs/graphql";
+import { ArgsType, createUnionType, Field, ID, InputType, IntersectionType, registerEnumType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
 import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
-import { SortArgs, SortInput } from "../../../common/sorting/sort.args";
+import { SortArgs } from "../../../common/sorting/sort.args";
+import { File } from "../entities/file.entity";
+import { Folder } from "../entities/folder.entity";
+
+export const DamItem = createUnionType({
+    name: "DamItem",
+    types: () => [File, Folder] as const,
+});
+
+export enum DamItemType {
+    File = "File",
+    Folder = "Folder",
+}
+registerEnumType(DamItemType, {
+    name: "DamItemType",
+});
 
 @InputType()
 export class DamItemFilterInput {
@@ -37,8 +52,16 @@ export class DamItemsArgs extends IntersectionType(OffsetBasedPaginationArgs, So
     filter?: DamItemFilterInput;
 }
 
-@InputType()
-export class DamItemPositionInput extends SortInput {
+@ArgsType()
+export class DamItemPositionArgs extends SortArgs {
+    @Field(() => ID)
+    @IsUUID()
+    id: string;
+
+    @Field(() => DamItemType)
+    @IsEnum(DamItemType)
+    type: DamItemType;
+
     @Field(() => ID, { nullable: true })
     @IsOptional()
     @IsUUID()

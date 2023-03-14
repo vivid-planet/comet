@@ -115,13 +115,11 @@ export const damItemListPosition = gql`
         damItemListPosition(
             id: $id
             type: $type
-            args: {
-                folderId: $folderId
-                includeArchived: $includeArchived
-                filter: $filter
-                sortColumnName: $sortColumnName
-                sortDirection: $sortDirection
-            }
+            folderId: $folderId
+            includeArchived: $includeArchived
+            filter: $filter
+            sortColumnName: $sortColumnName
+            sortDirection: $sortDirection
         )
     }
 `;

@@ -21,7 +21,7 @@ import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
-import { DamFileListPositionInput, FileArgs } from "./dto/file.args";
+import { DamFileListPositionArgs, FileArgs } from "./dto/file.args";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
@@ -309,7 +309,7 @@ export class FilesService {
         return result;
     }
 
-    async getFilePosition(fileId: string, args: DamFileListPositionInput): Promise<number> {
+    async getFilePosition(fileId: string, args: DamFileListPositionArgs): Promise<number> {
         const isSearching = args.filter?.searchText !== undefined && args.filter.searchText.length > 0;
 
         const subQb = withFilesSelect(

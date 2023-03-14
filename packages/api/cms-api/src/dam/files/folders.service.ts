@@ -5,7 +5,7 @@ import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { DamFolderListPositionInput, FolderArgs } from "./dto/folder.args";
+import { DamFolderListPositionArgs, FolderArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { Folder } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
@@ -219,7 +219,7 @@ export class FoldersService {
         return result === 1;
     }
 
-    async getFolderPosition(folderId: string, args: DamFolderListPositionInput): Promise<number> {
+    async getFolderPosition(folderId: string, args: DamFolderListPositionArgs): Promise<number> {
         const subQb = withFoldersSelect(
             this.foldersRepository
                 .createQueryBuilder("folder")
