@@ -10,10 +10,11 @@ export interface RowActionsIconItemComponentsProps {
 
 export interface RowActionsIconItemProps extends CommonRowActionItemProps {
     componentsProps?: RowActionsIconItemComponentsProps;
+    tooltip?: React.ReactNode;
 }
 
 export const RowActionsIconItem = React.forwardRef<HTMLButtonElement, RowActionsIconItemProps>(
-    ({ icon, text, componentsProps = {}, ...restIconButtonProps }, ref) => {
+    ({ icon, tooltip, componentsProps = {}, ...restIconButtonProps }, ref) => {
         const { tooltip: tooltipProps, iconButton: iconButtonProps } = componentsProps;
         const button = (
             <IconButton {...restIconButtonProps} {...iconButtonProps} ref={ref}>
@@ -21,9 +22,9 @@ export const RowActionsIconItem = React.forwardRef<HTMLButtonElement, RowActions
             </IconButton>
         );
 
-        if (text) {
+        if (tooltip) {
             return (
-                <Tooltip title={text} {...tooltipProps}>
+                <Tooltip title={tooltip} {...tooltipProps}>
                     {button}
                 </Tooltip>
             );

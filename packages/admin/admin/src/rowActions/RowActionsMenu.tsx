@@ -2,7 +2,9 @@ import * as React from "react";
 
 import { RowActionsSubMenu, RowActionsSubMenuProps } from "./RowActionsSubMenu";
 
-export type RowActionsMenuProps = Omit<RowActionsSubMenuProps, "menuIsOpen" | "openMenu" | "closeMenu">;
+export type RowActionsMenuProps = Omit<RowActionsSubMenuProps, "menuIsOpen" | "openMenu" | "closeMenu"> & {
+    text?: React.ReactNode;
+};
 
 export const RowActionsMenu = (props: RowActionsMenuProps): React.ReactElement => {
     const [menuIsOpen, setMenuIsOpen] = React.useState(false);

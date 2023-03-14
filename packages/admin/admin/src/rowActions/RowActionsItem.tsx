@@ -6,7 +6,6 @@ import { RowActionsMenuContext } from "./RowActionsMenu";
 
 export interface CommonRowActionItemProps {
     icon?: React.ReactNode;
-    text?: React.ReactNode;
     onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
@@ -14,16 +13,17 @@ export type RowActionsItemPropsComponentsProps = RowActionsIconItemComponentsPro
 
 export interface RowActionsItemProps extends Omit<RowActionsIconItemProps, "componentsProps">, Omit<RowActionsListItemProps, "componentsProps"> {
     componentsProps?: RowActionsItemPropsComponentsProps;
+    children?: React.ReactNode;
 }
 
-export const RowActionsItem = ({ icon, text, onClick, componentsProps, ...restListItemProps }: RowActionsItemProps) => {
+export const RowActionsItem = ({ icon, children, onClick, componentsProps, ...restListItemProps }: RowActionsItemProps) => {
     const { level, closeAllMenus } = React.useContext(RowActionsMenuContext);
 
     if (level === 1) {
         return (
             <RowActionsIconItem
                 icon={icon}
-                text={text}
+                tooltip={children}
                 onClick={onClick}
                 componentsProps={{ iconButton: componentsProps?.iconButton, tooltip: componentsProps?.tooltip }}
             />
@@ -33,7 +33,6 @@ export const RowActionsItem = ({ icon, text, onClick, componentsProps, ...restLi
     return (
         <RowActionsListItem
             icon={icon}
-            text={text}
             onClick={(event) => {
                 onClick?.(event);
                 closeAllMenus?.();
@@ -44,6 +43,8 @@ export const RowActionsItem = ({ icon, text, onClick, componentsProps, ...restLi
                 listItemText: componentsProps?.listItemText,
             }}
             {...restListItemProps}
-        />
+        >
+            {children}
+        </RowActionsListItem>
     );
 };

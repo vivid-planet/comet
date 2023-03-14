@@ -24,17 +24,19 @@ storiesOf("stories/components/RowActions/RowActions", module)
     .add("Edit & Context Menu Example", () => {
         return (
             <RowActionsMenu>
-                <RowActionsItem text="Edit" icon={<Edit />} componentsProps={{ iconButton: { color: "primary" } }} />
+                <RowActionsItem icon={<Edit />} componentsProps={{ iconButton: { color: "primary" } }}>
+                    Edit
+                </RowActionsItem>
                 <RowActionsMenu>
-                    <RowActionsItem text="Copy" icon={<Copy />} />
-                    <RowActionsItem text="Paste" icon={<Paste />} />
+                    <RowActionsItem icon={<Copy />}>Copy</RowActionsItem>
+                    <RowActionsItem icon={<Paste />}>Paste</RowActionsItem>
                     <RowActionsMenu text="More" icon={<Settings />}>
-                        <RowActionsItem text="Additional Item 1" icon={<Online />} />
-                        <RowActionsItem text="Additional Item 2" icon={<Online />} />
-                        <RowActionsItem text="Additional Item 3" icon={<Online />} />
+                        <RowActionsItem icon={<Online />}>Additional Item 1</RowActionsItem>
+                        <RowActionsItem icon={<Online />}>Additional Item 2</RowActionsItem>
+                        <RowActionsItem icon={<Online />}>Additional Item 3</RowActionsItem>
                     </RowActionsMenu>
                     <Divider />
-                    <RowActionsItem text="Delete" icon={<Delete />} />
+                    <RowActionsItem icon={<Delete />}>Delete</RowActionsItem>
                 </RowActionsMenu>
             </RowActionsMenu>
         );
@@ -42,34 +44,36 @@ storiesOf("stories/components/RowActions/RowActions", module)
     .add("More Complex & Deeply Nested Example", () => {
         return (
             <RowActionsMenu>
-                <RowActionsItem text="Level 0, item 1" icon={<Add />} />
-                <RowActionsItem text="Level 0, item 2" icon={<Accept />} />
-                <RowActionsItem text="Level 0, item 3" icon={<Info />} />
+                <RowActionsItem icon={<Add />}>Level 0, item 1</RowActionsItem>
+                <RowActionsItem icon={<Accept />}>Level 0, item 2</RowActionsItem>
+                <RowActionsItem icon={<Info />}>Level 0, item 3</RowActionsItem>
                 <RowActionsMenu>
-                    <RowActionsItem text="Level 1, item 1" icon={<FileData />} />
-                    <RowActionsItem text="Level 1, item 2" icon={<FileData />} />
-                    <RowActionsItem text="Level 1, item 3" textSecondary="Additional Text" icon={<FileData />} endIcon={<LinkExternal />} />
+                    <RowActionsItem icon={<FileData />}>Level 1, item 1</RowActionsItem>
+                    <RowActionsItem icon={<FileData />}>Level 1, item 2</RowActionsItem>
+                    <RowActionsItem textSecondary="Additional Text" icon={<FileData />} endIcon={<LinkExternal />}>
+                        Level 1, item 3
+                    </RowActionsItem>
                     <Divider />
                     <RowActionsMenu text="Submenu 1/1" textSecondary="Additional Text" icon={<Favorite />}>
-                        <RowActionsItem text="Level 2, item 1" icon={<Favorite />} />
-                        <RowActionsItem text="Level 2, item 2" icon={<Favorite />} />
-                        <RowActionsItem text="Level 2, item 3" icon={<Favorite />} />
+                        <RowActionsItem icon={<Favorite />}>Level 2, item 1</RowActionsItem>
+                        <RowActionsItem icon={<Favorite />}>Level 2, item 2</RowActionsItem>
+                        <RowActionsItem icon={<Favorite />}>Level 2, item 3</RowActionsItem>
                         <Divider />
                         <RowActionsMenu text="Submenu 2" icon={<Favorite />}>
-                            <RowActionsItem text="Level 3, item 1" icon={<Favorite />} />
-                            <RowActionsItem text="Level 3, item 2" icon={<Favorite />} />
-                            <RowActionsItem text="Level 3, item 3" icon={<Favorite />} />
+                            <RowActionsItem icon={<Favorite />}>Level 3, item 1</RowActionsItem>
+                            <RowActionsItem icon={<Favorite />}>Level 3, item 2</RowActionsItem>
+                            <RowActionsItem icon={<Favorite />}>Level 3, item 3</RowActionsItem>
                         </RowActionsMenu>
                     </RowActionsMenu>
                     <RowActionsMenu text="Submenu 1/2" icon={<BallTriangle />}>
-                        <RowActionsItem text="Level 2, item 1" icon={<BallTriangle />} />
-                        <RowActionsItem text="Level 2, item 2" icon={<BallTriangle />} />
-                        <RowActionsItem text="Level 2, item 3" icon={<BallTriangle />} />
+                        <RowActionsItem icon={<BallTriangle />}>Level 2, item 1</RowActionsItem>
+                        <RowActionsItem icon={<BallTriangle />}>Level 2, item 2</RowActionsItem>
+                        <RowActionsItem icon={<BallTriangle />}>Level 2, item 3</RowActionsItem>
                         <Divider />
                         <RowActionsMenu text="Submenu 2" icon={<BallTriangle />}>
-                            <RowActionsItem text="Level 3, item 1" icon={<BallTriangle />} />
-                            <RowActionsItem text="Level 3, item 2" icon={<BallTriangle />} />
-                            <RowActionsItem text="Level 3, item 3" icon={<BallTriangle />} />
+                            <RowActionsItem icon={<BallTriangle />}>Level 3, item 1</RowActionsItem>
+                            <RowActionsItem icon={<BallTriangle />}>Level 3, item 2</RowActionsItem>
+                            <RowActionsItem icon={<BallTriangle />}>Level 3, item 3</RowActionsItem>
                         </RowActionsMenu>
                     </RowActionsMenu>
                 </RowActionsMenu>

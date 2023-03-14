@@ -42,17 +42,18 @@ export const RowActionsSubMenu = ({
     return (
         <>
             {showMenuButtonAsIconButton ? (
-                <RowActionsIconItem onClick={openMenu} icon={icon} text={text} ref={menuIconItemButtonRef} {...rowActionsIconItemProps} />
+                <RowActionsIconItem onClick={openMenu} icon={icon} tooltip={text} ref={menuIconItemButtonRef} {...rowActionsIconItemProps} />
             ) : (
                 <RowActionsListItem
                     onClick={openMenu}
                     icon={icon}
-                    text={text}
                     textSecondary={textSecondary}
                     endIcon={endIcon}
                     ref={menuListItemButtonRef}
                     {...rowActionsListItemProps}
-                />
+                >
+                    {text}
+                </RowActionsListItem>
             )}
             <Menu
                 anchorEl={showMenuButtonAsIconButton ? menuIconItemButtonRef.current : menuListItemButtonRef.current}
