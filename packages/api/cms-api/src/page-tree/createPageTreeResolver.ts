@@ -97,15 +97,11 @@ export function createPageTreeResolver({
 
         @Query(() => PaginatedPageTreeNodes)
         async paginatedPageTreeNodes(@Args() { scope, category, sort, offset, limit }: PaginatedPageTreeNodesArgs): Promise<PaginatedPageTreeNodes> {
-            const [entities, count] = await this.pageTreeReadApi.getPaginatedNodes({
-                scope: nonEmptyScopeOrNothing(scope),
-                category,
-                sort,
-                offset,
-                limit,
-            });
+            await this.pageTreeReadApi.preloadNodes(scope);
+            const nodes = await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category, offset, limit, sort });
+            const count = await this.pageTreeReadApi.getNodesCount({ scope: nonEmptyScopeOrNothing(scope), category });
 
-            return new PaginatedPageTreeNodes(entities, count);
+            return new PaginatedPageTreeNodes(nodes, count);
         }
 
         @Query(() => SlugAvailability)

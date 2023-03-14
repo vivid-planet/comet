@@ -28,6 +28,7 @@ export class DocumentSubscriberFactory {
 
                 if (pageTreeNode) {
                     pageTreeNode.updatedAt = new Date();
+                    await this.em.flush();
                 }
             }
         }
