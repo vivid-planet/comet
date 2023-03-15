@@ -7,14 +7,14 @@ export interface NewlyUploadedItem {
 }
 
 interface FileUploadContextApi {
-    newlyUploadedItemIds: NewlyUploadedItem[];
-    addNewlyUploadedItemIds: (newlyUploadedItemIds: NewlyUploadedItem[]) => void;
+    newlyUploadedItems: NewlyUploadedItem[];
+    addNewlyUploadedItems: (newlyUploadedItems: NewlyUploadedItem[]) => void;
 }
 
 const FileUploadContext = React.createContext<FileUploadContextApi>({
-    newlyUploadedItemIds: [],
-    addNewlyUploadedItemIds: () => {
-        console.warn("If you want to track newlyUploadedItemIds, FileUploadContextProvider has to be defined higher up in the tree");
+    newlyUploadedItems: [],
+    addNewlyUploadedItems: () => {
+        console.warn("If you want to track newlyUploadedItems, FileUploadContextProvider has to be defined higher up in the tree");
     },
 });
 
@@ -22,23 +22,23 @@ export const useFileUploadContext = () => React.useContext(FileUploadContext);
 
 export const FileUploadContextProvider: React.FunctionComponent = ({ children }) => {
     const timeouts = React.useRef<NodeJS.Timeout[]>([]);
-    const [newlyUploadedItemIds, setNewlyUploadedItemIds] = React.useState<NewlyUploadedItem[]>([]);
+    const [newlyUploadedItems, setNewlyUploadedItems] = React.useState<NewlyUploadedItem[]>([]);
 
     React.useEffect(() => {
         return () => {
             for (const timeout of timeouts.current) {
                 clearTimeout(timeout);
             }
-            setNewlyUploadedItemIds([]);
+            setNewlyUploadedItems([]);
         };
     }, []);
 
-    const addNewlyUploadedItemIds = (itemIds: NewlyUploadedItem[]) => {
-        setNewlyUploadedItemIds((newlyUploadedItemIds) => [...itemIds, ...newlyUploadedItemIds]);
+    const addNewlyUploadedItems = (items: NewlyUploadedItem[]) => {
+        setNewlyUploadedItems((newlyUploadedItems) => [...items, ...newlyUploadedItems]);
 
         const timeout = setTimeout(() => {
             // remove uploaded items automatically after 5 seconds
-            setNewlyUploadedItemIds((newlyUploadedItemIds) => newlyUploadedItemIds.filter((itemId) => !itemIds.includes(itemId)));
+            setNewlyUploadedItems((newlyUploadedItems) => newlyUploadedItems.filter((itemId) => !items.includes(itemId)));
 
             timeouts.current = timeouts.current.filter((t) => t !== timeout);
         }, 10000);
@@ -46,5 +46,9 @@ export const FileUploadContextProvider: React.FunctionComponent = ({ children })
         timeouts.current.push(timeout);
     };
 
-    return <FileUploadContext.Provider value={{ newlyUploadedItemIds, addNewlyUploadedItemIds }}>{children}</FileUploadContext.Provider>;
+    return (
+        <FileUploadContext.Provider value={{ newlyUploadedItems, addNewlyUploadedItems: addNewlyUploadedItems }}>
+            {children}
+        </FileUploadContext.Provider>
+    );
 };

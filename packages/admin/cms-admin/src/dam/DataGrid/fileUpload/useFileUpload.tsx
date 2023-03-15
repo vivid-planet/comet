@@ -55,7 +55,7 @@ export interface FileUploadApi {
         multiple: boolean;
         maxSize: number;
     };
-    newlyUploadedItemIds: NewlyUploadedItem[];
+    newlyUploadedItems: NewlyUploadedItem[];
 }
 
 export interface FileUploadValidationError {
@@ -124,7 +124,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         return acceptObj;
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
 
-    const { newlyUploadedItemIds, addNewlyUploadedItemIds } = useFileUploadContext();
+    const { newlyUploadedItems, addNewlyUploadedItems } = useFileUploadContext();
 
     const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
     const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
@@ -437,7 +437,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         setUploadedSizes({});
         options.onAfterUpload?.(errorOccurred);
 
-        addNewlyUploadedItemIds([...uploadedFolders, ...uploadedFiles]);
+        addNewlyUploadedItems([...uploadedFolders, ...uploadedFiles]);
     };
 
     return {
@@ -462,6 +462,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
             multiple: true,
             maxSize: maxFileSizeInBytes,
         },
-        newlyUploadedItemIds,
+        newlyUploadedItems,
     };
 };

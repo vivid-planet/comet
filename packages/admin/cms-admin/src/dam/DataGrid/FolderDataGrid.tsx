@@ -127,7 +127,7 @@ const FolderDataGrid = ({
 
     React.useEffect(() => {
         async function navigateToNewlyUploadedItems() {
-            if (fileUploadApi.newlyUploadedItemIds.length === 0) {
+            if (fileUploadApi.newlyUploadedItems.length === 0) {
                 return;
             }
 
@@ -136,8 +136,8 @@ const FolderDataGrid = ({
             let parentId: string | undefined;
             let redirectToSubfolder;
 
-            if (fileUploadApi.newlyUploadedItemIds.find((item) => item.type === "folder")) {
-                const folders = fileUploadApi.newlyUploadedItemIds.filter((item) => item.type === "folder");
+            if (fileUploadApi.newlyUploadedItems.find((item) => item.type === "folder")) {
+                const folders = fileUploadApi.newlyUploadedItems.filter((item) => item.type === "folder");
                 const firstFolder = folders[0];
 
                 type = "Folder";
@@ -153,7 +153,7 @@ const FolderDataGrid = ({
                     redirectToSubfolder = true;
                 }
             } else {
-                const files = fileUploadApi.newlyUploadedItemIds;
+                const files = fileUploadApi.newlyUploadedItems;
                 const firstFile = files[0];
 
                 type = "File";
@@ -171,7 +171,7 @@ const FolderDataGrid = ({
             }
 
             if (id === redirectedToId) {
-                // otherwise it's not possible to navigate to another folder while the new item is in newlyUploadedItemIds
+                // otherwise it's not possible to navigate to another folder while the new item is in newlyUploadedItems
                 // because it always automatically redirects to the new item
                 return;
             }
@@ -206,9 +206,9 @@ const FolderDataGrid = ({
 
         navigateToNewlyUploadedItems();
 
-        // useEffect dependencies must only include `newlyUploadedItemIds`, because the function should only be called once after new items are added.
+        // useEffect dependencies must only include `newlyUploadedItems`, because the function should only be called once after new items are added.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fileUploadApi.newlyUploadedItemIds]);
+    }, [fileUploadApi.newlyUploadedItems]);
 
     const [hoveredId, setHoveredId] = React.useState<string | null>(null);
 
@@ -284,7 +284,7 @@ const FolderDataGrid = ({
                     error={error}
                     rowsPerPageOptions={[10, 20, 50]}
                     getRowClassName={({ row }) => {
-                        if (fileUploadApi.newlyUploadedItemIds.find((newItem) => newItem.id === row.id)) {
+                        if (fileUploadApi.newlyUploadedItems.find((newItem) => newItem.id === row.id)) {
                             return "CometDataGridRow--highlighted";
                         }
 
@@ -316,7 +316,7 @@ const FolderDataGrid = ({
                                             hideHoverStyles,
                                             isHovered: hoveredId === row.id,
                                         }}
-                                        scrollIntoView={fileUploadApi.newlyUploadedItemIds[0]?.id === row.id}
+                                        scrollIntoView={fileUploadApi.newlyUploadedItems[0]?.id === row.id}
                                     />
                                 );
                             },
