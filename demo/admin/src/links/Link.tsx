@@ -62,4 +62,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
             content: LinkBlock.replaceDependenciesInOutput(output.content, replacements),
         };
     },
+    // resolveDependencyRoute: (input, { rootColumn, jsonPath }) => {
+    //     return LinkBlock.resolveDependencyRoute(LinkBlock.input2State(input["content"]), jsonPath.substring("root.".length));
+    // },
 };

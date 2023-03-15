@@ -52,6 +52,9 @@ export {
     LatestContentUpdatesDashboardWidget,
     LatestContentUpdatesDashboardWidgetProps,
 } from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
+export { DependenciesConfigProvider, DependencyEntities, useDependenciesConfig } from "./dependencies/DependenciesConfig";
+export { Dependency, DependencyComponentInterface, DependencyComponentProps } from "./dependencies/Dependency";
+export { DependencyList } from "./dependencies/DependencyList";
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";

@@ -466,6 +466,18 @@ export function createListBlock<T extends BlockInterface>({
                 return [...prev, ...nextPreviewContent];
             }, []);
         },
+        resolveDependencyRoute: (state, jsonPath) => {
+            if (!/^blocks.\d+.props/.test(jsonPath)) {
+                throw new Error("ColumnsBlock: Invalid jsonPath");
+            }
+
+            const pathArr = jsonPath.split(".");
+            const num = Number(pathArr[1]);
+            const blockItem = state.blocks[num];
+
+            const childPath = block.resolveDependencyRoute(blockItem.props, pathArr.slice(3).join("."));
+            return `${blockItem.key}/edit/${childPath}`;
+        },
     };
     return BlockListBlock;
 }

@@ -1,6 +1,7 @@
-import { TypedDocumentNode } from "@apollo/client";
+import { OperationVariables, TypedDocumentNode } from "@apollo/client";
 import { BlockDependency, ReplaceDependencyObject } from "@comet/blocks-admin";
 import { SvgIconProps } from "@mui/material";
+import * as React from "react";
 
 import { GQLDocumentInterface, Maybe } from "../graphql.generated";
 import { PageTreePage } from "../pages/pageTree/usePageTree";
@@ -47,4 +48,12 @@ export interface DocumentInterface<
     anchors: (input: DocumentInput) => string[];
     dependencies: (input: DocumentInput) => BlockDependency[];
     replaceDependenciesInOutput?: (output: DocumentOutput, replacements: ReplaceDependencyObject[]) => DocumentOutput;
+}
+
+export interface DependencyInterface<GQLQuery = Record<string, unknown>, GQLQueryVariables = OperationVariables> {
+    displayName: React.ReactNode;
+    dependencyQuery: TypedDocumentNode<GQLQuery, GQLQueryVariables>;
+    getName: (data: GQLQuery) => React.ReactNode;
+    getSecondaryInformation?: (data: GQLQuery) => React.ReactNode;
+    getUrl: (data: GQLQuery, { rootColumn, jsonPath, contentScopeUrl }: { rootColumn: string; jsonPath: string; contentScopeUrl: string }) => string;
 }
