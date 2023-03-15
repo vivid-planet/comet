@@ -43,3 +43,21 @@ export class FolderByNameAndParentIdArgs {
     @IsUUID()
     parentId?: string;
 }
+
+export class DamFolderListPositionArgs extends SortArgs {
+    @Field(() => ID, { nullable: true })
+    @IsOptional()
+    @IsUUID()
+    parentId?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    includeArchived?: boolean;
+
+    @Field(() => FolderFilterInput, { nullable: true })
+    @Type(() => FolderFilterInput)
+    @IsOptional()
+    @ValidateNested()
+    filter?: FolderFilterInput;
+}
