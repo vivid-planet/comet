@@ -233,12 +233,9 @@ export class FoldersService {
             },
         );
 
-        const connection = this.orm.em.getConnection();
-        const metadata = this.orm.em.getMetadata();
+        const folderTableName = this.orm.em.getMetadata().get(Folder.name).tableName;
 
-        const folderTableName = metadata.get(Folder.name).tableName;
-
-        const result: Array<{ row_number: string }> = await connection.execute(
+        const result: { rows: Array<{ row_number: string }> } = await this.foldersRepository.createQueryBuilder().raw(
             `select "folder_with_row_number".row_number
                 from "${folderTableName}" as "folder"
                 join (${subQb.getFormattedQuery()}) as "folder_with_row_number" ON folder_with_row_number.id = folder.id
@@ -247,12 +244,12 @@ export class FoldersService {
             [folderId],
         );
 
-        if (result.length === 0) {
+        if (result.rows.length === 0) {
             throw new Error("Folder ID does not exist.");
         }
 
         // make the positions start with 0
-        return Number(result[0].row_number) - 1;
+        return Number(result.rows[0].row_number) - 1;
     }
 
     async isValidParentForFolder(folderId: string, parentId: string | null): Promise<boolean> {
