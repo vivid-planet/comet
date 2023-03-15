@@ -45,6 +45,7 @@
         "@comet/cli": "^4.0.0",
         "@comet/eslint-config": "^4.0.0",
         "@gitbeaker/node": "^34.0.0",
+        "@testing-library/react-hooks": "^8.0.0",
         "@types/jest": "^27.0.0",
         "@types/styled-components": "^5.0.0",
         "chokidar-cli": "^2.0.0",
