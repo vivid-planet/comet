@@ -315,7 +315,7 @@ export class FilesService {
         const subQb = withFilesSelect(
             this.filesRepository
                 .createQueryBuilder("file")
-                .select(`file.id, ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`)
+                .select(["file.id", `ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`])
                 .leftJoinAndSelect("file.folder", "folder"),
             {
                 archived: !args.includeArchived ? false : undefined,
@@ -327,12 +327,9 @@ export class FilesService {
             },
         );
 
-        const connection = this.orm.em.getConnection();
-        const metadata = this.orm.em.getMetadata();
+        const fileTableName = this.orm.em.getMetadata().get(File.name).tableName;
 
-        const fileTableName = metadata.get(File.name).tableName;
-
-        const result: Array<{ row_number: string }> = await connection.execute(
+        const result: { rows: Array<{ row_number: string }> } = await this.filesRepository.createQueryBuilder().raw(
             `select "file_with_row_number".row_number
                 from "${fileTableName}" as "file"
                 join (${subQb.getFormattedQuery()}) as "file_with_row_number" ON file_with_row_number.id = file.id
@@ -341,12 +338,12 @@ export class FilesService {
             [fileId],
         );
 
-        if (result.length === 0) {
+        if (result.rows.length === 0) {
             throw new Error("File ID does not exist.");
         }
 
         // make the positions start with 0
-        return Number(result[0].row_number) - 1;
+        return Number(result.rows[0].row_number) - 1;
     }
 
     async findNextAvailableFilename(filePath: string, folderId: string | null = null): Promise<string> {
