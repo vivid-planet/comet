@@ -2,6 +2,7 @@ import {
     AnnotationBlockMeta,
     BlockData,
     BlockField,
+    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -11,6 +12,7 @@ import {
 } from "@comet/blocks-api";
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
+import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageTreeReadApi } from "../page-tree-read-api";
 import { PageExists } from "../validators/page-exists.validator";
 
@@ -57,6 +59,21 @@ class InternalLinkBlockData extends BlockData {
                 documentType: node.documentType,
             },
             targetPageAnchor: this.targetPageAnchor,
+        };
+    }
+
+    indexData(): BlockIndexData {
+        if (this.targetPageId === undefined) {
+            return {};
+        }
+
+        return {
+            dependencies: [
+                {
+                    targetEntityName: PAGE_TREE_ENTITY,
+                    id: this.targetPageId,
+                },
+            ],
         };
     }
 }

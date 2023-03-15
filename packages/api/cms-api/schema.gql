@@ -64,6 +64,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  dependents: [Dependency!]!
 }
 
 type BuildTemplate {
@@ -92,6 +93,16 @@ enum JobStatus {
   active
   succeeded
   failed
+}
+
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
 }
 
 type CronJob {
@@ -139,6 +150,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
+  dependents: [Dependency!]!
 }
 
 enum PageTreeNodeVisibility {
@@ -182,6 +194,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
+  dependencies: [Dependency!]!
 }
 
 enum RedirectSourceTypeValues {

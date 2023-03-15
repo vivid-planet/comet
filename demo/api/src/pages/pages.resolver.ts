@@ -1,4 +1,6 @@
 import {
+    DependenciesService,
+    Dependency,
     OffsetBasedPaginationArgs,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
@@ -23,7 +25,11 @@ export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortA
 
 @Resolver(() => Page)
 export class PagesResolver {
-    constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
+    constructor(
+        @InjectRepository(Page) private readonly repository: EntityRepository<Page>,
+        private readonly pageTreeService: PageTreeService,
+        private readonly dependenciesService: DependenciesService,
+    ) {}
 
     // TODO add scope argument (who uses this anyway? probably dashboard)
     @Query(() => PaginatedPages)
@@ -35,6 +41,11 @@ export class PagesResolver {
         const [pages, totalCount] = await this.repository.findAndCount({}, options);
 
         return new PaginatedPages(pages, totalCount);
+    }
+
+    @ResolveField(() => [Dependency])
+    async dependencies(@Parent() page: Page): Promise<Dependency[]> {
+        return this.dependenciesService.getDependencies(page);
     }
 
     @ResolveField(() => PageTreeNode, { nullable: true })
