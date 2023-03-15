@@ -18,7 +18,6 @@ export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage
 export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
-export { BlockIndexService } from "./blocks/block-index.service";
 export { BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
 export { BlocksModule, BlocksModuleOptions } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
@@ -97,6 +96,9 @@ export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/v
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
 export { Extension, Gravity, ResizingType } from "./dam/imgproxy/imgproxy.enum";
 export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service";
+export { DependenciesModule } from "./dependencies/dependencies.module";
+export { DependenciesService } from "./dependencies/dependencies.service";
+export { Dependency } from "./dependencies/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";

@@ -19,7 +19,6 @@ export class Footer extends BaseEntity<Footer, "id"> implements DocumentInterfac
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();
-
     @RootBlock(FooterContentBlock)
     @Property({ customType: new RootBlockType(FooterContentBlock) })
     @Field(() => RootBlockDataScalar(FooterContentBlock))

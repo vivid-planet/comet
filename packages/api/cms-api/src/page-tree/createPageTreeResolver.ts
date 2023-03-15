@@ -3,6 +3,8 @@ import { Args, createUnionType, ID, Info, Mutation, Parent, Query, ResolveField,
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
+import { DependenciesService } from "../dependencies/dependencies.service";
+import { Dependency } from "../dependencies/dependency";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
@@ -64,6 +66,7 @@ export function createPageTreeResolver({
             protected readonly pageTreeReadApi: PageTreeReadApiService,
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
             private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
+            protected readonly dependenciesService: DependenciesService,
         ) {}
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
@@ -158,7 +161,10 @@ export function createPageTreeResolver({
                                 selection.typeCondition &&
                                 selection.typeCondition.kind == "NamedType"
                             ) {
-                                if (selection.typeCondition.name.value === node.documentType) {
+                                if (
+                                    selection.typeCondition.name.value === node.documentType ||
+                                    selection.typeCondition.name.value === DocumentInterface.name
+                                ) {
                                     //documentType is matching, return full document (fall thru)
                                     return undefined;
                                 } else {
@@ -184,6 +190,11 @@ export function createPageTreeResolver({
 
             //if document needs to be loaded use DataLoader for batch loading
             return this.attachedDocumentLoaderService.load(node);
+        }
+
+        @ResolveField(() => [Dependency])
+        async dependents(@Parent() node: PageTreeNodeInterface): Promise<Dependency[]> {
+            return this.dependenciesService.getDependents(node);
         }
 
         @Mutation(() => PageTreeNode)
