@@ -219,6 +219,7 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damItemListPosition(sortColumnName: String, sortDirection: SortDirection = ASC, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
 }
@@ -301,6 +302,11 @@ enum SlugAvailability {
 input DamItemFilterInput {
   searchText: String
   mimetypes: [String!]
+}
+
+enum DamItemType {
+  File
+  Folder
 }
 
 type Mutation {

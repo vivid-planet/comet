@@ -36,3 +36,21 @@ export class FileArgs extends IntersectionType(OffsetBasedPaginationArgs, SortAr
     @ValidateNested()
     filter?: FileFilterInput;
 }
+
+export class DamFileListPositionArgs extends SortArgs {
+    @Field(() => ID, { nullable: true })
+    @IsOptional()
+    @IsUUID()
+    folderId?: string;
+
+    @Field({ nullable: true, defaultValue: false })
+    @IsOptional()
+    @IsBoolean()
+    includeArchived?: boolean;
+
+    @Field(() => FileFilterInput, { nullable: true })
+    @Type(() => FileFilterInput)
+    @IsOptional()
+    @ValidateNested()
+    filter?: FileFilterInput;
+}

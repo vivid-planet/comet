@@ -1,14 +1,20 @@
 import React from "react";
 
+export interface NewlyUploadedItem {
+    id: string;
+    parentId?: string;
+    type: "file" | "folder";
+}
+
 interface FileUploadContextApi {
-    newlyUploadedFileIds: string[];
-    addNewlyUploadedFileIds: (newlyUploadedFileIds: string[]) => void;
+    newlyUploadedItems: NewlyUploadedItem[];
+    addNewlyUploadedItems: (newlyUploadedItems: NewlyUploadedItem[]) => void;
 }
 
 const FileUploadContext = React.createContext<FileUploadContextApi>({
-    newlyUploadedFileIds: [],
-    addNewlyUploadedFileIds: () => {
-        console.warn("If you want to track newlyUploadedFileIds, FileUploadContextProvider has to be defined higher up in the tree");
+    newlyUploadedItems: [],
+    addNewlyUploadedItems: () => {
+        console.warn("If you want to track newlyUploadedItems, FileUploadContextProvider has to be defined higher up in the tree");
     },
 });
 
@@ -16,29 +22,33 @@ export const useFileUploadContext = () => React.useContext(FileUploadContext);
 
 export const FileUploadContextProvider: React.FunctionComponent = ({ children }) => {
     const timeouts = React.useRef<NodeJS.Timeout[]>([]);
-    const [newlyUploadedFileIds, setNewlyUploadedFileIds] = React.useState<string[]>([]);
+    const [newlyUploadedItems, setNewlyUploadedItems] = React.useState<NewlyUploadedItem[]>([]);
 
     React.useEffect(() => {
         return () => {
             for (const timeout of timeouts.current) {
                 clearTimeout(timeout);
             }
-            setNewlyUploadedFileIds([]);
+            setNewlyUploadedItems([]);
         };
     }, []);
 
-    const addNewlyUploadedFileIds = (fileIds: string[]) => {
-        setNewlyUploadedFileIds((newlyUploadedFileIds) => [...newlyUploadedFileIds, ...fileIds]);
+    const addNewlyUploadedItems = (items: NewlyUploadedItem[]) => {
+        setNewlyUploadedItems((newlyUploadedItems) => [...items, ...newlyUploadedItems]);
 
         const timeout = setTimeout(() => {
-            // remove uploaded files automatically after 5 seconds
-            setNewlyUploadedFileIds((newlyUploadedFileIds) => newlyUploadedFileIds.filter((fileId) => !fileIds.includes(fileId)));
+            // remove uploaded items automatically after 5 seconds
+            setNewlyUploadedItems((newlyUploadedItems) => newlyUploadedItems.filter((itemId) => !items.includes(itemId)));
 
             timeouts.current = timeouts.current.filter((t) => t !== timeout);
-        }, 5000);
+        }, 10000);
 
         timeouts.current.push(timeout);
     };
 
-    return <FileUploadContext.Provider value={{ newlyUploadedFileIds, addNewlyUploadedFileIds }}>{children}</FileUploadContext.Provider>;
+    return (
+        <FileUploadContext.Provider value={{ newlyUploadedItems, addNewlyUploadedItems: addNewlyUploadedItems }}>
+            {children}
+        </FileUploadContext.Provider>
+    );
 };

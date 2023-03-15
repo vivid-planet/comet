@@ -101,3 +101,25 @@ export const moveDamFoldersMutation = gql`
         }
     }
 `;
+
+export const damItemListPosition = gql`
+    query DamItemListPosition(
+        $id: ID!
+        $type: DamItemType!
+        $folderId: ID
+        $includeArchived: Boolean
+        $filter: DamItemFilterInput
+        $sortColumnName: String
+        $sortDirection: SortDirection
+    ) {
+        damItemListPosition(
+            id: $id
+            type: $type
+            folderId: $folderId
+            includeArchived: $includeArchived
+            filter: $filter
+            sortColumnName: $sortColumnName
+            sortDirection: $sortDirection
+        )
+    }
+`;
