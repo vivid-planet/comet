@@ -1,5 +1,21 @@
 import { RowActionsItem, RowActionsMenu } from "@comet/admin";
-import { Accept, Add, BallTriangle, Copy, Delete, Edit, Favorite, FileData, Info, LinkExternal, Online, Paste, Settings } from "@comet/admin-icons";
+import {
+    Accept,
+    Add,
+    ChangeImage,
+    Copy,
+    Dashboard,
+    Delete,
+    Edit,
+    Favorite,
+    FileData,
+    Info,
+    LinkExternal,
+    Online,
+    Paste,
+    Settings,
+    Snips,
+} from "@comet/admin-icons";
 import { Divider, Paper } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -65,15 +81,15 @@ storiesOf("stories/components/RowActions/RowActions", module)
                             <RowActionsItem icon={<Favorite />}>Level 3, item 3</RowActionsItem>
                         </RowActionsMenu>
                     </RowActionsMenu>
-                    <RowActionsMenu text="Submenu 1/2" icon={<BallTriangle />}>
-                        <RowActionsItem icon={<BallTriangle />}>Level 2, item 1</RowActionsItem>
-                        <RowActionsItem icon={<BallTriangle />}>Level 2, item 2</RowActionsItem>
-                        <RowActionsItem icon={<BallTriangle />}>Level 2, item 3</RowActionsItem>
+                    <RowActionsMenu text="Submenu 1/2" icon={<Dashboard />}>
+                        <RowActionsItem icon={<ChangeImage />}>Level 2, item 1</RowActionsItem>
+                        <RowActionsItem icon={<ChangeImage />}>Level 2, item 2</RowActionsItem>
+                        <RowActionsItem icon={<ChangeImage />}>Level 2, item 3</RowActionsItem>
                         <Divider />
-                        <RowActionsMenu text="Submenu 2" icon={<BallTriangle />}>
-                            <RowActionsItem icon={<BallTriangle />}>Level 3, item 1</RowActionsItem>
-                            <RowActionsItem icon={<BallTriangle />}>Level 3, item 2</RowActionsItem>
-                            <RowActionsItem icon={<BallTriangle />}>Level 3, item 3</RowActionsItem>
+                        <RowActionsMenu text="Submenu 2" icon={<Snips />}>
+                            <RowActionsItem icon={<ChangeImage />}>Level 3, item 1</RowActionsItem>
+                            <RowActionsItem icon={<ChangeImage />}>Level 3, item 2</RowActionsItem>
+                            <RowActionsItem icon={<ChangeImage />}>Level 3, item 3</RowActionsItem>
                         </RowActionsMenu>
                     </RowActionsMenu>
                 </RowActionsMenu>
