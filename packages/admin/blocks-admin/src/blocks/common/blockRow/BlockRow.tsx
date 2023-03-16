@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { Copy, Delete, Drag, MoreVertical, Paste, Warning } from "@comet/admin-icons";
-import { Checkbox, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { Checkbox, Divider, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl";
@@ -207,13 +207,14 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
                         </ListItemIcon>
                         <FormattedMessage {...messages.paste} />
                     </MenuItem>
+                    {props.additionalMenuItems?.(handleMenuClose)}
+                    <Divider />
                     <MenuItem onClick={handleDeleteClick}>
                         <ListItemIcon>
                             <Delete />
                         </ListItemIcon>
                         <FormattedMessage {...messages.delete} />
                     </MenuItem>
-                    {props.additionalMenuItems?.(handleMenuClose)}
                 </Menu>
             </sc.Root>
         </sc.BlockWrapper>

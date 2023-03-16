@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file. This projec
 #### Changes
 
 -   Added `RowActionsMenu` and `RowActionsItem` components for creating IconButtons with nested Menus and Items for actions in table rows and other listed items.
+-   Add optional prop `disableCloseAfterSubmit` to `EditDialog`. It prevents the default closing behavior of `EditDialog`.
+-   Add optional prop `onAfterSave()` to `EditDialog`. It is called after successfully saving a `FinalForm` within the `EditDialog`.
 
 ## 4.0.0
 

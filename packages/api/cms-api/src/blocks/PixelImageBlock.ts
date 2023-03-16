@@ -41,7 +41,7 @@ class PixelImageBlockData extends BlockData {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { createdAt, updatedAt, folder, ...data } = file;
+        const { createdAt, updatedAt, folder, license, ...data } = file;
 
         return {
             damFile: {
