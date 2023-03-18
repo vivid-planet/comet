@@ -36,11 +36,8 @@
         "lint": "pnpm recursive run lint",
         "lint:eslint": "pnpm recursive run lint:eslint",
         "lint:tsc": "pnpm recursive run lint:tsc",
-        "publish:release": "lerna publish --force-publish --no-private",
-        "publish:version": "lerna version --force-publish --no-private",
         "storybook": "$npm_execpath workspace comet-admin-stories storybook",
-        "test": "pnpm recursive run test",
-        "version": "$npm_execpath install && git stage pnpm-lock.yaml"
+        "test": "pnpm recursive run test"
     },
     "devDependencies": {
         "@comet/dev-process-manager": "^2.3.0",
@@ -58,5 +55,8 @@
     "engines": {
         "node": "18",
         "pnpm": "7"
+    },
+    "dependencies": {
+        "@changesets/cli": "^2.26.0"
     }
 }
