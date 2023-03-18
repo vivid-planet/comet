@@ -90,6 +90,7 @@
     "devDependencies": {
         "@aws-sdk/types": "^3.47.0",
         "@comet/eslint-config": "workspace:^4.0.0",
+        "@kubernetes/client-node": "^0.18.1",
         "@mikro-orm/core": "^5.0.4",
         "@mikro-orm/sqlite": "^5.0.0",
         "@nestjs/common": "^9.0.0",
