@@ -32,6 +32,7 @@
     },
     "dependencies": {
         "@comet/admin": "workspace:^4.0.0",
+        "@comet/admin-date-time": "workspace:^4.0.0",
         "@comet/admin-icons": "workspace:^4.0.0",
         "@comet/admin-rte": "workspace:^4.0.0",
         "@comet/admin-theme": "workspace:^4.0.0",

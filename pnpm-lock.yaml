@@ -1221,6 +1221,7 @@ importers:
       '@babel/core': ^7.20.12
       '@comet/admin': workspace:^4.0.0
       '@comet/admin-babel-preset': workspace:^4.0.0
+      '@comet/admin-date-time': workspace:^4.0.0
       '@comet/admin-icons': workspace:^4.0.0
       '@comet/admin-rte': workspace:^4.0.0
       '@comet/admin-theme': workspace:^4.0.0
@@ -1314,6 +1315,7 @@ importers:
       uuid: ^9.0.0
     dependencies:
       '@comet/admin': link:../admin
+      '@comet/admin-date-time': link:../admin-date-time
       '@comet/admin-icons': link:../admin-icons
       '@comet/admin-rte': link:../admin-rte
       '@comet/admin-theme': link:../admin-theme
