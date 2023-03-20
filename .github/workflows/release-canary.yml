@@ -32,8 +32,13 @@ jobs:
 
       - name: Publish Canary release
         run: |
+        run: |
+          echo --- > .changeset/canary.md
+          echo '"@comet/cli": patch' >> .changeset/canary.md
+          echo --- >> .changeset/canary.md
+          echo >> .changeset/canary.md
+          echo fake change to always get a canary release >> .changeset/canary.md
           pnpm exec changeset version --snapshot canary
-          pnpm run build:lib
-          pnpm publish --recursive  --filter '@comet/*'
+          pnpm run publish
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
