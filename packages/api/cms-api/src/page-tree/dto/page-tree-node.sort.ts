@@ -5,6 +5,7 @@ import { SortDirection } from "../../common/sorting/sort-direction.enum";
 
 export enum PageTreeNodeSortField {
     updatedAt = "updatedAt",
+    pos = "pos",
 }
 registerEnumType(PageTreeNodeSortField, {
     name: "PageTreeNodeSortField",

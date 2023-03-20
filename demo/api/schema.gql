@@ -419,6 +419,7 @@ input PageTreeNodeSort {
 
 enum PageTreeNodeSortField {
   updatedAt
+  pos
 }
 
 enum SlugAvailability {

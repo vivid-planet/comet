@@ -86,6 +86,10 @@ export function createReadApi(
 
             nodes = filterPreloadedNodes(nodes, where);
 
+            if (sort && sort[0].field === "pos" && sort[0].direction === "ASC") {
+                sort.shift();
+            }
+
             if (sort) {
                 sort.forEach((sortItem) => {
                     nodes = nodes.sort((a, b) => {
