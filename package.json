@@ -18,7 +18,7 @@
         "build:cms:site": "pnpm recursive --filter '@comet/cms-site' run build",
         "build:cms:site:skippable": "test -f packages/site/cms-site/lib/index.d.ts && echo 'Skipping CMS Site build' || $npm_execpath build:cms:site",
         "build:cms:skippable": "test -f packages/admin/cms-admin/lib/index.d.ts && echo 'Skipping CMS build' || $npm_execpath build:cms",
-        "build:storybook": "pnpm recursive --filter '@comet/admin*' build && $npm_execpath workspace comet-admin-stories build-storybook",
+        "build:storybook": "pnpm recursive --filter '@comet/admin*' run build && pnpm --filter comet-admin-stories run build-storybook",
         "build:lib": "pnpm recursive --filter '@comet/*' run build",
         "clean": "pnpm recursive run clean",
         "copy-schema-files": "node copy-schema-files.js",
@@ -36,7 +36,7 @@
         "lint": "pnpm recursive run lint",
         "lint:eslint": "pnpm recursive run lint:eslint",
         "lint:tsc": "pnpm recursive run lint:tsc",
-        "storybook": "$npm_execpath workspace comet-admin-stories storybook",
+        "storybook": "pnpm --filter comet-admin-stories run storybook",
         "test": "pnpm recursive run test"
     },
     "devDependencies": {
