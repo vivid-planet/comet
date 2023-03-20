@@ -1,5 +1,5 @@
 import { FilterQuery, NotFoundError } from "@mikro-orm/core";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import opentelemetry from "@opentelemetry/api";
 
 import { PageTreeNodeSort } from "./dto/page-tree-node.sort";
@@ -9,6 +9,13 @@ import pathBuilder from "./utils/path-builder";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
+interface PageTreeNodeFilterOptios {
+    parentId?: string | null;
+    excludeHiddenInMenu?: boolean;
+    category?: string;
+    documentType?: string;
+    slug?: string;
+}
 export interface PageTreeReadApiOptions {
     category?: PageTreeNodeCategory;
     scope?: ScopeInterface;
@@ -67,13 +74,7 @@ export function createReadApi(
     const nodesById = new Map<string, PageTreeNodeInterface>();
     const queryNodes = async (
         scope: ScopeInterface | undefined,
-        where: {
-            parentId?: string | null;
-            excludeHiddenInMenu?: boolean;
-            category?: string;
-            documentType?: string;
-            slug?: string;
-        },
+        where: PageTreeNodeFilterOptios,
         sort?: PageTreeNodeSort[],
         limit?: number,
         offset?: number,
@@ -83,23 +84,10 @@ export function createReadApi(
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             let nodes = preloadedNodes.get(scopeHash(scope))!;
 
-            if (where.parentId !== undefined) {
-                nodes = nodes.filter((node) => node.parentId === where.parentId);
-            }
-            if (where.excludeHiddenInMenu) {
-                nodes = nodes.filter((node) => node.hideInMenu === false);
-            }
-            if (where.category) {
-                nodes = nodes.filter((node) => node.category === where.category);
-            }
-            if (where.documentType) {
-                nodes = nodes.filter((node) => node.documentType === where.documentType);
-            }
-            if (where.slug) {
-                nodes = nodes.filter((node) => node.slug === where.slug);
-            }
+            nodes = filterPreloadedNodes(nodes, where);
+
             if (sort) {
-                sort.map((sortItem) => {
+                sort.forEach((sortItem) => {
                     nodes = nodes.sort((a, b) => {
                         if (sortItem.field === "updatedAt") {
                             return sortItem.direction === "ASC"
@@ -120,31 +108,14 @@ export function createReadApi(
             return tracer.startActiveSpan("live query PageTree queryNodes", async (span) => {
                 span.setAttribute("scope", JSON.stringify(scope));
                 span.setAttribute("where", JSON.stringify(where));
-                const qb = pageTreeNodeRepository.createQueryBuilder().where({
+                let qb = pageTreeNodeRepository.createQueryBuilder().where({
                     visibility: visibilityFilter,
                 });
 
-                if (scope) {
-                    qb.andWhere({ scope });
-                }
-                if (where.parentId !== undefined) {
-                    qb.andWhere({ parentId: where.parentId });
-                }
+                qb = filterLiveQuery(qb, where, scope);
 
-                if (where.excludeHiddenInMenu) {
-                    qb.andWhere({ hideInMenu: false });
-                }
-                if (where.category) {
-                    qb.andWhere({ category: where.category });
-                }
-                if (where.documentType) {
-                    qb.andWhere({ documentType: where.documentType });
-                }
-                if (where.slug) {
-                    qb.andWhere({ slug: where.slug });
-                }
                 if (sort) {
-                    sort.map((sortItem) => {
+                    sort.forEach((sortItem) => {
                         qb.orderBy({ [`${sortItem.field}`]: sortItem.direction });
                     });
                 } else {
@@ -162,6 +133,81 @@ export function createReadApi(
                 }
                 span.end();
                 return nodes;
+            });
+        }
+    };
+
+    function filterPreloadedNodes(nodes: PageTreeNodeInterface[], where: PageTreeNodeFilterOptios): PageTreeNodeInterface[] {
+        if (where.parentId !== undefined) {
+            nodes = nodes.filter((node) => node.parentId === where.parentId);
+        }
+        if (where.excludeHiddenInMenu) {
+            nodes = nodes.filter((node) => node.hideInMenu === false);
+        }
+        if (where.category) {
+            nodes = nodes.filter((node) => node.category === where.category);
+        }
+        if (where.documentType) {
+            nodes = nodes.filter((node) => node.documentType === where.documentType);
+        }
+        if (where.slug) {
+            nodes = nodes.filter((node) => node.slug === where.slug);
+        }
+
+        return nodes;
+    }
+
+    function filterLiveQuery(
+        qb: QueryBuilder<PageTreeNodeInterface>,
+        where: PageTreeNodeFilterOptios,
+        scope: ScopeInterface | undefined,
+    ): QueryBuilder<PageTreeNodeInterface> {
+        if (scope) {
+            qb.andWhere({ scope });
+        }
+        if (where.parentId !== undefined) {
+            qb.andWhere({ parentId: where.parentId });
+        }
+
+        if (where.excludeHiddenInMenu) {
+            qb.andWhere({ hideInMenu: false });
+        }
+        if (where.category) {
+            qb.andWhere({ category: where.category });
+        }
+        if (where.documentType) {
+            qb.andWhere({ documentType: where.documentType });
+        }
+        if (where.slug) {
+            qb.andWhere({ slug: where.slug });
+        }
+
+        return qb;
+    }
+
+    const countNodes = async (scope: ScopeInterface | undefined, where: PageTreeNodeFilterOptios): Promise<number> => {
+        await waitForPreloadDone();
+        if (scope && preloadedNodes.has(scopeHash(scope))) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            let nodes = preloadedNodes.get(scopeHash(scope))!;
+
+            nodes = filterPreloadedNodes(nodes, where);
+
+            return nodes.length;
+        } else {
+            return tracer.startActiveSpan("live query PageTree countNodes", async (span) => {
+                span.setAttribute("scope", JSON.stringify(scope));
+                span.setAttribute("where", JSON.stringify(where));
+                let qb = pageTreeNodeRepository.createQueryBuilder().where({
+                    visibility: visibilityFilter,
+                });
+
+                qb = filterLiveQuery(qb, where, scope);
+
+                const nodesCout = await qb.getCount();
+
+                span.end();
+                return nodesCout;
             });
         }
     };
@@ -375,12 +421,10 @@ export function createReadApi(
         },
 
         async getNodesCount(options = {}): Promise<number> {
-            return (
-                await queryNodes(options.scope, {
-                    category: options.category,
-                    documentType: options.documentType,
-                })
-            ).length;
+            return countNodes(options.scope, {
+                category: options.category,
+                documentType: options.documentType,
+            });
         },
     };
 }
