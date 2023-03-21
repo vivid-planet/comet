@@ -9,7 +9,7 @@ import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
-import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
+import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeService } from "./page-tree.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
@@ -33,6 +33,11 @@ interface PageTreeModuleOptions {
 export class PageTreeModule {
     static forRoot(options: PageTreeModuleOptions): DynamicModule {
         const { Documents, Scope, PageTreeNode, PageTreeNodeCreateInput, PageTreeNodeUpdateInput, reservedPaths } = options;
+
+        if (PageTreeNode.name !== PAGE_TREE_ENTITY) {
+            throw new Error(`PageTreeModule: Your PageTreeNode entity must be named ${PAGE_TREE_ENTITY}`);
+        }
+
         const pageTreeResolver = createPageTreeResolver({
             PageTreeNode,
             Documents,

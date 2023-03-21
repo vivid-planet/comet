@@ -9,6 +9,7 @@ import {
     CronJobsModule,
     CurrentUserInterface,
     DamModule,
+    DependenciesModule,
     FilesService,
     ImagesService,
     KubernetesModule,
@@ -88,6 +89,7 @@ export class AppModule {
                     },
                     inject: [PageTreeService, FilesService, ImagesService],
                 }),
+                DependenciesModule,
                 KubernetesModule.register({
                     helmRelease: config.helmRelease,
                 }),

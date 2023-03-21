@@ -1,12 +1,10 @@
 import { DynamicModule, Global, Module, ModuleMetadata } from "@nestjs/common";
 
-import { BlockIndexService } from "./block-index.service";
 import { BlockMigrateService } from "./block-migrate.service";
 import { BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks.constants";
 import { BlocksMetaService } from "./blocks-meta.service";
 import { BlocksTransformerService } from "./blocks-transformer.service";
 import { CommandsService } from "./commands.service";
-import { DiscoverService } from "./discover.service";
 
 export interface BlocksModuleOptions {
     transformerDependencies: Record<string, unknown>;
@@ -38,18 +36,16 @@ export class BlocksModule {
 
         return {
             module: BlocksModule,
-            imports: options.imports ?? [],
+            imports: [],
             providers: [
                 optionsProvider,
                 transformerDependenciesProvider,
                 BlocksTransformerService,
                 BlocksMetaService,
-                DiscoverService,
-                BlockIndexService,
                 CommandsService,
                 BlockMigrateService,
             ],
-            exports: [BlocksTransformerService, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES, BlockIndexService],
+            exports: [BlocksTransformerService, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
         };
     }
 }

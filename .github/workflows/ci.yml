@@ -42,15 +42,12 @@ jobs:
                   token: ${{ secrets.GH_TOKEN }}
                   path: "demo/admin/lang/comet-demo-lang"
 
-            - name: Use Node.js 14.x
+            - name: Use Node.js 18.x
               uses: actions/setup-node@v3
               with:
-                  node-version: 14
+                  node-version: 18
                   registry-url: "https://registry.npmjs.org"
                   cache: "yarn" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
-
-            - name: Install NPM 7.x
-              run: npm install -g npm@7.19
 
             - run: yarn install
 
@@ -115,6 +112,7 @@ jobs:
             - name: Publish preminor canary release
               if: |
                   !contains( github.event.pull_request.labels.*.name, 'skip-release') &&
+                  github.ref_name != 'next' &&
                   github.base_ref == 'main' &&
                   github.event.pull_request.merged == true
               run: yarn publish:release preminor --no-push --no-git-tag-version --canary --preid=alpha.${{ github.run_number }} --dist-tag=alpha --yes

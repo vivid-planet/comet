@@ -68,6 +68,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  dependents: [Dependency!]!
 }
 
 type BuildTemplate {
@@ -96,6 +97,16 @@ enum JobStatus {
   active
   succeeded
   failed
+}
+
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
 }
 
 type CronJob {
@@ -128,16 +139,57 @@ type PaginatedDamFolders {
   totalCount: Int!
 }
 
-type Link implements DocumentInterface {
+type NewsComment implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-  content: LinkBlockData!
+  comment: String!
   createdAt: DateTime!
 }
 
 interface DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+}
+
+type NewsContentScope {
+  domain: String!
+  language: String!
+}
+
+type News implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  scope: NewsContentScope!
+  slug: String!
+  title: String!
+  date: DateTime!
+  category: NewsCategory!
+  visible: Boolean!
+  image: DamImageBlockData!
+  content: NewsContentBlockData!
+  createdAt: DateTime!
+  comments: [NewsComment!]!
+  dependents: [Dependency!]!
+  dependencies: [Dependency!]!
+}
+
+enum NewsCategory {
+  Events
+  Company
+  Awards
+}
+
+"""DamImage root block data"""
+scalar DamImageBlockData
+
+"""NewsContent root block data"""
+scalar NewsContentBlockData
+
+type Link implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: LinkBlockData!
+  createdAt: DateTime!
 }
 
 """Link root block data"""
@@ -149,6 +201,7 @@ type Page implements DocumentInterface {
   content: PageContentBlockData!
   seo: SeoBlockData!
   createdAt: DateTime!
+  dependencies: [Dependency!]!
   pageTreeNode: PageTreeNode
 }
 
@@ -181,6 +234,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
+  dependents: [Dependency!]!
 }
 
 enum PageTreeNodeVisibility {
@@ -233,6 +287,7 @@ type Footer implements DocumentInterface {
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
+  dependencies: [Dependency!]!
 }
 
 """FooterContent root block data"""
@@ -244,6 +299,7 @@ type MainMenuItem {
   content: RichTextBlockData
   createdAt: DateTime!
   updatedAt: DateTime!
+  dependencies: [Dependency!]!
 }
 
 """RichText root block data"""
@@ -252,45 +308,6 @@ scalar RichTextBlockData
 type MainMenu {
   items: [MainMenuItem!]!
 }
-
-type NewsComment implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  comment: String!
-  createdAt: DateTime!
-}
-
-type NewsContentScope {
-  domain: String!
-  language: String!
-}
-
-type News implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  scope: NewsContentScope!
-  slug: String!
-  title: String!
-  date: DateTime!
-  category: NewsCategory!
-  visible: Boolean!
-  image: DamImageBlockData!
-  content: NewsContentBlockData!
-  createdAt: DateTime!
-  comments: [NewsComment!]!
-}
-
-enum NewsCategory {
-  Events
-  Company
-  Awards
-}
-
-"""DamImage root block data"""
-scalar DamImageBlockData
-
-"""NewsContent root block data"""
-scalar NewsContentBlockData
 
 type PaginatedNews {
   nodes: [News!]!
@@ -333,6 +350,7 @@ type Redirect implements DocumentInterface {
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   scope: RedirectScope!
+  dependencies: [Dependency!]!
 }
 
 enum RedirectSourceTypeValues {
@@ -349,17 +367,17 @@ type PaginatedRedirects {
   totalCount: Int!
 }
 
+input NewsContentScopeInput {
+  domain: String!
+  language: String!
+}
+
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
 }
 
 input FooterContentScopeInput {
-  domain: String!
-  language: String!
-}
-
-input NewsContentScopeInput {
   domain: String!
   language: String!
 }
@@ -385,10 +403,12 @@ type Query {
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damItemListPosition(sortColumnName: String, sortDirection: SortDirection = ASC, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
   damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
+  damFoldersFlat: [DamFolder!]!
   damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
@@ -473,6 +493,11 @@ enum RedirectSortField {
 input DamItemFilterInput {
   searchText: String
   mimetypes: [String!]
+}
+
+enum DamItemType {
+  File
+  Folder
 }
 
 input FileFilterInput {

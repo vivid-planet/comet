@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { DamItem } from "./dam-items.resolver";
-import { DamItemsArgs } from "./dto/dam-items.args";
+import { DamItem, DamItemPositionArgs, DamItemsArgs, DamItemType } from "./dto/dam-items.args";
 import { FilesService } from "./files.service";
 import { FoldersService } from "./folders.service";
 
@@ -48,5 +47,40 @@ export class DamItemsService {
         }
 
         return [response, foldersTotalCount + filesTotalCount];
+    }
+
+    async getDamItemPosition({ type, id, ...args }: DamItemPositionArgs): Promise<number> {
+        if (type === DamItemType.Folder) {
+            const folderPosition = await this.foldersService.getFolderPosition(id, {
+                parentId: args.folderId,
+                includeArchived: args.includeArchived,
+                filter: { searchText: args.filter?.searchText },
+                sortDirection: args.sortDirection,
+                sortColumnName: args.sortColumnName,
+            });
+
+            return folderPosition;
+        }
+
+        const [, foldersTotalCount] = await this.foldersService.findAndCount({
+            parentId: args.folderId,
+            includeArchived: args.includeArchived,
+            filter: { searchText: args.filter?.searchText },
+            sortDirection: args.sortDirection,
+            sortColumnName: args.sortColumnName,
+            // offset and limit do not matter here
+            offset: 0,
+            limit: 10,
+        });
+
+        const filePosition = await this.filesService.getFilePosition(id, {
+            folderId: args.folderId,
+            includeArchived: args.includeArchived,
+            filter: { searchText: args.filter?.searchText },
+            sortDirection: args.sortDirection,
+            sortColumnName: args.sortColumnName,
+        });
+
+        return foldersTotalCount + filePosition;
     }
 }
