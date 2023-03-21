@@ -506,11 +506,18 @@ input NewsFilter {
   slug: StringFilter
   title: StringFilter
   date: DateFilter
+  category: NewsCategoryEnumFilter
   visible: BooleanFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
+}
+
+input NewsCategoryEnumFilter {
+  isAnyOf: [NewsCategory!]
+  equal: NewsCategory
+  notEqual: NewsCategory
 }
 
 input NewsSort {
@@ -532,12 +539,19 @@ input ProductFilter {
   title: StringFilter
   slug: StringFilter
   description: StringFilter
+  type: ProductTypeEnumFilter
   price: NumberFilter
   inStock: BooleanFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
+}
+
+input ProductTypeEnumFilter {
+  isAnyOf: [ProductType!]
+  equal: ProductType
+  notEqual: ProductType
 }
 
 input NumberFilter {
