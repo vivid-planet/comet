@@ -1,8 +1,10 @@
-import { BaseEntity, DateType, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, DateType, Entity, Enum, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { ESLint } from "eslint";
 import { Project, SourceFile } from "ts-morph";
 import { v4 as uuid } from "uuid";
 
+import { CrudFieldEnum } from "./crud-enum.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 
 async function lint(sourceCode: string): Promise<string> {
@@ -56,6 +58,26 @@ export class TestEntityWithBoolean extends BaseEntity<TestEntityWithBoolean, "id
 
     @Property()
     foo: boolean;
+}
+
+export enum TestEnumType {
+    Foo = "Foo",
+    Bar = "Bar",
+    Baz = "Baz",
+}
+registerEnumType(TestEnumType, {
+    name: "TestEnumType",
+});
+@Entity()
+@ObjectType()
+export class TestEntityWithEnum extends BaseEntity<TestEntityWithEnum, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @Enum({ items: () => TestEnumType })
+    @Field(() => TestEnumType)
+    @CrudFieldEnum("TestEnumType")
+    type: TestEnumType;
 }
 describe("GenerateCrudInput", () => {
     describe("string input class", () => {
@@ -141,6 +163,40 @@ describe("GenerateCrudInput", () => {
                 const decorators = prop.decorators?.map((i) => i.name);
                 expect(decorators).toContain("Field");
                 expect(decorators).toContain("IsBoolean");
+                expect(decorators).toContain("IsNotEmpty");
+            }
+
+            orm.close();
+        });
+    });
+
+    describe("enum input class", () => {
+        it("should be a valid generated ts file", async () => {
+            const orm = await MikroORM.init({
+                type: "sqlite",
+                dbName: "test-db",
+                entities: [TestEntityWithEnum],
+            });
+            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEnum"));
+            const lintedOutput = await lint(out);
+            //console.log(lintedOutput);
+            const source = parse(lintedOutput);
+
+            const classes = source.getClasses();
+            expect(classes.length).toBe(1);
+
+            const cls = classes[0];
+            const structure = cls.getStructure();
+
+            expect(structure.properties?.length).toBe(1);
+            {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const prop = structure.properties![0];
+                expect(prop.name).toBe("type");
+                expect(prop.type).toBe("TestEnumType");
+                const decorators = prop.decorators?.map((i) => i.name);
+                expect(decorators).toContain("Field");
+                expect(decorators).toContain("IsEnum");
                 expect(decorators).toContain("IsNotEmpty");
             }
 

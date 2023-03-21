@@ -100,6 +100,7 @@ export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
+export { CrudFieldEnum } from "./generator/crud-enum.decorator";
 export {
     CrudField,
     CrudFieldOptions,

@@ -325,9 +325,16 @@ type Product implements DocumentInterface {
   title: String!
   slug: String!
   description: String!
+  type: ProductType!
   price: Float
   inStock: Boolean!
   createdAt: DateTime!
+}
+
+enum ProductType {
+  Foo
+  Bar
+  Baz
 }
 
 type PaginatedProducts {
@@ -551,6 +558,7 @@ enum ProductSortField {
   title
   slug
   description
+  type
   price
   inStock
   createdAt
@@ -718,6 +726,7 @@ input NewsInput {
   slug: String!
   title: String!
   date: DateTime!
+  category: NewsCategory!
   visible: Boolean!
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
@@ -755,6 +764,7 @@ input ProductInput {
   title: String!
   slug: String!
   description: String!
+  type: ProductType!
   price: Float
   inStock: Boolean!
 }
