@@ -4,6 +4,7 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormSelect,
     MainContent,
     messages,
     SaveButton,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/cms-admin";
-import { CircularProgress, FormControlLabel, IconButton } from "@mui/material";
+import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import {
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
@@ -148,6 +149,15 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={intl.formatMessage({ id: "demo.product.description", defaultMessage: "Beschreibung" })}
                         />
+                        <Field name="type" label="Type" required fullWidth>
+                            {(props) => (
+                                <FinalFormSelect {...props} fullWidth>
+                                    <MenuItem value="Foo">Foo</MenuItem>
+                                    <MenuItem value="Bar">Bar</MenuItem>
+                                    <MenuItem value="Baz">Baz</MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             fullWidth
                             name="price"

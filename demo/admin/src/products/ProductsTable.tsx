@@ -130,6 +130,7 @@ const productsFragment = gql`
         title
         description
         price
+        type
         inStock
     }
 `;
