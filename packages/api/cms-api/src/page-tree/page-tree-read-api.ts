@@ -9,7 +9,7 @@ import pathBuilder from "./utils/path-builder";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
-interface PageTreeNodeFilterOptios {
+interface PageTreeNodeFilterOptions {
     parentId?: string | null;
     excludeHiddenInMenu?: boolean;
     category?: string;
