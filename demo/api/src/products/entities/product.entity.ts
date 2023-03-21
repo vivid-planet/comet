@@ -42,10 +42,10 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field()
     description: string;
 
-    @Enum({ items: () => ProductType })
-    @Field(() => ProductType)
+    @Enum({ items: () => ProductType, nullable: true })
+    @Field(() => ProductType, { nullable: true })
     @CrudFieldEnum("ProductType")
-    type: ProductType;
+    type?: ProductType;
 
     @Property({ type: types.decimal, nullable: true })
     @Field({ nullable: true })
