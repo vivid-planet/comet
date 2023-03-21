@@ -74,7 +74,7 @@ export function createReadApi(
     const nodesById = new Map<string, PageTreeNodeInterface>();
     const queryNodes = async (
         scope: ScopeInterface | undefined,
-        where: PageTreeNodeFilterOptios,
+        where: PageTreeNodeFilterOptions,
         sort?: PageTreeNodeSort[],
         limit?: number,
         offset?: number,
@@ -141,7 +141,7 @@ export function createReadApi(
         }
     };
 
-    function filterPreloadedNodes(nodes: PageTreeNodeInterface[], where: PageTreeNodeFilterOptios): PageTreeNodeInterface[] {
+    function filterPreloadedNodes(nodes: PageTreeNodeInterface[], where: PageTreeNodeFilterOptions): PageTreeNodeInterface[] {
         if (where.parentId !== undefined) {
             nodes = nodes.filter((node) => node.parentId === where.parentId);
         }
@@ -163,7 +163,7 @@ export function createReadApi(
 
     function filterLiveQuery(
         qb: QueryBuilder<PageTreeNodeInterface>,
-        where: PageTreeNodeFilterOptios,
+        where: PageTreeNodeFilterOptions,
         scope: ScopeInterface | undefined,
     ): QueryBuilder<PageTreeNodeInterface> {
         if (scope) {
@@ -189,7 +189,7 @@ export function createReadApi(
         return qb;
     }
 
-    const countNodes = async (scope: ScopeInterface | undefined, where: PageTreeNodeFilterOptios): Promise<number> => {
+    const countNodes = async (scope: ScopeInterface | undefined, where: PageTreeNodeFilterOptions): Promise<number> => {
         await waitForPreloadDone();
         if (scope && preloadedNodes.has(scopeHash(scope))) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
