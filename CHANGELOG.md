@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [next]
 
+### Highlights
+
+-   Api Crud Generator now supports enum types
+
 ### @comet/admin
 
 #### Changes
