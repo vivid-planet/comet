@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlockEntity } from "@comet/blocks-api";
-import { CrudFieldEnum, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
@@ -63,7 +63,6 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
 
     @Enum({ items: () => NewsCategory })
     @Field(() => NewsCategory)
-    @CrudFieldEnum("NewsCategory")
     category: NewsCategory = NewsCategory.Awards; // TODO remove default value once CRUD generator supports enums
 
     @Property({ default: false })

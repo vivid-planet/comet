@@ -3,6 +3,7 @@ import * as path from "path";
 
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { writeCrudInput } from "./generate-crud-input";
+import { findEnumName } from "./utils/find-enum-name";
 import { writeGenerated } from "./utils/write-generated";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,7 +64,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         const generatedEnumNames = new Set<string>();
         crudFilterProps.map((prop) => {
             if (prop.enum) {
-                const enumName = Reflect.getMetadata(`data:crudFieldEnum`, metadata.class, prop.name);
+                const enumName = findEnumName(metadata, prop.name);
                 if (!generatedEnumNames.has(enumName)) {
                     generatedEnumNames.add(enumName);
                     enumFiltersOut += `@InputType()
@@ -91,8 +92,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 ${crudFilterProps
                     .map((prop) => {
                         if (prop.enum) {
-                            const enumName = Reflect.getMetadata(`data:crudFieldEnum`, metadata.class, prop.name);
-                            if (!enumName) throw new Error("Enum field is missing @CrudFieldEnum decorator");
+                            const enumName = findEnumName(metadata, prop.name);
                             return `@Field(() => ${enumName}EnumFilter, { nullable: true })
                             @ValidateNested()
                             @Type(() => ${enumName}EnumFilter)

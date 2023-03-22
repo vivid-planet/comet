@@ -1,10 +1,10 @@
 import { BaseEntity, DateType, Entity, Enum, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { ESLint } from "eslint";
 import { Project, SourceFile } from "ts-morph";
 import { v4 as uuid } from "uuid";
 
-import { CrudFieldEnum } from "./crud-enum.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 
 async function lint(sourceCode: string): Promise<string> {
@@ -76,17 +76,18 @@ export class TestEntityWithEnum extends BaseEntity<TestEntityWithEnum, "id"> {
 
     @Enum({ items: () => TestEnumType })
     @Field(() => TestEnumType)
-    @CrudFieldEnum("TestEnumType")
     type: TestEnumType;
 }
 describe("GenerateCrudInput", () => {
     describe("string input class", () => {
         it("should be a valid generated ts file", async () => {
+            LazyMetadataStorage.load();
             const orm = await MikroORM.init({
                 type: "sqlite",
                 dbName: "test-db",
                 entities: [TestEntityWithString],
             });
+
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             //console.log(out);
             const lintedOutput = await lint(out);
@@ -105,6 +106,7 @@ describe("GenerateCrudInput", () => {
     });
     describe("date input class", () => {
         it("should be a valid generated ts file", async () => {
+            LazyMetadataStorage.load();
             const orm = await MikroORM.init({
                 type: "sqlite",
                 dbName: "test-db",
@@ -138,6 +140,7 @@ describe("GenerateCrudInput", () => {
     });
     describe("boolean input class", () => {
         it("should be a valid generated ts file", async () => {
+            LazyMetadataStorage.load();
             const orm = await MikroORM.init({
                 type: "sqlite",
                 dbName: "test-db",
@@ -172,6 +175,7 @@ describe("GenerateCrudInput", () => {
 
     describe("enum input class", () => {
         it("should be a valid generated ts file", async () => {
+            LazyMetadataStorage.load();
             const orm = await MikroORM.init({
                 type: "sqlite",
                 dbName: "test-db",

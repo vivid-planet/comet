@@ -4,6 +4,7 @@ import * as path from "path";
 import { RootBlockType } from "src/blocks/root-block-type";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
+import { findEnumName } from "./utils/find-enum-name";
 import { writeGenerated } from "./utils/write-generated";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,8 +37,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             //skip those (TODO find a non-magic solution?)
             continue;
         } else if (prop.enum) {
-            const enumName = Reflect.getMetadata(`data:crudFieldEnum`, metadata.class, prop.name);
-            if (!enumName) throw new Error("Enum field is missing @CrudFieldEnum decorator");
+            const enumName = findEnumName(metadata, prop.name);
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}${prop.nullable ? ", { nullable: true }" : ""})`);
             type = enumName;

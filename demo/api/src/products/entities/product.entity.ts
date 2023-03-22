@@ -1,4 +1,4 @@
-import { CrudField, CrudFieldEnum, CrudGenerator, DocumentInterface } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DocumentInterface } from "@comet/cms-api";
 import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property, types } from "@mikro-orm/core";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -44,7 +44,6 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @Enum({ items: () => ProductType, nullable: true })
     @Field(() => ProductType, { nullable: true })
-    @CrudFieldEnum("ProductType")
     type?: ProductType;
 
     @Property({ type: types.decimal, nullable: true })
