@@ -27,6 +27,7 @@ import {
     GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
+    GQLProductType,
 } from "@src/graphql.generated";
 import { FORM_ERROR } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -53,6 +54,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         const input = {
             ...formState,
             price: parseFloat(formState.price),
+            type: formState.type as GQLProductType,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
