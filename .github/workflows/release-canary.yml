@@ -31,7 +31,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Publish Canary release
-        run: |
+        if: ${{ github.ref_name == 'main' }}
         run: |
           echo --- > .changeset/canary.md
           echo '"@comet/cli": patch' >> .changeset/canary.md
@@ -39,6 +39,19 @@ jobs:
           echo >> .changeset/canary.md
           echo fake change to always get a canary release >> .changeset/canary.md
           pnpm exec changeset version --snapshot canary
-          pnpm run publish
+          pnpm run publish --tag canary
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish Canary release
+        if: ${{ github.ref_name == 'next' }}
+        run: |
+          echo --- > .changeset/canary.md
+          echo '"@comet/cli": major' >> .changeset/canary.md
+          echo --- >> .changeset/canary.md
+          echo >> .changeset/canary.md
+          echo fake change to always get a canary release >> .changeset/canary.md
+          pnpm exec changeset version --snapshot canary
+          pnpm run publish --tag next-canary
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
