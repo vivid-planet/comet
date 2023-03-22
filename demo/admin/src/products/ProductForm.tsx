@@ -154,9 +154,9 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field name="type" label="Type" required fullWidth>
                             {(props) => (
                                 <FinalFormSelect {...props} fullWidth>
-                                    <MenuItem value="Foo">Foo</MenuItem>
-                                    <MenuItem value="Bar">Bar</MenuItem>
-                                    <MenuItem value="Baz">Baz</MenuItem>
+                                    <MenuItem value="Cap">Cap</MenuItem>
+                                    <MenuItem value="Shirt">Shirt</MenuItem>
+                                    <MenuItem value="Tie">Tie</MenuItem>
                                 </FinalFormSelect>
                             )}
                         </Field>

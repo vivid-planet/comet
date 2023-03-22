@@ -4,9 +4,9 @@ import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 export enum ProductType {
-    Foo = "Foo",
-    Bar = "Bar",
-    Baz = "Baz",
+    Cap = "Cap",
+    Shirt = "Shirt",
+    Tie = "Tie",
 }
 registerEnumType(ProductType, {
     name: "ProductType",

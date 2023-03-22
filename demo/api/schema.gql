@@ -332,9 +332,9 @@ type Product implements DocumentInterface {
 }
 
 enum ProductType {
-  Foo
-  Bar
-  Baz
+  Cap
+  Shirt
+  Tie
 }
 
 type PaginatedProducts {
