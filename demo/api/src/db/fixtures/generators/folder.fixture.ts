@@ -1,9 +1,9 @@
-import { Folder, FoldersService } from "@comet/cms-api";
+import { FolderInterface, FoldersService } from "@comet/cms-api";
 import faker from "faker";
 
 export class FolderFixture {
     constructor(private foldersService: FoldersService) {}
-    async generateFolder(parentId: string | null = null): Promise<Folder> {
+    async generateFolder(parentId: string | null = null): Promise<FolderInterface> {
         const folder = this.foldersService.create({
             parentId: parentId ?? undefined,
             name: faker.lorem.word(),
@@ -12,9 +12,9 @@ export class FolderFixture {
         return folder;
     }
 
-    async randomlyGenerateFolders(amount = 5): Promise<Folder[]> {
+    async randomlyGenerateFolders(amount = 5): Promise<FolderInterface[]> {
         const parentIds: Array<string | null> = [null];
-        const folders: Folder[] = [];
+        const folders: FolderInterface[] = [];
 
         for (let i = 0; i < amount; i++) {
             const parentId = this.getRandomArrayItem(parentIds);

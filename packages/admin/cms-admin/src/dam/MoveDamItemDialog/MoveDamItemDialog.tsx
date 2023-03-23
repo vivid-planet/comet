@@ -17,6 +17,7 @@ import {
     GQLMoveDamFoldersMutation,
     GQLMoveDamFoldersMutationVariables,
 } from "../../graphql.generated";
+import { useDamScope } from "../config/useDamScope";
 import { moveDamFilesMutation, moveDamFoldersMutation } from "../DataGrid/FolderDataGrid.gql";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { ChooseFolder } from "./ChooseFolder";
@@ -52,8 +53,12 @@ export const MoveDamItemDialog = ({
     hasErrors = false,
 }: MoveDamItemDialogProps) => {
     const apolloClient = useApolloClient();
+    const scope = useDamScope();
     const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
         fetchPolicy: "network-only",
+        variables: {
+            scope,
+        },
     });
 
     const {

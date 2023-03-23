@@ -6,6 +6,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
+import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
 import { DamTable } from "../../../dam/DamTable";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
@@ -84,17 +85,20 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     <Close />
                 </CloseButton>
             </StyledDialogTitle>
-            <MemoryRouter>
-                <DamTable
-                    renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) => renderDamLabel(row, onChooseFile, { matches, filterApi })}
-                    allowedMimetypes={allowedMimetypes}
-                    damLocationStorageKey="choose-file-dam-location"
-                    hideContextMenu={true}
-                    disableScopeIndicator={true}
-                    hideMultiselect={true}
-                    hideArchiveFilter={true}
-                />
-            </MemoryRouter>
+            <DamScopeProvider>
+                <MemoryRouter>
+                    <DamTable
+                        renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) =>
+                            renderDamLabel(row, onChooseFile, { matches, filterApi })
+                        }
+                        allowedMimetypes={allowedMimetypes}
+                        damLocationStorageKey="choose-file-dam-location"
+                        hideContextMenu={true}
+                        hideMultiselect={true}
+                        hideArchiveFilter={true}
+                    />
+                </MemoryRouter>
+            </DamScopeProvider>
         </FixedHeightDialog>
     );
 };

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const allFoldersQuery = gql`
-    query AllFoldersWithoutFilters {
-        damFoldersFlat {
+    query AllFoldersWithoutFilters($scope: DamScopeInput!) {
+        damFoldersFlat(scope: $scope) {
             id
             name
             mpath

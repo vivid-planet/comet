@@ -2,6 +2,7 @@ import { useApolloClient } from "@apollo/client";
 import * as React from "react";
 
 import { GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables, GQLFilenameResponse } from "../../../graphql.generated";
+import { useDamScope } from "../../config/useDamScope";
 import { damAreFilenamesOccupied } from "./ManualDuplicatedFilenamesHandler.gql";
 import { ManuallyHandleDuplicatedFilenamesDialog } from "./ManuallyHandleDuplicatedFilenamesDialog";
 
@@ -23,6 +24,7 @@ export const useManualDuplicatedFilenamesHandler = (): ManualDuplicatedFilenames
 
 export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComponent = ({ children }) => {
     const client = useApolloClient();
+    const scope = useDamScope();
 
     const [occupiedFilenames, setOccupiedFilenames] = React.useState<FilenameData[]>([]);
     const [unoccupiedFilenames, setUnoccupiedFilenames] = React.useState<FilenameData[]>([]);
@@ -37,13 +39,14 @@ export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComp
                         name: file.name,
                         folderId: file.folderId,
                     })),
+                    scope,
                 },
                 fetchPolicy: "network-only",
             });
 
             return data.filenamesResponse;
         },
-        [client],
+        [client, scope],
     );
 
     const letUserHandleDuplicates = React.useCallback(

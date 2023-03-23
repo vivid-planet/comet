@@ -13,15 +13,17 @@ import {
     CurrentUserRightInterface,
     DocumentInterface,
     FileImagesResolver,
-    FilesResolver,
-    FoldersResolver,
     InternalLinkBlock,
     PageTreeNodeBase,
     PageTreeNodeCategory,
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
-import { DamItemsResolver } from "./src/dam/files/dam-items.resolver";
+import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
+import { createFileEntity } from "./src/dam/files/entities/file.entity";
+import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
+import { createFilesResolver } from "./src/dam/files/files.resolver";
+import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
 
@@ -85,15 +87,18 @@ async function generateSchema(): Promise<void> {
     }); // no scope
     const AuthResolver = createAuthResolver({ currentUser: CurrentUser });
 
+    const Folder = createFolderEntity();
+    const File = createFileEntity({ Folder });
+
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,
         BuildTemplatesResolver,
         redirectsResolver,
-        FilesResolver,
+        createDamItemsResolver({ File, Folder }),
+        createFilesResolver({ File }),
         FileImagesResolver,
-        FoldersResolver,
+        createFoldersResolver({ Folder }),
         pageTreeResolver,
-        DamItemsResolver,
         CronJobsResolver,
         AuthResolver,
     ]);

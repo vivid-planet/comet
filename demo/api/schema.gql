@@ -34,43 +34,6 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-type DamFolder {
-  id: ID!
-  name: String!
-  parent: DamFolder
-  numberOfChildFolders: Int!
-  numberOfFiles: Int!
-  mpath: [ID!]!
-  archived: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  parents: [DamFolder!]!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type DamFile {
-  id: ID!
-  folder: DamFolder
-  name: String!
-  size: Int!
-  mimetype: String!
-  contentHash: String!
-  title: String
-  altText: String
-  archived: Boolean!
-  image: DamFileImage
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  fileUrl: String!
-  duplicates: [DamFile!]!
-  damPath: String!
-  dependents: [Dependency!]!
-}
-
 type BuildTemplate {
   id: ID!
   name: String!
@@ -81,6 +44,11 @@ type AutoBuildStatus {
   lastCheck: DateTime
   nextCheck: DateTime!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Build {
   id: ID!
@@ -116,27 +84,10 @@ type CronJob {
   lastScheduledAt: DateTime
 }
 
-type PaginatedDamItems {
-  nodes: [DamItem!]!
-  totalCount: Int!
-}
-
-union DamItem = DamFile | DamFolder
-
 type FilenameResponse {
   name: String!
   folderId: ID
   isOccupied: Boolean!
-}
-
-type PaginatedDamFiles {
-  nodes: [DamFile!]!
-  totalCount: Int!
-}
-
-type PaginatedDamFolders {
-  nodes: [DamFolder!]!
-  totalCount: Int!
 }
 
 type NewsComment implements DocumentInterface {
@@ -275,6 +226,44 @@ type CurrentUser {
   domains: [String!]!
 }
 
+type DamScope {
+  domain: String!
+}
+
+type DamFolder {
+  id: ID!
+  name: String!
+  numberOfChildFolders: Int!
+  numberOfFiles: Int!
+  mpath: [ID!]!
+  archived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  scope: DamScope!
+  parent: DamFolder
+  parents: [DamFolder!]!
+}
+
+type DamFile {
+  id: ID!
+  folder: DamFolder
+  name: String!
+  size: Int!
+  mimetype: String!
+  contentHash: String!
+  title: String
+  altText: String
+  archived: Boolean!
+  image: DamFileImage
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  scope: DamScope!
+  fileUrl: String!
+  duplicates: [DamFile!]!
+  damPath: String!
+  dependents: [Dependency!]!
+}
+
 type FooterContentScope {
   domain: String!
   language: String!
@@ -361,6 +350,23 @@ type PaginatedRedirects {
   totalCount: Int!
 }
 
+type PaginatedDamItems {
+  nodes: [DamItem!]!
+  totalCount: Int!
+}
+
+union DamItem = DamFile | DamFolder
+
+type PaginatedDamFiles {
+  nodes: [DamFile!]!
+  totalCount: Int!
+}
+
+type PaginatedDamFolders {
+  nodes: [DamFolder!]!
+  totalCount: Int!
+}
+
 input NewsContentScopeInput {
   domain: String!
   language: String!
@@ -369,6 +375,10 @@ input NewsContentScopeInput {
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
+}
+
+input DamScopeInput {
+  domain: String!
 }
 
 input FooterContentScopeInput {
@@ -395,16 +405,16 @@ type Query {
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int = 0, limit: Int = 20): PaginatedRedirects!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
-  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damItemListPosition(sortColumnName: String, sortDirection: SortDirection = ASC, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
-  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
+  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damItemListPosition(sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput!, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
+  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
-  damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
-  damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
-  damFoldersFlat: [DamFolder!]!
-  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
+  damIsFilenameOccupied(filename: String!, scope: DamScopeInput!, folderId: String): Boolean!
+  damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput!): [FilenameResponse!]!
+  damFoldersFlat(scope: DamScopeInput!): [DamFolder!]!
+  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput!, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
-  damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
+  damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!): News
   newsList(offset: Int = 0, limit: Int = 20, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
@@ -583,9 +593,9 @@ type Mutation {
   restoreDamFile(id: ID!): DamFile!
   restoreDamFiles(ids: [ID!]!): [DamFile!]!
   deleteDamFile(id: ID!): Boolean!
-  createDamFolder(input: CreateDamFolderInput!): DamFolder!
+  createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput!): DamFolder!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
-  moveDamFolders(folderIds: [ID!]!, targetFolderId: ID): [DamFolder!]!
+  moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!

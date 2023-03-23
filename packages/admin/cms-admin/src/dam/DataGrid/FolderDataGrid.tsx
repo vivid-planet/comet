@@ -25,6 +25,7 @@ import {
     GQLDamItemType,
 } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
+import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
@@ -67,6 +68,7 @@ const FolderDataGrid = ({
     const apolloClient = useApolloClient();
     const switchApi = useStackSwitchApi();
     const damSelectionActionsApi = useDamSelectionApi();
+    const scope = useDamScope();
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -106,6 +108,7 @@ const FolderDataGrid = ({
             sortDirection: filterApi.current.sort?.direction,
             limit: dataGridProps.pageSize,
             offset: dataGridProps.page * dataGridProps.pageSize,
+            scope,
         },
     });
 
@@ -189,6 +192,7 @@ const FolderDataGrid = ({
                     },
                     sortColumnName: filterApi.current.sort?.columnName,
                     sortDirection: filterApi.current.sort?.direction,
+                    scope,
                 },
             });
 
