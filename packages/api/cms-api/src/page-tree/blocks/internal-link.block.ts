@@ -2,6 +2,7 @@ import {
     AnnotationBlockMeta,
     BlockData,
     BlockField,
+    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -11,7 +12,8 @@ import {
 } from "@comet/blocks-api";
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
-import { PageTreeService } from "../page-tree.service";
+import { PAGE_TREE_ENTITY } from "../page-tree.constants";
+import { PageTreeReadApi } from "../page-tree-read-api";
 import { PageExists } from "../validators/page-exists.validator";
 
 interface InternalLinkBlockTransformResponse extends TransformResponse {
@@ -30,8 +32,8 @@ class InternalLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
     targetPageAnchor?: string;
 
-    async transformToPlain({ pageTreeService }: { pageTreeService: PageTreeService }): Promise<InternalLinkBlockTransformResponse> {
-        if (pageTreeService === undefined) {
+    async transformToPlain({ pageTreeReadApi }: { pageTreeReadApi: PageTreeReadApi }): Promise<InternalLinkBlockTransformResponse> {
+        if (pageTreeReadApi === undefined) {
             throw new Error("Missing transform dependency pageTreeService!");
         }
 
@@ -41,9 +43,9 @@ class InternalLinkBlockData extends BlockData {
             };
         }
 
-        const readApi = pageTreeService.createReadApi({ visibility: "all" });
+        //TODO do we need createReadApi({ visibility: "all" });?
 
-        const node = await readApi.getNode(this.targetPageId);
+        const node = await pageTreeReadApi.getNode(this.targetPageId);
 
         if (!node) {
             return { targetPage: null };
@@ -53,10 +55,25 @@ class InternalLinkBlockData extends BlockData {
             targetPage: {
                 id: node.id,
                 name: node.name,
-                path: await readApi.nodePath(node),
+                path: await pageTreeReadApi.nodePath(node),
                 documentType: node.documentType,
             },
             targetPageAnchor: this.targetPageAnchor,
+        };
+    }
+
+    indexData(): BlockIndexData {
+        if (this.targetPageId === undefined) {
+            return {};
+        }
+
+        return {
+            dependencies: [
+                {
+                    targetEntityName: PAGE_TREE_ENTITY,
+                    id: this.targetPageId,
+                },
+            ],
         };
     }
 }

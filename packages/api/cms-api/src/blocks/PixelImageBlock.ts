@@ -54,7 +54,6 @@ class PixelImageBlockData extends BlockData {
                           dominantColor: file.image.dominantColor,
                       }
                     : undefined,
-                damPath: await filesService.getDamPath(file),
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
             cropArea: this.cropArea ? { ...this.cropArea } : undefined,
@@ -80,8 +79,17 @@ class PixelImageBlockData extends BlockData {
     }
 
     indexData(): BlockIndexData {
+        if (this.damFileId === undefined) {
+            return {};
+        }
+
         return {
-            damFileIds: this.damFileId ? [this.damFileId] : [],
+            dependencies: [
+                {
+                    targetEntityName: "File", // TODO is this correct?
+                    id: this.damFileId,
+                },
+            ],
         };
     }
 }
@@ -176,11 +184,6 @@ class Meta extends AnnotationBlockMeta {
                                 ],
                             },
                             nullable: true,
-                        },
-                        {
-                            name: "damPath",
-                            kind: BlockMetaFieldKind.String,
-                            nullable: false,
                         },
                         {
                             name: "fileUrl",

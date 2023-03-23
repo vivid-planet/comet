@@ -18,9 +18,8 @@ export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage
 export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
-export { BlockIndexService } from "./blocks/block-index.service";
 export { BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
-export { BlocksModule, BlocksModuleAsyncOptions, BlocksModuleOptions } from "./blocks/blocks.module";
+export { BlocksModule, BlocksModuleOptions } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
@@ -92,6 +91,9 @@ export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/v
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
 export { Extension, Gravity, ResizingType } from "./dam/imgproxy/imgproxy.enum";
 export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service";
+export { DependenciesModule } from "./dependencies/dependencies.module";
+export { DependenciesService } from "./dependencies/dependencies.service";
+export { Dependency } from "./dependencies/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
@@ -106,6 +108,7 @@ export {
 export { JobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
+export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";
 export { createPageTreeResolver } from "./page-tree/createPageTreeResolver";
@@ -123,6 +126,7 @@ export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entit
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
+export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
 export { PublicUpload } from "./public-upload/entities/public-upload.entity";

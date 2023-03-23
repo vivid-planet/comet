@@ -11,6 +11,8 @@ import { SubjectEntity } from "../../common/decorators/subject-entity.decorator"
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
+import { DependenciesService } from "../../dependencies/dependencies.service";
+import { Dependency } from "../../dependencies/dependency";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface } from "./dto/file.args";
@@ -46,6 +48,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             private readonly contentScopeService: ContentScopeService,
+            private readonly dependenciesService: DependenciesService,
         ) {}
 
         @Query(() => PaginatedDamFiles)
@@ -116,6 +119,19 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             return entity;
         }
 
+        @Mutation(() => [File])
+        @SkipBuild()
+        async archiveDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<FileInterface[]> {
+            const entities = await this.filesRepository.find({ id: { $in: ids } });
+
+            for (const entity of entities) {
+                entity.archived = true;
+            }
+
+            await this.filesRepository.flush();
+            return entities;
+        }
+
         @Mutation(() => File)
         @SubjectEntity(File)
         @SkipBuild()
@@ -125,6 +141,19 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
 
             await this.filesRepository.persistAndFlush(entity);
             return entity;
+        }
+
+        @Mutation(() => [File])
+        @SkipBuild()
+        async restoreDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<FileInterface[]> {
+            const entities = await this.filesRepository.find({ id: { $in: ids } });
+
+            for (const entity of entities) {
+                entity.archived = false;
+            }
+
+            await this.filesRepository.flush();
+            return entities;
         }
 
         @Mutation(() => Boolean)
@@ -191,6 +220,11 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @ResolveField(() => String)
         async damPath(@Parent() file: FileInterface): Promise<string> {
             return this.filesService.getDamPath(file);
+        }
+
+        @ResolveField(() => [Dependency])
+        async dependents(@Parent() file: FileInterface): Promise<Dependency[]> {
+            return this.dependenciesService.getDependents(file);
         }
     }
 

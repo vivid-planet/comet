@@ -4,10 +4,10 @@
 # jump into project dir
 cd $(dirname $0)
 
-# use correct npm and install dependencies
+# use correct node version and install dependencies
 nvm install
 nvm use
-npm i -g npm@7.19 yarn
+npm i -g yarn
 yarn install
 
 # admin Blocks

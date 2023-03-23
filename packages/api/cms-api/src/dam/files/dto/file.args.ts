@@ -55,3 +55,21 @@ export function createFileArgs({ Scope }: { Scope: Type<DamScopeInterface> }): T
 
     return FileArgs;
 }
+
+export class DamFileListPositionArgs extends SortArgs {
+    @Field(() => ID, { nullable: true })
+    @IsOptional()
+    @IsUUID()
+    folderId?: string;
+
+    @Field({ nullable: true, defaultValue: false })
+    @IsOptional()
+    @IsBoolean()
+    includeArchived?: boolean;
+
+    @Field(() => FileFilterInput, { nullable: true })
+    @TransformerType(() => FileFilterInput)
+    @IsOptional()
+    @ValidateNested()
+    filter?: FileFilterInput;
+}

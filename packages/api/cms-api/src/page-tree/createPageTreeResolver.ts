@@ -1,12 +1,12 @@
-import { EntityRepository } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Type } from "@nestjs/common";
-import { Args, CONTEXT, Context, createUnionType, ID, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
-import { Request } from "express";
-import { GraphQLError } from "graphql";
+import { Inject, Type } from "@nestjs/common";
+import { Args, createUnionType, ID, Info, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
+import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
-import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
+import { DependenciesService } from "../dependencies/dependencies.service";
+import { Dependency } from "../dependencies/dependency";
 import { DocumentInterface } from "../document/dto/document-interface";
+import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
     DefaultPageTreeNodeCreateInput,
@@ -16,9 +16,10 @@ import {
     PageTreeNodeUpdateVisibilityInput,
 } from "./dto/page-tree-node.input";
 import { SlugAvailability } from "./dto/slug-availability.enum";
-import { PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
+import { PAGE_TREE_CONFIG } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
-import { PageTreeReadApi, PageTreeService } from "./page-tree.service";
+import { PageTreeService } from "./page-tree.service";
+import { PageTreeReadApiService } from "./page-tree-read-api.service";
 import {
     PageTreeNodeCategory,
     PageTreeNodeCreateInputInterface,
@@ -27,11 +28,6 @@ import {
     PageTreeNodeVisibility as Visibility,
     ScopeInterface,
 } from "./types";
-import { InMemoryPathResolver } from "./utils/in-memory-path-resolver";
-
-interface PageTreeGQLContext {
-    pathResolver?: InMemoryPathResolver;
-}
 
 export function createPageTreeResolver({
     PageTreeNode,
@@ -65,20 +61,13 @@ export function createPageTreeResolver({
 
     @Resolver(() => PageTreeNode)
     class PageTreeResolver {
-        protected pageTreeReadApi: PageTreeReadApi;
-
         constructor(
             protected readonly pageTreeService: PageTreeService,
-            @Inject(forwardRef(() => PAGE_TREE_REPOSITORY)) public readonly pageTreeRepository: EntityRepository<PageTreeNodeInterface>,
-            @Inject(CONTEXT) private context: { req: Request },
+            protected readonly pageTreeReadApi: PageTreeReadApiService,
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
-        ) {
-            const { includeInvisiblePages } = getRequestContextHeadersFromRequest(this.context.req);
-            this.pageTreeReadApi = this.pageTreeService.createReadApi({
-                visibility: [Visibility.Published, ...(includeInvisiblePages || [])],
-            });
-        }
-
+            private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
+            protected readonly dependenciesService: DependenciesService,
+        ) {}
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
         async pageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<PageTreeNodeInterface> {
@@ -96,12 +85,9 @@ export function createPageTreeResolver({
         async pageTreeNodeList(
             @Args("scope", { type: () => Scope }) scope: ScopeInterface,
             @Args("category", { type: () => String, nullable: true }) category: PageTreeNodeCategory,
-            @Context() context: PageTreeGQLContext,
         ): Promise<PageTreeNodeInterface[]> {
-            const result = await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category });
-            const pathResolver = new InMemoryPathResolver(result);
-            context.pathResolver = pathResolver; // pass pathResolver to upcoming resolver
-            return result;
+            await this.pageTreeReadApi.preloadNodes(scope);
+            return this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category });
         }
 
         @Query(() => SlugAvailability)
@@ -135,16 +121,8 @@ export function createPageTreeResolver({
         }
 
         @ResolveField(() => String)
-        async path(@Parent() node: PageTreeNodeInterface, @Context() context: PageTreeGQLContext): Promise<string> {
-            const pathFromMemory = context.pathResolver?.resolve(node.id);
-            return (
-                pathFromMemory ??
-                this.pageTreeService
-                    .createReadApi({
-                        visibility: "all", // @TODO: Test if "all" is necessary. Actually archived path-names should not be public, now they are.
-                    })
-                    .nodePath(node)
-            );
+        async path(@Parent() node: PageTreeNodeInterface): Promise<string> {
+            return this.pageTreeReadApi.nodePath(node);
         }
 
         @ResolveField(() => [PageTreeNode])
@@ -153,12 +131,70 @@ export function createPageTreeResolver({
         }
 
         @ResolveField(() => pageContentUnion, { nullable: true })
-        async document(@Parent() node: PageTreeNodeInterface): Promise<typeof pageContentUnion | undefined> {
-            const activeDocument = await this.pageTreeService.getActiveAttachedDocument(node.id, node.documentType);
-            if (!activeDocument) {
-                return null;
+        async document(@Parent() node: PageTreeNodeInterface, @Info() info: GraphQLResolveInfo): Promise<typeof pageContentUnion | undefined> {
+            if (info.fieldNodes.length === 1) {
+                /*
+                try to avoid loading document for queries such as
+                  document {
+                    __typename
+                     ... on Link {
+                       content
+                     }
+                  }
+
+                  - loads __typename without loading document
+                  - detects ... on Link and loads document only if type matches
+                  - and only if required passes on to DataLoader (which then loads in batch)
+                */
+
+                const fieldNode = info.fieldNodes[0];
+
+                if (fieldNode.selectionSet) {
+                    const ret = fieldNode.selectionSet.selections.reduce(
+                        (acc, selection) => {
+                            if (!acc) return acc;
+                            if (selection.kind == "Field" && selection.name.value === "__typename") {
+                                //__typename is already in acc
+                                return acc;
+                            } else if (
+                                selection.kind === "InlineFragment" &&
+                                selection.typeCondition &&
+                                selection.typeCondition.kind == "NamedType"
+                            ) {
+                                if (
+                                    selection.typeCondition.name.value === node.documentType ||
+                                    selection.typeCondition.name.value === DocumentInterface.name
+                                ) {
+                                    //documentType is matching, return full document (fall thru)
+                                    return undefined;
+                                } else {
+                                    //documentType is not matching, return nothing more
+                                    return acc;
+                                }
+                            } else {
+                                // load full document (fall thru)
+                                return undefined;
+                            }
+                        },
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        { __typename: node.documentType } as any,
+                    );
+                    if (ret) {
+                        //we have all the information needed, return early
+                        return ret;
+                    } else {
+                        //fall thru to load full document
+                    }
+                }
             }
-            return this.pageTreeService.resolveDocument(activeDocument.type, activeDocument.documentId);
+
+            //if document needs to be loaded use DataLoader for batch loading
+            return this.attachedDocumentLoaderService.load(node);
+        }
+
+        @ResolveField(() => [Dependency])
+        async dependents(@Parent() node: PageTreeNodeInterface): Promise<Dependency[]> {
+            return this.dependenciesService.getDependents(node);
         }
 
         @Mutation(() => PageTreeNode)

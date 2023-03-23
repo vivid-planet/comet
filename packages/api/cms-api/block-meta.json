@@ -143,11 +143,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
@@ -463,11 +458,6 @@
                                 ]
                             },
                             "nullable": true
-                        },
-                        {
-                            "name": "damPath",
-                            "kind": "String",
-                            "nullable": false
                         },
                         {
                             "name": "fileUrl",
@@ -819,11 +809,6 @@
                         {
                             "name": "archived",
                             "kind": "Boolean",
-                            "nullable": false
-                        },
-                        {
-                            "name": "damPath",
-                            "kind": "String",
                             "nullable": false
                         },
                         {

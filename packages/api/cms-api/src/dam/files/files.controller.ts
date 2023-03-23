@@ -116,7 +116,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         private checkCdnOrigin(incomingCdnOriginHeader: string): void {
-            if (this.damConfig.cdnEnabled) {
+            if (this.damConfig.cdnEnabled && !this.damConfig.disableCdnOriginHeaderCheck) {
                 if (incomingCdnOriginHeader !== this.damConfig.cdnOriginHeader) {
                     throw new ForbiddenException();
                 }

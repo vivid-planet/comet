@@ -17,10 +17,11 @@ import { FormattedMessage } from "react-intl";
 import { TextLinkBlockData, TextLinkBlockInput } from "../blocks.generated";
 
 interface CreateTextLinkBlockOptions {
+    name?: string;
     link: BlockInterface;
 }
 
-export function createTextLinkBlock({ link: LinkBlock }: CreateTextLinkBlockOptions): BlockInterface {
+export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: CreateTextLinkBlockOptions): BlockInterface {
     const { api: composedApi, block: composedBlock } = composeBlocks({ link: LinkBlock });
 
     const block = withAdditionalBlockAttributes<Pick<TextLinkBlockData, "text">>({
@@ -31,7 +32,7 @@ export function createTextLinkBlock({ link: LinkBlock }: CreateTextLinkBlockOpti
         ...createBlockSkeleton(),
         ...block,
 
-        name: "TextLink",
+        name,
 
         displayName: <FormattedMessage {...messages.link} />,
 

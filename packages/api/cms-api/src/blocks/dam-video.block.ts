@@ -48,7 +48,6 @@ class DamVideoBlockData extends BlockData {
         return {
             damFile: {
                 ...data,
-                damPath: await filesService.getDamPath(file),
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
             autoplay: this.autoplay,
@@ -58,8 +57,17 @@ class DamVideoBlockData extends BlockData {
     }
 
     indexData(): BlockIndexData {
+        if (this.damFileId === undefined) {
+            return {};
+        }
+
         return {
-            damFileIds: this.damFileId ? [this.damFileId] : [],
+            dependencies: [
+                {
+                    targetEntityName: "File", // TODO is this correct?
+                    id: this.damFileId,
+                },
+            ],
         };
     }
 }
@@ -138,11 +146,6 @@ class Meta extends AnnotationBlockMeta {
                         {
                             name: "archived",
                             kind: BlockMetaFieldKind.Boolean,
-                            nullable: false,
-                        },
-                        {
-                            name: "damPath",
-                            kind: BlockMetaFieldKind.String,
                             nullable: false,
                         },
                         {

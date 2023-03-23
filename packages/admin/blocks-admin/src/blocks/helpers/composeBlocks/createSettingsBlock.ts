@@ -37,7 +37,16 @@ export function createSettingsAnonymousBlock<State>({
     return AnonymousSettingsBlock;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function copy<T = any>(value: T): T {
-    return typeof value === "object" && value !== null ? { ...value } : value;
+function copy<T = unknown>(value: T): T {
+    if (typeof value === "object") {
+        if (value === null) {
+            return value;
+        } else if (Array.isArray(value)) {
+            return [...value] as unknown as T;
+        } else {
+            return { ...value };
+        }
+    } else {
+        return value;
+    }
 }

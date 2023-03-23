@@ -1,20 +1,18 @@
 import { FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Type } from "@nestjs/common";
-import { Args, ArgsType, CONTEXT, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
+import { Type } from "@nestjs/common";
+import { Args, ArgsType, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-import { Request } from "express";
 
-import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
+import { DependenciesService } from "../dependencies/dependencies.service";
+import { Dependency } from "../dependencies/dependency";
 import { validateNotModified } from "../document/validateNotModified";
-import { PageTreeReadApi, PageTreeService } from "../page-tree/page-tree.service";
-import { PageTreeNodeVisibility } from "../page-tree/types";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
 import { RedirectInputInterface } from "./dto/redirect-input.factory";
@@ -57,19 +55,11 @@ export function createRedirectsResolver({
     @Resolver(() => Redirect)
     @ScopeGuardActive(hasNonEmptyScope)
     class RedirectsResolver {
-        protected pageTreeReadApi: PageTreeReadApi;
-
         constructor(
             private readonly redirectService: RedirectsService,
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
-            @Inject(forwardRef(() => PageTreeService)) private readonly pageTreeService: PageTreeService,
-            @Inject(CONTEXT) private context: { req: Request },
-        ) {
-            const { includeInvisiblePages } = getRequestContextHeadersFromRequest(this.context.req);
-            this.pageTreeReadApi = this.pageTreeService.createReadApi({
-                visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
-            });
-        }
+            private readonly dependenciesService: DependenciesService,
+        ) {}
 
         @Query(() => [Redirect], { deprecationReason: "Use paginatedRedirects instead. Will be removed in the next version." })
         async redirects(@Args() { scope, query, type, active, sortColumnName, sortDirection }: RedirectsArgs): Promise<RedirectInterface[]> {
@@ -129,7 +119,7 @@ export function createRedirectsResolver({
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
         ): Promise<RedirectInterface> {
-            if (!(await this.redirectService.isRedirectSourceAvailable(input.source, scope))) {
+            if (!(await this.redirectService.isRedirectSourceAvailable(input.source, nonEmptyScopeOrNothing(scope)))) {
                 throw new CometValidationException("Validation failed");
             }
 
@@ -199,6 +189,11 @@ export function createRedirectsResolver({
             const entity = await this.repository.findOneOrFail(id);
             await this.repository.removeAndFlush(entity);
             return true;
+        }
+
+        @ResolveField(() => [Dependency])
+        async dependencies(@Parent() redirect: RedirectInterface): Promise<Dependency[]> {
+            return this.dependenciesService.getDependencies(redirect);
         }
     }
 

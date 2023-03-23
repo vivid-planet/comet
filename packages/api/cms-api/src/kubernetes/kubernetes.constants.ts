@@ -1,4 +1,3 @@
-export const KUBERNETES_MODULE_OPTIONS = "kubernetes-module-options";
 export const KUBERNETES_CONFIG = "kubernetes-config";
 
 /** Label which specifies the instance a build is assigned to (Helm-Release) */

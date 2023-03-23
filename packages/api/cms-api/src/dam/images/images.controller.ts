@@ -154,7 +154,7 @@ export class ImagesController {
     }
 
     private checkCdnOrigin(incomingCdnOriginHeader: string): void {
-        if (this.config.cdnEnabled) {
+        if (this.config.cdnEnabled && !this.config.disableCdnOriginHeaderCheck) {
             if (incomingCdnOriginHeader !== this.config.cdnOriginHeader) {
                 throw new ForbiddenException();
             }

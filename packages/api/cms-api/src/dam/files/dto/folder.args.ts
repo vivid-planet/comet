@@ -77,3 +77,21 @@ export function createFolderByNameAndParentIdArgs({ Scope }: { Scope: Type<DamSc
 
     return FolderByNameAndParentIdArgs;
 }
+
+export class DamFolderListPositionArgs extends SortArgs {
+    @Field(() => ID, { nullable: true })
+    @IsOptional()
+    @IsUUID()
+    parentId?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    includeArchived?: boolean;
+
+    @Field(() => FolderFilterInput, { nullable: true })
+    @TransformerType(() => FolderFilterInput)
+    @IsOptional()
+    @ValidateNested()
+    filter?: FolderFilterInput;
+}

@@ -63,6 +63,16 @@ enum JobStatus {
   failed
 }
 
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
+}
+
 type CronJob {
   id: ID!
   name: String!
@@ -91,6 +101,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
+  dependents: [Dependency!]!
 }
 
 enum PageTreeNodeVisibility {
@@ -134,6 +145,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
+  dependencies: [Dependency!]!
 }
 
 enum RedirectSourceTypeValues {
@@ -179,6 +191,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  dependents: [Dependency!]!
 }
 
 type PaginatedDamItems {
@@ -207,10 +220,12 @@ type Query {
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput = {}, source: String!): Boolean!
   damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput = {}, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damItemListPosition(sortColumnName: String, sortDirection: SortDirection = ASC, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
   damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput = {}, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput = {}): [FilenameResponse!]!
+  damFoldersFlat: [DamFolder!]!
   damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput = {}, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(scope: DamScopeInput = {}, name: String!, parentId: ID): DamFolder
@@ -282,6 +297,11 @@ input DamItemFilterInput {
   mimetypes: [String!]
 }
 
+enum DamItemType {
+  File
+  Folder
+}
+
 input FileFilterInput {
   searchText: String
   mimetypes: [String!]
@@ -315,7 +335,9 @@ type Mutation {
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
+  archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
+  restoreDamFiles(ids: [ID!]!): [DamFile!]!
   deleteDamFile(id: ID!): Boolean!
   createDamFolder(input: CreateDamFolderInput!, scope: DamScopeInput = {}): DamFolder!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
