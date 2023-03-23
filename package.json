@@ -43,7 +43,7 @@
     "devDependencies": {
         "@comet/dev-process-manager": "^2.3.0",
         "@formatjs/cli": "^4.8.3",
-        "@types/node": "^14.0.0",
+        "@types/node": "^18.0.0",
         "dotenv-cli": "^5.1.0",
         "husky": "^7.0.4",
         "lint-staged": "^12.3.7",

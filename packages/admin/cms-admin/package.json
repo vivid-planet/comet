@@ -88,7 +88,7 @@
         "@types/lodash.get": "^4.4.6",
         "@types/lodash.isequal": "^4.0.0",
         "@types/lodash.set": "^4.3.6",
-        "@types/node": "^14.0.0",
+        "@types/node": "^18.0.0",
         "@types/react-final-form-listeners": "^1.0.0",
         "@types/react-image-crop": "^8.0.0",
         "@types/react-router": "^5.0.0",

@@ -27,7 +27,7 @@
         "@comet/admin-babel-preset": "workspace:^4.0.0",
         "@comet/eslint-config": "workspace:^4.0.0",
         "@types/cli-progress": "^3.8.0",
-        "@types/node": "^14.0.0",
+        "@types/node": "^18.0.0",
         "cli-progress": "^3.8.2",
         "eslint": "^8.0.0",
         "fast-xml-parser": "^3.18.0",
