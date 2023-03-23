@@ -4789,7 +4789,7 @@ __metadata:
     "@comet/eslint-config": ^4.0.0
     "@types/draft-js": ^0.10.0
     "@types/jest": ^27.0.0
-    "@types/node": ^14.0.0
+    "@types/node": ^18.0.0
     chokidar-cli: ^2.0.0
     eslint: ^8.0.0
     jest: ^27.0.0
@@ -4813,7 +4813,7 @@ __metadata:
   resolution: "@comet/cli@workspace:packages/cli"
   dependencies:
     "@comet/eslint-config": ^4.0.0
-    "@types/node": ^14.0.0
+    "@types/node": ^18.0.0
     commander: ^9.2.0
     eslint: ^8.0.0
     prettier: ^2.7.1
@@ -4941,7 +4941,7 @@ __metadata:
     "@types/mime": ^2.0.0
     "@types/mime-db": ^1.0.0
     "@types/multer": ^1.4.4
-    "@types/node": ^14.0.0
+    "@types/node": ^18.0.0
     "@types/passport-http": ^0.3.9
     "@types/passport-jwt": ^3.0.7
     "@types/probe-image-size": ^7.0.0
@@ -12875,7 +12875,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14, @types/node@npm:^14.0.0, @types/node@npm:^14.0.1, @types/node@npm:^14.14.28":
+"@types/node@npm:14, @types/node@npm:^14.0.1, @types/node@npm:^14.14.28":
   version: 14.18.21
   resolution: "@types/node@npm:14.18.21"
   checksum: 4ed35b76609647a4e36a194702e31cdda9ed42174ddaf7937bc5498984e98a99e8a42ea895ea17dd9c5ec18080112c29ab670c34f90eb9f7a4703b85b31e34fa
@@ -12896,17 +12896,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^12.0.0":
-  version: 12.20.55
-  resolution: "@types/node@npm:12.20.55"
-  checksum: e4f86785f4092706e0d3b0edff8dca5a13b45627e4b36700acd8dfe6ad53db71928c8dee914d4276c7fd3b6ccd829aa919811c9eb708a2c8e4c6eb3701178c37
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:^14.0.10 || ^16.0.0, @types/node@npm:^14.14.20 || ^16.0.0":
   version: 16.11.41
   resolution: "@types/node@npm:16.11.41"
   checksum: 808e4d65757bb13cf25e88dfa4e65880efef06652b04baecb051eb90cf090dda9812aa3505b31e963a48041eed7dbe0fc59c44c7c5e117da952ff951bf3a584a
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.0.0":
+  version: 18.15.1
+  resolution: "@types/node@npm:18.15.1"
+  checksum: c63a40786919ef77c1dd26f60ffb1ed76c8b608fb156942e4d600d4536e06c19d09463a66cd76e6415f90cd281d7a1a4683e7cfd9a6f0927491853c56ffa17bf
   languageName: node
   linkType: hard
 
@@ -17693,7 +17693,7 @@ __metadata:
     "@types/lodash.escaperegexp": ^4.0.0
     "@types/lodash.isequal": ^4.0.0
     "@types/lodash.merge": ^4.0.0
-    "@types/node": ^12.0.0
+    "@types/node": ^18.0.0
     "@types/react": ^17.0.0
     "@types/react-copy-to-clipboard": ^5.0.0
     "@types/react-dom": ^17.0.0
@@ -17813,7 +17813,7 @@ __metadata:
     "@types/faker": ^5.0.0
     "@types/mime": ^2.0.0
     "@types/multer": ^1.0.0
-    "@types/node": ^14.0.0
+    "@types/node": ^18.0.0
     "@types/passport": ^1.0.0
     "@types/pg": ^8.0.0
     "@types/rimraf": ^3.0.0
@@ -17880,7 +17880,7 @@ __metadata:
     "@opentelemetry/sdk-node": ^0.35.1
     "@types/fs-extra": ^9.0.0
     "@types/google.maps": ^3.0.0
-    "@types/node": ^14.0.0
+    "@types/node": ^18.0.0
     "@types/react": ^17.0.0
     "@types/react-dom": ^17.0.0
     "@types/react-is": ^17.0.0
