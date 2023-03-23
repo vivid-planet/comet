@@ -14,6 +14,7 @@ import {
 } from "@comet/blocks-api";
 import { IsBoolean, IsOptional, IsUUID } from "class-validator";
 
+import { FILE_ENTITY } from "../dam/files/entities/file.entity";
 import { FilesService } from "../dam/files/files.service";
 
 class DamVideoBlockData extends BlockData {
@@ -64,7 +65,7 @@ class DamVideoBlockData extends BlockData {
         return {
             dependencies: [
                 {
-                    targetEntityName: "File", // TODO is this correct?
+                    targetEntityName: FILE_ENTITY,
                     id: this.damFileId,
                 },
             ],

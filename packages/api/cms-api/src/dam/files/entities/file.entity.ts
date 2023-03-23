@@ -122,3 +122,5 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         return File;
     }
 }
+
+export const FILE_ENTITY = "File";

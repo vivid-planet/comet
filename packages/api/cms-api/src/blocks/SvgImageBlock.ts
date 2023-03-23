@@ -12,6 +12,7 @@ import {
 } from "@comet/blocks-api";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
+import { FILE_ENTITY } from "../dam/files/entities/file.entity";
 import { FilesService } from "../dam/files/files.service";
 
 // @TODO: make factory to support flexible validation
@@ -52,7 +53,7 @@ class SvgImageBlockData extends BlockData {
         return {
             dependencies: [
                 {
-                    targetEntityName: "File", // TODO is this correct?
+                    targetEntityName: FILE_ENTITY,
                     id: this.damFileId,
                 },
             ],
