@@ -42,8 +42,10 @@ export function createFoldersResolver({
         constructor(private readonly foldersService: FoldersService) {}
 
         @Query(() => [Folder])
-        async damFoldersFlat(): Promise<FolderInterface[]> {
-            return this.foldersService.findAllFlat();
+        async damFoldersFlat(
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+        ): Promise<FolderInterface[]> {
+            return this.foldersService.findAllFlat(nonEmptyScopeOrNothing(scope));
         }
 
         @Query(() => PaginatedDamFolders)

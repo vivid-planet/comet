@@ -4,7 +4,7 @@ import { Args, createUnionType, Field, Int, ObjectType, Query, Resolver } from "
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DamScopeInterface } from "../types";
 import { DamItemsService } from "./dam-items.service";
-import { createDamItemArgs, DamItemPositionArgs, DamItemsArgsInterface } from "./dto/dam-items.args";
+import { createDamItemArgs, createDamItemPositionArgs, DamItemPositionArgsInterface, DamItemsArgsInterface } from "./dto/dam-items.args";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
@@ -37,6 +37,7 @@ export function createDamItemsResolver({
     }
 
     const DamItemsArgs = createDamItemArgs({ Scope });
+    const DamItemsPositionArgs = createDamItemPositionArgs({ Scope });
 
     @ObjectType()
     class PaginatedDamItems {
@@ -64,8 +65,8 @@ export function createDamItemsResolver({
         }
 
         @Query(() => Number)
-        async damItemListPosition(@Args() args: DamItemPositionArgs): Promise<number> {
-            return this.damItemsService.getDamItemPosition(args);
+        async damItemListPosition(@Args({ type: () => DamItemsPositionArgs }) args: DamItemPositionArgsInterface): Promise<number> {
+            return this.damItemsService.getDamItemPosition(args, nonEmptyScopeOrNothing(args.scope));
         }
     }
 

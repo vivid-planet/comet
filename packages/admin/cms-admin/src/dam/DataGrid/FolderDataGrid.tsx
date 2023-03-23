@@ -192,6 +192,7 @@ const FolderDataGrid = ({
                     },
                     sortColumnName: filterApi.current.sort?.columnName,
                     sortDirection: filterApi.current.sort?.direction,
+                    scope,
                 },
             });
 

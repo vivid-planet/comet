@@ -113,6 +113,7 @@ export const damItemListPosition = gql`
         $filter: DamItemFilterInput
         $sortColumnName: String
         $sortDirection: SortDirection
+        $scope: DamScopeInput!
     ) {
         damItemListPosition(
             id: $id
@@ -122,6 +123,7 @@ export const damItemListPosition = gql`
             filter: $filter
             sortColumnName: $sortColumnName
             sortDirection: $sortDirection
+            scope: $scope
         )
     }
 `;

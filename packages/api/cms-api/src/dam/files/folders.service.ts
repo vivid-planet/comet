@@ -94,8 +94,14 @@ export class FoldersService {
         return qb.getResult();
     }
 
-    async findAllFlat(): Promise<FolderInterface[]> {
-        return this.selectQueryBuilder().orderBy({ name: "ASC" }).getResult();
+    async findAllFlat(scope?: DamScopeInterface): Promise<FolderInterface[]> {
+        const qb = this.selectQueryBuilder().orderBy({ name: "ASC" });
+
+        if (scope) {
+            qb.where({ scope });
+        }
+
+        return qb.getResult();
     }
 
     async findAndCount(
@@ -264,7 +270,7 @@ export class FoldersService {
         return result === 1;
     }
 
-    async getFolderPosition(folderId: string, args: DamFolderListPositionArgs): Promise<number> {
+    async getFolderPosition(folderId: string, args: Omit<DamFolderListPositionArgs, "scope">, scope?: DamScopeInterface): Promise<number> {
         const subQb = withFoldersSelect(
             this.foldersRepository
                 .createQueryBuilder("folder")
@@ -275,6 +281,7 @@ export class FoldersService {
                 query: args.filter?.searchText,
                 sortColumnName: args.sortColumnName,
                 sortDirection: args.sortDirection,
+                scope,
             },
         );
 

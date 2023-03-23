@@ -345,7 +345,7 @@ export class FilesService {
         return result;
     }
 
-    async getFilePosition(fileId: string, args: DamFileListPositionArgs): Promise<number> {
+    async getFilePosition(fileId: string, args: Omit<DamFileListPositionArgs, "scope">, scope?: DamScopeInterface): Promise<number> {
         const isSearching = args.filter?.searchText !== undefined && args.filter.searchText.length > 0;
 
         const subQb = withFilesSelect(
@@ -360,6 +360,7 @@ export class FilesService {
                 query: args.filter?.searchText,
                 sortColumnName: args.sortColumnName,
                 sortDirection: args.sortDirection,
+                scope,
             },
         );
 
