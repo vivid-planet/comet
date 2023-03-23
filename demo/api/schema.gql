@@ -230,6 +230,40 @@ type DamScope {
   domain: String!
 }
 
+type DamFolder {
+  id: ID!
+  name: String!
+  numberOfChildFolders: Int!
+  numberOfFiles: Int!
+  mpath: [ID!]!
+  archived: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  scope: DamScope!
+  parent: DamFolder
+  parents: [DamFolder!]!
+}
+
+type DamFile {
+  id: ID!
+  folder: DamFolder
+  name: String!
+  size: Int!
+  mimetype: String!
+  contentHash: String!
+  title: String
+  altText: String
+  archived: Boolean!
+  image: DamFileImage
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  scope: DamScope!
+  fileUrl: String!
+  duplicates: [DamFile!]!
+  damPath: String!
+  dependents: [Dependency!]!
+}
+
 type FooterContentScope {
   domain: String!
   language: String!
@@ -314,40 +348,6 @@ enum RedirectGenerationType {
 type PaginatedRedirects {
   nodes: [Redirect!]!
   totalCount: Int!
-}
-
-type DamFolder {
-  id: ID!
-  name: String!
-  numberOfChildFolders: Int!
-  numberOfFiles: Int!
-  mpath: [ID!]!
-  archived: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  scope: DamScope!
-  parent: DamFolder
-  parents: [DamFolder!]!
-}
-
-type DamFile {
-  id: ID!
-  folder: DamFolder
-  name: String!
-  size: Int!
-  mimetype: String!
-  contentHash: String!
-  title: String
-  altText: String
-  archived: Boolean!
-  image: DamFileImage
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  scope: DamScope!
-  fileUrl: String!
-  duplicates: [DamFile!]!
-  damPath: String!
-  dependents: [Dependency!]!
 }
 
 type PaginatedDamItems {

@@ -8,9 +8,9 @@ import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
-import { createFileEntity } from "./files/entities/file.entity";
+import { createFileEntity, FileInterface } from "./files/entities/file.entity";
 import { FileImage } from "./files/entities/file-image.entity";
-import { createFolderEntity } from "./files/entities/folder.entity";
+import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
@@ -31,12 +31,20 @@ interface DamModuleOptions {
     damConfig: DamConfig;
     imgproxyConfig: ImgproxyConfig;
     Scope?: Type<DamScopeInterface>;
+    Folder?: Type<FolderInterface>;
+    File?: Type<FileInterface>;
 }
 
 @Global()
 @Module({})
 export class DamModule {
-    static register({ damConfig, imgproxyConfig, Scope }: DamModuleOptions): DynamicModule {
+    static register({
+        damConfig,
+        imgproxyConfig,
+        Scope,
+        Folder = createFolderEntity({ Scope }),
+        File = createFileEntity({ Scope, Folder }),
+    }: DamModuleOptions): DynamicModule {
         const damConfigProvider: ValueProvider<DamConfig> = {
             provide: DAM_CONFIG,
             useValue: damConfig,
@@ -47,8 +55,6 @@ export class DamModule {
             useValue: imgproxyConfig,
         };
 
-        const Folder = createFolderEntity({ Scope });
-        const File = createFileEntity({ Scope, Folder });
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
         const FilesResolver = createFilesResolver({ File, Scope });
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
