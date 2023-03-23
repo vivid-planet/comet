@@ -107,7 +107,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
     }
 
     if (Scope) {
-        @Entity({ tableName: "DamFile" })
+        @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class File extends FileBase {
             @Embedded(() => Scope)
@@ -116,7 +116,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         }
         return File;
     } else {
-        @Entity({ tableName: "DamFile" })
+        @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class File extends FileBase {}
         return File;
@@ -124,3 +124,5 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
 }
 
 export const FILE_ENTITY = "File";
+
+export const FILE_TABLE_NAME = "DamFile";

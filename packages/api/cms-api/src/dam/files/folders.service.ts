@@ -9,7 +9,7 @@ import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { DamScopeInterface } from "../types";
 import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
-import { FolderInterface } from "./entities/folder.entity";
+import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 
 export const withFoldersSelect = (
@@ -285,12 +285,9 @@ export class FoldersService {
             },
         );
 
-        // const folderTableName = this.orm.em.getMetadata().get(Folder.name).tableName;
-        const folderTableName = "DamFolder"; // TODO use constant?
-
         const result: { rows: Array<{ row_number: string }> } = await this.foldersRepository.createQueryBuilder().raw(
             `select "folder_with_row_number".row_number
-                from "${folderTableName}" as "folder"
+                from "${FOLDER_TABLE_NAME}" as "folder"
                 join (${subQb.getFormattedQuery()}) as "folder_with_row_number" ON folder_with_row_number.id = folder.id
                 where "folder"."id" = ?
             `,

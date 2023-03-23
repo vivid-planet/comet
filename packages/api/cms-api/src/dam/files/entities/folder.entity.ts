@@ -81,7 +81,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
     }
 
     if (Scope) {
-        @Entity({ tableName: "DamFolder" })
+        @Entity({ tableName: FOLDER_TABLE_NAME })
         @ObjectType("DamFolder")
         class Folder extends FolderBase {
             @Embedded(() => Scope)
@@ -93,7 +93,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         }
         return Folder;
     } else {
-        @Entity({ tableName: "DamFolder" })
+        @Entity({ tableName: FOLDER_TABLE_NAME })
         @ObjectType("DamFolder")
         class Folder extends FolderBase {
             @Field(() => Folder, { nullable: true })
@@ -102,3 +102,5 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         return Folder;
     }
 }
+
+export const FOLDER_TABLE_NAME = "DamFolder";

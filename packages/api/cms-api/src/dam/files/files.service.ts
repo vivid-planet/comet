@@ -27,7 +27,7 @@ import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
-import { FileInterface } from "./entities/file.entity";
+import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { FileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { createHashedPath, slugifyFilename } from "./files.utils";
@@ -364,12 +364,9 @@ export class FilesService {
             },
         );
 
-        // const fileTableName = this.orm.em.getMetadata().get(File.name).tableName;
-        const fileTableName = "DamFile"; // TODO use constant?
-
         const result: { rows: Array<{ row_number: string }> } = await this.filesRepository.createQueryBuilder().raw(
             `select "file_with_row_number".row_number
-                from "${fileTableName}" as "file"
+                from "${FILE_TABLE_NAME}" as "file"
                 join (${subQb.getFormattedQuery()}) as "file_with_row_number" ON file_with_row_number.id = file.id
                 where "file"."id" = ?
             `,
