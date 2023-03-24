@@ -1,10 +1,10 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { useEditDialogApi, useErrorDialog, useStackSwitchApi } from "@comet/admin";
-import { Archive, Delete, Download, Edit, MoreVertical, Restore } from "@comet/admin-icons";
-import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from "@mui/material";
+import { RowActionsItem, RowActionsMenu, useEditDialogApi, useErrorDialog, useStackSwitchApi } from "@comet/admin";
+import { Archive, Delete, Download, Edit, Restore } from "@comet/admin-icons";
+import { Divider } from "@mui/material";
 import saveAs from "file-saver";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { UnknownError } from "../../common/errors/errorMessages";
 import {
@@ -30,16 +30,13 @@ interface DamContextMenuProps {
 
 interface FolderInnerMenuProps {
     folder: Pick<GQLDamFile, "id" | "name">;
-    handleClose: () => void;
 }
 
 interface FileInnerMenuProps {
     file: Pick<GQLDamFile, "id" | "name" | "fileUrl" | "archived">;
-    handleClose: () => void;
 }
 
-const FolderInnerMenu = ({ folder, handleClose }: FolderInnerMenuProps): React.ReactElement => {
-    const intl = useIntl();
+const FolderInnerMenu = ({ folder }: FolderInnerMenuProps): React.ReactElement => {
     const editDialogApi = useEditDialogApi();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
@@ -64,167 +61,134 @@ const FolderInnerMenu = ({ folder, handleClose }: FolderInnerMenuProps): React.R
                 userMessage: <UnknownError />,
             });
         }
-
-        handleClose();
     };
 
     return (
-        <MenuList>
-            <MenuItem
-                onClick={() => {
-                    handleClose();
-                    editDialogApi?.openEditDialog(folder.id);
+        <>
+            <RowActionsMenu>
+                <RowActionsMenu>
+                    <RowActionsItem
+                        icon={<Edit />}
+                        onClick={() => {
+                            editDialogApi?.openEditDialog(folder.id);
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.dam.rename" defaultMessage="Rename" />
+                    </RowActionsItem>
+                    <RowActionsItem
+                        icon={<Delete />}
+                        onClick={() => {
+                            setDeleteDialogOpen(true);
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.dam.delete" defaultMessage="Delete" />
+                    </RowActionsItem>
+                </RowActionsMenu>
+            </RowActionsMenu>
+            <ConfirmDeleteDialog
+                open={deleteDialogOpen}
+                onCloseDialog={async (confirmed) => {
+                    if (confirmed) {
+                        await handleFolderDelete();
+                    }
+                    setDeleteDialogOpen(false);
                 }}
-            >
-                <ListItemIcon>
-                    <Edit />
-                </ListItemIcon>
-                <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.rename", defaultMessage: "Rename" })} />
-            </MenuItem>
-            <MenuItem
-                onClick={() => {
-                    setDeleteDialogOpen(true);
-                }}
-            >
-                <ListItemIcon>
-                    <Delete />
-                </ListItemIcon>
-                <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.delete", defaultMessage: "Delete" })} />
-                <ConfirmDeleteDialog
-                    open={deleteDialogOpen}
-                    onCloseDialog={async (confirmed) => {
-                        if (confirmed) {
-                            await handleFolderDelete();
-                        }
-                        setDeleteDialogOpen(false);
-                        handleClose();
-                    }}
-                    name={folder.name}
-                    itemType="folder"
-                />
-            </MenuItem>
-        </MenuList>
+                name={folder.name}
+                itemType="folder"
+            />
+        </>
     );
 };
 
-const FileInnerMenu = ({ file, handleClose }: FileInnerMenuProps): React.ReactElement => {
+const FileInnerMenu = ({ file }: FileInnerMenuProps): React.ReactElement => {
     const client = useApolloClient();
-    const intl = useIntl();
     const stackApi = useStackSwitchApi();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
 
     return (
-        <MenuList>
-            <MenuItem
-                onClick={() => {
-                    handleClose();
-                    stackApi.activatePage("edit", file.id);
-                }}
-            >
-                <ListItemIcon>
-                    <Edit />
-                </ListItemIcon>
-                <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.showEdit", defaultMessage: "Show/edit" })} />
-            </MenuItem>
-            <MenuItem
-                onClick={() => {
-                    handleClose();
-                    saveAs(file.fileUrl, file.name);
-                }}
-            >
-                <ListItemIcon>
-                    <Download />
-                </ListItemIcon>
-                <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.downloadFile", defaultMessage: "Download file" })} />
-            </MenuItem>
-            <MenuItem
-                onClick={() => {
-                    handleClose();
-                    if (file.archived) {
-                        client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
-                            mutation: restoreDamFileMutation,
-                            variables: { id: file.id },
-                            refetchQueries: [namedOperations.Query.DamItemsList],
-                        });
-                    } else {
-                        client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
-                            mutation: archiveDamFileMutation,
+        <>
+            <RowActionsMenu>
+                <RowActionsMenu>
+                    <RowActionsItem
+                        icon={<Edit />}
+                        onClick={() => {
+                            stackApi.activatePage("edit", file.id);
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.dam.showEdit" defaultMessage="Show/edit" />
+                    </RowActionsItem>
+                    <RowActionsItem
+                        icon={<Download />}
+                        onClick={() => {
+                            saveAs(file.fileUrl, file.name);
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.dam.downloadFile" defaultMessage="Download file" />
+                    </RowActionsItem>
+                    <RowActionsItem
+                        icon={file.archived ? <Restore /> : <Archive />}
+                        onClick={() => {
+                            if (file.archived) {
+                                client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
+                                    mutation: restoreDamFileMutation,
+                                    variables: { id: file.id },
+                                    refetchQueries: [namedOperations.Query.DamItemsList],
+                                });
+                            } else {
+                                client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
+                                    mutation: archiveDamFileMutation,
+                                    variables: { id: file.id },
+                                    refetchQueries: [namedOperations.Query.DamItemsList],
+                                });
+                            }
+                        }}
+                    >
+                        {file.archived ? (
+                            <FormattedMessage id="comet.pages.dam.restoreFile" defaultMessage="Restore file" />
+                        ) : (
+                            <FormattedMessage id="comet.pages.dam.archiveFile" defaultMessage="Archive file" />
+                        )}
+                    </RowActionsItem>
+                    <Divider />
+                    <RowActionsItem
+                        icon={<Delete />}
+                        onClick={() => {
+                            setDeleteDialogOpen(true);
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.dam.delete" defaultMessage="Delete file" />
+                    </RowActionsItem>
+                </RowActionsMenu>
+            </RowActionsMenu>
+            <ConfirmDeleteDialog
+                open={deleteDialogOpen}
+                onCloseDialog={async (confirmed) => {
+                    if (confirmed) {
+                        await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
+                            mutation: deleteDamFileMutation,
                             variables: { id: file.id },
                             refetchQueries: [namedOperations.Query.DamItemsList],
                         });
                     }
-                }}
-            >
-                <ListItemIcon>{file.archived ? <Restore /> : <Archive />}</ListItemIcon>
-                <ListItemText
-                    primary={
-                        file.archived
-                            ? intl.formatMessage({ id: "comet.pages.dam.restoreFile", defaultMessage: "Restore file" })
-                            : intl.formatMessage({ id: "comet.pages.dam.archiveFile", defaultMessage: "Archive file" })
-                    }
-                />
-            </MenuItem>
-            <MenuItem
-                onClick={() => {
-                    setDeleteDialogOpen(true);
-                }}
-            >
-                <ListItemIcon>
-                    <Delete />
-                </ListItemIcon>
-                <ListItemText primary={intl.formatMessage({ id: "comet.pages.dam.deleteFile", defaultMessage: "Delete file" })} />
-                <ConfirmDeleteDialog
-                    open={deleteDialogOpen}
-                    onCloseDialog={async (confirmed) => {
-                        if (confirmed) {
-                            await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
-                                mutation: deleteDamFileMutation,
-                                variables: { id: file.id },
-                                refetchQueries: [namedOperations.Query.DamItemsList],
-                            });
-                        }
 
-                        setDeleteDialogOpen(false);
-                        handleClose();
-                    }}
-                    name={file.name}
-                    itemType="file"
-                />
-            </MenuItem>
-        </MenuList>
+                    setDeleteDialogOpen(false);
+                }}
+                name={file.name}
+                itemType="file"
+            />
+        </>
     );
 };
 
 const DamContextMenu = ({ file, folder }: DamContextMenuProps): React.ReactElement => {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    let innerMenu = null;
-
     if (folder !== undefined) {
-        innerMenu = <FolderInnerMenu folder={folder} handleClose={handleClose} />;
+        return <FolderInnerMenu folder={folder} />;
     } else if (file !== undefined) {
-        innerMenu = <FileInnerMenu file={file} handleClose={handleClose} />;
+        return <FileInnerMenu file={file} />;
     }
 
-    return (
-        <>
-            <IconButton onClick={handleClick}>
-                <MoreVertical />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                {innerMenu}
-            </Menu>
-        </>
-    );
+    return <></>;
 };
 
 export default DamContextMenu;
