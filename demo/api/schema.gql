@@ -325,7 +325,7 @@ type Product implements DocumentInterface {
   title: String!
   slug: String!
   description: String!
-  type: ProductType
+  type: ProductType!
   price: Float
   inStock: Boolean!
   createdAt: DateTime!
