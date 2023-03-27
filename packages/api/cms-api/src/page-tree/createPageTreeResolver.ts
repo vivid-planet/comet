@@ -224,14 +224,10 @@ export function createPageTreeResolver({
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => PageTreeNodeUpdateVisibilityInput }) input: PageTreeNodeUpdateVisibilityInput,
         ): Promise<PageTreeNodeInterface> {
-            const readApi = this.pageTreeService.createReadApi({ visibility: "all" });
-
-            const existingNode = await readApi.getNodeOrFail(id);
-            if (!existingNode) throw new GraphQLError("Can't find page-tree-node with id");
-
             await this.pageTreeService.updateNodeVisibility(id, input.visibility);
 
-            return readApi.getNodeOrFail(id);
+            const pageTreeReadApi = this.pageTreeService.createReadApi({ visibility: "all" });
+            return pageTreeReadApi.getNodeOrFail(id);
         }
 
         @Mutation(() => PageTreeNode)
