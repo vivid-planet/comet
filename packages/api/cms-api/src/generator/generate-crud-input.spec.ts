@@ -1,13 +1,11 @@
 import { BaseEntity, DateType, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
-import { spawnSync } from "child_process";
+import { ESLint } from "eslint";
 import { Project, SourceFile } from "ts-morph";
 import { v4 as uuid } from "uuid";
 
 import { generateCrudInput } from "./generate-crud-input";
 
 async function lint(sourceCode: string): Promise<string> {
-    /*
-    for some reason this doesn't work but eslint cli works
     const eslint = new ESLint({
         cwd: `${process.cwd()}/src`,
         fix: true,
@@ -15,13 +13,6 @@ async function lint(sourceCode: string): Promise<string> {
     const lintResults = await eslint.lintText(sourceCode, {
         filePath: "test.ts",
     });
-    */
-    const proc = spawnSync("pnpm", ["exec", "eslint", "--stdin", "--fix-dry-run", "--format", "json"], { input: sourceCode });
-    if (proc.status !== 0) {
-        console.log(proc.stdout.toString());
-    }
-    expect(proc.status).toBe(0);
-    const lintResults = JSON.parse(proc.stdout.toString());
     expect(lintResults.length).toBe(1);
     for (const lintResult of lintResults) {
         // must not have parse or lint errors
