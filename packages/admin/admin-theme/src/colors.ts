@@ -48,5 +48,5 @@ export const neutrals: ColorPartial = {
 };
 
 export const warningPalette: SimplePaletteColorOptions = {
-    main: "#FFBF00",
+    main: "#FFB31A",
 };

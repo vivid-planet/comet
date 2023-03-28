@@ -12,6 +12,7 @@ import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/f
 import { FileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
+import { FileLicensesResolver } from "./files/file-licenses.resolver";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
@@ -94,6 +95,7 @@ export class DamModule {
                 ImgproxyService,
                 FilesResolver,
                 FilesService,
+                FileLicensesResolver,
                 FoldersResolver,
                 FoldersService,
                 ImagesService,

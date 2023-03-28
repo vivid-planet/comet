@@ -68,10 +68,12 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         ? {
               ...filter<GQLProductFormFragment>(productFormFragment, data.product),
               price: String(data.product.price),
+              // @ts-expect-error type mismatch between OneOfBlock block data and block state
               image: rootBlocks.image.input2State(data.product.image),
           }
         : {
               image: rootBlocks.image.defaultValues(),
+              inStock: false,
           };
 
     const saveConflict = useFormSaveConflict({
