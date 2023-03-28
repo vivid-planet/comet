@@ -4,12 +4,11 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { SaveButton } from "./common/buttons/save/SaveButton";
-import { DirtyHandler } from "./DirtyHandler";
-import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { CloseDialogOptions, EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
 import { EditDialogFormApiProvider, useEditDialogFormApi } from "./EditDialogFormApiContext";
-import { SubmitResult } from "./form/SubmitResult";
 import { messages } from "./messages";
+import { RouterContext } from "./router/Context";
+import { SaveAction } from "./router/PromptHandler";
 import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
@@ -18,11 +17,11 @@ interface ITitle {
     add: React.ReactNode;
 }
 
-interface IProps {
+interface EditDialogProps {
     title?: ITitle | string;
 }
 
-export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
+export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
 
     const openAddDialog = React.useCallback(
@@ -63,17 +62,33 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
         };
     }, [closeDialog, openAddDialog, openEditDialog]);
 
+    const parentRouterContext = React.useContext(RouterContext);
+    const saveActionRef = React.useRef<SaveAction>();
+
     const EditDialogWithHookProps = React.useMemo(() => {
-        return (props: IProps) => {
+        return (props: EditDialogProps) => {
             return (
                 <Selection>
                     <EditDialogFormApiProvider>
-                        <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
+                        <RouterContext.Provider
+                            value={{
+                                register: ({ id, path, message, saveAction }) => {
+                                    saveActionRef.current = saveAction;
+                                    parentRouterContext?.register({ id, path, message, saveAction });
+                                },
+                                unregister: (id) => {
+                                    saveActionRef.current = undefined;
+                                    parentRouterContext?.unregister(id);
+                                },
+                            }}
+                        >
+                            <EditDialogInner {...props} saveActionRef={saveActionRef} selection={selection} selectionApi={selectionApi} api={api} />
+                        </RouterContext.Provider>
                     </EditDialogFormApiProvider>
                 </Selection>
             );
         };
-    }, [Selection, api, selection, selectionApi]);
+    }, [Selection, api, selection, selectionApi, parentRouterContext]);
 
     return [EditDialogWithHookProps, selection, api, selectionApi];
 }
@@ -85,9 +100,17 @@ interface IHookProps {
     };
     selectionApi: ISelectionApi;
     api: IEditDialogApi;
+    saveActionRef: React.MutableRefObject<SaveAction | undefined>;
 }
 
-const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selection, selectionApi, api, title: maybeTitle, children }) => {
+const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = ({
+    selection,
+    selectionApi,
+    api,
+    saveActionRef,
+    title: maybeTitle,
+    children,
+}) => {
     const intl = useIntl();
     const editDialogFormApi = useEditDialogFormApi();
 
@@ -96,24 +119,23 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
         add: intl.formatMessage(messages.add),
     };
 
-    let dirtyHandlerApi: IDirtyHandlerApi | undefined;
-    const handleSaveClick = () => {
-        if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then((submitResults: Array<SubmitResult>) => {
-                const failed = submitResults.some((submitResult) => !!submitResult.error);
+    const handleSaveClick = async () => {
+        if (!saveActionRef.current) {
+            console.error("Can't save, no RouterPrompt registered with saveAction");
+            return;
+        }
+        const saveResult = await saveActionRef.current();
 
-                if (!failed) {
-                    setTimeout(() => {
-                        if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
-                        api.closeDialog({ delay: true });
-                    });
-                }
+        if (!saveResult) {
+            setTimeout(() => {
+                // TODO DirtyHandler removal: do we need a onReset functionality here?
+                api.closeDialog({ delay: true });
             });
         }
     };
 
     const handleCancelClick = () => {
-        if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
+        // TODO DirtyHandler removal: do we need a onReset functionality here?
         api.closeDialog();
     };
 
@@ -121,38 +143,27 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
         api.closeDialog();
     };
 
+    const isOpen = !!selection.mode;
+
     return (
         <EditDialogApiContext.Provider value={api}>
-            <DirtyHandler>
-                <Dialog open={!!selection.mode} onClose={handleCloseClick}>
-                    <div>
-                        <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
-                        <DialogContent>{children}</DialogContent>
-                        <DialogActions>
-                            <CancelButton onClick={handleCancelClick} />
-                            <DirtyHandlerApiContext.Consumer>
-                                {(injectedDirtyHandlerApi) => {
-                                    dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
-                                    return (
-                                        <SaveButton
-                                            saving={editDialogFormApi?.saving}
-                                            hasErrors={editDialogFormApi?.hasErrors}
-                                            onClick={handleSaveClick}
-                                        >
-                                            <FormattedMessage {...messages.save} />
-                                        </SaveButton>
-                                    );
-                                }}
-                            </DirtyHandlerApiContext.Consumer>
-                        </DialogActions>
-                    </div>
-                </Dialog>
-            </DirtyHandler>
+            <Dialog open={isOpen} onClose={handleCloseClick}>
+                <div>
+                    <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
+                    <DialogContent>{children}</DialogContent>
+                    <DialogActions>
+                        <CancelButton onClick={handleCancelClick} />
+                        <SaveButton saving={editDialogFormApi?.saving} hasErrors={editDialogFormApi?.hasErrors} onClick={handleSaveClick}>
+                            <FormattedMessage {...messages.save} />
+                        </SaveButton>
+                    </DialogActions>
+                </div>
+            </Dialog>
         </EditDialogApiContext.Provider>
     );
 };
 
-interface IEditDialogHooklessProps extends IProps {
+interface IEditDialogHooklessProps extends EditDialogProps {
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
 

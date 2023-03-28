@@ -15,7 +15,9 @@ export type RouterConfirmationDialogClassKey =
 
 export const styles = (theme: Theme) => {
     return createStyles<RouterConfirmationDialogClassKey, RouterConfirmationDialogProps>({
-        root: {},
+        root: {
+            zIndex: 1301,
+        },
         closeButton: {
             position: "absolute",
             right: 14,

@@ -44,8 +44,6 @@ export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { DeleteMutation } from "./DeleteMutation";
-export { DirtyHandler } from "./DirtyHandler";
-export { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding, useDirtyHandlerApi } from "./DirtyHandlerApiContext";
 export { EditDialog, useEditDialog } from "./EditDialog";
 export { EditDialogApiContext, IEditDialogApi, useEditDialogApi } from "./EditDialogApiContext";
 export { ErrorBoundary, ErrorBoundaryClassKey, ErrorBoundaryProps } from "./error/errorboundary/ErrorBoundary";
@@ -174,7 +172,6 @@ export { ITableData, ITableQueryHookResult, useTableQuery } from "./table/useTab
 export { IFilterApi, useTableQueryFilter } from "./table/useTableQueryFilter";
 export { IChangePageOptions, IPagingApi, useTableQueryPaging } from "./table/useTableQueryPaging";
 export { ISortApi, ISortInformation, SortDirection, useTableQuerySort } from "./table/useTableQuerySort";
-export { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirtyHandlerApi";
 export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
 export { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 export { RouterTabsClassKey } from "./tabs/RouterTabs.styles";

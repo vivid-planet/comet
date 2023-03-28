@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.0.0
+
+_TBA_
+
+### @comet/admin
+
+### Highlights
+
+-   Routes (eg. Tabs) in a Component with dirty handling (eg. Form) is now supported
+
+#### Breaking changes
+
+- DirtyHandler removed, replace with <Prompt> (no change needed if DirtyHandler was used indirectly eg. in Form)
+
 ## 4.0.0
 
 _Mar 8, 2023_

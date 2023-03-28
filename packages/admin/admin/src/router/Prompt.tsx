@@ -1,5 +1,6 @@
 import * as History from "history";
 import * as React from "react";
+import { useRouteMatch } from "react-router";
 import useConstant from "use-constant";
 import { v4 as uuid } from "uuid";
 
@@ -17,10 +18,13 @@ interface IProps {
 }
 export const RouterPrompt: React.FunctionComponent<IProps> = ({ message, saveAction }) => {
     const id = useConstant<string>(() => uuid());
+    const { path } = useRouteMatch();
     const context = React.useContext(RouterContext);
     React.useEffect(() => {
         if (context) {
-            context.register(id, message, saveAction);
+            context.register({ id, message, saveAction, path });
+        } else {
+            console.error("Can't register RouterPrompt, missing <RouterPromptHandler>");
         }
         return function cleanup() {
             if (context) {
