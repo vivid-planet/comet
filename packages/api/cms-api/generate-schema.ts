@@ -22,6 +22,7 @@ import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
 import { createFileEntity } from "./src/dam/files/entities/file.entity";
 import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
+import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
@@ -96,6 +97,7 @@ async function generateSchema(): Promise<void> {
         redirectsResolver,
         createDamItemsResolver({ File, Folder }),
         createFilesResolver({ File }),
+        FileLicensesResolver,
         FileImagesResolver,
         createFoldersResolver({ Folder }),
         pageTreeResolver,

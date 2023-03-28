@@ -1,9 +1,10 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsDate, IsEnum, IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { DamScopeInterface } from "src/dam/types";
 
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
+import { LicenseType } from "../entities/license.embeddable";
 
 export class ImageFileInput {
     @IsOptional()
@@ -22,6 +23,34 @@ export class ImageFileInput {
     @IsOptional()
     @ValidateNested()
     cropArea?: ImageCropAreaInput;
+}
+
+@InputType()
+export class LicenseInput {
+    @Field(() => LicenseType, { nullable: true })
+    @IsOptional()
+    @IsEnum(LicenseType)
+    type?: LicenseType;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    details?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    author?: string;
+
+    @Field(() => Date, { nullable: true })
+    @IsOptional()
+    @IsDate()
+    durationFrom?: Date;
+
+    @Field(() => Date, { nullable: true })
+    @IsOptional()
+    @IsDate()
+    durationTo?: Date;
 }
 
 export class CreateFileInput {
@@ -49,6 +78,11 @@ export class CreateFileInput {
     @IsOptional()
     @IsUUID()
     folderId?: string;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => LicenseInput)
+    license?: LicenseInput;
 
     // TODO is this validation even used?
     @IsObject()
@@ -93,4 +127,10 @@ export class UpdateFileInput {
     @IsUUID()
     @IsOptional()
     folderId?: string;
+
+    @Field({ nullable: true })
+    @Type(() => LicenseInput)
+    @IsOptional()
+    @ValidateNested()
+    license?: LicenseInput;
 }

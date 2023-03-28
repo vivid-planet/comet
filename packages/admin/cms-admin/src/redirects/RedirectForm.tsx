@@ -19,6 +19,7 @@ import { useStackSwitchApi } from "@comet/admin/lib/stack/Switch";
 import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
 import { Card, CardContent, CircularProgress, Grid, MenuItem } from "@mui/material";
 import { FORM_ERROR } from "final-form";
+import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -168,6 +169,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
             onAfterSubmit={(values, form) => {
                 form.reset(values);
             }}
+            initialValuesEqual={isEqual}
         >
             {({ values, pristine, hasValidationErrors, submitting, handleSubmit, validating }) => (
                 <>

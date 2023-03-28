@@ -19,5 +19,5 @@ export const DamPathLazy = ({ fileId }: DamPathLazyProps): React.ReactElement =>
     if (!data) {
         return <> </>;
     }
-    return <>data.damFile.damPath</>;
+    return <>{data.damFile.damPath}</>;
 };
