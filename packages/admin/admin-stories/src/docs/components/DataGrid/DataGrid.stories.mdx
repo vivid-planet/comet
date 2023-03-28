@@ -22,11 +22,18 @@ It's up to the application code to pass filterModel, sortModel and page/pageSize
 | :---------------- | :----- | :------------------------------------------------------------------------------- |
 | pageSize          | number | Number of items per page, defaults to 20.                                        |
 | queryParamsPrefix | string | Prefix used for query parameters, useful when multiple DataGrid are on one page. |
+| initialSort       | Array<{ field: string; sort: GridSortDirection }> | InitialSort columns and sort directions applied to the DataGrid. Only applies the initalSort values if no other values are in the url. |
 
 #### Example
 
 <Canvas>
     <Story id="stories-components-datagrid--usedatagridremote" />
+</Canvas>
+
+#### Example Initial Sort
+
+<Canvas>
+    <Story id="stories-components-datagrid--usedatagridremoteinitialsort" />
 </Canvas>
 
 ## usePersistentColumnState
