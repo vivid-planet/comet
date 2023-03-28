@@ -310,6 +310,7 @@ type Product implements DocumentInterface {
   description: String!
   price: Float
   inStock: Boolean!
+  image: JSONObject
   createdAt: DateTime!
 }
 

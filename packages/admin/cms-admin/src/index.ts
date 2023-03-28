@@ -52,6 +52,7 @@ export { FileField } from "./form/file/FileField";
 export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
+export { useFormSaveConflict } from "./form/useFormSaveConflict";
 export { createHttpClient } from "./http/createHttpClient";
 export { LocaleProvider } from "./locale/LocaleProvider";
 export { useLocale } from "./locale/useLocale";
