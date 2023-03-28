@@ -88,8 +88,9 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             onAfterSubmit={(values, form) => {
                 //don't go back automatically
             }}
+            subscription={{}}
         >
-            {({ values, pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => (
+            {({ pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => (
                 <EditPageLayout>
                     <Toolbar>
                         <ToolbarItem>
@@ -98,7 +99,11 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             </IconButton>
                         </ToolbarItem>
                         <ToolbarTitleItem>
-                            {values.title ? values.title : <FormattedMessage id="comet.products.productDetail" defaultMessage="Product Detail" />}
+                            <Field name="title">
+                                {({ input }) =>
+                                    input.value ? input.value : <FormattedMessage id="comet.products.productDetail" defaultMessage="Product Detail" />
+                                }
+                            </Field>
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
