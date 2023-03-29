@@ -41,7 +41,7 @@ const exampleColumns: GridColDef[] = [
 
 storiesOf("stories/components/DataGrid", module)
     .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloStoryDecorator(`https://api.spacex.land/graphql/`))
+    .addDecorator(apolloStoryDecorator(`/`))
     .add("useDataGridRemote", () => {
         const columns: GridColDef[] = [
             {
