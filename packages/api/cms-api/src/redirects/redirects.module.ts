@@ -24,7 +24,7 @@ interface Config {
 @Global()
 @Module({})
 export class RedirectsModule {
-    static register({ customTargets, Scope }: Config): DynamicModule {
+    static register({ customTargets, Scope }: Config = {}): DynamicModule {
         const linkBlock = createOneOfBlock(
             {
                 supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, ...customTargets },
