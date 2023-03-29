@@ -22,7 +22,7 @@ It's up to the application code to pass filterModel, sortModel and page/pageSize
 | :---------------- | :----- | :------------------------------------------------------------------------------- |
 | pageSize          | number | Number of items per page, defaults to 20.                                        |
 | queryParamsPrefix | string | Prefix used for query parameters, useful when multiple DataGrid are on one page. |
-| initialSort       | Array<{ field: string; sort: GridSortDirection }> | InitialSort columns and sort directions applied to the DataGrid. Only applies the initalSort values if no other values are in the url. |
+| initialSort       | Array<{ field: string; sort: GridSortDirection }> | Initial sort columns and directions. Used when no sort query params are present. |
 
 #### Example
 
