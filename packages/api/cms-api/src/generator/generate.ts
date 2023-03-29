@@ -1,4 +1,5 @@
 import { ConfigurationLoader, MikroORM, Options, Utils } from "@mikro-orm/core";
+import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { Command } from "commander";
 
 import { CrudGeneratorOptions, CrudSingleGeneratorOptions } from "./crud-generator.decorator";
@@ -9,6 +10,7 @@ const generate = new Command("generate").action(async (options) => {
     const orm = await getORM(false);
 
     const entities = orm.em.getMetadata().getAll();
+    LazyMetadataStorage.load();
 
     for (const name in entities) {
         const entity = entities[name];

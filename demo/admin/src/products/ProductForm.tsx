@@ -4,6 +4,7 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormSelect,
     MainContent,
     messages,
     SaveButton,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/cms-admin";
-import { CircularProgress, FormControlLabel, IconButton } from "@mui/material";
+import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import {
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
@@ -26,6 +27,7 @@ import {
     GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
+    GQLProductType,
 } from "@src/graphql.generated";
 import { FORM_ERROR } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -52,6 +54,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         const input = {
             ...formState,
             price: parseFloat(formState.price),
+            type: formState.type as GQLProductType,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -153,6 +156,15 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={intl.formatMessage({ id: "demo.product.description", defaultMessage: "Beschreibung" })}
                         />
+                        <Field name="type" label="Type" required fullWidth>
+                            {(props) => (
+                                <FinalFormSelect {...props} fullWidth>
+                                    <MenuItem value="Cap">Cap</MenuItem>
+                                    <MenuItem value="Shirt">Shirt</MenuItem>
+                                    <MenuItem value="Tie">Tie</MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             fullWidth
                             name="price"

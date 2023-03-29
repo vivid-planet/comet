@@ -4,6 +4,7 @@ import * as path from "path";
 import { RootBlockType } from "src/blocks/root-block-type";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
+import { findEnumName } from "./utils/find-enum-name";
 import { writeGenerated } from "./utils/write-generated";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,8 +37,14 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             //skip those (TODO find a non-magic solution?)
             continue;
         } else if (prop.enum) {
-            //TODO add support for enum
-            continue;
+            const enumName = findEnumName(metadata, prop.name);
+            decorators.push(`@IsEnum(${enumName})`);
+            decorators.push(`@Field(() => ${enumName}${prop.nullable ? ", { nullable: true }" : ""})`);
+            type = enumName;
+            // entity MUST export the enum (as enumName)
+            importsOut += `import { ${enumName} } from "${path
+                .relative(`${generatorOptions.targetDirectory}/dto`, metadata.path)
+                .replace(/\.ts$/, "")}";`;
         } else if (prop.type === "string") {
             decorators.push("@IsString()");
             if (prop.name.startsWith("scope_")) {
@@ -101,7 +108,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
     }
     const inputOut = `import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum } from "class-validator";
 import { IsSlug, RootBlockInputScalar } from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";

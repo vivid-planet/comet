@@ -2,6 +2,7 @@ import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
 
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
+import { EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
 
@@ -9,7 +10,7 @@ function quoteLike(string: string): string {
     return string.replace(/([%_\\])/g, "\\$1");
 }
 export function filterToMikroOrmQuery(
-    filterProperty: StringFilter | NumberFilter | DateFilter | BooleanFilter,
+    filterProperty: StringFilter | NumberFilter | DateFilter | BooleanFilter | EnumFilterInterface<unknown>,
     propertyName: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): FilterQuery<any> {
@@ -82,6 +83,16 @@ export function filterToMikroOrmQuery(
     } else if (filterProperty instanceof BooleanFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
+        }
+    } else if (isEnumFilter(filterProperty)) {
+        if (filterProperty.equal !== undefined) {
+            ret.$eq = filterProperty.equal;
+        }
+        if (filterProperty.equal !== undefined) {
+            ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
         }
     } else {
         throw new Error(`Unsupported filter`);
