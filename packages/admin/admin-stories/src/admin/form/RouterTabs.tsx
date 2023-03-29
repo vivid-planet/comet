@@ -107,4 +107,4 @@ function Story() {
 
 storiesOf("@comet/admin/form", module)
     .addDecorator(storyRouterDecorator())
-    .add("RouterTabs with forms", () => <Story />);
+    .add("Form with router tabs", () => <Story />);
