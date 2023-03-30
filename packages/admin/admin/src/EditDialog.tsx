@@ -104,7 +104,7 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
         }
         const saveResult = await saveActionRef.current();
 
-        if (!saveResult) {
+        if (saveResult) {
             setTimeout(() => {
                 // TODO DirtyHandler removal: do we need a onReset functionality here?
                 api.closeDialog({ delay: true });
