@@ -1264,6 +1264,7 @@ importers:
       '@types/react-window': ^1.0.0
       '@types/uuid': ^9.0.0
       axios: ^0.21.0
+      chokidar-cli: ^2.0.0
       class-validator: 0.13.2
       clsx: ^1.1.1
       cosmiconfig-toml-loader: ^1.0.0
@@ -1393,6 +1394,7 @@ importers:
       '@types/react-window': 1.8.5
       '@types/uuid': 9.0.0
       axios: 0.21.4
+      chokidar-cli: 2.1.0
       cosmiconfig-toml-loader: 1.0.0
       csstype: 3.1.1
       draft-js: 0.11.7_sfoxds7t5ydpegc3knd667wn6m
