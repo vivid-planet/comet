@@ -74,4 +74,5 @@ export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, 
         }
     },
     anchors: () => [],
+    extractTextContents: () => [],
 };

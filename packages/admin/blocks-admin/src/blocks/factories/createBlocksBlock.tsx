@@ -207,6 +207,16 @@ export function createBlocksBlock({
             }, []);
         },
 
+        extractTextContents: (state) => {
+            return state.blocks.reduce<string[]>((contentBlock, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+                return [...contentBlock, ...(block.extractTextContents?.(child.props) ?? [])];
+            }, []);
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {

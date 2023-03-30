@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { IEditDialogApi, StackSwitchApiContext } from "@comet/admin";
-import { Add, Copy, Delete, Domain, Edit, MoreVertical, Paste, Settings, ThreeDotSaving } from "@comet/admin-icons";
+import { Add, ArrowRightEnd, Copy, Delete, Domain, Edit, MoreVertical, Paste, Settings, ThreeDotSaving } from "@comet/admin-icons";
 import { writeClipboard } from "@comet/blocks-admin";
 import { IconButton, ListItemIcon, ListItemText, Menu as MUIMenu, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -20,6 +20,7 @@ import { deletePageMutation } from "./Page.gql";
 import { PageDeleteDialog } from "./PageDeleteDialog";
 import { subTreeFromNode, traverse, treeMapToArray } from "./treemap/TreeMapUtils";
 import { useCopyPastePages } from "./useCopyPastePages";
+import { useExtractPages } from "./useExtractPages";
 import { PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
@@ -43,10 +44,12 @@ const Menu = withStyles({
 
 const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
     const [copyLoading, setCopyLoading] = React.useState(false);
+    const [extractLoading, setExtractLoading] = React.useState(false);
     const [pasting, setPasting] = React.useState(false);
     const [duplicateLoading, setDuplicateLoading] = React.useState(false);
 
     const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages } = useCopyPastePages();
+    const { prepareForExtraction } = useExtractPages();
     const { tree } = usePageTreeContext();
     const intl = useIntl();
     const client = useApolloClient();
@@ -201,6 +204,23 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                     </ListItemIcon>
                     <ListItemText primary={intl.formatMessage({ id: "comet.pages.pages.page.delete", defaultMessage: "Delete" })} />
                 </MenuItem>
+                <MenuItemSeparator key="separator4" />,
+                <MenuItem
+                    key="extract"
+                    onClick={async () => {
+                        setExtractLoading(true);
+                        const subTree = subTreeFromNode(props.page, tree);
+                        const pagesAsArray = treeMapToArray(subTree, "root");
+                        const extractedContents = await prepareForExtraction(pagesAsArray);
+                        writeClipboard(extractedContents);
+                        setExtractLoading(false);
+                        handleClose();
+                    }}
+                >
+                    <ListItemIcon>{!extractLoading ? <ArrowRightEnd /> : <ThreeDotSaving />}</ListItemIcon>
+                    <ListItemText primary={intl.formatMessage({ id: "comet.pages.pages.page.extract", defaultMessage: "Extract contents" })} />
+                </MenuItem>
+                ,
             </Menu>
             <PageDeleteDialog
                 dialogOpen={deleteDialogOpen}

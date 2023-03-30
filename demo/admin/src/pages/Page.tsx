@@ -19,6 +19,8 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             page: pageTreeNode(id: $id) {
                 id
                 path
+                name
+                slug
                 document {
                     ... on DocumentInterface {
                         id
@@ -59,4 +61,5 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
     anchors: (input) => PageContentBlock.anchors?.(PageContentBlock.input2State(input.content)) ?? [],
+    extractTextContents: (input) => PageContentBlock.extractTextContents?.(PageContentBlock.input2State(input.content)) ?? [],
 };

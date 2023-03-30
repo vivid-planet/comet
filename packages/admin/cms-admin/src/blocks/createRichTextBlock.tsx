@@ -175,6 +175,11 @@ export const createRichTextBlock = (
             };
         },
 
+        extractTextContents: ({ editorState }) => {
+            const { blocks } = convertStateToRawContent(editorState);
+            return blocks.map((block) => block.text);
+        },
+
         createPreviewState: ({ editorState }, previewCtx) => {
             const rawContent = convertStateToRawContent(editorState);
             return {

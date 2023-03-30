@@ -166,6 +166,8 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return result;
             },
+
+            extractTextContents: (state) => [],
         },
         api: {
             adminComponentProps,
