@@ -39,19 +39,17 @@ function InnerPromptHandler({
         };
 
     const promptMessage = (location: History.Location, action: History.Action): boolean | string => {
-        let ret: boolean | string = true;
-        Object.keys(registeredMessages.current).forEach((id) => {
-            if (location.pathname.startsWith(registeredMessages.current[id].path)) {
-                // allow transition if location is below path where prompt was rendered
-                return true;
+        for (const id of Object.keys(registeredMessages.current)) {
+            const path = registeredMessages.current[id].path;
+            // allow transition if location is below path where prompt was rendered
+            if (!(path && location.pathname.startsWith(path))) {
+                const message = registeredMessages.current[id].message(location, action);
+                if (message !== true) {
+                    return message;
+                }
             }
-            const message = registeredMessages.current[id].message(location, action);
-            if (message !== true) {
-                ret = message;
-                return false;
-            }
-        });
-        return ret;
+        }
+        return true;
     };
 
     const handleClose = async (action: PromptAction) => {
@@ -88,7 +86,7 @@ function InnerPromptHandler({
 interface PromptMessages {
     [id: string]: {
         message: (location: History.Location, action: History.Action) => boolean | string;
-        path: string;
+        path?: string;
     };
 }
 interface Props {
@@ -113,7 +111,7 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
         saveAction,
     }: {
         id: string;
-        path: string;
+        path?: string;
         message: (location: History.Location, action: History.Action) => string | boolean;
         saveAction: SaveAction;
     }) => {

@@ -1,6 +1,6 @@
 import * as History from "history";
 import * as React from "react";
-import { useRouteMatch } from "react-router";
+import { __RouterContext } from "react-router";
 import useConstant from "use-constant";
 import { v4 as uuid } from "uuid";
 
@@ -18,7 +18,8 @@ interface IProps {
 }
 export const RouterPrompt: React.FunctionComponent<IProps> = ({ message, saveAction }) => {
     const id = useConstant<string>(() => uuid());
-    const { path } = useRouteMatch();
+    const reactRouterContext = React.useContext(__RouterContext); // reactRouterContext can be undefined if no router is used, don't fail in that case
+    const path: string | undefined = reactRouterContext?.match.path;
     const context = React.useContext(RouterContext);
     React.useEffect(() => {
         if (context) {
