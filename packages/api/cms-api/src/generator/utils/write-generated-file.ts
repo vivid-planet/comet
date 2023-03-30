@@ -2,7 +2,7 @@ import { ESLint } from "eslint";
 import { promises as fs } from "fs";
 import * as path from "path";
 
-export async function writeGenerated(filePath: string, contents: string): Promise<void> {
+export async function writeGeneratedFile(filePath: string, contents: string): Promise<void> {
     await fs.mkdir(path.dirname(filePath), { recursive: true });
     const eslint = new ESLint({
         cwd: process.cwd(),

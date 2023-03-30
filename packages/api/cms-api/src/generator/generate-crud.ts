@@ -2,12 +2,14 @@ import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
 
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
-import { writeCrudInput } from "./generate-crud-input";
+import { generateCrudInput } from "./generate-crud-input";
 import { findEnumName } from "./utils/find-enum-name";
-import { writeGenerated } from "./utils/write-generated";
+import { GeneratedFiles } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<void> {
+export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFiles> {
+    const generatedFiles: GeneratedFiles = {};
+
     const classNameSingular = metadata.className;
     const classNamePlural = !metadata.className.endsWith("s") ? `${metadata.className}s` : metadata.className;
     const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
@@ -15,7 +17,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
 
-    async function writeCrudResolver(): Promise<void> {
+    async function generateCrudResolver(): Promise<GeneratedFiles> {
         const crudSearchProps = metadata.props.filter(
             (prop) => prop.type === "string" && hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"),
         );
@@ -140,7 +142,8 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 or?: ${classNameSingular}Filter[];
             }
             `;
-            await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.filter.ts`, filterOut);
+
+            generatedFiles[`dto/${fileNameSingular}.filter.ts`] = filterOut;
         }
         if (hasSortArg) {
             const sortOut = `import { SortDirection } from "@comet/cms-api";
@@ -170,7 +173,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 direction: SortDirection = SortDirection.ASC;
             }
             `;
-            await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.sort.ts`, sortOut);
+            generatedFiles[`dto/${fileNameSingular}.sort.ts`] = sortOut;
         }
         const paginatedOut = `import { ObjectType } from "@nestjs/graphql";
     import { PaginatedResponseFactory } from "@comet/cms-api";
@@ -180,7 +183,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     @ObjectType()
     export class Paginated${classNamePlural} extends PaginatedResponseFactory.create(${metadata.className}) {}
     `;
-        await writeGenerated(`${generatorOptions.targetDirectory}/dto/paginated-${fileNamePlural}.ts`, paginatedOut);
+        generatedFiles[`dto/paginated-${fileNamePlural}.ts`] = paginatedOut;
 
         const argsOut = `import { ArgsType, Field, IntersectionType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
@@ -243,7 +246,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         }
     }
     `;
-        await writeGenerated(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
+        generatedFiles[`dto/${argsFileName}.ts`] = argsOut;
 
         const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
@@ -288,7 +291,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         }
     }
     `;
-        await writeGenerated(`${generatorOptions.targetDirectory}/${fileNamePlural}.service.ts`, serviceOut);
+        generatedFiles[`${fileNamePlural}.service.ts`] = serviceOut;
 
         const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
@@ -441,9 +444,13 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
     }
     `;
 
-        await writeGenerated(`${generatorOptions.targetDirectory}/${fileNameSingular}.crud.resolver.ts`, resolverOut);
+        generatedFiles[`${fileNameSingular}.crud.resolver.ts`] = resolverOut;
+
+        return generatedFiles;
     }
 
-    await writeCrudInput(generatorOptions, metadata);
-    await writeCrudResolver();
+    return {
+        [`dto/${fileNameSingular}.input.ts`]: await generateCrudInput(generatorOptions, metadata),
+        ...(await generateCrudResolver()),
+    };
 }
