@@ -62,33 +62,17 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
         };
     }, [closeDialog, openAddDialog, openEditDialog]);
 
-    const parentRouterContext = React.useContext(RouterContext);
-    const saveActionRef = React.useRef<SaveAction>();
-
     const EditDialogWithHookProps = React.useMemo(() => {
         return (props: EditDialogProps) => {
             return (
                 <Selection>
                     <EditDialogFormApiProvider>
-                        <RouterContext.Provider
-                            value={{
-                                register: ({ id, path, message, saveAction }) => {
-                                    saveActionRef.current = saveAction;
-                                    parentRouterContext?.register({ id, path, message, saveAction });
-                                },
-                                unregister: (id) => {
-                                    saveActionRef.current = undefined;
-                                    parentRouterContext?.unregister(id);
-                                },
-                            }}
-                        >
-                            <EditDialogInner {...props} saveActionRef={saveActionRef} selection={selection} selectionApi={selectionApi} api={api} />
-                        </RouterContext.Provider>
+                        <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
                     </EditDialogFormApiProvider>
                 </Selection>
             );
         };
-    }, [Selection, api, selection, selectionApi, parentRouterContext]);
+    }, [Selection, api, selection, selectionApi]);
 
     return [EditDialogWithHookProps, selection, api, selectionApi];
 }
@@ -100,19 +84,13 @@ interface IHookProps {
     };
     selectionApi: ISelectionApi;
     api: IEditDialogApi;
-    saveActionRef: React.MutableRefObject<SaveAction | undefined>;
 }
 
-const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = ({
-    selection,
-    selectionApi,
-    api,
-    saveActionRef,
-    title: maybeTitle,
-    children,
-}) => {
+const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = ({ selection, selectionApi, api, title: maybeTitle, children }) => {
     const intl = useIntl();
     const editDialogFormApi = useEditDialogFormApi();
+    const parentRouterContext = React.useContext(RouterContext);
+    const saveActionRef = React.useRef<SaveAction>();
 
     const title = maybeTitle ?? {
         edit: intl.formatMessage(messages.edit),
@@ -146,20 +124,33 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
     const isOpen = !!selection.mode;
 
     return (
-        <EditDialogApiContext.Provider value={api}>
-            <Dialog open={isOpen} onClose={handleCloseClick}>
-                <div>
-                    <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
-                    <DialogContent>{children}</DialogContent>
-                    <DialogActions>
-                        <CancelButton onClick={handleCancelClick} />
-                        <SaveButton saving={editDialogFormApi?.saving} hasErrors={editDialogFormApi?.hasErrors} onClick={handleSaveClick}>
-                            <FormattedMessage {...messages.save} />
-                        </SaveButton>
-                    </DialogActions>
-                </div>
-            </Dialog>
-        </EditDialogApiContext.Provider>
+        <RouterContext.Provider
+            value={{
+                register: ({ id, path, message, saveAction }) => {
+                    saveActionRef.current = saveAction;
+                    parentRouterContext?.register({ id, path, message, saveAction });
+                },
+                unregister: (id) => {
+                    saveActionRef.current = undefined;
+                    parentRouterContext?.unregister(id);
+                },
+            }}
+        >
+            <EditDialogApiContext.Provider value={api}>
+                <Dialog open={isOpen} onClose={handleCloseClick}>
+                    <div>
+                        <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
+                        <DialogContent>{children}</DialogContent>
+                        <DialogActions>
+                            <CancelButton onClick={handleCancelClick} />
+                            <SaveButton saving={editDialogFormApi?.saving} hasErrors={editDialogFormApi?.hasErrors} onClick={handleSaveClick}>
+                                <FormattedMessage {...messages.save} />
+                            </SaveButton>
+                        </DialogActions>
+                    </div>
+                </Dialog>
+            </EditDialogApiContext.Provider>
+        </RouterContext.Provider>
     );
 };
 
