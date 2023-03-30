@@ -1,39 +1,10 @@
 import { BaseEntity, DateType, Entity, Enum, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
-import { ESLint } from "eslint";
-import { Project, SourceFile } from "ts-morph";
 import { v4 as uuid } from "uuid";
 
 import { generateCrudInput } from "./generate-crud-input";
-
-async function lint(sourceCode: string): Promise<string> {
-    const eslint = new ESLint({
-        cwd: process.cwd(),
-        fix: true,
-    });
-    const lintResults = await eslint.lintText(sourceCode, {
-        filePath: "test.ts",
-    });
-    for (const lintResult of lintResults) {
-        // must not have parse or lint errors
-        expect(lintResult.errorCount).toBe(0);
-    }
-    expect(lintResults.length).toBe(1);
-
-    const ret = lintResults[0].output ? lintResults[0].output : lintResults[0].source;
-    expect(ret).not.toBeUndefined();
-    if (ret === undefined) throw new Error();
-    return ret;
-}
-
-function parse(source: string): SourceFile {
-    const project = new Project({
-        tsConfigFilePath: "./tsconfig.json",
-        skipAddingFilesFromTsConfig: true,
-    });
-    return project.createSourceFile("test.ts", source);
-}
+import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
 export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id"> {
@@ -90,8 +61,8 @@ describe("GenerateCrudInput", () => {
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             //console.log(out);
-            const lintedOutput = await lint(out);
-            const source = parse(lintedOutput);
+            const lintedOutput = await lintSource(out);
+            const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(1);
@@ -114,8 +85,8 @@ describe("GenerateCrudInput", () => {
             });
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithDate"));
             //console.log(out);
-            const lintedOutput = await lint(out);
-            const source = parse(lintedOutput);
+            const lintedOutput = await lintSource(out);
+            const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(1);
@@ -148,8 +119,8 @@ describe("GenerateCrudInput", () => {
             });
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithBoolean"));
             //console.log(out);
-            const lintedOutput = await lint(out);
-            const source = parse(lintedOutput);
+            const lintedOutput = await lintSource(out);
+            const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(1);
@@ -182,9 +153,9 @@ describe("GenerateCrudInput", () => {
                 entities: [TestEntityWithEnum],
             });
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEnum"));
-            const lintedOutput = await lint(out);
+            const lintedOutput = await lintSource(out);
             //console.log(lintedOutput);
-            const source = parse(lintedOutput);
+            const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(1);
