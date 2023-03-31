@@ -15,7 +15,7 @@ export function filterToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): FilterQuery<any> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ret: ObjectQuery<any> = {};
+    const ret: any = {};
     if (filterProperty instanceof StringFilter) {
         const ilike: string[] = [];
         if (filterProperty.contains !== undefined) {
@@ -108,7 +108,7 @@ export function filtersToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): ObjectQuery<any> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const genericFilter = (filter: any): FilterQuery<any> => {
+    const genericFilter = (filter: any): ObjectQuery<any> => {
         return Object.keys(filter).reduce((acc, filterPropertyName) => {
             if (filterPropertyName == "and") {
                 if (filter.and) {
@@ -125,7 +125,8 @@ export function filtersToMikroOrmQuery(
                         applyFilter(acc, filterProperty, filterPropertyName);
                     } else {
                         const query = filterToMikroOrmQuery(filterProperty, filterPropertyName);
-                        if (Object.keys(query).length > 0) {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        if (Object.keys(query as any).length > 0) {
                             acc[filterPropertyName] = query;
                         }
                     }
