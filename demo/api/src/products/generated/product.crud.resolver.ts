@@ -4,9 +4,10 @@ import { SubjectEntity, validateNotModified } from "@comet/cms-api";
 import { FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { Product } from "../entities/product.entity";
+import { ProductCategory } from "../entities/product-cetegory.entity";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductInput } from "./dto/product.input";
 import { ProductsArgs } from "./dto/products.args";
@@ -108,5 +109,10 @@ export class ProductCrudResolver {
         await this.entityManager.flush();
 
         return product;
+    }
+
+    @ResolveField(() => ProductCategory, { nullable: true })
+    async category(@Parent() product: Product): Promise<ProductCategory | undefined> {
+        return product.category?.load();
     }
 }

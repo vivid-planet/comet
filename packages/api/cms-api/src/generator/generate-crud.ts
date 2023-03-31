@@ -251,13 +251,8 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     import { OffsetBasedPaginationArgs } from "@comet/cms-api";
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
     import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
-    ${
-        scopeProp && scopeProp.targetMeta
-            ? `import { ${scopeProp.targetMeta.className} } from "../${path
-                  .relative(generatorOptions.targetDirectory, scopeProp.targetMeta.path)
-                  .replace(/\.ts$/, "")}";`
-            : ""
-    }
+
+    ${scopeProp && scopeProp.targetMeta ? generateImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`) : ""}
 
     @ArgsType()
     export class ${argsClassName} extends OffsetBasedPaginationArgs {
@@ -320,7 +315,8 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
-    import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
+
+    ${generateImport(metadata, generatorOptions.targetDirectory)}
     import { ${classNameSingular}Filter } from "./dto/${fileNameSingular}.filter";
 
     @Injectable()
@@ -361,30 +357,44 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     return serviceOut;
 }
 
+function generateImport(targetMetadata: EntityMetadata<any>, relativeTo: string): string {
+    return `import { ${targetMetadata.className} } from "${path.relative(relativeTo, targetMetadata.path).replace(/\.ts$/, "")}";`;
+}
+
 function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
         buildNameVariants(metadata);
     const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, blockProps, hasUpdatedAt } =
         buildOptions(metadata);
 
+    const relationProps = metadata.props.filter((prop) => prop.reference === "m:1");
+    const relationsProps = metadata.props.filter((prop) => prop.reference === "1:m");
+
+    let importsOut = "";
+
+    for (const relationProp of relationProps) {
+        if (!relationProp.targetMeta) throw new Error(`Relation ${relationProp.name} has targetMeta not set`);
+        importsOut += generateImport(relationProp.targetMeta, generatorOptions.targetDirectory);
+    }
+
+    for (const relationsProp of relationsProps) {
+        if (!relationsProp.targetMeta) throw new Error(`Relation ${relationsProp.name} has targetMeta not set`);
+        importsOut += generateImport(relationsProp.targetMeta, generatorOptions.targetDirectory);
+    }
+
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions } from "@mikro-orm/core";
-    import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+    import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
 
-    import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
-    ${
-        scopeProp && scopeProp.targetMeta
-            ? `import { ${scopeProp.targetMeta.className} } from "${path
-                  .relative(generatorOptions.targetDirectory, scopeProp.targetMeta.path)
-                  .replace(/\.ts$/, "")}";`
-            : ""
-    }
+    ${generateImport(metadata, generatorOptions.targetDirectory)}
+    ${scopeProp && scopeProp.targetMeta ? generateImport(scopeProp.targetMeta, generatorOptions.targetDirectory) : ""}
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
     import { ${classNameSingular}Input } from "./dto/${fileNameSingular}.input";
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
     import { ${argsClassName} } from "./dto/${argsFileName}";
+    ${importsOut}
 
     @Resolver(() => ${metadata.className})
     export class ${classNameSingular}CrudResolver {
@@ -516,6 +526,28 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         `
                 : ""
         }
+
+        ${relationProps.map(
+            (prop) => `
+            @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
+            async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${
+                prop.nullable ? ` | undefined` : ""
+            }> {
+                return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
+            }    
+        `,
+        )}
+
+        ${relationsProps.map(
+            (prop) => `
+            @ResolveField(() => [${prop.type}])
+            async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
+                return ${instanceNameSingular}.${prop.name}.loadItems();
+            }   
+        `,
+        )}
+
+
     }
     `;
     return resolverOut;

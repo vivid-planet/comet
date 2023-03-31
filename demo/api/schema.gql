@@ -326,6 +326,7 @@ type Mutation {
   createNewsComment(input: NewsCommentInput!, newsId: ID!): NewsComment!
   createPageTreeNode(category: String!, input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!): PageTreeNode!
   createProduct(input: ProductInput!): Product!
+  createProductCategory(input: ProductCategoryInput!): ProductCategory!
   createRedirect(input: RedirectInput!, scope: RedirectScopeInput!): Redirect!
   currentUserSignOut: String!
   deleteDamFile(id: ID!): Boolean!
@@ -334,6 +335,7 @@ type Mutation {
   deleteNewsComment(id: ID!): Boolean!
   deletePageTreeNode(id: ID!): Boolean!
   deleteProduct(id: ID!): Boolean!
+  deleteProductCategory(id: ID!): Boolean!
   deleteRedirect(id: ID!): Boolean!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
   moveDamFolders(folderIds: [ID!]!, scope: DamScopeInput!, targetFolderId: ID): [DamFolder!]!
@@ -356,6 +358,7 @@ type Mutation {
   updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
   updateProduct(id: ID!, input: ProductInput!, lastUpdatedAt: DateTime): Product!
+  updateProductCategory(id: ID!, input: ProductCategoryInput!, lastUpdatedAt: DateTime): ProductCategory!
   updateProductVisibility(id: ID!, visible: Boolean!): Product!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
@@ -574,6 +577,11 @@ type PaginatedPages {
   totalCount: Int!
 }
 
+type PaginatedProductCategories {
+  nodes: [ProductCategory!]!
+  totalCount: Int!
+}
+
 type PaginatedProducts {
   nodes: [Product!]!
   totalCount: Int!
@@ -596,6 +604,7 @@ input PredefinedPageInput {
 }
 
 type Product implements DocumentInterface {
+  category: ProductCategory
   createdAt: DateTime!
   description: String!
   id: ID!
@@ -607,6 +616,41 @@ type Product implements DocumentInterface {
   type: ProductType!
   updatedAt: DateTime!
   visible: Boolean!
+}
+
+type ProductCategory implements DocumentInterface {
+  createdAt: DateTime!
+  id: ID!
+  products: [Product!]!
+  slug: String!
+  title: String!
+  updatedAt: DateTime!
+}
+
+input ProductCategoryFilter {
+  and: [ProductCategoryFilter!]
+  createdAt: DateFilter
+  or: [ProductCategoryFilter!]
+  slug: StringFilter
+  title: StringFilter
+  updatedAt: DateFilter
+}
+
+input ProductCategoryInput {
+  slug: String!
+  title: String!
+}
+
+input ProductCategorySort {
+  direction: SortDirection! = ASC
+  field: ProductCategorySortField!
+}
+
+enum ProductCategorySortField {
+  createdAt
+  slug
+  title
+  updatedAt
 }
 
 input ProductFilter {
@@ -695,6 +739,9 @@ type Query {
   predefinedPage(id: ID!): PredefinedPage
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
+  productCategories(filter: ProductCategoryFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductCategorySort!]): PaginatedProductCategories!
+  productCategory(id: ID!): ProductCategory!
+  productCategoryBySlug(slug: String!): ProductCategory
   products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!

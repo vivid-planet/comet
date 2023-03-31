@@ -4,9 +4,10 @@ import { SubjectEntity, validateNotModified } from "@comet/cms-api";
 import { FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { News, NewsContentScope } from "../entities/news.entity";
+import { NewsComment } from "../entities/news-comment.entity";
 import { NewsInput } from "./dto/news.input";
 import { NewsListArgs } from "./dto/news-list.args";
 import { PaginatedNews } from "./dto/paginated-news";
@@ -114,5 +115,10 @@ export class NewsCrudResolver {
         await this.entityManager.flush();
 
         return news;
+    }
+
+    @ResolveField(() => [NewsComment])
+    async comments(@Parent() news: News): Promise<NewsComment[]> {
+        return news.comments.loadItems();
     }
 }
