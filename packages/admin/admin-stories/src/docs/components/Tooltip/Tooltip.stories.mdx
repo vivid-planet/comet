@@ -1,0 +1,31 @@
+import { Canvas, Meta, Source, Story } from "@storybook/addon-docs";
+
+import dedent from "ts-dedent";
+
+<Meta title="Docs/Components/Tooltip" />
+
+# Tooltip
+
+> Tooltips display informative text when users hover over, focus on, or tap an element.
+>
+> \- [MUI Docs](https://mui.com/material-ui/react-tabs/)
+
+The Comet Admin `Tooltip` is based on [Material UI's `Tooltip`](https://mui.com/material-ui/react-tooltip) (`MuiTooltip`).
+
+## Tooltip
+
+The Tooltip component is a basic tooltip that can be triggered by hover, focus, or click events. The component is built using the Material UI Tooltip component and extends it with some additional props.
+
+#### Props
+
+| Name              | Type   | Description                                                                      |
+| :---------------- | :----- | :------------------------------------------------------------------------------- |
+| trigger          | "hover", "focus", "click" (optional) | You can define the types of events that cause a tooltip to show. |
+
+In addition to the trigger prop, the Tooltip component also accepts all the props from the Material UI Tooltip component.
+
+#### Example
+
+<Canvas>
+    <Story id="stories-components-tooltip--basictooltip" />
+</Canvas>
