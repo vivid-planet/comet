@@ -67,5 +67,9 @@ export const HeadlineBlock = createCompositeBlock(
     (block) => ({
         ...block,
         category: BlockCategory.TextAndContent,
+        extractTextContents: (block) => {
+            const headline = RichTextBlock.extractTextContents?.(block.headline) ?? [];
+            return [block.eyebrow, ...headline];
+        },
     }),
 );

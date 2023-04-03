@@ -156,6 +156,15 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                 });
                 return Object.values(anchorsPerBlock).reduce((anchors, blockAnchors) => [...anchors, ...blockAnchors], []);
             },
+            extractTextContents: (state) => {
+                const contentsPerBlock: Record<keyof C, string[]> = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
+                    const extractedData = extractData([block, options], attr, state);
+
+                    return block.extractTextContents?.(extractedData) ?? [];
+                });
+
+                return Object.values(contentsPerBlock).reduce((contents, blockContents) => [...contents, ...blockContents], []);
+            },
             previewContent: (state, ctx) => {
                 const previewContents = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
                     const extractedData = extractData([block, options], attr, state);
@@ -166,8 +175,6 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return result;
             },
-
-            extractTextContents: (state) => [],
         },
         api: {
             adminComponentProps,

@@ -40,6 +40,10 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
 
         definesOwnPadding: true,
 
+        extractTextContents: (state) => {
+            return [state.text];
+        },
+
         AdminComponent: ({ state, updateState }) => {
             const { link } = composedApi.adminComponents({ state, updateState: decomposeUpdateStateAction(updateState, ["link"]) });
 

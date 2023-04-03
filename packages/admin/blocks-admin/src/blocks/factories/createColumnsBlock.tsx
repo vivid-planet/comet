@@ -180,6 +180,12 @@ export function createColumnsBlock<T extends BlockInterface>({
             }, []);
         },
 
+        extractTextContents: (state) => {
+            return state.columns.reduce<string[]>((contents, column) => {
+                return [...contents, ...(contentBlock.extractTextContents?.(column.props) ?? [])];
+            }, []);
+        },
+
         AdminComponent: ({ state, updateState }) => {
             const intl = useIntl();
             const groupLayoutsByColumnsApi = createGroupLayoutsByColumnsApi(layouts);

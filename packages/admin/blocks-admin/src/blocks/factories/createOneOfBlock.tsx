@@ -218,6 +218,16 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
             return block?.anchors?.(blockState.props) ?? [];
         },
 
+        extractTextContents: (state) => {
+            const { state: blockState, block } = getActiveBlock(state);
+
+            if (blockState === undefined) {
+                return [];
+            }
+
+            return block?.extractTextContents?.(blockState.props) ?? [];
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {

@@ -179,6 +179,12 @@ export function createListBlock<T extends BlockInterface>({
             }, []);
         },
 
+        extractTextContents: (state) => {
+            return state.blocks.reduce<string[]>((contentBlock, child) => {
+                return [...contentBlock, ...(block.extractTextContents?.(child.props) ?? [])];
+            }, []);
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {
