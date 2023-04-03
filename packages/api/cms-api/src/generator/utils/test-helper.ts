@@ -9,7 +9,7 @@ export async function lintSource(sourceCode: string): Promise<string> {
         fix: true,
         overrideConfig: {
             rules: {
-                "import/no-extraneous-dependencies": "off", //don't report missing dpendency to @comet/cms-api
+                "import/no-extraneous-dependencies": "off", //don't report missing dependency to @comet/cms-api
             },
         },
     });
