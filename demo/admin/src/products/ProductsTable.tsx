@@ -55,6 +55,7 @@ const columns: GridColDef<GQLProductsListFragment>[] = [
     { field: "title", headerName: "Title", width: 150 },
     { field: "description", headerName: "Description", width: 150 },
     { field: "price", headerName: "Price", width: 150, type: "number" },
+    { field: "type", headerName: "Type", width: 150, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
     { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
     {
         field: "action",
@@ -80,6 +81,7 @@ const columns: GridColDef<GQLProductsListFragment>[] = [
                                         price: input.price,
                                         slug: input.slug,
                                         title: input.title,
+                                        type: input.type,
                                     },
                                 },
                             });
@@ -141,6 +143,7 @@ const productsFragment = gql`
         title
         description
         price
+        type
         inStock
         image
     }

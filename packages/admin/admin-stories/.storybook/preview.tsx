@@ -15,6 +15,7 @@ import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import { Locale as DateFnsLocale } from "date-fns";
 
 import { previewGlobalStyles } from "./preview.styles";
+import { worker } from "./mocks/browser";
 
 type LocaleKey = "de" | "en";
 
@@ -158,3 +159,5 @@ addParameters({
         },
     },
 });
+
+worker.start()

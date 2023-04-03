@@ -46,6 +46,8 @@
         "@babel/core": "^7.8.3",
         "@comet/admin-babel-preset": "^4.0.0",
         "@comet/eslint-config": "^4.0.0",
+        "@faker-js/faker": "^7.6.0",
+        "@graphql-mocks/network-msw": "^0.3.0",
         "@types/draft-js": "^0.10.38",
         "@types/faker": "^5.5.8",
         "@types/file-saver": "^2.0.1",
@@ -59,7 +61,9 @@
         "draft-js-export-markdown": "^1.4.0",
         "draft-js-import-markdown": "^1.4.0",
         "eslint": "^8.0.0",
+        "graphql-mocks": "^0.10.0",
         "immutable": "~3.7.4",
+        "msw": "^1.2.1",
         "prettier": "^2.0.0",
         "react-dnd": "^16.0.0",
         "react-dnd-html5-backend": "^16.0.0",
@@ -79,5 +83,8 @@
         "lint:eslint": "eslint --max-warnings 0 src/",
         "lint:tsc": "tsc --noEmit"
     },
-    "license": "BSD-2-Clause"
+    "license": "BSD-2-Clause",
+    "msw": {
+        "workerDirectory": "public"
+    }
 }

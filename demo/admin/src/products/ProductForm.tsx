@@ -5,6 +5,7 @@ import {
     FinalFormCheckbox,
     FinalFormInput,
     FinalFormSaveSplitButton,
+    FinalFormSelect,
     FinalFormSubmitEvent,
     MainContent,
     Toolbar,
@@ -19,7 +20,7 @@ import {
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, FormControlLabel, IconButton } from "@mui/material";
+import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import {
     GQLCheckForChangesProductQuery,
     GQLCheckForChangesProductQueryVariables,
@@ -30,6 +31,7 @@ import {
     GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
+    GQLProductType,
 } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -98,6 +100,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             ...formState,
             price: parseFloat(formState.price),
             image: rootBlocks.image.state2Output(formState.image),
+            type: formState.type as GQLProductType,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -139,8 +142,9 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             onAfterSubmit={(values, form) => {
                 //don't go back automatically TODO remove this automatismn
             }}
+            subscription={{}}
         >
-            {({ values }) => (
+            {() => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
                     <Toolbar>
@@ -150,7 +154,11 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             </IconButton>
                         </ToolbarItem>
                         <ToolbarTitleItem>
-                            {values.title ? values.title : <FormattedMessage id="comet.products.productDetail" defaultMessage="Product Detail" />}
+                            <Field name="title">
+                                {({ input }) =>
+                                    input.value ? input.value : <FormattedMessage id="comet.products.productDetail" defaultMessage="Product Detail" />
+                                }
+                            </Field>
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
@@ -181,6 +189,15 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="demo.product.description" defaultMessage="Beschreibung" />}
                         />
+                        <Field name="type" label="Type" required fullWidth>
+                            {(props) => (
+                                <FinalFormSelect {...props} fullWidth>
+                                    <MenuItem value="Cap">Cap</MenuItem>
+                                    <MenuItem value="Shirt">Shirt</MenuItem>
+                                    <MenuItem value="Tie">Tie</MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             fullWidth
                             name="price"
