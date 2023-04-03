@@ -5,7 +5,7 @@ interface TooltipProps extends MuiTooltipProps {
     trigger?: "hover" | "focus" | "click";
 }
 
-export const Tooltip = ({ trigger, children, ...props }: TooltipProps): JSX.Element => {
+export const Tooltip = ({ trigger = "hover", children, ...props }: TooltipProps): JSX.Element => {
     const [open, setOpen] = React.useState(false);
 
     const handleTooltipClose = () => {
