@@ -13,11 +13,6 @@ storiesOf("stories/components/Tooltip", module).add("BasicTooltip", () => {
                 </Tooltip>
             </Grid>
             <Grid item>
-                <Tooltip title="This is a hover or touch tooltip" trigger="hover">
-                    <div>Hover over or touch me me</div>
-                </Tooltip>
-            </Grid>
-            <Grid item>
                 <Tooltip title="This is a focus or touch tooltip" trigger="focus">
                     <div>Focus or touch</div>
                 </Tooltip>
