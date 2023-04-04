@@ -49,7 +49,7 @@ const NewsTable: React.FC = () => {
                 <ToolbarFillSpace />
                 <ToolbarItem>
                     <Button startIcon={<AddIcon />} onClick={() => stackApi.activatePage("edit", "new")} variant="contained" color="primary">
-                        <FormattedMessage id="cometDemo.news.newNews" defaultMessage="New News" />
+                        <FormattedMessage id="news.newNews" defaultMessage="New News" />
                     </Button>
                 </ToolbarItem>
             </Toolbar>
@@ -61,11 +61,11 @@ const NewsTable: React.FC = () => {
                             columns={[
                                 {
                                     name: "title",
-                                    header: <FormattedMessage id="cometDemo.news.title" defaultMessage="Title" />,
+                                    header: <FormattedMessage id="news.title" defaultMessage="Title" />,
                                 },
                                 {
                                     name: "slug",
-                                    header: <FormattedMessage id="cometDemo.news.slug" defaultMessage="Slug" />,
+                                    header: <FormattedMessage id="news.slug" defaultMessage="Slug" />,
                                 },
 
                                 {

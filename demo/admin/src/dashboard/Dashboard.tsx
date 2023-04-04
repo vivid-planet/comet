@@ -51,18 +51,18 @@ const Dashboard: React.FC = () => {
     const { data } = useQuery<GQLDashboardCurrentUserQuery>(currentUserQuery);
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "cometDemo.dashboard", defaultMessage: "Dashboard" })}>
+        <Stack topLevelTitle={intl.formatMessage({ id: "dashboard", defaultMessage: "Dashboard" })}>
             <Header>
                 <DateTime />
                 <Greeting variant="h1">
                     {data ? (
                         <FormattedMessage
-                            id="cometDemo.pages.dashboard.helloUser"
+                            id="pages.dashboard.helloUser"
                             defaultMessage="Hallo {givenName}!"
                             values={{ givenName: data.currentUser.name }}
                         />
                     ) : (
-                        <FormattedMessage id="cometDemo.pages.dashboard.hello" defaultMessage="Hallo!" />
+                        <FormattedMessage id="pages.dashboard.hello" defaultMessage="Hallo!" />
                     )}
                 </Greeting>
             </Header>
@@ -77,14 +77,12 @@ const Dashboard: React.FC = () => {
                 </ContentScopeIndicator>
                 <Grid container direction="row" spacing={4}>
                     <DashboardWidgetContainer
-                        header={<FormattedMessage id="cometDemo.pages.dashboard.latestContentUpdates" defaultMessage="Latest Content Updates" />}
+                        header={<FormattedMessage id="pages.dashboard.latestContentUpdates" defaultMessage="Latest Content Updates" />}
                     >
                         <LatestContentUpdates />
                     </DashboardWidgetContainer>
                     {process.env.NODE_ENV !== "development" && (
-                        <DashboardWidgetContainer
-                            header={<FormattedMessage id="cometDemo.pages.dashboard.latestBuilds" defaultMessage="Latest Builds" />}
-                        >
+                        <DashboardWidgetContainer header={<FormattedMessage id="pages.dashboard.latestBuilds" defaultMessage="Latest Builds" />}>
                             <LatestBuilds />
                         </DashboardWidgetContainer>
                     )}

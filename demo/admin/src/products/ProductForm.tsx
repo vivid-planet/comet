@@ -75,7 +75,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const initialValues = data?.product ? filter(productFormFragment, data.product) : { inStock: false };
 
     if (error) {
-        return <FormattedMessage id="demo.common.error" defaultMessage="Ein Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal." />;
+        return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
     }
 
     if (loading) {
@@ -104,7 +104,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         <ToolbarTitleItem>
                             <Field name="title">
                                 {({ input }) =>
-                                    input.value ? input.value : <FormattedMessage id="comet.products.productDetail" defaultMessage="Product Detail" />
+                                    input.value ? input.value : <FormattedMessage id="products.productDetail" defaultMessage="Product Detail" />
                                 }
                             </Field>
                         </ToolbarTitleItem>
@@ -138,14 +138,14 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             fullWidth
                             name="title"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "demo.product.title", defaultMessage: "Titel" })}
+                            label={intl.formatMessage({ id: "product.title", defaultMessage: "Title" })}
                         />
                         <Field
                             required
                             fullWidth
                             name="slug"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "demo.product.slug", defaultMessage: "Slug" })}
+                            label={intl.formatMessage({ id: "product.slug", defaultMessage: "Slug" })}
                         />
                         <Field
                             required
@@ -154,7 +154,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             rows={5}
                             name="description"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "demo.product.description", defaultMessage: "Beschreibung" })}
+                            label={intl.formatMessage({ id: "product.description", defaultMessage: "Description" })}
                         />
                         <Field name="type" label="Type" required fullWidth>
                             {(props) => (
@@ -170,12 +170,12 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             name="price"
                             component={FinalFormInput}
                             inputProps={{ type: "number" }}
-                            label={intl.formatMessage({ id: "demo.product.description", defaultMessage: "Preis" })}
+                            label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })}
                         />
                         <Field name="inStock" label="" type="checkbox" fullWidth>
                             {(props) => (
                                 <FormControlLabel
-                                    label={intl.formatMessage({ id: "demo.product.inStock", defaultMessage: "Auf Lager" })}
+                                    label={intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" })}
                                     control={<FinalFormCheckbox {...props} />}
                                 />
                             )}
