@@ -165,6 +165,9 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return Object.values(contentsPerBlock).reduce((contents, blockContents) => [...contents, ...blockContents], []);
             },
+            replaceTextContents: (state, contents) => {
+                return state;
+            },
             previewContent: (state, ctx) => {
                 const previewContents = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
                     const extractedData = extractData([block, options], attr, state);

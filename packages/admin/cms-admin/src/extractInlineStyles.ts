@@ -1,6 +1,5 @@
 import { RawDraftContentBlock } from "draft-js";
 
-// TODO does this work with multiple inline styles on the same position?
 const extractInlineStyles = (block: RawDraftContentBlock): string => {
     let text = "";
 
