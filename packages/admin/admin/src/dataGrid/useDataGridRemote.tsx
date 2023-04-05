@@ -37,7 +37,9 @@ export function useDataGridRemote({
         (!parsedSearch.sort
             ? undefined
             : !Array.isArray(parsedSearch[sortParamName])
-            ? [parsedSearch[sortParamName] as string]
+            ? parsedSearch[sortParamName] === "none"
+                ? []
+                : [parsedSearch[sortParamName] as string]
             : (parsedSearch[sortParamName] as string[])
         )?.map((i) => {
             const parts = i.split(":");
@@ -51,7 +53,7 @@ export function useDataGridRemote({
 
     const handleSortModelChange = React.useCallback(
         (sortModel: GridSortModel) => {
-            const sort = sortModel.map((i) => `${i.field}:${i.sort}`);
+            const sort = sortModel.length > 0 ? sortModel.map((i) => `${i.field}:${i.sort}`) : ["none"];
             history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [sortParamName]: sort }) });
         },
         [history, location, parsedSearch, sortParamName],
