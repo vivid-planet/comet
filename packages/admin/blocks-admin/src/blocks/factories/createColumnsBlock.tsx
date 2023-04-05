@@ -186,6 +186,18 @@ export function createColumnsBlock<T extends BlockInterface>({
             }, []);
         },
 
+        replaceTextContents: (state, contents) => ({
+            layout: state.layout.name,
+            columns: state.columns.map((column) => {
+                const { key, visible } = column;
+                return {
+                    key,
+                    visible,
+                    props: contentBlock.replaceTextContents?.(column.props, contents) ?? column.props,
+                };
+            }),
+        }),
+
         AdminComponent: ({ state, updateState }) => {
             const intl = useIntl();
             const groupLayoutsByColumnsApi = createGroupLayoutsByColumnsApi(layouts);

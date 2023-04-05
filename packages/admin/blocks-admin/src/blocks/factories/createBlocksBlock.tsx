@@ -217,6 +217,19 @@ export function createBlocksBlock({
             }, []);
         },
 
+        replaceTextContents: (state, contents) => ({
+            blocks: state.blocks.map((block) => {
+                const { key, type, userGroup, visible } = block;
+                return {
+                    key,
+                    type,
+                    userGroup,
+                    visible,
+                    props: blockForType(block.type)?.replaceTextContents?.(block.props, contents) ?? block.props,
+                };
+            }),
+        }),
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {

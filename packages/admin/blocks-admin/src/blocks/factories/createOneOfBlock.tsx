@@ -219,13 +219,24 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
         },
 
         extractTextContents: (state) => {
+            return state.attachedBlocks.reduce<string[]>((contentBlock, child) => {
+                const block = blockForType(child.type);
+
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+                return [...contentBlock, ...(block.extractTextContents?.(child.props) ?? [])];
+            }, []);
+        },
+
+        replaceTextContents: (state, contents) => {
             const { state: blockState, block } = getActiveBlock(state);
 
             if (blockState === undefined) {
                 return [];
             }
 
-            return block?.extractTextContents?.(blockState.props) ?? [];
+            return block?.replaceTextContents?.(blockState.props, contents) ?? blockState.props;
         },
 
         definesOwnPadding: true,

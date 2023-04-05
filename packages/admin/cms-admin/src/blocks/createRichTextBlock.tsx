@@ -15,7 +15,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
-import extractInlineStyles from "../extractInlineStyles";
+import { extractRichtextStyles, importRichtextStyles } from "../common/extractImportRichtextStyles";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
 import { Decorator as SoftHyphenDecorator } from "./rte/extension/SoftHyphen/Decorator";
@@ -178,7 +178,23 @@ export const createRichTextBlock = (
 
         extractTextContents: ({ editorState }) => {
             const { blocks } = convertStateToRawContent(editorState);
-            return blocks.map((block) => extractInlineStyles(block));
+            return blocks.map((block) => extractRichtextStyles(block));
+        },
+
+        replaceTextContents: (state, contents) => {
+            const rawContent = convertStateToRawContent(state.editorState);
+
+            const translatedBlocks = rawContent.blocks.map((block) => {
+                const translation = contents.find((content) => content.original.replace(/<i>|<\/i>|<e>|<\/e>/g, "") === block.text);
+
+                if (!translation || translation.replaceWith === "") return block;
+
+                return importRichtextStyles({ ...block, text: translation.replaceWith });
+            });
+
+            return {
+                draftContent: mapLinkEntitiesData({ ...rawContent, blocks: translatedBlocks }, (linkState) => LinkBlock.state2Output(linkState)),
+            };
         },
 
         createPreviewState: ({ editorState }, previewCtx) => {

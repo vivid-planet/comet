@@ -42,6 +42,12 @@ const AnchorBlock: BlockInterface<AnchorBlockData, AnchorBlockData, AnchorBlockI
         return state.name !== undefined ? [state.name] : [];
     },
 
+    replaceTextContents: (state, contents) => {
+        const translation = contents.find((content) => content.original === state.name);
+        const name = translation && translation.replaceWith !== "" ? translation.replaceWith : state.name;
+        return { ...state, name };
+    },
+
     previewContent: (state) => {
         return state.name !== undefined ? [{ type: "text", content: `#${state.name}` }] : [];
     },

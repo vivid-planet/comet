@@ -44,6 +44,16 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
             return [state.text];
         },
 
+        replaceTextContents: (state, contents) => {
+            const translation = contents.find((content) => content.original === state.text);
+            const text = translation && translation.replaceWith !== "" ? translation.replaceWith : state.text;
+
+            return {
+                link: composedBlock.state2Output(state).link,
+                text,
+            };
+        },
+
         AdminComponent: ({ state, updateState }) => {
             const { link } = composedApi.adminComponents({ state, updateState: decomposeUpdateStateAction(updateState, ["link"]) });
 

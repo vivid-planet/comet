@@ -56,5 +56,4 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
     },
     menuIcon: LinkIcon,
     anchors: () => [],
-    extractTextContents: () => [],
 };

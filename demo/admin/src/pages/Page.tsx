@@ -61,5 +61,12 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
     anchors: (input) => PageContentBlock.anchors?.(PageContentBlock.input2State(input.content)) ?? [],
-    extractTextContents: (input) => PageContentBlock.extractTextContents?.(PageContentBlock.input2State(input.content)) ?? [],
+    extractTextContents: (input) => [
+        ...(PageContentBlock.extractTextContents?.(PageContentBlock.input2State(input.content)) ?? []),
+        ...(SeoBlock.extractTextContents?.(SeoBlock.input2State(input.seo)) ?? []),
+    ],
+    replaceTextContents: (input, contents) => ({
+        content: PageContentBlock.replaceTextContents?.(PageContentBlock.input2State(input.content), contents) ?? input.content,
+        seo: SeoBlock.replaceTextContents?.(SeoBlock.input2State(input.seo), contents) ?? input.seo,
+    }),
 };

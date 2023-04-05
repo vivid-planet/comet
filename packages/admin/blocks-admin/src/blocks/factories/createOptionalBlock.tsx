@@ -71,6 +71,22 @@ export function createOptionalBlock<T extends BlockInterface>(
             return decoratedBlock.anchors?.(state.block) ?? [];
         },
 
+        extractTextContents: (state) => {
+            if (state.block === undefined) {
+                return [];
+            }
+
+            return decoratedBlock.extractTextContents?.(state.block) ?? [];
+        },
+
+        replaceTextContents: (state, contents) => {
+            if (state.block === undefined) {
+                return [];
+            }
+
+            return decoratedBlock.replaceTextContents?.(state.block, contents) ?? state.block;
+        },
+
         definesOwnTitle: true,
 
         AdminComponent: ({ state, updateState }) => {

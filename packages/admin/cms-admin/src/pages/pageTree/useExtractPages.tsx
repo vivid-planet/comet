@@ -3,9 +3,12 @@ import { LocalErrorScopeApolloContext } from "@comet/admin";
 import { readClipboard } from "@comet/blocks-admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+import slugify from "slugify";
 
-import { GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
+import { useContentScope } from "../../contentScope/Provider";
+import { GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "../../documents/types";
 import { GQLPageTreePageFragment, GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables } from "../../graphql.generated";
+import { useLocale } from "../../locale/useLocale";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface ContentsClipboard {
@@ -44,6 +47,14 @@ const updatePageNodeMutation = gql`
     }
 `;
 
+const transformToSlug = (name: string, locale: string) => {
+    let slug = slugify(name, { replacement: "-", lower: true, locale });
+    // Remove everything except unreserved characters and percent encoding (https://tools.ietf.org/html/rfc3986#section-2.1)
+    // This is necessary because slugify does not remove all reserved characters per default (e.g. "@")
+    slug = slug.replace(/[^a-zA-Z0-9-._~]/g, "");
+    return slug;
+};
+
 interface UseExtractPagesApi {
     /**
      * parallel fetches missing document data and prepares data for content extraction.
@@ -75,6 +86,8 @@ interface UseExtractPagesApi {
 function useExtractImportPages(): UseExtractPagesApi {
     const { documentTypes } = usePageTreeContext();
     const client = useApolloClient();
+    const { scope } = useContentScope();
+    const locale = useLocale({ scope });
 
     const prepareForExtraction = React.useCallback(
         async (pages: GQLPageTreePageFragment[]): Promise<string> => {
@@ -101,8 +114,8 @@ function useExtractImportPages(): UseExtractPagesApi {
                             });
 
                             if (data?.page?.document) {
-                                const extractedContent = documentType.extractTextContents(data.page.document);
-                                textContents.push(page.name, page.slug, ...extractedContent);
+                                const extractedContent = documentType.extractTextContents?.(data.page.document);
+                                textContents.push(page.name, page.slug, ...(extractedContent ?? []));
                             }
                         }
                     } catch (e) {
@@ -112,7 +125,7 @@ function useExtractImportPages(): UseExtractPagesApi {
             );
 
             const pageText = {
-                textContents: Array.from(new Set(textContents)),
+                textContents: Array.from(new Set(textContents.filter((content) => content !== null && content !== ""))),
             };
 
             return JSON.stringify(pageText);
@@ -125,11 +138,14 @@ function useExtractImportPages(): UseExtractPagesApi {
             await Promise.all(
                 pages.map(async (page) => {
                     const documentType = documentTypes[page.documentType];
+
                     if (!documentType) {
                         throw new Error(`Unknown document type "${documentType}"`);
                     }
+
                     try {
                         const query = documentType.getQuery;
+
                         if (query) {
                             const { data } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
                                 query,
@@ -140,25 +156,40 @@ function useExtractImportPages(): UseExtractPagesApi {
                             });
 
                             if (data?.page?.document) {
-                                // documentType.replaceTextContents(data.page.document, content.contents);
+                                const documentWithUpdateContents = documentType.replaceTextContents?.(data.page.document, content.contents);
+
+                                if (documentType.updateMutation) {
+                                    await client.mutate<GQLUpdatePageMutation, GQLUpdatePageMutationVariables>({
+                                        mutation: documentType.updateMutation,
+                                        variables: {
+                                            pageId: data.page.document.id,
+                                            input: { content: documentWithUpdateContents?.content, seo: documentWithUpdateContents?.seo },
+                                            attachedPageTreeNodeId: page.id,
+                                        },
+                                        context: LocalErrorScopeApolloContext,
+                                    });
+                                }
 
                                 const importedName = content.contents.find((item) => item.original === page.name)?.replaceWith;
-
-                                // TODO check characters of slug
                                 const importedSlug = content.contents.find((item) => item.original === page.slug)?.replaceWith.toLowerCase();
 
-                                await client.mutate<GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables>({
-                                    mutation: updatePageNodeMutation,
-                                    variables: {
-                                        nodeId: page.id,
-                                        input: {
-                                            name: importedName ?? page.name,
-                                            slug: importedSlug ?? page.slug,
-                                            attachedDocument: { id: data.page.document.id, type: data.page.document.__typename },
+                                if (importedName !== page.name || importedSlug !== page.slug) {
+                                    await client.mutate<GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables>({
+                                        mutation: updatePageNodeMutation,
+                                        variables: {
+                                            nodeId: page.id,
+                                            input: {
+                                                name: importedName && importedName !== "" ? importedName : page.name,
+                                                slug:
+                                                    importedSlug && importedSlug !== ""
+                                                        ? transformToSlug(importedSlug ?? page.slug, locale)
+                                                        : page.slug,
+                                                attachedDocument: { id: data.page.document.id, type: data.page.document.__typename },
+                                            },
                                         },
-                                    },
-                                    context: LocalErrorScopeApolloContext,
-                                });
+                                        context: LocalErrorScopeApolloContext,
+                                    });
+                                }
                             }
                         }
                     } catch (e) {
@@ -167,7 +198,7 @@ function useExtractImportPages(): UseExtractPagesApi {
                 }),
             );
         },
-        [client, documentTypes],
+        [client, documentTypes, locale],
     );
 
     const getContentsFromClipboard = async (): Promise<GetContentsFromClipboardResponse> => {

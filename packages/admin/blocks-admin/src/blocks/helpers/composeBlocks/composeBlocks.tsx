@@ -165,9 +165,25 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return Object.values(contentsPerBlock).reduce((contents, blockContents) => [...contents, ...blockContents], []);
             },
+
             replaceTextContents: (state, contents) => {
-                return state;
+                let contentsPerBlock: Record<keyof C, string[]> = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
+                    const extractedData = extractData([block, options], attr, state);
+
+                    return block.replaceTextContents?.(extractedData, contents) ?? block.state2Output(extractedData);
+                });
+
+                /* applyToCompositeBlocks creates an empty Object for e.g. an empty image block,
+                so keys with an empty object as value need to be removed in order to use state as fallback */
+                contentsPerBlock = Object.fromEntries(
+                    Object.entries(contentsPerBlock).filter(([_, v]) => {
+                        return v != null && Object.keys(v).length !== 0;
+                    }),
+                ) as Record<keyof C, string[]>;
+
+                return applyToCompositeBlocks({ ...state, ...contentsPerBlock }, ([block]) => block, { flatten: true });
             },
+
             previewContent: (state, ctx) => {
                 const previewContents = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
                     const extractedData = extractData([block, options], attr, state);
