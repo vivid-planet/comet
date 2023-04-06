@@ -57,7 +57,13 @@ const transformToSlug = (name: string, locale: string) => {
 
 interface UseExtractPagesApi {
     /**
-     * parallel fetches missing document data and prepares data for content extraction.
+     * Iterates over passed pages synchronous and extracts contents
+     *
+     * Process:
+     *      1. traverses the tree with top-down strategy
+     *          1a. documents and blocks return their translatable text contents
+     *      2. returns stringified JSON including all extracted text contents
+     *
      * @param flatPagesTree
      */
     prepareForExtraction: (pages: GQLPageTreePageFragment[]) => Promise<string>;
@@ -67,10 +73,12 @@ interface UseExtractPagesApi {
      *
      * Process:
      *      1. traverses the tree with top-down strategy
-     *      2. Refetch Pages query
+     *          1a. documents and blocks replace old content in their state with new content
+     *          1b. updates Page
+     *          1c. updates Page Node
      *
-     * @param parentId Parent Id where the paste should be attached to
-     * @param contents all pages which should be pasted
+     * @param flatPagesTree
+     * @param contents parsed contents data from clipboard
      */
     importContents: (pages: GQLPageTreePageFragment[], contents: ParsedContents) => Promise<void>;
 
