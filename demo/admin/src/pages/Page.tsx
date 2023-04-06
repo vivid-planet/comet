@@ -1,3 +1,4 @@
+import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
 import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
@@ -12,7 +13,7 @@ import { EditPage } from "./EditPage";
 import { PageContentBlock } from "./PageContentBlock";
 
 export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> = {
-    displayName: <FormattedMessage id="cometDemo.generic.page" defaultMessage="Page" />,
+    displayName: <FormattedMessage {...messages.page} />,
     editComponent: EditPage,
     getQuery: gql`
         query PageDocument($id: ID!) {

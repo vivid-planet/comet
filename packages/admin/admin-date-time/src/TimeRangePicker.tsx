@@ -36,7 +36,7 @@ function TimeRangePicker({
     classes,
     onChange,
     value,
-    separatorText = <FormattedMessage id="cometAdmin.dateTime.fromToSeparatorText" defaultMessage="to" />,
+    separatorText = <FormattedMessage id="comet.dateTime.fromToSeparatorText" defaultMessage="to" />,
     componentsProps = {},
     ...propsForBothTimePickers
 }: TimeRangePickerProps & WithStyles<typeof styles>) {
