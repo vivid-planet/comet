@@ -56,6 +56,8 @@
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
         "@mui/x-data-grid": "^5.0.0",
+        "@mui/x-data-grid-premium": "^5.0.0",
+        "@mui/x-data-grid-pro": "^5.0.0",
         "exceljs": "^3.4.0",
         "file-saver": "^2.0.2",
         "final-form": "^4.16.1",
@@ -70,6 +72,12 @@
         "react-router-dom": "^5.1.2"
     },
     "peerDependenciesMeta": {
+        "@mui/x-data-grid-premium": {
+            "optional": true
+        },
+        "@mui/x-data-grid-pro": {
+            "optional": true
+        },
         "react-dnd": {
             "optional": true
         }

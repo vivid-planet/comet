@@ -2,19 +2,24 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 5.0.0
-
-_TBA_
-
-### @comet/admin
+## [next]
 
 ### Highlights
 
+-   Api Crud Generator now supports enum types
 -   Routes (eg. Tabs) in a Component with dirty handling (eg. Form) is now supported
+
+### @comet/admin
 
 #### Breaking changes
 
 - DirtyHandler removed, replace with <Prompt> (no change needed if DirtyHandler was used indirectly eg. in Form)
+
+#### Changes
+
+-   Added `RowActionsMenu` and `RowActionsItem` components for creating IconButtons with nested Menus and Items for actions in table rows and other listed items.
+-   Add optional prop `disableCloseAfterSubmit` to `EditDialog`. It prevents the default closing behavior of `EditDialog`.
+-   Add optional prop `onAfterSave()` to `EditDialog`. It is called after successfully saving a `FinalForm` within the `EditDialog`.
 
 ## 4.0.0
 

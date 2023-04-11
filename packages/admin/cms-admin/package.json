@@ -35,6 +35,7 @@
     },
     "dependencies": {
         "@comet/admin": "^4.0.0",
+        "@comet/admin-date-time": "^4.0.0",
         "@comet/admin-icons": "^4.0.0",
         "@comet/admin-react-select": "^4.0.0",
         "@comet/admin-rte": "^4.0.0",

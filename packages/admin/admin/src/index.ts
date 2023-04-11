@@ -55,7 +55,7 @@ export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext
 export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
-export { FinalForm, useFormApiRef } from "./FinalForm";
+export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
 export {
     FinalFormSaveCancelButtonsLegacy,
     FinalFormSaveCancelButtonsLegacyClassKey,
@@ -101,6 +101,8 @@ export { RouterContext } from "./router/Context";
 export { RouterMemoryRouter } from "./router/MemoryRouter";
 export { RouterPrompt } from "./router/Prompt";
 export { RouterPromptHandler, SaveAction } from "./router/PromptHandler";
+export { RowActionsItem, RowActionsItemProps } from "./rowActions/RowActionsItem";
+export { RowActionsMenu, RowActionsMenuProps } from "./rowActions/RowActionsMenu";
 export { Selected } from "./Selected";
 export { ISelectionRenderPropArgs, Selection, useSelection } from "./Selection";
 export { ISelectionApi } from "./SelectionApi";

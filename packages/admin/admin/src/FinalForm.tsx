@@ -1,9 +1,9 @@
 import { getApolloContext } from "@apollo/client";
 import { CircularProgress } from "@mui/material";
-import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
+import { Config, Decorator, FORM_ERROR, FormApi, FormSubscription, MutableState, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
 import setFieldData from "final-form-set-field-data";
 import * as React from "react";
-import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
+import { AnyObject, Form, FormRenderProps, RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
 import { EditDialogApiContext } from "./EditDialogApiContext";
@@ -18,12 +18,25 @@ import { TableQueryContext } from "./table/TableQueryContext";
 export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
     React.useRef<FormApi<FormValues, InitialFormValues>>();
 
-interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
+// copy of FormProps from final-form, because Omit doen't work on it
+interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>
+    extends Omit<Config<FormValues, InitialFormValues>, "onSubmit">,
+        RenderableProps<FormRenderProps<FormValues, InitialFormValues>> {
+    subscription?: FormSubscription;
+    decorators?: Array<Decorator<FormValues, InitialFormValues>>;
+    form?: FormApi<FormValues, InitialFormValues>;
+    initialValuesEqual?: (a?: AnyObject, b?: AnyObject) => boolean;
+    [otherProp: string]: any;
+
     mode: "edit" | "add";
     resolveSubmitErrors?: (error: SubmissionErrors) => SubmissionErrors;
 
     // override final-form onSubmit and remove callback as we don't support that (return promise instead)
-    onSubmit: (values: FormValues, form: FormApi<FormValues>) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
+    onSubmit: (
+        values: FormValues,
+        form: FormApi<FormValues>,
+        event: FinalFormSubmitEvent,
+    ) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
 
     /* override onAfterSubmit. This method will be called at the end of a submit process.
      *
@@ -33,6 +46,24 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
     apiRef?: React.MutableRefObject<FormApi<FormValues> | undefined>;
+}
+
+declare module "final-form" {
+    interface InternalFormState {
+        submitEvent: any;
+    }
+}
+
+const setSubmitEvent: Mutator<any, any> = (args: any[], state: MutableState<any, any>) => {
+    const [event] = args;
+    state.formState.submitEvent = event;
+};
+const getSubmitEvent: Mutator<any, any> = (args: any[], state: MutableState<any, any>) => {
+    return state.formState.submitEvent;
+};
+
+export class FinalFormSubmitEvent extends Event {
+    navigatingBack?: boolean;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
@@ -53,7 +84,12 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     return (
         <Form
             {...props}
-            mutators={{ ...props.mutators, setFieldData: setFieldData as unknown as Mutator<FormValues, object> }}
+            mutators={{
+                ...props.mutators,
+                setFieldData: setFieldData as unknown as Mutator<FormValues, object>,
+                setSubmitEvent: setSubmitEvent as unknown as Mutator<FormValues, object>,
+                getSubmitEvent: getSubmitEvent as unknown as Mutator<FormValues, object>,
+            }}
             onSubmit={handleSubmit}
             render={RenderForm}
         />
@@ -163,7 +199,8 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     }
 
     function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
-        const ret = props.onSubmit(values, form);
+        const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
+        const ret = props.onSubmit(values, form, submitEvent);
 
         if (ret === undefined) return ret;
 

@@ -19,6 +19,8 @@ interface ITitle {
 
 interface EditDialogProps {
     title?: ITitle | string;
+    disableCloseAfterSave?: boolean;
+    onAfterSave?: () => void;
 }
 
 export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
@@ -86,7 +88,15 @@ interface IHookProps {
     api: IEditDialogApi;
 }
 
-const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = ({ selection, selectionApi, api, title: maybeTitle, children }) => {
+const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = ({
+    selection,
+    selectionApi,
+    api,
+    title: maybeTitle,
+    disableCloseAfterSave = false,
+    onAfterSave,
+    children,
+}) => {
     const intl = useIntl();
     const editDialogFormApi = useEditDialogFormApi();
     const parentRouterContext = React.useContext(RouterContext);
@@ -107,7 +117,10 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
         if (saveResult) {
             setTimeout(() => {
                 // TODO DirtyHandler removal: do we need a onReset functionality here?
-                api.closeDialog({ delay: true });
+                if (!disableCloseAfterSave) {
+                    api.closeDialog({ delay: true });
+                }
+                onAfterSave?.();
             });
         }
     };
@@ -158,9 +171,13 @@ interface IEditDialogHooklessProps extends EditDialogProps {
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
 
-const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = ({ children, title }, ref) => {
+const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = ({ children, title, onAfterSave }, ref) => {
     const [EditDialogConfigured, selection, api] = useEditDialog();
     React.useImperativeHandle(ref, () => api);
-    return <EditDialogConfigured title={title}>{children({ selectedId: selection.id, selectionMode: selection.mode })}</EditDialogConfigured>;
+    return (
+        <EditDialogConfigured title={title} onAfterSave={onAfterSave}>
+            {children({ selectedId: selection.id, selectionMode: selection.mode })}
+        </EditDialogConfigured>
+    );
 };
 export const EditDialog = React.forwardRef(EditDialogHooklessInner);

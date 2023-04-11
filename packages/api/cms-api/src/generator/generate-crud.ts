@@ -3,6 +3,7 @@ import * as path from "path";
 
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { writeCrudInput } from "./generate-crud-input";
+import { findEnumName } from "./utils/find-enum-name";
 import { writeGenerated } from "./utils/write-generated";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,7 +24,8 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             (prop) =>
                 hasFieldFeature(metadata.class, prop.name, "filter") &&
                 !prop.name.startsWith("scope_") &&
-                (prop.type === "string" ||
+                (prop.enum ||
+                    prop.type === "string" ||
                     prop.type === "DecimalType" ||
                     prop.type === "BooleanType" ||
                     prop.type === "boolean" ||
@@ -56,18 +58,46 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });
 
+        let importsOut = "";
+        let enumFiltersOut = "";
+
+        const generatedEnumNames = new Set<string>();
+        crudFilterProps.map((prop) => {
+            if (prop.enum) {
+                const enumName = findEnumName(metadata, prop.name);
+                if (!generatedEnumNames.has(enumName)) {
+                    generatedEnumNames.add(enumName);
+                    enumFiltersOut += `@InputType()
+                    class ${enumName}EnumFilter extends createEnumFilter(${enumName}) {}
+                `;
+                    // entity MUST export the enum (as enumName)
+                    importsOut += `import { ${enumName} } from "${path
+                        .relative(`${generatorOptions.targetDirectory}/dto`, metadata.path)
+                        .replace(/\.ts$/, "")}";`;
+                }
+            }
+        });
+
         if (hasFilterArg) {
-            const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter } from "@comet/cms-api";
+            const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, createEnumFilter } from "@comet/cms-api";
             import { Field, InputType } from "@nestjs/graphql";
             import { Type } from "class-transformer";
             import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+            ${importsOut}
+
+            ${enumFiltersOut}
 
             @InputType()
             export class ${classNameSingular}Filter {
                 ${crudFilterProps
                     .map((prop) => {
                         if (prop.enum) {
-                            //TODO add support for enum
+                            const enumName = findEnumName(metadata, prop.name);
+                            return `@Field(() => ${enumName}EnumFilter, { nullable: true })
+                            @ValidateNested()
+                            @Type(() => ${enumName}EnumFilter)
+                            ${prop.name}?: ${enumName}EnumFilter;
+                            `;
                         } else if (prop.type === "string") {
                             return `@Field(() => StringFilter, { nullable: true })
                             @ValidateNested()

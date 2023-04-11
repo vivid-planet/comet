@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 import { DamScopeInterface } from "../../types";
 import { FileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
+import { License } from "./license.embeddable";
 
 export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt" | "archived";
@@ -19,6 +20,7 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     altText?: string;
     archived: boolean;
     image?: FileImage;
+    license?: License;
     createdAt: Date;
     updatedAt: Date;
     scope?: DamScopeInterface;
@@ -89,6 +91,10 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
             eager: true,
         })
         image?: FileImage;
+
+        @Field(() => License, { nullable: true })
+        @Embedded(() => License, { nullable: true })
+        license?: License;
 
         @Property({
             columnType: "timestamp with time zone",

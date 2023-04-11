@@ -181,6 +181,10 @@ export class FilesService {
         return withFilesSelect(this.selectQueryBuilder(), { contentHash }).getSingleResult();
     }
 
+    async calculateHashForFile(filePath: string): Promise<string> {
+        return hasha.fromFile(filePath, { algorithm: "md5" });
+    }
+
     async findOneByFilenameAndFolder(
         {
             filename,
@@ -200,7 +204,7 @@ export class FilesService {
 
     async create({ folderId, ...data }: CreateFileInput): Promise<FileInterface> {
         const folder = folderId ? await this.foldersService.findOneById(folderId) : undefined;
-        return this.save(this.filesRepository.create({ ...data, folder: folder?.id }));
+        return this.save(this.filesRepository.create({ ...data, license: { ...data.license }, folder: folder?.id }));
     }
 
     async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {
@@ -269,7 +273,7 @@ export class FilesService {
     async upload({ file, folderId }: { file: FileUploadInterface; folderId?: string }, scope?: DamScopeInterface): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
-            const contentHash = await hasha.fromFile(file.path, { algorithm: "md5" });
+            const contentHash = await this.calculateHashForFile(file.path);
             let image: probe.ProbeResult | undefined;
             try {
                 image = await probe(createReadStream(file.path));
