@@ -4,6 +4,7 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormSelect,
     MainContent,
     messages,
     SaveButton,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/cms-admin";
-import { CircularProgress, FormControlLabel, IconButton } from "@mui/material";
+import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import {
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
@@ -26,6 +27,7 @@ import {
     GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
+    GQLProductType,
 } from "@src/graphql.generated";
 import { FORM_ERROR } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -52,6 +54,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         const input = {
             ...formState,
             price: parseFloat(formState.price),
+            type: formState.type as GQLProductType,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -72,7 +75,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const initialValues = data?.product ? filter(productFormFragment, data.product) : { inStock: false };
 
     if (error) {
-        return <FormattedMessage id="demo.common.error" defaultMessage="Ein Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal." />;
+        return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
     }
 
     if (loading) {
@@ -88,8 +91,9 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             onAfterSubmit={(values, form) => {
                 //don't go back automatically
             }}
+            subscription={{}}
         >
-            {({ values, pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => (
+            {({ pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => (
                 <EditPageLayout>
                     <Toolbar>
                         <ToolbarItem>
@@ -98,7 +102,11 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             </IconButton>
                         </ToolbarItem>
                         <ToolbarTitleItem>
-                            {values.title ? values.title : <FormattedMessage id="comet.products.productDetail" defaultMessage="Product Detail" />}
+                            <Field name="title">
+                                {({ input }) =>
+                                    input.value ? input.value : <FormattedMessage id="products.productDetail" defaultMessage="Product Detail" />
+                                }
+                            </Field>
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
@@ -130,14 +138,14 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             fullWidth
                             name="title"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "demo.product.title", defaultMessage: "Titel" })}
+                            label={intl.formatMessage({ id: "product.title", defaultMessage: "Title" })}
                         />
                         <Field
                             required
                             fullWidth
                             name="slug"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "demo.product.slug", defaultMessage: "Slug" })}
+                            label={intl.formatMessage({ id: "product.slug", defaultMessage: "Slug" })}
                         />
                         <Field
                             required
@@ -146,19 +154,28 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             rows={5}
                             name="description"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "demo.product.description", defaultMessage: "Beschreibung" })}
+                            label={intl.formatMessage({ id: "product.description", defaultMessage: "Description" })}
                         />
+                        <Field name="type" label="Type" required fullWidth>
+                            {(props) => (
+                                <FinalFormSelect {...props} fullWidth>
+                                    <MenuItem value="Cap">Cap</MenuItem>
+                                    <MenuItem value="Shirt">Shirt</MenuItem>
+                                    <MenuItem value="Tie">Tie</MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             fullWidth
                             name="price"
                             component={FinalFormInput}
                             inputProps={{ type: "number" }}
-                            label={intl.formatMessage({ id: "demo.product.description", defaultMessage: "Preis" })}
+                            label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })}
                         />
                         <Field name="inStock" label="" type="checkbox" fullWidth>
                             {(props) => (
                                 <FormControlLabel
-                                    label={intl.formatMessage({ id: "demo.product.inStock", defaultMessage: "Auf Lager" })}
+                                    label={intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" })}
                                     control={<FinalFormCheckbox {...props} />}
                                 />
                             )}

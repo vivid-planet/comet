@@ -43,7 +43,7 @@ function ProductsTableToolbar() {
             </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="cometDemo.products.newProduct" defaultMessage="New Product" />
+                    <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarItem>
         </Toolbar>
@@ -54,6 +54,7 @@ const columns: GridColDef<GQLProductsListFragment>[] = [
     { field: "title", headerName: "Title", width: 150 },
     { field: "description", headerName: "Description", width: 150 },
     { field: "price", headerName: "Price", width: 150, type: "number" },
+    { field: "type", headerName: "Type", width: 150, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
     { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
     {
         field: "action",
@@ -130,6 +131,7 @@ const productsFragment = gql`
         title
         description
         price
+        type
         inStock
     }
 `;

@@ -2,17 +2,9 @@
     "name": "comet-admin-stories",
     "version": "0.0.0",
     "private": true,
-    "license": "BSD-2-Clause",
     "files": [
         "src"
     ],
-    "scripts": {
-        "build-storybook": "build-storybook",
-        "lint": "run-p lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/",
-        "lint:tsc": "tsc --noEmit",
-        "storybook": "start-storybook -p 26638"
-    },
     "dependencies": {
         "@apollo/client": "^3.7.0",
         "@comet/admin": "workspace:^4.0.0",
@@ -67,6 +59,8 @@
         "@comet/admin-babel-preset": "workspace:^4.0.0",
         "@comet/eslint-config": "workspace:^4.0.0",
         "@types/draft-js": "^0.11.10",
+        "@faker-js/faker": "^7.6.0",
+        "@graphql-mocks/network-msw": "^0.3.0",
         "@types/faker": "^5.5.8",
         "@types/file-saver": "^2.0.1",
         "@types/history": "^4.0.0",
@@ -83,8 +77,10 @@
         "draft-js-export-markdown": "^1.4.0",
         "draft-js-import-markdown": "^1.4.0",
         "eslint": "^8.0.0",
+        "graphql-mocks": "^0.10.0",
         "immutable": "~3.7.4",
         "npm-run-all": "^4.1.5",
+        "msw": "^1.2.1",
         "prettier": "^2.0.0",
         "react-dnd": "^16.0.0",
         "react-dnd-html5-backend": "^16.0.0",
@@ -94,5 +90,16 @@
         "ts-node": "^10.0.0",
         "typescript": "^4.0.0",
         "webpack": "^5.0.0"
+    },
+    "scripts": {
+        "build-storybook": "build-storybook",
+        "storybook": "start-storybook -p 26638",
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/",
+        "lint:tsc": "tsc --noEmit"
+    },
+    "license": "BSD-2-Clause",
+    "msw": {
+        "workerDirectory": "public"
     }
 }

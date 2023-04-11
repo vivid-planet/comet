@@ -141,7 +141,6 @@ export class PageTreeService {
 
     async updateNodeVisibility(id: string, newVisibility: Visibility): Promise<void> {
         const node = await this.createReadApi({ visibility: "all" }).getNodeOrFail(id);
-        if (!node) throw new Error("Can't find page-tree-node with id");
 
         if (node.slug === "home" && newVisibility !== PageTreeNodeVisibility.Published) {
             throw new Error(`Page "home" cannot be ${newVisibility.toLowerCase()}`);
@@ -169,11 +168,10 @@ export class PageTreeService {
             changedSlug = slugIncrement ? `${slug}-${slugIncrement}` : slug;
         }
 
-        await this.pageTreeRepository
-            .createQueryBuilder()
-            .update({ visibility: newVisibility, slug: changedSlug ? changedSlug : node.slug })
-            .where({ id })
-            .execute();
+        node.assign({ visibility: newVisibility, slug: changedSlug ?? node.slug });
+
+        // TODO flush shouldn't happen here, remove in a major version
+        await this.pageTreeRepository.flush();
     }
 
     async updateNodePosition(id: string, input: MovePageTreeNodesByPosInput): Promise<PageTreeNodeInterface> {

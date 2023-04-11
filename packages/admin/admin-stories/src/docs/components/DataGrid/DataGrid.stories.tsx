@@ -41,7 +41,7 @@ const exampleColumns: GridColDef[] = [
 
 storiesOf("stories/components/DataGrid", module)
     .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloStoryDecorator(`https://api.spacex.land/graphql/`))
+    .addDecorator(apolloStoryDecorator("/graphql"))
     .add("useDataGridRemote", () => {
         const columns: GridColDef[] = [
             {
@@ -56,6 +56,55 @@ storiesOf("stories/components/DataGrid", module)
         ];
 
         const dataGridProps = useDataGridRemote();
+
+        const { data, loading, error } = useQuery(
+            gql`
+                query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
+                    launchesPastResult(limit: $limit, offset: $offset, sort: $sort, order: $order) {
+                        data {
+                            id
+                            mission_name
+                            launch_date_local
+                        }
+                        result {
+                            totalCount
+                        }
+                    }
+                }
+            `,
+            {
+                variables: {
+                    limit: dataGridProps.pageSize,
+                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    sort: dataGridProps.sortModel[0]?.field,
+                    order: dataGridProps.sortModel[0]?.sort,
+                },
+            },
+        );
+
+        const rows = data?.launchesPastResult.data ?? [];
+        const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
+
+        return (
+            <Box sx={{ height: 200, width: "100%" }}>
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+            </Box>
+        );
+    })
+    .add("useDataGridRemoteInitialSort", () => {
+        const columns: GridColDef[] = [
+            {
+                field: "mission_name",
+                headerName: "Mission Name",
+            },
+            {
+                field: "launch_date_local",
+                headerName: "Launch Date",
+                type: "dateTime",
+            },
+        ];
+
+        const dataGridProps = useDataGridRemote({ initialSort: [{ field: "mission_name", sort: "desc" }] });
 
         const { data, loading, error } = useQuery(
             gql`

@@ -38,7 +38,7 @@ export const EditPageNode = createEditPageNode({
     nodeFragment: additionalPageTreeNodeFieldsFragment,
     additionalFormFields: (
         <div>
-            <Field label={<FormattedMessage id="cometDemo.pageTreeNode.fields.userGroup" defaultMessage="User-Group" />} name="userGroup" fullWidth>
+            <Field label={<FormattedMessage id="pageTreeNode.fields.userGroup" defaultMessage="User-Group" />} name="userGroup" fullWidth>
                 {(props) => (
                     <FinalFormSelect {...props} fullWidth>
                         {userGroupOptions.map((option) => (
