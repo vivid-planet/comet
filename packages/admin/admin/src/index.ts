@@ -102,6 +102,7 @@ export { RouterContext } from "./router/Context";
 export { RouterMemoryRouter } from "./router/MemoryRouter";
 export { RouterPrompt } from "./router/Prompt";
 export { RouterPromptHandler, SaveAction } from "./router/PromptHandler";
+export { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "./router/SubRoute";
 export { RowActionsItem, RowActionsItemProps } from "./rowActions/RowActionsItem";
 export { RowActionsMenu, RowActionsMenuProps } from "./rowActions/RowActionsMenu";
 export { Selected } from "./Selected";

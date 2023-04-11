@@ -2,6 +2,7 @@ import * as React from "react";
 import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
+import { SubRouteIndexRoute, useSubRoutePrefix } from "../router/SubRoute";
 import { StackBreadcrumb } from "./Breadcrumb";
 import { IStackPageProps } from "./Page";
 import { StackSwitchMeta } from "./SwitchMeta";
@@ -87,6 +88,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
     const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = React.useState<Record<string, string | undefined>>({});
     const history = useHistory();
     const match = useRouteMatch<IRouteParams>();
+    const subRoutePrefix = useSubRoutePrefix();
 
     let activePage: string | undefined;
 
@@ -106,12 +108,12 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
     const getTargetUrl = React.useCallback(
         (pageName: string, payload: string, subUrl?: string): string => {
             if (isInitialPage(pageName)) {
-                return removeTrailingSlash(match.url);
+                return removeTrailingSlash(subRoutePrefix);
             } else {
-                return `${removeTrailingSlash(match.url)}/${payload}/${pageName}${subUrl ? `/${subUrl}` : ""}`;
+                return `${removeTrailingSlash(subRoutePrefix)}/${payload}/${pageName}${subUrl ? `/${subUrl}` : ""}`;
             }
         },
-        [isInitialPage, match],
+        [isInitialPage, subRoutePrefix],
     );
 
     const activatePage = React.useCallback(
@@ -173,7 +175,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
         <Switch>
             {React.Children.map(props.children, (page: React.ReactElement<IStackPageProps>) => {
                 if (isInitialPage(page.props.name)) return null; // don't render initial Page
-                const path = `${removeTrailingSlash(match.url)}/:id/${page.props.name}`;
+                const path = `${removeTrailingSlash(subRoutePrefix)}/:id/${page.props.name}`;
                 return (
                     <Route path={path}>
                         {(routeProps: RouteComponentProps<IRouteParams>) => {
@@ -183,8 +185,9 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
                     </Route>
                 );
             })}
-            <Route>
+            <SubRouteIndexRoute>
                 {(routeProps: RouteComponentProps<IRouteParams>) => {
+                    if (!routeProps.match) return null;
                     // now render initial page (as last route so it's a fallback)
                     let initialPage: React.ReactElement<IStackPageProps> | null = null;
                     React.Children.forEach(props.children, (page: React.ReactElement<IStackPageProps>) => {
@@ -194,7 +197,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
                     });
                     return renderRoute(initialPage!, routeProps);
                 }}
-            </Route>
+            </SubRouteIndexRoute>
         </Switch>
     );
 };
