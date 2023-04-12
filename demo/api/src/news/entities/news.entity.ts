@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
@@ -80,6 +80,9 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     content: BlockDataInterface;
 
     @OneToMany(() => NewsComment, (newsComment) => newsComment.news)
+    @CrudField({
+        input: false,
+    })
     comments = new Collection<NewsComment>(this);
 
     @Property({

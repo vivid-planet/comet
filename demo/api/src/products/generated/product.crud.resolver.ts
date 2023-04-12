@@ -19,6 +19,7 @@ export class ProductCrudResolver {
         private readonly entityManager: EntityManager,
         private readonly productsService: ProductsService,
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
+        @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
     ) {}
 
     @Query(() => Product)
@@ -55,11 +56,13 @@ export class ProductCrudResolver {
 
     @Mutation(() => Product)
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
+        const { categoryId, ...assignInput } = input;
         const product = this.repository.create({
-            ...input,
+            ...assignInput,
+
             image: input.image.transformToBlockData(),
-            category: input.categoryId ? Reference.createFromPK(ProductCategory, input.categoryId) : undefined,
             visible: false,
+            category: categoryId ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryId)) : undefined,
         });
 
         await this.entityManager.flush();
@@ -77,10 +80,11 @@ export class ProductCrudResolver {
         if (lastUpdatedAt) {
             validateNotModified(product, lastUpdatedAt);
         }
+        const { categoryId, ...assignInput } = input;
         product.assign({
-            ...input,
+            ...assignInput,
             image: input.image.transformToBlockData(),
-            category: input.categoryId ? Reference.createFromPK(ProductCategory, input.categoryId) : undefined,
+            category: categoryId ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryId)) : undefined,
         });
 
         await this.entityManager.flush();

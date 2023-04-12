@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { IsSlug } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsNotEmpty, IsString, IsUUID } from "class-validator";
 
 @InputType()
 export class ProductCategoryInput {
@@ -16,4 +16,9 @@ export class ProductCategoryInput {
     @IsSlug()
     @Field()
     slug: string;
+
+    @Field(() => [String])
+    @IsArray()
+    @IsUUID(undefined, { each: true })
+    productIds: string[];
 }

@@ -8,6 +8,10 @@ import { generateCrudInput } from "./generate-crud-input";
 import { findEnumName } from "./utils/find-enum-name";
 import { GeneratedFiles } from "./utils/write-generated-files";
 
+function classNameToInstanceName(className: string): string {
+    return className[0].toLocaleLowerCase() + className.slice(1);
+}
+
 function buildNameVariants(metadata: EntityMetadata<any>): {
     classNameSingular: string;
     classNamePlural: string;
@@ -18,8 +22,8 @@ function buildNameVariants(metadata: EntityMetadata<any>): {
 } {
     const classNameSingular = metadata.className;
     const classNamePlural = plural(metadata.className);
-    const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
-    const instanceNamePlural = classNamePlural[0].toLocaleLowerCase() + classNamePlural.slice(1);
+    const instanceNameSingular = classNameToInstanceName(classNameSingular);
+    const instanceNamePlural = classNameToInstanceName(classNamePlural);
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
     return {
@@ -371,16 +375,41 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const relationsProps = metadata.props.filter((prop) => prop.reference === "1:m");
 
     let importsOut = "";
+    const injectRepositories = new Set<string>();
 
-    for (const relationProp of relationProps) {
-        if (!relationProp.targetMeta) throw new Error(`Relation ${relationProp.name} has targetMeta not set`);
-        importsOut += generateImport(relationProp.targetMeta, generatorOptions.targetDirectory);
+    for (const prop of relationProps) {
+        if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
+        importsOut += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
     }
+    const inputRelationProps = relationProps
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .map((prop) => {
+            injectRepositories.add(prop.type);
+            return {
+                name: prop.name,
+                nullable: prop.nullable,
+                type: prop.type,
+                inputName: `${prop.name}Id`,
+                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
+            };
+        });
 
-    for (const relationsProp of relationsProps) {
-        if (!relationsProp.targetMeta) throw new Error(`Relation ${relationsProp.name} has targetMeta not set`);
-        importsOut += generateImport(relationsProp.targetMeta, generatorOptions.targetDirectory);
+    for (const prop of relationsProps) {
+        if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
+        importsOut += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
     }
+    const inputRelationsProps = relationsProps
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .map((prop) => {
+            injectRepositories.add(prop.type);
+            return {
+                name: prop.name,
+                nullable: prop.nullable,
+                type: prop.type,
+                inputName: `${prop.name.replace(/s$/, "")}Ids`,
+                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
+            };
+        });
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
@@ -401,7 +430,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         constructor(
             private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
-            @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>
+            @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
+            ${[...injectRepositories]
+                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
+                .join(", ")}
         ) {}
 
         @Query(() => ${metadata.className})
@@ -460,18 +492,33 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
-            const ${instanceNameSingular} = this.repository.create({
-                ...input,
-                ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
-                ${relationProps.map(
-                    (prop) =>
-                        `${prop.name}: ${prop.nullable ? `input.${prop.name}Id ? ` : ""}Reference.createFromPK(${prop.type}, input.${prop.name}Id)${
-                            prop.nullable ? ` : undefined` : ""
-                        }, `,
-                )}
-                ${hasVisibleProp ? `visible: false,` : ""}
-                ${scopeProp ? `scope,` : ""}
-            });
+            const { ${inputRelationProps.map((prop) => prop.inputName).join(", ")}${inputRelationProps.length ? ", " : ""}${inputRelationsProps
+        .map((prop) => prop.inputName)
+        .join(", ")}${inputRelationsProps.length ? ", " : ""}...assignInput } = input;
+                    const ${instanceNameSingular} = this.repository.create({
+                        ...assignInput,
+                        ${hasVisibleProp ? `visible: false,` : ""}
+                        ${scopeProp ? `scope,` : ""}        
+                        ${
+                            blockProps.length
+                                ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, `
+                                : ""
+                        }
+                        ${inputRelationProps.map(
+                            (prop) =>
+                                `${prop.name}: ${prop.nullable ? `${prop.name}Id ? ` : ""}Reference.create(await this.${
+                                    prop.repositoryName
+                                }.findOneOrFail(${prop.inputName}))${prop.nullable ? ` : undefined` : ""}, `,
+                        )}
+                    });
+                    ${inputRelationsProps.map(
+                        (prop) => `{
+                        const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.inputName} });
+                        if (${prop.name}.length != ${prop.inputName}.length) throw new Error("Couldn't find all ${prop.name} from ${prop.inputName}");
+                        await ${instanceNameSingular}.${prop.name}.loadItems();
+                        ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((p) => Reference.create(p)));
+                    }`,
+                    )}
 
             await this.entityManager.flush();
             return ${instanceNameSingular};
@@ -492,16 +539,27 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             }`
                     : ""
             }
+            const { ${inputRelationProps.map((prop) => prop.inputName).join(", ")}${inputRelationProps.length ? ", " : ""}${inputRelationsProps
+        .map((prop) => prop.inputName)
+        .join(", ")}${inputRelationsProps.length ? ", " : ""}...assignInput } = input;
             ${instanceNameSingular}.assign({
-                ...input,
+                ...assignInput,
                 ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
-                ${relationProps.map(
+                ${inputRelationProps.map(
                     (prop) =>
-                        `${prop.name}: ${prop.nullable ? `input.${prop.name}Id ? ` : ""}Reference.createFromPK(${prop.type}, input.${prop.name}Id)${
-                            prop.nullable ? ` : undefined` : ""
-                        }, `,
+                        `${prop.name}: ${prop.nullable ? `${prop.name}Id ? ` : ""}Reference.create(await this.${prop.repositoryName}.findOneOrFail(${
+                            prop.inputName
+                        }))${prop.nullable ? ` : undefined` : ""}, `,
                 )}
             });
+            ${inputRelationsProps.map(
+                (prop) => `{
+                const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.inputName} });
+                if (${prop.name}.length != ${prop.inputName}.length) throw new Error("Couldn't find all ${prop.name} from ${prop.inputName}");
+                await ${instanceNameSingular}.${prop.name}.loadItems();
+                ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((p) => Reference.create(p)));
+            }`,
+            )}
 
             await this.entityManager.flush();
 

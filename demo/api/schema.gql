@@ -637,6 +637,7 @@ input ProductCategoryFilter {
 }
 
 input ProductCategoryInput {
+  productIds: [String!]!
   slug: String!
   title: String!
 }

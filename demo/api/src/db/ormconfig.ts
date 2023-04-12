@@ -15,7 +15,7 @@ const config = createOrmConfig({
         connection: { ssl: process.env.POSTGRESQL_USE_SSL === "true" },
     },
     namingStrategy: EntityCaseNamingStrategy,
-    debug: false,
+    debug: true,
     migrations: {
         tableName: "Migrations",
         //  `path` is only used to tell MikroORM where to place newly generated migrations. Available migrations are defined using `migrationsList`.

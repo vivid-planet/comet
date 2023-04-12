@@ -58,13 +58,13 @@ export class NewsCrudResolver {
         @Args("scope", { type: () => NewsContentScope }) scope: NewsContentScope,
         @Args("input", { type: () => NewsInput }) input: NewsInput,
     ): Promise<News> {
+        const { ...assignInput } = input;
         const news = this.repository.create({
-            ...input,
-            image: input.image.transformToBlockData(),
-            content: input.content.transformToBlockData(),
-
+            ...assignInput,
             visible: false,
             scope,
+            image: input.image.transformToBlockData(),
+            content: input.content.transformToBlockData(),
         });
 
         await this.entityManager.flush();
@@ -82,8 +82,9 @@ export class NewsCrudResolver {
         if (lastUpdatedAt) {
             validateNotModified(news, lastUpdatedAt);
         }
+        const { ...assignInput } = input;
         news.assign({
-            ...input,
+            ...assignInput,
             image: input.image.transformToBlockData(),
             content: input.content.transformToBlockData(),
         });

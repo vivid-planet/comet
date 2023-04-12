@@ -103,6 +103,13 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             decorators.push("@IsUUID()");
             type = "string";
             fieldName += "Id";
+        } else if (prop.reference == "1:m") {
+            decorators.length = 0;
+            decorators.push(`@Field(() => [String])`);
+            decorators.push(`@IsArray()`);
+            decorators.push(`@IsUUID(undefined, { each: true })`);
+            type = "string[]";
+            fieldName = `${fieldName.replace(/s$/, "")}Ids`; //singularize and append Ids
         } else {
             //unsupported type TODO support more
             continue;
@@ -114,7 +121,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
     }
     const inputOut = `import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray } from "class-validator";
 import { IsSlug, RootBlockInputScalar } from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";

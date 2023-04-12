@@ -24,7 +24,7 @@ export class Product extends BaseEntity<Product, "id"> {
 }
 
 describe("GenerateCrudInputRelations", () => {
-    it("input dto should contain relation id", async () => {
+    it("n:1 input dto should contain relation id", async () => {
         LazyMetadataStorage.load();
         const orm = await MikroORM.init({
             type: "sqlite",
@@ -34,6 +34,39 @@ describe("GenerateCrudInputRelations", () => {
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("Product"));
         const lintedOutput = await lintSource(out);
+        const source = parseSource(lintedOutput);
+
+        const classes = source.getClasses();
+        expect(classes.length).toBe(1);
+
+        const cls = classes[0];
+        const structure = cls.getStructure();
+
+        expect(structure.properties?.length).toBe(1);
+        {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const prop = structure.properties![0];
+            expect(prop.name).toBe("categoryId");
+            expect(prop.type).toBe("string");
+            const decorators = prop.decorators?.map((i) => i.name);
+            expect(decorators).toContain("Field");
+            expect(decorators).toContain("IsUUID");
+            expect(decorators).toContain("IsOptional");
+        }
+        orm.close();
+    });
+
+    it("1:n input dto should contain relation id", async () => {
+        LazyMetadataStorage.load();
+        const orm = await MikroORM.init({
+            type: "sqlite",
+            dbName: "test-db",
+            entities: [Product, ProductCategory],
+        });
+
+        const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("ProductCategory"));
+        const lintedOutput = await lintSource(out);
+        console.log(lintedOutput);
         const source = parseSource(lintedOutput);
 
         const classes = source.getClasses();
