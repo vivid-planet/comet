@@ -69,6 +69,18 @@ pnpm run storybook
 
 Storybook will be available at [http://localhost:26638/](http://localhost:26638/)
 
+### Stop Processes
+
+```bash
+npx dev-pm shutdown
+```
+
+### Handy Alias
+
+```
+alias dpm="npm exec -- dev-pm"
+```
+
 ## Develop in a project
 
 ### additional Requirements
