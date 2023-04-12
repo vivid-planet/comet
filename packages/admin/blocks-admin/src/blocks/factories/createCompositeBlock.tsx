@@ -54,7 +54,7 @@ type ExtractCompositeBlocksConfigBase<T extends Record<string, { block: BlockInt
 };
 
 // Inspired by https://dev.to/lucianbc/union-type-merging-in-typescript-9al
-type ExtractGroupConfigs<T> = T[keyof T];
+type ExtractGroupConfigs<T extends Record<string, unknown>> = T[string];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AllBlockKeys<T> = T extends any ? keyof T : never;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

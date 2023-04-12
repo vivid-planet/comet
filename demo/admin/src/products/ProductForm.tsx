@@ -125,7 +125,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     };
 
     if (error) {
-        return <FormattedMessage id="demo.common.error" defaultMessage="Ein Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal." />;
+        return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
     }
 
     if (loading) {
@@ -156,7 +156,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         <ToolbarTitleItem>
                             <Field name="title">
                                 {({ input }) =>
-                                    input.value ? input.value : <FormattedMessage id="comet.products.productDetail" defaultMessage="Product Detail" />
+                                    input.value ? input.value : <FormattedMessage id="products.productDetail" defaultMessage="Product Detail" />
                                 }
                             </Field>
                         </ToolbarTitleItem>
@@ -171,14 +171,14 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             fullWidth
                             name="title"
                             component={FinalFormInput}
-                            label={<FormattedMessage id="demo.product.title" defaultMessage="Titel" />}
+                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                         />
                         <Field
                             required
                             fullWidth
                             name="slug"
                             component={FinalFormInput}
-                            label={<FormattedMessage id="demo.product.slug" defaultMessage="Slug" />}
+                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
                         />
                         <Field
                             required
@@ -187,7 +187,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             rows={5}
                             name="description"
                             component={FinalFormInput}
-                            label={<FormattedMessage id="demo.product.description" defaultMessage="Beschreibung" />}
+                            label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <Field name="type" label="Type" required fullWidth>
                             {(props) => (
@@ -203,12 +203,12 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             name="price"
                             component={FinalFormInput}
                             inputProps={{ type: "number" }}
-                            label={<FormattedMessage id="demo.product.price" defaultMessage="Preis" />}
+                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
                         <Field name="inStock" label="" type="checkbox" fullWidth>
                             {(props) => (
                                 <FormControlLabel
-                                    label={<FormattedMessage id="demo.product.inStock" defaultMessage="Auf Lager" />}
+                                    label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
                                     control={<FinalFormCheckbox {...props} />}
                                 />
                             )}

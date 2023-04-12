@@ -1,48 +1,55 @@
 {
     "name": "@comet/admin-icons",
     "version": "4.0.0",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
         "directory": "packages/admin/admin-icons"
     },
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "scripts": {
-        "clean": "rimraf lib && rimraf src/generated",
-        "generate-icons": "ts-node generate-icons.ts",
         "build": "run-s clean generate-icons && run-p build:babel build:types",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "start": "yarn run generate-icons && run-p start:babel start:types",
-        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
-        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
+        "clean": "rimraf lib && rimraf src/generated",
+        "generate-icons": "ts-node generate-icons.ts",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/",
-        "lint:tsc": "tsc --noEmit"
+        "lint:tsc": "tsc --noEmit",
+        "start": "$npm_execpath run generate-icons && run-p start:babel start:types",
+        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.17.6",
+        "@babel/core": "^7.20.12",
+        "@comet/admin-babel-preset": "workspace:^4.0.0",
+        "@comet/eslint-config": "workspace:^4.0.0",
+        "@types/cli-progress": "^3.8.0",
+        "@types/node": "^18.0.0",
+        "cli-progress": "^3.8.2",
+        "eslint": "^8.0.0",
+        "fast-xml-parser": "^3.18.0",
+        "pascal-case": "^3.1.2",
+        "prettier": "^2.0.0",
+        "react": "^17.0",
+        "react-dom": "^17.0",
+        "rimraf": "^3.0.2",
+        "ts-node": "^10.0.0",
+        "typescript": "^4.0.0",
+        "@mui/material": "^5.0.0",
+        "@types/react": "^17.0.0",
+        "@types/react-dom": "^17.0.0",
+        "npm-run-all": "^4.1.5"
     },
     "peerDependencies": {
         "@mui/material": "^5.0.0",
         "react": "^17.0",
         "react-dom": "^17.0"
     },
-    "devDependencies": {
-        "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^4.0.0",
-        "@comet/eslint-config": "^4.0.0",
-        "@types/cli-progress": "^3.8.0",
-        "cli-progress": "^3.8.2",
-        "eslint": "^8.0.0",
-        "fast-xml-parser": "^3.18.0",
-        "pascal-case": "^3.1.2",
-        "prettier": "^2.0.0",
-        "rimraf": "^3.0.2",
-        "ts-node": "^10.0.0",
-        "typescript": "^4.0.0",
-        "yarn-run-all": "^3.0.0"
-    },
     "publishConfig": {
-        "registry": "https://registry.npmjs.org",
-        "access": "public"
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
     }
 }

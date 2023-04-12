@@ -57,11 +57,14 @@ export const LatestContentUpdates: React.FC = () => {
                         columns={[
                             {
                                 name: "pageTreeNode.name",
-                                header: intl.formatMessage({ id: "comet.dashboard.latestContentUpdates.name", defaultMessage: "Page Name" }),
+                                header: intl.formatMessage({ id: "dashboard.latestContentUpdates.name", defaultMessage: "Page Name" }),
                             },
                             {
                                 name: "updatedAt",
-                                header: intl.formatMessage({ id: "comet.dashboard.latestContentUpdates.updatedAt", defaultMessage: "Updated At" }),
+                                header: intl.formatMessage({
+                                    id: "dashboard.latestContentUpdates.updatedAt",
+                                    defaultMessage: "Updated At",
+                                }),
                                 render: (row) => (
                                     <div>
                                         <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />

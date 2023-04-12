@@ -15,7 +15,7 @@ export function filterToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): FilterQuery<any> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ret: FilterQuery<any> = {};
+    const ret: ObjectQuery<any> = {};
     if (filterProperty instanceof StringFilter) {
         const ilike: string[] = [];
         if (filterProperty.contains !== undefined) {

@@ -160,7 +160,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             openSitePreviewWindow(pageState.path, contentScopeMatch.url);
                         }}
                     >
-                        <FormattedMessage id="cometDemo.pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                        <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
                     {pageSaveButton}
                 </ToolbarActions>
@@ -172,22 +172,18 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             key: "content",
                             label: (
                                 <AdminTabLabel isValid={rootBlocksApi.content.isValid}>
-                                    <FormattedMessage id="comet.blocks" defaultMessage="Blocks" />
+                                    <FormattedMessage {...messages.content} />
                                 </AdminTabLabel>
                             ),
                             content: (
-                                <AdminComponentRoot
-                                    title={intl.formatMessage({ id: "cometDemo.pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
-                                >
-                                    {rootBlocksApi.content.adminUI}
-                                </AdminComponentRoot>
+                                <AdminComponentRoot title={intl.formatMessage(messages.page)}>{rootBlocksApi.content.adminUI}</AdminComponentRoot>
                             ),
                         },
                         {
                             key: "config",
                             label: (
                                 <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                    <FormattedMessage id="cometDemo.pages.pages.page.edit.config" defaultMessage="Config" />{" "}
+                                    <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />{" "}
                                 </AdminTabLabel>
                             ),
                             content: rootBlocksApi.seo.adminUI,

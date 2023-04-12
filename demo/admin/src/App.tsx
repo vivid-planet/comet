@@ -67,11 +67,11 @@ const apiClient = createHttpClient(config.apiUrl);
 const categories: AllCategories = [
     {
         category: "MainNavigation",
-        label: <FormattedMessage id="cometDemo.menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
+        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
     },
     {
         category: "TopMenu",
-        label: <FormattedMessage id="cometDemo.menu.pageTree.topMenu" defaultMessage="Top menu" />,
+        label: <FormattedMessage id="menu.pageTree.topMenu" defaultMessage="Top menu" />,
     },
 ];
 
