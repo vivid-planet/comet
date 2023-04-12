@@ -13,12 +13,12 @@ export const DamItem = createUnionType({
 @ObjectType()
 class PaginatedDamItems {
     @Field(() => [DamItem])
-    nodes: typeof DamItem[];
+    nodes: (typeof DamItem)[];
 
     @Field(() => Int)
     totalCount: number;
 
-    constructor(nodes: typeof DamItem[], totalCount: number) {
+    constructor(nodes: (typeof DamItem)[], totalCount: number) {
         this.nodes = nodes;
         this.totalCount = totalCount;
     }

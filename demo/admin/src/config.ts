@@ -2,7 +2,7 @@ import cometConfig from "../comet-config.json";
 import environment from "./environment";
 
 export function createConfig() {
-    const environmentVariables = {} as Record<typeof environment[number], string>;
+    const environmentVariables = {} as Record<(typeof environment)[number], string>;
     for (const variableName of environment) {
         const externalVariableName = `EXTERNAL__${variableName}__`;
 
