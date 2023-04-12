@@ -193,7 +193,13 @@ export const createRichTextBlock = (
             });
 
             return {
-                draftContent: mapLinkEntitiesData({ ...rawContent, blocks: translatedBlocks }, (linkState) => LinkBlock.state2Output(linkState)),
+                editorState: createStateFromRawContent(
+                    mapLinkEntitiesData({ ...rawContent, blocks: translatedBlocks } as RawDraftContentState, (linkData) => {
+                        // @TODO: bei linkdata ist targetPage noch kein object!
+                        // das muss/soll von der Api auch so kommen wie beim linkblock
+                        return LinkBlock.input2State(linkData);
+                    }),
+                ),
             };
         },
 

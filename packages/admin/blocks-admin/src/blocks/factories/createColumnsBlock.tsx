@@ -187,12 +187,10 @@ export function createColumnsBlock<T extends BlockInterface>({
         },
 
         replaceTextContents: (state, contents) => ({
-            layout: state.layout.name,
+            ...state,
             columns: state.columns.map((column) => {
-                const { key, visible } = column;
                 return {
-                    key,
-                    visible,
+                    ...column,
                     props: contentBlock.replaceTextContents?.(column.props, contents) ?? column.props,
                 };
             }),

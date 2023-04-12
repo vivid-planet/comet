@@ -49,7 +49,7 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
             const text = translation && translation.replaceWith !== "" ? translation.replaceWith : state.text;
 
             return {
-                link: composedBlock.state2Output(state).link,
+                ...state,
                 text,
             };
         },

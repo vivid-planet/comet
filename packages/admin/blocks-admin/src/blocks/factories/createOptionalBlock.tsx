@@ -81,10 +81,10 @@ export function createOptionalBlock<T extends BlockInterface>(
 
         replaceTextContents: (state, contents) => {
             if (state.block === undefined) {
-                return [];
+                return state;
             }
 
-            return decoratedBlock.replaceTextContents?.(state.block, contents) ?? state.block;
+            return { ...state, block: decoratedBlock.replaceTextContents?.(state.block, contents) ?? state.block };
         },
 
         definesOwnTitle: true,

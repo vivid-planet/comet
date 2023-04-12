@@ -72,11 +72,11 @@ export const HeadlineBlock = createCompositeBlock(
             return [block.eyebrow, ...headline];
         },
         replaceTextContents: (state, contents) => {
-            const headline = RichTextBlock.replaceTextContents?.(state.headline, contents) ?? RichTextBlock.state2Output(state.headline);
+            const headline = RichTextBlock.replaceTextContents?.(state.headline, contents) ?? state.headline;
             const translation = contents.find((content) => content.original === state.eyebrow);
             const eyebrow = translation && translation.replaceWith !== "" ? translation.replaceWith : state.eyebrow;
 
-            return { headline, eyebrow, level: state.level };
+            return { ...state, headline, eyebrow };
         },
     }),
 );

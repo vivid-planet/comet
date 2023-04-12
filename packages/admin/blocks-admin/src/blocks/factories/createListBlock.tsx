@@ -181,19 +181,16 @@ export function createListBlock<T extends BlockInterface>({
         },
 
         extractTextContents: (state) => {
-            return state.blocks.reduce<string[]>((contentBlock, child) => {
-                return [...contentBlock, ...(block.extractTextContents?.(child.props) ?? [])];
+            return state.blocks.reduce<string[]>((content, child) => {
+                return [...content, ...(block.extractTextContents?.(child.props) ?? [])];
             }, []);
         },
 
         replaceTextContents: (state, contents) => ({
+            ...state,
             blocks: state.blocks.map((contentBlock) => {
-                const { key, type, userGroup, visible } = contentBlock;
                 return {
-                    key,
-                    type,
-                    userGroup,
-                    visible,
+                    ...contentBlock,
                     props: block.replaceTextContents?.(contentBlock.props, contents) ?? contentBlock.props,
                 };
             }),

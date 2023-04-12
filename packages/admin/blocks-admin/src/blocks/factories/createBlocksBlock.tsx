@@ -208,26 +208,21 @@ export function createBlocksBlock({
         },
 
         extractTextContents: (state) => {
-            return state.blocks.reduce<string[]>((contentBlock, child) => {
+            return state.blocks.reduce<string[]>((content, child) => {
                 const block = blockForType(child.type);
                 if (!block) {
                     throw new Error(`No Block found for type ${child.type}`); // for TS
                 }
-                return [...contentBlock, ...(block.extractTextContents?.(child.props) ?? [])];
+                return [...content, ...(block.extractTextContents?.(child.props) ?? [])];
             }, []);
         },
 
         replaceTextContents: (state, contents) => ({
-            blocks: state.blocks.map((block) => {
-                const { key, type, userGroup, visible } = block;
-                return {
-                    key,
-                    type,
-                    userGroup,
-                    visible,
-                    props: blockForType(block.type)?.replaceTextContents?.(block.props, contents) ?? block.props,
-                };
-            }),
+            ...state,
+            blocks: state.blocks.map((block) => ({
+                ...block,
+                props: blockForType(block.type)?.replaceTextContents?.(block.props, contents) ?? block.props,
+            })),
         }),
 
         definesOwnPadding: true,

@@ -229,15 +229,18 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
             }, []);
         },
 
-        replaceTextContents: (state, contents) => {
-            const { state: blockState, block } = getActiveBlock(state);
+        replaceTextContents: (state, contents) => ({
+            ...state,
+            attachedBlocks: state.attachedBlocks.map((content) => {
+                const block = blockForType(content.type);
 
-            if (blockState === undefined) {
-                return [];
-            }
+                if (!block) {
+                    throw new Error(`No Block found for type ${content.type}`); // for TS
+                }
 
-            return block?.replaceTextContents?.(blockState.props, contents) ?? blockState.props;
-        },
+                return { ...content, props: block.replaceTextContents?.(content.props, contents) ?? content.props };
+            }),
+        }),
 
         definesOwnPadding: true,
 

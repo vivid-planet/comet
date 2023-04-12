@@ -133,7 +133,7 @@ function useExtractImportPages(): UseExtractPagesApi {
             );
 
             const pageText = {
-                textContents: Array.from(new Set(textContents.filter((content) => content !== null && content !== ""))),
+                textContents: Array.from(new Set(textContents.filter((content) => content && content !== ""))),
             };
 
             return JSON.stringify(pageText);

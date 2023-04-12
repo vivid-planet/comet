@@ -29,17 +29,12 @@ export const FullWidthImageBlock = createCompositeBlock(
     (block) => ({
         ...block,
         extractTextContents: (block) => {
-            const content = block.content?.block ? RichTextBlock.extractTextContents?.(block.content?.block ?? {}) ?? [] : [];
+            const content = block.content?.block ? FullWidthImageContentBlock.extractTextContents?.(block.content ?? {}) ?? [] : [];
             return content;
         },
         replaceTextContents: (state, contents) => ({
             ...state,
-            content: {
-                ...state.content,
-                block: state.content.block
-                    ? RichTextBlock.replaceTextContents?.(state.content.block, contents) ?? state.content.block
-                    : state.content.block,
-            },
+            content: FullWidthImageContentBlock.replaceTextContents?.(state.content, contents) ?? state.content,
         }),
     }),
 );
