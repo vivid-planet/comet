@@ -13,6 +13,8 @@ The following tools need to be installed on your local machine.
 -   [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 -   [nvm](https://github.com/nvm-sh/nvm)
 
+The Node.js process manager "dev-process-manager" (https://github.com/vivid-planet/dev-process-manager) is used in the local development environment.
+
 ### Setup workspace
 
 Run the `install.sh` script to install dependencies and setup needed symlinks.
@@ -73,12 +75,6 @@ Storybook will be available at [http://localhost:26638/](http://localhost:26638/
 
 ```bash
 npx dev-pm shutdown
-```
-
-### Handy Alias
-
-```
-alias dpm="npm exec -- dev-pm"
 ```
 
 ## Develop in a project
