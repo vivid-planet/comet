@@ -44,7 +44,7 @@ function ProductsTableToolbar() {
             </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="cometDemo.products.newProduct" defaultMessage="New Product" />
+                    <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarItem>
         </Toolbar>

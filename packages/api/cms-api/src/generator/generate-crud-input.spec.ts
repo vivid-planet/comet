@@ -9,18 +9,17 @@ import { generateCrudInput } from "./generate-crud-input";
 
 async function lint(sourceCode: string): Promise<string> {
     const eslint = new ESLint({
-        cwd: process.cwd(),
+        cwd: `${process.cwd()}/src`,
         fix: true,
     });
     const lintResults = await eslint.lintText(sourceCode, {
         filePath: "test.ts",
     });
+    expect(lintResults.length).toBe(1);
     for (const lintResult of lintResults) {
         // must not have parse or lint errors
         expect(lintResult.errorCount).toBe(0);
     }
-    expect(lintResults.length).toBe(1);
-
     const ret = lintResults[0].output ? lintResults[0].output : lintResults[0].source;
     expect(ret).not.toBeUndefined();
     if (ret === undefined) throw new Error();

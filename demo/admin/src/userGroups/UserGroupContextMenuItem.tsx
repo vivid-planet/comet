@@ -46,7 +46,7 @@ function UserGroupContextMenuItem({ item, onChange, onMenuClose }: Props): JSX.E
                 <ListItemIcon>
                     <Account />
                 </ListItemIcon>
-                <FormattedMessage id="cometDemo.pageContentBlock.userGroup.menuItem" defaultMessage="Visibility rules" />
+                <FormattedMessage id="pageContentBlock.userGroup.menuItem" defaultMessage="Visibility rules" />
             </MenuItem>
             <Dialog
                 open={dialogOpen}
@@ -56,7 +56,7 @@ function UserGroupContextMenuItem({ item, onChange, onMenuClose }: Props): JSX.E
                 }}
             >
                 <DialogTitle>
-                    <FormattedMessage id="cometDemo.pageContentBlock.userGroup.dialogTitle" defaultMessage="Visibility rules" />
+                    <FormattedMessage id="pageContentBlock.userGroup.dialogTitle" defaultMessage="Visibility rules" />
                 </DialogTitle>
                 <Form<FormValues> onSubmit={handleSubmit} initialValues={{ userGroup: item.userGroup }}>
                     {({ handleSubmit }) => (

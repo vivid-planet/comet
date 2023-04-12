@@ -84,7 +84,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             </IconButton>
                         </ToolbarItem>
                         <ToolbarTitleItem>
-                            {values.title ? values.title : <FormattedMessage id="cometDemo.news.newsDetail" defaultMessage="News Detail" />}
+                            {values.title ? values.title : <FormattedMessage id="news.newsDetail" defaultMessage="News Detail" />}
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
@@ -115,7 +115,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             type="text"
                             name="title"
                             fullWidth
-                            label={intl.formatMessage({ id: "cometDemo.news.title", defaultMessage: "Title" })}
+                            label={intl.formatMessage({ id: "news.title", defaultMessage: "Title" })}
                             component={FinalFormInput}
                             required
                         />
@@ -123,14 +123,14 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             type="text"
                             name="slug"
                             fullWidth
-                            label={intl.formatMessage({ id: "cometDemo.news.slug", defaultMessage: "Slug" })}
+                            label={intl.formatMessage({ id: "news.slug", defaultMessage: "Slug" })}
                             component={FinalFormInput}
                             required
                             format={(value: string) => (value ? value.toLowerCase() : "")}
                             validate={async (value) => {
                                 if (!isValidSlug(value)) {
                                     return intl.formatMessage({
-                                        id: "cometDemo.news.slugErrorMsg",
+                                        id: "news.slugErrorMsg",
                                         defaultMessage: "Slug contains forbidden symbols",
                                     });
                                 }

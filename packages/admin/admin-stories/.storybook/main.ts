@@ -28,4 +28,7 @@ export default {
         },
     ],
     staticDirs: ["../public"],
+    core: {
+        builder: "webpack5",
+    },
 };

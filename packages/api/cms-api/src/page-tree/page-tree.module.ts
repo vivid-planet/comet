@@ -1,5 +1,5 @@
-import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
 import { DocumentInterface } from "../document/dto/document-interface";

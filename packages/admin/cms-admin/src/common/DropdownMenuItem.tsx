@@ -59,7 +59,15 @@ export function DropdownMenuItem({
                     </sc.ArrowWrapper>
                 )}
             </sc.Button>
-            <sc.Popper open={showDropdown} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+            <sc.Popper
+                open={showDropdown}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                transition
+                disablePortal
+                onResize={undefined}
+                onResizeCapture={undefined}
+            >
                 {({ TransitionProps, placement }) => (
                     <Grow {...TransitionProps} style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}>
                         <DropdownContainer>
