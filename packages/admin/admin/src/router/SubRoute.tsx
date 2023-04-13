@@ -25,5 +25,7 @@ export function SubRoute({ children, path }: { children: React.ReactNode; path: 
 export function useSubRoutePrefix() {
     const match = useRouteMatch();
     const subRoutesContext = React.useContext(SubRoutesContext);
-    return subRoutesContext?.path || match.url;
+    let ret = subRoutesContext?.path || match.url;
+    ret = ret.replace(/\/$/, ""); //remove trailing slash
+    return ret;
 }

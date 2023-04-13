@@ -12,6 +12,7 @@ import { renderComponent } from "./finalFormRenderComponent";
 import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
 import { messages } from "./messages";
 import { RouterPrompt } from "./router/Prompt";
+import { useSubRoutePrefix } from "./router/SubRoute";
 import { StackApiContext } from "./stack/Api";
 import { TableQueryContext } from "./table/TableQueryContext";
 
@@ -46,6 +47,7 @@ interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<F
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
     apiRef?: React.MutableRefObject<FormApi<FormValues> | undefined>;
+    subRoutePath?: string;
 }
 
 declare module "final-form" {
@@ -97,9 +99,11 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
     function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
         const intl = useIntl();
+        const subRoutePrefix = useSubRoutePrefix();
         if (props.apiRef) props.apiRef.current = formRenderProps.form;
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
+        const subRoutePath = props.subRoutePath ?? `${subRoutePrefix}/form`;
 
         const submit = React.useCallback(
             (event: any) => {
@@ -177,23 +181,25 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         return true;
                     }}
                     // TODO DirtyHandler removal: do we need a resetAction functionality here?
-                />
-                <form onSubmit={submit}>
-                    <div>
-                        {renderComponent<FormValues>(
-                            {
-                                children: props.children,
-                                component: props.component,
-                                render: props.render,
-                            },
-                            formRenderProps,
+                    subRoutePath={subRoutePath}
+                >
+                    <form onSubmit={submit}>
+                        <div>
+                            {renderComponent<FormValues>(
+                                {
+                                    children: props.children,
+                                    component: props.component,
+                                    render: props.render,
+                                },
+                                formRenderProps,
+                            )}
+                        </div>
+                        {(formRenderProps.submitError || formRenderProps.error) && (
+                            <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
                         )}
-                    </div>
-                    {(formRenderProps.submitError || formRenderProps.error) && (
-                        <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
-                    )}
-                    {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
-                </form>
+                        {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
+                    </form>
+                </RouterPrompt>
             </FinalFormContextProvider>
         );
     }

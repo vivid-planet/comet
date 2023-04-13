@@ -96,13 +96,14 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
                         });
                     }}
                     */
-                />
-                {this.props.children({
-                    tableLocalChangesApi: this.tableLocalChangesApi,
-                    localChangesCount: Object.keys(this.state.changes).length,
-                    data: patchedData,
-                    loading: this.state.loading,
-                })}
+                >
+                    {this.props.children({
+                        tableLocalChangesApi: this.tableLocalChangesApi,
+                        localChangesCount: Object.keys(this.state.changes).length,
+                        data: patchedData,
+                        loading: this.state.loading,
+                    })}
+                </RouterPrompt>
             </>
         );
     }

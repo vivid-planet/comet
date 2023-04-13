@@ -19,11 +19,13 @@ test("Nested route in Prompt", async () => {
                         message={() => {
                             return "sure?";
                         }}
-                    />
-                    <Link to="/foo/sub">subLink</Link>
-                    <Route path="/foo/sub">
-                        <div>sub</div>
-                    </Route>
+                        subRoutePath="/foo/s"
+                    >
+                        <Link to="/foo/s/sub">subLink</Link>
+                        <Route path="/foo/s/sub">
+                            <div>sub</div>
+                        </Route>
+                    </RouterPrompt>
                 </Route>
                 <Redirect to="/foo" />
             </Switch>
@@ -58,15 +60,17 @@ test("Nested route with non-sub-path route in Prompt", async () => {
                         message={() => {
                             return "sure?";
                         }}
-                    />
-                    <Link to="/foo/sub">subLink</Link>
-                    <Link to="/foo">fooLink</Link>
-                    <Route path="/foo">
-                        <div>foo</div>
-                    </Route>
-                    <Route path="/foo/sub">
-                        <div>sub</div>
-                    </Route>
+                        subRoutePath="/foo/s"
+                    >
+                        <Link to="/foo/s/sub">subLink</Link>
+                        <Link to="/foo">fooLink</Link>
+                        <Route path="/foo">
+                            <div>foo</div>
+                        </Route>
+                        <Route path="/foo/s/sub">
+                            <div>sub</div>
+                        </Route>
+                    </RouterPrompt>
                 </Route>
                 <Redirect to="/foo" />
             </Switch>
@@ -109,8 +113,10 @@ test("route outside Prompt", async () => {
                         message={() => {
                             return "sure?";
                         }}
-                    />
-                    <Link to="/bar">barLink</Link>
+                        subRoutePath="/s"
+                    >
+                        <Link to="/bar">barLink</Link>
+                    </RouterPrompt>
                 </Route>
                 <Route path="/bar">bar</Route>
             </Switch>
