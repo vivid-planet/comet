@@ -1,5 +1,9 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { AnyFramework, StoryContext } from "@storybook/csf/dist/story";
+import { StoryContext } from "@storybook/react";
+
+declare type AnyFramework = {
+    component: unknown;
+    storyResult: unknown;
+};
 
 type DecoratorStoryFramework<StoryResult = unknown> = Omit<AnyFramework, "storyResult"> & {
     storyResult: StoryResult;

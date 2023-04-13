@@ -3,7 +3,8 @@ import "react-date-range/dist/theme/default.css";
 
 import { ClearInputAdornment, InputWithPopper, InputWithPopperProps } from "@comet/admin";
 import { Calendar as CalendarIcon } from "@comet/admin-icons";
-import { ComponentsOverrides, InputAdornment, Theme } from "@mui/material";
+import { ComponentsOverrides, InputAdornment } from "@mui/material";
+import { Theme } from "@mui/material/styles";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { Calendar, CalendarProps } from "react-date-range";

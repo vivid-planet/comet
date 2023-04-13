@@ -9,11 +9,11 @@ export interface IProps {
     disabled?: boolean;
     selected?: boolean;
     onButtonClick?: (e: React.MouseEvent) => void;
-    icon?: (props: SvgIconProps) => JSX.Element;
+    icon?: (props: SvgIconProps) => JSX.Element | null;
     children?: React.ReactNode;
 
     /** @deprecated use icon instead */
-    Icon?: (props: SvgIconProps) => JSX.Element;
+    Icon?: (props: SvgIconProps) => JSX.Element | null;
 }
 
 function ControlButton({

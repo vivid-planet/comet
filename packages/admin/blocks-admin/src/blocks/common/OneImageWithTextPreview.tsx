@@ -45,7 +45,7 @@ const ImageTag = styled("img")`
     object-fit: cover;
     width: 64px;
     height: 64px;
-    margin-right: 12px; ;
+    margin-right: 12px;
 `;
 
 function Text({ text }: { text: React.ReactNode }): JSX.Element {

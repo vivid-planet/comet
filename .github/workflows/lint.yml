@@ -1,0 +1,77 @@
+name: Lint
+
+on:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+            - closed
+        branches:
+            - main
+            - next
+
+jobs:
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "${{ github.actor }}"
+
+            - uses: actions/checkout@v3
+              with:
+                  token: ${{ secrets.GH_TOKEN }}
+            - run: |
+                  git config user.name github-actions
+                  git config user.email github-actions@github.com
+
+            - name: "Library: Clone translations"
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-lang
+                  token: ${{ secrets.GH_TOKEN }}
+                  path: "demo/admin/lang/comet-lang"
+
+            - name: "Demo: Clone translations"
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GH_TOKEN }}
+                  path: "demo/admin/lang/comet-demo-lang"
+
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+
+            - name: Use Node.js 18.x
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+                  registry-url: "https://registry.npmjs.org"
+                  cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+
+            - run: pnpm install --frozen-lockfile
+
+            - name: Copy schema files
+              run: pnpm run copy-schema-files
+
+            - name: Build
+              run: pnpm run build:lib
+
+            - name: Lint
+              run: |
+                  pnpm exec prettier --check "./*.{js,json,md,yml}"
+                  pnpm run lint
+                  # check for duplicate ids of formatted messages
+                  pnpm run intl:extract
+
+            - name: Test
+              run: pnpm run test
+
+            - name: Test Report
+              uses: dorny/test-reporter@v1
+              if: github.actor != 'dependabot[bot]' && (success() || failure())
+              with:
+                  name: Tests
+                  path: packages/**/junit.xml
+                  reporter: jest-junit

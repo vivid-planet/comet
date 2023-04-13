@@ -52,11 +52,11 @@ const MainMenuItems: React.FunctionComponent = () => {
                             columns={[
                                 {
                                     name: "node.name",
-                                    header: <FormattedMessage id="cometDemo.mainMenuItems.name" defaultMessage="Name" />,
+                                    header: <FormattedMessage id="mainMenuItems.name" defaultMessage="Name" />,
                                 },
                                 {
                                     name: "node.path",
-                                    header: <FormattedMessage id="cometDemo.mainMenuItems.path" defaultMessage="Path" />,
+                                    header: <FormattedMessage id="mainMenuItems.path" defaultMessage="Path" />,
                                 },
                                 {
                                     name: "edit",

@@ -130,6 +130,8 @@ function InputWithPopper({
                     placement="bottom-start"
                     className={classes.popper}
                     transition
+                    onResize={undefined} // see https://github.com/mui/material-ui/issues/35287
+                    onResizeCapture={undefined}
                     {...componentsProps?.popper}
                 >
                     {({ TransitionProps }) => (

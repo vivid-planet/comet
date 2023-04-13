@@ -2,7 +2,7 @@ module.exports = {
     apps: [
         {
             name: "next-server",
-            script: "npx yarn start",
+            script: "pnpm start",
         },
         {
             name: "next-server-internal-api",

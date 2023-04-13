@@ -26,6 +26,8 @@ export const messages = defineMessages({
     link: { id: "comet.generic.link", defaultMessage: "Link" },
     text: { id: "comet.generic.text", defaultMessage: "Text" },
     file: { id: "comet.generic.file", defaultMessage: "File" },
+    image: { id: "comet.generic.image", defaultMessage: "Image" },
+    page: { id: "comet.generic.page", defaultMessage: "Page" },
     yes: { id: "comet.generic.yes", defaultMessage: "Yes" },
     no: { id: "comet.generic.no", defaultMessage: "No" },
     globalContentScope: { id: "comet.generic.globalContentScope", defaultMessage: "Global Content" },

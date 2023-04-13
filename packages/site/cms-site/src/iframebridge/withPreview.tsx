@@ -48,12 +48,12 @@ export const withPreview = <ComponentProps,>(
                     }}
                 >
                     <Preview adminRoute={componentProps.data?.adminMeta.route} type={label} enabledAutoScrolling={parentEnabledAutoScrolling}>
-                        <Component {...(componentProps as ComponentProps)} />
+                        <Component {...componentProps} />
                     </Preview>
                 </AdminRouteContext.Provider>
             );
         }
 
-        return <Component {...(componentProps as ComponentProps)} />;
+        return <Component {...componentProps} />;
     };
 };

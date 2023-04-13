@@ -13,8 +13,8 @@ export function createSettingsAnonymousBlock<State>({
     AdminComponent,
     isValid,
     definesOwnPadding,
-}: Options<State>): AnonymousBlockInterface<State, State, State> {
-    const AnonymousSettingsBlock: AnonymousBlockInterface<State, State, State> = {
+}: Options<State>): AnonymousBlockInterface<State, State, State, State> {
+    const AnonymousSettingsBlock: AnonymousBlockInterface<State, State, State, State> = {
         ...createBlockSkeleton(),
 
         defaultValues: () => defaultValues,
