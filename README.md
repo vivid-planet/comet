@@ -28,25 +28,25 @@ _It is recommend to run `install.sh` every time you switch to the `main` branch.
 Start Comet Admin packages
 
 ```bash
-yarn dev:admin
+pnpm run dev:admin
 ```
 
 Start CMS packages
 
 ```bash
-yarn dev:cms
+pnpm run dev:cms
 ```
 
 It is also possbile to start specific microservices
 
 ```bash
-yarn dev:cms:api # (api|admin|site)
+pnpm run dev:cms:api # (api|admin|site)
 ```
 
 #### Start Demo
 
 ```bash
-yarn dev:demo
+pnpm run dev:demo
 ```
 
 Demo will be available at
@@ -58,13 +58,13 @@ Demo will be available at
 It is also possbile to start specific microservices
 
 ```bash
-yarn dev:demo:api # (api|admin|site)
+pnpm run dev:demo:api # (api|admin|site)
 ```
 
 #### Start Storybook
 
 ```bash
-yarn storybook
+pnpm run storybook
 ```
 
 Storybook will be available at [http://localhost:26638/](http://localhost:26638/)

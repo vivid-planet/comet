@@ -14,6 +14,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { DamImageBlock } from "@comet/cms-admin";
 import { Box, Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
@@ -43,7 +44,7 @@ function ProductsTableToolbar() {
             </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="cometDemo.products.newProduct" defaultMessage="New Product" />
+                    <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarItem>
         </Toolbar>
@@ -71,7 +72,18 @@ const columns: GridColDef<GQLProductsListFragment>[] = [
                         onPaste={async ({ input, client }) => {
                             await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                                 mutation: createProductMutation,
-                                variables: { input },
+                                variables: {
+                                    input: {
+                                        description: input.description,
+                                        // @ts-expect-error type mismatch between OneOfBlock block data and block state
+                                        image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
+                                        inStock: input.inStock,
+                                        price: input.price,
+                                        slug: input.slug,
+                                        title: input.title,
+                                        type: input.type,
+                                    },
+                                },
                             });
                         }}
                         onDelete={async ({ client }) => {
@@ -133,6 +145,7 @@ const productsFragment = gql`
         price
         type
         inStock
+        image
     }
 `;
 

@@ -1,4 +1,4 @@
-import { EntityManager } from "@mikro-orm/core";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Controller, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import rimraf from "rimraf";
 

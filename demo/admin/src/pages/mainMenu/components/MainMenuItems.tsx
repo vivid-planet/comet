@@ -1,9 +1,8 @@
 import { gql } from "@apollo/client";
 import { MainContent, Table, TableQuery, Toolbar, ToolbarAutomaticTitleItem, useStackSwitchApi, useTableQuery } from "@comet/admin";
-import { Domain, Edit } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+import { Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
+import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLMainMenuQuery, GQLMainMenuQueryVariables } from "@src/graphql.generated";
 import * as React from "react";
@@ -40,14 +39,7 @@ const MainMenuItems: React.FunctionComponent = () => {
 
     return (
         <>
-            <ContentScopeIndicator variant="toolbar">
-                <ScopeIndicatorContent>
-                    <Domain fontSize="small" />
-                    <ScopeIndicatorLabelBold variant="body2">{scope.domain}</ScopeIndicatorLabelBold>
-                </ScopeIndicatorContent>
-                {` | `}
-                <ScopeIndicatorLabel variant="body2">{scope.language}</ScopeIndicatorLabel>
-            </ContentScopeIndicator>
+            <ContentScopeIndicator scope={scope} variant="toolbar" />
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
             </Toolbar>
@@ -60,11 +52,11 @@ const MainMenuItems: React.FunctionComponent = () => {
                             columns={[
                                 {
                                     name: "node.name",
-                                    header: <FormattedMessage id="cometDemo.mainMenuItems.name" defaultMessage="Name" />,
+                                    header: <FormattedMessage id="mainMenuItems.name" defaultMessage="Name" />,
                                 },
                                 {
                                     name: "node.path",
-                                    header: <FormattedMessage id="cometDemo.mainMenuItems.path" defaultMessage="Path" />,
+                                    header: <FormattedMessage id="mainMenuItems.path" defaultMessage="Path" />,
                                 },
                                 {
                                     name: "edit",

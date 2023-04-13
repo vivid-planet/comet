@@ -8,6 +8,7 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables, GQLLicenseType } from "../../graphql.generated";
+import { useDamScope } from "../config/useDamScope";
 import { CropSettingsFields } from "./CropSettingsFields";
 import { EditFileFormValues } from "./EditFile";
 
@@ -17,8 +18,8 @@ interface SettingsFormProps {
 }
 
 const damIsFilenameOccupiedQuery = gql`
-    query DamIsFilenameOccupied($filename: String!, $folderId: String) {
-        damIsFilenameOccupied(filename: $filename, folderId: $folderId)
+    query DamIsFilenameOccupied($filename: String!, $folderId: String, $scope: DamScopeInput!) {
+        damIsFilenameOccupied(filename: $filename, folderId: $folderId, scope: $scope)
     }
 `;
 
@@ -37,6 +38,7 @@ const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
 export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): React.ReactElement => {
     const intl = useIntl();
     const apollo = useApolloClient();
+    const scope = useDamScope();
     const damIsFilenameOccupied = React.useCallback(
         async (filename: string): Promise<boolean> => {
             const { data } = await apollo.query<GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables>({
@@ -44,13 +46,14 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                 variables: {
                     filename,
                     folderId,
+                    scope,
                 },
                 fetchPolicy: "network-only",
             });
 
             return data.damIsFilenameOccupied;
         },
-        [apollo, folderId],
+        [apollo, folderId, scope],
     );
 
     return (

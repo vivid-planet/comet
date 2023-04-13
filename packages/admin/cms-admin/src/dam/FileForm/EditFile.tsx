@@ -36,8 +36,8 @@ import {
     GQLUpdateFileMutation,
     GQLUpdateFileMutationVariables,
 } from "../../graphql.generated";
-import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation";
-import { LicenseValidityTags } from "../Table/tags/LicenseValidityTags";
+import { usePersistedDamLocation } from "../DataGrid/RedirectToPersistedDamLocation";
+import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { FilePreview } from "./FilePreview";

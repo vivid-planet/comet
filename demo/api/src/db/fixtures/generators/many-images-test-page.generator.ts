@@ -1,5 +1,6 @@
 import { FilesService, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { EntityRepository } from "@mikro-orm/postgresql";
+import { DamScope } from "@src/dam/dto/dam-scope";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
@@ -35,6 +36,10 @@ export class ManyImagesTestPageGenerator {
             language: "en",
         };
 
+        const damScope: DamScope = {
+            domain: "main",
+        };
+
         const manyImagesTestPageTreeNode = await this.pageTreeService.createNode(
             {
                 name: "Test many images",
@@ -52,10 +57,10 @@ export class ManyImagesTestPageGenerator {
 
         const imageBlocks: ReturnType<typeof generateImageBlock>[] = [];
         for (let index = 0; index < IMAGES_NUMBER; index++) {
-            const imageFile = await this.unsplashImageFileFixture.generateImage();
+            const imageFile = await this.unsplashImageFileFixture.generateImage(damScope);
             imageBlocks.push(generateImageBlock(imageFile));
         }
-        const svgFile = await this.svgImageFileFixture.generateImage();
+        const svgFile = await this.svgImageFileFixture.generateImage(damScope);
         imageBlocks.push(generateImageBlock(svgFile));
 
         const pageInput = new PageInput();
