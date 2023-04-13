@@ -13,7 +13,7 @@ The following tools need to be installed on your local machine.
 -   [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 -   [nvm](https://github.com/nvm-sh/nvm)
 
-The Node.js process manager "dev-process-manager" (https://github.com/vivid-planet/dev-process-manager) is used in the local development environment.
+[dev-process-manager](https://github.com/vivid-planet/dev-process-manager) is used for local development.
 
 ### Setup workspace
 
