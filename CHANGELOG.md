@@ -7,13 +7,8 @@ All notable changes to this project will be documented in this file. This projec
 ### Highlights
 
 -   Api Crud Generator now supports enum types
--   Routes (eg. Tabs) in a Component with dirty handling (eg. Form) is now supported
 
 ### @comet/admin
-
-#### Breaking changes
-
-- DirtyHandler removed, replace with <Prompt> (no change needed if DirtyHandler was used indirectly eg. in Form)
 
 #### Changes
 
