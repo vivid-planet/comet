@@ -30,6 +30,9 @@ jobs:
             - name: Install Dependencies
               run: pnpm install --frozen-lockfile
 
+            - name: Copy schema files
+              run: pnpm run copy-schema-files
+
             - name: Publish Canary release
               if: ${{ github.ref_name == 'main' }}
               run: |
@@ -39,7 +42,7 @@ jobs:
                   echo >> .changeset/canary.md
                   echo fake change to always get a canary release >> .changeset/canary.md
                   pnpm exec changeset version --snapshot canary
-                  pnpm run publish --tag canary
+                  pnpm run publish --tag canary --no-git-checks
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -52,6 +55,6 @@ jobs:
                   echo >> .changeset/canary.md
                   echo fake change to always get a canary release >> .changeset/canary.md
                   pnpm exec changeset version --snapshot canary
-                  pnpm run publish --tag next-canary
+                  pnpm run publish --tag next-canary --no-git-checks
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
