@@ -13,8 +13,6 @@ The following tools need to be installed on your local machine.
 -   [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 -   [nvm](https://github.com/nvm-sh/nvm)
 
-The Node.js process manager "dev-process-manager" (https://github.com/vivid-planet/dev-process-manager) is used in the local development environment.
-
 ### Setup workspace
 
 Run the `install.sh` script to install dependencies and setup needed symlinks.
@@ -26,6 +24,8 @@ sh install.sh
 _It is recommend to run `install.sh` every time you switch to the `main` branch._
 
 ### Start development processes
+
+[dev-process-manager](https://github.com/vivid-planet/dev-process-manager) is used for local development.
 
 Start Comet Admin packages
 
