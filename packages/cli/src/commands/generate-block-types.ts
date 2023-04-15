@@ -72,9 +72,9 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
         content += "{\n";
         field.object.fields.forEach((f) => {
             content += f.name;
-            if (f.nullable) content += "?";
             content += ": ";
             writeFieldType(f, blockNamePostfix);
+            if (f.nullable) content += " | null";
             content += ";\n";
         });
         content += "}\n";
@@ -82,9 +82,9 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
         content += "Array<{\n";
         field.object.fields.forEach((f) => {
             content += f.name;
-            if (f.nullable) content += "?";
             content += ": ";
             writeFieldType(f, blockNamePostfix);
+            if (f.nullable) content += " | null";
             content += ";\n";
         });
         content += "}>\n";
@@ -103,9 +103,9 @@ const generateBlockTypes = new Command("generate-block-types")
             content += `export interface ${block.name}BlockData {\n`;
             block.fields.forEach((field) => {
                 content += field.name;
-                if (field.nullable) content += "?";
                 content += ": ";
                 writeFieldType(field, "BlockData");
+                if (field.nullable) content += " | null";
                 content += ";\n";
             });
             content += "}\n";
@@ -116,9 +116,9 @@ const generateBlockTypes = new Command("generate-block-types")
                 content += `export interface ${block.name}BlockInput {\n`;
                 block.inputFields.forEach((field) => {
                     content += field.name;
-                    if (field.nullable) content += "?";
                     content += ": ";
                     writeFieldType(field, "BlockInput");
+                    if (field.nullable) content += " | null";
                     content += ";\n";
                 });
                 content += "}\n";
