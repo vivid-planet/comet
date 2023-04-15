@@ -42,7 +42,7 @@ export const PixelImageBlock = withPreview(
                     loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
                     src={urlTemplate}
                     layout="fill"
-                    alt={damFile.altText}
+                    alt={damFile.altText || undefined}
                     {...nextImageProps}
                 />
             );
@@ -80,13 +80,13 @@ export const PixelImageBlock = withPreview(
                     height={dimensions.height}
                     layout={layout}
                     priority
-                    alt={damFile.altText}
+                    alt={damFile.altText || undefined}
                     {...nextImageProps}
                 />
             );
         }
 
-        const blurDataUrl = createDominantImageDataUrl(dimensions.width, dimensions.height, damFile.image.dominantColor);
+        const blurDataUrl = createDominantImageDataUrl(dimensions.width, dimensions.height, damFile.image.dominantColor || undefined);
         return (
             <NextImage
                 loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
@@ -96,7 +96,7 @@ export const PixelImageBlock = withPreview(
                 layout={layout}
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
-                alt={damFile.altText}
+                alt={damFile.altText || undefined}
                 {...nextImageProps}
             />
         );

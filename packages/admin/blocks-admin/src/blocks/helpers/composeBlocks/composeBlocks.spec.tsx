@@ -71,9 +71,12 @@ describe("composeBlocks", () => {
         });
 
         propsMap.space.updateState({ height: 30 });
-        propsMap.video.updateState({ aspectRatio: "4X3", youtubeIdentifier: "def" });
+        propsMap.video.updateState({ aspectRatio: "4X3", youtubeIdentifier: "def", autoplay: true, showControls: true });
 
-        expect(getTestState()).toStrictEqual({ space: { height: 30 }, video: { aspectRatio: "4X3", youtubeIdentifier: "def" } });
+        expect(getTestState()).toStrictEqual({
+            space: { height: 30 },
+            video: { aspectRatio: "4X3", youtubeIdentifier: "def", autoplay: true, showControls: true },
+        });
     });
 
     it("composes values of 1 BlockInterface and 1 settings - flattened", () => {

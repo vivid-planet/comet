@@ -54,10 +54,10 @@ class PixelImageBlockData extends BlockData {
                           cropArea: { ...file.image.cropArea },
                           dominantColor: file.image.dominantColor,
                       }
-                    : undefined,
+                    : null,
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             },
-            cropArea: this.cropArea ? { ...this.cropArea } : undefined,
+            cropArea: this.cropArea ? { ...this.cropArea } : null,
             urlTemplate: imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, previewDamUrls),
         };
     }
