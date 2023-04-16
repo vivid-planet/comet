@@ -23,7 +23,7 @@ export const HeadlineBlock = createCompositeBlock(
         blocks: {
             eyebrow: {
                 block: createCompositeSetting<HeadlineBlockData["eyebrow"]>({
-                    defaultValue: undefined,
+                    defaultValue: null,
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<Pick<HeadlineBlockData, "eyebrow">>
                             onSubmit={({ eyebrow }) => updateState(eyebrow)}

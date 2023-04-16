@@ -56,8 +56,8 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     displayName: <FormattedMessage id="comet.blocks.image" defaultMessage="Image" />,
 
     defaultValues: () => ({
-        file: undefined,
-        cropArea: undefined,
+        damFile: null,
+        cropArea: null,
     }),
 
     category: BlockCategory.Media,
@@ -70,7 +70,10 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     state2Output: (v) => {
         if (!v.damFile) {
-            return {};
+            return {
+                damFileId: null,
+                cropArea: null,
+            };
         }
 
         return {
@@ -81,7 +84,10 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
     output2State: async (output, { apolloClient }: CmsBlockContext): Promise<ImageBlockState> => {
         if (!output.damFileId) {
-            return {};
+            return {
+                damFile: null,
+                cropArea: null,
+            };
         }
 
         const { data } = await apolloClient.query<GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables>({
@@ -177,7 +183,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                 </Grid>
                             </ButtonBase>
                             <Divider />
-                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined, cropArea: undefined })}>
+                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: null, cropArea: null })}>
                                 <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
                             </AdminComponentButton>
                         </AdminComponentPaper>
@@ -199,8 +205,8 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                     size: state.damFile.size,
                                 }}
                                 initialValues={{
-                                    useInheritedDamSettings: state.cropArea === undefined,
-                                    cropArea: state.cropArea ?? state.damFile.image.cropArea,
+                                    useInheritedDamSettings: !state.cropArea,
+                                    cropArea: state.cropArea ? state.cropArea : state.damFile.image.cropArea,
                                 }}
                                 inheritedDamSettings={{ cropArea: state.damFile.image.cropArea }}
                                 onSubmit={(cropArea) => {
@@ -212,9 +218,9 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                         )}
                     </>
                 ) : (
-                    <BlocksFinalForm<{ damFile?: ImageBlockState["damFile"] }>
+                    <BlocksFinalForm<{ damFile: ImageBlockState["damFile"] }>
                         onSubmit={(newValues) => {
-                            updateState((prevState) => ({ ...prevState, damFile: newValues.damFile || undefined, cropArea: undefined })); // reset local crop area when image changes
+                            updateState((prevState) => ({ ...prevState, damFile: newValues.damFile, cropArea: null })); // reset local crop area when image changes
                         }}
                         initialValues={{ damFile: state.damFile }}
                     >

@@ -4,7 +4,7 @@ import * as React from "react";
 
 const AnchorBlock = withPreview(
     ({ data: { name } }: PropsWithData<AnchorBlockData>) => {
-        if (name === undefined) {
+        if (!name) {
             return null;
         }
 

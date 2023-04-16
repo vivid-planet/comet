@@ -17,7 +17,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
 
     displayName: <FormattedMessage id="comet.blocks.externalLink" defaultMessage="External Link" />,
 
-    defaultValues: () => ({ targetUrl: undefined, openInNewWindow: false }),
+    defaultValues: () => ({ targetUrl: null, openInNewWindow: false }),
 
     category: BlockCategory.Navigation,
 

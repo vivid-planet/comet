@@ -23,12 +23,15 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     defaultValues: () => ({
         showControls: true,
+        autoplay: false,
+        loop: false,
+        damFile: null,
     }),
 
     category: BlockCategory.Media,
 
     state2Output: (state) => ({
-        damFileId: state.damFile?.id,
+        damFileId: state.damFile?.id || null,
         autoplay: state.autoplay,
         loop: state.loop,
         showControls: state.showControls,
@@ -36,7 +39,12 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     output2State: async (output, { apolloClient }: CmsBlockContext): Promise<State> => {
         if (!output.damFileId) {
-            return {};
+            return {
+                showControls: true,
+                autoplay: false,
+                loop: false,
+                damFile: null,
+            };
         }
 
         const { data } = await apolloClient.query<GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables>({
@@ -109,7 +117,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                                 </Grid>
                             </Box>
                             <Divider />
-                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
+                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, damFile: null })}>
                                 <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
                             </AdminComponentButton>
                         </AdminComponentPaper>

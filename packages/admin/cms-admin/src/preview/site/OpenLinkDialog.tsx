@@ -54,7 +54,9 @@ function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.Rea
                 <Button
                     onClick={() => {
                         onClose?.();
-                        window.open(link?.targetUrl);
+                        if (link?.targetUrl) {
+                            window.open(link.targetUrl);
+                        }
                     }}
                     variant="contained"
                     color="primary"

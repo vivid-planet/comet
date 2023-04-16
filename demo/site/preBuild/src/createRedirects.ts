@@ -45,8 +45,8 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
     const redirects: Redirect[] = [];
 
     for (const redirect of response.redirects) {
-        let source: string | undefined;
-        let destination: string | undefined;
+        let source: string | null = null;
+        let destination: string | null = null;
 
         if (redirect.sourceType === "path") {
             source = redirect.source;
@@ -54,17 +54,17 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
 
         const target = redirect.target as RedirectsLinkBlockData;
 
-        if (target.block !== undefined) {
+        if (target.block) {
             switch (target.block.type) {
                 case "internal":
-                    destination = (target.block.props as InternalLinkBlockData).targetPage?.path;
+                    destination = (target.block.props as InternalLinkBlockData).targetPage?.path || null;
                     break;
 
                 case "external":
                     destination = (target.block.props as ExternalLinkBlockData).targetUrl;
                     break;
                 case "news":
-                    if ((target.block.props as NewsLinkBlockData).id !== undefined) {
+                    if ((target.block.props as NewsLinkBlockData).id) {
                         destination = `/news/${(target.block.props as NewsLinkBlockData).id}`;
                     }
 

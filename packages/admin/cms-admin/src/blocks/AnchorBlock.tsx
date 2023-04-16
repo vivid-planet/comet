@@ -8,7 +8,7 @@ import { AnchorBlockData, AnchorBlockInput } from "../blocks.generated";
 const AnchorBlock: BlockInterface<AnchorBlockData, AnchorBlockData, AnchorBlockInput> = {
     ...createBlockSkeleton(),
 
-    defaultValues: () => ({ name: undefined }),
+    defaultValues: () => ({ name: null }),
 
     name: "Anchor",
 
@@ -35,11 +35,11 @@ const AnchorBlock: BlockInterface<AnchorBlockData, AnchorBlockData, AnchorBlockI
     },
 
     anchors: (state) => {
-        return state.name !== undefined ? [state.name] : [];
+        return state.name ? [state.name] : [];
     },
 
     previewContent: (state) => {
-        return state.name !== undefined ? [{ type: "text", content: `#${state.name}` }] : [];
+        return state.name ? [{ type: "text", content: `#${state.name}` }] : [];
     },
 };
 

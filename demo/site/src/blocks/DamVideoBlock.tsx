@@ -3,12 +3,12 @@ import { DamVideoBlockData } from "@src/blocks.generated";
 import * as React from "react";
 
 function DamVideoBlock({ data: { damFile, autoplay, loop, showControls } }: PropsWithData<DamVideoBlockData>): JSX.Element {
-    if (damFile === undefined) {
+    if (!damFile) {
         return <PreviewSkeleton type="media" hasContent={false} />;
     }
 
     return (
-        <video autoPlay={autoplay} controls={showControls} loop={loop} playsInline muted={autoplay}>
+        <video autoPlay={autoplay || false} controls={showControls || false} loop={loop || false} playsInline muted={autoplay || false}>
             <source src={damFile.fileUrl} type={damFile.mimetype} />
         </video>
     );

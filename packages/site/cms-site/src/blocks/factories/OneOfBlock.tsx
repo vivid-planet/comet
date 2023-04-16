@@ -4,11 +4,11 @@ import { SupportedBlocks } from "./types";
 
 interface Props {
     data: {
-        block?: {
+        block: {
             type: string;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             props: any;
-        };
+        } | null;
     };
     supportedBlocks: SupportedBlocks;
 }

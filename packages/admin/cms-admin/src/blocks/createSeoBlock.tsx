@@ -47,12 +47,12 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
         priority: "0_5",
         changeFrequency: "weekly",
         alternativeLinks: [],
-        htmlTitle: undefined,
-        metaDescription: undefined,
-        openGraphTitle: undefined,
-        openGraphDescription: undefined,
-        structuredData: undefined,
-        canonicalUrl: undefined,
+        htmlTitle: null,
+        metaDescription: null,
+        openGraphTitle: null,
+        openGraphDescription: null,
+        structuredData: null,
+        canonicalUrl: null,
     })(composedBlock);
 
     type State = BlockState<typeof block>;

@@ -26,16 +26,16 @@ import { GQLFocalPoint } from "../../graphql.generated";
 
 type CropArea = {
     focalPoint: GQLFocalPoint;
-    width?: number;
-    height?: number;
-    x?: number;
-    y?: number;
+    width: number | null;
+    height: number | null;
+    x: number | null;
+    y: number | null;
 };
 
 const imageStyle = { maxWidth: "60vw", maxHeight: "70vh" };
 
 interface FormValues extends EditImageFormValues {
-    useInheritedDamSettings?: boolean;
+    useInheritedDamSettings: boolean;
 }
 
 interface Props {
@@ -48,10 +48,10 @@ interface Props {
     };
     onClose: () => void;
     initialValues: {
-        useInheritedDamSettings?: boolean;
-        cropArea?: CropArea;
+        useInheritedDamSettings: boolean;
+        cropArea: CropArea | null;
     };
-    onSubmit: (cropArea: CropArea | undefined) => void;
+    onSubmit: (cropArea: CropArea | null) => void;
     inheritedDamSettings?: { cropArea: CropArea };
 }
 
@@ -64,25 +64,25 @@ const DialogContent = styled(MuiDialogContent)`
 export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings }: Props): React.ReactElement {
     const handleSubmit = (values: FormValues) => {
         if (values.useInheritedDamSettings) {
-            onSubmit(undefined);
+            onSubmit(null);
         } else {
             let cropArea: CropArea;
 
             if (values.focalPoint === "SMART") {
                 cropArea = {
                     focalPoint: "SMART",
-                    x: undefined,
-                    y: undefined,
-                    width: undefined,
-                    height: undefined,
+                    x: null,
+                    y: null,
+                    width: null,
+                    height: null,
                 };
             } else {
                 cropArea = {
-                    focalPoint: values.focalPoint ?? undefined,
+                    focalPoint: values.focalPoint,
                     x: values.crop.x,
                     y: values.crop.y,
-                    width: values.crop.width ? Math.ceil(values.crop.width) : undefined,
-                    height: values.crop.height ? Math.ceil(values.crop.height) : undefined,
+                    width: values.crop.width ? Math.ceil(values.crop.width) : null,
+                    height: values.crop.height ? Math.ceil(values.crop.height) : null,
                 };
             }
 
@@ -95,7 +95,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
             onSubmit={handleSubmit}
             initialValues={{
                 useInheritedDamSettings: initialValues.useInheritedDamSettings,
-                focalPoint: initialValues.cropArea?.focalPoint ?? "SMART",
+                focalPoint: initialValues.cropArea?.focalPoint || "SMART",
                 crop: {
                     width: initialValues.cropArea?.width ?? 100,
                     height: initialValues.cropArea?.height ?? 100,

@@ -3,7 +3,7 @@ import { NewsLinkBlockData } from "@src/blocks.generated";
 import * as React from "react";
 
 function NewsLinkBlock({ data: { id }, children }: React.PropsWithChildren<PropsWithData<NewsLinkBlockData>>): JSX.Element | null {
-    if (id === undefined) {
+    if (!id) {
         return null;
     }
 

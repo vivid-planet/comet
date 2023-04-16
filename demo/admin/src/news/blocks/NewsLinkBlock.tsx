@@ -12,7 +12,7 @@ const NewsLinkBlock: BlockInterface<NewsLinkBlockData, State, NewsLinkBlockInput
 
     displayName: "News",
 
-    defaultValues: () => ({}),
+    defaultValues: () => ({ id: null }),
 
     AdminComponent: ({ state, updateState }) => {
         return (
@@ -22,7 +22,7 @@ const NewsLinkBlock: BlockInterface<NewsLinkBlockData, State, NewsLinkBlockInput
         );
     },
 
-    previewContent: (state) => (state.id !== undefined ? [{ type: "text", content: state.id }] : []),
+    previewContent: (state) => (state.id ? [{ type: "text", content: state.id }] : []),
 };
 
 export { NewsLinkBlock };
