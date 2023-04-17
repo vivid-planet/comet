@@ -66,7 +66,7 @@ interface UseExtractPagesApi {
      *
      * @param flatPagesTree
      */
-    prepareForExtraction: (pages: GQLPageTreePageFragment[]) => Promise<string>;
+    extractContents: (pages: GQLPageTreePageFragment[]) => Promise<string[]>;
 
     /**
      * Iterates over passed pages synchronous and updates data with mutations
@@ -97,8 +97,8 @@ function useExtractImportPages(): UseExtractPagesApi {
     const { scope } = useContentScope();
     const locale = useLocale({ scope });
 
-    const prepareForExtraction = React.useCallback(
-        async (pages: GQLPageTreePageFragment[]): Promise<string> => {
+    const extractContents = React.useCallback(
+        async (pages: GQLPageTreePageFragment[]): Promise<string[]> => {
             const textContents: string[] = [];
 
             await Promise.all(
@@ -132,11 +132,7 @@ function useExtractImportPages(): UseExtractPagesApi {
                 }),
             );
 
-            const pageText = {
-                textContents: Array.from(new Set(textContents.filter((content) => content && content !== ""))),
-            };
-
-            return JSON.stringify(pageText);
+            return Array.from(new Set(textContents.filter((content) => content && content !== "")));
         },
         [client, documentTypes],
     );
@@ -245,8 +241,8 @@ function useExtractImportPages(): UseExtractPagesApi {
                     canPaste: false,
                     error: (
                         <FormattedMessage
-                            id="comet.pages.cannotPasteBlock.messageFailedToParseClipboard"
-                            defaultMessage="Content from clipboard aren't valid blocks"
+                            id="comet.pages.cannotPasteContent.messageFailedToParseClipboard"
+                            defaultMessage="Content from clipboard isn't valid document/block content"
                         />
                     ),
                 };
@@ -256,15 +252,15 @@ function useExtractImportPages(): UseExtractPagesApi {
                 canPaste: false,
                 error: (
                     <FormattedMessage
-                        id="comet.pages.cannotPasteBlock.messageFailedToParseClipboard"
-                        defaultMessage="Content from clipboard aren't valid blocks"
+                        id="comet.pages.cannotPasteContent.messageFailedToParseClipboard"
+                        defaultMessage="Content from clipboard isn't valid document/block content"
                     />
                 ),
             };
         }
     };
 
-    return { prepareForExtraction, importContents, getContentsFromClipboard };
+    return { extractContents, importContents, getContentsFromClipboard };
 }
 
 export { useExtractImportPages as useExtractPages };

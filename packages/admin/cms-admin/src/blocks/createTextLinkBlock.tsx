@@ -41,7 +41,7 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
         definesOwnPadding: true,
 
         extractTextContents: (state) => {
-            return state.text.trim().length > 0 ? [state.text]: [];
+            return state.text.trim().length > 0 ? [state.text] : [];
         },
 
         replaceTextContents: (state, contents) => {

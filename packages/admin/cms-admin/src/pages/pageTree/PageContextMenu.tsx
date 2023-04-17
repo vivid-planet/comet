@@ -50,7 +50,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
     const [duplicateLoading, setDuplicateLoading] = React.useState(false);
 
     const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages } = useCopyPastePages();
-    const { prepareForExtraction, importContents, getContentsFromClipboard } = useExtractPages();
+    const { extractContents, importContents, getContentsFromClipboard } = useExtractPages();
     const { tree } = usePageTreeContext();
     const intl = useIntl();
     const client = useApolloClient();
@@ -212,8 +212,13 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         setExtractLoading(true);
                         const subTree = subTreeFromNode(props.page, tree);
                         const pagesAsArray = treeMapToArray(subTree, "root");
-                        const extractedContents = await prepareForExtraction(pagesAsArray);
-                        writeClipboard(extractedContents);
+                        const extractedContents = await extractContents(pagesAsArray);
+
+                        writeClipboard(
+                            JSON.stringify({
+                                textContents: extractedContents,
+                            }),
+                        );
                         setExtractLoading(false);
                         handleClose();
                     }}

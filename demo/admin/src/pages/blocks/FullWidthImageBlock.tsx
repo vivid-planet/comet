@@ -29,8 +29,7 @@ export const FullWidthImageBlock = createCompositeBlock(
     (block) => ({
         ...block,
         extractTextContents: (block) => {
-            const content = block.content?.block ? FullWidthImageContentBlock.extractTextContents?.(block.content ?? {}) ?? [] : [];
-            return content;
+            return FullWidthImageContentBlock.extractTextContents?.(block.content) ?? [];
         },
         replaceTextContents: (state, contents) => ({
             ...state,
