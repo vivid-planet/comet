@@ -24,11 +24,11 @@ export const extractRichtextStyles = (block: RawDraftContentBlock): string => {
 
     for (let i = 0; i < block.text.length + 1; i++) {
         const startTags = combinedSettings.filter((setting) => setting.start === i);
-        const endTags = combinedSettings.filter((setting) => setting.end === i);
+        const endTags = combinedSettings.filter((setting) => setting.end === i).reverse();
 
-        text += `${endTags.map((tag) => (tag.type === "inlineStyle" ? "</i>" : "</e>"))}${startTags.map((tag) =>
-            tag.type === "inlineStyle" ? "<i>" : "<e>",
-        )}${block.text[i] ?? ""}`;
+        text += `${endTags.map((tag) => (tag.type === "inlineStyle" ? "</i>" : "</e>")).join("")}${startTags
+            .map((tag) => (tag.type === "inlineStyle" ? "<i>" : "<e>"))
+            .join("")}${block.text[i] ?? ""}`;
     }
 
     return text;

@@ -139,6 +139,12 @@ function useExtractImportPages(): UseExtractPagesApi {
 
     const importContents = React.useCallback(
         async (pages: GQLPageTreePageFragment[], content: ParsedContents): Promise<void> => {
+            const idsMap = new Map<string, string>();
+
+            pages.forEach((page) => {
+                idsMap.set(page.id, page.id);
+            });
+
             await Promise.all(
                 pages.map(async (page) => {
                     const documentType = documentTypes[page.documentType];
@@ -162,12 +168,18 @@ function useExtractImportPages(): UseExtractPagesApi {
                             if (data?.page?.document) {
                                 const documentWithUpdateContents = documentType.replaceTextContents?.(data.page.document, content.contents);
 
-                                if (documentType.updateMutation) {
+                                if (documentType.updateMutation && documentType.inputToOutput) {
                                     await client.mutate<GQLUpdatePageMutation, GQLUpdatePageMutationVariables>({
                                         mutation: documentType.updateMutation,
                                         variables: {
                                             pageId: data.page.document.id,
-                                            input: { content: documentWithUpdateContents?.content, seo: documentWithUpdateContents?.seo },
+                                            input: documentType.inputToOutput?.(
+                                                {
+                                                    content: documentWithUpdateContents?.content,
+                                                    seo: documentWithUpdateContents?.seo,
+                                                },
+                                                { idsMap },
+                                            ),
                                             attachedPageTreeNodeId: page.id,
                                         },
                                         context: LocalErrorScopeApolloContext,

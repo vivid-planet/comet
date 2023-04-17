@@ -45,6 +45,37 @@ describe("extractRichtextStyles", () => {
 
         expect(extractRichtextStyles(block)).toEqual("Another <e>Head<i>line</e> in RTE</i>");
     });
+
+    it("should insert pseudo tags in correct order for an entity range and inline style with same range", () => {
+        const block = {
+            key: "5jda2",
+            text: "Entity and Inline Style with same Ranges",
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [{ offset: 0, length: 40, style: "BOLD" as DraftInlineStyleType }],
+            entityRanges: [{ offset: 0, length: 40, key: 0 }],
+            data: {},
+        };
+
+        expect(extractRichtextStyles(block)).toEqual("<i><e>Entity and Inline Style with same Ranges</e></i>");
+    });
+
+    it("should insert pseudo tags in correctly for overlapping inline styles", () => {
+        const block = {
+            key: "5jda2",
+            text: "Inline Styles with overlapping Ranges",
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [
+                { offset: 0, length: 37, style: "BOLD" as DraftInlineStyleType },
+                { offset: 7, length: 23, style: "ITALIC" as DraftInlineStyleType },
+            ],
+            entityRanges: [],
+            data: {},
+        };
+
+        expect(extractRichtextStyles(block)).toEqual("<i>Inline <i>Styles with overlapping</i> Ranges</i>");
+    });
 });
 
 describe("importRichtextStyles", () => {
