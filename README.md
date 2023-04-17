@@ -1,5 +1,8 @@
 # Comet DXP
 
+![main](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=main)
+![next](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=next)
+
 ## Docs
 
 Visit https://docs.comet-dxp.com/ to view the documentation.
