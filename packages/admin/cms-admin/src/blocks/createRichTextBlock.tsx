@@ -185,7 +185,9 @@ export const createRichTextBlock = (
             const rawContent = convertStateToRawContent(state.editorState);
 
             const translatedBlocks = rawContent.blocks.map((block) => {
-                const translation = contents.find((content) => content.original.replace(/<i>|<\/i>|<e>|<\/e>/g, "") === block.text);
+                const translation = contents.find(
+                    (content) => content.original.replace(/<i[0-9][0-9]?>|<\/i[0-9][0-9]?>|<e[0-9][0-9]?>|<\/e[0-9][0-9]?>/g, "") === block.text,
+                );
 
                 if (!translation || translation.replaceWith === "") return block;
 

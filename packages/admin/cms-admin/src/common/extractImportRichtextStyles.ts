@@ -1,24 +1,20 @@
-import { RawDraftContentBlock, RawDraftInlineStyleRange } from "draft-js";
+import { RawDraftContentBlock, RawDraftEntityRange, RawDraftInlineStyleRange } from "draft-js";
 
 export const extractRichtextStyles = (block: RawDraftContentBlock): string => {
     let text = "";
 
-    // As multiple inline styles with same offset and length are possible, items with same offset and length are removed
-    const filteredInlineStyles = block.inlineStyleRanges
-        .map((inlineStyle) => ({ start: inlineStyle.offset, end: inlineStyle.offset + inlineStyle.length, type: "inlineStyle" }))
-        .reduce((previous: { start: number; end: number; type: string }[], current) => {
-            if (!previous.some((style: { start: number; end: number }) => style.start === current.start && style.end === current.end)) {
-                previous.push(current);
-            }
-            return previous;
-        }, []);
-
     const combinedSettings = [
-        ...filteredInlineStyles,
-        ...block.entityRanges.map((entityRange) => ({
+        ...block.inlineStyleRanges.map((inlineStyle, index) => ({
+            start: inlineStyle.offset,
+            end: inlineStyle.offset + inlineStyle.length,
+            type: "inlineStyle",
+            index: index + 1,
+        })),
+        ...block.entityRanges.map((entityRange, index) => ({
             start: entityRange.offset,
             end: entityRange.offset + entityRange.length,
             type: "entityRange",
+            index: index + 1,
         })),
     ];
 
@@ -26,8 +22,8 @@ export const extractRichtextStyles = (block: RawDraftContentBlock): string => {
         const startTags = combinedSettings.filter((setting) => setting.start === i);
         const endTags = combinedSettings.filter((setting) => setting.end === i).reverse();
 
-        text += `${endTags.map((tag) => (tag.type === "inlineStyle" ? "</i>" : "</e>")).join("")}${startTags
-            .map((tag) => (tag.type === "inlineStyle" ? "<i>" : "<e>"))
+        text += `${endTags.map((tag) => (tag.type === "inlineStyle" ? `</i${tag.index}>` : `</e${tag.index}>`)).join("")}${startTags
+            .map((tag) => (tag.type === "inlineStyle" ? `<i${tag.index}>` : `<e${tag.index}>`))
             .join("")}${block.text[i] ?? ""}`;
     }
 
@@ -35,45 +31,61 @@ export const extractRichtextStyles = (block: RawDraftContentBlock): string => {
 };
 
 export const importRichtextStyles = (block: RawDraftContentBlock): RawDraftContentBlock => {
-    const onlyInlineStyleTags = block.text.replace(/<e>|<\/e>/g, "");
-    const onlyEntityRangeTags = block.text.replace(/<i>|<\/i>/g, "");
+    const regexInlineStylesPattern = /<i[0-9][0-9]?>|<\/i[0-9][0-9]?>/g;
+    const regexEntitiesPattern = /<e[0-9][0-9]?>|<\/e[0-9][0-9]?>/g;
 
-    let replacedInlineStyleText = onlyInlineStyleTags;
-    let replacedEntityRangeText = onlyEntityRangeTags;
+    const onlyInlineStyleTags = block.text.replace(regexEntitiesPattern, "");
+    const onlyEntityRangeTags = block.text.replace(regexInlineStylesPattern, "");
 
     const newInlineStyleRanges: Array<RawDraftInlineStyleRange> = [];
+    const newEntityRanges: Array<RawDraftEntityRange> = [];
 
     block.inlineStyleRanges.forEach((inlineStyleRange, index) => {
-        // this handles inlineStyleRanges with identical ranges
-        if (
-            index > 0 &&
-            inlineStyleRange.offset === block.inlineStyleRanges[index - 1].offset &&
-            inlineStyleRange.length === block.inlineStyleRanges[index - 1].length
-        ) {
-            newInlineStyleRanges.push({
-                ...inlineStyleRange,
-                offset: newInlineStyleRanges[index - 1].offset,
-                length: newInlineStyleRanges[index - 1].length,
-            });
+        const openingTag = `<i${index + 1}>`;
+        const closingTag = `</i${index + 1}>`;
 
-            return;
-        }
-        const firstOpeningTag = replacedInlineStyleText.search(/<i>/);
-        const firstEndingTag = replacedInlineStyleText.search(/<\/i>/);
+        const openingTagIndex = onlyInlineStyleTags.indexOf(openingTag);
+        const closingTagIndex = onlyInlineStyleTags.indexOf(closingTag);
 
-        replacedInlineStyleText = replacedInlineStyleText.replace(/<i>/, "").replace(/<\/i>/, "");
+        const tagsBeforeStart = onlyInlineStyleTags.substring(0, openingTagIndex).match(regexInlineStylesPattern)?.join("") ?? "";
+        const tagsBetweenStartAndEnd =
+            onlyInlineStyleTags
+                .substring(openingTagIndex + openingTag.length, closingTagIndex)
+                .match(regexInlineStylesPattern)
+                ?.join("") ?? "";
 
-        newInlineStyleRanges.push({ ...inlineStyleRange, offset: firstOpeningTag, length: firstEndingTag - firstOpeningTag - 3 });
+        newInlineStyleRanges.push({
+            ...inlineStyleRange,
+            offset: openingTagIndex - tagsBeforeStart.length,
+            length: closingTagIndex - openingTagIndex - tagsBetweenStartAndEnd.length - openingTag.length,
+        });
     });
 
-    const newEntityRanges = block.entityRanges.map((inlineStyleRange) => {
-        const firstOpeningTag = replacedEntityRangeText.search(/<e>/);
-        const firstEndingTag = replacedEntityRangeText.search(/<\/e>/);
+    block.entityRanges.forEach((entityRange, index) => {
+        const openingTag = `<e${index + 1}>`;
+        const closingTag = `</e${index + 1}>`;
 
-        replacedEntityRangeText = replacedEntityRangeText.replace(/<e>/, "").replace(/<\/e>/, "");
+        const openingTagIndex = onlyEntityRangeTags.indexOf(openingTag);
+        const closingTagIndex = onlyEntityRangeTags.indexOf(closingTag);
 
-        return { ...inlineStyleRange, offset: firstOpeningTag, length: firstEndingTag - firstOpeningTag - 3 };
+        const tagsBeforeStart = onlyEntityRangeTags.substring(0, openingTagIndex).match(regexEntitiesPattern)?.join("") ?? "";
+        const tagsBetweenStartAndEnd =
+            onlyEntityRangeTags
+                .substring(openingTagIndex + openingTag.length, closingTagIndex)
+                .match(regexEntitiesPattern)
+                ?.join("") ?? "";
+
+        newEntityRanges.push({
+            ...entityRange,
+            offset: openingTagIndex - tagsBeforeStart.length,
+            length: closingTagIndex - openingTagIndex - tagsBetweenStartAndEnd.length - openingTag.length,
+        });
     });
 
-    return { ...block, text: block.text.replace(/<i>|<\/i>|<e>|<\/e>/g, ""), inlineStyleRanges: newInlineStyleRanges, entityRanges: newEntityRanges };
+    return {
+        ...block,
+        text: block.text.replace(/<i[0-9][0-9]?>|<\/i[0-9][0-9]?>|<e[0-9][0-9]?>|<\/e[0-9][0-9]?>/g, ""),
+        inlineStyleRanges: newInlineStyleRanges,
+        entityRanges: newEntityRanges,
+    };
 };
