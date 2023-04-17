@@ -28,6 +28,8 @@ _It is recommend to run `install.sh` every time you switch to the `main` branch.
 
 ### Start development processes
 
+[dev-process-manager](https://github.com/vivid-planet/dev-process-manager) is used for local development.
+
 Start Comet Admin packages
 
 ```bash
@@ -71,6 +73,12 @@ pnpm run storybook
 ```
 
 Storybook will be available at [http://localhost:26638/](http://localhost:26638/)
+
+### Stop Processes
+
+```bash
+npx dev-pm shutdown
+```
 
 ## Develop in a project
 
