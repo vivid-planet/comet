@@ -24,10 +24,12 @@ export class NewsListArgs extends OffsetBasedPaginationArgs {
     @Field(() => NewsFilter, { nullable: true })
     @ValidateNested()
     @Type(() => NewsFilter)
+    @IsOptional()
     filter?: NewsFilter;
 
     @Field(() => [NewsSort], { nullable: true })
     @ValidateNested({ each: true })
     @Type(() => NewsSort)
+    @IsOptional()
     sort?: NewsSort[];
 }

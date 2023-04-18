@@ -95,30 +95,35 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                             const enumName = findEnumName(metadata, prop.name);
                             return `@Field(() => ${enumName}EnumFilter, { nullable: true })
                             @ValidateNested()
+                            @IsOptional()
                             @Type(() => ${enumName}EnumFilter)
                             ${prop.name}?: ${enumName}EnumFilter;
                             `;
                         } else if (prop.type === "string") {
                             return `@Field(() => StringFilter, { nullable: true })
                             @ValidateNested()
+                            @IsOptional()
                             @Type(() => StringFilter)
                             ${prop.name}?: StringFilter;
                             `;
                         } else if (prop.type === "DecimalType") {
                             return `@Field(() => NumberFilter, { nullable: true })
                             @ValidateNested()
+                            @IsOptional()
                             @Type(() => NumberFilter)
                             ${prop.name}?: NumberFilter;
                             `;
                         } else if (prop.type === "boolean" || prop.type === "BooleanType") {
                             return `@Field(() => BooleanFilter, { nullable: true })
                             @ValidateNested()
+                            @IsOptional()
                             @Type(() => BooleanFilter)
                             ${prop.name}?: BooleanFilter;
                             `;
                         } else if (prop.type === "DateType" || prop.type === "Date") {
                             return `@Field(() => DateFilter, { nullable: true })
                             @ValidateNested()
+                            @IsOptional()
                             @Type(() => DateFilter)
                             ${prop.name}?: DateFilter;
                             `;
@@ -132,11 +137,13 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 @Field(() => [${classNameSingular}Filter], { nullable: true })
                 @Type(() => ${classNameSingular}Filter)
                 @ValidateNested({ each: true })
+                @IsOptional()
                 and?: ${classNameSingular}Filter[];
 
                 @Field(() => [${classNameSingular}Filter], { nullable: true })
                 @Type(() => ${classNameSingular}Filter)
                 @ValidateNested({ each: true })
+                @IsOptional()
                 or?: ${classNameSingular}Filter[];
             }
             `;
@@ -226,6 +233,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         @Field(() => ${classNameSingular}Filter, { nullable: true })
         @ValidateNested()
         @Type(() => ${classNameSingular}Filter)
+        @IsOptional()
         filter?: ${classNameSingular}Filter;
         `
                 : ""
@@ -237,6 +245,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         @Field(() => [${classNameSingular}Sort], { nullable: true })
         @ValidateNested({ each: true })
         @Type(() => ${classNameSingular}Sort)
+        @IsOptional()
         sort?: ${classNameSingular}Sort[];
         `
                 : ""

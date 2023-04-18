@@ -18,10 +18,12 @@ export class ProductsArgs extends OffsetBasedPaginationArgs {
     @Field(() => ProductFilter, { nullable: true })
     @ValidateNested()
     @Type(() => ProductFilter)
+    @IsOptional()
     filter?: ProductFilter;
 
     @Field(() => [ProductSort], { nullable: true })
     @ValidateNested({ each: true })
     @Type(() => ProductSort)
+    @IsOptional()
     sort?: ProductSort[];
 }
