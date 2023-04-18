@@ -1,5 +1,8 @@
 # Comet DXP
 
+![main](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=main)
+![next](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=next)
+
 ## Docs
 
 Visit https://docs.comet-dxp.com/ to view the documentation.
@@ -24,6 +27,8 @@ sh install.sh
 _It is recommend to run `install.sh` every time you switch to the `main` branch._
 
 ### Start development processes
+
+[dev-process-manager](https://github.com/vivid-planet/dev-process-manager) is used for local development.
 
 Start Comet Admin packages
 
@@ -69,6 +74,12 @@ pnpm run storybook
 
 Storybook will be available at [http://localhost:26638/](http://localhost:26638/)
 
+### Stop Processes
+
+```bash
+npx dev-pm shutdown
+```
+
 ## Develop in a project
 
 ### additional Requirements
@@ -80,6 +91,10 @@ Storybook will be available at [http://localhost:26638/](http://localhost:26638/
 
     ./wml-add.sh ../example
     wml start
+
+## Contributing
+
+Make sure to [add a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md).
 
 ## Notes
 
