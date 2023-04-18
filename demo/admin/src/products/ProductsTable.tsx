@@ -9,13 +9,14 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
+    Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Box, Button, IconButton } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateProductMutation,
@@ -52,7 +53,26 @@ function ProductsTableToolbar() {
 }
 
 const columns: GridColDef<GQLProductsListFragment>[] = [
-    { field: "title", headerName: "Title", width: 150 },
+    {
+        field: "title",
+        headerName: "Title",
+        width: 150,
+        renderHeader: () => (
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography fontWeight={400} fontSize={14}>
+                    Title
+                </Typography>
+                <Tooltip
+                    trigger="click"
+                    title={<FormattedMessage id="comet.products.productTitle.info" defaultMessage="The title/name of the product" />}
+                >
+                    <IconButton>
+                        <Info />
+                    </IconButton>
+                </Tooltip>
+            </div>
+        ),
+    },
     { field: "description", headerName: "Description", width: 150 },
     { field: "price", headerName: "Price", width: 150, type: "number" },
     { field: "type", headerName: "Type", width: 150, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
