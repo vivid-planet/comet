@@ -38,8 +38,6 @@ function Story() {
                                         }}
                                     >
                                         {({ pristine, dirty, hasValidationErrors, submitting, hasSubmitErrors, handleSubmit, ...formVars }) => {
-                                            console.log({ pristine, hasValidationErrors, submitting, hasSubmitErrors, ...formVars });
-
                                             return (
                                                 <>
                                                     Pristine: {String(pristine)} <br />
