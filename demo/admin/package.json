@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "build": "run-s intl:update intl:compile && run-p gql:types generate-block-types && cross-env BABEL_ENV=production webpack --config ./webpack.config.ts --env production --mode production --progress",
-        "generate-block-types": "dotenv -- ts-node generate-block-types.ts",
+        "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\"",
         "gql:types": "graphql-codegen",
         "gql:watch": "graphql-codegen --watch",
@@ -86,6 +86,7 @@
         "zen-observable": "^0.8.0"
     },
     "devDependencies": {
+        "@comet/cli": "workspace:^4.0.0",
         "@comet/eslint-config": "workspace:^4.0.0",
         "@emotion/babel-plugin": "^11.0.0",
         "@formatjs/cli": "^2.0.0",

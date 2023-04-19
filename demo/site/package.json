@@ -12,7 +12,7 @@
         "dev": "run-p gql:types generate-block-types && $npm_execpath build:preBuild && NODE_OPTIONS='--inspect=localhost:9230' node server.js",
         "export": "next export",
         "extract:publicGenerated": "node preBuild/build/preBuild/src/publicGenerator/extract.js",
-        "generate-block-types": "dotenv -- ts-node generate-block-types.ts",
+        "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
         "gql:types": "$npm_execpath clear:types && graphql-codegen",
         "gql:watch": "$npm_execpath clear:types && graphql-codegen --watch",
@@ -53,6 +53,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.16.0",
+        "@comet/cli": "workspace:^4.0.0",
         "@comet/eslint-config": "workspace:^4.0.0",
         "@graphql-codegen/add": "^3.0.0",
         "@graphql-codegen/cli": "^2.0.0",

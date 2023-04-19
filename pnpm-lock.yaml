@@ -234,6 +234,9 @@ importers:
         specifier: ^0.8.0
         version: 0.8.15
     devDependencies:
+      '@comet/cli':
+        specifier: workspace:^4.0.0
+        version: link:../../packages/cli
       '@comet/eslint-config':
         specifier: workspace:^4.0.0
         version: link:../../packages/eslint-config
@@ -719,6 +722,9 @@ importers:
       '@babel/core':
         specifier: ^7.16.0
         version: 7.20.12
+      '@comet/cli':
+        specifier: workspace:^4.0.0
+        version: link:../../packages/cli
       '@comet/eslint-config':
         specifier: workspace:^4.0.0
         version: link:../../packages/eslint-config
