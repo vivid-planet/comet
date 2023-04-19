@@ -13,7 +13,6 @@ export interface AppHeaderDropdownProps extends Omit<AppHeaderButtonProps, "chil
     dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
     popoverProps?: Partial<PopoverProps>;
     open?: boolean;
-    onClose?: () => void;
     onOpenChange?: (open: boolean) => void;
 }
 
@@ -46,7 +45,6 @@ function Dropdown({
     popoverProps,
     open,
     onOpenChange,
-    onClose,
     classes,
     ...restProps
 }: AppHeaderDropdownProps & WithStyles<typeof styles>): React.ReactElement {
@@ -81,12 +79,7 @@ function Dropdown({
                 anchorEl={rootRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
-                onClose={() => {
-                    if (onClose) {
-                        onClose();
-                    }
-                    _onOpenChange(false);
-                }}
+                onClose={() => _onOpenChange(false)}
                 marginThreshold={0}
                 {...popoverProps}
             >

@@ -1,4 +1,4 @@
-import { AppHeaderDropdown } from "@comet/admin";
+import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
 import { InputBase, List, ListItemButton, ListItemIcon as MuiListItemIcon, ListItemText, SvgIconProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -37,15 +37,7 @@ export default function ContentScopeSelect({
     const filteredValues = searchable ? values.filter((item) => item.value.toLowerCase().includes(searchValue.toLowerCase())) : values;
 
     return (
-        <AppHeaderDropdown
-            onClose={() => {
-                setTimeout(() => {
-                    setSearchValue("");
-                }, 250);
-            }}
-            buttonChildren={value ? value.label || value.value.toUpperCase() : defaultLabel}
-            startIcon={Icon ? <Icon /> : undefined}
-        >
+        <AppHeaderDropdown buttonChildren={value ? value.label || value.value.toUpperCase() : defaultLabel} startIcon={Icon ? <Icon /> : undefined}>
             {(hideDropdown) => (
                 <List>
                     {searchable && (
@@ -58,6 +50,9 @@ export default function ContentScopeSelect({
                             })}
                             value={searchValue}
                             onChange={(event) => setSearchValue(event.currentTarget.value)}
+                            endAdornment={
+                                <ClearInputAdornment onClick={() => setSearchValue("")} hasClearableContent={searchValue !== ""} position="end" />
+                            }
                             autoFocus
                         />
                     )}
