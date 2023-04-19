@@ -168,18 +168,12 @@ function useExtractImportPages(): UseExtractPagesApi {
                             if (data?.page?.document) {
                                 const documentWithUpdateContents = documentType.replaceTextContents?.(data.page.document, content.contents);
 
-                                if (documentType.updateMutation && documentType.inputToOutput) {
+                                if (documentWithUpdateContents && documentType.updateMutation && documentType.inputToOutput) {
                                     await client.mutate<GQLUpdatePageMutation, GQLUpdatePageMutationVariables>({
                                         mutation: documentType.updateMutation,
                                         variables: {
                                             pageId: data.page.document.id,
-                                            input: documentType.inputToOutput?.(
-                                                {
-                                                    content: documentWithUpdateContents?.content,
-                                                    seo: documentWithUpdateContents?.seo,
-                                                },
-                                                { idsMap },
-                                            ),
+                                            input: documentType.inputToOutput?.(documentWithUpdateContents, { idsMap }),
                                             attachedPageTreeNodeId: page.id,
                                         },
                                         context: LocalErrorScopeApolloContext,
