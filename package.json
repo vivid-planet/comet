@@ -38,7 +38,7 @@
         "lint:tsc": "pnpm recursive run lint:tsc",
         "storybook": "pnpm --filter comet-admin-stories run storybook",
         "test": "pnpm recursive run test",
-        "publish": "pnpm run build:lib && pnpm publish --recursive  --filter '@comet/*'"
+        "publish": "pnpm run build:lib && $npm_execpath changeset publish"
     },
     "devDependencies": {
         "@comet/dev-process-manager": "^2.3.2",
