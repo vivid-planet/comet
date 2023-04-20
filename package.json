@@ -38,6 +38,7 @@
         "lint:tsc": "pnpm recursive run lint:tsc",
         "storybook": "pnpm --filter comet-admin-stories run storybook",
         "test": "pnpm recursive run test",
+        "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
         "publish": "pnpm run build:lib && $npm_execpath changeset publish"
     },
     "devDependencies": {
