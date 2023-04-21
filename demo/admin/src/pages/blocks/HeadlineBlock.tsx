@@ -32,6 +32,7 @@ export const HeadlineBlock = createCompositeBlock(
                             <Field name="eyebrow" label="Eyebrow" component={FinalFormInput} fullWidth />
                         </BlocksFinalForm>
                     ),
+                    extractContent: true,
                 }),
             },
             headline: {
@@ -67,16 +68,5 @@ export const HeadlineBlock = createCompositeBlock(
     (block) => ({
         ...block,
         category: BlockCategory.TextAndContent,
-        extractTextContents: (block) => {
-            const headline = RichTextBlock.extractTextContents?.(block.headline) ?? [];
-            return [block.eyebrow, ...headline];
-        },
-        replaceTextContents: (state, contents) => {
-            const headline = RichTextBlock.replaceTextContents?.(state.headline, contents) ?? state.headline;
-            const translation = contents.find((content) => content.original === state.eyebrow);
-            const eyebrow = translation && translation.replaceWith !== "" ? translation.replaceWith : state.eyebrow;
-
-            return { ...state, headline, eyebrow };
-        },
     }),
 );

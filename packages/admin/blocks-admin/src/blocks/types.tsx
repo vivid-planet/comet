@@ -93,6 +93,7 @@ export interface AnonymousBlockInterface<
     AdminComponent: BlockAdminComponent<State>;
     definesOwnPadding?: boolean;
     definesOwnTitle?: boolean;
+    extractContent?: boolean;
 }
 
 export interface BlockInterface<

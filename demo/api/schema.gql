@@ -153,10 +153,10 @@ enum NewsCategory {
 }
 
 """DamImage root block data"""
-scalar DamImageBlockData
+scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 """NewsContent root block data"""
-scalar NewsContentBlockData
+scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type Link implements DocumentInterface {
   id: ID!
@@ -436,14 +436,14 @@ type Query {
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 20): PaginatedRedirects!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
-  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damItemListPosition(sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput!, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
-  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
+  damItemsList(offset: Int! = 0, limit: Int! = 20, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
+  damFilesList(offset: Int! = 0, limit: Int! = 20, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput!, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput!): [FilenameResponse!]!
   damFoldersFlat(scope: DamScopeInput!): [DamFolder!]!
-  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, scope: DamScopeInput!, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
+  damFoldersList(offset: Int! = 0, limit: Int! = 20, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!

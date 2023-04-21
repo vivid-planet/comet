@@ -214,9 +214,13 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         const pagesAsArray = treeMapToArray(subTree, "root");
                         const extractedContents = await extractContents(pagesAsArray);
 
+                        const content = extractedContents.reduce((accumulator, value) => {
+                            return { ...accumulator, [value]: value };
+                        }, {});
+
                         writeClipboard(
                             JSON.stringify({
-                                textContents: extractedContents,
+                                textContents: content,
                             }),
                         );
                         setExtractLoading(false);
