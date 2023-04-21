@@ -22,41 +22,41 @@ module.exports = {
         // group admin
         {
             name: "comet-admin",
-            script: "npx yarn workspace @comet/admin start",
+            script: "pnpm --filter @comet/admin run start",
             group: ["comet-admin"],
             waitOn: waitOnPackages("@comet/admin-icons"),
         },
         {
             name: "comet-admin-color-picker",
-            script: "npx yarn workspace @comet/admin-color-picker start",
+            script: "pnpm --filter @comet/admin-color-picker run start",
             group: ["comet-admin"],
             waitOn: waitOnPackages("@comet/admin"),
         },
         {
             name: "comet-admin-date-time",
-            script: "npx yarn workspace @comet/admin-date-time start",
+            script: "pnpm --filter @comet/admin-date-time run start",
             group: ["comet-admin"],
             waitOn: waitOnPackages("@comet/admin-icons", "@comet/admin"),
         },
         {
             name: "comet-admin-icons",
-            script: "npx yarn workspace @comet/admin-icons start",
+            script: "pnpm --filter @comet/admin-icons run start",
             group: ["comet-admin"],
         },
         {
             name: "comet-admin-react-select",
-            script: "npx yarn workspace @comet/admin-react-select start",
+            script: "pnpm --filter @comet/admin-react-select run start",
             group: ["comet-admin"],
             waitOn: waitOnPackages("@comet/admin"),
         },
         {
             name: "comet-admin-rte",
-            script: "npx yarn workspace @comet/admin-rte start",
+            script: "pnpm --filter @comet/admin-rte run start",
             group: ["comet-admin"],
         },
         {
             name: "comet-admin-theme",
-            script: "npx yarn workspace @comet/admin-theme start",
+            script: "pnpm --filter @comet/admin-theme run start",
             group: ["comet-admin"],
             waitOn: waitOnPackages(
                 "@comet/admin-icons",
@@ -70,19 +70,19 @@ module.exports = {
         // group cms-admin
         {
             name: "blocks-admin",
-            script: "npx yarn workspace @comet/blocks-admin start",
+            script: "pnpm --filter @comet/blocks-admin run start",
             group: ["cms-admin", "cms"],
             waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons"),
         },
         {
             name: "blocks-admin-codegen-block-types",
-            script: "npx yarn workspace @comet/blocks-admin generate-block-types:watch",
+            script: "pnpm --filter @comet/blocks-admin run generate-block-types:watch",
             group: ["cms-admin", "cms"],
             waitOn: waitOnPackages("@comet/admin", "@comet/admin-icons"),
         },
         {
             name: "cms-admin",
-            script: "npx yarn workspace @comet/cms-admin start",
+            script: "pnpm --filter @comet/cms-admin run start",
             group: ["cms-admin", "cms"],
             waitOn: waitOnPackages(
                 "@comet/admin",
@@ -95,7 +95,7 @@ module.exports = {
         },
         {
             name: "cms-admin-codegen-graphql-types",
-            script: "npx yarn workspace @comet/cms-admin generate-graphql-types:watch",
+            script: "pnpm --filter @comet/cms-admin run generate-graphql-types:watch",
             group: ["cms-admin", "cms"],
             waitOn: waitOnPackages(
                 "@comet/admin",
@@ -108,7 +108,7 @@ module.exports = {
         },
         {
             name: "cms-admin-codegen-block-types",
-            script: "npx yarn workspace @comet/cms-admin generate-block-types:watch",
+            script: "pnpm --filter @comet/cms-admin run generate-block-types:watch",
             group: ["cms-admin", "cms"],
             waitOn: waitOnPackages(
                 "@comet/admin",
@@ -123,29 +123,29 @@ module.exports = {
         //group cms-api
         {
             name: "blocks-api",
-            script: "npx yarn workspace @comet/blocks-api dev",
+            script: "pnpm --filter @comet/blocks-api run dev",
             group: ["cms-api", "cms"],
         },
         {
             name: "blocks-api-codegen-block-meta",
-            script: "npx yarn workspace @comet/blocks-api generate-block-meta:watch",
+            script: "pnpm --filter @comet/blocks-api run generate-block-meta:watch",
             group: ["cms-api", "cms"],
         },
         {
             name: "cms-api",
-            script: "npx yarn workspace @comet/cms-api dev",
+            script: "pnpm --filter @comet/cms-api run dev",
             group: ["cms-api", "cms"],
             waitOn: waitOnPackages("@comet/blocks-api"),
         },
         {
             name: "cms-api-codegen-schema",
-            script: "npx yarn workspace @comet/cms-api generate-schema:watch",
+            script: "pnpm --filter @comet/cms-api run generate-schema:watch",
             group: ["cms-api", "cms"],
             waitOn: waitOnPackages("@comet/blocks-api"),
         },
         {
             name: "cms-api-codegen-block-meta",
-            script: "npx yarn workspace @comet/cms-api generate-block-meta:watch",
+            script: "pnpm --filter @comet/cms-api run generate-block-meta:watch",
             group: ["cms-api", "cms"],
             waitOn: waitOnPackages("@comet/blocks-api"),
         },
@@ -153,19 +153,19 @@ module.exports = {
         //group cms-site
         {
             name: "cms-site",
-            script: "npx yarn workspace @comet/cms-site dev",
+            script: "pnpm --filter @comet/cms-site run dev",
             group: ["cms-site", "cms"],
         },
         {
             name: "cms-site-codegen-block-types",
-            script: "npx yarn workspace @comet/cms-site generate-block-types:watch",
+            script: "pnpm --filter @comet/cms-site run generate-block-types:watch",
             group: ["cms-site", "cms"],
         },
 
         //group demo admin
         {
             name: "demo-admin",
-            script: "npx yarn workspace comet-demo-admin start",
+            script: "pnpm --filter comet-demo-admin run start",
             group: ["demo-admin", "demo"],
             waitOn: [
                 ...waitOnPackages(
@@ -182,13 +182,13 @@ module.exports = {
         },
         {
             name: "demo-admin-codegen",
-            script: "npx yarn workspace comet-demo-admin gql:watch",
+            script: "pnpm --filter comet-demo-admin run gql:watch",
             group: ["demo-admin", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
         {
             name: "demo-admin-block-codegen",
-            script: "npx yarn workspace comet-demo-admin generate-block-types:watch",
+            script: "pnpm --filter comet-demo-admin run generate-block-types:watch",
             group: ["demo-admin", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
@@ -201,7 +201,7 @@ module.exports = {
         },
         {
             name: "demo-api",
-            script: ["npx yarn workspace comet-demo-api db:migrate", "npx yarn workspace comet-demo-api start:dev"].join(" && "),
+            script: ["pnpm --filter comet-demo-api run db:migrate", "pnpm --filter comet-demo-api run start:dev"].join(" && "),
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/blocks-api", "@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
@@ -209,19 +209,19 @@ module.exports = {
         //group demo site
         {
             name: "demo-site",
-            script: "npx yarn workspace comet-demo-site dev",
+            script: "pnpm --filter comet-demo-site run dev",
             group: ["demo-site", "demo"],
             waitOn: [...waitOnPackages("@comet/cms-site"), "tcp:$API_PORT"],
         },
         {
             name: "demo-site-codegen",
-            script: "npx yarn workspace comet-demo-site gql:watch",
+            script: "pnpm --filter comet-demo-site run gql:watch",
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
         {
             name: "demo-site-block-codegen",
-            script: "npx yarn workspace comet-demo-site generate-block-types:watch",
+            script: "pnpm --filter comet-demo-site run generate-block-types:watch",
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },

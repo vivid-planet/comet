@@ -10,10 +10,10 @@ import {
     ToolbarItem,
     useTableQuery,
 } from "@comet/admin";
-import { Add as AddIcon, Delete as DeleteIcon, Domain, Edit } from "@comet/admin-icons";
-import { ContentScopeIndicator, EditPageLayout } from "@comet/cms-admin";
+import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
+import { EditPageLayout } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
+import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLNewsListQuery, GQLNewsListQueryVariables, namedOperations } from "@src/graphql.generated";
 import gql from "graphql-tag";
@@ -36,14 +36,7 @@ const NewsTable: React.FC = () => {
 
     return (
         <EditPageLayout>
-            <ContentScopeIndicator variant="toolbar">
-                <ScopeIndicatorContent>
-                    <Domain fontSize="small" />
-                    <ScopeIndicatorLabelBold variant="body2">{scope.domain}</ScopeIndicatorLabelBold>
-                </ScopeIndicatorContent>
-                {` | `}
-                <ScopeIndicatorLabel variant="body2">{scope.language}</ScopeIndicatorLabel>
-            </ContentScopeIndicator>
+            <ContentScopeIndicator scope={scope} variant="toolbar" />
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
                 <ToolbarFillSpace />

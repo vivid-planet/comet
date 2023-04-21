@@ -36,6 +36,7 @@ export { ToolbarFillSpace, ToolbarFillSpaceClassKey, ToolbarFillSpaceProps } fro
 export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/toolbar/item/ToolbarItem";
 export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } from "./common/toolbar/titleitem/ToolbarTitleItem";
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
+export { Tooltip } from "./common/Tooltip";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
@@ -57,7 +58,7 @@ export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext
 export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
-export { FinalForm, useFormApiRef } from "./FinalForm";
+export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
 export {
     FinalFormSaveCancelButtonsLegacy,
     FinalFormSaveCancelButtonsLegacyClassKey,

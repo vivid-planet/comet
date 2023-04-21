@@ -1,16 +1,13 @@
 {
     "name": "@comet/admin-babel-preset",
     "version": "4.0.0",
-    "main": "index.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
         "directory": "packages/admin/admin-babel-preset"
     },
-    "publishConfig": {
-        "registry": "https://registry.npmjs.org",
-        "access": "public"
-    },
+    "license": "BSD-2-Clause",
+    "main": "index.js",
     "dependencies": {
         "@babel/cli": "^7.0.0",
         "@babel/core": "^7.0.0",
@@ -26,5 +23,8 @@
     "peerDependencies": {
         "@babel/cli": ">= 7"
     },
-    "license": "BSD-2-Clause"
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    }
 }

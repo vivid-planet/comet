@@ -15,7 +15,7 @@ export interface IBlocktypeConfig {
     renderConfig?: DraftBlockRenderConfig; // visual appearance of the blocktype
     label?: string | React.ReactNode; // displayed in the dropdown
     group?: "dropdown" | "button"; // displays the element in the dropdown or as button
-    icon?: (props: SvgIconProps) => JSX.Element;
+    icon?: (props: SvgIconProps) => JSX.Element | null;
     supportedBy?: SupportedThings; // blocktype is active when this "supported thing" is active
 }
 
@@ -29,11 +29,11 @@ export interface IFeatureConfig<T extends string = string> {
     disabled?: boolean;
     selected?: boolean;
     onButtonClick?: (e: React.MouseEvent) => void;
-    icon?: (props: SvgIconProps) => JSX.Element;
+    icon?: (props: SvgIconProps) => JSX.Element | null;
     tooltipText?: React.ReactNode;
 
     /** @deprecated use icon instead */
-    Icon?: (props: SvgIconProps) => JSX.Element;
+    Icon?: (props: SvgIconProps) => JSX.Element | null;
 }
 
 type CustomInlineStyleType = "SUP" | "SUB" | string;
@@ -70,7 +70,7 @@ export interface ICustomBlockTypeMap_Deprecated {
 export interface CustomInlineStyles {
     [name: string]: {
         label: React.ReactNode;
-        icon?: (props: SvgIconProps) => JSX.Element;
+        icon?: (props: SvgIconProps) => JSX.Element | null;
         tooltipText?: React.ReactNode;
         style: React.CSSProperties;
     };

@@ -7,7 +7,7 @@ import { Chip, ComponentsOverrides, InputBase, InputBaseProps, MenuItem, Paper, 
 import { WithStyles, withStyles } from "@mui/styles";
 import classNames from "classnames";
 import * as React from "react";
-import Select from "react-select";
+import Select, { OptionTypeBase } from "react-select";
 import AsyncSelect, { Props as ReactSelectAsyncProps } from "react-select/async";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import { Props as ReactSelectProps } from "react-select/base";
@@ -23,7 +23,7 @@ import { SingleValueProps } from "react-select/src/components/SingleValue";
 
 import styles, { SelectClassKey } from "./ReactSelect.styles";
 
-function NoOptionsMessage<OptionType, IsMulti extends boolean>(props: NoticeProps<OptionType, IsMulti>) {
+function NoOptionsMessage<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: NoticeProps<OptionType, IsMulti>) {
     return (
         <Typography className={props.selectProps.classes.noOptionsMessage} {...props.innerProps}>
             {props.children}
@@ -37,7 +37,7 @@ function inputComponent({ inputRef, ...props }: any) {
 
 export const ControlInput = ({ ...props }: InputBaseProps) => <InputBase classes={{ root: "root", focused: "focused" }} {...props} />;
 
-function Control<OptionType, IsMulti extends boolean>(props: ControlProps<OptionType, IsMulti>) {
+function Control<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: ControlProps<OptionType, IsMulti>) {
     const InputProps = {
         inputComponent,
         inputProps: {
@@ -50,7 +50,7 @@ function Control<OptionType, IsMulti extends boolean>(props: ControlProps<Option
     return <ControlInput type="text" fullWidth {...InputProps} {...props.selectProps.textFieldProps} />;
 }
 
-function Option<OptionType, IsMulti extends boolean>(props: OptionProps<OptionType, IsMulti>) {
+function Option<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: OptionProps<OptionType, IsMulti>) {
     const rootClasses: string[] = [props.selectProps.classes.option];
     if (props.isFocused) rootClasses.push(props.selectProps.classes.optionFocused);
     if (props.isSelected) rootClasses.push(props.selectProps.classes.optionSelected);
@@ -68,7 +68,7 @@ function Option<OptionType, IsMulti extends boolean>(props: OptionProps<OptionTy
     );
 }
 
-function Placeholder<OptionType, IsMulti extends boolean>(props: PlaceholderProps<OptionType, IsMulti>) {
+function Placeholder<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: PlaceholderProps<OptionType, IsMulti>) {
     return (
         <div className={props.selectProps.classes.placeholder} {...props.innerProps}>
             {props.children}
@@ -76,7 +76,7 @@ function Placeholder<OptionType, IsMulti extends boolean>(props: PlaceholderProp
     );
 }
 
-function SingleValue<OptionType>(props: SingleValueProps<OptionType>) {
+function SingleValue<OptionType extends OptionTypeBase>(props: SingleValueProps<OptionType>) {
     return (
         <div className={props.selectProps.classes.singleValue} {...props.innerProps}>
             {props.children}
@@ -84,11 +84,11 @@ function SingleValue<OptionType>(props: SingleValueProps<OptionType>) {
     );
 }
 
-function ValueContainer<OptionType, IsMulti extends boolean>(props: ValueContainerProps<OptionType, IsMulti>) {
+function ValueContainer<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: ValueContainerProps<OptionType, IsMulti>) {
     return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
 }
 
-function MultiValue<OptionType>(props: MultiValueProps<OptionType>) {
+function MultiValue<OptionType extends OptionTypeBase>(props: MultiValueProps<OptionType>) {
     return (
         <Chip
             tabIndex={-1}
@@ -102,7 +102,7 @@ function MultiValue<OptionType>(props: MultiValueProps<OptionType>) {
     );
 }
 
-function Menu<OptionType, IsMulti extends boolean>(props: MenuProps<OptionType, IsMulti>) {
+function Menu<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: MenuProps<OptionType, IsMulti>) {
     return (
         <Paper className={props.selectProps.classes.paper} {...props.innerProps}>
             {props.children}
@@ -110,15 +110,18 @@ function Menu<OptionType, IsMulti extends boolean>(props: MenuProps<OptionType, 
     );
 }
 
-function IndicatorsContainer<OptionType, IsMulti extends boolean>(props: IndicatorContainerProps<OptionType, IsMulti>) {
+function IndicatorsContainer<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: IndicatorContainerProps<OptionType, IsMulti>) {
     return <div className={props.selectProps.classes.indicatorsContainer}>{props.children}</div>;
 }
 
-function IndicatorSeparator<OptionType, IsMulti extends boolean>(props: IndicatorContainerProps<OptionType, IsMulti>) {
+function IndicatorSeparator<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: IndicatorContainerProps<OptionType, IsMulti>) {
     return <span className={props.selectProps.classes.indicatorSeparator} />;
 }
 
-function ClearIndicator<OptionType, IsMulti extends boolean>({ selectProps, clearValue }: IndicatorProps<OptionType, IsMulti>) {
+function ClearIndicator<OptionType extends OptionTypeBase, IsMulti extends boolean>({
+    selectProps,
+    clearValue,
+}: IndicatorProps<OptionType, IsMulti>) {
     const Icon = selectProps.clearIcon ? selectProps.clearIcon : ClearIcon;
     return (
         <div className={`${selectProps.classes.indicator} ${selectProps.classes.clearIndicator}`} onClick={clearValue}>
@@ -127,7 +130,7 @@ function ClearIndicator<OptionType, IsMulti extends boolean>({ selectProps, clea
     );
 }
 
-function DropdownIndicator<OptionType, IsMulti extends boolean>({ selectProps }: IndicatorProps<OptionType, IsMulti>) {
+function DropdownIndicator<OptionType extends OptionTypeBase, IsMulti extends boolean>({ selectProps }: IndicatorProps<OptionType, IsMulti>) {
     const DefaultIcon = selectProps.dropdownIcon ? selectProps.dropdownIcon : DropdownIcon;
     const OpenIcon = selectProps.dropdownIconOpen ? selectProps.dropdownIconOpen : DropdownIcon;
     const Icon = selectProps.menuIsOpen ? OpenIcon : DefaultIcon;
@@ -154,7 +157,7 @@ const components = {
     DropdownIndicator,
 };
 
-export interface SelectProps<OptionType> {
+export interface SelectProps<OptionType extends OptionTypeBase> {
     theme: Theme;
     selectComponent: React.ComponentType<ReactSelectProps<OptionType>>;
     clearIcon?: SvgIconComponent;
@@ -162,7 +165,7 @@ export interface SelectProps<OptionType> {
     dropdownIconOpen?: SvgIconComponent;
 }
 
-function SelectWrapper<OptionType>({
+function SelectWrapper<OptionType extends OptionTypeBase>({
     classes,
     theme,
     components: origComponents,
@@ -189,22 +192,24 @@ const useReactSelectStyles = () => {
     };
 };
 
-export function ReactSelect<OptionType>(props: ReactSelectProps<OptionType>) {
+export function ReactSelect<OptionType extends OptionTypeBase>(props: ReactSelectProps<OptionType>) {
     const reactSelectStyles = useReactSelectStyles();
     return <ExtendedSelectWrapper selectComponent={Select} {...props} styles={{ ...reactSelectStyles }} />;
 }
 
-export function ReactSelectAsync<OptionType, IsMulti extends boolean>(props: ReactSelectAsyncProps<OptionType, IsMulti>) {
+export function ReactSelectAsync<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: ReactSelectAsyncProps<OptionType, IsMulti>) {
     const reactSelectStyles = useReactSelectStyles();
     return <ExtendedSelectWrapper selectComponent={AsyncSelect} {...props} styles={{ ...reactSelectStyles }} />;
 }
 
-export function ReactSelectCreatable<OptionType, IsMulti extends boolean>(props: ReactSelectCreatableProps<OptionType, IsMulti>) {
+export function ReactSelectCreatable<OptionType extends OptionTypeBase, IsMulti extends boolean>(
+    props: ReactSelectCreatableProps<OptionType, IsMulti>,
+) {
     const reactSelectStyles = useReactSelectStyles();
     return <ExtendedSelectWrapper selectComponent={CreatableSelect} {...props} styles={{ ...reactSelectStyles }} />;
 }
 
-export function ReactSelectAsyncCreatable<OptionType, IsMulti extends boolean>(
+export function ReactSelectAsyncCreatable<OptionType extends OptionTypeBase, IsMulti extends boolean>(
     props: ReactSelectCreatableProps<OptionType, IsMulti> & ReactSelectAsyncProps<OptionType, IsMulti>,
 ) {
     const reactSelectStyles = useReactSelectStyles();

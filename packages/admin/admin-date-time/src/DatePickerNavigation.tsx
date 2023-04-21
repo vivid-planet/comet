@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
-import { Box, Button, buttonClasses, ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem, Theme } from "@mui/material";
+import { Box, Button, buttonClasses, ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
+import { Theme } from "@mui/material/styles";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
