@@ -5,12 +5,6 @@ module.exports = {
         jest: true,
     },
     rules: {
-        "@typescript-eslint/explicit-function-return-type": [
-            "error",
-            {
-                allowExpressions: true,
-            },
-        ],
         "@typescript-eslint/naming-convention": [
             "error",
             {
