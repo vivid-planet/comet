@@ -2,6 +2,7 @@ import { PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
 import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { useColorTheme } from "@src/blocks/ColorThemeContext";
 import { Typography } from "@src/components/common/Typography";
+import type { RawDraftContentState } from "draft-js";
 import * as React from "react";
 import redraft, { Renderers } from "redraft";
 import styled from "styled-components";
@@ -122,13 +123,13 @@ const RichTextBlock: React.FC<RichTextBlockProps> = ({ data: { draftContent }, r
     const colorTheme = useColorTheme();
 
     return (
-        <PreviewSkeleton title={"RichText"} type={"rows"} hasContent={hasDraftContent(draftContent)}>
+        <PreviewSkeleton title={"RichText"} type={"rows"} hasContent={hasDraftContent(draftContent as RawDraftContentState)}>
             <sc.Wrapper colorTheme={colorTheme}>{rendered}</sc.Wrapper>
         </PreviewSkeleton>
     );
 };
 
-export function hasDraftContent(draftContent: RichTextBlockData["draftContent"]): boolean {
+export function hasDraftContent(draftContent: RawDraftContentState): boolean {
     return !(draftContent.blocks.length == 1 && draftContent.blocks[0].text === "");
 }
 export default withPreview(RichTextBlock, { label: "RichText" });

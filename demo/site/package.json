@@ -8,14 +8,13 @@
         "build:preBuild:tsc": "tsc --project tsconfig.preBuild.json",
         "build:publicGenerated": "node preBuild/build/preBuild/src/publicGenerator/generate.js",
         "clear:preBuild": "rimraf preBuild/build",
-        "clear:types": "rimraf \"src/*.generated.ts\"",
         "dev": "run-p gql:types generate-block-types && $npm_execpath build:preBuild && NODE_OPTIONS='--inspect=localhost:9230' node server.js",
         "export": "next export",
         "extract:publicGenerated": "node preBuild/build/preBuild/src/publicGenerator/extract.js",
-        "generate-block-types": "dotenv -- ts-node generate-block-types.ts",
+        "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
-        "gql:types": "$npm_execpath clear:types && graphql-codegen",
-        "gql:watch": "$npm_execpath clear:types && graphql-codegen --watch",
+        "gql:types": "graphql-codegen",
+        "gql:watch": "graphql-codegen --watch",
         "lint": "run-p gql:types generate-block-types && run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --config ./.eslintrc.cli.js --ext .ts,.tsx,.js,.jsx,.json,.md src/",
         "lint:tsc": "tsc --project .",
@@ -24,7 +23,7 @@
         "serve": "npm run extract:publicGenerated && NODE_ENV=production node server.js"
     },
     "dependencies": {
-        "@comet/cms-site": "workspace:^4.0.0",
+        "@comet/cms-site": "workspace:^4.1.0",
         "@googlemaps/js-api-loader": "^1.0.0",
         "@googlemaps/markerclustererplus": "^1.0.0",
         "@opentelemetry/api": "^1.4.0",
@@ -33,6 +32,7 @@
         "@opentelemetry/sdk-node": "^0.35.1",
         "babel-plugin-inline-react-svg": "^2.0.0",
         "babel-plugin-styled-components": "^1.0.0",
+        "draft-js": "^0.11.7",
         "express": "^4.0.0",
         "fs-extra": "^9.0.0",
         "graphql": "^15.0.0",
@@ -53,12 +53,14 @@
     },
     "devDependencies": {
         "@babel/core": "^7.16.0",
-        "@comet/eslint-config": "workspace:^4.0.0",
+        "@comet/cli": "workspace:^4.1.0",
+        "@comet/eslint-config": "workspace:^4.1.0",
         "@graphql-codegen/add": "^3.0.0",
         "@graphql-codegen/cli": "^2.0.0",
         "@graphql-codegen/named-operations-object": "^2.0.0",
         "@graphql-codegen/typescript": "^2.0.0",
         "@graphql-codegen/typescript-operations": "^2.0.0",
+        "@types/draft-js": "^0.11.10",
         "@types/fs-extra": "^9.0.0",
         "@types/google.maps": "^3.0.0",
         "@types/node": "^18.0.0",
@@ -71,10 +73,10 @@
         "cosmiconfig-toml-loader": "^1.0.0",
         "dotenv-cli": "^4.0.0",
         "eslint": "^8.0.0",
+        "npm-run-all": "^4.1.5",
         "prettier": "^2.0.0",
         "rimraf": "^3.0.0",
         "tsconfig-paths": "^3.0.0",
-        "typescript": "^4.0.0",
-        "npm-run-all": "^4.1.5"
+        "typescript": "^4.0.0"
     }
 }

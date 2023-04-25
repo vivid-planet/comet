@@ -12,7 +12,6 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
     styleOverrides: mergeOverrideStyles<"MuiButton">(component?.styleOverrides, {
         root: {
             position: "relative",
-            top: 1,
             fontSize: 16,
             lineHeight: 1,
             textTransform: "none",
@@ -98,8 +97,6 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
         },
         startIcon: {
             marginLeft: 0,
-            position: "relative",
-            top: -1,
 
             [`&.${buttonClasses.iconSizeMedium} > *:first-of-type`]: {
                 fontSize: 16,
@@ -107,8 +104,6 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
         },
         endIcon: {
             marginRight: 0,
-            position: "relative",
-            top: -1,
 
             [`&.${buttonClasses.iconSizeMedium} > *:first-of-type`]: {
                 fontSize: 16,
