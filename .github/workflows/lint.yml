@@ -10,6 +10,10 @@ on:
         branches:
             - main
             - next
+    push:
+        branches:
+            - main
+            - next
 
 jobs:
     lint:

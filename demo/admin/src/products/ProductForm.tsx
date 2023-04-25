@@ -49,7 +49,7 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormState = Omit<GQLProductFormFragment, "price"> & {
+type FormState = Omit<GQLProductFormFragment, "price" | "image"> & {
     price: string;
     image: BlockState<typeof rootBlocks.image>;
 };

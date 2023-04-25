@@ -29,11 +29,24 @@ jobs:
             - name: Install Dependencies
               run: pnpm install --frozen-lockfile
 
+            - name: Copy schema files
+              run: pnpm run copy-schema-files
+
+            - name: Get version to be published
+              run: |
+                  cd packages/admin/admin
+                  echo "PUBLISHED_VERSION=$(pnpm pkg get version | sed -r 's/"//g')" >> $GITHUB_ENV
+
             - name: Create Release Pull Request or Publish to npm
               id: changesets
-              uses: changesets/action@v1
+              uses: dotansimha/changesets-action@cbc5ff3569ae9861100a48b290f4e9c1b94e45b5
               with:
+                  version: pnpm run version
                   publish: pnpm run publish
+                  createGithubReleases: aggregate
+                  githubReleaseName: "${{ env.PUBLISHED_VERSION }}"
+                  githubTagName: "v${{ env.PUBLISHED_VERSION }}"
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  HUSKY: 0 # https://typicode.github.io/husky/#/?id=with-env-variables
