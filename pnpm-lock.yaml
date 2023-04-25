@@ -915,6 +915,9 @@ importers:
       '@types/react-router-dom':
         specifier: ^5.1.7
         version: 5.3.3
+      '@types/testing-library__jest-dom':
+        specifier: ^5.14.5
+        version: 5.14.5
       '@types/uuid':
         specifier: ^9.0.0
         version: 9.0.0
