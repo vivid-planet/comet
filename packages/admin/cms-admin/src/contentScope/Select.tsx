@@ -45,7 +45,7 @@ export default function ContentScopeSelect({
                             sx={{ m: 1 }}
                             startAdornment={<Search />}
                             placeholder={intl.formatMessage({
-                                id: "search.input",
+                                id: "contentScope.select.searchInput.placeholder",
                                 defaultMessage: "Search ...",
                             })}
                             value={searchValue}
