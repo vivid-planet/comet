@@ -31,10 +31,10 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Property()
     @Field()
     @CrudField({
-        search: true,
-        filter: true,
-        sort: true,
-        input: true,
+        search: true, //default is true
+        filter: true, //default is true
+        sort: true, //default is true
+        input: true, //default is true
     })
     title: string;
 
@@ -70,10 +70,11 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @ManyToOne(() => ProductCategory, { nullable: true, ref: true })
     @CrudField({
-        search: true,
-        filter: true,
-        sort: true,
-        input: true,
+        output: true, //default is true
+        //not yet supported: search: true,
+        //not yet supported: filter: true,
+        //not yet supported: sort: true,
+        input: true, //default is true
     })
     category?: Ref<ProductCategory>;
 

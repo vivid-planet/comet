@@ -26,14 +26,6 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> implement
     slug: string;
 
     @OneToMany(() => Product, (products) => products.category)
-    /*
-    @CrudRelationField({
-        paging: true,
-        filter: true,
-        sort: true,
-        mutations: true
-    })
-    */
     products = new Collection<Product>(this);
 
     @Property()

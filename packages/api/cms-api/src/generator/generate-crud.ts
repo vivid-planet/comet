@@ -373,6 +373,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
     const relationProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationsProps = metadata.props.filter((prop) => prop.reference === "1:m");
+    const outputRelationProps = relationProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
+    const outputRelationsProps = relationsProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
+    for (const prop of metadata.props) {
+        if (!hasFieldFeature(metadata.class, prop.name, "output") && !relationProps.includes(prop) && !relationsProps.includes(prop)) {
+            throw new Error("@CrudField output=false is only used for relations, for other props simply remove @Field() disable it's output");
+        }
+    }
 
     let importsOut = "";
     const injectRepositories = new Set<string>();
@@ -597,7 +604,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 : ""
         }
 
-        ${relationProps.map(
+        ${outputRelationProps.map(
             (prop) => `
             @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
             async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${
@@ -608,7 +615,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         `,
         )}
 
-        ${relationsProps.map(
+        ${outputRelationsProps.map(
             (prop) => `
             @ResolveField(() => [${prop.type}])
             async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
