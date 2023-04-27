@@ -127,7 +127,6 @@ function ProductsTable() {
                                     variables: {
                                         input: {
                                             description: input.description,
-                                            // @ts-expect-error type mismatch between OneOfBlock block data and block state
                                             image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
                                             inStock: input.inStock,
                                             price: input.price,
