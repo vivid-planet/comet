@@ -637,7 +637,7 @@ input ProductCategoryFilter {
 }
 
 input ProductCategoryInput {
-  productIds: [String!]!
+  products: [String!]!
   slug: String!
   title: String!
 }
@@ -669,7 +669,7 @@ input ProductFilter {
 }
 
 input ProductInput {
-  categoryId: String
+  category: String
   description: String!
   image: DamImageBlockInput!
   inStock: Boolean!

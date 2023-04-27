@@ -49,5 +49,5 @@ export class ProductInput {
     @IsOptional()
     @Field({ nullable: true })
     @IsUUID()
-    categoryId?: string;
+    category?: string;
 }

@@ -20,5 +20,5 @@ export class ProductCategoryInput {
     @Field(() => [String])
     @IsArray()
     @IsUUID(undefined, { each: true })
-    productIds: string[];
+    products: string[];
 }

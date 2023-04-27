@@ -56,13 +56,13 @@ export class ProductCategoryCrudResolver {
 
     @Mutation(() => ProductCategory)
     async createProductCategory(@Args("input", { type: () => ProductCategoryInput }) input: ProductCategoryInput): Promise<ProductCategory> {
-        const { productIds, ...assignInput } = input;
+        const { products: productsInput, ...assignInput } = input;
         const productCategory = this.repository.create({
             ...assignInput,
         });
         {
-            const products = await this.productRepository.find({ id: productIds });
-            if (products.length != productIds.length) throw new Error("Couldn't find all products from productIds");
+            const products = await this.productRepository.find({ id: productsInput });
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products");
             await productCategory.products.loadItems();
             productCategory.products.set(products.map((p) => Reference.create(p)));
         }
@@ -82,13 +82,13 @@ export class ProductCategoryCrudResolver {
         if (lastUpdatedAt) {
             validateNotModified(productCategory, lastUpdatedAt);
         }
-        const { productIds, ...assignInput } = input;
+        const { products: productsInput, ...assignInput } = input;
         productCategory.assign({
             ...assignInput,
         });
         {
-            const products = await this.productRepository.find({ id: productIds });
-            if (products.length != productIds.length) throw new Error("Couldn't find all products from productIds");
+            const products = await this.productRepository.find({ id: productsInput });
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products");
             await productCategory.products.loadItems();
             productCategory.products.set(products.map((p) => Reference.create(p)));
         }

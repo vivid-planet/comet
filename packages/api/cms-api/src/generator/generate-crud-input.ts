@@ -27,7 +27,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
     let importsOut = "";
     for (const prop of props) {
         let type = prop.type;
-        let fieldName = prop.name;
+        const fieldName = prop.name;
         const decorators = [] as Array<string>;
         if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
@@ -102,14 +102,12 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             decorators.push("@IsUUID()");
             type = "string";
-            fieldName += "Id";
         } else if (prop.reference == "1:m") {
             decorators.length = 0;
             decorators.push(`@Field(() => [String])`);
             decorators.push(`@IsArray()`);
             decorators.push(`@IsUUID(undefined, { each: true })`);
             type = "string[]";
-            fieldName = `${fieldName.replace(/s$/, "")}Ids`; //singularize and append Ids
         } else {
             //unsupported type TODO support more
             continue;

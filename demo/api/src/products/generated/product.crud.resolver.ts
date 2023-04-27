@@ -56,13 +56,13 @@ export class ProductCrudResolver {
 
     @Mutation(() => Product)
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
-        const { categoryId, ...assignInput } = input;
+        const { ...assignInput } = input;
         const product = this.repository.create({
             ...assignInput,
 
             image: input.image.transformToBlockData(),
             visible: false,
-            category: categoryId ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryId)) : undefined,
+            category: input.category ? Reference.create(await this.productCategoryRepository.findOneOrFail(input.category)) : undefined,
         });
 
         await this.entityManager.flush();
@@ -80,11 +80,11 @@ export class ProductCrudResolver {
         if (lastUpdatedAt) {
             validateNotModified(product, lastUpdatedAt);
         }
-        const { categoryId, ...assignInput } = input;
+        const { ...assignInput } = input;
         product.assign({
             ...assignInput,
             image: input.image.transformToBlockData(),
-            category: categoryId ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryId)) : undefined,
+            category: input.category ? Reference.create(await this.productCategoryRepository.findOneOrFail(input.category)) : undefined,
         });
 
         await this.entityManager.flush();

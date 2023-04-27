@@ -396,7 +396,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 name: prop.name,
                 nullable: prop.nullable,
                 type: prop.type,
-                inputName: `${prop.name}Id`,
                 repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
             };
         });
@@ -413,7 +412,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 name: prop.name,
                 nullable: prop.nullable,
                 type: prop.type,
-                inputName: `${prop.name.replace(/s$/, "")}Ids`,
                 repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
             };
         });
@@ -499,9 +497,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
-            const { ${inputRelationProps.map((prop) => prop.inputName).join(", ")}${inputRelationProps.length ? ", " : ""}${inputRelationsProps
-        .map((prop) => prop.inputName)
-        .join(", ")}${inputRelationsProps.length ? ", " : ""}...assignInput } = input;
+            const { ${inputRelationsProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}${
+        inputRelationsProps.length ? ", " : ""
+    }...assignInput } = input;
                     const ${instanceNameSingular} = this.repository.create({
                         ...assignInput,
                         ${hasVisibleProp ? `visible: false,` : ""}
@@ -513,15 +511,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                         }
                         ${inputRelationProps.map(
                             (prop) =>
-                                `${prop.name}: ${prop.nullable ? `${prop.name}Id ? ` : ""}Reference.create(await this.${
+                                `${prop.name}: ${prop.nullable ? `input.${prop.name} ? ` : ""}Reference.create(await this.${
                                     prop.repositoryName
-                                }.findOneOrFail(${prop.inputName}))${prop.nullable ? ` : undefined` : ""}, `,
+                                }.findOneOrFail(input.${prop.name}))${prop.nullable ? ` : undefined` : ""}, `,
                         )}
                     });
                     ${inputRelationsProps.map(
                         (prop) => `{
-                        const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.inputName} });
-                        if (${prop.name}.length != ${prop.inputName}.length) throw new Error("Couldn't find all ${prop.name} from ${prop.inputName}");
+                        const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
+                        if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name}");
                         await ${instanceNameSingular}.${prop.name}.loadItems();
                         ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((p) => Reference.create(p)));
                     }`,
@@ -546,23 +544,23 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             }`
                     : ""
             }
-            const { ${inputRelationProps.map((prop) => prop.inputName).join(", ")}${inputRelationProps.length ? ", " : ""}${inputRelationsProps
-        .map((prop) => prop.inputName)
-        .join(", ")}${inputRelationsProps.length ? ", " : ""}...assignInput } = input;
+            const { ${inputRelationsProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}${
+        inputRelationsProps.length ? ", " : ""
+    }...assignInput } = input;
             ${instanceNameSingular}.assign({
                 ...assignInput,
                 ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
                 ${inputRelationProps.map(
                     (prop) =>
-                        `${prop.name}: ${prop.nullable ? `${prop.name}Id ? ` : ""}Reference.create(await this.${prop.repositoryName}.findOneOrFail(${
-                            prop.inputName
-                        }))${prop.nullable ? ` : undefined` : ""}, `,
+                        `${prop.name}: ${prop.nullable ? `input.${prop.name} ? ` : ""}Reference.create(await this.${
+                            prop.repositoryName
+                        }.findOneOrFail(input.${prop.name}))${prop.nullable ? ` : undefined` : ""}, `,
                 )}
             });
             ${inputRelationsProps.map(
                 (prop) => `{
-                const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.inputName} });
-                if (${prop.name}.length != ${prop.inputName}.length) throw new Error("Couldn't find all ${prop.name} from ${prop.inputName}");
+                const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
+                if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name}");
                 await ${instanceNameSingular}.${prop.name}.loadItems();
                 ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((p) => Reference.create(p)));
             }`,
