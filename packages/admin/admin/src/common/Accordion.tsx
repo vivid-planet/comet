@@ -1,18 +1,23 @@
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion from "@mui/material/Accordion";
-import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import MuiAccordionDetails, { AccordionDetailsProps } from "@mui/material/AccordionDetails";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
+interface AccordionComponentsProps {
+    accordionSummary?: Partial<AccordionSummaryProps>;
+    accordionDetails?: Partial<AccordionDetailsProps>;
+}
 interface AccordionProps {
     title: React.ReactNode;
     supportText?: React.ReactNode;
     endAdornment?: React.ReactNode;
     initialExpanded?: boolean;
+    componentsProps?: AccordionComponentsProps;
 }
 
-export const Accordion: React.FC<AccordionProps> = ({ title, supportText, endAdornment, children, initialExpanded = false }) => {
+export const Accordion: React.FC<AccordionProps> = ({ title, supportText, endAdornment, children, initialExpanded = false, componentsProps }) => {
     const [expanded, setExpanded] = React.useState(initialExpanded);
 
     const handleChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -21,7 +26,7 @@ export const Accordion: React.FC<AccordionProps> = ({ title, supportText, endAdo
 
     return (
         <AccordionComponent expanded={expanded} onChange={handleChange} disableGutters elevation={0} square>
-            <AccordionSummary>
+            <AccordionSummary {...componentsProps?.accordionSummary}>
                 <AccordionColumn>
                     <AccordionTitleText expanded={expanded}>{title}</AccordionTitleText>
                     <AccordionSupportText>{supportText}</AccordionSupportText>
@@ -29,7 +34,7 @@ export const Accordion: React.FC<AccordionProps> = ({ title, supportText, endAdo
                 <FillSpace />
                 <AccordionEndAdornment>{endAdornment}</AccordionEndAdornment>
             </AccordionSummary>
-            <AccordionDetails>{children}</AccordionDetails>
+            <AccordionDetails {...componentsProps?.accordionDetails}>{children}</AccordionDetails>
         </AccordionComponent>
     );
 };

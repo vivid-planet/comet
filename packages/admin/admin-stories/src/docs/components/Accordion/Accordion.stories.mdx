@@ -8,16 +8,18 @@ import dedent from "ts-dedent";
 
 > Accordion allows user to show or hide content sections.
 >
-> \- [MUI Docs](https://mui.com/material-ui/react-tooltip/)
+> \- [MUI Docs](https://mui.com/material-ui/react-accordion/)
 
 The Comet Admin `Accordion` extends [Material UI's `Accordion`](https://mui.com/material-ui/react-accordion) by adding custom style and elements such as supportText, endAdornment and initialExpanded.
 
 #### Props
 
-| Name              | Type   | Description                                                                      |
-| :---------------- | :----- | :------------------------------------------------------------------------------- |
-| initialExpanded          | boolean (optional) | Defines Accordion initial state (default: false) |
-
+| Name              | Type   | Default   | Description                                                                      |
+| :---------------- | :----- | :----- | :------------------------------------------------------------------------------- |
+| title          | ReactNode |  | Title of the Accordion |
+| supportText          | ReactNode (optional) |  | Additional line below the Title |
+| endAdornment          | ReactNode (optional) |  | An element on the right end of the AccordionSummary |
+| initialExpanded          | boolean (optional) | false | If true, Accordion is open by default |
 
 In addition to its own props, the Accordion component also accepts all props from the Material UI Accordion component.
 
