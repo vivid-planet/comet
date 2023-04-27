@@ -9,6 +9,10 @@ export const productFormFragment = gql`
         type
         inStock
         image
+        category {
+            id
+            title
+        }
     }
 `;
 
@@ -43,4 +47,22 @@ export const updateProductMutation = gql`
         }
     }
     ${productFormFragment}
+`;
+
+export const productCategorySelectFragment = gql`
+    fragment ProductCategorySelect on ProductCategory {
+        id
+        title
+    }
+`;
+
+export const productCategoriesQuery = gql`
+    query ProductCategories {
+        productCategorys {
+            nodes {
+                ...ProductCategorySelect
+            }
+        }
+    }
+    ${productCategorySelectFragment}
 `;

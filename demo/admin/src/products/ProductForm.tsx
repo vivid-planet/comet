@@ -13,6 +13,7 @@ import {
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
+    useAsyncOptionsProps,
     useFormApiRef,
     useStackApi,
     useStackSwitchApi,
@@ -28,8 +29,11 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+import { createProductMutation, productCategoriesQuery, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
+    GQLProductCategoriesQuery,
+    GQLProductCategoriesQueryVariables,
+    GQLProductCategorySelectFragment,
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
     GQLProductFormFragment,
@@ -93,6 +97,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             price: parseFloat(formState.price),
             image: rootBlocks.image.state2Output(formState.image),
             type: formState.type as GQLProductType,
+            category: formState.category?.id,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -115,6 +120,11 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             }
         }
     };
+
+    const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
+        const categories = await client.query<GQLProductCategoriesQuery, GQLProductCategoriesQueryVariables>({ query: productCategoriesQuery });
+        return categories.data.productCategories.nodes;
+    });
 
     if (error) {
         return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
@@ -190,6 +200,17 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                                 </FinalFormSelect>
                             )}
                         </Field>
+                        <Field
+                            fullWidth
+                            name="category"
+                            label="Category"
+                            component={FinalFormSelect}
+                            {...categorySelectAsyncProps}
+                            getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
+                            getOptionSelected={(option: GQLProductCategorySelectFragment, value: GQLProductCategorySelectFragment) => {
+                                return option.id === value.id;
+                            }}
+                        />
                         <Field
                             fullWidth
                             name="price"

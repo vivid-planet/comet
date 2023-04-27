@@ -85,6 +85,14 @@ function ProductsTable() {
         { field: "description", headerName: "Description", width: 150 },
         { field: "price", headerName: "Price", width: 150, type: "number" },
         { field: "type", headerName: "Type", width: 150, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
+        {
+            field: "category",
+            headerName: "Category",
+            width: 150,
+            renderCell: (params) => <>{params.row.category?.title}</>,
+            sortable: false,
+            filterable: false,
+        },
         { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
         {
             field: "visible",
@@ -194,6 +202,10 @@ const productsFragment = gql`
         inStock
         image
         visible
+        category {
+            id
+            title
+        }
     }
 `;
 
