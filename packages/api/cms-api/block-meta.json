@@ -661,7 +661,21 @@
             },
             {
                 "name": "alternativeLinks",
-                "kind": "Json",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "code",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "url",
+                            "kind": "String",
+                            "nullable": true
+                        }
+                    ]
+                },
                 "nullable": false
             }
         ],
@@ -741,7 +755,21 @@
             },
             {
                 "name": "alternativeLinks",
-                "kind": "Json",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "code",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "url",
+                            "kind": "String",
+                            "nullable": true
+                        }
+                    ]
+                },
                 "nullable": false
             }
         ]

@@ -1,5 +1,5 @@
 import { EntityClass, MikroORM } from "@mikro-orm/core";
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, Optional } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
@@ -17,8 +17,8 @@ export class ScopeGuard implements CanActivate {
     constructor(
         private reflector: Reflector,
         private readonly orm: MikroORM,
-        private readonly pageTreeService: PageTreeService,
         private readonly contentScopeService: ContentScopeService,
+        @Optional() private readonly pageTreeService?: PageTreeService,
     ) {}
 
     async inferScopeFromRequest(context: ExecutionContext): Promise<ContentScope | undefined> {
@@ -49,6 +49,9 @@ export class ScopeGuard implements CanActivate {
                 } else if (subjectEntity.options.pageTreeNodeIdArg && args[subjectEntity.options.pageTreeNodeIdArg]) {
                     if (!args[subjectEntity.options.pageTreeNodeIdArg]) {
                         throw new Error(`${subjectEntity.options.pageTreeNodeIdArg} arg not found`);
+                    }
+                    if (this.pageTreeService === undefined) {
+                        throw new Error("pageTreeNodeIdArg was given but no PageTreeModule is registered");
                     }
                     const node = await this.pageTreeService
                         .createReadApi({ visibility: "all" })

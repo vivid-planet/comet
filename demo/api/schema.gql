@@ -112,57 +112,16 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type NewsComment implements DocumentInterface {
+type Link implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-  comment: String!
+  content: LinkBlockData!
   createdAt: DateTime!
 }
 
 interface DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-}
-
-type NewsContentScope {
-  domain: String!
-  language: String!
-}
-
-type News implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  scope: NewsContentScope!
-  slug: String!
-  title: String!
-  date: DateTime!
-  category: NewsCategory!
-  visible: Boolean!
-  image: DamImageBlockData!
-  content: NewsContentBlockData!
-  createdAt: DateTime!
-  comments: [NewsComment!]!
-  dependents: [Dependency!]!
-  dependencies: [Dependency!]!
-}
-
-enum NewsCategory {
-  Events
-  Company
-  Awards
-}
-
-"""DamImage root block data"""
-scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""NewsContent root block data"""
-scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type Link implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  content: LinkBlockData!
-  createdAt: DateTime!
 }
 
 """Link root block data"""
@@ -320,6 +279,47 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
+type NewsComment implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  comment: String!
+  createdAt: DateTime!
+}
+
+type NewsContentScope {
+  domain: String!
+  language: String!
+}
+
+type News implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  scope: NewsContentScope!
+  slug: String!
+  title: String!
+  date: DateTime!
+  category: NewsCategory!
+  visible: Boolean!
+  image: DamImageBlockData!
+  content: NewsContentBlockData!
+  createdAt: DateTime!
+  comments: [NewsComment!]!
+  dependents: [Dependency!]!
+  dependencies: [Dependency!]!
+}
+
+enum NewsCategory {
+  Events
+  Company
+  Awards
+}
+
+"""DamImage root block data"""
+scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""NewsContent root block data"""
+scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
 type PaginatedNews {
   nodes: [News!]!
   totalCount: Int!
@@ -398,11 +398,6 @@ type PaginatedDamFolders {
   totalCount: Int!
 }
 
-input NewsContentScopeInput {
-  domain: String!
-  language: String!
-}
-
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
@@ -413,6 +408,11 @@ input DamScopeInput {
 }
 
 input FooterContentScopeInput {
+  domain: String!
+  language: String!
+}
+
+input NewsContentScopeInput {
   domain: String!
   language: String!
 }
