@@ -15,7 +15,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
-import { extractRichtextStyles, importRichtextStyles } from "../common/extractImportRichtextStyles";
+import { importRichtextStyles } from "../common/extractImportRichtextStyles";
+import stateToHTML from "../common/stateToHTML";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
 import { Decorator as SoftHyphenDecorator } from "./rte/extension/SoftHyphen/Decorator";
@@ -177,11 +178,9 @@ export const createRichTextBlock = (
         },
 
         extractTextContents: (state) => {
-            const { blocks } = convertStateToRawContent(state.editorState);
-
-            // const html = stateToHTML(state.editorState.getCurrentContent());
-
-            return blocks.map((block) => extractRichtextStyles(block));
+            // const { blocks } = convertStateToRawContent(state.editorState);
+            // return blocks.map((block) => extractRichtextStyles(block));
+            return [stateToHTML(state.editorState.getCurrentContent())];
         },
 
         replaceTextContents: (state, contents) => {

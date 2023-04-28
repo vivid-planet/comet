@@ -244,8 +244,7 @@ class MarkupGenerator {
         const tags = getTags(block.getType());
 
         for (const tag of tags) {
-            this.output.push(`<${tag}${this.counter}>`);
-            this.counter += 1;
+            this.output.push(`<${tag}>`);
         }
     }
 
@@ -300,14 +299,14 @@ class MarkupGenerator {
                     .map(([text, styleSet]) => {
                         let content = encodeContent(text);
                         for (const styleName of this.styleOrder) {
-                            if (styleSet.has(styleName)) {
+                            const currentStyle = styleSet.find((style) => style.style === styleName);
+                            if (currentStyle) {
                                 let { element } = this.inlineStyles[styleName];
                                 if (element == null) {
                                     element = "span";
                                 }
 
-                                content = `<${element} class="${this.counter}">${content}</${element}>`;
-                                this.counter += 1;
+                                content = `<${element} class="${currentStyle.id}">${content}</${element}>`;
                             }
                         }
 
