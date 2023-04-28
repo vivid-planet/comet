@@ -1,36 +1,6 @@
 import { RawDraftContentBlock, RawDraftEntityRange, RawDraftInlineStyleRange } from "draft-js";
 
-export const extractRichtextStyles = (block: RawDraftContentBlock): string => {
-    let text = "";
-
-    const combinedSettings = [
-        ...block.inlineStyleRanges.map((inlineStyle, index) => ({
-            start: inlineStyle.offset,
-            end: inlineStyle.offset + inlineStyle.length,
-            type: "inlineStyle",
-            index: index + 1,
-        })),
-        ...block.entityRanges.map((entityRange, index) => ({
-            start: entityRange.offset,
-            end: entityRange.offset + entityRange.length,
-            type: "entityRange",
-            index: index + 1,
-        })),
-    ];
-
-    for (let i = 0; i < block.text.length + 1; i++) {
-        const startTags = combinedSettings.filter((setting) => setting.start === i);
-        const endTags = combinedSettings.filter((setting) => setting.end === i).reverse();
-
-        text += `${endTags.map((tag) => (tag.type === "inlineStyle" ? `</i${tag.index}>` : `</e${tag.index}>`)).join("")}${startTags
-            .map((tag) => (tag.type === "inlineStyle" ? `<i${tag.index}>` : `<e${tag.index}>`))
-            .join("")}${block.text[i] ?? ""}`;
-    }
-
-    return text;
-};
-
-export const importRichtextStyles = (block: RawDraftContentBlock): RawDraftContentBlock => {
+export const HTMLToState = (block: RawDraftContentBlock): RawDraftContentBlock => {
     const regexInlineStylesPattern = /<i[0-9][0-9]?>|<\/i[0-9][0-9]?>/g;
     const regexEntitiesPattern = /<e[0-9][0-9]?>|<\/e[0-9][0-9]?>/g;
 

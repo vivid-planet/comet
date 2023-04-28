@@ -15,7 +15,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
-import { importRichtextStyles } from "../common/extractImportRichtextStyles";
+import { HTMLToState } from "../common/HTMLToState";
 import stateToHTML from "../common/stateToHTML";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
@@ -178,8 +178,8 @@ export const createRichTextBlock = (
         },
 
         extractTextContents: (state) => {
-            // const { blocks } = convertStateToRawContent(state.editorState);
-            // return blocks.map((block) => extractRichtextStyles(block));
+            // const blocks = state.editorState.getCurrentContent().getBlocksAsArray();
+            // return blocks.map((block) => stateToHTML(block));
             return [stateToHTML(state.editorState.getCurrentContent())];
         },
 
@@ -193,7 +193,7 @@ export const createRichTextBlock = (
 
                 if (!translation || translation.replaceWith === "") return block;
 
-                return importRichtextStyles({ ...block, text: translation.replaceWith });
+                return HTMLToState({ ...block, text: translation.replaceWith });
             });
 
             return {
