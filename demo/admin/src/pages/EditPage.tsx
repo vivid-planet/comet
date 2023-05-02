@@ -1,14 +1,5 @@
 import { gql } from "@apollo/client";
-import {
-    MainContent as CometMainContent,
-    messages,
-    RouterPrompt,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    useStackApi,
-} from "@comet/admin";
+import { MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -22,7 +13,6 @@ import {
     useSiteConfig,
 } from "@comet/cms-admin";
 import { Button, CircularProgress, IconButton } from "@mui/material";
-import { withStyles } from "@mui/styles";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import {
@@ -80,13 +70,6 @@ const usePage = createUsePage({
         }
     `,
 });
-
-// TODO: Add `disablePaddingBottom` prop to `MainContent` in @comet/admin
-const MainContent = withStyles({
-    root: {
-        paddingBottom: 0,
-    },
-})(CometMainContent);
 
 export const EditPage: React.FC<Props> = ({ id, category }) => {
     const intl = useIntl();
@@ -165,7 +148,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                     {pageSaveButton}
                 </ToolbarActions>
             </Toolbar>
-            <MainContent>
+            <MainContent disablePaddingBottom>
                 <BlockPreviewWithTabs previewUrl={`${siteConfig.previewUrl}/admin/page`} previewState={previewState} previewApi={previewApi}>
                     {[
                         {
