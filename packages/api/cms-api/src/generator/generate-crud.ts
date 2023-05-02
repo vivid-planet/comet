@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
+import { plural } from "pluralize";
 
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
@@ -16,7 +17,7 @@ function buildNameVariants(metadata: EntityMetadata<any>): {
     fileNamePlural: string;
 } {
     const classNameSingular = metadata.className;
-    const classNamePlural = !metadata.className.endsWith("s") ? `${metadata.className}s` : metadata.className;
+    const classNamePlural = plural(metadata.className);
     const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
     const instanceNamePlural = classNamePlural[0].toLocaleLowerCase() + classNamePlural.slice(1);
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
