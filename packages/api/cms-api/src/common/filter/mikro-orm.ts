@@ -3,6 +3,7 @@ import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
 import { EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
+import { ManyToOneFilter } from "./many-to-one.filter";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
 
@@ -84,6 +85,16 @@ export function filterToMikroOrmQuery(
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
         }
+    } else if (filterProperty instanceof ManyToOneFilter) {
+        if (filterProperty.equal !== undefined) {
+            ret.$eq = filterProperty.equal;
+        }
+        if (filterProperty.notEqual !== undefined) {
+            ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
     } else if (isEnumFilter(filterProperty)) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
@@ -144,9 +155,14 @@ export function searchToMikroOrmQuery(search: string, fields: string[]): ObjectQ
     const quotedSearch = search.replace(/([%_\\])/g, "\\$1");
     return {
         $or: fields.map((field) => {
-            return {
-                [field]: { $ilike: `%${quotedSearch}%` },
-            };
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const ret: any = {};
+            let nestedFilter = ret;
+            for (const fieldPart of field.split(".")) {
+                nestedFilter = nestedFilter[fieldPart] = {};
+            }
+            nestedFilter.$ilike = `%${quotedSearch}%`;
+            return ret;
         }),
     };
 }

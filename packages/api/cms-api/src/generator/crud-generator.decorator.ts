@@ -21,7 +21,7 @@ export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassD
 }
 
 export interface CrudFieldOptions {
-    output?: boolean;
+    output?: boolean; //only for relations, for others customize using @Field
     search?: boolean;
     filter?: boolean;
     sort?: boolean;

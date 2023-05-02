@@ -306,6 +306,12 @@ input MainMenuItemInput {
   content: RichTextBlockInput
 }
 
+input ManyToOneFilter {
+  equal: String
+  isAnyOf: [String!]
+  notEqual: String
+}
+
 input MovePageTreeNodesByNeighbourInput {
   afterId: String
   beforeId: String
@@ -656,6 +662,7 @@ enum ProductCategorySortField {
 
 input ProductFilter {
   and: [ProductFilter!]
+  category: ManyToOneFilter
   createdAt: DateFilter
   description: StringFilter
   inStock: BooleanFilter
@@ -685,6 +692,7 @@ input ProductSort {
 }
 
 enum ProductSortField {
+  category
   createdAt
   description
   inStock

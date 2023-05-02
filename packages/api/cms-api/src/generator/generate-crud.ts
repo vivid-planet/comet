@@ -40,10 +40,27 @@ function buildNameVariants(metadata: EntityMetadata<any>): {
 function buildOptions(metadata: EntityMetadata<any>) {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
-    const crudSearchProps = metadata.props.filter(
-        (prop) => prop.type === "string" && hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"),
-    );
-    const hasSearchArg = crudSearchProps.length > 0;
+    const crudSearchPropNames = metadata.props
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
+        .reduce((acc, prop) => {
+            if (prop.type === "string") {
+                acc.push(prop.name);
+            } else if (prop.reference == "m:1") {
+                if (!prop.targetMeta) {
+                    throw new Error(`reference ${prop.name} has no targetMeta`);
+                }
+                prop.targetMeta.props
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    .filter((innerProp) => hasFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"))
+                    .forEach((innerProp) => {
+                        if (innerProp.type === "string") {
+                            acc.push(`${prop.name}.${innerProp.name}`);
+                        }
+                    });
+            }
+            return acc;
+        }, [] as string[]);
+    const hasSearchArg = crudSearchPropNames.length > 0;
 
     const crudFilterProps = metadata.props.filter(
         (prop) =>
@@ -55,7 +72,8 @@ function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "BooleanType" ||
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
-                prop.type === "Date"),
+                prop.type === "Date" ||
+                prop.reference === "m:1"),
     );
     const hasFilterArg = crudFilterProps.length > 0;
     const crudSortProps = metadata.props.filter(
@@ -67,7 +85,8 @@ function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "BooleanType" ||
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
-                prop.type === "Date"),
+                prop.type === "Date" ||
+                prop.reference === "m:1"),
     );
     const hasSortArg = crudSortProps.length > 0;
 
@@ -84,7 +103,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
     });
 
     return {
-        crudSearchProps,
+        crudSearchPropNames,
         hasSearchArg,
         crudFilterProps,
         hasFilterArg,
@@ -124,7 +143,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, createEnumFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, ManyToOneFilter, createEnumFilter } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -171,6 +190,13 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @IsOptional()
                     @Type(() => DateFilter)
                     ${prop.name}?: DateFilter;
+                    `;
+                } else if (prop.reference === "m:1") {
+                    return `@Field(() => ManyToOneFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => ManyToOneFilter)
+                    ${prop.name}?: ManyToOneFilter;
                     `;
                 } else {
                     //unsupported type TODO support more
@@ -312,7 +338,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
 
 function generateService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
-    const { hasSearchArg, hasFilterArg, crudSearchProps } = buildOptions(metadata);
+    const { hasSearchArg, hasFilterArg, crudSearchPropNames } = buildOptions(metadata);
 
     const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
@@ -336,7 +362,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                 hasSearchArg
                     ? `
             if (options.search) {
-                andFilters.push(searchToMikroOrmQuery(options.search, [${crudSearchProps.map((prop) => `"${prop.name}", `).join("")}]));
+                andFilters.push(searchToMikroOrmQuery(options.search, [${crudSearchPropNames.map((propName) => `"${propName}", `).join("")}]));
             }
             `
                     : ""

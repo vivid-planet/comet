@@ -60,6 +60,7 @@ function ProductsTable() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
+    const { data: categoriesData } = useQuery<GQLProductTableCategoriesQuery, GQLProductTableCategoriesQueryVariables>(productCategoriesQuery);
 
     const columns: GridColDef<GQLProductsListFragment>[] = [
         {
@@ -90,8 +91,8 @@ function ProductsTable() {
             headerName: "Category",
             width: 150,
             renderCell: (params) => <>{params.row.category?.title}</>,
-            sortable: false,
-            filterable: false,
+            type: "singleSelect",
+            valueOptions: categoriesData?.productCategorys.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
         {
@@ -220,6 +221,17 @@ const productsQuery = gql`
         }
     }
     ${productsFragment}
+`;
+
+const productCategoriesQuery = gql`
+    query ProductTableCategories {
+        productCategorys {
+            nodes {
+                id
+                title
+            }
+        }
+    }
 `;
 
 const deleteProductMutation = gql`
