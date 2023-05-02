@@ -1,4 +1,13 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    Dialog,
+    DialogActions,
+    DialogActionsProps,
+    DialogContent,
+    DialogContentProps,
+    DialogProps,
+    DialogTitle,
+    DialogTitleProps,
+} from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -18,10 +27,18 @@ interface ITitle {
     add: React.ReactNode;
 }
 
+interface EditDialogComponentsProps {
+    dialog?: Omit<Partial<DialogProps>, "open" | "onClose">;
+    dialogActions?: Partial<DialogActionsProps>;
+    dialogContent?: Partial<DialogContentProps>;
+    dialogTitle?: Partial<DialogTitleProps>;
+}
+
 interface IProps {
     title?: ITitle | string;
     disableCloseAfterSave?: boolean;
     onAfterSave?: () => void;
+    componentsProps?: EditDialogComponentsProps;
 }
 
 export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
@@ -97,6 +114,7 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({
     disableCloseAfterSave = false,
     onAfterSave,
     children,
+    componentsProps,
 }) => {
     const intl = useIntl();
     const editDialogFormApi = useEditDialogFormApi();
@@ -138,11 +156,13 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({
     return (
         <EditDialogApiContext.Provider value={api}>
             <DirtyHandler>
-                <Dialog open={!!selection.mode} onClose={handleCloseClick}>
+                <Dialog open={!!selection.mode} onClose={handleCloseClick} {...componentsProps?.dialog}>
                     <div>
-                        <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
-                        <DialogContent>{children}</DialogContent>
-                        <DialogActions>
+                        <DialogTitle {...componentsProps?.dialogTitle}>
+                            {typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}
+                        </DialogTitle>
+                        <DialogContent {...componentsProps?.dialogContent}>{children}</DialogContent>
+                        <DialogActions {...componentsProps?.dialogActions}>
                             <CancelButton onClick={handleCancelClick} />
                             <DirtyHandlerApiContext.Consumer>
                                 {(injectedDirtyHandlerApi) => {
@@ -170,11 +190,14 @@ interface IEditDialogHooklessProps extends IProps {
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
 
-const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = ({ children, title, onAfterSave }, ref) => {
+const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = (
+    { children, title, onAfterSave, componentsProps },
+    ref,
+) => {
     const [EditDialogConfigured, selection, api] = useEditDialog();
     React.useImperativeHandle(ref, () => api);
     return (
-        <EditDialogConfigured title={title} onAfterSave={onAfterSave}>
+        <EditDialogConfigured title={title} onAfterSave={onAfterSave} componentsProps={componentsProps}>
             {children({ selectedId: selection.id, selectionMode: selection.mode })}
         </EditDialogConfigured>
     );
