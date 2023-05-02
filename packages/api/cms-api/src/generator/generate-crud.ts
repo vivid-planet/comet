@@ -368,7 +368,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         buildOptions(metadata);
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository } from "@mikro-orm/postgresql";
+    import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
     import { SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
@@ -389,6 +389,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     @Resolver(() => ${metadata.className})
     export class ${classNameSingular}CrudResolver {
         constructor(
+            private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>
         ) {}
@@ -456,7 +457,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ${scopeProp ? `scope,` : ""}
             });
 
-            await this.repository.persistAndFlush(${instanceNameSingular});
+            await this.entityManager.flush();
             return ${instanceNameSingular};
         }
 
@@ -480,7 +481,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
             });
 
-            await this.repository.persistAndFlush(${instanceNameSingular});
+            await this.entityManager.flush();
 
             return ${instanceNameSingular};
         }
@@ -489,8 +490,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         @SubjectEntity(${metadata.className})
         async delete${metadata.className}(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-            await this.repository.removeAndFlush(${instanceNameSingular});
-
+            await this.entityManager.remove(${instanceNameSingular});
+            await this.entityManager.flush();
             return true;
         }
 
@@ -508,7 +509,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${instanceNameSingular}.assign({
                 visible,
             });
-            await this.repository.flush();
+            await this.entityManager.flush();
 
             return ${instanceNameSingular};
         }

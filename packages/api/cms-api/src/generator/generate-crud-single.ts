@@ -38,7 +38,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         generatedFiles[`${fileNamePlural}.service.ts`] = serviceOut;
 
         const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository } from "@mikro-orm/postgresql";
+    import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
     import { SortDirection, validateNotModified } from "@comet/cms-api";
@@ -58,6 +58,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     @Resolver(() => ${metadata.className})
     export class ${classNameSingular}CrudResolver {
         constructor(
+            private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>
         ) {}
@@ -98,7 +99,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
                 });
             }
     
-            await this.repository.persistAndFlush(${instanceNameSingular});
+            await this.entityManager.flush();
     
             return ${instanceNameSingular};
         }
