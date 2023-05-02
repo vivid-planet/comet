@@ -5,7 +5,7 @@ import { RootBlockType } from "src/blocks/root-block-type";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { findEnumName } from "./utils/find-enum-name";
-import { writeGenerated } from "./utils/write-generated";
+import { writeGeneratedFile } from "./utils/write-generated-file";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function writeCrudInput(generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): Promise<void> {
@@ -14,7 +14,7 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
 
     const inputOut = await generateCrudInput(generatorOptions, metadata);
-    await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.input.ts`, inputOut);
+    await writeGeneratedFile(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.input.ts`, inputOut);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

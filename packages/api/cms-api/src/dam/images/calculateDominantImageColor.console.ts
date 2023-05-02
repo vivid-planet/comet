@@ -3,7 +3,7 @@ import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
-import { File } from "../files/entities/file.entity";
+import { FileInterface } from "../files/entities/file.entity";
 import { FileImage } from "../files/entities/file-image.entity";
 import { FilesService } from "../files/files.service";
 
@@ -11,7 +11,7 @@ import { FilesService } from "../files/files.service";
 @Console()
 export class CalculateDominantImageColor {
     constructor(
-        @InjectRepository(File) private readonly filesRepository: EntityRepository<File>,
+        @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
         @InjectRepository(FileImage) private readonly fileImagesRepository: EntityRepository<FileImage>,
         private readonly fileService: FilesService,
     ) {}

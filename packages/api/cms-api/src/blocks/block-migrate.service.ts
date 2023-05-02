@@ -4,7 +4,7 @@ import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import isEqual from "lodash.isequal";
 
-import { DiscoverService } from "./discover.service";
+import { DiscoverService } from "../dependencies/discover.service";
 
 @Injectable()
 export class BlockMigrateService {

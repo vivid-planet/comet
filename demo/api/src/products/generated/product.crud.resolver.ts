@@ -55,6 +55,7 @@ export class ProductCrudResolver {
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
         const product = this.repository.create({
             ...input,
+            image: input.image.transformToBlockData(),
         });
 
         await this.repository.persistAndFlush(product);
@@ -74,6 +75,7 @@ export class ProductCrudResolver {
         }
         product.assign({
             ...input,
+            image: input.image.transformToBlockData(),
         });
 
         await this.repository.persistAndFlush(product);
