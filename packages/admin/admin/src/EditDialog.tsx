@@ -28,7 +28,7 @@ interface ITitle {
 }
 
 interface EditDialogComponentsProps {
-    dialog?: Omit<Partial<DialogProps>, "open">;
+    dialog?: Omit<Partial<DialogProps>, "open" | "onClose">;
     dialogActions?: Partial<DialogActionsProps>;
     dialogContent?: Partial<DialogContentProps>;
     dialogTitle?: Partial<DialogTitleProps>;
