@@ -23,7 +23,7 @@ export const FinalFormAutocomplete = <
     DisableClearable extends boolean | undefined,
     FreeSolo extends boolean | undefined,
 >({
-    input: { onChange, value, ...restInput },
+    input: { onChange, value, multiple, ...restInput },
     loading = false,
     isAsync = false,
     clearable,
@@ -43,6 +43,7 @@ export const FinalFormAutocomplete = <
             }}
             value={value ? (value as T) : (null as any)}
             {...rest}
+            multiple={multiple as Multiple}
             renderInput={(params: AutocompleteRenderInputParams) => (
                 <InputBase
                     {...restInput}
