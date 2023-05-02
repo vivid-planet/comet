@@ -2208,6 +2208,9 @@ importers:
       got:
         specifier: ^11.8.0
         version: 11.8.6
+      graphql-parse-resolve-info:
+        specifier: ^4.13.0
+        version: 4.13.0(graphql@15.8.0)
       graphql-type-json:
         specifier: ^0.3.2
         version: 0.3.2(graphql@15.8.0)
@@ -17459,6 +17462,19 @@ packages:
     optionalDependencies:
       sinon: 9.2.4
     dev: true
+
+  /graphql-parse-resolve-info@4.13.0(graphql@15.8.0):
+    resolution: {integrity: sha512-VVJ1DdHYcR7hwOGQKNH+QTzuNgsLA8l/y436HtP9YHoX6nmwXRWq3xWthU3autMysXdm0fQUbhTZCx0W9ICozw==}
+    engines: {node: '>=8.6'}
+    peerDependencies:
+      graphql: '>=0.9 <0.14 || ^14.0.2 || ^15.4.0 || ^16.3.0'
+    dependencies:
+      debug: 4.3.4(supports-color@9.3.1)
+      graphql: 15.8.0
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /graphql-request@3.7.0(graphql@15.8.0):
     resolution: {integrity: sha512-dw5PxHCgBneN2DDNqpWu8QkbbJ07oOziy8z+bK/TAXufsOLaETuVO4GkXrbs0WjhdKhBMN3BkpN/RIvUHkmNUQ==}

@@ -56,6 +56,7 @@ export { createEnumFilter } from "./common/filter/enum.filter.factory";
 export { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { StringFilter } from "./common/filter/string.filter";
+export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";
 export { PaginatedResponseFactory } from "./common/pagination/paginated-response.factory";
 export { SortArgs } from "./common/sorting/sort.args";
