@@ -48,7 +48,7 @@ const styles = (theme: Theme) =>
             lineHeight: "18px",
             color: theme.palette.text.secondary,
         },
-        endAdornment: { alignItems: "center" },
+        endAdornment: { display: "flex", alignItems: "center" },
         placeholder: {
             flexGrow: 1,
             boxSizing: "inherit",
