@@ -1,4 +1,4 @@
-import { CharacterMetadata, ContentBlock, ContentState, EntityInstance } from "draft-js";
+import { CharacterMetadata, ContentBlock, ContentState } from "draft-js";
 import type { List } from "immutable";
 
 /*
@@ -9,8 +9,6 @@ import type { List } from "immutable";
 import getEntityRanges from "./getEntityRanges";
 
 type CharacterMetaList = List<CharacterMetadata>;
-type AttrMap = { [key: string]: string };
-type Attributes = { [key: string]: string };
 
 export const BLOCK_TYPE = {
     UNSTYLED: "unstyled",
@@ -24,8 +22,6 @@ export const BLOCK_TYPE = {
     ORDERED_LIST_ITEM: "ordered-list-item",
     BLOCKQUOTE: "blockquote",
     PULLQUOTE: "pullquote",
-    CODE: "code-block",
-    ATOMIC: "atomic",
 };
 
 export const INLINE_STYLE = {
@@ -41,39 +37,6 @@ export const ENTITY_TYPE = {
 };
 
 const BREAK = "<br>";
-const DATA_ATTRIBUTE = /^data-([a-z0-9-]+)$/;
-
-// Map entity data to element attributes.
-const ENTITY_ATTR_MAP: { [entityType: string]: AttrMap } = {
-    [ENTITY_TYPE.LINK]: {
-        url: "href",
-        href: "href",
-        rel: "rel",
-        target: "target",
-        title: "title",
-        className: "class",
-    },
-};
-
-// Map entity data to element attributes.
-const DATA_TO_ATTR = {
-    [ENTITY_TYPE.LINK](entityType: string, entity: EntityInstance): Attributes {
-        const attrMap = ENTITY_ATTR_MAP[entityType] ?? {};
-        const data = entity.getData();
-        const attrs: { [key: string]: string } = {};
-
-        for (const dataKey of Object.keys(data)) {
-            const dataValue = data[dataKey];
-            if (attrMap[dataKey]) {
-                const attrKey = attrMap[dataKey];
-                attrs[attrKey] = dataValue;
-            } else if (DATA_ATTRIBUTE.test(dataKey)) {
-                attrs[dataKey] = dataValue;
-            }
-        }
-        return attrs;
-    },
-};
 
 // Order: inner-most style to outer-most.
 // Examle: <em><strong>foo</strong></em>
@@ -85,17 +48,6 @@ const DEFAULT_STYLE_MAP = {
     [INLINE_STYLE.STRIKETHROUGH]: { element: "i" },
     [INLINE_STYLE.UNDERLINE]: { element: "i" },
 };
-
-function getWrapperTag(blockType: string): string | null {
-    switch (blockType) {
-        case BLOCK_TYPE.UNORDERED_LIST_ITEM:
-            return "ul";
-        case BLOCK_TYPE.ORDERED_LIST_ITEM:
-            return "ol";
-        default:
-            return null;
-    }
-}
 
 function getTags(blockType: string): string[] {
     switch (blockType) {
@@ -111,50 +63,15 @@ function getTags(blockType: string): string[] {
             return ["h5"];
         case BLOCK_TYPE.HEADER_SIX:
             return ["h6"];
-        case BLOCK_TYPE.UNORDERED_LIST_ITEM:
-        case BLOCK_TYPE.ORDERED_LIST_ITEM:
-            return ["li"];
         case BLOCK_TYPE.BLOCKQUOTE:
             return ["blockquote"];
-        case BLOCK_TYPE.CODE:
-            return ["pre", "code"];
-        case BLOCK_TYPE.ATOMIC:
-            return ["figure"];
         default:
             return [];
     }
 }
 
-function canHaveDepth(blockType: string): boolean {
-    switch (blockType) {
-        case BLOCK_TYPE.UNORDERED_LIST_ITEM:
-        case BLOCK_TYPE.ORDERED_LIST_ITEM:
-            return true;
-        default:
-            return false;
-    }
-}
-
 function encodeContent(text: string): string {
     return text.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split("\xA0").join("&nbsp;").split("\n").join(`${BREAK}\n`);
-}
-
-function encodeAttr(text: string): string {
-    return text.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split('"').join("&quot;");
-}
-
-function stringifyAttrs(attrs: Attributes | null) {
-    if (attrs == null) {
-        return "";
-    }
-    const parts = [];
-    for (const name of Object.keys(attrs)) {
-        const value = attrs[name];
-        if (value != null) {
-            parts.push(` ${name}="${encodeAttr(`${value}`)}"`);
-        }
-    }
-    return parts.join("");
 }
 
 class MarkupGenerator {
@@ -164,7 +81,6 @@ class MarkupGenerator {
     currentBlock = 0;
     indentLevel = 0;
     totalBlocks = 0;
-    wrapperTag: string | null = null;
     inlineStyles = DEFAULT_STYLE_MAP;
     styleOrder: string[] = DEFAULT_STYLE_ORDER;
     indent = "  ";
@@ -174,70 +90,32 @@ class MarkupGenerator {
         this.contentState = contentState;
     }
 
-    generate() {
+    generate(): string[] {
         this.output = [];
         this.blocks = this.contentState.getBlocksAsArray();
         this.totalBlocks = this.blocks.length;
         this.currentBlock = 0;
         this.indentLevel = 0;
-        this.wrapperTag = null;
+
         while (this.currentBlock < this.totalBlocks) {
             this.processBlock();
         }
-        this.closeWrapperTag();
-        return this.output.join("").trim();
+
+        return this.output.filter((content) => content !== "" && content !== "\n");
     }
 
     processBlock() {
         const block = this.blocks[this.currentBlock];
-        const blockType = block.getType();
-        const newWrapperTag = getWrapperTag(blockType);
-
-        if (this.wrapperTag !== newWrapperTag) {
-            if (this.wrapperTag) {
-                this.closeWrapperTag();
-            }
-            if (newWrapperTag) {
-                this.openWrapperTag(newWrapperTag);
-            }
-        }
 
         this.addIndent();
 
         this.writeStartTag(block);
-        this.output.push(this.renderBlockContent(block));
+        const content = this.renderBlockContent(block);
 
-        // Look ahead and see if we will nest list.
-        const nextBlock = this.getNextBlock();
-        if (canHaveDepth(blockType) && nextBlock && nextBlock.getDepth() === block.getDepth() + 1) {
-            this.output.push("\n");
-            // This is a litle hacky: temporarily stash our current wrapperTag and
-            // render child list(s).
-            const thisWrapperTag = this.wrapperTag;
-            this.wrapperTag = null;
-            this.indentLevel += 1;
-            this.currentBlock += 1;
-            this.processBlocksAtDepth(nextBlock.getDepth());
-            this.wrapperTag = thisWrapperTag;
-            this.indentLevel -= 1;
-            this.addIndent();
-        } else {
-            this.currentBlock += 1;
-        }
+        this.output.push(content);
+
+        this.currentBlock += 1;
         this.writeEndTag(block);
-    }
-
-    processBlocksAtDepth(depth: number) {
-        let block = this.blocks[this.currentBlock];
-        while (block && block.getDepth() === depth) {
-            this.processBlock();
-            block = this.blocks[this.currentBlock];
-        }
-        this.closeWrapperTag();
-    }
-
-    getNextBlock(): ContentBlock {
-        return this.blocks[this.currentBlock + 1];
     }
 
     writeStartTag(block: ContentBlock) {
@@ -258,22 +136,6 @@ class MarkupGenerator {
                 output.unshift(`</${tag}>`);
             }
             this.output.push(`${output.join("")}\n`);
-        }
-    }
-
-    openWrapperTag(wrapperTag: string) {
-        this.wrapperTag = wrapperTag;
-        this.addIndent();
-        this.output.push(`<${wrapperTag}${this.counter}>\n`);
-        this.indentLevel += 1;
-    }
-
-    closeWrapperTag() {
-        if (this.wrapperTag) {
-            this.indentLevel -= 1;
-            this.addIndent();
-            this.output.push(`</${this.wrapperTag}>\n`);
-            this.wrapperTag = null;
         }
     }
 
@@ -319,9 +181,7 @@ class MarkupGenerator {
                 const entityType = entity == null ? null : entity.getType().toUpperCase();
 
                 if (entityType != null && entityType === ENTITY_TYPE.LINK) {
-                    const attrs = DATA_TO_ATTR[entityType] && entity ? DATA_TO_ATTR[entityType](entityType, entity) : null;
-                    const attrString = stringifyAttrs(attrs);
-                    return `<a${attrString}>${content}</a>`;
+                    return `<a>${content}</a>`;
                 } else {
                     return content;
                 }
@@ -344,6 +204,6 @@ class MarkupGenerator {
     }
 }
 
-export default function stateToHTML(content: ContentState): string {
+export default function stateToHTML(content: ContentState): string[] {
     return new MarkupGenerator(content).generate();
 }

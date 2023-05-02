@@ -29,15 +29,15 @@ describe("HTMLToState", () => {
 
         expect(HTMLToState(block)).toEqual({
             ...block,
-            text: "Let's test bold and italic.",
+            text: "Let's test bold and italic",
         });
     });
 
-    it("should update inline styles correctly also for inline styles also for multiple styles", () => {
-        // original text: "<i1>Another</i1> Text in RTE for <i2>testing <i4>overlapping</i2> instyle</i4> ranges for styles <i3>bold</i3> and <i5>italic</i5>.""
+    it("should update multiple inline styles correctly", () => {
+        // original text: "<i class=\"1\">Another</i> Text in RTE for <i class=\"2\">testing </i><i class=\"3\"><i class=\"2\">overlapping</i></i><i class=\"3\"> inline style</i> ranges for styles <i class=\"4\">bold</i> and <i class=\"5\">italic</i>."
         const block = {
             key: "5jda2",
-            text: "<i1>Another nice</i1> Text in RTE for <i2>testing <i4>some overlapping</i2> instyle</i4> ranges for styles <i3>bold</i3> and <i5>italic</i5>.",
+            text: '<i class="1">Another nice</i> Text in RTE for <i class="2">testing </i><i class="3"><i class="2">some overlapping</i></i><i class="3"> custom inline style</i> ranges for styles <i class="4">bold</i> and <i class="5">italic</i>.',
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -52,17 +52,17 @@ describe("HTMLToState", () => {
                     style: "BOLD" as DraftInlineStyleType,
                 },
                 {
-                    offset: 70,
+                    offset: 75,
                     length: 4,
                     style: "BOLD" as DraftInlineStyleType,
                 },
                 {
                     offset: 32,
-                    length: 19,
+                    length: 24,
                     style: "ITALIC" as DraftInlineStyleType,
                 },
                 {
-                    offset: 79,
+                    offset: 84,
                     length: 6,
                     style: "ITALIC" as DraftInlineStyleType,
                 },
@@ -71,36 +71,38 @@ describe("HTMLToState", () => {
             data: {},
         };
 
+        const expectedInlineStyles = [
+            {
+                offset: 0,
+                length: 12,
+                style: "BOLD" as DraftInlineStyleType,
+            },
+            {
+                offset: 29,
+                length: 24,
+                style: "BOLD" as DraftInlineStyleType,
+            },
+            {
+                offset: 92,
+                length: 4,
+                style: "BOLD" as DraftInlineStyleType,
+            },
+            {
+                offset: 37,
+                length: 36,
+                style: "ITALIC" as DraftInlineStyleType,
+            },
+            {
+                offset: 101,
+                length: 6,
+                style: "ITALIC" as DraftInlineStyleType,
+            },
+        ];
+
         expect(HTMLToState(block)).toEqual({
             ...block,
-            text: "Another nice Text in RTE for testing some overlapping instyle ranges for styles bold and italic.",
-            inlineStyleRanges: [
-                {
-                    offset: 0,
-                    length: 12,
-                    style: "BOLD" as DraftInlineStyleType,
-                },
-                {
-                    offset: 29,
-                    length: 24,
-                    style: "BOLD" as DraftInlineStyleType,
-                },
-                {
-                    offset: 80,
-                    length: 4,
-                    style: "BOLD" as DraftInlineStyleType,
-                },
-                {
-                    offset: 37,
-                    length: 24,
-                    style: "ITALIC" as DraftInlineStyleType,
-                },
-                {
-                    offset: 89,
-                    length: 6,
-                    style: "ITALIC" as DraftInlineStyleType,
-                },
-            ],
+            text: "Another nice Text in RTE for testing some overlapping custom inline style ranges for styles bold and italic.",
+            inlineStyleRanges: expectedInlineStyles.sort((a, b) => a.offset - b.offset),
             entityRanges: [],
         });
     });

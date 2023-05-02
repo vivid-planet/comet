@@ -28,7 +28,9 @@
         "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "test": "jest --verbose=true",
-        "test:watch": "jest --watch"
+        "test:watch": "jest --watch",
+        "po:export": "ts-node export-po-file.ts",
+        "po:import": "ts-node import-po-file.ts"
     },
     "dependencies": {
         "@comet/admin": "workspace:^4.1.0",
@@ -75,11 +77,11 @@
         "@apollo/client": "^3.7.0",
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@emotion/react": "^11.5.0",
-        "@emotion/styled": "^11.3.0",
         "@comet/admin-babel-preset": "workspace:^4.1.0",
         "@comet/cli": "workspace:^4.1.0",
         "@comet/eslint-config": "workspace:^4.1.0",
+        "@emotion/react": "^11.5.0",
+        "@emotion/styled": "^11.3.0",
         "@graphql-codegen/cli": "^2.0.0",
         "@graphql-codegen/named-operations-object": "^2.0.0",
         "@graphql-codegen/typescript": "^2.0.0",

@@ -180,7 +180,7 @@ export const createRichTextBlock = (
         extractTextContents: (state) => {
             // const blocks = state.editorState.getCurrentContent().getBlocksAsArray();
             // return blocks.map((block) => stateToHTML(block));
-            return [stateToHTML(state.editorState.getCurrentContent())];
+            return stateToHTML(state.editorState.getCurrentContent());
         },
 
         replaceTextContents: (state, contents) => {
@@ -188,7 +188,7 @@ export const createRichTextBlock = (
 
             const translatedBlocks = rawContent.blocks.map((block) => {
                 const translation = contents.find(
-                    (content) => content.original.replace(/<i[0-9][0-9]?>|<\/i[0-9][0-9]?>|<e[0-9][0-9]?>|<\/e[0-9][0-9]?>/g, "") === block.text,
+                    (content) => content.original.replace(/<i class="[0-9][0-9]?">|<\/i>|<e class="[0-9][0-9]?">|<\/e>/g, "") === block.text,
                 );
 
                 if (!translation || translation.replaceWith === "") return block;

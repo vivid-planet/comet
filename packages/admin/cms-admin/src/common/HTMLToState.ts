@@ -1,61 +1,80 @@
-import { RawDraftContentBlock, RawDraftEntityRange, RawDraftInlineStyleRange } from "draft-js";
+import { RawDraftContentBlock } from "draft-js";
+
+interface InlineStyle {
+    id: number;
+    offset: number;
+    length: number;
+}
 
 export const HTMLToState = (block: RawDraftContentBlock): RawDraftContentBlock => {
-    const regexInlineStylesPattern = /<i[0-9][0-9]?>|<\/i[0-9][0-9]?>/g;
-    const regexEntitiesPattern = /<e[0-9][0-9]?>|<\/e[0-9][0-9]?>/g;
+    const regexInlineStylesPattern = /<i class="[0-9][0-9]?">|<\/i>/g;
+    // const regexEntitiesPattern = /<e class="[0-9][0-9]?">|<\/e>/g;
 
-    const onlyInlineStyleTags = block.text.replace(regexEntitiesPattern, "");
-    const onlyEntityRangeTags = block.text.replace(regexInlineStylesPattern, "");
+    // const onlyEntityRangeTags = block.text.replace(regexInlineStylesPattern, "");
 
-    const newInlineStyleRanges: Array<RawDraftInlineStyleRange> = [];
-    const newEntityRanges: Array<RawDraftEntityRange> = [];
+    // const newEntityRanges: Array<RawDraftEntityRange> = [];
+    const newInlineStyleRanges: InlineStyle[] = [];
+    const stylesStack: InlineStyle[] = [];
 
-    block.inlineStyleRanges.forEach((inlineStyleRange, index) => {
-        const openingTag = `<i${index + 1}>`;
-        const closingTag = `</i${index + 1}>`;
+    const inlineStyleTags = block.text.matchAll(regexInlineStylesPattern);
 
-        const openingTagIndex = onlyInlineStyleTags.indexOf(openingTag);
-        const closingTagIndex = onlyInlineStyleTags.indexOf(closingTag);
+    let shiftCount = 0;
 
-        const tagsBeforeStart = onlyInlineStyleTags.substring(0, openingTagIndex).match(regexInlineStylesPattern)?.join("") ?? "";
-        const tagsBetweenStartAndEnd =
-            onlyInlineStyleTags
-                .substring(openingTagIndex + openingTag.length, closingTagIndex)
-                .match(regexInlineStylesPattern)
-                ?.join("") ?? "";
+    for (const match of inlineStyleTags) {
+        const id = match[0].match(/\d+/)?.[0];
 
-        newInlineStyleRanges.push({
-            ...inlineStyleRange,
-            offset: openingTagIndex - tagsBeforeStart.length,
-            length: closingTagIndex - openingTagIndex - tagsBetweenStartAndEnd.length - openingTag.length,
+        if (!match.index) continue;
+
+        const offset = match.index - shiftCount;
+
+        if (id) {
+            stylesStack.push({
+                id: parseInt(id ?? ""),
+                offset,
+                length: 0,
+            });
+        } else {
+            const openingTag = stylesStack.pop();
+
+            if (!openingTag) {
+                continue;
+            }
+
+            const existingStyle = newInlineStyleRanges.findIndex((style) => style.id === openingTag.id);
+
+            if (existingStyle !== -1) {
+                newInlineStyleRanges[existingStyle] = {
+                    ...newInlineStyleRanges[existingStyle],
+                    length: newInlineStyleRanges[existingStyle].length + (offset - openingTag.offset),
+                };
+            } else {
+                newInlineStyleRanges.push({
+                    id: openingTag.id,
+                    offset: openingTag.offset,
+                    length: offset - openingTag.offset,
+                });
+            }
+        }
+
+        shiftCount += match[0].length;
+    }
+
+    /* inline styles need to be sorted by offset to map style property as inline styles are sorted by style order*/
+    block.inlineStyleRanges = block.inlineStyleRanges
+        .sort((a, b) => a.offset - b.offset)
+        .map((style, index) => {
+            const newStyle = newInlineStyleRanges.find((newStyle) => newStyle.id - 1 === index);
+
+            return {
+                ...style,
+                offset: newStyle?.offset ?? style.offset,
+                length: newStyle?.length ?? style.length,
+            };
         });
-    });
-
-    block.entityRanges.forEach((entityRange, index) => {
-        const openingTag = `<e${index + 1}>`;
-        const closingTag = `</e${index + 1}>`;
-
-        const openingTagIndex = onlyEntityRangeTags.indexOf(openingTag);
-        const closingTagIndex = onlyEntityRangeTags.indexOf(closingTag);
-
-        const tagsBeforeStart = onlyEntityRangeTags.substring(0, openingTagIndex).match(regexEntitiesPattern)?.join("") ?? "";
-        const tagsBetweenStartAndEnd =
-            onlyEntityRangeTags
-                .substring(openingTagIndex + openingTag.length, closingTagIndex)
-                .match(regexEntitiesPattern)
-                ?.join("") ?? "";
-
-        newEntityRanges.push({
-            ...entityRange,
-            offset: openingTagIndex - tagsBeforeStart.length,
-            length: closingTagIndex - openingTagIndex - tagsBetweenStartAndEnd.length - openingTag.length,
-        });
-    });
 
     return {
         ...block,
-        text: block.text.replace(/<i[0-9][0-9]?>|<\/i[0-9][0-9]?>|<e[0-9][0-9]?>|<\/e[0-9][0-9]?>/g, ""),
-        inlineStyleRanges: newInlineStyleRanges,
-        entityRanges: newEntityRanges,
+        text: block.text.replace(/<i class="[0-9][0-9]?">|<\/i>|<e class="[0-9][0-9]?">|<\/e>/g, ""),
+        entityRanges: block.entityRanges,
     };
 };

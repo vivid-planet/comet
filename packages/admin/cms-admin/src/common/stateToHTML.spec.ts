@@ -34,7 +34,7 @@ describe("stateToHTML", () => {
         const content = convertFromRaw(rawContent);
         const mockState = { editorState: EditorState.createWithContent(content) };
 
-        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual('Let\'s test <i class="1">bold</i> and <i class="2">italic</i>.');
+        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual(['Let\'s test <i class="1">bold</i> and <i class="2">italic</i>.']);
     });
 
     it("should insert pseudo-tags in correct order for nested inline styles", () => {
@@ -86,8 +86,78 @@ describe("stateToHTML", () => {
         const content = convertFromRaw(rawContent);
         const mockState = { editorState: EditorState.createWithContent(content) };
 
-        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual(
-            '<i class="1">Lorem ipsum</i> <i class="2">dolor sit amet,</i> <i class="4"><i class="3">consectetuer adipiscing elit</i></i><i class="3">.</i>\nAenean commodo ligula eget dolor.',
-        );
+        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual([
+            '<i class="1">Lorem ipsum</i> <i class="2">dolor sit amet,</i> <i class="4"><i class="3">consectetuer adipiscing elit</i></i><i class="3">.</i>',
+            "Aenean commodo ligula eget dolor.",
+        ]);
+    });
+
+    // TODO
+    it("should insert pseudo-tags in for entity ranges", () => {
+        const rawContent = {
+            entityMap: {},
+            blocks: [
+                {
+                    key: "3bflg",
+                    text: "Aenean commodo ligula eget dolor.",
+                    type: "unstyled",
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    entityRanges: [],
+                    data: {},
+                },
+            ],
+        };
+
+        const content = convertFromRaw(rawContent);
+        const mockState = { editorState: EditorState.createWithContent(content) };
+
+        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual(["Aenean commodo ligula eget dolor."]);
+    });
+
+    // TODO
+    it("should insert pseudo-tags in for combined entity ranges and inline styles", () => {
+        const rawContent = {
+            entityMap: {},
+            blocks: [
+                {
+                    key: "3bflg",
+                    text: "Aenean commodo ligula eget dolor.",
+                    type: "unstyled",
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    entityRanges: [],
+                    data: {},
+                },
+            ],
+        };
+
+        const content = convertFromRaw(rawContent);
+        const mockState = { editorState: EditorState.createWithContent(content) };
+
+        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual(["Aenean commodo ligula eget dolor."]);
+    });
+
+    // TODO
+    it("should insert pseudo-tags for list inline styles", () => {
+        const rawContent = {
+            entityMap: {},
+            blocks: [
+                {
+                    key: "3bflg",
+                    text: "Aenean commodo ligula eget dolor.",
+                    type: "unstyled",
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    entityRanges: [],
+                    data: {},
+                },
+            ],
+        };
+
+        const content = convertFromRaw(rawContent);
+        const mockState = { editorState: EditorState.createWithContent(content) };
+
+        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual(["Aenean commodo ligula eget dolor."]);
     });
 });
