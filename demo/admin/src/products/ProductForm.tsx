@@ -21,6 +21,14 @@ import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { GQLProductType } from "@src/graphql.generated";
+import { FormApi } from "final-form";
+import { filter } from "graphql-anywhere";
+import isEqual from "lodash.isequal";
+import React from "react";
+import { FormattedMessage } from "react-intl";
+
+import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
@@ -29,15 +37,7 @@ import {
     GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
-    GQLProductType,
-} from "@src/graphql.generated";
-import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
-import isEqual from "lodash.isequal";
-import React from "react";
-import { FormattedMessage } from "react-intl";
-
-import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+} from "./ProductForm.gql.generated";
 
 interface FormProps {
     id?: string;
