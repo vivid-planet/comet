@@ -47,6 +47,7 @@ import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
 import News from "./news/News";
 import MainMenu from "./pages/mainMenu/MainMenu";
 import { Page } from "./pages/Page";
+import ProductCategoriesPage from "./products/categories/ProductCategoriesPage";
 import ProductsPage from "./products/ProductsPage";
 import { urlParamToCategory } from "./utils/pageTreeNodeCategoryMapping";
 
@@ -207,6 +208,10 @@ class App extends React.Component {
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/products`}
                                                                                         component={ProductsPage}
+                                                                                    />
+                                                                                    <RouteWithErrorBoundary
+                                                                                        path={`${match.path}/product-categories`}
+                                                                                        component={ProductCategoriesPage}
                                                                                     />
 
                                                                                     <Redirect from={`${match.path}`} to={`${match.url}/dashboard`} />

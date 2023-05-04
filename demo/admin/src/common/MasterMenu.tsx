@@ -77,7 +77,10 @@ const MasterMenu: React.FC = () => {
                 to={`${match.url}/component-demo`}
                 icon={<Snips />}
             />
-            <MenuItemRouterLink primary="Products" to={`${match.url}/products`} icon={<Snips />} />
+            <MenuCollapsibleItem primary="Products" icon={<Snips />}>
+                <MenuItemRouterLink primary="Products" to={`${match.url}/products`} icon={<Snips />} />
+                <MenuItemRouterLink primary="Categories" to={`${match.url}/product-categories`} icon={<Snips />} />
+            </MenuCollapsibleItem>
         </Menu>
     );
 };
