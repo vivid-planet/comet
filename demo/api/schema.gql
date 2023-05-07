@@ -2,6 +2,93 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Query {
+  currentUser: CurrentUser!
+  buildTemplates: [BuildTemplate!]!
+  builds(limit: Float): [Build!]!
+  autoBuildStatus: AutoBuildStatus!
+  link(linkId: ID!): Link
+  pages(offset: Int! = 0, limit: Int! = 20, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
+  pageTreeNode(id: ID!): PageTreeNode
+  pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
+  pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
+  redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
+  paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 20): PaginatedRedirects!
+  redirect(id: ID!): Redirect!
+  redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
+  damItemsList(offset: Int! = 0, limit: Int! = 20, sortColumnName: String, sortDirection: SortDirection! = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
+  damFilesList(offset: Int! = 0, limit: Int! = 20, sortColumnName: String, sortDirection: SortDirection! = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
+  damFile(id: ID!): DamFile!
+  damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
+  damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
+  damFoldersList(offset: Int! = 0, limit: Int! = 20, sortColumnName: String, sortDirection: SortDirection! = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
+  damFolder(id: ID!): DamFolder!
+  damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
+  news(id: ID!): News!
+  newsBySlug(slug: String!): News
+  newsList(offset: Int! = 0, limit: Int! = 20, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
+  topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
+  mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
+  footer(scope: FooterContentScopeInput!): Footer
+  predefinedPage(id: ID!): PredefinedPage
+  pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  cronJobs: [CronJob!]!
+  product(id: ID!): Product!
+  productBySlug(slug: String!): Product
+  products(offset: Int! = 0, limit: Int! = 20, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+  foo_continent(code: ID!): FooContinent
+  foo_continents(filter: FooContinentFilterInput = {}): [FooContinent!]!
+  foo_countries(filter: FooCountryFilterInput = {}): [FooCountry!]!
+  foo_country(code: ID!): FooCountry
+  foo_language(code: ID!): FooLanguage
+  foo_languages(filter: FooLanguageFilterInput = {}): [FooLanguage!]!
+}
+
+type Mutation {
+  currentUserSignOut: String!
+  createBuilds(input: CreateBuildsInput!): Boolean!
+  saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
+  savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
+  updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
+  deletePageTreeNode(id: ID!): Boolean!
+  updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
+  updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
+  movePageTreeNodesByPos(ids: [ID!]!, input: MovePageTreeNodesByPosInput!): [PageTreeNode!]!
+  movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
+  updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
+  createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
+  createRedirect(scope: RedirectScopeInput!, input: RedirectInput!): Redirect!
+  updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
+  updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
+  deleteRedirect(id: ID!): Boolean!
+  updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
+  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
+  archiveDamFile(id: ID!): DamFile!
+  archiveDamFiles(ids: [ID!]!): [DamFile!]!
+  restoreDamFile(id: ID!): DamFile!
+  restoreDamFiles(ids: [ID!]!): [DamFile!]!
+  deleteDamFile(id: ID!): Boolean!
+  createDamFolder(input: CreateDamFolderInput!): DamFolder!
+  updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
+  moveDamFolders(folderIds: [ID!]!, targetFolderId: ID): [DamFolder!]!
+  deleteDamFolder(id: ID!): Boolean!
+  createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
+  updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!
+  deleteNews(id: ID!): Boolean!
+  updateNewsVisibility(id: ID!, visible: Boolean!): News!
+  createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
+  updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
+  deleteNewsComment(id: ID!): Boolean!
+  updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
+  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
+  savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
+  createProduct(input: ProductInput!): Product!
+  updateProduct(id: ID!, input: ProductInput!, lastUpdatedAt: DateTime): Product!
+  deleteProduct(id: ID!): Boolean!
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -32,7 +119,7 @@ type DamFileImage {
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar JSONObject
 
 type DamFolder {
   id: ID!
@@ -164,7 +251,7 @@ interface DocumentInterface {
 }
 
 """Link root block data"""
-scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar LinkBlockData
 
 type Page implements DocumentInterface {
   id: ID!
@@ -176,10 +263,10 @@ type Page implements DocumentInterface {
 }
 
 """PageContent root block data"""
-scalar PageContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar PageContentBlockData
 
 """Seo root block data"""
-scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar SeoBlockData
 
 type PageTreeNodeScope {
   domain: String!
@@ -258,7 +345,7 @@ type Footer implements DocumentInterface {
 }
 
 """FooterContent root block data"""
-scalar FooterContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar FooterContentBlockData
 
 type MainMenuItem {
   id: ID!
@@ -269,7 +356,7 @@ type MainMenuItem {
 }
 
 """RichText root block data"""
-scalar RichTextBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar RichTextBlockData
 
 type MainMenu {
   items: [MainMenuItem!]!
@@ -390,44 +477,6 @@ input NewsContentScopeInput {
 
 input RedirectScopeInput {
   domain: String!
-}
-
-type Query {
-  currentUser: CurrentUser!
-  buildTemplates: [BuildTemplate!]!
-  builds(limit: Float): [Build!]!
-  autoBuildStatus: AutoBuildStatus!
-  link(linkId: ID!): Link
-  pages(offset: Int! = 0, limit: Int! = 20, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
-  pageTreeNode(id: ID!): PageTreeNode
-  pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
-  pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
-  pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
-  paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 20): PaginatedRedirects!
-  redirect(id: ID!): Redirect!
-  redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
-  damItemsList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damFilesList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
-  damFile(id: ID!): DamFile!
-  damIsFilenameOccupied(filename: String!, folderId: String): Boolean!
-  damAreFilenamesOccupied(filenames: [FilenameInput!]!): [FilenameResponse!]!
-  damFoldersList(offset: Int = 0, limit: Int = 20, sortColumnName: String, sortDirection: SortDirection = ASC, parentId: ID, includeArchived: Boolean, filter: FolderFilterInput): PaginatedDamFolders!
-  damFolder(id: ID!): DamFolder!
-  damFolderByNameAndParentId(name: String!, parentId: ID): DamFolder
-  news(id: ID!): News!
-  newsBySlug(slug: String!): News
-  newsList(offset: Int! = 0, limit: Int! = 20, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
-  mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
-  topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
-  mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
-  footer(scope: FooterContentScopeInput!): Footer
-  predefinedPage(id: ID!): PredefinedPage
-  pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
-  cronJobs: [CronJob!]!
-  product(id: ID!): Product!
-  productBySlug(slug: String!): Product
-  products(offset: Int! = 0, limit: Int! = 20, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
 }
 
 enum SortDirection {
@@ -579,49 +628,6 @@ enum ProductSortField {
   updatedAt
 }
 
-type Mutation {
-  currentUserSignOut: String!
-  createBuilds(input: CreateBuildsInput!): Boolean!
-  saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
-  savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
-  updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
-  deletePageTreeNode(id: ID!): Boolean!
-  updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
-  updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
-  movePageTreeNodesByPos(ids: [ID!]!, input: MovePageTreeNodesByPosInput!): [PageTreeNode!]!
-  movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
-  updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
-  createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
-  createRedirect(scope: RedirectScopeInput!, input: RedirectInput!): Redirect!
-  updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
-  updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
-  deleteRedirect(id: ID!): Boolean!
-  updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
-  moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  archiveDamFile(id: ID!): DamFile!
-  archiveDamFiles(ids: [ID!]!): [DamFile!]!
-  restoreDamFile(id: ID!): DamFile!
-  restoreDamFiles(ids: [ID!]!): [DamFile!]!
-  deleteDamFile(id: ID!): Boolean!
-  createDamFolder(input: CreateDamFolderInput!): DamFolder!
-  updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
-  moveDamFolders(folderIds: [ID!]!, targetFolderId: ID): [DamFolder!]!
-  deleteDamFolder(id: ID!): Boolean!
-  createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
-  updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!
-  deleteNews(id: ID!): Boolean!
-  updateNewsVisibility(id: ID!, visible: Boolean!): News!
-  createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
-  updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
-  deleteNewsComment(id: ID!): Boolean!
-  updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
-  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
-  savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
-  createProduct(input: ProductInput!): Product!
-  updateProduct(id: ID!, input: ProductInput!, lastUpdatedAt: DateTime): Product!
-  deleteProduct(id: ID!): Boolean!
-}
-
 input CreateBuildsInput {
   names: [String!]!
 }
@@ -631,7 +637,7 @@ input LinkInput {
 }
 
 """Link root block input"""
-scalar LinkBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar LinkBlockInput
 
 input PageInput {
   content: PageContentBlockInput!
@@ -639,10 +645,10 @@ input PageInput {
 }
 
 """PageContent root block input"""
-scalar PageContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar PageContentBlockInput
 
 """Seo root block input"""
-scalar SeoBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar SeoBlockInput
 
 input PageTreeNodeUpdateInput {
   name: String!
@@ -747,10 +753,10 @@ input NewsInput {
 }
 
 """DamImage root block input"""
-scalar DamImageBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar DamImageBlockInput
 
 """NewsContent root block input"""
-scalar NewsContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar NewsContentBlockInput
 
 input NewsCommentInput {
   comment: String!
@@ -761,14 +767,14 @@ input MainMenuItemInput {
 }
 
 """RichText root block input"""
-scalar RichTextBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar RichTextBlockInput
 
 input FooterInput {
   content: FooterContentBlockInput!
 }
 
 """FooterContent root block input"""
-scalar FooterContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar FooterContentBlockInput
 
 input PredefinedPageInput {
   type: String
@@ -781,4 +787,69 @@ input ProductInput {
   type: ProductType!
   price: Float
   inStock: Boolean!
+}
+
+type FooContinent {
+  code: ID!
+  countries: [FooCountry!]!
+  name: String!
+}
+
+input FooContinentFilterInput {
+  code: FooStringQueryOperatorInput
+}
+
+type FooCountry {
+  awsRegion: String!
+  capital: String
+  code: ID!
+  continent: FooContinent!
+  currencies: [String!]!
+  currency: String
+  emoji: String!
+  emojiU: String!
+  languages: [FooLanguage!]!
+  name(lang: String): String!
+  native: String!
+  phone: String!
+  phones: [String!]!
+  states: [FooState!]!
+  subdivisions: [FooSubdivision!]!
+}
+
+input FooCountryFilterInput {
+  code: FooStringQueryOperatorInput
+  continent: FooStringQueryOperatorInput
+  currency: FooStringQueryOperatorInput
+}
+
+type FooLanguage {
+  code: ID!
+  name: String!
+  native: String!
+  rtl: Boolean!
+}
+
+input FooLanguageFilterInput {
+  code: FooStringQueryOperatorInput
+}
+
+type FooState {
+  code: String
+  country: FooCountry!
+  name: String!
+}
+
+input FooStringQueryOperatorInput {
+  eq: String
+  in: [String!]
+  ne: String
+  nin: [String!]
+  regex: String
+}
+
+type FooSubdivision {
+  code: ID!
+  emoji: String
+  name: String!
 }

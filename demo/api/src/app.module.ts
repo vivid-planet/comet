@@ -17,6 +17,10 @@ import {
     PublicUploadModule,
     RedirectsModule,
 } from "@comet/cms-api";
+import { SubschemaConfig } from "@graphql-tools/delegate";
+import { stitchSchemas } from "@graphql-tools/stitch";
+import { ExecutionRequest } from "@graphql-tools/utils";
+import { RenameRootFields, RenameRootTypes, RenameTypes, schemaFromExecutor } from "@graphql-tools/wrap";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
@@ -27,6 +31,7 @@ import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
+import { GraphQLSchema, print } from "graphql";
 
 import { AuthModule } from "./auth/auth.module";
 import { FooterModule } from "./footer/footer.module";
@@ -41,6 +46,30 @@ import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
+
+const createRemoteSchema = async (url: string): Promise<SubschemaConfig> => {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const executor = async ({ document, variables }: ExecutionRequest) => {
+        const query = print(document);
+        const fetchResult = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query, variables }),
+        });
+        return fetchResult.json();
+    };
+    return {
+        schema: await schemaFromExecutor(executor),
+        executor: executor,
+        transforms: [
+            new RenameTypes((name) => `Foo${name}`),
+            new RenameRootTypes((name) => `Foo${name}`),
+            new RenameRootFields((operationName, fieldName, fieldConfig) => `foo_${fieldName}`),
+        ],
+    };
+};
 
 @Module({})
 export class AppModule {
@@ -64,6 +93,12 @@ export class AppModule {
                         },
                         buildSchemaOptions: {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
+                        },
+                        transformAutoSchemaFile: true,
+                        transformSchema: async (schema: GraphQLSchema) => {
+                            return stitchSchemas({
+                                subschemas: [schema, await createRemoteSchema("https://countries.trevorblades.com/graphql")],
+                            });
                         },
                     }),
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
