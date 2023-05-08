@@ -22,16 +22,16 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
-    GQLCreateProductCategoryMutation,
-    GQLCreateProductCategoryMutationVariables,
-    GQLDeleteProductCategoryMutation,
-    GQLDeleteProductCategoryMutationVariables,
-    GQLProductCategoriesListQuery,
-    GQLProductCategoriesListQueryVariables,
-    GQLProductsCategoriesListFragment,
-} from "./ProductCategoriesTable.generated";
+    GQLCreateProductTagMutation,
+    GQLCreateProductTagMutationVariables,
+    GQLDeleteProductTagMutation,
+    GQLDeleteProductTagMutationVariables,
+    GQLProductsTagsListFragment,
+    GQLProductTagsListQuery,
+    GQLProductTagsListQueryVariables,
+} from "./ProductTagTable.generated";
 
-function ProductCategoriesTableToolbar() {
+function ProductTagsTableToolbar() {
     return (
         <Toolbar>
             <ToolbarAutomaticTitleItem />
@@ -44,14 +44,14 @@ function ProductCategoriesTableToolbar() {
             </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="products.newCategory" defaultMessage="New Category" />
+                    <FormattedMessage id="products.newTag" defaultMessage="New Tag" />
                 </Button>
             </ToolbarItem>
         </Toolbar>
     );
 }
 
-const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
+const columns: GridColDef<GQLProductsTagsListFragment>[] = [
     {
         field: "title",
         headerName: "Title",
@@ -70,20 +70,20 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
                     </IconButton>
                     <CrudContextMenu
                         onPaste={async ({ input, client }) => {
-                            await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
+                            await client.mutate<GQLCreateProductTagMutation, GQLCreateProductTagMutationVariables>({
                                 mutation: createProductMutation,
                                 variables: { input: { ...input, products: [] } },
                             });
                         }}
                         onDelete={async ({ client }) => {
-                            await client.mutate<GQLDeleteProductCategoryMutation, GQLDeleteProductCategoryMutationVariables>({
+                            await client.mutate<GQLDeleteProductTagMutation, GQLDeleteProductTagMutationVariables>({
                                 mutation: deleteProductMutation,
                                 variables: { id: params.row.id },
                             });
                         }}
-                        refetchQueries={["ProductCategoriesList"]}
+                        refetchQueries={["ProductTagsList"]}
                         copyData={() => {
-                            return filter<GQLProductsCategoriesListFragment>(productCategoriesFragment, params.row);
+                            return filter<GQLProductsTagsListFragment>(productTagsFragment, params.row);
                         }}
                     />
                 </>
@@ -92,11 +92,11 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
     },
 ];
 
-function ProductCategoriesTable() {
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductCategoriesGrid") };
+function ProductTagsTable() {
+    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductTagsGrid") };
     const sortModel = dataGridProps.sortModel;
 
-    const { data, loading, error } = useQuery<GQLProductCategoriesListQuery, GQLProductCategoriesListQueryVariables>(productCategoriesQuery, {
+    const { data, loading, error } = useQuery<GQLProductTagsListQuery, GQLProductTagsListQueryVariables>(productTagsQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             offset: dataGridProps.page * dataGridProps.pageSize,
@@ -104,8 +104,8 @@ function ProductCategoriesTable() {
             sort: muiGridSortToGql(sortModel),
         },
     });
-    const rows = data?.productCategorys.nodes ?? [];
-    const rowCount = useBufferedRowCount(data?.productCategorys.totalCount);
+    const rows = data?.productTags.nodes ?? [];
+    const rowCount = useBufferedRowCount(data?.productTags.totalCount);
 
     return (
         <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
@@ -118,17 +118,16 @@ function ProductCategoriesTable() {
                 loading={loading}
                 error={error}
                 components={{
-                    Toolbar: ProductCategoriesTableToolbar,
+                    Toolbar: ProductTagsTableToolbar,
                 }}
             />
         </Box>
     );
 }
 
-const productCategoriesFragment = gql`
-    fragment ProductsCategoriesList on ProductCategory {
+const productTagsFragment = gql`
+    fragment ProductsTagsList on ProductTag {
         id
-        slug
         title
         products {
             id
@@ -137,31 +136,31 @@ const productCategoriesFragment = gql`
     }
 `;
 
-const productCategoriesQuery = gql`
-    query ProductCategoriesList($offset: Int, $limit: Int, $sort: [ProductCategorySort!], $filter: ProductCategoryFilter, $search: String) {
-        productCategorys(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
+const productTagsQuery = gql`
+    query ProductTagsList($offset: Int, $limit: Int, $sort: [ProductTagSort!], $filter: ProductTagFilter, $search: String) {
+        productTags(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
             nodes {
                 id
-                ...ProductsCategoriesList
+                ...ProductsTagsList
             }
             totalCount
         }
     }
-    ${productCategoriesFragment}
+    ${productTagsFragment}
 `;
 
 const deleteProductMutation = gql`
-    mutation DeleteProductCategory($id: ID!) {
-        deleteProductCategory(id: $id)
+    mutation DeleteProductTag($id: ID!) {
+        deleteProductTag(id: $id)
     }
 `;
 
 const createProductMutation = gql`
-    mutation CreateProductCategory($input: ProductCategoryInput!) {
-        createProductCategory(input: $input) {
+    mutation CreateProductTag($input: ProductTagInput!) {
+        createProductTag(input: $input) {
             id
         }
     }
 `;
 
-export default ProductCategoriesTable;
+export default ProductTagsTable;

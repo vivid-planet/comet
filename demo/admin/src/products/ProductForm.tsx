@@ -29,7 +29,14 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createProductMutation, productCategoriesQuery, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+import {
+    createProductMutation,
+    productCategoriesQuery,
+    productFormFragment,
+    productQuery,
+    productTagsQuery,
+    updateProductMutation,
+} from "./ProductForm.gql";
 import {
     GQLProductCategoriesQuery,
     GQLProductCategoriesQueryVariables,
@@ -41,7 +48,10 @@ import {
     GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
+    GQLProductTagsQuery,
+    GQLProductTagsSelectFragment,
 } from "./ProductForm.gql.generated";
+import { GQLProductTagsListQueryVariables } from "./tags/ProductTagTable.generated";
 
 interface FormProps {
     id?: string;
@@ -98,6 +108,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             image: rootBlocks.image.state2Output(formState.image),
             type: formState.type as GQLProductType,
             category: formState.category?.id,
+            tags: formState.tags.map((i) => i.id),
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -124,6 +135,10 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
         const categories = await client.query<GQLProductCategoriesQuery, GQLProductCategoriesQueryVariables>({ query: productCategoriesQuery });
         return categories.data.productCategories.nodes;
+    });
+    const tagsSelectAsyncProps = useAsyncOptionsProps(async () => {
+        const tags = await client.query<GQLProductTagsQuery, GQLProductTagsListQueryVariables>({ query: productTagsQuery });
+        return tags.data.productTags.nodes;
     });
 
     if (error) {
@@ -208,6 +223,18 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             {...categorySelectAsyncProps}
                             getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
                             getOptionSelected={(option: GQLProductCategorySelectFragment, value: GQLProductCategorySelectFragment) => {
+                                return option.id === value.id;
+                            }}
+                        />
+                        <Field
+                            fullWidth
+                            name="tags"
+                            label="Tags"
+                            component={FinalFormSelect}
+                            multiple
+                            {...tagsSelectAsyncProps}
+                            getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
+                            getOptionSelected={(option: GQLProductTagsSelectFragment, value: GQLProductTagsSelectFragment) => {
                                 return option.id === value.id;
                             }}
                         />

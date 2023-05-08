@@ -13,6 +13,10 @@ export const productFormFragment = gql`
             id
             title
         }
+        tags {
+            id
+            title
+        }
     }
 `;
 
@@ -65,4 +69,22 @@ export const productCategoriesQuery = gql`
         }
     }
     ${productCategorySelectFragment}
+`;
+
+export const productTagsSelectFragment = gql`
+    fragment ProductTagsSelect on ProductTag {
+        id
+        title
+    }
+`;
+
+export const productTagsQuery = gql`
+    query ProductTags {
+        productTags {
+            nodes {
+                ...ProductTagsSelect
+            }
+        }
+    }
+    ${productTagsSelectFragment}
 `;

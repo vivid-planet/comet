@@ -32,6 +32,8 @@ import {
     GQLProductsListFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
+    GQLProductTableCategoriesQuery,
+    GQLProductTableCategoriesQueryVariables,
     GQLUpdateProductVisibilityMutation,
     GQLUpdateProductVisibilityMutationVariables,
 } from "./ProductsTable.generated";

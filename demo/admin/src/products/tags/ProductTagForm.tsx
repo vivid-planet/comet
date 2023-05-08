@@ -24,60 +24,57 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
-    createProductCategoryMutation,
-    productCategoryCheckForChangesQuery,
-    productCategoryFormFragment,
-    productCategoryQuery,
-    updateProductCategoryMutation,
-} from "./ProductCategoryForm.gql";
+    createProductTagMutation,
+    productTagCheckForChangesQuery,
+    productTagFormFragment,
+    productTagQuery,
+    updateProductTagMutation,
+} from "./ProductTagForm.gql";
 import {
-    GQLCheckForChangesProductCategoryQuery,
-    GQLCheckForChangesProductCategoryQueryVariables,
-    GQLProductCategoryFormCreateProductCategoryMutation,
-    GQLProductCategoryFormCreateProductCategoryMutationVariables,
-    GQLProductCategoryFormFragment,
-    GQLProductCategoryFormUpdateProductCategoryMutation,
-    GQLProductCategoryFormUpdateProductCategoryMutationVariables,
-    GQLProductCategoryQuery,
-    GQLProductCategoryQueryVariables,
-} from "./ProductCategoryForm.gql.generated";
+    GQLCheckForChangesProductTagQuery,
+    GQLCheckForChangesProductTagQueryVariables,
+    GQLProductTagFormCreateProductTagMutation,
+    GQLProductTagFormCreateProductTagMutationVariables,
+    GQLProductTagFormFragment,
+    GQLProductTagFormUpdateProductTagMutation,
+    GQLProductTagFormUpdateProductTagMutationVariables,
+    GQLProductTagQuery,
+    GQLProductTagQueryVariables,
+} from "./ProductTagForm.gql.generated";
 
 interface FormProps {
     id?: string;
 }
 
-type FormState = GQLProductCategoryFormFragment;
+type FormState = GQLProductTagFormFragment;
 
-function ProductCategoryForm({ id }: FormProps): React.ReactElement {
+function ProductTagForm({ id }: FormProps): React.ReactElement {
     const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormState>();
     const stackSwitchApi = useStackSwitchApi();
 
-    const { data, error, loading, refetch } = useQuery<GQLProductCategoryQuery, GQLProductCategoryQueryVariables>(
-        productCategoryQuery,
+    const { data, error, loading, refetch } = useQuery<GQLProductTagQuery, GQLProductTagQueryVariables>(
+        productTagQuery,
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues: Partial<FormState> = data?.productCategory
+    const initialValues: Partial<FormState> = data?.productTag
         ? {
-              ...filter<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
+              ...filter<GQLProductTagFormFragment>(productTagFormFragment, data.productTag),
           }
         : {};
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
             if (!id) return false;
-            const { data: hasConflictData } = await client.query<
-                GQLCheckForChangesProductCategoryQuery,
-                GQLCheckForChangesProductCategoryQueryVariables
-            >({
-                query: productCategoryCheckForChangesQuery,
+            const { data: hasConflictData } = await client.query<GQLCheckForChangesProductTagQuery, GQLCheckForChangesProductTagQueryVariables>({
+                query: productTagCheckForChangesQuery,
                 variables: { id },
                 fetchPolicy: "no-cache",
             });
-            return resolveHasSaveConflict(data?.productCategory.updatedAt, hasConflictData.productCategory.updatedAt);
+            return resolveHasSaveConflict(data?.productTag.updatedAt, hasConflictData.productTag.updatedAt);
         },
         formApiRef,
         loadLatestVersion: async () => {
@@ -93,20 +90,20 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
         };
         if (mode === "edit") {
             if (!id) throw new Error();
-            await client.mutate<GQLProductCategoryFormUpdateProductCategoryMutation, GQLProductCategoryFormUpdateProductCategoryMutationVariables>({
-                mutation: updateProductCategoryMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.productCategory.updatedAt },
+            await client.mutate<GQLProductTagFormUpdateProductTagMutation, GQLProductTagFormUpdateProductTagMutationVariables>({
+                mutation: updateProductTagMutation,
+                variables: { id, input: output, lastUpdatedAt: data?.productTag.updatedAt },
             });
         } else {
             const { data: mutationReponse } = await client.mutate<
-                GQLProductCategoryFormCreateProductCategoryMutation,
-                GQLProductCategoryFormCreateProductCategoryMutationVariables
+                GQLProductTagFormCreateProductTagMutation,
+                GQLProductTagFormCreateProductTagMutationVariables
             >({
-                mutation: createProductCategoryMutation,
+                mutation: createProductTagMutation,
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProductCategory.id;
+                const id = mutationReponse?.createProductTag.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
@@ -150,7 +147,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                                     input.value ? (
                                         input.value
                                     ) : (
-                                        <FormattedMessage id="products.productCategoryDetail" defaultMessage="Product Category Detail" />
+                                        <FormattedMessage id="products.productTagDetail" defaultMessage="Product Tag Detail" />
                                     )
                                 }
                             </Field>
@@ -168,13 +165,6 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                         />
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
                     </MainContent>
                 </EditPageLayout>
             )}
@@ -182,4 +172,4 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
     );
 }
 
-export default ProductCategoryForm;
+export default ProductTagForm;
