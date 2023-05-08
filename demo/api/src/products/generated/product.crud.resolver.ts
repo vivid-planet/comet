@@ -8,6 +8,7 @@ import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nest
 
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-cetegory.entity";
+import { ProductTag } from "../entities/product-tag.entity";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductInput } from "./dto/product.input";
 import { ProductsArgs } from "./dto/products.args";
@@ -20,6 +21,7 @@ export class ProductCrudResolver {
         private readonly productsService: ProductsService,
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
+        @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
     ) {}
 
     @Query(() => Product)
@@ -56,7 +58,7 @@ export class ProductCrudResolver {
 
     @Mutation(() => Product)
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
-        const { ...assignInput } = input;
+        const { tags: tagsInput, ...assignInput } = input;
         const product = this.repository.create({
             ...assignInput,
 
@@ -64,6 +66,12 @@ export class ProductCrudResolver {
             visible: false,
             category: input.category ? Reference.create(await this.productCategoryRepository.findOneOrFail(input.category)) : undefined,
         });
+        {
+            const tags = await this.productTagRepository.find({ id: tagsInput });
+            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that where passes as input");
+            await product.tags.loadItems();
+            product.tags.set(tags.map((p) => Reference.create(p)));
+        }
 
         await this.entityManager.flush();
         return product;
@@ -80,12 +88,18 @@ export class ProductCrudResolver {
         if (lastUpdatedAt) {
             validateNotModified(product, lastUpdatedAt);
         }
-        const { ...assignInput } = input;
+        const { tags: tagsInput, ...assignInput } = input;
         product.assign({
             ...assignInput,
             image: input.image.transformToBlockData(),
             category: input.category ? Reference.create(await this.productCategoryRepository.findOneOrFail(input.category)) : undefined,
         });
+        {
+            const tags = await this.productTagRepository.find({ id: tagsInput });
+            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that where passes as input");
+            await product.tags.loadItems();
+            product.tags.set(tags.map((p) => Reference.create(p)));
+        }
 
         await this.entityManager.flush();
 
@@ -120,5 +134,10 @@ export class ProductCrudResolver {
     @ResolveField(() => ProductCategory, { nullable: true })
     async category(@Parent() product: Product): Promise<ProductCategory | undefined> {
         return product.category?.load();
+    }
+
+    @ResolveField(() => [ProductTag])
+    async tags(@Parent() product: Product): Promise<ProductTag[]> {
+        return product.tags.loadItems();
     }
 }

@@ -397,12 +397,19 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, blockProps, hasUpdatedAt } =
         buildOptions(metadata);
 
-    const relationProps = metadata.props.filter((prop) => prop.reference === "m:1");
-    const relationsProps = metadata.props.filter((prop) => prop.reference === "1:m");
-    const outputRelationProps = relationProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
-    const outputRelationsProps = relationsProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
+    const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
+    const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
+    const relationManyToManyProps = metadata.props.filter((prop) => prop.reference === "m:n");
+    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
+    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
+    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
     for (const prop of metadata.props) {
-        if (!hasFieldFeature(metadata.class, prop.name, "output") && !relationProps.includes(prop) && !relationsProps.includes(prop)) {
+        if (
+            !hasFieldFeature(metadata.class, prop.name, "output") &&
+            !relationManyToOneProps.includes(prop) &&
+            !relationOneToManyProps.includes(prop) &&
+            !outputRelationManyToManyProps.includes(prop)
+        ) {
             throw new Error("@CrudField output=false is only used for relations, for other props simply remove @Field() disable it's output");
         }
     }
@@ -410,11 +417,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     let importsOut = "";
     const injectRepositories = new Set<string>();
 
-    for (const prop of relationProps) {
+    for (const prop of relationManyToOneProps) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
         importsOut += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
     }
-    const inputRelationProps = relationProps
+    const inputRelationManyToOneProps = relationManyToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
             injectRepositories.add(prop.type);
@@ -426,11 +433,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             };
         });
 
-    for (const prop of relationsProps) {
+    for (const prop of [...relationOneToManyProps, ...relationManyToManyProps]) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
         importsOut += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
     }
-    const inputRelationsProps = relationsProps
+    const inputRelationToManyProps = [...relationOneToManyProps, ...relationManyToManyProps]
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
             injectRepositories.add(prop.type);
@@ -523,8 +530,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
-            const { ${inputRelationsProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}${
-        inputRelationsProps.length ? ", " : ""
+            const { ${inputRelationToManyProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}${
+        inputRelationToManyProps.length ? ", " : ""
     }...assignInput } = input;
                     const ${instanceNameSingular} = this.repository.create({
                         ...assignInput,
@@ -535,17 +542,17 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                                 ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, `
                                 : ""
                         }
-                        ${inputRelationProps.map(
+                        ${inputRelationManyToOneProps.map(
                             (prop) =>
                                 `${prop.name}: ${prop.nullable ? `input.${prop.name} ? ` : ""}Reference.create(await this.${
                                     prop.repositoryName
                                 }.findOneOrFail(input.${prop.name}))${prop.nullable ? ` : undefined` : ""}, `,
                         )}
                     });
-                    ${inputRelationsProps.map(
+                    ${inputRelationToManyProps.map(
                         (prop) => `{
                         const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
-                        if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name}");
+                        if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passes as input");
                         await ${instanceNameSingular}.${prop.name}.loadItems();
                         ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((p) => Reference.create(p)));
                     }`,
@@ -570,23 +577,23 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             }`
                     : ""
             }
-            const { ${inputRelationsProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}${
-        inputRelationsProps.length ? ", " : ""
+            const { ${inputRelationToManyProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}${
+        inputRelationToManyProps.length ? ", " : ""
     }...assignInput } = input;
             ${instanceNameSingular}.assign({
                 ...assignInput,
                 ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
-                ${inputRelationProps.map(
+                ${inputRelationManyToOneProps.map(
                     (prop) =>
                         `${prop.name}: ${prop.nullable ? `input.${prop.name} ? ` : ""}Reference.create(await this.${
                             prop.repositoryName
                         }.findOneOrFail(input.${prop.name}))${prop.nullable ? ` : undefined` : ""}, `,
                 )}
             });
-            ${inputRelationsProps.map(
+            ${inputRelationToManyProps.map(
                 (prop) => `{
                 const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
-                if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name}");
+                if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passes as input");
                 await ${instanceNameSingular}.${prop.name}.loadItems();
                 ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((p) => Reference.create(p)));
             }`,
@@ -628,7 +635,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 : ""
         }
 
-        ${outputRelationProps.map(
+        ${outputRelationManyToOneProps.map(
             (prop) => `
             @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
             async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${
@@ -639,7 +646,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         `,
         )}
 
-        ${outputRelationsProps.map(
+        ${outputRelationOneToManyProps.map(
             (prop) => `
             @ResolveField(() => [${prop.type}])
             async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
@@ -648,6 +655,14 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         `,
         )}
 
+        ${outputRelationManyToManyProps.map(
+            (prop) => `
+            @ResolveField(() => [${prop.type}])
+            async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
+                return ${instanceNameSingular}.${prop.name}.loadItems();
+            }
+        `,
+        )}
 
     }
     `;

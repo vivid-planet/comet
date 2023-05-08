@@ -1,6 +1,6 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
 import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
-import { BaseEntity, Entity, Enum, ManyToOne, OptionalProps, PrimaryKey, Property, Ref, types } from "@mikro-orm/core";
+import { BaseEntity, Collection, Entity, Enum, ManyToMany, ManyToOne, OptionalProps, PrimaryKey, Property, Ref, types } from "@mikro-orm/core";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
@@ -14,6 +14,7 @@ registerEnumType(ProductType, {
 });
 
 import { ProductCategory } from "./product-cetegory.entity";
+import { ProductTag } from "./product-tag.entity";
 
 @ObjectType({
     implements: () => [DocumentInterface],
@@ -77,6 +78,16 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
         input: true, //default is true
     })
     category?: Ref<ProductCategory>;
+
+    @ManyToMany(() => ProductTag, "products", { owner: true })
+    @CrudField({
+        output: true, //default is true
+        //search: true, //not implemented
+        //filter: true, //not implemented
+        //sort: true, //not implemented
+        input: true, //default is true
+    })
+    tags = new Collection<ProductTag>(this);
 
     @Property()
     @Field()

@@ -1,5 +1,5 @@
 import { CrudField, CrudGenerator, DocumentInterface } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Collection, Entity, ManyToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
@@ -10,7 +10,7 @@ import { Product } from "./product.entity";
 })
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class ProductCategory extends BaseEntity<ProductCategory, "id"> implements DocumentInterface {
+export class ProductTag extends BaseEntity<ProductTag, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
@@ -21,10 +21,6 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> implement
     @Field()
     title: string;
 
-    @Property()
-    @Field()
-    slug: string;
-
     @CrudField({
         output: true, //default is true
         //search: true, //not implemented
@@ -32,7 +28,7 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> implement
         //sort: true, //not implemented
         input: true, //default is true
     })
-    @OneToMany(() => Product, (products) => products.category)
+    @ManyToMany(() => Product, (products) => products.tags)
     products = new Collection<Product>(this);
 
     @Property()

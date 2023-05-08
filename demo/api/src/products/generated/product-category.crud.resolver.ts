@@ -62,7 +62,7 @@ export class ProductCategoryCrudResolver {
         });
         {
             const products = await this.productRepository.find({ id: productsInput });
-            if (products.length != productsInput.length) throw new Error("Couldn't find all products");
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passes as input");
             await productCategory.products.loadItems();
             productCategory.products.set(products.map((p) => Reference.create(p)));
         }
@@ -88,7 +88,7 @@ export class ProductCategoryCrudResolver {
         });
         {
             const products = await this.productRepository.find({ id: productsInput });
-            if (products.length != productsInput.length) throw new Error("Couldn't find all products");
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passes as input");
             await productCategory.products.loadItems();
             productCategory.products.set(products.map((p) => Reference.create(p)));
         }

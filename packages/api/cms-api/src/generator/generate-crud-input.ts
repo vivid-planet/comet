@@ -108,6 +108,12 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             decorators.push(`@IsArray()`);
             decorators.push(`@IsUUID(undefined, { each: true })`);
             type = "string[]";
+        } else if (prop.reference == "m:n") {
+            decorators.length = 0;
+            decorators.push(`@Field(() => [String])`);
+            decorators.push(`@IsArray()`);
+            decorators.push(`@IsUUID(undefined, { each: true })`);
+            type = "string[]";
         } else {
             //unsupported type TODO support more
             continue;
