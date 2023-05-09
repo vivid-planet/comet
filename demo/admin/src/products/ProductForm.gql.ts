@@ -23,14 +23,6 @@ export const productQuery = gql`
     ${productFormFragment}
 `;
 
-export const productCheckForChangesQuery = gql`
-    query CheckForChangesProduct($id: ID!) {
-        product(id: $id) {
-            updatedAt
-        }
-    }
-`;
-
 export const createProductMutation = gql`
     mutation ProductFormCreateProduct($input: ProductInput!) {
         createProduct(input: $input) {

@@ -19,11 +19,9 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import {
-    GQLCheckForChangesProductQuery,
-    GQLCheckForChangesProductQueryVariables,
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
     GQLProductFormFragment,
@@ -39,7 +37,7 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createProductMutation, productCheckForChangesQuery, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 
 interface FormProps {
     id?: string;
@@ -80,13 +78,8 @@ function ProductForm({ id }: FormProps): React.ReactElement {
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
-            if (!id) return false;
-            const { data: hasConflictData } = await client.query<GQLCheckForChangesProductQuery, GQLCheckForChangesProductQueryVariables>({
-                query: productCheckForChangesQuery,
-                variables: { id },
-                fetchPolicy: "no-cache",
-            });
-            return resolveHasSaveConflict(data?.product.updatedAt, hasConflictData.product.updatedAt);
+            const updatedAt = await queryUpdatedAt(client, "product", id);
+            return resolveHasSaveConflict(data?.product.updatedAt, updatedAt);
         },
         formApiRef,
         loadLatestVersion: async () => {
