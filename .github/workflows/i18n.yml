@@ -22,14 +22,14 @@ jobs:
               uses: actions/checkout@v3
               with:
                   repository: vivid-planet/comet-lang
-                  token: ${{ secrets.GITHUB_TOKEN }}
+                  token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
                   path: "demo/admin/lang/comet-lang"
 
             - name: "Demo: Clone translations"
               uses: actions/checkout@v3
               with:
                   repository: vivid-planet/comet-demo-lang
-                  token: ${{ secrets.GITHUB_TOKEN }}
+                  token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
                   path: "demo/admin/lang/comet-demo-lang"
 
             - uses: pnpm/action-setup@v2
