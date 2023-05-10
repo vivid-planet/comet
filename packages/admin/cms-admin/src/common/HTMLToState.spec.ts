@@ -99,9 +99,163 @@ describe("HTMLToState", () => {
             },
         ];
 
-        expect(HTMLToState(block)).toEqual({
+        const state = HTMLToState(block);
+        state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
+
+        expect(state).toEqual({
             ...block,
             text: "Another nice Text in RTE for testing some overlapping custom inline style ranges for styles bold and italic.",
+            inlineStyleRanges: expectedInlineStyles.sort((a, b) => a.offset - b.offset),
+            entityRanges: [],
+        });
+    });
+
+    it("should update inline styles correctly when swapping positions", () => {
+        // original text: "Testing <i class=\"1\">bold</i> and <i class=\"2\">italic</i> styles with swapping positions."
+        const block = {
+            key: "5jda2",
+            text: 'Testing <i class="2">italic</i> and <i class="1">bold</i> styles with swapping positions.',
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [
+                {
+                    offset: 8,
+                    length: 4,
+                    style: "BOLD" as DraftInlineStyleType,
+                },
+                {
+                    offset: 17,
+                    length: 6,
+                    style: "ITALIC" as DraftInlineStyleType,
+                },
+            ],
+            entityRanges: [],
+            data: {},
+        };
+
+        const expectedInlineStyles = [
+            {
+                offset: 8,
+                length: 6,
+                style: "ITALIC" as DraftInlineStyleType,
+            },
+            {
+                offset: 19,
+                length: 4,
+                style: "BOLD" as DraftInlineStyleType,
+            },
+        ];
+
+        const state = HTMLToState(block);
+        state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
+
+        expect(state).toEqual({
+            ...block,
+            text: "Testing italic and bold styles with swapping positions.",
+            inlineStyleRanges: expectedInlineStyles.sort((a, b) => a.offset - b.offset),
+            entityRanges: [],
+        });
+    });
+
+    it("should remove inline style when closing tag is missing", () => {
+        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic and <i class=\"3\">strikethrough</i>."
+        const block = {
+            key: "5jda2",
+            text: 'Testing <i class="1">bold</i>, <i class="2">italic and <i class="3">strikethrough</i>.',
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [
+                {
+                    offset: 8,
+                    length: 4,
+                    style: "BOLD" as DraftInlineStyleType,
+                },
+                {
+                    offset: 14,
+                    length: 6,
+                    style: "ITALIC" as DraftInlineStyleType,
+                },
+                {
+                    offset: 25,
+                    length: 13,
+                    style: "STRIKETHROUGH" as DraftInlineStyleType,
+                },
+            ],
+            entityRanges: [],
+            data: {},
+        };
+
+        const expectedInlineStyles = [
+            {
+                offset: 8,
+                length: 4,
+                style: "BOLD" as DraftInlineStyleType,
+            },
+            {
+                offset: 25,
+                length: 13,
+                style: "STRIKETHROUGH" as DraftInlineStyleType,
+            },
+        ];
+
+        const state = HTMLToState(block);
+        state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
+
+        expect(state).toEqual({
+            ...block,
+            text: "Testing bold, italic and strikethrough.",
+            inlineStyleRanges: expectedInlineStyles.sort((a, b) => a.offset - b.offset),
+            entityRanges: [],
+        });
+    });
+
+    it("should remove inline style when opening tag is missing", () => {
+        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic and <i class=\"3\">strikethrough</i>."
+        const block = {
+            key: "5jda2",
+            text: 'Testing <i class="1">bold</i>, italic</i> and <i class="3">strikethrough</i>.',
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [
+                {
+                    offset: 8,
+                    length: 4,
+                    style: "BOLD" as DraftInlineStyleType,
+                },
+                {
+                    offset: 14,
+                    length: 6,
+                    style: "ITALIC" as DraftInlineStyleType,
+                },
+                {
+                    offset: 25,
+                    length: 13,
+                    style: "STRIKETHROUGH" as DraftInlineStyleType,
+                },
+            ],
+            entityRanges: [],
+            data: {},
+        };
+
+        const expectedInlineStyles = [
+            {
+                offset: 8,
+                length: 4,
+                style: "BOLD" as DraftInlineStyleType,
+            },
+            {
+                offset: 25,
+                length: 13,
+                style: "STRIKETHROUGH" as DraftInlineStyleType,
+            },
+        ];
+
+        const state = HTMLToState(block);
+        state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
+
+        expect(state).toEqual({
+            ...block,
+            text: "Testing bold, italic and strikethrough.",
             inlineStyleRanges: expectedInlineStyles.sort((a, b) => a.offset - b.offset),
             entityRanges: [],
         });

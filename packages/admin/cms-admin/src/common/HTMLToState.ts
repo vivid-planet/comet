@@ -1,4 +1,4 @@
-import { RawDraftContentBlock } from "draft-js";
+import { DraftInlineStyleType, RawDraftContentBlock } from "draft-js";
 
 interface InlineStyle {
     id: number;
@@ -23,7 +23,7 @@ export const HTMLToState = (block: RawDraftContentBlock): RawDraftContentBlock =
     for (const match of inlineStyleTags) {
         const id = match[0].match(/\d+/)?.[0];
 
-        if (!match.index) continue;
+        if (match.index === null || match.index === undefined) continue;
 
         const offset = match.index - shiftCount;
 
@@ -36,23 +36,21 @@ export const HTMLToState = (block: RawDraftContentBlock): RawDraftContentBlock =
         } else {
             const openingTag = stylesStack.pop();
 
-            if (!openingTag) {
-                continue;
-            }
+            if (openingTag) {
+                const existingStyle = newInlineStyleRanges.findIndex((style) => style.id === openingTag.id);
 
-            const existingStyle = newInlineStyleRanges.findIndex((style) => style.id === openingTag.id);
-
-            if (existingStyle !== -1) {
-                newInlineStyleRanges[existingStyle] = {
-                    ...newInlineStyleRanges[existingStyle],
-                    length: newInlineStyleRanges[existingStyle].length + (offset - openingTag.offset),
-                };
-            } else {
-                newInlineStyleRanges.push({
-                    id: openingTag.id,
-                    offset: openingTag.offset,
-                    length: offset - openingTag.offset,
-                });
+                if (existingStyle !== -1) {
+                    newInlineStyleRanges[existingStyle] = {
+                        ...newInlineStyleRanges[existingStyle],
+                        length: newInlineStyleRanges[existingStyle].length + (offset - openingTag.offset),
+                    };
+                } else {
+                    newInlineStyleRanges.push({
+                        id: openingTag.id,
+                        offset: openingTag.offset,
+                        length: offset - openingTag.offset,
+                    });
+                }
             }
         }
 
@@ -65,12 +63,21 @@ export const HTMLToState = (block: RawDraftContentBlock): RawDraftContentBlock =
         .map((style, index) => {
             const newStyle = newInlineStyleRanges.find((newStyle) => newStyle.id - 1 === index);
 
+            if (!newStyle) {
+                return undefined;
+            }
+
             return {
                 ...style,
                 offset: newStyle?.offset ?? style.offset,
                 length: newStyle?.length ?? style.length,
             };
-        });
+        })
+        .filter((styleRange) => styleRange) as {
+        offset: number;
+        length: number;
+        style: DraftInlineStyleType;
+    }[];
 
     return {
         ...block,
