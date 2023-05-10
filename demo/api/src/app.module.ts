@@ -61,6 +61,7 @@ export class AppModule {
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
+                        sortSchema: true,
                         context: ({ req }: { req: Request }) => ({ ...req }),
                         cors: {
                             credentials: true,
