@@ -85,6 +85,7 @@ export { useStoredState } from "./hooks/useStoredState";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperComponentsProps, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
 export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.styles";
 export { messages } from "./messages";
+export { FullHeightBox } from "./mui/FullHeightBox";
 export { MainContent, MainContentClassKey, MainContentProps } from "./mui/MainContent";
 export { MasterLayout, MasterLayoutProps } from "./mui/MasterLayout";
 export { MasterLayoutClassKey } from "./mui/MasterLayout.styles";
