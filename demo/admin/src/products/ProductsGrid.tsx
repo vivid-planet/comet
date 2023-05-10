@@ -31,7 +31,7 @@ import {
     GQLDeleteProductMutationVariables,
     GQLProductGridCategoriesQuery,
     GQLProductGridCategoriesQueryVariables,
-    GQLProductsListFragment,
+    GQLProductsListManualFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
     GQLUpdateProductVisibilityMutation,
@@ -64,7 +64,7 @@ function ProductsGrid() {
     const client = useApolloClient();
     const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
 
-    const columns: GridColDef<GQLProductsListFragment>[] = [
+    const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
             field: "title",
             headerName: "Title",
@@ -178,7 +178,7 @@ function ProductsGrid() {
                             }}
                             refetchQueries={["ProductsList"]}
                             copyData={() => {
-                                return filter<GQLProductsListFragment>(productsFragment, params.row);
+                                return filter<GQLProductsListManualFragment>(productsFragment, params.row);
                             }}
                         />
                     </>
@@ -217,7 +217,7 @@ function ProductsGrid() {
 }
 
 const productsFragment = gql`
-    fragment ProductsList on Product {
+    fragment ProductsListManual on Product {
         id
         slug
         title
@@ -257,7 +257,7 @@ const productsQuery = gql`
         products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
             nodes {
                 id
-                ...ProductsList
+                ...ProductsListManual
             }
             totalCount
         }

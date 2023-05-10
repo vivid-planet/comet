@@ -81,6 +81,7 @@ const MasterMenu: React.FC = () => {
                 <MenuItemRouterLink primary="Products" to={`${match.url}/products`} icon={<Snips />} />
                 <MenuItemRouterLink primary="Categories" to={`${match.url}/product-categories`} icon={<Snips />} />
                 <MenuItemRouterLink primary="Tags" to={`${match.url}/product-tags`} icon={<Snips />} />
+                <MenuItemRouterLink primary="Products Handmade" to={`${match.url}/products-handmade`} icon={<Snips />} />
             </MenuCollapsibleItem>
         </Menu>
     );

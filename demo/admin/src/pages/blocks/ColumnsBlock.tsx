@@ -10,7 +10,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import * as React from "react";
 
-import { HeadlineBlock } from "./HeadlineBlock";
+import { HeadlineBlock } from "../../common/blocks/HeadlineBlock";
 
 const ColumnsContentBlock = createBlocksBlock({
     name: "ColumnsContent",

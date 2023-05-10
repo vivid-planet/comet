@@ -1,6 +1,6 @@
 import { createCompositeBlock, createListBlock } from "@comet/blocks-admin";
 
-import { HeadlineBlock } from "./HeadlineBlock";
+import { HeadlineBlock } from "../../common/blocks/HeadlineBlock";
 
 const TwoListsListBlock = createListBlock({
     name: "TwoListsList",
