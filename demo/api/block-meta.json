@@ -930,7 +930,8 @@
                                 "LinkList",
                                 "FullWidthImage",
                                 "Columns",
-                                "Anchor"
+                                "Anchor",
+                                "TwoLists"
                             ],
                             "nullable": false
                         },
@@ -1583,6 +1584,94 @@
             {
                 "name": "imageAspectRatio",
                 "kind": "String",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TwoLists",
+        "fields": [
+            {
+                "name": "list1",
+                "kind": "Block",
+                "block": "TwoListsList",
+                "nullable": false
+            },
+            {
+                "name": "list2",
+                "kind": "Block",
+                "block": "TwoListsList",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "list1",
+                "kind": "Block",
+                "block": "TwoListsList",
+                "nullable": false
+            },
+            {
+                "name": "list2",
+                "kind": "Block",
+                "block": "TwoListsList",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TwoListsList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "Headline",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "Headline",
+                            "nullable": false
+                        }
+                    ]
+                },
                 "nullable": false
             }
         ]

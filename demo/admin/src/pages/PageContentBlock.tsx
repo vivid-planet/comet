@@ -11,6 +11,7 @@ import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
 import { HeadlineBlock } from "./blocks/HeadlineBlock";
 import { TextImageBlock } from "./blocks/TextImageBlock";
+import { TwoListsBlock } from "./blocks/TwoListsBlock";
 
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
@@ -26,6 +27,7 @@ export const PageContentBlock = createBlocksBlock({
         fullWidthImage: FullWidthImageBlock,
         columns: ColumnsBlock,
         anchor: AnchorBlock,
+        twoLists: TwoListsBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

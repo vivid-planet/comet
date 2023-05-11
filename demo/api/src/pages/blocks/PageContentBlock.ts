@@ -9,6 +9,7 @@ import { ColumnsBlock } from "./columns.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { HeadlineBlock } from "./headline.block";
 import { TextImageBlock } from "./TextImageBlock";
+import { TwoListsBlock } from "./two-lists.block";
 
 const supportedBlocks = {
     space: SpaceBlock,
@@ -22,6 +23,7 @@ const supportedBlocks = {
     fullWidthImage: FullWidthImageBlock,
     columns: ColumnsBlock,
     anchor: AnchorBlock,
+    twoLists: TwoListsBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
