@@ -77,6 +77,7 @@ storiesOf("stories/form/FinalForm Fields", module)
             () => ({
                 autocomplete: { value: "strawberry", label: "Strawberry" },
                 autocompleteAsync: { value: "strawberry", label: "Strawberry" },
+                autocompleteMultiple: [{ value: "strawberry", label: "Strawberry" }],
             }),
             [],
         );
@@ -113,6 +114,18 @@ storiesOf("stories/form/FinalForm Fields", module)
                     }}
                     name="autocompleteAsync"
                     label="AutocompleteAsync"
+                    fullWidth
+                />
+                <Field
+                    component={FinalFormAutocomplete}
+                    multiple
+                    getOptionLabel={(option: Option) => option.label}
+                    getOptionSelected={(option: Option, value: Option) => {
+                        return option.value === value.value;
+                    }}
+                    options={options}
+                    name="autocompleteMultiple"
+                    label="Autocomplete multiple select"
                     fullWidth
                 />
                 <Button color="primary" variant="contained" type="submit">
