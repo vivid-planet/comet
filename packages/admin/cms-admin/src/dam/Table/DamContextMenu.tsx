@@ -157,7 +157,7 @@ const FileInnerMenu = ({ file }: FileInnerMenuProps): React.ReactElement => {
                             setDeleteDialogOpen(true);
                         }}
                     >
-                        <FormattedMessage id="comet.pages.dam.delete" defaultMessage="Delete file" />
+                        <FormattedMessage id="comet.pages.dam.deleteFile" defaultMessage="Delete file" />
                     </RowActionsItem>
                 </RowActionsMenu>
             </RowActionsMenu>
