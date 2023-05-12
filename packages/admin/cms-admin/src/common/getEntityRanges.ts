@@ -16,25 +16,39 @@ export default function getEntityRanges(text: string, charMetaList: CharacterMet
     let prevCharEntity: EntityKey = null;
     const ranges: Array<EntityRange> = [];
     let rangeStart = 0;
+    let lastStyle = null;
+    let styleId = 0;
+
     for (let i = 0, len = text.length; i < len; i++) {
         prevCharEntity = charEntity;
         const meta: CharacterMetadata = charMetaList.get(i);
         charEntity = meta ? meta.getEntity() : null;
+
         if (i > 0 && charEntity !== prevCharEntity) {
-            ranges.push([prevCharEntity, getStyleRanges(text.slice(rangeStart, i), charMetaList.slice(rangeStart, i))]);
+            const styleRanges = getStyleRanges(text.slice(rangeStart, i), charMetaList.slice(rangeStart, i), lastStyle, styleId);
+            styleId = styleRanges.styleId;
+            ranges.push([prevCharEntity, styleRanges.styleRanges]);
             rangeStart = i;
+            lastStyle = ranges[ranges.length - 1];
         }
     }
-    ranges.push([charEntity, getStyleRanges(text.slice(rangeStart), charMetaList.slice(rangeStart))]);
+
+    ranges.push([charEntity, getStyleRanges(text.slice(rangeStart), charMetaList.slice(rangeStart), lastStyle, styleId).styleRanges]);
+
     return ranges;
 }
 
-function getStyleRanges(text: string, charMetaList: Immutable.Iterable<number, CharacterMetadata>): StyleRangeWithId[] {
-    let styleId = 0;
+function getStyleRanges(
+    text: string,
+    charMetaList: Immutable.Iterable<number, CharacterMetadata>,
+    lastStyle: EntityRange | null,
+    styleId: number,
+): { styleRanges: StyleRangeWithId[]; styleId: number } {
     let charStyle = EMPTY_SET;
     let prevCharStyle = charStyle;
     const ranges: StyleRange[] = [];
     let rangeStart = 0;
+    const lastPreviousStyleRange = lastStyle ? lastStyle[1][lastStyle[1].length - 1][1] : [];
 
     for (let i = 0, len = text.length; i < len; i++) {
         prevCharStyle = charStyle;
@@ -55,18 +69,24 @@ function getStyleRanges(text: string, charMetaList: Immutable.Iterable<number, C
         const stylesArray = ranges[i][1].toArray();
 
         const styles = stylesArray.map((style) => {
-            if (i > 0 && ranges[i - 1][1].toArray().includes(style)) {
+            // when entity ranges are in the text, the text is split up at their positions, therefore it's needed to look at the previous style
+            const enduringStyle = lastPreviousStyleRange.find((item) => item.style === style);
+
+            if (enduringStyle) {
+                return { style, id: enduringStyle.id };
+            } else if (i > 0 && ranges[i - 1][1].toArray().includes(style)) {
                 const previousStyle = styleRangesWithIds[i - 1][1].find((previousStyle) => previousStyle.style === style);
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 return { style, id: previousStyle!.id };
             }
 
             styleId += 1;
+
             return { style, id: styleId };
         });
 
         styleRangesWithIds.push([ranges[i][0], styles]);
     }
 
-    return styleRangesWithIds;
+    return { styleRanges: styleRangesWithIds, styleId };
 }

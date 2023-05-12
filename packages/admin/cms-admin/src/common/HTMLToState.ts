@@ -6,17 +6,28 @@ interface InlineStyle {
     length: number;
 }
 
+interface EntityRange {
+    key: number;
+    offset: number;
+    length: number;
+}
+
 export const HTMLToState = (block: RawDraftContentBlock): RawDraftContentBlock => {
     const regexInlineStylesPattern = /<i class="[0-9][0-9]?">|<\/i>/g;
-    // const regexEntitiesPattern = /<e class="[0-9][0-9]?">|<\/e>/g;
+    const regexEntitiesPattern = /<e class="[0-9][0-9]?">|<\/e>/g;
 
-    // const onlyEntityRangeTags = block.text.replace(regexInlineStylesPattern, "");
-
-    // const newEntityRanges: Array<RawDraftEntityRange> = [];
     const newInlineStyleRanges: InlineStyle[] = [];
+    const newEntityRanges: EntityRange[] = [];
     const stylesStack: InlineStyle[] = [];
+    const entitiesStack: EntityRange[] = [];
 
-    const inlineStyleTags = block.text.matchAll(regexInlineStylesPattern);
+    const onlyInlineStyles = block.text.replace(regexEntitiesPattern, "");
+    const inlineStyleTags = onlyInlineStyles.matchAll(regexInlineStylesPattern);
+
+    const onlyEntityRanges = block.text.replace(regexInlineStylesPattern, "");
+    const entityRangesTags = onlyEntityRanges.matchAll(regexEntitiesPattern);
+
+    const text = block.text.replace(regexEntitiesPattern, "").replace(regexInlineStylesPattern, "");
 
     let shiftCount = 0;
 
@@ -57,6 +68,45 @@ export const HTMLToState = (block: RawDraftContentBlock): RawDraftContentBlock =
         shiftCount += match[0].length;
     }
 
+    shiftCount = 0;
+
+    for (const match of entityRangesTags) {
+        const id = match[0].match(/\d+/)?.[0];
+
+        if (match.index === null || match.index === undefined) continue;
+
+        const offset = match.index - shiftCount;
+
+        if (id) {
+            entitiesStack.push({
+                key: parseInt(id ?? ""),
+                offset,
+                length: 0,
+            });
+        } else {
+            const openingTag = entitiesStack.pop();
+
+            if (openingTag) {
+                const existingStyle = newEntityRanges.findIndex((style) => style.key === openingTag.key);
+
+                if (existingStyle !== -1) {
+                    newEntityRanges[existingStyle] = {
+                        ...newEntityRanges[existingStyle],
+                        length: newEntityRanges[existingStyle].length + (offset - openingTag.offset),
+                    };
+                } else {
+                    newEntityRanges.push({
+                        key: openingTag.key,
+                        offset: openingTag.offset,
+                        length: offset - openingTag.offset,
+                    });
+                }
+            }
+        }
+
+        shiftCount += match[0].length;
+    }
+
     /* inline styles need to be sorted by offset to map style property as inline styles are sorted by style order*/
     block.inlineStyleRanges = block.inlineStyleRanges
         .sort((a, b) => a.offset - b.offset)
@@ -79,9 +129,25 @@ export const HTMLToState = (block: RawDraftContentBlock): RawDraftContentBlock =
         style: DraftInlineStyleType;
     }[];
 
+    // TODO needs the key to be updated when tags are missing?
+    block.entityRanges = block.entityRanges
+        .map((entityRange) => {
+            const newEntityRange = newEntityRanges.find((newEntityRange) => newEntityRange.key - 1 === entityRange.key);
+
+            if (!newEntityRange) {
+                return undefined;
+            }
+
+            return {
+                ...entityRange,
+                offset: newEntityRange?.offset ?? entityRange.offset,
+                length: newEntityRange?.length ?? entityRange.length,
+            };
+        })
+        .filter((styleRange) => styleRange) as EntityRange[];
+
     return {
         ...block,
-        text: block.text.replace(/<i class="[0-9][0-9]?">|<\/i>|<e class="[0-9][0-9]?">|<\/e>/g, ""),
-        entityRanges: block.entityRanges,
+        text,
     };
 };

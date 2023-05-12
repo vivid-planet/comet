@@ -195,6 +195,7 @@ export const createRichTextBlock = (
 
                 return HTMLToState({ ...block, text: translation.replaceWith });
             });
+            // TODO internal link has no target after import
 
             return {
                 editorState: createStateFromRawContent(

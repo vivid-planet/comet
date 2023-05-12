@@ -158,7 +158,7 @@ describe("HTMLToState", () => {
     });
 
     it("should remove inline style when closing tag is missing", () => {
-        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic and <i class=\"3\">strikethrough</i>."
+        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
         const block = {
             key: "5jda2",
             text: 'Testing <i class="1">bold</i>, <i class="2">italic and <i class="3">strikethrough</i>.',
@@ -210,7 +210,7 @@ describe("HTMLToState", () => {
     });
 
     it("should remove inline style when opening tag is missing", () => {
-        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic and <i class=\"3\">strikethrough</i>."
+        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
         const block = {
             key: "5jda2",
             text: 'Testing <i class="1">bold</i>, italic</i> and <i class="3">strikethrough</i>.',
@@ -258,6 +258,240 @@ describe("HTMLToState", () => {
             text: "Testing bold, italic and strikethrough.",
             inlineStyleRanges: expectedInlineStyles.sort((a, b) => a.offset - b.offset),
             entityRanges: [],
+        });
+    });
+
+    it("should remove inline style when multiple tags are missing", () => {
+        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
+        const block = {
+            key: "5jda2",
+            text: 'Testing <i class="1">bold, <i class="2">italic and <i class="3">strikethrough.',
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [
+                {
+                    offset: 8,
+                    length: 4,
+                    style: "BOLD" as DraftInlineStyleType,
+                },
+                {
+                    offset: 14,
+                    length: 6,
+                    style: "ITALIC" as DraftInlineStyleType,
+                },
+                {
+                    offset: 25,
+                    length: 13,
+                    style: "STRIKETHROUGH" as DraftInlineStyleType,
+                },
+            ],
+            entityRanges: [],
+            data: {},
+        };
+
+        expect(HTMLToState(block)).toEqual({
+            ...block,
+            text: "Testing bold, italic and strikethrough.",
+            inlineStyleRanges: [],
+            entityRanges: [],
+        });
+    });
+
+    it("should remove inline style when multiple closing tags are missing", () => {
+        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
+        const block = {
+            key: "5jda2",
+            text: 'Testing <i class="1">bold, <i class="2">italic and <i class="3">strikethrough.',
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [
+                {
+                    offset: 8,
+                    length: 4,
+                    style: "BOLD" as DraftInlineStyleType,
+                },
+                {
+                    offset: 14,
+                    length: 6,
+                    style: "ITALIC" as DraftInlineStyleType,
+                },
+                {
+                    offset: 25,
+                    length: 13,
+                    style: "STRIKETHROUGH" as DraftInlineStyleType,
+                },
+            ],
+            entityRanges: [],
+            data: {},
+        };
+
+        expect(HTMLToState(block)).toEqual({
+            ...block,
+            text: "Testing bold, italic and strikethrough.",
+            inlineStyleRanges: [],
+            entityRanges: [],
+        });
+    });
+
+    it("should remove inline style when multiple opening tags are missing", () => {
+        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
+        const block = {
+            key: "5jda2",
+            text: "Testing bold</i>, italic</i> and strikethrough</i>.",
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [
+                {
+                    offset: 8,
+                    length: 4,
+                    style: "BOLD" as DraftInlineStyleType,
+                },
+                {
+                    offset: 14,
+                    length: 6,
+                    style: "ITALIC" as DraftInlineStyleType,
+                },
+                {
+                    offset: 25,
+                    length: 13,
+                    style: "STRIKETHROUGH" as DraftInlineStyleType,
+                },
+            ],
+            entityRanges: [],
+            data: {},
+        };
+
+        expect(HTMLToState(block)).toEqual({
+            ...block,
+            text: "Testing bold, italic and strikethrough.",
+            inlineStyleRanges: [],
+            entityRanges: [],
+        });
+    });
+
+    it("should update multiple instyle and entity ranges", () => {
+        // original text: "Now <i class=\"1\">some </i><e class=\"1\"><i class=\"1\">links</i></e><i class=\"1\"> are added</i>, pointing <i class=\"2\">somewhere </i><e class=\"2\"><i class=\"2\">ex</i>ternal</e> and <e class=\"3\">internal</e> also including some styling tags."
+        const block = {
+            key: "5jda2",
+            text: 'Now <i class="1">some </i><e class="1"><i class="1">new links</i></e><i class="1"> are added</i>, pointing <i class="2">somewhere </i><e class="2"><i class="2">ex</i>ternal</e> and <e class="3">internal</e> also including some styling tags.',
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [
+                {
+                    offset: 4,
+                    length: 20,
+                    style: "BOLD" as DraftInlineStyleType,
+                },
+                {
+                    offset: 35,
+                    length: 12,
+                    style: "ITALIC" as DraftInlineStyleType,
+                },
+            ],
+            entityRanges: [
+                {
+                    offset: 9,
+                    length: 5,
+                    key: 0,
+                },
+                {
+                    offset: 45,
+                    length: 8,
+                    key: 1,
+                },
+                {
+                    offset: 58,
+                    length: 8,
+                    key: 2,
+                },
+            ],
+            data: {},
+        };
+
+        expect(HTMLToState(block)).toEqual({
+            ...block,
+            text: "Now some new links are added, pointing somewhere external and internal also including some styling tags.",
+            inlineStyleRanges: [
+                {
+                    offset: 4,
+                    length: 24,
+                    style: "BOLD",
+                },
+                {
+                    offset: 39,
+                    length: 12,
+                    style: "ITALIC",
+                },
+            ],
+            entityRanges: [
+                {
+                    offset: 9,
+                    length: 9,
+                    key: 0,
+                },
+                {
+                    offset: 49,
+                    length: 8,
+                    key: 1,
+                },
+                {
+                    offset: 62,
+                    length: 8,
+                    key: 2,
+                },
+            ],
+        });
+    });
+
+    it("should remove entity range when opening tag is missing", () => {
+        // original text: "Testing <i class=\"1\">bold </i><e class=\"1\"><i class=\"1\">links</i></e>, <i class=\"2\">italic </i><e class=\"2\"><i class=\"2\">links</i></e> and <i class=\"3\">strikethrough</i>."
+        const block = {
+            key: "5jda2",
+            text: 'Testing <i class="1">bold </i><i class="1">links</i></e>, <i class="2">italic </i><e class="2"><i class="2">links</i></e> and <i class="3">strikethrough</i>.',
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [
+                {
+                    offset: 8,
+                    length: 10,
+                    style: "BOLD" as DraftInlineStyleType,
+                },
+                {
+                    offset: 20,
+                    length: 12,
+                    style: "ITALIC" as DraftInlineStyleType,
+                },
+                {
+                    offset: 37,
+                    length: 13,
+                    style: "STRIKETHROUGH" as DraftInlineStyleType,
+                },
+            ],
+            entityRanges: [
+                {
+                    offset: 13,
+                    length: 5,
+                    key: 0,
+                },
+                {
+                    offset: 27,
+                    length: 5,
+                    key: 1,
+                },
+            ],
+            data: {},
+        };
+
+        expect(HTMLToState(block)).toEqual({
+            ...block,
+            text: "Testing bold links, italic links and strikethrough.",
+            entityRanges: [
+                {
+                    offset: 27,
+                    length: 5,
+                    key: 1,
+                },
+            ],
         });
     });
 });

@@ -145,6 +145,7 @@ class MarkupGenerator {
 
     renderBlockContent(block: ContentBlock): string {
         let text = block.getText();
+        let currentLinkId = 0;
 
         if (text === "") {
             // Prevent element collapse if completely empty.
@@ -162,6 +163,7 @@ class MarkupGenerator {
                         let content = encodeContent(text);
                         for (const styleName of this.styleOrder) {
                             const currentStyle = styleSet.find((style) => style.style === styleName);
+
                             if (currentStyle) {
                                 let { element } = this.inlineStyles[styleName];
                                 if (element == null) {
@@ -181,7 +183,8 @@ class MarkupGenerator {
                 const entityType = entity == null ? null : entity.getType().toUpperCase();
 
                 if (entityType != null && entityType === ENTITY_TYPE.LINK) {
-                    return `<a>${content}</a>`;
+                    currentLinkId += 1;
+                    return `<e class="${currentLinkId}">${content}</e>`;
                 } else {
                     return content;
                 }
