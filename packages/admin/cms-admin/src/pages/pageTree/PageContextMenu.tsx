@@ -20,7 +20,7 @@ import { deletePageMutation } from "./Page.gql";
 import { PageDeleteDialog } from "./PageDeleteDialog";
 import { subTreeFromNode, traverse, treeMapToArray } from "./treemap/TreeMapUtils";
 import { useCopyPastePages } from "./useCopyPastePages";
-import { useExtractPages } from "./useExtractPages";
+import { useExtractImportPages } from "./useExtractPages";
 import { PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
@@ -50,7 +50,7 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
     const [duplicateLoading, setDuplicateLoading] = React.useState(false);
 
     const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages } = useCopyPastePages();
-    const { extractContents, importContents, getContentsFromClipboard } = useExtractPages();
+    const { extractContents, importContents, getContentsFromClipboard } = useExtractImportPages();
     const { tree } = usePageTreeContext();
     const intl = useIntl();
     const client = useApolloClient();

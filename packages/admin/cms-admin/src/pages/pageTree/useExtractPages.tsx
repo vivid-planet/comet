@@ -269,4 +269,4 @@ function useExtractImportPages(): UseExtractPagesApi {
     return { extractContents, importContents, getContentsFromClipboard };
 }
 
-export { useExtractImportPages as useExtractPages };
+export { useExtractImportPages };
