@@ -28,7 +28,6 @@ export const getMuiAccordion: GetMuiComponentTheme<"MuiAccordion"> = (component,
                 flexDirection: "row-reverse",
                 padding: "20px",
                 gap: "20px",
-                height: "86px",
             },
             [`& .${accordionDetailsClasses.root}`]: {
                 borderTop: `solid ${palette.divider}`,
