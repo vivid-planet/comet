@@ -86,6 +86,11 @@ interface UseExtractPagesApi {
      * read data from clipboard, validate it and return parsed data.
      */
     getContentsFromClipboard: () => Promise<GetContentsFromClipboardResponse>;
+
+    /**
+     * get content in csv format
+     */
+    getContentAsCSV: (contents: string[]) => string;
 }
 
 /**
@@ -266,7 +271,17 @@ function useExtractImportPages(): UseExtractPagesApi {
         }
     };
 
-    return { extractContents, importContents, getContentsFromClipboard };
+    const getContentAsCSV = (contents: string[]) => {
+        const rows = ["Original;ReplaceWith"];
+
+        contents.forEach((content) => {
+            const value = content.replace(/;/g, '"";""');
+            rows.push(`${value};${value}`);
+        });
+        return rows.join("\n");
+    };
+
+    return { extractContents, importContents, getContentsFromClipboard, getContentAsCSV };
 }
 
 export { useExtractImportPages };
