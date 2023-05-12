@@ -1,5 +1,6 @@
 import { ComponentsOverrides, Theme, Typography, TypographyTypeMap } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import clsx from "clsx";
 import * as React from "react";
 
 import { useStackApi } from "../../../stack/Api";
@@ -18,12 +19,15 @@ const styles = () => {
     });
 };
 
-function AutomaticTitleItem({ typographyProps, classes }: ToolbarAutomaticTitleItemProps & WithStyles<typeof styles>): React.ReactElement {
+function AutomaticTitleItem({ typographyProps = {}, classes }: ToolbarAutomaticTitleItemProps & WithStyles<typeof styles>): React.ReactElement {
     const stackApi = useStackApi();
+
+    const { classes: typographyClasses = {}, ...restTypographyProps } = typographyProps;
+    typographyClasses.root = clsx(typographyClasses.root, classes.typography);
 
     return (
         <ToolbarItem classes={{ root: classes.root }}>
-            <Typography variant="h4" classes={{ root: classes.typography }} {...typographyProps}>
+            <Typography variant="h4" classes={typographyClasses} {...restTypographyProps}>
                 {stackApi?.breadCrumbs != null && stackApi.breadCrumbs.length > 0 && stackApi.breadCrumbs[stackApi?.breadCrumbs.length - 1].title}
             </Typography>
         </ToolbarItem>
