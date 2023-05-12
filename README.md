@@ -94,10 +94,4 @@ npx dev-pm shutdown
 
 ## Contributing
 
-This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-Changes are documented using [changesets](https://github.com/changesets/changesets). Make sure to [add a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md) when making a notable change.
-
-## Notes
-
-Please note that this project is released with a [Contributor Code of Conduct](CODE-OF-CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please read our [Contributing](CONTRIBUTING.md) file.
