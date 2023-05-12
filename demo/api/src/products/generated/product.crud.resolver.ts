@@ -8,7 +8,7 @@ import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { Product } from "../entities/product.entity";
 import { PaginatedProducts } from "./dto/paginated-products";
-import { ProductInput } from "./dto/product.input";
+import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { ProductsArgs } from "./dto/products.args";
 import { ProductsService } from "./products.service";
 
@@ -67,17 +67,21 @@ export class ProductCrudResolver {
     @SubjectEntity(Product)
     async updateProduct(
         @Args("id", { type: () => ID }) id: string,
-        @Args("input", { type: () => ProductInput }) input: ProductInput,
+        @Args("input", { type: () => ProductUpdateInput }) input: ProductUpdateInput,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<Product> {
         const product = await this.repository.findOneOrFail(id);
         if (lastUpdatedAt) {
             validateNotModified(product, lastUpdatedAt);
         }
+        const { image: imageInput, ...assignInput } = input;
         product.assign({
-            ...input,
-            image: input.image.transformToBlockData(),
+            ...assignInput,
         });
+
+        if (imageInput) {
+            product.image = imageInput.transformToBlockData();
+        }
 
         await this.entityManager.flush();
 
