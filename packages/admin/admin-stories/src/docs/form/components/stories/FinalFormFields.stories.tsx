@@ -77,8 +77,9 @@ storiesOf("stories/form/FinalForm Fields", module)
             () => ({
                 autocomplete: { value: "strawberry", label: "Strawberry" },
                 autocompleteAsync: { value: "strawberry", label: "Strawberry" },
-                autocompleteMultiple: [{ value: "strawberry", label: "Strawberry" }],
+                autocompleteMultiple: [options[options.findIndex((option) => option.value == "strawberry")]],
             }),
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             [],
         );
 
