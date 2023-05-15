@@ -3,7 +3,7 @@
 import { SubjectEntity, validateNotModified } from "@comet/cms-api";
 import { FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { News, NewsContentScope } from "../entities/news.entity";
@@ -14,7 +14,11 @@ import { NewsService } from "./news.service";
 
 @Resolver(() => News)
 export class NewsCrudResolver {
-    constructor(private readonly newsService: NewsService, @InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+    constructor(
+        private readonly entityManager: EntityManager,
+        private readonly newsService: NewsService,
+        @InjectRepository(News) private readonly repository: EntityRepository<News>,
+    ) {}
 
     @Query(() => News)
     @SubjectEntity(News)
@@ -61,7 +65,7 @@ export class NewsCrudResolver {
             scope,
         });
 
-        await this.repository.persistAndFlush(news);
+        await this.entityManager.flush();
         return news;
     }
 
@@ -82,7 +86,7 @@ export class NewsCrudResolver {
             content: input.content.transformToBlockData(),
         });
 
-        await this.repository.persistAndFlush(news);
+        await this.entityManager.flush();
 
         return news;
     }
@@ -91,8 +95,8 @@ export class NewsCrudResolver {
     @SubjectEntity(News)
     async deleteNews(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const news = await this.repository.findOneOrFail(id);
-        await this.repository.removeAndFlush(news);
-
+        await this.entityManager.remove(news);
+        await this.entityManager.flush();
         return true;
     }
 
@@ -107,7 +111,7 @@ export class NewsCrudResolver {
         news.assign({
             visible,
         });
-        await this.repository.flush();
+        await this.entityManager.flush();
 
         return news;
     }

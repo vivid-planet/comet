@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { validateNotModified } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { Footer } from "../entities/footer.entity";
@@ -12,7 +12,11 @@ import { FootersService } from "./footers.service";
 
 @Resolver(() => Footer)
 export class FooterCrudResolver {
-    constructor(private readonly footersService: FootersService, @InjectRepository(Footer) private readonly repository: EntityRepository<Footer>) {}
+    constructor(
+        private readonly entityManager: EntityManager,
+        private readonly footersService: FootersService,
+        @InjectRepository(Footer) private readonly repository: EntityRepository<Footer>,
+    ) {}
 
     @Query(() => Footer, { nullable: true })
     async footer(@Args("scope", { type: () => FooterContentScope }) scope: FooterContentScope): Promise<Footer | null> {
@@ -48,7 +52,7 @@ export class FooterCrudResolver {
             });
         }
 
-        await this.repository.persistAndFlush(footer);
+        await this.entityManager.flush();
 
         return footer;
     }

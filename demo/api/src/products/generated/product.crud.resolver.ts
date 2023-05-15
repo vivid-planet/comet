@@ -3,7 +3,7 @@
 import { SubjectEntity, validateNotModified } from "@comet/cms-api";
 import { FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { Product } from "../entities/product.entity";
@@ -15,6 +15,7 @@ import { ProductsService } from "./products.service";
 @Resolver(() => Product)
 export class ProductCrudResolver {
     constructor(
+        private readonly entityManager: EntityManager,
         private readonly productsService: ProductsService,
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
     ) {}
@@ -58,7 +59,7 @@ export class ProductCrudResolver {
             image: input.image.transformToBlockData(),
         });
 
-        await this.repository.persistAndFlush(product);
+        await this.entityManager.flush();
         return product;
     }
 
@@ -78,7 +79,7 @@ export class ProductCrudResolver {
             image: input.image.transformToBlockData(),
         });
 
-        await this.repository.persistAndFlush(product);
+        await this.entityManager.flush();
 
         return product;
     }
@@ -87,8 +88,8 @@ export class ProductCrudResolver {
     @SubjectEntity(Product)
     async deleteProduct(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const product = await this.repository.findOneOrFail(id);
-        await this.repository.removeAndFlush(product);
-
+        await this.entityManager.remove(product);
+        await this.entityManager.flush();
         return true;
     }
 }

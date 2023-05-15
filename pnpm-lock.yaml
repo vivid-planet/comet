@@ -2271,6 +2271,9 @@ importers:
       passport-jwt:
         specifier: ^4.0.0
         version: 4.0.1
+      pluralize:
+        specifier: ^8.0.0
+        version: 8.0.0
       probe-image-size:
         specifier: ^7.0.0
         version: 7.2.3
@@ -2365,6 +2368,9 @@ importers:
       '@types/passport-jwt':
         specifier: ^3.0.7
         version: 3.0.8
+      '@types/pluralize':
+        specifier: ^0.0.29
+        version: 0.0.29
       '@types/probe-image-size':
         specifier: ^7.0.0
         version: 7.2.0
@@ -11322,6 +11328,10 @@ packages:
   /@types/picomatch@2.3.0:
     resolution: {integrity: sha512-O397rnSS9iQI4OirieAtsDqvCj4+3eY1J+EPdNTKuHuRWIfUoGyzX294o8C4KJYaLqgSrd2o60c5EqCU8Zv02g==}
     dev: false
+
+  /@types/pluralize@0.0.29:
+    resolution: {integrity: sha512-BYOID+l2Aco2nBik+iYS4SZX0Lf20KPILP5RGmM1IgzdwNdTs0eebiFriOPcej1sX9mLnSoiNte5zcFxssgpGA==}
+    dev: true
 
   /@types/prettier@2.7.2:
     resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
@@ -22176,7 +22186,6 @@ packages:
   /pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
-    dev: true
 
   /pngjs@3.4.0:
     resolution: {integrity: sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==}
