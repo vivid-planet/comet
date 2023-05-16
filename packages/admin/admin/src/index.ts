@@ -28,7 +28,11 @@ export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInp
 export { CometLogo } from "./common/CometLogo";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
-export { ToolbarAutomaticTitleItem, ToolbarAutomaticTitleItemProps } from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
+export {
+    ToolbarAutomaticTitleItem,
+    ToolbarAutomaticTitleItemClassKey,
+    ToolbarAutomaticTitleItemProps,
+} from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
 export { ToolbarBackButton, ToolbarBackButtonClassKey, ToolbarBackButtonProps } from "./common/toolbar/backbutton/ToolbarBackButton";
 export { ToolbarBreadcrumbs, ToolbarBreadcrumbsProps } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs";
 export { ToolbarBreadcrumbsClassKey } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs.styles";
