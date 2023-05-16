@@ -27,12 +27,12 @@ import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadConte
 import { UploadSplitButton } from "./DataGrid/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
 import FolderDataGrid, {
+    damFolderQuery,
     GQLDamFileTableFragment,
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,
     GQLDamFolderTableFragment,
 } from "./DataGrid/FolderDataGrid";
-import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
 import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
