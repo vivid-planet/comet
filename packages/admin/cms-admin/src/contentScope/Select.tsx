@@ -1,6 +1,6 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
-import { InputBase, List, ListItemButton, ListItemIcon as MuiListItemIcon, ListItemText, SvgIconProps } from "@mui/material";
+import { InputAdornment, InputBase, List, ListItemButton, ListItemIcon as MuiListItemIcon, ListItemText, SvgIconProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -43,7 +43,11 @@ export default function ContentScopeSelect({
                     {searchable && (
                         <InputBase
                             sx={{ m: 1 }}
-                            startAdornment={<InputAdornment position="start"><Search /></InputAdornment>}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            }
                             placeholder={intl.formatMessage({
                                 id: "contentScope.select.searchInput.placeholder",
                                 defaultMessage: "Search ...",
