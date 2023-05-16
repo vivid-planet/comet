@@ -668,6 +668,7 @@ input ProductFilter {
 }
 
 input ProductInput {
+  categoryId: String
   description: String!
   image: DamImageBlockInput!
   inStock: Boolean!

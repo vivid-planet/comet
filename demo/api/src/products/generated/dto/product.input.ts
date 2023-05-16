@@ -4,7 +4,7 @@ import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 import { DamImageBlock, IsSlug, RootBlockInputScalar } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
 import { ProductType } from "../../entities/product.entity";
 @InputType()
@@ -45,4 +45,9 @@ export class ProductInput {
     @Transform(({ value }) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
     image: BlockInputInterface;
+
+    @IsOptional()
+    @Field({ nullable: true })
+    @IsUUID()
+    categoryId?: string;
 }

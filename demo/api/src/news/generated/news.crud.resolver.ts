@@ -62,6 +62,7 @@ export class NewsCrudResolver {
             ...input,
             image: input.image.transformToBlockData(),
             content: input.content.transformToBlockData(),
+
             visible: false,
             scope,
         });

@@ -27,6 +27,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
     let importsOut = "";
     for (const prop of props) {
         let type = prop.type;
+        let fieldName = prop.name;
         const decorators = [] as Array<string>;
         if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
@@ -97,18 +98,23 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             );
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";
+        } else if (prop.reference == "m:1") {
+            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
+            decorators.push("@IsUUID()");
+            type = "string";
+            fieldName += "Id";
         } else {
             //unsupported type TODO support more
             continue;
         }
         fieldsOut += `${decorators.join("\n")}
-    ${prop.name}${prop.nullable ? "?" : ""}: ${type};
+    ${fieldName}${prop.nullable ? "?" : ""}: ${type};
     
     `;
     }
     const inputOut = `import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID } from "class-validator";
 import { IsSlug, RootBlockInputScalar } from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";

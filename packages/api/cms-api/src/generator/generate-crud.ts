@@ -384,7 +384,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions } from "@mikro-orm/core";
+    import { FindOptions, Reference } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
 
@@ -463,6 +463,12 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             const ${instanceNameSingular} = this.repository.create({
                 ...input,
                 ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
+                ${relationProps.map(
+                    (prop) =>
+                        `${prop.name}: ${prop.nullable ? `input.${prop.name}Id ? ` : ""}Reference.createFromPK(${prop.type}, input.${prop.name}Id)${
+                            prop.nullable ? ` : undefined` : ""
+                        }, `,
+                )}
                 ${hasVisibleProp ? `visible: false,` : ""}
                 ${scopeProp ? `scope,` : ""}
             });
@@ -489,6 +495,12 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${instanceNameSingular}.assign({
                 ...input,
                 ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
+                ${relationProps.map(
+                    (prop) =>
+                        `${prop.name}: ${prop.nullable ? `input.${prop.name}Id ? ` : ""}Reference.createFromPK(${prop.type}, input.${prop.name}Id)${
+                            prop.nullable ? ` : undefined` : ""
+                        }, `,
+                )}
             });
 
             await this.entityManager.flush();
