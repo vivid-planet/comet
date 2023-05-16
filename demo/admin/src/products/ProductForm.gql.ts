@@ -35,7 +35,7 @@ export const createProductMutation = gql`
 `;
 
 export const updateProductMutation = gql`
-    mutation ProductFormUpdateProduct($id: ID!, $input: ProductInput!, $lastUpdatedAt: DateTime) {
+    mutation ProductFormUpdateProduct($id: ID!, $input: ProductUpdateInput!, $lastUpdatedAt: DateTime) {
         updateProduct(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
             id
             updatedAt
