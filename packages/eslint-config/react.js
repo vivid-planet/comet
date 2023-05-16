@@ -37,7 +37,7 @@ module.exports = {
                 ],
             },
         ],
-        "@comet/no-private-sibling-import": ["error", [ "gql", "sc"]]
+        "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]]
     },
     overrides: [
         {
