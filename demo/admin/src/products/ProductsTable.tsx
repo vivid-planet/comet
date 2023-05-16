@@ -1,6 +1,7 @@
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    CrudVisibility,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -31,6 +32,8 @@ import {
     GQLProductsListFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
+    GQLUpdateProductVisibilityMutation,
+    GQLUpdateProductVisibilityMutationVariables,
 } from "./ProductsTable.generated";
 
 function ProductsTableToolbar() {
@@ -53,80 +56,104 @@ function ProductsTableToolbar() {
     );
 }
 
-const columns: GridColDef<GQLProductsListFragment>[] = [
-    {
-        field: "title",
-        headerName: "Title",
-        width: 150,
-        renderHeader: () => (
-            <div style={{ display: "flex", alignItems: "center" }}>
-                <Typography fontWeight={400} fontSize={14}>
-                    Title
-                </Typography>
-                <Tooltip
-                    trigger="click"
-                    title={<FormattedMessage id="comet.products.productTitle.info" defaultMessage="The title/name of the product" />}
-                >
-                    <IconButton>
-                        <Info />
-                    </IconButton>
-                </Tooltip>
-            </div>
-        ),
-    },
-    { field: "description", headerName: "Description", width: 150 },
-    { field: "price", headerName: "Price", width: 150, type: "number" },
-    { field: "type", headerName: "Type", width: 150, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
-    { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
-    {
-        field: "action",
-        headerName: "",
-        sortable: false,
-        filterable: false,
-        renderCell: (params) => {
-            return (
-                <>
-                    <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                        <Edit color="primary" />
-                    </IconButton>
-                    <CrudContextMenu
-                        onPaste={async ({ input, client }) => {
-                            await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
-                                mutation: createProductMutation,
-                                variables: {
-                                    input: {
-                                        description: input.description,
-                                        // @ts-expect-error type mismatch between OneOfBlock block data and block state
-                                        image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
-                                        inStock: input.inStock,
-                                        price: input.price,
-                                        slug: input.slug,
-                                        title: input.title,
-                                        type: input.type,
-                                    },
-                                },
-                            });
-                        }}
-                        onDelete={async ({ client }) => {
-                            await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
-                                mutation: deleteProductMutation,
-                                variables: { id: params.row.id },
-                            });
-                        }}
-                        refetchQueries={["ProductsList"]}
-                        copyData={() => {
-                            return filter<GQLProductsListFragment>(productsFragment, params.row);
-                        }}
-                    />
-                </>
-            );
-        },
-    },
-];
-
 function ProductsTable() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
+    const client = useApolloClient();
+
+    const columns: GridColDef<GQLProductsListFragment>[] = [
+        {
+            field: "title",
+            headerName: "Title",
+            width: 150,
+            renderHeader: () => (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                    <Typography fontWeight={400} fontSize={14}>
+                        Title
+                    </Typography>
+                    <Tooltip
+                        trigger="click"
+                        title={<FormattedMessage id="comet.products.productTitle.info" defaultMessage="The title/name of the product" />}
+                    >
+                        <IconButton>
+                            <Info />
+                        </IconButton>
+                    </Tooltip>
+                </div>
+            ),
+        },
+        { field: "description", headerName: "Description", width: 150 },
+        { field: "price", headerName: "Price", width: 150, type: "number" },
+        { field: "type", headerName: "Type", width: 150, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
+        { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
+        {
+            field: "visible",
+            headerName: "Visible",
+            width: 100,
+            type: "boolean",
+            renderCell: (params) => {
+                return (
+                    <CrudVisibility
+                        visibility={params.row.visible}
+                        onUpdateVisibility={async (visible) => {
+                            await client.mutate<GQLUpdateProductVisibilityMutation, GQLUpdateProductVisibilityMutationVariables>({
+                                mutation: updateProductVisibilityMutation,
+                                variables: { id: params.row.id, visible },
+                                optimisticResponse: {
+                                    __typename: "Mutation",
+                                    updateProductVisibility: { __typename: "Product", id: params.row.id, visible },
+                                },
+                            });
+                        }}
+                    />
+                );
+            },
+        },
+        {
+            field: "action",
+            headerName: "",
+            sortable: false,
+            filterable: false,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit color="primary" />
+                        </IconButton>
+                        <CrudContextMenu
+                            onPaste={async ({ input }) => {
+                                await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
+                                    mutation: createProductMutation,
+                                    variables: {
+                                        input: {
+                                            description: input.description,
+                                            // @ts-expect-error type mismatch between OneOfBlock block data and block state
+                                            image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
+                                            inStock: input.inStock,
+                                            price: input.price,
+                                            slug: input.slug,
+                                            title: input.title,
+                                            type: input.type,
+                                        },
+                                    },
+                                });
+                            }}
+                            onDelete={async () => {
+                                await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
+                                    mutation: deleteProductMutation,
+                                    variables: { id: params.row.id },
+                                });
+                            }}
+                            refetchQueries={["ProductsList"]}
+                            copyData={() => {
+                                return filter<GQLProductsListFragment>(productsFragment, params.row);
+                            }}
+                        />
+                    </>
+                );
+            },
+        },
+    ];
 
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
@@ -167,6 +194,7 @@ const productsFragment = gql`
         type
         inStock
         image
+        visible
     }
 `;
 
@@ -193,6 +221,15 @@ const createProductMutation = gql`
     mutation CreateProduct($input: ProductInput!) {
         createProduct(input: $input) {
             id
+        }
+    }
+`;
+
+const updateProductVisibilityMutation = gql`
+    mutation UpdateProductVisibility($id: ID!, $visible: Boolean!) {
+        updateProductVisibility(id: $id, visible: $visible) {
+            id
+            visible
         }
     }
 `;

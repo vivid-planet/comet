@@ -38,6 +38,10 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @Property()
     @Field()
+    visible: boolean;
+
+    @Property()
+    @Field()
     slug: string;
 
     @Property()

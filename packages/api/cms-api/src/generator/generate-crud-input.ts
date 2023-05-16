@@ -33,7 +33,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
         } else {
             decorators.push("@IsOptional()");
         }
-        if (prop.name === "id" || prop.name == "createdAt" || prop.name == "updatedAt") {
+        if (prop.name === "id" || prop.name == "createdAt" || prop.name == "updatedAt" || prop.name == "visible") {
             //skip those (TODO find a non-magic solution?)
             continue;
         } else if (prop.enum) {
