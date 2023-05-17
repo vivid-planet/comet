@@ -14,9 +14,10 @@ export const styles = ({ palette }: Theme) => {
             boxSizing: "border-box",
             textAlign: "center",
             borderRadius: "4px",
-            padding: "0 5px",
+            padding: "4px 5px",
+            marginTop: -4,
+            marginBottom: -4,
             fontSize: "12px",
-            height: "20px",
         },
     });
 };
