@@ -10,6 +10,7 @@ import * as React from "react";
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
 import { HeadlineBlock } from "./blocks/HeadlineBlock";
+import { MediaBlock } from "./blocks/MediaBlock";
 import { TextImageBlock } from "./blocks/TextImageBlock";
 import { TwoListsBlock } from "./blocks/TwoListsBlock";
 
@@ -28,6 +29,7 @@ export const PageContentBlock = createBlocksBlock({
         columns: ColumnsBlock,
         anchor: AnchorBlock,
         twoLists: TwoListsBlock,
+        media: MediaBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,
