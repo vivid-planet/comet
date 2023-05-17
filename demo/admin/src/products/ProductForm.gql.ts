@@ -62,7 +62,7 @@ export const productCategorySelectFragment = gql`
 
 export const productCategoriesQuery = gql`
     query ProductCategories {
-        productCategorys {
+        productCategories {
             nodes {
                 ...ProductCategorySelect
             }

@@ -94,7 +94,7 @@ function ProductsTable() {
             width: 150,
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
-            valueOptions: categoriesData?.productCategorys.nodes.map((i) => ({ value: i.id, label: i.title })),
+            valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
         {
@@ -144,6 +144,8 @@ function ProductsTable() {
                                             slug: input.slug,
                                             title: input.title,
                                             type: input.type,
+                                            tags: [], // todo copy tags
+                                            category: null, // todo copy category
                                         },
                                     },
                                 });
@@ -227,7 +229,7 @@ const productsQuery = gql`
 
 const productCategoriesQuery = gql`
     query ProductTableCategories {
-        productCategorys {
+        productCategories {
             nodes {
                 id
                 title

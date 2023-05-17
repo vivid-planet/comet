@@ -104,8 +104,8 @@ function ProductCategoriesTable() {
             sort: muiGridSortToGql(sortModel),
         },
     });
-    const rows = data?.productCategorys.nodes ?? [];
-    const rowCount = useBufferedRowCount(data?.productCategorys.totalCount);
+    const rows = data?.productCategories.nodes ?? [];
+    const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
 
     return (
         <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
@@ -139,7 +139,7 @@ const productCategoriesFragment = gql`
 
 const productCategoriesQuery = gql`
     query ProductCategoriesList($offset: Int, $limit: Int, $sort: [ProductCategorySort!], $filter: ProductCategoryFilter, $search: String) {
-        productCategorys(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
+        productCategories(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
             nodes {
                 id
                 ...ProductsCategoriesList
