@@ -50,6 +50,7 @@ export type { DocumentInterface, DocumentType, IdsMap } from "./documents/types"
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
 export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";
+export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
 export { useFormSaveConflict } from "./form/useFormSaveConflict";
