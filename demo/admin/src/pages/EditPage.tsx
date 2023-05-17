@@ -166,7 +166,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             key: "config",
                             label: (
                                 <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                    <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />{" "}
+                                    <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />
                                 </AdminTabLabel>
                             ),
                             content: rootBlocksApi.seo.adminUI,
