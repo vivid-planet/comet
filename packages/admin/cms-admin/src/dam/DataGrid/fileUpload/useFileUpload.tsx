@@ -7,16 +7,9 @@ import { Accept, FileRejection } from "react-dropzone";
 import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
 import { upload } from "../../../form/file/upload";
-import {
-    GQLDamFolderByNameAndParentIdQuery,
-    GQLDamFolderByNameAndParentIdQueryVariables,
-    GQLDamFolderForFolderUploadMutation,
-    GQLDamFolderForFolderUploadMutationVariables,
-} from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
-import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./fileUpload.gql";
 import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
@@ -27,6 +20,13 @@ import {
     UnsupportedTypeError,
 } from "./fileUploadErrorMessages";
 import { ProgressDialog } from "./ProgressDialog";
+import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useFileUpload.gql";
+import {
+    GQLDamFolderByNameAndParentIdQuery,
+    GQLDamFolderByNameAndParentIdQueryVariables,
+    GQLDamFolderForFolderUploadMutation,
+    GQLDamFolderForFolderUploadMutationVariables,
+} from "./useFileUpload.gql.generated";
 
 interface FileWithPath extends File {
     path?: string;

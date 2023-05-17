@@ -3,8 +3,8 @@ import escapeRegExp from "lodash.escaperegexp";
 import * as React from "react";
 
 import { TextMatch } from "../../common/MarkedMatches";
-import { GQLPageSearchFragment } from "../../graphql.generated";
 import { PageTreePage } from "../pageTree/usePageTree";
+import { GQLPageSearchFragment } from "./usePageSearch.generated";
 
 export type PageSearchMatch = TextMatch & { page: { id: string; ancestorIds: string[] } };
 

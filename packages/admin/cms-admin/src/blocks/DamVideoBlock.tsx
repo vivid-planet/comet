@@ -9,8 +9,8 @@ import { FormattedMessage } from "react-intl";
 import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "../graphql.generated";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
 
 type State = DamVideoBlockData;
 

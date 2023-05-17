@@ -5,7 +5,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { GQLUpdatePageTreeNodeCategoryMutation, GQLUpdatePageTreeNodeCategoryMutationVariables } from "../../graphql.generated";
+import { GQLUpdatePageTreeNodeCategoryMutation, GQLUpdatePageTreeNodeCategoryMutationVariables } from "./MovePageMenuItem.generated";
 import { PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 

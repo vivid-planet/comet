@@ -1,9 +1,11 @@
 import { Link, useRouter } from "@comet/cms-site";
 import { LinkBlock } from "@src/blocks/LinkBlock";
-import { GQLPageLinkFragment, GQLPredefinedPage } from "@src/graphql.generated";
+import { GQLPredefinedPage } from "@src/graphql.generated";
 import { predefinedPagePaths } from "@src/predefinedPages/predefinedPagePaths";
 import { gql } from "graphql-request";
 import * as React from "react";
+
+import { GQLPageLinkFragment } from "./PageLink.generated";
 
 const pageLinkFragment = gql`
     fragment PageLink on PageTreeNode {

@@ -1,12 +1,13 @@
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import SeoBlock from "@src/blocks/seo/SeoBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
-import { GQLPageQuery } from "@src/graphql.generated";
 import { Header, headerFragment } from "@src/header/Header";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
 import { gql } from "graphql-request";
 import Head from "next/head";
 import * as React from "react";
+
+import { GQLPageQuery } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
 export const pageQuery = gql`

@@ -21,7 +21,6 @@ import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from ".
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DocumentInterface, DocumentType } from "../../documents/types";
-import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../../graphql.generated";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
 import { EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
@@ -29,7 +28,7 @@ import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
 import { AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
-import { createPagesQuery } from "./createPagesQuery";
+import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 
 interface Props {

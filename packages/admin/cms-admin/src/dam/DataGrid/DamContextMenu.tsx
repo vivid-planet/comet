@@ -7,22 +7,19 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { UnknownError } from "../../common/errors/errorMessages";
+import { GQLDamFile, GQLDamFolder } from "../../graphql.generated";
+import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
+import { clearDamItemCache } from "../helpers/clearDamItemCache";
+import { GQLDeleteDamFolderMutation, GQLDeleteDamFolderMutationVariables } from "./DamContextMenu.generated";
+import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamContextMenu.gql";
 import {
     GQLArchiveFileMutation,
     GQLArchiveFileMutationVariables,
-    GQLDamFile,
-    GQLDamFolder,
     GQLDeleteDamFileMutation,
     GQLDeleteDamFileMutationVariables,
-    GQLDeleteDamFolderMutation,
-    GQLDeleteDamFolderMutationVariables,
     GQLRestoreFileMutation,
     GQLRestoreFileMutationVariables,
-    namedOperations,
-} from "../../graphql.generated";
-import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
-import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamContextMenu.gql";
+} from "./DamContextMenu.gql.generated";
 
 interface FolderInnerMenuProps {
     folder: Pick<GQLDamFile, "id" | "name">;
@@ -44,7 +41,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps): Reac
                 }
             `,
             variables: { id: folder.id },
-            refetchQueries: [namedOperations.Query.DamItemsList],
+            refetchQueries: ["DamItemsList"],
             update: (cache) => {
                 clearDamItemCache(cache);
             },
@@ -150,13 +147,13 @@ const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps): React.Reac
                                 client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
                                     mutation: restoreDamFileMutation,
                                     variables: { id: file.id },
-                                    refetchQueries: [namedOperations.Query.DamItemsList],
+                                    refetchQueries: ["DamItemsList"],
                                 });
                             } else {
                                 client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
                                     mutation: archiveDamFileMutation,
                                     variables: { id: file.id },
-                                    refetchQueries: [namedOperations.Query.DamItemsList],
+                                    refetchQueries: ["DamItemsList"],
                                 });
                             }
                         }}
@@ -185,7 +182,7 @@ const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps): React.Reac
                         await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
                             mutation: deleteDamFileMutation,
                             variables: { id: file.id },
-                            refetchQueries: [namedOperations.Query.DamItemsList],
+                            refetchQueries: ["DamItemsList"],
                             update: (cache) => {
                                 clearDamItemCache(cache);
                             },

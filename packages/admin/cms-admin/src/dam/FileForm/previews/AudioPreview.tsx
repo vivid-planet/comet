@@ -2,7 +2,7 @@ import { Music } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { GQLDamFileDetailFragment } from "../../../graphql.generated";
+import { GQLDamFileDetailFragment } from "../EditFile";
 
 const AudioPreviewWrapper = styled("div")`
     width: 100%;

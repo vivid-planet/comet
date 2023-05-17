@@ -7,10 +7,11 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables, GQLLicenseType } from "../../graphql.generated";
+import { GQLLicenseType } from "../../graphql.generated";
 import { useDamScope } from "../config/useDamScope";
 import { CropSettingsFields } from "./CropSettingsFields";
 import { EditFileFormValues } from "./EditFile";
+import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
 
 interface SettingsFormProps {
     isImage: boolean;

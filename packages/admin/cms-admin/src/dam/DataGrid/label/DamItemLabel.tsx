@@ -3,8 +3,8 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { MarkedMatches, TextMatch } from "../../../common/MarkedMatches";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 import { isFile } from "../../helpers/isFile";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
 import { ArchivedTag } from "../tags/ArchivedTag";
 import { LicenseValidityTags } from "../tags/LicenseValidityTags";
 import { DamThumbnail } from "../thumbnail/DamThumbnail";
