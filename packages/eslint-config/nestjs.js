@@ -5,17 +5,24 @@ module.exports = {
         jest: true,
     },
     rules: {
-        "@typescript-eslint/naming-convention": [
-            "error",
-            {
-                selector: ["interface", "typeAlias"],
-                format: ["PascalCase"],
-                custom: { regex: "^I[A-Z]", match: false },
-            },
-        ],
         "import/order": "off",
         "no-console": "off",
         "no-duplicate-imports": "error",
         "sort-imports": "off",
     },
+    overrides: [
+        {
+            files: ["*.ts", "*.tsx"],
+            rules: {
+                "@typescript-eslint/naming-convention": [
+                    "error",
+                    {
+                        selector: ["interface", "typeAlias"],
+                        format: ["PascalCase"],
+                        custom: { regex: "^I[A-Z]", match: false },
+                    },
+                ],
+            },
+        },
+    ],
 };
