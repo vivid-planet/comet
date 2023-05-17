@@ -8,7 +8,6 @@ const rootBlocks = Object.keys(schema.getTypeMap()).filter((type) => type.endsWi
 
 const config: CodegenConfig = {
     schema: "schema.gql",
-    hooks: { afterAllFileWrite: ["eslint --fix"] },
     generates: {
         "./schema.json": {
             plugins: ["introspection"],
@@ -20,7 +19,7 @@ const config: CodegenConfig = {
             plugins: ["fragment-matcher"],
         },
         "./src/graphql.generated.ts": {
-            plugins: ["typescript"],
+            plugins: [{ add: { content: `import { ${rootBlocks.sort().join(", ")} } from "@src/blocks.generated";` } }, "typescript"],
             config: {
                 avoidOptionals: {
                     field: true,
