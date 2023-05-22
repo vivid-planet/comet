@@ -46,7 +46,7 @@ describe("GenerateCrudInputRelations", () => {
         {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const prop = structure.properties![0];
-            expect(prop.name).toBe("categoryId");
+            expect(prop.name).toBe("category");
             expect(prop.type).toBe("string");
             const decorators = prop.decorators?.map((i) => i.name);
             expect(decorators).toContain("Field");
@@ -66,7 +66,7 @@ describe("GenerateCrudInputRelations", () => {
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("ProductCategory"));
         const lintedOutput = await lintSource(out);
-        console.log(lintedOutput);
+        //console.log(lintedOutput);
         const source = parseSource(lintedOutput);
 
         const classes = source.getClasses();
@@ -79,12 +79,12 @@ describe("GenerateCrudInputRelations", () => {
         {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const prop = structure.properties![0];
-            expect(prop.name).toBe("categoryId");
-            expect(prop.type).toBe("string");
+            expect(prop.name).toBe("products");
+            expect(prop.type).toBe("string[]");
             const decorators = prop.decorators?.map((i) => i.name);
             expect(decorators).toContain("Field");
             expect(decorators).toContain("IsUUID");
-            expect(decorators).toContain("IsOptional");
+            expect(decorators).toContain("IsArray");
         }
         orm.close();
     });
