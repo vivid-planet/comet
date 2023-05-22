@@ -1,5 +1,12 @@
 # @comet/admin-theme
 
+## 4.2.0
+
+### Patch Changes
+
+-   67e54a82: Add styling variants to Tooltip
+    -   @comet/admin-icons@4.2.0
+
 ## 4.1.0
 
 ### Patch Changes
