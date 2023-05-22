@@ -1,5 +1,19 @@
 # @comet/admin
 
+## 4.2.0
+
+### Minor Changes
+
+-   3567533e: Add componentsProps to EditDialog
+-   d25a7cbb: Allow disabling `RowActionsItem` using a `disabled` prop.
+
+### Patch Changes
+
+-   67e54a82: Add styling variants to Tooltip
+-   7b614c13: Add styleOverrides to ToolbarAutomaticTitleItem
+-   aaf1586c: Fix multiple prop in FinalFormAutocomplete
+    -   @comet/admin-icons@4.2.0
+
 ## 4.1.0
 
 ### Minor Changes
