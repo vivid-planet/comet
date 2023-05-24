@@ -1,14 +1,14 @@
 import { DraftInlineStyleType } from "draft-js";
 import { v4 } from "uuid";
 
-import { HTMLToState } from "./HTMLToState";
+import { XMLToState } from "./XMLToState";
 
-describe("HTMLToState", () => {
+describe("XMLToState", () => {
     it("should remove pseudo-tags for multiple sequential inline styles", () => {
-        // original text: Let\'s test <i class="1">bold</i> and <i class="2">italic</i>.
+        // original text: Let\'s test <inline id="1">bold</inline> and <inline id="2">italic</inline>.
         const block = {
             key: v4(),
-            text: 'Let\'s test <i class="1">bold</i> and <i class="2">italic</i>',
+            text: 'Let\'s test <inline id="1">bold</inline> and <inline id="2">italic</inline>',
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -27,17 +27,17 @@ describe("HTMLToState", () => {
             data: {},
         };
 
-        expect(HTMLToState(block)).toEqual({
+        expect(XMLToState(block)).toEqual({
             ...block,
             text: "Let's test bold and italic",
         });
     });
 
     it("should update multiple inline styles correctly", () => {
-        // original text: "<i class=\"1\">Another</i> Text in RTE for <i class=\"2\">testing </i><i class=\"3\"><i class=\"2\">overlapping</i></i><i class=\"3\"> inline style</i> ranges for styles <i class=\"4\">bold</i> and <i class=\"5\">italic</i>."
+        // original text: "<inline id=\"1\">Another</inline> Text in RTE for <inline id=\"2\">testing </inline><inline id=\"3\"><inline id=\"2\">overlapping</inline></inline><inline id=\"3\"> inline style</inline> ranges for styles <inline id=\"4\">bold</inline> and <inline id=\"5\">italic</inline>."
         const block = {
             key: "5jda2",
-            text: '<i class="1">Another nice</i> Text in RTE for <i class="2">testing </i><i class="3"><i class="2">some overlapping</i></i><i class="3"> custom inline style</i> ranges for styles <i class="4">bold</i> and <i class="5">italic</i>.',
+            text: '<inline id="1">Another nice</inline> Text in RTE for <inline id="2">testing </inline><inline id="3"><inline id="2">some overlapping</inline></inline><inline id="3"> custom inline style</inline> ranges for styles <inline id="4">bold</inline> and <inline id="5">italic</inline>.',
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -99,7 +99,7 @@ describe("HTMLToState", () => {
             },
         ];
 
-        const state = HTMLToState(block);
+        const state = XMLToState(block);
         state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
 
         expect(state).toEqual({
@@ -111,10 +111,10 @@ describe("HTMLToState", () => {
     });
 
     it("should update inline styles correctly when swapping positions", () => {
-        // original text: "Testing <i class=\"1\">bold</i> and <i class=\"2\">italic</i> styles with swapping positions."
+        // original text: "Testing <inline id=\"1\">bold</inline> and <inline id=\"2\">italic</inline> styles with swapping positions."
         const block = {
             key: "5jda2",
-            text: 'Testing <i class="2">italic</i> and <i class="1">bold</i> styles with swapping positions.',
+            text: 'Testing <inline id="2">italic</inline> and <inline id="1">bold</inline> styles with swapping positions.',
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -146,7 +146,7 @@ describe("HTMLToState", () => {
             },
         ];
 
-        const state = HTMLToState(block);
+        const state = XMLToState(block);
         state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
 
         expect(state).toEqual({
@@ -158,10 +158,10 @@ describe("HTMLToState", () => {
     });
 
     it("should remove inline style when closing tag is missing", () => {
-        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
+        // original text: "Testing <inline id=\"1\">bold</inline>, <inline id=\"2\">italic</inline> and <inline id=\"3\">strikethrough</inline>."
         const block = {
             key: "5jda2",
-            text: 'Testing <i class="1">bold</i>, <i class="2">italic and <i class="3">strikethrough</i>.',
+            text: 'Testing <inline id="1">bold</inline>, <inline id="2">italic and <inline id="3">strikethrough</inline>.',
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -198,7 +198,7 @@ describe("HTMLToState", () => {
             },
         ];
 
-        const state = HTMLToState(block);
+        const state = XMLToState(block);
         state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
 
         expect(state).toEqual({
@@ -210,10 +210,10 @@ describe("HTMLToState", () => {
     });
 
     it("should remove inline style when opening tag is missing", () => {
-        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
+        // original text: "Testing <inline id=\"1\">bold</inline>, <inline id=\"2\">italic</inline> and <inline id=\"3\">strikethrough</inline>."
         const block = {
             key: "5jda2",
-            text: 'Testing <i class="1">bold</i>, italic</i> and <i class="3">strikethrough</i>.',
+            text: 'Testing <inline id="1">bold</inline>, italic</inline> and <inline id="3">strikethrough</inline>.',
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -250,7 +250,7 @@ describe("HTMLToState", () => {
             },
         ];
 
-        const state = HTMLToState(block);
+        const state = XMLToState(block);
         state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
 
         expect(state).toEqual({
@@ -262,10 +262,10 @@ describe("HTMLToState", () => {
     });
 
     it("should remove inline style when multiple tags are missing", () => {
-        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
+        // original text: "Testing <inline id=\"1\">bold</inline>, <inline id=\"2\">italic</inline> and <inline id=\"3\">strikethrough</inline>."
         const block = {
             key: "5jda2",
-            text: 'Testing <i class="1">bold, <i class="2">italic and <i class="3">strikethrough.',
+            text: 'Testing <inline id="1">bold, <inline id="2">italic and <inline id="3">strikethrough.',
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -289,7 +289,7 @@ describe("HTMLToState", () => {
             data: {},
         };
 
-        expect(HTMLToState(block)).toEqual({
+        expect(XMLToState(block)).toEqual({
             ...block,
             text: "Testing bold, italic and strikethrough.",
             inlineStyleRanges: [],
@@ -298,10 +298,10 @@ describe("HTMLToState", () => {
     });
 
     it("should remove inline style when multiple closing tags are missing", () => {
-        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
+        // original text: "Testing <inline id=\"1\">bold</inline>, <inline id=\"2\">italic</inline> and <inline id=\"3\">strikethrough</inline>."
         const block = {
             key: "5jda2",
-            text: 'Testing <i class="1">bold, <i class="2">italic and <i class="3">strikethrough.',
+            text: 'Testing <inline id="1">bold, <inline id="2">italic and <inline id="3">strikethrough.',
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -325,7 +325,7 @@ describe("HTMLToState", () => {
             data: {},
         };
 
-        expect(HTMLToState(block)).toEqual({
+        expect(XMLToState(block)).toEqual({
             ...block,
             text: "Testing bold, italic and strikethrough.",
             inlineStyleRanges: [],
@@ -334,10 +334,10 @@ describe("HTMLToState", () => {
     });
 
     it("should remove inline style when multiple opening tags are missing", () => {
-        // original text: "Testing <i class=\"1\">bold</i>, <i class=\"2\">italic</i> and <i class=\"3\">strikethrough</i>."
+        // original text: "Testing <inline id=\"1\">bold</inline>, <inline id=\"2\">italic</inline> and <inline id=\"3\">strikethrough</inline>."
         const block = {
             key: "5jda2",
-            text: "Testing bold</i>, italic</i> and strikethrough</i>.",
+            text: "Testing bold</inline>, italic</inline> and strikethrough</inline>.",
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -361,7 +361,7 @@ describe("HTMLToState", () => {
             data: {},
         };
 
-        expect(HTMLToState(block)).toEqual({
+        expect(XMLToState(block)).toEqual({
             ...block,
             text: "Testing bold, italic and strikethrough.",
             inlineStyleRanges: [],
@@ -370,10 +370,10 @@ describe("HTMLToState", () => {
     });
 
     it("should update multiple instyle and entity ranges", () => {
-        // original text: "Now <i class=\"1\">some </i><e class=\"1\"><i class=\"1\">links</i></e><i class=\"1\"> are added</i>, pointing <i class=\"2\">somewhere </i><e class=\"2\"><i class=\"2\">ex</i>ternal</e> and <e class=\"3\">internal</e> also including some styling tags."
+        // original text: "Now <inline id=\"1\">some </inline><entity id=\"1\"><inline id=\"1\">links</inline></entity><inline id=\"1\"> are added</inline>, pointing <inline id=\"2\">somewhere </inline><entity id=\"2\"><inline id=\"2\">ex</inline>ternal</entity> and <entity id=\"3\">internal</entity> also including some styling tags."
         const block = {
             key: "5jda2",
-            text: 'Now <i class="1">some </i><e class="1"><i class="1">new links</i></e><i class="1"> are added</i>, pointing <i class="2">somewhere </i><e class="2"><i class="2">ex</i>ternal</e> and <e class="3">internal</e> also including some styling tags.',
+            text: 'Now <inline id="1">some </inline><entity id="1"><inline id="1">new links</inline></entity><inline id="1"> are added</inline>, pointing <inline id="2">somewhere </inline><entity id="2"><inline id="2">ex</inline>ternal</entity> and <entity id="3">internal</entity> also including some styling tags.',
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -408,7 +408,7 @@ describe("HTMLToState", () => {
             data: {},
         };
 
-        expect(HTMLToState(block)).toEqual({
+        expect(XMLToState(block)).toEqual({
             ...block,
             text: "Now some new links are added, pointing somewhere external and internal also including some styling tags.",
             inlineStyleRanges: [
@@ -444,10 +444,10 @@ describe("HTMLToState", () => {
     });
 
     it("should remove entity range when opening tag is missing", () => {
-        // original text: "Testing <i class=\"1\">bold </i><e class=\"1\"><i class=\"1\">links</i></e>, <i class=\"2\">italic </i><e class=\"2\"><i class=\"2\">links</i></e> and <i class=\"3\">strikethrough</i>."
+        // original text: "Testing <inline id=\"1\">bold </inline><entity id=\"1\"><inline id=\"1\">links</inline></entity>, <inline id=\"2\">italic </inline><entity id=\"2\"><inline id=\"2\">links</inline></entity> and <inline id=\"3\">strikethrough</inline>."
         const block = {
             key: "5jda2",
-            text: 'Testing <i class="1">bold </i><i class="1">links</i></e>, <i class="2">italic </i><e class="2"><i class="2">links</i></e> and <i class="3">strikethrough</i>.',
+            text: 'Testing <inline id="1">bold </inline><inline id="1">links</inline></entity>, <inline id="2">italic </inline><entity id="2"><inline id="2">links</inline></entity> and <inline id="3">strikethrough</inline>.',
             type: "header-three",
             depth: 0,
             inlineStyleRanges: [
@@ -482,7 +482,7 @@ describe("HTMLToState", () => {
             data: {},
         };
 
-        expect(HTMLToState(block)).toEqual({
+        expect(XMLToState(block)).toEqual({
             ...block,
             text: "Testing bold links, italic links and strikethrough.",
             entityRanges: [

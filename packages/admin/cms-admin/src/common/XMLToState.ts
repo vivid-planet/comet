@@ -12,9 +12,9 @@ interface EntityRange {
     length: number;
 }
 
-export const HTMLToState = (block: RawDraftContentBlock): RawDraftContentBlock => {
-    const regexInlineStylesPattern = /<i class="[0-9][0-9]?">|<\/i>/g;
-    const regexEntitiesPattern = /<e class="[0-9][0-9]?">|<\/e>/g;
+export const XMLToState = (block: RawDraftContentBlock): RawDraftContentBlock => {
+    const regexInlineStylesPattern = /<inline id="[0-9][0-9]?">|<\/inline>/g;
+    const regexEntitiesPattern = /<entity id="[0-9][0-9]?">|<\/entity>/g;
 
     const newInlineStyleRanges: InlineStyle[] = [];
     const newEntityRanges: EntityRange[] = [];

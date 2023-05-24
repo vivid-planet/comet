@@ -15,8 +15,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
-import { HTMLToState } from "../common/HTMLToState";
-import stateToHTML from "../common/stateToHTML";
+import stateToXML from "../common/stateToXML";
+import { XMLToState } from "../common/XMLToState";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
 import { Decorator as SoftHyphenDecorator } from "./rte/extension/SoftHyphen/Decorator";
@@ -178,9 +178,7 @@ export const createRichTextBlock = (
         },
 
         extractTextContents: (state) => {
-            // const blocks = state.editorState.getCurrentContent().getBlocksAsArray();
-            // return blocks.map((block) => stateToHTML(block));
-            return stateToHTML(state.editorState.getCurrentContent());
+            return stateToXML(state.editorState.getCurrentContent());
         },
 
         replaceTextContents: (state, contents) => {
@@ -188,12 +186,13 @@ export const createRichTextBlock = (
 
             const translatedBlocks = rawContent.blocks.map((block) => {
                 const translation = contents.find(
-                    (content) => content.original.replace(/<i class="[0-9][0-9]?">|<\/i>|<e class="[0-9][0-9]?">|<\/e>/g, "") === block.text,
+                    (content) =>
+                        content.original.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "") === block.text,
                 );
 
                 if (!translation || translation.replaceWith === "") return block;
 
-                return HTMLToState({ ...block, text: translation.replaceWith });
+                return XMLToState({ ...block, text: translation.replaceWith });
             });
             // TODO internal link has no target after import
 

@@ -214,17 +214,6 @@ const PageContextMenu = (props: PageContextMenuProps): React.ReactElement => {
                         const pagesAsArray = treeMapToArray(subTree, "root");
                         const extractedContents = await extractContents(pagesAsArray);
 
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                        const content = extractedContents.reduce((accumulator, value) => {
-                            return { ...accumulator, [value]: value };
-                        }, {});
-
-                        // writeClipboard(
-                        //     JSON.stringify({
-                        //         textContents: content,
-                        //     }),
-                        // );
-
                         const csv = getContentAsCSV(extractedContents);
                         writeClipboard(csv);
                         setExtractLoading(false);

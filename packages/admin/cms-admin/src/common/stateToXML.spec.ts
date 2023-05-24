@@ -1,9 +1,9 @@
 import { convertFromRaw, DraftEntityMutability, DraftInlineStyleType, EditorState } from "draft-js";
 import { v4 } from "uuid";
 
-import stateToHTML from "./stateToHTML";
+import stateToXML from "./stateToXML";
 
-describe("stateToHTML", () => {
+describe("stateToXML", () => {
     it("should insert pseudo-tags for multiple sequential inline styles", () => {
         const rawContent = {
             entityMap: {},
@@ -34,7 +34,9 @@ describe("stateToHTML", () => {
         const content = convertFromRaw(rawContent);
         const mockState = { editorState: EditorState.createWithContent(content) };
 
-        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual(['Let\'s test <i class="1">bold</i> and <i class="2">italic</i>.']);
+        expect(stateToXML(mockState.editorState.getCurrentContent())).toEqual([
+            'Let\'s test <inline id="1">bold</inline> and <inline id="2">italic</inline>.',
+        ]);
     });
 
     it("should insert pseudo-tags in correct order for nested inline styles", () => {
@@ -86,8 +88,8 @@ describe("stateToHTML", () => {
         const content = convertFromRaw(rawContent);
         const mockState = { editorState: EditorState.createWithContent(content) };
 
-        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual([
-            '<i class="1">Lorem ipsum</i> <i class="2">dolor sit amet,</i> <i class="4"><i class="3">consectetuer adipiscing elit</i></i><i class="3">.</i>',
+        expect(stateToXML(mockState.editorState.getCurrentContent())).toEqual([
+            '<inline id="1">Lorem ipsum</inline> <inline id="2">dolor sit amet,</inline> <inline id="4"><inline id="3">consectetuer adipiscing elit</inline></inline><inline id="3">.</inline>',
             "Aenean commodo ligula eget dolor.",
         ]);
     });
@@ -182,8 +184,8 @@ describe("stateToHTML", () => {
         const content = convertFromRaw(rawContent);
         const mockState = { editorState: EditorState.createWithContent(content) };
 
-        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual([
-            'Now some <e class="1">links</e> are added, pointing somewhere <e class="2">external</e> and <e class="3">internal</e>.',
+        expect(stateToXML(mockState.editorState.getCurrentContent())).toEqual([
+            'Now some <entity id="1">links</entity> are added, pointing somewhere <entity id="2">external</entity> and <entity id="3">internal</entity>.',
         ]);
     });
 
@@ -279,8 +281,8 @@ describe("stateToHTML", () => {
         const content = convertFromRaw(rawContent);
         const mockState = { editorState: EditorState.createWithContent(content) };
 
-        expect(stateToHTML(mockState.editorState.getCurrentContent())).toEqual([
-            'Now <i class="1">some </i><e class="1"><i class="1">links</i></e><i class="1"> are added</i>, pointing <i class="2">somewhere </i><e class="2"><i class="2">ex</i>ternal</e> and <e class="3">internal</e> also including some styling tags.',
+        expect(stateToXML(mockState.editorState.getCurrentContent())).toEqual([
+            'Now <inline id="1">some </inline><entity id="1"><inline id="1">links</inline></entity><inline id="1"> are added</inline>, pointing <inline id="2">somewhere </inline><entity id="2"><inline id="2">ex</inline>ternal</entity> and <entity id="3">internal</entity> also including some styling tags.',
         ]);
     });
 });
