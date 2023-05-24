@@ -129,7 +129,6 @@ export const XMLToState = (block: RawDraftContentBlock): RawDraftContentBlock =>
         style: DraftInlineStyleType;
     }[];
 
-    // TODO needs the key to be updated when tags are missing?
     block.entityRanges = block.entityRanges
         .map((entityRange) => {
             const newEntityRange = newEntityRanges.find((newEntityRange) => newEntityRange.key - 1 === entityRange.key);

@@ -239,7 +239,8 @@ function useExtractImportPages(): UseExtractPagesApi {
         }
 
         try {
-            const parsedText = JSON.parse(text);
+            const parsedText = getCSVAsContent(text);
+
             if (isContentsClipboard(parsedText)) {
                 return {
                     canPaste: true,
@@ -279,6 +280,20 @@ function useExtractImportPages(): UseExtractPagesApi {
             rows.push(`${value};${value}`);
         });
         return rows.join("\n");
+    };
+
+    const getCSVAsContent = (csv: string) => {
+        const content: { [key: string]: string } = {};
+
+        const lines = csv.split("\n");
+
+        for (let i = 1; i < lines.length; i++) {
+            const lineContent = lines[i].split(";");
+
+            content[lineContent[0]] = lineContent[1];
+        }
+
+        return { textContents: content };
     };
 
     return { extractContents, importContents, getContentsFromClipboard, getContentAsCSV };

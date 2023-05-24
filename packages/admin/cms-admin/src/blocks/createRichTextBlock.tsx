@@ -182,7 +182,7 @@ export const createRichTextBlock = (
         },
 
         replaceTextContents: (state, contents) => {
-            const rawContent = convertStateToRawContent(state.editorState);
+            const rawContent = mapLinkEntitiesData(convertStateToRawContent(state.editorState), (linkState) => LinkBlock.state2Output(linkState));
 
             const translatedBlocks = rawContent.blocks.map((block) => {
                 const translation = contents.find(
@@ -194,7 +194,6 @@ export const createRichTextBlock = (
 
                 return XMLToState({ ...block, text: translation.replaceWith });
             });
-            // TODO internal link has no target after import
 
             return {
                 editorState: createStateFromRawContent(

@@ -29,8 +29,9 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
         "test": "jest --verbose=true",
         "test:watch": "jest --watch",
-        "po:export": "ts-node export-po-file.ts",
-        "po:import": "ts-node import-po-file.ts"
+        "po:import": "ts-node import-po-file.ts",
+        "csv:import": "ts-node import-csv-file.ts",
+        "csv:export-as-po": "ts-node csv-to-po-file.ts"
     },
     "dependencies": {
         "@comet/admin": "workspace:^4.1.0",
