@@ -6,9 +6,10 @@ import { SaveAction } from "./PromptHandler";
 interface IContext {
     register: (options: {
         id: string;
-        path?: string;
         message: (location: History.Location, action: History.Action) => string | boolean;
         saveAction?: SaveAction;
+        path: string;
+        subRoutePath?: string;
     }) => void;
     unregister: (id: string) => void;
 }

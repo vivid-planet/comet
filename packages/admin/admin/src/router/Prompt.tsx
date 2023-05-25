@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 
 import { RouterContext } from "./Context";
 import { SaveAction } from "./PromptHandler";
+import { SubRoute } from "./SubRoute";
 
 // react-router Prompt doesn't support multiple Prompts, this one does
 interface IProps {
@@ -15,15 +16,16 @@ interface IProps {
      */
     message: (location: History.Location, action: History.Action) => boolean | string;
     saveAction?: SaveAction;
+    subRoutePath?: string;
 }
-export const RouterPrompt: React.FunctionComponent<IProps> = ({ message, saveAction }) => {
+export const RouterPrompt: React.FunctionComponent<IProps> = ({ message, saveAction, subRoutePath, children }) => {
     const id = useConstant<string>(() => uuid());
     const reactRouterContext = React.useContext(__RouterContext); // reactRouterContext can be undefined if no router is used, don't fail in that case
     const path: string | undefined = reactRouterContext?.match.path;
     const context = React.useContext(RouterContext);
     React.useEffect(() => {
         if (context) {
-            context.register({ id, message, saveAction, path });
+            context.register({ id, message, saveAction, path, subRoutePath });
         } else {
             console.error("Can't register RouterPrompt, missing <RouterPromptHandler>");
         }
@@ -33,6 +35,9 @@ export const RouterPrompt: React.FunctionComponent<IProps> = ({ message, saveAct
             }
         };
     });
-
-    return null;
+    if (subRoutePath) {
+        return <SubRoute path={subRoutePath}>{children}</SubRoute>;
+    } else {
+        return <>{children}</>;
+    }
 };

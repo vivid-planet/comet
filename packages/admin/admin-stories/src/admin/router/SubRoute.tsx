@@ -100,6 +100,6 @@ function App() {
     );
 }
 
-storiesOf("@comet/admin/stack", module)
+storiesOf("@comet/admin/router", module)
     .addDecorator(storyRouterDecorator())
     .add("Subroute", () => <App />);
