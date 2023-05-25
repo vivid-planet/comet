@@ -1,6 +1,7 @@
 import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
 import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import {
+    BlockMap,
     BlockMapBuilder,
     convertFromHTML,
     convertFromRaw,
@@ -16,7 +17,6 @@ import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
 import stateToXML from "../common/stateToXML";
-import { XMLToState } from "../common/XMLToState";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
 import { Decorator as SoftHyphenDecorator } from "./rte/extension/SoftHyphen/Decorator";
@@ -182,28 +182,90 @@ export const createRichTextBlock = (
         },
 
         replaceTextContents: (state, contents) => {
-            const rawContent = mapLinkEntitiesData(convertStateToRawContent(state.editorState), (linkState) => LinkBlock.state2Output(linkState));
+            const { editorState } = state;
+            // const rawContent = convertStateToRawContent(editorState);
+            const content = editorState.getCurrentContent();
+            const blockMap: BlockMap = content.getBlockMap();
 
-            const translatedBlocks = rawContent.blocks.map((block) => {
+            // const newContentState = content;
+
+            /* WITH REPLACE TEXT - REMOVES STYLES COMPLETLY */
+            // blockMap.forEach((contentBlock) => {
+            //     if (!contentBlock) {
+            //         return;
+            //     }
+
+            //     const translation = contents.find(
+            //         (content: { original: string; replaceWith: string }) =>
+            //             content.original.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "") ===
+            //             contentBlock.getText(),
+            //     );
+
+            //     if (!translation) {
+            //         return;
+            //     }
+
+            //     const replaceWith = translation.replaceWith.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "");
+
+            //     const blockKey = contentBlock.getKey();
+            //     const blockSelection = SelectionState.createEmpty(blockKey).merge({
+            //         anchorOffset: 0,
+            //         focusOffset: contentBlock.getText().length,
+            //     });
+
+            //     newContentState = Modifier.replaceText(newContentState, blockSelection, replaceWith);
+            // });
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const translatedBlocks: any = blockMap.map((contentBlock) => {
                 const translation = contents.find(
-                    (content) =>
-                        content.original.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "") === block.text,
+                    (content: { original: string; replaceWith: string }) =>
+                        content.original.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "") ===
+                        contentBlock?.getText(),
                 );
 
-                if (!translation || translation.replaceWith === "") return block;
+                if (!translation) {
+                    return;
+                }
 
-                return XMLToState({ ...block, text: translation.replaceWith });
+                const replaceWith = translation.replaceWith.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "");
+
+                return contentBlock?.merge({
+                    text: replaceWith,
+                });
             });
 
+            /* REPLACING IN RAW CONTENT - NOT IN DRAFT.JS */
+            // const translatedBlocks = rawContent.blocks.map((block) => {
+            //     const translation = contents.find(
+            //         (content) =>
+            //             content.original.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "") === block.text,
+            //     );
+
+            //     if (!translation || translation.replaceWith === "") return block;
+
+            //     return XMLToState({ ...block, text: translation.replaceWith });
+            // });
+
             return {
-                editorState: createStateFromRawContent(
-                    mapLinkEntitiesData({ ...rawContent, blocks: translatedBlocks } as RawDraftContentState, (linkData) => {
-                        // @TODO: bei linkdata ist targetPage noch kein object!
-                        // das muss/soll von der Api auch so kommen wie beim linkblock
-                        return LinkBlock.input2State(linkData);
+                editorState: EditorState.set(editorState, {
+                    currentContent: content.merge({
+                        blockMap: blockMap.merge(translatedBlocks),
                     }),
-                ),
+                }),
             };
+
+            // return { editorState: EditorState.createWithContent(newContentState) };
+
+            // return {
+            //     editorState: createStateFromRawContent(
+            //         mapLinkEntitiesData({ ...rawContent, blocks: translatedBlocks } as RawDraftContentState, (linkData) => {
+            //             // @TODO: bei linkdata ist targetPage noch kein object!
+            //             // das muss/soll von der Api auch so kommen wie beim linkblock
+            //             return LinkBlock.input2State(linkData);
+            //         }),
+            //     ),
+            // };
         },
 
         createPreviewState: ({ editorState }, previewCtx) => {
