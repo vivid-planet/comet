@@ -12,8 +12,6 @@
         "test": "jest",
         "test:watch": "jest --watch"
     },
-    "dependencies": {
-    },
     "devDependencies": {
         "@types/eslint": "^8.37.0",
         "@types/jest": "^27.0.2",
