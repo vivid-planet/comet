@@ -67,12 +67,21 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
         ...(SeoBlock.extractTextContents?.(SeoBlock.input2State(input.seo)) ?? []),
     ],
     replaceTextContents: (input, contents) => {
-        const translatedPageContent = PageContentBlock.replaceTextContents?.(PageContentBlock.input2State(input.content), contents);
-        const translatedSeoContent = SeoBlock.replaceTextContents?.(SeoBlock.input2State(input.seo), contents);
+        let contentState = PageContentBlock.input2State(input.content);
+
+        if (PageContentBlock.replaceTextContents) {
+            contentState = PageContentBlock.replaceTextContents(contentState, contents);
+        }
+
+        let seoState = SeoBlock.input2State(input.seo);
+
+        if (SeoBlock.replaceTextContents) {
+            seoState = SeoBlock.replaceTextContents(seoState, contents);
+        }
 
         return {
-            content: translatedPageContent ? PageContentBlock.state2Output(translatedPageContent) : input.content,
-            seo: translatedSeoContent ? SeoBlock.state2Output(translatedSeoContent) : input.seo,
+            content: PageContentBlock.state2Output(contentState),
+            seo: SeoBlock.state2Output(seoState),
         };
     },
 };

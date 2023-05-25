@@ -144,12 +144,6 @@ function useExtractImportPages(): UseExtractPagesApi {
 
     const importContents = React.useCallback(
         async (pages: GQLPageTreePageFragment[], content: ParsedContents): Promise<void> => {
-            const idsMap = new Map<string, string>();
-
-            pages.forEach((page) => {
-                idsMap.set(page.id, page.id);
-            });
-
             await Promise.all(
                 pages.map(async (page) => {
                     const documentType = documentTypes[page.documentType];
@@ -178,7 +172,7 @@ function useExtractImportPages(): UseExtractPagesApi {
                                         mutation: documentType.updateMutation,
                                         variables: {
                                             pageId: data.page.document.id,
-                                            input: documentType.inputToOutput?.(documentWithUpdateContents, { idsMap }),
+                                            input: documentWithUpdateContents,
                                             attachedPageTreeNodeId: page.id,
                                         },
                                         context: LocalErrorScopeApolloContext,

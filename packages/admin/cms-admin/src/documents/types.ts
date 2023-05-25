@@ -47,5 +47,5 @@ export interface DocumentInterface<
     InfoTag?: React.ComponentType<{ page: PageTreePage }>;
     anchors: (input: DocumentInput) => string[];
     extractTextContents?: (input: DocumentInput) => string[];
-    replaceTextContents?: (input: DocumentInput, contents: Array<{ original: string; replaceWith: string }>) => DocumentInput;
+    replaceTextContents?: (input: DocumentInput, contents: Array<{ original: string; replaceWith: string }>) => DocumentOutput;
 }
