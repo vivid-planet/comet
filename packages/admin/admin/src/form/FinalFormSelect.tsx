@@ -79,17 +79,22 @@ export const FinalFormSelect = <T,>({
             onBlur={onBlur}
             multiple={multiple}
         >
+            {loading && (
+                <MenuItem value="">
+                    <CircularProgress size={20} />
+                </MenuItem>
+            )}
             {options.length === 0 &&
-                (loading || value) &&
+                value &&
                 (Array.isArray(value) ? (
                     value.map((v) => (
                         <MenuItem value={getOptionValue(v)} key={getOptionValue(v)}>
-                            {loading ? <CircularProgress size={20} /> : getOptionLabel(v)}
+                            {getOptionLabel(v)}
                         </MenuItem>
                     ))
                 ) : (
                     <MenuItem value={getOptionValue(value)} key={getOptionValue(value)}>
-                        {loading ? <CircularProgress size={20} /> : getOptionLabel(value)}
+                        {getOptionLabel(value)}
                     </MenuItem>
                 ))}
             {options.map((option: T) => (
