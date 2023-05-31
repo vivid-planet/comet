@@ -31,9 +31,9 @@ export const CrudVisibility = ({ visibility, onUpdateVisibility }: CrudVisibilit
                 message={
                     <FormattedMessage
                         id="comet.common.visibilityChanged"
-                        defaultMessage="Changed visibility to {visibility, select, visible {published} hidden {unpublished} other {unknown}}"
+                        defaultMessage="Changed visibility to {visibility, select, true {published} false {unpublished} other {unknown}}"
                         values={{
-                            visibility: visibility ? "visible" : "hidden",
+                            visibility,
                         }}
                     />
                 }
@@ -49,9 +49,9 @@ export const CrudVisibility = ({ visibility, onUpdateVisibility }: CrudVisibilit
             <Button size="small" onClick={handleMenuOpen} startIcon={<CrudVisibilityIcon visibility={visibility} />} color="info">
                 <FormattedMessage
                     id="comet.common.visibility"
-                    defaultMessage="{visibility, select, visible {Published} hidden {Unpublished} other {unknown}}"
+                    defaultMessage="{visibility, select, true {Published} false {Unpublished} other {unknown}}"
                     values={{
-                        visibility: visibility ? "visible" : "hidden",
+                        visibility,
                     }}
                 />
             </Button>
