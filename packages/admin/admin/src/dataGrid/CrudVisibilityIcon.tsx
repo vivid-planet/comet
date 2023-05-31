@@ -8,12 +8,11 @@ interface CrudVisibilityIconProps {
 }
 
 export function CrudVisibilityIcon({ visibility, disabled }: CrudVisibilityIconProps): JSX.Element {
-    const color = disabled ? "disabled" : undefined;
     const theme = useTheme();
 
     if (visibility) {
         return <Online htmlColor={theme.palette.success.main} />;
     } else {
-        return <Disabled color={color} />;
+        return <Disabled />;
     }
 }

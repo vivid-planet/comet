@@ -58,13 +58,13 @@ export const CrudVisibility = ({ visibility, onUpdateVisibility }: CrudVisibilit
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                 <MenuItem onClick={() => handleVisibilityClick(true)} disabled={visibility == true}>
                     <ListItemIcon>
-                        <CrudVisibilityIcon visibility={true} disabled={visibility == true} />
+                        <CrudVisibilityIcon visibility={true} />
                     </ListItemIcon>
                     <FormattedMessage id="comet.common.visibility.published" defaultMessage="Published" />
                 </MenuItem>
                 <MenuItem onClick={() => handleVisibilityClick(false)} disabled={visibility == false}>
                     <ListItemIcon>
-                        <CrudVisibilityIcon visibility={false} disabled={visibility == false} />
+                        <CrudVisibilityIcon visibility={false} />
                     </ListItemIcon>
                     <FormattedMessage id="comet.common.visibility.unpublished" defaultMessage="Unpublished" />
                 </MenuItem>
