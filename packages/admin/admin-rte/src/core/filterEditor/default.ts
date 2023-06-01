@@ -4,6 +4,7 @@ import removeBlocksExceedingBlockLimit from "./removeBlocksExceedingBlockLimit";
 import removeUnsupportedBlockTypes from "./removeUnsupportedBlockTypes";
 import removeUnsupportedEntities from "./removeUnsupportedEntities";
 import removeUnsupportedInlineStyles from "./removeUnsupportedInlineStyles";
+import removeUnsupportedListLevels from "./removeUnsupportedListLevels";
 
 const defaultFilterEditorStateBeforeUpdate: FilterEditorStateBeforeUpdateFn = (newState, ctx) => {
     const fns: FilterEditorStateBeforeUpdateFn[] = [
@@ -11,6 +12,7 @@ const defaultFilterEditorStateBeforeUpdate: FilterEditorStateBeforeUpdateFn = (n
         removeUnsupportedBlockTypes,
         removeUnsupportedInlineStyles,
         removeBlocksExceedingBlockLimit,
+        removeUnsupportedListLevels,
     ];
 
     const shouldFilter = newState.getLastChangeType() === "insert-fragment";
