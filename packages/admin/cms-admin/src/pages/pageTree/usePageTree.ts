@@ -42,6 +42,7 @@ interface UsePageTreeApi {
     tree: TreeMap<GQLPageTreePageFragment>;
     selectedTree: TreeMap<GQLPageTreePageFragment>;
     setExpandedIds: React.Dispatch<React.SetStateAction<string[]>>;
+    expandedIds: string[];
     toggleExpand: (pageId: string) => void;
     onSelectChanged: (pageId: string, value: boolean) => void;
     selectState: PageTreeSelectionState;
@@ -166,6 +167,7 @@ export function usePageTree({
         setExpandedIds,
         toggleExpand,
         expandPage,
+        expandedIds,
 
         /* selected */
         selectedTree,

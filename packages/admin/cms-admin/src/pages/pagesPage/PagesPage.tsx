@@ -87,10 +87,11 @@ export function PagesPage({
 
     const ignorePages = React.useCallback((page: GQLPageTreePageFragment) => (showArchive ? true : page.visibility !== "Archived"), [showArchive]);
 
-    const { tree, pagesToRender, setExpandedIds, toggleExpand, onSelectChanged, setSelectedIds, selectState, selectedTree } = usePageTree({
-        pages: data?.pages ?? [],
-        filter: ignorePages,
-    });
+    const { tree, pagesToRender, setExpandedIds, expandedIds, toggleExpand, onSelectChanged, setSelectedIds, selectState, selectedTree } =
+        usePageTree({
+            pages: data?.pages ?? [],
+            filter: ignorePages,
+        });
 
     const pageSearchApi = usePageSearch({
         tree,
@@ -151,12 +152,12 @@ export function PagesPage({
                                         }
                                     }}
                                     selectedTree={selectedTree}
+                                    collapseAllDisabled={!expandedIds.length}
                                     onCollapseAllPressed={() => {
                                         setExpandedIds([]);
                                     }}
                                 />
                             </ActionToolbarBox>
-
                             <FullHeightPaper variant="outlined">
                                 {loading && <CircularProgress />}
 

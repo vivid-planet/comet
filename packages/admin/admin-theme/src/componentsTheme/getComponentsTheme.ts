@@ -39,6 +39,7 @@ import { getMuiTableRow } from "./MuiTableRow";
 import { getMuiTabs } from "./MuiTabs";
 import { getMuiToggleButton } from "./MuiToggleButton";
 import { getMuiToggleButtonGroup } from "./MuiToggleButtonGroup";
+import { getMuiTooltip } from "./MuiTooltip";
 import { getMuiTypography } from "./MuiTypography";
 
 type ThemeData = {
@@ -90,5 +91,6 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiTabs: getMuiTabs(components.MuiTabs, themeData),
     MuiToggleButton: getMuiToggleButton(components.MuiToggleButton, themeData),
     MuiToggleButtonGroup: getMuiToggleButtonGroup(components.MuiToggleButtonGroup, themeData),
+    MuiTooltip: getMuiTooltip(components.MuiTooltip, themeData),
     MuiTypography: getMuiTypography(components.MuiTypography, themeData),
 });

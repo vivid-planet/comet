@@ -72,10 +72,9 @@ jobs:
             - name: Test
               run: pnpm run test
 
-            - name: Test Report
-              uses: dorny/test-reporter@v1
-              if: github.actor != 'dependabot[bot]' && (success() || failure())
+            - name: Upload test results
+              uses: actions/upload-artifact@v3
+              if: success() || failure()
               with:
-                  name: Tests
+                  name: test-results
                   path: packages/**/junit.xml
-                  reporter: jest-junit
