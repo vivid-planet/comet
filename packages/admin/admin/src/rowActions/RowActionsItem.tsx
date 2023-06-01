@@ -6,6 +6,7 @@ import { RowActionsMenuContext } from "./RowActionsMenu";
 
 export interface CommonRowActionItemProps {
     icon?: React.ReactNode;
+    disabled?: boolean;
     onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
@@ -16,13 +17,14 @@ export interface RowActionsItemProps extends Omit<RowActionsIconItemProps, "comp
     children?: React.ReactNode;
 }
 
-export const RowActionsItem = ({ icon, children, onClick, componentsProps, ...restListItemProps }: RowActionsItemProps) => {
+export const RowActionsItem = ({ icon, children, disabled, onClick, componentsProps, ...restListItemProps }: RowActionsItemProps) => {
     const { level, closeAllMenus } = React.useContext(RowActionsMenuContext);
 
     if (level === 1) {
         return (
             <RowActionsIconItem
                 icon={icon}
+                disabled={disabled}
                 tooltip={children}
                 onClick={onClick}
                 componentsProps={{ iconButton: componentsProps?.iconButton, tooltip: componentsProps?.tooltip }}
@@ -33,6 +35,7 @@ export const RowActionsItem = ({ icon, children, onClick, componentsProps, ...re
     return (
         <RowActionsListItem
             icon={icon}
+            disabled={disabled}
             onClick={(event) => {
                 onClick?.(event);
                 closeAllMenus?.();

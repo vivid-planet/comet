@@ -37,6 +37,7 @@ export interface PagesPageActionToolbarProps {
     selectedTree: TreeMap<GQLPageTreePageFragment>;
 
     /* Collapse Buttons*/
+    collapseAllDisabled: boolean;
     onCollapseAllPressed: () => void;
 }
 
@@ -44,6 +45,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
     selectedState,
     selectedTree,
     onSelectAllPressed,
+    collapseAllDisabled,
     onCollapseAllPressed,
 }) => {
     const [showCanNotDeleteDialog, setShowCanNotDeleteDialog] = React.useState(false);
@@ -233,7 +235,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                     </Tooltip>
                 </Grid>
                 <Grid item>
-                    <Button startIcon={<TreeCollapseAll />} onClick={onCollapseAllPressed} size="small" color="info">
+                    <Button disabled={collapseAllDisabled} startIcon={<TreeCollapseAll />} onClick={onCollapseAllPressed} size="small" color="info">
                         <FormattedMessage id="comet.pages.pages.collapseAll" defaultMessage="Collapse all" />
                     </Button>
                 </Grid>

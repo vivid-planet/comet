@@ -1,6 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
-import { ChevronRight, MovePage } from "@comet/admin-icons";
-import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+import { RowActionsItem, RowActionsMenu } from "@comet/admin";
+import { MovePage } from "@comet/admin-icons";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -11,11 +11,9 @@ import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {
     page: PageTreePage;
-    onClose: () => void;
 }
 
-function MovePageMenuItem({ page, onClose }: Props): React.ReactElement | null {
-    const [subMenuAnchorEl, setSubMenuAnchorEl] = React.useState<HTMLElement>();
+export function MovePageMenuItem({ page }: Props): React.ReactElement | null {
     const [updatePageTreeNodeCategory, { loading: submitting }] = useMutation<
         GQLUpdatePageTreeNodeCategoryMutation,
         GQLUpdatePageTreeNodeCategoryMutationVariables
@@ -34,15 +32,6 @@ function MovePageMenuItem({ page, onClose }: Props): React.ReactElement | null {
         return null;
     }
 
-    const handleMenuItemClick: React.MouseEventHandler<HTMLElement> = (event) => {
-        setSubMenuAnchorEl(event.currentTarget);
-    };
-
-    const handleSubMenuClose = () => {
-        setSubMenuAnchorEl(undefined);
-        onClose();
-    };
-
     const handleSubMenuItemClick = async (category: string) => {
         const refetchQueries = [
             { query, variables: { contentScope: scope, category } },
@@ -53,34 +42,15 @@ function MovePageMenuItem({ page, onClose }: Props): React.ReactElement | null {
             variables: { id: page.id, category },
             refetchQueries,
         });
-
-        handleSubMenuClose();
     };
 
     return (
-        <>
-            <MenuItem onClick={handleMenuItemClick}>
-                <ListItemIcon>
-                    <MovePage />
-                </ListItemIcon>
-                <ListItemText primary={<FormattedMessage id="comet.pages.pages.page.movePage" defaultMessage="Move page" />} />
-                <ChevronRight color="action" />
-            </MenuItem>
-            <Menu
-                open={Boolean(subMenuAnchorEl)}
-                anchorEl={subMenuAnchorEl}
-                anchorOrigin={{ vertical: "center", horizontal: "left" }}
-                transformOrigin={{ vertical: "center", horizontal: "right" }}
-                onClose={handleSubMenuClose}
-            >
-                {allCategories.map(({ category, label }) => (
-                    <MenuItem key={category} disabled={category === page.category || submitting} onClick={() => handleSubMenuItemClick(category)}>
-                        {label}
-                    </MenuItem>
-                ))}
-            </Menu>
-        </>
+        <RowActionsMenu icon={<MovePage />} text={<FormattedMessage id="comet.pages.pages.page.movePage" defaultMessage="Move page" />}>
+            {allCategories.map(({ category, label }) => (
+                <RowActionsItem key={category} disabled={category === page.category || submitting} onClick={() => handleSubMenuItemClick(category)}>
+                    {label}
+                </RowActionsItem>
+            ))}
+        </RowActionsMenu>
     );
 }
-
-export { MovePageMenuItem };
