@@ -448,12 +448,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
             };
         });
+    const hasOutputRelations =
+        outputRelationManyToOneProps.length > 0 || outputRelationOneToManyProps.length > 0 || outputRelationManyToManyProps.length > 0;
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions, Reference } from "@mikro-orm/core";
-    import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    import { SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
+    import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
+    import { extractGraphqlFields, SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
+    import { GraphQLResolveInfo } from "graphql";
 
     ${generateImport(metadata, generatorOptions.targetDirectory)}
     ${scopeProp && scopeProp.targetMeta ? generateImport(scopeProp.targetMeta, generatorOptions.targetDirectory) : ""}
@@ -498,7 +501,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
         hasSortArg ? `sort, ` : ""
-    }offset, limit }: ${argsClassName}
+    }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
             const where = ${
                 hasSearchArg || hasFilterArg
@@ -506,7 +509,26 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     : "{}"
             }
             ${scopeProp ? `where.scope = scope;` : ""}
-            const options: FindOptions<${metadata.className}> = { offset, limit };
+
+            ${
+                hasOutputRelations
+                    ? `const fields = extractGraphqlFields(info, { root: "nodes" });
+            const populate: string[] = [];`
+                    : ""
+            }
+            ${[...outputRelationManyToOneProps, ...outputRelationOneToManyProps, ...outputRelationManyToManyProps]
+                .map(
+                    (r) =>
+                        `if (fields.includes("${r.name}")) {
+                            populate.push("${r.name}");
+                        }`,
+                )
+                .join("\n")}
+
+            ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
+            const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { offset, limit${
+        hasOutputRelations ? `, populate` : ""
+    }};
 
             ${
                 hasSortArg
