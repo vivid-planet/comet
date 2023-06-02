@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Next minor
+
+_tba_
+
+### @comet/cms-api
+
+#### Changes
+
+-   add stream end when create files from buffer in filestorage
+
 ## 3.2.3
 
 _Feb 7, 2023_
