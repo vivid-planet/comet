@@ -3,13 +3,13 @@ import { FinalForm, ISelectionApi } from "@comet/admin";
 import { CircularProgress } from "@mui/material";
 import React from "react";
 
+import { editFolderQuery, updateDamFolderMutation } from "./EditFolder.gql";
 import {
     GQLEditFolderQuery,
     GQLEditFolderQueryVariables,
     GQLUpdateDamFolderMutation,
     GQLUpdateDamFolderMutationVariables,
-} from "../../graphql.generated";
-import { editFolderQuery, updateDamFolderMutation } from "./EditFolder.gql";
+} from "./EditFolder.gql.generated";
 import { FolderFormFields, FolderFormValues } from "./FolderFormFields";
 
 interface EditFolderProps {

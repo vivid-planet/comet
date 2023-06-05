@@ -21,9 +21,9 @@ import { FileField } from "..";
 import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { DamPathLazy } from "../form/file/DamPathLazy";
-import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "../graphql.generated";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { EditImageDialog } from "./image/EditImageDialog";
+import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;

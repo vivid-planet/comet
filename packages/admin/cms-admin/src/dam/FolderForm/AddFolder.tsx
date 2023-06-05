@@ -2,10 +2,10 @@ import { useMutation } from "@apollo/client";
 import { FinalForm, ISelectionApi } from "@comet/admin";
 import React from "react";
 
-import { GQLCreateDamFolderMutation, GQLCreateDamFolderMutationVariables, namedOperations } from "../../graphql.generated";
 import { useDamScope } from "../config/useDamScope";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { createDamFolderMutation } from "./AddFolder.gql";
+import { GQLCreateDamFolderMutation, GQLCreateDamFolderMutationVariables } from "./AddFolder.gql.generated";
 import { FolderFormFields, FolderFormValues } from "./FolderFormFields";
 
 interface AddFolderProps {
@@ -16,7 +16,7 @@ interface AddFolderProps {
 const AddFolder = ({ parentId, selectionApi }: AddFolderProps): React.ReactElement => {
     const scope = useDamScope();
     const [createDamFolder] = useMutation<GQLCreateDamFolderMutation, GQLCreateDamFolderMutationVariables>(createDamFolderMutation, {
-        refetchQueries: [namedOperations.Query.DamItemsList],
+        refetchQueries: ["DamItemsList"],
         update: (cache) => {
             clearDamItemCache(cache);
         },

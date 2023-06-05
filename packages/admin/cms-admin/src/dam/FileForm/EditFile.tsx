@@ -26,23 +26,22 @@ import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
-import {
-    GQLDamFileDetailFragment,
-    GQLDamFileDetailQuery,
-    GQLDamFileDetailQueryVariables,
-    GQLFocalPoint,
-    GQLImageCropAreaInput,
-    GQLLicenseInput,
-    GQLUpdateFileMutation,
-    GQLUpdateFileMutationVariables,
-} from "../../graphql.generated";
+import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
 import { usePersistedDamLocation } from "../DataGrid/RedirectToPersistedDamLocation";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
+import {
+    GQLDamFileDetailFragment,
+    GQLDamFileDetailQuery,
+    GQLDamFileDetailQueryVariables,
+    GQLUpdateFileMutation,
+    GQLUpdateFileMutationVariables,
+} from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
 import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
+export { GQLDamFileDetailFragment } from "./EditFile.gql.generated";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;

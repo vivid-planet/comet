@@ -18,16 +18,13 @@ import { EditPageLayout, openSitePreviewWindow, SplitPreview, useBlockPreview, u
 import { Button } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import {
-    GQLEditMainMenuItemFragment,
-    GQLUpdateMainMenuItemMutation,
-    GQLUpdateMainMenuItemMutationVariables,
-    namedOperations,
-} from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
+
+import { GQLEditMainMenuItemFragment, GQLUpdateMainMenuItemMutation, GQLUpdateMainMenuItemMutationVariables } from "./EditMainMenuItem.generated";
+export type { GQLEditMainMenuItemFragment } from "./EditMainMenuItem.generated"; // re-export
 
 export const editMainMenuItemFragment = gql`
     fragment EditMainMenuItem on MainMenuItem {
@@ -109,7 +106,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                 input: { content: content ? RichTextBlock.state2Output(content) : null },
                 lastUpdatedAt: item.updatedAt,
             },
-            refetchQueries: [namedOperations.Query.MainMenuItem],
+            refetchQueries: ["MainMenuItem"],
         });
     };
 

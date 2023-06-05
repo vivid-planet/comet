@@ -81,6 +81,7 @@
         "@emotion/styled": "^11.3.0",
         "@graphql-codegen/cli": "^2.0.0",
         "@graphql-codegen/named-operations-object": "^2.0.0",
+        "@graphql-codegen/near-operation-file-preset": "^2.5.0",
         "@graphql-codegen/typescript": "^2.0.0",
         "@graphql-codegen/typescript-operations": "^2.0.0",
         "@mui/icons-material": "^5.0.0",

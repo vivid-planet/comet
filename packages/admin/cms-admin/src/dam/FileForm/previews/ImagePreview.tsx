@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { ImageCrop } from "../../../common/image/ImageCrop";
-import { GQLDamFileDetailFragment } from "../../../graphql.generated";
+import { GQLDamFileDetailFragment } from "../EditFile";
 
 const imageStyle = { maxWidth: "100%", maxHeight: "75vh" };
 

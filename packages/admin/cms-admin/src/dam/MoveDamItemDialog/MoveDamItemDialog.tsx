@@ -9,18 +9,16 @@ import { FormattedMessage } from "react-intl";
 
 import { TextMatch } from "../../common/MarkedMatches";
 import { SearchInput } from "../../common/SearchInput";
+import { useDamScope } from "../config/useDamScope";
 import {
-    GQLAllFoldersWithoutFiltersQuery,
-    GQLAllFoldersWithoutFiltersQueryVariables,
     GQLMoveDamFilesMutation,
     GQLMoveDamFilesMutationVariables,
     GQLMoveDamFoldersMutation,
     GQLMoveDamFoldersMutationVariables,
-} from "../../graphql.generated";
-import { useDamScope } from "../config/useDamScope";
+} from "../DataGrid/FolderDataGrid";
 import { moveDamFilesMutation, moveDamFoldersMutation } from "../DataGrid/FolderDataGrid.gql";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { ChooseFolder } from "./ChooseFolder";
+import { ChooseFolder, GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder";
 import { allFoldersQuery } from "./ChooseFolder.gql";
 import { useFolderTree } from "./useFolderTree";
 import { useFolderTreeSearch } from "./useFolderTreeSearch";

@@ -5,17 +5,11 @@ import { Button, Checkbox, FormControlLabel, Grid, IconButton, Tooltip, useTheme
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    GQLDeletePageTreeNodeMutation,
-    GQLDeletePageTreeNodeMutationVariables,
-    GQLPageTreePageFragment,
-    namedOperations,
-} from "../../graphql.generated";
-import { deletePageMutation } from "../pageTree/Page.gql";
+import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
 import { PageDeleteDialog } from "../pageTree/PageDeleteDialog";
 import { traverse, TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
 import { useCopyPastePages } from "../pageTree/useCopyPastePages";
-import { PageTreeSelectionState } from "../pageTree/usePageTree";
+import { GQLPageTreePageFragment, PageTreeSelectionState } from "../pageTree/usePageTree";
 import { usePageTreeContext } from "../pageTree/usePageTreeContext";
 import { areAllSubTreesFullSelected } from "./areAllSubTreesFullSelected";
 import { ConfirmPageActionDialog } from "./ConfirmPageActionDialog";
@@ -284,7 +278,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             // eslint-disable-next-line no-console
                             console.error("Error deleting pages");
                         } finally {
-                            client.refetchQueries({ include: [namedOperations.Query.Pages] });
+                            client.refetchQueries({ include: ["Pages"] });
                         }
                     } else {
                         setShowCanNotDeleteDialog(true);

@@ -21,12 +21,16 @@ import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../graphql.generated";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import { UploadSplitButton } from "./DataGrid/fileUpload/UploadSplitButton";
 import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
-import FolderDataGrid from "./DataGrid/FolderDataGrid";
+import FolderDataGrid, {
+    GQLDamFileTableFragment,
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamFolderTableFragment,
+} from "./DataGrid/FolderDataGrid";
 import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";

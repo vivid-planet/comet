@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLDamFileDetailFragment } from "../../../graphql.generated";
+import { GQLDamFileDetailFragment } from "../EditFile";
 
 const VideoPreviewWrapper = styled("div")`
     width: 100%;

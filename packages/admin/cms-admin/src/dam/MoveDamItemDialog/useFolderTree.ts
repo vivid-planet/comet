@@ -1,7 +1,7 @@
 import React from "react";
 
-import { GQLAllFoldersWithoutFiltersQuery } from "../../graphql.generated";
 import { traversePreOrder, TreeMap } from "../../pages/pageTree/treemap/TreeMapUtils";
+import { GQLAllFoldersWithoutFiltersQuery } from "./ChooseFolder";
 
 interface FolderTreeFolder {
     id: string;
