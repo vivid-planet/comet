@@ -2,18 +2,26 @@
     "name": "comet-admin-stories",
     "version": "0.0.0",
     "private": true,
+    "license": "BSD-2-Clause",
     "files": [
         "src"
     ],
+    "scripts": {
+        "build-storybook": "build-storybook",
+        "storybook": "start-storybook -p 26638",
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:tsc": "tsc --noEmit"
+    },
     "dependencies": {
         "@apollo/client": "^3.7.0",
-        "@comet/admin": "workspace:^4.1.0",
-        "@comet/admin-color-picker": "workspace:^4.1.0",
-        "@comet/admin-date-time": "workspace:^4.1.0",
-        "@comet/admin-icons": "workspace:^4.1.0",
-        "@comet/admin-react-select": "workspace:^4.1.0",
-        "@comet/admin-rte": "workspace:^4.1.0",
-        "@comet/admin-theme": "workspace:^4.1.0",
+        "@comet/admin": "workspace:^4.2.0",
+        "@comet/admin-color-picker": "workspace:^4.2.0",
+        "@comet/admin-date-time": "workspace:^4.2.0",
+        "@comet/admin-icons": "workspace:^4.2.0",
+        "@comet/admin-react-select": "workspace:^4.2.0",
+        "@comet/admin-rte": "workspace:^4.2.0",
+        "@comet/admin-theme": "workspace:^4.2.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@fontsource/roboto": "^4.2.3",
@@ -56,11 +64,11 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^4.1.0",
-        "@comet/eslint-config": "workspace:^4.1.0",
-        "@types/draft-js": "^0.11.10",
+        "@comet/admin-babel-preset": "workspace:^4.2.0",
+        "@comet/eslint-config": "workspace:^4.2.0",
         "@faker-js/faker": "^7.6.0",
         "@graphql-mocks/network-msw": "^0.3.0",
+        "@types/draft-js": "^0.11.10",
         "@types/faker": "^5.5.8",
         "@types/file-saver": "^2.0.1",
         "@types/history": "^4.0.0",
@@ -79,8 +87,8 @@
         "eslint": "^8.0.0",
         "graphql-mocks": "^0.10.0",
         "immutable": "~3.7.4",
-        "npm-run-all": "^4.1.5",
         "msw": "^0.35.0",
+        "npm-run-all": "^4.1.5",
         "prettier": "^2.0.0",
         "react-dnd": "^16.0.0",
         "react-dnd-html5-backend": "^16.0.0",
@@ -91,14 +99,6 @@
         "typescript": "^4.0.0",
         "webpack": "^5.0.0"
     },
-    "scripts": {
-        "build-storybook": "build-storybook",
-        "storybook": "start-storybook -p 26638",
-        "lint": "run-p lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/",
-        "lint:tsc": "tsc --noEmit"
-    },
-    "license": "BSD-2-Clause",
     "msw": {
         "workerDirectory": "public"
     }

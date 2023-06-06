@@ -778,6 +778,69 @@
         ]
     },
     {
+        "name": "Media",
+        "fields": [
+            {
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "DamImage",
+                                "DamVideo"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "DamImage",
+                                "DamVideo"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "NewsContent",
         "fields": [
             {
@@ -931,7 +994,8 @@
                                 "FullWidthImage",
                                 "Columns",
                                 "Anchor",
-                                "TwoLists"
+                                "TwoLists",
+                                "Media"
                             ],
                             "nullable": false
                         },

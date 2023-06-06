@@ -13,7 +13,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
+import { GQLDocumentInterface } from "../graphql.generated";
+import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
 import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";

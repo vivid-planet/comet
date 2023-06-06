@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
 import { Table, TableQuery, useTableQuery } from "@comet/admin";
 import { BuildRuntime } from "@comet/cms-admin";
-import { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "@src/graphql.generated";
 import { parseISO } from "date-fns";
 import * as React from "react";
 import { useIntl } from "react-intl";
+
+import { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "./LatestBuilds.generated";
 
 const LATEST_BUILDS = gql`
     query LatestBuilds {

@@ -2,11 +2,12 @@ import { gql } from "@apollo/client";
 import { Table, TableQuery, useTableQuery } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/utils/pageTreeNodeCategoryMapping";
 import * as React from "react";
 import { FormattedDate, FormattedTime, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
+
+import { GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables } from "./LatestContentUpdates.generated";
 
 const LATEST_CONTENT_UPDATES_QUERY = gql`
     query LatestContentUpdates {

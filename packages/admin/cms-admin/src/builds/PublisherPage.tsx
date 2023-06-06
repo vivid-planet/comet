@@ -9,9 +9,9 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { GQLBuildsQuery } from "../graphql.generated";
 import { BuildRuntime } from "./BuildRuntime";
 import { PublishButton } from "./PublishButton";
+import { GQLBuildsQuery } from "./PublisherPage.generated";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
     && {

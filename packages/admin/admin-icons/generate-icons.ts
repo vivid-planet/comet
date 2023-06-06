@@ -43,7 +43,11 @@ const getPathData = (fileName: string) => {
 };
 
 const getFormattedText = async (text: string) => {
-    const results = await eslint.lintText(text);
+    const results = await eslint.lintText(text, {
+        // Configures ESLint to treat supplied text as TypeScript JSX file.
+        // See docs: https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
+        filePath: "dummy.tsx",
+    });
 
     return results[0].output;
 };

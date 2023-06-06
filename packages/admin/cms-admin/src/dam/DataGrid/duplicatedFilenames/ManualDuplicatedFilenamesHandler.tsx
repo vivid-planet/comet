@@ -1,9 +1,10 @@
 import { useApolloClient } from "@apollo/client";
 import * as React from "react";
 
-import { GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables, GQLFilenameResponse } from "../../../graphql.generated";
+import { GQLFilenameResponse } from "../../../graphql.generated";
 import { useDamScope } from "../../config/useDamScope";
 import { damAreFilenamesOccupied } from "./ManualDuplicatedFilenamesHandler.gql";
+import { GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables } from "./ManualDuplicatedFilenamesHandler.gql.generated";
 import { ManuallyHandleDuplicatedFilenamesDialog } from "./ManuallyHandleDuplicatedFilenamesDialog";
 
 export interface ManualDuplicatedFilenamesHandlerApi {

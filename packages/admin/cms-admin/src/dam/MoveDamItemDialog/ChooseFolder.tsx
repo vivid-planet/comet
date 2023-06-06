@@ -9,6 +9,7 @@ import { FixedSizeList as List } from "react-window";
 import { MarkedMatches } from "../../common/MarkedMatches";
 import { FolderTreeMap } from "./useFolderTree";
 import { FolderWithMatches } from "./useFolderTreeSearch";
+export { GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder.gql.generated";
 
 interface ChooseFolderProps {
     folderTree: FolderTreeMap;

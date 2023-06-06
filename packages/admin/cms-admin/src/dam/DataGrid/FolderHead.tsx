@@ -5,9 +5,14 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useOptimisticQuery } from "../../common/useOptimisticQuery";
-import { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables } from "../../graphql.generated";
 import FolderBreadcrumbs from "./breadcrumbs/FolderBreadcrumbs";
-import { damFolderMPathFragment, damFolderMPathQuery } from "./TableHead.gql";
+import {
+    damFolderMPathFragment,
+    damFolderMPathQuery,
+    GQLDamFolderMPathFragment,
+    GQLDamFolderMPathQuery,
+    GQLDamFolderMPathQueryVariables,
+} from "./TableHead";
 
 interface TableHeadProps {
     isSearching: boolean;

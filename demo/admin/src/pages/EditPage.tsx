@@ -15,17 +15,12 @@ import {
 import { Button, CircularProgress, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import {
-    GQLEditPageQuery,
-    GQLEditPageQueryVariables,
-    GQLPageTreeNodeCategory,
-    GQLUpdatePageMutation,
-    GQLUpdatePageMutationVariables,
-} from "@src/graphql.generated";
+import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory, useRouteMatch } from "react-router";
 
+import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
 import { PageContentBlock } from "./PageContentBlock";
 
 interface Props {
@@ -166,7 +161,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             key: "config",
                             label: (
                                 <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                    <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />{" "}
+                                    <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />
                                 </AdminTabLabel>
                             ),
                             content: rootBlocksApi.seo.adminUI,

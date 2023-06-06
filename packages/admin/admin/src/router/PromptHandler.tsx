@@ -41,8 +41,9 @@ function InnerPromptHandler({
     const promptMessage = (location: History.Location, action: History.Action): boolean | string => {
         for (const id of Object.keys(registeredMessages.current)) {
             const path = registeredMessages.current[id].path;
+            const subRoutePath = registeredMessages.current[id].subRoutePath;
             // allow transition if location is below path where prompt was rendered
-            if (!(path && location.pathname.startsWith(path))) {
+            if (!((subRoutePath && location.pathname.startsWith(subRoutePath)) || location.pathname == path)) {
                 const message = registeredMessages.current[id].message(location, action);
                 if (message !== true) {
                     return message;
@@ -86,7 +87,8 @@ function InnerPromptHandler({
 interface PromptMessages {
     [id: string]: {
         message: (location: History.Location, action: History.Action) => boolean | string;
-        path?: string;
+        path: string;
+        subRoutePath?: string;
     };
 }
 interface Props {
@@ -106,16 +108,18 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
 
     const register = ({
         id,
-        path,
         message,
         saveAction,
+        path,
+        subRoutePath,
     }: {
         id: string;
-        path?: string;
         message: (location: History.Location, action: History.Action) => string | boolean;
         saveAction: SaveAction;
+        path: string;
+        subRoutePath?: string;
     }) => {
-        registeredMessages.current[id] = { message, path };
+        registeredMessages.current[id] = { message, path, subRoutePath };
         if (saveAction) {
             saveActions.current[id] = saveAction;
         }

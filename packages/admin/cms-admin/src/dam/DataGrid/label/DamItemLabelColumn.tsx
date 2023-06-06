@@ -5,11 +5,11 @@ import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 
 import { TextMatch } from "../../../common/MarkedMatches";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 import { DamFilter } from "../../DamTable";
 import { isFile } from "../../helpers/isFile";
 import { isFolder } from "../../helpers/isFolder";
 import { FileUploadApi } from "../fileUpload/useFileUpload";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
 import { DamItemMatches } from "../useDamSearchHighlighting";
 import DamItemLabel from "./DamItemLabel";
 

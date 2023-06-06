@@ -7,8 +7,8 @@ import { FormattedMessage } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 
 import { useOptimisticQuery } from "../../../common/useOptimisticQuery";
-import { GQLDamFolderBreadcrumbFragment, GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables } from "../../../graphql.generated";
 import { damFolderBreadcrumbFragment, damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
+import { GQLDamFolderBreadcrumbFragment, GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables } from "./FolderBreadcrumbs.gql.generated";
 
 interface DamBreadcrumbItem {
     id: string | null;

@@ -4,9 +4,10 @@ import { Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import { GQLMainMenuQuery, GQLMainMenuQueryVariables } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
+import { GQLMainMenuQuery, GQLMainMenuQueryVariables } from "./MainMenuItems.generated";
 
 const mainMenuQuery = gql`
     query MainMenu($contentScope: PageTreeNodeScopeInput!) {

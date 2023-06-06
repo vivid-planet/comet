@@ -18,10 +18,12 @@ import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import { GQLMutationcreateNewsArgs, GQLMutationupdateNewsArgs, GQLNewsInput, GQLNewsQuery, GQLNewsQueryVariables } from "@src/graphql.generated";
+import { GQLMutationcreateNewsArgs, GQLMutationupdateNewsArgs, GQLNewsInput } from "@src/graphql.generated";
 import { FORM_ERROR } from "final-form";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+
+import { GQLNewsQuery, GQLNewsQueryVariables } from "./Form.generated";
 
 const newsQuery = gql`
     query News($id: ID!) {

@@ -18,6 +18,11 @@ import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { filter } from "graphql-anywhere";
+import gql from "graphql-tag";
+import * as React from "react";
+import { FormattedMessage } from "react-intl";
+
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -26,11 +31,7 @@ import {
     GQLProductsListFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
-} from "@src/graphql.generated";
-import { filter } from "graphql-anywhere";
-import gql from "graphql-tag";
-import * as React from "react";
-import { FormattedMessage } from "react-intl";
+} from "./ProductsTable.generated";
 
 function ProductsTableToolbar() {
     return (

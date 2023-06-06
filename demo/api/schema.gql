@@ -687,32 +687,32 @@ type Query {
   currentUser: CurrentUser!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput!): [FilenameResponse!]!
   damFile(id: ID!): DamFile!
-  damFilesList(filter: FileFilterInput, folderId: ID, includeArchived: Boolean = false, limit: Int! = 20, offset: Int! = 0, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamFiles!
+  damFilesList(filter: FileFilterInput, folderId: ID, includeArchived: Boolean = false, limit: Int! = 25, offset: Int! = 0, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamFiles!
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(name: String!, parentId: ID, scope: DamScopeInput!): DamFolder
   damFoldersFlat(scope: DamScopeInput!): [DamFolder!]!
-  damFoldersList(filter: FolderFilterInput, includeArchived: Boolean, limit: Int! = 20, offset: Int! = 0, parentId: ID, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamFolders!
+  damFoldersList(filter: FolderFilterInput, includeArchived: Boolean, limit: Int! = 25, offset: Int! = 0, parentId: ID, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamFolders!
   damIsFilenameOccupied(filename: String!, folderId: String, scope: DamScopeInput!): Boolean!
   damItemListPosition(filter: DamItemFilterInput, folderId: ID, id: ID!, includeArchived: Boolean, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC, type: DamItemType!): Float!
-  damItemsList(filter: DamItemFilterInput, folderId: ID, includeArchived: Boolean, limit: Int! = 20, offset: Int! = 0, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamItems!
+  damItemsList(filter: DamItemFilterInput, folderId: ID, includeArchived: Boolean, limit: Int! = 25, offset: Int! = 0, scope: DamScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedDamItems!
   footer(scope: FooterContentScopeInput!): Footer
   link(linkId: ID!): Link
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   news(id: ID!): News!
   newsBySlug(slug: String!): News
-  newsList(filter: NewsFilter, limit: Int! = 20, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]): PaginatedNews!
+  newsList(filter: NewsFilter, limit: Int! = 25, offset: Int! = 0, scope: NewsContentScopeInput!, search: String, sort: [NewsSort!]): PaginatedNews!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeForPredefinedPage(scope: PageTreeNodeScopeInput!, type: String!): PageTreeNode
   pageTreeNodeList(category: String, scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   pageTreeNodeSlugAvailable(parentId: ID, scope: PageTreeNodeScopeInput!, slug: String!): SlugAvailability!
-  pages(limit: Int! = 20, offset: Int! = 0, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
-  paginatedRedirects(filter: RedirectFilter, limit: Int! = 20, offset: Int! = 0, scope: RedirectScopeInput!, search: String, sort: [RedirectSort!]): PaginatedRedirects!
+  pages(limit: Int! = 25, offset: Int! = 0, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
+  paginatedRedirects(filter: RedirectFilter, limit: Int! = 25, offset: Int! = 0, scope: RedirectScopeInput!, search: String, sort: [RedirectSort!]): PaginatedRedirects!
   predefinedPage(id: ID!): PredefinedPage
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
-  products(filter: ProductFilter, limit: Int! = 20, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
+  products(filter: ProductFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [ProductSort!]): PaginatedProducts!
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   redirects(active: Boolean, query: String, scope: RedirectScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC, type: RedirectGenerationType): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")

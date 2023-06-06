@@ -7,15 +7,14 @@ import { v4 as uuid } from "uuid";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { GQLDocument, GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutationVariables, IdsMap } from "../../documents/types";
+import { arrayToTreeMap } from "./treemap/TreeMapUtils";
 import {
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
-    GQLPageTreePageFragment,
     GQLSlugAvailableQuery,
     GQLSlugAvailableQueryVariables,
-    namedOperations,
-} from "../../graphql.generated";
-import { arrayToTreeMap } from "./treemap/TreeMapUtils";
+} from "./useCopyPastePages.generated";
+import { GQLPageTreePageFragment } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 const slugAvailableQuery = gql`
@@ -291,7 +290,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
             await traverse("root", parentId);
 
             // 2. Refetch Pages query
-            client.refetchQueries({ include: [namedOperations.Query.Pages] });
+            client.refetchQueries({ include: ["Pages"] });
         },
         [client, documentTypes, scope],
     );

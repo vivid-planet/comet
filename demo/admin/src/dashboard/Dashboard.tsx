@@ -4,11 +4,11 @@ import { Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import DateTime from "@src/dashboard/DateTime";
-import { GQLDashboardCurrentUserQuery } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { DashboardWidgetContainer } from "./components/DashboardWidgetContainer";
+import { GQLDashboardCurrentUserQuery } from "./Dashboard.generated";
 import backgroundImage1x from "./dashboard-image@1x.jpg";
 import backgroundImage2x from "./dashboard-image@2x.jpg";
 import { LatestBuilds } from "./LatestBuilds";

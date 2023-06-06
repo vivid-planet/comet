@@ -12,7 +12,7 @@
         "fixtures": "$npm_execpath console fixtures --",
         "fixtures:prod": "$npm_execpath console:prod fixtures --",
         "lint": "run-p lint:eslint lint:tsc && $npm_execpath lint:generated-files-not-modified",
-        "lint:eslint": "eslint --max-warnings 0  --ext .ts,.tsx,.js,.jsx,.json,.md src/",
+        "lint:eslint": "eslint --max-warnings 0  --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
         "lint:generated-files-not-modified": "$npm_execpath api-generator && git diff --exit-code HEAD --",
         "mikro-orm": "mikro-orm",
@@ -26,8 +26,8 @@
     "dependencies": {
         "@aws-sdk/client-s3": "^3.47.0",
         "@azure/storage-blob": "^12.0.0",
-        "@comet/blocks-api": "workspace:^4.1.0",
-        "@comet/cms-api": "workspace:^4.1.0",
+        "@comet/blocks-api": "workspace:^4.2.0",
+        "@comet/cms-api": "workspace:^4.2.0",
         "@hapi/accept": "^5.0.0",
         "@kubernetes/client-node": "^0.18.0",
         "@mikro-orm/cli": "^5.0.4",
@@ -81,7 +81,7 @@
         "webpack": "^5.64.2"
     },
     "devDependencies": {
-        "@comet/eslint-config": "workspace:^4.1.0",
+        "@comet/eslint-config": "workspace:^4.2.0",
         "@nestjs/cli": "^9.0.0",
         "@nestjs/schematics": "^9.0.0",
         "@nestjs/testing": "^9.0.0",

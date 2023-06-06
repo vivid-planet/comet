@@ -157,9 +157,9 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
     return (
         <RouterContext.Provider
             value={{
-                register: ({ id, path, message, saveAction }) => {
+                register: ({ saveAction, ...args }) => {
                     saveActionRef.current = saveAction;
-                    parentRouterContext?.register({ id, path, message, saveAction });
+                    parentRouterContext?.register({ saveAction, ...args });
                 },
                 unregister: (id) => {
                     saveActionRef.current = undefined;

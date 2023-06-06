@@ -4,7 +4,7 @@ import { List, ListItem, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { GQLPageQuery, GQLPageQueryVariables } from "../graphql.generated";
+import { GQLPageQuery, GQLPageQueryVariables } from "./PageName.generated";
 
 export const pageFragment = gql`
     fragment Page on PageTreeNode {

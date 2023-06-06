@@ -21,7 +21,6 @@ import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from ".
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DocumentInterface, DocumentType } from "../../documents/types";
-import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../../graphql.generated";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
 import { EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
@@ -29,7 +28,7 @@ import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
 import { AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
-import { createPagesQuery } from "./createPagesQuery";
+import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 
 interface Props {
@@ -87,10 +86,11 @@ export function PagesPage({
 
     const ignorePages = React.useCallback((page: GQLPageTreePageFragment) => (showArchive ? true : page.visibility !== "Archived"), [showArchive]);
 
-    const { tree, pagesToRender, setExpandedIds, toggleExpand, onSelectChanged, setSelectedIds, selectState, selectedTree } = usePageTree({
-        pages: data?.pages ?? [],
-        filter: ignorePages,
-    });
+    const { tree, pagesToRender, setExpandedIds, expandedIds, toggleExpand, onSelectChanged, setSelectedIds, selectState, selectedTree } =
+        usePageTree({
+            pages: data?.pages ?? [],
+            filter: ignorePages,
+        });
 
     const pageSearchApi = usePageSearch({
         tree,
@@ -151,12 +151,12 @@ export function PagesPage({
                                         }
                                     }}
                                     selectedTree={selectedTree}
+                                    collapseAllDisabled={!expandedIds.length}
                                     onCollapseAllPressed={() => {
                                         setExpandedIds([]);
                                     }}
                                 />
                             </ActionToolbarBox>
-
                             <FullHeightPaper variant="outlined">
                                 {loading && <CircularProgress />}
 

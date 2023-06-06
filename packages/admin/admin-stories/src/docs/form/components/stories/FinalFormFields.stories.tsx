@@ -97,9 +97,7 @@ storiesOf("stories/form/FinalForm Fields", module)
                 <Field
                     component={FinalFormAutocomplete}
                     getOptionLabel={(option: Option) => option.label}
-                    getOptionSelected={(option: Option, value: Option) => {
-                        return option.value === value.value;
-                    }}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
                     options={options}
                     name="autocomplete"
                     label="Autocomplete"
@@ -109,9 +107,7 @@ storiesOf("stories/form/FinalForm Fields", module)
                     component={FinalFormAutocomplete}
                     {...acAsyncProps}
                     getOptionLabel={(option: Option) => option.label}
-                    getOptionSelected={(option: Option, value: Option) => {
-                        return option.value === value.value;
-                    }}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
                     name="autocompleteAsync"
                     label="AutocompleteAsync"
                     fullWidth
@@ -120,9 +116,7 @@ storiesOf("stories/form/FinalForm Fields", module)
                     component={FinalFormAutocomplete}
                     multiple
                     getOptionLabel={(option: Option) => option.label}
-                    getOptionSelected={(option: Option, value: Option) => {
-                        return option.value === value.value;
-                    }}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
                     options={options}
                     name="autocompleteMultiple"
                     label="Autocomplete multiple select"

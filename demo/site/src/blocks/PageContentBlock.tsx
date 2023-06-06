@@ -9,6 +9,7 @@ import DamVideoBlock from "./DamVideoBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { HeadlineBlock } from "./HeadlineBlock";
 import { LinkListBlock } from "./LinkListBlock";
+import { MediaBlock } from "./MediaBlock";
 import RichTextBlock from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
 import { TextImageBlock } from "./TextImageBlock";
@@ -26,6 +27,7 @@ const supportedBlocks: SupportedBlocks = {
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
     columns: (props) => <ColumnsBlock data={props} />,
     anchor: (props) => <AnchorBlock data={props} />,
+    media: (props) => <MediaBlock data={props} />,
 };
 
 export const PageContentBlock: React.FC<PropsWithData<PageContentBlockData>> = ({ data }) => {

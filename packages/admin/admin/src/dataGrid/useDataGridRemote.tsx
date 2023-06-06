@@ -6,7 +6,7 @@ import { useHistory, useLocation } from "react-router";
 //returns props for DataGrid that turns it into a controlled component ready to be used for remote filter/sorting/paging
 export function useDataGridRemote({
     queryParamsPrefix = "",
-    pageSize: initialPageSize = 20,
+    pageSize: initialPageSize = 25,
     initialSort,
 }: {
     queryParamsPrefix?: string;
