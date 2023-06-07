@@ -143,7 +143,7 @@ export const XMLToState = (block: RawDraftContentBlock): RawDraftContentBlock =>
                 length: newEntityRange?.length ?? entityRange.length,
             };
         })
-        .filter((styleRange) => styleRange) as EntityRange[];
+        .filter((entityRange) => entityRange) as EntityRange[];
 
     return {
         ...block,

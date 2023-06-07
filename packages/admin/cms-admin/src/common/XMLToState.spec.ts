@@ -494,4 +494,61 @@ describe("XMLToState", () => {
             ],
         });
     });
+
+    it("should handle changed link position", () => {
+        // original text: "Das ist <entity id="1">ein Link</entity>"
+        const block = {
+            key: "5jda2",
+            text: '<entity id="1">ein Link</entity> Das ist',
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [
+                {
+                    offset: 8,
+                    length: 8,
+                    key: 0,
+                },
+            ],
+            data: {},
+        };
+
+        expect(XMLToState(block)).toEqual({
+            ...block,
+            text: "ein Link Das ist",
+            entityRanges: [
+                {
+                    offset: 0,
+                    length: 8,
+                    key: 0,
+                },
+            ],
+        });
+    });
+
+    it("should keep links and styles when only text has changed", () => {
+        // original text: "Das ist <entity id="1">ein Link</entity>"
+        const block = {
+            key: "5jda2",
+            text: 'Das ist <entity id="1">ein Test</entity>',
+            type: "header-three",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [
+                {
+                    offset: 8,
+                    length: 8,
+                    key: 0,
+                },
+            ],
+            data: {},
+        };
+
+        const test = XMLToState(block);
+
+        expect(test).toEqual({
+            ...block,
+            text: "Das ist ein Test",
+        });
+    });
 });
