@@ -18,12 +18,19 @@ jobs:
                   git config user.name github-actions
                   git config user.email github-actions@github.com
 
-            - name: Merge main into next
+            - name: Try automatic merge of main into next
               run: |
                   git checkout next
                   git merge main
 
+            - name: Merge with conflicts if automatic merge failed
+              if: failure()
+              run: |
+                  git add .
+                  git commit -m "Merge main into next"
+
             - name: Create pull request
+              if: success() || failure()
               uses: peter-evans/create-pull-request@v5
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
