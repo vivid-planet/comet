@@ -27,7 +27,6 @@ import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
-import { usePersistedDamLocation } from "../DataGrid/RedirectToPersistedDamLocation";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
@@ -78,16 +77,12 @@ const useInitialValues = (id: string) => {
 
 const EditFile = ({ id }: EditFormProps): React.ReactElement => {
     const { match: scopeMatch } = useContentScope();
-    const persistedDamLocationApi = usePersistedDamLocation();
     const initialValues = useInitialValues(id);
     const file = initialValues.data?.damFile;
 
     if (initialValues.loading) {
         return <CircularProgress />;
     } else if (initialValues.error || file === undefined) {
-        // otherwise, the user always gets redirected to the broken file and is stuck there
-        persistedDamLocationApi?.reset();
-
         return (
             <Card>
                 <CardContent>
