@@ -27,7 +27,7 @@ const DamImageBlock = createOneOfBlock({
 DamImageBlock.AdminComponent = function AdminComponent({ state, updateState }) {
     const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    if (state.activeType === null) {
+    if (!state.activeType) {
         throw new Error("No active type");
     }
 
