@@ -21,7 +21,6 @@ import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ConditionalWrapper } from "../common/ConditionalWrapper";
 import { useDamScope } from "./config/useDamScope";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
@@ -190,20 +189,14 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
-            <ConditionalWrapper
-                condition={stateKey !== undefined}
-                // non-null check is done in the line above
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                wrapper={(children) => <RedirectToPersistedDamLocation stateKey={stateKey!}>{children}</RedirectToPersistedDamLocation>}
-            >
-                <FileUploadContextProvider>
-                    <ManualDuplicatedFilenamesHandlerContextProvider>
-                        <DamSelectionProvider>
-                            <Folder filterApi={filterApi} {...propsWithDefaultValues} />
-                        </DamSelectionProvider>
-                    </ManualDuplicatedFilenamesHandlerContextProvider>
-                </FileUploadContextProvider>
-            </ConditionalWrapper>
+            {stateKey && <RedirectToPersistedDamLocation stateKey={stateKey} />}
+            <FileUploadContextProvider>
+                <ManualDuplicatedFilenamesHandlerContextProvider>
+                    <DamSelectionProvider>
+                        <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                    </DamSelectionProvider>
+                </ManualDuplicatedFilenamesHandlerContextProvider>
+            </FileUploadContextProvider>
         </Stack>
     );
 };
