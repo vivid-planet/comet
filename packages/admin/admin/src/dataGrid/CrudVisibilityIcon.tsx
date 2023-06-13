@@ -4,10 +4,9 @@ import React from "react";
 
 interface CrudVisibilityIconProps {
     visibility: boolean;
-    disabled?: boolean;
 }
 
-export function CrudVisibilityIcon({ visibility, disabled }: CrudVisibilityIconProps): JSX.Element {
+export function CrudVisibilityIcon({ visibility }: CrudVisibilityIconProps): JSX.Element {
     const theme = useTheme();
 
     if (visibility) {
