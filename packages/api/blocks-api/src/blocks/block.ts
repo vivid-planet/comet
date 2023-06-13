@@ -305,9 +305,11 @@ export function transformToSave(block: BlockDataInterface): TraversableTransform
             return jsonObj.map((c) => traverse(c));
         } else if (jsonObj !== null && typeof jsonObj === "object") {
             const entries = Object.entries(isBlockDataInterface(jsonObj) ? jsonObj.transformToSave() : jsonObj);
-            const mappedEntries = entries.map(([k, i]) => {
-                return [k, traverse(i)];
-            });
+            const mappedEntries = entries
+                .map(([k, i]) => {
+                    return [k, traverse(i)];
+                })
+                .filter(([, value]) => value !== undefined);
             return Object.fromEntries(mappedEntries);
         } else {
             // keep literal as it is
