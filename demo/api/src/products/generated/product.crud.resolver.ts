@@ -57,6 +57,7 @@ export class ProductCrudResolver {
         const product = this.repository.create({
             ...input,
             image: input.image.transformToBlockData(),
+            visible: false,
         });
 
         await this.entityManager.flush();
@@ -91,5 +92,21 @@ export class ProductCrudResolver {
         await this.entityManager.remove(product);
         await this.entityManager.flush();
         return true;
+    }
+
+    @Mutation(() => Product)
+    @SubjectEntity(Product)
+    async updateProductVisibility(
+        @Args("id", { type: () => ID }) id: string,
+        @Args("visible", { type: () => Boolean }) visible: boolean,
+    ): Promise<Product> {
+        const product = await this.repository.findOneOrFail(id);
+
+        product.assign({
+            visible,
+        });
+        await this.entityManager.flush();
+
+        return product;
     }
 }

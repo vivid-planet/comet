@@ -356,6 +356,7 @@ type Mutation {
   updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
   updateProduct(id: ID!, input: ProductInput!, lastUpdatedAt: DateTime): Product!
+  updateProductVisibility(id: ID!, visible: Boolean!): Product!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
 }
@@ -435,7 +436,6 @@ input NewsInput {
   image: DamImageBlockInput!
   slug: String!
   title: String!
-  visible: Boolean!
 }
 
 input NewsSort {
@@ -606,6 +606,7 @@ type Product implements DocumentInterface {
   title: String!
   type: ProductType!
   updatedAt: DateTime!
+  visible: Boolean!
 }
 
 input ProductFilter {
@@ -619,6 +620,7 @@ input ProductFilter {
   title: StringFilter
   type: ProductTypeEnumFilter
   updatedAt: DateFilter
+  visible: BooleanFilter
 }
 
 input ProductInput {
@@ -645,6 +647,7 @@ enum ProductSortField {
   title
   type
   updatedAt
+  visible
 }
 
 enum ProductType {
