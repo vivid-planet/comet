@@ -21,6 +21,7 @@ import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { ConditionalWrapper } from "../common/ConditionalWrapper";
 import { useDamScope } from "./config/useDamScope";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
@@ -151,7 +152,7 @@ interface DamTableProps extends DamConfig {
     damLocationStorageKey?: string;
 }
 
-export const DamTable = ({ damLocationStorageKey = "dam-location", ...props }: DamTableProps): React.ReactElement => {
+export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): React.ReactElement => {
     const intl = useIntl();
     const [sorting, setSorting] = useStoredState<ISortInformation>("dam_filter_sorting", {
         columnName: "name",
@@ -176,10 +177,12 @@ export const DamTable = ({ damLocationStorageKey = "dam-location", ...props }: D
         }
     }, [filterApi, filterApi.current.sort, setSorting]);
 
-    let stateKey: string;
+    let stateKey: string | undefined;
     const scope = useDamScope();
 
-    if (Object.keys(scope).length > 0) {
+    if (damLocationStorageKey === undefined) {
+        stateKey = undefined;
+    } else if (Object.keys(scope).length > 0) {
         stateKey = `${Object.values(scope).join("-")}-${damLocationStorageKey}`;
     } else {
         stateKey = damLocationStorageKey;
@@ -187,7 +190,12 @@ export const DamTable = ({ damLocationStorageKey = "dam-location", ...props }: D
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
-            <RedirectToPersistedDamLocation stateKey={stateKey}>
+            <ConditionalWrapper
+                condition={stateKey !== undefined}
+                // non-null check is done in the line above
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                wrapper={(children) => <RedirectToPersistedDamLocation stateKey={stateKey!}>{children}</RedirectToPersistedDamLocation>}
+            >
                 <FileUploadContextProvider>
                     <ManualDuplicatedFilenamesHandlerContextProvider>
                         <DamSelectionProvider>
@@ -195,7 +203,7 @@ export const DamTable = ({ damLocationStorageKey = "dam-location", ...props }: D
                         </DamSelectionProvider>
                     </ManualDuplicatedFilenamesHandlerContextProvider>
                 </FileUploadContextProvider>
-            </RedirectToPersistedDamLocation>
+            </ConditionalWrapper>
         </Stack>
     );
 };
