@@ -125,7 +125,6 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                             <Divider />
                             <CopyPasteMenuItem page={page} />
                             <Divider />
-                            <Divider />
                             <ExtractImportMenuItem page={page} />
                             <Divider />
                         </>

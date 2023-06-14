@@ -127,9 +127,11 @@ function useExtractImportPages(): UseExtractPagesApi {
                                 context: LocalErrorScopeApolloContext,
                             });
 
+                            textContents.push(page.name, page.slug);
+
                             if (data?.page?.document) {
                                 const extractedContent = documentType.extractTextContents?.(data.page.document);
-                                textContents.push(page.name, page.slug, ...(extractedContent ?? []));
+                                textContents.push(...(extractedContent ?? []));
                             }
                         }
                     } catch (e) {
@@ -179,27 +181,31 @@ function useExtractImportPages(): UseExtractPagesApi {
                                         context: LocalErrorScopeApolloContext,
                                     });
                                 }
+                            }
 
-                                const importedName = content.contents.find((item) => item.original === page.name)?.replaceWith;
-                                const importedSlug = content.contents.find((item) => item.original === page.slug)?.replaceWith.toLowerCase();
+                            const importedName = content.contents.find((item) => item.original === page.name)?.replaceWith;
+                            const importedSlug = content.contents.find((item) => item.original === page.slug)?.replaceWith.toLowerCase();
 
-                                if (importedName !== page.name || importedSlug !== page.slug) {
-                                    await client.mutate<GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables>({
-                                        mutation: updatePageNodeMutation,
-                                        variables: {
-                                            nodeId: page.id,
-                                            input: {
-                                                name: importedName && importedName !== "" ? importedName : page.name,
-                                                slug:
-                                                    importedSlug && importedSlug !== ""
-                                                        ? transformToSlug(importedSlug ?? page.slug, locale)
-                                                        : page.slug,
-                                                attachedDocument: { id: data.page.document.id, type: data.page.document.__typename },
-                                            },
-                                        },
-                                        context: LocalErrorScopeApolloContext,
-                                    });
+                            if (importedName !== page.name || importedSlug !== page.slug) {
+                                const attachedDocument: { id?: string; type: string } = { type: page.documentType };
+
+                                if (data.page?.document) {
+                                    attachedDocument.id = data.page?.document.id;
                                 }
+
+                                await client.mutate<GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables>({
+                                    mutation: updatePageNodeMutation,
+                                    variables: {
+                                        nodeId: page.id,
+                                        input: {
+                                            name: importedName && importedName !== "" ? importedName : page.name,
+                                            slug:
+                                                importedSlug && importedSlug !== "" ? transformToSlug(importedSlug ?? page.slug, locale) : page.slug,
+                                            attachedDocument,
+                                        },
+                                    },
+                                    context: LocalErrorScopeApolloContext,
+                                });
                             }
                         }
                     } catch (e) {
