@@ -4,7 +4,7 @@ import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
 import { ObjectQuery } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 
-import { ProductCategory } from "../entities/product-cetegory.entity";
+import { ProductCategory } from "../entities/product-category.entity";
 import { ProductCategoryFilter } from "./dto/product-category.filter";
 
 @Injectable()

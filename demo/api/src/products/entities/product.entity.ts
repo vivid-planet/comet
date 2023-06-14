@@ -13,7 +13,7 @@ registerEnumType(ProductType, {
     name: "ProductType",
 });
 
-import { ProductCategory } from "./product-cetegory.entity";
+import { ProductCategory } from "./product-category.entity";
 import { ProductTag } from "./product-tag.entity";
 
 @ObjectType({

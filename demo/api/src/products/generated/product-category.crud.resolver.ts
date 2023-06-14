@@ -8,7 +8,7 @@ import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from 
 import { GraphQLResolveInfo } from "graphql";
 
 import { Product } from "../entities/product.entity";
-import { ProductCategory } from "../entities/product-cetegory.entity";
+import { ProductCategory } from "../entities/product-category.entity";
 import { PaginatedProductCategories } from "./dto/paginated-product-categories";
 import { ProductCategoriesArgs } from "./dto/product-categories.args";
 import { ProductCategoryInput } from "./dto/product-category.input";
