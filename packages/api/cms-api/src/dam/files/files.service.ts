@@ -559,8 +559,7 @@ export class FilesService {
     async createFileUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
         const filename = parse(file.name).name;
 
-        // Use CDN url only if available and not in preview as preview requires auth
-        const baseUrl = [this.config.cdnEnabled && !previewDamUrls ? `${this.config.cdnDomain}/files` : this.config.filesBaseUrl];
+        const baseUrl = [this.config.filesBaseUrl];
 
         if (previewDamUrls) {
             baseUrl.push("preview");

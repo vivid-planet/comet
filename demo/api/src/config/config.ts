@@ -49,6 +49,10 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
         },
+        cdn: {
+            enabled: envVars.CDN_ENABLED,
+            originCheck: envVars.CDN_ORIGIN_CHECK,
+        },
     };
 }
 

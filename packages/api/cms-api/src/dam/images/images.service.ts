@@ -26,8 +26,7 @@ export class ImagesService {
         const imageCropArea = cropArea !== undefined ? cropArea : file.image!.cropArea;
         const filename = parse(file.name).name;
 
-        // Use CDN url only if available and not in preview as preview requires auth
-        const baseUrl = [this.config.cdnEnabled && !previewDamUrls ? `${this.config.cdnDomain}/images` : this.config.imagesBaseUrl];
+        const baseUrl = [this.config.imagesBaseUrl];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
