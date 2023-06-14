@@ -7,8 +7,9 @@ import slugify from "slugify";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "../../documents/types";
-import { GQLPageTreePageFragment, GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables } from "../../graphql.generated";
 import { useLocale } from "../../locale/useLocale";
+import { GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables } from "../createEditPageNode.generated";
+import { GQLPageTreePageFragment } from "./usePageTree.generated";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface ContentsClipboard {
