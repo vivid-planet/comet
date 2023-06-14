@@ -22,7 +22,7 @@ interface OneOfBlockItem<T extends BlockInterface = BlockInterface> {
 
 export interface OneOfBlockState {
     attachedBlocks: OneOfBlockItem[];
-    activeType: string | null;
+    activeType?: string;
 }
 
 export interface OneOfBlockFragment {
@@ -31,7 +31,7 @@ export interface OneOfBlockFragment {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         props: any;
     }[];
-    activeType: string | null;
+    activeType?: string;
 }
 
 export interface OneOfBlockPreviewState extends PreviewStateInterface {
@@ -111,7 +111,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
             if (allowEmpty) {
                 return {
                     attachedBlocks: [],
-                    activeType: null,
+                    activeType: undefined,
                 };
             } else {
                 const [blockType, block] = Object.entries(supportedBlocks)[0];
@@ -124,7 +124,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
         },
 
         input2State: (input) => {
-            const activeType = input.activeType && supportedBlocks[input.activeType] ? input.activeType : null;
+            const activeType = input.activeType && supportedBlocks[input.activeType] ? input.activeType : undefined;
 
             const attachedBlocks: OneOfBlockItem[] = [];
 
@@ -253,7 +253,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
                         let newState: OneOfBlockState = prevState;
                         if (blockType === "none") {
                             // unselect, no block selected
-                            newState = { ...prevState, activeType: null };
+                            newState = { ...prevState, activeType: undefined };
                         } else {
                             // check if we have a block of the same type already
                             const match = prevState.attachedBlocks.find((c) => c.type === blockType);

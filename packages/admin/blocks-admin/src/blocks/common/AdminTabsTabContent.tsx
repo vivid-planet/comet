@@ -13,7 +13,9 @@ export function TabContent({ children, selectedTab }: TabContentProps): React.Re
     const scrollRestoration = useScrollRestoration<HTMLDivElement>(`adminTabsTabContent-${selectedTab}`);
     return (
         <Root {...scrollRestoration}>
-            <Box marginBottom={4}>{children}</Box>
+            <Box marginBottom={4} marginTop={4}>
+                {children}
+            </Box>
         </Root>
     );
 }

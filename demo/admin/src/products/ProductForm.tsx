@@ -19,11 +19,17 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { GQLProductType } from "@src/graphql.generated";
+import { FormApi } from "final-form";
+import { filter } from "graphql-anywhere";
+import isEqual from "lodash.isequal";
+import React from "react";
+import { FormattedMessage } from "react-intl";
+
+import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
-    GQLCheckForChangesProductQuery,
-    GQLCheckForChangesProductQueryVariables,
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
     GQLProductFormFragment,
@@ -31,15 +37,7 @@ import {
     GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
-    GQLProductType,
-} from "@src/graphql.generated";
-import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
-import isEqual from "lodash.isequal";
-import React from "react";
-import { FormattedMessage } from "react-intl";
-
-import { createProductMutation, productCheckForChangesQuery, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+} from "./ProductForm.gql.generated";
 
 interface FormProps {
     id?: string;
@@ -70,7 +68,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         ? {
               ...filter<GQLProductFormFragment>(productFormFragment, data.product),
               price: String(data.product.price),
-              // @ts-expect-error type mismatch between OneOfBlock block data and block state
               image: rootBlocks.image.input2State(data.product.image),
           }
         : {
@@ -80,13 +77,8 @@ function ProductForm({ id }: FormProps): React.ReactElement {
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
-            if (!id) return false;
-            const { data: hasConflictData } = await client.query<GQLCheckForChangesProductQuery, GQLCheckForChangesProductQueryVariables>({
-                query: productCheckForChangesQuery,
-                variables: { id },
-                fetchPolicy: "no-cache",
-            });
-            return resolveHasSaveConflict(data?.product.updatedAt, hasConflictData.product.updatedAt);
+            const updatedAt = await queryUpdatedAt(client, "product", id);
+            return resolveHasSaveConflict(data?.product.updatedAt, updatedAt);
         },
         formApiRef,
         loadLatestVersion: async () => {

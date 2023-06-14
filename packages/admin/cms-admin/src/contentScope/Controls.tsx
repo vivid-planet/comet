@@ -8,6 +8,7 @@ export type ContentScopeControlsConfig<S extends ContentScopeInterface = Content
     [P in keyof S]?: {
         label?: string;
         icon?: (props: SvgIconProps) => JSX.Element;
+        searchable?: boolean;
     };
 };
 
@@ -31,6 +32,7 @@ export function ContentScopeControls<S extends ContentScopeInterface = ContentSc
                         key={key}
                         defaultLabel={config[key]?.label}
                         icon={config[key]?.icon}
+                        searchable={config[key]?.searchable}
                         values={valuesForKey}
                         value={value}
                         onChange={(newValue) => {

@@ -4,6 +4,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
     const [showExample3, setShowExample3] = React.useState(false);
@@ -51,4 +52,5 @@ function Story() {
 
 storiesOf("@comet/admin/form", module)
     .addDecorator(apolloRestStoryDecorator())
+    .addDecorator(storyRouterDecorator())
     .add("Tabs", () => <Story />);

@@ -8,10 +8,10 @@ import { MemoryRouter } from "react-router";
 
 import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
 import { DamTable } from "../../../dam/DamTable";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {

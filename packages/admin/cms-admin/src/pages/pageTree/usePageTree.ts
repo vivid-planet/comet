@@ -2,9 +2,10 @@ import { gql } from "@apollo/client";
 import { useStoredState } from "@comet/admin";
 import * as React from "react";
 
-import { GQLPageTreePageFragment } from "../../graphql.generated";
 import { PageSearchMatch } from "../pageSearch/usePageSearch";
 import { arrayToTreeMap, subTreeFromNodes, TreeMap } from "./treemap/TreeMapUtils";
+import { GQLPageTreePageFragment } from "./usePageTree.generated";
+export { GQLPageTreePageFragment } from "./usePageTree.generated";
 
 export const pageTreePageFragment = gql`
     fragment PageTreePage on PageTreeNode {
@@ -42,6 +43,7 @@ interface UsePageTreeApi {
     tree: TreeMap<GQLPageTreePageFragment>;
     selectedTree: TreeMap<GQLPageTreePageFragment>;
     setExpandedIds: React.Dispatch<React.SetStateAction<string[]>>;
+    expandedIds: string[];
     toggleExpand: (pageId: string) => void;
     onSelectChanged: (pageId: string, value: boolean) => void;
     selectState: PageTreeSelectionState;
@@ -166,6 +168,7 @@ export function usePageTree({
         setExpandedIds,
         toggleExpand,
         expandPage,
+        expandedIds,
 
         /* selected */
         selectedTree,

@@ -59,7 +59,11 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
         @Post("upload")
         @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
-        async upload(@UploadedFile() file: FileUploadInterface, @Body() body: UploadFileBodyInterface): Promise<FileInterface> {
+        async upload(
+            @UploadedFile() file: FileUploadInterface,
+            @Body() body: UploadFileBodyInterface,
+            @GetCurrentUser() user: CurrentUserInterface,
+        ): Promise<FileInterface> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -68,6 +72,11 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             const { scope, folderId } = transformedBody;
+
+            if (hasNonEmptyScope && !this.contentScopeService.canAccessScope(scope, user)) {
+                throw new ForbiddenException();
+            }
+
             const uploadedFile = await this.filesService.upload({ file, folderId }, nonEmptyScopeOrNothing(scope));
             return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
         }

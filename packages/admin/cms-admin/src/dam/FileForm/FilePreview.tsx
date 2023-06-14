@@ -7,19 +7,18 @@ import saveAs from "file-saver";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
+import { clearDamItemCache } from "../helpers/clearDamItemCache";
+import { GQLDamFileDetailFragment } from "./EditFile";
+import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
 import {
     GQLArchiveFileMutation,
     GQLArchiveFileMutationVariables,
-    GQLDamFileDetailFragment,
     GQLDeleteDamFileMutation,
     GQLDeleteDamFileMutationVariables,
     GQLRestoreFileMutation,
     GQLRestoreFileMutationVariables,
-    namedOperations,
-} from "../../graphql.generated";
-import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
-import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
+} from "./FilePreview.gql.generated";
 import { AudioPreview } from "./previews/AudioPreview";
 import { DefaultFilePreview } from "./previews/DefaultFilePreview";
 import { ImagePreview } from "./previews/ImagePreview";
@@ -132,7 +131,7 @@ export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
                         await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
                             mutation: deleteDamFileMutation,
                             variables: { id: file.id },
-                            refetchQueries: [namedOperations.Query.DamItemsList],
+                            refetchQueries: ["DamItemsList"],
                             update: (cache) => {
                                 clearDamItemCache(cache);
                             },

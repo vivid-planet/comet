@@ -1,6 +1,6 @@
 import { ApolloClient, RefetchQueriesOptions, useApolloClient } from "@apollo/client";
-import { Copy, Delete as DeleteIcon, Domain, MoreVertical, Paste, ThreeDotSaving } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -8,6 +8,8 @@ import { readClipboardText } from "../clipboard/readClipboardText";
 import { writeClipboardText } from "../clipboard/writeClipboardText";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
 import { messages } from "../messages";
+import { RowActionsItem } from "../rowActions/RowActionsItem";
+import { RowActionsMenu } from "../rowActions/RowActionsMenu";
 
 interface DeleteDialogProps {
     dialogOpen: boolean;
@@ -52,18 +54,9 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
     const client = useApolloClient();
     const errorDialog = useErrorDialog();
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     const [copyLoading, setCopyLoading] = React.useState(false);
     const [pasting, setPasting] = React.useState(false);
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
 
     const handleDeleteClick = async () => {
         if (!onDelete) return;
@@ -122,65 +115,54 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
 
     return (
         <>
-            <IconButton onClick={handleClick} size="large">
-                <MoreVertical />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                {url && (
-                    <MenuItem
-                        key="copyUrl"
-                        onClick={() => {
-                            handleClose();
-                            writeClipboardText(url);
-                        }}
-                    >
-                        <ListItemIcon>
-                            <Domain />
-                        </ListItemIcon>
-                        <ListItemText primary={intl.formatMessage(messages.copyUrl)} />
-                    </MenuItem>
-                )}
-                {copyData && (
-                    <MenuItem
-                        onClick={async () => {
-                            setCopyLoading(true);
-                            await handleCopyClick();
-                            setCopyLoading(false);
-                            handleClose();
-                        }}
-                    >
-                        <ListItemIcon>{!copyLoading ? <Copy /> : <ThreeDotSaving />}</ListItemIcon>
-                        <ListItemText primary={intl.formatMessage(messages.copy)} />
-                    </MenuItem>
-                )}
-                {onPaste && (
-                    <MenuItem
-                        key="paste"
-                        onClick={async () => {
-                            setPasting(true);
-                            await handlePasteClick();
-                            setPasting(false);
-                            handleClose();
-                        }}
-                    >
-                        <ListItemIcon>{!pasting ? <Paste /> : <ThreeDotSaving />}</ListItemIcon>
-                        <ListItemText primary={intl.formatMessage(messages.paste)} />
-                    </MenuItem>
-                )}
-                {onDelete && (
-                    <MenuItem
-                        onClick={() => {
-                            handleClose();
-                            setDeleteDialogOpen(true);
-                        }}
-                    >
-                        <ListItemIcon>
-                            <DeleteIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={intl.formatMessage(messages.deleteItem)} />
-                    </MenuItem>
-                )}
-            </Menu>
+            <RowActionsMenu>
+                <RowActionsMenu>
+                    {url && (
+                        <RowActionsItem
+                            icon={<Domain />}
+                            onClick={() => {
+                                writeClipboardText(url);
+                            }}
+                        >
+                            {intl.formatMessage(messages.copyUrl)}
+                        </RowActionsItem>
+                    )}
+                    {copyData && (
+                        <RowActionsItem
+                            icon={copyLoading ? <ThreeDotSaving /> : <Copy />}
+                            onClick={async () => {
+                                setCopyLoading(true);
+                                await handleCopyClick();
+                                setCopyLoading(false);
+                            }}
+                        >
+                            {intl.formatMessage(messages.copy)}
+                        </RowActionsItem>
+                    )}
+                    {onPaste && (
+                        <RowActionsItem
+                            icon={pasting ? <ThreeDotSaving /> : <Paste />}
+                            onClick={async () => {
+                                setPasting(true);
+                                await handlePasteClick();
+                                setPasting(false);
+                            }}
+                        >
+                            {intl.formatMessage(messages.paste)}
+                        </RowActionsItem>
+                    )}
+                    {onDelete && (
+                        <RowActionsItem
+                            icon={<DeleteIcon />}
+                            onClick={() => {
+                                setDeleteDialogOpen(true);
+                            }}
+                        >
+                            {intl.formatMessage(messages.deleteItem)}
+                        </RowActionsItem>
+                    )}
+                </RowActionsMenu>
+            </RowActionsMenu>
             <DeleteDialog
                 dialogOpen={deleteDialogOpen}
                 onDelete={() => {

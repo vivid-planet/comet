@@ -15,10 +15,11 @@ import { EditPageLayout } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import { GQLNewsListQuery, GQLNewsListQueryVariables, namedOperations } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+
+import { GQLNewsListQuery, GQLNewsListQueryVariables, namedOperations } from "./Table.generated";
 
 const NewsTable: React.FC = () => {
     const stackApi = React.useContext(StackSwitchApiContext);

@@ -48,25 +48,25 @@ importers:
         specifier: ^7.0.0
         version: 7.20.12
       '@comet/admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/admin/admin
       '@comet/admin-icons':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/admin/admin-icons
       '@comet/admin-react-select':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/admin/admin-react-select
       '@comet/admin-rte':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/admin/admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/admin/admin-theme
       '@comet/blocks-admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/admin/blocks-admin
       '@comet/cms-admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/admin/cms-admin
       '@emotion/react':
         specifier: ^11.9.3
@@ -235,10 +235,10 @@ importers:
         version: 0.8.15
     devDependencies:
       '@comet/cli':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/cli
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/eslint-config
       '@emotion/babel-plugin':
         specifier: ^11.0.0
@@ -264,6 +264,9 @@ importers:
       '@graphql-codegen/named-operations-object':
         specifier: ^2.0.0
         version: 2.3.1(graphql-tag@2.12.6)(graphql@15.8.0)
+      '@graphql-codegen/near-operation-file-preset':
+        specifier: ^2.5.0
+        version: 2.5.0(graphql@15.8.0)
       '@graphql-codegen/typescript':
         specifier: ^2.0.0
         version: 2.8.7(graphql@15.8.0)
@@ -403,10 +406,10 @@ importers:
         specifier: ^12.0.0
         version: 12.12.0
       '@comet/blocks-api':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/api/blocks-api
       '@comet/cms-api':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/api/cms-api
       '@hapi/accept':
         specifier: ^5.0.0
@@ -563,7 +566,7 @@ importers:
         version: 5.75.0(webpack-cli@4.10.0)
     devDependencies:
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/eslint-config
       '@nestjs/cli':
         specifier: ^9.0.0
@@ -641,7 +644,7 @@ importers:
   demo/site:
     dependencies:
       '@comet/cms-site':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/site/cms-site
       '@googlemaps/js-api-loader':
         specifier: ^1.0.0
@@ -726,10 +729,10 @@ importers:
         specifier: ^7.16.0
         version: 7.20.12
       '@comet/cli':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/cli
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../packages/eslint-config
       '@graphql-codegen/add':
         specifier: ^3.0.0
@@ -740,6 +743,9 @@ importers:
       '@graphql-codegen/named-operations-object':
         specifier: ^2.0.0
         version: 2.3.1(graphql-tag@2.12.6)(graphql@15.8.0)
+      '@graphql-codegen/near-operation-file-preset':
+        specifier: ^2.5.0
+        version: 2.5.0(graphql@15.8.0)
       '@graphql-codegen/typescript':
         specifier: ^2.0.0
         version: 2.8.7(graphql@15.8.0)
@@ -804,7 +810,7 @@ importers:
   packages/admin/admin:
     dependencies:
       '@comet/admin-icons':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-icons
       '@mui/private-theming':
         specifier: ^5.0.0
@@ -847,10 +853,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1009,10 +1015,10 @@ importers:
   packages/admin/admin-color-picker:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-icons
       clsx:
         specifier: ^1.1.1
@@ -1034,10 +1040,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1091,10 +1097,10 @@ importers:
   packages/admin/admin-date-time:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1116,10 +1122,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1176,10 +1182,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1233,7 +1239,7 @@ importers:
   packages/admin/admin-react-select:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin
       classnames:
         specifier: ^2.2.6
@@ -1246,10 +1252,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1319,10 +1325,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1385,25 +1391,25 @@ importers:
         specifier: ^3.7.0
         version: 3.7.4(graphql@15.8.0)(react-dom@17.0.2)(react@17.0.2)
       '@comet/admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin
       '@comet/admin-color-picker':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-color-picker
       '@comet/admin-date-time':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-icons
       '@comet/admin-react-select':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-react-select
       '@comet/admin-rte':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-theme
       '@emotion/react':
         specifier: ^11.5.0
@@ -1527,10 +1533,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@faker-js/faker':
         specifier: ^7.6.0
@@ -1632,7 +1638,7 @@ importers:
   packages/admin/admin-theme:
     dependencies:
       '@comet/admin-icons':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1645,10 +1651,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1693,10 +1699,10 @@ importers:
   packages/admin/blocks-admin:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-icons
       '@mui/lab':
         specifier: ^5.0.0-alpha.76
@@ -1727,13 +1733,13 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/cli':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1826,22 +1832,22 @@ importers:
   packages/admin/cms-admin:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin
       '@comet/admin-date-time':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-icons
       '@comet/admin-rte':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-theme
       '@comet/blocks-admin':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../blocks-admin
       '@graphql-typed-document-node/core':
         specifier: ^3.1.1
@@ -1953,13 +1959,13 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../admin-babel-preset
       '@comet/cli':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1973,6 +1979,9 @@ importers:
       '@graphql-codegen/named-operations-object':
         specifier: ^2.0.0
         version: 2.3.1(graphql-tag@2.12.6)(graphql@15.8.0)
+      '@graphql-codegen/near-operation-file-preset':
+        specifier: ^2.5.0
+        version: 2.5.0(graphql@15.8.0)
       '@graphql-codegen/typescript':
         specifier: ^2.0.0
         version: 2.8.7(graphql@15.8.0)
@@ -2131,7 +2140,7 @@ importers:
         version: 3.0.2
     devDependencies:
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@nestjs/common':
         specifier: ^9.0.0
@@ -2188,7 +2197,7 @@ importers:
   packages/api/cms-api:
     dependencies:
       '@comet/blocks-api':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../blocks-api
       '@hapi/accept':
         specifier: ^5.0.2
@@ -2235,6 +2244,9 @@ importers:
       got:
         specifier: ^11.8.0
         version: 11.8.6
+      graphql-parse-resolve-info:
+        specifier: ^4.13.0
+        version: 4.13.0(graphql@15.8.0)
       graphql-type-json:
         specifier: ^0.3.2
         version: 0.3.2(graphql@15.8.0)
@@ -2274,6 +2286,9 @@ importers:
       passport-jwt:
         specifier: ^4.0.0
         version: 4.0.1
+      pluralize:
+        specifier: ^8.0.0
+        version: 8.0.0
       probe-image-size:
         specifier: ^7.0.0
         version: 7.2.3
@@ -2300,7 +2315,7 @@ importers:
         specifier: ^12.0.0
         version: 12.12.0
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@kubernetes/client-node':
         specifier: ^0.18.1
@@ -2368,6 +2383,9 @@ importers:
       '@types/passport-jwt':
         specifier: ^3.0.7
         version: 3.0.8
+      '@types/pluralize':
+        specifier: ^0.0.29
+        version: 0.0.29
       '@types/probe-image-size':
         specifier: ^7.0.0
         version: 7.2.0
@@ -2439,7 +2457,7 @@ importers:
         version: 2.8.3
     devDependencies:
       '@comet/eslint-config':
-        specifier: ^4.1.0
+        specifier: ^4.2.0
         version: link:../eslint-config
       '@types/node':
         specifier: ^18.0.0
@@ -2483,6 +2501,9 @@ importers:
       eslint-plugin-import:
         specifier: ^2.27.5
         version: 2.27.5(@typescript-eslint/parser@5.49.0)(eslint-import-resolver-typescript@3.5.3)(eslint@8.32.0)
+      eslint-plugin-json-files:
+        specifier: ^2.2.0
+        version: 2.2.0(eslint@8.32.0)
       eslint-plugin-prettier:
         specifier: ^4.2.1
         version: 4.2.1(eslint-config-prettier@8.6.0)(eslint@8.32.0)(prettier@2.8.3)
@@ -2531,10 +2552,10 @@ importers:
         version: 6.0.1(react@17.0.2)
     devDependencies:
       '@comet/cli':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.2.0
         version: link:../../eslint-config
       '@gitbeaker/node':
         specifier: ^34.0.0
@@ -3881,7 +3902,7 @@ packages:
       '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@babel/types': 7.20.7
       convert-source-map: 1.9.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       lodash: 4.17.21
@@ -3907,7 +3928,7 @@ packages:
       '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@babel/types': 7.20.7
       convert-source-map: 1.9.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.0
@@ -3986,7 +4007,7 @@ packages:
       '@babel/helper-module-imports': 7.18.6
       '@babel/helper-plugin-utils': 7.20.2
       '@babel/traverse': 7.20.13(supports-color@5.5.0)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
       semver: 6.3.0
@@ -4002,7 +4023,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/helper-compilation-targets': 7.20.7(@babel/core@7.20.12)
       '@babel/helper-plugin-utils': 7.20.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
       semver: 6.3.0
@@ -5638,7 +5659,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       espree: 9.4.1
       globals: 13.19.0
       ignore: 5.2.4
@@ -6058,6 +6079,23 @@ packages:
       tslib: 2.4.1
     dev: true
 
+  /@graphql-codegen/near-operation-file-preset@2.5.0(graphql@15.8.0):
+    resolution: {integrity: sha512-S9PNJP5tTkUWBQ6inbviOsTREzsMxYVqJGrtPcIdMWkKLZAAItAfAb60klB1T64vt6Oru+nUf8IYUNrchJ8MYg==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-codegen/add': 3.2.3(graphql@15.8.0)
+      '@graphql-codegen/plugin-helpers': 2.7.2(graphql@15.8.0)
+      '@graphql-codegen/visitor-plugin-common': 2.13.1(graphql@15.8.0)
+      '@graphql-tools/utils': 8.13.1(graphql@15.8.0)
+      graphql: 15.8.0
+      parse-filepath: 1.0.2
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
+
   /@graphql-codegen/plugin-helpers@1.18.8(graphql@15.8.0):
     resolution: {integrity: sha512-mb4I9j9lMGqvGggYuZ0CV+Hme08nar68xkpPbAVotg/ZBmlhZIok/HqW2BcMQi7Rj+Il5HQMeQ1wQ1M7sv/TlQ==}
     peerDependencies:
@@ -6136,6 +6174,27 @@ packages:
       '@graphql-codegen/visitor-plugin-common': 2.13.7(graphql@15.8.0)
       auto-bind: 4.0.0
       graphql: 15.8.0
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
+
+  /@graphql-codegen/visitor-plugin-common@2.13.1(graphql@15.8.0):
+    resolution: {integrity: sha512-mD9ufZhDGhyrSaWQGrU1Q1c5f01TeWtSWy/cDwXYjJcHIj1Y/DG2x0tOflEfCvh5WcnmHNIw4lzDsg1W7iFJEg==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 2.7.2(graphql@15.8.0)
+      '@graphql-tools/optimize': 1.3.1(graphql@15.8.0)
+      '@graphql-tools/relay-operation-optimizer': 6.5.15(graphql@15.8.0)
+      '@graphql-tools/utils': 8.13.1(graphql@15.8.0)
+      auto-bind: 4.0.0
+      change-case-all: 1.0.14
+      dependency-graph: 0.11.0
+      graphql: 15.8.0
+      graphql-tag: 2.12.6(graphql@15.8.0)
+      parse-filepath: 1.0.2
       tslib: 2.4.1
     transitivePeerDependencies:
       - encoding
@@ -6542,7 +6601,7 @@ packages:
       '@types/json-stable-stringify': 1.0.34
       '@types/jsonwebtoken': 9.0.1
       chalk: 4.1.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       dotenv: 16.0.3
       graphql: 15.8.0
       graphql-request: 5.1.0(graphql@15.8.0)
@@ -6873,7 +6932,7 @@ packages:
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -6881,6 +6940,11 @@ packages:
   /@humanwhocodes/module-importer@1.0.1:
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
     engines: {node: '>=12.22'}
+
+  /@humanwhocodes/momoa@2.0.4:
+    resolution: {integrity: sha512-RE815I4arJFtt+FVeU1Tgp9/Xvecacji8w/V6XtXsWWH/wz/eNkNbhb+ny/+PlVZjV0rxQpRSQKNKE3lcktHEA==}
+    engines: {node: '>=10.10.0'}
+    dev: false
 
   /@humanwhocodes/object-schema@1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
@@ -7576,7 +7640,7 @@ packages:
     dependencies:
       '@open-draft/until': 1.0.3
       '@xmldom/xmldom': 0.7.10
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       headers-utils: 3.0.2
       outvariant: 1.4.0
       strict-event-emitter: 0.2.8
@@ -10315,7 +10379,7 @@ packages:
       typescript: '>= 3.x'
       webpack: '>= 4'
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       endent: 2.1.0
       find-cache-dir: 3.3.2
       flat-cache: 3.0.4
@@ -11326,6 +11390,10 @@ packages:
     resolution: {integrity: sha512-O397rnSS9iQI4OirieAtsDqvCj4+3eY1J+EPdNTKuHuRWIfUoGyzX294o8C4KJYaLqgSrd2o60c5EqCU8Zv02g==}
     dev: false
 
+  /@types/pluralize@0.0.29:
+    resolution: {integrity: sha512-BYOID+l2Aco2nBik+iYS4SZX0Lf20KPILP5RGmM1IgzdwNdTs0eebiFriOPcej1sX9mLnSoiNte5zcFxssgpGA==}
+    dev: true
+
   /@types/prettier@2.7.2:
     resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
     dev: true
@@ -11668,7 +11736,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.49.0
       '@typescript-eslint/type-utils': 5.49.0(eslint@8.32.0)(typescript@4.9.4)
       '@typescript-eslint/utils': 5.49.0(eslint@8.32.0)(typescript@4.9.4)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       eslint: 8.32.0
       ignore: 5.2.4
       natural-compare-lite: 1.4.0
@@ -11693,7 +11761,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.49.0
       '@typescript-eslint/types': 5.49.0
       '@typescript-eslint/typescript-estree': 5.49.0(typescript@4.9.4)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       eslint: 8.32.0
       typescript: 4.9.4
     transitivePeerDependencies:
@@ -11720,7 +11788,7 @@ packages:
     dependencies:
       '@typescript-eslint/typescript-estree': 5.49.0(typescript@4.9.4)
       '@typescript-eslint/utils': 5.49.0(eslint@8.32.0)(typescript@4.9.4)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       eslint: 8.32.0
       tsutils: 3.21.0(typescript@4.9.4)
       typescript: 4.9.4
@@ -11744,7 +11812,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.49.0
       '@typescript-eslint/visitor-keys': 5.49.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.3.8
@@ -12258,7 +12326,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -12266,7 +12334,7 @@ packages:
     resolution: {integrity: sha512-Zn4cw2NEqd+9fiSVWMscnjyQ1a8Yfoc5oBajLeo5w+YBHgDUcEBY2hS4YpTz6iN5f/2zQiktcuM6tS8x1p9dpA==}
     engines: {node: '>= 8.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       depd: 1.1.2
       humanize-ms: 1.2.1
     transitivePeerDependencies:
@@ -13318,6 +13386,20 @@ packages:
     resolution: {integrity: sha512-qeFIXtP4MSoi6NLqO12WfqARWWuCKi2Rn/9hJLEmtB5yTNr9DqFWkJRCf2qShWzPeAMRnOgCrq0sg/KLv5ES9w==}
     dependencies:
       tweetnacl: 0.14.5
+
+  /better-ajv-errors@1.2.0(ajv@8.12.0):
+    resolution: {integrity: sha512-UW+IsFycygIo7bclP9h5ugkNH8EjCSgqyFB/yQ4Hqqa1OEYDtb0uFIkYE0b6+CjkgJYVM5UKI/pJPxjYe9EZlA==}
+    engines: {node: '>= 12.13.0'}
+    peerDependencies:
+      ajv: 4.11.8 - 8
+    dependencies:
+      '@babel/code-frame': 7.18.6
+      '@humanwhocodes/momoa': 2.0.4
+      ajv: 8.12.0
+      chalk: 4.1.2
+      jsonpointer: 5.0.1
+      leven: 3.1.0
+    dev: false
 
   /better-opn@2.1.1:
     resolution: {integrity: sha512-kIPXZS5qwyKiX/HcRvDYfmBQUa8XP17I0mYZZ0y4UhpYOSvtsLHDYqmomS+Mj20aDvD3knEiQ0ecQy2nhio3yA==}
@@ -14947,7 +15029,6 @@ packages:
     dependencies:
       ms: 2.1.2
       supports-color: 9.3.1
-    dev: true
 
   /decamelize-keys@1.1.1:
     resolution: {integrity: sha512-WiPxgEirIV0/eIOMcnFBA3/IJZAZqKnwAwWyvvdi4lsr1WCN22nhdf/3db3DoZcUjTV2SqfzIwNyp6y2xs3nmg==}
@@ -15131,7 +15212,6 @@ packages:
   /detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
-    dev: true
 
   /detect-node@2.1.0:
     resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
@@ -15148,7 +15228,7 @@ packages:
     hasBin: true
     dependencies:
       address: 1.2.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -15515,7 +15595,7 @@ packages:
       basic-auth: 2.0.1
       cookie: 0.5.0
       core-util-is: 1.0.3
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       elastic-apm-http-client: 11.2.0
       end-of-stream: 1.4.4
       error-callsites: 2.0.4
@@ -15864,7 +15944,7 @@ packages:
       eslint: '*'
       eslint-plugin-import: '*'
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       enhanced-resolve: 5.12.0
       eslint: 8.32.0
       eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.49.0)(eslint-import-resolver-typescript@3.5.3)(eslint@8.32.0)
@@ -15977,6 +16057,20 @@ packages:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
+    dev: false
+
+  /eslint-plugin-json-files@2.2.0(eslint@8.32.0):
+    resolution: {integrity: sha512-7ETNwGWMtlAqtAIfwrNSm/X8RsHrZcV78YFa/EyYjavFWaVFhi/fsZBjnj4yIf1G0Rbx5f2t+sd037hVPK20WQ==}
+    engines: {node: '>=14.15'}
+    peerDependencies:
+      eslint: '>=5'
+    dependencies:
+      ajv: 8.12.0
+      better-ajv-errors: 1.2.0(ajv@8.12.0)
+      eslint: 8.32.0
+      requireindex: 1.2.0
+      semver: 7.3.8
+      sort-package-json: 1.57.0
     dev: false
 
   /eslint-plugin-jsx-a11y@6.7.1(eslint@8.32.0):
@@ -16133,7 +16227,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.1.1
@@ -17293,6 +17387,10 @@ packages:
     dependencies:
       assert-plus: 1.0.0
 
+  /git-hooks-list@1.0.3:
+    resolution: {integrity: sha512-Y7wLWcrLUXwk2noSka166byGCvhMtDRpgHdzCno1UQv/n/Hegp++a2xBWJL1lJarnKD3SWaljD+0z1ztqxuKyQ==}
+    dev: false
+
   /github-slugger@1.5.0:
     resolution: {integrity: sha512-wIh+gKBI9Nshz2o46B0B3f5k/W+WI9ZAv6y5Dn5WJ5SK1t0TnDimB4WE5rmTD05ZAIn8HALCZVmCsvj0w0v0lw==}
     dev: false
@@ -17389,6 +17487,20 @@ packages:
 
   /globalyzer@0.1.0:
     resolution: {integrity: sha512-40oNTM9UfG6aBmuKxk/giHn5nQ8RVz/SS4Ir6zgzOv9/qC3kKZ9v4etGTcJbEl/NyVQH7FGU7d+X1egr57Md2Q==}
+    dev: false
+
+  /globby@10.0.0:
+    resolution: {integrity: sha512-3LifW9M4joGZasyYPz2A1U74zbC/45fvpXUvO/9KbSa+VV0aGZarWkfdgKyR9sExNP0t0x0ss/UMJpNpcaTspw==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@types/glob': 7.2.0
+      array-union: 2.1.0
+      dir-glob: 3.0.1
+      fast-glob: 3.2.12
+      glob: 7.2.3
+      ignore: 5.2.4
+      merge2: 1.4.1
+      slash: 3.0.0
     dev: false
 
   /globby@11.0.3:
@@ -17548,6 +17660,19 @@ packages:
     optionalDependencies:
       sinon: 9.2.4
     dev: true
+
+  /graphql-parse-resolve-info@4.13.0(graphql@15.8.0):
+    resolution: {integrity: sha512-VVJ1DdHYcR7hwOGQKNH+QTzuNgsLA8l/y436HtP9YHoX6nmwXRWq3xWthU3autMysXdm0fQUbhTZCx0W9ICozw==}
+    engines: {node: '>=8.6'}
+    peerDependencies:
+      graphql: '>=0.9 <0.14 || ^14.0.2 || ^15.4.0 || ^16.3.0'
+    dependencies:
+      debug: 4.3.4(supports-color@9.3.1)
+      graphql: 15.8.0
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /graphql-request@3.7.0(graphql@15.8.0):
     resolution: {integrity: sha512-dw5PxHCgBneN2DDNqpWu8QkbbJ07oOziy8z+bK/TAXufsOLaETuVO4GkXrbs0WjhdKhBMN3BkpN/RIvUHkmNUQ==}
@@ -18024,7 +18149,7 @@ packages:
     dependencies:
       '@tootallnate/once': 1.1.2
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -18035,7 +18160,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -18092,7 +18217,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -18934,7 +19059,7 @@ packages:
     resolution: {integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==}
     engines: {node: '>=10'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       istanbul-lib-coverage: 3.2.0
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -19658,6 +19783,11 @@ packages:
     resolution: {integrity: sha512-zBfiUPM5nD0YZSBT/o/fbCUlCcepMIdP0CJZxM1+KgA4f2T206f6VAg9e7mX35+KlMaIc5qXW34f3BnwJ3w+RA==}
     engines: {node: '>=12.0.0'}
 
+  /jsonpointer@5.0.1:
+    resolution: {integrity: sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
     engines: {node: '>=4', npm: '>=1.4.28'}
@@ -19786,7 +19916,7 @@ packages:
     dependencies:
       '@types/express': 4.17.16
       '@types/jsonwebtoken': 9.0.1
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       jose: 4.11.2
       limiter: 1.1.5
       lru-memoizer: 2.1.4
@@ -19871,7 +20001,7 @@ packages:
     dependencies:
       colorette: 2.0.19
       commander: 9.5.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       escalade: 3.1.1
       esm: 3.2.25
       get-package-type: 0.1.0
@@ -19919,7 +20049,6 @@ packages:
   /leven@3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
     engines: {node: '>=6'}
-    dev: true
 
   /levn@0.3.0:
     resolution: {integrity: sha512-0OO4y2iOHix2W6ujICbKIaEQXvFQHue65vUG3pb5EUomzPI90z9hsA1VsO/dbIIpC53J8gxM9Q4Oho0jrCM/yA==}
@@ -22183,7 +22312,6 @@ packages:
   /pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
-    dev: true
 
   /pngjs@3.4.0:
     resolution: {integrity: sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==}
@@ -23591,7 +23719,7 @@ packages:
     resolution: {integrity: sha512-efCx3b+0Z69/LGJmm9Yvi4cqEdxnoGnxYxGxBghkkTTFeXRtTCmmhO0AnAfHz59k957uTSuy8WaHqOs8wbYUWg==}
     engines: {node: '>=6'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       module-details-from-path: 1.0.3
       resolve: 1.22.1
     transitivePeerDependencies:
@@ -23603,6 +23731,11 @@ packages:
 
   /requireindex@1.1.0:
     resolution: {integrity: sha512-LBnkqsDE7BZKvqylbmn7lTIVdpx4K/QCduRATpO5R+wtPmky/a8pN1bO2D6wXppn1497AJF9mNjqAXr6bdl9jg==}
+    engines: {node: '>=0.10.5'}
+    dev: false
+
+  /requireindex@1.2.0:
+    resolution: {integrity: sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==}
     engines: {node: '>=0.10.5'}
     dev: false
 
@@ -24223,7 +24356,7 @@ packages:
     engines: {node: '>= 10'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       socks: 2.7.1
     transitivePeerDependencies:
       - supports-color
@@ -24242,6 +24375,22 @@ packages:
     dependencies:
       atomic-sleep: 1.0.0
       flatstr: 1.0.12
+    dev: false
+
+  /sort-object-keys@1.1.3:
+    resolution: {integrity: sha512-855pvK+VkU7PaKYPc+Jjnmt4EzejQHyhhF33q31qG8x7maDzkeFhAAThdCYay11CISO+qAMwjOBP+fPZe0IPyg==}
+    dev: false
+
+  /sort-package-json@1.57.0:
+    resolution: {integrity: sha512-FYsjYn2dHTRb41wqnv+uEqCUvBpK3jZcTp9rbz2qDTmel7Pmdtf+i2rLaaPMRZeSVM60V3Se31GyWFpmKs4Q5Q==}
+    hasBin: true
+    dependencies:
+      detect-indent: 6.1.0
+      detect-newline: 3.1.0
+      git-hooks-list: 1.0.3
+      globby: 10.0.0
+      is-plain-obj: 2.1.0
+      sort-object-keys: 1.1.3
     dev: false
 
   /source-list-map@2.0.1:
@@ -24336,7 +24485,7 @@ packages:
   /spdy-transport@3.0.0:
     resolution: {integrity: sha512-hsLVFE5SjA6TCisWeJXFKniGGOpBgMLmerfO2aCyCU5s7nJ/rpAepqmFifv/GCbSbueEeAJJnmSQ2rKC/g8Fcw==}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       detect-node: 2.1.0
       hpack.js: 2.1.6
       obuf: 1.1.2
@@ -24349,7 +24498,7 @@ packages:
     resolution: {integrity: sha512-r46gZQZQV+Kl9oItvl1JZZqJKGr+oEkB08A6BzkiR7593/7IbtuncXHd2YoYeTsG4157ZssMu9KYvUHLcjcDoA==}
     engines: {node: '>=6.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       handle-thing: 2.0.1
       http-deceiver: 1.2.7
       select-hose: 2.0.0
@@ -24913,7 +25062,6 @@ packages:
   /supports-color@9.3.1:
     resolution: {integrity: sha512-knBY82pjmnIzK3NifMo3RxEIRD9E0kIzV4BKcyTZ9+9kWgLMxd4PrsTSMoFQUabgRBbF8KOLRDCyKgNV+iK44Q==}
     engines: {node: '>=12'}
-    dev: true
 
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}

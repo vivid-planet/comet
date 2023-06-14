@@ -13,6 +13,8 @@ import slugify from "slugify";
 import { useContentScope } from "../contentScope/Provider";
 import { DocumentInterface, DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
+import { GQLSlugAvailability } from "../graphql.generated";
+import { useLocale } from "../locale/useLocale";
 import {
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
@@ -22,12 +24,9 @@ import {
     GQLEditPageParentNodeQueryVariables,
     GQLIsPathAvailableQuery,
     GQLIsPathAvailableQueryVariables,
-    GQLSlugAvailability,
     GQLUpdatePageNodeMutation,
     GQLUpdatePageNodeMutationVariables,
-    namedOperations,
-} from "../graphql.generated";
-import { useLocale } from "../locale/useLocale";
+} from "./createEditPageNode.generated";
 
 type SerializedInitialValues = string;
 
@@ -243,7 +242,7 @@ export function createEditPageNode({
                                 context: {
                                     errorScope: ErrorScope.Local,
                                 },
-                                refetchQueries: [namedOperations.Query.Pages],
+                                refetchQueries: ["Pages"],
                             });
                         }
                     }}

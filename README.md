@@ -94,8 +94,4 @@ npx dev-pm shutdown
 
 ## Contributing
 
-Make sure to [add a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md).
-
-## Notes
-
-Please note that this project is released with a [Contributor Code of Conduct](CODE-OF-CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please read our [Contributing](CONTRIBUTING.md) file.

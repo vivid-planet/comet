@@ -1,4 +1,10 @@
 import { gql } from "@apollo/client";
+export {
+    GQLDamFolderByNameAndParentIdQuery,
+    GQLDamFolderByNameAndParentIdQueryVariables,
+    GQLDamFolderForFolderUploadMutation,
+    GQLDamFolderForFolderUploadMutationVariables,
+} from "./useFileUpload.gql.generated";
 
 export const damFolderByNameAndParentId = gql`
     query DamFolderByNameAndParentId($name: String!, $parentId: ID, $scope: DamScopeInput!) {

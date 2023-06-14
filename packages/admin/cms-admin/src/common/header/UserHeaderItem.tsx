@@ -5,8 +5,8 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLCurrentUserQuery, GQLSignOutMutation } from "../../graphql.generated";
 import { AboutModal } from "./about/AboutModal";
+import { GQLCurrentUserQuery, GQLSignOutMutation } from "./UserHeaderItem.generated";
 
 const DropdownContent = styled(Box)`
     width: 250px;

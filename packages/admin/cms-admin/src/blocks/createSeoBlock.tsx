@@ -146,7 +146,7 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
                         }}
                     >
                         {/* Meta */}
-                        <Box marginTop={4} marginBottom={8}>
+                        <Box marginBottom={8}>
                             <Typography variant="h4" gutterBottom>
                                 <FormattedMessage id="comet.blocks.seo.meta.sectionTitle" defaultMessage="Meta Tags" />
                             </Typography>

@@ -14,10 +14,10 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generated";
-import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "../graphql.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
 
 type State = InternalLinkBlockData;
 

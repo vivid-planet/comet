@@ -18,6 +18,12 @@ export class ProductFilter {
     @Type(() => StringFilter)
     title?: StringFilter;
 
+    @Field(() => BooleanFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => BooleanFilter)
+    visible?: BooleanFilter;
+
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

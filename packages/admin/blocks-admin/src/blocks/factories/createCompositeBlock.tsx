@@ -1,4 +1,4 @@
-import { StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { StackPage, StackSwitch, StackSwitchApiContext, SubRoute, useSubRoutePrefix } from "@comet/admin";
 import { Divider } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -144,6 +144,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
             return { ...(blockPreviewState as any), adminMeta: { route: previewContext.parentUrl } };
         },
         AdminComponent: ({ state, updateState }) => {
+            const urlPrefix = useSubRoutePrefix();
             const isInPaper = useAdminComponentPaper();
             const blockAdminComponents = adminComponents({ state, updateState });
             const blockPreviews = previews(state);
@@ -192,7 +193,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                 } else {
                     children = (
                         <HoverPreviewComponent key={blockKey} componentSlug={`#${blockKey}`}>
-                            {blockAdminComponents[blockKey]}
+                            <SubRoute path={`${urlPrefix}/${blockKey}`}>{blockAdminComponents[blockKey]}</SubRoute>
                         </HoverPreviewComponent>
                     );
                 }

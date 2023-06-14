@@ -15,15 +15,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import {
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamItemListPositionQuery,
-    GQLDamItemListPositionQueryVariables,
-    GQLDamItemsListQuery,
-    GQLDamItemsListQueryVariables,
-    GQLDamItemType,
-} from "../../graphql.generated";
+import { GQLDamItemType } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
@@ -36,6 +28,14 @@ import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
+import {
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamItemListPositionQuery,
+    GQLDamItemListPositionQueryVariables,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
+} from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
 import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
@@ -43,6 +43,16 @@ import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
+export {
+    GQLDamFileTableFragment,
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamFolderTableFragment,
+    GQLMoveDamFilesMutation,
+    GQLMoveDamFilesMutationVariables,
+    GQLMoveDamFoldersMutation,
+    GQLMoveDamFoldersMutationVariables,
+} from "./FolderDataGrid.gql.generated";
 
 export type DamItemSelectionMap = Map<string, "file" | "folder">;
 

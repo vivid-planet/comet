@@ -28,7 +28,11 @@ export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInp
 export { CometLogo } from "./common/CometLogo";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
-export { ToolbarAutomaticTitleItem, ToolbarAutomaticTitleItemProps } from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
+export {
+    ToolbarAutomaticTitleItem,
+    ToolbarAutomaticTitleItemClassKey,
+    ToolbarAutomaticTitleItemProps,
+} from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
 export { ToolbarBackButton, ToolbarBackButtonClassKey, ToolbarBackButtonProps } from "./common/toolbar/backbutton/ToolbarBackButton";
 export { ToolbarBreadcrumbs, ToolbarBreadcrumbsProps } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs";
 export { ToolbarBreadcrumbsClassKey } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs.styles";
@@ -36,8 +40,9 @@ export { ToolbarFillSpace, ToolbarFillSpaceClassKey, ToolbarFillSpaceProps } fro
 export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/toolbar/item/ToolbarItem";
 export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } from "./common/toolbar/titleitem/ToolbarTitleItem";
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
-export { Tooltip } from "./common/Tooltip";
+export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
+export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
@@ -102,6 +107,7 @@ export { RouterContext } from "./router/Context";
 export { RouterMemoryRouter } from "./router/MemoryRouter";
 export { RouterPrompt } from "./router/Prompt";
 export { RouterPromptHandler, SaveAction } from "./router/PromptHandler";
+export { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "./router/SubRoute";
 export { RowActionsItem, RowActionsItemProps } from "./rowActions/RowActionsItem";
 export { RowActionsMenu, RowActionsMenuProps } from "./rowActions/RowActionsMenu";
 export { Selected } from "./Selected";

@@ -23,17 +23,18 @@ import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { GQLRedirectSourceTypeValues } from "../graphql.generated";
+import { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
+import { redirectDetailQuery } from "./RedirectForm.gql";
 import {
     GQLCreateRedirectMutation,
     GQLRedirectDetailFragment,
     GQLRedirectDetailQuery,
     GQLRedirectDetailQueryVariables,
-    GQLRedirectSourceAvailableQuery,
-    GQLRedirectSourceAvailableQueryVariables,
-    GQLRedirectSourceTypeValues,
-} from "../graphql.generated";
-import { redirectDetailQuery } from "./RedirectForm.gql";
+} from "./RedirectForm.gql.generated";
 import { useSubmitMutation } from "./submitMutation";
+export { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
+export { GQLCreateRedirectMutation, GQLUpdateRedirectMutation } from "./RedirectForm.gql.generated";
 
 interface Props {
     id?: string;

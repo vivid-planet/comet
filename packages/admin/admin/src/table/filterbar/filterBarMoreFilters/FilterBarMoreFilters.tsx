@@ -1,9 +1,10 @@
 import { Filter } from "@comet/admin-icons";
-import { ComponentsOverrides, Theme, Typography } from "@mui/material";
+import { ComponentsOverrides, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { FilterBarButton } from "../filterBarButton/FilterBarButton";
 import { FilterBarMoveFilersClassKey, styles } from "./FilterBarMoreFilters.styles";
 
 export interface FilterBarMoreFiltersProps {
@@ -16,20 +17,18 @@ export function MoreFilters({
     classes,
 }: React.PropsWithChildren<FilterBarMoreFiltersProps> & WithStyles<typeof styles>): React.ReactElement {
     const [hasExtended, setHasExtended] = React.useState(false);
-    if (!hasExtended) {
-        return (
-            <div className={classes.root} onClick={() => setHasExtended(true)}>
-                {icon}
-                <div className={classes.textWrapper}>
-                    <Typography variant="body1">
-                        <FormattedMessage id="comet.filterbar.moreFilter" defaultMessage="More Filter" />
-                    </Typography>
-                </div>
-            </div>
-        );
-    } else {
+
+    if (hasExtended) {
         return <>{children}</>;
     }
+
+    return (
+        <div className={classes.root}>
+            <FilterBarButton className={classes.button} onClick={() => setHasExtended(true)} startIcon={icon} endIcon={null}>
+                <FormattedMessage id="comet.filterbar.moreFilter" defaultMessage="More Filter" />
+            </FilterBarButton>
+        </div>
+    );
 }
 
 export const FilterBarMoreFilters = withStyles(styles, { name: "CometAdminFilterBarMoreFilters" })(MoreFilters);
