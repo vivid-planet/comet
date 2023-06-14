@@ -12,12 +12,12 @@ export class BuildTemplatesService {
     constructor(private readonly kubernetesService: KubernetesService, private readonly contentScopeService: ContentScopeService) {}
 
     async getAllowedBuilderCronJobs(user: CurrentUserInterface): Promise<V1CronJob[]> {
-        const allCronJobs = await this.kubernetesService.getAllCronJobs(
-            `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
-        );
-
-        return allCronJobs.filter((cronJob) => {
+        return (await this.getAllBuilderCronJobs()).filter((cronJob) => {
             return this.contentScopeService.canAccessScope(this.kubernetesService.getContentScope(cronJob), user);
         });
+    }
+
+    async getAllBuilderCronJobs(): Promise<V1CronJob[]> {
+        return this.kubernetesService.getAllCronJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
     }
 }
