@@ -21,7 +21,6 @@ import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { useDamScope } from "./config/useDamScope";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import { UploadSplitButton } from "./DataGrid/fileUpload/UploadSplitButton";
@@ -34,7 +33,6 @@ import FolderDataGrid, {
 } from "./DataGrid/FolderDataGrid";
 import { damFolderQuery } from "./DataGrid/FolderDataGrid.gql";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
-import { RedirectToPersistedDamLocation } from "./DataGrid/RedirectToPersistedDamLocation";
 import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
 import { DamSelectionProvider, useDamSelectionApi } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
@@ -147,11 +145,9 @@ export interface DamConfig {
     hideDamActions?: boolean;
 }
 
-interface DamTableProps extends DamConfig {
-    damLocationStorageKey?: string;
-}
+type DamTableProps = DamConfig;
 
-export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): React.ReactElement => {
+export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
     const intl = useIntl();
     const [sorting, setSorting] = useStoredState<ISortInformation>("dam_filter_sorting", {
         columnName: "name",
@@ -176,20 +172,8 @@ export const DamTable = ({ damLocationStorageKey, ...props }: DamTableProps): Re
         }
     }, [filterApi, filterApi.current.sort, setSorting]);
 
-    let stateKey: string | undefined;
-    const scope = useDamScope();
-
-    if (damLocationStorageKey === undefined) {
-        stateKey = undefined;
-    } else if (Object.keys(scope).length > 0) {
-        stateKey = `${Object.values(scope).join("-")}-${damLocationStorageKey}`;
-    } else {
-        stateKey = damLocationStorageKey;
-    }
-
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.dam.assetManager", defaultMessage: "Asset Manager" })}>
-            {stateKey && <RedirectToPersistedDamLocation stateKey={stateKey} />}
             <FileUploadContextProvider>
                 <ManualDuplicatedFilenamesHandlerContextProvider>
                     <DamSelectionProvider>

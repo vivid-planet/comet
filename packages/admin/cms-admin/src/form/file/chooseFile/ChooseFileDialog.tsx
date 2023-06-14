@@ -7,11 +7,13 @@ import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
 import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
+import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
+import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation";
 
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
@@ -77,6 +79,13 @@ interface ChooseFileDialogProps {
 }
 
 export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
+    let stateKey = "choose-file-dam-location";
+    const scope = useDamScope();
+
+    if (Object.keys(scope).length > 0) {
+        stateKey = `${Object.values(scope).join("-")}-${stateKey}`;
+    }
+
     return (
         <FixedHeightDialog open={open} onClose={onClose} fullWidth maxWidth="xl">
             <StyledDialogTitle>
@@ -87,12 +96,12 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
             </StyledDialogTitle>
             <DamScopeProvider>
                 <MemoryRouter>
+                    <RedirectToPersistedDamLocation stateKey={stateKey} />
                     <DamTable
                         renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) =>
                             renderDamLabel(row, onChooseFile, { matches, filterApi })
                         }
                         allowedMimetypes={allowedMimetypes}
-                        damLocationStorageKey="choose-file-dam-location"
                         hideContextMenu={true}
                         hideMultiselect={true}
                         hideArchiveFilter={true}
