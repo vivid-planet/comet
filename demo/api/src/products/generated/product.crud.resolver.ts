@@ -72,9 +72,9 @@ export class ProductCrudResolver {
         const { tags: tagsInput, ...assignInput } = input;
         const product = this.repository.create({
             ...assignInput,
+            visible: false,
 
             image: input.image.transformToBlockData(),
-            visible: false,
             category: input.category ? Reference.create(await this.productCategoryRepository.findOneOrFail(input.category)) : undefined,
         });
         {
