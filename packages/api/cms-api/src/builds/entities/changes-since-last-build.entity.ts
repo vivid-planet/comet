@@ -1,6 +1,8 @@
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { v4 as uuid } from "uuid";
 
+import { ContentScope } from "../../common/decorators/content-scope.interface";
+
 @Entity()
 export class ChangesSinceLastBuild extends BaseEntity<ChangesSinceLastBuild, "id"> {
     [OptionalProps]?: "createdAt";
@@ -12,4 +14,7 @@ export class ChangesSinceLastBuild extends BaseEntity<ChangesSinceLastBuild, "id
         columnType: "timestamp with time zone",
     })
     createdAt: Date = new Date();
+
+    @Property({ type: "json" })
+    scope: "all" | ContentScope;
 }
