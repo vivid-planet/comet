@@ -12,7 +12,7 @@ import { JobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { BuildTemplatesService } from "./build-templates.service";
-import { BUILDER_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
+import { BUILDER_LABEL, LABEL_ANNOTATION, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { Build } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
@@ -107,6 +107,7 @@ export class BuildsService {
                         `${PARENT_CRON_JOB_LABEL} = ${job.metadata?.labels?.[PARENT_CRON_JOB_LABEL]}`,
                     ),
                     trigger: job.metadata?.annotations?.[TRIGGER_ANNOTATION],
+                    label: job.metadata?.annotations?.[LABEL_ANNOTATION],
                 };
             }),
         );
