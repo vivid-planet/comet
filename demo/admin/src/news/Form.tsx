@@ -148,7 +148,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
 export default NewsForm;
 
 const updateNewsMutation = gql`
-    mutation UpdateNews($id: ID!, $input: NewsInput!) {
+    mutation UpdateNews($id: ID!, $input: NewsUpdateInput!) {
         updateNews(id: $id, input: $input) {
             id
             slug

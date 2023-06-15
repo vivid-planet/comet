@@ -382,7 +382,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             : ""
     }
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
-    import { ${classNameSingular}Input } from "./dto/${fileNameSingular}.input";
+    import { ${classNameSingular}Input, ${classNameSingular}UpdateInput } from "./dto/${fileNameSingular}.input";
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
     import { ${argsClassName} } from "./dto/${argsFileName}";
 
@@ -465,7 +465,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         @SubjectEntity(${metadata.className})
         async update${classNameSingular}(
             @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input,
+            @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput,
             ${hasUpdatedAt ? `@Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,` : ""}
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
@@ -476,10 +476,18 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             }`
                     : ""
             }
+            const { ${blockProps.map((prop) => `${prop.name}: ${prop.name}Input, `).join("")}...assignInput } = input;
             ${instanceNameSingular}.assign({
-                ...input,
-                ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
+                ...assignInput,
             });
+            ${blockProps
+                .map(
+                    (prop) => `
+            if (${prop.name}Input) {
+                ${instanceNameSingular}.${prop.name} = ${prop.name}Input.transformToBlockData();
+            }`,
+                )
+                .join("")}
 
             await this.entityManager.flush();
 

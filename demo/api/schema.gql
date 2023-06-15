@@ -348,14 +348,14 @@ type Mutation {
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   updateMainMenuItem(input: MainMenuItemInput!, lastUpdatedAt: DateTime, pageTreeNodeId: ID!): MainMenuItem!
-  updateNews(id: ID!, input: NewsInput!, lastUpdatedAt: DateTime): News!
+  updateNews(id: ID!, input: NewsUpdateInput!, lastUpdatedAt: DateTime): News!
   updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
   updateNewsVisibility(id: ID!, visible: Boolean!): News!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   updatePageTreeNodeCategory(category: String!, id: ID!): PageTreeNode!
   updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
-  updateProduct(id: ID!, input: ProductInput!, lastUpdatedAt: DateTime): Product!
+  updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
   updateProductVisibility(id: ID!, visible: Boolean!): Product!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
@@ -451,6 +451,16 @@ enum NewsSortField {
   title
   updatedAt
   visible
+}
+
+input NewsUpdateInput {
+  category: NewsCategory
+  content: NewsContentBlockInput
+  date: DateTime
+  image: DamImageBlockInput
+  slug: String
+  title: String
+  visible: Boolean
 }
 
 input NumberFilter {
@@ -660,6 +670,16 @@ input ProductTypeEnumFilter {
   equal: ProductType
   isAnyOf: [ProductType!]
   notEqual: ProductType
+}
+
+input ProductUpdateInput {
+  description: String
+  image: DamImageBlockInput
+  inStock: Boolean
+  price: Float
+  slug: String
+  title: String
+  type: ProductType
 }
 
 type Query {
