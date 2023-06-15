@@ -54,14 +54,14 @@ type ExtractCompositeBlocksConfigBase<T extends Record<string, { block: BlockInt
 };
 
 // Inspired by https://dev.to/lucianbc/union-type-merging-in-typescript-9al
-type ExtractGroupConfigs<T extends Record<string, unknown>> = T[string];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AllBlockKeys<T> = T extends any ? keyof T : never;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MergeBlockConfigs<T> = { [BlockKey in AllBlockKeys<T>]: NonNullable<ExtractBlockConfig<T, BlockKey>> };
+type ExtractGroupConfigs<T extends Record<string, GroupConfiguration>> = T[keyof T];
+type AllBlockKeys<T> = T extends Record<string, BlockConfiguration> ? keyof T : never;
+type MergeBlockConfigs<T extends Record<string, BlockConfiguration>> = {
+    [BlockKey in AllBlockKeys<T>]: NonNullable<ExtractBlockConfig<T, BlockKey>>;
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PickType<T, K extends AllBlockKeys<T>> = T extends { [k in K]?: any } ? T[K] : undefined;
-type ExtractBlockConfig<T, K extends string | number | symbol> = K extends AllBlockKeys<T> ? PickType<T, K> : never;
+type ExtractBlockConfig<T extends Record<string, BlockConfiguration>, K extends AllBlockKeys<T>> = PickType<T, K>;
 
 type ExtractCompositeBlocksConfig<Options extends CreateCompositeBlockOptions> = Options extends CreateCompositeBlockOptionsWithGroups
     ? ExtractCompositeBlocksConfigBase<MergeBlockConfigs<ExtractGroupConfigs<Options["groups"]>["blocks"]>>
