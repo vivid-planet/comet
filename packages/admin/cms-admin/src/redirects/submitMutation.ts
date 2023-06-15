@@ -4,8 +4,7 @@ import { FetchResult } from "@apollo/client/link/core";
 import { BlockInterface } from "@comet/blocks-admin";
 
 import { GQLRedirectInput } from "../graphql.generated";
-import { FormValues, GQLCreateRedirectMutation, GQLUpdateRedirectMutation } from "./RedirectForm";
-import { createRedirectMutation, updateRedirectMutation } from "./RedirectForm.gql";
+import { createRedirectMutation, FormValues, GQLCreateRedirectMutation, GQLUpdateRedirectMutation, updateRedirectMutation } from "./RedirectForm";
 
 const convertRedirectFormToApiInput = ({ sourceType, source, target, comment }: FormValues, linkBlock: BlockInterface): GQLRedirectInput => {
     const apiInput: GQLRedirectInput = {

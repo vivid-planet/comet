@@ -1,7 +1,5 @@
 import { gql } from "@apollo/client";
 
-export { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables } from "./TableHead.generated";
-
 export const damFolderMPathFragment = gql`
     fragment DamFolderMPath on DamFolder {
         id
