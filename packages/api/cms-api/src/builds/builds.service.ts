@@ -134,6 +134,12 @@ export class BuildsService {
     }
 
     async setChangesSinceLastBuild(scope: ContentScope | "all" = "all"): Promise<void> {
+        const isEmptyScope = scope !== "all" && Object.keys(scope).length === 0; // Caused by features with optional scoping, e.g. redirects
+
+        if (isEmptyScope) {
+            scope = "all";
+        }
+
         if ((await this.changesRepository.findOne({ scope })) === null) {
             await this.changesRepository.persistAndFlush(this.changesRepository.create({ scope }));
         }
