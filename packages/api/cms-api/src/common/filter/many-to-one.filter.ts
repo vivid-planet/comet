@@ -1,20 +1,20 @@
-import { Field, InputType } from "@nestjs/graphql";
-import { IsOptional, IsString } from "class-validator";
+import { Field, ID, InputType } from "@nestjs/graphql";
+import { IsOptional, IsUUID } from "class-validator";
 
 @InputType()
 export class ManyToOneFilter {
-    @Field(() => [String], { nullable: true })
+    @Field(() => [ID], { nullable: true })
     @IsOptional()
-    @IsString({ each: true })
+    @IsUUID(undefined, { each: true })
     isAnyOf?: string[];
 
-    @Field({ nullable: true })
+    @Field(() => ID, { nullable: true })
     @IsOptional()
-    @IsString()
+    @IsUUID()
     equal?: string;
 
-    @Field({ nullable: true })
+    @Field(() => ID, { nullable: true })
     @IsOptional()
-    @IsString()
+    @IsUUID()
     notEqual?: string;
 }
