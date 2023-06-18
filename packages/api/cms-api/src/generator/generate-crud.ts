@@ -410,7 +410,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             !relationOneToManyProps.includes(prop) &&
             !outputRelationManyToManyProps.includes(prop)
         ) {
-            throw new Error("@CrudField output=false is only used for relations, for other props simply remove @Field() disable it's output");
+            throw new Error("@CrudField output=false is only used for relations, for other props simply remove @Field() to disable its output");
         }
     }
 
@@ -574,7 +574,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     ${inputRelationToManyProps.map(
                         (prop) => `{
                         const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
-                        if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passes as input");
+                        if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passed as input");
                         await ${instanceNameSingular}.${prop.name}.loadItems();
                         ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((p) => Reference.create(p)));
                     }`,
