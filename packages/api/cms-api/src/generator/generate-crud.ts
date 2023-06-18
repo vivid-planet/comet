@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
-import { plural } from "pluralize";
+import { plural, singular } from "pluralize";
 
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
@@ -427,6 +427,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             injectRepositories.add(prop.type);
             return {
                 name: prop.name,
+                singularName: singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
                 repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
@@ -443,6 +444,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             injectRepositories.add(prop.type);
             return {
                 name: prop.name,
+                singularName: singular(prop.name),
                 nullable: prop.nullable,
                 type: prop.type,
                 repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
@@ -576,7 +578,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                         const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
                         if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passed as input");
                         await ${instanceNameSingular}.${prop.name}.loadItems();
-                        ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((p) => Reference.create(p)));
+                        ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((${prop.singularName}) => Reference.create(${prop.singularName})));
                     }`,
                     )}
 
@@ -617,7 +619,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
                 if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passes as input");
                 await ${instanceNameSingular}.${prop.name}.loadItems();
-                ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((p) => Reference.create(p)));
+                ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((${prop.singularName}) => Reference.create(${prop.singularName})));
             }`,
             )}
 
