@@ -400,17 +400,17 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
     const relationManyToManyProps = metadata.props.filter((prop) => prop.reference === "m:n");
-    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
-    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
-    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "output"));
+    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     for (const prop of metadata.props) {
         if (
-            !hasFieldFeature(metadata.class, prop.name, "output") &&
+            !hasFieldFeature(metadata.class, prop.name, "resolveField") &&
             !relationManyToOneProps.includes(prop) &&
             !relationOneToManyProps.includes(prop) &&
             !outputRelationManyToManyProps.includes(prop)
         ) {
-            throw new Error("@CrudField output=false is only used for relations, for other props simply remove @Field() to disable its output");
+            throw new Error("@CrudField resolveField=false is only used for relations, for other props simply remove @Field() to disable its output");
         }
     }
 

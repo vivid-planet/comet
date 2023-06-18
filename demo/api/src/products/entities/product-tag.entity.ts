@@ -22,7 +22,7 @@ export class ProductTag extends BaseEntity<ProductTag, "id"> implements Document
     title: string;
 
     @CrudField({
-        output: true, //default is true
+        resolveField: true, //default is true
         //search: true, //not implemented
         //filter: true, //not implemented
         //sort: true, //not implemented

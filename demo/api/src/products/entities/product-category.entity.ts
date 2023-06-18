@@ -26,7 +26,7 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> implement
     slug: string;
 
     @CrudField({
-        output: true, //default is true
+        resolveField: true, //default is true
         //search: true, //not implemented
         //filter: true, //not implemented
         //sort: true, //not implemented

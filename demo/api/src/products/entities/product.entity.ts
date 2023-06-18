@@ -71,7 +71,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @ManyToOne(() => ProductCategory, { nullable: true, ref: true })
     @CrudField({
-        output: true, //default is true
+        resolveField: true, //default is true
         search: true, //default is true
         filter: true, //default is true
         sort: true, //default is true
@@ -81,7 +81,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @ManyToMany(() => ProductTag, "products", { owner: true })
     @CrudField({
-        output: true, //default is true
+        resolveField: true, //default is true
         //search: true, //not implemented
         //filter: true, //not implemented
         //sort: true, //not implemented
