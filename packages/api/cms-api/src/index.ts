@@ -57,11 +57,14 @@ export { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/m
 export { NumberFilter } from "./common/filter/number.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
+export { PartialType } from "./common/helper/partial-type.helper";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";
 export { PaginatedResponseFactory } from "./common/pagination/paginated-response.factory";
 export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
+export { IsNullable } from "./common/validators/is-nullable";
 export { IsSlug } from "./common/validators/is-slug";
+export { IsUndefinable } from "./common/validators/is-undefinable";
 export { ContentScopeModule } from "./content-scope/content-scope.module";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";

@@ -10,7 +10,7 @@ import { GraphQLResolveInfo } from "graphql";
 import { Product } from "../entities/product.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { PaginatedProductTags } from "./dto/paginated-product-tags";
-import { ProductTagInput } from "./dto/product-tag.input";
+import { ProductTagInput, ProductTagUpdateInput } from "./dto/product-tag.input";
 import { ProductTagsArgs } from "./dto/product-tags.args";
 import { ProductTagsService } from "./product-tags.service";
 
@@ -79,13 +79,14 @@ export class ProductTagCrudResolver {
     @SubjectEntity(ProductTag)
     async updateProductTag(
         @Args("id", { type: () => ID }) id: string,
-        @Args("input", { type: () => ProductTagInput }) input: ProductTagInput,
+        @Args("input", { type: () => ProductTagUpdateInput }) input: ProductTagUpdateInput,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<ProductTag> {
         const productTag = await this.repository.findOneOrFail(id);
         if (lastUpdatedAt) {
             validateNotModified(productTag, lastUpdatedAt);
         }
+
         const { products: productsInput, ...assignInput } = input;
         productTag.assign({
             ...assignInput,

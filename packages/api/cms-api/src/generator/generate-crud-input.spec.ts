@@ -62,15 +62,24 @@ describe("GenerateCrudInput", () => {
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             //console.log(out);
             const lintedOutput = await lintSource(out);
+            //console.log(lintedOutput);
             const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
-            expect(classes.length).toBe(1);
+            expect(classes.length).toBe(2);
 
-            const cls = classes[0];
-            const structure = cls.getStructure();
+            {
+                const cls = classes[0];
+                const structure = cls.getStructure();
 
-            expect(structure.properties?.length).toBe(1);
+                expect(structure.properties?.length).toBe(1);
+            }
+            {
+                const cls = classes[1]; //update dto
+                const structure = cls.getStructure();
+
+                expect(structure.properties?.length).toBe(0);
+            }
 
             orm.close();
         });
@@ -89,7 +98,7 @@ describe("GenerateCrudInput", () => {
             const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
-            expect(classes.length).toBe(1);
+            expect(classes.length).toBe(2);
 
             const cls = classes[0];
             const structure = cls.getStructure();
@@ -123,7 +132,7 @@ describe("GenerateCrudInput", () => {
             const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
-            expect(classes.length).toBe(1);
+            expect(classes.length).toBe(2);
 
             const cls = classes[0];
             const structure = cls.getStructure();
@@ -158,7 +167,7 @@ describe("GenerateCrudInput", () => {
             const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
-            expect(classes.length).toBe(1);
+            expect(classes.length).toBe(2);
 
             const cls = classes[0];
             const structure = cls.getStructure();

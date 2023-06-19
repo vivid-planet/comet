@@ -11,7 +11,7 @@ import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { PaginatedProducts } from "./dto/paginated-products";
-import { ProductInput } from "./dto/product.input";
+import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { ProductsArgs } from "./dto/products.args";
 import { ProductsService } from "./products.service";
 
@@ -92,17 +92,17 @@ export class ProductCrudResolver {
     @SubjectEntity(Product)
     async updateProduct(
         @Args("id", { type: () => ID }) id: string,
-        @Args("input", { type: () => ProductInput }) input: ProductInput,
+        @Args("input", { type: () => ProductUpdateInput }) input: ProductUpdateInput,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<Product> {
         const product = await this.repository.findOneOrFail(id);
         if (lastUpdatedAt) {
             validateNotModified(product, lastUpdatedAt);
         }
-        const { tags: tagsInput, ...assignInput } = input;
+
+        const { tags: tagsInput, image: imageInput, ...assignInput } = input;
         product.assign({
             ...assignInput,
-            image: input.image.transformToBlockData(),
             category: input.category ? Reference.create(await this.productCategoryRepository.findOneOrFail(input.category)) : undefined,
         });
         {
@@ -110,6 +110,10 @@ export class ProductCrudResolver {
             if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that where passes as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
+        }
+
+        if (imageInput) {
+            product.image = imageInput.transformToBlockData();
         }
 
         await this.entityManager.flush();

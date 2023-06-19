@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-import { damFileThumbnailFragment } from "./thumbnail/DamThumbnail.gql";
+import { damFileThumbnailFragment } from "./thumbnail/DamThumbnail";
 
 export const damFileTableFragment = gql`
     fragment DamFileTable on DamFile {

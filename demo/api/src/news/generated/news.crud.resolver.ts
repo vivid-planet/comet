@@ -9,7 +9,7 @@ import { GraphQLResolveInfo } from "graphql";
 
 import { News, NewsContentScope } from "../entities/news.entity";
 import { NewsComment } from "../entities/news-comment.entity";
-import { NewsInput } from "./dto/news.input";
+import { NewsInput, NewsUpdateInput } from "./dto/news.input";
 import { NewsListArgs } from "./dto/news-list.args";
 import { PaginatedNews } from "./dto/paginated-news";
 import { NewsService } from "./news.service";
@@ -84,19 +84,25 @@ export class NewsCrudResolver {
     @SubjectEntity(News)
     async updateNews(
         @Args("id", { type: () => ID }) id: string,
-        @Args("input", { type: () => NewsInput }) input: NewsInput,
+        @Args("input", { type: () => NewsUpdateInput }) input: NewsUpdateInput,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<News> {
         const news = await this.repository.findOneOrFail(id);
         if (lastUpdatedAt) {
             validateNotModified(news, lastUpdatedAt);
         }
-        const { ...assignInput } = input;
+
+        const { image: imageInput, content: contentInput, ...assignInput } = input;
         news.assign({
             ...assignInput,
-            image: input.image.transformToBlockData(),
-            content: input.content.transformToBlockData(),
         });
+
+        if (imageInput) {
+            news.image = imageInput.transformToBlockData();
+        }
+        if (contentInput) {
+            news.content = contentInput.transformToBlockData();
+        }
 
         await this.entityManager.flush();
 

@@ -6,6 +6,7 @@ import { GQLDamFile, GQLDamFolder } from "../../../graphql.generated";
 import { AudioThumbnail } from "./AudioThumbnail";
 import { GQLDamFileThumbnailFragment } from "./DamThumbnail.gql.generated";
 import { VideoThumbnail } from "./VideoThumbnail";
+export { damFileThumbnailFragment } from "./DamThumbnail.gql";
 
 const ThumbnailWrapper = styled("div")`
     display: flex;

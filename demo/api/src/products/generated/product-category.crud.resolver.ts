@@ -11,7 +11,7 @@ import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { PaginatedProductCategories } from "./dto/paginated-product-categories";
 import { ProductCategoriesArgs } from "./dto/product-categories.args";
-import { ProductCategoryInput } from "./dto/product-category.input";
+import { ProductCategoryInput, ProductCategoryUpdateInput } from "./dto/product-category.input";
 import { ProductCategoriesService } from "./product-categories.service";
 
 @Resolver(() => ProductCategory)
@@ -86,13 +86,14 @@ export class ProductCategoryCrudResolver {
     @SubjectEntity(ProductCategory)
     async updateProductCategory(
         @Args("id", { type: () => ID }) id: string,
-        @Args("input", { type: () => ProductCategoryInput }) input: ProductCategoryInput,
+        @Args("input", { type: () => ProductCategoryUpdateInput }) input: ProductCategoryUpdateInput,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<ProductCategory> {
         const productCategory = await this.repository.findOneOrFail(id);
         if (lastUpdatedAt) {
             validateNotModified(productCategory, lastUpdatedAt);
         }
+
         const { products: productsInput, ...assignInput } = input;
         productCategory.assign({
             ...assignInput,

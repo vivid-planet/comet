@@ -15,11 +15,11 @@ import {
     GQLMoveDamFilesMutationVariables,
     GQLMoveDamFoldersMutation,
     GQLMoveDamFoldersMutationVariables,
+    moveDamFilesMutation,
+    moveDamFoldersMutation,
 } from "../DataGrid/FolderDataGrid";
-import { moveDamFilesMutation, moveDamFoldersMutation } from "../DataGrid/FolderDataGrid.gql";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { ChooseFolder, GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder";
-import { allFoldersQuery } from "./ChooseFolder.gql";
+import { allFoldersQuery, ChooseFolder, GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder";
 import { useFolderTree } from "./useFolderTree";
 import { useFolderTreeSearch } from "./useFolderTreeSearch";
 

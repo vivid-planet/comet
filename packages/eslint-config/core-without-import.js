@@ -1,7 +1,6 @@
 module.exports = {
     extends: ["eslint:recommended", "plugin:prettier/recommended"],
-    plugins: ["simple-import-sort", "unused-imports", "json-files"],
-
+    plugins: ["simple-import-sort", "unused-imports", "json-files", "@comet"],
     rules: {
         "no-unused-vars": "off",
         "prefer-template": "error",
