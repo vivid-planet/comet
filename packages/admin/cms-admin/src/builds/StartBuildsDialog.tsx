@@ -12,6 +12,7 @@ const buildTemplatesQuery = gql`
         buildTemplates {
             id
             name
+            label
         }
     }
 `;
@@ -66,6 +67,9 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                                 defaultMessage: "Name",
                             }),
                             flex: 1,
+                            renderCell: ({ row }) => {
+                                return row.label ?? row.name;
+                            },
                         },
                     ]}
                     checkboxSelection

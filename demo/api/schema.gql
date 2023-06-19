@@ -21,6 +21,11 @@ type Build {
   completionTime: DateTime
   estimatedCompletionTime: DateTime
   id: ID!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
   name: String
   startTime: DateTime
   status: JobStatus!
@@ -29,6 +34,11 @@ type Build {
 
 type BuildTemplate {
   id: ID!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
   name: String!
 }
 
