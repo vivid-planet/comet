@@ -125,6 +125,6 @@ jobs:
 
             - name: "Publish stable version"
               if: startsWith(github.event.ref, 'refs/tags/v')
-              run: yarn publish:release from-git --yes
+              run: yarn publish:release from-git --dist-tag=v3.x.x --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
