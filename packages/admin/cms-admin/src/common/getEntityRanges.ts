@@ -11,6 +11,9 @@ export type CharacterMetaList = List<CharacterMetadata>;
 
 export const EMPTY_SET: Style = OrderedSet();
 
+/*
+    This implementation is inspired by https://github.com/jpuri/draftjs-to-html.
+*/
 export default function getEntityRanges(text: string, charMetaList: CharacterMetaList): EntityRange[] {
     let charEntity: EntityKey = null;
     let prevCharEntity: EntityKey = null;

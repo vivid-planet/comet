@@ -6,21 +6,21 @@ interface Options<State extends Record<string, any>> {
     defaultValues: State;
     AdminComponent: BlockAdminComponent<State>;
     definesOwnPadding?: boolean;
-    extractContent?: boolean;
+    extractTextContent?: boolean;
 }
 
 export function createCompositeSettings<State extends Record<string, any>>({
     defaultValues,
     AdminComponent,
     definesOwnPadding,
-    extractContent,
+    extractTextContent,
 }: Options<State>): [AnonymousBlockInterface<State, State, State>, { flatten: true }] {
     return [
         createSettingsAnonymousBlock<State>({
             defaultValues,
             AdminComponent,
             definesOwnPadding,
-            extractContent,
+            extractTextContent,
         }),
         { flatten: true },
     ];

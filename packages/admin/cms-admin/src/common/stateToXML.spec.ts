@@ -94,7 +94,6 @@ describe("stateToXML", () => {
         ]);
     });
 
-    // TODO
     it("should insert pseudo-tags in for entity ranges", () => {
         const rawContent = {
             entityMap: {

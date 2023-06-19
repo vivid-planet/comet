@@ -6,7 +6,7 @@ interface Options<State> {
     AdminComponent: BlockAdminComponent<State>;
     isValid?: (values: State) => boolean | Promise<boolean>;
     definesOwnPadding?: boolean;
-    extractContent?: boolean;
+    extractTextContent?: boolean;
 }
 
 export function createSettingsAnonymousBlock<State>({
@@ -14,7 +14,7 @@ export function createSettingsAnonymousBlock<State>({
     AdminComponent,
     isValid,
     definesOwnPadding,
-    extractContent,
+    extractTextContent,
 }: Options<State>): AnonymousBlockInterface<State, State, State, State> {
     const AnonymousSettingsBlock: AnonymousBlockInterface<State, State, State, State> = {
         ...createBlockSkeleton(),
@@ -31,7 +31,7 @@ export function createSettingsAnonymousBlock<State>({
 
         definesOwnPadding,
 
-        extractContent,
+        extractTextContent,
 
         AdminComponent,
     };
