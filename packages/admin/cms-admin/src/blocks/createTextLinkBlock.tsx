@@ -50,6 +50,7 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
 
             return {
                 ...state,
+                link: block.replaceTextContents?.(state.link, contents) ?? state.link,
                 text,
             };
         },
