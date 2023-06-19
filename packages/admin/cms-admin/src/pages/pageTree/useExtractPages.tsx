@@ -9,6 +9,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "../../documents/types";
 import { useLocale } from "../../locale/useLocale";
 import { GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables } from "../createEditPageNode.generated";
+import { convertCsvToTextContents } from "./convertCsvToTextContents";
 import { GQLPageTreePageFragment } from "./usePageTree.generated";
 import { usePageTreeContext } from "./usePageTreeContext";
 
@@ -87,11 +88,6 @@ interface UseExtractPagesApi {
      * read data from clipboard, validate it and return parsed data.
      */
     getContentsFromClipboard: () => Promise<GetContentsFromClipboardResponse>;
-
-    /**
-     * get content in csv format
-     */
-    getContentAsCSV: (contents: string[]) => string;
 }
 
 /**
@@ -240,7 +236,7 @@ function useExtractImportPages(): UseExtractPagesApi {
         }
 
         try {
-            const parsedText = getCSVAsContent(text);
+            const parsedText = convertCsvToTextContents(text);
 
             if (isContentsClipboard(parsedText)) {
                 return {
@@ -273,31 +269,7 @@ function useExtractImportPages(): UseExtractPagesApi {
         }
     };
 
-    const getContentAsCSV = (contents: string[]) => {
-        const rows = ["Original;ReplaceWith"];
-
-        contents.forEach((content) => {
-            const value = content.replace(/;/g, '"";""');
-            rows.push(`${value};${value}`);
-        });
-        return rows.join("\n");
-    };
-
-    const getCSVAsContent = (csv: string) => {
-        const content: { [key: string]: string } = {};
-
-        const lines = csv.split("\n");
-
-        for (let i = 1; i < lines.length; i++) {
-            const lineContent = lines[i].split(";");
-
-            content[lineContent[0]] = lineContent[1];
-        }
-
-        return { textContents: content };
-    };
-
-    return { extractContents, importContents, getContentsFromClipboard, getContentAsCSV };
+    return { extractContents, importContents, getContentsFromClipboard };
 }
 
 export { useExtractImportPages };

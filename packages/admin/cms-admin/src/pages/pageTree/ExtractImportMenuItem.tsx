@@ -4,6 +4,7 @@ import { writeClipboard } from "@comet/blocks-admin";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { convertTextContentsToCsv } from "./convertTextContentsToCsv";
 import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";
 import { useExtractImportPages } from "./useExtractPages";
 import { PageTreePage } from "./usePageTree";
@@ -17,7 +18,7 @@ export const ExtractImportMenuItem = ({ page }: Props): React.ReactElement => {
     const [extractLoading, setExtractLoading] = React.useState(false);
     const [importLoading, setImportLoading] = React.useState(false);
 
-    const { extractContents, importContents, getContentsFromClipboard, getContentAsCSV } = useExtractImportPages();
+    const { extractContents, importContents, getContentsFromClipboard } = useExtractImportPages();
     const { tree } = usePageTreeContext();
 
     return (
@@ -30,7 +31,7 @@ export const ExtractImportMenuItem = ({ page }: Props): React.ReactElement => {
                     const pagesAsArray = treeMapToArray(subTree, "root");
                     const extractedContents = await extractContents(pagesAsArray);
 
-                    const csv = getContentAsCSV(extractedContents);
+                    const csv = convertTextContentsToCsv(extractedContents);
                     writeClipboard(csv);
                     setExtractLoading(false);
                 }}
