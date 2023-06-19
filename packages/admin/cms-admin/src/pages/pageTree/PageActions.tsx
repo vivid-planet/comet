@@ -10,7 +10,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { serializeInitialValues } from "../../form/serializeInitialValues";
 import { openSitePreviewWindow } from "../../preview/openSitePreviewWindow";
 import { CopyPasteMenuItem } from "./CopyPasteMenuItem";
-import { ExtractImportMenuItem } from "./ExrtactImportMenuItem";
+import { ExtractImportMenuItem } from "./ExtractImportMenuItem";
 import { MovePageMenuItem } from "./MovePageMenuItem";
 import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "./Page";
 import { PageDeleteDialog } from "./PageDeleteDialog";
