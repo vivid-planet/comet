@@ -1,9 +1,9 @@
 import { DraftInlineStyleType } from "draft-js";
 import { v4 } from "uuid";
 
-import { XMLToState } from "./XMLToState";
+import { updateBlockContent } from "./XmlToState";
 
-describe("XMLToState", () => {
+describe("updateBlockContent", () => {
     it("should remove pseudo-tags for multiple sequential inline styles", () => {
         // original text: Let\'s test <inline id="1">bold</inline> and <inline id="2">italic</inline>.
         const block = {
@@ -27,7 +27,7 @@ describe("XMLToState", () => {
             data: {},
         };
 
-        expect(XMLToState(block)).toEqual({
+        expect(updateBlockContent(block)).toEqual({
             ...block,
             text: "Let's test bold and italic",
         });
@@ -99,7 +99,7 @@ describe("XMLToState", () => {
             },
         ];
 
-        const state = XMLToState(block);
+        const state = updateBlockContent(block);
         state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
 
         expect(state).toEqual({
@@ -146,7 +146,7 @@ describe("XMLToState", () => {
             },
         ];
 
-        const state = XMLToState(block);
+        const state = updateBlockContent(block);
         state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
 
         expect(state).toEqual({
@@ -198,7 +198,7 @@ describe("XMLToState", () => {
             },
         ];
 
-        const state = XMLToState(block);
+        const state = updateBlockContent(block);
         state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
 
         expect(state).toEqual({
@@ -250,7 +250,7 @@ describe("XMLToState", () => {
             },
         ];
 
-        const state = XMLToState(block);
+        const state = updateBlockContent(block);
         state.inlineStyleRanges.sort((a, b) => a.offset - b.offset);
 
         expect(state).toEqual({
@@ -289,7 +289,7 @@ describe("XMLToState", () => {
             data: {},
         };
 
-        expect(XMLToState(block)).toEqual({
+        expect(updateBlockContent(block)).toEqual({
             ...block,
             text: "Testing bold, italic and strikethrough.",
             inlineStyleRanges: [],
@@ -325,7 +325,7 @@ describe("XMLToState", () => {
             data: {},
         };
 
-        expect(XMLToState(block)).toEqual({
+        expect(updateBlockContent(block)).toEqual({
             ...block,
             text: "Testing bold, italic and strikethrough.",
             inlineStyleRanges: [],
@@ -361,7 +361,7 @@ describe("XMLToState", () => {
             data: {},
         };
 
-        expect(XMLToState(block)).toEqual({
+        expect(updateBlockContent(block)).toEqual({
             ...block,
             text: "Testing bold, italic and strikethrough.",
             inlineStyleRanges: [],
@@ -408,7 +408,7 @@ describe("XMLToState", () => {
             data: {},
         };
 
-        expect(XMLToState(block)).toEqual({
+        expect(updateBlockContent(block)).toEqual({
             ...block,
             text: "Now some new links are added, pointing somewhere external and internal also including some styling tags.",
             inlineStyleRanges: [
@@ -482,7 +482,7 @@ describe("XMLToState", () => {
             data: {},
         };
 
-        expect(XMLToState(block)).toEqual({
+        expect(updateBlockContent(block)).toEqual({
             ...block,
             text: "Testing bold links, italic links and strikethrough.",
             entityRanges: [
@@ -513,7 +513,7 @@ describe("XMLToState", () => {
             data: {},
         };
 
-        expect(XMLToState(block)).toEqual({
+        expect(updateBlockContent(block)).toEqual({
             ...block,
             text: "ein Link Das ist",
             entityRanges: [
@@ -544,7 +544,7 @@ describe("XMLToState", () => {
             data: {},
         };
 
-        const test = XMLToState(block);
+        const test = updateBlockContent(block);
 
         expect(test).toEqual({
             ...block,

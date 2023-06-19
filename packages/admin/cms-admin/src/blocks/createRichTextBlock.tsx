@@ -9,15 +9,14 @@ import {
     EntityInstance,
     Modifier,
     RawDraftContentState,
-    RawDraftEntity,
 } from "draft-js";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
-import stateToXML from "../common/stateToXML";
-import { XMLToState } from "../common/XMLToState";
+import { stateToXml } from "../common/stateToXML";
+import { XmlToState } from "../common/XmlToState";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
 import { Decorator as SoftHyphenDecorator } from "./rte/extension/SoftHyphen/Decorator";
@@ -179,32 +178,15 @@ export const createRichTextBlock = (
         },
 
         extractTextContents: (state) => {
-            return stateToXML(state.editorState.getCurrentContent());
+            return stateToXml(state.editorState.getCurrentContent());
         },
 
         replaceTextContents: (state, contents) => {
             const { editorState } = state;
             const rawContent = convertStateToRawContent(editorState);
-            let newEntityMap: { [key: number]: RawDraftEntity } = {};
-
-            const translatedBlocks = rawContent.blocks.map((block) => {
-                const translation = contents.find(
-                    (content) =>
-                        content.original.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "") === block.text,
-                );
-                if (!translation || translation.replaceWith === "") return block;
-
-                const newBlockstate = XMLToState({ ...block, text: translation.replaceWith });
-
-                newBlockstate.entityRanges.forEach((entityRange) => {
-                    newEntityMap = { ...newEntityMap, [entityRange.key]: rawContent.entityMap[entityRange.key] };
-                });
-
-                return newBlockstate;
-            });
 
             return {
-                editorState: EditorState.createWithContent(convertFromRaw({ blocks: translatedBlocks, entityMap: newEntityMap })),
+                editorState: XmlToState(rawContent, contents),
             };
         },
 

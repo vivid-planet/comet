@@ -21,8 +21,6 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             page: pageTreeNode(id: $id) {
                 id
                 path
-                name
-                slug
                 document {
                     ... on DocumentInterface {
                         id

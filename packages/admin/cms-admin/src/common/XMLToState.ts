@@ -1,4 +1,4 @@
-import { DraftInlineStyleType, RawDraftContentBlock } from "draft-js";
+import { convertFromRaw, DraftInlineStyleType, EditorState, RawDraftContentBlock, RawDraftContentState, RawDraftEntity } from "draft-js";
 
 interface InlineStyle {
     id: number;
@@ -12,7 +12,7 @@ interface EntityRange {
     length: number;
 }
 
-export const XMLToState = (block: RawDraftContentBlock): RawDraftContentBlock => {
+export const updateBlockContent = (block: RawDraftContentBlock) => {
     const regexInlineStylesPattern = /<inline id="[0-9][0-9]?">|<\/inline>/g;
     const regexEntitiesPattern = /<entity id="[0-9][0-9]?">|<\/entity>/g;
 
@@ -149,4 +149,25 @@ export const XMLToState = (block: RawDraftContentBlock): RawDraftContentBlock =>
         ...block,
         text,
     };
+};
+
+export const XmlToState = (rawContent: RawDraftContentState, contents: { original: string; replaceWith: string }[]) => {
+    let newEntityMap: { [key: number]: RawDraftEntity } = {};
+
+    const translatedBlocks = rawContent.blocks.map((block) => {
+        const translation = contents.find(
+            (content) => content.original.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "") === block.text,
+        );
+        if (!translation || translation.replaceWith === "") return block;
+
+        const newBlockstate = updateBlockContent({ ...block, text: translation.replaceWith });
+
+        newBlockstate.entityRanges.forEach((entityRange) => {
+            newEntityMap = { ...newEntityMap, [entityRange.key]: rawContent.entityMap[entityRange.key] };
+        });
+
+        return newBlockstate;
+    });
+
+    return EditorState.createWithContent(convertFromRaw({ blocks: translatedBlocks, entityMap: newEntityMap }));
 };
