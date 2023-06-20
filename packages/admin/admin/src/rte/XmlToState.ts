@@ -1,4 +1,14 @@
-import { convertFromRaw, DraftInlineStyleType, EditorState, RawDraftContentBlock, RawDraftContentState, RawDraftEntity } from "draft-js";
+import {
+    ContentState,
+    convertFromRaw,
+    DraftInlineStyleType,
+    EditorState,
+    RawDraftContentBlock,
+    RawDraftContentState,
+    RawDraftEntity,
+} from "draft-js";
+
+import { blockToXml } from "./stateToXml";
 
 interface InlineStyle {
     id: number;
@@ -151,13 +161,15 @@ export const updateBlockContent = (block: RawDraftContentBlock) => {
     };
 };
 
-export const XmlToState = (rawContent: RawDraftContentState, contents: { original: string; replaceWith: string }[]) => {
+export const XmlToState = (state: ContentState, rawContent: RawDraftContentState, contents: { original: string; replaceWith: string }[]) => {
     let newEntityMap: { [key: number]: RawDraftEntity } = {};
 
-    const translatedBlocks = rawContent.blocks.map((block) => {
-        const translation = contents.find(
-            (content) => content.original.replace(/<inline id="[0-9][0-9]?">|<\/inline>|<entity id="[0-9][0-9]?">|<\/entity>/g, "") === block.text,
-        );
+    const contentBlocks = state.getBlocksAsArray();
+
+    const translatedBlocks = rawContent.blocks.map((block, index) => {
+        const xmlBlockContent = blockToXml(contentBlocks[index], state);
+
+        const translation = contents.find((content) => content.original === xmlBlockContent);
         if (!translation || translation.replaceWith === "") return block;
 
         const newBlockstate = updateBlockContent({ ...block, text: translation.replaceWith });

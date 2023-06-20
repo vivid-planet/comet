@@ -34,13 +34,16 @@ const DEFAULT_STYLE_MAP = {
     [INLINE_STYLE.UNDERLINE]: { element: "inline" },
 };
 
+/* 
+    escapes special characters in the text content to their HTML/XML entities
+*/
 function encodeContent(text: string): string {
     return text.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split("\xA0").join("&nbsp;").split("\n").join(`${BREAK}\n`);
 }
 
 class MarkupGenerator {
     blocks: ContentBlock[] = [];
-    contentState: ContentState;
+    contentState: ContentState | undefined;
     output: string[] = [];
     currentBlock = 0;
     indentLevel = 0;
@@ -50,30 +53,31 @@ class MarkupGenerator {
     indent = "  ";
     counter = 1;
 
-    constructor(contentState: ContentState) {
+    constructor(contentState?: ContentState) {
         this.contentState = contentState;
     }
 
     generate(): string[] {
+        if (!this.contentState) {
+            return [];
+        }
+
         this.output = [];
         this.blocks = this.contentState.getBlocksAsArray();
         this.totalBlocks = this.blocks.length;
         this.currentBlock = 0;
-        this.indentLevel = 0;
 
         while (this.currentBlock < this.totalBlocks) {
-            this.processBlock();
+            this.processBlock(this.contentState);
         }
 
         return this.output.filter((content) => content !== "" && content !== "\n");
     }
 
-    processBlock() {
+    processBlock(contentState: ContentState) {
         const block = this.blocks[this.currentBlock];
 
-        this.addIndent();
-
-        const content = this.renderBlockContent(block);
+        const content = this.renderBlockContent(block, contentState);
 
         this.output.push(content);
 
@@ -81,11 +85,7 @@ class MarkupGenerator {
         this.output.push(`\n`);
     }
 
-    addIndent() {
-        this.output.push(this.indent.repeat(this.indentLevel));
-    }
-
-    renderBlockContent(block: ContentBlock): string {
+    renderBlockContent(block: ContentBlock, contentState: ContentState): string {
         let text = block.getText();
         let currentLinkId = 0;
 
@@ -96,6 +96,7 @@ class MarkupGenerator {
 
         text = this.preserveWhitespace(text);
         const charMetaList: CharacterMetaList = block.getCharacterList();
+
         const entityPieces = getEntityRanges(text, charMetaList);
 
         return entityPieces
@@ -120,7 +121,7 @@ class MarkupGenerator {
                     })
                     .join("");
 
-                const entity = entityKey ? this.contentState.getEntity(entityKey) : null;
+                const entity = entityKey ? contentState.getEntity(entityKey) : null;
                 // Note: The `toUpperCase` below is for compatability with some libraries that use lower-case for image blocks.
                 const entityType = entity == null ? null : entity.getType().toUpperCase();
 
@@ -134,9 +135,11 @@ class MarkupGenerator {
             .join("");
     }
 
+    /*
+        preserves leading/trailing/consecutive whitespace in the text content
+     */
     preserveWhitespace(text: string): string {
         const length = text.length;
-        // Prevent leading/trailing/consecutive whitespace collapse.
         const newText = new Array(length);
         for (let i = 0; i < length; i++) {
             if (text[i] === " " && (i === 0 || i === length - 1 || text[i - 1] === " ")) {
@@ -151,4 +154,8 @@ class MarkupGenerator {
 
 export function stateToXml(content: ContentState): string[] {
     return new MarkupGenerator(content).generate();
+}
+
+export function blockToXml(contentBlock: ContentBlock, contentState: ContentState): string {
+    return new MarkupGenerator().renderBlockContent(contentBlock, contentState);
 }

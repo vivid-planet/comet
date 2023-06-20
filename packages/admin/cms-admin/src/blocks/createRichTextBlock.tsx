@@ -185,7 +185,7 @@ export const createRichTextBlock = (
             const rawContent = convertStateToRawContent(editorState);
 
             return {
-                editorState: XmlToState(rawContent, contents),
+                editorState: XmlToState(state.editorState.getCurrentContent(), rawContent, contents),
             };
         },
 
