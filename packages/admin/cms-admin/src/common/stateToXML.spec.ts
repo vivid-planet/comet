@@ -1,7 +1,7 @@
 import { convertFromRaw, DraftEntityMutability, DraftInlineStyleType, EditorState } from "draft-js";
 import { v4 } from "uuid";
 
-import { stateToXml } from "./stateToXml";
+import { stateToXml } from "./stateTo1";
 
 describe("stateToXml", () => {
     it("should insert pseudo-tags for multiple sequential inline styles", () => {
