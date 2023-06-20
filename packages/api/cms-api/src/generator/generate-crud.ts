@@ -603,8 +603,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             }
 
             const { ${[...inputRelationToManyProps, ...blockProps].map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}${
-                (inputRelationToManyProps.length || blockProps.length) ? ", " : ""
-            }...assignInput } = input;
+        inputRelationToManyProps.length || blockProps.length ? ", " : ""
+    }...assignInput } = input;
             ${instanceNameSingular}.assign({
                 ...assignInput,
                 ${inputRelationManyToOneProps.map(
