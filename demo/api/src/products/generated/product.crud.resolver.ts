@@ -105,7 +105,7 @@ export class ProductCrudResolver {
             ...assignInput,
             category: input.category ? Reference.create(await this.productCategoryRepository.findOneOrFail(input.category)) : undefined,
         });
-        {
+        if (tagsInput) {
             const tags = await this.productTagRepository.find({ id: tagsInput });
             if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that where passes as input");
             await product.tags.loadItems();

@@ -615,7 +615,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 )}
             });
             ${inputRelationToManyProps.map(
-                (prop) => `{
+                (prop) => `if (${prop.name}Input) {
                 const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
                 if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passes as input");
                 await ${instanceNameSingular}.${prop.name}.loadItems();

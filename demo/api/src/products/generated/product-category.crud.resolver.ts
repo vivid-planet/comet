@@ -98,7 +98,7 @@ export class ProductCategoryCrudResolver {
         productCategory.assign({
             ...assignInput,
         });
-        {
+        if (productsInput) {
             const products = await this.productRepository.find({ id: productsInput });
             if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passes as input");
             await productCategory.products.loadItems();

@@ -307,9 +307,9 @@ input MainMenuItemInput {
 }
 
 input ManyToOneFilter {
-  equal: String
-  isAnyOf: [String!]
-  notEqual: String
+  equal: ID
+  isAnyOf: [ID!]
+  notEqual: ID
 }
 
 input MovePageTreeNodesByNeighbourInput {
@@ -365,13 +365,9 @@ type Mutation {
   updatePageTreeNodeCategory(category: String!, id: ID!): PageTreeNode!
   updatePageTreeNodeSlug(id: ID!, slug: String!): PageTreeNode!
   updatePageTreeNodeVisibility(id: ID!, input: PageTreeNodeUpdateVisibilityInput!): PageTreeNode!
-<<<<<<< HEAD
-  updateProduct(id: ID!, input: ProductInput!, lastUpdatedAt: DateTime): Product!
-  updateProductCategory(id: ID!, input: ProductCategoryInput!, lastUpdatedAt: DateTime): ProductCategory!
-  updateProductTag(id: ID!, input: ProductTagInput!, lastUpdatedAt: DateTime): ProductTag!
-=======
   updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
->>>>>>> next
+  updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!, lastUpdatedAt: DateTime): ProductCategory!
+  updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
   updateProductVisibility(id: ID!, visible: Boolean!): Product!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
@@ -476,7 +472,6 @@ input NewsUpdateInput {
   image: DamImageBlockInput
   slug: String
   title: String
-  visible: Boolean
 }
 
 input NumberFilter {
@@ -666,7 +661,7 @@ input ProductCategoryFilter {
 }
 
 input ProductCategoryInput {
-  products: [String!]!
+  products: [ID!]!
   slug: String!
   title: String!
 }
@@ -681,6 +676,12 @@ enum ProductCategorySortField {
   slug
   title
   updatedAt
+}
+
+input ProductCategoryUpdateInput {
+  products: [ID!]
+  slug: String
+  title: String
 }
 
 input ProductFilter {
@@ -699,13 +700,13 @@ input ProductFilter {
 }
 
 input ProductInput {
-  category: String
+  category: [ID!]
   description: String!
   image: DamImageBlockInput!
   inStock: Boolean!
   price: Float
   slug: String!
-  tags: [String!]!
+  tags: [ID!]!
   title: String!
   type: ProductType!
 }
@@ -745,7 +746,7 @@ input ProductTagFilter {
 }
 
 input ProductTagInput {
-  products: [String!]!
+  products: [ID!]!
   title: String!
 }
 
@@ -758,6 +759,11 @@ enum ProductTagSortField {
   createdAt
   title
   updatedAt
+}
+
+input ProductTagUpdateInput {
+  products: [ID!]
+  title: String
 }
 
 enum ProductType {
@@ -773,11 +779,13 @@ input ProductTypeEnumFilter {
 }
 
 input ProductUpdateInput {
+  category: [ID!]
   description: String
   image: DamImageBlockInput
   inStock: Boolean
   price: Float
   slug: String
+  tags: [ID!]
   title: String
   type: ProductType
 }
