@@ -37,7 +37,7 @@ export const createProductTagMutation = gql`
 `;
 
 export const updateProductTagMutation = gql`
-    mutation ProductTagFormUpdateProductTag($id: ID!, $input: ProductTagInput!, $lastUpdatedAt: DateTime) {
+    mutation ProductTagFormUpdateProductTag($id: ID!, $input: ProductTagUpdateInput!, $lastUpdatedAt: DateTime) {
         updateProductTag(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
             id
             updatedAt
