@@ -31,13 +31,43 @@ export function createSettingsAnonymousBlock<State>({
 
         definesOwnPadding,
 
-        extractTextContent,
-
         AdminComponent,
     };
     if (isValid) {
         AnonymousSettingsBlock.isValid = isValid;
     }
+    if (extractTextContent) {
+        AnonymousSettingsBlock.extractTextContents = (state) => {
+            if (typeof state === "object") {
+                if (state === null) {
+                    return [];
+                } else {
+                    return Object.values(state).filter((value) => typeof value === "string");
+                }
+            } else if (typeof state === "string") {
+                return [state];
+            } else {
+                return [];
+            }
+        };
+
+        AnonymousSettingsBlock.replaceTextContents = (state, contents) => {
+            if (typeof state === "object") {
+                if (state === null) {
+                    return state;
+                } else {
+                    return Object.values(state).filter(
+                        (value) => contents.find((translation) => translation.original === value)?.replaceWith,
+                    ) as State;
+                }
+            } else if (typeof state === "string") {
+                return contents.find((translation) => translation.original === state)?.replaceWith as State;
+            } else {
+                return state;
+            }
+        };
+    }
+
     return AnonymousSettingsBlock;
 }
 
