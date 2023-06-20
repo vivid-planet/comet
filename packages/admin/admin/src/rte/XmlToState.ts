@@ -31,36 +31,43 @@ export const updateBlockContent = (block: RawDraftContentBlock) => {
     const stylesStack: InlineStyle[] = [];
     const entitiesStack: EntityRange[] = [];
 
+    // process only inline style ranges and their associated pseudo tags
     const onlyInlineStyles = block.text.replace(regexEntitiesPattern, "");
     const inlineStyleTags = onlyInlineStyles.matchAll(regexInlineStylesPattern);
 
+    // process only entity ranges and their associated pseudo tags
     const onlyEntityRanges = block.text.replace(regexInlineStylesPattern, "");
     const entityRangesTags = onlyEntityRanges.matchAll(regexEntitiesPattern);
 
     const text = block.text.replace(regexEntitiesPattern, "").replace(regexInlineStylesPattern, "");
 
+    // counts the number of characters of previous pseudo tags to keep the correct index shift
     let shiftCount = 0;
 
     for (const match of inlineStyleTags) {
-        const id = match[0].match(/\d+/)?.[0];
+        const id = match[0].match(/\d+/)?.[0]; // get id of opening pseudo tag
 
         if (match.index === null || match.index === undefined) continue;
 
         const offset = match.index - shiftCount;
 
         if (id) {
+            // opening pseudo tags are added to the stack
             stylesStack.push({
                 id: parseInt(id ?? ""),
                 offset,
                 length: 0,
             });
         } else {
+            // take top element of stack when closing pseudo tags occurs
             const openingTag = stylesStack.pop();
 
             if (openingTag) {
+                // check if style already occured before
                 const existingStyle = newInlineStyleRanges.findIndex((style) => style.id === openingTag.id);
 
                 if (existingStyle !== -1) {
+                    // update range length of style
                     newInlineStyleRanges[existingStyle] = {
                         ...newInlineStyleRanges[existingStyle],
                         length: newInlineStyleRanges[existingStyle].length + (offset - openingTag.offset),
@@ -75,11 +82,13 @@ export const updateBlockContent = (block: RawDraftContentBlock) => {
             }
         }
 
+        // update index shift according to pseudo tag length
         shiftCount += match[0].length;
     }
 
     shiftCount = 0;
 
+    // entity ranges work the same way as inline styles
     for (const match of entityRangesTags) {
         const id = match[0].match(/\d+/)?.[0];
 
@@ -117,7 +126,7 @@ export const updateBlockContent = (block: RawDraftContentBlock) => {
         shiftCount += match[0].length;
     }
 
-    /* inline styles need to be sorted by offset to map style property as inline styles are sorted by style order*/
+    /* inline styles need to be sorted by offset to map style property as inline styles are sorted by style order */
     block.inlineStyleRanges = block.inlineStyleRanges
         .sort((a, b) => a.offset - b.offset)
         .map((style, index) => {

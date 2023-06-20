@@ -95,8 +95,11 @@ class MarkupGenerator {
         }
 
         text = this.preserveWhitespace(text);
+
+        // getting a list including all styles and entites for every single character
         const charMetaList: CharacterMetaList = block.getCharacterList();
 
+        // divides the information about style and entities of each character into ranges
         const entityPieces = getEntityRanges(text, charMetaList);
 
         return entityPieces

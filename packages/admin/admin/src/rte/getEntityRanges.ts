@@ -20,6 +20,7 @@ export default function getEntityRanges(text: string, charMetaList: CharacterMet
     const ranges: Array<EntityRange> = [];
     let rangeStart = 0;
     let lastStyle = null;
+    // the id is used for the pseudotags
     let styleId = 0;
 
     for (let i = 0, len = text.length; i < len; i++) {
@@ -28,6 +29,7 @@ export default function getEntityRanges(text: string, charMetaList: CharacterMet
         charEntity = meta ? meta.getEntity() : null;
 
         if (i > 0 && charEntity !== prevCharEntity) {
+            /* Styles are always within entities */
             const styleRanges = getStyleRanges(text.slice(rangeStart, i), charMetaList.slice(rangeStart, i), lastStyle, styleId);
             styleId = styleRanges.styleId;
             ranges.push([prevCharEntity, styleRanges.styleRanges]);
@@ -51,6 +53,9 @@ function getStyleRanges(
     let prevCharStyle = charStyle;
     const ranges: StyleRange[] = [];
     let rangeStart = 0;
+
+    /* The start and end of an entity always mark a single range.
+If a style range starts before an entity range and extends into it, the last style must be used here, otherwise it will be interpreted as a new style range. */
     const lastPreviousStyleRange = lastStyle ? lastStyle[1][lastStyle[1].length - 1][1] : [];
 
     for (let i = 0, len = text.length; i < len; i++) {
