@@ -3,8 +3,7 @@
     "compilerOptions": {
         "outDir": "lib",
         "rootDir": "src",
-        "strict": true,
-        "downlevelIteration": true
+        "strict": true
     },
     "include": ["./src"],
     "exclude": ["**/*.test.tsx", "**/*.test.ts", "**/*.spec.tsx", "**/*.spec.ts", "**/__tests__/**"]
