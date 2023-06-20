@@ -15,8 +15,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
-import { stateToXml } from "../common/stateTo1";
-import { XmlToState } from "../common/XmlTo1";
+import { stateToXml } from "../common/stateToXml";
+import { XmlToState } from "../common/XmlToState";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
 import { Decorator as SoftHyphenDecorator } from "./rte/extension/SoftHyphen/Decorator";
