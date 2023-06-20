@@ -99,18 +99,18 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";
         } else if (prop.reference == "m:1") {
-            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
+            decorators.push(`@Field(() => [ID]${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push("@IsUUID()");
             type = "string";
         } else if (prop.reference == "1:m") {
             decorators.length = 0;
-            decorators.push(`@Field(() => [String])`);
+            decorators.push(`@Field(() => [ID])`);
             decorators.push(`@IsArray()`);
             decorators.push(`@IsUUID(undefined, { each: true })`);
             type = "string[]";
         } else if (prop.reference == "m:n") {
             decorators.length = 0;
-            decorators.push(`@Field(() => [String])`);
+            decorators.push(`@Field(() => [ID])`);
             decorators.push(`@IsArray()`);
             decorators.push(`@IsUUID(undefined, { each: true })`);
             type = "string[]";
@@ -123,7 +123,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
     
     `;
     }
-    const inputOut = `import { Field, InputType } from "@nestjs/graphql";
+    const inputOut = `import { Field, InputType, ID } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray } from "class-validator";
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";

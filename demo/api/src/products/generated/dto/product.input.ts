@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 import { DamImageBlock, IsNullable, IsSlug, PartialType, RootBlockInputScalar } from "@comet/cms-api";
-import { Field, InputType } from "@nestjs/graphql";
+import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
@@ -48,11 +48,11 @@ export class ProductInput {
     image: BlockInputInterface;
 
     @IsNullable()
-    @Field({ nullable: true })
+    @Field(() => [ID], { nullable: true })
     @IsUUID()
     category?: string;
 
-    @Field(() => [String])
+    @Field(() => [ID])
     @IsArray()
     @IsUUID(undefined, { each: true })
     tags: string[];
