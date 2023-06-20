@@ -107,8 +107,10 @@ const EditFile = ({ id }: EditFormProps): React.ReactElement => {
     return <EditFileInner file={file} id={id} />;
 };
 
+export type DamFileDetails = GQLDamFileDetailFragment;
+
 interface EditFileInnerProps {
-    file: GQLDamFileDetailFragment;
+    file: DamFileDetails;
     id: string;
 }
 
