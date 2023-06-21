@@ -324,7 +324,7 @@ export function createEditPageNode({
                                             return (
                                                 <>
                                                     <Typography>
-                                                        {parentPath ?? ""}
+                                                        {parentPath}
                                                         <strong>/{slug}</strong>
                                                     </Typography>
                                                     {mode === "edit" && dirtyFields.slug && (
