@@ -309,8 +309,8 @@ export function createEditPageNode({
                                         defaultMessage: "Complete Path",
                                     })}
                                 >
-                                    <FormSpy subscription={{ values: true, dirtyFields: true, initialValues: true }}>
-                                        {({ values, dirtyFields, initialValues }) => {
+                                    <FormSpy subscription={{ values: true, dirtyFields: true }}>
+                                        {({ values, dirtyFields }) => {
                                             if (!values.slug) {
                                                 return null;
                                             }
