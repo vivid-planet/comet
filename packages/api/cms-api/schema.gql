@@ -449,6 +449,7 @@ input PageTreeNodeUpdateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
+  createRedirectFromOldToNewSlug: Boolean = false
 }
 
 input AttachedDocumentInput {

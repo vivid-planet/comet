@@ -66,6 +66,11 @@ export abstract class PageTreeNodeBaseUpdateInput {
     @IsOptional()
     @IsBoolean()
     hideInMenu?: boolean;
+
+    @Field({ nullable: true, defaultValue: false })
+    @IsOptional()
+    @IsBoolean()
+    createRedirectFromOldToNewSlug: boolean;
 }
 
 @InputType("PageTreeNodeUpdateInput")
