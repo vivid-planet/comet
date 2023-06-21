@@ -1,6 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { ErrorScope, Field, FieldContainer, FinalForm, FinalFormCheckbox, FinalFormInput, FinalFormSelect } from "@comet/admin";
-import { Box, CircularProgress, FormControlLabel, MenuItem, Typography } from "@mui/material";
+import { ErrorScope, Field, FieldContainer, FinalForm, FinalFormCheckbox, FinalFormInput, FinalFormSelect, Tooltip } from "@comet/admin";
+import { Info } from "@comet/admin-icons";
+import { Box, CircularProgress, FormControlLabel, IconButton, MenuItem, Typography } from "@mui/material";
 import { Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
 import { DocumentNode } from "graphql";
@@ -335,14 +336,29 @@ export function createEditPageNode({
                                                                 {(props) => (
                                                                     <FormControlLabel
                                                                         label={
-                                                                            <FormattedMessage
-                                                                                id="comet.pages.pages.page.createRedirectFromOldToNewSlug"
-                                                                                defaultMessage="Create redirect from {oldSlug} to {newSlug}"
-                                                                                values={{
-                                                                                    oldSlug: createCompletePath(initialValues?.slug ?? ""),
-                                                                                    newSlug: createCompletePath(values.slug),
-                                                                                }}
-                                                                            />
+                                                                            <Typography display="flex" alignItems="center">
+                                                                                <FormattedMessage
+                                                                                    tagName="span"
+                                                                                    id="comet.pages.pages.page.createRedirectFromOldToNewSlug"
+                                                                                    defaultMessage="Create redirect from {oldSlug} to {newSlug}"
+                                                                                    values={{
+                                                                                        oldSlug: createCompletePath(initialValues?.slug ?? ""),
+                                                                                        newSlug: createCompletePath(values.slug),
+                                                                                    }}
+                                                                                />
+                                                                                <Tooltip
+                                                                                    title={
+                                                                                        <FormattedMessage
+                                                                                            id="comet.pages.pages.page.createRedirectTooltip"
+                                                                                            defaultMessage="You should create a redirect if the URL is known by users or search engines, so they can still find the page after renaming it. If this path is not known (e.g. newly created) you can skip it."
+                                                                                        />
+                                                                                    }
+                                                                                >
+                                                                                    <IconButton>
+                                                                                        <Info />
+                                                                                    </IconButton>
+                                                                                </Tooltip>
+                                                                            </Typography>
                                                                         }
                                                                         control={<FinalFormCheckbox {...props} />}
                                                                     />
