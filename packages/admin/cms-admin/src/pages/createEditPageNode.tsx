@@ -361,8 +361,11 @@ export function createEditPageNode({
                                                                                 <Tooltip
                                                                                     title={
                                                                                         <FormattedMessage
-                                                                                            id="comet.pages.pages.page.createRedirectTooltip"
-                                                                                            defaultMessage="You should create the redirect(s) if the URL is known by users or search engines, so they can still find the page after renaming it. If the path is not known (e.g. newly created) you can skip it."
+                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.tooltip"
+                                                                                            defaultMessage="You should create the {numberOfDescendants, plural, =0 {redirect} other {redirects}} if the URL is known by users or search engines, so they can still find the page after renaming it. If the path is not known (e.g. newly created) you can skip it."
+                                                                                            values={{
+                                                                                                numberOfDescendants,
+                                                                                            }}
                                                                                         />
                                                                                     }
                                                                                 >
