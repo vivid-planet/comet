@@ -21,8 +21,6 @@ export const ENTITY_TYPE = {
     LINK: "LINK",
 };
 
-const BREAK = "<br>";
-
 // Order: inner-most style to outer-most.
 // Examle: <em><strong>foo</strong></em>
 const DEFAULT_STYLE_ORDER = [INLINE_STYLE.BOLD, INLINE_STYLE.ITALIC, INLINE_STYLE.UNDERLINE, INLINE_STYLE.STRIKETHROUGH];
@@ -38,7 +36,7 @@ const DEFAULT_STYLE_MAP = {
     escapes special characters in the text content to their HTML/XML entities
 */
 function encodeContent(text: string): string {
-    return text.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split("\xA0").join("&nbsp;").split("\n").join(`${BREAK}\n`);
+    return text.split("\n").join(`<br>\n`);
 }
 
 class MarkupGenerator {
@@ -86,15 +84,15 @@ class MarkupGenerator {
     }
 
     renderBlockContent(block: ContentBlock, contentState: ContentState): string {
-        let text = block.getText();
+        const text = block.getText();
+
         let currentLinkId = 0;
 
         if (text === "") {
-            // Prevent element collapse if completely empty.
-            return BREAK;
+            return "";
         }
 
-        text = this.preserveWhitespace(text);
+        // text = this.preserveWhitespace(text);
 
         // getting a list including all styles and entites for every single character
         const charMetaList: CharacterMetaList = block.getCharacterList();
@@ -136,22 +134,6 @@ class MarkupGenerator {
                 }
             })
             .join("");
-    }
-
-    /*
-        preserves leading/trailing/consecutive whitespace in the text content
-     */
-    preserveWhitespace(text: string): string {
-        const length = text.length;
-        const newText = new Array(length);
-        for (let i = 0; i < length; i++) {
-            if (text[i] === " " && (i === 0 || i === length - 1 || text[i - 1] === " ")) {
-                newText[i] = "\xA0";
-            } else {
-                newText[i] = text[i];
-            }
-        }
-        return newText.join("");
     }
 }
 

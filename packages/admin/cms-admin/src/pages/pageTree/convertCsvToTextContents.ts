@@ -1,7 +1,7 @@
 const convertCsvToTextContents = (csv: string) => {
     const content: { [key: string]: string } = {};
 
-    const lines = csv.split("\n");
+    const lines = csv.replace("//r/g", "").split("\n");
 
     for (let i = 1; i < lines.length; i++) {
         const lineContent = lines[i].split(";");
