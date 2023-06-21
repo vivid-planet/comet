@@ -1,13 +1,13 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { ErrorScope, Field, FieldContainer, FinalForm, FinalFormCheckbox, FinalFormInput, FinalFormSelect } from "@comet/admin";
-import { CircularProgress, FormControlLabel, MenuItem, Typography } from "@mui/material";
+import { Box, CircularProgress, FormControlLabel, MenuItem, Typography } from "@mui/material";
 import { Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
 import { DocumentNode } from "graphql";
 import debounce from "p-debounce";
 import React from "react";
 import { FormSpy } from "react-final-form";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";
 
 import { useContentScope } from "../contentScope/Provider";
@@ -202,6 +202,7 @@ export function createEditPageNode({
                             name: values.name,
                             slug: values.slug,
                             hideInMenu: values.hideInMenu,
+                            createRedirectFromOldToNewSlug: values.createRedirectFromOldToNewSlug,
                             attachedDocument: {
                                 id: values.documentType === data?.page?.documentType ? data?.page?.document?.id : undefined,
                                 type: values.documentType,
@@ -306,8 +307,8 @@ export function createEditPageNode({
                                         defaultMessage: "Complete Path",
                                     })}
                                 >
-                                    <FormSpy subscription={{ values: true }}>
-                                        {({ values }) => {
+                                    <FormSpy subscription={{ values: true, dirtyFields: true, initialValues: true }}>
+                                        {({ values, dirtyFields, initialValues }) => {
                                             if (!values.slug) {
                                                 return null;
                                             }
@@ -316,10 +317,40 @@ export function createEditPageNode({
                                                 return <Typography>/</Typography>;
                                             }
 
+                                            function createCompletePath(slug: string) {
+                                                return (
+                                                    <>
+                                                        {parentPath ?? ""}
+                                                        <strong>/{slug}</strong>
+                                                    </>
+                                                );
+                                            }
+
                                             return (
-                                                <Typography>
-                                                    {parentPath}/{values.slug}
-                                                </Typography>
+                                                <>
+                                                    <Typography>{createCompletePath(values.slug)}</Typography>
+                                                    {mode === "edit" && dirtyFields.slug && (
+                                                        <Box mt={2}>
+                                                            <Field name="createRedirectFromOldToNewSlug" type="checkbox">
+                                                                {(props) => (
+                                                                    <FormControlLabel
+                                                                        label={
+                                                                            <FormattedMessage
+                                                                                id="comet.pages.pages.page.createRedirectFromOldToNewSlug"
+                                                                                defaultMessage="Create redirect from {oldSlug} to {newSlug}"
+                                                                                values={{
+                                                                                    oldSlug: createCompletePath(initialValues?.slug ?? ""),
+                                                                                    newSlug: createCompletePath(values.slug),
+                                                                                }}
+                                                                            />
+                                                                        }
+                                                                        control={<FinalFormCheckbox {...props} />}
+                                                                    />
+                                                                )}
+                                                            </Field>
+                                                        </Box>
+                                                    )}
+                                                </>
                                             );
                                         }}
                                     </FormSpy>
@@ -396,6 +427,7 @@ interface FormValues {
     path: string;
     documentType: string;
     hideInMenu: boolean;
+    createRedirectFromOldToNewSlug?: boolean;
 }
 
 const transformToSlug = (name: string, locale: string) => {
