@@ -204,7 +204,7 @@ export function createEditPageNode({
                             name: values.name,
                             slug: values.slug,
                             hideInMenu: values.hideInMenu,
-                            createRedirectFromOldToNewSlug: values.createRedirectFromOldToNewSlug,
+                            createAutomaticRedirectsOnSlugChange: values.createAutomaticRedirectsOnSlugChange,
                             attachedDocument: {
                                 id: values.documentType === data?.page?.documentType ? data?.page?.document?.id : undefined,
                                 type: values.documentType,
@@ -455,7 +455,7 @@ interface FormValues {
     path: string;
     documentType: string;
     hideInMenu: boolean;
-    createRedirectFromOldToNewSlug?: boolean;
+    createAutomaticRedirectsOnSlugChange?: boolean;
 }
 
 const transformToSlug = (name: string, locale: string) => {

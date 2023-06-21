@@ -70,7 +70,7 @@ export abstract class PageTreeNodeBaseUpdateInput {
     @Field({ nullable: true, defaultValue: false })
     @IsOptional()
     @IsBoolean()
-    createRedirectFromOldToNewSlug: boolean;
+    createAutomaticRedirectsOnSlugChange: boolean;
 }
 
 @InputType("PageTreeNodeUpdateInput")
