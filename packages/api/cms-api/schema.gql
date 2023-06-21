@@ -129,6 +129,7 @@ type PageTreeNode {
   hideInMenu: Boolean!
   category: String!
   childNodes: [PageTreeNode!]!
+  numberOfDescendants: Float!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!

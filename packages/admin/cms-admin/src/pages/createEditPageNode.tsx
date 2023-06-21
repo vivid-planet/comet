@@ -63,6 +63,7 @@ export function createEditPageNode({
                 documentType
                 hideInMenu
                 parentId
+                numberOfDescendants
                 document {
                     ... on DocumentInterface {
                         id
@@ -318,39 +319,50 @@ export function createEditPageNode({
                                                 return <Typography>/</Typography>;
                                             }
 
-                                            function createCompletePath(slug: string) {
-                                                return (
-                                                    <>
-                                                        {parentPath ?? ""}
-                                                        <strong>/{slug}</strong>
-                                                    </>
-                                                );
-                                            }
+                                            const numberOfDescendants = data?.page?.numberOfDescendants ?? 0;
 
                                             return (
                                                 <>
-                                                    <Typography>{createCompletePath(values.slug)}</Typography>
+                                                    <Typography>
+                                                        {parentPath ?? ""}
+                                                        <strong>/{slug}</strong>
+                                                    </Typography>
                                                     {mode === "edit" && dirtyFields.slug && (
-                                                        <Box mt={2}>
-                                                            <Field name="createRedirectFromOldToNewSlug" type="checkbox">
+                                                        <Box mt={3}>
+                                                            <Field name="createAutomaticRedirectsOnSlugChange" type="checkbox">
                                                                 {(props) => (
                                                                     <FormControlLabel
                                                                         label={
                                                                             <Typography display="flex" alignItems="center">
-                                                                                <FormattedMessage
-                                                                                    tagName="span"
-                                                                                    id="comet.pages.pages.page.createRedirectFromOldToNewSlug"
-                                                                                    defaultMessage="Create redirect from {oldSlug} to {newSlug}"
-                                                                                    values={{
-                                                                                        oldSlug: createCompletePath(initialValues?.slug ?? ""),
-                                                                                        newSlug: createCompletePath(values.slug),
-                                                                                    }}
-                                                                                />
+                                                                                <div>
+                                                                                    <Typography variant="body1">
+                                                                                        <FormattedMessage
+                                                                                            tagName="span"
+                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.fromOldToNewPath"
+                                                                                            defaultMessage="Create {numberOfDescendants, plural, =0 {a redirect} other {redirects}} from the old to the new path"
+                                                                                            values={{
+                                                                                                numberOfDescendants,
+                                                                                            }}
+                                                                                        />
+                                                                                    </Typography>
+                                                                                    {numberOfDescendants > 0 && (
+                                                                                        <Typography variant="body2" color="rgba(0, 0, 0, 0.6)">
+                                                                                            <FormattedMessage
+                                                                                                tagName="span"
+                                                                                                id="comet.pages.pages.page.createAutomaticRedirects.numberOfPages"
+                                                                                                defaultMessage="for this page and all {numberOfDescendants} descending pages"
+                                                                                                values={{
+                                                                                                    numberOfDescendants,
+                                                                                                }}
+                                                                                            />
+                                                                                        </Typography>
+                                                                                    )}
+                                                                                </div>
                                                                                 <Tooltip
                                                                                     title={
                                                                                         <FormattedMessage
                                                                                             id="comet.pages.pages.page.createRedirectTooltip"
-                                                                                            defaultMessage="You should create a redirect if the URL is known by users or search engines, so they can still find the page after renaming it. If this path is not known (e.g. newly created) you can skip it."
+                                                                                            defaultMessage="You should create the redirect(s) if the URL is known by users or search engines, so they can still find the page after renaming it. If the path is not known (e.g. newly created) you can skip it."
                                                                                         />
                                                                                     }
                                                                                 >
