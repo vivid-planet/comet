@@ -325,7 +325,7 @@ export function createEditPageNode({
                                                 <>
                                                     <Typography>
                                                         {parentPath}
-                                                        <strong>/{slug}</strong>
+                                                        <strong>/{values.slug}</strong>
                                                     </Typography>
                                                     {mode === "edit" && dirtyFields.slug && (
                                                         <Box mt={3}>
