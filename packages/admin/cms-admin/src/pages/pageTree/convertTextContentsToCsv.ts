@@ -2,7 +2,11 @@ const convertTextContentsToCsv = (contents: string[]) => {
     const rows = ["Original;ReplaceWith"];
 
     contents.forEach((content) => {
-        const value = content.replace(/;/g, '"";""');
+        let value = content.replace(/"/g, '""');
+
+        if (content.includes(";")) {
+            value = `"${value}"`;
+        }
         rows.push(`${value};${value}`);
     });
     return rows.join("\n");
