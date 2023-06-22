@@ -37,7 +37,7 @@ describe("GenerateCrudInputRelations", () => {
         const source = parseSource(lintedOutput);
 
         const classes = source.getClasses();
-        expect(classes.length).toBe(1);
+        expect(classes.length).toBe(2);
 
         const cls = classes[0];
         const structure = cls.getStructure();
@@ -51,7 +51,7 @@ describe("GenerateCrudInputRelations", () => {
             const decorators = prop.decorators?.map((i) => i.name);
             expect(decorators).toContain("Field");
             expect(decorators).toContain("IsUUID");
-            expect(decorators).toContain("IsOptional");
+            expect(decorators).toContain("IsNullable");
         }
         orm.close();
     });
@@ -70,7 +70,7 @@ describe("GenerateCrudInputRelations", () => {
         const source = parseSource(lintedOutput);
 
         const classes = source.getClasses();
-        expect(classes.length).toBe(1);
+        expect(classes.length).toBe(2);
 
         const cls = classes[0];
         const structure = cls.getStructure();
