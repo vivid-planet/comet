@@ -325,6 +325,106 @@
         ]
     },
     {
+        "name": "Debug",
+        "fields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "icon",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "icon",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "DebugList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "Debug",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "Debug",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "DemoTextLink",
         "fields": [
             {
@@ -1107,7 +1207,9 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "debug": "Debug",
+                                "debugList": "DebugList"
                             },
                             "nullable": false
                         },
@@ -1166,7 +1268,9 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "debug": "Debug",
+                                "debugList": "DebugList"
                             },
                             "nullable": false
                         },
