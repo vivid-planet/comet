@@ -48,7 +48,7 @@ export class ProductInput {
     image: BlockInputInterface;
 
     @IsNullable()
-    @Field(() => [ID], { nullable: true })
+    @Field(() => ID, { nullable: true })
     @IsUUID()
     category?: string;
 

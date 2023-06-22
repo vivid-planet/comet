@@ -700,7 +700,7 @@ input ProductFilter {
 }
 
 input ProductInput {
-  category: [ID!]
+  category: ID
   description: String!
   image: DamImageBlockInput!
   inStock: Boolean!
@@ -779,7 +779,7 @@ input ProductTypeEnumFilter {
 }
 
 input ProductUpdateInput {
-  category: [ID!]
+  category: ID
   description: String
   image: DamImageBlockInput
   inStock: Boolean

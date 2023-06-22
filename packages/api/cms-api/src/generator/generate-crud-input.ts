@@ -99,7 +99,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";
         } else if (prop.reference == "m:1") {
-            decorators.push(`@Field(() => [ID]${prop.nullable ? ", { nullable: true }" : ""})`);
+            decorators.push(`@Field(() => ID${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push("@IsUUID()");
             type = "string";
         } else if (prop.reference == "1:m") {
