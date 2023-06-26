@@ -1,6 +1,7 @@
-import { CircularProgress, MenuItem, Select, SelectProps } from "@mui/material";
+import { CircularProgress, InputAdornment, MenuItem, Select, SelectProps } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
@@ -64,7 +65,16 @@ export const FinalFormSelect = <T,>({
     return (
         <Select
             {...rest}
-            endAdornment={selectEndAdornment}
+            endAdornment={
+                <>
+                    {loading && (
+                        <InputAdornment position="end">
+                            <CircularProgress size={16} color="inherit" />
+                        </InputAdornment>
+                    )}
+                    {selectEndAdornment}
+                </>
+            }
             name={name}
             onChange={(event) => {
                 const value = event.target.value;
@@ -80,20 +90,21 @@ export const FinalFormSelect = <T,>({
             multiple={multiple}
         >
             {loading && (
-                <MenuItem value="">
-                    <CircularProgress size={20} />
+                <MenuItem value="" disabled>
+                    <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
                 </MenuItem>
             )}
+
             {options.length === 0 &&
                 value &&
                 (Array.isArray(value) ? (
                     value.map((v) => (
-                        <MenuItem value={getOptionValue(v)} key={getOptionValue(v)}>
+                        <MenuItem value={getOptionValue(v)} key={getOptionValue(v)} sx={{ display: "none" }}>
                             {getOptionLabel(v)}
                         </MenuItem>
                     ))
                 ) : (
-                    <MenuItem value={getOptionValue(value)} key={getOptionValue(value)}>
+                    <MenuItem value={getOptionValue(value)} key={getOptionValue(value)} sx={{ display: "none" }}>
                         {getOptionLabel(value)}
                     </MenuItem>
                 ))}
