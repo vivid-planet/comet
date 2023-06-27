@@ -5,10 +5,21 @@ import { GraphQLFieldResolver } from "graphql";
 import { GraphQLHandler } from "graphql-mocks";
 import { rest } from "msw";
 
-type Launch = {
+export type Launch = {
     id: string;
     mission_name: string;
     launch_date_local: Date;
+};
+
+export type LaunchesPastResult = {
+    data: Array<{
+        id: string;
+        mission_name: string;
+        launch_date_local: string;
+    }>;
+    result: {
+        totalCount: number;
+    };
 };
 
 const allLaunches: Launch[] = [];
