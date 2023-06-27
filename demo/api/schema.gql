@@ -460,7 +460,6 @@ input NewsUpdateInput {
   image: DamImageBlockInput
   slug: String
   title: String
-  visible: Boolean
 }
 
 input NumberFilter {
