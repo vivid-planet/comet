@@ -109,6 +109,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             type: formState.type as GQLProductType,
             category: formState.category?.id,
             tags: formState.tags.map((i) => i.id),
+            variants: [],
         };
         if (mode === "edit") {
             if (!id) throw new Error();

@@ -15,7 +15,7 @@ import { PaginatedNews } from "./dto/paginated-news";
 import { NewsService } from "./news.service";
 
 @Resolver(() => News)
-export class NewsCrudResolver {
+export class NewsResolver {
     constructor(
         private readonly entityManager: EntityManager,
         private readonly newsService: NewsService,
@@ -67,16 +67,18 @@ export class NewsCrudResolver {
         @Args("scope", { type: () => NewsContentScope }) scope: NewsContentScope,
         @Args("input", { type: () => NewsInput }) input: NewsInput,
     ): Promise<News> {
-        const { ...assignInput } = input;
+        const { image: imageInput, content: contentInput, ...assignInput } = input;
         const news = this.repository.create({
             ...assignInput,
             visible: false,
             scope,
-            image: input.image.transformToBlockData(),
-            content: input.content.transformToBlockData(),
+
+            image: imageInput.transformToBlockData(),
+            content: contentInput.transformToBlockData(),
         });
 
         await this.entityManager.flush();
+
         return news;
     }
 

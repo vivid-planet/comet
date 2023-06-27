@@ -15,7 +15,7 @@ import { ProductTagsArgs } from "./dto/product-tags.args";
 import { ProductTagsService } from "./product-tags.service";
 
 @Resolver(() => ProductTag)
-export class ProductTagCrudResolver {
+export class ProductTagResolver {
     constructor(
         private readonly entityManager: EntityManager,
         private readonly productTagsService: ProductTagsService,
@@ -64,14 +64,16 @@ export class ProductTagCrudResolver {
         const productTag = this.repository.create({
             ...assignInput,
         });
-        {
+
+        if (productsInput) {
             const products = await this.productRepository.find({ id: productsInput });
-            if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passed as input");
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passes as input");
             await productTag.products.loadItems();
             productTag.products.set(products.map((product) => Reference.create(product)));
         }
 
         await this.entityManager.flush();
+
         return productTag;
     }
 
@@ -91,6 +93,7 @@ export class ProductTagCrudResolver {
         productTag.assign({
             ...assignInput,
         });
+
         if (productsInput) {
             const products = await this.productRepository.find({ id: productsInput });
             if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passes as input");

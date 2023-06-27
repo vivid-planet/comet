@@ -61,7 +61,7 @@ describe("GenerateCrudInput", () => {
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             //console.log(out);
-            const lintedOutput = await lintSource(out);
+            const lintedOutput = await lintSource(out[0].content);
             //console.log(lintedOutput);
             const source = parseSource(lintedOutput);
 
@@ -94,7 +94,7 @@ describe("GenerateCrudInput", () => {
             });
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithDate"));
             //console.log(out);
-            const lintedOutput = await lintSource(out);
+            const lintedOutput = await lintSource(out[0].content);
             const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
@@ -128,7 +128,7 @@ describe("GenerateCrudInput", () => {
             });
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithBoolean"));
             //console.log(out);
-            const lintedOutput = await lintSource(out);
+            const lintedOutput = await lintSource(out[0].content);
             const source = parseSource(lintedOutput);
 
             const classes = source.getClasses();
@@ -162,7 +162,7 @@ describe("GenerateCrudInput", () => {
                 entities: [TestEntityWithEnum],
             });
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEnum"));
-            const lintedOutput = await lintSource(out);
+            const lintedOutput = await lintSource(out[0].content);
             //console.log(lintedOutput);
             const source = parseSource(lintedOutput);
 

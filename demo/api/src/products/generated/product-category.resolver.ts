@@ -15,7 +15,7 @@ import { ProductCategoryInput, ProductCategoryUpdateInput } from "./dto/product-
 import { ProductCategoriesService } from "./product-categories.service";
 
 @Resolver(() => ProductCategory)
-export class ProductCategoryCrudResolver {
+export class ProductCategoryResolver {
     constructor(
         private readonly entityManager: EntityManager,
         private readonly productCategoriesService: ProductCategoriesService,
@@ -71,14 +71,16 @@ export class ProductCategoryCrudResolver {
         const productCategory = this.repository.create({
             ...assignInput,
         });
-        {
+
+        if (productsInput) {
             const products = await this.productRepository.find({ id: productsInput });
-            if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passed as input");
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passes as input");
             await productCategory.products.loadItems();
             productCategory.products.set(products.map((product) => Reference.create(product)));
         }
 
         await this.entityManager.flush();
+
         return productCategory;
     }
 
@@ -98,6 +100,7 @@ export class ProductCategoryCrudResolver {
         productCategory.assign({
             ...assignInput,
         });
+
         if (productsInput) {
             const products = await this.productRepository.find({ id: productsInput });
             if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passes as input");

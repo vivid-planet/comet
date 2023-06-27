@@ -58,14 +58,16 @@ describe("GenerateCrudRelations", () => {
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
             const lintedOut = await lintGeneratedFiles(out);
+            const file = lintedOut.find((file) => file.name === "test-entity-product.resolver.ts");
+            if (!file) throw new Error("File not found");
 
-            const source = parseSource(lintedOut["test-entity-product.crud.resolver.ts"]);
+            const source = parseSource(file.content);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(1);
 
             const cls = classes[0];
-            expect(cls.getName()).toBe("TestEntityProductCrudResolver");
+            expect(cls.getName()).toBe("TestEntityProductResolver");
             const structure = cls.getStructure();
 
             expect(structure.properties?.length).toBe(0);
@@ -85,13 +87,15 @@ describe("GenerateCrudRelations", () => {
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityCategory"));
             const lintedOut = await lintGeneratedFiles(out);
 
-            const source = parseSource(lintedOut["test-entity-category.crud.resolver.ts"]);
+            const file = lintedOut.find((file) => file.name === "test-entity-category.resolver.ts");
+            if (!file) throw new Error("File not found");
 
+            const source = parseSource(file.content);
             const classes = source.getClasses();
             expect(classes.length).toBe(1);
 
             const cls = classes[0];
-            expect(cls.getName()).toBe("TestEntityCategoryCrudResolver");
+            expect(cls.getName()).toBe("TestEntityCategoryResolver");
             const structure = cls.getStructure();
 
             expect(structure.properties?.length).toBe(0);

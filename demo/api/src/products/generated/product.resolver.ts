@@ -10,18 +10,20 @@ import { GraphQLResolveInfo } from "graphql";
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { ProductTag } from "../entities/product-tag.entity";
+import { ProductVariant } from "../entities/product-variant.entity";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { ProductsArgs } from "./dto/products.args";
 import { ProductsService } from "./products.service";
 
 @Resolver(() => Product)
-export class ProductCrudResolver {
+export class ProductResolver {
     constructor(
         private readonly entityManager: EntityManager,
         private readonly productsService: ProductsService,
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
+        @InjectRepository(ProductVariant) private readonly productVariantRepository: EntityRepository<ProductVariant>,
         @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
     ) {}
 
@@ -48,6 +50,9 @@ export class ProductCrudResolver {
         if (fields.includes("category")) {
             populate.push("category");
         }
+        if (fields.includes("variants")) {
+            populate.push("variants");
+        }
         if (fields.includes("tags")) {
             populate.push("tags");
         }
@@ -69,22 +74,35 @@ export class ProductCrudResolver {
 
     @Mutation(() => Product)
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
-        const { tags: tagsInput, ...assignInput } = input;
+        const { variants: variantsInput, tags: tagsInput, category: categoryInput, image: imageInput, ...assignInput } = input;
         const product = this.repository.create({
             ...assignInput,
             visible: false,
 
-            image: input.image.transformToBlockData(),
-            category: input.category ? Reference.create(await this.productCategoryRepository.findOneOrFail(input.category)) : undefined,
+            category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
+            image: imageInput.transformToBlockData(),
         });
-        {
+        if (variantsInput) {
+            product.variants.set(
+                variantsInput.map((variantInput) => {
+                    const { image: imageInput, ...assignInput } = variantInput;
+                    return this.productVariantRepository.assign(new ProductVariant(), {
+                        ...assignInput,
+
+                        image: imageInput.transformToBlockData(),
+                    });
+                }),
+            );
+        }
+        if (tagsInput) {
             const tags = await this.productTagRepository.find({ id: tagsInput });
-            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that where passed as input");
+            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that where passes as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
 
         await this.entityManager.flush();
+
         return product;
     }
 
@@ -100,11 +118,24 @@ export class ProductCrudResolver {
             validateNotModified(product, lastUpdatedAt);
         }
 
-        const { tags: tagsInput, image: imageInput, ...assignInput } = input;
+        const { variants: variantsInput, tags: tagsInput, category: categoryInput, image: imageInput, ...assignInput } = input;
         product.assign({
             ...assignInput,
-            category: input.category ? Reference.create(await this.productCategoryRepository.findOneOrFail(input.category)) : undefined,
+
+            category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
         });
+        if (variantsInput) {
+            product.variants.set(
+                variantsInput.map((variantInput) => {
+                    const { image: imageInput, ...assignInput } = variantInput;
+                    return this.productVariantRepository.assign(new ProductVariant(), {
+                        ...assignInput,
+
+                        image: imageInput.transformToBlockData(),
+                    });
+                }),
+            );
+        }
         if (tagsInput) {
             const tags = await this.productTagRepository.find({ id: tagsInput });
             if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that where passes as input");
@@ -149,6 +180,11 @@ export class ProductCrudResolver {
     @ResolveField(() => ProductCategory, { nullable: true })
     async category(@Parent() product: Product): Promise<ProductCategory | undefined> {
         return product.category?.load();
+    }
+
+    @ResolveField(() => [ProductVariant])
+    async variants(@Parent() product: Product): Promise<ProductVariant[]> {
+        return product.variants.loadItems();
     }
 
     @ResolveField(() => [ProductTag])

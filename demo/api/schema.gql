@@ -639,6 +639,7 @@ type Product implements DocumentInterface {
   title: String!
   type: ProductType!
   updatedAt: DateTime!
+  variants: [ProductVariant!]!
   visible: Boolean!
 }
 
@@ -709,6 +710,7 @@ input ProductInput {
   tags: [ID!]!
   title: String!
   type: ProductType!
+  variants: [ProductVariantInput!]!
 }
 
 input ProductSort {
@@ -788,6 +790,20 @@ input ProductUpdateInput {
   tags: [ID!]
   title: String
   type: ProductType
+  variants: [ProductVariantInput!]
+}
+
+type ProductVariant implements DocumentInterface {
+  createdAt: DateTime!
+  id: ID!
+  image: DamImageBlockData!
+  name: String!
+  updatedAt: DateTime!
+}
+
+input ProductVariantInput {
+  image: DamImageBlockInput!
+  name: String!
 }
 
 type Query {

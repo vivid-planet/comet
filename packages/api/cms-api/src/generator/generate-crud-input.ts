@@ -4,24 +4,29 @@ import * as path from "path";
 import { RootBlockType } from "src/blocks/root-block-type";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
+import { buildNameVariants } from "./utils/build-name-variants";
 import { findEnumName } from "./utils/find-enum-name";
-import { writeGeneratedFile } from "./utils/write-generated-file";
+import { GeneratedFile, writeGeneratedFiles } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function writeCrudInput(generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): Promise<void> {
-    const classNameSingular = metadata.className;
-    const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
-    const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
-
-    const inputOut = await generateCrudInput(generatorOptions, metadata);
-    await writeGeneratedFile(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.input.ts`, inputOut);
+    const files = await generateCrudInput(generatorOptions, metadata);
+    await writeGeneratedFiles(files, generatorOptions);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function generateCrudInput(generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): Promise<string> {
-    const props = metadata.props.filter((prop) => {
-        return hasFieldFeature(metadata.class, prop.name, "input");
-    });
+export async function generateCrudInput(
+    generatorOptions: { targetDirectory: string },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    metadata: EntityMetadata<any>,
+    options: { nested: boolean; excludeFields: string[] } = { nested: false, excludeFields: [] },
+): Promise<GeneratedFile[]> {
+    const generatedFiles: GeneratedFile[] = [];
+
+    const props = metadata.props
+        .filter((prop) => {
+            return hasFieldFeature(metadata.class, prop.name, "input");
+        })
+        .filter((prop) => !options.excludeFields.includes(prop.name));
 
     let fieldsOut = "";
     let importsOut = "";
@@ -103,11 +108,31 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             decorators.push("@IsUUID()");
             type = "string";
         } else if (prop.reference == "1:m") {
-            decorators.length = 0;
-            decorators.push(`@Field(() => [ID])`);
-            decorators.push(`@IsArray()`);
-            decorators.push(`@IsUUID(undefined, { each: true })`);
-            type = "string[]";
+            if (prop.orphanRemoval) {
+                //if orphanRemoval is enabled, we need to generate a nested input type
+                decorators.length = 0;
+                {
+                    if (!prop.targetMeta) throw new Error("No targetMeta");
+                    const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "m:1" && p.targetMeta == metadata).map((p) => p.name);
+                    const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, { nested: true, excludeFields });
+                    generatedFiles.push(...nestedInputFiles);
+                    importsOut += `import { ${prop.targetMeta.className}Input } from "${nestedInputFiles[0].name
+                        .replace(/^dto/, ".")
+                        .replace(/\.ts$/, "")}";`;
+                }
+                const inputName = `${prop.targetMeta.className}Input`;
+                decorators.push(`@Field(() => [${inputName}])`);
+                decorators.push(`@IsArray()`);
+                decorators.push(`@Type(() => ${inputName})`);
+                type = `${inputName}[]`;
+            } else {
+                //if orphanRemoval is disabled, we reference the id in input
+                decorators.length = 0;
+                decorators.push(`@Field(() => [ID])`);
+                decorators.push(`@IsArray()`);
+                decorators.push(`@IsUUID(undefined, { each: true })`);
+                type = "string[]";
+            }
         } else if (prop.reference == "m:n") {
             decorators.length = 0;
             decorators.push(`@Field(() => [ID])`);
@@ -124,7 +149,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
     `;
     }
     const inputOut = `import { Field, InputType, ID } from "@nestjs/graphql";
-import { Transform } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray } from "class-validator";
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
@@ -136,9 +161,21 @@ export class ${metadata.className}Input {
     ${fieldsOut}
 }
 
+${
+    !options.nested
+        ? `
 @InputType()
 export class ${metadata.className}UpdateInput extends PartialType(${metadata.className}Input) {}
+`
+        : ""
+}
 `;
 
-    return inputOut;
+    const { fileNameSingular } = buildNameVariants(metadata);
+    generatedFiles.push({
+        name: !options.nested ? `dto/${fileNameSingular}.input.ts` : `dto/${fileNameSingular}.nested.input.ts`,
+        content: inputOut,
+        type: "input",
+    });
+    return generatedFiles;
 }

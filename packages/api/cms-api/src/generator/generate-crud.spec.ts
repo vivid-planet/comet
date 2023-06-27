@@ -27,13 +27,16 @@ describe("GenerateCrud", () => {
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             const lintedOut = await lintGeneratedFiles(out);
 
-            const source = parseSource(lintedOut["test-entity-with-string.crud.resolver.ts"]);
+            const file = lintedOut.find((file) => file.name === "test-entity-with-string.resolver.ts");
+            if (!file) throw new Error("File not found");
+
+            const source = parseSource(file.content);
 
             const classes = source.getClasses();
             expect(classes.length).toBe(1);
 
             const cls = classes[0];
-            expect(cls.getName()).toBe("TestEntityWithStringCrudResolver");
+            expect(cls.getName()).toBe("TestEntityWithStringResolver");
             const structure = cls.getStructure();
 
             expect(structure.properties?.length).toBe(0);

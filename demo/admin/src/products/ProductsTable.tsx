@@ -146,6 +146,7 @@ function ProductsTable() {
                                             type: input.type,
                                             tags: [], // todo copy tags
                                             category: null, // todo copy category
+                                            variants: [], // todo copy variants
                                         },
                                     },
                                 });

@@ -1,40 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
-import { plural, singular } from "pluralize";
+import { singular } from "pluralize";
 
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
+import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { findEnumName } from "./utils/find-enum-name";
-import { GeneratedFiles } from "./utils/write-generated-files";
-
-function classNameToInstanceName(className: string): string {
-    return className[0].toLocaleLowerCase() + className.slice(1);
-}
-
-function buildNameVariants(metadata: EntityMetadata<any>): {
-    classNameSingular: string;
-    classNamePlural: string;
-    instanceNameSingular: string;
-    instanceNamePlural: string;
-    fileNameSingular: string;
-    fileNamePlural: string;
-} {
-    const classNameSingular = metadata.className;
-    const classNamePlural = plural(metadata.className);
-    const instanceNameSingular = classNameToInstanceName(classNameSingular);
-    const instanceNamePlural = classNameToInstanceName(classNamePlural);
-    const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
-    const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
-    return {
-        classNameSingular,
-        classNamePlural,
-        instanceNameSingular,
-        instanceNamePlural,
-        fileNameSingular,
-        fileNamePlural,
-    };
-}
+import { GeneratedFile } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function buildOptions(metadata: EntityMetadata<any>) {
@@ -391,11 +364,142 @@ function generateImport(targetMetadata: EntityMetadata<any>, relativeTo: string)
     return `import { ${targetMetadata.className} } from "${path.relative(relativeTo, targetMetadata.path).replace(/\.ts$/, "")}";`;
 }
 
-function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
-    const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
-        buildNameVariants(metadata);
-    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, blockProps, hasUpdatedAt } =
-        buildOptions(metadata);
+function generateInputHandling(
+    options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
+    metadata: EntityMetadata<any>,
+): string {
+    const { instanceNameSingular } = buildNameVariants(metadata);
+    const { blockProps, hasVisibleProp, scopeProp } = buildOptions(metadata);
+
+    const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
+
+    const relationManyToOneProps = props.filter((prop) => prop.reference === "m:1");
+    const relationOneToManyProps = props.filter((prop) => prop.reference === "1:m");
+    const relationManyToManyProps = props.filter((prop) => prop.reference === "m:n");
+
+    const inputRelationManyToOneProps = relationManyToOneProps
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .map((prop) => {
+            return {
+                name: prop.name,
+                singularName: singular(prop.name),
+                nullable: prop.nullable,
+                type: prop.type,
+                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
+            };
+        });
+
+    const inputRelationToManyProps = [...relationOneToManyProps, ...relationManyToManyProps]
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .map((prop) => {
+            const targetMeta = prop.targetMeta;
+            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            return {
+                name: prop.name,
+                singularName: singular(prop.name),
+                nullable: prop.nullable,
+                type: prop.type,
+                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
+                orphanRemoval: prop.orphanRemoval,
+                targetMeta,
+            };
+        });
+
+    const noAssignProps = [...inputRelationToManyProps, ...inputRelationManyToOneProps, ...blockProps];
+    return `
+    ${
+        noAssignProps.length
+            ? `const { ${noAssignProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}, ...assignInput } = ${options.inputName};`
+            : ""
+    }
+    ${options.assignEntityCode}
+    ...${noAssignProps.length ? `assignInput` : options.inputName},
+        ${options.mode == "create" && hasVisibleProp ? `visible: false,` : ""}
+        ${options.mode == "create" && scopeProp ? `scope,` : ""}
+        ${inputRelationManyToOneProps
+            .map(
+                (prop) =>
+                    `${prop.name}: ${prop.nullable ? `${prop.name}Input ? ` : ""}Reference.create(await this.${prop.repositoryName}.findOneOrFail(${
+                        prop.name
+                    }Input))${prop.nullable ? ` : undefined` : ""}, `,
+            )
+            .join("")}
+        ${
+            options.mode == "create" || options.mode == "updateNested"
+                ? blockProps.map((prop) => `${prop.name}: ${prop.name}Input.transformToBlockData(),`).join("")
+                : ""
+        }
+});
+${inputRelationToManyProps
+    .map((prop) => {
+        if (prop.orphanRemoval) {
+            return `if (${prop.name}Input) {
+        ${instanceNameSingular}.${prop.name}.set(
+            ${prop.name}Input.map((${prop.singularName}Input) => {
+                ${generateInputHandling(
+                    {
+                        mode: "updateNested",
+                        inputName: `${prop.singularName}Input`,
+
+                        // alternative `return this.${prop.repositoryName}.create({` requires back relation to be set
+                        assignEntityCode: `return this.${prop.repositoryName}.assign(new ${prop.type}(), {`,
+
+                        excludeFields: prop.targetMeta.props
+                            .filter((prop) => prop.reference == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                            .map((prop) => prop.name),
+                    },
+                    prop.targetMeta,
+                )}
+            }),
+        );
+        }`;
+        } else {
+            return `
+            if (${prop.name}Input) {
+                const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
+                if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passes as input");
+                await ${instanceNameSingular}.${prop.name}.loadItems();
+                ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((${prop.singularName}) => Reference.create(${prop.singularName})));
+            }`;
+        }
+    })
+    .join("")}
+
+${
+    options.mode == "update"
+        ? blockProps
+              .map(
+                  (prop) => `
+                    if (${prop.name}Input) {
+                        ${instanceNameSingular}.${prop.name} = ${prop.name}Input.transformToBlockData();
+                    }`,
+              )
+              .join("")
+        : ""
+}
+    `;
+}
+
+function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
+    const { classNameSingular } = buildNameVariants(metadata);
+
+    const { importsCode, code, hasOutputRelations } = generateRelationsFieldResolver({ generatorOptions, metadata });
+    if (!hasOutputRelations) return null;
+
+    return `
+    import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
+    ${generateImport(metadata, generatorOptions.targetDirectory)}
+    ${importsCode}
+
+    @Resolver(() => ${metadata.className})
+    export class ${classNameSingular}Resolver {
+        ${code}
+    }
+    `;
+}
+
+function generateRelationsFieldResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
+    const { instanceNameSingular } = buildNameVariants(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
@@ -414,44 +518,91 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
     }
 
-    let importsOut = "";
-    const injectRepositories = new Set<string>();
+    const hasOutputRelations =
+        outputRelationManyToOneProps.length > 0 || outputRelationOneToManyProps.length > 0 || outputRelationManyToManyProps.length > 0;
+
+    let importsCode = "";
 
     for (const prop of relationManyToOneProps) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
-        importsOut += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
+        importsCode += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
     }
-    const inputRelationManyToOneProps = relationManyToOneProps
-        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
-        .map((prop) => {
-            injectRepositories.add(prop.type);
-            return {
-                name: prop.name,
-                singularName: singular(prop.name),
-                nullable: prop.nullable,
-                type: prop.type,
-                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
-            };
-        });
 
     for (const prop of [...relationOneToManyProps, ...relationManyToManyProps]) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
-        importsOut += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
+        importsCode += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
     }
-    const inputRelationToManyProps = [...relationOneToManyProps, ...relationManyToManyProps]
+
+    const code = `
+    ${outputRelationManyToOneProps.map(
+        (prop) => `
+        @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${prop.nullable ? ` | undefined` : ""}> {
+            return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
+        }    
+    `,
+    )}
+
+    ${outputRelationOneToManyProps.map(
+        (prop) => `
+        @ResolveField(() => [${prop.type}])
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
+            return ${instanceNameSingular}.${prop.name}.loadItems();
+        }   
+    `,
+    )}
+
+    ${outputRelationManyToManyProps.map(
+        (prop) => `
+        @ResolveField(() => [${prop.type}])
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
+            return ${instanceNameSingular}.${prop.name}.loadItems();
+        }
+    `,
+    )}
+    `.trim();
+
+    return {
+        code,
+        importsCode,
+        hasOutputRelations,
+    };
+}
+
+function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+    const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
+        buildNameVariants(metadata);
+    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt } =
+        buildOptions(metadata);
+
+    const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
+    const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
+    const relationManyToManyProps = metadata.props.filter((prop) => prop.reference === "m:n");
+    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+
+    const injectRepositories = new Set<string>();
+
+    relationManyToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
             injectRepositories.add(prop.type);
-            return {
-                name: prop.name,
-                singularName: singular(prop.name),
-                nullable: prop.nullable,
-                type: prop.type,
-                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
-            };
         });
-    const hasOutputRelations =
-        outputRelationManyToOneProps.length > 0 || outputRelationOneToManyProps.length > 0 || outputRelationManyToManyProps.length > 0;
+    [...relationOneToManyProps, ...relationManyToManyProps]
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .map((prop) => {
+            injectRepositories.add(prop.type);
+        });
+
+    const {
+        importsCode: relationsFieldResolverImportsCode,
+        code: relationsFieldResolverCode,
+        hasOutputRelations,
+    } = generateRelationsFieldResolver({
+        generatorOptions,
+        metadata,
+    });
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
@@ -466,10 +617,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { ${classNameSingular}Input, ${classNameSingular}UpdateInput } from "./dto/${fileNameSingular}.input";
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
     import { ${argsClassName} } from "./dto/${argsFileName}";
-    ${importsOut}
+    ${relationsFieldResolverImportsCode}
 
     @Resolver(() => ${metadata.className})
-    export class ${classNameSingular}CrudResolver {
+    export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
@@ -554,35 +705,14 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
-            const { ${inputRelationToManyProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}${
-        inputRelationToManyProps.length ? ", " : ""
-    }...assignInput } = input;
-                    const ${instanceNameSingular} = this.repository.create({
-                        ...assignInput,
-                        ${hasVisibleProp ? `visible: false,` : ""}
-                        ${scopeProp ? `scope,` : ""}        
-                        ${
-                            blockProps.length
-                                ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, `
-                                : ""
-                        }
-                        ${inputRelationManyToOneProps.map(
-                            (prop) =>
-                                `${prop.name}: ${prop.nullable ? `input.${prop.name} ? ` : ""}Reference.create(await this.${
-                                    prop.repositoryName
-                                }.findOneOrFail(input.${prop.name}))${prop.nullable ? ` : undefined` : ""}, `,
-                        )}
-                    });
-                    ${inputRelationToManyProps.map(
-                        (prop) => `{
-                        const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
-                        if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passed as input");
-                        await ${instanceNameSingular}.${prop.name}.loadItems();
-                        ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((${prop.singularName}) => Reference.create(${prop.singularName})));
-                    }`,
-                    )}
+
+            ${generateInputHandling(
+                { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
+                metadata,
+            )}
 
             await this.entityManager.flush();
+
             return ${instanceNameSingular};
         }
 
@@ -601,36 +731,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             }`
                     : ""
             }
-
-            const { ${[...inputRelationToManyProps, ...blockProps].map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}${
-        inputRelationToManyProps.length || blockProps.length ? ", " : ""
-    }...assignInput } = input;
-            ${instanceNameSingular}.assign({
-                ...assignInput,
-                ${inputRelationManyToOneProps.map(
-                    (prop) =>
-                        `${prop.name}: ${prop.nullable ? `input.${prop.name} ? ` : ""}Reference.create(await this.${
-                            prop.repositoryName
-                        }.findOneOrFail(input.${prop.name}))${prop.nullable ? ` : undefined` : ""}, `,
-                )}
-            });
-            ${inputRelationToManyProps.map(
-                (prop) => `if (${prop.name}Input) {
-                const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
-                if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passes as input");
-                await ${instanceNameSingular}.${prop.name}.loadItems();
-                ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((${prop.singularName}) => Reference.create(${prop.singularName})));
-            }`,
-            )}
-
-            ${blockProps
-                .map(
-                    (prop) => `
-            if (${prop.name}Input) {
-                ${instanceNameSingular}.${prop.name} = ${prop.name}Input.transformToBlockData();
-            }`,
-                )
-                .join("")}
+            ${generateInputHandling({ mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` }, metadata)}
 
             await this.entityManager.flush();
 
@@ -668,34 +769,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 : ""
         }
 
-        ${outputRelationManyToOneProps.map(
-            (prop) => `
-            @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
-            async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${
-                prop.nullable ? ` | undefined` : ""
-            }> {
-                return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
-            }    
-        `,
-        )}
-
-        ${outputRelationOneToManyProps.map(
-            (prop) => `
-            @ResolveField(() => [${prop.type}])
-            async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
-                return ${instanceNameSingular}.${prop.name}.loadItems();
-            }   
-        `,
-        )}
-
-        ${outputRelationManyToManyProps.map(
-            (prop) => `
-            @ResolveField(() => [${prop.type}])
-            async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
-                return ${instanceNameSingular}.${prop.name}.loadItems();
-            }
-        `,
-        )}
+        ${relationsFieldResolverCode}
 
     }
     `;
@@ -703,29 +777,67 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFiles> {
-    const generatedFiles: GeneratedFiles = {};
+export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
+    const generatedFiles: GeneratedFile[] = [];
 
     const { fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
     const { hasFilterArg, hasSortArg, argsFileName } = buildOptions(metadata);
 
-    async function generateCrudResolver(): Promise<GeneratedFiles> {
+    async function generateCrudResolver(): Promise<GeneratedFile[]> {
         if (hasFilterArg) {
-            generatedFiles[`dto/${fileNameSingular}.filter.ts`] = generateFilterDto({ generatorOptions, metadata });
+            generatedFiles.push({
+                name: `dto/${fileNameSingular}.filter.ts`,
+                content: generateFilterDto({ generatorOptions, metadata }),
+                type: "filter",
+            });
         }
         if (hasSortArg) {
-            generatedFiles[`dto/${fileNameSingular}.sort.ts`] = generateSortDto({ generatorOptions, metadata });
+            generatedFiles.push({
+                name: `dto/${fileNameSingular}.sort.ts`,
+                content: generateSortDto({ generatorOptions, metadata }),
+                type: "sort",
+            });
         }
-        generatedFiles[`dto/paginated-${fileNamePlural}.ts`] = generatePaginatedDto({ generatorOptions, metadata });
-        generatedFiles[`dto/${argsFileName}.ts`] = generateArgsDto({ generatorOptions, metadata });
-        generatedFiles[`${fileNamePlural}.service.ts`] = generateService({ generatorOptions, metadata });
-        generatedFiles[`${fileNameSingular}.crud.resolver.ts`] = generateResolver({ generatorOptions, metadata });
+        generatedFiles.push({
+            name: `dto/paginated-${fileNamePlural}.ts`,
+            content: generatePaginatedDto({ generatorOptions, metadata }),
+            type: "sort",
+        });
+        generatedFiles.push({
+            name: `dto/${argsFileName}.ts`,
+            content: generateArgsDto({ generatorOptions, metadata }),
+            type: "args",
+        });
+        generatedFiles.push({
+            name: `${fileNamePlural}.service.ts`,
+            content: generateService({ generatorOptions, metadata }),
+            type: "service",
+        });
+        generatedFiles.push({
+            name: `${fileNameSingular}.resolver.ts`,
+            content: generateResolver({ generatorOptions, metadata }),
+            type: "resolver",
+        });
+
+        metadata.props
+            .filter((prop) => prop.reference === "1:m" && prop.orphanRemoval)
+            .forEach((prop) => {
+                if (!prop.targetMeta) throw new Error(`Target metadata not set`);
+                const { fileNameSingular } = buildNameVariants(prop.targetMeta);
+                const content = generateNestedEntityResolver({ generatorOptions, metadata: prop.targetMeta });
+
+                //can be null if no relations exist
+                if (content) {
+                    generatedFiles.push({
+                        name: `${fileNameSingular}.resolver.ts`,
+                        content,
+                        type: "resolver",
+                    });
+                }
+            });
 
         return generatedFiles;
     }
 
-    return {
-        [`dto/${fileNameSingular}.input.ts`]: await generateCrudInput(generatorOptions, metadata),
-        ...(await generateCrudResolver()),
-    };
+    return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
 }
