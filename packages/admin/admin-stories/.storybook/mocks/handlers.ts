@@ -86,7 +86,7 @@ const launchesPastResult: GraphQLFieldResolver<unknown, unknown, { limit?: numbe
     }
 
     return {
-        data: offset && limit ? launches.slice(offset, offset + limit) : launches,
+        data: offset !== undefined && limit ? launches.slice(offset, offset + limit) : launches,
         result: {
             totalCount: launches.length,
         },
