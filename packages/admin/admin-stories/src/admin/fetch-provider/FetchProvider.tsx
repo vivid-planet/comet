@@ -7,7 +7,7 @@ function ExampleFetch() {
     const [data, setData] = React.useState<object | null>(null);
     React.useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`/people`);
+            const response = await fetch(`/launches`);
             setData(await response.json());
         };
         fetchData();
@@ -17,7 +17,6 @@ function ExampleFetch() {
 
 function Story() {
     const fetch = createFetch({
-        baseUrl: "https://swapi.co/api",
         interceptHeaders: async (headers: Headers) => {
             // headers.append("x-foo", "bar");
         },
