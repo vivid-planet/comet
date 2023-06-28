@@ -10,8 +10,9 @@ export function createOffsetLimitPagingAction<TData extends OffsetLimitPagingDat
     { totalCount }: TData,
     limit: number,
 ): IPagingInfo {
-    const currentPage = pagingApi.currentPage ?? 1;
     const totalPages = Math.ceil(totalCount / limit);
+    const currentPage = Math.floor(pagingApi.current / limit) + 1;
+    pagingApi.changePage(currentPage);
 
     const createFetchNextPage = () => {
         const nextPage = currentPage + 1;
