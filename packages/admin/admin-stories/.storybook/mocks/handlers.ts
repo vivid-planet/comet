@@ -12,14 +12,18 @@ export type Launch = {
 };
 
 export type LaunchesPastResult = {
-    data: Array<{
-        id: string;
-        mission_name: string;
-        launch_date_local: string;
-    }>;
+    data: Launch[];
     result: {
         totalCount: number;
     };
+};
+
+export type LaunchesPastPagePagingResult = {
+    nodes: Launch[];
+    totalCount: number;
+    nextPage?: number;
+    previousPage?: number;
+    totalPages?: number;
 };
 
 const allLaunches: Launch[] = [];
@@ -40,22 +44,31 @@ schema {
 scalar Date
 
 type Launch {
-    id: ID
-    mission_name: String
-    launch_date_local: Date
+    id: ID!
+    mission_name: String!
+    launch_date_local: Date!
 }
 
 type Result {
-    totalCount: Int
+    totalCount: Int!
 }
 
 type LaunchesPastResult {
-    data: [Launch]
-    result: Result
+    data: [Launch!]!
+    result: Result!
+}
+
+type LaunchesPastPagePagingResult {
+    nodes: [Launch!]!
+    totalCount: Int!
+    nextPage: Int
+    previousPage: Int
+    totalPages: Int
 }
 
 type Query {
-    launchesPastResult(limit: Int, offset: Int, sort: String, order: String): LaunchesPastResult
+    launchesPastResult(limit: Int, offset: Int, sort: String, order: String): LaunchesPastResult!
+    launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
 }
 `;
 
@@ -93,10 +106,27 @@ const launchesPastResult: GraphQLFieldResolver<unknown, unknown, { limit?: numbe
     };
 };
 
+const launchesPastPagePaging: GraphQLFieldResolver<unknown, unknown, { page?: number; size?: number }> = (
+    parent,
+    { page = 1, size = 20 },
+): LaunchesPastPagePagingResult => {
+    const launches = [...allLaunches];
+    const totalCount = launches.length;
+
+    return {
+        nodes: launches.slice((page - 1) * size, page * size),
+        totalCount: totalCount,
+        nextPage: totalCount > page * size ? page + 1 : undefined,
+        previousPage: page > 1 ? page - 1 : undefined,
+        totalPages: Math.ceil(totalCount / size),
+    };
+};
+
 const graphqlHandler = new GraphQLHandler({
     resolverMap: {
         Query: {
             launchesPastResult,
+            launchesPastPagePaging,
         },
     },
 
