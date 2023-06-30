@@ -1,15 +1,9 @@
+import { unparse } from "papaparse";
+
 const convertTextContentsToCsv = (contents: string[]) => {
-    const rows = ["Original;ReplaceWith"];
+    const data = contents.map((content) => ({ original: content, replaceWith: content }));
 
-    contents.forEach((content) => {
-        let value = content.replace(/"/g, '""');
-
-        if (content.includes(";")) {
-            value = `"${value}"`;
-        }
-        rows.push(`${value};${value}`);
-    });
-    return rows.join("\n");
+    return unparse(data, { quotes: true, delimiter: ";" });
 };
 
 export { convertTextContentsToCsv };

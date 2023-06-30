@@ -1,13 +1,11 @@
+import { parse } from "papaparse";
+
 const convertCsvToTextContents = (csv: string) => {
     const content: { [key: string]: string } = {};
+    const parsedData = parse(csv).data as string[][];
+    const records = parsedData.slice(1, parsedData.length);
 
-    const lines = csv.replace("//r/g", "").split("\n");
-
-    for (let i = 1; i < lines.length; i++) {
-        const lineContent = lines[i].split(";");
-
-        content[lineContent[0]] = lineContent[1];
-    }
+    records.forEach((record) => (content[record[0]] = record[1]));
 
     return { textContents: content };
 };
