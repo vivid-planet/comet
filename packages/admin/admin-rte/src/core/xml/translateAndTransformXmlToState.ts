@@ -8,7 +8,7 @@ import {
     RawDraftEntity,
 } from "draft-js";
 
-import { blockToXml } from "./stateToXml";
+import { blockToXml } from "./transformStateToXml";
 
 interface InlineStyle {
     id: number;
@@ -170,7 +170,11 @@ export const updateBlockContent = (block: RawDraftContentBlock) => {
     };
 };
 
-export const XmlToState = (state: ContentState, rawContent: RawDraftContentState, contents: { original: string; replaceWith: string }[]) => {
+export const translateAndTransformXmlToState = (
+    state: ContentState,
+    rawContent: RawDraftContentState,
+    contents: { original: string; replaceWith: string }[],
+) => {
     let newEntityMap: { [key: number]: RawDraftEntity } = {};
 
     const contentBlocks = state.getBlocksAsArray();

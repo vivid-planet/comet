@@ -110,8 +110,6 @@ export { RouterPromptHandler, SaveAction } from "./router/PromptHandler";
 export { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "./router/SubRoute";
 export { RowActionsItem, RowActionsItemProps } from "./rowActions/RowActionsItem";
 export { RowActionsMenu, RowActionsMenuProps } from "./rowActions/RowActionsMenu";
-export { stateToXml } from "./rte/stateToXml";
-export { XmlToState } from "./rte/XmlToState";
 export { Selected } from "./Selected";
 export { ISelectionRenderPropArgs, Selection, useSelection } from "./Selection";
 export { ISelectionApi } from "./SelectionApi";

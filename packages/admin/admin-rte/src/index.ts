@@ -20,4 +20,6 @@ export { default as findEntityInCurrentSelection } from "./core/utils/findEntity
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
 export { pasteAndFilterText } from "./core/utils/pasteAndFilterText";
 export { default as selectionIsInOneBlock } from "./core/utils/selectionIsInOneBlock";
+export { transformStateToXml } from "./core/xml/transformStateToXml";
+export { translateAndTransformXmlToState } from "./core/xml/translateAndTransformXmlToState";
 export { default as createFinalFormRte } from "./field/createFinalFormRte";

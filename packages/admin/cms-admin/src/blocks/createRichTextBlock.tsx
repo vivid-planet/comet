@@ -1,5 +1,4 @@
-import { stateToXml, XmlToState } from "@comet/admin";
-import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
+import { IRteOptions, makeRteApi, pasteAndFilterText, Rte, transformStateToXml, translateAndTransformXmlToState } from "@comet/admin-rte";
 import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import {
     BlockMapBuilder,
@@ -177,7 +176,7 @@ export const createRichTextBlock = (
         },
 
         extractTextContents: (state) => {
-            return stateToXml(state.editorState.getCurrentContent());
+            return transformStateToXml(state.editorState.getCurrentContent());
         },
 
         replaceTextContents: (state, contents) => {
@@ -185,7 +184,7 @@ export const createRichTextBlock = (
             const rawContent = convertStateToRawContent(editorState);
 
             return {
-                editorState: XmlToState(state.editorState.getCurrentContent(), rawContent, contents),
+                editorState: translateAndTransformXmlToState(state.editorState.getCurrentContent(), rawContent, contents),
             };
         },
 

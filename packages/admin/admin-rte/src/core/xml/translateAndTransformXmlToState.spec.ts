@@ -1,7 +1,7 @@
 import { DraftInlineStyleType } from "draft-js";
 import { v4 } from "uuid";
 
-import { updateBlockContent } from "./XmlToState";
+import { updateBlockContent } from "./translateAndTransformXmlToState";
 
 describe("updateBlockContent", () => {
     it("should remove pseudo-tags for multiple sequential inline styles", () => {

@@ -153,7 +153,7 @@ class MarkupGenerator {
     }
 }
 
-export function stateToXml(content: ContentState): string[] {
+export function transformStateToXml(content: ContentState): string[] {
     return new MarkupGenerator(content).generate();
 }
 
