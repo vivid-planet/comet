@@ -30,7 +30,6 @@
         "@comet/admin-icons": "workspace:^4.2.0",
         "@mui/private-theming": "^5.0.0",
         "clsx": "^1.1.1",
-        "draft-js": "^0.11.7",
         "exceljs": "^3.4.0",
         "file-saver": "^2.0.2",
         "final-form-set-field-data": "^1.0.2",
