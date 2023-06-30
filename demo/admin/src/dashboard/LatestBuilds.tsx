@@ -1,11 +1,20 @@
 import { gql } from "@apollo/client";
-import { Table, TableQuery, useTableQuery } from "@comet/admin";
-import { BuildRuntime } from "@comet/cms-admin";
-import { parseISO } from "date-fns";
+import { useTableQuery } from "@comet/admin";
+import { LatestBuildsDashboardWidget } from "@comet/cms-admin";
 import * as React from "react";
-import { useIntl } from "react-intl";
 
 import { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "./LatestBuilds.generated";
+
+export const LatestBuilds: React.FC = () => {
+    const tableQuery = useTableQuery<GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables>()(LATEST_BUILDS, {
+        resolveTableData: (data) => ({
+            data: data.builds,
+            totalCount: 5,
+        }),
+    });
+
+    return <LatestBuildsDashboardWidget tableQuery={tableQuery} />;
+};
 
 const LATEST_BUILDS = gql`
     query LatestBuilds {
@@ -19,42 +28,3 @@ const LATEST_BUILDS = gql`
         }
     }
 `;
-
-export const LatestBuilds: React.FC = () => {
-    const intl = useIntl();
-
-    const { tableData, api, loading, error } = useTableQuery<GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables>()(LATEST_BUILDS, {
-        resolveTableData: (data) => ({
-            data: data.builds,
-            totalCount: 5,
-        }),
-    });
-
-    return (
-        <TableQuery api={api} loading={loading} error={error}>
-            {tableData && (
-                <>
-                    <Table
-                        {...tableData}
-                        columns={[
-                            {
-                                name: "runtime",
-                                header: intl.formatMessage({ id: "pages.publisher.runtime", defaultMessage: "Runtime" }),
-                                render: (row) => (
-                                    <BuildRuntime
-                                        startTime={row.startTime ? parseISO(row.startTime) : undefined}
-                                        completionTime={row.completionTime ? parseISO(row.completionTime) : undefined}
-                                    />
-                                ),
-                            },
-                            {
-                                name: "status",
-                                header: intl.formatMessage({ id: "pages.publisher.status", defaultMessage: "Status" }),
-                            },
-                        ]}
-                    />
-                </>
-            )}
-        </TableQuery>
-    );
-};
