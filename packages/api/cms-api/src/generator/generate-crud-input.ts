@@ -1,11 +1,9 @@
-import { Block } from "@comet/blocks-api";
 import { EntityMetadata } from "@mikro-orm/core";
-import * as path from "path";
-import { RootBlockType } from "src/blocks/root-block-type";
+import { ModuleKind, Project } from "ts-morph";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildNameVariants } from "./utils/build-name-variants";
-import { findEnumName } from "./utils/find-enum-name";
+import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
 import { GeneratedFile, writeGeneratedFiles } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,6 +19,17 @@ export async function generateCrudInput(
     options: { nested: boolean; excludeFields: string[] } = { nested: false, excludeFields: [] },
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
+
+    const project = new Project({
+        compilerOptions: {
+            strictNullChecks: true,
+            module: ModuleKind.Node16,
+        },
+    });
+    const tsSource = project.addSourceFileAtPath(metadata.path);
+
+    const tsClass = tsSource.getClass(metadata.className);
+    if (!tsClass) throw new Error(`Class ${metadata.className} not found in ${metadata.path}`);
 
     const props = metadata.props
         .filter((prop) => {
@@ -43,14 +52,12 @@ export async function generateCrudInput(
             //skip those (TODO find a non-magic solution?)
             continue;
         } else if (prop.enum) {
-            const enumName = findEnumName(metadata, prop.name);
+            const enumName = findEnumName(prop.name, metadata);
+            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
+            importsOut += `import { ${enumName} } from "${importPath}";`;
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}${prop.nullable ? ", { nullable: true }" : ""})`);
             type = enumName;
-            // entity MUST export the enum (as enumName)
-            importsOut += `import { ${enumName} } from "${path
-                .relative(`${generatorOptions.targetDirectory}/dto`, metadata.path)
-                .replace(/\.ts$/, "")}";`;
         } else if (prop.type === "string") {
             decorators.push("@IsString()");
             if (prop.name.startsWith("scope_")) {
@@ -73,33 +80,13 @@ export async function generateCrudInput(
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "boolean";
         } else if (prop.type === "RootBlockType") {
-            const rootBlockType = prop.customType as RootBlockType | undefined;
-            let blockExportName: string;
-            if (rootBlockType?.block.name == "DamImage") {
-                // TODO (detect that is block is defined in library (or use completely other technique))
-                importsOut += `import { DamImageBlock } from "@comet/cms-api";`;
-                blockExportName = "DamImageBlock";
-            } else {
-                if (!rootBlockType) throw new Error("Custom type not set");
-                if (!rootBlockType.block.path) throw new Error(`No path found for block ${rootBlockType.block.name}`);
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                const exports = require(rootBlockType.block.path);
-                const blockExport = Object.entries(exports).find((i) => {
-                    const b = i[1] as Block | undefined;
-                    return b && b.blockDataFactory == rootBlockType.block.blockDataFactory;
-                });
-                if (!blockExport) {
-                    throw new Error(`Can't find block export ${rootBlockType.block.name} in ${rootBlockType.block.path}`);
-                }
-                blockExportName = blockExport[0];
-                importsOut += `import { ${blockExportName} } from "${path
-                    .relative(`${generatorOptions.targetDirectory}/dto`, rootBlockType.block.path)
-                    .replace(/\.ts$/, "")}";`;
-            }
+            const blockName = findBlockName(prop.name, metadata);
+            const importPath = findBlockImportPath(blockName, generatorOptions, metadata);
+            importsOut += `import { ${blockName} } from "${importPath}";`;
 
-            decorators.push(`@Field(() => RootBlockInputScalar(${blockExportName})${prop.nullable ? ", { nullable: true }" : ""})`);
+            decorators.push(`@Field(() => RootBlockInputScalar(${blockName})${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push(
-                `@Transform(({ value }) => (isBlockInputInterface(value) ? value : ${blockExportName}.blockInputFactory(value)), { toClassOnly: true })`,
+                `@Transform(({ value }) => (isBlockInputInterface(value) ? value : ${blockName}.blockInputFactory(value)), { toClassOnly: true })`,
             );
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";

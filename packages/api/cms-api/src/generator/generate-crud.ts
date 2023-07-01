@@ -6,7 +6,7 @@ import { singular } from "pluralize";
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
-import { findEnumName } from "./utils/find-enum-name";
+import { findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -102,16 +102,14 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     const generatedEnumNames = new Set<string>();
     crudFilterProps.map((prop) => {
         if (prop.enum) {
-            const enumName = findEnumName(metadata, prop.name);
+            const enumName = findEnumName(prop.name, metadata);
+            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
             if (!generatedEnumNames.has(enumName)) {
                 generatedEnumNames.add(enumName);
                 enumFiltersOut += `@InputType()
-                class ${enumName}EnumFilter extends createEnumFilter(${enumName}) {}
-            `;
-                // entity MUST export the enum (as enumName)
-                importsOut += `import { ${enumName} } from "${path
-                    .relative(`${generatorOptions.targetDirectory}/dto`, metadata.path)
-                    .replace(/\.ts$/, "")}";`;
+                    class ${enumName}EnumFilter extends createEnumFilter(${enumName}) {}
+                `;
+                importsOut += `import { ${enumName} } from "${importPath}";`;
             }
         }
     });
@@ -129,7 +127,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         ${crudFilterProps
             .map((prop) => {
                 if (prop.enum) {
-                    const enumName = findEnumName(metadata, prop.name);
+                    const enumName = findEnumName(prop.name, metadata);
                     return `@Field(() => ${enumName}EnumFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
