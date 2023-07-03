@@ -52,18 +52,12 @@ export const MoveDamItemDialog = ({
 }: MoveDamItemDialogProps) => {
     const apolloClient = useApolloClient();
     const scope = useDamScope();
-    const { data, loading, refetch } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
+    const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
         fetchPolicy: "network-only",
         variables: {
             scope,
         },
     });
-
-    React.useEffect(() => {
-        if (open) {
-            refetch();
-        }
-    }, [open, refetch]);
 
     const {
         tree: folderTree,
