@@ -371,7 +371,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-    import { SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
+    import { PermissionCheck, SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
 
     import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     ${
@@ -387,6 +387,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { ${argsClassName} } from "./dto/${argsFileName}";
 
     @Resolver(() => ${metadata.className})
+    @PermissionCheck({ allowedForPermissions: ["${instanceNamePlural}"]${!scopeProp ? `, skipScopeCheck: true` : ""} })
     export class ${classNameSingular}CrudResolver {
         constructor(
             private readonly entityManager: EntityManager,

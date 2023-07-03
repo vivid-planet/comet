@@ -15,8 +15,8 @@ import { SCOPE_GUARD_ACTIVE_METADATA_KEY, ScopeGuardActiveMetadataValue } from "
 @Injectable()
 export class ScopeGuard implements CanActivate {
     constructor(
-        private reflector: Reflector,
-        private readonly orm: MikroORM,
+        protected reflector: Reflector,
+        protected readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
         @Optional() private readonly pageTreeService?: PageTreeService,
     ) {}

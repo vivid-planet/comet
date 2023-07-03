@@ -108,6 +108,90 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
+type CurrentUserPermission {
+  name: String!
+  configuration: JSONObject
+  overrideContentScopes: Boolean!
+  contentScopes: [CurrentUserContentScope!]!
+}
+
+type CurrentUserContentScope {
+  scope: String!
+  label: String!
+  values: [CurrentUserContentScopeValue!]!
+}
+
+type CurrentUserContentScopeValue {
+  label: String!
+  value: String!
+}
+
+type UserContentScopes {
+  userId: String!
+  scopes: [UserContentScope!]!
+}
+
+type UserContentScope {
+  scope: String!
+  values: [String!]!
+}
+
+type UserPermission {
+  id: ID!
+  source: UserPermissionSource
+  permission: String!
+  configuration: JSONObject
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  overrideContentScopes: Boolean!
+  contentScopes: [UserContentScope!]!
+  name: String!
+  description: String
+}
+
+enum UserPermissionSource {
+  MANUAL
+  BY_RULE
+}
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+  status: UserStatus!
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+type PaginatedUserList {
+  nodes: [User!]!
+  totalCount: Int!
+}
+
+type AvailableContentScopes {
+  scope: String!
+  label: String!
+  values: [AvailableContentScopeValues!]!
+}
+
+type AvailableContentScopeValues {
+  label: String!
+  value: String!
+}
+
+type AvailablePermission {
+  permission: String!
+  name: String!
+  description: String
+}
+
 type PageTreeNode {
   id: ID!
   parentId: String
@@ -144,17 +228,12 @@ interface DocumentInterface {
   updatedAt: DateTime!
 }
 
-type CurrentUserRight {
-  right: String!
-  values: [String!]!
-}
-
 type CurrentUser {
   name: String!
   email: String!
   language: String!
-  role: String!
-  rights: [CurrentUserRight!]
+  contentScopes: [CurrentUserContentScope!]!
+  permissions: [CurrentUserPermission!]!
 }
 
 type Redirect implements DocumentInterface {
@@ -258,6 +337,13 @@ type Query {
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
+  userManagementUserById(id: String!): User!
+  userManagementUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
+  userManagementPermissionList(userId: String!): [UserPermission!]!
+  userManagementPermission(id: ID!, userId: String): UserPermission!
+  userManagementAvailablePermissions: [AvailablePermission!]!
+  userManagementContentScope(userId: String!, skipManual: Boolean): UserContentScopes!
+  userManagementAvailableContentScopes: [AvailableContentScopes!]!
 }
 
 input RedirectScopeInput {
@@ -349,6 +435,27 @@ enum SlugAvailability {
   Reserved
 }
 
+input UserFilter {
+  name: StringFilter
+  email: StringFilter
+  status: StringFilter
+  language: StringFilter
+  and: [UserFilter!]
+  or: [UserFilter!]
+}
+
+input UserSort {
+  field: UserSortField!
+  direction: SortDirection! = ASC
+}
+
+enum UserSortField {
+  name
+  email
+  status
+  language
+}
+
 type Mutation {
   createBuilds(input: CreateBuildsInput!): Boolean!
   createRedirect(scope: RedirectScopeInput! = {}, input: RedirectInput!): Redirect!
@@ -375,6 +482,11 @@ type Mutation {
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
   currentUserSignOut: String!
+  userManagementCreatePermission(data: CreateUserPermissionInput!): UserPermission!
+  userManagementUpdatePermission(data: UpdateUserPermissionInput!): UserPermission!
+  userManagementSetPermissionContentScopes(data: UserPermissionContentScopesInput!): UserPermission!
+  userManagementDeletePermission(id: ID!): Boolean!
+  userManagementSetContentScope(input: UserContentScopesInput!): UserContentScopes!
 }
 
 input CreateBuildsInput {
@@ -469,4 +581,47 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
+}
+
+input CreateUserPermissionInput {
+  permission: String!
+  configuration: JSONObject
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  userId: String!
+}
+
+input UpdateUserPermissionInput {
+  permission: String
+  configuration: JSONObject
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  id: ID!
+}
+
+input UserPermissionContentScopesInput {
+  permissionId: ID!
+  overrideContentScopes: Boolean!
+  contentScopes: [UserPermissionContentScopeInput!]! = []
+}
+
+input UserPermissionContentScopeInput {
+  scope: String!
+  values: [String!]! = []
+}
+
+input UserContentScopesInput {
+  userId: String!
+  scopes: [UserContentScopeInput!]!
+}
+
+input UserContentScopeInput {
+  scope: String!
+  values: [String!]!
 }

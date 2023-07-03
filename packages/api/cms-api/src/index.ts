@@ -1,7 +1,6 @@
 import "reflect-metadata";
 
-export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
-export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
+export { CurrentUserInterface, CurrentUserLoaderInterface } from "./auth/current-user/current-user";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
 export { PublicApi } from "./auth/decorators/public-api.decorator";
@@ -141,3 +140,13 @@ export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
+export { createUserManagementJwtStrategy } from "./user-management/auth/jwt.strategy";
+export { PermissionCheck } from "./user-management/auth/permission-check";
+export { createUserManagementStaticAuthedUserStrategy } from "./user-management/auth/static-authed-user.strategy";
+export { CurrentUser } from "./user-management/current-user";
+export { FindUsersArgs } from "./user-management/dto/paginated-user-list";
+export { User, UserStatus } from "./user-management/dto/user";
+export { UserContentScopes } from "./user-management/entities/user-content-scopes.entity";
+export { UserPermission } from "./user-management/entities/user-permission.entity";
+export { UserManagementModule } from "./user-management/user-management.module";
+export { USERMANAGEMENT } from "./user-management/user-management.types";

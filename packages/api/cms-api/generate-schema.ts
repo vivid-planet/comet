@@ -10,7 +10,6 @@ import {
     createPageTreeResolver,
     createRedirectsResolver,
     CurrentUserInterface,
-    CurrentUserRightInterface,
     DocumentInterface,
     FileImagesResolver,
     InternalLinkBlock,
@@ -27,6 +26,10 @@ import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
+import { CurrentUserContentScope, CurrentUserPermission } from "./src/user-management/current-user";
+import { createUserResolver } from "./src/user-management/user.resolver";
+import { createUserContentScopesResolver } from "./src/user-management/user-content-scopes.resolver";
+import { createUserPermissionResolver } from "./src/user-management/user-permission.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -43,15 +46,6 @@ class Page implements DocumentInterface {
 }
 
 @ObjectType()
-class CurrentUserRight implements CurrentUserRightInterface {
-    @Field()
-    right: string;
-
-    @Field(() => [String])
-    values: string[];
-}
-
-@ObjectType()
 class CurrentUser implements CurrentUserInterface {
     id: string;
     @Field()
@@ -60,10 +54,10 @@ class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
-    @Field()
-    role: string;
-    @Field(() => [CurrentUserRight], { nullable: true })
-    rights: CurrentUserRightInterface[];
+    @Field(() => [CurrentUserContentScope])
+    contentScopes: CurrentUserContentScope[];
+    @Field(() => [CurrentUserPermission])
+    permissions: CurrentUserPermission[];
 }
 
 async function generateSchema(): Promise<void> {
@@ -103,6 +97,9 @@ async function generateSchema(): Promise<void> {
         pageTreeResolver,
         CronJobsResolver,
         AuthResolver,
+        createUserResolver(),
+        createUserPermissionResolver(),
+        createUserContentScopesResolver(),
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

@@ -1,20 +1,35 @@
-import { createAuthResolver, createCometAuthGuard, createStaticAuthedUserStrategy } from "@comet/cms-api";
+import {
+    createAuthResolver,
+    createCometAuthGuard,
+    createUserManagementStaticAuthedUserStrategy,
+    CurrentUser,
+    User,
+    UserStatus,
+} from "@comet/cms-api";
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
-import { CurrentUser } from "./current-user";
+export const staticUsers: User[] = [
+    {
+        id: "1",
+        name: "Admin",
+        email: "demo@comet-dxp.com",
+        language: "en",
+        status: UserStatus.ACTIVE,
+    },
+    {
+        id: "2",
+        name: "Non-Admin",
+        email: "test@test.com",
+        language: "en",
+        status: UserStatus.ACTIVE,
+    },
+];
 
 @Module({
     providers: [
-        createStaticAuthedUserStrategy({
-            staticAuthedUser: {
-                id: "1",
-                name: "Test Admin",
-                email: "demo@comet-dxp.com",
-                language: "en",
-                role: "admin",
-                domains: ["main", "secondary"],
-            },
+        createUserManagementStaticAuthedUserStrategy({
+            staticAuthedUser: staticUsers[0],
         }),
         createAuthResolver({
             currentUser: CurrentUser,

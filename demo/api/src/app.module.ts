@@ -4,19 +4,19 @@ import {
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
-    ContentScope,
-    ContentScopeModule,
     CronJobsModule,
-    CurrentUserInterface,
     DamModule,
     DependenciesModule,
     FilesService,
+    FindUsersArgs,
     ImagesService,
     KubernetesModule,
     PageTreeModule,
     PageTreeService,
     PublicUploadModule,
     RedirectsModule,
+    USERMANAGEMENT,
+    UserManagementModule,
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
@@ -29,7 +29,7 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
-import { AuthModule } from "./auth/auth.module";
+import { AuthModule, staticUsers } from "./auth/auth.module";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
@@ -74,10 +74,67 @@ export class AppModule {
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
-                ContentScopeModule.forRoot({
-                    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
-                        if (!user.domains) return true; //all domains
-                        return user.domains.includes(requestScope.domain);
+                UserManagementModule.register<USERMANAGEMENT.pageTree | typeof USERMANAGEMENT.userManagement | "news" | "products">({
+                    userService: {
+                        findUsers: async (args: FindUsersArgs) => {
+                            const search = args.search?.toLowerCase();
+                            const users = staticUsers.filter(
+                                (user) => !search || user.name.toLowerCase().includes(search) || user.email.toLowerCase().includes(search),
+                            );
+                            return [users, users.length];
+                        },
+                        getUser: async (id: string) => {
+                            const index = parseInt(id) - 1;
+                            if (staticUsers[index]) return staticUsers[index];
+                            throw new Error("User not found");
+                        },
+                    },
+                    getAvailablePermissions: async () => ({
+                        news: {
+                            name: "News",
+                        },
+                        products: {
+                            name: "Products",
+                        },
+                        pageTree: {
+                            name: "Page Tree",
+                        },
+                        userManagement: {
+                            name: "User Management",
+                        },
+                    }),
+                    getPermissions: async (user) => {
+                        if (user.email.endsWith("@comet-dxp.com")) {
+                            return USERMANAGEMENT.allPermissions;
+                        } else {
+                            return [{ permission: USERMANAGEMENT.pageTree }, { permission: "news" }];
+                        }
+                    },
+                    getAvailableContentScopes: async () => ({
+                        domain: {
+                            label: "Domain",
+                            values: [
+                                { label: "Main", value: "main" },
+                                { label: "Secondary", value: "secondary" },
+                            ],
+                        },
+                        language: {
+                            label: "Language",
+                            values: [
+                                { label: "English", value: "en" },
+                                { label: "German", value: "de" },
+                            ],
+                        },
+                    }),
+                    getContentScopes: async (user) => {
+                        if (user.email.endsWith("@comet-dxp.com")) {
+                            return USERMANAGEMENT.allContentScopes;
+                        } else {
+                            return {
+                                domain: ["main"],
+                                language: [user.language],
+                            };
+                        }
                     },
                 }),
                 BlocksModule.forRoot({

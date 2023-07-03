@@ -2,6 +2,8 @@ import { Type } from "@nestjs/common";
 import { Args, createUnionType, Field, Int, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
+import { PermissionCheck } from "../../user-management/auth/permission-check";
+import { USERMANAGEMENT } from "../../user-management/user-management.types";
 import { DamScopeInterface } from "../types";
 import { DamItemsService } from "./dam-items.service";
 import { createDamItemArgs, createDamItemPositionArgs, DamItemPositionArgsInterface, DamItemsArgsInterface } from "./dto/dam-items.args";
@@ -54,6 +56,7 @@ export function createDamItemsResolver({
     }
 
     @ScopeGuardActive(hasNonEmptyScope)
+    @PermissionCheck({ allowedForPermissions: [USERMANAGEMENT.pageTree, USERMANAGEMENT.pageTree] })
     @Resolver(() => DamItem)
     class DamItemsResolver {
         constructor(private readonly damItemsService: DamItemsService) {}

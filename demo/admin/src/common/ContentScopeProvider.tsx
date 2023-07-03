@@ -1,4 +1,3 @@
-import { gql, useQuery } from "@apollo/client";
 import { Domain as DomainIcon } from "@comet/admin-icons";
 import {
     ContentScopeConfigProps,
@@ -10,12 +9,10 @@ import {
     useContentScope as useContentScopeLibrary,
     UseContentScopeApi,
     useContentScopeConfig as useContentScopeConfigLibrary,
+    useCurrentUser,
     useSitesConfig,
 } from "@comet/cms-admin";
-import { CircularProgress } from "@mui/material";
 import React from "react";
-
-import { GQLCurrentUserScopeQuery } from "./ContentScopeProvider.generated";
 
 type Domain = "main" | "secondary" | string;
 type Language = "en" | string;
@@ -52,22 +49,11 @@ export function useContentScopeConfig(p: ContentScopeConfigProps): void {
     return useContentScopeConfigLibrary(p);
 }
 
-const currentUserQuery = gql`
-    query CurrentUserScope {
-        currentUser {
-            role
-            domains
-        }
-    }
-`;
-
 const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">> = ({ children }) => {
     const sitesConfig = useSitesConfig();
-    const { loading, data } = useQuery<GQLCurrentUserScopeQuery>(currentUserQuery);
+    const user = useCurrentUser();
 
-    if (loading || !data) return <CircularProgress />;
-
-    const allowedUserDomains = data.currentUser.domains;
+    const allowedUserDomains = user.contentScopes.find((scope) => scope.scope === "domain")?.values.map((v) => v.value) ?? [];
 
     const allowedSiteConfigs = Object.fromEntries(
         Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),
