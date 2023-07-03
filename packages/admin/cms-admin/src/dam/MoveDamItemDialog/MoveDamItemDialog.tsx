@@ -111,6 +111,7 @@ export const MoveDamItemDialog = ({
                         targetFolderId: selectedId,
                     },
                     errorPolicy: "all",
+                    refetchQueries: ["AllFoldersWithoutFilters"],
                 }),
             );
         }

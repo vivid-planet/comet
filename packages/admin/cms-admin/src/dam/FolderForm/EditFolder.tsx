@@ -24,7 +24,9 @@ const EditFolder = ({ id, selectionApi }: EditFolderProps): React.ReactElement =
         },
     });
 
-    const [updateDamFolder] = useMutation<GQLUpdateDamFolderMutation, GQLUpdateDamFolderMutationVariables>(updateDamFolderMutation);
+    const [updateDamFolder] = useMutation<GQLUpdateDamFolderMutation, GQLUpdateDamFolderMutationVariables>(updateDamFolderMutation, {
+        refetchQueries: ["AllFoldersWithoutFilters"],
+    });
 
     if (loading || !data?.damFolder) {
         return <CircularProgress />;
