@@ -1,63 +1,52 @@
 import { gql } from "@apollo/client";
-import { createRestPagingActions, MainContent, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
+import { createPagePagingActions, MainContent, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
-const gqlRest = gql;
-
-const query = gqlRest`
-query people(
-    $page: Int
-) {
-    people(
-        page: $page
-    ) @rest(type: "PeoplePayload", path: "people?page={args.page}") {
-        count
-        next
-        previous
-        results @type(name: "People") {
-            name
-            url
-        }
-    }
-}
-`;
-
-interface IQueryData {
-    people: {
-        count: number;
-        next: string;
-        previous: string;
-        results: Array<{
-            name: string;
-            url: string;
-        }>;
-    };
-}
-
-interface IVariables {
-    page: number;
-}
+import { LaunchesPastPagePagingResult } from "../../../.storybook/mocks/handlers";
+import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
 function Story() {
     const pagingApi = useTableQueryPaging(1);
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
-        variables: {
-            page: pagingApi.current,
+    const { tableData, api, loading, error } = useTableQuery<
+        { launchesPastPagePaging: LaunchesPastPagePagingResult },
+        { page?: number; size?: number }
+    >()(
+        gql`
+            query LaunchesPastPagePaging($page: Int, $size: Int) {
+                launchesPastPagePaging(page: $page, size: $size) {
+                    nodes {
+                        id
+                        mission_name
+                        launch_date_local
+                    }
+                    totalCount
+                    nextPage
+                    previousPage
+                    totalPages
+                }
+            }
+        `,
+        {
+            variables: {
+                page: pagingApi.current,
+            },
+            resolveTableData: (data) => {
+                console.log("data ", data);
+
+                return {
+                    data: data.launchesPastPagePaging.nodes,
+                    totalCount: data.launchesPastPagePaging.totalCount,
+                    pagingInfo: createPagePagingActions(pagingApi, {
+                        totalPages: data.launchesPastPagePaging.totalPages,
+                        nextPage: data.launchesPastPagePaging.nextPage ?? null,
+                        previousPage: data.launchesPastPagePaging.previousPage ?? null,
+                    }),
+                };
+            },
+            notifyOnNetworkStatusChange: true,
         },
-        resolveTableData: (data) => ({
-            data: data.people.results.map((i) => ({ ...i, id: i.url.match(/.*\/(\d+)\//)![1] })),
-            totalCount: data.people.count,
-            pagingInfo: createRestPagingActions(pagingApi, {
-                totalPages: Math.ceil(data.people.count / 10), // Don't calculate this in a real application
-                nextPage: data.people.next,
-                previousPage: data.people.previous,
-            }),
-        }),
-        notifyOnNetworkStatusChange: true,
-    });
+    );
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
@@ -67,8 +56,8 @@ function Story() {
                         {...tableData}
                         columns={[
                             {
-                                name: "name",
-                                header: "Name",
+                                name: "mission_name",
+                                header: "Mission Name",
                             },
                         ]}
                     />
@@ -79,9 +68,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/table", module)
-    .addDecorator(
-        apolloRestStoryDecorator({
-            uri: "https://swapi.co/api/",
-        }),
-    )
+    .addDecorator(apolloStoryDecorator("/graphql"))
     .add("Paging", () => <Story />);
