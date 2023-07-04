@@ -18,8 +18,8 @@
     ],
     "scripts": {
         "clean": "rimraf lib",
-        "build": "$npm_execpath run clean && tsc",
-        "dev": "tsc --watch --preserveWatchOutput",
+        "build": "$npm_execpath run clean && tsc -p tsconfig.build.json",
+        "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
         "lint:tsc": "tsc --noEmit",

@@ -13,9 +13,9 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && tsc",
+        "build": "$npm_execpath run clean && tsc -p tsconfig.build.json",
         "clean": "rimraf lib",
-        "dev": "tsc --watch --preserveWatchOutput",
+        "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "generate-block-meta": "ts-node generate-block-meta.ts",
         "generate-block-meta:watch": "chokidar \"src/\" -c \"npm run generate-block-meta\"",
         "lint": "run-p lint:eslint lint:tsc",
