@@ -194,7 +194,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                     parentId: parentId,
                     scope,
                 },
-                refetchQueries: ["AllFoldersWithoutFilters"],
             });
 
             if (!data) {

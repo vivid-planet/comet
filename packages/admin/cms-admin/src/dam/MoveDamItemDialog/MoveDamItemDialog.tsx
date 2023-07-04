@@ -105,7 +105,6 @@ const MoveDamItemDialogInner = ({
                         targetFolderId: selectedId,
                     },
                     errorPolicy: "all",
-                    refetchQueries: ["AllFoldersWithoutFilters"],
                 }),
             );
         }

@@ -16,7 +16,7 @@ interface AddFolderProps {
 const AddFolder = ({ parentId, selectionApi }: AddFolderProps): React.ReactElement => {
     const scope = useDamScope();
     const [createDamFolder] = useMutation<GQLCreateDamFolderMutation, GQLCreateDamFolderMutationVariables>(createDamFolderMutation, {
-        refetchQueries: ["DamItemsList", "AllFoldersWithoutFilters"],
+        refetchQueries: ["DamItemsList"],
         update: (cache) => {
             clearDamItemCache(cache);
         },
