@@ -104,8 +104,8 @@ export const moveDamFilesMutation = gql`
 `;
 
 export const moveDamFoldersMutation = gql`
-    mutation MoveDamFolders($folderIds: [ID!]!, $targetFolderId: ID) {
-        moveDamFolders(folderIds: $folderIds, targetFolderId: $targetFolderId) {
+    mutation MoveDamFolders($folderIds: [ID!]!, $targetFolderId: ID, $scope: DamScopeInput!) {
+        moveDamFolders(folderIds: $folderIds, targetFolderId: $targetFolderId, scope: $scope) {
             id
             mpath
         }
