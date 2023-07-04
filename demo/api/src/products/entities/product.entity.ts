@@ -3,6 +3,8 @@ import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDa
 import {
     BaseEntity,
     Collection,
+    Embeddable,
+    Embedded,
     Entity,
     Enum,
     ManyToMany,
@@ -14,13 +16,62 @@ import {
     Ref,
     types,
 } from "@mikro-orm/core";
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { IsNumber } from "class-validator";
 import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./product-category.entity";
 import { ProductTag } from "./product-tag.entity";
 import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
+
+@ObjectType()
+@InputType("ProductDiscountsInput")
+export class ProductDiscounts {
+    @Field()
+    @IsNumber()
+    quantity: number;
+
+    @Field()
+    @IsNumber()
+    price: number;
+}
+
+@ObjectType()
+@InputType("ProductDimensionsInput")
+export class ProductDimensions {
+    @Field()
+    @IsNumber()
+    width: number;
+
+    @Field()
+    @IsNumber()
+    height: number;
+
+    @Field()
+    @IsNumber()
+    depth: number;
+}
+
+@Embeddable()
+@ObjectType()
+@InputType("ProductPackageDimensionsInput")
+export class ProductPackageDimensions {
+    @Property({ type: types.integer })
+    @Field()
+    @IsNumber()
+    width: number;
+
+    @Property({ type: types.integer })
+    @Field()
+    @IsNumber()
+    height: number;
+
+    @Property({ type: types.integer })
+    @Field()
+    @IsNumber()
+    depth: number;
+}
 
 @ObjectType({
     implements: () => [DocumentInterface],
@@ -74,6 +125,21 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field(() => RootBlockDataScalar(DamImageBlock))
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
+
+    @Property({ type: "json" })
+    @Field(() => [ProductDiscounts])
+    discounts: ProductDiscounts[] = [];
+    @Property({ type: "json" })
+    @Field(() => [String])
+    articleNumbers: string[] = [];
+
+    @Property({ type: "json", nullable: true })
+    @Field(() => ProductDimensions, { nullable: true })
+    dimensions?: ProductDimensions;
+
+    @Embedded(() => ProductPackageDimensions)
+    @Field(() => ProductPackageDimensions)
+    packageDimensions: ProductPackageDimensions;
 
     @OneToMany(() => ProductVariant, (variant) => variant.product, { orphanRemoval: true })
     @CrudField({

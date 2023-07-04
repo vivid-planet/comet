@@ -360,6 +360,23 @@ type ProductVariant implements DocumentInterface {
   createdAt: DateTime!
 }
 
+type ProductDiscounts {
+  quantity: Float!
+  price: Float!
+}
+
+type ProductDimensions {
+  width: Float!
+  height: Float!
+  depth: Float!
+}
+
+type ProductPackageDimensions {
+  width: Float!
+  height: Float!
+  depth: Float!
+}
+
 type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -371,6 +388,10 @@ type Product implements DocumentInterface {
   price: Float
   inStock: Boolean!
   image: DamImageBlockData!
+  discounts: [ProductDiscounts!]!
+  articleNumbers: [String!]!
+  dimensions: ProductDimensions
+  packageDimensions: ProductPackageDimensions!
   createdAt: DateTime!
   category: ProductCategory
   variants: [ProductVariant!]!
@@ -464,6 +485,23 @@ input FooterContentScopeInput {
 input NewsContentScopeInput {
   domain: String!
   language: String!
+}
+
+input ProductDiscountsInput {
+  quantity: Float!
+  price: Float!
+}
+
+input ProductDimensionsInput {
+  width: Float!
+  height: Float!
+  depth: Float!
+}
+
+input ProductPackageDimensionsInput {
+  width: Float!
+  height: Float!
+  depth: Float!
 }
 
 input RedirectScopeInput {
@@ -937,6 +975,10 @@ input ProductInput {
   price: Float
   inStock: Boolean!
   image: DamImageBlockInput!
+  discounts: [ProductDiscountsInput!]!
+  articleNumbers: [String!]!
+  dimensions: ProductDimensionsInput
+  packageDimensions: ProductPackageDimensionsInput!
   variants: [ProductVariantInput!]!
   category: ID
   tags: [ID!]!
@@ -955,6 +997,10 @@ input ProductUpdateInput {
   price: Float
   inStock: Boolean
   image: DamImageBlockInput
+  discounts: [ProductDiscountsInput!]
+  articleNumbers: [String!]
+  dimensions: ProductDimensionsInput
+  packageDimensions: ProductPackageDimensionsInput
   variants: [ProductVariantInput!]
   category: ID
   tags: [ID!]
