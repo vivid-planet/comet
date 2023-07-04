@@ -9,6 +9,7 @@ import { GraphQLResolveInfo } from "graphql";
 
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
+import { ProductStatistics } from "../entities/product-statistics.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { PaginatedProducts } from "./dto/paginated-products";
@@ -23,6 +24,7 @@ export class ProductResolver {
         private readonly productsService: ProductsService,
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
+        @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
         @InjectRepository(ProductVariant) private readonly productVariantRepository: EntityRepository<ProductVariant>,
         @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
     ) {}
@@ -56,6 +58,9 @@ export class ProductResolver {
         if (fields.includes("tags")) {
             populate.push("tags");
         }
+        if (fields.includes("statistics")) {
+            populate.push("statistics");
+        }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const options: FindOptions<Product, any> = { offset, limit, populate };
@@ -74,13 +79,21 @@ export class ProductResolver {
 
     @Mutation(() => Product)
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
-        const { variants: variantsInput, tags: tagsInput, category: categoryInput, image: imageInput, ...assignInput } = input;
+        const {
+            variants: variantsInput,
+            tags: tagsInput,
+            category: categoryInput,
+            statistics: statisticsInput,
+            image: imageInput,
+            ...assignInput
+        } = input;
         const product = this.repository.create({
             ...assignInput,
             visible: false,
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
             image: imageInput.transformToBlockData(),
+            statistics: this.productStatisticsRepository.assign(new ProductStatistics(), statisticsInput),
         });
         if (variantsInput) {
             product.variants.set(
@@ -118,7 +131,14 @@ export class ProductResolver {
             validateNotModified(product, lastUpdatedAt);
         }
 
-        const { variants: variantsInput, tags: tagsInput, category: categoryInput, image: imageInput, ...assignInput } = input;
+        const {
+            variants: variantsInput,
+            tags: tagsInput,
+            category: categoryInput,
+            statistics: statisticsInput,
+            image: imageInput,
+            ...assignInput
+        } = input;
         product.assign({
             ...assignInput,
 
@@ -141,6 +161,14 @@ export class ProductResolver {
             if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that were passed as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
+        }
+
+        if (statisticsInput) {
+            const statistic = await product.statistics.load();
+
+            this.productStatisticsRepository.assign(statistic, {
+                ...statisticsInput,
+            });
         }
 
         if (imageInput) {
@@ -190,5 +218,10 @@ export class ProductResolver {
     @ResolveField(() => [ProductTag])
     async tags(@Parent() product: Product): Promise<ProductTag[]> {
         return product.tags.loadItems();
+    }
+
+    @ResolveField(() => ProductStatistics)
+    async statistics(@Parent() product: Product): Promise<ProductStatistics> {
+        return product.statistics.load();
     }
 }

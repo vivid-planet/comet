@@ -374,6 +374,7 @@ function generateInputHandling(
     const relationManyToOneProps = props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = props.filter((prop) => prop.reference === "1:m");
     const relationManyToManyProps = props.filter((prop) => prop.reference === "m:n");
+    const relationOneToOneProps = props.filter((prop) => prop.reference === "1:1");
 
     const inputRelationManyToOneProps = relationManyToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
@@ -387,6 +388,20 @@ function generateInputHandling(
             };
         });
 
+    const inputRelationOneToOneProps = relationOneToOneProps
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .map((prop) => {
+            const targetMeta = prop.targetMeta;
+            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            return {
+                name: prop.name,
+                singularName: singular(prop.name),
+                nullable: prop.nullable,
+                type: prop.type,
+                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
+                targetMeta,
+            };
+        });
     const inputRelationToManyProps = [...relationOneToManyProps, ...relationManyToManyProps]
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
@@ -403,7 +418,7 @@ function generateInputHandling(
             };
         });
 
-    const noAssignProps = [...inputRelationToManyProps, ...inputRelationManyToOneProps, ...blockProps];
+    const noAssignProps = [...inputRelationToManyProps, ...inputRelationManyToOneProps, ...inputRelationOneToOneProps, ...blockProps];
     return `
     ${
         noAssignProps.length
@@ -425,6 +440,13 @@ function generateInputHandling(
         ${
             options.mode == "create" || options.mode == "updateNested"
                 ? blockProps.map((prop) => `${prop.name}: ${prop.name}Input.transformToBlockData(),`).join("")
+                : ""
+        }
+        ${
+            options.mode == "create" || options.mode == "updateNested"
+                ? inputRelationOneToOneProps
+                      .map((prop) => `${prop.name}: this.${prop.repositoryName}.assign(new ${prop.type}(), ${prop.name}Input),`)
+                      .join("")
                 : ""
         }
 });
@@ -465,6 +487,30 @@ ${inputRelationToManyProps
 
 ${
     options.mode == "update"
+        ? inputRelationOneToOneProps
+              .map(
+                  (prop) => `
+                    if (${prop.name}Input) {
+                        const ${prop.singularName} = await ${instanceNameSingular}.${prop.name}.load();
+                        ${generateInputHandling(
+                            {
+                                mode: "updateNested",
+                                inputName: `${prop.name}Input`,
+                                assignEntityCode: `this.${prop.repositoryName}.assign(${prop.singularName}, {`,
+                                excludeFields: prop.targetMeta.props
+                                    .filter((prop) => prop.reference == "1:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                                    .map((prop) => prop.name),
+                            },
+                            prop.targetMeta,
+                        )}
+                    }`,
+              )
+              .join("")
+        : ""
+}
+
+${
+    options.mode == "update"
         ? blockProps
               .map(
                   (prop) => `
@@ -502,31 +548,32 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
     const relationManyToManyProps = metadata.props.filter((prop) => prop.reference === "m:n");
+    const relationOneToOneProps = metadata.props.filter((prop) => prop.reference === "1:1");
     const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     for (const prop of metadata.props) {
         if (
             !hasFieldFeature(metadata.class, prop.name, "resolveField") &&
             !relationManyToOneProps.includes(prop) &&
             !relationOneToManyProps.includes(prop) &&
-            !outputRelationManyToManyProps.includes(prop)
+            !outputRelationManyToManyProps.includes(prop) &&
+            !outputRelationOneToOneProps.includes(prop)
         ) {
             throw new Error("@CrudField resolveField=false is only used for relations, for other props simply remove @Field() to disable its output");
         }
     }
 
     const hasOutputRelations =
-        outputRelationManyToOneProps.length > 0 || outputRelationOneToManyProps.length > 0 || outputRelationManyToManyProps.length > 0;
+        outputRelationManyToOneProps.length > 0 ||
+        outputRelationOneToManyProps.length > 0 ||
+        outputRelationManyToManyProps.length > 0 ||
+        outputRelationOneToOneProps.length > 0;
 
     let importsCode = "";
 
-    for (const prop of relationManyToOneProps) {
-        if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
-        importsCode += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
-    }
-
-    for (const prop of [...relationOneToManyProps, ...relationManyToManyProps]) {
+    for (const prop of [...relationManyToOneProps, ...relationOneToManyProps, ...relationManyToManyProps, ...relationOneToOneProps]) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
         importsCode += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
     }
@@ -558,6 +605,16 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         }
     `,
     )}
+
+    ${outputRelationOneToOneProps.map(
+        (prop) => `
+        @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${prop.nullable ? ` | undefined` : ""}> {
+            return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
+        }
+    `,
+    )}
+
     `.trim();
 
     return {
@@ -576,20 +633,17 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
     const relationManyToManyProps = metadata.props.filter((prop) => prop.reference === "m:n");
+    const relationOneToOneProps = metadata.props.filter((prop) => prop.reference === "1:1");
     const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
 
     const injectRepositories = new Set<string>();
 
-    relationManyToOneProps
+    [...relationManyToOneProps, ...relationOneToOneProps, ...relationOneToManyProps, ...relationManyToManyProps]
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
-        .map((prop) => {
-            injectRepositories.add(prop.type);
-        });
-    [...relationOneToManyProps, ...relationManyToManyProps]
-        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
-        .map((prop) => {
+        .forEach((prop) => {
             injectRepositories.add(prop.type);
         });
 
@@ -667,7 +721,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             const populate: string[] = [];`
                     : ""
             }
-            ${[...outputRelationManyToOneProps, ...outputRelationOneToManyProps, ...outputRelationManyToManyProps]
+            ${[...outputRelationManyToOneProps, ...outputRelationOneToManyProps, ...outputRelationManyToManyProps, ...outputRelationOneToOneProps]
                 .map(
                     (r) =>
                         `if (fields.includes("${r.name}")) {

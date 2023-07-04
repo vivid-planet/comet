@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 
 import { Product } from "./entities/product.entity";
 import { ProductCategory } from "./entities/product-category.entity";
+import { ProductStatistics } from "./entities/product-statistics.entity";
 import { ProductTag } from "./entities/product-tag.entity";
 import { ProductVariant } from "./entities/product-variant.entity";
 import { ProductResolver } from "./generated/product.resolver";
@@ -13,7 +14,7 @@ import { ProductTagsService } from "./generated/product-tags.service";
 import { ProductsService } from "./generated/products.service";
 
 @Module({
-    imports: [MikroOrmModule.forFeature([Product, ProductCategory, ProductTag, ProductVariant])],
+    imports: [MikroOrmModule.forFeature([Product, ProductCategory, ProductTag, ProductVariant, ProductStatistics])],
     providers: [ProductResolver, ProductsService, ProductCategoryResolver, ProductCategoriesService, ProductTagResolver, ProductTagsService],
     exports: [],
 })
