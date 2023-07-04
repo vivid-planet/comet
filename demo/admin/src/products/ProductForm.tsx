@@ -110,6 +110,9 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             category: formState.category?.id,
             tags: formState.tags.map((i) => i.id),
             variants: [],
+            articleNumbers: [],
+            discounts: [],
+            packageDimensions: { width: 0, height: 0, depth: 0 },
         };
         if (mode === "edit") {
             if (!id) throw new Error();
