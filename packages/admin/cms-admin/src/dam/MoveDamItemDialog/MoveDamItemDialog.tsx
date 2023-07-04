@@ -116,6 +116,7 @@ export const MoveDamItemDialog = ({
                     variables: {
                         folderIds,
                         targetFolderId: selectedId,
+                        scope,
                     },
                     errorPolicy: "all",
                 }),
@@ -132,7 +133,7 @@ export const MoveDamItemDialog = ({
         }
 
         setMoving?.(false);
-    }, [apolloClient, damItemsToMove, handleHasErrors, selectedId, setMoving]);
+    }, [apolloClient, damItemsToMove, handleHasErrors, scope, selectedId, setMoving]);
 
     const handleClose = () => {
         setSelectedId(undefined);
