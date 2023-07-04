@@ -1,4 +1,4 @@
-import { BreadcrumbItem } from "@comet/admin";
+import { BreadcrumbItem, LocalErrorScopeApolloContext } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -15,6 +15,7 @@ interface TableHeadProps {
     numberItems?: number;
     breadcrumbs?: BreadcrumbItem[];
     folderId?: string;
+    showFolderNotFoundError?: boolean;
 }
 
 const TableHeadWrapper = styled("div")`
@@ -29,7 +30,7 @@ const BoldTypography = styled(Typography)`
     font-weight: 500;
 `;
 
-export const FolderHead = ({ isSearching, numberItems, breadcrumbs, folderId }: TableHeadProps): React.ReactElement => {
+export const FolderHead = ({ isSearching, numberItems, breadcrumbs, folderId, showFolderNotFoundError }: TableHeadProps): React.ReactElement => {
     let content: React.ReactNode = null;
 
     const { data, loading } = useOptimisticQuery<GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables>(damFolderMPathQuery, {
@@ -47,6 +48,7 @@ export const FolderHead = ({ isSearching, numberItems, breadcrumbs, folderId }: 
 
             return fragment === null || Object.keys(fragment).length === 0 ? undefined : { damFolder: fragment };
         },
+        context: showFolderNotFoundError ? undefined : LocalErrorScopeApolloContext,
     });
 
     if (isSearching) {

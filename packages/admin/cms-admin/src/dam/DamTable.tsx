@@ -3,6 +3,7 @@ import {
     EditDialogApiContext,
     IFilterApi,
     ISortInformation,
+    LocalErrorScopeApolloContext,
     SortDirection,
     Stack,
     StackPage,
@@ -12,6 +13,7 @@ import {
     ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
+    useErrorDialog,
     useStackApi,
     useStoredState,
     useTableQueryFilter,
@@ -54,17 +56,40 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     const stackApi = useStackApi();
     const [, , editDialogApi, selectionApi] = useEditDialog();
     const damSelectionActionsApi = useDamSelectionApi();
+    const errorDialogApi = useErrorDialog();
+    const isRedirectToDamRootInProgress = React.useRef(false);
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
     const [selectedFolderId, setSelectedFolderId] = React.useState<string | undefined>();
-    const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
+    const { data, error } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             id: selectedFolderId!,
         },
         skip: selectedFolderId === undefined,
+        context: LocalErrorScopeApolloContext,
     });
+
+    React.useEffect(() => {
+        if (isRedirectToDamRootInProgress.current) {
+            return;
+        }
+
+        if (error?.message.startsWith("Folder not found")) {
+            // if the current folder doesn't exist, the user is redirected to the DAM root
+            // this can either happen:
+            //      - if the folder is specified in the URL
+            //      - (in case of the ChooseFileDialog) when the path of a non-existing folder is loaded from the session storage
+            stackApi?.goAllBack();
+            isRedirectToDamRootInProgress.current = true;
+            if (props.showFolderNotFoundError) {
+                errorDialogApi?.showError({ userMessage: "Folder not found", error: error.toString() });
+            }
+        } else if (error) {
+            errorDialogApi?.showError({ error: error?.toString() });
+        }
+    }, [error, errorDialogApi, props.showFolderNotFoundError, stackApi]);
 
     return (
         <StackSwitch initialPage="table">
@@ -143,6 +168,7 @@ export interface DamConfig {
     contentScopeIndicator?: React.ReactNode;
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
+    showFolderNotFoundError?: boolean;
 }
 
 type DamTableProps = DamConfig;
@@ -159,6 +185,7 @@ export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
         hideMultiselect: false,
         hideDamActions: false,
         hideArchiveFilter: false,
+        showFolderNotFoundError: true,
         ...props,
     };
 

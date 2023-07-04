@@ -4,6 +4,7 @@ import {
     EditDialog,
     IFilterApi,
     ISelectionApi,
+    LocalErrorScopeApolloContext,
     PrettyBytes,
     useDataGridRemote,
     useStackSwitchApi,
@@ -73,6 +74,7 @@ const FolderDataGrid = ({
     hideContextMenu,
     hideArchiveFilter,
     hideMultiselect,
+    showFolderNotFoundError,
     renderDamLabel,
     ...props
 }: FolderDataGridProps): React.ReactElement => {
@@ -102,6 +104,7 @@ const FolderDataGrid = ({
             id: currentFolderId!,
         },
         skip: currentFolderId === undefined,
+        context: showFolderNotFoundError ? undefined : LocalErrorScopeApolloContext,
     });
 
     const {
@@ -289,6 +292,7 @@ const FolderDataGrid = ({
                 numberItems={dataGridData?.damItemsList.totalCount ?? 0}
                 breadcrumbs={breadcrumbs}
                 folderId={currentFolderId}
+                showFolderNotFoundError={showFolderNotFoundError}
             />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
