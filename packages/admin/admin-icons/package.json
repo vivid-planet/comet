@@ -12,7 +12,7 @@
         "build": "run-s clean generate-icons && run-p build:babel build:types",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "clean": "rimraf lib && rimraf src/generated",
+        "clean": "rimraf lib",
         "generate-icons": "ts-node generate-icons.ts",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
