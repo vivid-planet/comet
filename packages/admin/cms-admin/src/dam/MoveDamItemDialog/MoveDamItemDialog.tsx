@@ -41,7 +41,7 @@ interface MoveDamItemDialogProps {
     hasErrors?: boolean;
 }
 
-export const MoveDamItemDialog = ({
+const MoveDamItemDialogInner = ({
     open,
     damItemsToMove,
     setMoving,
@@ -53,7 +53,7 @@ export const MoveDamItemDialog = ({
     const apolloClient = useApolloClient();
     const scope = useDamScope();
     const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
-        fetchPolicy: "network-only",
+        fetchPolicy: "cache-and-network",
         variables: {
             scope,
         },
@@ -227,4 +227,12 @@ export const MoveDamItemDialog = ({
             </DialogActions>
         </FixedHeightDialog>
     );
+};
+
+export const MoveDamItemDialog = (props: MoveDamItemDialogProps) => {
+    if (!props.open) {
+        return null;
+    }
+
+    return <MoveDamItemDialogInner {...props} />;
 };
