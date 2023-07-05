@@ -74,7 +74,7 @@ export class ProductCategoryResolver {
 
         if (productsInput) {
             const products = await this.productRepository.find({ id: productsInput });
-            if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passes as input");
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products that were passed as input");
             await productCategory.products.loadItems();
             productCategory.products.set(products.map((product) => Reference.create(product)));
         }
@@ -103,7 +103,7 @@ export class ProductCategoryResolver {
 
         if (productsInput) {
             const products = await this.productRepository.find({ id: productsInput });
-            if (products.length != productsInput.length) throw new Error("Couldn't find all products that where passes as input");
+            if (products.length != productsInput.length) throw new Error("Couldn't find all products that were passed as input");
             await productCategory.products.loadItems();
             productCategory.products.set(products.map((product) => Reference.create(product)));
         }

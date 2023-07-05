@@ -96,7 +96,7 @@ export class ProductResolver {
         }
         if (tagsInput) {
             const tags = await this.productTagRepository.find({ id: tagsInput });
-            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that where passes as input");
+            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that were passed as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
@@ -138,7 +138,7 @@ export class ProductResolver {
         }
         if (tagsInput) {
             const tags = await this.productTagRepository.find({ id: tagsInput });
-            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that where passes as input");
+            if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that were passed as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }

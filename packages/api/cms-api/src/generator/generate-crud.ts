@@ -457,7 +457,7 @@ ${inputRelationToManyProps
             return `
             if (${prop.name}Input) {
                 const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
-                if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that where passes as input");
+                if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that were passed as input");
                 await ${instanceNameSingular}.${prop.name}.loadItems();
                 ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((${prop.singularName}) => Reference.create(${prop.singularName})));
             }`;
