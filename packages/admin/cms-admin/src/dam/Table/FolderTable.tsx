@@ -11,6 +11,7 @@ import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 
 import { GQLDamFileTableFragment, GQLDamFolderQuery, GQLDamFolderQueryVariables, GQLDamFolderTableFragment } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
+import { useDamConfig } from "../config/useDamConfig";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
@@ -50,6 +51,7 @@ const FolderTable = ({
     const client = useApolloClient();
     const intl = useIntl();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+    const damConfig = useDamConfig();
 
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
     const [footerType, setFooterType] = React.useState<FooterType>();
@@ -128,7 +130,7 @@ const FolderTable = ({
             cellProps: { style: { width: "100%" } },
             render: (row) => {
                 return renderDamLabel ? (
-                    renderDamLabel(row, { matches: matches.get(row.id) })
+                    renderDamLabel(row, { matches: matches.get(row.id), showLicenseWarnings: damConfig.enableLicenseFeature })
                 ) : (
                     <Link
                         underline="none"
@@ -141,7 +143,12 @@ const FolderTable = ({
                             }
                         }}
                     >
-                        <DamLabel asset={row} showPath={isSearching} matches={matches.get(row.id)} />
+                        <DamLabel
+                            asset={row}
+                            showPath={isSearching}
+                            matches={matches.get(row.id)}
+                            showLicenseWarnings={damConfig.enableLicenseFeature}
+                        />
                     </Link>
                 );
             },
